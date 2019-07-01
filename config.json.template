@@ -1,0 +1,12 @@
+{
+    "DATA_DIR": "./data/",
+    "db_config":
+    {
+        "DB_HOST" : "hostname",
+        "DB_USER" : "user",
+        "DB_PW" : "password",
+        "DB_NAME_DATA" : "database name",
+        "table" : "table name",
+        "DB_PORT" : 1234
+    }
+}
