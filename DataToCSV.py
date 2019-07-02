@@ -72,27 +72,37 @@ def getAndParseData(request: Request, model, db, settings, data_directory):
                                                  utils.dateToFileSafeString(request.end_date)), "w")
 
     raw_csv_file.write(",".join(col_names))
-    for elem in session_ids:
+    session_features = []
+    for sess_id in session_ids:
+        # initialize vars for session data.
+        # each data variable maps level numbers to values for the given level.
+        features = WaveFeature()
+        raw_csv_lines = []
+
+        # grab data for the given session.
         next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=settings["table"],
-                                   filter="app_id=\"WAVES\" AND session_id={}".format(elem[0]),
-                                   limit=3, distinct=True)
-        # logging.debug("next_data_set: " + str(next_data_set))
-        logging.debug("number of rows expected: " + str(len(next_data_set)))
-        csv_lines = []
+                                         filter="app_id=\"WAVES\" AND session_id={}".format(sess_id[0]),
+                                         limit=3, distinct=True)
+
+        # now, we process each row.
         for row in next_data_set:
-            csv_lines.append(",".join([str(elem) for elem in row]))
-        logging.debug("actual number of rows: " + str(len(csv_lines)))
-        raw_csv_file.write("\n".join(csv_lines))
+            raw_csv_lines.append(",".join([str(elem) for elem in row]))
+            complex_data = row[complex_data_index]
+            complex_data_parsed = json.loads(complex_data) if (complex_data is not None) else {"event_custom":row[col_names.index("event")]}
+            # use function in the "features" var to pull features from each row
+            features.extractFromRow(row[col_names.index("level")], complex_data_parsed, row[col_names.index("client_time")])
+        
+        session_features.append(",".join())
+
+        # after processing all rows, write out the session data.
+        raw_csv_file.write("\n".join(raw_csv_lines))
         raw_csv_file.write("\n")
-        # logging.debug("formatted data: " + "\n".join(csv_lines))
+        proc_csv_file.write("\n".join())
 
         ## NOTE: Some code that could be useful to refer to if we ever decide to do something to unwrap
         ## the event_data_complex column.
         # parsed_data = []
         # for row in next_data_set:
-            # complex_data = row[complex_data_index]
-        #     if (complex_data is not None):
-        #         complex_data_parsed = json.loads(complex_data)
         #         parsed_data.append( row[0:complex_data_index] \
         #                         + tuple(complex_data_parsed.values()) \
         #                         + row[complex_data_index+1:-1] )
