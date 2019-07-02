@@ -4,6 +4,7 @@ import logging
 import typing
 # import local files
 import utils
+from game_features.WaveFeature import WaveFeature
 from Request import Request
 
 def dataToCSV(request: Request, db, settings):
@@ -11,7 +12,7 @@ def dataToCSV(request: Request, db, settings):
     db_settings = settings["db_config"]
     if request.game_id is not None:
         # TODO: Should we get model file still? Not sure what it's used for.
-        model = utils.loadJSONFile("../model.json")
+        model = utils.loadJSONFile("model.json", "../")
         # TODO: figure out if these are even needed.
         SQL_QUESTION_CUSTOM = model[request.game_id]['sqlEventCustoms']['question']
         SQL_MOVE_CUSTOM = model[request.game_id]['sqlEventCustoms']['move']
@@ -59,7 +60,6 @@ def getAndParseData(request: Request, model, db, settings, data_directory):
 
     complex_data_index = col_names.index("event_data_complex")
     logging.debug("complex_data_index: {}".format(complex_data_index))
-
     ## NOTE: Some code that could be useful to refer to if we ever decide to do something to unwrap
     ## the event_data_complex column.
     # parsed_columns = db_cursor.column_names[0:complex_data_index]                 \

@@ -6,12 +6,16 @@ import mysql.connector
 import typing
 import datetime
 
-def loadJSONFile(filename: str):
+def loadJSONFile(filename: str, path:str = "./"):
     if not filename.endswith(".json"):
         filename = filename + ".json"
-    json_file = open(filename, "r")
-    ret_val = json.loads(json_file.read())
-    json_file.close()
+    ret_val = None
+    try:
+        json_file = open(path+filename, "r")
+        ret_val = json.loads(json_file.read())
+        json_file.close()
+    except Exception as err:
+        logging.error("Could not read file at {}{}".format(path, filename))
     return ret_val
 
 def dateToFileSafeString(date: datetime.datetime):
