@@ -6,6 +6,8 @@ import mysql.connector
 import typing
 import datetime
 
+import os
+
 def loadJSONFile(filename: str, path:str = "./"):
     if not filename.endswith(".json"):
         filename = filename + ".json"
@@ -15,7 +17,7 @@ def loadJSONFile(filename: str, path:str = "./"):
         ret_val = json.loads(json_file.read())
         json_file.close()
     except Exception as err:
-        logging.error("Could not read file at {}{}".format(path, filename))
+        logging.error("Could not read file at {}\nFull error message: {}\nCurrent directory: {}".format(path+filename, str(err), os.getcwd()))
     return ret_val
 
 def dateToFileSafeString(date: datetime.datetime):
@@ -54,10 +56,10 @@ class SQL:
 
         sel_clause   = "SELECT " + d + cols + " FROM " + table_path
         where_clause = "" if filter is None else " WHERE {}".format(filter)
-        lim_clause   = "" if limit < 0      else " LIMIT {}".format(str(limit))
         sort_clause  = "" if sort_cols is None   else " ORDER BY {} {} ".format(sort_cols, sort_direction)
+        lim_clause   = "" if limit < 0      else " LIMIT {}".format(str(limit))
 
-        query = sel_clause + where_clause + lim_clause + sort_clause + ";"
+        query = sel_clause + where_clause + sort_clause + lim_clause + ";"
         logging.debug("Running query: " + query)
         cursor.execute(query)
         return cursor.fetchall()

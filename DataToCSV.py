@@ -12,7 +12,7 @@ def dataToCSV(request: Request, db, settings):
     db_settings = settings["db_config"]
     if request.game_id is not None:
         # TODO: Should we get model file still? Not sure what it's used for.
-        model = utils.loadJSONFile("model.json", "../")
+        model = utils.loadJSONFile("model.json", "./")
         # TODO: figure out if these are even needed.
         SQL_QUESTION_CUSTOM = model[request.game_id]['sqlEventCustoms']['question']
         SQL_MOVE_CUSTOM = model[request.game_id]['sqlEventCustoms']['move']
@@ -46,13 +46,18 @@ def getAndParseData(request: Request, model, db, settings, data_directory):
     #     except Exception as err:
     #         utils.SQL.server500Error(err)
     
-    max_level = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=settings["table"],
-                                 columns=["MAX(level)"], filter="app_id=\"WAVES\"", distinct=True)
+    max_level_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=settings["table"],
+                                     columns=["MAX(level)"], filter="app_id=\"WAVES\"", distinct=True)
+    max_level = max_level_raw[0][0]
+    min_level_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=settings["table"],
+                                     columns=["MIN(level)"], filter="app_id=\"WAVES\"", distinct=True)
+    min_level = min_level_raw[0][0]
     # logging.debug("max_level: " + str(max_level))
 
-    session_ids = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=settings["table"],
-                                   columns=["session_id"],
-                                   filter="app_id=\"WAVES\"", limit=4, distinct=True)
+    session_ids_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=settings["table"],
+                                       columns=["session_id"],
+                                       filter="app_id=\"WAVES\"", limit=4, distinct=True)
+    session_ids = [sess[0] for sess in session_ids_raw]
     # logging.debug("session_ids: " + str(session_ids))
 
     db_cursor.execute("SHOW COLUMNS from {}.{}".format(db.database, settings["table"]))
@@ -70,20 +75,21 @@ def getAndParseData(request: Request, model, db, settings, data_directory):
                                                utils.dateToFileSafeString(request.end_date)), "w")
     proc_csv_file = open("{}/{}_{}_proc.csv".format(data_directory, utils.dateToFileSafeString(request.start_date),
                                                  utils.dateToFileSafeString(request.end_date)), "w")
+    WaveFeature.initializeClass("./game_features/schemas/", "WAVES.json")
 
     raw_csv_file.write(",".join(col_names))
     session_features = []
     for sess_id in session_ids:
         # initialize vars for session data.
         # each data variable maps level numbers to values for the given level.
-        features = WaveFeature()
+        features = WaveFeature(max_level, min_level)
         raw_csv_lines = []
 
         # grab data for the given session.
         next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=settings["table"],
-                                         filter="app_id=\"WAVES\" AND session_id={}".format(sess_id[0]),
+                                         filter="app_id=\"WAVES\" AND session_id={}".format(sess_id),
                                          sort_columns=["client_time"], sort_direction = "ASC",
-                                         limit=3, distinct=True)
+                                         limit=3, distinct=False)
 
         # now, we process each row.
         for row in next_data_set:
@@ -92,13 +98,16 @@ def getAndParseData(request: Request, model, db, settings, data_directory):
             complex_data_parsed = json.loads(complex_data) if (complex_data is not None) else {"event_custom":row[col_names.index("event")]}
             # use function in the "features" var to pull features from each row
             features.extractFromRow(row[col_names.index("level")], complex_data_parsed, row[col_names.index("client_time")])
+        features.calculateAggregateFeatures()
+        session_features.append(features)
         
-        session_features.append(",".join())
-
         # after processing all rows, write out the session data.
         raw_csv_file.write("\n".join(raw_csv_lines))
         raw_csv_file.write("\n")
-        proc_csv_file.write("\n".join())
+
+    session_features[0].writeCSVHeader(proc_csv_file)
+    for session in session_features:
+        session.writeCurrentFeatures(proc_csv_file)
 
         ## NOTE: Some code that could be useful to refer to if we ever decide to do something to unwrap
         ## the event_data_complex column.

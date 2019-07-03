@@ -32,7 +32,7 @@
         },
         "SLIDER_MOVE_RELEASE":{
             "event_custom":"string",
-            "slider":"string",
+            "slider":{"enum": ["AMPLITUDE", "OFFSET", "WAVELENGTH"]},
             "wave":"string",
             "begin_val":"float",
             "end_val":"float",
@@ -55,5 +55,54 @@
             "closeness":"float",
             "correct_val":"float"
         }
-    }
+    },
+
+    "features": {
+        "perlevel":{
+            "totalSliderMoves":"slider moves across a given level",
+            "totalArrowMoves":"arrow moves across a given level",
+            "totalLevelTime" : "time spent on a level",
+            "totalKnobStdDevs": "sum of stdev_val for all slider moves in a level",
+            "totalMoveTypeChanges" : "number of times 'slider' changes across a level",
+            "totalKnobAvgMaxMin" : "difference between max and min values of a slider move, doesn't seem to have anything to do with an avg",
+            "totalAmplitudeMoves":"number of times the amplitude is adjusted",
+            "totalOffsetMoves" : "number of times the offset is adjusted",
+            "totalWavelengthMoves":"number of times the wavelength is adjusted",
+            "totalFails" : "number of 'Fail' events",
+            "percentAmplitudeMoves" : "percent of total moves that were amplitude adjustments in a level",
+            "percentOffsetMoves" : "percent of total moves that were offset adjustments in a level",
+            "percentWavelengthMoves" : "percent of total moves that were wavelength adjustments in a level"
+        },
+        "aggregate":{
+            "avgSliderMoves" : "totalSliderMoves averaged over all levels",
+            "avgLevelTime" : "totalLevelTime averaged over all levels",
+            "avgKnobStdDevs" : "totalKnobStdDevs averaged over all levels",
+            "avgMoveTypeChanges" : "totalMoveTypeChanges averaged over all levels",
+            "avgKnobAvgMaxMin" : "totalKnobAvgMaxMin averaged over all levels",
+            "avgAmplitudeMoves" : "totalAmplitudeMoves averaged over all levels",
+            "avgOffsetMoves" : "totalOffsetMoves averaged over all levels",
+            "avgWavelengthMoves" : "totalWavelengthMoves averaged over all levels",
+            "avgFails" : "totalFails averaged over all levels"
+        }
+    },
+
+    "db_columns": [
+        "id",
+        "app_id",
+        "app_id_fast",
+        "app_version",
+        "session_id",
+        "persistent_session_id",
+        "level",
+        "event",
+        "event_custom",
+        "event_data_simple",
+        "event_data_complex",
+        "client_time",
+        "client_time_ms",
+        "server_time",
+        "req_id",
+        "session_n",
+        "http_user_agent"
+    ]
 }
