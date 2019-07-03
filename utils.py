@@ -45,7 +45,7 @@ class SQL:
     @staticmethod
     def SELECT(cursor: mysql.connector.cursor.MySQLCursor, db_name: str, table: str,
                columns: typing.List[str] = None, filter: str = None, limit: int = -1,
-               sort_columns: typing.List[str] = None, sort_direction = "ASC"
+               sort_columns: typing.List[str] = None, sort_direction = "ASC",
                distinct: bool = False) -> typing.List[typing.Tuple]:
         d = "DISTINCT " if distinct else ""
         cols      = ",".join(columns)      if columns is not None      and len(columns) > 0      else "*"
