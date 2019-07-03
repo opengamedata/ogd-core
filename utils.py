@@ -55,7 +55,7 @@ class SQL:
         sel_clause   = "SELECT " + d + cols + " FROM " + table_path
         where_clause = "" if filter is None else " WHERE {}".format(filter)
         lim_clause   = "" if limit < 0      else " LIMIT {}".format(str(limit))
-        sort_clause  = "" if sort is None   else " ORDER BY {} {} ".format(sort, sort_direction)
+        sort_clause  = "" if sort_cols is None   else " ORDER BY {} {} ".format(sort_cols, sort_direction)
 
         query = sel_clause + where_clause + lim_clause + sort_clause + ";"
         logging.debug("Running query: " + query)
