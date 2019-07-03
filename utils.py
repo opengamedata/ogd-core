@@ -45,10 +45,11 @@ class SQL:
     @staticmethod
     def SELECT(cursor: mysql.connector.cursor.MySQLCursor, db_name: str, table: str,
                columns: typing.List[str] = None, filter: str = None, limit: int = -1,
-               sort: str = None, sort_direction = "ASC"
+               sort_columns: typing.List[str] = None, sort_direction = "ASC"
                distinct: bool = False) -> typing.List[typing.Tuple]:
         d = "DISTINCT " if distinct else ""
-        cols = ",".join(columns) if columns is not None and len(columns) > 0 else "*"
+        cols      = ",".join(columns)      if columns is not None      and len(columns) > 0      else "*"
+        sort_cols = ",".join(sort_columns) if sort_columns is not None and len(sort_columns) > 0 else None
         table_path = db_name + "." + str(table)
 
         sel_clause   = "SELECT " + d + cols + " FROM " + table_path

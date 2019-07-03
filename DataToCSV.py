@@ -82,6 +82,7 @@ def getAndParseData(request: Request, model, db, settings, data_directory):
         # grab data for the given session.
         next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=settings["table"],
                                          filter="app_id=\"WAVES\" AND session_id={}".format(sess_id[0]),
+                                         sort_columns=["client_time"], sort_direction = "ASC",
                                          limit=3, distinct=True)
 
         # now, we process each row.
