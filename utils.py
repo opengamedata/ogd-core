@@ -47,7 +47,7 @@ class SQL:
     @staticmethod
     def SELECT(cursor: mysql.connector.cursor.MySQLCursor, db_name: str, table: str,
                columns: typing.List[str] = None, filter: str = None, limit: int = -1,
-               sort_columns: typing.List[str] = None, sort_direction = "ASC",
+               sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping = None,
                distinct: bool = False) -> typing.List[typing.Tuple]:
         d = "DISTINCT " if distinct else ""
         cols      = ",".join(columns)      if columns is not None      and len(columns) > 0      else "*"
@@ -55,11 +55,12 @@ class SQL:
         table_path = db_name + "." + str(table)
 
         sel_clause   = "SELECT " + d + cols + " FROM " + table_path
-        where_clause = "" if filter is None else " WHERE {}".format(filter)
-        sort_clause  = "" if sort_cols is None   else " ORDER BY {} {} ".format(sort_cols, sort_direction)
-        lim_clause   = "" if limit < 0      else " LIMIT {}".format(str(limit))
+        where_clause = "" if filter    is None else " WHERE {}".format(filter)
+        group_clause = "" if grouping  is None else " GROUP BY {}".format(grouping)
+        sort_clause  = "" if sort_cols is None else " ORDER BY {} {} ".format(sort_cols, sort_direction)
+        lim_clause   = "" if limit < 0         else " LIMIT {}".format(str(limit))
 
-        query = sel_clause + where_clause + sort_clause + lim_clause + ";"
+        query = sel_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
         logging.debug("Running query: " + query)
         cursor.execute(query)
         return cursor.fetchall()
