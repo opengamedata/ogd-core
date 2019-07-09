@@ -7,7 +7,7 @@ import utils
 from game_features.WaveFeature import WaveFeature
 from Request import Request
 
-def dataToCSV(request: Request, db, settings):
+def exportDataToCSV(request: Request, db, settings):
     DATA_DIR = settings["DATA_DIR"] + request.game_id
     db_settings = settings["db_config"]
     if request.game_id is not None:

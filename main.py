@@ -27,5 +27,5 @@ req = Request(game_id="WAVES", start_date=datetime.datetime(2019, 3, 1), \
               end_date=datetime.datetime(2019, 3, 31), max_rows=5, min_moves=1, \
               read_cache=False, write_cache=False
              )
-DataToCSV.dataToCSV(req, db, settings)
+DataToCSV.exportDataToCSV(req, db, settings)
 
