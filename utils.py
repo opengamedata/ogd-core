@@ -70,7 +70,7 @@ class SQL:
     def SELECT(cursor: mysql.connector.cursor.MySQLCursor, db_name: str, table: str,
                columns: typing.List[str] = None, filter: str = None, limit: int = -1,
                sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
-               distinct: bool = False) -> typing.List[typing.Tuple]:
+               distinct: bool = False, fetch_results: bool = True) -> typing.List[typing.Tuple]:
         d = "DISTINCT " if distinct else ""
         cols      = ",".join(columns)      if columns is not None      and len(columns) > 0      else "*"
         sort_cols = ",".join(sort_columns) if sort_columns is not None and len(sort_columns) > 0 else None
@@ -85,7 +85,7 @@ class SQL:
         query = sel_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
         logging.debug("Running query: " + query)
         cursor.execute(query)
-        return cursor.fetchall()
+        return cursor.fetchall() if fetch_results else None
 
     @staticmethod
     def server500Error(error: Exception):
