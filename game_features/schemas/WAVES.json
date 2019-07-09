@@ -69,6 +69,7 @@
             "totalOffsetMoves" : "number of times the offset is adjusted",
             "totalWavelengthMoves":"number of times the wavelength is adjusted",
             "totalFails" : "number of 'Fail' events",
+            "completed":"whether the level was completed or not",
             "percentAmplitudeMoves" : "percent of total moves that were amplitude adjustments in a level",
             "percentOffsetMoves" : "percent of total moves that were offset adjustments in a level",
             "percentWavelengthMoves" : "percent of total moves that were wavelength adjustments in a level"
@@ -86,23 +87,23 @@
         }
     },
 
-    "db_columns": [
-        "id",
-        "app_id",
-        "app_id_fast",
-        "app_version",
-        "session_id",
-        "persistent_session_id",
-        "level",
-        "event",
-        "event_custom",
-        "event_data_simple",
-        "event_data_complex",
-        "client_time",
-        "client_time_ms",
-        "server_time",
-        "req_id",
-        "session_n",
-        "http_user_agent"
-    ]
+    "db_columns": {
+        "id":"Unique identifier for a row",
+        "app_id":"A string identifying which game from which the event came",
+        "app_id_fast":"Um... another version of the app id?",
+        "app_version":"The version of the game from which the event came",
+        "session_id":"Unique identifier for the gameplay session",
+        "persistent_session_id":"Unique identifier across all gameplay sessions from a single computer",
+        "level":"The game level in which the event was logged",
+        "event":"The type of event logged",
+        "event_custom":"Um... this appears to be unused?",
+        "event_data_simple":"Um, this also seems to be unused?",
+        "event_data_complex":"event-specific data encoded as a JSON string",
+        "client_time":"The client machine time when the event was generated",
+        "client_time_ms":"Client time in milliseconds? Or something?",
+        "server_time":"The server machine time when the event was logged",
+        "req_id":"Another ID of some kind",
+        "session_n":"Session number, maybe? Not really sure what n means here...",
+        "http_user_agent":"Data on the type of web browser, OS, etc. in use by the player"
+    }
 }
