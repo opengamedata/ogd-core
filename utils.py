@@ -23,6 +23,28 @@ def loadJSONFile(filename: str, path:str = "./"):
 def dateToFileSafeString(date: datetime.datetime):
     return "{}-{}-{}".format(date.month, date.day, date.year)
 
+def csvMetadata(game_name: str, begin_date: datetime.datetime, end_date: datetime.datetime,
+                      field_list: dict) -> str:
+    template_str = \
+    "## Field Day Open Game Data \n\
+# Retrieved from https://fielddaylab.wisc.edu/opengamedata \n\
+# These anonymous data are provided in service of future educational data mining research. \n\
+# They are made available under the Creative Commons CCO 1.0 Universal license. \n\
+# See https://creativecommons.org/publicdomain/zero/1.0/ \n\
+\n\
+## Suggested citation: \n\
+# Field Day. (2019). Open Educational Game Play Logs - [dataset ID]. Retrieved [today's date] from https://fielddaylab.wisc.edu/opengamedata \n\
+\n\
+## Game: {0} \n\
+# Begin Date: {1} \n\
+# End Date: {2} \n\
+\n\
+## Field Descriptions: \n".format(game_name, begin_date, end_date)
+    field_descriptions = ["# {0} - {1}".format(key, field_list[key]) for key in field_list.keys()]
+    template_str += "\n".join(field_descriptions)
+    template_str += "\n"
+    return template_str
+
 # class Numeric:
 #     @staticmethod
 #     def replaceNans(arr: typing.Dict) -> typing.Dict:
@@ -47,7 +69,7 @@ class SQL:
     @staticmethod
     def SELECT(cursor: mysql.connector.cursor.MySQLCursor, db_name: str, table: str,
                columns: typing.List[str] = None, filter: str = None, limit: int = -1,
-               sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping = None,
+               sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
                distinct: bool = False) -> typing.List[typing.Tuple]:
         d = "DISTINCT " if distinct else ""
         cols      = ",".join(columns)      if columns is not None      and len(columns) > 0      else "*"
