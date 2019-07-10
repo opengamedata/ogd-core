@@ -3,10 +3,8 @@ import logging
 import typing
 ## import local files
 import utils
-from schemas.Schema import Schema
 
 class Schema:
-
     def __init__(self, schema_name:str, schema_path:str = "./schemas/JSON"):
         ## define instance vars
         self._schema:                     typing.Dict      = {}
