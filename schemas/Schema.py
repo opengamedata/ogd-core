@@ -1,56 +1,43 @@
-import abc
+## import standard libraries
+import logging
 import typing
+## import local files
+import utils
+from schemas.Schema import Schema
 
-# Abstract base class for game schemas
-class Schema(abc.ABC):
-    _schema:                      typing.Dict      = {}
-    _db_columns:                  typing.Dict      = None
-    _feature_list:               typing.Dict      = None
-    _event_data_complex_types:   typing.List[str] = None
-    _event_data_complex_schemas: typing.Dict      = None
-    _initialized:                bool             = False
+class Schema:
 
-    @staticmethod
-    @abc.abstractmethod
-    def initializeClass(schema_path:str, schema_name:str):
-        pass
+    def __init__(self, schema_name:str, schema_path:str = "./schemas/JSON"):
+        ## define instance vars
+        self._schema:                     typing.Dict      = {}
+        self._feature_list:               typing.Dict      = None
+        ## set instance vars
+        self._schema = utils.loadJSONFile(schema_name, schema_path)
+        if self._schema is None:
+            logging.error("Could not find event_data_complex schemas at {}".format(schema_path))
+        else:
+            self._feature_list = list(self._schema["features"]["perlevel"].keys(self)) + list(self._schema["features"]["aggregate"].keys(self))
 
-    @staticmethod
-    @abc.abstractmethod
-    def schema():
-        pass
+    def schema(self):
+        return self._schema
 
-    @staticmethod
-    @abc.abstractmethod
-    def events():
-        pass
+    def events(self):
+        return self._schema["events"]
 
-    @staticmethod
-    @abc.abstractmethod
-    def event_types():
-        pass
+    def event_types(self):
+        return self._schema["events"].keys(self)
 
-    @staticmethod
-    @abc.abstractmethod
-    def features():
-        pass
+    def features(self):
+        return self._schema["features"]
 
-    @staticmethod
-    @abc.abstractmethod
-    def perlevel_features():
-        pass
+    def perlevel_features(self):
+        return self._schema["features"]["perlevel"]
 
-    @staticmethod
-    @abc.abstractmethod
-    def aggregate_features():
-        pass
+    def aggregate_features(self):
+        return self._schema["features"]["aggregate"]
 
-    @staticmethod
-    @abc.abstractmethod
-    def feature_list():
-        pass
+    def feature_list(self):
+        return self._feature_list
 
-    @staticmethod
-    @abc.abstractmethod
-    def db_columns():
-        pass
+    def db_columns(self):
+        return self._schema["db_columns"]
