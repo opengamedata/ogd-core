@@ -53,7 +53,7 @@ def _getBatchData(request: Request, db, settings) -> BatchData:
     session_ids_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=settings["table"],
                                     columns=["session_id"], filter="app_id=\"{}\" AND session_n=0 AND (server_time BETWEEN '{}' AND '{}')".format( \
                                                                     request.game_id, request.start_date.isoformat(), request.end_date.isoformat()),
-                                    sort_columns=["session_id"], sort_direction="ASC", distinct=True)
+                                    sort_columns=["session_id"], sort_direction="ASC", distinct=True, limit=request.max_sessions)
     session_ids = [sess[0] for sess in session_ids_raw]
     # logging.debug("session_ids: " + str(session_ids))
 

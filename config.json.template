@@ -10,4 +10,5 @@
         "DB_PORT" : 1234
     },
     "BATCH_SIZE":1000
+    "MAX_SESSIONS":-1
 }
