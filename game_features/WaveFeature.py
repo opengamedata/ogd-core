@@ -8,11 +8,11 @@ import typing
 import utils
 
 class WaveFeature:
+    schema:                      typing.Dict      = {}
+    db_columns:                  typing.Dict      = None
     _feature_list:               typing.Dict      = None
-    db_columns:                 typing.Dict = None
     _event_data_complex_types:   typing.List[str] = None
     _event_data_complex_schemas: typing.Dict      = None
-    schema:                     typing.Dict      = {}
     _initialized:                bool             = False
 
     @staticmethod
@@ -23,15 +23,16 @@ class WaveFeature:
         if WaveFeature.schema is None:
             logging.error("Could not find wave event_data_complex schemas at {}".format(schema_path))
         else:
-            _event_data_complex_types = WaveFeature.schema["schemas"].keys()
-            _event_data_complex_schemas = WaveFeature.schema["schemas"]
-            _feature_list = list(WaveFeature.schema["features"]["perlevel"].keys()) + list(WaveFeature.schema["features"]["aggregate"].keys())
-            db_columns = WaveFeature.schema["db_columns"]
+            WaveFeature.db_columns = WaveFeature.schema["db_columns"]
+            WaveFeature._event_data_complex_types = WaveFeature.schema["schemas"].keys()
+            WaveFeature._event_data_complex_schemas = WaveFeature.schema["schemas"]
+            WaveFeature._feature_list = list(WaveFeature.schema["features"]["perlevel"].keys()) + list(WaveFeature.schema["features"]["aggregate"].keys())
         WaveFeature._initialized = True
 
-    def __init__(self, max_level:int, min_level:int):
+    def __init__(self, session_id: int, max_level:int, min_level:int):
         if not WaveFeature._initialized:
             WaveFeature.initializeClass()
+        self.session_id:  int               = session_id
         self.last_adjust_type: str          = None
         self.max_level:   int               = max_level
         self.min_level:   int               = min_level
@@ -40,7 +41,7 @@ class WaveFeature:
         self.end_times:   typing.Dict       = {}
         # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
         # which maps each level to a value.
-        logging.info("schema keys: " + str(WaveFeature.schema.keys()))
+        # logging.info("schema keys: " + str(WaveFeature.schema.keys()))
         self.features:    typing.Dict       = { f:{lvl:0 for lvl in range(self.min_level,self.max_level+1)} for f in WaveFeature.schema["features"]["perlevel"] }
         # then, add in aggregate-only features.
         self.features.update({f:0 for f in WaveFeature.schema["features"]["aggregate"]})

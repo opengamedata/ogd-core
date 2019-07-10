@@ -85,7 +85,9 @@ class SQL:
         query = sel_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
         logging.debug("Running query: " + query)
         cursor.execute(query)
-        return cursor.fetchall() if fetch_results else None
+        result = cursor.fetchall() if fetch_results else None
+        logging.debug("Query complete.")
+        return result
 
     @staticmethod
     def server500Error(error: Exception):
