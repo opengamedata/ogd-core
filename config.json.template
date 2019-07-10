@@ -8,5 +8,6 @@
         "DB_NAME_DATA" : "database name",
         "table" : "table name",
         "DB_PORT" : 1234
-    }
+    },
+    "BATCH_SIZE":1000
 }
