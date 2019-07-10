@@ -1,37 +1,16 @@
-# library imports
+## import standard libraries
 import bisect
 import datetime
 import json
 import logging
 import typing
-# local file imports
+## import local files
 import utils
+from feature_extractors.Extractor import Extractor
+from schemas.WaveSchema import WaveSchema
 
-class WaveFeature:
-    schema:                      typing.Dict      = {}
-    db_columns:                  typing.Dict      = None
-    _feature_list:               typing.Dict      = None
-    _event_data_complex_types:   typing.List[str] = None
-    _event_data_complex_schemas: typing.Dict      = None
-    _initialized:                bool             = False
-
-    @staticmethod
-    def initializeClass(schema_path:str = "./schemas/", schema_name:str = "WAVES.json"):
-        logging.basicConfig(level=logging.DEBUG)
-        logging.info("called initializeClass")
-        WaveFeature.schema = utils.loadJSONFile(schema_name, schema_path)
-        if WaveFeature.schema is None:
-            logging.error("Could not find wave event_data_complex schemas at {}".format(schema_path))
-        else:
-            WaveFeature.db_columns = WaveFeature.schema["db_columns"]
-            WaveFeature._event_data_complex_types = WaveFeature.schema["schemas"].keys()
-            WaveFeature._event_data_complex_schemas = WaveFeature.schema["schemas"]
-            WaveFeature._feature_list = list(WaveFeature.schema["features"]["perlevel"].keys()) + list(WaveFeature.schema["features"]["aggregate"].keys())
-        WaveFeature._initialized = True
-
+class WaveExtractor(Extractor):
     def __init__(self, session_id: int, max_level:int, min_level:int):
-        if not WaveFeature._initialized:
-            WaveFeature.initializeClass()
         self.session_id:  int               = session_id
         self.last_adjust_type: str          = None
         self.max_level:   int               = max_level
@@ -41,10 +20,10 @@ class WaveFeature:
         self.end_times:   typing.Dict       = {}
         # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
         # which maps each level to a value.
-        # logging.info("schema keys: " + str(WaveFeature.schema.keys()))
-        self.features:    typing.Dict       = { f:{lvl:0 for lvl in range(self.min_level,self.max_level+1)} for f in WaveFeature.schema["features"]["perlevel"] }
+        # logging.info("schema keys: " + str(WaveExtractor.schema.keys()))
+        self.features:    typing.Dict       = { f:{lvl:0 for lvl in range(self.min_level,self.max_level+1)} for f in WaveExtractor.schema["features"]["perlevel"] }
         # then, add in aggregate-only features.
-        self.features.update({f:0 for f in WaveFeature.schema["features"]["aggregate"]})
+        self.features.update({f:0 for f in WaveSchema.schema()["features"]["aggregate"]})
 
     def extractFromRow(self, level:int, event_data_complex_parsed, event_client_time: datetime.datetime):
         if "event_custom" not in event_data_complex_parsed.keys():
@@ -84,27 +63,7 @@ class WaveFeature:
                     self.features["totalKnobAvgMaxMin"][level] += event_data_complex_parsed["max_val"] - event_data_complex_parsed["min_val"]
                 else: # log things specific to arrow move:
                     self.features["totalArrowMoves"][level] += 1
-
-    def _calcPercentMoves(self, key:str, level:int) -> int:
-        num = sum(self.features[key].values())
-        if num == 0:
-            return 0
-        else:
-            denom = sum(self.features["totalSliderMoves"].values()) \
-                  + sum(self.features["totalArrowMoves"].values())
-            return num/denom
-
-    def _calcLevelTime(self, lvl:int) -> int:
-        # use 0 if not played, -1 if not completed
-        if lvl in self.levels:
-            if lvl in self.start_times and lvl in self.end_times:
-                return (self.end_times[lvl] - self.start_times[lvl]).total_seconds()
-            else:
-                return -1
-        else:
-            return 0
                                                
-
     def calculateAggregateFeatures(self):
         if len(self.levels) > 0:
             # the percent____Moves features are per-level, but can't be calculated until the end.
@@ -138,7 +97,9 @@ class WaveFeature:
         file.write(",".join(columns))
         file.write("\n")
 
-    # TODO: write out per-level vals once for each level
+    # TODO: It looks like I might be assuming that dictionaries always have same order here.
+    # May need to revisit that issue. I mean, it should be fine because Python won't just go
+    # and change order for no reason, but still...
     def writeCurrentFeatures(self, file: typing.IO.writable):
         column_vals = []
         for key in self.features.keys():
@@ -149,3 +110,22 @@ class WaveFeature:
                 column_vals.append(str(self.features[key]))
         file.write(",".join(column_vals))
         file.write("\n")
+
+    def _calcPercentMoves(self, key:str, level:int) -> int:
+        num = sum(self.features[key].values())
+        if num == 0:
+            return 0
+        else:
+            denom = sum(self.features["totalSliderMoves"].values()) \
+                  + sum(self.features["totalArrowMoves"].values())
+            return num/denom
+
+    def _calcLevelTime(self, lvl:int) -> int:
+        # use 0 if not played, -1 if not completed
+        if lvl in self.levels:
+            if lvl in self.start_times and lvl in self.end_times:
+                return (self.end_times[lvl] - self.start_times[lvl]).total_seconds()
+            else:
+                return -1
+        else:
+            return 0

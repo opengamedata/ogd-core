@@ -1,5 +1,5 @@
 {
-    "schemas":{
+    "events":{
         "COMPLETE":{
             "event_custom":"string",
             "amplitude_left":"float",
