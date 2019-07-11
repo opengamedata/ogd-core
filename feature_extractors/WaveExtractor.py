@@ -7,23 +7,28 @@ import typing
 ## import local files
 import utils
 from feature_extractors.Extractor import Extractor
-from schemas.WaveSchema import WaveSchema
+from GameTable import GameTable
+from schemas.Schema import Schema
 
 class WaveExtractor(Extractor):
-    def __init__(self, session_id: int, max_level:int, min_level:int):
+    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
         self.session_id:  int               = session_id
         self.last_adjust_type: str          = None
-        self.max_level:   int               = max_level
-        self.min_level:   int               = min_level
+        self._level_range: range            = range(game_table.min_level, game_table.max_level+1)
         self.levels:      typing.List[int]  = []
         self.start_times: typing.Dict       = {}
         self.end_times:   typing.Dict       = {}
         # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
         # which maps each level to a value.
         # logging.info("schema keys: " + str(WaveExtractor.schema.keys()))
-        self.features:    typing.Dict       = { f:{lvl:0 for lvl in range(self.min_level,self.max_level+1)} for f in WaveExtractor.schema["features"]["perlevel"] }
+        self.features:    typing.Dict       = WaveExtractor._generateFeatureDict(self._level_range, game_schema)
+
+    @staticmethod
+    def _generateFeatureDict(level_range: range, game_schema: Schema):
+        features = { f:{lvl:0 for lvl in level_range} for f in game_schema.perlevel_features() }
         # then, add in aggregate-only features.
-        self.features.update({f:0 for f in WaveSchema.schema()["features"]["aggregate"]})
+        features.update({f:0 for f in game_schema.aggregate_features()})
+        return features
 
     def extractFromRow(self, level:int, event_data_complex_parsed, event_client_time: datetime.datetime):
         if "event_custom" not in event_data_complex_parsed.keys():
@@ -34,16 +39,19 @@ class WaveExtractor(Extractor):
             # handle cases for each type of event
             # NOTE: for BEGIN and COMPLETE, we assume only one event of each type happens.
             # If there are somehow multiples, the previous times are overwritten by the newer ones.
-            if event_data_complex_parsed["event_custom"] == "BEGIN":
+            event_type = event_data_complex_parsed["event_custom"]
+            if event_type == "BEGIN":
                 self.start_times[level] = event_client_time
-            if event_data_complex_parsed["event_custom"] == "COMPLETE":
+            elif event_type == "COMPLETE":
                 self.end_times[level] = event_client_time
                 self.features["completed"][level] = 1
-            elif event_data_complex_parsed["event_custom"] == "SUCCEED":
+            elif event_type == "SUCCEED":
                 pass
-            elif event_data_complex_parsed["event_custom"] == "FAIL":
+            elif event_type == "RESET_BTN_PRESS":
+                pass
+            elif event_type == "FAIL":
                 self.features["totalFails"][level] += 1
-            elif event_data_complex_parsed["event_custom"] in ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"] :
+            elif event_type in ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"] :
                 # first, log the type of move.
                 if event_data_complex_parsed["slider"] is not self.last_adjust_type:
                     self.last_adjust_type = event_data_complex_parsed["slider"]
@@ -63,21 +71,27 @@ class WaveExtractor(Extractor):
                     self.features["totalKnobAvgMaxMin"][level] += event_data_complex_parsed["max_val"] - event_data_complex_parsed["min_val"]
                 else: # log things specific to arrow move:
                     self.features["totalArrowMoves"][level] += 1
+            # elif event_type == "QUESTION_ANSWER":
+            #     if event_data_complex_parsed["answered"]
+            #     self.features["totalQuestionsAnswered"] += 1
+            #     if 
+            else:
+                raise Exception("Found an unrecognized event type: {}".format(event_type))
                                                
     def calculateAggregateFeatures(self):
         if len(self.levels) > 0:
             # the percent____Moves features are per-level, but can't be calculated until the end.
             self.features["percentAmplitudeMoves"] = {lvl: self._calcPercentMoves("totalAmplitudeMoves", lvl) \
                                                        if lvl in self.levels else 0
-                                                       for lvl in range(self.min_level, self.max_level+1)}
+                                                       for lvl in self._level_range}
             self.features["percentOffsetMoves"] = {lvl: self._calcPercentMoves("totalOffsetMoves", lvl) \
                                                        if lvl in self.levels else 0
-                                                       for lvl in range(self.min_level, self.max_level+1)}
+                                                       for lvl in self._level_range}
             self.features["percentWavelengthMoves"] = {lvl: self._calcPercentMoves("totalWavelengthMoves", lvl) \
                                                        if lvl in self.levels else 0
-                                                       for lvl in range(self.min_level, self.max_level+1)}
+                                                       for lvl in self._level_range}
             self.features["avgSliderMoves"] = sum(self.features["totalSliderMoves"].values()) / len(self.levels)
-            self.features["totalLevelTime"] = {lvl:self._calcLevelTime(lvl) for lvl in range(self.min_level, self.max_level+1)}
+            self.features["totalLevelTime"] = {lvl:self._calcLevelTime(lvl) for lvl in self._level_range}
             self.features["avgLevelTime"] = sum(self.features["totalLevelTime"].values()) / len(self.levels)
             self.features["avgKnobStdDevs"] = sum(self.features["totalKnobStdDevs"].values()) / len(self.levels)
             self.features["avgMoveTypeChanges"] = sum(self.features["totalMoveTypeChanges"].values()) / len(self.levels)
@@ -86,12 +100,14 @@ class WaveExtractor(Extractor):
             self.features["avgOffsetMoves"] = sum(self.features["totalOffsetMoves"].values()) / len(self.levels)
             self.features["avgWavelengthMoves"] = sum(self.features["totalWavelengthMoves"].values()) / len(self.levels)
 
-    def writeCSVHeader(self, file: typing.IO.writable):
+    @staticmethod
+    def writeCSVHeader(game_table: GameTable, game_schema: Schema, file: typing.IO.writable):
         columns = []
-        for key in self.features.keys():
-            if type(self.features[key]) is type({}):
+        features = WaveExtractor._generateFeatureDict(range(game_table.min_level, game_table.max_level), game_schema)
+        for key in features.keys():
+            if type(features[key]) is type({}):
                 # if it's a dictionary, expand.
-                columns.extend(["lvl{}_{}".format(lvl, key) for lvl in range(self.min_level,self.max_level+1)])
+                columns.extend(["lvl{}_{}".format(lvl, key) for lvl in range(game_table.min_level, game_table.max_level+1)])
             else:
                 columns.append(key)
         file.write(",".join(columns))
@@ -105,7 +121,7 @@ class WaveExtractor(Extractor):
         for key in self.features.keys():
             if type(self.features[key]) is type({}):
                 # if it's a dictionary, expand.
-                column_vals.extend([str(self.features[key][lvl]) for lvl in range(self.min_level,self.max_level+1)])
+                column_vals.extend([str(self.features[key][lvl]) for lvl in self._level_range])
             else:
                 column_vals.append(str(self.features[key]))
         file.write(",".join(column_vals))

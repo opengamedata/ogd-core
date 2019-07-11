@@ -5,8 +5,8 @@ import math
 import mysql.connector
 import typing
 import datetime
-
 import os
+
 
 def loadJSONFile(filename: str, path:str = "./"):
     if not filename.endswith(".json"):
@@ -24,7 +24,7 @@ def dateToFileSafeString(date: datetime.datetime):
     return "{}-{}-{}".format(date.month, date.day, date.year)
 
 def csvMetadata(game_name: str, begin_date: datetime.datetime, end_date: datetime.datetime,
-                      field_list: dict) -> str:
+                      field_list: typing.Dict[str,str]) -> str:
     template_str = \
     "## Field Day Open Game Data \n\
 # Retrieved from https://fielddaylab.wisc.edu/opengamedata \n\

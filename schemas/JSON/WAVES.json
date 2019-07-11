@@ -30,6 +30,16 @@
             "offset_right":"float",
             "closeness":"float"
         },
+        "RESET_BTN_PRESS":{
+            "event_custom":"string",
+            "amplitude_left":"float",
+            "wavelength_left":"float",
+            "offset_left":"float",
+            "amplitude_right":"float",
+            "wavelength_right":"float",
+            "offset_right":"float",
+            "closeness":"float"
+        },
         "SLIDER_MOVE_RELEASE":{
             "event_custom":"string",
             "slider":{"enum": ["AMPLITUDE", "OFFSET", "WAVELENGTH"]},
@@ -54,6 +64,12 @@
             "end_val":"float",
             "closeness":"float",
             "correct_val":"float"
+        },
+        "QUESTION_ANSWER":{
+            "event_custom":"string",
+            "answer":"int",
+            "answered":"int",
+            "question":"int"
         }
     },
 
@@ -83,7 +99,9 @@
             "avgAmplitudeMoves" : "totalAmplitudeMoves averaged over all levels",
             "avgOffsetMoves" : "totalOffsetMoves averaged over all levels",
             "avgWavelengthMoves" : "totalWavelengthMoves averaged over all levels",
-            "avgFails" : "totalFails averaged over all levels"
+            "avgFails" : "totalFails averaged over all levels",
+            "totalQuestionsAnswered" : "Number of in-game questions answered",
+            "totalQuestionsCorrect" : "Number of in-game questions answered correctly"
         }
     },
 

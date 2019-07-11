@@ -5,7 +5,7 @@ import logging
 import DataToCSV
 import utils
 from Request import Request
-from game_features.WaveFeature import WaveFeature
+from feature_extractors.WaveExtractor import WaveExtractor
 
 # Load settings, set up consts.
 settings = utils.loadJSONFile("config.json")
@@ -20,13 +20,12 @@ DB_PORT = db_settings['DB_PORT']
 logging.basicConfig(level=logging.DEBUG)
 
 db = utils.SQL.connectToMySQL(DB_HOST, DB_PORT, DB_USER, DB_PW, DB_NAME_DATA)
-WaveFeature.initializeClass("./game_features/schemas/", "WAVES.json")
 
 # TODO: if we have a GET call, handle here:
 
 # otherwise, for direct testing, handle here:
 req = Request(game_id="WAVES", start_date=datetime.datetime(2019, 3, 1, 0, 0, 0), \
-              end_date=datetime.datetime(2019, 3, 31, 23, 59, 59), max_sessions=5, min_moves=1, \
+              end_date=datetime.datetime(2019, 3, 31, 23, 59, 59), max_sessions=settings["MAX_SESSIONS"], min_moves=1, \
               read_cache=False, write_cache=False
              )
 DataToCSV.exportDataToCSV(db=db, settings=settings, request=req)
