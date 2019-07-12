@@ -12,23 +12,12 @@ from schemas.Schema import Schema
 
 class WaveExtractor(Extractor):
     def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
-        self.session_id:  int               = session_id
-        self.last_adjust_type: str          = None
-        self._level_range: range            = range(game_table.min_level, game_table.max_level+1)
-        self.levels:      typing.List[int]  = []
-        self.start_times: typing.Dict       = {}
-        self.end_times:   typing.Dict       = {}
-        # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
-        # which maps each level to a value.
-        # logging.info("schema keys: " + str(WaveExtractor.schema.keys()))
-        self.features:    typing.Dict       = WaveExtractor._generateFeatureDict(self._level_range, game_schema)
-
-    @staticmethod
-    def _generateFeatureDict(level_range: range, game_schema: Schema):
-        features = { f:{lvl:0 for lvl in level_range} for f in game_schema.perlevel_features() }
-        # then, add in aggregate-only features.
-        features.update({f:0 for f in game_schema.aggregate_features()})
-        return features
+        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
+        # we specifically want to set the default value for questionAnswered to -1, for unanswered.
+        for ans in self.features["questionAnswered"].keys():
+            self.features["questionAnswered"][ans] = -1
+        for q in self.features["questionCorrect"]:
+            self.features["questionCorrect"][q] = -1
 
     def extractFromRow(self, level:int, event_data_complex_parsed, event_client_time: datetime.datetime):
         if "event_custom" not in event_data_complex_parsed.keys():
@@ -41,40 +30,20 @@ class WaveExtractor(Extractor):
             # If there are somehow multiples, the previous times are overwritten by the newer ones.
             event_type = event_data_complex_parsed["event_custom"]
             if event_type == "BEGIN":
-                self.start_times[level] = event_client_time
+                self._extractFromBegin(level, event_client_time)
             elif event_type == "COMPLETE":
-                self.end_times[level] = event_client_time
-                self.features["completed"][level] = 1
+                self._extractFromComplete(level, event_client_time)
             elif event_type == "SUCCEED":
                 pass
             elif event_type == "RESET_BTN_PRESS":
-                pass
+                self._extractFromResetBtnPress(level)
             elif event_type == "FAIL":
-                self.features["totalFails"][level] += 1
+                self._extractFromFail(level)
             elif event_type in ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"] :
-                # first, log the type of move.
-                if event_data_complex_parsed["slider"] is not self.last_adjust_type:
-                    self.last_adjust_type = event_data_complex_parsed["slider"]
-                    # NOTE: We assume data are processed in order of event time.
-                    # If events are not sorted by time, the "move type changes" may be inaccurate.
-                    self.features["totalMoveTypeChanges"][level] += 1
-                if event_data_complex_parsed["slider"] == "AMPLITUDE":
-                    self.features["totalAmplitudeMoves"][level] += 1
-                elif event_data_complex_parsed["slider"] == "OFFSET":
-                    self.features["totalOffsetMoves"][level] += 1
-                if event_data_complex_parsed["slider"] == "WAVELENGTH":
-                    self.features["totalWavelengthMoves"][level] += 1
-                # then, log things specific to slider move:
-                if event_data_complex_parsed["event_custom"] == "SLIDER_MOVE_RELEASE":
-                    self.features["totalSliderMoves"][level] += 1
-                    self.features["totalKnobStdDevs"][level] += event_data_complex_parsed["stdev_val"]
-                    self.features["totalKnobAvgMaxMin"][level] += event_data_complex_parsed["max_val"] - event_data_complex_parsed["min_val"]
-                else: # log things specific to arrow move:
-                    self.features["totalArrowMoves"][level] += 1
-            # elif event_type == "QUESTION_ANSWER":
-            #     if event_data_complex_parsed["answered"]
-            #     self.features["totalQuestionsAnswered"] += 1
-            #     if 
+                self._extractFromMoveRelease(level, event_data_complex_parsed)
+            elif event_type == "QUESTION_ANSWER":
+                self._extractFromQuestionAnswer(event_data_complex_parsed)
+                # print("Q+A: " + str(event_data_complex_parsed))
             else:
                 raise Exception("Found an unrecognized event type: {}".format(event_type))
                                                
@@ -103,11 +72,11 @@ class WaveExtractor(Extractor):
     @staticmethod
     def writeCSVHeader(game_table: GameTable, game_schema: Schema, file: typing.IO.writable):
         columns = []
-        features = WaveExtractor._generateFeatureDict(range(game_table.min_level, game_table.max_level), game_schema)
+        features = WaveExtractor._generateFeatureDict(range(game_table.min_level, game_table.max_level+1), game_schema)
         for key in features.keys():
             if type(features[key]) is type({}):
                 # if it's a dictionary, expand.
-                columns.extend(["lvl{}_{}".format(lvl, key) for lvl in range(game_table.min_level, game_table.max_level+1)])
+                columns.extend(["lvl{}_{}".format(lvl, key) for lvl in features[key].keys()])
             else:
                 columns.append(key)
         file.write(",".join(columns))
@@ -121,11 +90,51 @@ class WaveExtractor(Extractor):
         for key in self.features.keys():
             if type(self.features[key]) is type({}):
                 # if it's a dictionary, expand.
-                column_vals.extend([str(self.features[key][lvl]) for lvl in self._level_range])
+                column_vals.extend([str(self.features[key][index]) for index in self.features[key].keys()])
             else:
                 column_vals.append(str(self.features[key]))
         file.write(",".join(column_vals))
         file.write("\n")
+
+    def _extractFromBegin(self, level, event_client_time):
+        self.start_times[level] = event_client_time
+
+    def _extractFromComplete(self, level, event_client_time):
+        self.end_times[level] = event_client_time
+        self.features["completed"][level] = 1
+
+    def _extractFromResetBtnPress(self, level):
+        self.features["totalResets"][level] += 1
+
+    def _extractFromFail(self, level):
+        self.features["totalFails"][level] += 1
+
+    def _extractFromMoveRelease(self, level, event_data_complex_parsed):
+        # first, log the type of move.
+        if event_data_complex_parsed["slider"] is not self.last_adjust_type:
+            self.last_adjust_type = event_data_complex_parsed["slider"]
+            # NOTE: We assume data are processed in order of event time.
+            # If events are not sorted by time, the "move type changes" may be inaccurate.
+            self.features["totalMoveTypeChanges"][level] += 1
+        if event_data_complex_parsed["slider"] == "AMPLITUDE":
+            self.features["totalAmplitudeMoves"][level] += 1
+        elif event_data_complex_parsed["slider"] == "OFFSET":
+            self.features["totalOffsetMoves"][level] += 1
+        if event_data_complex_parsed["slider"] == "WAVELENGTH":
+            self.features["totalWavelengthMoves"][level] += 1
+        # then, log things specific to slider move:
+        if event_data_complex_parsed["event_custom"] == "SLIDER_MOVE_RELEASE":
+            self.features["totalSliderMoves"][level] += 1
+            self.features["totalKnobStdDevs"][level] += event_data_complex_parsed["stdev_val"]
+            self.features["totalKnobAvgMaxMin"][level] += event_data_complex_parsed["max_val"] - event_data_complex_parsed["min_val"]
+        else: # log things specific to arrow move:
+            self.features["totalArrowMoves"][level] += 1
+
+    def _extractFromQuestionAnswer(self, event_data_complex_parsed):
+        q_num = event_data_complex_parsed["question"]
+        self.features["questionAnswered"][q_num] = event_data_complex_parsed["answered"]
+        correctness = 1 if event_data_complex_parsed["answered"] == event_data_complex_parsed["answer"] else 0
+        self.features["questionCorrect"][q_num] = correctness
 
     def _calcPercentMoves(self, key:str, level:int) -> int:
         num = sum(self.features[key].values())

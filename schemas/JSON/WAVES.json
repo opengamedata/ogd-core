@@ -80,16 +80,22 @@
             "totalLevelTime" : "time spent on a level",
             "totalKnobStdDevs": "sum of stdev_val for all slider moves in a level",
             "totalMoveTypeChanges" : "number of times 'slider' changes across a level",
-            "totalKnobAvgMaxMin" : "difference between max and min values of a slider move, doesn't seem to have anything to do with an avg",
+            "totalKnobAvgMaxMin" : "difference between max and min values of a slider move, doesn't seem to have anything to do with an avg. I don't know who named it this way",
             "totalAmplitudeMoves":"number of times the amplitude is adjusted",
             "totalOffsetMoves" : "number of times the offset is adjusted",
             "totalWavelengthMoves":"number of times the wavelength is adjusted",
+            "totalResets" : "number of times the user pressed the 'reset' button",
             "totalFails" : "number of 'Fail' events",
             "completed":"whether the level was completed or not",
             "percentAmplitudeMoves" : "percent of total moves that were amplitude adjustments in a level",
             "percentOffsetMoves" : "percent of total moves that were offset adjustments in a level",
             "percentWavelengthMoves" : "percent of total moves that were wavelength adjustments in a level"
         },
+        "per_custom_count": {
+            "questionAnswered" : {"count" : 4, "desc" : "The answer the user gave to a given question (or -1 if unanswered)"},
+            "questionCorrect" : {"count" : 4, "desc" : "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"}
+        },
+
         "aggregate":{
             "avgSliderMoves" : "totalSliderMoves averaged over all levels",
             "avgLevelTime" : "totalLevelTime averaged over all levels",
@@ -99,9 +105,7 @@
             "avgAmplitudeMoves" : "totalAmplitudeMoves averaged over all levels",
             "avgOffsetMoves" : "totalOffsetMoves averaged over all levels",
             "avgWavelengthMoves" : "totalWavelengthMoves averaged over all levels",
-            "avgFails" : "totalFails averaged over all levels",
-            "totalQuestionsAnswered" : "Number of in-game questions answered",
-            "totalQuestionsCorrect" : "Number of in-game questions answered correctly"
+            "avgFails" : "totalFails averaged over all levels"
         }
     },
 

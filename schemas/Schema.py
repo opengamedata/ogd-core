@@ -18,7 +18,9 @@ class Schema:
         if self._schema is None:
             logging.error("Could not find event_data_complex schemas at {}{}".format(schema_path, schema_name))
         else:
-            self._feature_list = list(self._schema["features"]["perlevel"].keys()) + list(self._schema["features"]["aggregate"].keys())
+            self._feature_list = list(self._schema["features"]["perlevel"].keys()) \
+                               + list(self._schema["features"]["per_custom_count"].keys()) \
+                               + list(self._schema["features"]["aggregate"].keys())
 
     def schema(self):
         return self._schema
@@ -34,6 +36,9 @@ class Schema:
 
     def perlevel_features(self):
         return self._schema["features"]["perlevel"]
+
+    def percount_features(self):
+        return self._schema["features"]["per_custom_count"]
 
     def aggregate_features(self):
         return self._schema["features"]["aggregate"]
