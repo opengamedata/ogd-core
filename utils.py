@@ -11,6 +11,8 @@ import os
 def loadJSONFile(filename: str, path:str = "./"):
     if not filename.endswith(".json"):
         filename = filename + ".json"
+    if not path.endswith("/"):
+        path = path + "/"
     ret_val = None
     try:
         json_file = open(path+filename, "r")
