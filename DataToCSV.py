@@ -3,6 +3,7 @@ import datetime
 import json
 import logging
 import math
+import os
 import typing
 ## import local files
 import utils
@@ -56,10 +57,15 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
     #                + db_cursor.column_names[complex_data_index+1:-1]
 
     # First, get the files and game-specific vars ready
-    raw_csv_file = open("{}/{}_{}_raw.csv".format(data_directory, utils.dateToFileSafeString(request.start_date),
-                                               utils.dateToFileSafeString(request.end_date)), "w")
-    proc_csv_file = open("{}/{}_{}_proc.csv".format(data_directory, utils.dateToFileSafeString(request.start_date),
-                                                 utils.dateToFileSafeString(request.end_date)), "w")
+    raw_csv_name = "{}_{}_raw.csv".format(utils.dateToFileSafeString(request.start_date),
+                                               utils.dateToFileSafeString(request.end_date))
+    raw_csv_full_path = "{}/{}".format(data_directory, raw_csv_name)
+    proc_csv_name = "{}_{}_proc.csv".format(utils.dateToFileSafeString(request.start_date),
+                                                 utils.dateToFileSafeString(request.end_date))
+    proc_csv_full_path = "{}/{}".format(data_directory, proc_csv_name)
+    raw_csv_file = open(raw_csv_full_path, "w")
+    proc_csv_file = open(proc_csv_full_path, "w")
+
     game_schema: Schema
     game_extractor: type
     if request.game_id == "WAVES":
@@ -128,5 +134,15 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
     #         db_cursor.execute(cache_query, cache_params)
     #     except Exception as err:
     #         utils.SQL.server500Error(logger, err)
+
+    # Finally, update the list of csv files.
+    existing_csvs = utils.loadJSONFile("file_list.json", data_directory) or {}
+    
+    existing_csv_file = open("{}/file_list.json".format(data_directory), "w")
+    raw_stat = os.stat(raw_csv_full_path)
+    existing_csvs[raw_csv_name] = {"name":raw_csv_name, "file size":raw_stat.st_size, "date modified":str(raw_stat.st_mtime)}
+    proc_stat = os.stat(proc_csv_full_path)
+    existing_csvs[proc_csv_name] = {"name":proc_csv_name, "file size":proc_stat.st_size, "date modified":str(proc_stat.st_mtime)}
+    existing_csv_file.write(str(existing_csvs))
 
     return "Successfully completed."
