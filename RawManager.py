@@ -22,7 +22,7 @@ class RawManager:
         self._game_table = game_table
         self._db_columns = game_schema.db_columns()
         self._JSON_columns = RawManager._generateJSONColumns(game_schema)
-        self._all_columns = game_table.column_names[:game_table.complex_data_index] + list(self._JSON_columns) + game_table.column_names[game_table.complex_data_index:]
+        self._all_columns = game_table.column_names[:game_table.complex_data_index] + self._JSON_columns + game_table.column_names[game_table.complex_data_index:]
         ## Not the nicest thing ever, but this function creates a dictionary that maps column names
         ## to indices, so we can store each line for raw csv as a list with guaranteed consistent order.
         self._columns_to_indices = {name:index for index,name in enumerate(self._all_columns)}
@@ -61,7 +61,7 @@ class RawManager:
 
     @staticmethod
     def _generateJSONColumns(game_schema: Schema):
-        JSON_column_set = {}
+        JSON_columns = []
         for event_type in game_schema.event_types():
-            JSON_column_set |= game_schema.events()[event_type].keys()
-        return JSON_column_set
+            JSON_columns.extend([col for col in game_schema.events()[event_type].keys() if col not in JSON_columns])
+        return JSON_columns
