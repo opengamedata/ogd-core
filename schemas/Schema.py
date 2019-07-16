@@ -1,11 +1,12 @@
 ## import standard libraries
 import logging
+import os
 import typing
 ## import local files
 import utils
 
 class Schema:
-    def __init__(self, schema_name:str, schema_path:str = "./schemas/JSON/"):
+    def __init__(self, schema_name:str, schema_path:str = os.path.dirname(__file__) + "/JSON/"):
         ## define instance vars
         self._schema:                     typing.Dict      = {}
         self._feature_list:               typing.Dict      = None
