@@ -1,4 +1,5 @@
 ## import standard libraries
+import datetime
 import json
 import logging
 import math
@@ -91,10 +92,15 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
     for next_slice in session_slices:
         # grab data for the given session range. Sort by event time, so 
         filt = "app_id=\"WAVES\" AND session_id BETWEEN {} AND {}".format(next_slice[0], next_slice[-1])
+        start = datetime.datetime.now()
         next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=db_settings["table"],
                                         filter= filt, sort_columns=["client_time"], sort_direction = "ASC",
                                         distinct=False)
+        end = datetime.datetime.now()
+        time_delta = end - start
+        print("Query time:      {} min, {} sec".format(math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60))
         # now, we process each row.
+        start = datetime.datetime.now()
         for row in next_data_set:
             session_id = row[game_table.session_id_index]
             if session_id in game_table.session_ids:
@@ -102,6 +108,9 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
                 proc_mgr.ProcessRow(row)
             else:
                 logging.warn("Found a session which was in the slice but not in the list of sessions for processing.")
+        end = datetime.datetime.now()
+        time_delta = end - start
+        print("Processing time: {} min, {} sec".format(math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60))
         
     # after processing all rows for all slices, write out the session data and reset for next slice.
     raw_mgr.WriteRawCSVLines()
