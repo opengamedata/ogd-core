@@ -20,6 +20,14 @@ DB_PORT = db_settings['DB_PORT']
 # set up other global vars as needed:
 logging.basicConfig(level=logging.DEBUG)
 
+print("Content-type:text/html\r\n\r\n \
+       <html> \
+       <head> \
+           <title>Parser CGI test</test>\
+       </head> \
+       <body> \
+           <p>")
+
 db = utils.SQL.connectToMySQL(DB_HOST, DB_PORT, DB_USER, DB_PW, DB_NAME_DATA)
 
 # TODO: if we have a GET call, handle here:
@@ -35,3 +43,6 @@ end = datetime.datetime.now()
 
 time_delta = end - start
 print("Total time taken: {} min, {} sec".format(math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60))
+print("</p>")
+print("</body>")
+print("</html>")
