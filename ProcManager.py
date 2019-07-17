@@ -22,6 +22,8 @@ class ProcManager:
         session_id = row[self._game_table.session_id_index]
         col = row[self._game_table.complex_data_index]
         complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[self._game_table.event_index]}
+        if "event_custom" not in complex_data_parsed.keys():
+            complex_data_parsed["event_custom"] = row[self._game_table.event_index]
         ## ensure we have an extractor for the given session:
         if not session_id in self._session_extractors.keys():
             self._session_extractors[session_id] = self._ExtractorClass(session_id, self._game_table, self._game_schema)

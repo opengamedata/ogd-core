@@ -15,9 +15,9 @@ class WaveExtractor(Extractor):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
         # we specifically want to set the default value for questionAnswered to -1, for unanswered.
         for ans in self.features["questionAnswered"].keys():
-            self.features["questionAnswered"][ans] = -1
+            self.features["questionAnswered"][ans]["val"] = -1
         for q in self.features["questionCorrect"]:
-            self.features["questionCorrect"][q] = -1
+            self.features["questionCorrect"][q]["val"] = -1
 
     def extractFromRow(self, level:int, event_data_complex_parsed, event_client_time: datetime.datetime):
         if "event_custom" not in event_data_complex_parsed.keys():
@@ -50,64 +50,54 @@ class WaveExtractor(Extractor):
     def calculateAggregateFeatures(self):
         if len(self.levels) > 0:
             # the percent____Moves features are per-level, but can't be calculated until the end.
-            self.features["percentAmplitudeMoves"] = {lvl: self._calcPercentMoves("totalAmplitudeMoves", lvl) \
-                                                       if lvl in self.levels else 0
+            self.features["percentAmplitudeMoves"] = {lvl: {"prefix":"lvl",
+                                                            "val":self._calcPercentMoves("totalAmplitudeMoves", lvl) if lvl in self.levels else 0}
+                                                      for lvl in self._level_range}
+            self.features["percentOffsetMoves"] = {lvl: {"prefix":"lvl",
+                                                         "val":self._calcPercentMoves("totalOffsetMoves", lvl) if lvl in self.levels else 0}
+                                                   for lvl in self._level_range}
+            self.features["percentWavelengthMoves"] = {lvl: {"prefix":"lvl",
+                                                             "val":self._calcPercentMoves("totalWavelengthMoves", lvl) if lvl in self.levels else 0}
                                                        for lvl in self._level_range}
-            self.features["percentOffsetMoves"] = {lvl: self._calcPercentMoves("totalOffsetMoves", lvl) \
-                                                       if lvl in self.levels else 0
-                                                       for lvl in self._level_range}
-            self.features["percentWavelengthMoves"] = {lvl: self._calcPercentMoves("totalWavelengthMoves", lvl) \
-                                                       if lvl in self.levels else 0
-                                                       for lvl in self._level_range}
-            self.features["avgSliderMoves"] = sum(self.features["totalSliderMoves"].values()) / len(self.levels)
-            self.features["totalLevelTime"] = {lvl:self._calcLevelTime(lvl) for lvl in self._level_range}
-            self.features["avgLevelTime"] = sum(self.features["totalLevelTime"].values()) / len(self.levels)
-            self.features["avgKnobStdDevs"] = sum(self.features["totalKnobStdDevs"].values()) / len(self.levels)
-            self.features["avgMoveTypeChanges"] = sum(self.features["totalMoveTypeChanges"].values()) / len(self.levels)
-            self.features["avgKnobAvgMaxMin"] = sum(self.features["totalKnobAvgMaxMin"].values()) / len(self.levels)
-            self.features["avgAmplitudeMoves"] = sum(self.features["totalAmplitudeMoves"].values()) / len(self.levels)
-            self.features["avgOffsetMoves"] = sum(self.features["totalOffsetMoves"].values()) / len(self.levels)
-            self.features["avgWavelengthMoves"] = sum(self.features["totalWavelengthMoves"].values()) / len(self.levels)
+            num_lvl = len(self.levels)
+            all_vals = [elem["val"] for elem in self.features["totalSliderMoves"].values()]
+            self.features["avgSliderMoves"] = sum(all_vals) / num_lvl
 
-    @staticmethod
-    def writeCSVHeader(game_table: GameTable, game_schema: Schema, file: typing.IO.writable):
-        columns = []
-        features = WaveExtractor._generateFeatureDict(range(game_table.min_level, game_table.max_level+1), game_schema)
-        for key in features.keys():
-            if type(features[key]) is type({}):
-                # if it's a dictionary, expand.
-                columns.extend(["lvl{}_{}".format(lvl, key) for lvl in features[key].keys()])
-            else:
-                columns.append(key)
-        file.write(",".join(columns))
-        file.write("\n")
+            for lvl in self._level_range:
+                self.features["totalLevelTime"][lvl]["val"] = self._calcLevelTime(lvl)
+            all_vals = [elem["val"] for elem in self.features["totalLevelTime"].values()]
+            self.features["avgLevelTime"] = sum(all_vals) / num_lvl
 
-    # TODO: It looks like I might be assuming that dictionaries always have same order here.
-    # May need to revisit that issue. I mean, it should be fine because Python won't just go
-    # and change order for no reason, but still...
-    def writeCurrentFeatures(self, file: typing.IO.writable):
-        column_vals = []
-        for key in self.features.keys():
-            if type(self.features[key]) is type({}):
-                # if it's a dictionary, expand.
-                column_vals.extend([str(self.features[key][index]) for index in self.features[key].keys()])
-            else:
-                column_vals.append(str(self.features[key]))
-        file.write(",".join(column_vals))
-        file.write("\n")
+            all_vals = [elem["val"] for elem in self.features["totalKnobStdDevs"].values()]
+            self.features["avgKnobStdDevs"] = sum(all_vals) / num_lvl
+
+            all_vals = [elem["val"] for elem in self.features["totalMoveTypeChanges"].values()]
+            self.features["avgMoveTypeChanges"] = sum(all_vals) / num_lvl
+
+            all_vals = [elem["val"] for elem in self.features["totalKnobAvgMaxMin"].values()]
+            self.features["avgKnobAvgMaxMin"] = sum(all_vals) / num_lvl
+
+            all_vals = [elem["val"] for elem in self.features["totalAmplitudeMoves"].values()]
+            self.features["avgAmplitudeMoves"] = sum(all_vals) / num_lvl
+
+            all_vals = [elem["val"] for elem in self.features["totalOffsetMoves"].values()]
+            self.features["avgOffsetMoves"] = sum(all_vals) / num_lvl
+
+            all_vals = [elem["val"] for elem in self.features["totalWavelengthMoves"].values()]
+            self.features["avgWavelengthMoves"] = sum(all_vals) / num_lvl
 
     def _extractFromBegin(self, level, event_client_time):
         self.start_times[level] = event_client_time
 
     def _extractFromComplete(self, level, event_client_time):
         self.end_times[level] = event_client_time
-        self.features["completed"][level] = 1
+        self.features["completed"][level]["val"] = 1
 
     def _extractFromResetBtnPress(self, level):
-        self.features["totalResets"][level] += 1
+        self.features["totalResets"][level]["val"] += 1
 
     def _extractFromFail(self, level):
-        self.features["totalFails"][level] += 1
+        self.features["totalFails"][level]["val"] += 1
 
     def _extractFromMoveRelease(self, level, event_data_complex_parsed):
         # first, log the type of move.
@@ -115,34 +105,36 @@ class WaveExtractor(Extractor):
             self.last_adjust_type = event_data_complex_parsed["slider"]
             # NOTE: We assume data are processed in order of event time.
             # If events are not sorted by time, the "move type changes" may be inaccurate.
-            self.features["totalMoveTypeChanges"][level] += 1
+            self.features["totalMoveTypeChanges"][level]["val"] += 1
         if event_data_complex_parsed["slider"] == "AMPLITUDE":
-            self.features["totalAmplitudeMoves"][level] += 1
+            self.features["totalAmplitudeMoves"][level]["val"] += 1
         elif event_data_complex_parsed["slider"] == "OFFSET":
-            self.features["totalOffsetMoves"][level] += 1
+            self.features["totalOffsetMoves"][level]["val"] += 1
         if event_data_complex_parsed["slider"] == "WAVELENGTH":
-            self.features["totalWavelengthMoves"][level] += 1
+            self.features["totalWavelengthMoves"][level]["val"] += 1
         # then, log things specific to slider move:
         if event_data_complex_parsed["event_custom"] == "SLIDER_MOVE_RELEASE":
-            self.features["totalSliderMoves"][level] += 1
-            self.features["totalKnobStdDevs"][level] += event_data_complex_parsed["stdev_val"]
-            self.features["totalKnobAvgMaxMin"][level] += event_data_complex_parsed["max_val"] - event_data_complex_parsed["min_val"]
+            self.features["totalSliderMoves"][level]["val"] += 1
+            self.features["totalKnobStdDevs"][level]["val"] += event_data_complex_parsed["stdev_val"]
+            self.features["totalKnobAvgMaxMin"][level]["val"] += event_data_complex_parsed["max_val"] - event_data_complex_parsed["min_val"]
         else: # log things specific to arrow move:
-            self.features["totalArrowMoves"][level] += 1
+            self.features["totalArrowMoves"][level]["val"] += 1
 
     def _extractFromQuestionAnswer(self, event_data_complex_parsed):
         q_num = event_data_complex_parsed["question"]
-        self.features["questionAnswered"][q_num] = event_data_complex_parsed["answered"]
+        self.features["questionAnswered"][q_num]["val"] = event_data_complex_parsed["answered"]
         correctness = 1 if event_data_complex_parsed["answered"] == event_data_complex_parsed["answer"] else 0
-        self.features["questionCorrect"][q_num] = correctness
+        self.features["questionCorrect"][q_num]["val"] = correctness
 
     def _calcPercentMoves(self, key:str, level:int) -> int:
-        num = sum(self.features[key].values())
+        all_vals = [elem["val"] for elem in self.features[key].values()]
+        num = sum(all_vals)
         if num == 0:
             return 0
         else:
-            denom = sum(self.features["totalSliderMoves"].values()) \
-                  + sum(self.features["totalArrowMoves"].values())
+            slider_vals = [elem["val"] for elem in self.features["totalSliderMoves"].values()]
+            arrow_vals = [elem["val"] for elem in self.features["totalArrowMoves"].values()]
+            denom = sum(slider_vals) + sum(arrow_vals)
             return num/denom
 
     def _calcLevelTime(self, lvl:int) -> int:

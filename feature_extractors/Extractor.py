@@ -21,15 +21,43 @@ class Extractor(abc.ABC):
 
     @staticmethod
     def _generateFeatureDict(level_range: range, game_schema: Schema):
-        # start with per-level features.
         # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
-        # which maps each level to a value.
-        features = { f:{lvl:0 for lvl in level_range} for f in game_schema.perlevel_features() }
-        # now, add custom-count features.
-        features.update( {f:{num:0 for num in range(0, game_schema.percount_features()[f]["count"]) } for f in game_schema.percount_features()} )
+        # which maps each level to a value and prefix.
+        perlevels = game_schema.perlevel_features()
+        features = {f:{lvl:{"val":0, "prefix":"lvl"} for lvl in level_range } for f in perlevels}
+        # next, do something similar for other per-custom-count features.
+        percounts = game_schema.percount_features()
+        features.update({f:{num:{"val":0, "prefix":percounts[f]["prefix"]} for num in range(0, percounts[f]["count"]) } for f in percounts})
         # finally, add in aggregate-only features.
         features.update({f:0 for f in game_schema.aggregate_features()})
         return features
+
+    @staticmethod
+    def writeCSVHeader(game_table: GameTable, game_schema: Schema, file: typing.IO.writable):
+        columns = []
+        features = Extractor._generateFeatureDict(range(game_table.min_level, game_table.max_level+1), game_schema)
+        for key in features.keys():
+            if type(features[key]) is type({}):
+                # if it's a dictionary, expand.
+                columns.extend(["{}{}_{}".format(features[key][num]["prefix"], num, key) for num in features[key].keys()])
+            else:
+                columns.append(key)
+        file.write(",".join(columns))
+        file.write("\n")
+
+    # TODO: It looks like I might be assuming that dictionaries always have same order here.
+    # May need to revisit that issue. I mean, it should be fine because Python won't just go
+    # and change order for no reason, but still...
+    def writeCurrentFeatures(self, file: typing.IO.writable):
+        column_vals = []
+        for key in self.features.keys():
+            if type(self.features[key]) is type({}):
+                # if it's a dictionary, expand.
+                column_vals.extend([str(self.features[key][num]["val"]) for num in self.features[key].keys()])
+            else:
+                column_vals.append(str(self.features[key]))
+        file.write(",".join(column_vals))
+        file.write("\n")
 
     @abc.abstractmethod
     def extractFromRow(self, level:int, event_data_complex_parsed, event_client_time: datetime):
@@ -37,13 +65,4 @@ class Extractor(abc.ABC):
 
     @abc.abstractmethod
     def calculateAggregateFeatures(self):
-        pass
-
-    @staticmethod
-    @abc.abstractmethod
-    def writeCSVHeader(game_table: GameTable, game_schema: Schema, file: typing.IO.writable):
-        pass
-
-    @abc.abstractmethod
-    def writeCurrentFeatures(self, file: typing.IO.writable):
         pass

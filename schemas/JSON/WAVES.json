@@ -92,8 +92,8 @@
             "percentWavelengthMoves" : "percent of total moves that were wavelength adjustments in a level"
         },
         "per_custom_count": {
-            "questionAnswered" : {"count" : 4, "desc" : "The answer the user gave to a given question (or -1 if unanswered)"},
-            "questionCorrect" : {"count" : 4, "desc" : "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"}
+            "questionAnswered" : {"count" : 4, "prefix": "QA", "desc" : "The answer the user gave to a given question (or -1 if unanswered)"},
+            "questionCorrect"  : {"count" : 4, "prefix": "QA", "desc" : "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"}
         },
 
         "aggregate":{
