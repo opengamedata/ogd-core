@@ -97,14 +97,17 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
                      range( 0, math.ceil(num_sess / slice_size) )]
     for next_slice in session_slices:
         # grab data for the given session range. Sort by event time, so 
-        filt = "app_id=\"WAVES\" AND session_id BETWEEN {} AND {}".format(next_slice[0], next_slice[-1])
+        # TODO: Take the "WAVES" out of the line of code below.
+        filt = "app_id=\"{}\" AND session_id BETWEEN {} AND {}".format(request.game_id, next_slice[0], next_slice[-1])
         start = datetime.datetime.now()
         next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=db_settings["table"],
                                         filter= filt, sort_columns=["client_time"], sort_direction = "ASC",
                                         distinct=False)
         end = datetime.datetime.now()
         time_delta = end - start
-        print("Query time:      {} min, {} sec".format(math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60))
+        print("Query time:      {} min, {5:.3f} sec to get {} rows".format( \
+              math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(next_data_set) ) \
+             )
         # now, we process each row.
         start = datetime.datetime.now()
         for row in next_data_set:
@@ -116,14 +119,14 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
                 logging.warn("Found a session which was in the slice but not in the list of sessions for processing.")
         end = datetime.datetime.now()
         time_delta = end - start
-        print("Processing time: {} min, {} sec".format(math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60))
+        print("Processing time: {} min, {:.3f} sec".format(math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60))
         
-    # after processing all rows for all slices, write out the session data and reset for next slice.
-    raw_mgr.WriteRawCSVLines()
-    raw_mgr.ClearLines()
-    proc_mgr.calculateAggregateFeatures()
-    proc_mgr.WriteProcCSVLines()
-    proc_mgr.ClearLines()
+        # after processing all rows for all slices, write out the session data and reset for next slice.
+        raw_mgr.WriteRawCSVLines()
+        raw_mgr.ClearLines()
+        proc_mgr.calculateAggregateFeatures()
+        proc_mgr.WriteProcCSVLines()
+        proc_mgr.ClearLines()
 
     ## NOTE: I've left the bit of cache code ported from the old logger,
     ## on the off chance we ever decide to use caching again.
@@ -143,6 +146,7 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
     existing_csvs[raw_csv_name] = {"name":raw_csv_name, "file size":raw_stat.st_size, "date modified":str(raw_stat.st_mtime)}
     proc_stat = os.stat(proc_csv_full_path)
     existing_csvs[proc_csv_name] = {"name":proc_csv_name, "file size":proc_stat.st_size, "date modified":str(proc_stat.st_mtime)}
-    existing_csv_file.write(str(existing_csvs))
+    for csv in existing_csvs.values():
+        existing_csv_file.write(json.dumps(csv))
 
     return "Successfully completed."

@@ -1,5 +1,6 @@
 ## import standard libraries
 import json
+import logging
 import typing
 ## import local files
 import GameTable
@@ -33,12 +34,16 @@ class ProcManager:
         This is helpful if we're processing a lot of data and want to avoid
         Eating too much memory. """
     def ClearLines(self):
+        logging.debug(f"Clearing {len(self._session_extractors)} entries from ProcManager.")
         self._session_extractors = {}
 
     def calculateAggregateFeatures(self):
         for extractor in self._session_extractors.values():
             extractor.calculateAggregateFeatures()
 
+    """ Function to write out the header for a processed csv file.
+        The corresponding function should be a static member of each extractor class.
+        So, use whatever extractor class the manager was created to work with."""
     def WriteProcCSVHeader(self):
         self._ExtractorClass.writeCSVHeader(game_table=self._game_table, game_schema=self._game_schema, file=self._proc_file)
 

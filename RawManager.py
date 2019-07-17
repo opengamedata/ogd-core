@@ -1,5 +1,6 @@
 ## import standard libraries
 import json
+import logging
 import typing
 ## import local files
 import GameTable
@@ -50,6 +51,7 @@ class RawManager:
         This is helpful if we're processing a lot of data and want to avoid
         Eating too much memory. """
     def ClearLines(self):
+        logging.debug(f"Clearing {len(self._lines)} entries from RawManager.")
         self._lines = []
 
     def WriteRawCSVHeader(self):
