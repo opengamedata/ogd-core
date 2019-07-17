@@ -18,7 +18,7 @@ DB_HOST = db_settings['DB_HOST']
 DB_PORT = db_settings['DB_PORT']
 
 # set up other global vars as needed:
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.WARNING)
 
 print("Content-type:text/html\r\n\r\n \
        <html> \
@@ -37,7 +37,9 @@ req = Request(game_id="WAVES", start_date=datetime.datetime(2019, 3, 1, 0, 0, 0)
               end_date=datetime.datetime(2019, 3, 31, 23, 59, 59), max_sessions=settings["MAX_SESSIONS"], min_moves=1, \
               read_cache=False, write_cache=False
              )
+import cProfile
 start = datetime.datetime.now()
+# cProfile.run("DataToCSV.exportDataToCSV(db=db, settings=settings, request=req)")
 DataToCSV.exportDataToCSV(db=db, settings=settings, request=req)
 end = datetime.datetime.now()
 
