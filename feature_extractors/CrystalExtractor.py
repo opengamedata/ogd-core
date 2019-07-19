@@ -23,6 +23,9 @@ class CrystalExtractor(Extractor):
             self.features["wasCorrect"][q]["val"] = -1
 
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+        if self.features["sessionID"] == 0:
+            self.features["sessionID"] = row_with_complex_parsed[game_table.session_id_index]
+            self.features["persistentSessionID"] = row_with_complex_parsed[game_table.pers_session_id_index]
         level = row_with_complex_parsed[game_table.level_index]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
         event_client_time = row_with_complex_parsed[game_table.client_time_index]
