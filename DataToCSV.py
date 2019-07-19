@@ -13,6 +13,7 @@ from RawManager import RawManager
 from Request import Request
 from schemas.Schema import Schema
 from feature_extractors.WaveExtractor import WaveExtractor
+from feature_extractors.CrystalExtractor import CrystalExtractor
 
 def exportDataToCSV(db, settings, request: Request):
     db_settings = settings["db_config"]
@@ -57,11 +58,11 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
     #                + db_cursor.column_names[complex_data_index+1:-1]
 
     # First, get the files and game-specific vars ready
-    raw_csv_name = "{}_{}_raw.csv".format(utils.dateToFileSafeString(request.start_date),
-                                               utils.dateToFileSafeString(request.end_date))
+    raw_csv_name = "{}_{}_{}_raw.csv".format(request.game_id,
+        utils.dateToFileSafeString(request.start_date), utils.dateToFileSafeString(request.end_date))
     raw_csv_full_path = "{}/{}".format(data_directory, raw_csv_name)
-    proc_csv_name = "{}_{}_proc.csv".format(utils.dateToFileSafeString(request.start_date),
-                                                 utils.dateToFileSafeString(request.end_date))
+    proc_csv_name = "{}_{}_{}_proc.csv".format(request.game_id,
+        utils.dateToFileSafeString(request.start_date), utils.dateToFileSafeString(request.end_date))
     proc_csv_full_path = "{}/{}".format(data_directory, proc_csv_name)
     raw_csv_file = open(raw_csv_full_path, "w")
     proc_csv_file = open(proc_csv_full_path, "w")
@@ -71,6 +72,9 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
     if request.game_id == "WAVES":
         game_schema = Schema(schema_name="WAVES.json")
         game_extractor = WaveExtractor
+    elif request.game_id == "CRYSTAL":
+        game_schema = Schema(schema_name="CRYSTAL.json")
+        game_extractor = CrystalExtractor
     else:
         raise Exception("Got an invalid game ID!")
     # Now, we're ready to set up the managers:

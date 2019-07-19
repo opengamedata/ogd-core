@@ -33,7 +33,11 @@ db = utils.SQL.connectToMySQL(DB_HOST, DB_PORT, DB_USER, DB_PW, DB_NAME_DATA)
 # TODO: if we have a GET call, handle here:
 
 # otherwise, for direct testing, handle here:
-req = Request(game_id="WAVES", start_date=datetime.datetime(2019, 3, 1, 0, 0, 0), \
+# req = Request(game_id="WAVES", start_date=datetime.datetime(2019, 3, 1, 0, 0, 0), \
+#               end_date=datetime.datetime(2019, 3, 31, 23, 59, 59), max_sessions=settings["MAX_SESSIONS"], min_moves=1, \
+#               read_cache=False, write_cache=False
+#              )
+req = Request(game_id="CRYSTAL", start_date=datetime.datetime(2019, 3, 1, 0, 0, 0), \
               end_date=datetime.datetime(2019, 3, 31, 23, 59, 59), max_sessions=settings["MAX_SESSIONS"], min_moves=1, \
               read_cache=False, write_cache=False
              )
