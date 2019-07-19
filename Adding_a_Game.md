@@ -60,7 +60,8 @@ Below is a sample of JSON schema formatting:
 e.g. For the "Wave" game, we would name the extractor `WaveExtractor` (as opposed to `app_id + "Extractor` => `WAVEExtractor`).
 The `Extractor` subclass *must* implement the following functions:
    - `__init__(self, session_id, game_table, game_schema)`: At minimum, this function should call the super constructor. `session_id` has the id of the session we are extracting data from, `game_table` contains information about the database table, and `game_schema` contains the data from the schema we defined in step 1. The super constructor initializes all features to have values of 0. If a different default value is preferred for any features, it would be a good idea to set those values here, after calling the super constructor.
-   - `extractFromRow(self, level, event_data_complex_parsed, event_client_time)`: This function is responsible for extracting feature data from a single database entry. The `level` and `event_client_time` tell us what level the event came from (so we know which level to use for per-level features), and when the event occurred (useful for features tracking time per level, for example). `event_data_complex_parsed` is a dictionary, parsed from JSON in the `event_data_complex` column of the database. If step 1 was completed correctly, the `event_data_complex_parsed` ought to match one of the `event`s from the JSON schema.
+   - `extractFromRow(self, row_with_complex_parsed, game_table)`: This function is responsible for extracting feature data from a single database entry. The `row_with_complex_parsed` should a row returned from the database, but with the item at `event_data_complex` already parsed into a Python dictionary from JSON. If step 1 was completed correctly, the `event_data_complex` ought to match one of the `event`s from the JSON schema.
+   The `game_table` holds information about the layout of the database table, as usual. It can be used to get items from the row at specific columns.
    This function should contain code to handle extraction from each `event` type. By convention, the actual extraction code should be split into separate private functions for each `event` type, so that we can get a cleanly-formatted `extractFromRow` function, as below:
      ```python
         event_type = event_data_complex_parsed["event_custom"]
@@ -77,5 +78,14 @@ The `Extractor` subclass *must* implement the following functions:
             self.end_times[level] = event_client_time
             self.features["completed"][level]["val"] = 1
      ```
-     Also note that in general, we use `event_data_complex_parsed["event_custom"]` to distinguish event types. Even if the original database entry did not have `event_custom` as a part of the JSON, the `ProcManager` class will insert the value of the `event` database column as `event_custom` in the `event_data_complex_parsed` object, so there is at least _some_ way to tell what type of event is being processed.
+     Also note that in general, we use `row_with_complex_parsed["event_data_complex]["event_custom"]` to distinguish event types. Even if the original database entry did not have `event_custom` as a part of the JSON, the `ProcManager` class will insert the value of the `event` database column as `event_custom` in the `row_with_complex_parsed["event_data_complex]` object, so there is at least _some_ way to tell what type of event is being processed.
     - `calculateAggregateFeatures(self)`: This function should use the values in its per-level and per-custom-count features to calculate the aggregate (across whole session) features. The code for calculating individual aggregate features may be broken into separate private functions if desired, although in practice most aggregate features can be calculated with just a couple lines of code apiece, so this is not usually necessary. This function will generally be called just once during each extractor's lifetime, after all rows corresponding to that session have been processed. 
+
+3. Next, we need to ensure DataToCSV knows what the possible games are. In the section of code (presently around line 70) dealing with loading of the schema file, we need to add a case to the if-elif-else block. It should check if the request object has a game_id matching our new game, and if so, we must call the Schema constructor with the name of the schema file from step 1, and we must set `game_extractor` to the Extractor class we created for the game. For example:
+```python
+    if request.game_id == "WAVES":
+        game_schema = Schema(schema_name="WAVES.json")
+        game_extractor = WaveExtractor
+```
+
+4. Once those three steps are completed, the only thing left is to call DataToCSV with a request using the new game's app_id. This is usually done from main.py.
