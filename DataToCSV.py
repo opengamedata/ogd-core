@@ -1,3 +1,7 @@
+## @package DataToCSV.py
+#  A package to handle processing of stuff from our database,
+#  for export to CSV files.
+
 ## import standard libraries
 import datetime
 import json
@@ -15,6 +19,9 @@ from schemas.Schema import Schema
 from feature_extractors.WaveExtractor import WaveExtractor
 from feature_extractors.CrystalExtractor import CrystalExtractor
 
+## The main function to use for feature extraction and csv export.
+#  @param db An active database connection
+#  @param settings 
 def exportDataToCSV(db, settings, request: Request):
     db_settings = settings["db_config"]
     if request.game_id is not None:
