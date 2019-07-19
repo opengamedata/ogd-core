@@ -15,8 +15,6 @@ class Extractor(abc.ABC):
         self.last_adjust_type: str          = None
         self._level_range: range            = range(game_table.min_level, game_table.max_level+1)
         self.levels:      typing.List[int]  = []
-        self.start_times: typing.Dict       = {}
-        self.end_times:   typing.Dict       = {}
         self.features:    typing.Dict       = Extractor._generateFeatureDict(self._level_range, game_schema)
 
     @staticmethod
@@ -60,7 +58,7 @@ class Extractor(abc.ABC):
         file.write("\n")
 
     @abc.abstractmethod
-    def extractFromRow(self, level:int, event_data_complex_parsed, event_client_time: datetime):
+    def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
         pass
 
     @abc.abstractmethod

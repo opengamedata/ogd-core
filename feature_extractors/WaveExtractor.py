@@ -13,13 +13,18 @@ from schemas.Schema import Schema
 class WaveExtractor(Extractor):
     def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
+        self.start_times: typing.Dict       = {}
+        self.end_times:   typing.Dict       = {}
         # we specifically want to set the default value for questionAnswered to -1, for unanswered.
         for ans in self.features["questionAnswered"].keys():
             self.features["questionAnswered"][ans]["val"] = -1
         for q in self.features["questionCorrect"]:
             self.features["questionCorrect"][q]["val"] = -1
 
-    def extractFromRow(self, level:int, event_data_complex_parsed, event_client_time: datetime.datetime):
+    def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+        level = row[game_table.level_index]
+        event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
+        event_client_time = row_with_complex_parsed[game_table.client_time_index]
         if "event_custom" not in event_data_complex_parsed.keys():
             logging.error("Invalid event_data_complex, does not contain event_custom field!")
         else:
