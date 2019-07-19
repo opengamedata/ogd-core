@@ -36,6 +36,7 @@ class GameTable:
         self.session_ids = GameTable._getSessionIDs(db_cursor, db, db_settings, request)
         # logging.debug("session_ids: " + str(session_ids))
     
+    # TODO: Currently, this is retrieved separately from the schema. We ought to just load in one place, and check for a match or something.
     @staticmethod
     def _getColumnNames(db_cursor, db, db_settings):
         db_cursor.execute("SHOW COLUMNS from {}.{}".format(db.database, db_settings["table"]))

@@ -18,19 +18,13 @@ class ProcManager:
         self._proc_file:          typing.IO.writable = proc_csv_file
         self._session_extractors: typing.Dict[str, self._ExtractorClass] = {}
 
-    def ProcessRow(self, row: typing.Tuple):
-        session_id = row[self._game_table.session_id_index]
-        col = row[self._game_table.complex_data_index]
-        complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[self._game_table.event_index]}
-        if "event_custom" not in complex_data_parsed.keys():
-            complex_data_parsed["event_custom"] = row[self._game_table.event_index]
+    def ProcessRow(self, row_with_complex_parsed: typing.Tuple):
+        session_id = row_with_complex_parsed[self._game_table.session_id_index]
         ## ensure we have an extractor for the given session:
         if not session_id in self._session_extractors.keys():
             self._session_extractors[session_id] = self._ExtractorClass(session_id, self._game_table, self._game_schema)
         ## do the actual extraction.
-        self._session_extractors[session_id].extractFromRow( \
-            row[self._game_table.level_index], complex_data_parsed, row[self._game_table.client_time_index] \
-            )
+        self._session_extractors[session_id].extractFromRow(row_with_complex_parsed, self._game_table)
 
     """ Empty the list of lines stored by the ProcManager.
         This is helpful if we're processing a lot of data and want to avoid

@@ -29,9 +29,9 @@ class RawManager:
         self._columns_to_indices = {name:index for index,name in enumerate(self._all_columns)}
         self._raw_file = raw_csv_file
 
-    def ProcessRow(self, row: typing.Tuple):
+    def ProcessRow(self, row_with_complex_parsed: typing.Tuple):
         line = [None] * len(self._all_columns)
-        for i,col in enumerate(row):
+        for i,col in enumerate(row_with_complex_parsed):
             # So, I'm only using columns_to_indices for the JSON stuff,
             # since the other stuff comes in tuples, which have a consistent order.
             # A little inconsistent, but... whatever.
@@ -41,7 +41,7 @@ class RawManager:
             elif i > self._game_table.complex_data_index:
                 line[i + len(self._JSON_columns) - 1] = col
             else: # must be at complex_data_index
-                complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[self._game_table.event_index]}
+                complex_data_parsed = row_with_complex_parsed[self._game_table.complex_data_index]
                 for key in complex_data_parsed.keys():
                     index = self._columns_to_indices[key]
                     line[index] = complex_data_parsed[key]

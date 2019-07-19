@@ -105,13 +105,24 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
                                         distinct=False)
         end = datetime.datetime.now()
         time_delta = end - start
-        print("Query time:      {} min, {5:.3f} sec to get {} rows".format( \
+        print("Query time:      {:d} min, {:.3f} sec to get {:d} rows".format( \
               math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(next_data_set) ) \
              )
         # now, we process each row.
         start = datetime.datetime.now()
         for row in next_data_set:
             session_id = row[game_table.session_id_index]
+
+            # parse out complex data from json
+            col = row[game_table.complex_data_index]
+            complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[game_table.event_index]}
+            # make sure we get *something* in the event_custom name
+            if "event_custom" not in complex_data_parsed.keys():
+                complex_data_parsed["event_custom"] = row[game_table.event_index]
+            # replace the json with parsed version.
+            row = list(row)
+            row[game_table.complex_data_index] = complex_data_parsed
+
             if session_id in game_table.session_ids:
                 raw_mgr.ProcessRow(row)
                 proc_mgr.ProcessRow(row)
