@@ -22,7 +22,7 @@ class WaveExtractor(Extractor):
             self.features["questionCorrect"][q]["val"] = -1
 
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
-        level = row[game_table.level_index]
+        level = row_with_complex_parsed[game_table.level_index]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
         event_client_time = row_with_complex_parsed[game_table.client_time_index]
         if "event_custom" not in event_data_complex_parsed.keys():
