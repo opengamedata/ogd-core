@@ -16,6 +16,7 @@ class CrystalExtractor(Extractor):
         self.start_times: typing.Dict       = {}
         self.end_times:   typing.Dict       = {}
         self.totalMoleculeDragDuration      = {}
+        self.features["sessionID"] = session_id
         # we specifically want to set the default value for questionAnswered to -1, for unanswered.
         for ans in self.features["answerGiven"].keys():
             self.features["answerGiven"][ans]["val"] = -1
@@ -23,8 +24,9 @@ class CrystalExtractor(Extractor):
             self.features["wasCorrect"][q]["val"] = -1
 
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
-        if self.features["sessionID"] == 0:
-            self.features["sessionID"] = row_with_complex_parsed[game_table.session_id_index]
+        if row_with_complex_parsed[game_table.session_id_index] != self.session_id:
+            raise Exception("Got a row with incorrect session id!")
+        if self.features["persistentSessionID"] == 0:
             self.features["persistentSessionID"] = row_with_complex_parsed[game_table.pers_session_id_index]
         level = row_with_complex_parsed[game_table.level_index]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
