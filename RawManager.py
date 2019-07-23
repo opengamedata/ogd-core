@@ -23,7 +23,7 @@ class RawManager:
         self._game_table = game_table
         self._db_columns = game_schema.db_columns()
         self._JSON_columns = RawManager._generateJSONColumns(game_schema)
-        self._all_columns = game_table.column_names[:game_table.complex_data_index] + self._JSON_columns + game_table.column_names[game_table.complex_data_index:]
+        self._all_columns = game_table.column_names[:game_table.complex_data_index] + self._JSON_columns + game_table.column_names[game_table.complex_data_index+1:]
         ## Not the nicest thing ever, but this function creates a dictionary that maps column names
         ## to indices, so we can store each line for raw csv as a list with guaranteed consistent order.
         self._columns_to_indices = {name:index for index,name in enumerate(self._all_columns)}
@@ -37,14 +37,17 @@ class RawManager:
             # A little inconsistent, but... whatever.
             # I don't know of a good way to get column names with the row data.
             if i < self._game_table.complex_data_index:
-                line[i] = col
+                line[i] = f"\"{col}\"" if type(col) == str else col
             elif i > self._game_table.complex_data_index:
-                line[i + len(self._JSON_columns) - 1] = col
+                index = i + len(self._JSON_columns) - 1
+                line[index] = f"\"{col}\"" if type(col) == str else col
             else: # must be at complex_data_index
                 complex_data_parsed = row_with_complex_parsed[self._game_table.complex_data_index]
                 for key in complex_data_parsed.keys():
                     index = self._columns_to_indices[key]
-                    line[index] = complex_data_parsed[key]
+                    item = complex_data_parsed[key]
+                    line[index] = f"\"{str(item)}\"" if (type(item) == type({}) or type(item) == str) \
+                             else item
         self._lines.append(",".join([str(item) for item in line]) + "\n")
 
     """ Empty the list of lines stored by the RawManager.
