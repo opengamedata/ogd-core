@@ -70,19 +70,6 @@ f"## Field Day Open Game Data \n\
     template_str += "\n"
     return template_str
 
-# class Numeric:
-#     @staticmethod
-#     def replaceNans(arr: typing.Dict) -> typing.Dict:
-#         ret_val = arr
-#         for key in ret_val.keys():
-#             if type(ret_val[key]) is dict:
-#                  ret_val[key] = Numeric.replaceNans(ret_val[key])
-#             elif type(ret_val[key]) is not str and math.isnan(ret_val[key]):
-#                 ret_val[key] = 'NaN'
-#             elif type(ret_val[key]) is not str and math.isinf(ret_val[key]):
-#                 ret_val[key] = 'Inf'
-#         return ret_val
-
 ## @class SQL
 #  A utility class containing some functions to assist in retrieving from a database.
 #  Specifically, helps to connect to a database, make selections, and provides
@@ -162,10 +149,3 @@ class SQL:
         logging.error("HTTP Response: " + http.HTTPStatus.INTERNAL_SERVER_ERROR.value \
                                 + http.HTTPStatus.INTERNAL_SERVER_ERROR.phrase )
         logging.error(str(error))
-
-# def run_tests():
-#     fails = []
-#     test_data = {}
-#     # add test data below as follows:
-#     # create list of tuples, where each tuple has function args as first input, and expected output as second.
-#     # Finally, map function name as string to the list, and everything else goes automatically.
