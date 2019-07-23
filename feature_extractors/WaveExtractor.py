@@ -15,6 +15,7 @@ class WaveExtractor(Extractor):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
         self.start_times: typing.Dict       = {}
         self.end_times:   typing.Dict       = {}
+        self.features["sessionID"] = session_id
         # we specifically want to set the default value for questionAnswered to -1, for unanswered.
         for ans in self.features["questionAnswered"].keys():
             self.features["questionAnswered"][ans]["val"] = -1
@@ -22,6 +23,10 @@ class WaveExtractor(Extractor):
             self.features["questionCorrect"][q]["val"] = -1
 
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+        if row_with_complex_parsed[game_table.session_id_index] != self.session_id:
+            raise Exception("Got a row with incorrect session id!")
+        if self.features["persistentSessionID"] == 0:
+            self.features["persistentSessionID"] = row_with_complex_parsed[game_table.pers_session_id_index]
         level = row_with_complex_parsed[game_table.level_index]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
         event_client_time = row_with_complex_parsed[game_table.client_time_index]
@@ -106,7 +111,7 @@ class WaveExtractor(Extractor):
 
     def _extractFromMoveRelease(self, level, event_data_complex_parsed):
         # first, log the type of move.
-        if event_data_complex_parsed["slider"] is not self.last_adjust_type:
+        if event_data_complex_parsed["slider"] != self.last_adjust_type:
             self.last_adjust_type = event_data_complex_parsed["slider"]
             # NOTE: We assume data are processed in order of event time.
             # If events are not sorted by time, the "move type changes" may be inaccurate.

@@ -97,6 +97,8 @@
         },
 
         "aggregate":{
+            "sessionID":"The player's session ID number for this play session",
+            "persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",
             "avgSliderMoves" : "totalSliderMoves averaged over all levels",
             "avgLevelTime" : "totalLevelTime averaged over all levels",
             "avgKnobStdDevs" : "totalKnobStdDevs averaged over all levels",
