@@ -65,12 +65,12 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
     #                + db_cursor.column_names[complex_data_index+1:-1]
 
     # First, get the files and game-specific vars ready
-    raw_csv_name = "{}_{}_{}_raw.csv".format(request.game_id,
-        utils.dateToFileSafeString(request.start_date), utils.dateToFileSafeString(request.end_date))
-    raw_csv_full_path = "{}/{}".format(data_directory, raw_csv_name)
-    proc_csv_name = "{}_{}_{}_proc.csv".format(request.game_id,
-        utils.dateToFileSafeString(request.start_date), utils.dateToFileSafeString(request.end_date))
-    proc_csv_full_path = "{}/{}".format(data_directory, proc_csv_name)
+    dataset_id = "{}_{}_to_{}".format(request.game_id, request.start_date.strftime("%Y%m%d"),\
+                                      request.end_date.strftime("%Y%m%d"))
+    raw_csv_name = f"{dataset_id}_raw.csv"
+    raw_csv_full_path = f"{data_directory}/{raw_csv_name}"
+    proc_csv_name  = f"{dataset_id}_proc.csv"
+    proc_csv_full_path = f"{data_directory}/{proc_csv_name}"
     raw_csv_file = open(raw_csv_full_path, "w")
     proc_csv_file = open(proc_csv_full_path, "w")
 
@@ -103,17 +103,17 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
 
     num_sess = len(game_table.session_ids)
     slice_size = settings["BATCH_SIZE"]
-    session_slices = [[game_table.session_ids[i] for i in \
-                     range( j*slice_size, min((j+1)*slice_size - 1, num_sess) )] for j in \
-                     range( 0, math.ceil(num_sess / slice_size) )]
+    session_slices = [[game_table.session_ids[i] for i in
+                      range( j*slice_size, min((j+1)*slice_size - 1, num_sess) )] for j in
+                      range( 0, math.ceil(num_sess / slice_size) )]
     for next_slice in session_slices:
         # grab data for the given session range. Sort by event time, so 
         # TODO: Take the "WAVES" out of the line of code below.
         filt = "app_id=\"{}\" AND session_id BETWEEN {} AND {}".format(request.game_id, next_slice[0], next_slice[-1])
         start = datetime.datetime.now()
         next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=db_settings["table"],
-                                        filter= filt, sort_columns=["client_time"], sort_direction = "ASC",
-                                        distinct=False)
+                                         filter=filt, sort_columns=["client_time"], sort_direction = "ASC",
+                                         distinct=False)
         end = datetime.datetime.now()
         time_delta = end - start
         print("Query time:      {:d} min, {:.3f} sec to get {:d} rows".format( \
@@ -161,14 +161,21 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
     #         utils.SQL.server500Error(logger, err)
 
     # Finally, update the list of csv files.
-    existing_csvs = utils.loadJSONFile("file_list.json", data_directory) or {}
-    
-    existing_csv_file = open("{}/file_list.json".format(data_directory), "w")
+    existing_csvs = utils.loadJSONFile("file_list.json", settings["DATA_DIR"]) or {}
+
+    existing_csv_file = open("{}/file_list.json".format(settings["DATA_DIR"]), "w")
+    if not request.game_id in existing_csvs:
+        existing_csvs[request.game_id] = {}
     raw_stat = os.stat(raw_csv_full_path)
-    existing_csvs[raw_csv_name] = {"name":raw_csv_name, "file size":raw_stat.st_size, "date modified":str(raw_stat.st_mtime)}
     proc_stat = os.stat(proc_csv_full_path)
-    existing_csvs[proc_csv_name] = {"name":proc_csv_name, "file size":proc_stat.st_size, "date modified":str(proc_stat.st_mtime)}
-    for csv in existing_csvs.values():
-        existing_csv_file.write(json.dumps(csv))
+    existing_csvs[request.game_id][dataset_id] = \
+        {"raw":raw_csv_full_path,
+         "proc":proc_csv_full_path,
+         "start_date":request.start_date.strftime("%m-%d-%Y"),
+         "end_date":request.end_date.strftime("%m-%d-%Y"),
+         "date_modified":datetime.datetime.now().strftime("%m-%d-%Y"),
+         "sessions":num_sess
+         }
+    existing_csv_file.write(json.dumps(existing_csvs, indent=4))
 
     return "Successfully completed."
