@@ -111,8 +111,8 @@
             "completesCount":"The number of time the player (pressed the submit button)/(completed the level) in the level"
         },
         "per_custom_count": {
-            "answerGiven" : {"count" : 3, "prefix": "QA", "desc" : "The answer the user gave to a given question (or -1 if unanswered)"},
-            "wasCorrect"  : {"count" : 3, "prefix": "QA", "desc" : "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"}
+            "questionAnswered" : {"count" : 3, "prefix": "QA", "desc" : "The answer the user gave to a given question (or -1 if unanswered)"},
+            "questionCorrect"  : {"count" : 3, "prefix": "QA", "desc" : "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"}
         },
         "aggregate":{
             "sessionID":"The player's session ID number for this play session",
