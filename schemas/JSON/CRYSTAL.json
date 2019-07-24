@@ -100,15 +100,15 @@
 
     "features": {
         "perlevel":{
-            "eventCount":"Number of events in the given level",
+            "eventCount":"Number of player events in the given level",
             "durationInSecs":"Time (in seconds) spent on the given level",
             "stampRotateCount":"Number of stamp rotate events in the level. These are MOLECULE_ROTATE events with isStamp set true.",
             "singleRotateCount":"Number of single rotation events in the level",
             "moleculeMoveCount":"Number of molecule move (MOLECULE_RELEASE) events in the level",
             "clearBtnPresses":"Number of times the clear button was pressed in the level",
             "avgMoleculeDragDurationInSecs":"The average number of seconds each drag took, over the given level",
-            "finalScore":"The final score the player received for this level, among all plays",
-            "completesCount":"The number of completion events in the level"
+            "finalScore":"The max final score given when submit button pressed, for this level, among all plays",
+            "completesCount":"The number of time the player (pressed the submit button)/(completed the level) in the level"
         },
         "per_custom_count": {
             "answerGiven" : {"count" : 3, "prefix": "QA", "desc" : "The answer the user gave to a given question (or -1 if unanswered)"},
