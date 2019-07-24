@@ -78,7 +78,7 @@
             "totalSliderMoves":"slider moves across a given level",
             "totalArrowMoves":"arrow moves across a given level",
             "totalLevelTime" : "time spent on a level",
-            "sliderAveStdDevs": "Average of stdev_val for all slider moves in a level",
+            "sliderAvgStdDevs": "Average of stdev_val for all slider moves in a level",
             "totalMoveTypeChanges" : "number of times 'slider' changes across a level",
             "sliderAvgRange" : "difference between max and min values of a slider move, averaged together across a level",
             "totalResets" : "number of times the user pressed the 'reset' button across a level",
