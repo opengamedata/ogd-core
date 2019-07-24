@@ -15,6 +15,9 @@ class WaveExtractor(Extractor):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
         self.start_times: typing.Dict       = {}
         self.end_times:   typing.Dict       = {}
+        self.amp_move_counts: typing.Dict   = {}
+        self.off_move_counts: typing.Dict   = {}
+        self.wave_move_counts: typing.Dict  = {}
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
         # we specifically want to set the default value for questionAnswered to -1, for unanswered.
         for ans in self.features.getValByName(feature_name="questionAnswered").keys():
@@ -36,6 +39,9 @@ class WaveExtractor(Extractor):
         else:
             if not level in self.levels:
                 bisect.insort(self.levels, level)
+                self.amp_move_counts[level] = 0
+                self.off_move_counts[level] = 0
+                self.wave_move_counts[level] = 0
             # handle cases for each type of event
             # NOTE: for BEGIN and COMPLETE, we assume only one event of each type happens.
             # If there are somehow multiples, the previous times are overwritten by the newer ones.
@@ -60,19 +66,26 @@ class WaveExtractor(Extractor):
                                                
     def calculateAggregateFeatures(self):
         if len(self.levels) > 0:
-            # the percent____Moves features are per-level, but can't be calculated until the end.
-            percents = {lvl: {"prefix":"lvl",
-                              "val":self._calcPercentMoves("totalAmplitudeMoves", lvl) if lvl in self.levels else 0}
-                        for lvl in self._level_range}
-            self.features.setValByName(feature_name="percentAmplitudeMoves", new_value=percents)
-            percents = {lvl: {"prefix":"lvl",
-                              "val":self._calcPercentMoves("totalOffsetMoves", lvl) if lvl in self.levels else 0}
-                        for lvl in self._level_range}
-            self.features.setValByName(feature_name="percentOffsetMoves", new_value=percents) 
-            percents = {lvl: {"prefix":"lvl",
-                              "val":self._calcPercentMoves("totalWavelengthMoves", lvl) if lvl in self.levels else 0}
-                        for lvl in self._level_range}
-            self.features.setValByName(feature_name="percentWavelengthMoves", new_value=percents)
+            # Calculate per-level averages and percentages, since we can't calculate
+            # them until we know how many total events occur.
+            for lvl in self._level_range:
+                total_slider_moves = self.features.getValByIndex(feature_name="totalSliderMoves", index=lvl)
+                total_moves = total_slider_moves + self.features.getValByIndex(feature_name="totalArrowMoves", index=lvl)
+                # percents of each move type
+                val   = self.amp_move_counts[lvl] / total_moves if total_moves > 0 else total_moves
+                self.features.setValByIndex(feature_name="percentAmplitudeMoves", index=lvl, new_value=val)
+                val   = self.off_move_counts[lvl] / total_moves if total_moves > 0 else total_moves
+                self.features.setValByIndex(feature_name="percentOffsetMoves", index=lvl, new_value=val)
+                val   = self.wave_move_counts[lvl] / total_moves if total_moves > 0 else total_moves
+                self.features.setValByIndex(feature_name="percentWavelengthMoves", index=lvl, new_value=val)
+                # avg slider std devs and ranges.
+                total_slider_stdevs = self.features.getValByIndex(feature_name="sliderAvgStdDevs", index=lvl)
+                val = total_slider_stdevs / total_slider_moves if total_slider_moves > 0 else total_slider_moves
+                self.features.setValByIndex(feature_name="sliderAvgStdDevs", index=lvl, new_value=val)
+                total_slider_range  = self.features.getValByIndex(feature_name="sliderAvgRange", index=lvl)
+                val = total_slider_range / total_slider_moves if total_slider_moves > 0 else total_slider_moves
+                self.features.setValByIndex(feature_name="sliderAvgRange", index=lvl, new_value=val)
+            # Then, calculate true aggregates.
             num_lvl = len(self.levels)
             all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalSliderMoves").values()]
             self.features.setValByName(feature_name="avgSliderMoves", new_value=sum(all_vals) / num_lvl)
@@ -82,22 +95,22 @@ class WaveExtractor(Extractor):
             all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalLevelTime").values()]
             self.features.setValByName(feature_name="avgLevelTime", new_value=sum(all_vals) / num_lvl)
 
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalKnobStdDevs").values()]
+            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="sliderAveStdDevs").values()]
             self.features.setValByName(feature_name="avgKnobStdDevs", new_value=sum(all_vals) / num_lvl)
 
             all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalMoveTypeChanges").values()]
             self.features.setValByName(feature_name="avgMoveTypeChanges", new_value=sum(all_vals) / num_lvl)
 
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalKnobAvgMaxMin").values()]
+            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgRange").values()]
             self.features.setValByName(feature_name="avgKnobAvgMaxMin", new_value=sum(all_vals) / num_lvl)
 
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalAmplitudeMoves").values()]
+            all_vals = list(self.amp_move_counts.values())
             self.features.setValByName(feature_name="avgAmplitudeMoves", new_value=sum(all_vals) / num_lvl)
 
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalOffsetMoves").values()]
+            all_vals = list(self.off_move_counts.values())
             self.features.setValByName(feature_name="avgOffsetMoves", new_value=sum(all_vals) / num_lvl)
 
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalWavelengthMoves").values()]
+            all_vals = list(self.wave_move_counts.values())
             self.features.setValByName(feature_name="avgWavelengthMoves", new_value=sum(all_vals) / num_lvl)
 
     def _extractFromBegin(self, level, event_client_time):
@@ -121,22 +134,28 @@ class WaveExtractor(Extractor):
             # If events are not sorted by time, the "move type changes" may be inaccurate.
             self.features.incValByIndex(feature_name="totalMoveTypeChanges", index=level)
         if event_data_complex_parsed["slider"] == "AMPLITUDE":
-            self.features.incValByIndex(feature_name="totalAmplitudeMoves", index=level)
+            self.amp_move_counts[level] += 1
         elif event_data_complex_parsed["slider"] == "OFFSET":
-            self.features.incValByIndex(feature_name="totalOffsetMoves", index=level)
-        if event_data_complex_parsed["slider"] == "WAVELENGTH":
-            self.features.incValByIndex(feature_name="totalWavelengthMoves", index=level)
+            self.off_move_counts[level] += 1
+        elif event_data_complex_parsed["slider"] == "WAVELENGTH":
+            self.wave_move_counts[level] += 1
         # then, log things specific to slider move:
         if event_data_complex_parsed["event_custom"] == "SLIDER_MOVE_RELEASE":
             self.features.incValByIndex(feature_name="totalSliderMoves", index=level)
-            self.features.incValByIndex(feature_name="totalKnobStdDevs", index=level, increment=event_data_complex_parsed["stdev_val"])
-            self.features.incValByIndex(feature_name="totalKnobAvgMaxMin", index=level, increment=event_data_complex_parsed["max_val"] - event_data_complex_parsed["min_val"])
+            # These will be averages over the level. Per-row, just accumulate,
+            # then we'll divide in the aggregate feature step.
+            self.features.incValByIndex(feature_name="sliderAvgStdDevs", index=level,
+                                        increment=event_data_complex_parsed["stdev_val"])
+            self.features.incValByIndex(feature_name="sliderAvgRange", index=level,
+                                        increment= event_data_complex_parsed["max_val"]
+                                                 - event_data_complex_parsed["min_val"])
         else: # log things specific to arrow move:
             self.features.incValByIndex(feature_name="totalArrowMoves", index=level)
 
     def _extractFromQuestionAnswer(self, event_data_complex_parsed):
         q_num = event_data_complex_parsed["question"]
-        self.features.setValByIndex(feature_name="questionAnswered", index=q_num, new_value=event_data_complex_parsed["answered"])
+        self.features.setValByIndex(feature_name="questionAnswered", index=q_num,
+                                    new_value=event_data_complex_parsed["answered"])
         correctness = 1 if event_data_complex_parsed["answered"] == event_data_complex_parsed["answer"] else 0
         self.features.setValByIndex(feature_name="questionCorrect", index=q_num, new_value=correctness)
 
