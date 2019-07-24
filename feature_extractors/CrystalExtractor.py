@@ -18,10 +18,10 @@ class CrystalExtractor(Extractor):
         self.totalMoleculeDragDuration      = {}
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
         # we specifically want to set the default value for questionAnswered to -1, for unanswered.
-        for ans in self.features.getValByName(feature_name="answerGiven").keys():
-            self.features.setValByIndex(feature_name="answerGiven", index=ans, new_value= -1)
-        for q in self.features.getValByName(feature_name="wasCorrect"):
-            self.features.setValByIndex(feature_name="wasCorrect", index=q, new_value= -1)
+        for ans in self.features.getValByName(feature_name="questionAnswered").keys():
+            self.features.setValByIndex(feature_name="questionAnswered", index=ans, new_value= -1)
+        for q in self.features.getValByName(feature_name="questionCorrect"):
+            self.features.setValByIndex(feature_name="questionCorrect", index=q, new_value= -1)
 
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
         if row_with_complex_parsed[game_table.session_id_index] != self.session_id:
@@ -121,9 +121,9 @@ class CrystalExtractor(Extractor):
 
     def _extractFromQuestionAnswer(self, event_data_complex_parsed):
         q_num = event_data_complex_parsed["question"]
-        self.features.setValByIndex(feature_name="answerGiven", index=q_num, new_value=event_data_complex_parsed["answered"])
+        self.features.setValByIndex(feature_name="questionAnswered", index=q_num, new_value=event_data_complex_parsed["answered"])
         correctness = 1 if event_data_complex_parsed["answered"] == event_data_complex_parsed["answer"] else 0
-        self.features.setValByIndex(feature_name="wasCorrect", index=q_num, new_value= correctness)
+        self.features.setValByIndex(feature_name="questionCorrect", index=q_num, new_value= correctness)
 
     def _calcLevelTime(self, lvl:int, play_num:int) -> int:
         # use 0 if not played, -1 if not completed
