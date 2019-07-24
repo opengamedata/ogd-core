@@ -16,18 +16,19 @@ class CrystalExtractor(Extractor):
         self.start_times: typing.Dict       = {}
         self.end_times:   typing.Dict       = {}
         self.totalMoleculeDragDuration      = {}
-        self.features["sessionID"] = session_id
+        self.features.setValByName(feature_name="sessionID", new_value=session_id)
         # we specifically want to set the default value for questionAnswered to -1, for unanswered.
-        for ans in self.features["answerGiven"].keys():
-            self.features["answerGiven"][ans]["val"] = -1
-        for q in self.features["wasCorrect"]:
-            self.features["wasCorrect"][q]["val"] = -1
+        for ans in self.features.getValByName(feature_name="answerGiven").keys():
+            self.features.setValByIndex(feature_name="answerGiven", index=ans, new_value= -1)
+        for q in self.features.getValByName(feature_name="wasCorrect"):
+            self.features.setValByIndex(feature_name="wasCorrect", index=q, new_value= -1)
 
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
         if row_with_complex_parsed[game_table.session_id_index] != self.session_id:
             raise Exception("Got a row with incorrect session id!")
-        if self.features["persistentSessionID"] == 0:
-            self.features["persistentSessionID"] = row_with_complex_parsed[game_table.pers_session_id_index]
+        if self.features.getValByName(feature_name="persistentSessionID") == 0:
+            self.features.setValByName(feature_name="persistentSessionID",
+                                       new_value   = row_with_complex_parsed[game_table.pers_session_id_index])
         level = row_with_complex_parsed[game_table.level_index]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
         event_client_time = row_with_complex_parsed[game_table.client_time_index]
@@ -40,8 +41,8 @@ class CrystalExtractor(Extractor):
                 self.start_times[level] = []
                 self.end_times[level] = []
             # First, record the fact that an event has occurred for the level & session
-            self.features["eventCount"][level]["val"] += 1
-            self.features["sessionEventCount"] += 1
+            self.features.incValByIndex(feature_name="eventCount", index=level)
+            self.features.incAggregateVal(feature_name="sessionEventCount")
             # handle cases for each type of event
             event_type = event_data_complex_parsed["event_custom"]
             if event_type == "BEGIN":
@@ -63,15 +64,15 @@ class CrystalExtractor(Extractor):
                                                
     def calculateAggregateFeatures(self):
         for level in self.levels:
-            count = self.features["moleculeMoveCount"][level]["val"]
+            count = self.features.getFeatureByIndex(feature_name="moleculeMoveCount", index=level)
             avg = 0 if count == 0 else self.totalMoleculeDragDuration[level] / count
-            self.features["avgMoleculeDragDurationInSecs"][level]["val"] = avg
+            self.features.setValByIndex(feature_name="avgMoleculeDragDurationInSecs", index=level, new_value=avg)
             # for each each time we started a play in the level, do stuff.
             for play in range(len(self.start_times[level])):
                 if len(self.end_times[level]) > play:
                     time_taken = self._calcLevelTime(level, play)
-                    self.features["durationInSecs"][level]["val"] += time_taken
-                    self.features["sessionDurationInSecs"] += time_taken
+                    self.features.incValByIndex(feature_name="durationInSecs", index=level, increment=time_taken)
+                    self.features.incAggregateVal(feature_name="sessionDurationInSecs", increment=time_taken)
 
     def _extractFromBegin(self, level, event_client_time):
         # we'll maintain lists of start times for each level, since there may
@@ -91,38 +92,38 @@ class CrystalExtractor(Extractor):
         while len(self.end_times) < len(self.start_times)-1:
             self.end_times[level].append(None)
         self.end_times[level].append(event_client_time)
-        self.features["completesCount"][level]["val"] += 1
+        self.features.incValByIndex(feature_name="completesCount", index=level, increment=1)
         score = event_data_complex_parsed["stability"]["pack"] \
               + event_data_complex_parsed["stability"]["charge"]
-        self.features["finalScore"][level]["val"] = score
+        self.features.setValByIndex(feature_name="finalScore", index=level, new_value=score)
 
     def _extractFromMoleculeRelease(self, level, event_data_complex_parsed):
         if not level in self.totalMoleculeDragDuration.keys():
             self.totalMoleculeDragDuration[level] = 0
         self.totalMoleculeDragDuration[level] += event_data_complex_parsed["time"]
-        self.features["moleculeMoveCount"][level]["val"] += 1
-        self.features["sessionMoleculeMoveCount"] += 1
+        self.features.incValByIndex(feature_name="moleculeMoveCount", index=level)
+        self.features.incAggregateVal(feature_name="sessionMoleculeMoveCount")
 
     def _extractFromMoleculeRotate(self, level, event_data_complex_parsed):
         if event_data_complex_parsed["isStamp"]:
-            self.features["stampRotateCount"][level]["val"] += 1
-            self.features["sessionStampRotateCount"] += 1
+            self.features.incValByIndex(feature_name="stampRotateCount", index=level)
+            self.features.incAggregateVal(feature_name="sessionStampRotateCount")
         if event_data_complex_parsed["numRotations"] == 1:
-            self.features["singleRotateCount"][level]["val"] += 1
-            self.features["sessionSingleRotateCount"] += 1
+            self.features.incValByIndex(feature_name="singleRotateCount", index=level)
+            self.features.incAggregateVal(feature_name="sessionSingleRotateCount")
 
     def _extractFromClearBtnPress(self, level):
-        self.features["clearBtnPresses"][level]["val"] += 1
-        self.features["sessionClearBtnPresses"] += 1
+        self.features.incValByIndex(feature_name="clearBtnPresses", index=level)
+        self.features.incAggregateVal(feature_name="sessionClearBtnPresses")
 
     def _extractFromMuseumClose(self, level, event_data_complex_parsed):
-        self.features["sessionMuseumDurationInSecs"] += event_data_complex_parsed["timeOpen"]
+        self.features.incAggregateVal(feature_name="sessionMuseumDurationInSecs", increment=event_data_complex_parsed["timeOpen"])
 
     def _extractFromQuestionAnswer(self, event_data_complex_parsed):
         q_num = event_data_complex_parsed["question"]
-        self.features["answerGiven"][q_num]["val"] = event_data_complex_parsed["answered"]
+        self.features.setValByIndex(feature_name="answerGiven", index=q_num, new_value=event_data_complex_parsed["answered"])
         correctness = 1 if event_data_complex_parsed["answered"] == event_data_complex_parsed["answer"] else 0
-        self.features["wasCorrect"][q_num]["val"] = correctness
+        self.features.setValByIndex(feature_name="wasCorrect", index=q_num, new_value= correctness)
 
     def _calcLevelTime(self, lvl:int, play_num:int) -> int:
         # use 0 if not played, -1 if not completed
