@@ -16,7 +16,15 @@ class CrystalExtractor(Extractor):
     ## Constructor for the CrystalExtractor class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.
+    #  Sets the sessionID feature.
     #  Further, initializes all Q&A features to -1, representing unanswered questions.
+    #
+    #  @param session_id The id number for the session whose data is being processed
+    #                    by this extractor instance.
+    #  @param game_table A data structure containing information on how the db
+    #                    table assiciated with this game is structured. 
+    #  @param game_schema A dictionary that defines how the game data itself is
+    #                     structured.
     def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
         # Define custom private data.
