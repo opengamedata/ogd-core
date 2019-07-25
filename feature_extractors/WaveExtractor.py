@@ -122,23 +122,30 @@ class WaveExtractor(Extractor):
             all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalLevelTime").values()]
             self.features.setValByName(feature_name="avgLevelTime", new_value=sum(all_vals) / num_lvl)
 
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgStdDevs").values()]
-            self.features.setValByName(feature_name="avgSliderAvgStdDevs", new_value=sum(all_vals) / num_lvl)
-
             all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalMoveTypeChanges").values()]
             self.features.setValByName(feature_name="avgMoveTypeChanges", new_value=sum(all_vals) / num_lvl)
 
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgRange").values()]
-            self.features.setValByName(feature_name="avgSliderAvgRange", new_value=sum(all_vals) / num_lvl)
+            # Determine number of moves that occurred across all levels
+            all_amps = sum(list(self.amp_move_counts.values()))
+            all_offs = sum(list(self.off_move_counts.values()))
+            all_waves = sum(list(self.wave_move_counts.values()))
+            all_moves = all_amps + all_offs + all_waves
 
-            all_vals = list(self.amp_move_counts.values())
-            self.features.setValByName(feature_name="avgAmplitudeMoves", new_value=sum(all_vals) / num_lvl)
+            # Calculate percentages of each move type over all moves.
+            perc_amps = all_amps / all_moves if all_moves > 0 else all_moves
+            perc_offs = all_offs / all_moves if all_moves > 0 else all_moves
+            perc_waves = all_waves / all_moves if all_moves > 0 else all_moves
+            self.features.setValByName(feature_name="avgAmplitudeMoves", new_value=perc_amps)
+            self.features.setValByName(feature_name="avgOffsetMoves", new_value=perc_offs)
+            self.features.setValByName(feature_name="avgWavelengthMoves", new_value=perc_waves)
 
-            all_vals = list(self.off_move_counts.values())
-            self.features.setValByName(feature_name="avgOffsetMoves", new_value=sum(all_vals) / num_lvl)
-
-            all_vals = list(self.wave_move_counts.values())
-            self.features.setValByName(feature_name="avgWavelengthMoves", new_value=sum(all_vals) / num_lvl)
+            # Calculate average ranges and std devs over all moves.
+            all_stdevs = [elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgStdDevs").values()]
+            all_ranges = [elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgRange").values()]
+            avg_stdevs = all_stdevs / all_moves if all_moves > 0 else all_moves
+            avg_ranges = all_ranges / all_moves if all_moves > 0 else all_moves
+            self.features.setValByName(feature_name="avgSliderAvgStdDevs", new_value=avg_stdevs)
+            self.features.setValByName(feature_name="avgSliderAvgRange", new_value=avg_ranges)
 
     ## Private function to extract features from a "BEGIN" event.
     #  The features affected are:
@@ -231,7 +238,7 @@ class WaveExtractor(Extractor):
     #  @param key   The feature name for the type of move to calculate percentage on.
     #  @param level The level for which we want to calculate a percentage.
     def _calcPercentMoves(self, key:str, level:int) -> int:
-        all_vals = [elem["val"] for elem in self.features.getFeatureByName(feature_name=key).values()]
+        all_vals = [elem["val"] for elem in self.features.getValByName(feature_name=key).values()]
         num = sum(all_vals)
         if num == 0:
             return 0
