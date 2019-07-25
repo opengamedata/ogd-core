@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['loadjsonfile',['loadJSONFile',['../namespaceutils.html#a05bb98273ce91cd5c7922286b703596f',1,'utils']]]
+  ['datetofilesafestring',['dateToFileSafeString',['../namespaceutils.html#ab2f8ec31af461e89fcc8e5d030cfd5fc',1,'utils']]]
 ];

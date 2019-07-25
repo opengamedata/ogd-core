@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['procmanager',['ProcManager',['../class_proc_manager_1_1_proc_manager.html',1,'ProcManager']]]
+  ['extractor',['Extractor',['../classfeature__extractors_1_1_extractor_1_1_extractor.html',1,'feature_extractors::Extractor']]]
 ];

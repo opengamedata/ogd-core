@@ -70,6 +70,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="class_game_table_1_1_game_table-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">GameTable.GameTable Class Reference</div>  </div>
@@ -90,9 +91,8 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a596b733cc376c6d28de396ab7a011c1e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_table_1_1_game_table.html#a596b733cc376c6d28de396ab7a011c1e">column_names</a></td></tr>
 <tr class="memdesc:a596b733cc376c6d28de396ab7a011c1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define instance vars.  <a href="#a596b733cc376c6d28de396ab7a011c1e">More...</a><br /></td></tr>
 <tr class="separator:a596b733cc376c6d28de396ab7a011c1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1f48adb24bc7144f6f6ba628791ffa0"><td class="memItemLeft" align="right" valign="top"><a id="ad1f48adb24bc7144f6f6ba628791ffa0"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_table_1_1_game_table.html#ad1f48adb24bc7144f6f6ba628791ffa0">complex_data_index</a></td></tr>
-<tr class="memdesc:ad1f48adb24bc7144f6f6ba628791ffa0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Take note of specific indices which will be useful when using a <a class="el" href="class_game_table_1_1_game_table.html" title="Dumb struct to hold info about the structure of database data for a particular game.">GameTable</a>. <br /></td></tr>
+<tr class="memitem:ad1f48adb24bc7144f6f6ba628791ffa0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_table_1_1_game_table.html#ad1f48adb24bc7144f6f6ba628791ffa0">complex_data_index</a></td></tr>
+<tr class="memdesc:ad1f48adb24bc7144f6f6ba628791ffa0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Take note of specific indices which will be useful when using a <a class="el" href="class_game_table_1_1_game_table.html" title="Dumb struct to hold info about the structure of database data for a particular game.">GameTable</a> TODO: Honestly, should just make a reverse index dictionary.  <a href="#ad1f48adb24bc7144f6f6ba628791ffa0">More...</a><br /></td></tr>
 <tr class="separator:ad1f48adb24bc7144f6f6ba628791ffa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a354141997986901db4358cee0d9984bd"><td class="memItemLeft" align="right" valign="top"><a id="a354141997986901db4358cee0d9984bd"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>client_time_index</b></td></tr>
@@ -100,6 +100,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ab382ffa3682e97fc1007d7b7dfc3a6e9"><td class="memItemLeft" align="right" valign="top"><a id="ab382ffa3682e97fc1007d7b7dfc3a6e9"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>session_id_index</b></td></tr>
 <tr class="separator:ab382ffa3682e97fc1007d7b7dfc3a6e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66fefa32c3baff950397c28dd149af1f"><td class="memItemLeft" align="right" valign="top"><a id="a66fefa32c3baff950397c28dd149af1f"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>pers_session_id_index</b></td></tr>
+<tr class="separator:a66fefa32c3baff950397c28dd149af1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af480e48516bebdbb6735eefacc4b5c81"><td class="memItemLeft" align="right" valign="top"><a id="af480e48516bebdbb6735eefacc4b5c81"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>event_index</b></td></tr>
 <tr class="separator:af480e48516bebdbb6735eefacc4b5c81"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -115,6 +118,15 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a8bf2a912ab31a23d98857741027b1657"><td class="memItemLeft" align="right" valign="top"><a id="a8bf2a912ab31a23d98857741027b1657"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>session_ids</b></td></tr>
 <tr class="separator:a8bf2a912ab31a23d98857741027b1657"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
+Static Private Member Functions</h2></td></tr>
+<tr class="memitem:a53de09318575062d54e7fbac6ced6e72"><td class="memItemLeft" align="right" valign="top"><a id="a53de09318575062d54e7fbac6ced6e72"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>_getColumnNames</b> (db_cursor, db, db_settings)</td></tr>
+<tr class="separator:a53de09318575062d54e7fbac6ced6e72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae359142f51f4e68cb57b6e76689e09e6"><td class="memItemLeft" align="right" valign="top"><a id="ae359142f51f4e68cb57b6e76689e09e6"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>_getSessionIDs</b> (db_cursor, db, db_settings, request)</td></tr>
+<tr class="separator:ae359142f51f4e68cb57b6e76689e09e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Dumb struct to hold info about the structure of database data for a particular game. </p>
@@ -134,6 +146,22 @@ Public Attributes</h2></td></tr>
 
 <p>Define instance vars. </p>
 <p>Set instance vars </p>
+
+</div>
+</div>
+<a id="ad1f48adb24bc7144f6f6ba628791ffa0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1f48adb24bc7144f6f6ba628791ffa0">&#9670;&nbsp;</a></span>complex_data_index</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GameTable.GameTable.complex_data_index</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Take note of specific indices which will be useful when using a <a class="el" href="class_game_table_1_1_game_table.html" title="Dumb struct to hold info about the structure of database data for a particular game.">GameTable</a> TODO: Honestly, should just make a reverse index dictionary. </p>
 
 </div>
 </div>

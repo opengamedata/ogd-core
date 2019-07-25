@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['rawmanager',['RawManager',['../class_raw_manager_1_1_raw_manager.html',1,'RawManager']]],
-  ['request',['Request',['../class_request_1_1_request.html',1,'Request']]]
+  ['gametable',['GameTable',['../class_game_table_1_1_game_table.html',1,'GameTable']]]
 ];

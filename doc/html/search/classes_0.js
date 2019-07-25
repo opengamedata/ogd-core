@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gametable',['GameTable',['../class_game_table_1_1_game_table.html',1,'GameTable']]]
+  ['crystalextractor',['CrystalExtractor',['../classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor.html',1,'feature_extractors::CrystalExtractor']]]
 ];

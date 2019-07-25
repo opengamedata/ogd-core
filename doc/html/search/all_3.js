@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['gametable',['GameTable',['../class_game_table_1_1_game_table.html',1,'GameTable']]]
+  ['datetofilesafestring',['dateToFileSafeString',['../namespaceutils.html#ab2f8ec31af461e89fcc8e5d030cfd5fc',1,'utils']]],
+  ['py',['py',['../namespace_data_to_c_s_v_1_1py.html',1,'DataToCSV']]]
 ];
