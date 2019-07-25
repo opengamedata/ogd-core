@@ -23,7 +23,6 @@ from feature_extractors.CrystalExtractor import CrystalExtractor
 #  @param db An active database connection
 #  @param settings 
 def exportDataToCSV(db, settings, request: Request):
-    db_settings = settings["db_config"]
     if request.game_id is not None:
         game_table: GameTable = GameTable(db=db, settings=settings, request=request)
 
@@ -124,7 +123,7 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
                 raw_mgr.ProcessRow(row)
                 proc_mgr.ProcessRow(row)
             else:
-                logging.warn("Found a session which was in the slice but not in the list of sessions for processing.")
+                logging.warn(f"Found a session ({session_id}) which was in the slice but not in the list of sessions for processing.")
         end = datetime.datetime.now()
         time_delta = end - start
         print("Processing time: {} min, {:.3f} sec".format(math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60))
