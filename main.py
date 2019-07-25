@@ -26,16 +26,18 @@ def showHelp():
     print(width*"*")
 
 def runExport():
-    if num_args > 1:
-        game_id = sys.argv[1]
+    if num_args > 2:
+        game_id = sys.argv[2]
     else:
         showHelp()
         return
-    today   = datetime.date.today()
-    start_date = datetime.datetime.strptime(sys.argv[2], "%m/%d/%Y") if num_args > 3 \
-            else today.replace(day=1)
-    end_date   = datetime.datetime.strptime(sys.argv[3], "%m/%d/%Y") if num_args > 3 \
+    today   = datetime.datetime.now()
+    start_date = datetime.datetime.strptime(sys.argv[3], "%m/%d/%Y") if num_args > 4 \
             else today
+    start_date = start_date.replace(day=1, hour=0, minute=0, second=0)
+    end_date   = datetime.datetime.strptime(sys.argv[4], "%m/%d/%Y") if num_args > 4 \
+            else today
+    end_date = end_date.replace(hour=23, minute=59, second=59)
     # Load settings, set up consts.
     settings = utils.loadJSONFile("config.json")
     db_settings = settings["db_config"]
@@ -82,7 +84,10 @@ def runExport():
 
 # Get variables from command line args
 num_args = len(sys.argv)
-cmd = sys.argv[0] if num_args > 0 else "help"
+# print(sys.argv)
+fname = sys.argv[0] if num_args > 0 else None
+print(f"Running {fname}...")
+cmd = sys.argv[1] if num_args > 1 else "help"
 if type(cmd) == str:
     if cmd.lower() == "export":
         runExport()
