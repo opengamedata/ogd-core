@@ -27,20 +27,6 @@ def exportDataToCSV(db, settings, request: Request):
     if request.game_id is not None:
         game_table: GameTable = GameTable(db=db, settings=settings, request=request)
 
-        ## NOTE: I've left the bit of cache code ported from the old logger,
-        ## on the off chance we ever decide to use caching again.
-        # if request.read_cache:
-        #     cache_query = "SELECT output FROM cache WHERE filter=%s ORDER BY time DESC LIMIT 1"
-        #     cache_params = [request]
-        #     try:
-        #         db_cursor.execute(cache_query, cache_params)
-        #         cache_result = db_cursor.fetchall()
-        #         if cache_result is not []:
-        #             logger.debug("cache_result: " + str(cache_result))
-        #             quit()
-        #     except Exception as err:
-        #         utils.SQL.server500Error(err)
-
         parse_result: str = _getAndParseData(request, game_table, db, settings)
         
         # output results
@@ -149,16 +135,6 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
         proc_mgr.calculateAggregateFeatures()
         proc_mgr.WriteProcCSVLines()
         proc_mgr.ClearLines()
-
-    ## NOTE: I've left the bit of cache code ported from the old logger,
-    ## on the off chance we ever decide to use caching again.
-    # if request.write_cache:
-    #     cache_query = "INSERT INTO cache (filter, output) VALUES (%s, %s)"
-    #     cache_params = [request, ret_val]
-    #     try:
-    #         db_cursor.execute(cache_query, cache_params)
-    #     except Exception as err:
-    #         utils.SQL.server500Error(logger, err)
 
     # Finally, update the list of csv files.
     existing_csvs = utils.loadJSONFile("file_list.json", settings["DATA_DIR"]) or {}
