@@ -9,32 +9,28 @@ import utils
 from Request import Request
 from feature_extractors.WaveExtractor import WaveExtractor
 
-# Get variables from command line args
-num_args = len(sys.argv)
-cmd = sys.argv[0] if num_args > 0 else "help"
-if type(cmd) == str:
-    if cmd.lower() == "export":
-        runExport()
-    else:
-        showHelp()
-else:
-    showHelp()
-
 def showHelp():
+    width = 15
+    print(width*"*")
     print("Invoke main.py with the following format: <python> main.py <cmd> [<args>]")
     print("<python> is your python command.")
     print("<cmd> is one of the available commands:")
     print("    export")
     print("    help")
     print("[<args>] are the arguments for the command.")
-    print("export arguments: game_id, [start_date, end_date]")
-    print("    game_id    = id of game to export")
-    print("    start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)")
-    print("    end_date   = ending date for export, in form mm/dd/yyyy (default=current day)")
-    print("help arguments: *None*")
+    print("    export args: game_id, [start_date, end_date]")
+    print("        game_id    = id of game to export")
+    print("        start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)")
+    print("        end_date   = ending date for export, in form mm/dd/yyyy (default=current day)")
+    print("    help arguments: *None*")
+    print(width*"*")
 
 def runExport():
-    game_id = sys.argv[1] if num_args > 1 else ""
+    if num_args > 1:
+        game_id = sys.argv[1]
+    else:
+        showHelp()
+        return
     today   = datetime.date.today()
     start_date = datetime.datetime.strptime(sys.argv[2], "%m/%d/%Y") if num_args > 3 \
             else today.replace(day=1)
@@ -83,3 +79,14 @@ def runExport():
     # print("</p>")
     # print("</body>")
     # print("</html>")
+
+# Get variables from command line args
+num_args = len(sys.argv)
+cmd = sys.argv[0] if num_args > 0 else "help"
+if type(cmd) == str:
+    if cmd.lower() == "export":
+        runExport()
+    else:
+        showHelp()
+else:
+    showHelp()
