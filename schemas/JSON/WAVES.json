@@ -75,15 +75,17 @@
 
     "features": {
         "perlevel":{
-            "totalSliderMoves":"slider moves across a given level",
-            "totalArrowMoves":"arrow moves across a given level",
-            "totalLevelTime" : "time spent on a level",
+            "totalSliderMoves":"slider moves across a given level [count of 'SLIDER_MOVE_RELEASE' events]",
+            "totalArrowMoves":"arrow moves across a given level [count of 'ARROW_MOVE_RELEASE' events]",
+            "totalLevelTime" : "time spent on a level [sum of differences in time between 'BEGIN' and 'COMPLETE' event(s)]",
             "sliderAvgStdDevs": "Average of stdev_val for all slider moves in a level",
             "totalMoveTypeChanges" : "number of times 'slider' changes across a level",
             "sliderAvgRange" : "difference between max and min values of a slider move, averaged together across a level",
             "totalResets" : "number of times the user pressed the 'reset' button across a level",
             "totalFails" : "number of 'Fail' events across a level",
-            "completed":"whether the level was completed or not",
+            "beginCount" : "number of times a player 'began' the level. [count of 'BEGIN' events]",
+            "completed":"whether the level was completed or not [bool whether 'COMPLETE' event was found]",
+            "completeCount" : "number of times a player 'completed' the level. [count of 'COMPLETE' events]",
             "percentAmplitudeMoves" : "percent of total moves that were amplitude adjustments in a level",
             "percentOffsetMoves" : "percent of total moves that were offset adjustments in a level",
             "percentWavelengthMoves" : "percent of total moves that were wavelength adjustments in a level"

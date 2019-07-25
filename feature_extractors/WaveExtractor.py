@@ -140,8 +140,8 @@ class WaveExtractor(Extractor):
             self.features.setValByName(feature_name="avgWavelengthMoves", new_value=perc_waves)
 
             # Calculate average ranges and std devs over all moves.
-            all_stdevs = [elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgStdDevs").values()]
-            all_ranges = [elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgRange").values()]
+            all_stdevs = sum([elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgStdDevs").values()])
+            all_ranges = sum([elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgRange").values()])
             avg_stdevs = all_stdevs / all_moves if all_moves > 0 else all_moves
             avg_ranges = all_ranges / all_moves if all_moves > 0 else all_moves
             self.features.setValByName(feature_name="avgSliderAvgStdDevs", new_value=avg_stdevs)
@@ -155,6 +155,7 @@ class WaveExtractor(Extractor):
     #  @param event_client_time The time when this event occurred, according to game client.
     def _extractFromBegin(self, level, event_client_time):
         self.start_times[level] = event_client_time
+        self.features.incValByIndex(feature_name="beginCount", index=level)
 
     ## Private function to extract features from a "COMPLETE" event.
     #  The features affected are:
@@ -166,6 +167,7 @@ class WaveExtractor(Extractor):
     def _extractFromComplete(self, level, event_client_time):
         self.end_times[level] = event_client_time
         self.features.setValByIndex(feature_name="completed", index=level, new_value=1)
+        self.features.incValByIndex(feature_name="completeCount", index=level)
 
     ## Private function to extract features from a "RESET_BTN_PRESS" event.
     #  The features affected are:
