@@ -89,6 +89,11 @@ class Extractor(abc.ABC):
     def calculateAggregateFeatures(self):
         pass
 
+    ## @class SessionFeatures
+    #  Private Extractor class to track feature data.
+    #  This class provides several functions to managing data, which should make
+    #  the actual extractor code easier to read/write, since there is less need
+    #  to understand the structure of feature data.
     class SessionFeatures:
         def __init__(self, level_range: range, game_schema: Schema):
             self.features = Extractor.SessionFeatures.generateFeatureDict(level_range, game_schema)
