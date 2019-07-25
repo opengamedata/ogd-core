@@ -178,4 +178,4 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
          }
     existing_csv_file.write(json.dumps(existing_csvs, indent=4))
 
-    return "Successfully completed."
+    return f"Successfully completed request {str(request)}."

@@ -12,3 +12,7 @@ class Request:
         self.min_moves = min_moves
         self.read_cache = read_cache
         self.write_cache = write_cache
+
+    def __str__(self):
+        fmt = "%Y%m%d"
+        return f"{self.game_id}: {self.start_date.strftime(fmt)}-{self.end_date.strftime(fmt)}"
