@@ -95,14 +95,14 @@ class WaveExtractor(Extractor):
             all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalLevelTime").values()]
             self.features.setValByName(feature_name="avgLevelTime", new_value=sum(all_vals) / num_lvl)
 
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="sliderAveStdDevs").values()]
-            self.features.setValByName(feature_name="avgKnobStdDevs", new_value=sum(all_vals) / num_lvl)
+            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgStdDevs").values()]
+            self.features.setValByName(feature_name="avgSliderAvgStdDevs", new_value=sum(all_vals) / num_lvl)
 
             all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalMoveTypeChanges").values()]
             self.features.setValByName(feature_name="avgMoveTypeChanges", new_value=sum(all_vals) / num_lvl)
 
             all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgRange").values()]
-            self.features.setValByName(feature_name="avgKnobAvgMaxMin", new_value=sum(all_vals) / num_lvl)
+            self.features.setValByName(feature_name="avgSliderAvgRange", new_value=sum(all_vals) / num_lvl)
 
             all_vals = list(self.amp_move_counts.values())
             self.features.setValByName(feature_name="avgAmplitudeMoves", new_value=sum(all_vals) / num_lvl)
