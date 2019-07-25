@@ -37,8 +37,10 @@ db = utils.SQL.connectToMySQL(DB_HOST, DB_PORT, DB_USER, DB_PW, DB_NAME_DATA)
 #               end_date=datetime.datetime(2019, 3, 31, 23, 59, 59), max_sessions=settings["MAX_SESSIONS"], min_moves=1, \
 #               read_cache=False, write_cache=False
 #              )
-req = Request(game_id="CRYSTAL", start_date=datetime.datetime(2019, 3, 1, 0, 0, 0), \
-              end_date=datetime.datetime(2019, 3, 31, 23, 59, 59), max_sessions=settings["MAX_SESSIONS"], min_moves=1, \
+req = Request(game_id="CRYSTAL", \
+              start_date=datetime.datetime(2019, 3, 1, 0, 0, 0), \
+              end_date=datetime.datetime(2019, 3, 31, 23, 59, 59), \
+              max_sessions=settings["MAX_SESSIONS"], min_moves=settings["MIN_MOVES"], \
               read_cache=False, write_cache=False
              )
 import cProfile

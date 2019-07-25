@@ -9,6 +9,7 @@
         "table" : "table name",
         "DB_PORT" : 1234
     },
+    "MIN_MOVES":1,
     "BATCH_SIZE":1000
     "MAX_SESSIONS":-1
 }
