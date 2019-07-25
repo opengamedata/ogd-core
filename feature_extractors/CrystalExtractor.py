@@ -64,7 +64,7 @@ class CrystalExtractor(Extractor):
                                                
     def calculateAggregateFeatures(self):
         for level in self.levels:
-            count = self.features.getFeatureByIndex(feature_name="moleculeMoveCount", index=level)
+            count = self.features.getValByIndex(feature_name="moleculeMoveCount", index=level)
             avg = 0 if count == 0 else self.totalMoleculeDragDuration[level] / count
             self.features.setValByIndex(feature_name="avgMoleculeDragDurationInSecs", index=level, new_value=avg)
             # for each each time we started a play in the level, do stuff.

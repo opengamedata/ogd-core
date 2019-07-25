@@ -67,7 +67,7 @@ class Extractor(abc.ABC):
         for key in self.features.featureList():
             if type(self.features.getValByName(key)) is type({}):
                 # if it's a dictionary, expand.
-                column_vals.extend([str(self.features.getValByCountIndex(key, num)) for num in self.features[key].keys()])
+                column_vals.extend([str(self.features.getValByIndex(key, num)) for num in self.features.getValByName(feature_name=key).keys()])
             else:
                 column_vals.append(str(self.features.getValByName(key)))
         file.write(",".join(column_vals))
