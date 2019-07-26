@@ -97,7 +97,7 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
         filt = "app_id=\"{}\" AND session_id BETWEEN {} AND {}".format(request.game_id, next_slice[0], next_slice[-1])
         start = datetime.datetime.now()
         next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=db_settings["table"],
-                                         filter=filt, sort_columns=["client_time"], sort_direction = "ASC",
+                                         filter=filt, sort_columns=["session_id", "session_n"], sort_direction = "ASC",
                                          distinct=False)
         end = datetime.datetime.now()
         time_delta = end - start
