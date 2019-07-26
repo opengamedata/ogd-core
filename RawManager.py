@@ -10,7 +10,7 @@ from schemas.Schema import Schema
 class RawManager:
     def __init__(self, game_table: GameTable, game_schema: Schema,
                  raw_csv_file: typing.IO.writable):
-        ## define instance vars
+        # define instance vars
         self._lines:              typing.List[typing.List]
         self._game_table:         GameTable
         self._db_columns:         typing.List[str]
@@ -18,14 +18,14 @@ class RawManager:
         self._all_columns:        typing.List[str]
         self._columns_to_indices: typing.Dict
         self._raw_file          : typing.IO.writable
-        ## set instance vars
+        # set instance vars
         self._lines = []
         self._game_table = game_table
         self._db_columns = game_schema.db_columns()
         self._JSON_columns = RawManager._generateJSONColumns(game_schema)
         self._all_columns = game_table.column_names[:game_table.complex_data_index] + self._JSON_columns + game_table.column_names[game_table.complex_data_index+1:]
-        ## Not the nicest thing ever, but this function creates a dictionary that maps column names
-        ## to indices, so we can store each line for raw csv as a list with guaranteed consistent order.
+        # Not the nicest thing ever, but this function creates a dictionary that maps column names
+        # to indices, so we can store each line for raw csv as a list with guaranteed consistent order.
         self._columns_to_indices = {name:index for index,name in enumerate(self._all_columns)}
         self._raw_file = raw_csv_file
 

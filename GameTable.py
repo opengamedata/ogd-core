@@ -4,11 +4,19 @@ import typing
 import Request
 import utils
 
-## Dumb struct to hold info about the structure of database data for a particular game.
-## Just here to help keep useful data together for easier passing around.
+## @class GameTable
+#  Dumb struct to hold useful info about the structure of database data
+#  for a particular game.
+#  This includes the indices of several important database columns, the names
+#  of the database columns, the max and min levels in the game, and a list of
+#  IDs for the game sessions in the given requested date range.
 class GameTable:
+    ## Constructor for the GameTable class.
+    #  Given a database connection and a game data request,
+    #  this retrieves a bit of information from the database to fill in the
+    #  class variables.
     def __init__(self, db, settings, request: Request):
-        ## Define instance vars
+        # Define instance vars
         self.column_names:       typing.List[str]
         self.complex_data_index: int
         self.client_time_index:  int
@@ -18,11 +26,11 @@ class GameTable:
         self.max_level:          int
         self.min_level:          int
         self.session_ids:        typing.List[int]
-        ## Set instance vars
+        # Set instance vars
         db_cursor = db.cursor(buffered=True)
         db_settings = settings["db_config"]
         self.column_names = GameTable._getColumnNames(db_cursor, db, db_settings)
-        ## Take note of specific indices which will be useful when using a GameTable
+        # Take note of specific indices which will be useful when using a GameTable
         # TODO: Honestly, should just make a reverse index dictionary.
         self.complex_data_index = self.column_names.index("event_data_complex")
         self.client_time_index = self.column_names.index("client_time")
