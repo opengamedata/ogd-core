@@ -83,9 +83,12 @@
             "sliderAvgRange" : "difference between max and min values of a slider move, averaged together across a level",
             "totalResets" : "number of times the user pressed the 'reset' button across a level",
             "totalFails" : "number of 'Fail' events across a level",
+            "totalSkips" : "number of times the player chose to skip the level (only allowed if they already completed the level once)",
+            "menuBtnCount" : "number of times the player returned to the main menu. [count of 'MENU_BUTTON' events]",
             "beginCount" : "number of times a player 'began' the level. [count of 'BEGIN' events]",
-            "completed":"whether the level was completed or not [bool whether 'COMPLETE' event was found]",
+            "succeedCount" : "number of times a 'SUCCEED' event occurs. [count of 'SUCCEED' events]",
             "completeCount" : "number of times a player 'completed' the level. [count of 'COMPLETE' events]",
+            "completed":"whether the level was completed or not [bool whether 'COMPLETE' event was found]",
             "percentAmplitudeMoves" : "percent of total moves that were amplitude adjustments in a level",
             "percentOffsetMoves" : "percent of total moves that were offset adjustments in a level",
             "percentWavelengthMoves" : "percent of total moves that were wavelength adjustments in a level"
@@ -119,14 +122,15 @@
         "persistent_session_id":"Unique identifier across all gameplay sessions from a single computer",
         "level":"The game level in which the event was logged",
         "event":"The type of event logged",
-        "event_custom":"Um... this appears to be unused?",
-        "event_data_simple":"Um, this also seems to be unused?",
+        "event_custom":"A number corresponding to the game-specific event type for 'CUSTOM' events",
+        "event_data_simple":"Unused (always=0)",
         "event_data_complex":"event-specific data encoded as a JSON string",
         "client_time":"The client machine time when the event was generated",
         "client_time_ms":"Client time in milliseconds? Or something?",
         "server_time":"The server machine time when the event was logged",
+        "remote_addr":"The IP address for the player's computer",
         "req_id":"Another ID of some kind",
-        "session_n":"Session number, maybe? Not really sure what n means here...",
+        "session_n":"Counter of events in the session, from 0. A row with session_n = i is the (i+1)-th event of the session",
         "http_user_agent":"Data on the type of web browser, OS, etc. in use by the player"
     }
 }

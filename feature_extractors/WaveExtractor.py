@@ -29,9 +29,10 @@ class WaveExtractor(Extractor):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
         self.start_times: typing.Dict       = {}
         self.end_times:   typing.Dict       = {}
-        self.amp_move_counts: typing.Dict   = {}
-        self.off_move_counts: typing.Dict   = {}
-        self.wave_move_counts: typing.Dict  = {}
+        self.amp_move_counts:  typing.Dict   = {}
+        self.off_move_counts:  typing.Dict   = {}
+        self.wave_move_counts: typing.Dict   = {}
+        self.active_begin = None
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
         # we specifically want to set the default value for questionAnswered to -1, for unanswered.
         for ans in self.features.getValByName(feature_name="questionAnswered").keys():
@@ -76,7 +77,13 @@ class WaveExtractor(Extractor):
             elif event_type == "COMPLETE":
                 self._extractFromComplete(level, event_client_time)
             elif event_type == "SUCCEED":
-                pass
+                self._extractFromSucceed(level)
+            elif event_type == "MENU_BUTTON":
+                self._extractFromMenuBtn(level, event_client_time)
+            elif event_type == "SKIP_BUTTON":
+                self._extractFromSkipBtn(level)
+            elif event_type == "DISMISS_MENU_BUTTON":
+                print("Stub: Got a DISMISS_MENU_BUTTON event, nothing to do with it.")
             elif event_type == "RESET_BTN_PRESS":
                 self._extractFromResetBtnPress(level)
             elif event_type == "FAIL":
@@ -117,8 +124,6 @@ class WaveExtractor(Extractor):
             all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalSliderMoves").values()]
             self.features.setValByName(feature_name="avgSliderMoves", new_value=sum(all_vals) / num_lvl)
 
-            for lvl in self._level_range:
-                self.features.setValByIndex(feature_name="totalLevelTime", index=lvl, new_value=self._calcLevelTime(lvl))
             all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalLevelTime").values()]
             self.features.setValByName(feature_name="avgLevelTime", new_value=sum(all_vals) / num_lvl)
 
@@ -150,24 +155,76 @@ class WaveExtractor(Extractor):
     ## Private function to extract features from a "BEGIN" event.
     #  The features affected are:
     #  - start_times (used to calculate totalLevelTime and avgLevelTime)
+    #  - beginCount
+    #  - totalLevelTime
     #
     #  @param level             The level being played when event occurred.
     #  @param event_client_time The time when this event occurred, according to game client.
     def _extractFromBegin(self, level, event_client_time):
-        self.start_times[level] = event_client_time
         self.features.incValByIndex(feature_name="beginCount", index=level)
+        if self.active_begin == None:
+            self.active_begin = level
+            self.start_times[level] = event_client_time
+        elif self.active_begin == level:
+            pass # in this case, just keep going.
+        else:
+            self.end_times[level] = event_client_time
+            self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
+            self.active_begin = None
 
     ## Private function to extract features from a "COMPLETE" event.
     #  The features affected are:
     #  - end_times (used to calculate totalLevelTime and avgLevelTime)
     #  - completed
+    #  - completeCount
+    #  - totalLevelTime
     #
     #  @param level             The level being played when event occurred.
     #  @param event_client_time The time when this event occurred, according to game client.
     def _extractFromComplete(self, level, event_client_time):
-        self.end_times[level] = event_client_time
-        self.features.setValByIndex(feature_name="completed", index=level, new_value=1)
         self.features.incValByIndex(feature_name="completeCount", index=level)
+        if self.active_begin == None:
+            sess_id = self.features.getValByName(feature_name="sessionID")
+            logging.error(f"Got a 'Complete' event when there was no active 'Begin' event! Sess ID: {sess_id}")
+        else:
+            self.end_times[level] = event_client_time
+            self.features.setValByIndex(feature_name="completed", index=level, new_value=1)
+            self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
+
+    ## Private function to extract features from a "SUCCEED" event.
+    #  The features affected are:
+    #  - succeedCount
+    #
+    #  @param level The level being played when reset button was pressed.
+    def _extractFromSucceed(self, level):
+        self.features.incValByIndex(feature_name="succeedCount", index=level)
+
+    ## Private function to extract features from a "MENU_BUTTON" event.
+    #  The features affected are:
+    #  - end_times (used to calculate totalLevelTime and avgLevelTime)
+    #  - menuBtnCount
+    #  - totalLevelTime
+    #
+    #  @param level             The level being played when event occurred.
+    #  @param event_client_time The time when this event occurred, according to game client.
+    def _extractFromMenuBtn(self, level, event_client_time):
+        self.features.incValByIndex(feature_name="menuBtnCount", index=level)
+        if self.active_begin == None:
+            sess_id = self.features.getValByName(feature_name="sessionID")
+            logging.error(f"Got a 'Menu Button' event when there was no active 'Begin' event! Sess ID: {sess_id}")
+        else:
+            self.end_times[level] = event_client_time
+            self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
+            self.active_begin = None
+
+    ## Private function to extract features from a "SKIP_BUTTON" event.
+    #  The features affected are:
+    #  - totalSkips
+    #
+    #  @param level The level being played when reset button was pressed.
+    def _extractFromSkipBtn(self, level):
+        self.features.incValByIndex(feature_name="totalSkips", index=level)
+        self.active_begin = None
 
     ## Private function to extract features from a "RESET_BTN_PRESS" event.
     #  The features affected are:

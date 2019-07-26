@@ -4,6 +4,7 @@ import datetime
 import json
 import logging
 import typing
+from math import max
 ## import local files
 import utils
 from feature_extractors.Extractor import Extractor
@@ -31,6 +32,7 @@ class CrystalExtractor(Extractor):
         self.start_times: typing.Dict       = {}
         self.end_times:   typing.Dict       = {}
         self.totalMoleculeDragDuration      = {}
+        self.active_begin = None
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
         # we specifically want to set the default value for questionAnswered to -1, for unanswered.
         for ans in self.features.getValByName(feature_name="questionAnswered").keys():
@@ -97,12 +99,6 @@ class CrystalExtractor(Extractor):
             count = self.features.getValByIndex(feature_name="moleculeMoveCount", index=level)
             avg = self.totalMoleculeDragDuration[level] / count if count > 0 else count
             self.features.setValByIndex(feature_name="avgMoleculeDragDurationInSecs", index=level, new_value=avg)
-            ## Calculate features that depend on data across multiple plays of a level.
-            for play in range(len(self.start_times[level])):
-                if len(self.end_times[level]) > play:
-                    time_taken = self._calcLevelTime(level, play)
-                    self.features.incValByIndex(feature_name="durationInSecs", index=level, increment=time_taken)
-                    self.features.incAggregateVal(feature_name="sessionDurationInSecs", increment=time_taken)
 
     ## Private function to extract features from a "BEGIN" event.
     #  The features affected are:
@@ -111,15 +107,24 @@ class CrystalExtractor(Extractor):
     #  @param level             The level being played when event occurred.
     #  @param event_client_time The time when this event occurred, according to game client.
     def _extractFromBegin(self, level, event_client_time):
-        # We'll maintain lists of start times for each level, since there may
-        # be multiple playthroughs.
-        if not level in self.start_times.keys():
-            self.start_times[level] = []
-        self.start_times[level].append(event_client_time)
+        self.features.incValByIndex(feature_name="beginCount", index=level, increment=1)
+        if self.active_begin == None:
+            self.active_begin = level
+            self.start_times[level] = event_client_time
+        elif self.active_begin == level:
+            pass # in this case, just keep going.
+        else:
+            self.end_times[level] = event_client_time
+            time_taken = self._calcLevelTime(level)
+            self.features.incValByIndex(feature_name="durationInSecs", index=level, increment=time_taken)
+            self.features.incAggregateVal(feature_name="sessionDurationInSecs", increment=time_taken)
+            self.active_begin = None
 
     ## Private function to extract features from a "COMPLETE" event.
     #  The features affected are:
     #  - end_times (used to calculate durationInSecs and sessionDurationInSecs)
+    #  - durationInSecs
+    #  - sessionDurationInSecs
     #  - completesCount
     #  - finalScore
     #
@@ -127,20 +132,40 @@ class CrystalExtractor(Extractor):
     #  @param event_client_time The time when this event occurred, according to game client.
     #  @param event_data        Parsed JSON data from the row being processed.
     def _extractFromComplete(self, level, event_client_time, event_data):
-        # we'll maintain lists of end times for each level, since there may
-        # be multiple playthroughs.
-        if not level in self.end_times.keys():
-            self.end_times[level] = []
-        # We assume completion of the most recent BEGIN event.
-        # Thus, if there have been multiple BEGINS, we pad with empty COMPLETES
-        # until we match lengths again by adding the current COMPLETE.
-        while len(self.end_times) < len(self.start_times)-1:
-            self.end_times[level].append(None)
-        self.end_times[level].append(event_client_time)
         self.features.incValByIndex(feature_name="completesCount", index=level, increment=1)
-        score = event_data["stability"]["pack"] \
-              + event_data["stability"]["charge"]
-        self.features.setValByIndex(feature_name="finalScore", index=level, new_value=score)
+        if self.active_begin == None:
+            sess_id = self.features.getValByName(feature_name="sessionID")
+            logging.error(f"Got a 'Complete' event when there was no active 'Begin' event! Sess ID: {sess_id}")
+        else:
+            self.end_times[level] = event_client_time
+            time_taken = self._calcLevelTime(level)
+            self.features.incValByIndex(feature_name="durationInSecs", index=level, increment=time_taken)
+            self.features.incAggregateVal(feature_name="sessionDurationInSecs", increment=time_taken)
+            self.active_begin = None
+            score = event_data["stability"]["pack"] + event_data["stability"]["charge"]
+            max_score = max(score, self.features.getValByIndex(feature_name="finalScore", index=level))
+            self.features.setValByIndex(feature_name="finalScore", index=level, new_value=max_score)
+
+    ## Private function to extract features from a "BACK_TO_MENU" event.
+    #  The features affected are:
+    #  - end_times (used to calculate totalLevelTime and avgLevelTime)
+    #  - durationInSecs
+    #  - sessionDurationInSecs
+    #  - menuBtnCount
+    #
+    #  @param level             The level being played when event occurred.
+    #  @param event_client_time The time when this event occurred, according to game client.
+    def _extractFromMenuBtn(self, level, event_client_time):
+        self.features.incValByIndex(feature_name="menuBtnCount", index=level)
+        if self.active_begin == None:
+            sess_id = self.features.getValByName(feature_name="sessionID")
+            logging.error(f"Got a 'Back to Menu' event when there was no active 'Begin' event! Sess ID: {sess_id}")
+        else:
+            self.end_times[level] = event_client_time
+            time_taken = self._calcLevelTime(level)
+            self.features.incValByIndex(feature_name="durationInSecs", index=level, increment=time_taken)
+            self.features.incAggregateVal(feature_name="sessionDurationInSecs", increment=time_taken)
+            self.active_begin = None
 
     ## Private function to extract features from a "MOLECULE_RELEASE" event.
     #  The features affected are:
@@ -208,17 +233,13 @@ class CrystalExtractor(Extractor):
     #  and play index (each level may have been played multiple times).
     #
     #  @param lvl      The level whose play time should be calculated
-    #  @param play_num The play number/index whose play time should be calculated
-    #  @return         The play time if level and play_num are valid, -1 if level
-    #                  was not completed, 0 if level was never attempted.
-    def _calcLevelTime(self, lvl:int, play_num:int) -> int:
+    #  @return         The play time if level is valid, -1 if level was not
+    #                  completed, 0 if level was never attempted.
+    def _calcLevelTime(self, lvl:int) -> int:
         # use 0 if not played, -1 if not completed
         if lvl in self.levels:
             if lvl in self.start_times and lvl in self.end_times:
-                if play_num < len(self.start_times[lvl]) and play_num < len(self.end_times[lvl]):
-                    return (self.end_times[lvl][play_num] - self.start_times[lvl][play_num]).total_seconds()
-                else:
-                    return -1
+                return (self.end_times[lvl] - self.start_times[lvl]).total_seconds()
             else:
                 return -1
         else:

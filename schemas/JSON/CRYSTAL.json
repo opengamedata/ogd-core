@@ -108,6 +108,7 @@
             "clearBtnPresses":"Number of times the clear button was pressed in the level",
             "avgMoleculeDragDurationInSecs":"The average number of seconds each drag took, over the given level",
             "finalScore":"The max final score given when submit button pressed, for this level, among all plays",
+            "beginCount" : "number of times a player 'began' the level. [count of 'BEGIN' events]",
             "completesCount":"The number of time the player (pressed the submit button)/(completed the level) in the level"
         },
         "per_custom_count": {
@@ -136,14 +137,15 @@
         "persistent_session_id":"Unique identifier across all gameplay sessions from a single computer",
         "level":"The game level in which the event was logged",
         "event":"The type of event logged",
-        "event_custom":"Um... this appears to be unused?",
-        "event_data_simple":"Um, this also seems to be unused?",
+        "event_custom":"A number corresponding to the game-specific event type for 'CUSTOM' events",
+        "event_data_simple":"Unused (always=0)",
         "event_data_complex":"event-specific data encoded as a JSON string",
         "client_time":"The client machine time when the event was generated",
         "client_time_ms":"Client time in milliseconds? Or something?",
         "server_time":"The server machine time when the event was logged",
+        "remote_addr":"The IP address for the player's computer",
         "req_id":"Another ID of some kind",
-        "session_n":"Session number, maybe? Not really sure what n means here...",
+        "session_n":"Counter of events in the session, from 0. A row with session_n = i is the (i+1)-th event of the session",
         "http_user_agent":"Data on the type of web browser, OS, etc. in use by the player"
     }
 }
