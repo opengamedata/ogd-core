@@ -4,7 +4,6 @@ import datetime
 import json
 import logging
 import typing
-from math import max
 ## import local files
 import utils
 from feature_extractors.Extractor import Extractor
