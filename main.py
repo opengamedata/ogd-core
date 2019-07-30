@@ -9,6 +9,9 @@ import utils
 from Request import Request
 from feature_extractors.WaveExtractor import WaveExtractor
 
+## Function to print a "help" listing for the export tool.
+#  Hopefully not needed too often, if at all.
+#  Just nice to have on hand, in case we ever need it.
 def showHelp():
     width = 15
     print(width*"*")
@@ -25,6 +28,8 @@ def showHelp():
     print("    help arguments: *None*")
     print(width*"*")
 
+## Function to handle execution of export code. This is the main use of the
+#  program.
 def runExport():
     if num_args > 2:
         game_id = sys.argv[2]
@@ -50,14 +55,6 @@ def runExport():
     # set up other global vars as needed:
     logging.basicConfig(level=logging.WARNING)
 
-    # print("Content-type:text/html\r\n\r\n \
-    #        <html> \
-    #        <head> \
-    #            <title>Parser CGI test</test>\
-    #        </head> \
-    #        <body> \
-    #            <p>")
-
     db = utils.SQL.connectToMySQL(DB_HOST, DB_PORT, DB_USER, DB_PW, DB_NAME_DATA)
 
     # TODO: if we have a GET call, handle here:
@@ -78,9 +75,6 @@ def runExport():
 
     time_delta = end - start
     print("Total time taken: {} min, {} sec".format(math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60))
-    # print("</p>")
-    # print("</body>")
-    # print("</html>")
 
 # Get variables from command line args
 num_args = len(sys.argv)
