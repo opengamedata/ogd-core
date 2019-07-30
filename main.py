@@ -66,7 +66,8 @@ def runExport():
     # import cProfile
     start = datetime.datetime.now()
     # cProfile.run("DataToCSV.exportDataToCSV(db=db, settings=settings, request=req)")
-    DataToCSV.exportDataToCSV(db=db, settings=settings, request=req)
+    feature_exporter = DataToCSV.FeatureExporter(req.game_id, db=db, settings=settings)
+    feature_exporter.exportFromRequest(request=req)
     end = datetime.datetime.now()
 
     time_delta = end - start
