@@ -76,11 +76,14 @@ $(function() {
 <div class="title">RawManager.RawManager Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class to manage data for a raw csv file.  
+ <a href="class_raw_manager_1_1_raw_manager.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a44e637891a42f1bf6aab68a21a10aefe"><td class="memItemLeft" align="right" valign="top"><a id="a44e637891a42f1bf6aab68a21a10aefe"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self, GameTable game_table, <a class="el" href="classschemas_1_1_schema_1_1_schema.html">Schema</a> game_schema, typing.IO.writable raw_csv_file)</td></tr>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self, <a class="el" href="class_game_table.html">GameTable</a> game_table, <a class="el" href="classschemas_1_1_schema_1_1_schema.html">Schema</a> game_schema, typing.IO.writable raw_csv_file)</td></tr>
 <tr class="separator:a44e637891a42f1bf6aab68a21a10aefe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac3f8a97ca8ffb14d53201adbd2e59b93"><td class="memItemLeft" align="right" valign="top"><a id="ac3f8a97ca8ffb14d53201adbd2e59b93"></a>
 def&#160;</td><td class="memItemRight" valign="bottom"><b>ProcessRow</b> (self, typing.Tuple row_with_complex_parsed)</td></tr>
@@ -103,8 +106,8 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>_generateJSONColumns</
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a109af60a7672888cb33fecb47a919cfa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_raw_manager_1_1_raw_manager.html#a109af60a7672888cb33fecb47a919cfa">_lines</a></td></tr>
-<tr class="memdesc:a109af60a7672888cb33fecb47a919cfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">define instance vars  <a href="#a109af60a7672888cb33fecb47a919cfa">More...</a><br /></td></tr>
+<tr class="memitem:a109af60a7672888cb33fecb47a919cfa"><td class="memItemLeft" align="right" valign="top"><a id="a109af60a7672888cb33fecb47a919cfa"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>_lines</b></td></tr>
 <tr class="separator:a109af60a7672888cb33fecb47a919cfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add5ca396bb6f30bd2822f7dc76c649c1"><td class="memItemLeft" align="right" valign="top"><a id="add5ca396bb6f30bd2822f7dc76c649c1"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>_game_table</b></td></tr>
@@ -118,64 +121,16 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:aa4bbc716d06ce743642e64109d39e147"><td class="memItemLeft" align="right" valign="top"><a id="aa4bbc716d06ce743642e64109d39e147"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>_all_columns</b></td></tr>
 <tr class="separator:aa4bbc716d06ce743642e64109d39e147"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e56eb61692028e319691b35ed295833"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_raw_manager_1_1_raw_manager.html#a0e56eb61692028e319691b35ed295833">_columns_to_indices</a></td></tr>
-<tr class="memdesc:a0e56eb61692028e319691b35ed295833"><td class="mdescLeft">&#160;</td><td class="mdescRight">Not the nicest thing ever, but this function creates a dictionary that maps column names to indices, so we can store each line for raw csv as a list with guaranteed consistent order.  <a href="#a0e56eb61692028e319691b35ed295833">More...</a><br /></td></tr>
+<tr class="memitem:a0e56eb61692028e319691b35ed295833"><td class="memItemLeft" align="right" valign="top"><a id="a0e56eb61692028e319691b35ed295833"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>_columns_to_indices</b></td></tr>
 <tr class="separator:a0e56eb61692028e319691b35ed295833"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac7ea16672e9717033c1cf2bc76d7061c"><td class="memItemLeft" align="right" valign="top"><a id="ac7ea16672e9717033c1cf2bc76d7061c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>_raw_file</b></td></tr>
 <tr class="separator:ac7ea16672e9717033c1cf2bc76d7061c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a0e56eb61692028e319691b35ed295833"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e56eb61692028e319691b35ed295833">&#9670;&nbsp;</a></span>_columns_to_indices</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">RawManager.RawManager._columns_to_indices</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Not the nicest thing ever, but this function creates a dictionary that maps column names to indices, so we can store each line for raw csv as a list with guaranteed consistent order. </p>
-
-</div>
-</div>
-<a id="a109af60a7672888cb33fecb47a919cfa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a109af60a7672888cb33fecb47a919cfa">&#9670;&nbsp;</a></span>_lines</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">RawManager.RawManager._lines</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>define instance vars </p>
-<p>set instance vars </p>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Class to manage data for a raw csv file. </p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>RawManager.py</li>
 </ul>
 </div><!-- contents -->

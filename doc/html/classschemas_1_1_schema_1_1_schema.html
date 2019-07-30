@@ -75,75 +75,301 @@ $(function() {
 <div class="title">schemas.Schema.Schema Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>A fairly simple class that reads a JSON schema with information on how a given game's data is structured in the database, and the features we want to extract for that game.  
+ <a href="classschemas_1_1_schema_1_1_schema.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a49117e762b38a7a2a3f7c1a25ab5e38c"><td class="memItemLeft" align="right" valign="top"><a id="a49117e762b38a7a2a3f7c1a25ab5e38c"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self, str schema_name, str schema_path=os.path.dirname(__file__)+&quot;/JSON/&quot;)</td></tr>
+<tr class="memitem:a49117e762b38a7a2a3f7c1a25ab5e38c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classschemas_1_1_schema_1_1_schema.html#a49117e762b38a7a2a3f7c1a25ab5e38c">__init__</a> (self, str schema_name, str schema_path=os.path.dirname(__file__)+&quot;/JSON/&quot;)</td></tr>
+<tr class="memdesc:a49117e762b38a7a2a3f7c1a25ab5e38c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <a class="el" href="classschemas_1_1_schema_1_1_schema.html" title="A fairly simple class that reads a JSON schema with information on how a given game&#39;s data is structu...">Schema</a> class.  <a href="#a49117e762b38a7a2a3f7c1a25ab5e38c">More...</a><br /></td></tr>
 <tr class="separator:a49117e762b38a7a2a3f7c1a25ab5e38c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a31dc30bc1d2718a76951952d2e07e7"><td class="memItemLeft" align="right" valign="top"><a id="a4a31dc30bc1d2718a76951952d2e07e7"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>schema</b> (self)</td></tr>
-<tr class="separator:a4a31dc30bc1d2718a76951952d2e07e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a452594660a19056dc8e8dfcf9752572d"><td class="memItemLeft" align="right" valign="top"><a id="a452594660a19056dc8e8dfcf9752572d"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>events</b> (self)</td></tr>
-<tr class="separator:a452594660a19056dc8e8dfcf9752572d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a701be4bd6663c1e874002a3006a7a7f4"><td class="memItemLeft" align="right" valign="top"><a id="a701be4bd6663c1e874002a3006a7a7f4"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>event_types</b> (self)</td></tr>
+<tr class="memitem:af9a879ebb04be3449b986010fcbb70f1"><td class="memItemLeft" align="right" valign="top">typing.Dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classschemas_1_1_schema_1_1_schema.html#af9a879ebb04be3449b986010fcbb70f1">schema</a> (self)</td></tr>
+<tr class="memdesc:af9a879ebb04be3449b986010fcbb70f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to retrieve the full schema dictionary.  <a href="#af9a879ebb04be3449b986010fcbb70f1">More...</a><br /></td></tr>
+<tr class="separator:af9a879ebb04be3449b986010fcbb70f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe06b60ef3219404bdae121d8384d580"><td class="memItemLeft" align="right" valign="top">typing.Dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classschemas_1_1_schema_1_1_schema.html#abe06b60ef3219404bdae121d8384d580">events</a> (self)</td></tr>
+<tr class="memdesc:abe06b60ef3219404bdae121d8384d580"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to retrieve the dictionary of event types for the game.  <a href="#abe06b60ef3219404bdae121d8384d580">More...</a><br /></td></tr>
+<tr class="separator:abe06b60ef3219404bdae121d8384d580"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a701be4bd6663c1e874002a3006a7a7f4"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classschemas_1_1_schema_1_1_schema.html#a701be4bd6663c1e874002a3006a7a7f4">event_types</a> (self)</td></tr>
+<tr class="memdesc:a701be4bd6663c1e874002a3006a7a7f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to retrieve the names of all event types for the game.  <a href="#a701be4bd6663c1e874002a3006a7a7f4">More...</a><br /></td></tr>
 <tr class="separator:a701be4bd6663c1e874002a3006a7a7f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41210274d603cbb51a708543699613bd"><td class="memItemLeft" align="right" valign="top"><a id="a41210274d603cbb51a708543699613bd"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>features</b> (self)</td></tr>
-<tr class="separator:a41210274d603cbb51a708543699613bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4417540295a6983bbc01b43ab6305b6b"><td class="memItemLeft" align="right" valign="top"><a id="a4417540295a6983bbc01b43ab6305b6b"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>perlevel_features</b> (self)</td></tr>
-<tr class="separator:a4417540295a6983bbc01b43ab6305b6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2681dfa3bc8a7df6c04450a667dfefb4"><td class="memItemLeft" align="right" valign="top"><a id="a2681dfa3bc8a7df6c04450a667dfefb4"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>percount_features</b> (self)</td></tr>
-<tr class="separator:a2681dfa3bc8a7df6c04450a667dfefb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa14f9b76747da30079f66675abbd1d9b"><td class="memItemLeft" align="right" valign="top"><a id="aa14f9b76747da30079f66675abbd1d9b"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>aggregate_features</b> (self)</td></tr>
-<tr class="separator:aa14f9b76747da30079f66675abbd1d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1ced29747f1d84f67abd0051bfdf33e"><td class="memItemLeft" align="right" valign="top"><a id="ad1ced29747f1d84f67abd0051bfdf33e"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>feature_list</b> (self)</td></tr>
-<tr class="separator:ad1ced29747f1d84f67abd0051bfdf33e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a388360851a28e68ef6dd2ad0b13fceb9"><td class="memItemLeft" align="right" valign="top"><a id="a388360851a28e68ef6dd2ad0b13fceb9"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>db_columns_with_types</b> (self)</td></tr>
-<tr class="separator:a388360851a28e68ef6dd2ad0b13fceb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0441b3d86b6254c0b58d69053264ae56"><td class="memItemLeft" align="right" valign="top"><a id="a0441b3d86b6254c0b58d69053264ae56"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>db_columns</b> (self)</td></tr>
+<tr class="memitem:af82bbbdcbfcce5c877835fb72f011fd8"><td class="memItemLeft" align="right" valign="top">typing.Dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classschemas_1_1_schema_1_1_schema.html#af82bbbdcbfcce5c877835fb72f011fd8">features</a> (self)</td></tr>
+<tr class="memdesc:af82bbbdcbfcce5c877835fb72f011fd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to retrieve the dictionary of categorized features to extract.  <a href="#af82bbbdcbfcce5c877835fb72f011fd8">More...</a><br /></td></tr>
+<tr class="separator:af82bbbdcbfcce5c877835fb72f011fd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa4cdb4eb5c81160ce964c035617471b"><td class="memItemLeft" align="right" valign="top">typing.Dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classschemas_1_1_schema_1_1_schema.html#aaa4cdb4eb5c81160ce964c035617471b">perlevel_features</a> (self)</td></tr>
+<tr class="memdesc:aaa4cdb4eb5c81160ce964c035617471b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to retrieve the dictionary of per-level features.  <a href="#aaa4cdb4eb5c81160ce964c035617471b">More...</a><br /></td></tr>
+<tr class="separator:aaa4cdb4eb5c81160ce964c035617471b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c47728a54d6f61550c665d83ecf142a"><td class="memItemLeft" align="right" valign="top">typing.Dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classschemas_1_1_schema_1_1_schema.html#a9c47728a54d6f61550c665d83ecf142a">percount_features</a> (self)</td></tr>
+<tr class="memdesc:a9c47728a54d6f61550c665d83ecf142a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to retrieve the dictionary of per-custom-count features.  <a href="#a9c47728a54d6f61550c665d83ecf142a">More...</a><br /></td></tr>
+<tr class="separator:a9c47728a54d6f61550c665d83ecf142a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65c1e410bba5f9c14aa5f90558f1313f"><td class="memItemLeft" align="right" valign="top">typing.Dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classschemas_1_1_schema_1_1_schema.html#a65c1e410bba5f9c14aa5f90558f1313f">aggregate_features</a> (self)</td></tr>
+<tr class="memdesc:a65c1e410bba5f9c14aa5f90558f1313f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to retrieve the dictionary of aggregate features.  <a href="#a65c1e410bba5f9c14aa5f90558f1313f">More...</a><br /></td></tr>
+<tr class="separator:a65c1e410bba5f9c14aa5f90558f1313f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac787b75fe46e2bbe10fd807bf76e1d0e"><td class="memItemLeft" align="right" valign="top">typing.List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classschemas_1_1_schema_1_1_schema.html#ac787b75fe46e2bbe10fd807bf76e1d0e">feature_list</a> (self)</td></tr>
+<tr class="memdesc:ac787b75fe46e2bbe10fd807bf76e1d0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to retrieve the compiled list of all feature names.  <a href="#ac787b75fe46e2bbe10fd807bf76e1d0e">More...</a><br /></td></tr>
+<tr class="separator:ac787b75fe46e2bbe10fd807bf76e1d0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8195db97a01c5a742d0a2734605acf82"><td class="memItemLeft" align="right" valign="top">typing.Dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classschemas_1_1_schema_1_1_schema.html#a8195db97a01c5a742d0a2734605acf82">db_columns_with_types</a> (self)</td></tr>
+<tr class="memdesc:a8195db97a01c5a742d0a2734605acf82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to retrieve the dictionary of database columns.  <a href="#a8195db97a01c5a742d0a2734605acf82">More...</a><br /></td></tr>
+<tr class="separator:a8195db97a01c5a742d0a2734605acf82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0441b3d86b6254c0b58d69053264ae56"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classschemas_1_1_schema_1_1_schema.html#a0441b3d86b6254c0b58d69053264ae56">db_columns</a> (self)</td></tr>
+<tr class="memdesc:a0441b3d86b6254c0b58d69053264ae56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to retrieve the names of all database columns.  <a href="#a0441b3d86b6254c0b58d69053264ae56">More...</a><br /></td></tr>
 <tr class="separator:a0441b3d86b6254c0b58d69053264ae56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a26f967eb1a6bc8075e6866e97d3412c9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classschemas_1_1_schema_1_1_schema.html#a26f967eb1a6bc8075e6866e97d3412c9">_schema</a></td></tr>
-<tr class="memdesc:a26f967eb1a6bc8075e6866e97d3412c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">define instance vars  <a href="#a26f967eb1a6bc8075e6866e97d3412c9">More...</a><br /></td></tr>
+<tr class="memitem:a26f967eb1a6bc8075e6866e97d3412c9"><td class="memItemLeft" align="right" valign="top"><a id="a26f967eb1a6bc8075e6866e97d3412c9"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>_schema</b></td></tr>
 <tr class="separator:a26f967eb1a6bc8075e6866e97d3412c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0471e490085c79f8244d3dd9aa7c3c6c"><td class="memItemLeft" align="right" valign="top"><a id="a0471e490085c79f8244d3dd9aa7c3c6c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>_feature_list</b></td></tr>
 <tr class="separator:a0471e490085c79f8244d3dd9aa7c3c6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a26f967eb1a6bc8075e6866e97d3412c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26f967eb1a6bc8075e6866e97d3412c9">&#9670;&nbsp;</a></span>_schema</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>A fairly simple class that reads a JSON schema with information on how a given game's data is structured in the database, and the features we want to extract for that game. </p>
+<p>The class includes several functions for easy access to the various parts of this schema data. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a49117e762b38a7a2a3f7c1a25ab5e38c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49117e762b38a7a2a3f7c1a25ab5e38c">&#9670;&nbsp;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">schemas.Schema.Schema._schema</td>
+          <td class="memname">def schemas.Schema.Schema.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>schema_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">str &#160;</td>
+          <td class="paramname"><em>schema_path</em> = <code>os.path.dirname(__file__)&#160;+&#160;&quot;/JSON/&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
-<p>define instance vars </p>
-<p>set instance vars </p>
+<p>Constructor for the <a class="el" href="classschemas_1_1_schema_1_1_schema.html" title="A fairly simple class that reads a JSON schema with information on how a given game&#39;s data is structu...">Schema</a> class. </p>
+<p>Given a path and filename, it loads the data from a JSON schema, storing the full schema into a private variable, and compiling a list of all features to be extracted.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">schema_name</td><td>The name of the JSON schema file (if .json is not the file extension, .json will be appended) </td></tr>
+    <tr><td class="paramname">schema_path</td><td>Path to the folder containing the JSON schema file (if the path does not end in "/", a "/" will be appended) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a65c1e410bba5f9c14aa5f90558f1313f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65c1e410bba5f9c14aa5f90558f1313f">&#9670;&nbsp;</a></span>aggregate_features()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> typing.Dict schemas.Schema.Schema.aggregate_features </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to retrieve the dictionary of aggregate features. </p>
+
+</div>
+</div>
+<a id="a0441b3d86b6254c0b58d69053264ae56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0441b3d86b6254c0b58d69053264ae56">&#9670;&nbsp;</a></span>db_columns()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def schemas.Schema.Schema.db_columns </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to retrieve the names of all database columns. </p>
+
+</div>
+</div>
+<a id="a8195db97a01c5a742d0a2734605acf82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8195db97a01c5a742d0a2734605acf82">&#9670;&nbsp;</a></span>db_columns_with_types()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> typing.Dict schemas.Schema.Schema.db_columns_with_types </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to retrieve the dictionary of database columns. </p>
+
+</div>
+</div>
+<a id="a701be4bd6663c1e874002a3006a7a7f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a701be4bd6663c1e874002a3006a7a7f4">&#9670;&nbsp;</a></span>event_types()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def schemas.Schema.Schema.event_types </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to retrieve the names of all event types for the game. </p>
+
+</div>
+</div>
+<a id="abe06b60ef3219404bdae121d8384d580"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe06b60ef3219404bdae121d8384d580">&#9670;&nbsp;</a></span>events()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> typing.Dict schemas.Schema.Schema.events </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to retrieve the dictionary of event types for the game. </p>
+
+</div>
+</div>
+<a id="ac787b75fe46e2bbe10fd807bf76e1d0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac787b75fe46e2bbe10fd807bf76e1d0e">&#9670;&nbsp;</a></span>feature_list()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> typing.List schemas.Schema.Schema.feature_list </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to retrieve the compiled list of all feature names. </p>
+
+</div>
+</div>
+<a id="af82bbbdcbfcce5c877835fb72f011fd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af82bbbdcbfcce5c877835fb72f011fd8">&#9670;&nbsp;</a></span>features()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> typing.Dict schemas.Schema.Schema.features </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to retrieve the dictionary of categorized features to extract. </p>
+
+</div>
+</div>
+<a id="a9c47728a54d6f61550c665d83ecf142a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c47728a54d6f61550c665d83ecf142a">&#9670;&nbsp;</a></span>percount_features()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> typing.Dict schemas.Schema.Schema.percount_features </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to retrieve the dictionary of per-custom-count features. </p>
+
+</div>
+</div>
+<a id="aaa4cdb4eb5c81160ce964c035617471b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa4cdb4eb5c81160ce964c035617471b">&#9670;&nbsp;</a></span>perlevel_features()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> typing.Dict schemas.Schema.Schema.perlevel_features </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to retrieve the dictionary of per-level features. </p>
+
+</div>
+</div>
+<a id="af9a879ebb04be3449b986010fcbb70f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9a879ebb04be3449b986010fcbb70f1">&#9670;&nbsp;</a></span>schema()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> typing.Dict schemas.Schema.Schema.schema </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to retrieve the full schema dictionary. </p>
 
 </div>
 </div>

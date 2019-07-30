@@ -76,23 +76,20 @@ $(function() {
 <div class="title">GameTable.GameTable Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>Dumb struct to hold info about the structure of database data for a particular game.  
- <a href="class_game_table_1_1_game_table.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aac82c184a78a56e743d0b0abf1f8d310"><td class="memItemLeft" align="right" valign="top"><a id="aac82c184a78a56e743d0b0abf1f8d310"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self, db, settings, Request request)</td></tr>
+<tr class="memitem:aac82c184a78a56e743d0b0abf1f8d310"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_table_1_1_game_table.html#aac82c184a78a56e743d0b0abf1f8d310">__init__</a> (self, db, settings, Request request)</td></tr>
+<tr class="memdesc:aac82c184a78a56e743d0b0abf1f8d310"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <a class="el" href="class_game_table_1_1_game_table.html">GameTable</a> class.  <a href="#aac82c184a78a56e743d0b0abf1f8d310">More...</a><br /></td></tr>
 <tr class="separator:aac82c184a78a56e743d0b0abf1f8d310"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a596b733cc376c6d28de396ab7a011c1e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_table_1_1_game_table.html#a596b733cc376c6d28de396ab7a011c1e">column_names</a></td></tr>
-<tr class="memdesc:a596b733cc376c6d28de396ab7a011c1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define instance vars.  <a href="#a596b733cc376c6d28de396ab7a011c1e">More...</a><br /></td></tr>
+<tr class="memitem:a596b733cc376c6d28de396ab7a011c1e"><td class="memItemLeft" align="right" valign="top"><a id="a596b733cc376c6d28de396ab7a011c1e"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>column_names</b></td></tr>
 <tr class="separator:a596b733cc376c6d28de396ab7a011c1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1f48adb24bc7144f6f6ba628791ffa0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_table_1_1_game_table.html#ad1f48adb24bc7144f6f6ba628791ffa0">complex_data_index</a></td></tr>
-<tr class="memdesc:ad1f48adb24bc7144f6f6ba628791ffa0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Take note of specific indices which will be useful when using a <a class="el" href="class_game_table_1_1_game_table.html" title="Dumb struct to hold info about the structure of database data for a particular game.">GameTable</a> TODO: Honestly, should just make a reverse index dictionary.  <a href="#ad1f48adb24bc7144f6f6ba628791ffa0">More...</a><br /></td></tr>
+<tr class="memitem:ad1f48adb24bc7144f6f6ba628791ffa0"><td class="memItemLeft" align="right" valign="top"><a id="ad1f48adb24bc7144f6f6ba628791ffa0"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>complex_data_index</b></td></tr>
 <tr class="separator:ad1f48adb24bc7144f6f6ba628791ffa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a354141997986901db4358cee0d9984bd"><td class="memItemLeft" align="right" valign="top"><a id="a354141997986901db4358cee0d9984bd"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>client_time_index</b></td></tr>
@@ -121,47 +118,151 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
-<tr class="memitem:a53de09318575062d54e7fbac6ced6e72"><td class="memItemLeft" align="right" valign="top"><a id="a53de09318575062d54e7fbac6ced6e72"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>_getColumnNames</b> (db_cursor, db, db_settings)</td></tr>
+<tr class="memitem:a53de09318575062d54e7fbac6ced6e72"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_table_1_1_game_table.html#a53de09318575062d54e7fbac6ced6e72">_getColumnNames</a> (db_cursor, db, db_settings)</td></tr>
+<tr class="memdesc:a53de09318575062d54e7fbac6ced6e72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Private helper function to retrieve a list of all database columns from the table.  <a href="#a53de09318575062d54e7fbac6ced6e72">More...</a><br /></td></tr>
 <tr class="separator:a53de09318575062d54e7fbac6ced6e72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae359142f51f4e68cb57b6e76689e09e6"><td class="memItemLeft" align="right" valign="top"><a id="ae359142f51f4e68cb57b6e76689e09e6"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>_getSessionIDs</b> (db_cursor, db, db_settings, request)</td></tr>
+<tr class="memitem:ae359142f51f4e68cb57b6e76689e09e6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_table_1_1_game_table.html#ae359142f51f4e68cb57b6e76689e09e6">_getSessionIDs</a> (db_cursor, db, db_settings, request)</td></tr>
+<tr class="memdesc:ae359142f51f4e68cb57b6e76689e09e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Private helper function to get a list of all sessions within the timeframe given in the request, for the game id given in the request.  <a href="#ae359142f51f4e68cb57b6e76689e09e6">More...</a><br /></td></tr>
 <tr class="separator:ae359142f51f4e68cb57b6e76689e09e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Dumb struct to hold info about the structure of database data for a particular game. </p>
-<p>Just here to help keep useful data together for easier passing around. </p>
-</div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="a596b733cc376c6d28de396ab7a011c1e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a596b733cc376c6d28de396ab7a011c1e">&#9670;&nbsp;</a></span>column_names</h2>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aac82c184a78a56e743d0b0abf1f8d310"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac82c184a78a56e743d0b0abf1f8d310">&#9670;&nbsp;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">GameTable.GameTable.column_names</td>
+          <td class="memname">def GameTable.GameTable.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>db</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>settings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Request&#160;</td>
+          <td class="paramname"><em>request</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Define instance vars. </p>
-<p>Set instance vars </p>
+<p>Constructor for the <a class="el" href="class_game_table_1_1_game_table.html">GameTable</a> class. </p>
+<p>Given a database connection and a game data request, this retrieves a bit of information from the database to fill in the class variables. </p>
 
 </div>
 </div>
-<a id="ad1f48adb24bc7144f6f6ba628791ffa0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1f48adb24bc7144f6f6ba628791ffa0">&#9670;&nbsp;</a></span>complex_data_index</h2>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a53de09318575062d54e7fbac6ced6e72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53de09318575062d54e7fbac6ced6e72">&#9670;&nbsp;</a></span>_getColumnNames()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">GameTable.GameTable.complex_data_index</td>
+          <td class="memname">def GameTable.GameTable._getColumnNames </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>db_cursor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>db</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>db_settings</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Take note of specific indices which will be useful when using a <a class="el" href="class_game_table_1_1_game_table.html" title="Dumb struct to hold info about the structure of database data for a particular game.">GameTable</a> TODO: Honestly, should just make a reverse index dictionary. </p>
+<p>Private helper function to retrieve a list of all database columns from the table. </p>
+<p>This requires executing a SQL statement, so it's slightly slower than using the schema, but is guaranteed to be correct for what's in the db. Just used to initialize the column_names member of the <a class="el" href="class_game_table_1_1_game_table.html">GameTable</a> class. </p>
+
+</div>
+</div>
+<a id="ae359142f51f4e68cb57b6e76689e09e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae359142f51f4e68cb57b6e76689e09e6">&#9670;&nbsp;</a></span>_getSessionIDs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">def GameTable.GameTable._getSessionIDs </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>db_cursor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>db</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>db_settings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>request</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Private helper function to get a list of all sessions within the timeframe given in the request, for the game id given in the request. </p>
+<p>Just used to initialize the session_ids member of the <a class="el" href="class_game_table_1_1_game_table.html">GameTable</a> class. </p>
 
 </div>
 </div>

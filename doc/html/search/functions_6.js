@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['incaggregateval',['incAggregateVal',['../classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features.html#a7d4f6f7bc8639f698f74228a9f14e60a',1,'feature_extractors::Extractor::Extractor::SessionFeatures']]],
-  ['incvalbyindex',['incValByIndex',['../classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features.html#affd8503fce964f8f1406627feb32ecbc',1,'feature_extractors::Extractor::Extractor::SessionFeatures']]]
+  ['generatefeaturedict',['generateFeatureDict',['../classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features.html#a9bf201ba0b88d15f849a3e864d518bb2',1,'feature_extractors::Extractor::Extractor::SessionFeatures']]],
+  ['getfeaturebyindex',['getFeatureByIndex',['../classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features.html#a661173b55a36766ad239d447e9bbcf4b',1,'feature_extractors::Extractor::Extractor::SessionFeatures']]],
+  ['getvalbyindex',['getValByIndex',['../classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features.html#a239bd49dfe33736f8c76edccfa7a50b2',1,'feature_extractors::Extractor::Extractor::SessionFeatures']]],
+  ['getvalbyname',['getValByName',['../classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features.html#a8debfe1452e37cf6129c4e14fbd0025d',1,'feature_extractors::Extractor::Extractor::SessionFeatures']]]
 ];

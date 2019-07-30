@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['extractfromrow',['extractFromRow',['../classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor.html#a916b4ecdb7842673f8f62d61732d5624',1,'feature_extractors.CrystalExtractor.CrystalExtractor.extractFromRow()'],['../classfeature__extractors_1_1_extractor_1_1_extractor.html#a98fc31f77b3c7650f49480097f1f6da4',1,'feature_extractors.Extractor.Extractor.extractFromRow()'],['../classfeature__extractors_1_1_wave_extractor_1_1_wave_extractor.html#a3dbf40e07ac5c4c28037f331cc268798',1,'feature_extractors.WaveExtractor.WaveExtractor.extractFromRow()']]]
+  ['datetofilesafestring',['dateToFileSafeString',['../namespaceutils.html#ab2f8ec31af461e89fcc8e5d030cfd5fc',1,'utils']]],
+  ['db_5fcolumns',['db_columns',['../classschemas_1_1_schema_1_1_schema.html#a0441b3d86b6254c0b58d69053264ae56',1,'schemas::Schema::Schema']]],
+  ['db_5fcolumns_5fwith_5ftypes',['db_columns_with_types',['../classschemas_1_1_schema_1_1_schema.html#a8195db97a01c5a742d0a2734605acf82',1,'schemas::Schema::Schema']]]
 ];

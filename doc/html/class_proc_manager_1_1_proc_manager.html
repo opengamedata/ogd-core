@@ -75,26 +75,29 @@ $(function() {
 <div class="title">ProcManager.ProcManager Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Class to extract and manage features for a processed csv file.  
+ <a href="class_proc_manager_1_1_proc_manager.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9fd37c5df3f1f4af41d9eccd8fe5f7fb"><td class="memItemLeft" align="right" valign="top"><a id="a9fd37c5df3f1f4af41d9eccd8fe5f7fb"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self, type ExtractorClass, GameTable game_table, <a class="el" href="classschemas_1_1_schema_1_1_schema.html">Schema</a> game_schema, typing.IO.writable proc_csv_file)</td></tr>
+<tr class="memitem:a9fd37c5df3f1f4af41d9eccd8fe5f7fb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_proc_manager_1_1_proc_manager.html#a9fd37c5df3f1f4af41d9eccd8fe5f7fb">__init__</a> (self, type ExtractorClass, <a class="el" href="class_game_table.html">GameTable</a> game_table, <a class="el" href="classschemas_1_1_schema_1_1_schema.html">Schema</a> game_schema, typing.IO.writable proc_csv_file)</td></tr>
+<tr class="memdesc:a9fd37c5df3f1f4af41d9eccd8fe5f7fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <a class="el" href="class_proc_manager_1_1_proc_manager.html" title="Class to extract and manage features for a processed csv file.">ProcManager</a> class.  <a href="#a9fd37c5df3f1f4af41d9eccd8fe5f7fb">More...</a><br /></td></tr>
 <tr class="separator:a9fd37c5df3f1f4af41d9eccd8fe5f7fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74911cffd1679201bde8401b34d89af0"><td class="memItemLeft" align="right" valign="top"><a id="a74911cffd1679201bde8401b34d89af0"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>ProcessRow</b> (self, typing.Tuple row_with_complex_parsed)</td></tr>
+<tr class="memitem:a74911cffd1679201bde8401b34d89af0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_proc_manager_1_1_proc_manager.html#a74911cffd1679201bde8401b34d89af0">ProcessRow</a> (self, typing.Tuple row_with_complex_parsed)</td></tr>
+<tr class="memdesc:a74911cffd1679201bde8401b34d89af0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to handle processing of a single row of data.  <a href="#a74911cffd1679201bde8401b34d89af0">More...</a><br /></td></tr>
 <tr class="separator:a74911cffd1679201bde8401b34d89af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a672b24c4a817fc8cc7d4c1dafb47d6b8"><td class="memItemLeft" align="right" valign="top"><a id="a672b24c4a817fc8cc7d4c1dafb47d6b8"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>ClearLines</b> (self)</td></tr>
+<tr class="memitem:a672b24c4a817fc8cc7d4c1dafb47d6b8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_proc_manager_1_1_proc_manager.html#a672b24c4a817fc8cc7d4c1dafb47d6b8">ClearLines</a> (self)</td></tr>
+<tr class="memdesc:a672b24c4a817fc8cc7d4c1dafb47d6b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to empty the list of lines stored by the <a class="el" href="class_proc_manager_1_1_proc_manager.html" title="Class to extract and manage features for a processed csv file.">ProcManager</a>.  <a href="#a672b24c4a817fc8cc7d4c1dafb47d6b8">More...</a><br /></td></tr>
 <tr class="separator:a672b24c4a817fc8cc7d4c1dafb47d6b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5961b8a9141b674e42921cb8a3866a72"><td class="memItemLeft" align="right" valign="top"><a id="a5961b8a9141b674e42921cb8a3866a72"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>calculateAggregateFeatures</b> (self)</td></tr>
+<tr class="memitem:a5961b8a9141b674e42921cb8a3866a72"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_proc_manager_1_1_proc_manager.html#a5961b8a9141b674e42921cb8a3866a72">calculateAggregateFeatures</a> (self)</td></tr>
+<tr class="memdesc:a5961b8a9141b674e42921cb8a3866a72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to calculate aggregate features of all extractors created by the <a class="el" href="class_proc_manager_1_1_proc_manager.html" title="Class to extract and manage features for a processed csv file.">ProcManager</a>.  <a href="#a5961b8a9141b674e42921cb8a3866a72">More...</a><br /></td></tr>
 <tr class="separator:a5961b8a9141b674e42921cb8a3866a72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2abf4bcc5684ffe4a68bc2398b7c5b50"><td class="memItemLeft" align="right" valign="top"><a id="a2abf4bcc5684ffe4a68bc2398b7c5b50"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>WriteProcCSVHeader</b> (self)</td></tr>
+<tr class="memitem:a2abf4bcc5684ffe4a68bc2398b7c5b50"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_proc_manager_1_1_proc_manager.html#a2abf4bcc5684ffe4a68bc2398b7c5b50">WriteProcCSVHeader</a> (self)</td></tr>
+<tr class="memdesc:a2abf4bcc5684ffe4a68bc2398b7c5b50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to write out the header for a processed csv file.  <a href="#a2abf4bcc5684ffe4a68bc2398b7c5b50">More...</a><br /></td></tr>
 <tr class="separator:a2abf4bcc5684ffe4a68bc2398b7c5b50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed7e5345016adee275b0e3415b420b66"><td class="memItemLeft" align="right" valign="top"><a id="aed7e5345016adee275b0e3415b420b66"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>WriteProcCSVLines</b> (self)</td></tr>
+<tr class="memitem:aed7e5345016adee275b0e3415b420b66"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_proc_manager_1_1_proc_manager.html#aed7e5345016adee275b0e3415b420b66">WriteProcCSVLines</a> (self)</td></tr>
+<tr class="memdesc:aed7e5345016adee275b0e3415b420b66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to write out all data for the extractors created by the <a class="el" href="class_proc_manager_1_1_proc_manager.html" title="Class to extract and manage features for a processed csv file.">ProcManager</a>.  <a href="#aed7e5345016adee275b0e3415b420b66">More...</a><br /></td></tr>
 <tr class="separator:aed7e5345016adee275b0e3415b420b66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
@@ -103,6 +106,188 @@ Private Attributes</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>_session_extractors</b></td></tr>
 <tr class="separator:aec97cec2a93a9517820e86a918fe1d06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Class to extract and manage features for a processed csv file. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a9fd37c5df3f1f4af41d9eccd8fe5f7fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9fd37c5df3f1f4af41d9eccd8fe5f7fb">&#9670;&nbsp;</a></span>__init__()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def ProcManager.ProcManager.__init__ </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type&#160;</td>
+          <td class="paramname"><em>ExtractorClass</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_game_table.html">GameTable</a>&#160;</td>
+          <td class="paramname"><em>game_table</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classschemas_1_1_schema_1_1_schema.html">Schema</a>&#160;</td>
+          <td class="paramname"><em>game_schema</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">typing.IO.writable&#160;</td>
+          <td class="paramname"><em>proc_csv_file</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructor for the <a class="el" href="class_proc_manager_1_1_proc_manager.html" title="Class to extract and manage features for a processed csv file.">ProcManager</a> class. </p>
+<p>Simply stores some data for use later, including the type of extractor to use.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ExtractorClass</td><td>The type of data extractor to use for input data. This should correspond to whatever game_id is in the <a class="el" href="class_game_table.html" title="Dumb struct to hold useful info about the structure of database data for a particular game.">GameTable</a>. </td></tr>
+    <tr><td class="paramname">game_table</td><td>A data structure containing information on how the db table assiciated with the given game is structured. </td></tr>
+    <tr><td class="paramname">game_schema</td><td>A dictionary that defines how the game data itself is structured. </td></tr>
+    <tr><td class="paramname">proc_csv_file</td><td>The output file, to which we'll write the processed feature data. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a5961b8a9141b674e42921cb8a3866a72"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5961b8a9141b674e42921cb8a3866a72">&#9670;&nbsp;</a></span>calculateAggregateFeatures()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def ProcManager.ProcManager.calculateAggregateFeatures </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to calculate aggregate features of all extractors created by the <a class="el" href="class_proc_manager_1_1_proc_manager.html" title="Class to extract and manage features for a processed csv file.">ProcManager</a>. </p>
+<p>Just calls the function once on each extractor. </p>
+
+</div>
+</div>
+<a id="a672b24c4a817fc8cc7d4c1dafb47d6b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a672b24c4a817fc8cc7d4c1dafb47d6b8">&#9670;&nbsp;</a></span>ClearLines()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def ProcManager.ProcManager.ClearLines </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to empty the list of lines stored by the <a class="el" href="class_proc_manager_1_1_proc_manager.html" title="Class to extract and manage features for a processed csv file.">ProcManager</a>. </p>
+<p>This is helpful if we're processing a lot of data and want to avoid eating too much memory. </p>
+
+</div>
+</div>
+<a id="a74911cffd1679201bde8401b34d89af0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74911cffd1679201bde8401b34d89af0">&#9670;&nbsp;</a></span>ProcessRow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def ProcManager.ProcManager.ProcessRow </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">typing.Tuple&#160;</td>
+          <td class="paramname"><em>row_with_complex_parsed</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to handle processing of a single row of data. </p>
+<p>Basically just responsible for ensuring an extractor for the session corresponding to the row already exists, then delegating the processing to that extractor. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">row_with_complex_parsed</td><td>A tuple of the row data. We assume the event_data_complex has already been parsed from JSON. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2abf4bcc5684ffe4a68bc2398b7c5b50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2abf4bcc5684ffe4a68bc2398b7c5b50">&#9670;&nbsp;</a></span>WriteProcCSVHeader()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def ProcManager.ProcManager.WriteProcCSVHeader </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to write out the header for a processed csv file. </p>
+<p>Just runs the header writer for whichever Extractor subclass we were given. </p>
+
+</div>
+</div>
+<a id="aed7e5345016adee275b0e3415b420b66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed7e5345016adee275b0e3415b420b66">&#9670;&nbsp;</a></span>WriteProcCSVLines()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def ProcManager.ProcManager.WriteProcCSVLines </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to write out all data for the extractors created by the <a class="el" href="class_proc_manager_1_1_proc_manager.html" title="Class to extract and manage features for a processed csv file.">ProcManager</a>. </p>
+<p>Just calls the "write" function once for each extractor. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>ProcManager.py</li>
 </ul>
