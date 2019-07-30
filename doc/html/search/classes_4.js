@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['rawmanager',['RawManager',['../class_raw_manager_1_1_raw_manager.html',1,'RawManager']]],
-  ['request',['Request',['../class_request_1_1_request.html',1,'Request']]]
+  ['procmanager',['ProcManager',['../class_proc_manager.html',1,'ProcManager'],['../class_proc_manager_1_1_proc_manager.html',1,'ProcManager.ProcManager']]]
 ];
