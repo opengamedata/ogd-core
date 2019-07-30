@@ -4,8 +4,8 @@ import logging
 import math
 import sys
 # import local files
-import DataToCSV
 import utils
+from FeatureExporter import FeatureExporter
 from Request import Request
 from feature_extractors.WaveExtractor import WaveExtractor
 
@@ -66,7 +66,7 @@ def runExport():
     # import cProfile
     start = datetime.datetime.now()
     # cProfile.run("DataToCSV.exportDataToCSV(db=db, settings=settings, request=req)")
-    feature_exporter = DataToCSV.FeatureExporter(req.game_id, db=db, settings=settings)
+    feature_exporter = FeatureExporter(req.game_id, db=db, settings=settings)
     feature_exporter.exportFromRequest(request=req)
     end = datetime.datetime.now()
 
