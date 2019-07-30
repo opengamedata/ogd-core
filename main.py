@@ -71,7 +71,7 @@ def runExport():
     end = datetime.datetime.now()
 
     time_delta = end - start
-    logging.info(f"Total time taken: {math.floor(time_delta.total_seconds()/60)} min, {time_delta.total_seconds() % 60)} sec")
+    logging.info(f"Total time taken: {math.floor(time_delta.total_seconds()/60)} min, {time_delta.total_seconds() % 60} sec")
 
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
