@@ -163,14 +163,14 @@ class WaveExtractor(Extractor):
     def _extractFromBegin(self, level, event_client_time):
         self.features.incValByIndex(feature_name="beginCount", index=level)
         if self.active_begin == None:
-            self.active_begin = level
             self.start_times[level] = event_client_time
         elif self.active_begin == level:
             pass # in this case, just keep going.
         else:
             self.end_times[level] = event_client_time
             self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
-            self.active_begin = None
+        # in any case, current level now has active begin event.
+        self.active_begin = level
 
     ## Private function to extract features from a "COMPLETE" event.
     #  The features affected are:
