@@ -98,7 +98,7 @@
         },
         "BACK_TO_MENU":
         {
-            "event_custom":"BACK_TO_MENU",
+            "event_custom":"BACK_TO_MENU"
         }
     },
 
