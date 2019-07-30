@@ -43,11 +43,6 @@ def _getAndParseData(request: Request, game_table: GameTable, db, settings):
     db_settings = settings["db_config"]
     
     # logging.debug("complex_data_index: {}".format(complex_data_index))
-    ## NOTE: Some code that could be useful to refer to if we ever decide to do something to unwrap
-    ## the event_data_complex column.
-    # parsed_columns = db_cursor.column_names[0:complex_data_index]                 \
-    #                + tuple(json.loads(single_elem[0][complex_data_index]).keys()) \
-    #                + db_cursor.column_names[complex_data_index+1:-1]
 
     # First, get the files and game-specific vars ready
     dataset_id = "{}_{}_to_{}".format(request.game_id, request.start_date.strftime("%Y%m%d"),\
