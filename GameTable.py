@@ -46,15 +46,22 @@ class GameTable:
         self.session_ids = GameTable._getSessionIDs(db_cursor, db, db_settings, request)
         # logging.debug("session_ids: " + str(session_ids))
     
-    # TODO: Currently, this is retrieved separately from the schema. We ought to just load in one place, and check for a match or something.
+    ## Private helper function to retrieve a list of all database columns from the table.
+    #  This requires executing a SQL statement, so it's slightly slower than
+    #  using the schema, but is guaranteed to be correct for what's in the db.
+    #  Just used to initialize the column_names member of the GameTable class.
     @staticmethod
     def _getColumnNames(db_cursor, db, db_settings):
+    # TODO: Currently, this is retrieved separately from the schema. We may just want to load in one place, and check for a match or something.
         db_cursor.execute("SHOW COLUMNS from {}.{}".format(db.database, db_settings["table"]))
         return [col[0] for col in db_cursor.fetchall()]
     
+    ## Private helper function to get a list of all sessions within the timeframe
+    #  given in the request, for the game id given in the request.
+    #  Just used to initialize the session_ids member of the GameTable class.
     @staticmethod
     def _getSessionIDs(db_cursor, db, db_settings, request):
-        ## We grab the ids for all sessions that have 0th move in the proper date range.
+        # We grab the ids for all sessions that have 0th move in the proper date range.
         filt = "app_id=\"{}\" AND session_n=0 AND (server_time BETWEEN '{}' AND '{}')".format( \
                     request.game_id, request.start_date.isoformat(), request.end_date.isoformat())
         session_ids_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=db_settings["table"],
