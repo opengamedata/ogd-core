@@ -70,6 +70,17 @@
             "answer":"int",
             "answered":"int",
             "question":"int"
+        },
+        "MENU_BUTTON":{
+            "event_custom":"string"
+        },
+        "SKIP_BUTTON":
+        {
+            "event_custom":"SKIP_BUTTON"
+        },
+        "DISMISS_MENU_BUTTON":
+        {
+            "event_custom":"DISMISS_MENU_BUTTON"
         }
     },
 
