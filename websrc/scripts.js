@@ -12,7 +12,7 @@ var headers = {
 function change_tables(value, start=false) {
   let table = document.querySelector("table");
   table.innerHTML = '';
-  jQuery.getJSON("/data/file_list.json",function(result){
+  jQuery.getJSON("/toydata/file_list.json",function(result){
     tables = result;
     let table = document.querySelector("table");
     generateTableHead(table, headers);

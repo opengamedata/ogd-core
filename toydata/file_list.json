@@ -1,0 +1,22 @@
+{
+    "WAVES": {
+        "WAVES_20190301_to_20190331": {
+            "raw": "./data/WAVES/WAVES_20190301_to_20190331_raw.csv",
+            "proc": "./data/WAVES/WAVES_20190301_to_20190331_proc.csv",
+            "start_date": "03-01-2019",
+            "end_date": "03-31-2019",
+            "date_modified": "07-23-2019",
+            "sessions": 100
+        }
+    },
+    "CRYSTAL": {
+        "CRYSTAL_20190301_to_20190331": {
+            "raw": "./data/CRYSTAL/CRYSTAL_20190301_to_20190331_raw.csv",
+            "proc": "./data/CRYSTAL/CRYSTAL_20190301_to_20190331_proc.csv",
+            "start_date": "03-01-2019",
+            "end_date": "03-31-2019",
+            "date_modified": "07-23-2019",
+            "sessions": 100
+        }
+    }
+}
