@@ -65,8 +65,8 @@ class CrystalExtractor(Extractor):
             if not level in self.levels:
                 bisect.insort(self.levels, level)
                 self.totalMoleculeDragDuration[level] = 0
-                self.start_times[level] = []
-                self.end_times[level] = []
+                # self.start_times[level] = None
+                # self.end_times[level] = None
             # First, record that an event of any kind occurred, for the level & session
             self.features.incValByIndex(feature_name="eventCount", index=level)
             self.features.incAggregateVal(feature_name="sessionEventCount")
