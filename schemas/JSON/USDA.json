@@ -111,7 +111,9 @@
       "(none)": " | Log itself indicates the player has left the game page. Seperate history and gamestate logs are sent."
     }
   },
-    
+  "features": {
+
+  },
 
   "db_columns": {
       "id":"Unique identifier for a row",
