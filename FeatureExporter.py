@@ -71,15 +71,6 @@ class FeatureExporter:
         # logging.debug("complex_data_index: {}".format(complex_data_index))
 
         # First, get the files and game-specific vars ready
-        dataset_id = "{}_{}_to_{}".format(self._game_id, request.start_date.strftime("%Y%m%d"),\
-                                        request.end_date.strftime("%Y%m%d"))
-        raw_csv_name = f"{dataset_id}_raw.csv"
-        raw_csv_full_path = f"{data_directory}/{raw_csv_name}"
-        proc_csv_name  = f"{dataset_id}_proc.csv"
-        proc_csv_full_path = f"{data_directory}/{proc_csv_name}"
-        raw_csv_file = open(raw_csv_full_path, "w")
-        proc_csv_file = open(proc_csv_full_path, "w")
-
         game_schema: Schema
         game_extractor: type
         if self._game_id == "WAVES":
@@ -90,6 +81,15 @@ class FeatureExporter:
             game_extractor = CrystalExtractor
         else:
             raise Exception("Got an invalid game ID!")
+
+        dataset_id = "{}_{}_to_{}".format(self._game_id, request.start_date.strftime("%Y%m%d"),\
+                                        request.end_date.strftime("%Y%m%d"))
+        raw_csv_name = f"{dataset_id}_raw.csv"
+        raw_csv_full_path = f"{data_directory}/{raw_csv_name}"
+        proc_csv_name  = f"{dataset_id}_proc.csv"
+        proc_csv_full_path = f"{data_directory}/{proc_csv_name}"
+        raw_csv_file = open(raw_csv_full_path, "w")
+        proc_csv_file = open(proc_csv_full_path, "w")
 
         # Now, we're ready to set up the managers:
         raw_mgr = RawManager(game_table=game_table, game_schema=game_schema, raw_csv_file=raw_csv_file)
@@ -116,7 +116,7 @@ class FeatureExporter:
         for next_slice in session_slices:
             # grab data for the given session range. Sort by event time, so 
             # TODO: Take the "WAVES" out of the line of code below.
-            filt = f"app_id=\"{self._game_id}\" AND session_id BETWEEN {next_slice[0]} AND {next_slice[-1]}"
+            filt = f"app_id=\"{self._game_id}\" AND session_id BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'"
             start = datetime.datetime.now()
             next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=self._db.database, table=db_settings["table"],
                                             filter=filt, sort_columns=["session_id", "session_n"], sort_direction = "ASC",
