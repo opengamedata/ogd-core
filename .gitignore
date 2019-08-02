@@ -1,5 +1,5 @@
 # Specific things in this project that shouldn't go to git:
-data/
+data/*
 config.json
 
 # Byte-compiled / optimized / DLL files
