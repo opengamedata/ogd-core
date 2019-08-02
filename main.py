@@ -1,14 +1,14 @@
 # import standard libraries
 import cProfile
-import datetime
 import logging
 import math
 import sys
+from datetime import datetime
 # import local files
 import utils
+from feature_extractors.WaveExtractor import WaveExtractor
 from FeatureExporter import FeatureExporter
 from Request import Request
-from feature_extractors.WaveExtractor import WaveExtractor
 
 ## Function to print a "help" listing for the export tool.
 #  Hopefully not needed too often, if at all.
@@ -38,11 +38,11 @@ def runExport():
     else:
         showHelp()
         return
-    today   = datetime.datetime.now()
-    start_date = datetime.datetime.strptime(sys.argv[3], "%m/%d/%Y") if num_args > 4 \
+    today   = datetime.now()
+    start_date = datetime.strptime(sys.argv[3], "%m/%d/%Y") if num_args > 4 \
             else today
     start_date = start_date.replace(day=1, hour=0, minute=0, second=0)
-    end_date   = datetime.datetime.strptime(sys.argv[4], "%m/%d/%Y") if num_args > 4 \
+    end_date   = datetime.strptime(sys.argv[4], "%m/%d/%Y") if num_args > 4 \
             else today
     end_date = end_date.replace(hour=23, minute=59, second=59)
     # Load settings, set up consts.
@@ -71,14 +71,14 @@ def runExport():
     req = Request(game_id=game_id, start_date=start_date, end_date=end_date, \
                 max_sessions=settings["MAX_SESSIONS"], min_moves=settings["MIN_MOVES"], \
                 )
-    start = datetime.datetime.now()
+    start = datetime.now()
     feature_exporter = FeatureExporter(req.game_id, db=db, settings=settings)
     # feature_exporter.exportFromRequest(request=req)
     try:
         cProfile.runctx("feature_exporter.exportFromRequest(request=req)",
                         {'req':req, 'feature_exporter':feature_exporter}, {})
     finally:
-        end = datetime.datetime.now()
+        end = datetime.now()
 
         time_delta = end - start
         print(f"Total time taken: {math.floor(time_delta.total_seconds()/60)} min, {time_delta.total_seconds() % 60} sec")

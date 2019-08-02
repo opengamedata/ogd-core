@@ -1,7 +1,7 @@
 ## import standard libraries
-import datetime
 import logging
 import typing
+from datetime import datetime
 ## import local files
 import Request
 import utils
@@ -57,9 +57,9 @@ class GameTable:
     # TODO: Currently, this is retrieved separately from the schema. We may just want to load in one place, and check for a match or something.
         query = "SHOW COLUMNS from {}.{}".format(db.database, db_settings["table"])
         logging.info("Running query: " + query)
-        start = datetime.datetime.now()
+        start = datetime.now()
         db_cursor.execute(query)
-        logging.info(f"Query execution completed, time to execute: {datetime.datetime.now()-start}")
+        logging.info(f"Query execution completed, time to execute: {datetime.now()-start}")
         return [col[0] for col in db_cursor.fetchall()]
     
     ## Private helper function to get a list of all sessions within the timeframe

@@ -3,12 +3,12 @@
 #  for export to CSV files.
 
 ## import standard libraries
-import datetime
 import json
 import logging
 import math
 import os
 import typing
+from datetime import datetime
 ## import local files
 import utils
 from GameTable import GameTable
@@ -121,10 +121,10 @@ class FeatureExporter:
                                             filter=filt, sort_columns=["session_id", "session_n"], sort_direction = "ASC",
                                             distinct=False)
             # now, we process each row.
-            start = datetime.datetime.now()
+            start = datetime.now()
             for row in next_data_set:
                 self._processRow(row, game_table, raw_mgr, proc_mgr)
-            time_delta = datetime.datetime.now() - start
+            time_delta = datetime.now() - start
             logging.info("Slice processing time: {} min, {:.3f} sec".format(
                 math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60)
             )
@@ -193,7 +193,7 @@ class FeatureExporter:
             "proc":proc_csv_path,
             "start_date":request.start_date.strftime("%m-%d-%Y"),
             "end_date":request.end_date.strftime("%m-%d-%Y"),
-            "date_modified":datetime.datetime.now().strftime("%m-%d-%Y"),
+            "date_modified":datetime.now().strftime("%m-%d-%Y"),
             "sessions":num_sess
             }
         existing_csv_file.write(json.dumps(existing_csvs, indent=4))
