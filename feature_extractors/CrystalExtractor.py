@@ -108,7 +108,6 @@ class CrystalExtractor(Extractor):
     def _extractFromBegin(self, level, event_client_time):
         self.features.incValByIndex(feature_name="beginCount", index=level, increment=1)
         if self.active_begin == None:
-            self.active_begin = level
             self.start_times[level] = event_client_time
         elif self.active_begin == level:
             pass # in this case, just keep going.
@@ -117,7 +116,8 @@ class CrystalExtractor(Extractor):
             time_taken = self._calcLevelTime(level)
             self.features.incValByIndex(feature_name="durationInSecs", index=level, increment=time_taken)
             self.features.incAggregateVal(feature_name="sessionDurationInSecs", increment=time_taken)
-            self.active_begin = None
+        # in any case, current level now has active begin event.
+        self.active_begin = level
 
     ## Private function to extract features from a "COMPLETE" event.
     #  The features affected are:
