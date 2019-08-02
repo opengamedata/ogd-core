@@ -1,0 +1,136 @@
+{
+  "events":{
+    "GAMESTATE":{
+      "tiles": "pako.gzip(uint8_tile_array()).join() | Gzipped tile [data matrix](#DataMatrices).",
+      "farmbits": "pako.gzip(uint8_farmbit_array()).join() | Gzipped farmbit [data matrix](#DataMatrices).",
+      "items": "pako.gzip(uint8_item_array()).join() | Gzipped item [data matrix](#DataMatrices).",
+      "money": "gg.money | current money",
+      "speed": "gg.speed | current game speed (see [Speed](#SpeedConst))",
+      "achievements": "achievements | A boolean array of whether the player has gotten the [achievement](#Achievements) at that index.",
+      "num_checkpoints_completed": "get_num_checkpoints_completed() | Number of tutorials began + number of tutorial ended. Includes tutorials skipped.",
+      "raining": "gg.b.raining | Boolean - currently raining or not.",
+      "curr_selection_type": "gg.inspector.detailed_type | Current selection [inspector content](#InspectorContent) index. (Note that because the game currently (as of 7/25) logs gamestate only after buys, this will always be the type of tile.)",
+      "curr_selection_data": "detailed_data() | SelectFarmbit/SelectItem/SelectTile data, depending on the curr_selection_type.",
+      "camera_center": "prev_center_txty | Tile that the game is currently centered on.",
+      "gametime": "time | Metric to count speed-adjusted time. Based on number of ticks.",
+      "client_time": "now | current client time"
+      },
+    "STARTGAME":{
+      "tile_states": "tile_states | 2500 element array of tile state indices.",
+      "tile_nutritions": "tile_nutritions | 2500 element array of tile nutritions on a scale 0-255."
+      },
+    "CHECKPOINT":{
+      "event_category": "arguments[2] | Usually (always?) begin or end",
+      "event_label": "arguments[2] | Tutorial name. For example, the name of the tutorial that teaches the player how to build a house is called 'build_a_house'",
+      "event_type": "arguments[1] | Usually (always?) tutorial",
+      "blurb_history": "flush_blurb_history(now) | List of client time relative to now for each blurb popup. (Blurbs are now logged here instead of the [blurb](#blurb) event.)",
+      "client_time": "now | current client time"
+      },
+    "SELECTTILE":{
+      "tile": "tile_data_short(t) | See [Data Short](#DataShort).",
+      "marks": "t.marks | Tile [mark indices](#Mark)."
+      },
+    "SELECTFARMBIT":{
+      "farmbit": "farmbit_data_short(f) | See [Data Short](#DataShort)."
+      },
+    "SELECTITEM":{
+      "item": "item_data_short(it) | See [Data Short](#DataShort).",
+      "mark": "it.mark | Item [mark index](#Mark)."
+      },
+    "SELECTBUY":{
+      "buy": "buy | [Buy index](#Buys).",
+      "cost": "gg.shop.buy_cost(buy) | Cost of buy",
+      "curr_money": "gg.money | Current money",
+      "success": "gg.money>=gg.shop.buy_cost(buy) | Boolean. Whether the buy can be selected or not. (Cannot select a buy that cannot be paid for.)"
+      },
+    "BUY":{
+      "buy": "gg.shop.selected_buy | [Buy index](#Buys).",
+      "tile": "tile_data_short(gg.b.hover_t) | [Data Short](#DataShort) for the tile the buy will be placed on.",
+      "success": "gg.b.placement_valid(gg.b.hover_tgg.shop.selected_buy) | Boolean. Whether the buy can be put on the tile. If not, buy fails.",
+      "buy_hovers": "flush_buy_hovers(now) | List of tile [Data Short](#DataShort) appended with client time before now for each hovered tile since either selectbuy log or the previous buy log.",
+      "client_time": "now | current client time"
+      },
+    "CANCELBUY":{
+      "selected_buy": "buy | [Buy index](#Buys).",
+      "cost": "gg.shop.buy_cost(buy) | Cost of buy.",
+      "curr_money": "gg.money | Current money.",
+      "buy_hovers": "flush_buy_hovers(now) | List of tile [Data Short](#DataShort) appended with client time before now for each hovered tile since either selectbuy log or the previous buy log.",
+      "client_time": "now | current client time"
+      },
+    "ROADBUILDS":{
+      "road_builds": "flush_road_hovers(now) | List of tile [Data Short](#DataShort) appended with client time before now for each tile a road was built on.",
+      "client_time": "now | current client time"
+      },
+    "TILEUSESELECT":{
+      "tile": "tile_data_short(t) | See [Data Short](#DataShort).",
+      "marks": "t.marks | Tile [mark indices](#Mark)."
+      },
+    "ITEMUSESELECT":{
+      "item": "item_data_short(it) | See [Data Short](#DataShort).",
+      "mark": "it.mark | Item [mark index](#Mark)."
+      },
+    "TOGGLENUTRITION":{
+      "to_state": "gg.b.nutrition_view | 1 if nutrition view is being turned on, 0 if turned off.",
+      "tile_nutritions": "nutrition_array() | 2500 element array of tile nutritions on a scale 0-255."
+      },
+    "TOGGLESHOP":{
+      "shop_open": "gg.shop.open | 1 if the shop view is being opened, 0 if closed."
+      },
+    "TOGGLEACHIEVEMENTS":{
+      "achievements_open": "gg.achievements.open | 1 if the achievement view is being opened, 0 if closed."
+      },
+    "SKIPTUTORIAL":{
+      "(none)": " | Event itself indicates that the player skipped a tutorial (the tutorial skipped is the last tutorial event logged)."
+      },
+    "SPEED":{
+      "cur_speed": "gg.speed | From [speed](#SpeedConst) index.",
+      "clicked_speed": "speed | To [speed](#SpeedConst) index."
+      },
+    "ACHIEVEMENT":{
+      "achievement": "i | [Achievement](#Achievements) index."
+      },
+    "FARMBITDEATH":{
+      "farmbit": "farmbit_data_short(f) | See [Data Short](#DataShort).",
+      "grave": "tile_data_short(f.home) | Tile data short of dead farmbit's home."
+      },
+    "BLURB":{
+      "(none)": " | Event itself indicates that the player clicked to the next blurb in a tutorial etc. (the tutorial itself is the last tutorial event logged)."
+      },
+    "CLICK":{
+      "(not currently implemented)": " | "
+      },
+    "RAINSTOPPED":{
+      "(none)": " | Log itself indicates that it was raining and the raining has now stopped."
+      },
+    "HISTORY":{
+      "client_time": "now | current client time",
+      "camera_history": "flush_camera_history(now) | List of [camera moves](#CameraMove) since last history log.",
+      "emote_history": "flush_emote_history(now) | List of 10 element sublists [[farmbit](#DataShort), [emote index](#Emotes), time before client_time (negative number)] emotes since last history log."
+      },
+    "ENDGAME":{
+      "(none)": " | Log itself indicates the player has left the game page. Seperate history and gamestate logs are sent."
+    }
+  },
+    
+
+  "db_columns": {
+      "id":"Unique identifier for a row",
+      "app_id":"A string identifying which game from which the event came",
+      "app_id_fast":"Um... another version of the app id?",
+      "app_version":"The version of the game from which the event came",
+      "session_id":"Unique identifier for the gameplay session",
+      "persistent_session_id":"Unique identifier across all gameplay sessions from a single computer",
+      "level":"The game level in which the event was logged",
+      "event":"The type of event logged",
+      "event_custom":"A number corresponding to the game-specific event type for 'CUSTOM' events",
+      "event_data_simple":"Unused (always=0)",
+      "event_data_complex":"event-specific data encoded as a JSON string",
+      "client_time":"The client machine time when the event was generated",
+      "client_time_ms":"Client time in milliseconds? Or something?",
+      "server_time":"The server machine time when the event was logged",
+      "remote_addr":"The IP address for the player's computer",
+      "req_id":"Another ID of some kind",
+      "session_n":"Counter of events in the session, from 0. A row with session_n = i is the (i+1)-th event of the session",
+      "http_user_agent":"Data on the type of web browser, OS, etc. in use by the player"
+  }
+}
