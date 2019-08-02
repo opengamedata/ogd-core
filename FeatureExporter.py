@@ -3,12 +3,12 @@
 #  for export to CSV files.
 
 ## import standard libraries
-import datetime
 import json
 import logging
 import math
 import os
 import typing
+from datetime import datetime
 ## import local files
 import utils
 from GameTable import GameTable
@@ -117,20 +117,17 @@ class FeatureExporter:
             # grab data for the given session range. Sort by event time, so 
             # TODO: Take the "WAVES" out of the line of code below.
             filt = f"app_id=\"{self._game_id}\" AND session_id BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'"
-            start = datetime.datetime.now()
             next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=self._db.database, table=db_settings["table"],
                                             filter=filt, sort_columns=["session_id", "session_n"], sort_direction = "ASC",
                                             distinct=False)
-            time_delta = datetime.datetime.now() - start
-            logging.info("Query time:      {:d} min, {:.3f} sec to get {:d} rows".format( \
-                math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(next_data_set) ) \
-                )
             # now, we process each row.
-            start = datetime.datetime.now()
+            start = datetime.now()
             for row in next_data_set:
                 self._processRow(row, game_table, raw_mgr, proc_mgr)
-            time_delta = datetime.datetime.now() - start
-            logging.info("Processing time: {} min, {:.3f} sec".format(math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60))
+            time_delta = datetime.now() - start
+            logging.info("Slice processing time: {} min, {:.3f} sec".format(
+                math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60)
+            )
             
             # after processing all rows for all slices, write out the session data and reset for next slice.
             raw_mgr.WriteRawCSVLines()
@@ -196,7 +193,7 @@ class FeatureExporter:
             "proc":proc_csv_path,
             "start_date":request.start_date.strftime("%m-%d-%Y"),
             "end_date":request.end_date.strftime("%m-%d-%Y"),
-            "date_modified":datetime.datetime.now().strftime("%m-%d-%Y"),
+            "date_modified":datetime.now().strftime("%m-%d-%Y"),
             "sessions":num_sess
             }
         existing_csv_file.write(json.dumps(existing_csvs, indent=4))

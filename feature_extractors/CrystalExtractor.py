@@ -1,6 +1,5 @@
 ## import standard libraries
 import bisect
-import datetime
 import json
 import logging
 import typing
@@ -108,7 +107,6 @@ class CrystalExtractor(Extractor):
     def _extractFromBegin(self, level, event_client_time):
         self.features.incValByIndex(feature_name="beginCount", index=level, increment=1)
         if self.active_begin == None:
-            self.active_begin = level
             self.start_times[level] = event_client_time
         elif self.active_begin == level:
             pass # in this case, just keep going.
@@ -117,7 +115,8 @@ class CrystalExtractor(Extractor):
             time_taken = self._calcLevelTime(level)
             self.features.incValByIndex(feature_name="durationInSecs", index=level, increment=time_taken)
             self.features.incAggregateVal(feature_name="sessionDurationInSecs", increment=time_taken)
-            self.active_begin = None
+        # in any case, current level now has active begin event.
+        self.active_begin = level
 
     ## Private function to extract features from a "COMPLETE" event.
     #  The features affected are:
@@ -134,7 +133,7 @@ class CrystalExtractor(Extractor):
         self.features.incValByIndex(feature_name="completesCount", index=level, increment=1)
         if self.active_begin == None:
             sess_id = self.features.getValByName(feature_name="sessionID")
-            logging.error(f"Got a 'Complete' event when there was no active 'Begin' event! Sess ID: {sess_id}")
+            logging.error(f"Got a 'Complete' event when there was no active 'Begin' event! Level {level}, Sess ID: {sess_id}")
         else:
             self.end_times[level] = event_client_time
             time_taken = self._calcLevelTime(level)

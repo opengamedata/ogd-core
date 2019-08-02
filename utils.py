@@ -7,6 +7,7 @@ import logging
 import math
 import mysql.connector
 import os
+import sshtunnel
 import typing
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
@@ -70,6 +71,21 @@ f"## Field Day Open Game Data \n\
     template_str += "\n"
     return template_str
 
+class SQLLogin:
+    def __init__(self, host: str, port: int, user: str, pword: str, db_name: str):
+        self.host    = host
+        self.port    = port
+        self.user    = user
+        self.pword   = pword
+        self.db_name = db_name
+
+class SSHLogin:
+    def __init__(self, host: str, port: int, user: str, pword: str):
+        self.host    = host
+        self.port    = port
+        self.user    = user
+        self.pword   = pword
+
 ## @class SQL
 #  A utility class containing some functions to assist in retrieving from a database.
 #  Specifically, helps to connect to a database, make selections, and provides
@@ -86,9 +102,41 @@ class SQL:
     #  @return          An open connection to the database if successful,
     #                       otherwise None.
     @staticmethod
-    def connectToMySQL(host: str, port: int, user: str, pword: str, db_name: str):
+    def connectToMySQL(login: SQLLogin):
         try:
-            return mysql.connector.connect(host = host, port = port, user = user, password = pword, database = db_name)
+            return mysql.connector.connect(host = login.host, port = login.port,
+                                           user = login.user, password = login.pword,
+                                           database = login.db_name)
+        except mysql.connector.Error as err:
+            logging.error("Could no connect to the MySql database: " + str(err))
+            return None
+
+    ## Function to help connect to a mySQL server over SSH.
+    #  Simply tries to make a connection, and prints an error in case of failure.
+    #
+    #  @param host      The name of the database host server.
+    #  @param port      The database server port to which we want to connect.
+    #  @param user      Username for connecting to the database.
+    #  @param password  The given user's password.
+    #  @param database  The actual name of the database on the host.
+    #  @return          An open connection to the database if successful,
+    #                       otherwise None.
+    @staticmethod
+    def connectToMySQLViaSSH(sql: SQLLogin, ssh: SSHLogin):
+        try:
+            tunnel_logger = logging.getLogger('tunnel_logger')
+            tunnel_logger.setLevel(logging.WARN)
+            tunnel = sshtunnel.SSHTunnelForwarder(
+                (ssh.host, ssh.port), ssh_username=ssh.user, ssh_password=ssh.pword,
+                remote_bind_address=(sql.host, sql.port), logger=tunnel_logger
+            )
+            tunnel.start()
+            logging.info("Connected to SSH")
+            conn = mysql.connector.connect(host = sql.host, port = tunnel.local_bind_port,
+                                           user = sql.user, password = sql.pword,
+                                           database = sql.db_name)
+            logging.info("Connected to SQL")
+            return (tunnel, conn)
         except mysql.connector.Error as err:
             logging.error("Could no connect to the MySql database: " + str(err))
             return None
@@ -136,16 +184,25 @@ class SQL:
         lim_clause   = "" if limit < 0         else " LIMIT {}".format(str(limit))
 
         query = sel_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
-        logging.debug("Running query: " + query)
+        logging.info("Running query: " + query)
+        start = datetime.datetime.now()
         cursor.execute(query)
+        time_delta = datetime.datetime.now()-start
+        logging.info("Query execution completed, time to execute: {:d} min, {:.3f} sec".format( \
+            math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60 ) \
+        )
         result = cursor.fetchall() if fetch_results else None
-        logging.debug("Query complete.")
+        time_delta = datetime.datetime.now()-start
+        # logging.info(f"Query fetch completed, total query time: {}")
+        logging.info("Query fetch completed, total query time:    {:d} min, {:.3f} sec to get {:d} rows".format( \
+            math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(result) ) \
+        )
         return result
 
     ## Simple function to construct and log a nice server 500 error message.
     #  @param error The exception raised when a 500 error occurs.
     @staticmethod
     def server500Error(error: Exception):
-        logging.error("HTTP Response: " + http.HTTPStatus.INTERNAL_SERVER_ERROR.value \
-                                + http.HTTPStatus.INTERNAL_SERVER_ERROR.phrase )
+        logging.error("HTTP Response: {}{}".format(http.HTTPStatus.INTERNAL_SERVER_ERROR.value, \
+                                http.HTTPStatus.INTERNAL_SERVER_ERROR.phrase ))
         logging.error(str(error))

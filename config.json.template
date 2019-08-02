@@ -9,6 +9,13 @@
         "table" : "table name",
         "DB_PORT" : 1234
     },
+    "ssh_config":
+    {
+        "SSH_HOST" : "hostname",
+        "SSH_USER" : "user",
+        "SSH_PW" : "password",
+        "SSH_PORT" : 1234
+    },
     "MIN_MOVES":1,
     "BATCH_SIZE":1000
     "MAX_SESSIONS":-1

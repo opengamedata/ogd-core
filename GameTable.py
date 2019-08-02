@@ -1,5 +1,7 @@
 ## import standard libraries
+import logging
 import typing
+from datetime import datetime
 ## import local files
 import Request
 import utils
@@ -53,7 +55,11 @@ class GameTable:
     @staticmethod
     def _getColumnNames(db_cursor, db, db_settings):
     # TODO: Currently, this is retrieved separately from the schema. We may just want to load in one place, and check for a match or something.
-        db_cursor.execute("SHOW COLUMNS from {}.{}".format(db.database, db_settings["table"]))
+        query = "SHOW COLUMNS from {}.{}".format(db.database, db_settings["table"])
+        logging.info("Running query: " + query)
+        start = datetime.now()
+        db_cursor.execute(query)
+        logging.info(f"Query execution completed, time to execute: {datetime.now()-start}")
         return [col[0] for col in db_cursor.fetchall()]
     
     ## Private helper function to get a list of all sessions within the timeframe
