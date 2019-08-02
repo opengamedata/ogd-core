@@ -88,6 +88,8 @@ class FeatureExporter:
         raw_csv_full_path = f"{data_directory}/{raw_csv_name}"
         proc_csv_name  = f"{dataset_id}_proc.csv"
         proc_csv_full_path = f"{data_directory}/{proc_csv_name}"
+        os.makedirs(name=raw_csv_full_path, exist_ok=True)
+        os.makedirs(name=proc_csv_full_path, exist_ok=True)
         raw_csv_file = open(raw_csv_full_path, "w")
         proc_csv_file = open(proc_csv_full_path, "w")
 

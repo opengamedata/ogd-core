@@ -81,7 +81,8 @@ def runExport():
         end = datetime.now()
 
         time_delta = end - start
-        print(f"Total time taken: {math.floor(time_delta.total_seconds()/60)} min, {time_delta.total_seconds() % 60} sec")
+        print(f"Total time taken: {math.floor(time_delta.total_seconds()/60)} min, \
+                                  {time_delta.total_seconds() % 60} sec")
         db.close()
         tunnel.stop()
 
