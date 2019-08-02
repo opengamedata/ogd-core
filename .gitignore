@@ -109,3 +109,9 @@ venv.bak/
 
 # Mac OS metadata stuff
 .DS_Store
+
+# PyCharm
+.idea
+
+# VSCode
+.vscode
