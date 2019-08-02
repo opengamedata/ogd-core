@@ -112,7 +112,57 @@
     }
   },
   "features": {
-
+    "perlevel":{
+    },
+    "per_custom_count": {
+    },
+    "aggregate":{
+      "FEATUREID": "Player feature - Number of times the player: look at achievements",
+      "FEATUREID": "Player feature - Number of times the player: buy a …",
+      "FEATUREID": "Player feature - Number of times the player: inspect a tile",
+      "FEATUREID": "Player feature - Number of times the player: open the buy menu",
+      "FEATUREID": "Player feature - Number of times the player: change a sale/eat/feed state on the board",
+      "FEATUREID": "Player feature - Number of times the player: change a sale/eat/feed state in a farm panel",
+      "FEATUREID": "Player feature - Total amount of time the player: look at achievements",
+      "FEATUREID": "Player feature - Total amount of time the player: buy a …",
+      "FEATUREID": "Player feature - Total amount of time the player: inspect a tile",
+      "FEATUREID": "Player feature - Total amount of time the player: open the buy menu",
+      "FEATUREID": "Player feature - Total amount of time the player: change a sale/eat/feed state on the board",
+      "FEATUREID": "Player feature - Total amount of time the player: change a sale/eat/feed state in a farm panel",
+      "FEATUREID": "Player feature - General: % of money spent on different items",
+      "FEATUREID": "Player feature - General: % of corn/milk marked for sale, feed, export/eat",
+      "FEATUREID": "Player feature - General: max number of each item (houses, signs, etc)  in play",
+      "FEATUREID": "Player feature - General: ave number of corn marked for eat on the board (over the session) per capita",
+      "FEATUREID": "Player feature - General: $ spent",
+      "FEATUREID": "Player feature - General: # marked corn/milk/manure for sale/eat/feed in the farm panel per capita",
+      "FEATUREID": "Player feature - General: % building a farm on the best available tile",
+      "FEATUREID": "Player feature - General: % placing fertilizer on lowest nutrient farm",
+      "FEATUREID": "Player feature - General: ave. # tiles hovered before placing",
+      "FEATUREID": "Player feature - General: build orders",
+      "FEATUREID": "Player feature - Assessment: compliance with a tutorial within x seconds",
+      "FEATUREID": "Player feature - Assessment: average distance between manure placement and lake",
+      "FEATUREID": "Player feature - Assessment: average distance between buildings (when they build, how far is it from the closest thing)",
+      "FEATUREID": "Player feature - Progress: did they see ____ achievement",
+      "FEATUREID": "Player feature - Progress: count of achievements",
+      "FEATUREID": "Player feature - Progress: did they get ______ tutorial",
+      "FEATUREID": "Player feature - Progress: count of tutorials",
+      "FEATUREID": "Player feature - Progress: time to first house",
+      "FEATUREID": "Player feature - Progress: time to first farm",
+      "FEATUREID": "Player feature - Progress: time to first …",
+      "FEATUREID": "Player feature - Progress: time to achievements",
+      "FEATUREID": "Player feature - Progress: time to tutorial",
+      "FEATUREID": "Game feature - General: mode: tutorial mode or post-tutorial",
+      "FEATUREID": "Game feature - General: count of farms in low productivity",
+      "FEATUREID": "Game feature - General: count of lake tiles in bloom",
+      "FEATUREID": "Game feature - General: # deaths / session",
+      "FEATUREID": "Game feature - General: # of each emotes / per capita",
+      "FEATUREID": "Game feature - General: % positivenegative/neutral emotes",
+      "FEATUREID": "Game feature - General: # of corn produced",
+      "FEATUREID": "Game feature - General: # of milk produced",
+      "FEATUREID": "Game feature - General: # of manure produced",
+      "FEATUREID": "Game feature - General: $ earned",
+      "FEATUREID": "Game feature - General: ave. lake nutrition?"
+    }
   },
 
   "db_columns": {
