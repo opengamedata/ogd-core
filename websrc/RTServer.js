@@ -2,13 +2,12 @@ class Server
 {
    static getGreeting(callback)
    {
-      console.log("Received request for greeting")
+      console.log("Making request for greeting")
       var req = new XMLHttpRequest();
       req.onreadystatechange = function()
       {
          if (this.readyState == 4 && this.status == 200)
          {
-            console.log("responseText was: " + this.responseText)
             callback(this.responseText.toString());
          }
       }
@@ -32,6 +31,9 @@ class Server
       //    "CITY0": [SessID0, SessID1, SessID2, ... sessIDn],
       //    "CITY1": [SessID0...]
       // }
+      console.log("Making request for all active sessions")
+      post_string = `method=get_all_active_sessions&gameID=${gameID}`
+      Server._execute_request(callback, post_string)
    }
    //returns {} if there are no active sessions.
 
@@ -42,6 +44,9 @@ class Server
    //   city - str city name as returned by get_all_active_sessions(GameID)
    //   returns an array of active sessions eg
    //   [SessID0, SessID1, SessID2]
+      console.log("Making request for active sessions by location")
+      post_string = `method=get_active_sessions_by_loc&gameID=${gameID}&state=${state}&city=${city}`
+      Server._execute_request(callback, post_string)
    }
 
    // Note: The _by_sessID functions below are probably going to mostly be run
@@ -53,10 +58,16 @@ class Server
    //   specifying which features to return. this would be like:
    //   ['GameStart','Fail','GameEnd'].
    //   Returns list of features in JSON format
+      console.log("Making request for features by session")
+      post_string = `method=get_features_by_sessID&sessID=${sessID}&features=${features}`
+      Server._execute_request(callback, post_string)
    }
 
    static get_feature_names_by_game(callback, gameID){
    //   returns all feature names of that game (callback, any format is fine)
+      console.log("Making request for feature names by game")
+      post_string = `method=get_feature_names_by_game&gameID=${gameID}`
+      Server._execute_request(callback, post_string)
    }
 
    static get_predictions_by_sessID(callback, sessID, predictions=null){
@@ -65,10 +76,31 @@ class Server
    //   specifying which predictions to return. this would be like:
    //   ['probability to finish lv3' etc.].
    //   Returns list of predictions in JSON format
+      console.log("Making request for predictions by session")
+      post_string = `method=get_predictions_by_sessID&sessID=${sessID}&predictions=${predictions}`
+      Server._execute_request(callback, post_string)
    }
 
    static get_prediction_names_by_game(callback, gameID){
    //   returns all prediction names of that game (any format is fine)
+      console.log("Making request for prediction names by game")
+      post_string = `method=get_prediction_names_by_game&gameID=${gameID}`
+      Server._execute_request(callback, post_string)
+   }
+
+   static _execute_request(callback, post_string)
+   {
+      var req = new XMLHttpRequest();
+      req.onreadystatechange = function()
+      {
+         if (this.readyState == 4 && this.status == 200)
+         {
+            callback(this.responseText.toString());
+         }
+      }
+      req.open("POST", "realtime.cgi", true);
+      req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      req.send(post_string);
    }
 
 /*
