@@ -123,16 +123,11 @@ for (let state in toydata){
   }
 }
 
-
-function getStubbedData(){
-  req = new XMLHttpRequest();
-  req.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("stub-data-drop").innerHTML = this.responseText;
-    }
-  }
-  req.open("GET", "realtime.py", true);
-  req.send();
+function getGreeting()
+{
+  Server.getGreeting(
+    function callback(result) {document.getElementById("greeting-drop").innerHTML = result;}
+  );
 }
 
 function listcities(state){
