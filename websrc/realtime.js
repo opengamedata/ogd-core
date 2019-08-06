@@ -57,8 +57,11 @@ for (let state in toydata){
   }
 }
 
-function getGreeting(){
-  document.getElementById("greeting-drop").innerHTML = Server.getGreeting()
+function getGreeting()
+{
+  Server.getGreeting(
+    function callback(result) {document.getElementById("greeting-drop").innerHTML = result;}
+  );
 }
 
 function listcities(state){

@@ -1,13 +1,13 @@
 class Server
 {
-    static getGreeting()
+    static getGreeting(callback)
     {
         var req = new XMLHttpRequest();
         req.onreadystatechange = function()
         {
             if (this.readyState == 4 && this.status == 200)
             {
-                return this.responseText;
+               callback(this.responseText);
             }
         }
         req.open("POST", "realtime.py", true);
