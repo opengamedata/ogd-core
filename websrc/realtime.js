@@ -59,9 +59,11 @@ for (let state in toydata){
 
 function getGreeting()
 {
+  console.log("Getting greeting...")
   Server.getGreeting(
-    function callback(result) {document.getElementById("greeting-drop").innerHTML = result;}
+    function callback(result) {console.log("Reached callback function"); console.log("result was: " + result.toString());  document.getElementById("greeting-drop").innerHTML = result.toString();}
   );
+  console.log("...Got back from greeting.")
 }
 
 function listcities(state){
