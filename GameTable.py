@@ -33,7 +33,7 @@ class GameTable:
         self.min_level:          int
         self.session_ids:        typing.List[int]
         # Set instance vars
-        db_cursor = db.cursor(buffered=True)
+        db_cursor = db.cursor()
         db_settings = settings["db_config"]
         self.column_names = GameTable._getColumnNames(db_cursor, db, db_settings)
         # Take note of specific indices which will be useful when using a GameTable
