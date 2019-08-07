@@ -13,12 +13,18 @@ function change_tables(value, start=false) {
   let table = document.querySelector("table");
   table.innerHTML = '';
   jQuery.getJSON("/data/file_list.json",function(result){
-    console.log(`file_list json: ${result}`)
     tables = result;
     let table = document.querySelector("table");
     generateTableHead(table, headers);
-    generateTable(table, tables[value], headers);
-    if(start) generate_options();
+    if(start)
+    {
+      generate_options();
+      generateTable(table, Object.values(tables)[0], headers);
+    }
+    else
+    {
+      generateTable(table, tables[value], headers);
+    }
   });
 }
 
