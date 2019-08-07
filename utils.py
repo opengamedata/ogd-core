@@ -5,7 +5,7 @@ import http
 import json
 import logging
 import math
-import mysql.connector
+import MySQLdb
 import os
 import sshtunnel
 import typing
@@ -104,10 +104,10 @@ class SQL:
     @staticmethod
     def connectToMySQL(login: SQLLogin):
         try:
-            return mysql.connector.connect(host = login.host, port = login.port,
+            return MySQLdb.connect(host = login.host, port = login.port,
                                            user = login.user, password = login.pword,
                                            database = login.db_name)
-        except mysql.connector.Error as err:
+        except MySQLdb.connections.Error as err:
             logging.error("Could no connect to the MySql database: " + str(err))
             return None
 
@@ -132,12 +132,12 @@ class SQL:
             )
             tunnel.start()
             logging.info("Connected to SSH")
-            conn = mysql.connector.connect(host = sql.host, port = tunnel.local_bind_port,
+            conn = MySQLdb.connect(host = sql.host, port = tunnel.local_bind_port,
                                            user = sql.user, password = sql.pword,
                                            database = sql.db_name)
             logging.info("Connected to SQL")
             return (tunnel, conn)
-        except mysql.connector.Error as err:
+        except MySQLdb.connections.Error as err:
             logging.error("Could no connect to the MySql database: " + str(err))
             return None
 
@@ -168,7 +168,7 @@ class SQL:
     #  @return              A collection of all rows from the selection, if fetch_results is true,
 #                           otherwise None.
     @staticmethod
-    def SELECT(cursor: mysql.connector.cursor.MySQLCursor, db_name: str, table: str,
+    def SELECT(cursor: MySQLdb.cursors.Cursor, db_name: str, table: str,
                columns: typing.List[str] = None, filter: str = None, limit: int = -1,
                sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
                distinct: bool = False, fetch_results: bool = True) -> typing.List[typing.Tuple]:
