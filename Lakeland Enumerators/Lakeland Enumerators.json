@@ -1,0 +1,201 @@
+{
+  "Event Categories": {
+    "gamestate": 0,
+    "startgame": 1,
+    "checkpoint": 2,
+    "selecttile": 3,
+    "selectfarmbit": 4,
+    "selectitem": 5,
+    "selectbuy": 6,
+    "buy": 7,
+    "cancelbuy": 8,
+    "roadbuilds": 9,
+    "tileuseselect": 10,
+    "itemuseselect": 11,
+    "togglenutrition": 12,
+    "toggleshop": 13,
+    "toggleachievements": 14,
+    "skiptutorial": 15,
+    "speed": 16,
+    "achievement": 17,
+    "farmbitdeath": 18,
+    "blurb": 19,
+    "click": 20,
+    "rainstopped": 21,
+    "history": 22,
+    "endgame": 23
+  },
+  "Emotes": {
+    "fullness_motivated_txt": 0,
+    "fullness_desperate_txt": 1,
+    "energy_desperate_txt": 2,
+    "joy_motivated_txt": 3,
+    "joy_desperate_txt": 4,
+    "puke_txt": 5,
+    "yum_txt": 6,
+    "tired_txt": 7,
+    "happy_txt": 8,
+    "swim_txt": 9,
+    "sale_txt": 10
+  },
+  "Buys": {
+    "null": 0,
+    "home": 1,
+    "food": 2,
+    "farm": 3,
+    "fertilizer": 4,
+    "livestock": 5,
+    "skimmer": 6,
+    "sign": 7,
+    "road": 8
+  },
+  "Names": {
+    "Peter": 0,
+    "Paul": 1,
+    "Mary": 2,
+    "John": 3,
+    "George": 4,
+    "Ringo": 5,
+    "Yoko": 6,
+    "Stevie": 7,
+    "Saanvi": 8,
+    "Nethra": 9,
+    "Meha": 10,
+    "Sidney": 11,
+    "Lucy": 12,
+    "Belden": 13,
+    "Henry": 14,
+    "Alejandro": 15,
+    "Victor": 16,
+    "Richard": 17
+  },
+  "Speed": {
+    "null": 0,
+    "pause": 1,
+    "play": 2,
+    "fast": 3,
+    "vfast": 4
+  },
+  "Achievements": {
+    "exist": 0,
+    "group": 1,
+    "town": 2,
+    "city": 3,
+    "farmer": 4,
+    "farmers": 5,
+    "farmtown": 6,
+    "megafarm": 7,
+    "paycheck": 8,
+    "thousandair": 9,
+    "stability": 10,
+    "riches": 11,
+    "bloom": 12,
+    "bigbloom": 13,
+    "hugebloom": 14,
+    "massivebloom": 15
+  },
+  "Thing_Type": {
+    "null": 0,
+    "tile": 1,
+    "item": 2,
+    "farmbit": 3
+  },
+  "Inspector Content": {
+    "null": 0,
+    "farmbit": 1,
+    "item": 2,
+    "tile": 3
+  },
+  "Text Type": {
+    "null": 0,
+    "observe": 1,
+    "dismiss": 2,
+    "direct": 3
+  },
+  "Advisor Type": {
+    "null": 0,
+    "mayor": 1,
+    "business": 2,
+    "farmer": 3
+  },
+  "Tile States": {
+    "null": 0,
+    "home_vacant": 1,
+    "home_occupied": 2,
+    "land_d0": 3,
+    "land_d1": 4,
+    "land_d2": 5,
+    "farm_unplanted": 6,
+    "farm_planted": 7,
+    "farm_grown": 8,
+    "livestock_eating": 9,
+    "livestock_digesting": 10,
+    "livestock_milkable": 11
+  },
+  "Tile Type": {
+    "null": 0,
+    "land": 1,
+    "rock": 2,
+    "grave": 3,
+    "sign": 4,
+    "lake": 5,
+    "shore": 6,
+    "forest": 7,
+    "home": 8,
+    "farm": 9,
+    "livestock": 10,
+    "road": 11
+  },
+  "Job Type": {
+    "null": 0,
+    "idle": 1,
+    "wait": 2,
+    "eat": 3,
+    "sleep": 4,
+    "play": 5,
+    "plant": 6,
+    "harvest": 7,
+    "feed": 8,
+    "fertilize": 9,
+    "milk": 10,
+    "export": 11
+  },
+  "Item Type": {
+    "null": 0,
+    "water": 1,
+    "food": 2,
+    "poop": 3,
+    "fertilizer": 4,
+    "milk": 5
+  },
+  "Job State": {
+    "null": 0,
+    "get": 1,
+    "seek": 2,
+    "act": 3
+  },
+  "Farmbit State": {
+    "null": 0,
+    "dire": 1,
+    "desperate": 2,
+    "motivated": 3
+  },
+  "Farmbit Need": {
+    "null": 0,
+    "fullness": 1,
+    "energy": 2,
+    "joy": 3,
+    "fulfillment": 4
+  },
+  "Direction": {
+    "null": 0,
+    "r": 1,
+    "dr": 2,
+    "d": 3,
+    "dl": 4,
+    "l": 5,
+    "ul": 6,
+    "u": 7,
+    "ur": 8
+  }
+}
