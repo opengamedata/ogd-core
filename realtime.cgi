@@ -27,7 +27,7 @@ logging.basicConfig(level=logging.INFO)
 sql_login = utils.SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
 ssh_login = utils.SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
 tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
-cursor = db.cursor(buffered=True)
+cursor = db.cursor()
 
 header = "Content-type:text/plain \r\n\r\n"
 

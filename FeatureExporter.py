@@ -64,7 +64,7 @@ class FeatureExporter:
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
     def _getAndParseData(self, request: Request, game_table: GameTable):
-        db_cursor = self._db.cursor(buffered=True)
+        db_cursor = self._db.cursor()
         data_directory = self._settings["DATA_DIR"] + self._game_id
         db_settings = self._settings["db_config"]
         
