@@ -5,10 +5,10 @@ import math
 import sys
 from datetime import datetime
 # import local files
+import Request
 import utils
 from feature_extractors.WaveExtractor import WaveExtractor
 from FeatureExporter import FeatureExporter
-from Request import Request
 
 ## Function to print a "help" listing for the export tool.
 #  Hopefully not needed too often, if at all.
@@ -68,7 +68,7 @@ def runExport():
     # TODO: if we have a GET call, handle here:
 
     # otherwise, for direct testing, handle here:
-    req = Request(game_id=game_id, start_date=start_date, end_date=end_date, \
+    req = Request.DateRangeRequest(game_id=game_id, start_date=start_date, end_date=end_date, \
                 max_sessions=settings["MAX_SESSIONS"], min_moves=settings["MIN_MOVES"], \
                 )
     start = datetime.now()

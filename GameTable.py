@@ -17,6 +17,10 @@ class GameTable:
     #  Given a database connection and a game data request,
     #  this retrieves a bit of information from the database to fill in the
     #  class variables.
+    #  @param db        A database connection to the table corresponding to this GameTable.
+    #  @param settings  The dictionary of settings for the app
+    #  @param request   A request object, with information about a date range
+    #                   and other information on what data to retrieve.
     def __init__(self, db, settings, request: Request):
         # Define instance vars
         self.column_names:       typing.List[str]
@@ -67,10 +71,13 @@ class GameTable:
     #  Just used to initialize the session_ids member of the GameTable class.
     @staticmethod
     def _getSessionIDs(db_cursor, db, db_settings, request):
-        # We grab the ids for all sessions that have 0th move in the proper date range.
-        filt = "app_id=\"{}\" AND session_n=0 AND (server_time BETWEEN '{}' AND '{}')".format( \
-                    request.game_id, request.start_date.isoformat(), request.end_date.isoformat())
-        session_ids_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=db_settings["table"],
-                                        columns=["session_id"], filter=filt,
-                                        sort_columns=["session_id"], sort_direction="ASC", distinct=True, limit=request.max_sessions)
-        return [sess[0] for sess in session_ids_raw]
+        if type(request) == Request.DateRangeRequest:
+            # We grab the ids for all sessions that have 0th move in the proper date range.
+            filt = "app_id=\"{}\" AND session_n=0 AND (server_time BETWEEN '{}' AND '{}')".format( \
+                        request.game_id, request.start_date.isoformat(), request.end_date.isoformat())
+            session_ids_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db.database, table=db_settings["table"],
+                                            columns=["session_id"], filter=filt,
+                                            sort_columns=["session_id"], sort_direction="ASC", distinct=True, limit=request.max_sessions)
+            return [sess[0] for sess in session_ids_raw]
+        elif type(request) == Request.IDListRequest:
+            return request._session_ids
