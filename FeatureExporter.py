@@ -118,7 +118,7 @@ class FeatureExporter:
             # grab data for the given session range. Sort by event time, so 
             # TODO: Take the "WAVES" out of the line of code below.
             filt = f"app_id=\"{self._game_id}\" AND session_id BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'"
-            next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=self._db.database, table=db_settings["table"],
+            next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
                                             filter=filt, sort_columns=["session_id", "session_n"], sort_direction = "ASC",
                                             distinct=False)
             # now, we process each row.
