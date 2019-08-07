@@ -59,7 +59,7 @@ class GameTable:
     @staticmethod
     def _getColumnNames(db_cursor, db, db_settings):
     # TODO: Currently, this is retrieved separately from the schema. We may just want to load in one place, and check for a match or something.
-        query = "SHOW COLUMNS from {}.{}".format(db.database, db_settings["table"])
+        query = "SHOW COLUMNS from {}.{}".format(db_settings["DB_NAME_DATA"], db_settings["table"])
         logging.info("Running query: " + query)
         start = datetime.now()
         db_cursor.execute(query)
