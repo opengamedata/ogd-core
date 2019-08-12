@@ -1,11 +1,19 @@
 #!/usr/bin/python3.6
 # import standard libraries
+import cgi
+import cgitb
 import json
 import logging
 from datetime import datetime
 # import local files
-import cgi, cgitb
+import Request
 import utils
+from feature_extractors.Extractor import Extractor
+from feature_extractors.CrystalExtractor import CrystalExtractor
+from feature_extractors.WaveExtractor import WaveExtractor
+from GameTable import GameTable
+from ProcManager import ProcManager
+from schemas.Schema import Schema
 
 # Load settings, set up consts.
 settings = utils.loadJSONFile("config.json")
@@ -73,7 +81,7 @@ def _getAllActiveSessions(game_id: str):
     filt = f"app_id={game_id} AND server_time > '{start_time.isoformat()}';"
     active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
                                            db_name=DB_NAME_DATA, table=DB_TABLE,\
-                                           columns=["session_d", "remote_addr"], filter=filt,\
+                                           columns=["session_id", "remote_addr"], filter=filt,\
                                            sort_columns=["remote_addr"], distinct=True)
     ID_INDEX = 0
     IP_INDEX = 1
@@ -92,15 +100,43 @@ def _ip_to_loc(ip):
     return ("Stub:Wisconsin", "Stub:Madison")
 
 def _getActiveSessionsByLoc(game_id: str, state: str, city: str):
-    pass
+    all_sessions = _getAllActiveSessions(game_id)
+    return all_sessions[state][city]
 
-def _getFeaturesBySessID(sess_id: str, features):
-    pass
+def _getFeaturesBySessID(sess_id: str, game_id: str, features):
+    filt = f"session_id = '{sess_id}';"
+    session_data = utils.SQL.SELECT(cursor=cursor,
+                                    db_name=DB_NAME_DATA, table=DB_TABLE,\
+                                    filter=filt,\
+                                    sort_columns=["session_n", "client_time"])
+    if len(session_data) == 0:
+        return {"error": "Empty Session!"}
+    else:
+        request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
+        game_table = GameTable(db, settings, request)
+        schema = Schema(schema_name=f"{game_id}.JSON")
+        extractor: Extractor
+        if game_id == "WAVES":
+            extractor = WaveExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
+        elif game_id == "CRYSTAL":
+            extractor = CrystalExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
+        else:
+            raise Exception("Got an invalid game ID!")
+        for row in session_data:
+            col = row[game_table.complex_data_index]
+            complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[game_table.event_index]}
+            if "event_custom" not in complex_data_parsed.keys():
+                complex_data_parsed["event_custom"] = row[game_table.event_index]
+            row = list(row)
+            row[game_table.complex_data_index] = complex_data_parsed
+            extractor.extractFromRow(row_with_complex_parsed=row, game_table=game_table)
+        return dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
+                         extractor.getCurrentFeatures() ))
 
 def _getFeatureNamesByGame(gameID: str, features):
     pass
 
-def _getPredictionsBySessID(sess_id: str, predictions):
+def _getPredictionsBySessID(sess_id: str, game_id: str, predictions):
     pass
 
 def _getPredictionNamesByGame(gameID: str, predictions):
