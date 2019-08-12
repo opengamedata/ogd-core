@@ -63,13 +63,7 @@ class Extractor(abc.ABC):
     # TODO: It looks like I might be assuming that dictionaries always have same order here.
     # May need to revisit that issue. I mean, it should be fine because Python won't just go
     # and change order for no reason, but still...
-        column_vals = []
-        for key in self.features.featureList():
-            if type(self.features.getValByName(key)) is type({}):
-                # if it's a dictionary, expand.
-                column_vals.extend([str(self.features.getValByIndex(key, num)) for num in self.features.getValByName(feature_name=key).keys()])
-            else:
-                column_vals.append(str(self.features.getValByName(key)))
+        column_vals = self.getCurrentFeatures()
         file.write(",".join(column_vals))
         file.write("\n")
 
