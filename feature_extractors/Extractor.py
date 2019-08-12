@@ -73,6 +73,16 @@ class Extractor(abc.ABC):
         file.write(",".join(column_vals))
         file.write("\n")
 
+    def getCurrentFeatures(self):
+        column_vals = []
+        for key in self.features.featureList():
+            if type(self.features.getValByName(key)) is type({}):
+                # if it's a dictionary, expand.
+                column_vals.extend([str(self.features.getValByIndex(key, num)) for num in self.features.getValByName(feature_name=key).keys()])
+            else:
+                column_vals.append(str(self.features.getValByName(key)))
+        return column_vals
+
     ## Abstract declaration of a function to perform extraction of features from a row.
     #
     #  @param row_with_complex_parsed A row of game data from the db, with the
