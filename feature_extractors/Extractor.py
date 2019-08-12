@@ -43,6 +43,12 @@ class Extractor(abc.ABC):
     #  @param file        An open csv file to which we will write column headers.
     @staticmethod
     def writeCSVHeader(game_table: GameTable, game_schema: Schema, file: typing.IO.writable):
+        columns = Extractor.getFeatureNames(game_table=game_table, game_schema=game_schema)
+        file.write(",".join(columns))
+        file.write("\n")
+
+    @staticmethod
+    def getFeatureNames(game_table: GameTable, game_schema: Schema) -> typing.List[str]:
         columns = []
         features = Extractor.SessionFeatures.generateFeatureDict(range(game_table.min_level, game_table.max_level+1), game_schema)
         for key in features.keys():
@@ -50,9 +56,8 @@ class Extractor(abc.ABC):
                 # if it's a dictionary, expand.
                 columns.extend(["{}{}_{}".format(features[key][num]["prefix"], num, key) for num in features[key].keys()])
             else:
-                columns.append(key)
-        file.write(",".join(columns))
-        file.write("\n")
+                columns.append(str(key))
+        return columns
 
     ## Function to print data from an extractor to file.
     #  This function should be the same across all Extractor subtypes.
