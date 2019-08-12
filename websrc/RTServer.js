@@ -52,14 +52,14 @@ class Server
    // Note: The _by_sessID functions below are probably going to mostly be run
    // in a row, so if its more efficient to input and output whole lists, that
    // is fine too.
-   static get_features_by_sessID(callback, sessID, features=null){
+   static get_features_by_sessID(callback, sessID, gameID, features=null){
    //   returns the features of specific (callback, active) sessID.
    //   takes optional argument features which if not null, is an array of feature names
    //   specifying which features to return. this would be like:
    //   ['GameStart','Fail','GameEnd'].
    //   Returns list of features in JSON format
       console.log("Making request for features by session")
-      post_string = `method=get_features_by_sessID&sessID=${sessID}&features=${features}`
+      post_string = `method=get_features_by_sessID&sessID=${sessID}&game_id=${gameID}&features=${features}`
       Server._execute_request(callback, post_string)
    }
 
@@ -70,14 +70,14 @@ class Server
       Server._execute_request(callback, post_string)
    }
 
-   static get_predictions_by_sessID(callback, sessID, predictions=null){
+   static get_predictions_by_sessID(callback, sessID, gameID, predictions=null){
    //   returns the predictions of specific (callback, active) sessID.
    //   takes optional argument predictions which if not null, is an array of prediction names
    //   specifying which predictions to return. this would be like:
    //   ['probability to finish lv3' etc.].
    //   Returns list of predictions in JSON format
       console.log("Making request for predictions by session")
-      post_string = `method=get_predictions_by_sessID&sessID=${sessID}&predictions=${predictions}`
+      post_string = `method=get_predictions_by_sessID&sessID=${sessID}&game_id=${gameID}&predictions=${predictions}`
       Server._execute_request(callback, post_string)
    }
 
