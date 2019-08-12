@@ -67,7 +67,7 @@ class Extractor(abc.ABC):
         file.write(",".join(column_vals))
         file.write("\n")
 
-    def getCurrentFeatures(self):
+    def getCurrentFeatures(self) -> typing.List[str]:
         column_vals = []
         for key in self.features.featureList():
             if type(self.features.getValByName(key)) is type({}):
