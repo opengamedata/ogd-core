@@ -37,7 +37,7 @@ class Server
       //    "CITY1": [SessID0...]
       // }
       console.log("Making request for all active sessions")
-      post_string = `method=get_all_active_sessions&gameID=${gameID}`
+      var post_string = `method=get_all_active_sessions&gameID=${gameID}`
       Server._execute_request(callback, post_string)
    }
    //returns {} if there are no active sessions.
@@ -50,7 +50,7 @@ class Server
    //   returns an array of active sessions eg
    //   [SessID0, SessID1, SessID2]
       console.log("Making request for active sessions by location")
-      post_string = `method=get_active_sessions_by_loc&gameID=${gameID}&state=${state}&city=${city}`
+      var post_string = `method=get_active_sessions_by_loc&gameID=${gameID}&state=${state}&city=${city}`
       Server._execute_request(callback, post_string)
    }
 
@@ -64,14 +64,14 @@ class Server
    //   ['GameStart','Fail','GameEnd'].
    //   Returns list of features in JSON format
       console.log("Making request for features by session")
-      post_string = `method=get_features_by_sessID&sessID=${sessID}&game_id=${gameID}&features=${features}`
+      var post_string = `method=get_features_by_sessID&sessID=${sessID}&game_id=${gameID}&features=${features}`
       Server._execute_request(callback, post_string)
    }
 
    static get_feature_names_by_game(callback, gameID){
    //   returns all feature names of that game (callback, any format is fine)
       console.log("Making request for feature names by game")
-      post_string = `method=get_feature_names_by_game&gameID=${gameID}`
+      var post_string = `method=get_feature_names_by_game&gameID=${gameID}`
       Server._execute_request(callback, post_string)
    }
 
@@ -82,14 +82,14 @@ class Server
    //   ['probability to finish lv3' etc.].
    //   Returns list of predictions in JSON format
       console.log("Making request for predictions by session")
-      post_string = `method=get_predictions_by_sessID&sessID=${sessID}&game_id=${gameID}&predictions=${predictions}`
+      var post_string = `method=get_predictions_by_sessID&sessID=${sessID}&game_id=${gameID}&predictions=${predictions}`
       Server._execute_request(callback, post_string)
    }
 
    static get_prediction_names_by_game(callback, gameID){
    //   returns all prediction names of that game (any format is fine)
       console.log("Making request for prediction names by game")
-      post_string = `method=get_prediction_names_by_game&gameID=${gameID}`
+      var post_string = `method=get_prediction_names_by_game&gameID=${gameID}`
       Server._execute_request(callback, post_string)
    }
 
