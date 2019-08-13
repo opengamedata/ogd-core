@@ -130,14 +130,19 @@ def _getFeaturesBySessID(sess_id: str, game_id: str, features):
             row = list(row)
             row[game_table.complex_data_index] = complex_data_parsed
             extractor.extractFromRow(row_with_complex_parsed=row, game_table=game_table)
-        return dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
-                         extractor.getCurrentFeatures() ))
+        all_features = dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
+                                 extractor.getCurrentFeatures() ))
+        if features is not None:
+            return {i:all_features[i] for i in features}
+        else:
+            return all_features
 
 def _getFeatureNamesByGame(gameID: str):
-    pass
+    schema = Schema(schema_name=f"{game_id}.JSON")
+    return {"features": schema.feature_list()}
 
 def _getPredictionsBySessID(sess_id: str, game_id: str, predictions):
-    pass
+    return {f"stub:{sess_id}":{"stub:prediction_name_1": 1, "stub:prediction_name_2": False}}
 
 def _getPredictionNamesByGame(gameID: str):
-    pass
+    return {"stub:prediction_names":["stub:prediction_name_1", "stub:prediction_name_2"]}
