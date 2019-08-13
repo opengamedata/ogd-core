@@ -39,7 +39,6 @@ try:
     logging.basicConfig(level=logging.INFO)
     sql_login = utils.SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
     ssh_login = utils.SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
-    tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
 
     ln = 45
     print(f"ran to the quit in line {ln}")
@@ -111,6 +110,7 @@ def _getActiveSessionsByLoc(game_id: str, state: str, city: str):
     return all_sessions[state][city]
 
 def _getFeaturesBySessID(sess_id: str, game_id: str, features):
+    tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
     filt = f"session_id = '{sess_id}';"
     session_data = utils.SQL.SELECT(cursor=cursor,
                                     db_name=DB_NAME_DATA, table=DB_TABLE,\
@@ -149,6 +149,7 @@ def _getFeatureNamesByGame(gameID: str):
     return {"features": schema.feature_list()}
 
 def _getPredictionsBySessID(sess_id: str, game_id: str, predictions):
+    #tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
     return {f"stub:{sess_id}":{"stub:prediction_name_1": 1, "stub:prediction_name_2": False}}
 
 def _getPredictionNamesByGame(gameID: str):
