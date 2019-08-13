@@ -73,10 +73,10 @@ def runExport():
                 )
     start = datetime.now()
     feature_exporter = FeatureExporter(req.game_id, db=db, settings=settings)
-    # feature_exporter.exportFromRequest(request=req)
     try:
-        cProfile.runctx("feature_exporter.exportFromRequest(request=req)",
-                        {'req':req, 'feature_exporter':feature_exporter}, {})
+        feature_exporter.exportFromRequest(request=req)
+        # cProfile.runctx("feature_exporter.exportFromRequest(request=req)",
+                        # {'req':req, 'feature_exporter':feature_exporter}, {})
     finally:
         end = datetime.now()
 
