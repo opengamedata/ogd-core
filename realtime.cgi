@@ -118,7 +118,7 @@ def _getFeaturesBySessID(sess_id: str, game_id: str, features):
     else:
         request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
         game_table = GameTable(db, settings, request)
-        schema = Schema(schema_name=f"{game_id}.JSON")
+        schema = Schema(schema_name=f"./schemas/JSON/{game_id}.JSON")
         extractor: Extractor
         if game_id == "WAVES":
             extractor = WaveExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
@@ -143,7 +143,7 @@ def _getFeaturesBySessID(sess_id: str, game_id: str, features):
             return all_features
 
 def _getFeatureNamesByGame(gameID: str):
-    schema = Schema(schema_name=f"{game_id}.JSON")
+    schema = Schema(schema_name=f"./schemas/JSON/{game_id}.JSON")
     return {"features": schema.feature_list()}
 
 def _getPredictionsBySessID(sess_id: str, game_id: str, predictions):
