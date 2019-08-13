@@ -83,8 +83,7 @@ def runExport():
         time_delta = end - start
         print(f"Total time taken: {math.floor(time_delta.total_seconds()/60)} min, \
                                   {time_delta.total_seconds() % 60} sec")
-        db.close()
-        tunnel.stop()
+        utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
 
 ## This section of code is what runs main itself. Just need something to get it
 #  started.

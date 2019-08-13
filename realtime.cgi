@@ -107,9 +107,6 @@ def _getActiveSessionsByLoc(game_id: str, state: str, city: str):
 def _getFeaturesBySessID(sess_id: str, game_id: str, features):
     tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
 
-    ln = 110
-    print(f"ran to the quit in line {ln}")
-    quit()
     cursor = db.cursor()
     filt = f"session_id = '{sess_id}';"
     session_data = utils.SQL.SELECT(cursor=cursor,
@@ -139,6 +136,7 @@ def _getFeaturesBySessID(sess_id: str, game_id: str, features):
             extractor.extractFromRow(row_with_complex_parsed=row, game_table=game_table)
         all_features = dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
                                  extractor.getCurrentFeatures() ))
+        utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
         if features is not None:
             return {i:all_features[i] for i in features}
         else:

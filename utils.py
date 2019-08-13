@@ -125,7 +125,6 @@ class SQL:
     @staticmethod
     def connectToMySQLViaSSH(sql: SQLLogin, ssh: SSHLogin):
         try:
-            dbg_file = open("./python_cgi_log.log", "a")
             tunnel_logger = logging.getLogger('tunnel_logger')
             tunnel_logger.setLevel(logging.WARN)
             tunnel = sshtunnel.SSHTunnelForwarder(
@@ -137,17 +136,19 @@ class SQL:
             print(f"Reached quit in utils.py, line {ln}")
             quit()
             logging.info("Connected to SSH")
-            dbg_file.write("Connected to SSH\n")
             conn = MySQLdb.connect(host = sql.host, port = tunnel.local_bind_port,
                                            user = sql.user, password = sql.pword,
                                            database = sql.db_name)
             logging.info("Connected to SQL")
-            dbg_file.write(f"Connected to SQL at {str(datetime.now())}\n")
             return (tunnel, conn)
         except MySQLdb.connections.Error as err:
             logging.error("Could not connect to the MySql database: " + str(err))
-            dbg_file.write("Could not connect to the MySql database: " + str(err) + "\n")
             return None
+
+    @staticmethod
+    def disconnectMySQLViaSSH(tunnel, db):
+        db.close()
+        tunnel.stop()
 
     ## Function to build and execute SELECT statements on a database connection.
     #  @param cursor        A database cursor, retrieved from the active connection.
