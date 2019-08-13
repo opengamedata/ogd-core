@@ -71,7 +71,7 @@ try:
     print(str(header))
     print(json.dumps(body))
 except Exception as err:
-    print(f"Error in realtime script!")
+    print(f"Error in realtime script! {str(err.with_traceback())}")
     err_file = open("./python_errors.log", "a")
     err_file.write(f"{str(err)}\n")
 
