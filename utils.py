@@ -132,9 +132,6 @@ class SQL:
                 remote_bind_address=(sql.host, sql.port), logger=tunnel_logger
             )
             tunnel.start()
-            ln = 138
-            print(f"Reached quit in utils.py, line {ln}")
-            quit()
             logging.info("Connected to SSH")
             conn = MySQLdb.connect(host = sql.host, port = tunnel.local_bind_port,
                                            user = sql.user, password = sql.pword,
