@@ -133,11 +133,11 @@ def _getFeaturesBySessID(sess_id: str, game_id: str, features):
         return dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
                          extractor.getCurrentFeatures() ))
 
-def _getFeatureNamesByGame(gameID: str, features):
+def _getFeatureNamesByGame(gameID: str):
     pass
 
 def _getPredictionsBySessID(sess_id: str, game_id: str, predictions):
     pass
 
-def _getPredictionNamesByGame(gameID: str, predictions):
+def _getPredictionNamesByGame(gameID: str):
     pass
