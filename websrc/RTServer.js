@@ -8,7 +8,12 @@ class Server
       {
          if (this.readyState == 4 && this.status == 200)
          {
+            console.log(`got back: ${this.responseText.toString()}`);
             callback(this.responseText.toString());
+         }
+         else
+         {
+             console.log(`readyState = ${this.readyState}, status = ${this.status}, response = ${this.responseText.toString()}`);
          }
       }
       req.open("POST", "realtime.cgi", true);

@@ -62,6 +62,7 @@ for (let state in toydata){
 
 function getGreeting()
 {
+  console.log("In realtime.js, we got a call to getGreeting");
   Server.getGreeting(
     function callback(result) {document.getElementById("greeting-drop").innerHTML = result.toString();}
   );
