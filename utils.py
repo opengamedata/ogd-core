@@ -141,7 +141,7 @@ class SQL:
                                            database = sql.db_name)
             logging.info("Connected to SQL")
             return (tunnel, conn)
-        except MySQLdb.connections.Error as err:
+        except Exception as err:
             logging.error("Could not connect to the MySql database: " + str(err))
             return None
 
