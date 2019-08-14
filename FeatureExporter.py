@@ -18,6 +18,7 @@ from Request import Request
 from schemas.Schema import Schema
 from feature_extractors.WaveExtractor import WaveExtractor
 from feature_extractors.CrystalExtractor import CrystalExtractor
+from feature_extractors.LakelandExtractor import LakelandExtractor
 
 ## @class FeatureExporter
 #  A class to export features and raw data, given a Request object.
@@ -79,6 +80,9 @@ class FeatureExporter:
         elif self._game_id == "CRYSTAL":
             game_schema = Schema(schema_name="CRYSTAL.json")
             game_extractor = CrystalExtractor
+        elif self._game_id == "LAKELAND":
+            game_schema = Schema(schema_name="LAKELAND.json")
+            game_extractor = LakelandExtractor
         else:
             raise Exception("Got an invalid game ID!")
 
