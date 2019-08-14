@@ -73,18 +73,17 @@ def runExport():
                 )
     start = datetime.now()
     feature_exporter = FeatureExporter(req.game_id, db=db, settings=settings)
-    # feature_exporter.exportFromRequest(request=req)
     try:
-        cProfile.runctx("feature_exporter.exportFromRequest(request=req)",
-                        {'req':req, 'feature_exporter':feature_exporter}, {})
+        feature_exporter.exportFromRequest(request=req)
+        # cProfile.runctx("feature_exporter.exportFromRequest(request=req)",
+                        # {'req':req, 'feature_exporter':feature_exporter}, {})
     finally:
         end = datetime.now()
 
         time_delta = end - start
         print(f"Total time taken: {math.floor(time_delta.total_seconds()/60)} min, \
                                   {time_delta.total_seconds() % 60} sec")
-        db.close()
-        tunnel.stop()
+        utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
 
 ## This section of code is what runs main itself. Just need something to get it
 #  started.

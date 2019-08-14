@@ -8,6 +8,7 @@ import math
 import MySQLdb
 import os
 import sshtunnel
+import traceback
 import typing
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
@@ -137,9 +138,14 @@ class SQL:
                                            database = sql.db_name)
             logging.info("Connected to SQL")
             return (tunnel, conn)
-        except MySQLdb.connections.Error as err:
+        except Exception as err:
             logging.error("Could not connect to the MySql database: " + str(err))
             return None
+
+    @staticmethod
+    def disconnectMySQLViaSSH(tunnel, db):
+        db.close()
+        tunnel.stop()
 
     ## Function to build and execute SELECT statements on a database connection.
     #  @param cursor        A database cursor, retrieved from the active connection.
