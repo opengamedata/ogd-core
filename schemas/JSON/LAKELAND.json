@@ -67,7 +67,7 @@
       },
     "ITEMUSESELECT":{
       "item": "item_data_short(it) | See [Data Short](#DataShort).",
-      "mark": "it.mark | Item [mark index](#Mark)."
+      "prev_mark": "it.mark | Item [mark index](#Mark)."
       },
     "TOGGLENUTRITION":{
       "to_state": "gg.b.nutrition_view | 1 if nutrition view is being turned on, 0 if turned off.",
@@ -117,17 +117,24 @@
     "per_custom_count": {
     },
     "aggregate":{
-      "num_open_achievements": "Player feature - Number of times the player: look at achievements",
-      "num_buy_house": "Player feature - Number of times the player: buy a …",
-      "num_inspect_tile": "Player feature - Number of times the player: inspect a tile",
-      "num_open_buy_menu": "Player feature - Number of times the player: open the buy menu",
-      "num_change_item_mark": "Player feature - Number of times the player: change a sale/eat/feed state on the board",
-      "num_change_tile_mark": "Player feature - Number of times the player: change a sale/eat/feed state in a farm panel",
-      "play_in_tutorial_mode": "Player feature - Total amount of time the player: play in tutorial mode",
-      "play_in_free_play_mode": "Player feature - Total amount of time the player: play in free play mode",
-      "spend_in_nutrition_view": "Player feature - Total amount of time the player: spend in nutrition view",
+      "num_open_achievements": "X Player feature - Number of times the player: look at achievements",
+      "num_buy_home": "X Player feature - Number of times the player: buy a home",
+      "num_buy_food": "X Player feature - Number of times the player: buy a food",
+      "num_buy_farm": "X Player feature - Number of times the player: buy a farm",
+      "num_buy_fertilizer": "X Player feature - Number of times the player: buy a fertilizer",
+      "num_buy_livestock": "X Player feature - Number of times the player: buy a livestock",
+      "num_buy_skimmer": "X Player feature - Number of times the player: buy a skimmer",
+      "num_buy_sign": "X Player feature - Number of times the player: buy a sign",
+      "num_buy_road": "X Player feature - Number of times the player: buy a road",
+      "num_inspect_tile": "X Player feature - Number of times the player: inspect a tile",
+      "num_open_buy_menu": "X Player feature - Number of times the player: open the buy menu",
+      "num_change_item_mark": "X Player feature - Number of times the player: change a sale/eat/feed state on the board",
+      "num_change_tile_mark": "X Player feature - Number of times the player: change a sale/eat/feed state in a farm panel",
+      "time_in_tutorial_mode": "Player feature - Total amount of time the player: play in tutorial mode",
+      "time_in_free_play_mode": "Player feature - Total amount of time the player: play in free play mode",
+      "time_in_nutrition_view": "Player feature - Total amount of time the player: spend in nutrition view",
       "ave_time_per_tutorial_screen_before_continue": "Player feature - Total amount of time the player: ave time per tutorial screen before continue",
-      "in_each_game_speed_": "Player feature - Total amount of time the player: in each game speed ",
+      "time_in_each_game_speed": "Player feature - Total amount of time the player: in each game speed ",
       "percent_of_money_spent_on_different_items": "Player feature - General: percent of money spent on different items",
       "percent_of_corn-milk_marked_for_sale,_feed,_export-eat": "Player feature - General: percent of corn-milk marked for sale, feed, export-eat",
       "max_number_of_each_item___in_play": "Player feature - General: max number of each item   in play",
