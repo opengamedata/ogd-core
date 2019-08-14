@@ -83,8 +83,9 @@
       "(none)": " | Event itself indicates that the player skipped a tutorial (the tutorial skipped is the last tutorial event logged)."
       },
     "SPEED":{
-      "cur_speed": "gg.speed | From [speed](#SpeedConst) index.",
-      "clicked_speed": "speed | To [speed](#SpeedConst) index."
+      "cur_speed": "gg.speed | To [speed](#SpeedConst) index.",
+      "prev_speed": "speed | From [speed](#SpeedConst) index.",
+      "manual": "manual_speed_bool | bool: 1 if speed was manually changed, 0 if not "
       },
     "ACHIEVEMENT":{
       "achievement": "i | [Achievement](#Achievements) index."
@@ -130,17 +131,17 @@
       "num_open_buy_menu": "X Player feature - Number of times the player: open the buy menu",
       "num_change_item_mark": "X Player feature - Number of times the player: change a sale/eat/feed state on the board",
       "num_change_tile_mark": "X Player feature - Number of times the player: change a sale/eat/feed state in a farm panel",
-      "time_in_tutorial_mode": "Player feature - Total amount of time the player: play in tutorial mode",
-      "time_in_free_play_mode": "Player feature - Total amount of time the player: play in free play mode",
-      "time_in_nutrition_view": "Player feature - Total amount of time the player: spend in nutrition view",
-      "ave_time_per_tutorial_screen_before_continue": "Player feature - Total amount of time the player: ave time per tutorial screen before continue",
-      "time_in_each_game_speed": "Player feature - Total amount of time the player: in each game speed ",
-      "percent_of_money_spent_on_different_items": "Player feature - General: percent of money spent on different items",
-      "percent_of_corn-milk_marked_for_sale,_feed,_export-eat": "Player feature - General: percent of corn-milk marked for sale, feed, export-eat",
-      "max_number_of_each_item___in_play": "Player feature - General: max number of each item   in play",
-      "ave_number_of_corn_marked_for_eat_on_the_board__per_capita": "Player feature - General: ave number of corn marked for eat on the board  per capita",
-      "money_spent": "Player feature - General: money spent",
-      "num_marked_corn-milk-manure_for_sale-eat-feed_in_the_farm_panel_per_capita": "Player feature - General: num marked corn-milk-manure for sale-eat-feed in the farm panel per capita",
+      "time_in_tutorial_mode": "? wait to find what is tutorial mode ? Player feature - Total amount of time the player: play in tutorial mode",
+      "time_in_free_play_mode": "? wait to find what is tutorial mode ? Player feature - Total amount of time the player: play in free play mode",
+      "time_in_nutrition_view": "X Player feature - Total amount of time the player: spend in nutrition view",
+      "ave_time_per_tutorial_screen_before_continue": "? include skips ? Player feature - Total amount of time the player: ave time per tutorial screen before continue",
+      "time_in_each_game_speed": "X Player feature - Total amount of time the player: in each game speed ",
+      "percent_of_money_spent_on_different_items": "X Player feature - General: percent of money spent on different items",
+      "percent_of_corn-milk_marked_for_sale,_feed,_export-eat": "X Player feature - General: percent of corn-milk marked for sale, feed, export-eat",
+      "max_number_of_each_item___in_play": "X Player feature - General: max number of each item   in play",
+      "ave_number_of_corn_marked_for_eat_on_the_board__per_capita": "X Player feature - General: ave number of corn marked for eat on the board  per capita",
+      "money_spent": "X Player feature - General: money spent",
+      "num_marked_corn-milk-manure_for_sale-eat-feed_in_the_farm_panel_per_capita": "X Player feature - General: num marked corn-milk-manure for sale-eat-feed in the farm panel per capita",
       "percent_building_a_farm_on_the_best_available_tile": "Player feature - General: percent building a farm on the best available tile",
       "percent_placing_fertilizer_on_lowest_nutrient_farm": "Player feature - General: percent placing fertilizer on lowest nutrient farm",
       "ave_num_tiles_hovered_before_placing": "Player feature - General: ave num tiles hovered before placing",
