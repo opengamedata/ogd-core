@@ -9,7 +9,8 @@ from feature_extractors.Extractor import Extractor
 from GameTable import GameTable
 from schemas.Schema import Schema
 from enum import Enum
-from collections import defaultdict
+from collections import defaultdict, Counter
+import copy
 
 
 
@@ -34,9 +35,17 @@ class LakelandExtractor(Extractor):
     #                     structured.
     def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
-        self._tile_marks = defaultdict(lambda x: [1,1,1,1])
+        self._tile_marks = defaultdict(lambda x: {'marks': [1,1,1,1], 'type':0})
         self._client_start_time = None
-        self._num_checkpoints_completed = 0
+        self._tutorial_start_and_end_times = {key: [0,0] for key in LakelandExtractor._STR_TO_ENUM['TUTORIALS']}
+        self._time_per_speed = {key: 0 for key in LakelandExtractor._STR_TO_ENUM['SPEED']}
+        self._last_speed_change = None
+        self._time_in_nutrition_view = 0
+        self._last_nutrition_open = None
+        self._money_spent_per_item = {key: 0 for key in LakelandExtractor._STR_TO_ENUM['BUYS']}
+        self._selected_buy_cost = 0
+        self._max_num_items_on_screen = LakelandExtractor.onscreen_item_dict()
+        self._num_farmbits = 0
 
 
 
@@ -54,6 +63,7 @@ class LakelandExtractor(Extractor):
         event_client_time = row_with_complex_parsed[game_table.client_time_index]
         if not self._client_start_time:
             self._client_start_time = event_client_time
+            self._last_speed_change = self._client_start_time
         # Check for invalid row.
         if row_with_complex_parsed[game_table.session_id_index] != self.session_id:
             logging.error("Got a row with incorrect session id!")
@@ -124,15 +134,42 @@ class LakelandExtractor(Extractor):
 
     def _extractFromGamestate(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
+        cur_num_items_on_screen = LakelandExtractor.onscreen_item_dict()
+        items = LakelandExtractor.array_to_mat(4,d["items"])
+        tiles = LakelandExtractor.array_to_mat(4,d["tiles"])
+        farmbits = LakelandExtractor.array_to_mat(9, d["farmbits"])
+        for it in items:
+            type = it[2]
+            key = LakelandExtractor._ENUM_TO_STR["ITEM TYPE"][type]
+            cur_num_items_on_screen[key] += 1
+        for t in tiles:
+            type = t[3]
+            key = LakelandExtractor._ENUM_TO_STR["TILE TYPE"][type]
+            cur_num_items_on_screen[key] += 1
+        for (k,cur_num) in cur_num_items_on_screen.items():
+            if cur_num > self._max_num_items_on_screen[k]:
+                self._max_num_items_on_screen = cur_num
+
+        food_marked_eat = lambda it: it[2] == "food" and it[3] == "feed"
+
+
+        num_food_marked_eat = sum(list(map(food_marked_eat, items)))
+        num_farmbits = len(d["farmbits"]//9)
+        num_food_marked_eat_per_capita = num_food_marked_eat/num_farmbits
 
     def _extractFromStartgame(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
 
     def _extractFromCheckpoint(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
-        self._num_checkpoints_completed += 1
-        if self._num_checkpoints_completed == 50:
-            self.features.setValByName(feature_name="time_in_tutorial_mode", new_value=event_client_time-self._client_start_time)
+        if d["event_type"] == 'tutorial':
+            tutorial = d["event_label"]
+            is_tutorial_end = 1 if d["event_category"] == 'end' else 0
+            self._tutorial_start_and_end_times[tutorial][is_tutorial_end] = event_client_time
+            if is_tutorial_end:
+                average_screen_time = 0
+
+
 
     def _extractFromSelecttile(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
@@ -146,15 +183,22 @@ class LakelandExtractor(Extractor):
 
     def _extractFromSelectbuy(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
+        self._selected_buy_cost = d["cost"]
 
     def _extractFromBuy(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
         if d["success"]:
             self.features.incAggregateVal(feature_name=
-                                          self._get_feature(base='num_buy_',enum=d["buy"],enum_type='Buys'))
+                                          self._get_feature(base='num_buy_', enum=d["buy"], enum_type='Buys'))
+            self._money_spent_per_item[LakelandExtractor._ENUM_TO_STR["BUYS"][d["buy"]]] += self._selected_buy_cost
+            self.features.incAggregateVal(feature_name="money_spent", increment=self._selected_buy_cost)
+            self._selected_buy_cost = 0
+            if d["buy"] == 1: # home
+                self._num_farmbits += 1;
 
     def _extractFromCancelbuy(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
+        self._selected_buy_cost = 0
 
     def _extractFromRoadbuilds(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
@@ -164,6 +208,12 @@ class LakelandExtractor(Extractor):
         tile_array, marks = d["tile"], d["marks"]
         if self._tile_mark_change(tile_array, marks):
             self.features.incAggregateVal("num_change_tile_mark")
+        total_farm_marks1 = [t["marks"][0] for t in self._tiles.values() if t["type"] == LakelandExtractor._STR_TO_ENUM["TILE TYPE"]['farm']]
+        total_farm_marks2 = [t["marks"][1] for t in self._tiles.values() if t["type"] == LakelandExtractor._STR_TO_ENUM["TILE TYPE"]['farm']]
+        total_dairy_marks = [t["marks"][0] for t in self._tiles.values() if t["type"] == LakelandExtractor._STR_TO_ENUM["TILE TYPE"]['dairy']]
+        total_marks = total_dairy_marks + total_farm_marks1 + total_farm_marks2
+        allocations_per_capita = {LakelandExtractor._ENUM_TO_STR['MARK'][k]:v/self._num_farmbits for k,v in Counter(total_marks).items()}
+
 
 
     def _extractFromItemuseselect(self, event_client_time, event_data_complex_parsed):
@@ -171,10 +221,16 @@ class LakelandExtractor(Extractor):
         item_array = d["item"]
         curr_mark = item_array[3]
         if d["prev_mark"] != curr_mark:
-            self.features.incAggregateVal("num_change_tile_mark")
+            self.features.incAggregateVal("num_change_item_mark")
 
     def _extractFromTogglenutrition(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
+        toggle_opened = d["to_state"]
+        if not toggle_opened:
+            self._time_in_nutrition_view += event_client_time - self._last_nutrition_open
+        else: # if nutriton opened
+            self._last_nutrition_open = event_client_time
+
 
     def _extractFromToggleshop(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
@@ -191,12 +247,20 @@ class LakelandExtractor(Extractor):
 
     def _extractFromSpeed(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
+        cur_speed, prev_speed = d["cur_speed"], d["prev_speed"]
+        if cur_speed != prev_speed:
+            time_at_prev_speed = event_client_time - self._last_speed_change
+            self._last_speed_change = event_client_time
+            self._time_per_speed[LakelandExtractor._ENUM_TO_STR[prev_speed]] += time_at_prev_speed
+
+
 
     def _extractFromAchievement(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
 
     def _extractFromFarmbitdeath(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
+        self._num_farmbits -= 1
 
     def _extractFromBlurb(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
@@ -217,10 +281,12 @@ class LakelandExtractor(Extractor):
 
     def _tile_mark_change(self, tile_array, marks):
         tx,ty = tile_array[4], tile_array[5]
-        if marks == self._tile_marks[(tx,ty)]:
+        type = tile_array[3]
+        self._tiles[(tx, ty)]['type'] = type
+        if marks == self._tiles[(tx,ty)]['marks']:
             return False
         else:
-            self._tile_marks[(tx,ty)] = marks
+            self._tiles[(tx,ty)]['marks'] = marks
             return True
 
     @staticmethod
@@ -230,3 +296,18 @@ class LakelandExtractor(Extractor):
     @staticmethod
     def str_to_int(str):
         return int(str.strip())
+
+    @staticmethod
+    def list_deltas(l):
+        [l[i]-l[i-1] for i in range(1,len(l))]
+
+    @staticmethod
+    def onscreen_item_dict():
+        ret = {key: 0 for key in LakelandExtractor._STR_TO_ENUM['ITEM TYPE']}
+        ret.update({key: 0 for key in LakelandExtractor._STR_TO_ENUM['TILE TYPE']})
+        return ret
+
+    @staticmethod
+    def array_to_mat(num_columns, arr):
+        assert len(arr) % num_columns == 0
+        return [arr[i:i+num_columns] for i in range(0, len(arr), num_columns)]
