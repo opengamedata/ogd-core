@@ -1,9 +1,14 @@
+# include libraries
+import abc
+import typing
 from datetime import date
+# include local files
+import utils
 
 ## @class Request
 #  Dumb struct to hold data related to requests for data export.
 #  This way, we've at least got a list of what is available in a request.
-class Request:
+class Request(abc.ABC):
     ## Constructor for the request class.
     #  Just stores whatever data is given. No checking done to ensure we have all
     #  necessary data, this can be checked wherever Requests are actually used.
@@ -20,6 +25,10 @@ class Request:
         self.max_sessions = max_sessions
         self.min_moves = min_moves
 
+    @abc.abstractmethod
+    def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
+        pass
+
 class DateRangeRequest(Request):
     def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None,
                  start_date: date = None, end_date: date = None):
@@ -32,8 +41,27 @@ class DateRangeRequest(Request):
         fmt = "%Y%m%d"
         return f"{self.game_id}: {self.start_date.strftime(fmt)}-{self.end_date.strftime(fmt)}"
 
+    def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
+        # We grab the ids for all sessions that have 0th move in the proper date range.
+        filt = "app_id=\"{}\" AND session_n=0 AND (server_time BETWEEN '{}' AND '{}')".format( \
+                        self.game_id, self.start_date.isoformat(), self.end_date.isoformat())
+        session_ids_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
+                                columns=["session_id"], filter=filt,
+                                sort_columns=["session_id"], sort_direction="ASC", distinct=True, limit=self.max_sessions)
+        return [sess[0] for sess in session_ids_raw]
+
 class IDListRequest(Request):
     def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None,
                     session_ids = []):
         Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves)
         self._session_ids = session_ids
+
+    def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
+        return self._session_ids
+
+class GameInfoRequest(Request):
+    def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None):
+        Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves)
+
+    def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
+        return []

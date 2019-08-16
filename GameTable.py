@@ -49,7 +49,7 @@ class GameTable:
                                         distinct=True)
         self.max_level = max_min_raw[0][0]
         self.min_level = max_min_raw[0][1]
-        self.session_ids = GameTable._getSessionIDs(db_cursor, db, db_settings, request)
+        self.session_ids = request.retrieveSessionIDs(db_cursor=db_cursor, db_settings=db_settings)
         # logging.debug("session_ids: " + str(session_ids))
     
     ## Private helper function to retrieve a list of all database columns from the table.
@@ -65,19 +65,3 @@ class GameTable:
         db_cursor.execute(query)
         logging.info(f"Query execution completed, time to execute: {datetime.now()-start}")
         return [col[0] for col in db_cursor.fetchall()]
-    
-    ## Private helper function to get a list of all sessions within the timeframe
-    #  given in the request, for the game id given in the request.
-    #  Just used to initialize the session_ids member of the GameTable class.
-    @staticmethod
-    def _getSessionIDs(db_cursor, db, db_settings, request):
-        if type(request) == Request.DateRangeRequest:
-            # We grab the ids for all sessions that have 0th move in the proper date range.
-            filt = "app_id=\"{}\" AND session_n=0 AND (server_time BETWEEN '{}' AND '{}')".format( \
-                        request.game_id, request.start_date.isoformat(), request.end_date.isoformat())
-            session_ids_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
-                                            columns=["session_id"], filter=filt,
-                                            sort_columns=["session_id"], sort_direction="ASC", distinct=True, limit=request.max_sessions)
-            return [sess[0] for sess in session_ids_raw]
-        elif type(request) == Request.IDListRequest:
-            return request._session_ids
