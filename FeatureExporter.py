@@ -174,7 +174,8 @@ class FeatureExporter:
             raw_mgr.ProcessRow(row)
             proc_mgr.ProcessRow(row)
         else:
-            logging.warn(f"Found a session ({session_id}) which was in the slice but not in the list of sessions for processing.")
+            # logging.warn(f"Found a session ({session_id}) which was in the slice but not in the list of sessions for processing.")
+            pass
 
     ## Private helper function to update the list of exported files.
     #  Given the paths of the exported files, and some other variables for
