@@ -1,5 +1,5 @@
 {
-  "Event Categories": {
+  "EVENT CATEGORIES": {
     "gamestate": 0,
     "startgame": 1,
     "checkpoint": 2,
@@ -25,7 +25,7 @@
     "history": 22,
     "endgame": 23
   },
-  "Emotes": {
+  "EMOTES": {
     "fullness_motivated_txt": 0,
     "fullness_desperate_txt": 1,
     "energy_desperate_txt": 2,
@@ -38,7 +38,7 @@
     "swim_txt": 9,
     "sale_txt": 10
   },
-  "Buys": {
+  "BUYS": {
     "null": 0,
     "home": 1,
     "food": 2,
@@ -49,7 +49,7 @@
     "sign": 7,
     "road": 8
   },
-  "Names": {
+  "NAMES": {
     "Peter": 0,
     "Paul": 1,
     "Mary": 2,
@@ -69,14 +69,14 @@
     "Victor": 16,
     "Richard": 17
   },
-  "Speed": {
+  "SPEED": {
     "null": 0,
     "pause": 1,
     "play": 2,
     "fast": 3,
     "vfast": 4
   },
-  "Achievements": {
+  "ACHIEVEMENTS": {
     "exist": 0,
     "group": 1,
     "town": 2,
@@ -94,31 +94,59 @@
     "hugebloom": 14,
     "massivebloom": 15
   },
-  "Thing_Type": {
+  "TUTORIALS": {
+    "another_death": 0,
+    "another_member": 1,
+    "bloom": 2,
+    "build_a_farm": 3,
+    "build_a_house": 4,
+    "buy_fertilizer": 5,
+    "buy_food": 6,
+    "buy_livestock": 7,
+    "death": 8,
+    "end_life": 9,
+    "extra_life": 10,
+    "final_death": 11,
+    "flooded_fertilizer": 12,
+    "gross": 13,
+    "gross_again": 14,
+    "livestock": 15,
+    "long_travel": 16,
+    "low_nutrients": 17,
+    "mass_sadness": 18,
+    "poop": 19,
+    "rain": 20,
+    "sell_food": 21,
+    "successful_harvest": 22,
+    "timewarp": 23,
+    "unattended_farm": 24,
+    "unused_fertilizer": 25
+  },
+  "THING_TYPE": {
     "null": 0,
     "tile": 1,
     "item": 2,
     "farmbit": 3
   },
-  "Inspector Content": {
+  "INSPECTOR CONTENT": {
     "null": 0,
     "farmbit": 1,
     "item": 2,
     "tile": 3
   },
-  "Text Type": {
+  "TEXT TYPE": {
     "null": 0,
     "observe": 1,
     "dismiss": 2,
     "direct": 3
   },
-  "Advisor Type": {
+  "ADVISOR TYPE": {
     "null": 0,
     "mayor": 1,
     "business": 2,
     "farmer": 3
   },
-  "Tile States": {
+  "TILE STATES": {
     "null": 0,
     "home_vacant": 1,
     "home_occupied": 2,
@@ -132,7 +160,7 @@
     "livestock_digesting": 10,
     "livestock_milkable": 11
   },
-  "Tile Type": {
+  "TILE TYPE": {
     "null": 0,
     "land": 1,
     "rock": 2,
@@ -146,7 +174,7 @@
     "livestock": 10,
     "road": 11
   },
-  "Job Type": {
+  "JOB TYPE": {
     "null": 0,
     "idle": 1,
     "wait": 2,
@@ -160,7 +188,7 @@
     "milk": 10,
     "export": 11
   },
-  "Item Type": {
+  "ITEM TYPE": {
     "null": 0,
     "water": 1,
     "food": 2,
@@ -168,26 +196,26 @@
     "fertilizer": 4,
     "milk": 5
   },
-  "Job State": {
+  "JOB STATE": {
     "null": 0,
     "get": 1,
     "seek": 2,
     "act": 3
   },
-  "Farmbit State": {
+  "FARMBIT STATE": {
     "null": 0,
     "dire": 1,
     "desperate": 2,
     "motivated": 3
   },
-  "Farmbit Need": {
+  "FARMBIT NEED": {
     "null": 0,
     "fullness": 1,
     "energy": 2,
     "joy": 3,
     "fulfillment": 4
   },
-  "Direction": {
+  "DIRECTION": {
     "null": 0,
     "r": 1,
     "dr": 2,
@@ -197,5 +225,11 @@
     "ul": 6,
     "u": 7,
     "ur": 8
+  },
+  "MARK": {
+    "null": 0,
+    "use": 1,
+    "sell": 2,
+    "feed": 3
   }
 }
