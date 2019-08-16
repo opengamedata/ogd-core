@@ -3,12 +3,17 @@ import cProfile
 import logging
 import math
 import sys
+import typing
 from datetime import datetime
 # import local files
+import feature_extractors.Extractor
 import Request
 import utils
-from feature_extractors.WaveExtractor import WaveExtractor
 from FeatureExporter import FeatureExporter
+from feature_extractors.CrystalExtractor import CrystalExtractor
+from feature_extractors.WaveExtractor import WaveExtractor
+from GameTable import GameTable
+from schemas.Schema import Schema
 
 ## Function to print a "help" listing for the export tool.
 #  Hopefully not needed too often, if at all.
@@ -29,6 +34,25 @@ def showHelp():
     print("    help arguments: *None*")
     print(width*"*")
 
+def prepareDB() -> typing.Tuple:
+    # Load settings, set up consts.
+    DB_NAME_DATA = db_settings["DB_NAME_DATA"]
+    DB_USER = db_settings['DB_USER']
+    DB_PW = db_settings['DB_PW']
+    DB_HOST = db_settings['DB_HOST']
+    DB_PORT = db_settings['DB_PORT']
+    SSH_USER = ssh_settings['SSH_USER']
+    SSH_PW = ssh_settings['SSH_PW']
+    SSH_HOST = ssh_settings['SSH_HOST']
+    SSH_PORT = ssh_settings['SSH_PORT']
+
+    # set up other global vars as needed:
+    logging.basicConfig(level=logging.INFO)
+    sql_login = utils.SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
+    ssh_login = utils.SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
+    tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
+    return (tunnel, db)
+
 ## Function to handle execution of export code. This is the main use of the
 #  program.
 def runExport():
@@ -45,29 +69,10 @@ def runExport():
     end_date   = datetime.strptime(sys.argv[4], "%m/%d/%Y") if num_args > 4 \
             else today
     end_date = end_date.replace(hour=23, minute=59, second=59)
-    # Load settings, set up consts.
-    settings = utils.loadJSONFile("config.json")
-    db_settings = settings["db_config"]
-    DB_NAME_DATA = db_settings["DB_NAME_DATA"]
-    DB_USER = db_settings['DB_USER']
-    DB_PW = db_settings['DB_PW']
-    DB_HOST = db_settings['DB_HOST']
-    DB_PORT = db_settings['DB_PORT']
-    ssh_settings = settings["ssh_config"]
-    SSH_USER = ssh_settings['SSH_USER']
-    SSH_PW = ssh_settings['SSH_PW']
-    SSH_HOST = ssh_settings['SSH_HOST']
-    SSH_PORT = ssh_settings['SSH_PORT']
 
-    # set up other global vars as needed:
-    logging.basicConfig(level=logging.INFO)
-    sql_login = utils.SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
-    ssh_login = utils.SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
-    tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
+    tunnel, db = prepareDB()
 
-    # TODO: if we have a GET call, handle here:
-
-    # otherwise, for direct testing, handle here:
+    # Once we have the parameters parsed out, construct the request.
     req = Request.DateRangeRequest(game_id=game_id, start_date=start_date, end_date=end_date, \
                 max_sessions=settings["MAX_SESSIONS"], min_moves=settings["MIN_MOVES"], \
                 )
@@ -85,6 +90,20 @@ def runExport():
                                   {time_delta.total_seconds() % 60} sec")
         utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
 
+def runGameInfo():
+    if num_args > 2:
+        try:
+            tunnel, db = prepareDB()
+            game_name = sys.argv[2]
+            request = Request.GameInfoRequest(game_id=game_name)
+            table = GameTable(db=db, settings=settings, request=request)
+            schema = Schema(f"{game_name}.json")
+            feature_extractors.Extractor.Extractor.writeCSVHeader(game_table=table, game_schema=schema, file=sys.stdout)
+        finally:
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+    else:
+        print("Error, no game name given!")
+        showHelp()
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
 num_args = len(sys.argv)
@@ -93,9 +112,19 @@ fname = sys.argv[0] if num_args > 0 else None
 print(f"Running {fname}...")
 cmd = sys.argv[1] if num_args > 1 else "help"
 if type(cmd) == str:
+    # if we have a real command, load the config file.
+    settings = utils.loadJSONFile("config.json")
+    db_settings = settings["db_config"]
+    ssh_settings = settings["ssh_config"]
+
     if cmd.lower() == "export":
         runExport()
+    elif cmd.lower() == "info":
+        runGameInfo()
     else:
+        if not cmd.lower() == "help":
+            print("Invalid Command!")
         showHelp()
 else:
+    print("Command is not a string!")
     showHelp()
