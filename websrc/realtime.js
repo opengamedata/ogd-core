@@ -63,8 +63,10 @@ for (let state in toydata){
 function getGreeting()
 {
   console.log("In realtime.js, we got a call to getGreeting");
-  Server.getGreeting(
-    function callback(result) {document.getElementById("greeting-drop").innerHTML = result.toString();}
+  // Server.getGreeting(function callback(result) {document.getElementByID("greeting-drop").innerHTML = result.toString();});
+  Server.get_feature_names_by_game(
+    function callback(result) {document.getElementById("greeting-drop").innerHTML = result.toString();},
+    "CRYSTAL"
   );
 }
 
