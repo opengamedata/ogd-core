@@ -39,6 +39,8 @@ try:
     logging.basicConfig(level=logging.INFO)
     sql_login = utils.SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
     ssh_login = utils.SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
+    log_file = open("./python_errors.log", "a")
+    _cgi_debug("Opened log file", "Info", log_file)
 
     request = cgi.FieldStorage()
     method = request.getvalue("method")
@@ -59,7 +61,9 @@ try:
         features = request.getvalue("features")
         body = _getFeaturesBySessID(sess_id=sess_id, features=features)
     elif method == "get_feature_names_by_game":
+        _cgi_debug("Ready to get all feature names", "Info", log_file)
         game_id = request.getvalue("gameID")
+        _cgi_debug(f"Game ID is {game_id}", "Info", log_file)
         body = _getFeatureNamesByGame(game_id=game_id)
     elif method == "get_predictions_by_sessID":
         sess_id = request.getvalue("sessID")
@@ -143,8 +147,15 @@ def _getFeaturesBySessID(sess_id: str, game_id: str, features):
             return all_features
 
 def _getFeatureNamesByGame(gameID: str):
-    schema = Schema(schema_name=f"./schemas/JSON/{game_id}.JSON")
-    return {"features": schema.feature_list()}
+    _cgi_debug("Ready to load schema", "Info", log_file)
+    try:
+        schema = Schema(schema_name=f"./schemas/JSON/{game_id}.JSON")
+        return {"features": schema.feature_list()}
+    except Exception as err:
+        _cgi_debug(f"Got exception message: {str(err)}", "Error", log_file)
+    finally:
+        _cgi_debug("Had to return None", "Warning", log_file)
+        return None
 
 def _getPredictionsBySessID(sess_id: str, game_id: str, predictions):
     #tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
@@ -156,3 +167,6 @@ def _getPredictionsBySessID(sess_id: str, game_id: str, predictions):
 
 def _getPredictionNamesByGame(gameID: str):
     return {"stub:prediction_names":["stub:prediction_name_1", "stub:prediction_name_2"]}
+
+def _cgi_debug(msg: str, level: str, file):
+    file.write(f"[{level}] At {str(datetime.now())}, {msg}.\n")
