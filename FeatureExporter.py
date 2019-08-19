@@ -99,16 +99,18 @@ class FeatureExporter:
         # Now, we're ready to set up the managers:
         raw_mgr = RawManager(game_table=game_table, game_schema=game_schema, raw_csv_file=raw_csv_file)
         proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table, game_schema=game_schema, proc_csv_file=proc_csv_file )
-        # Next, calculate metadata
-        raw_metadata = utils.csvMetadata(game_name=self._game_id, begin_date=request.start_date, end_date=request.end_date,
-                                        field_list=game_schema.db_columns_with_types())
-        feature_descriptions = {**game_schema.perlevel_features(), **game_schema.aggregate_features()}
-        proc_metadata = utils.csvMetadata(game_name=self._game_id, begin_date=request.start_date, end_date=request.end_date,
-                                        field_list=feature_descriptions)
+        
+        # We're moving the metadata out into a separate readme file.
+        # # Next, calculate metadata
+        # raw_metadata = utils.csvMetadata(game_name=self._game_id, begin_date=request.start_date, end_date=request.end_date,
+        #                                 field_list=game_schema.db_columns_with_types())
+        # feature_descriptions = {**game_schema.perlevel_features(), **game_schema.aggregate_features()}
+        # proc_metadata = utils.csvMetadata(game_name=self._game_id, begin_date=request.start_date, end_date=request.end_date,
+        #                                 field_list=feature_descriptions)
+        # # after generating the metadata, write to each file
+        # raw_csv_file.write(raw_metadata)
+        # proc_csv_file.write(proc_metadata)
 
-        # after generating the metadata, write to each file
-        raw_csv_file.write(raw_metadata)
-        proc_csv_file.write(proc_metadata)
         # then write the column headers for the raw csv.
         raw_mgr.WriteRawCSVHeader()
         proc_mgr.WriteProcCSVHeader()
