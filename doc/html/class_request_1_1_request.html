@@ -75,27 +75,31 @@ $(function() {
 <div class="title">Request.Request Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="dynheader">
+Inheritance diagram for Request.Request:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="class_request_1_1_request.png" usemap="#Request.Request_map" alt=""/>
+  <map id="Request.Request_map" name="Request.Request_map">
+<area href="class_request_1_1_date_range_request.html" alt="Request.DateRangeRequest" shape="rect" coords="0,112,166,136"/>
+<area href="class_request_1_1_i_d_list_request.html" alt="Request.IDListRequest" shape="rect" coords="176,112,342,136"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa106342429eecbd088edd1d4f047a22c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_request_1_1_request.html#aa106342429eecbd088edd1d4f047a22c">__init__</a> (self, str game_id=None, date start_date=None, date end_date=None, int max_sessions=None, int min_moves=None)</td></tr>
-<tr class="memdesc:aa106342429eecbd088edd1d4f047a22c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the request class.  <a href="#aa106342429eecbd088edd1d4f047a22c">More...</a><br /></td></tr>
-<tr class="separator:aa106342429eecbd088edd1d4f047a22c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab592146e2d766e462d18ea551cb1b2ee"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_request_1_1_request.html#ab592146e2d766e462d18ea551cb1b2ee">__str__</a> (self)</td></tr>
-<tr class="memdesc:ab592146e2d766e462d18ea551cb1b2ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">String representation of a request.  <a href="#ab592146e2d766e462d18ea551cb1b2ee">More...</a><br /></td></tr>
-<tr class="separator:ab592146e2d766e462d18ea551cb1b2ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b2b15d3918230c6b56025e0ef7326ab"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_request_1_1_request.html#a4b2b15d3918230c6b56025e0ef7326ab">__init__</a> (self, str game_id=None, int max_sessions=None, int min_moves=None)</td></tr>
+<tr class="memdesc:a4b2b15d3918230c6b56025e0ef7326ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the request class.  <a href="#a4b2b15d3918230c6b56025e0ef7326ab">More...</a><br /></td></tr>
+<tr class="separator:a4b2b15d3918230c6b56025e0ef7326ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa65df0d73c5d2524053dbedd666c7d9e"><td class="memItemLeft" align="right" valign="top"><a id="aa65df0d73c5d2524053dbedd666c7d9e"></a>
+typing.List&#160;</td><td class="memItemRight" valign="bottom"><b>retrieveSessionIDs</b> (self, db_cursor, db_settings)</td></tr>
+<tr class="separator:aa65df0d73c5d2524053dbedd666c7d9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a520789a0d1abb508824a0ef6f5d4ac6e"><td class="memItemLeft" align="right" valign="top"><a id="a520789a0d1abb508824a0ef6f5d4ac6e"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>game_id</b></td></tr>
 <tr class="separator:a520789a0d1abb508824a0ef6f5d4ac6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45aee871aec9ccd1bb420fe54bcecd0b"><td class="memItemLeft" align="right" valign="top"><a id="a45aee871aec9ccd1bb420fe54bcecd0b"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>start_date</b></td></tr>
-<tr class="separator:a45aee871aec9ccd1bb420fe54bcecd0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3dcb5787819533d1287c55aa2bc26f3"><td class="memItemLeft" align="right" valign="top"><a id="ad3dcb5787819533d1287c55aa2bc26f3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>end_date</b></td></tr>
-<tr class="separator:ad3dcb5787819533d1287c55aa2bc26f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3194d12360e8581ee6d31c3fd0dbefe"><td class="memItemLeft" align="right" valign="top"><a id="ae3194d12360e8581ee6d31c3fd0dbefe"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>max_sessions</b></td></tr>
 <tr class="separator:ae3194d12360e8581ee6d31c3fd0dbefe"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -104,8 +108,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a7f4e3723e0b4b3415c3527caf74c6944"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aa106342429eecbd088edd1d4f047a22c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa106342429eecbd088edd1d4f047a22c">&#9670;&nbsp;</a></span>__init__()</h2>
+<a id="a4b2b15d3918230c6b56025e0ef7326ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b2b15d3918230c6b56025e0ef7326ab">&#9670;&nbsp;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -121,18 +125,6 @@ Public Attributes</h2></td></tr>
           <td></td>
           <td class="paramtype">str &#160;</td>
           <td class="paramname"><em>game_id</em> = <code>None</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">date &#160;</td>
-          <td class="paramname"><em>start_date</em> = <code>None</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">date &#160;</td>
-          <td class="paramname"><em>end_date</em> = <code>None</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -165,28 +157,6 @@ Public Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="ab592146e2d766e462d18ea551cb1b2ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab592146e2d766e462d18ea551cb1b2ee">&#9670;&nbsp;</a></span>__str__()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">def Request.Request.__str__ </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>self</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>String representation of a request. </p>
-<p>Just gives game id, and date range. </p>
 
 </div>
 </div>

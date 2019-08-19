@@ -79,6 +79,10 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classutils_1_1_s_q_l.html">SQL</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A utility class containing some functions to assist in retrieving from a database.  <a href="classutils_1_1_s_q_l.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classutils_1_1_s_q_l_login.html">SQLLogin</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classutils_1_1_s_s_h_login.html">SSHLogin</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -88,15 +92,15 @@ Functions</h2></td></tr>
 <tr class="memitem:ab2f8ec31af461e89fcc8e5d030cfd5fc"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceutils.html#ab2f8ec31af461e89fcc8e5d030cfd5fc">dateToFileSafeString</a> (datetime.datetime date)</td></tr>
 <tr class="memdesc:ab2f8ec31af461e89fcc8e5d030cfd5fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function that converts a datetime object into a filename-friendly format.  <a href="#ab2f8ec31af461e89fcc8e5d030cfd5fc">More...</a><br /></td></tr>
 <tr class="separator:ab2f8ec31af461e89fcc8e5d030cfd5fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c96cba3c2b57d7b3d4c66964f689f57"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceutils.html#a9c96cba3c2b57d7b3d4c66964f689f57">csvMetadata</a> (str game_name, datetime.datetime begin_date, datetime.datetime end_date, typing.Dict[str, str] field_list)</td></tr>
-<tr class="memdesc:a9c96cba3c2b57d7b3d4c66964f689f57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to generate metadata for a csv file.  <a href="#a9c96cba3c2b57d7b3d4c66964f689f57">More...</a><br /></td></tr>
-<tr class="separator:a9c96cba3c2b57d7b3d4c66964f689f57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5494ad4fa3d93ab1e45930ca24c987dc"><td class="memItemLeft" align="right" valign="top">str&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceutils.html#a5494ad4fa3d93ab1e45930ca24c987dc">csvMetadata</a> (str game_name, typing.Dict[str, str] raw_field_list, typing.Dict[str, str] proc_field_list)</td></tr>
+<tr class="memdesc:a5494ad4fa3d93ab1e45930ca24c987dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to generate metadata for a csv file.  <a href="#a5494ad4fa3d93ab1e45930ca24c987dc">More...</a><br /></td></tr>
+<tr class="separator:a5494ad4fa3d93ab1e45930ca24c987dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A module of utility functions used in the feature_extraction_to_csv project. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a9c96cba3c2b57d7b3d4c66964f689f57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9c96cba3c2b57d7b3d4c66964f689f57">&#9670;&nbsp;</a></span>csvMetadata()</h2>
+<a id="a5494ad4fa3d93ab1e45930ca24c987dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5494ad4fa3d93ab1e45930ca24c987dc">&#9670;&nbsp;</a></span>csvMetadata()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -110,20 +114,14 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">datetime.datetime&#160;</td>
-          <td class="paramname"><em>begin_date</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">datetime.datetime&#160;</td>
-          <td class="paramname"><em>end_date</em>, </td>
+          <td class="paramtype">typing.Dict[str,str]&#160;</td>
+          <td class="paramname"><em>raw_field_list</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">typing.Dict[str,str]&#160;</td>
-          <td class="paramname"><em>field_list</em>&#160;</td>
+          <td class="paramname"><em>proc_field_list</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

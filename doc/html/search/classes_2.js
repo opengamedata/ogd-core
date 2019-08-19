@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['featureexporter',['FeatureExporter',['../class_feature_exporter_1_1_feature_exporter.html',1,'FeatureExporter.FeatureExporter'],['../class_feature_exporter.html',1,'FeatureExporter']]]
+  ['extractor',['Extractor',['../classfeature__extractors_1_1_extractor_1_1_extractor.html',1,'feature_extractors::Extractor']]]
 ];

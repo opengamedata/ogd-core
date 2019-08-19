@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['extractor',['Extractor',['../classfeature__extractors_1_1_extractor_1_1_extractor.html',1,'feature_extractors::Extractor']]]
+  ['daterangerequest',['DateRangeRequest',['../class_request_1_1_date_range_request.html',1,'Request']]]
 ];

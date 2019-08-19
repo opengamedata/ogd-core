@@ -104,6 +104,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a532d1edd279592d6a7bc287d6de2a310 inherit pub_methods_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfeature__extractors_1_1_extractor_1_1_extractor.html#a532d1edd279592d6a7bc287d6de2a310">writeCurrentFeatures</a> (self, typing.IO.writable file)</td></tr>
 <tr class="memdesc:a532d1edd279592d6a7bc287d6de2a310 inherit pub_methods_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to print data from an extractor to file.  <a href="classfeature__extractors_1_1_extractor_1_1_extractor.html#a532d1edd279592d6a7bc287d6de2a310">More...</a><br /></td></tr>
 <tr class="separator:a532d1edd279592d6a7bc287d6de2a310 inherit pub_methods_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3bfb3281b2ed3310f65e8317947354d inherit pub_methods_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="memItemLeft" align="right" valign="top"><a id="af3bfb3281b2ed3310f65e8317947354d"></a>
+typing.List[str]&#160;</td><td class="memItemRight" valign="bottom"><b>getCurrentFeatures</b> (self)</td></tr>
+<tr class="separator:af3bfb3281b2ed3310f65e8317947354d inherit pub_methods_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -156,10 +159,13 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a7cf66d598a6ec479e3f65db57ec454a0 inherit pub_static_methods_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfeature__extractors_1_1_extractor_1_1_extractor.html#a7cf66d598a6ec479e3f65db57ec454a0">writeCSVHeader</a> (<a class="el" href="class_game_table_1_1_game_table.html">GameTable</a> game_table, <a class="el" href="classschemas_1_1_schema_1_1_schema.html">Schema</a> game_schema, typing.IO.writable file)</td></tr>
 <tr class="memdesc:a7cf66d598a6ec479e3f65db57ec454a0 inherit pub_static_methods_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static function to print column headers to a file.  <a href="classfeature__extractors_1_1_extractor_1_1_extractor.html#a7cf66d598a6ec479e3f65db57ec454a0">More...</a><br /></td></tr>
 <tr class="separator:a7cf66d598a6ec479e3f65db57ec454a0 inherit pub_static_methods_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b2024828a8be05ca1cadeac54ddc9d9 inherit pub_static_methods_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="memItemLeft" align="right" valign="top"><a id="a0b2024828a8be05ca1cadeac54ddc9d9"></a>
+typing.List[str]&#160;</td><td class="memItemRight" valign="bottom"><b>getFeatureNames</b> (<a class="el" href="class_game_table_1_1_game_table.html">GameTable</a> game_table, <a class="el" href="classschemas_1_1_schema_1_1_schema.html">Schema</a> game_schema)</td></tr>
+<tr class="separator:a0b2024828a8be05ca1cadeac54ddc9d9 inherit pub_static_methods_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_attribs_classfeature__extractors_1_1_extractor_1_1_extractor"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_classfeature__extractors_1_1_extractor_1_1_extractor')"><img src="closed.png" alt="-"/>&#160;Static Public Attributes inherited from <a class="el" href="classfeature__extractors_1_1_extractor_1_1_extractor.html">feature_extractors.Extractor.Extractor</a></td></tr>
-<tr class="memitem:a3b4f8e906f126e2556d226722b7b7dc2 inherit pub_static_attribs_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="memItemLeft" align="right" valign="top"><a id="a3b4f8e906f126e2556d226722b7b7dc2"></a>
-list&#160;</td><td class="memItemRight" valign="bottom"><b>column_vals</b> = []</td></tr>
-<tr class="separator:a3b4f8e906f126e2556d226722b7b7dc2 inherit pub_static_attribs_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0798db610596efbedabee5dd257afaa inherit pub_static_attribs_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="memItemLeft" align="right" valign="top"><a id="af0798db610596efbedabee5dd257afaa"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>column_vals</b> = self.getCurrentFeatures()</td></tr>
+<tr class="separator:af0798db610596efbedabee5dd257afaa inherit pub_static_attribs_classfeature__extractors_1_1_extractor_1_1_extractor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Extractor subclass for extracting features from Waves game data. </p>

@@ -70,6 +70,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="class_game_table_1_1_game_table-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -116,14 +117,20 @@ Public Attributes</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>session_ids</b></td></tr>
 <tr class="separator:a8bf2a912ab31a23d98857741027b1657"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a095999b1c52a72cbb04109151d664e20"><td class="memItemLeft" align="right" valign="top"><a id="a095999b1c52a72cbb04109151d664e20"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>query</b> = &quot;SHOW COLUMNS from {}.{}&quot;.format(db_settings[&quot;DB_NAME_DATA&quot;], db_settings[&quot;table&quot;])</td></tr>
+<tr class="separator:a095999b1c52a72cbb04109151d664e20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9290ce9f5db52bb5b7ebc0c7d6b1b934"><td class="memItemLeft" align="right" valign="top"><a id="a9290ce9f5db52bb5b7ebc0c7d6b1b934"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>start</b> = datetime.now()</td></tr>
+<tr class="separator:a9290ce9f5db52bb5b7ebc0c7d6b1b934"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
 <tr class="memitem:a53de09318575062d54e7fbac6ced6e72"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_table_1_1_game_table.html#a53de09318575062d54e7fbac6ced6e72">_getColumnNames</a> (db_cursor, db, db_settings)</td></tr>
 <tr class="memdesc:a53de09318575062d54e7fbac6ced6e72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Private helper function to retrieve a list of all database columns from the table.  <a href="#a53de09318575062d54e7fbac6ced6e72">More...</a><br /></td></tr>
 <tr class="separator:a53de09318575062d54e7fbac6ced6e72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae359142f51f4e68cb57b6e76689e09e6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_table_1_1_game_table.html#ae359142f51f4e68cb57b6e76689e09e6">_getSessionIDs</a> (db_cursor, db, db_settings, request)</td></tr>
-<tr class="memdesc:ae359142f51f4e68cb57b6e76689e09e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Private helper function to get a list of all sessions within the timeframe given in the request, for the game id given in the request.  <a href="#ae359142f51f4e68cb57b6e76689e09e6">More...</a><br /></td></tr>
-<tr class="separator:ae359142f51f4e68cb57b6e76689e09e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aac82c184a78a56e743d0b0abf1f8d310"></a>
@@ -165,7 +172,14 @@ Static Private Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Constructor for the <a class="el" href="class_game_table_1_1_game_table.html">GameTable</a> class. </p>
-<p>Given a database connection and a game data request, this retrieves a bit of information from the database to fill in the class variables. </p>
+<p>Given a database connection and a game data request, this retrieves a bit of information from the database to fill in the class variables. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">db</td><td>A database connection to the table corresponding to this <a class="el" href="class_game_table_1_1_game_table.html">GameTable</a>. </td></tr>
+    <tr><td class="paramname">settings</td><td>The dictionary of settings for the app </td></tr>
+    <tr><td class="paramname">request</td><td>A request object, with information about a date range and other information on what data to retrieve. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -212,57 +226,6 @@ Static Private Member Functions</h2></td></tr>
 
 <p>Private helper function to retrieve a list of all database columns from the table. </p>
 <p>This requires executing a SQL statement, so it's slightly slower than using the schema, but is guaranteed to be correct for what's in the db. Just used to initialize the column_names member of the <a class="el" href="class_game_table_1_1_game_table.html">GameTable</a> class. </p>
-
-</div>
-</div>
-<a id="ae359142f51f4e68cb57b6e76689e09e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae359142f51f4e68cb57b6e76689e09e6">&#9670;&nbsp;</a></span>_getSessionIDs()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">def GameTable.GameTable._getSessionIDs </td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>db_cursor</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>db</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>db_settings</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>request</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Private helper function to get a list of all sessions within the timeframe given in the request, for the game id given in the request. </p>
-<p>Just used to initialize the session_ids member of the <a class="el" href="class_game_table_1_1_game_table.html">GameTable</a> class. </p>
 
 </div>
 </div>
