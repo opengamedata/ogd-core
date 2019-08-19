@@ -98,7 +98,7 @@ def showGameInfo():
             schema = Schema(f"{game_name}.json")
 
             feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-            print(utils.csvMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
+            print(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
                                                          proc_field_list=feature_descriptions))
         finally:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
