@@ -90,20 +90,77 @@ def runExport():
                                   {time_delta.total_seconds() % 60} sec")
         utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
 
-def runGameInfo():
+def showGameInfo():
     if num_args > 2:
         try:
             tunnel, db = prepareDB()
             game_name = sys.argv[2]
-            request = Request.GameInfoRequest(game_id=game_name)
-            table = GameTable(db=db, settings=settings, request=request)
             schema = Schema(f"{game_name}.json")
-            feature_extractors.Extractor.Extractor.writeCSVHeader(game_table=table, game_schema=schema, file=sys.stdout)
+
+            feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
+            print(utils.csvMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
+                                                         proc_field_list=feature_descriptions))
         finally:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
     else:
         print("Error, no game name given!")
         showHelp()
+
+def writeReadme():
+    if num_args > 2:
+        try:
+            game_name = sys.argv[2]
+            path = f"./data/{game_name}"
+            readme = open(f"{path}/readme.md", "w")
+            changelog = open("./doc/changelog_src.md", "r")
+            schema = Schema(f"{game_name}.json")
+
+            feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
+            readme.write(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
+                                                                proc_field_list=feature_descriptions))
+            readme.write("## Changelog:\n")
+            readme.write(changelog.read())
+        except Exception as err:
+            logging.error(str(err))
+    else:
+        print("Error, no game name given!")
+        showHelp()
+
+## Function to generate metadata for a given game.
+#  The "fields" are a sort of generalization of columns. Basically, columns which
+#  are repeated (say, once per level) all fall under a single field.
+#  Columns which are completely unique correspond to individual fields.
+#
+#  @param game_name         The name of the game for which the csv metadata is being generated.
+#  @param raw_field_list    A mapping of raw csv "fields" to descriptions of the fields.
+#  @param proc_field_list   A mapping of processed csv features to descriptions of the features.
+#  @return                  A string containing metadata for the given game.
+def _genCSVMetadata(game_name: str, raw_field_list: typing.Dict[str,str], proc_field_list: typing.Dict[str,str]) -> str:
+    raw_field_descriptions = [f"{key} - {raw_field_list[key]}" for key in raw_field_list.keys()]
+    proc_field_descriptions = [f"{key} - {proc_field_list[key]}" for key in proc_field_list.keys()]
+    raw_field_string = "\n".join(raw_field_descriptions)
+    proc_field_string = "\n".join(proc_field_descriptions)
+    template_str = \
+f"## Field Day Open Game Data \n\
+### Retrieved from https://fielddaylab.wisc.edu/opengamedata \n\
+### These anonymous data are provided in service of future educational data mining research. \n\
+### They are made available under the Creative Commons CCO 1.0 Universal license. \n\
+### See https://creativecommons.org/publicdomain/zero/1.0/ \n\
+\n\
+## Suggested citation: \n\
+### Field Day. (2019). Open Educational Game Play Logs - [dataset ID]. Retrieved [today's date] from https://fielddaylab.wisc.edu/opengamedata \n\
+\n\
+## Game: {game_name} \n\
+\n\
+## Field Descriptions: \n\
+### Raw CSV Columns:\n\
+{raw_field_string}\n\
+\n\
+### Processed Features:\n\
+{proc_field_string}\n\
+\n"
+    return template_str
+
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
 num_args = len(sys.argv)
@@ -120,7 +177,9 @@ if type(cmd) == str:
     if cmd.lower() == "export":
         runExport()
     elif cmd.lower() == "info":
-        runGameInfo()
+        showGameInfo()
+    elif cmd.lower() == "readme":
+        writeReadme()
     else:
         if not cmd.lower() == "help":
             print("Invalid Command!")
