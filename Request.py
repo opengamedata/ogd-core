@@ -59,9 +59,9 @@ class IDListRequest(Request):
     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
         return self._session_ids
 
-class GameInfoRequest(Request):
-    def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None):
-        Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves)
+# class GameInfoRequest(Request):
+#     def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None):
+#         Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves)
 
-    def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
-        return []
+#     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
+#         return []
