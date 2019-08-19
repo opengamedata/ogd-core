@@ -40,38 +40,6 @@ def loadJSONFile(filename: str, path:str = "./") -> object:
 def dateToFileSafeString(date: datetime.datetime):
     return f"{date.month}-{date.day}-{date.year}"
 
-## Function to generate metadata for a csv file.
-#  The "fields" are a sort of generalization of columns. Basically, columns which
-#  are repeated (say, once per level) all fall under a single field.
-#  Columns which are completely unique correspond to individual fields.
-#
-#  @param game_name     The name of the game for which the csv is being generated.
-#  @param begin_date    Start of the date range for the exported data.
-#  @param end_date      End of the date range for the exported data.
-#  @param field_list    A mapping of csv "fields" to descriptions of the fields.
-#  @return              A string containing metadata for the csv file.
-def csvMetadata(game_name: str, begin_date: datetime.datetime, end_date: datetime.datetime,
-                      field_list: typing.Dict[str,str]) -> str:
-    template_str = \
-f"## Field Day Open Game Data \n\
-# Retrieved from https://fielddaylab.wisc.edu/opengamedata \n\
-# These anonymous data are provided in service of future educational data mining research. \n\
-# They are made available under the Creative Commons CCO 1.0 Universal license. \n\
-# See https://creativecommons.org/publicdomain/zero/1.0/ \n\
-\n\
-## Suggested citation: \n\
-# Field Day. (2019). Open Educational Game Play Logs - [dataset ID]. Retrieved [today's date] from https://fielddaylab.wisc.edu/opengamedata \n\
-\n\
-## Game: {game_name} \n\
-# Begin Date: {begin_date} \n\
-# End Date: {end_date} \n\
-\n\
-## Field Descriptions: \n"
-    field_descriptions = [f"# {key} - {field_list[key]}" for key in field_list.keys()]
-    template_str += "\n".join(field_descriptions)
-    template_str += "\n"
-    return template_str
-
 class SQLLogin:
     def __init__(self, host: str, port: int, user: str, pword: str, db_name: str):
         self.host    = host
