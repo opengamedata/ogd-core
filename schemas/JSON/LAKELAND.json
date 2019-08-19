@@ -154,6 +154,10 @@
       "ave_num_tiles_hovered_before_placing_sign": "Player feature - General: ave num tiles hovered before placing sign",
       "ave_num_tiles_hovered_before_placing_road": "Player feature - General: ave num tiles hovered before placing (the first) road",
 
+      "percent_of_compliance_with_a_tutorial_within_x_seconds": "Player feature - Assessment: percent of compliance with a tutorial within x seconds",
+      "average_distance_between_manure_placement_and_lake": "Player feature - Assessment: average distance between manure placement and lake",
+      "average_distance_between_buildings": "Player feature - Assessment: Average distance between buildings (when they build, how far is it from the closest thing)",
+
       "percent_building_a_farm_on_highest_nutrition_tile": "Player feature - General: percent building a farm on the best tile with the highest nutrition that was hovered over during the buy process",
       "percent_placing_fertilizer_on_lowest_nutrient_farm": " TODO:::figure out how to calculate this:::TODO Player feature - General: percent placing fertilizer on lowest nutrient farm",
       "build_sequences": "Player feature - General: Build Sequences (as binary columns if they exist)[Home, Farm, Farm, Farm],[Home, Farm, Home, Farm], Etc.",
@@ -161,9 +165,6 @@
       "num_inspect_tile": "X Player feature - Number of times the player: inspect a tile",
       "num_open_achievements": "X Player feature - Number of times the player: look at achievements",
       "num_open_shop": "X Player feature - Number of times the player: open the shop",
-
-      "num_change_item_mark": "X Player feature - Number of times the player: change a sale/eat/feed state in an item panel",
-      "num_change_tile_mark": "X Player feature - Number of times the player: change a sale/eat/feed state in a farm panel",
 
       "num_ecounter_tutorial": "X Player feature - Number of times the player: encounter a tutorial",
       "num_press_skip_button": "X Player feature - Number of times the player: press skip button",
@@ -178,6 +179,9 @@
       "time_in_game_speed_fast": "X Player feature - Total amount of time the player: in game speed fast (with client identified to correct for fps) ",
       "time_in_game_speed_vfast": "X Player feature - Total amount of time the player: in game speed vfast (with client identified to correct for fps) ",
 
+      "num_change_item_mark": "X Player feature - Number of times the player: change a sale/eat/feed state in an item panel",
+      "num_change_tile_mark": "X Player feature - Number of times the player: change a sale/eat/feed state in a farm panel",
+
       "percent_of_corn_marked_for_sale": "X Player feature - General: percent of corn marked for sale",
       "percent_of_corn_marked_for_eat": "X Player feature - General: percent of corn marked for eat",
       "percent_of_corn_marked_for_feed": "X Player feature - General: percent of corn marked for feed",
@@ -186,12 +190,54 @@
       "percent_of_manure_marked_for_sale": "X Player feature - General: percent of manure marked for sale",
       "percent_of_manure_marked_for_fertilize": "X Player feature - General: percent of manure marked for fertilize",
 
-      "max_number_of_edible_corn_per_capita": "Maximum number of corn marked eat divided by current number of farmbits measured",
-      "min_number_of_edible_corn_per_capita": "Minimum number of corn marked eat divided by current number of farmbits measured",
+      "max_num_per_capita_of_corn_marked_for_sale": "X Player feature - General: maximum per capita number of corn marked for sale",
+      "max_num_per_capita_of_corn_marked_for_eat": "X Player feature - General: maximum per capita number of corn marked for eat",
+      "max_num_per_capita_of_corn_marked_for_feed": "X Player feature - General: maximum per capita number of corn marked for feed",
+      "max_num_per_capita_of_milk_marked_for_sale": "X Player feature - General: maximum per capita number of milk marked for sale",
+      "max_num_per_capita_of_milk_for_eat": "X Player feature - General: maximum per capita number of milk marked for eat",
+      "max_num_per_capita_of_manure_marked_for_sale": "X Player feature - General: maximum per capita number of manure marked for sale",
+      "max_num_per_capita_of_manure_marked_for_fertilize": "X Player feature - General: maximum per capita number of manure marked for fertilize",
 
-      "percent_of_compliance_with_a_tutorial_within_x_seconds": "Player feature - Assessment: percent of compliance with a tutorial within x seconds",
-      "average_distance_between_manure_placement_and_lake": "Player feature - Assessment: average distance between manure placement and lake",
-      "average_distance_between_buildings": "Player feature - Assessment: Average distance between buildings (when they build, how far is it from the closest thing)"
+      "min_num_per_capita_of_corn_marked_for_sale": "X Player feature - General: minimum per capita number of corn marked for sale",
+      "min_num_per_capita_of_corn_marked_for_eat": "X Player feature - General: minimum per capita number of corn marked for eat",
+      "min_num_per_capita_of_corn_marked_for_feed": "X Player feature - General: minimum per capita number of corn marked for feed",
+      "min_num_per_capita_of_milk_marked_for_sale": "X Player feature - General: minimum per capita number of milk marked for sale",
+      "min_num_per_capita_of_milk_for_eat": "X Player feature - General: minimum per capita number of milk marked for eat",
+      "min_num_per_capita_of_manure_marked_for_sale": "X Player feature - General: minimum per capita number of manure marked for sale",
+      "min_num_per_capita_of_manure_marked_for_fertilize": "X Player feature - General: minimum per capita number of manure marked for fertilize",
+
+      "max_num_of_fullness_motivated_emotes_per_capita": "Game feature - General: max num of the fullness_motivated emotes per capita",
+      "max_num_of_fullness_desperate_emotes_per_capita": "Game feature - General: max num of the fullness_desperate emotes per capita",
+      "max_num_of_energy_desperate_emotes_per_capita": "Game feature - General: max num of the energy_desperate emotes per capita",
+      "max_num_of_joy_motivated_emotes_per_capita": "Game feature - General: max num of the joy_motivated emotes per capita",
+      "max_num_of_joy_desperate_emotes_per_capita": "Game feature - General: max num of the joy_desperate emotes per capita",
+      "max_num_of_puke_emotes_per_capita": "Game feature - General: max num of the puke emotes per capita",
+      "max_num_of_yum_emotes_per_capita": "Game feature - General: max num of the yum emotes per capita",
+      "max_num_of_tired_emotes_per_capita": "Game feature - General: max num of the tired emotes per capita",
+      "max_num_of_happy_emotes_per_capita": "Game feature - General: max num of the happy emotes per capita",
+      "max_num_of_swim_emotes_per_capita": "Game feature - General: max num of the swim emotes per capita",
+      "max_num_of_sale_emotes_per_capita": "Game feature - General: max num of the sale emotes per capita",
+
+      "min_num_of_fullness_motivated_emotes_per_capita": "Game feature - General: min num of the fullness_motivated emotes per capita",
+      "min_num_of_fullness_desperate_emotes_per_capita": "Game feature - General: min num of the fullness_desperate emotes per capita",
+      "min_num_of_energy_desperate_emotes_per_capita": "Game feature - General: min num of the energy_desperate emotes per capita",
+      "min_num_of_joy_motivated_emotes_per_capita": "Game feature - General: min num of the joy_motivated emotes per capita",
+      "min_num_of_joy_desperate_emotes_per_capita": "Game feature - General: min num of the joy_desperate emotes per capita",
+      "min_num_of_puke_emotes_per_capita": "Game feature - General: min num of the puke emotes per capita",
+      "min_num_of_yum_emotes_per_capita": "Game feature - General: min num of the yum emotes per capita",
+      "min_num_of_tired_emotes_per_capita": "Game feature - General: min num of the tired emotes per capita",
+      "min_num_of_happy_emotes_per_capita": "Game feature - General: min num of the happy emotes per capita",
+      "min_num_of_swim_emotes_per_capita": "Game feature - General: min num of the swim emotes per capita",
+      "min_num_of_sale_emotes_per_capita": "Game feature - General: min num of the sale emotes per capita",
+
+      "percent_positive_emotes": "Game feature - General: percent positive emotes",
+      "percent_negative_emotes": "Game feature - General: percent negative emotes",
+      "percent_neutral_emotes": "Game feature - General: percent neutral emotes",
+
+      "max_count_of_farms_in_low_productivity": "Game feature - General: max count of farms in low productivity",
+      "min_count_of_farms_in_low_productivity": "Game feature - General: min count of farms in low productivity",
+      "max_count_of_lake_tiles_in_bloom": "Game feature - General: max count of lake tiles in bloom",
+      "min_count_of_lake_tiles_in_bloom": "Game feature - General: min count of lake tiles in bloom"
 
 
       
@@ -204,8 +250,7 @@
       "count_of_achievements": "Player feature - Progress: count of achievements",
       "count_of_tutorials": "Player feature - Progress: count of tutorials",
 
-    
-
+      "time_to_exist_achievement": "Player feature - Progress: Time to the exist achievement (or 0 if not achieved)",
       "time_to_group_achievement": "Player feature - Progress: Time to the group achievement (or 0 if not achieved)",
       "time_to_town_achievement": "Player feature - Progress: Time to the town achievement (or 0 if not achieved)",
       "time_to_city_achievement": "Player feature - Progress: Time to the city achievement (or 0 if not achieved)",
@@ -221,7 +266,8 @@
       "time_to_bigbloom_achievement": "Player feature - Progress: Time to the bigbloom achievement (or 0 if not achieved)",
       "time_to_hugebloom_achievement": "Player feature - Progress: Time to the hugebloom achievement (or 0 if not achieved)",
       "time_to_massivebloom_achievement": "Player feature - Progress: Time to the massivebloom achievement (or 0 if not achieved)",
-
+      
+      "time_to_another_death_tutorial": "Player feature - Progress: time to another_death tutorial (or 0 if unencountered)",
       "time_to_another_member_tutorial": "Player feature - Progress: time to another_member tutorial (or 0 if unencountered)",
       "time_to_bloom_tutorial": "Player feature - Progress: time to bloom tutorial (or 0 if unencountered)",
       "time_to_build_a_farm_tutorial": "Player feature - Progress: time to build_a_farm tutorial (or 0 if unencountered)",
@@ -274,13 +320,40 @@
       "time_in_game_speed_fast": "X Player feature - Total amount of time the player: in game speed fast (with client identified to correct for fps) ",
       "time_in_game_speed_vfast": "X Player feature - Total amount of time the player: in game speed vfast (with client identified to correct for fps) ",
 
-      "mode:_tutorial_mode_or_post-tutorial": "Game feature - General: mode: tutorial mode or post-tutorial",
-      "count_of_farms_in_low_productivity": "Game feature - General: count of farms in low productivity",
-      "count_of_lake_tiles_in_bloom": "Game feature - General: count of lake tiles in bloom",
-      "num_deaths_per_session": "Game feature - General: num deaths per session",
-      "num_of_each_emotes_per_capita": "Game feature - General: num of each emotes per capita",
-      "percent_positivenegative-neutral_emotes": "Game feature - General: percent positivenegative-neutral emotes",
-      "ave_lake_nutrition?": "X Game feature - General: ave lake nutrition?"
+      "max_num_of_fullness_motivated_emotes_per_capita": "Game feature - General: max num of the fullness_motivated emotes per capita",
+      "max_num_of_fullness_desperate_emotes_per_capita": "Game feature - General: max num of the fullness_desperate emotes per capita",
+      "max_num_of_energy_desperate_emotes_per_capita": "Game feature - General: max num of the energy_desperate emotes per capita",
+      "max_num_of_joy_motivated_emotes_per_capita": "Game feature - General: max num of the joy_motivated emotes per capita",
+      "max_num_of_joy_desperate_emotes_per_capita": "Game feature - General: max num of the joy_desperate emotes per capita",
+      "max_num_of_puke_emotes_per_capita": "Game feature - General: max num of the puke emotes per capita",
+      "max_num_of_yum_emotes_per_capita": "Game feature - General: max num of the yum emotes per capita",
+      "max_num_of_tired_emotes_per_capita": "Game feature - General: max num of the tired emotes per capita",
+      "max_num_of_happy_emotes_per_capita": "Game feature - General: max num of the happy emotes per capita",
+      "max_num_of_swim_emotes_per_capita": "Game feature - General: max num of the swim emotes per capita",
+      "max_num_of_sale_emotes_per_capita": "Game feature - General: max num of the sale emotes per capita",
+
+      "min_num_of_fullness_motivated_emotes_per_capita": "Game feature - General: min num of the fullness_motivated emotes per capita",
+      "min_num_of_fullness_desperate_emotes_per_capita": "Game feature - General: min num of the fullness_desperate emotes per capita",
+      "min_num_of_energy_desperate_emotes_per_capita": "Game feature - General: min num of the energy_desperate emotes per capita",
+      "min_num_of_joy_motivated_emotes_per_capita": "Game feature - General: min num of the joy_motivated emotes per capita",
+      "min_num_of_joy_desperate_emotes_per_capita": "Game feature - General: min num of the joy_desperate emotes per capita",
+      "min_num_of_puke_emotes_per_capita": "Game feature - General: min num of the puke emotes per capita",
+      "min_num_of_yum_emotes_per_capita": "Game feature - General: min num of the yum emotes per capita",
+      "min_num_of_tired_emotes_per_capita": "Game feature - General: min num of the tired emotes per capita",
+      "min_num_of_happy_emotes_per_capita": "Game feature - General: min num of the happy emotes per capita",
+      "min_num_of_swim_emotes_per_capita": "Game feature - General: min num of the swim emotes per capita",
+      "min_num_of_sale_emotes_per_capita": "Game feature - General: min num of the sale emotes per capita",
+
+      "percent_positive_emotes": "Game feature - General: percent positive emotes",
+      "percent_negative_emotes": "Game feature - General: percent negative emotes",
+      "percent_neutral_emotes": "Game feature - General: percent neutral emotes",
+
+      "max_count_of_farms_in_low_productivity": "Game feature - General: max count of farms in low productivity",
+      "min_count_of_farms_in_low_productivity": "Game feature - General: min count of farms in low productivity",
+      "max_count_of_lake_tiles_in_bloom": "Game feature - General: max count of lake tiles in bloom",
+      "min_count_of_lake_tiles_in_bloom": "Game feature - General: min count of lake tiles in bloom",
+      "total_num_deaths": "Game feature - General: num deaths per session",
+      "ave_lake_nutrition": "X Game feature - General: ave lake nutrition"
     }
   },
 
