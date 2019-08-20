@@ -18,7 +18,8 @@ import typing
 #                       JSON file. If path does not end in /, then "/" will be appended.
 #  @return          A python object parsed from the JSON.
 def loadJSONFile(filename: str, path:str = "./") -> object:
-    if not filename.endswith(".json"):
+    if not filename.lower().endswith(".json"):
+        logging.debug(f"Got a filename that didn't end with .json: {filename}, appending .json")
         filename = filename + ".json"
     if not path.endswith("/"):
         path = path + "/"
@@ -31,6 +32,7 @@ def loadJSONFile(filename: str, path:str = "./") -> object:
         logging.error(f"Could not read file at {path+filename}  \
                       \nFull error message: {str(err)}          \
                       \nCurrent directory: {os.getcwd()}")
+        raise err
     return ret_val
 
 ## Function that converts a datetime object into a filename-friendly format.
