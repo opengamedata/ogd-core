@@ -43,6 +43,7 @@ class GameTable:
         self.session_id_index = self.column_names.index("session_id")
         self.pers_session_id_index = self.column_names.index("persistent_session_id")
         self.event_index = self.column_names.index("event")
+        self.event_custom_index = self.column_names.index("event_custom")
         self.level_index = self.column_names.index("level")
         max_min_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
                                         columns=["MAX(level)", "MIN(level)"], filter="app_id=\"{}\"".format(request.game_id),

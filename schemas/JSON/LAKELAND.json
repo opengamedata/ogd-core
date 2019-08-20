@@ -117,6 +117,8 @@
   },
   "features": {
     "perlevel":{
+      "eventCount":"Number of player events in the given level",
+      "durationInSecs":"Time (in seconds) spent on the given level",
       "num_buy_home": "X Player feature - Number of times the player: buy a home",
       "num_buy_food": "X Player feature - Number of times the player: buy a food",
       "num_buy_farm": "X Player feature - Number of times the player: buy a farm",
@@ -353,7 +355,12 @@
       "max_count_of_lake_tiles_in_bloom": "Game feature - General: max count of lake tiles in bloom",
       "min_count_of_lake_tiles_in_bloom": "Game feature - General: min count of lake tiles in bloom",
       "total_num_deaths": "Game feature - General: num deaths per session",
-      "ave_lake_nutrition": "X Game feature - General: ave lake nutrition"
+      "ave_lake_nutrition": "X Game feature - General: ave lake nutrition",
+
+      "sessionID":"The player's session ID number for this play session",
+      "persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",
+      "sessionEventCount":"The total number of events across the entire session",
+      "sessionDurationInSecs":"The total time (in seconds) spent over the entire session"
     }
   },
 

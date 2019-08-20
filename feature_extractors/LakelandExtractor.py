@@ -71,7 +71,7 @@ class LakelandExtractor(Extractor):
         # put some data in local vars, for readability later.
         level = row_with_complex_parsed[game_table.level_index]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
-        event_type = row_with_complex_parsed[game_table.event_index]
+        event_type = row_with_complex_parsed[game_table.event_custom_index]
         event_client_time = row_with_complex_parsed[game_table.client_time_index]
         if not self._client_start_time:
             self._client_start_time = event_client_time
@@ -93,53 +93,53 @@ class LakelandExtractor(Extractor):
             self.features.incValByIndex(feature_name="eventCount", index=level)
             self.features.incAggregateVal(feature_name="sessionEventCount")
             # Then, handle cases for each type of event
-            if LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "GAMESTATE":
+            if LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "GAMESTATE":
                 self._extractFromGamestate(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "STARTGAME":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "STARTGAME":
                 self._extractFromStartgame(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "CHECKPOINT":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "CHECKPOINT":
                 self._extractFromCheckpoint(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "SELECTTILE":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "SELECTTILE":
                 self._extractFromSelecttile(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "SELECTFARMBIT":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "SELECTFARMBIT":
                 self._extractFromSelectfarmbit(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "SELECTITEM":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "SELECTITEM":
                 self._extractFromSelectitem(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "SELECTBUY":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "SELECTBUY":
                 self._extractFromSelectbuy(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "BUY":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "BUY":
                 self._extractFromBuy(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "CANCELBUY":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "CANCELBUY":
                 self._extractFromCancelbuy(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "ROADBUILDS":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "ROADBUILDS":
                 self._extractFromRoadbuilds(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "TILEUSESELECT":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "TILEUSESELECT":
                 self._extractFromTileuseselect(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "ITEMUSESELECT":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "ITEMUSESELECT":
                 self._extractFromItemuseselect(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "TOGGLENUTRITION":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "TOGGLENUTRITION":
                 self._extractFromTogglenutrition(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "TOGGLESHOP":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "TOGGLESHOP":
                 self._extractFromToggleshop(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "TOGGLEACHIEVEMENTS":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "TOGGLEACHIEVEMENTS":
                 self._extractFromToggleachievements(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "SKIPTUTORIAL":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "SKIPTUTORIAL":
                 self._extractFromSkiptutorial(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "SPEED":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "SPEED":
                 self._extractFromSpeed(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "ACHIEVEMENT":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "ACHIEVEMENT":
                 self._extractFromAchievement(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "FARMBITDEATH":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "FARMBITDEATH":
                 self._extractFromFarmbitdeath(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "BLURB":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "BLURB":
                 self._extractFromBlurb(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "CLICK":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "CLICK":
                 self._extractFromClick(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "RAINSTOPPED":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "RAINSTOPPED":
                 self._extractFromRainstopped(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "HISTORY":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "HISTORY":
                 self._extractFromHistory(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type] == "ENDGAME":
+            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "ENDGAME":
                 self._extractFromEndgame(event_client_time, event_data_complex_parsed)
             else:
                 raise Exception("Found an unrecognized event type: {}".format(event_type))
@@ -344,6 +344,9 @@ class LakelandExtractor(Extractor):
             if LakelandExtractor._ENUM_TO_STR["TILE TYPE"][og_type] == "lake":
                 lake_nutritions.append(nutrition)
         return sum(lake_nutritions)/len(lake_nutritions)
+
+    def calculateAggregateFeatures(self):
+        pass
 
             
 

@@ -164,7 +164,10 @@ class FeatureExporter:
         col = row[game_table.complex_data_index]
         complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[game_table.event_index]}
         # make sure we get *something* in the event_custom name
-        if "event_custom" not in complex_data_parsed.keys():
+        # TODO: Make a better solution for games without event_custom fields in the logs themselves
+        if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
+            complex_data_parsed["event_custom"] = row[game_table.event_custom_index]
+        elif "event_custom" not in complex_data_parsed.keys():
             complex_data_parsed["event_custom"] = row[game_table.event_index]
         # replace the json with parsed version.
         row = list(row)
