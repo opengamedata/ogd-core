@@ -139,17 +139,22 @@ class WaveExtractor(Extractor):
             perc_amps = all_amps / all_moves if all_moves > 0 else all_moves
             perc_offs = all_offs / all_moves if all_moves > 0 else all_moves
             perc_waves = all_waves / all_moves if all_moves > 0 else all_moves
-            self.features.setValByName(feature_name="avgAmplitudeMoves", new_value=perc_amps)
-            self.features.setValByName(feature_name="avgOffsetMoves", new_value=perc_offs)
-            self.features.setValByName(feature_name="avgWavelengthMoves", new_value=perc_waves)
+            self.features.setValByName(feature_name="overallPercentAmplitudeMoves", new_value=perc_amps)
+            self.features.setValByName(feature_name="overallPercentOffsetMoves", new_value=perc_offs)
+            self.features.setValByName(feature_name="overallPercentWavelengthMoves", new_value=perc_waves)
 
             # Calculate average ranges and std devs over all moves.
             all_stdevs = sum([elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgStdDevs").values()])
             all_ranges = sum([elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgRange").values()])
             avg_stdevs = all_stdevs / all_moves if all_moves > 0 else all_moves
             avg_ranges = all_ranges / all_moves if all_moves > 0 else all_moves
-            self.features.setValByName(feature_name="avgSliderAvgStdDevs", new_value=avg_stdevs)
-            self.features.setValByName(feature_name="avgSliderAvgRange", new_value=avg_ranges)
+            self.features.setValByName(feature_name="overallSliderAvgStdDevs", new_value=avg_stdevs)
+            self.features.setValByName(feature_name="overallSliderAvgRange", new_value=avg_ranges)
+
+            # Finally, calculate average fails per level
+            all_fails = sum([elem["val"] for elem in self.features.getValByName(feature_name="totalFails").values()])
+            avg_fails = all_fails / all_moves if all_moves > 0 else all_moves
+            self.features.setValByName(feature_name="avgFails", new_value=avg_fails)
 
     ## Private function to extract features from a "BEGIN" event.
     #  The features affected are:
