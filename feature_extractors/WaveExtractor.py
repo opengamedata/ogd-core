@@ -151,6 +151,11 @@ class WaveExtractor(Extractor):
             self.features.setValByName(feature_name="overallSliderAvgStdDevs", new_value=avg_stdevs)
             self.features.setValByName(feature_name="overallSliderAvgRange", new_value=avg_ranges)
 
+            # Finally, calculate average fails per level
+            all_fails = sum([elem["val"] for elem in self.features.getValByName(feature_name="totalFails").values()])
+            avg_fails = all_fails / all_moves if all_moves > 0 else all_moves
+            self.features.setValByName(feature_name="avgFails", new_value=avg_fails)
+
     ## Private function to extract features from a "BEGIN" event.
     #  The features affected are:
     #  - start_times (used to calculate totalLevelTime and avgLevelTime)
