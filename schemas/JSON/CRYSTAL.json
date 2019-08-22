@@ -113,6 +113,7 @@
             "avgMoleculeDragDurationInSecs":"The average number of seconds each drag took, over the given level",
             "finalScore":"The max final score given when submit button pressed, for this level, among all plays",
             "beginCount" : "number of times a player 'began' the level. [count of 'BEGIN' events]",
+            "menuBtnCount" : "The number of times a player pressed the 'return to menu' button during a level",
             "completesCount":"The number of time the player (pressed the submit button)/(completed the level) in the level"
         },
         "per_custom_count": {
