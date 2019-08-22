@@ -15,15 +15,19 @@ function change_tables(value, start=false) {
   jQuery.getJSON("/data/file_list.json",function(result){
     tables = result;
     let table = document.querySelector("table");
+    let table_name;
     generateTableHead(table, headers);
     if(start)
     {
-      generate_options();
       generateTable(table, Object.values(tables)[0], headers);
+      generate_options();
+      console.log(tables)
+      document.getElementById("readme_fname").href = `data/${Object.keys(tables)[0]}/readme.md`;
     }
     else
     {
       generateTable(table, tables[value], headers);
+      document.getElementById("readme_fname").href = `data/${value}/readme.md`;
     }
   });
 }
