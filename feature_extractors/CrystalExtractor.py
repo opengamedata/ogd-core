@@ -79,6 +79,8 @@ class CrystalExtractor(Extractor):
                 self._extractFromMoleculeRelease(level, event_data_complex_parsed)
             elif event_type == "MOLECULE_ROTATE":
                 self._extractFromMoleculeRotate(level, event_data_complex_parsed)
+            elif event_type == "BACK_TO_MENU":
+                self._extractFromMenuBtn(level, event_client_time)
             elif event_type == "CLEAR_BTN_PRESS":
                 self._extractFromClearBtnPress(level)
             elif event_type in "MUSEUM_CLOSE" :
