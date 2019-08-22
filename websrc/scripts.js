@@ -39,7 +39,9 @@ function generateTableHead(table, headers) {
   }
 }
 function generateTable(table, data, headers) {
-  for (let setID in data) {
+  setIDs = Object.keys(data)
+  setIDs.sort((x,y) => Date.parse(data[y]["start_date"]) - Date.parse(data[x]["start_date"]))
+  for (let setID of setIDs) {
     var set = data[setID]
     let row = table.insertRow();
     for (key in headers) {
