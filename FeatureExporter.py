@@ -56,7 +56,7 @@ class FeatureExporter:
                 else:
                     logging.error(f"Could not complete request {str(request)}")
             except Exception as err:
-                utils.SQL.server500Error(err)
+                utils.SQL.server500Error(str(err))
 
     ## Private function containing most of the code to handle processing of db
     #  data, and export to files.
