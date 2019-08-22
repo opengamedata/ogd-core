@@ -176,9 +176,9 @@ class SQL:
         return result
 
     ## Simple function to construct and log a nice server 500 error message.
-    #  @param error The exception raised when a 500 error occurs.
+    #  @param err_msg A more detailed error message with info to help debugging.
     @staticmethod
-    def server500Error(error: Exception):
+    def server500Error(err_msg: str):
         logging.error("HTTP Response: {}{}".format(http.HTTPStatus.INTERNAL_SERVER_ERROR.value, \
                                 http.HTTPStatus.INTERNAL_SERVER_ERROR.phrase ))
-        logging.error(str(error))
+        logging.error(f"Error Message: {err_msg}")
