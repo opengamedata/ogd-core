@@ -171,3 +171,7 @@ var headers = {
 var table = document.createElement('table');
 tablediv.appendChild(table);
 
+function parse_server_ret_val(return_value){
+  return JSON.parse(return_value.split(/[\r\n]+/)[2])
+}
+
