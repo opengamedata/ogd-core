@@ -1,45 +1,4 @@
-toydata = {
-  "Wisconsin": {
-    "Milwaukee": {
-      "1435": {
-        "SessionID": "1435",
-        "Time": "10:92",
-        "Event Category": "Buy",
-        "Event Complex": "slbkfn;ks;fjb;kfsnjdslnsbedbs",
-      },
-      "1436": {},
-      "1437": {},
-      "1438": {},
-      "1439": {},
-      "1434": {},
-      "1433": {},
-      "1432": {},
-      "1431": {},
-      "1430": {},
-      "1440": {},
-      "1450": {},
-    },
-    "Madison": {
-      "1275": {}
-    },
-    "Delafield": {
-      "12": {}
-    },
-    "Oconomowoc": {
-      "1214": {}
-    }
-  },
-  "Alabama": {},
-  "Kansas": {},
-  "Utah": {}
-};
-
-active_sessions = {};
-cur_game_id = 'CRYSTAL'
-
-
-
-
+// initialize
 var statebar = document.querySelector('.statebar');
 statebar.innerHTML = '';
 var citybar = document.querySelector('.citybar');
@@ -47,11 +6,20 @@ var screens = document.querySelector('.screens');
 var tablediv = document.querySelector('.table');
 var table = document.createElement('table');
 tablediv.appendChild(table);
+
 // ADD SELECT GAME OPTION
 var select = document.createElement("SELECT");
 select.id = "mySelect";
 statebar.appendChild(select);
-generate_options(['CRYSTAL', 'WAVES', 'LAKELAND', 'JOWILDER'])
+
+
+all_games = ['CRYSTAL', 'WAVES', 'LAKELAND', 'JOWILDER'];
+cur_game_id = all_games[0];
+
+active_sessions = {};
+
+
+generate_options(all_games);
 
 function change_games(game_id){
   cur_game_id = game_id;
