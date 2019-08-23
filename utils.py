@@ -161,6 +161,7 @@ class SQL:
 
         query = sel_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
         logging.info("Running query: " + query)
+        #print(f"running query: {query}")
         start = datetime.datetime.now()
         cursor.execute(query)
         time_delta = datetime.datetime.now()-start
