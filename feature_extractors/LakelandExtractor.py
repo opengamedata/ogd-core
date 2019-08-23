@@ -33,6 +33,19 @@ class LakelandExtractor(Extractor):
     _ITEM_MARK_COMBINATIONS = [ ('food', 'sell'), ('food', 'use'), ('food', 'eat'),
         ('milk', 'sell'), ('milk', 'use'), ('poop', 'sell'), ('poop', 'use')
     ]
+    _EMOTE_STR_TO_AFFECT = {
+        "fullness_motivated_txt": 0,
+        "fullness_desperate_txt": -1,
+        "energy_desperate_txt": -1,
+        "joy_motivated_txt": 0,
+        "joy_desperate_txt": -1,
+        "puke_txt": -1,
+        "yum_txt": 0,
+        "tired_txt": -1,
+        "happy_txt": 1,
+        "swim_txt": 0,
+        "sale_txt": 0
+    }
 
     ## Constructor for the CrystalExtractor class.
     #  Initializes some custom private data (not present in base class) for use
@@ -69,8 +82,11 @@ class LakelandExtractor(Extractor):
         self._selected_buy_cost = 0
         self._max_num_items_on_screen = LakelandExtractor.onscreen_item_dict()
         self._num_farmbits = 0
+        self._population_history = [(0,0)]
+        self._emotes_by_window = defaultdict(lambda: [])
         self._windows = []
         self._cur_windows = []
+        self.prev_windows = []
 
 
 
@@ -102,17 +118,14 @@ class LakelandExtractor(Extractor):
 
             # set current windows
             secs_since_start = (event_client_time - self._client_start_time).seconds
-            self._cur_windows = [secs_since_start // self._NUM_SECONDS_PER_WINDOW,
-                                 (secs_since_start - self._NUM_SECONDS_PER_WINDOW_OVERLAP) // self._NUM_SECONDS_PER_WINDOW]
-            # remove negative or duplicate windows
-            if self._cur_windows[1] < 0:
-                self._cur_windows[1] = 0
-            if self._cur_windows[0] == self._cur_windows[1]:
-                self._cur_windows = [self._cur_windows[0]]
+            self._prev_windows = self._cur_windows
+            self._cur_windows = self._get_windows_at_time_in_seconds(secs_since_start)
             # make sure windows are both in the list of all windows
             for window in self._cur_windows:
-                if not window in self._windows:
+                if window not in self._windows:
                     bisect.insort(self._windows, window)
+                if window not in self._prev_windows:
+                    self.calculate_window_end(window)
 
             # Ensure we have private data initialized for this level.
             if not level in self.levels:
@@ -195,6 +208,8 @@ class LakelandExtractor(Extractor):
         num_poop_produced = d["num_poop_produced"]
 
 
+
+
         cur_num_items_on_screen = LakelandExtractor.onscreen_item_dict()
         items = LakelandExtractor.array_to_mat(4,items)
         tiles = LakelandExtractor.array_to_mat(4,tiles)
@@ -218,17 +233,17 @@ class LakelandExtractor(Extractor):
         #     if cur_num > self._max_num_items_on_screen[k]:
         #         self._max_num_items_on_screen = cur_num
 
-        for combo_type, combo_mark in LakelandExtractor._ITEM_MARK_COMBINATIONS:
-            # each item type is it[2] and the mark is it[3]
-            match = lambda it: combo_type == it[2] and combo_mark == it[3]
-            count_matches = sum([match(it) for it in items])
-            count_matches_per_capita = count_matches/num_farmbits
-            max_per_capita_fname = f"window_max_num_per_capita_of_{combo_type}_marked_{combo_mark}"
-            min_per_capita_fname = f"window_min_num_per_capita_of_{combo_type}_marked_{combo_mark}"
-            total_fname = f"window_total_{combo_type}_marked_{combo_mark}"
-            self._set_feature_max_in_cur_windows(max_per_capita_fname, count_matches_per_capita)
-            self._set_feature_min_in_cur_windows(min_per_capita_fname, count_matches_per_capita)
-            self._increment_feature_in_cur_windows(total_fname,count_matches)
+        # for combo_type, combo_mark in LakelandExtractor._ITEM_MARK_COMBINATIONS:
+        #     # each item type is it[2] and the mark is it[3]
+        #     match = lambda it: combo_type == it[2] and combo_mark == it[3]
+        #     count_matches = sum([match(it) for it in items])
+        #     count_matches_per_capita = count_matches/num_farmbits
+        #     max_per_capita_fname = f"window_max_num_per_capita_of_{combo_type}_marked_{combo_mark}"
+        #     min_per_capita_fname = f"window_min_num_per_capita_of_{combo_type}_marked_{combo_mark}"
+        #     total_fname = f"window_total_{combo_type}_marked_{combo_mark}"
+        #     self._set_feature_max_in_cur_windows(max_per_capita_fname, count_matches_per_capita)
+        #     self._set_feature_min_in_cur_windows(min_per_capita_fname, count_matches_per_capita)
+        #     self._increment_feature_in_cur_windows(total_fname,count_matches)
 
 
 
@@ -254,11 +269,17 @@ class LakelandExtractor(Extractor):
             is_tutorial_end = 1 if d["event_category"] == 'end' else 0
             self._tutorial_start_and_end_times[tutorial][is_tutorial_end] = event_client_time
             if is_tutorial_end:
+                time_since_start = (event_client_time - self._client_start_time).seconds
+                fname = f"session_secs_to_{tutorial}_tutorial"
+                self.features.setValByName(feature_name=fname, new_value=time_since_start)
                 average_screen_time = 0
                 if d["blurb_history"]:
                     blurb_history = d["blurb_history"]
                     time_per_blurb = LakelandExtractor.list_deltas(blurb_history)
+                    avg_secs_per_blurb = sum(time_per_blurb)/len(time_per_blurb)/1000
                     self._tutorial_times_per_blurb[tutorial] = time_per_blurb
+                    fname = f"session_avg_secs_per_blurb_in_{tutorial}_tutorial"
+                    self.features.setValByName(feature_name=fname, new_value=avg_secs_per_blurb)
 
 
 
@@ -279,16 +300,20 @@ class LakelandExtractor(Extractor):
     def _extractFromBuy(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
         if d["success"]:
-            self._money_spent_per_item[LakelandExtractor._ENUM_TO_STR["BUYS"][d["buy"]]] += self._selected_buy_cost
+            buy_name = LakelandExtractor._ENUM_TO_STR['BUYS'][d['buy']]
+            self._money_spent_per_item[buy_name] += self._selected_buy_cost
             self.features.incAggregateVal(feature_name="session_money_spent", increment=self._selected_buy_cost)
             self._increment_feature_in_cur_windows(feature_name="window_money_spent", increment=self._selected_buy_cost)
+            time_to_first_fname = f"session_secs_to_first_{buy_name}"
+            if not self.features.getValByName(time_to_first_fname):
+                self.features.setValByName(time_to_first_fname, (event_client_time-self._client_start_time).seconds)
             self._selected_buy_cost = 0
             if d["buy"] == 1: # home
-                self._num_farmbits += 1;
+                self._change_population(event_client_time,1)
 
-            num_buy_feature_name = LakelandExtractor.get_feature(base='window_num_buy_', enum=d["buy"], enum_type='BUYS')
+            num_buy_feature_name = f'window_num_buy_{buy_name}'
             self._increment_feature_in_cur_windows(feature_name=num_buy_feature_name, increment=1)
-            money_spent_feature_name = LakelandExtractor.get_feature(base='window_money_spent_on_', enum=d["buy"], enum_type='BUYS')
+            money_spent_feature_name = f'window_money_spent_on_{buy_name}'
             self._increment_feature_in_cur_windows(feature_name=money_spent_feature_name, increment=1)
 
             tile_hovers = d['buy_hovers']
@@ -311,10 +336,22 @@ class LakelandExtractor(Extractor):
             self._increment_feature_in_cur_windows("window_num_change_tile_mark")
         total_farm_marks1 = [t["marks"][0] for t in self._tiles.values() if t["type"] == LakelandExtractor._STR_TO_ENUM["TILE TYPE"]['farm']]
         total_farm_marks2 = [t["marks"][1] for t in self._tiles.values() if t["type"] == LakelandExtractor._STR_TO_ENUM["TILE TYPE"]['farm']]
-        total_dairy_marks = [t["marks"][0] for t in self._tiles.values() if t["type"] == LakelandExtractor._STR_TO_ENUM["TILE TYPE"]['livestock']]
-        total_marks = total_dairy_marks + total_farm_marks1 + total_farm_marks2
-        allocations_per_capita = {LakelandExtractor._ENUM_TO_STR['MARK'][k]:v/self._num_farmbits for k,v in Counter(total_marks).items()}
+        total_dairy_marks1 = [t["marks"][0] for t in self._tiles.values() if t["type"] == LakelandExtractor._STR_TO_ENUM["TILE TYPE"]['livestock']] #milk
+        total_dairy_marks2 = [t["marks"][1] for t in self._tiles.values() if t["type"] == LakelandExtractor._STR_TO_ENUM["TILE TYPE"]['livestock']] #fertilizer
 
+        for type, marks in [('food', total_farm_marks2+total_farm_marks1), ('milk', total_dairy_marks1), ('poop', total_dairy_marks2)]:
+            mark_counts = {LakelandExtractor._ENUM_TO_STR(k):v/self._num_farmbits for k,v in Counter(marks)}
+            for use in mark_counts:
+                max_per_capita_fname = f"window_max_num_per_capita_of_{type}_marked_{use}"
+                min_per_capita_fname = f"window_min_num_per_capita_of_{type}_marked_{use}"
+                total_fname = f"window_total_{type}_marked_{use}"
+                use_percentage_fname = f"window_percent_of_{type}_marked_{use}"
+                self._set_feature_max_in_cur_windows(max_per_capita_fname, mark_counts[use]/self._num_farmbits)
+                self._set_feature_min_in_cur_windows(min_per_capita_fname, mark_counts[use]/self._num_farmbits)
+                self._set_feature_max_in_session(max_per_capita_fname.replace('window','session'), mark_counts[use]/self._num_farmbits)
+                self._set_feature_min_in_session(min_per_capita_fname.replace('window','session'), mark_counts[use]/self._num_farmbits)
+                self._increment_feature_in_cur_windows(total_fname, mark_counts[use])
+                self._set_value_in_cur_windows(use_percentage_fname, mark_counts[use]/len(marks))
 
 
     def _extractFromItemuseselect(self, event_client_time, event_data_complex_parsed):
@@ -322,7 +359,7 @@ class LakelandExtractor(Extractor):
         item_array = d["item"]
         curr_mark = item_array[3]
         if d["prev_mark"] != curr_mark:
-            self.features.incAggregateVal("window_num_change_item_mark")
+            self._increment_feature_in_cur_windows("window_num_change_item_mark")
 
     def _extractFromTogglenutrition(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
@@ -358,10 +395,17 @@ class LakelandExtractor(Extractor):
 
     def _extractFromAchievement(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
+        achievement_enum = d["achievement"]
+        achievement_str = LakelandExtractor._ENUM_TO_STR["ACHIEVEMENT"]
+        time_since_start = (event_client_time - self._client_start_time).seconds
+        fname = f"session_secs_to_{achievement_str}_achievement"
+        self.features.setValByName(feature_name=fname, new_value=time_since_start)
+
 
     def _extractFromFarmbitdeath(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
-        self._num_farmbits -= 1
+        self._change_population(event_client_time,-1)
+
 
     def _extractFromBlurb(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
@@ -374,6 +418,23 @@ class LakelandExtractor(Extractor):
 
     def _extractFromHistory(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
+        emote_history = d["emote_history"]
+        now = d["now"]
+        emote_time_index, emote_type_index = 9,10
+        for e in emote_history:
+            self._add_emote_to_window_by_time(e, now)
+
+
+
+
+        num_farmbits = 0
+        last_pop_change = 0
+        for emote in emote_history:
+            emote_type = emote[9]
+            emote_time = emote[10] + now
+
+
+
 
     def _extractFromEndgame(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
@@ -414,6 +475,10 @@ class LakelandExtractor(Extractor):
         for w in self._cur_windows:
             self.features.incValByIndex(feature_name=feature_name, index=w, increment=increment)
 
+    def _set_value_in_cur_windows(self, feature_name, value):
+        for w in self._cur_windows:
+            self.features.setValByIndex(feature_name=feature_name, index=w, new_value=value)
+
     def _set_feature_max_in_cur_windows(self, feature_name, val):
         for w in self._cur_windows:
             prev_val = self.features.getValByIndex(feature_name=feature_name, index=w)
@@ -426,10 +491,111 @@ class LakelandExtractor(Extractor):
             if val < prev_val:
                 self.features.setValByIndex(feature_name=feature_name, index=w, new_value=val)
 
+    def _set_feature_max_in_session(self, feature_name, val):
+        prev_val = self.features.getValByName(feature_name=feature_name)
+        if val > prev_val:
+            self.features.setValByName(feature_name=feature_name, new_value=val)
+
+    def _set_feature_min_in_session(self, feature_name, val):
+        prev_val = self.features.getValByName(feature_name=feature_name)
+        if val < prev_val:
+            self.features.setValByName(feature_name=feature_name, new_value=val)
+
     def _set_default_window_val(self, feature_name, val):
         self.features.features[feature_name] = defaultdict(lambda: {'val': val, 'prefix': 'lvl'})
 
+    def _change_population(self, client_time, increment):
+        self._num_farmbits += 1;
+        self._population_history.append((client_time.seconds, self._population_history[-1][1] + increment))
+
+    def _get_pops_at_times(self, time_list):
+        # takes in a sorted list of times and returns the population of farmbits at those times
+        ret = []
+        pop_cur = 0
+        for t in time_list:
+            while (not pop_cur + 1 >= len(self._population_history)) and self._population_history[pop_cur + 1][0] <= t:
+                pop_cur += 1
+            ret.append(self._population_history[pop_cur][1])
+        return ret
+
+    def _get_windows_at_time_in_seconds(self, time):
+        windows = [time // self._NUM_SECONDS_PER_WINDOW,
+                             (time - self._NUM_SECONDS_PER_WINDOW_OVERLAP) // self._NUM_SECONDS_PER_WINDOW]
+
+        # remove negative or duplicate windows
+        if windows[1] < 0:
+            windows[1] = 0
+        if windows[0] == windows[1]:
+            windows = [windows[0]]
+
+        return windows
+
+    def _add_emote_to_window_by_time(self, emote, now):
+        client_time_in_seconds = (emote[-1] + now)/1000
+        emote[-1] = client_time_in_seconds
+        windows = self._get_windows_at_time_in_seconds(client_time_in_seconds)
+        for window in windows:
+            self._emotes_by_window[window].append(emote)
+
+
     def calculateAggregateFeatures(self):
+        self.calculate_emotes()
+        --------
+
+    def calculate_emotes(self):
+        for window, emotes in self._emotes_by_window.values():
+            total_emotes = len(emotes)
+            emote_type_index, emote_time_in_secs_index = -2, -1
+            emote_type_enums = [e[emote_type_index] for e in emotes]
+            emote_times = [e[emote_time_in_secs_index] for e in emotes]
+            emote_pops = self._get_pops_at_times(emote_times)
+
+            #initialize
+            total_emotes_per_capita = {k:0 for k in LakelandExtractor._STR_TO_ENUM['EMOTES'].keys()}
+            # emotes_per_capita_per_second = {k:0 for k in LakelandExtractor._STR_TO_ENUM['EMOTES'].keys()}
+
+            total_pos_emotes = 0
+            total_neg_emotes = 0
+            total_neutral_emotes = 0
+            #fill
+            for enum, pop in zip(emote_type_enums, emote_pops):
+                emote_str = LakelandExtractor._ENUM_TO_STR['EMOTES'][enum]
+                total_emotes_per_capita[emote_str] += 1/pop
+                if LakelandExtractor._EMOTE_STR_TO_AFFECT[emote_str] == -1:
+                    total_neg_emotes +=1
+                elif LakelandExtractor._EMOTE_STR_TO_AFFECT[emote_str] == 0:
+                    total_neutral_emotes +=1
+                elif LakelandExtractor._EMOTE_STR_TO_AFFECT[emote_str] == 1:
+                    total_pos_emotes +=1
+
+            for emote_str, per_capita_value in total_emotes_per_capita.values():
+                fname_total = f'window_num_of_{emote_str}__emotes_per_capita'
+                self.features.setValByIndex(self, fname_total, window, per_capita_value)
+
+            self.features.setValByIndex("window_percent_positive_emotes", window, total_pos_emotes/total_emotes)
+            self.features.setValByIndex("window_percent_negative_emotes", window, total_neg_emotes/total_emotes)
+            self.features.setValByIndex("window_percent_neutral_emotes", window, total_neutral_emotes/total_emotes)
+            self.features.incAggregateVal("session_percent_positive_emotes", total_pos_emotes)
+            self.features.incAggregateVal("session_percent_negative_emotes", total_neg_emotes)
+            self.features.incAggregateVal("session_percent_neutral_emotes", total_neutral_emotes)
+
+            # for i, (enum, pop) in enumerate(zip(emote_type_enums, emote_pops)):
+            #     if i < 20:
+            #         emotes
+            #         emotes_per_capita_per_second_max[LakelandExtractor._ENUM_TO_STR['EMOTES'][enum]] += 1/pop
+            # fname_per_second_min = f'window_min_num_of_{emote_str}__emotes_per_capita_per_second'
+            # fname_per_second_max = f'window_max_num_of_{emote_str}__emotes_per_capita_per_second'
+
+            #assign
+
+
+
+
+    def calculate_window_end(self, window):
+        self.calculate_window_ave_hovers(window)
+
+
+    def calculate_window_ave_hovers(self, window):
         buys = list(LakelandExtractor._ENUM_TO_STR['BUYS'].values())
         ave_num_tile_features = ["window_ave_num_tiles_hovered_before_placing_" + buy for buy in
                                  LakelandExtractor._ENUM_TO_STR['BUYS'].values()]
@@ -437,10 +603,10 @@ class LakelandExtractor(Extractor):
             num_buys_feature = 'window_num_buy_' + buy
             num_hovers_feature = "window_total_num_tiles_hovered_before_placing_" + buy
             ave_hovers_feature = "window_ave_num_tiles_hovered_before_placing_" + buy
-            for window in self.features.features[num_buys_feature].keys():
-                avg_hovers = self.features.getValByIndex(num_hovers_feature, window) / self.features.getValByIndex(
-                    num_buys_feature, window)
-                self.features.setValByIndex(feature_name=ave_hovers_feature, index=window)
+            avg_hovers = self.features.getValByIndex(num_hovers_feature, window) / self.features.getValByIndex(
+                num_buys_feature, window)
+            self.features.setValByIndex(feature_name=ave_hovers_feature, index=window)
+
 
 
 

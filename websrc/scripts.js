@@ -43,7 +43,9 @@ function generateTableHead(table, headers) {
   }
 }
 function generateTable(table, data, headers) {
-  for (let setID in data) {
+  setIDs = Object.keys(data)
+  setIDs.sort((x,y) => Date.parse(data[y]["start_date"]) - Date.parse(data[x]["start_date"]))
+  for (let setID of setIDs) {
     var set = data[setID]
     let row = table.insertRow();
     for (key in headers) {
@@ -80,6 +82,7 @@ function generateTable(table, data, headers) {
 
 function generate_options(){
   select = document.getElementById("mySelect");
+  select.onchange = function(){if (this.value) change_tables(this.value);};
   for(table_name in tables){
     var option = document.createElement("option");
     option.text = table_name;
