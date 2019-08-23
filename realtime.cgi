@@ -4,6 +4,7 @@ import cgi
 import cgitb
 import json
 import logging
+import random
 import traceback
 from datetime import datetime, timedelta
 # import local files
@@ -118,11 +119,20 @@ class RTServer:
         #print(f"ran to the quit in line {ln}")
         #quit()
         #cursor = db.cursor()
-        return {f"stub:{sess_id}":{"stub:prediction_name_1": 1, "stub:prediction_name_2": False}}
+        return { \
+            f"stub:{sess_id}":\
+            { \
+                "stub:this_should_be_1": 1, \
+                "stub:this_should_be_0-168": 0.168, \
+                "stub:random_1": random.random(), \
+                "stub:random_2": random.random(), \
+                "stub:random_3": random.random(), \
+                "stub:random_4": random.random() \
+            }}
 
     @staticmethod
     def getPredictionNamesByGame(game_id: str):
-        return {"stub:prediction_names":["stub:prediction_name_1", "stub:prediction_name_2"]}
+        return {"stub:prediction_names":["stub:this_should_be_1", "stub:this_should_be_0-168", "stub:random_1", "stub:random_2", "stub:random_3", "stub:random_4"]}
 
     @staticmethod
     def _ip_to_loc(ip):
