@@ -5,7 +5,7 @@ import cgitb
 import json
 import logging
 import traceback
-from datetime import datetime
+from datetime import datetime, timedelta
 # import local files
 import Request
 import utils
@@ -23,13 +23,18 @@ def _cgi_debug(msg: str, level: str, file):
 class RTServer:
     @staticmethod
     def getAllActiveSessions(game_id: str):
-        start_time = datetime.now() - datetime.timedelta(minutes=5)
+        tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
+        cursor = db.cursor()
+        start_time = datetime.now() - timedelta(minutes=5)
 
         filt = f"app_id={game_id} AND server_time > '{start_time.isoformat()}';"
         active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
                                                db_name=DB_NAME_DATA, table=DB_TABLE,\
                                                columns=["session_id", "remote_addr"], filter=filt,\
                                                sort_columns=["remote_addr"], distinct=True)
+        print(f"got stuff from db: {str(active_sessions_raw)}")
+        utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+        return "quit"
         ID_INDEX = 0
         IP_INDEX = 1
         ret_val = {}
@@ -40,6 +45,7 @@ class RTServer:
             if city not in ret_val[state].keys():
                 ret_val[state][city] = []
             ret_val[state][city].append(item[ID_INDEX])
+        utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
         return ret_val
 
     @staticmethod
@@ -58,6 +64,7 @@ class RTServer:
                                         filter=filt,\
                                         sort_columns=["session_n", "client_time"])
         if len(session_data) == 0:
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return {"error": "Empty Session!"}
         else:
             request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
@@ -159,7 +166,7 @@ try:
     elif method == "get_features_by_sessID":
         sess_id = request.getvalue("sessID")
         features = request.getvalue("features")
-        body = RTServer.getFeaturesBySessID(sess_id=sess_id, features=features)
+        body = RTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, features=features)
     elif method == "get_feature_names_by_game":
         _cgi_debug("Ready to get all feature names", "Info", log_file)
         game_id = request.getvalue("gameID")
