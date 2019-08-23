@@ -82,6 +82,7 @@ function generateTable(table, data, headers) {
 
 function generate_options(){
   select = document.getElementById("mySelect");
+  select.onchange = function(){if (this.value) change_tables(this.value);};
   for(table_name in tables){
     var option = document.createElement("option");
     option.text = table_name;
