@@ -114,12 +114,13 @@ function showplayers(state, city){
   table.innerHTML = '';
   console.log(active_sessions[state][city]);
   player_sessIDs = active_sessions[state][city];
-  Server.get_prediction_names_by_game(function(headers){
+  Server.get_prediction_names_by_game(function(return_value){
+    headers = parse_server_ret_val(return_value)["stub:prediction_names"]
     generateTableHead(table, headers);
     generateTable(table, player_sessIDs, headers);
   }
     ,cur_game_id)
-  for(let playerid in players){
+  for(let playerid in player_sessIDs){
     create_canvas();
   }
 }
