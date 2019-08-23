@@ -116,6 +116,7 @@ function showplayers(state, city){
   player_sessIDs = active_sessions[state][city];
   Server.get_prediction_names_by_game(function(return_value){
     headers = parse_server_ret_val(return_value)["stub:prediction_names"]
+    headers.unshift('SessID')
     generateTableHead(table, headers);
     generateTable(table, player_sessIDs, headers);
   }
@@ -151,6 +152,9 @@ function generateTable(table, player_sessIDs, headers) {
     Server.get_predictions_by_sessID(function(return_value){
       predictions = parse_server_ret_val(return_value);
       let row = table.insertRow();
+      sessID = Object.keys(predictions)[0]
+      predictions = predictions[sessID]
+      predictions['SessID'] = sessID
       for (prediction_name of headers) {
         let cell = row.insertCell();
         var text = null;
@@ -187,4 +191,6 @@ function parse_server_ret_val(return_value){
 }
   return ret
 }
+
+change_games('CRYSTAL');
 
