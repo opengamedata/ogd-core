@@ -170,6 +170,7 @@ try:
         city = request.getvalue("city")
         body = RTServer.getActiveSessionsByLoc(game_id=game_id, state=state, city=city)
     elif method == "get_features_by_sessID":
+        game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
         features = request.getvalue("features")
         body = RTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, features=features)
@@ -179,9 +180,10 @@ try:
         _cgi_debug(f"Game ID is {game_id}", "Info", log_file)
         body = RTServer.getFeatureNamesByGame(game_id=game_id)
     elif method == "get_predictions_by_sessID":
+        game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
         predictions = request.getvalue("predictions")
-        body = RTServer.getPredictionsBySessID(sess_id=sess_id, predictions=predictions)
+        body = RTServer.getPredictionsBySessID(sess_id=sess_id, game_id=game_id, predictions=predictions)
     elif method == "get_prediction_names_by_game":
         game_id = request.getvalue("gameID")
         body = RTServer.getPredictionNamesByGame(game_id=game_id)
