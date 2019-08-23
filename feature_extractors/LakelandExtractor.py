@@ -87,6 +87,7 @@ class LakelandExtractor(Extractor):
         self._windows = []
         self._cur_windows = []
         self.prev_windows = []
+        self._curr_money = 0
 
 
 
@@ -207,6 +208,13 @@ class LakelandExtractor(Extractor):
         num_milk_produced = d["num_milk_produced"]
         num_poop_produced = d["num_poop_produced"]
 
+        for fname, val in [
+            ("session_num_of_food_produced", num_food_produced),
+            ("session_num_of_food_produced", num_milk_produced),
+            ("session_num_of_food_produced", num_poop_produced)
+        ]:
+            self.features.incAggregateVal(fname, val)
+
 
 
 
@@ -296,6 +304,7 @@ class LakelandExtractor(Extractor):
     def _extractFromSelectbuy(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
         self._selected_buy_cost = d["cost"]
+        self._curr_money = d["curr_money"]
 
     def _extractFromBuy(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
