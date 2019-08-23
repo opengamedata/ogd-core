@@ -24,29 +24,31 @@ class RTServer:
     @staticmethod
     def getAllActiveSessions(game_id: str):
         tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
-        cursor = db.cursor()
-        start_time = datetime.now() - timedelta(minutes=5)
+        try:
+            cursor = db.cursor()
+            start_time = datetime.now() - timedelta(minutes=5)
+            filt = f"`app_id`='{game_id}' AND `server_time` > '{start_time.isoformat()}'"
+            active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
+                                                   db_name=DB_NAME_DATA, table=DB_TABLE,\
+                                                   columns=["session_id", "remote_addr"], filter=filt,\
+                                                   sort_columns=["remote_addr", "session_id"], distinct=True)
 
-        filt = f"app_id={game_id} AND server_time > '{start_time.isoformat()}';"
-        active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
-                                               db_name=DB_NAME_DATA, table=DB_TABLE,\
-                                               columns=["session_id", "remote_addr"], filter=filt,\
-                                               sort_columns=["remote_addr"], distinct=True)
-        print(f"got stuff from db: {str(active_sessions_raw)}")
-        utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-        return "quit"
-        ID_INDEX = 0
-        IP_INDEX = 1
-        ret_val = {}
-        for item in active_sessions_raw:
-            (state, city) = RTServer._ip_to_loc(item[IP_INDEX])
-            if state not in ret_val.keys():
-                ret_val[state] = {}
-            if city not in ret_val[state].keys():
-                ret_val[state][city] = []
-            ret_val[state][city].append(item[ID_INDEX])
-        utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-        return ret_val
+            ID_INDEX = 0
+            IP_INDEX = 1
+            ret_val = {}
+            for item in active_sessions_raw:
+                (state, city) = RTServer._ip_to_loc(item[IP_INDEX])
+                if state not in ret_val.keys():
+                    ret_val[state] = {}
+                if city not in ret_val[state].keys():
+                    ret_val[state][city] = []
+                ret_val[state][city].append(item[ID_INDEX])
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            return ret_val
+        except Exception as err:
+            #print(f"got error in RTServer.py: {str(err)}")
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            raise err
 
     @staticmethod
     def getActiveSessionsByLoc(game_id: str, state: str, city: str):
@@ -56,42 +58,46 @@ class RTServer:
     @staticmethod
     def getFeaturesBySessID(sess_id: str, game_id: str, features):
         tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
-
-        cursor = db.cursor()
-        filt = f"session_id = '{sess_id}';"
-        session_data = utils.SQL.SELECT(cursor=cursor,
-                                        db_name=DB_NAME_DATA, table=DB_TABLE,\
-                                        filter=filt,\
-                                        sort_columns=["session_n", "client_time"])
-        if len(session_data) == 0:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-            return {"error": "Empty Session!"}
-        else:
-            request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
-            game_table = GameTable(db, settings, request)
-            schema = Schema(schema_name=f"{game_id}.JSON")
-            extractor: Extractor
-            if game_id == "WAVES":
-                extractor = WaveExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
-            elif game_id == "CRYSTAL":
-                extractor = CrystalExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
+        try:
+            cursor = db.cursor()
+            filt = f"session_id = '{sess_id}';"
+            session_data = utils.SQL.SELECT(cursor=cursor,
+                                            db_name=DB_NAME_DATA, table=DB_TABLE,\
+                                            filter=filt,\
+                                            sort_columns=["session_n", "client_time"])
+            if len(session_data) == 0:
+                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+                return {"error": "Empty Session!"}
             else:
-                raise Exception("Got an invalid game ID!")
-            for row in session_data:
-                col = row[game_table.complex_data_index]
-                complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[game_table.event_index]}
-                if "event_custom" not in complex_data_parsed.keys():
-                    complex_data_parsed["event_custom"] = row[game_table.event_index]
-                row = list(row)
-                row[game_table.complex_data_index] = complex_data_parsed
-                extractor.extractFromRow(row_with_complex_parsed=row, game_table=game_table)
-            all_features = dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
-                                     extractor.getCurrentFeatures() ))
+                request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
+                game_table = GameTable(db, settings, request)
+                schema = Schema(schema_name=f"{game_id}.JSON")
+                extractor: Extractor
+                if game_id == "WAVES":
+                    extractor = WaveExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
+                elif game_id == "CRYSTAL":
+                    extractor = CrystalExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
+                else:
+                    raise Exception("Got an invalid game ID!")
+                for row in session_data:
+                    col = row[game_table.complex_data_index]
+                    complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[game_table.event_index]}
+                    if "event_custom" not in complex_data_parsed.keys():
+                        complex_data_parsed["event_custom"] = row[game_table.event_index]
+                    row = list(row)
+                    row[game_table.complex_data_index] = complex_data_parsed
+                    extractor.extractFromRow(row_with_complex_parsed=row, game_table=game_table)
+                all_features = dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
+                                         extractor.getCurrentFeatures() ))
+                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+                if features is not None:
+                    return {i:all_features[i] for i in features}
+                else:
+                    return all_features
+        except Exception as err:
+            #print(f"got error in RTServer.py: {str(err)}")
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-            if features is not None:
-                return {i:all_features[i] for i in features}
-            else:
-                return all_features
+            raise err
 
     @staticmethod
     def getFeatureNamesByGame(game_id: str):
