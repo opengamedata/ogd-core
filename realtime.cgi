@@ -23,7 +23,7 @@ def _cgi_debug(msg: str, level: str, file):
 class RTServer:
     @staticmethod
     def getAllActiveSessions(game_id: str):
-        start_time = datetime.datetime.now() - datetime.timedelta(minutes=5)
+        start_time = datetime.now() - datetime.timedelta(minutes=5)
 
         filt = f"app_id={game_id} AND server_time > '{start_time.isoformat()}';"
         active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
