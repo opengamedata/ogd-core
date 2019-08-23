@@ -42,6 +42,11 @@ statebar.innerHTML = '';
 var citybar = document.querySelector('.citybar');
 var screens = document.querySelector('.screens');
 var tablediv = document.querySelector('.table');
+// ADD SELECT GAME OPTION
+var select = document.createElement("SELECT");
+select.id = "mySelect";
+statebar.appendChild(select);
+generate_options(['CRYSTAL', 'WAVES', 'LAKELAND', 'JOWILDER'])
 
 for (let state in toydata){
   if(Object.keys(toydata[state]).length) {
@@ -119,7 +124,6 @@ function change_tables(value, start=false) {
     let table = document.querySelector("table");
     generateTableHead(table, headers);
     generateTable(table, tables[value], headers);
-    if(start) generate_options();
   });
 }
 
@@ -150,11 +154,11 @@ function generateTable(table, data, headers) {
   }
 }
 
-function generate_options(){
+function generate_options(option_texts){
   select = document.getElementById("mySelect");
-  for(table_name in tables){
+  for(txt of option_texts){
     var option = document.createElement("option");
-    option.text = table_name;
+    option.text = txt;
     select.add(option);
   }
 }
