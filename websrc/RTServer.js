@@ -64,7 +64,7 @@ class Server
    //   ['GameStart','Fail','GameEnd'].
    //   Returns list of features in JSON format
       console.log("Making request for features by session")
-      var post_string = `method=get_features_by_sessID&sessID=${sessID}&game_id=${gameID}&features=${features}`
+      var post_string = `method=get_features_by_sessID&sessID=${sessID}&gameID=${gameID}&features=${features}`
       Server._execute_request(callback, post_string)
    }
 
@@ -82,7 +82,7 @@ class Server
    //   ['probability to finish lv3' etc.].
    //   Returns list of predictions in JSON format
       console.log("Making request for predictions by session")
-      var post_string = `method=get_predictions_by_sessID&sessID=${sessID}&game_id=${gameID}&predictions=${predictions}`
+      var post_string = `method=get_predictions_by_sessID&sessID=${sessID}&gameID=${gameID}&predictions=${predictions}`
       Server._execute_request(callback, post_string)
    }
 
