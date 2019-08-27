@@ -379,9 +379,9 @@
 
 
       "session_ave_time_per_blurb": "? include skips ? Player feature - General: ave time per tutorial screen (blurb) before continue",
-      "session_num_of_food_produced": "Game feature - General: num of food produced",
-      "session_num_of_milk_produced": "Game feature - General: num of milk produced",
-      "session_num_of_poop_produced": "Game feature - General: num of poop produced",
+      "session_num_of_food_produced": "X Game feature - General: num of food produced",
+      "session_num_of_milk_produced": "X Game feature - General: num of milk produced",
+      "session_num_of_poop_produced": "X Game feature - General: num of poop produced",
       "session_money_earned": "Game feature - General: money earned",
       "session_money_spent": "Game feature - General: money earned",
 
