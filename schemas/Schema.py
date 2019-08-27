@@ -26,7 +26,7 @@ class Schema:
         self._schema:       typing.Dict = {}
         self._feature_list: typing.Dict = None
         # set instance vars
-        if not schema_name.endswith(".json"):
+        if not schema_name.lower().endswith(".json"):
             schema_name += ".json"
         if not schema_path.endswith("/"):
             schema_path += "/"
