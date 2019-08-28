@@ -77,7 +77,7 @@ class RTServer:
             if len(session_data) > 0:
                 request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
                 game_table = GameTable(db, settings, request)
-                schema = Schema(schema_name=f"{game_id}.JSON")
+                schema = Schema(schema_name=f"{game_id}.json")
                 _cgi_debug(f"About to make extractor", "Info", log_file)
                 extractor: Extractor
                 if game_id == "WAVES":
@@ -95,18 +95,25 @@ class RTServer:
                     row[game_table.complex_data_index] = complex_data_parsed
                     extractor.extractFromRow(row_with_complex_parsed=row, game_table=game_table)
                 all_features = dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
-                                         extractor.getCurrentFeatures() ))
-                if features is not None:
+                                            extractor.getCurrentFeatures() ))
+                if features is not None and features != "null":
+                    print(f"returned some features: {features}")
+                    logging.info(f"features: {features}")
                     return {i:all_features[i] for i in features}
                 else:
+                    print("returned all features")
+                    logging.info(f"all_features: {all_features}")
                     return all_features
             else:
+                print("error, empty session!")
+                logging.warning(f"all_features: {all_features}")
                 return {"error": "Empty Session!"}
             log_file.close()
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
         except Exception as err:
-            #print(f"got error in RTServer.py: {str(err)}")
+            print(f"got error in RTServer.py: {str(err)}")
             _cgi_debug(f"Got an error in getFeaturesBySessID: {str(err)}", "Error", log_file)
+            traceback.print_tb(err.__traceback__)
             log_file.close()
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             raise err
