@@ -6,6 +6,7 @@ import json
 import logging
 import random
 import traceback
+import typing
 from datetime import datetime, timedelta
 # import local files
 import Request
@@ -73,12 +74,11 @@ class RTServer:
                                             db_name=DB_NAME_DATA, table=DB_TABLE,\
                                             filter=filt,\
                                             sort_columns=["session_n", "client_time"])
-            import json
+            ret_val: typing.Dict
             if len(session_data) > 0:
                 request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
                 game_table = GameTable(db, settings, request)
                 schema = Schema(schema_name=f"{game_id}.json")
-                _cgi_debug(f"About to make extractor", "Info", log_file)
                 extractor: Extractor
                 if game_id == "WAVES":
                     extractor = WaveExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
@@ -97,19 +97,16 @@ class RTServer:
                 all_features = dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
                                             extractor.getCurrentFeatures() ))
                 if features is not None and features != "null":
-                    print(f"returned some features: {features}")
-                    logging.info(f"features: {features}")
-                    return {i:all_features[i] for i in features}
+                    ret_val = {i:all_features[i] for i in features}
                 else:
-                    print("returned all features")
-                    logging.info(f"all_features: {all_features}")
-                    return all_features
+                    ret_val = all_features
             else:
                 print("error, empty session!")
                 logging.warning(f"all_features: {all_features}")
-                return {"error": "Empty Session!"}
+                ret_val = {"error": "Empty Session!"}
             log_file.close()
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            return ret_val
         except Exception as err:
             print(f"got error in RTServer.py: {str(err)}")
             _cgi_debug(f"Got an error in getFeaturesBySessID: {str(err)}", "Error", log_file)
@@ -187,13 +184,11 @@ try:
 
     request = cgi.FieldStorage()
     method = request.getvalue("method")
-    _cgi_debug(f"method is: {method}", "Info", log_file)
 
     if method == "say_hello":
         body = "Hello, world."
     elif method == "get_all_active_sessions":
         game_id = request.getvalue("gameID")
-        _cgi_debug(f"getting active sessions, game_id={game_id}", "Info", log_file)
         body = RTServer.getAllActiveSessions(game_id=game_id)
     elif method == "get_active_sessions_by_loc":
         game_id = request.getvalue("gameID")
@@ -204,12 +199,11 @@ try:
         game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
         features = request.getvalue("features")
-        _cgi_debug(f"getting features by session ID, sess_id={sess_id}, game_id={game_id}", "Info", log_file)
         body = RTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, features=features)
+        logging.info("got features by session ID in main realtime code.")
+        _cgi_debug(f"got features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}", "Info", log_file)
     elif method == "get_feature_names_by_game":
-        _cgi_debug("Ready to get all feature names", "Info", log_file)
         game_id = request.getvalue("gameID")
-        _cgi_debug(f"Game ID is {game_id}", "Info", log_file)
         body = RTServer.getFeatureNamesByGame(game_id=game_id)
     elif method == "get_predictions_by_sessID":
         game_id = request.getvalue("gameID")
@@ -220,7 +214,9 @@ try:
         game_id = request.getvalue("gameID")
         body = RTServer.getPredictionNamesByGame(game_id=game_id)
 
-    print(json.dumps(body, default=lambda ob: ob.isoformat() if type(ob) == datetime else json.dumps(ob)))
+    result: str = json.dumps(body, default=lambda ob: ob.isoformat() if type(ob) == datetime else json.dumps(ob))
+    _cgi_debug(f"method: {method}; result string: {result}", "Info", log_file)
+    print(result)
 except Exception as err:
     print(f"Error in realtime script! {str(err)}")
     traceback.print_tb(err.__traceback__)
