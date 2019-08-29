@@ -549,7 +549,7 @@ class LakelandExtractor(Extractor):
 
     def calculateAggregateFeatures(self):
         self.calculate_emotes()
-        --------
+        #--------
 
     def calculate_emotes(self):
         for window, emotes in self._emotes_by_window.values():
