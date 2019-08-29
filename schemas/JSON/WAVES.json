@@ -137,7 +137,7 @@
         "event_data_simple":"Unused (always=0), to be deleted",
         "event_data_complex":"Data specific to an event type, encoded as a JSON string",
         "client_time":"The client machine time when the event was generated",
-        "client_time_ms":"Client time in milliseconds, to be removed",
+        "client_time_ms":"Client time in milliseconds",
         "server_time":"The server machine time when the event was logged",
         "remote_addr":"The IP address for the player's computer",
         "req_id":"Another ID of some kind, to be removed",
