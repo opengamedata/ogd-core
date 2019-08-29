@@ -168,7 +168,6 @@ class TableManager
     // for each ID, get predictions and features.
     for (let sessID of player_sessIDs) {
       Server.get_predictions_by_sessID(prediction_handler ,sessID, this.cur_game_id);
-      console.log(`On to features of session ${sessID}:`);
       Server.get_features_by_sessID(features_handler, sessID, this.cur_game_id);
     }
   }
