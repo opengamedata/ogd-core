@@ -102,6 +102,10 @@ class Server
          {
             callback(this.responseText.toString());
          }
+         else
+         {
+            // console.log(`Status for ${post_string} is ${this.statusText}`);
+         }
       }
       req.open("POST", "realtime.cgi", true);
       req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
