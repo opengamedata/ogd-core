@@ -25,14 +25,14 @@ function parse_server_ret_val(return_value){
 class TableManager
 {
   constructor() {
-    this.cur_game_id = all_games[0];
-    this.active_sessions = {};
-    this.generate_options(all_games);
-    this.change_games(this.cur_game_id);
-    this.table = document.createElement('table');
-    this.is_active = false;
+    this.active_game = all_games[0];
     this.active_state = null;
     this.active_city = null;
+    this.active_sessions = {};
+    this.generate_options(all_games);
+    this.change_games(this.active_game);
+    this.table = document.createElement('table');
+    this.is_active = false;
     tablediv.appendChild(this.table);
   }
 
@@ -42,15 +42,16 @@ class TableManager
     statebar.appendChild(select);
     citybar.innerHTML = '';
     // reset local table manager elements
-    this.cur_game_id = game_id;
+    this.active_game = game_id;
     this.active_sessions = {};
     this.is_active = false;
-    // then, set up to get sessions.
     var that = this; // stupid javascript hack. 'Cause js is a hack language.
-    let handler = function(return_value){
-      that.active_sessions = parse_server_ret_val(return_value)
+    // then, set up to get sessions.
+    let get_sessions_handler = function(sessions){
+      that.active_sessions = parse_server_ret_val(sessions)
       console.log({active_sessions: that.active_sessions})
       for (let state in that.active_sessions){
+        // for each state, add it to list of states.
         if(Object.keys(that.active_sessions[state]).length) {
           let a = document.createElement('a');
           let linkText = document.createTextNode(state);
@@ -70,17 +71,7 @@ class TableManager
       }
     };
     // get all the active sessions, and handle.
-    Server.get_all_active_sessions(handler, this.cur_game_id);
-  }
-
-  getGreeting()
-  {
-    console.log("In realtime.js, we got a call to getGreeting");
-    // Server.getGreeting(function callback(result) {document.getElementByID("greeting-drop").innerHTML = result.toString();});
-    Server.get_feature_names_by_game(
-      function callback(result) {document.getElementById("greeting-drop").innerHTML = result.toString();},
-      "CRYSTAL"
-    );
+    Server.get_all_active_sessions(get_sessions_handler, this.active_game);
   }
 
   listcities(state){
@@ -116,7 +107,7 @@ class TableManager
       that.generateTableHead();
       that.generateTable(player_sessIDs);
     };
-    Server.get_prediction_names_by_game(handler ,this.cur_game_id);
+    Server.get_prediction_names_by_game(handler ,this.active_game);
     for(let playerid in player_sessIDs){
       screens.appendChild(this.create_canvas());
     }
@@ -162,15 +153,17 @@ class TableManager
     };
     // handler to print features, so we know they ran.
     let features_handler = function(result) {
-      console.log("feature results:");
-      console.log(result);
+      console.log("feature results: withheld");
+      // console.log(result);
     }
     // for each ID, get predictions and features.
     for (let sessID of player_sessIDs) {
-      Server.get_predictions_by_sessID(prediction_handler ,sessID, this.cur_game_id);
-      Server.get_features_by_sessID(features_handler, sessID, this.cur_game_id);
+      Server.get_predictions_by_sessID(prediction_handler ,sessID, this.active_game);
+      Server.get_features_by_sessID(features_handler, sessID, this.active_game);
     }
   }
+
+  populateTable
 
   generate_options(option_texts){
     select = document.getElementById("mySelect");
