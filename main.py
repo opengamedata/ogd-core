@@ -2,6 +2,7 @@
 import cProfile
 import logging
 import math
+import os
 import sys
 import typing
 from datetime import datetime
@@ -111,15 +112,20 @@ def writeReadme():
         try:
             game_name = sys.argv[2]
             path = f"./data/{game_name}"
-            readme = open(f"{path}/readme.md", "w")
-            changelog = open("./doc/changelog_src.md", "r")
+            os.makedirs(name=path, exist_ok=True)
+            readme        = open(f"{path}/readme.md",                "w")
+            # Load schema, and write feature & column descriptions to the readme.
             schema = Schema(f"{game_name}.json")
-
             feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
             readme.write(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
                                                                 proc_field_list=feature_descriptions))
-            readme.write("## Changelog:\n")
-            readme.write(changelog.read())
+            # Open files with game-specific readme data, and global db changelog.
+            readme_src    = open(f"./doc/readme_src/{game_name}_readme_src.md", "r")
+            changelog_src = open("./doc/readme_src/changelog_src.md",           "r")
+            # Finally, write those into the new readme file.
+            readme.write(readme_src.read())
+            readme.write("\n")
+            readme.write(changelog_src.read())
         except Exception as err:
             logging.error(str(err))
     else:
