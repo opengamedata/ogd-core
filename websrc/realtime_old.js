@@ -32,7 +32,10 @@ toydata = {
   "Alabama": {},
   "Kansas": {},
   "Utah": {}
-}
+};
+
+active_sessions = {};
+cur_game_id = 'CRYSTAL'
 
 
 
@@ -42,27 +45,40 @@ statebar.innerHTML = '';
 var citybar = document.querySelector('.citybar');
 var screens = document.querySelector('.screens');
 var tablediv = document.querySelector('.table');
+var table = document.createElement('table');
+tablediv.appendChild(table);
 // ADD SELECT GAME OPTION
 var select = document.createElement("SELECT");
 select.id = "mySelect";
 statebar.appendChild(select);
 generate_options(['CRYSTAL', 'WAVES', 'LAKELAND', 'JOWILDER'])
 
-for (let state in toydata){
-  if(Object.keys(toydata[state]).length) {
-    let a = document.createElement('a');
-    let linkText = document.createTextNode(state);
-    a.appendChild(linkText);
-    a.title = state;
-    a.href = '#';
-    a.onclick = function(evt){
-      listcities(state)
-      document.querySelectorAll('.statebar a').forEach(function(x){x.style.backgroundColor = 'initial';});
-      a.style.backgroundColor = 'teal'
-      return false;
+function change_games(game_id){
+  cur_game_id = game_id;
+  statebar.innerHTML = '';
+  statebar.appendChild(select);
+  citybar.innerHTML = '';
+  active_sessions = {};
+  Server.get_all_active_sessions(function(return_value){
+    active_sessions = parse_server_ret_val(return_value)
+    console.log({active_sessions: active_sessions})
+    for (let state in active_sessions){
+      if(Object.keys(active_sessions[state]).length) {
+        let a = document.createElement('a');
+        let linkText = document.createTextNode(state);
+        a.appendChild(linkText);
+        a.title = state;
+        a.href = '#';
+        a.onclick = function(evt){
+          listcities(state)
+          document.querySelectorAll('.statebar a').forEach(function(x){x.style.backgroundColor = 'initial';});
+          a.style.backgroundColor = 'teal'
+          return false;
+        }
+        statebar.appendChild(a);
+      }
     }
-    statebar.appendChild(a);
-  }
+  }, cur_game_id);
 }
 
 function getGreeting()
@@ -77,7 +93,7 @@ function getGreeting()
 
 function listcities(state){
   citybar.innerHTML = '';
-  for(let city in toydata[state]) if (Object.keys(toydata[state][city]).length){
+  for(let city in active_sessions[state]) if (Object.keys(active_sessions[state][city]).length){
     let a = document.createElement('a');
     let linkText = document.createTextNode(city);
     a.appendChild(linkText);
@@ -96,10 +112,13 @@ function listcities(state){
 function showplayers(state, city){
   screens.innerHTML = '';
   table.innerHTML = '';
-  console.log(toydata[state][city]);
-  players = toydata[state][city];
-  generateTableHead(table,headers);
-  generateTable(table, players, headers)
+  console.log(active_sessions[state][city]);
+  player_sessIDs = active_sessions[state][city];
+  Server.get_prediction_names_by_game(function(headers){
+    generateTableHead(table, headers);
+    generateTable(table, player_sessIDs, headers);
+  }
+    ,cur_game_id)
   for(let playerid in players){
     create_canvas();
   }
@@ -116,62 +135,55 @@ function create_canvas(){
   ctx.fillRect(0,0,100,100);
 }
 
-function change_tables(value, start=false) {
-  let table = document.querySelector("table");
-  table.innerHTML = '';
-  jQuery.getJSON("http://localhost/GameData%20Site/data/file_list.json",function(result){
-    tables = result;
-    let table = document.querySelector("table");
-    generateTableHead(table, headers);
-    generateTable(table, tables[value], headers);
-  });
-}
-
 function generateTableHead(table, headers) {
   let thead = table.createTHead();
   let row = thead.insertRow();
-  for (let key in headers) {
+  for (let head of headers) {
     let th = document.createElement("th");
-    let text = document.createTextNode(headers[key]);
+    let text = document.createTextNode(head);
     th.appendChild(text);
     row.appendChild(th);
   }
 }
-function generateTable(table, data, headers) {
-  for (let setID in data) {
-    var set = data[setID]
-    let row = table.insertRow();
-    for (key in headers) {
-      let cell = row.insertCell();
-      var text = null;
-      switch (key) {
-        default:
-            text = document.createTextNode(set[key]);
-            cell.appendChild(text);
-
+function generateTable(table, player_sessIDs, headers) {
+  for (let sessID of player_sessIDs) {
+    Server.get_predictions_by_sessID(function(return_value){
+      predictions = parse_server_ret_val(return_value);
+      let row = table.insertRow();
+      for (prediction_name of headers) {
+        let cell = row.insertCell();
+        var text = null;
+        text = document.createTextNode(predictions[prediction_name]);
+        cell.appendChild(text);
       }
-    }
+    },sessID, cur_game_id);
   }
 }
 
 function generate_options(option_texts){
   select = document.getElementById("mySelect");
+  select.onchange = function(){if (this.value) change_games(this.value);};
   for(txt of option_texts){
     var option = document.createElement("option");
     option.text = txt;
     select.add(option);
   }
 }
-var headers = {
-  "SessionID": "SessionID",
-  "Time": "Time",
-  "Event Category": "Event Category",
-  "Event Complex": "Event Complex",
-};
-var table = document.createElement('table');
-tablediv.appendChild(table);
+// var headers = {
+//   "SessionID": "SessionID",
+//   "Time": "Time",
+//   "Event Category": "Event Category",
+//   "Event Complex": "Event Complex",
+// };
 
 function parse_server_ret_val(return_value){
-  return JSON.parse(return_value.split(/[\r\n]+/)[2])
+  return_value = return_value.trim()
+  second_line = return_value.split(/[\r\n]+/)[1]
+  try{
+    ret = JSON.parse(second_line);
+} catch(e) {
+    ret = second_line
+}
+  return ret
 }
 
