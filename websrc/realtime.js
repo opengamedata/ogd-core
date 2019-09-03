@@ -16,8 +16,25 @@ function change_games(){
   
 }
 
-// ADD SELECT GAME OPTION
-var select = document.createElement("SELECT");
-select.id = "mySelect";
-bar.appendChild(select);
-generate_options(['CRYSTAL', 'WAVES', 'LAKELAND', 'JOWILDER'])
+function onload()
+{
+  // ADD SELECT GAME OPTION
+  var select = document.createElement("SELECT");
+  select.id = "mySelect";
+  bar.appendChild(select);
+  generate_options(['CRYSTAL', 'WAVES', 'LAKELAND', 'JOWILDER'])
+}
+
+class SessionList
+{
+  constructor()
+  {
+    this.active_game = document.getElementById("mySelect").value;
+    this.session_ids = [];
+    let that = this;
+    function handler(result) {
+      that.session_ids = result;
+    };
+    Server.get_all_active_sessions(handler, this.active_game);
+  }
+}
