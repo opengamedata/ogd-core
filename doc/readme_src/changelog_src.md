@@ -1,3 +1,4 @@
+## Global Database Changelog:
 ### July 2019:
 - Crystal game data now includes Menu Button events.
 ### August 2019:
