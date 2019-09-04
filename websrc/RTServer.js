@@ -26,16 +26,7 @@ class Server
    static get_all_active_sessions(callback, gameID) //gameID eg 'CRYSTAL'
    {
    //returns object of form:
-      // {
-      // "STATE0": {
-      //    "CITY0": [SessID0, SessID1, SessID2, ... sessIDn],
-      //    "CITY1": [SessID0...]
-      //    etc.
-      // }
-      // "STATE1": {
-      //    "CITY0": [SessID0, SessID1, SessID2, ... sessIDn],
-      //    "CITY1": [SessID0...]
-      // }
+      // {[SessID0, SessID1, SessID2, ... sessIDn]}
       var post_string = `method=get_all_active_sessions&gameID=${gameID}`
       console.log(`Making request for all active sessions: ${post_string}`)
       Server._execute_request(callback, post_string)
