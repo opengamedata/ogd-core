@@ -26,17 +26,18 @@
     "endgame": 23
   },
   "EMOTES": {
-    "fullness_motivated_txt": 0,
-    "fullness_desperate_txt": 1,
-    "energy_desperate_txt": 2,
-    "joy_motivated_txt": 3,
-    "joy_desperate_txt": 4,
-    "puke_txt": 5,
-    "yum_txt": 6,
-    "tired_txt": 7,
-    "happy_txt": 8,
-    "swim_txt": 9,
-    "sale_txt": 10
+    "null": 0,
+    "fullness_motivated_txt": 1,
+    "fullness_desperate_txt": 2,
+    "energy_desperate_txt": 3,
+    "joy_motivated_txt": 4,
+    "joy_desperate_txt": 5,
+    "puke_txt": 6,
+    "yum_txt": 7,
+    "tired_txt": 8,
+    "happy_txt": 9,
+    "swim_txt": 10,
+    "sale_txt": 11
   },
   "BUYS": {
     "null": 0,

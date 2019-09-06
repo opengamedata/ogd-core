@@ -40,6 +40,7 @@ class GameTable:
         # TODO: Honestly, should just make a reverse index dictionary.
         self.complex_data_index = self.column_names.index("event_data_complex")
         self.client_time_index = self.column_names.index("client_time")
+        self.server_time_index = self.column_names.index("server_time")
         self.session_id_index = self.column_names.index("session_id")
         self.pers_session_id_index = self.column_names.index("persistent_session_id")
         self.event_index = self.column_names.index("event")
