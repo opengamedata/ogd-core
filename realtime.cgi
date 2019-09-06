@@ -24,7 +24,7 @@ def _cgi_debug(msg: str, level: str, file):
 
 class RTServer:
     @staticmethod
-    def getAllActiveSessions(game_id: str):
+    def getAllActiveSessions(game_id: str) -> typing.List:
         tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
         log_file = open("./python_errors.log", "a")
         try:
@@ -39,14 +39,9 @@ class RTServer:
             _cgi_debug(f"Got result from db: {str(active_sessions_raw)}", "Info", log_file)
             ID_INDEX = 0
             IP_INDEX = 1
-            ret_val = {}
+            ret_val = []
             for item in active_sessions_raw:
-                (state, city) = RTServer._ip_to_loc(item[IP_INDEX])
-                if state not in ret_val.keys():
-                    ret_val[state] = {}
-                if city not in ret_val[state].keys():
-                    ret_val[state][city] = []
-                ret_val[state][city].append(item[ID_INDEX])
+                ret_val.append(item[ID_INDEX])
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             _cgi_debug(f"returning: {str(ret_val)}", "Info", log_file)
             return ret_val
@@ -137,10 +132,10 @@ class RTServer:
         #quit()
         #cursor = db.cursor()
         return { \
-            f"stub:{sess_id}":\
+            f"{sess_id}":\
             { \
                 "stub:this_should_be_1": 1, \
-                "stub:this_should_be_0-168": 0.168, \
+                "stub:this_should_be_0.168": 0.168, \
                 "stub:random_1": random.random(), \
                 "stub:random_2": random.random(), \
                 "stub:random_3": random.random(), \
@@ -149,7 +144,7 @@ class RTServer:
 
     @staticmethod
     def getPredictionNamesByGame(game_id: str):
-        return {"stub:prediction_names":["stub:this_should_be_1", "stub:this_should_be_0-168", "stub:random_1", "stub:random_2", "stub:random_3", "stub:random_4"]}
+        return {"stub:prediction_names":["stub:this_should_be_1", "stub:this_should_be_0.168", "stub:random_1", "stub:random_2", "stub:random_3", "stub:random_4"]}
 
     @staticmethod
     def _ip_to_loc(ip):
@@ -160,7 +155,6 @@ try:
     header = "Content-type:text/plain \r\n\r\n"
     print(str(header))
 
-    print("just a fakeout line")
     # Load settings, set up consts.
     settings = utils.loadJSONFile("config.json")
     db_settings = settings["db_config"]

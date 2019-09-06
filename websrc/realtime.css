@@ -8,7 +8,7 @@
 }
 .leftbar {
   background:darkgray;
-  flex: 1;
+  flex: 2;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
