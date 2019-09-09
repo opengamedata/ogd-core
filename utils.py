@@ -42,6 +42,7 @@ def loadJSONFile(filename: str, path:str = "./") -> object:
 def dateToFileSafeString(date: datetime.datetime):
     return f"{date.month}-{date.day}-{date.year}"
 
+## Dumb struct to collect data used to establish a connection to a SQL database.
 class SQLLogin:
     def __init__(self, host: str, port: int, user: str, pword: str, db_name: str):
         self.host    = host
@@ -50,6 +51,7 @@ class SQLLogin:
         self.pword   = pword
         self.db_name = db_name
 
+## Dumb struct to collect data used to establish a connection over ssh.
 class SSHLogin:
     def __init__(self, host: str, port: int, user: str, pword: str):
         self.host    = host
@@ -142,7 +144,7 @@ class SQL:
     #  @param distinct      A bool to determine whether all results should be fetched and returned.
     #                           Default: True
     #  @return              A collection of all rows from the selection, if fetch_results is true,
-#                           otherwise None.
+    #                           otherwise None.
     @staticmethod
     def SELECT(cursor, db_name: str, table: str,
                columns: typing.List[str] = None, filter: str = None, limit: int = -1,

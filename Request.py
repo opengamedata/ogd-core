@@ -8,8 +8,9 @@ import utils
 ## @class Request
 #  Dumb struct to hold data related to requests for data export.
 #  This way, we've at least got a list of what is available in a request.
+#  Acts as a base class for more specific types of request.
 class Request(abc.ABC):
-    ## Constructor for the request class.
+    ## Constructor for the request base class.
     #  Just stores whatever data is given. No checking done to ensure we have all
     #  necessary data, this can be checked wherever Requests are actually used.
     #  @param game_id An identifier for the game from which we want to extract data.
@@ -25,10 +26,14 @@ class Request(abc.ABC):
         self.max_sessions = max_sessions
         self.min_moves = min_moves
 
+    ## Abstract method to retrieve the list of IDs for all sessions covered by
+    #  the request.
     @abc.abstractmethod
     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
         pass
 
+## Class representing a request that includes a range of dates to be retrieved
+#  for the given game.
 class DateRangeRequest(Request):
     def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None,
                  start_date: date = None, end_date: date = None):
@@ -41,6 +46,8 @@ class DateRangeRequest(Request):
         fmt = "%Y%m%d"
         return f"{self.game_id}: {self.start_date.strftime(fmt)}-{self.end_date.strftime(fmt)}"
 
+    ## Method to retrieve the list of IDs for all sessions covered by
+    #  the request.
     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
         # We grab the ids for all sessions that have 0th move in the proper date range.
         filt = "app_id=\"{}\" AND session_n=0 AND (server_time BETWEEN '{}' AND '{}')".format( \
@@ -50,12 +57,15 @@ class DateRangeRequest(Request):
                                 sort_columns=["session_id"], sort_direction="ASC", distinct=True, limit=self.max_sessions)
         return [sess[0] for sess in session_ids_raw]
 
+## Class representing a request for a specific list of session IDs.
 class IDListRequest(Request):
     def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None,
                     session_ids = []):
         Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves)
         self._session_ids = session_ids
 
+    ## Method to retrieve the list of IDs for all sessions covered by
+    #  the request. Should just be the original request list.
     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
         return self._session_ids
 

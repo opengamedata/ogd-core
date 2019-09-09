@@ -35,6 +35,8 @@ def showHelp():
     print("    help arguments: *None*")
     print(width*"*")
 
+## Function to set up a connection to a database, via an ssh tunnel.
+#  @return A tuple consisting of the tunnel and database connection, respectively.
 def prepareDB() -> typing.Tuple:
     # Load settings, set up consts.
     DB_NAME_DATA = db_settings["DB_NAME_DATA"]
@@ -54,22 +56,35 @@ def prepareDB() -> typing.Tuple:
     tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
     return (tunnel, db)
 
-## Function to handle execution of export code. This is the main use of the
-#  program.
-def runExport():
-    # retrieve game id and date range.
+## Function to handle execution of export code. This is the main intended use of
+#  the program.
+def runExport(month: bool = False):
+    # retrieve game id
     if num_args > 2:
         game_id = sys.argv[2]
     else:
         showHelp()
         return
-    today   = datetime.now()
-    start_date = datetime.strptime(sys.argv[3], "%m/%d/%Y") if num_args > 4 \
-            else today
-    start_date = start_date.replace(day=1, hour=0, minute=0, second=0)
-    end_date   = datetime.strptime(sys.argv[4], "%m/%d/%Y") if num_args > 4 \
-            else today
-    end_date = end_date.replace(hour=23, minute=59, second=59)
+    # retrieve/calculate date range.
+    start_date: datetime
+    end_date: datetime
+    # If we want to export all data for a given month, calculate a date range.
+    if month is True:
+        from calendar import monthrange
+        if num_args > 3:
+            month_year = sys.argv[3].split("/")
+            month_range = monthrange(month_year[1], month_year[0])
+            # TODO: work out start and end dates, so we get a full month of range.
+            start_date = month_year.replace(day=1, hour=0, minut=0, second=0)
+    # Otherwise, create date range from given pair of dates.
+    else:
+        today   = datetime.now()
+        start_date = datetime.strptime(sys.argv[3], "%m/%d/%Y") if num_args > 4 \
+                else today
+        start_date = start_date.replace(day=1, hour=0, minute=0, second=0)
+        end_date   = datetime.strptime(sys.argv[4], "%m/%d/%Y") if num_args > 4 \
+                else today
+        end_date = end_date.replace(hour=23, minute=59, second=59)
 
     tunnel, db = prepareDB()
 
@@ -85,12 +100,16 @@ def runExport():
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     finally:
         end = datetime.now()
-
         time_delta = end - start
         print(f"Total time taken: {math.floor(time_delta.total_seconds()/60)} min, \
                                   {time_delta.total_seconds() % 60} sec")
         utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
 
+## Function to print out info on a game from the game's schema.
+#  This does a similar function to writeReadme, but is limited to the CSV
+#  metadata part (basically what was in the schema, at one time written into
+#  the csv's themselves). Further, the output is printed rather than written
+#  to file.
 def showGameInfo():
     if num_args > 2:
         try:
@@ -107,6 +126,10 @@ def showGameInfo():
         print("Error, no game name given!")
         showHelp()
 
+## Function to write out the readme file for a given game.
+#  This includes the CSV metadata (data from the schema, originally written into
+#  the CSV files themselves), custom readme source, and the global changelog.
+#  The readme is placed in the game's data folder.
 def writeReadme():
     if num_args > 2:
         try:
@@ -180,14 +203,18 @@ if type(cmd) == str:
     db_settings = settings["db_config"]
     ssh_settings = settings["ssh_config"]
 
-    if cmd.lower() == "export":
+    cmd = cmd.lower()
+
+    if cmd == "export":
         runExport()
-    elif cmd.lower() == "info":
+    elif cmd == "export_month":
+        runExport(month=True)
+    elif cmd == "info":
         showGameInfo()
-    elif cmd.lower() == "readme":
+    elif cmd == "readme":
         writeReadme()
     else:
-        if not cmd.lower() == "help":
+        if not cmd == "help":
             print("Invalid Command!")
         showHelp()
 else:
