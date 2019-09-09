@@ -92,9 +92,9 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>disconnectMySQLViaSSH<
 <tr class="memitem:a43152b5f69fea05be945a40d5c5dbf6e"><td class="memItemLeft" align="right" valign="top">typing.List[typing.Tuple]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classutils_1_1_s_q_l.html#a43152b5f69fea05be945a40d5c5dbf6e">SELECT</a> (cursor, str db_name, str table, typing.List[str] columns=None, str filter=None, int limit=-1, typing.List[str] sort_columns=None, sort_direction=&quot;ASC&quot;, str grouping=None, bool distinct=False, bool fetch_results=True)</td></tr>
 <tr class="memdesc:a43152b5f69fea05be945a40d5c5dbf6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to build and execute SELECT statements on a database connection.  <a href="#a43152b5f69fea05be945a40d5c5dbf6e">More...</a><br /></td></tr>
 <tr class="separator:a43152b5f69fea05be945a40d5c5dbf6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1dae24d67862cc30095c5442eb760b5"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classutils_1_1_s_q_l.html#ad1dae24d67862cc30095c5442eb760b5">server500Error</a> (Exception error)</td></tr>
-<tr class="memdesc:ad1dae24d67862cc30095c5442eb760b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple function to construct and log a nice server 500 error message.  <a href="#ad1dae24d67862cc30095c5442eb760b5">More...</a><br /></td></tr>
-<tr class="separator:ad1dae24d67862cc30095c5442eb760b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa45d1f8a1dc595e0156e3acda4310295"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classutils_1_1_s_q_l.html#aa45d1f8a1dc595e0156e3acda4310295">server500Error</a> (str err_msg)</td></tr>
+<tr class="memdesc:aa45d1f8a1dc595e0156e3acda4310295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple function to construct and log a nice server 500 error message.  <a href="#aa45d1f8a1dc595e0156e3acda4310295">More...</a><br /></td></tr>
+<tr class="separator:aa45d1f8a1dc595e0156e3acda4310295"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A utility class containing some functions to assist in retrieving from a database. </p>
@@ -299,8 +299,8 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>disconnectMySQLViaSSH<
 
 </div>
 </div>
-<a id="ad1dae24d67862cc30095c5442eb760b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1dae24d67862cc30095c5442eb760b5">&#9670;&nbsp;</a></span>server500Error()</h2>
+<a id="aa45d1f8a1dc595e0156e3acda4310295"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa45d1f8a1dc595e0156e3acda4310295">&#9670;&nbsp;</a></span>server500Error()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -311,8 +311,8 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>disconnectMySQLViaSSH<
         <tr>
           <td class="memname">def utils.SQL.server500Error </td>
           <td>(</td>
-          <td class="paramtype">Exception&#160;</td>
-          <td class="paramname"><em>error</em></td><td>)</td>
+          <td class="paramtype">str&#160;</td>
+          <td class="paramname"><em>err_msg</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -326,7 +326,7 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>disconnectMySQLViaSSH<
 <p>Simple function to construct and log a nice server 500 error message. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">error</td><td>The exception raised when a 500 error occurs. </td></tr>
+    <tr><td class="paramname">err_msg</td><td>A more detailed error message with info to help debugging. </td></tr>
   </table>
   </dd>
 </dl>

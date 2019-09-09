@@ -81,18 +81,18 @@ Inheritance diagram for Request.Request:</div>
  <div class="center">
   <img src="class_request_1_1_request.png" usemap="#Request.Request_map" alt=""/>
   <map id="Request.Request_map" name="Request.Request_map">
-<area href="class_request_1_1_date_range_request.html" alt="Request.DateRangeRequest" shape="rect" coords="0,112,166,136"/>
-<area href="class_request_1_1_i_d_list_request.html" alt="Request.IDListRequest" shape="rect" coords="176,112,342,136"/>
+<area href="class_request_1_1_date_range_request.html" title="Class representing a request that includes a range of dates to be retrieved for the given game." alt="Request.DateRangeRequest" shape="rect" coords="0,112,166,136"/>
+<area href="class_request_1_1_i_d_list_request.html" title="Class representing a request for a specific list of session IDs." alt="Request.IDListRequest" shape="rect" coords="176,112,342,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4b2b15d3918230c6b56025e0ef7326ab"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_request_1_1_request.html#a4b2b15d3918230c6b56025e0ef7326ab">__init__</a> (self, str game_id=None, int max_sessions=None, int min_moves=None)</td></tr>
-<tr class="memdesc:a4b2b15d3918230c6b56025e0ef7326ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the request class.  <a href="#a4b2b15d3918230c6b56025e0ef7326ab">More...</a><br /></td></tr>
+<tr class="memdesc:a4b2b15d3918230c6b56025e0ef7326ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the request base class.  <a href="#a4b2b15d3918230c6b56025e0ef7326ab">More...</a><br /></td></tr>
 <tr class="separator:a4b2b15d3918230c6b56025e0ef7326ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa65df0d73c5d2524053dbedd666c7d9e"><td class="memItemLeft" align="right" valign="top"><a id="aa65df0d73c5d2524053dbedd666c7d9e"></a>
-typing.List&#160;</td><td class="memItemRight" valign="bottom"><b>retrieveSessionIDs</b> (self, db_cursor, db_settings)</td></tr>
+<tr class="memitem:aa65df0d73c5d2524053dbedd666c7d9e"><td class="memItemLeft" align="right" valign="top">typing.List&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_request_1_1_request.html#aa65df0d73c5d2524053dbedd666c7d9e">retrieveSessionIDs</a> (self, db_cursor, db_settings)</td></tr>
+<tr class="memdesc:aa65df0d73c5d2524053dbedd666c7d9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abstract method to retrieve the list of IDs for all sessions covered by the request.  <a href="#aa65df0d73c5d2524053dbedd666c7d9e">More...</a><br /></td></tr>
 <tr class="separator:aa65df0d73c5d2524053dbedd666c7d9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -146,7 +146,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Constructor for the request class. </p>
+<p>Constructor for the request base class. </p>
 <p>Just stores whatever data is given. No checking done to ensure we have all necessary data, this can be checked wherever Requests are actually used. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">game_id</td><td>An identifier for the game from which we want to extract data. Should correspond to the app_id in the database. </td></tr>
@@ -157,6 +157,45 @@ Public Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa65df0d73c5d2524053dbedd666c7d9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa65df0d73c5d2524053dbedd666c7d9e">&#9670;&nbsp;</a></span>retrieveSessionIDs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"> typing.List Request.Request.retrieveSessionIDs </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>db_cursor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>db_settings</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Abstract method to retrieve the list of IDs for all sessions covered by the request. </p>
+
+<p>Reimplemented in <a class="el" href="class_request_1_1_i_d_list_request.html#a444c98ee565920afcd145fb9081f0eb1">Request.IDListRequest</a>, and <a class="el" href="class_request_1_1_date_range_request.html#a6225fcabddc26682a0964b9438d3e845">Request.DateRangeRequest</a>.</p>
 
 </div>
 </div>
