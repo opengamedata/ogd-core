@@ -26,7 +26,7 @@ function onload()
   sess_list = new SessionList();
   window.setInterval(() => {
     try {
-      sess_list.refreshActiveSessions();
+      sess_list.refreshSessionDisplayList();
       if (sess_list.selected_session_id != -1)
       {
         sess_list.refreshDisplayedSession();
@@ -138,7 +138,7 @@ class SessionList
         value.innerText = prediction_value;
       }
     };
-    Server.get_predictions_by_sessID(predictions_handler, session_id, that.active_game);
+    Server.get_predictions_by_sessID(predictions_handler, that.selected_session_id, that.active_game);
   }
 
   clearSelected() {
