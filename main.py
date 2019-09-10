@@ -72,7 +72,10 @@ def runExport(month: bool = False):
     if month is True:
         from calendar import monthrange
         if num_args > 3:
-            month_year = sys.argv[3].split("/")
+            month_year_str = sys.argv[3].split("/")
+            month_year = []
+            month_year.append(int(month_year_str[0]))
+            month_year.append(int(month_year_str[1]))
             month_range = monthrange(month_year[1], month_year[0])
             days_in_month = month_range[1]
             start_date = datetime(year=month_year[1], month=month_year[0], day=1, hour=0, minute=0, second=0)
