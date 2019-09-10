@@ -74,8 +74,9 @@ def runExport(month: bool = False):
         if num_args > 3:
             month_year = sys.argv[3].split("/")
             month_range = monthrange(month_year[1], month_year[0])
-            # TODO: work out start and end dates, so we get a full month of range.
-            start_date = month_year.replace(day=1, hour=0, minut=0, second=0)
+            days_in_month = month_range[1]
+            start_date = datetime(year=month_year[1], month=month_year[0], day=1, hour=0, minute=0, second=0)
+            end_date   = datetime(year=month_year[1], month=month_year[0], day=days_in_month, hour=23, minute=59, second=59)
     # Otherwise, create date range from given pair of dates.
     else:
         today   = datetime.now()
