@@ -27,6 +27,10 @@ function onload()
   window.setInterval(() => {
     try {
       sess_list.refreshActiveSessions();
+      if (sess_list.selected_session_id != -1)
+      {
+        sess_list.refreshDisplayedSession();
+      }
     }
     catch(err) {
       console.log(err.message);
@@ -48,20 +52,20 @@ class SessionList
     this.active_session_ids = [];
     this.displayed_session_ids = [];
     this.selected_session_id = -1;
-    this.refreshActiveSessions();
+    this.refreshActiveSessionList();
   }
 
-  refreshActiveSessions() {
+  refreshActiveSessionList() {
     let that = this;
     function active_sessions_handler(result) {
       that.active_session_ids = JSON.parse(result);
       console.log(`Refreshed session IDs: ${that.active_session_ids}`);
-      that.refreshDisplayedSessions();
+      that.refreshSessionDisplayList();
     };
     Server.get_all_active_sessions(active_sessions_handler, this.active_game);
   }
 
-  refreshDisplayedSessions() {
+  refreshSessionDisplayList() {
     let that = this;
     let display_set = new Set(this.displayed_session_ids);
     let active_set = new Set(this.active_session_ids);
@@ -110,10 +114,28 @@ class SessionList
         title.innerText = prediction_name;
         next_prediction.appendChild(title);
         let value = document.createElement("div");
+        value.id = `${prediction_name}_val`;
         value.innerText = prediction_value;
         next_prediction.appendChild(value);
         next_prediction.appendChild(document.createElement("br"));
         display_area.appendChild(next_prediction);
+      }
+    };
+    Server.get_predictions_by_sessID(predictions_handler, session_id, that.active_game);
+  }
+
+  refreshDisplayedSession()
+  {
+    console.log("Starting to refresh displayed session");
+    let that = this;
+    let predictions_handler = function(result) {
+      console.log(`Got back predictions: ${result}`);
+      let predictions_raw = JSON.parse(result);
+      let prediction_list = predictions_raw[that.selected_session_id]
+      for (let prediction_name in prediction_list) {
+        let prediction_value = prediction_list[prediction_name];
+        let value = document.getElementById(`${prediction_name}_val`);
+        value.innerText = prediction_value;
       }
     };
     Server.get_predictions_by_sessID(predictions_handler, session_id, that.active_game);
