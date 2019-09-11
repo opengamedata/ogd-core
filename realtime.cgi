@@ -60,7 +60,7 @@ class RTServer:
         return all_sessions[state][city]
 
     @staticmethod
-    def getFeaturesBySessID(sess_id: str, game_id: str, features = None):
+    def getFeaturesBySessID(sess_id: str, game_id: str, features = None) -> typing.Dict:
         tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
         try:
             log_file = open("./python_errors.log", "a")
@@ -193,11 +193,12 @@ class RTServer:
             "Intercept":15.91617862447785
         } }
         ret_val = {}
-        features = RTServer.getFeaturesBySessID(sess_id, game_id)
+        features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
+        features_parsed = {feature_name: float(features_raw[feature_name]) for feature_name in features_raw.keys()}
         for model in models.keys():
-            ret_val[model] = RTServer.EvaluateModel(models[model], features)
+            ret_val[model] = RTServer.EvaluateModel(models[model], features_parsed)
 
-        return ret_val
+        return {sess_id:ret_val}
 
     ## Function to evaluate a logistic regression model, creating a prediction.
     #  This is based around the equation for probability of Y=1, denoted as p:
@@ -213,14 +214,13 @@ class RTServer:
             if coeff == "Intercept":
                 logit += model[coeff]
             else:
-                print(f"feature_data[coeff]: {feature_data[coeff]}")
-                print(f"model[coeff]: {model[coeff]}")
-                print(f"product: {model[coeff] * feature_data[coeff]}")
+                # print(f"feature_data[coeff]: {str(type(feature_data[coeff]))} {feature_data[coeff]}")
+                # print(f"model[coeff]: {str(type(model[coeff]))} {model[coeff]}")
+                # print(f"product: {model[coeff] * feature_data[coeff]}")
                 logit += model[coeff] * feature_data[coeff]
-        print(f"logit: {logit}")
+        # print(f"logit: {logit}")
         p = 1 / (1 + math.exp(-logit))
         return p
-        
 
     @staticmethod
     def getPredictionNamesByGame(game_id: str):
