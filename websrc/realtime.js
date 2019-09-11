@@ -2,7 +2,7 @@
 function generate_options(option_texts){
   select = document.getElementById("mySelect");
   let that = this; // the old this-that js hack.
-  select.onchange = function(){if (this.value) that.change_games(this.value);};
+  select.onchange = function(){if (this.value) change_games(sess_list, this.value);};
   for(let txt of option_texts){
     var option = document.createElement("option");
     option.text = txt;
@@ -10,8 +10,9 @@ function generate_options(option_texts){
   }
 }
 
-function change_games(){
-  
+function change_games(list, game_name){
+  list.active_game = game_name;
+  list.refreshActiveSessionList();
 }
 
 function onload()
