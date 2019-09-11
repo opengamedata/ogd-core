@@ -213,7 +213,11 @@ class RTServer:
             if coeff == "Intercept":
                 logit += model[coeff]
             else:
+                print(f"feature_data[coeff]: {feature_data[coeff]}")
+                print(f"model[coeff]: {model[coeff]}")
+                print(f"product: {model[coeff] * feature_data[coeff]}")
                 logit += model[coeff] * feature_data[coeff]
+        print(f"logit: {logit}")
         p = 1 / (1 + math.exp(-logit))
         return p
         
