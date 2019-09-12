@@ -114,13 +114,13 @@ class WaveExtractor(Extractor):
                 self.features.setValByIndex(feature_name="percentWavelengthMoves", index=lvl, new_value=val)
                 # percents of good moves for each type
                 val   = self.features.getValByIndex(feature_name="amplitudeGoodMoveCount", index=lvl) / self.amp_move_counts[lvl] \
-                     if self.amp_move_counts[lvl] > 0 else 0.0
+                     if lvl in self.amp_move_counts.keys() and self.amp_move_counts[lvl] > 0 else 0.0
                 self.features.setValByIndex(feature_name="percentAmplitudeGoodMoves", index=lvl, new_value=val)
                 val   = self.features.getValByIndex(feature_name="offsetGoodMoveCount", index=lvl) / self.off_move_counts[lvl] \
-                     if self.off_move_counts[lvl] > 0 else 0.0
+                     if lvl in self.off_move_counts.keys() and self.off_move_counts[lvl] > 0 else 0.0
                 self.features.setValByIndex(feature_name="percentOffsetGoodMoves", index=lvl, new_value=val)
                 val   = self.features.getValByIndex(feature_name="wavelengthGoodMoveCount", index=lvl) / self.wave_move_counts[lvl] \
-                     if self.wave_move_counts[lvl] > 0 else 0.0
+                     if lvl in self.wave_move_counts.keys() and self.wave_move_counts[lvl] > 0 else 0.0
                 self.features.setValByIndex(feature_name="percentWavelengthGoodMoves", index=lvl, new_value=val)
                 # avg slider std devs and ranges.
                 total_slider_stdevs = self.features.getValByIndex(feature_name="sliderAvgStdDevs", index=lvl)
