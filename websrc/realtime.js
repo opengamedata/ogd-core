@@ -102,23 +102,23 @@ class SessionList
     let that = this;
     this.selected_session_id = session_id;
     let display_area = document.getElementById("prediction_display_area");
-    display_area.innerText = session_id;
+    display_area.innerText = `Session ID: ${session_id}`;
     let predictions_handler = function(result) {
-      console.log(`Got back predictions: ${result}`);
       let predictions_raw = JSON.parse(result);
       let prediction_list = predictions_raw[that.selected_session_id]
       for (let prediction_name in prediction_list) {
         let prediction_value = prediction_list[prediction_name];
         let next_prediction = document.createElement("div");
         next_prediction.id=prediction_name;
+        next_prediction.className="resultbox";
         let title = document.createElement("h3");
         title.innerText = prediction_name;
         next_prediction.appendChild(title);
-        let value = document.createElement("div");
+        let value = document.createElement("span");
         value.id = `${prediction_name}_val`;
         value.innerText = prediction_value;
         next_prediction.appendChild(value);
-        next_prediction.appendChild(document.createElement("br"));
+        next_prediction.appendChild(document.createElement("br"))
         display_area.appendChild(next_prediction);
       }
     };
@@ -127,10 +127,9 @@ class SessionList
 
   refreshDisplayedSession()
   {
-    console.log("Starting to refresh displayed session");
     let that = this;
     let predictions_handler = function(result) {
-      console.log(`Got back predictions: ${result}`);
+      // console.log(`Got back predictions: ${result}`);
       let predictions_raw = JSON.parse(result);
       let prediction_list = predictions_raw[that.selected_session_id]
       for (let prediction_name in prediction_list) {
