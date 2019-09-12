@@ -200,7 +200,7 @@ class WaveExtractor(Extractor):
         self.features.incValByIndex(feature_name="completeCount", index=level)
         if self.active_begin == None:
             sess_id = self.features.getValByName(feature_name="sessionID")
-            logging.error(f"Got a 'Complete' event when there was no active 'Begin' event! Sess ID: {sess_id}")
+            logging.error(f"Got a 'Complete' event when there was no active 'Begin' event! Sess ID: {sess_id}, level: {level}")
         else:
             self.end_times[level] = event_client_time
             self.features.setValByIndex(feature_name="completed", index=level, new_value=1)
@@ -226,7 +226,7 @@ class WaveExtractor(Extractor):
         self.features.incValByIndex(feature_name="menuBtnCount", index=level)
         if self.active_begin == None:
             sess_id = self.features.getValByName(feature_name="sessionID")
-            logging.error(f"Got a 'Menu Button' event when there was no active 'Begin' event! Sess ID: {sess_id}")
+            logging.error(f"Got a 'Menu Button' event when there was no active 'Begin' event! Sess ID: {sess_id}, level: {level}")
         else:
             self.end_times[level] = event_client_time
             self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
