@@ -82,7 +82,7 @@ class WaveExtractor(Extractor):
             elif event_type == "SKIP_BUTTON":
                 self._extractFromSkipBtn(level)
             elif event_type == "DISMISS_MENU_BUTTON":
-                print("Stub: Got a DISMISS_MENU_BUTTON event, nothing to do with it.")
+                # print("Stub: Got a DISMISS_MENU_BUTTON event, nothing to do with it.")
             elif event_type == "RESET_BTN_PRESS":
                 self._extractFromResetBtnPress(level)
             elif event_type == "FAIL":
@@ -111,6 +111,16 @@ class WaveExtractor(Extractor):
                 self.features.setValByIndex(feature_name="percentOffsetMoves", index=lvl, new_value=val)
                 val   = self.wave_move_counts[lvl] / total_moves if total_moves > 0 else total_moves
                 self.features.setValByIndex(feature_name="percentWavelengthMoves", index=lvl, new_value=val)
+                # percents of good moves for each type
+                val   = self.features.getValByIndex(feature_name="amplitudeGoodMoveCount", index=lvl) / self.amp_move_counts[lvl] \
+                     if self.amp_move_counts[lvl] > 0 else 0.0
+                self.features.setValByIndex(feature_name="percentAmplitudeGoodMoves", index=lvl, new_value=val)
+                val   = self.features.getValByIndex(feature_name="offsetGoodMoveCount", index=lvl) / self.off_move_counts[lvl] \
+                     if self.off_move_counts[lvl] > 0 else 0.0
+                self.features.setValByIndex(feature_name="percentOffsetGoodMoves", index=lvl, new_value=val)
+                val   = self.features.getValByIndex(feature_name="wavelengthGoodMoveCount", index=lvl) / self.wave_move_counts[lvl] \
+                     if self.wave_move_counts[lvl] > 0 else 0.0
+                self.features.setValByIndex(feature_name="percentWavelengthGoodMoves", index=lvl, new_value=val)
                 # avg slider std devs and ranges.
                 total_slider_stdevs = self.features.getValByIndex(feature_name="sliderAvgStdDevs", index=lvl)
                 val = total_slider_stdevs / total_slider_moves if total_slider_moves > 0 else total_slider_moves
@@ -257,6 +267,10 @@ class WaveExtractor(Extractor):
     #  @param level      The level being played when event occurred.
     #  @param event_data Parsed JSON data from the row being processed.
     def _extractFromMoveRelease(self, level, event_data):
+        def isGoodMove(event_data):
+            end_distance   = abs(event_data["correct_val"] - event_data["end_val"])
+            start_distance = abs(event_data["correct_val"] - event_data["begin_val"])
+            return end_distance < start_distance
         # first, log the type of move.
         if event_data["slider"] != self.last_adjust_type:
             self.last_adjust_type = event_data["slider"]
@@ -265,10 +279,16 @@ class WaveExtractor(Extractor):
             self.features.incValByIndex(feature_name="totalMoveTypeChanges", index=level)
         if event_data["slider"] == "AMPLITUDE":
             self.amp_move_counts[level] += 1
+            if isGoodMove(event_data):
+                self.features.incValByIndex(feature_name="amplitudeGoodMoveCount", index=level)
         elif event_data["slider"] == "OFFSET":
             self.off_move_counts[level] += 1
+            if isGoodMove(event_data):
+                self.features.incValByIndex(feature_name="offsetGoodMoveCount", index=level)
         elif event_data["slider"] == "WAVELENGTH":
             self.wave_move_counts[level] += 1
+            if isGoodMove(event_data):
+                self.features.incValByIndex(feature_name="wavelengthGoodMoveCount", index=level)
         # then, log things specific to slider move:
         if event_data["event_custom"] == "SLIDER_MOVE_RELEASE":
             self.features.incValByIndex(feature_name="totalSliderMoves", index=level)

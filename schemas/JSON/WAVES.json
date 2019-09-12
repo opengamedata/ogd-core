@@ -102,7 +102,13 @@
             "completed":"whether the level was completed or not [bool whether 'COMPLETE' event was found]",
             "percentAmplitudeMoves" : "percent of total moves that were amplitude adjustments in a level",
             "percentOffsetMoves" : "percent of total moves that were offset adjustments in a level",
-            "percentWavelengthMoves" : "percent of total moves that were wavelength adjustments in a level"
+            "percentWavelengthMoves" : "percent of total moves that were wavelength adjustments in a level",
+            "amplitudeGoodMoveCount" : "number of amplitude moves that brought amplitude closer to the correct value",
+            "offsetGoodMoveCount" : "number of offset moves that brought offset closer to the correct value",
+            "wavelengthGoodMoveCount" : "number of wavelength moves that brought wavelength closer to the correct value",
+            "percentAmplitudeGoodMoves" : "percent of amplitude moves that brought amplitude closer to the correct value",
+            "percentOffsetGoodMoves" : "percent of wavelength moves that brought wavelength closer to the correct value",
+            "percentWavelengthGoodMoves" : "percent of wavelength moves that brought wavelength closer to the correct value"
         },
         "per_custom_count": {
             "questionAnswered" : {"count" : 4, "prefix": "QA", "desc" : "The answer the user gave to a given question (or -1 if unanswered)"},
