@@ -82,6 +82,7 @@ class WaveExtractor(Extractor):
             elif event_type == "SKIP_BUTTON":
                 self._extractFromSkipBtn(level)
             elif event_type == "DISMISS_MENU_BUTTON":
+                pass
                 # print("Stub: Got a DISMISS_MENU_BUTTON event, nothing to do with it.")
             elif event_type == "RESET_BTN_PRESS":
                 self._extractFromResetBtnPress(level)
