@@ -20,19 +20,24 @@ from schemas.Schema import Schema
 #  Hopefully not needed too often, if at all.
 #  Just nice to have on hand, in case we ever need it.
 def showHelp():
-    width = 15
+    width = 30
     print(width*"*")
-    print("Invoke main.py with the following format: <python> main.py <cmd> [<args>]")
+    print("usage: <python> main.py <cmd> [<args>]")
+    print("")
     print("<python> is your python command.")
-    print("<cmd> is one of the available commands:")
-    print("    export")
-    print("    help")
-    print("[<args>] are the arguments for the command.")
-    print("    export args: game_id, [start_date, end_date]")
-    print("        game_id    = id of game to export")
-    print("        start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)")
-    print("        end_date   = ending date for export, in form mm/dd/yyyy (default=current day)")
-    print("    help arguments: *None*")
+    print("<cmd>    is one of the available commands:")
+    print("         - export")
+    print("         - export_month")
+    print("         - help")
+    print("[<args>] are the arguments for the command:")
+    print("         - export: game_id, [start_date, end_date]")
+    print("             game_id    = id of game to export")
+    print("             start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)")
+    print("             end_date   = ending date for export, in form mm/dd/yyyy (default=current day)")
+    print("         - export_month: game_id, [month_year]")
+    print("             game_id    = id of game to export")
+    print("             month_year = month (and year) to export, in form mm/yyyy (default=current month)")
+    print("         - help: *None*")
     print(width*"*")
 
 ## Function to set up a connection to a database, via an ssh tunnel.
