@@ -57,8 +57,12 @@ def prepareDB() -> typing.Tuple:
     # set up other global vars as needed:
     logging.basicConfig(level=logging.INFO)
     sql_login = utils.SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
-    ssh_login = utils.SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
-    tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
+    if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
+        ssh_login = utils.SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
+        tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
+    else:
+        db = utils.SQL.connectToMySQL(login=sql_login)
+        tunnel = None
     return (tunnel, db)
 
 ## Function to handle execution of export code. This is the main intended use of
