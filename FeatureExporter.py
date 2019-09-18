@@ -7,6 +7,7 @@ import json
 import logging
 import math
 import os
+import subprocess
 import typing
 from datetime import datetime
 ## import local files
@@ -143,6 +144,13 @@ class FeatureExporter:
             proc_mgr.WriteProcCSVLines()
             proc_mgr.ClearLines()
 
+        args_list = ["mysqldump", f"--host={db_settings['DB_HOST']}",
+                    f"--where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'\"",
+                    f"--user={db_settings['DB_USER']}", f"--password={db_settings['DB_PW']}",
+                    f"{db_settings['DB_NAME_DATA']}", f"{db_settings['table']}"]
+        sql_dump_file = open(sql_dump_full_path, "w")
+        logging.info(f"running sql dump command: {args_list}")
+        subprocess.run(args_list, stdout=sql_dump_file)
         # Finally, update the list of csv files.
         self._updateFileExportList(dataset_id, raw_csv_full_path, proc_csv_full_path,
                                    sql_dump_full_path, request, num_sess)
@@ -207,7 +215,7 @@ class FeatureExporter:
             existing_csvs[self._game_id][dataset_id] = \
                 {"raw":raw_csv_path,
                 "proc":proc_csv_path,
-                "sql":sql_dump_path
+                "sql":sql_dump_path,
                 "start_date":request.start_date.strftime("%m-%d-%Y"),
                 "end_date":request.end_date.strftime("%m-%d-%Y"),
                 "date_modified":datetime.now().strftime("%m-%d-%Y"),
