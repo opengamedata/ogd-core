@@ -116,6 +116,7 @@ class FeatureExporter:
         proc_mgr.WriteProcCSVHeader()
 
         num_sess = len(game_table.session_ids)
+        logging.info(f"Preparing to process {num_sess} sessions.")
         slice_size = self._settings["BATCH_SIZE"]
         session_slices = [[game_table.session_ids[i] for i in
                         range( j*slice_size, min((j+1)*slice_size - 1, num_sess) )] for j in
@@ -132,8 +133,8 @@ class FeatureExporter:
             for row in next_data_set:
                 self._processRow(row, game_table, raw_mgr, proc_mgr)
             time_delta = datetime.now() - start
-            logging.info("Slice processing time: {} min, {:.3f} sec".format(
-                math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60)
+            logging.info("Slice processing time: {} min, {:.3f} sec to handle {} events".format(
+                math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(next_data_set))
             )
             
             # after processing all rows for all slices, write out the session data and reset for next slice.
