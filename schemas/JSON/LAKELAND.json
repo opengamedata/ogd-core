@@ -167,15 +167,6 @@
       "window_min_number_of_poop_in_play": "X Player feature - General: min number of poop in play",
       "window_min_number_of_milk_in_play": "X Player feature - General: min number of milk in play",
 
-      "window_total_num_tiles_hovered_before_placing_home": "X Player feature - General: ave num tiles hovered before placing home",
-      "window_total_num_tiles_hovered_before_placing_food": "X Player feature - General: ave num tiles hovered before placing food",
-      "window_total_num_tiles_hovered_before_placing_farm": "X Player feature - General: ave num tiles hovered before placing farm",
-      "window_total_num_tiles_hovered_before_placing_fertilizer": "X Player feature - General: ave num tiles hovered before placing fertilizer",
-      "window_total_num_tiles_hovered_before_placing_livestock": "X Player feature - General: ave num tiles hovered before placing livestock",
-      "window_total_num_tiles_hovered_before_placing_skimmer": "X Player feature - General: ave num tiles hovered before placing skimmer",
-      "window_total_num_tiles_hovered_before_placing_sign": "X Player feature - General: ave num tiles hovered before placing sign",
-      "window_total_num_tiles_hovered_before_placing_road": "X Player feature - General: ave num tiles hovered before placing (the first) road",
-
       "window_ave_num_tiles_hovered_before_placing_home": "X Player feature - General: ave num tiles hovered before placing home",
       "window_ave_num_tiles_hovered_before_placing_food": "X Player feature - General: ave num tiles hovered before placing food",
       "window_ave_num_tiles_hovered_before_placing_farm": "X Player feature - General: ave num tiles hovered before placing farm",
@@ -186,8 +177,8 @@
       "window_ave_num_tiles_hovered_before_placing_road": "X Player feature - General: ave num tiles hovered before placing (the first) road",
 
       "window_percent_of_compliance_with_a_tutorial_within_x_seconds": "Player feature - Assessment: percent of compliance with a tutorial within x seconds",
-      "window_average_distance_between_poop_placement_and_lake": "Player feature - Assessment: average distance between poop placement and lake",
-      "window_average_distance_between_buildings": "Player feature - Assessment: Average distance between buildings (when they build, how far is it from the closest thing)",
+      "window_average_distance_between_poop_placement_and_lake": "X Player feature - Assessment: average distance between poop placement and lake",
+      "window_avg_avg_distance_between_buildings": "Player feature - Assessment: Average distance between buildings (when they build, how far is it from the closest thing)",
 
       "window_percent_building_a_farm_on_highest_nutrition_tile": "Player feature - General: percent building a farm on the best tile with the highest nutrition that was hovered over during the buy process",
       "window_percent_placing_fertilizer_on_lowest_nutrient_farm": " TODO:::figure out how to calculate this:::TODO Player feature - General: percent placing fertilizer on lowest nutrient farm",
@@ -318,6 +309,23 @@
       "session_secs_to_timewarp_tutorial": "X Player feature - Progress: Time to timewarp tutorial (or 0 if unencountered)",
       "session_secs_to_unattended_farm_tutorial": "X Player feature - Progress: Time to unattended_farm tutorial (or 0 if unencountered)",
       "session_secs_to_unused_fertilizer_tutorial": "X Player feature - Progress: Time to unused_fertilizer tutorial (or 0 if unencountered)",
+
+      "build_a_house_compliance_interval": "The time from the build_a_house tutorial and buying a house",
+      "buy_food_compliance_interval": "The time from the buy_food tutorial and buying food",
+      "build_a_farm_compliance_interval": "The time from the build_a_farm tutorial and buying a farm",
+      "timewarp_compliance_interval": "The time from the timewarp tutorial and buying XXX",
+      "sell_food_compliance_interval": "The time from the sell_food tutorial and buying XXX",
+      "buy_fertilizer_compliance_interval": "The time from the buy_fertilizer tutorial and buying fertilizer",
+      "buy_livestock_compliance_interval": "The time from the buy_livestock tutorial and buying a dairy",
+
+      "session_ave_num_tiles_hovered_before_placing_home": "X Player feature - General: ave num tiles hovered before placing home",
+      "session_ave_num_tiles_hovered_before_placing_food": "X Player feature - General: ave num tiles hovered before placing food",
+      "session_ave_num_tiles_hovered_before_placing_farm": "X Player feature - General: ave num tiles hovered before placing farm",
+      "session_ave_num_tiles_hovered_before_placing_fertilizer": "X Player feature - General: ave num tiles hovered before placing fertilizer",
+      "session_ave_num_tiles_hovered_before_placing_livestock": "X Player feature - General: ave num tiles hovered before placing livestock",
+      "session_ave_num_tiles_hovered_before_placing_skimmer": "X Player feature - General: ave num tiles hovered before placing skimmer",
+      "session_ave_num_tiles_hovered_before_placing_sign": "X Player feature - General: ave num tiles hovered before placing sign",
+      "session_ave_num_tiles_hovered_before_placing_road": "X Player feature - General: ave num tiles hovered before placing (the first) road",
       
       "session_avg_secs_per_blurb_in_another_death_tutorial": "X Player feature - Progress: Time to another_death tutorial (or 0 if unencountered)",
       "session_avg_secs_per_blurb_in_another_member_tutorial": "X Player feature - Progress: Time to another_member tutorial (or 0 if unencountered)",
@@ -402,6 +410,9 @@
       "session_percent_negative_emotes": "X Game feature - General: percent negative emotes",
       "session_percent_neutral_emotes": "X Game feature - General: percent neutral emotes",
 
+      "session_average_distance_between_poop_placement_and_lake": " X Player feature - Assessment: average distance between poop placement and lake",
+      "session_avg_avg_distance_between_buildings": "Player feature - Assessment: Average distance between buildings (when they build, how far is it from the closest thing)",
+
       "session_max_count_of_farms_in_low_productivity": "Game feature - General: max count of farms in low productivity",
       "session_min_count_of_farms_in_low_productivity": "Game feature - General: min count of farms in low productivity",
       "session_max_count_of_lake_tiles_in_bloom": "Game feature - General: max count of lake tiles in bloom",
@@ -409,10 +420,10 @@
       "session_total_num_deaths": "Game feature - General: num deaths per session",
       "session_ave_lake_nutrition": "Game feature - General: ave lake nutrition",
 
-      "session_sessionID":"The player's session ID number for this play session",
-      "session_persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",
-      "session_sessionEventCount":"The total number of events across the entire session",
-      "session_sessionDurationInSecs":"The total time (in seconds) spent over the entire session"
+      "session_sessionID":"X The player's session ID number for this play session",
+      "session_persistentSessionID":"X The session ID for the player's device, persists across multiple players using the same device.",
+      "session_sessionEventCount":"X The total number of events across the entire session",
+      "sessionDuration":"X The total time (in seconds) spent over the entire session"
     }
   },
 
