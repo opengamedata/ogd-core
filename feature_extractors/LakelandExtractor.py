@@ -276,6 +276,8 @@ class LakelandExtractor(Extractor):
                 time_since_start = event_client_time - self._client_start_time
                 fname = f"session_secs_to_{tutorial}_tutorial"
                 self.features.setValByName(feature_name=fname, new_value=time_since_start)
+                self._increment_feature_in_cur_windows(feature_name="window_num_encounter_tutorial")
+                self.features.incAggregateVal(feature_name="session_count_of_tutorials")
                 average_screen_time = 0
                 if d["blurb_history"]:
                     client_time = d["client_time"]
@@ -312,6 +314,7 @@ class LakelandExtractor(Extractor):
         d = event_data_complex_parsed
         if d["success"]:
             tx, ty = d['tile'][4], d['tile'][5]
+            chosen_tile = d['tile']
             buy_name = LakelandExtractor._ENUM_TO_STR['BUYS'][d['buy']]
             self._money_spent_per_item[buy_name] += self._selected_buy_cost
             self.features.incAggregateVal(feature_name="session_money_spent", increment=self._selected_buy_cost)
@@ -337,14 +340,25 @@ class LakelandExtractor(Extractor):
                                                 session_feature=avg_hovers_session_fname, value=len(tile_hovers))
 
             if buy_name == 'farm':
-                chosen_tile = d['tile']
-                chosen_txy = (chosen_tile[4], chosen_tile[5]) # tile tx,ty
+                chosen_txy = (tx,ty)# tile tx,ty
                 window_fname = "window_percent_building_a_farm_on_highest_nutrition_tile"
                 session_fname = "session_percent_building_a_farm_on_highest_nutrition_tile"
                 for t in tile_hovers:
                     if t[3] == 1: #t has the current type of land (only type that farms can be built on)
-                        if t[1] - 2 > chosen_tile[1]: #comparing the nutritions within reason
+                        if t[1] - 2 > chosen_tile[1]: # comparing the nutritions give or take 2/255 ~ 1% of nutrition
                             self.average_in_windows_and_session(window_fname, session_fname, 0) # failed to put on highest nutrition tile
+                            break
+                else:
+                    self.average_in_windows_and_session(window_fname, session_fname, 1)
+
+            if buy_name == 'fertilizer':
+                chosen_txy = (tx,ty)# tile tx,ty
+                window_fname = "window_percent_placing_fertilizer_on_lowest_nutrient_farm"
+                session_fname = "session_percent_placing_fertilizer_on_lowest_nutrient_farm"
+                for t in tile_hovers:
+                    if t[3] == 9: #t has the current type of farm (only type that fertilizer can be built on)
+                        if t[1] - 2 < chosen_tile[1]: # comparing the nutritions give or take 2/255 ~ 1% of nutrition
+                            self.average_in_windows_and_session(window_fname, session_fname, 0) # failed to put on lowest nutrition tile
                             break
                 else:
                     self.average_in_windows_and_session(window_fname, session_fname, 1)
@@ -449,6 +463,9 @@ class LakelandExtractor(Extractor):
 
     def _extractFromSkiptutorial(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
+        self.features.incAggregateVal("session_count_of_skips")
+        self._increment_feature_in_cur_windows("window_num_press_skip_button")
+
 
     def _extractFromSpeed(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
@@ -470,6 +487,7 @@ class LakelandExtractor(Extractor):
 
     def _extractFromAchievement(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
+        self.features.incAggregateVal("session_count_of_achievements")
         achievement_enum = d["achievement"]
         achievement_str = LakelandExtractor._ENUM_TO_STR["ACHIEVEMENTS"]
         time_since_start = (event_client_time - self._client_start_time).seconds
@@ -480,6 +498,8 @@ class LakelandExtractor(Extractor):
     def _extractFromFarmbitdeath(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
         self._change_population(event_client_time,-1)
+        self.features.incAggregateVal("session_num_deaths")
+        self._increment_feature_in_cur_windows("window_num_deaths")
 
 
     def _extractFromBlurb(self, event_client_time, event_data_complex_parsed):

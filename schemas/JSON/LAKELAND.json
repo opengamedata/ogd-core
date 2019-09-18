@@ -187,10 +187,11 @@
       "window_num_inspect_tile": "X Player feature - Number of times the player: inspect a tile",
       "window_num_open_achievements": "X Player feature - Number of times the player: look at achievements",
       "window_num_open_shop": "X Player feature - Number of times the player: open the shop",
+      "window_num_deaths": "Game feature - General: num deaths per session",
 
-      "window_num_ecounter_tutorial": "Player feature - Number of times the player: encounter a tutorial",
-      "window_num_press_skip_button": "Player feature - Number of times the player: press skip button",
-      "window_ave_secs_per_blurb": "? include skips ? Player feature - General: ave time per tutorial screen (blurb) before continue",
+      "window_num_encounter_tutorial": "X Player feature - Number of times the player: encounter a tutorial",
+      "window_num_press_skip_button": "X Player feature - Number of times the player: press skip button",
+      "window_ave_secs_per_blurb": "X ? include skips ? Player feature - General: ave time per tutorial screen (blurb) before continue",
 
       "window_secs_in_nutrition_view": "X Player feature - Total amount of time the player: spend in nutrition view",
 
@@ -263,8 +264,9 @@
     "per_custom_count": {
     },
     "aggregate":{
-      "session_count_of_achievements": "Player feature - Progress: count of achievements",
-      "session_count_of_tutorials": "Player feature - Progress: count of tutorials",
+      "session_count_of_achievements": "X Player feature - Progress: count of achievements",
+      "session_count_of_tutorials": "X Player feature - Progress: count of tutorials",
+      "session_count_of_skips": "X Player feature - Progress: count of skips",
 
       "session_secs_to_exist_achievement": "X Player feature - Progress: Time to the exist achievement (or 0 if not achieved)",
       "session_secs_to_group_achievement": "X Player feature - Progress: Time to the group achievement (or 0 if not achieved)",
@@ -373,6 +375,7 @@
 
       "session_secs_in_nutrition_view": "X Player feature - Total amount of time the player: spend in nutrition view",
 
+
       "session_secs_in_game_speed_pause": "X Player feature - Total amount of time the player: in game speed pause (with client identified to correct for fps) ",
       "session_secs_in_game_speed_play": "X Player feature - Total amount of time the player: in game speed play (with client identified to correct for fps) ",
       "session_secs_in_game_speed_fast": "X Player feature - Total amount of time the player: in game speed fast (with client identified to correct for fps) ",
@@ -417,7 +420,7 @@
       "session_min_count_of_farms_in_low_productivity": "Game feature - General: min count of farms in low productivity",
       "session_max_count_of_lake_tiles_in_bloom": "Game feature - General: max count of lake tiles in bloom",
       "session_min_count_of_lake_tiles_in_bloom": "Game feature - General: min count of lake tiles in bloom",
-      "session_total_num_deaths": "Game feature - General: num deaths per session",
+      "session_num_deaths": "Game feature - General: num deaths per session",
       "session_ave_lake_nutrition": "Game feature - General: ave lake nutrition",
 
       "session_sessionID":"X The player's session ID number for this play session",
