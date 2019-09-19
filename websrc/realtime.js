@@ -86,6 +86,7 @@ class SessionList
    */
   constructor() {
     this.active_game = document.getElementById("mySelect").value;
+    this.active_sessions = [];
     this.active_session_ids = [];
     this.displayed_session_ids = [];
     this.selected_session_id = -1;
@@ -101,8 +102,10 @@ class SessionList
   refreshActiveSessionList() {
     let that = this;
     function active_sessions_handler(result) {
-      that.active_session_ids = JSON.parse(result);
-      console.log(`Refreshed session IDs: ${that.active_session_ids}`);
+      that.active_sessions = JSON.parse(result);
+      console.log(`Refreshed session IDs: ${that.active_sessions}`);
+      that.active_session_ids = [];
+      that.active_sessions.foreach(function(item, index) { that.active_session_ids.push(item["session_id"]) } );
       that.refreshSessionDisplayList();
     };
     Server.get_all_active_sessions(active_sessions_handler, this.active_game);
