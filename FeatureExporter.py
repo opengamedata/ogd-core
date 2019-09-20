@@ -7,6 +7,7 @@ import json
 import logging
 import math
 import os
+import subprocess
 import typing
 from datetime import datetime
 ## import local files
@@ -88,10 +89,9 @@ class FeatureExporter:
 
         dataset_id = "{}_{}_to_{}".format(self._game_id, request.start_date.strftime("%Y%m%d"),\
                                         request.end_date.strftime("%Y%m%d"))
-        raw_csv_name = f"{dataset_id}_raw.csv"
-        raw_csv_full_path = f"{data_directory}/{raw_csv_name}"
-        proc_csv_name  = f"{dataset_id}_proc.csv"
-        proc_csv_full_path = f"{data_directory}/{proc_csv_name}"
+        raw_csv_full_path = f"{data_directory}/{dataset_id}_raw.csv"
+        proc_csv_full_path = f"{data_directory}/{dataset_id}_proc.csv"
+        sql_dump_full_path = f"{data_directory}/{dataset_id}.sql"
         os.makedirs(name=data_directory, exist_ok=True)
         raw_csv_file = open(raw_csv_full_path, "w")
         proc_csv_file = open(proc_csv_full_path, "w")
@@ -116,6 +116,7 @@ class FeatureExporter:
         proc_mgr.WriteProcCSVHeader()
 
         num_sess = len(game_table.session_ids)
+        logging.info(f"Preparing to process {num_sess} sessions.")
         slice_size = self._settings["BATCH_SIZE"]
         session_slices = [[game_table.session_ids[i] for i in
                         range( j*slice_size, min((j+1)*slice_size - 1, num_sess) )] for j in
@@ -132,8 +133,8 @@ class FeatureExporter:
             for row in next_data_set:
                 self._processRow(row, game_table, raw_mgr, proc_mgr)
             time_delta = datetime.now() - start
-            logging.info("Slice processing time: {} min, {:.3f} sec".format(
-                math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60)
+            logging.info("Slice processing time: {} min, {:.3f} sec to handle {} events".format(
+                math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(next_data_set))
             )
             
             # after processing all rows for all slices, write out the session data and reset for next slice.
@@ -143,9 +144,22 @@ class FeatureExporter:
             proc_mgr.WriteProcCSVLines()
             proc_mgr.ClearLines()
 
+        # args_list = ["mysqldump", f"--host={db_settings['DB_HOST']}",
+        #             f"--where=", f"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'",
+        #             f"--user={db_settings['DB_USER']}", f"--password={db_settings['DB_PW']}",
+        #             f"{db_settings['DB_NAME_DATA']}", f"{db_settings['table']}"]
+        command = f"mysqldump --host={db_settings['DB_HOST']} \
+ --where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'\" \
+ --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']}\
+ > {sql_dump_full_path}"
+        sql_dump_file = open(sql_dump_full_path, "w")
+        # logging.info(f"running sql dump command: {subprocess.list2cmdline(args_list)}")
+        # subprocess.run(args_list, stdout=sql_dump_file)
+        logging.info(f"running sql dump command: {command}")
+        os.system(command)
         # Finally, update the list of csv files.
         self._updateFileExportList(dataset_id, raw_csv_full_path, proc_csv_full_path,
-                                   request, num_sess)
+                                   sql_dump_full_path, request, num_sess)
 
         return True
 
@@ -193,20 +207,37 @@ class FeatureExporter:
     #  @param request       The original request for data export
     #  @param num_sess      The number of sessions included in the recent export.
     def _updateFileExportList(self, dataset_id: str, raw_csv_path: str, proc_csv_path: str,
-        request: Request, num_sess: int):
-        existing_csvs = utils.loadJSONFile("file_list.json", self._settings["DATA_DIR"]) or {}
+        sql_dump_path: str, request: Request, num_sess: int):
+        self._backupFileExportList()
+        try:
+            existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR'])
+        except Exception as err:
+            existing_csvs = {}
+        finally:
+            existing_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json", "w")
+            logging.info(f"opened existing csv file at {existing_csv_file.name}")
+            if not self._game_id in existing_csvs:
+                existing_csvs[self._game_id] = {}
+            # raw_stat = os.stat(raw_csv_full_path)
+            # proc_stat = os.stat(proc_csv_full_path)
+            existing_csvs[self._game_id][dataset_id] = \
+                {"raw":raw_csv_path,
+                "proc":proc_csv_path,
+                "sql":sql_dump_path,
+                "start_date":request.start_date.strftime("%m-%d-%Y"),
+                "end_date":request.end_date.strftime("%m-%d-%Y"),
+                "date_modified":datetime.now().strftime("%m-%d-%Y"),
+                "sessions":num_sess
+                }
+            existing_csv_file.write(json.dumps(existing_csvs, indent=4))
 
-        existing_csv_file = open("{}/file_list.json".format(self._settings["DATA_DIR"]), "w")
-        if not self._game_id in existing_csvs:
-            existing_csvs[self._game_id] = {}
-        # raw_stat = os.stat(raw_csv_full_path)
-        # proc_stat = os.stat(proc_csv_full_path)
-        existing_csvs[self._game_id][dataset_id] = \
-            {"raw":raw_csv_path,
-            "proc":proc_csv_path,
-            "start_date":request.start_date.strftime("%m-%d-%Y"),
-            "end_date":request.end_date.strftime("%m-%d-%Y"),
-            "date_modified":datetime.now().strftime("%m-%d-%Y"),
-            "sessions":num_sess
-            }
-        existing_csv_file.write(json.dumps(existing_csvs, indent=4))
+    def _backupFileExportList(self) -> bool:
+        try:
+            existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR']) or {}
+        except Exception as err:
+            logging.error("Could not back up file_list.json")
+            return False
+        backup_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json.bak", "w")
+        backup_csv_file.write(json.dumps(existing_csvs, indent=4))
+        logging.info(f"Backed up file_list.json to {backup_csv_file.name}")
+        return True

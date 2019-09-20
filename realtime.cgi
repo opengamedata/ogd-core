@@ -34,15 +34,22 @@ class RTServer:
             filt = f"`app_id`='{game_id}' AND `server_time` > '{start_time.isoformat()}'"
             active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
                                                    db_name=DB_NAME_DATA, table=DB_TABLE,\
-                                                   columns=["session_id", "remote_addr"], filter=filt,\
-                                                   sort_columns=["remote_addr", "session_id"], distinct=True)
+                                                   columns=["session_id"], filter=filt,\
+                                                   sort_columns=["session_id"], distinct=True)
 
             _cgi_debug(f"Got result from db: {str(active_sessions_raw)}", "Info", log_file)
-            ID_INDEX = 0
-            IP_INDEX = 1
             ret_val = []
             for item in active_sessions_raw:
-                ret_val.append(item[ID_INDEX])
+                sess_id = item[0]
+                filt = f"`session_id`={sess_id}"
+                max_level_raw = utils.SQL.SELECT(cursor=cursor,
+                                                 db_name=DB_NAME_DATA, table=DB_TABLE,\
+                                                 columns=["MAX(level)"], filter=filt)
+                cur_level_raw = utils.SQL.SELECT(cursor=cursor,
+                                                 db_name=DB_NAME_DATA, table=DB_TABLE,\
+                                                 columns=["level"], filter=filt, limit=1,\
+                                                 sort_columns=["client_time"], sort_direction="DESC")
+                ret_val.append({"session_id":sess_id, "max_level":max_level_raw[0], "cur_level":cur_level_raw[0]})
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             _cgi_debug(f"returning: {str(ret_val)}", "Info", log_file)
             return ret_val

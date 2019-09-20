@@ -117,7 +117,8 @@ class SQL:
     @staticmethod
     def disconnectMySQLViaSSH(tunnel, db):
         db.close()
-        tunnel.stop()
+        if tunnel is not None:
+            tunnel.stop()
 
     ## Function to build and execute SELECT statements on a database connection.
     #  @param cursor        A database cursor, retrieved from the active connection.

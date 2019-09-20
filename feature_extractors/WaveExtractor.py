@@ -31,13 +31,20 @@ class WaveExtractor(Extractor):
         self.amp_move_counts:  typing.Dict   = {}
         self.off_move_counts:  typing.Dict   = {}
         self.wave_move_counts: typing.Dict   = {}
+        self.latest_complete_lvl8 = None
+        self.latest_complete_lvl16 = None
+        self.latest_answer_Q0 = None
+        self.latest_answer_Q2 = None
         self.active_begin = None
+        self.saw_first_move: bool = False
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
-        # we specifically want to set the default value for questionAnswered to -1, for unanswered.
+        # we specifically want to set the default value for questionAnswered to "null", for unanswered.
         for ans in self.features.getValByName(feature_name="questionAnswered").keys():
             self.features.setValByIndex(feature_name="questionAnswered", index=ans, new_value="null")
         for q in self.features.getValByName(feature_name="questionCorrect"):
             self.features.setValByIndex(feature_name="questionCorrect", index=q, new_value="null")
+        for elem in self.features.getValByName(feature_name="firstMoveType"):
+            self.features.setValByIndex(feature_name="firstMoveType", index=elem, new_value="null")
 
     ## Function to perform extraction of features from a row.
     #
@@ -91,7 +98,7 @@ class WaveExtractor(Extractor):
             elif event_type in ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"] :
                 self._extractFromMoveRelease(level, event_data_complex_parsed)
             elif event_type == "QUESTION_ANSWER":
-                self._extractFromQuestionAnswer(event_data_complex_parsed)
+                self._extractFromQuestionAnswer(event_data_complex_parsed, event_client_time)
                 # print("Q+A: " + str(event_data_complex_parsed))
             else:
                 raise Exception("Found an unrecognized event type: {}".format(event_type))
@@ -198,6 +205,12 @@ class WaveExtractor(Extractor):
     #  @param event_client_time The time when this event occurred, according to game client.
     def _extractFromComplete(self, level, event_client_time):
         self.features.incValByIndex(feature_name="completeCount", index=level)
+        # track latest completion of levels 8 & 16, for the timeToAnswerMS features.
+        if (level == 8):
+            self.latest_complete_lvl8 = event_client_time
+        elif (level == 16):
+            self.latest_complete_lvl16 = event_client_time
+        # Handle tracking of level play times.
         if self.active_begin == None:
             sess_id = self.features.getValByName(feature_name="sessionID")
             logging.error(f"Got a 'Complete' event when there was no active 'Begin' event! Sess ID: {sess_id}, level: {level}")
@@ -257,7 +270,8 @@ class WaveExtractor(Extractor):
     def _extractFromFail(self, level):
         self.features.incValByIndex(feature_name="totalFails", index=level)
 
-    ## Private function to extract features from a "SLIDER_MOVE_RELEASE" event.
+    ## Private function to extract features from a "SLIDER_MOVE_RELEASE" or 
+    #  "ARROW_MOVE_RELEASE" event.
     #  The features affected are:
     #  - totalMoveTypeChanges
     #  - totalSliderMoves
@@ -282,14 +296,23 @@ class WaveExtractor(Extractor):
             self.amp_move_counts[level] += 1
             if isGoodMove(event_data):
                 self.features.incValByIndex(feature_name="amplitudeGoodMoveCount", index=level)
+            if not self.saw_first_move:
+                self.saw_first_move = True
+                self.features.setValByIndex(feature_name="firstMoveType", index=level, new_value='A')
         elif event_data["slider"] == "OFFSET":
             self.off_move_counts[level] += 1
             if isGoodMove(event_data):
                 self.features.incValByIndex(feature_name="offsetGoodMoveCount", index=level)
+            if not self.saw_first_move:
+                self.saw_first_move = True
+                self.features.setValByIndex(feature_name="firstMoveType", index=level, new_value='O')
         elif event_data["slider"] == "WAVELENGTH":
             self.wave_move_counts[level] += 1
             if isGoodMove(event_data):
                 self.features.incValByIndex(feature_name="wavelengthGoodMoveCount", index=level)
+            if not self.saw_first_move:
+                self.saw_first_move = True
+                self.features.setValByIndex(feature_name="firstMoveType", index=level, new_value='W')
         # then, log things specific to slider move:
         if event_data["event_custom"] == "SLIDER_MOVE_RELEASE":
             self.features.incValByIndex(feature_name="totalSliderMoves", index=level)
@@ -309,8 +332,14 @@ class WaveExtractor(Extractor):
     #  - questionCorrect
     #
     #  @param event_data Parsed JSON data from the row being processed.
-    def _extractFromQuestionAnswer(self, event_data):
+    def _extractFromQuestionAnswer(self, event_data, event_client_time):
         q_num = event_data["question"]
+        if (q_num == 0):
+            self.latest_answer_Q0 = event_client_time
+        elif (q_num == 2):
+            self.latest_answer_Q2 = event_client_time
+        answer_time = self._calcAnswerTime(q_num=q_num, event_client_time=event_client_time)
+        self.features.setValByIndex(feature_name="timeToAnswerMS", index=q_num, new_value=answer_time)
         self.features.setValByIndex(feature_name="questionAnswered", index=q_num,
                                     new_value=event_data["answered"])
         correctness = 1 if event_data["answered"] == event_data["answer"] else 0
@@ -346,3 +375,15 @@ class WaveExtractor(Extractor):
                 return -1
         else:
             return 0
+        
+    def _calcAnswerTime(self, q_num:int, event_client_time) -> int:
+        millis: float
+        if q_num == 0:
+            millis = 1000.0 * (event_client_time - self.latest_complete_lvl8).total_seconds()
+        elif q_num == 1:
+            millis = 1000.0 * (event_client_time - self.latest_answer_Q0).total_seconds()
+        elif q_num == 2:
+            millis = 1000.0 * (event_client_time - self.latest_complete_lvl16).total_seconds()
+        elif q_num == 3:
+            millis = 1000.0 * (event_client_time - self.latest_answer_Q2).total_seconds()
+        return int(millis)
