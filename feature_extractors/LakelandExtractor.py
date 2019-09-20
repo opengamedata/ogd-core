@@ -239,6 +239,7 @@ class LakelandExtractor(Extractor):
         cur_num_items_on_screen = LakelandExtractor.onscreen_item_dict()
         items = LakelandExtractor.array_to_mat(4,items)
         tiles = LakelandExtractor.array_to_mat(4,tiles)
+        tile_nutritions = [t[1] for t in tiles] # 1 is the nutrition index
         farmbits = LakelandExtractor.array_to_mat(9, farmbits)
 
         for it in items:
@@ -257,6 +258,19 @@ class LakelandExtractor(Extractor):
             self._set_feature_min_in_cur_windows(min_num_feature_name, cur_num)
 
         total_money_earned = sum(self._money_spent_per_item.values()) + money
+        self.features.setValByName(feature_name="session_money_earned", new_value=total_money_earned)
+        avg_lake_nutrition = self._avg_lake_nutrition(tile_nutritions)
+        fname_window = "window_ave_lake_nutrition"
+        fname_session = "session_ave_lake_nutrition"
+        self.average_in_windows_and_session(window_feature=fname_window, session_feature=fname_session,
+                                            value=avg_lake_nutrition)
+
+        farms_low_productivity = [t for t in tiles if t[3] == 9 and t[1] < 3] #type == farm and nutrition < 3 (the circle is heavily black)
+        self._set_feature_max_min_sess_win("num_farms_low_productivity", len(farms_low_productivity))
+
+        lake_bloom = [t for t in tiles if t[3] == 5 and t[1] > 25] # lake tiles bloom when nutrition > 10% of 255,
+        # so technically not all tiles > 25 nutrition are blooming, but we will put the cutoff here
+        self._set_feature_max_min_sess_win("num_lake_tiles_in_bloom", len(lake_bloom))
 
 
     def _extractFromStartgame(self, event_client_time, event_data_complex_parsed):
@@ -590,6 +604,20 @@ class LakelandExtractor(Extractor):
         prev_val = self.features.getValByName(feature_name=feature_name)
         if val < prev_val:
             self.features.setValByName(feature_name=feature_name, new_value=val)
+
+    def _set_feature_max_min_sess_win(self, fname_base, val):
+        """feature must have the same fname_base that gets put on the following four features:
+        - session_max_
+        - session_min_
+        - window_max_
+        - window_min_ """
+
+        self._set_feature_max_in_cur_windows(feature_name="window_max_"+fname_base, val=val)
+        self._set_feature_min_in_cur_windows(feature_name="window_min_"+fname_base, val=val)
+        self._set_feature_max_in_session(feature_name="session_max_"+fname_base, val=val)
+        self._set_feature_min_in_session(feature_name="session_min_"+fname_base, val=val)
+
+
 
     def _set_default_window_val(self, feature_name, val):
         for w in self.window_range:

@@ -250,11 +250,13 @@
       "window_percent_positive_emotes": "X Game feature - General: percent positive emotes",
       "window_percent_negative_emotes": "X Game feature - General: percent negative emotes",
       "window_percent_neutral_emotes": "X Game feature - General: percent neutral emotes",
+      "window_ave_lake_nutrition": "Game feature - General: ave lake nutrition",
 
-      "window_max_count_of_farms_in_low_productivity": "Game feature - General: max count of farms in low productivity",
-      "window_min_count_of_farms_in_low_productivity": "Game feature - General: min count of farms in low productivity",
-      "window_max_count_of_lake_tiles_in_bloom": "Game feature - General: max count of lake tiles in bloom",
-      "window_min_count_of_lake_tiles_in_bloom": "Game feature - General: min count of lake tiles in bloom"
+
+      "window_max_num_farms_low_productivity": "Game feature - General: max count of farms in low productivity",
+      "window_min_num_farms_low_productivity": "Game feature - General: min count of farms in low productivity",
+      "window_max_num_lake_tiles_in_bloom": "Game feature - General: max count of lake tiles in bloom",
+      "window_min_num_lake_tiles_in_bloom": "Game feature - General: min count of lake tiles in bloom"
 
 
       
@@ -416,10 +418,10 @@
       "session_average_distance_between_poop_placement_and_lake": " X Player feature - Assessment: average distance between poop placement and lake",
       "session_avg_avg_distance_between_buildings": "Player feature - Assessment: Average distance between buildings (when they build, how far is it from the closest thing)",
 
-      "session_max_count_of_farms_in_low_productivity": "Game feature - General: max count of farms in low productivity",
-      "session_min_count_of_farms_in_low_productivity": "Game feature - General: min count of farms in low productivity",
-      "session_max_count_of_lake_tiles_in_bloom": "Game feature - General: max count of lake tiles in bloom",
-      "session_min_count_of_lake_tiles_in_bloom": "Game feature - General: min count of lake tiles in bloom",
+      "session_max_num_farms_low_productivity": "Game feature - General: max count of farms in low productivity",
+      "session_min_num_farms_low_productivity": "Game feature - General: min count of farms in low productivity",
+      "session_max_num_lake_tiles_in_bloom": "Game feature - General: max count of lake tiles in bloom",
+      "session_min_num_lake_tiles_in_bloom": "Game feature - General: min count of lake tiles in bloom",
       "session_num_deaths": "Game feature - General: num deaths per session",
       "session_ave_lake_nutrition": "Game feature - General: ave lake nutrition",
 
@@ -449,5 +451,6 @@
         "req_id":"Another ID of some kind, to be removed",
         "session_n":"Counter of events in the session, from 0. A row with session_n = i is the (i+1)-th event of the session",
         "http_user_agent":"Data on the type of web browser, OS, etc. in use by the player"
-    }
+    },
+  -- add more here
 }
