@@ -23,11 +23,11 @@ class Server
 
    //REALTIME API CALL
 
-   static get_all_active_sessions(callback, gameID) //gameID eg 'CRYSTAL'
+   static get_all_active_sessions(callback, gameID, require_player_id) //gameID eg 'CRYSTAL'
    {
    //returns object of form:
       // {[SessID0, SessID1, SessID2, ... sessIDn]}
-      var post_string = `method=get_all_active_sessions&gameID=${gameID}`
+      var post_string = `method=get_all_active_sessions&gameID=${gameID}&require_player_id=${require_player_id}`
       console.log(`Making request for all active sessions: ${post_string}`)
       Server._execute_request(callback, post_string)
    }

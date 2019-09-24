@@ -25,20 +25,21 @@ def _cgi_debug(msg: str, level: str, file):
 
 class RTServer:
     @staticmethod
-    def getAllActiveSessions(game_id: str) -> typing.List:
-        tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
+    def getAllActiveSessions(game_id: str, require_player_id: bool) -> typing.Dict:
+        tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
         log_file = open("./python_errors.log", "a")
         try:
             cursor = db.cursor()
             start_time = datetime.now() - timedelta(minutes=5)
-            filt = f"`app_id`='{game_id}' AND `server_time` > '{start_time.isoformat()}'"
+            player_id_filter = "AND `player_id` IS NOT NULL" if require_player_id else ""
+            filt = f"`app_id`='{game_id}' AND `server_time` > '{start_time.isoformat()}' {player_id_filter}"
             active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
                                                    db_name=DB_NAME_DATA, table=DB_TABLE,\
-                                                   columns=["session_id"], filter=filt,\
+                                                   columns=["session_id", "player_id"], filter=filt,\
                                                    sort_columns=["session_id"], distinct=True)
 
             _cgi_debug(f"Got result from db: {str(active_sessions_raw)}", "Info", log_file)
-            ret_val = []
+            ret_val = {}
             for item in active_sessions_raw:
                 sess_id = item[0]
                 filt = f"`session_id`={sess_id}"
@@ -49,7 +50,7 @@ class RTServer:
                                                  db_name=DB_NAME_DATA, table=DB_TABLE,\
                                                  columns=["level"], filter=filt, limit=1,\
                                                  sort_columns=["client_time"], sort_direction="DESC")
-                ret_val.append({"session_id":sess_id, "max_level":max_level_raw[0], "cur_level":cur_level_raw[0]})
+                ret_val[sess_id] = {"session_id":sess_id, "max_level":max_level_raw[0][0], "cur_level":cur_level_raw[0][0]}
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             _cgi_debug(f"returning: {str(ret_val)}", "Info", log_file)
             return ret_val
@@ -68,7 +69,7 @@ class RTServer:
 
     @staticmethod
     def getFeaturesBySessID(sess_id: str, game_id: str, features = None) -> typing.Dict:
-        tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
+        tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
         try:
             log_file = open("./python_errors.log", "a")
             cursor = db.cursor()
@@ -141,12 +142,22 @@ class RTServer:
         models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
         ret_val = {}
         features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
-        features_parsed = {feature_name: float(features_raw[feature_name]) for feature_name in features_raw.keys()}
+        # print(f"features_raw: {features_raw}")
+        features_parsed = RTServer._parseRawToDict(features_raw)
         for model in models.keys():
             ret_val[model] = RTServer.EvaluateLogRegModel(models[model], features_parsed)
 
         return {sess_id:ret_val}
 
+    @staticmethod
+    def _parseRawToDict(features_raw):
+        ret_val = {}
+        for feature_name in features_raw.keys():
+            if features_raw[feature_name].replace('.','',1).isdigit():
+                ret_val[feature_name] = float(features_raw[feature_name])
+            else:
+                ret_val[feature_name] = features_raw[feature_name]
+        return ret_val
     ## Function to evaluate a logistic regression model, creating a prediction.
     #  This is based around the equation for probability of Y=1, denoted as p:
     #  p = 1 / (1 + e^-logit(X)),
@@ -186,21 +197,11 @@ try:
     settings = utils.loadJSONFile("config.json")
     db_settings = settings["db_config"]
     DB_NAME_DATA = db_settings["DB_NAME_DATA"]
-    DB_USER = db_settings['DB_USER']
-    DB_PW = db_settings['DB_PW']
-    DB_HOST = db_settings['DB_HOST']
-    DB_PORT = db_settings['DB_PORT']
     DB_TABLE = db_settings["table"]
     ssh_settings = settings["ssh_config"]
-    SSH_USER = ssh_settings['SSH_USER']
-    SSH_PW = ssh_settings['SSH_PW']
-    SSH_HOST = ssh_settings['SSH_HOST']
-    SSH_PORT = ssh_settings['SSH_PORT']
 
     # set up other global vars as needed:
     logging.basicConfig(level=logging.INFO)
-    sql_login = utils.SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
-    ssh_login = utils.SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
     log_file = open("./python_errors.log", "a")
 
     request = cgi.FieldStorage()
@@ -210,7 +211,8 @@ try:
         body = "Hello, world."
     elif method == "get_all_active_sessions":
         game_id = request.getvalue("gameID")
-        body = RTServer.getAllActiveSessions(game_id=game_id)
+        require_player_id = request.getvalue("require_player_id")
+        body = RTServer.getAllActiveSessions(game_id=game_id, require_player_id=require_player_id)
     elif method == "get_active_sessions_by_loc":
         game_id = request.getvalue("gameID")
         state = request.getvalue("state")
@@ -239,7 +241,7 @@ try:
     _cgi_debug(f"method: {method}; result string: {result}", "Info", log_file)
     print(result)
 except Exception as err:
-    print(f"Error in realtime script! {str(err)}")
+    print(f"Error in realtime script! {str(err)}, traceback:\n{traceback.format_exc()}")
     traceback.print_tb(err.__traceback__)
     #print(f"Traceback: {traceback.print_stack(limit=10)}")
     err_file = open("./python_errors.log", "a")
