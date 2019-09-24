@@ -51,6 +51,14 @@ class GameTable:
                                         distinct=True)
         self.max_level = max_min_raw[0][0]
         self.min_level = max_min_raw[0][1]
+        self.playtimes = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
+                                        columns=["MAX(client_time)", "MIN(client_time)"], grouping='session_id', filter="app_id=\"{}\"".format(request.game_id),
+                                        distinct=True)
+        if request.game_id == 'LAKELAND':
+            play_durations = [p[0]-p[1] for p in self.playtimes]
+            max_play_duration = max(play_durations)
+            self.min_level = 0
+            self.max_level = max_play_duration.seconds // settings['WINDOW_SIZE_SECONDS']
         self.session_ids = request.retrieveSessionIDs(db_cursor=db_cursor, db_settings=db_settings)
         # logging.debug("session_ids: " + str(session_ids))
     

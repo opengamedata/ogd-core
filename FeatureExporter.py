@@ -180,6 +180,8 @@ class FeatureExporter:
         # make sure we get *something* in the event_custom name
         # TODO: Make a better solution for games without event_custom fields in the logs themselves
         if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
+            if type(complex_data_parsed) is not type({}):
+                complex_data_parsed = {"item": complex_data_parsed}
             complex_data_parsed["event_custom"] = row[game_table.event_custom_index]
         elif "event_custom" not in complex_data_parsed.keys():
             complex_data_parsed["event_custom"] = row[game_table.event_index]

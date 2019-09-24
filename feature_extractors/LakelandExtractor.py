@@ -1,22 +1,22 @@
 ## import standard libraries
 import bisect
 import datetime
-import json
 import logging
-import typing
+import json
+
 ## import local files
 import utils
 from feature_extractors.Extractor import Extractor
 from GameTable import GameTable
 from schemas.Schema import Schema
-from enum import Enum
 from collections import defaultdict, Counter
-import copy
+from math import sqrt
 
 
 
-## @class CrystalExtractor
-#  Extractor subclass for extracting features from Crystal game data.
+
+## @class LakelandExtractor
+#  Extractor subclass for extracting features from Lakeland game data.
 class LakelandExtractor(Extractor):
     _TUTORIAL_MODE = [
         "build_a_house",
@@ -26,8 +26,6 @@ class LakelandExtractor(Extractor):
         "sell_food",
         "buy_fertilizer",
         "buy_livestock",
-        "livestock",
-        "poop",
     ]
     _STR_TO_ENUM = utils.loadJSONFile("Lakeland Enumerators/Lakeland Enumerators.json")
     _ENUM_TO_STR = {cat: {y: x for x, y in ydict.items()} for cat, ydict in _STR_TO_ENUM.items()}
@@ -49,28 +47,45 @@ class LakelandExtractor(Extractor):
         "sale_txt": 0
     }
 
-    ## Constructor for the CrystalExtractor class.
+    _TUT_NAME_COMPLIANT_BUY_NAME = [
+        ("build_a_house", "house"),
+        ("buy_food", "food"),
+        ("build_a_farm", "farm"),
+        ("buy_fertilizer", "fertilizer"),
+        ("buy_livestock", "livestock"),
+    ]
+    _BUILDING_TYPES =["home","farm","livestock"]
+
+    ## Constructor for the LakelandExtractor class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.
     #  Sets the sessionID feature.
-    #  Further, initializes all Q&A features to -1, representing unanswered questions.
     #
     #  @param session_id The id number for the session whose data is being processed
     #                    by this extractor instance.
     #  @param game_table A data structure containing information on how the db
-    #                    table assiciated with this game is structured.
+    #                    table associated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
     def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
+        # Set window and overlap size
+        settings = utils.loadJSONFile("config.json")
+        self._NUM_SECONDS_PER_WINDOW =  settings["WINDOW_SIZE_SECONDS"]
+        self._NUM_SECONDS_PER_WINDOW_OVERLAP = settings["WINDOW_OVERLAP_SECONDS"]
+        # set window range
+        max_secs = max(p[0]-p[1] for p in game_table.playtimes).seconds
+        self.window_range = range(max_secs // self._NUM_SECONDS_PER_WINDOW + 1)
+        # Initialize superclass
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
-        self.features.features = {k: defaultdict(lambda: {'val': 0, 'prefix': 'lvl'}) if v else v
-                                  for k,v in self.features.features.items()}
+        # Set any 'min' feature to have a default of positive infinity
         for k in self.features.features.keys():
-            if 'min' in k and 'window' in k:
-                self._set_default_window_val(feature_name=k, val=float('inf'))
+            if 'min' in k:
+                if 'window' in k:
+                    self._set_default_window_val(feature_name=k, val=float('inf'))
+                if 'session' in k:
+                    self._set_default_session_val(feature_name=k, val=float('inf'))
 
-        self._NUM_SECONDS_PER_WINDOW = 5 * 60
-        self._NUM_SECONDS_PER_WINDOW_OVERLAP = 1 * 60
+        # Initialize Lakeland variables
         self._tiles = defaultdict(lambda: {'marks': [1,1,1,1], 'type':0})
         self._tile_og_types = []
         self._client_start_time = None
@@ -91,6 +106,12 @@ class LakelandExtractor(Extractor):
         self.prev_windows = []
         self._curr_money = 0
         self._cur_speed = 2 #default is play, 2
+        self._tutorial_compliance = {tut:None for tut in LakelandExtractor._TUTORIAL_MODE}
+        self.lake_xys = []
+        self.average_handler_window = defaultdict(lambda: {k:{'n': 0, 'total': 0} for k in self.window_range})
+        self.average_handler_session = defaultdict(lambda: {'n': 0, 'total': 0})
+        self.building_xys = []
+
 
 
 
@@ -102,7 +123,6 @@ class LakelandExtractor(Extractor):
     #                     table assiciated with this game is structured.
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
         # put some data in local vars, for readability later.
-        level = row_with_complex_parsed[game_table.level_index]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
         event_type = row_with_complex_parsed[game_table.event_custom_index]
         event_client_time = row_with_complex_parsed[game_table.client_time_index]
@@ -119,33 +139,24 @@ class LakelandExtractor(Extractor):
                                            new_value=row_with_complex_parsed[game_table.pers_session_id_index])
             # if this is the first row
             if not self._client_start_time:
-
+                # initialize this time as the start
                 self._client_start_time = event_client_time
-
-
                 self._last_speed_change = self._client_start_time
 
             # set current windows
             self._prev_windows = self._cur_windows
             self._cur_windows = self._get_windows_at_time(event_client_time)
-            # make sure windows are both in the list of all windows
-            for window in self._cur_windows:
-                if window not in self._windows:
-                    bisect.insort(self._windows, window)
-                if window not in self._prev_windows:
-                    self.calculate_window_end(window)
 
-            # Ensure we have private data initialized for this level.
-            if not level in self.levels:
-                bisect.insort(self.levels, level)
 
-            # First, record that an event of any kind occurred, for the level & session
-            self.features.incValByIndex(feature_name="window_eventCount", index=level)
+            # Record that an event of any kind occurred, for the window & session
+            self._increment_feature_in_cur_windows(feature_name="window_eventCount", increment=1)
             self.features.incAggregateVal(feature_name="session_sessionEventCount")
+            time_since_start = event_client_time - self._client_start_time
+            self.features.setValByName(feature_name="sessionDuration",
+                                       new_value=time_since_start)
 
             # Then, handle cases for each type of event
             if LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "GAMESTATE":
-                return
                 self._extractFromGamestate(event_client_time, event_data_complex_parsed)
             elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "STARTGAME":
                 self._extractFromStartgame(event_client_time, event_data_complex_parsed)
@@ -168,8 +179,7 @@ class LakelandExtractor(Extractor):
             elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "TILEUSESELECT":
                 self._extractFromTileuseselect(event_client_time, event_data_complex_parsed)
             elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "ITEMUSESELECT":
-                pass
-            #     self._extractFromItemuseselect(event_client_time, event_data_complex_parsed)
+                self._extractFromItemuseselect(event_client_time, event_data_complex_parsed)
             elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "TOGGLENUTRITION":
                 self._extractFromTogglenutrition(event_client_time, event_data_complex_parsed)
             elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "TOGGLESHOP":
@@ -199,9 +209,9 @@ class LakelandExtractor(Extractor):
 
     def _extractFromGamestate(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
-        tiles = d["tiles"]
-        farmbits = d["farmbits"]
-        items = d["items"]
+        tiles = LakelandExtractor.read_stringified_array(d["tiles"])
+        farmbits = LakelandExtractor.read_stringified_array(d["farmbits"])
+        items = LakelandExtractor.read_stringified_array(d["items"])
         money = d["money"]
         speed = d["speed"]
         achievements = d["achievements"]
@@ -229,8 +239,8 @@ class LakelandExtractor(Extractor):
         cur_num_items_on_screen = LakelandExtractor.onscreen_item_dict()
         items = LakelandExtractor.array_to_mat(4,items)
         tiles = LakelandExtractor.array_to_mat(4,tiles)
+        tile_nutritions = [t[1] for t in tiles] # 1 is the nutrition index
         farmbits = LakelandExtractor.array_to_mat(9, farmbits)
-        num_farmbits = len(farmbits)
 
         for it in items:
             type = it[2]
@@ -239,44 +249,35 @@ class LakelandExtractor(Extractor):
         for t in tiles:
             type = t[3]
             key = LakelandExtractor._ENUM_TO_STR["TILE TYPE"][type]
-            cur_num_items_on_screen[key] += 1
+            if key in cur_num_items_on_screen:
+                cur_num_items_on_screen[key] += 1
         for (key, cur_num) in cur_num_items_on_screen.items():
             max_num_feature_name = 'window_max_number_of_'+ key +'_in_play'
             min_num_feature_name = 'window_min_number_of_' + key + '_in_play'
-            self._set_feature_max_in_cur_windows(cur_num,max_num_feature_name)
-            self._set_feature_min_in_cur_windows(cur_num, min_num_feature_name)
-        # for (k,cur_num) in cur_num_items_on_screen.items():
-        #     if cur_num > self._max_num_items_on_screen[k]:
-        #         self._max_num_items_on_screen = cur_num
-
-        # for combo_type, combo_mark in LakelandExtractor._ITEM_MARK_COMBINATIONS:
-        #     # each item type is it[2] and the mark is it[3]
-        #     match = lambda it: combo_type == it[2] and combo_mark == it[3]
-        #     count_matches = sum([match(it) for it in items])
-        #     count_matches_per_capita = count_matches/num_farmbits
-        #     max_per_capita_fname = f"window_max_num_per_capita_of_{combo_type}_marked_{combo_mark}"
-        #     min_per_capita_fname = f"window_min_num_per_capita_of_{combo_type}_marked_{combo_mark}"
-        #     total_fname = f"window_total_{combo_type}_marked_{combo_mark}"
-        #     self._set_feature_max_in_cur_windows(max_per_capita_fname, count_matches_per_capita)
-        #     self._set_feature_min_in_cur_windows(min_per_capita_fname, count_matches_per_capita)
-        #     self._increment_feature_in_cur_windows(total_fname,count_matches)
-
-
-
-
-
-
-
-        food_marked_eat = lambda it: it[2] == "food" and it[3] == "feed"
-        num_food_marked_eat = sum(list(map(food_marked_eat, items)))
-        num_food_marked_eat_per_capita = num_food_marked_eat/num_farmbits
+            self._set_feature_max_in_cur_windows(max_num_feature_name, cur_num)
+            self._set_feature_min_in_cur_windows(min_num_feature_name, cur_num)
 
         total_money_earned = sum(self._money_spent_per_item.values()) + money
+        self.features.setValByName(feature_name="session_money_earned", new_value=total_money_earned)
+        avg_lake_nutrition = self._avg_lake_nutrition(tile_nutritions)
+        fname_window = "window_ave_lake_nutrition"
+        fname_session = "session_ave_lake_nutrition"
+        self.average_in_windows_and_session(window_feature=fname_window, session_feature=fname_session,
+                                            value=avg_lake_nutrition)
+
+        farms_low_productivity = [t for t in tiles if t[3] == 9 and t[1] < 3] #type == farm and nutrition < 3 (the circle is heavily black)
+        self._set_feature_max_min_sess_win("num_farms_low_productivity", len(farms_low_productivity))
+
+        lake_bloom = [t for t in tiles if t[3] == 5 and t[1] > 25] # lake tiles bloom when nutrition > 10% of 255,
+        # so technically not all tiles > 25 nutrition are blooming, but we will put the cutoff here
+        self._set_feature_max_min_sess_win("num_lake_tiles_in_bloom", len(lake_bloom))
 
 
     def _extractFromStartgame(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
         self._tile_og_types = d["tile_states"]
+        self.lake_xys = self.get_tile_types_xys(['lake'])
+
 
 
     def _extractFromCheckpoint(self, event_client_time, event_data_complex_parsed):
@@ -289,6 +290,8 @@ class LakelandExtractor(Extractor):
                 time_since_start = event_client_time - self._client_start_time
                 fname = f"session_secs_to_{tutorial}_tutorial"
                 self.features.setValByName(feature_name=fname, new_value=time_since_start)
+                self._increment_feature_in_cur_windows(feature_name="window_num_encounter_tutorial")
+                self.features.incAggregateVal(feature_name="session_count_of_tutorials")
                 average_screen_time = 0
                 if d["blurb_history"]:
                     client_time = d["client_time"]
@@ -321,12 +324,21 @@ class LakelandExtractor(Extractor):
         self._curr_money = d["curr_money"]
 
     def _extractFromBuy(self, event_client_time, event_data_complex_parsed):
+
         d = event_data_complex_parsed
         if d["success"]:
+            tx, ty = d['tile'][4], d['tile'][5]
+            chosen_tile = d['tile']
             buy_name = LakelandExtractor._ENUM_TO_STR['BUYS'][d['buy']]
             self._money_spent_per_item[buy_name] += self._selected_buy_cost
             self.features.incAggregateVal(feature_name="session_money_spent", increment=self._selected_buy_cost)
             self._increment_feature_in_cur_windows(feature_name="window_money_spent", increment=self._selected_buy_cost)
+
+            num_buy_feature_name = f'window_num_buy_{buy_name}'
+            self._increment_feature_in_cur_windows(feature_name=num_buy_feature_name, increment=1)
+            money_spent_feature_name = f'window_money_spent_on_{buy_name}'
+            self._increment_feature_in_cur_windows(feature_name=money_spent_feature_name, increment=self._selected_buy_cost)
+
             time_to_first_fname = f"session_secs_to_first_{buy_name}"
             if not self.features.getValByName(time_to_first_fname):
                 self.features.setValByName(time_to_first_fname, event_client_time-self._client_start_time)
@@ -334,16 +346,66 @@ class LakelandExtractor(Extractor):
             if d["buy"] == 1: # home
                 self._change_population(event_client_time,1)
 
-            num_buy_feature_name = f'window_num_buy_{buy_name}'
-            self._increment_feature_in_cur_windows(feature_name=num_buy_feature_name, increment=1)
-            money_spent_feature_name = f'window_money_spent_on_{buy_name}'
-            self._increment_feature_in_cur_windows(feature_name=money_spent_feature_name, increment=1)
 
             tile_hovers = d['buy_hovers']
-            num_hovers = len(tile_hovers)
-            num_hovers_feature_name = LakelandExtractor.get_feature(base='window_total_num_tiles_hovered_before_placing_', enum=d['buy'], enum_type='BUYS')
-            self._increment_feature_in_cur_windows(feature_name=num_buy_feature_name, increment=num_hovers)
+            avg_hovers_window_fname = 'window_ave_num_tiles_hovered_before_placing_' + buy_name
+            avg_hovers_session_fname = 'session_ave_num_tiles_hovered_before_placing_' + buy_name
+            self.average_in_windows_and_session(window_feature=avg_hovers_window_fname,
+                                                session_feature=avg_hovers_session_fname, value=len(tile_hovers))
 
+            if buy_name == 'farm':
+                chosen_txy = (tx,ty)# tile tx,ty
+                window_fname = "window_percent_building_a_farm_on_highest_nutrition_tile"
+                session_fname = "session_percent_building_a_farm_on_highest_nutrition_tile"
+                for t in tile_hovers:
+                    if t[3] == 1: #t has the current type of land (only type that farms can be built on)
+                        if t[1] - 2 > chosen_tile[1]: # comparing the nutritions give or take 2/255 ~ 1% of nutrition
+                            self.average_in_windows_and_session(window_fname, session_fname, 0) # failed to put on highest nutrition tile
+                            break
+                else:
+                    self.average_in_windows_and_session(window_fname, session_fname, 1)
+
+            if buy_name == 'fertilizer':
+                chosen_txy = (tx,ty)# tile tx,ty
+                window_fname = "window_percent_placing_fertilizer_on_lowest_nutrient_farm"
+                session_fname = "session_percent_placing_fertilizer_on_lowest_nutrient_farm"
+                for t in tile_hovers:
+                    if t[3] == 9: #t has the current type of farm (only type that fertilizer can be built on)
+                        if t[1] - 2 < chosen_tile[1]: # comparing the nutritions give or take 2/255 ~ 1% of nutrition
+                            self.average_in_windows_and_session(window_fname, session_fname, 0) # failed to put on lowest nutrition tile
+                            break
+                else:
+                    self.average_in_windows_and_session(window_fname, session_fname, 1)
+
+
+
+            for tut, compliant_buy in LakelandExtractor._TUT_NAME_COMPLIANT_BUY_NAME:
+                if buy_name == compliant_buy:
+                    self._tutorial_compliance_check(tut, event_client_time)
+
+            if buy_name == 'fertilizer':
+                min_lake_dist = sqrt(min([(tx-x)**2+(ty-y)**2 for x,y in self.lake_xys]))
+                window_fname = "window_average_distance_between_poop_placement_and_lake"
+                session_fname = "session_average_distance_between_poop_placement_and_lake"
+                self.average_in_windows_and_session(window_fname,session_fname,min_lake_dist)
+
+
+            if buy_name in LakelandExtractor._BUILDING_TYPES:
+                self.building_xys.append((tx,ty))
+                if len(self.building_xys) > 1:
+                    avg_dist_from_buildings = \
+                        sum(self.distance((tx,ty), pt2) for pt2 in self.building_xys)/(len(self.building_xys)-1)
+                    session_fname = "session_avg_avg_distance_between_buildings"
+                    window_fname = "window_avg_avg_distance_between_buildings"
+                    self.average_in_windows_and_session(window_fname, session_fname, avg_dist_from_buildings)
+                    
+
+    def _tutorial_compliance_check(self, tut_name, event_client_time):
+        tutorial_end_time = self._tutorial_start_and_end_times[tut_name][1]
+        if not self._tutorial_compliance[tut_name] and tutorial_end_time:
+            compliance_interval = event_client_time - tutorial_end_time
+            fname = f"{tut_name}_compliance_interval"
+            self.features.setValByName(feature_name=fname, new_value=compliance_interval)
 
     def _extractFromCancelbuy(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
@@ -401,7 +463,7 @@ class LakelandExtractor(Extractor):
             window_fname = "window_secs_in_nutrition_view"
             session_fname = "session_secs_in_nutrition_view"
             self._increment_feature_in_cur_windows(window_fname, secs_in_nutrtion_view)
-            self.features.incAggregateVal(window_fname,secs_in_nutrtion_view)
+            self.features.incAggregateVal(session_fname,secs_in_nutrtion_view)
 
     def _extractFromToggleshop(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
@@ -415,6 +477,9 @@ class LakelandExtractor(Extractor):
 
     def _extractFromSkiptutorial(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
+        self.features.incAggregateVal("session_count_of_skips")
+        self._increment_feature_in_cur_windows("window_num_press_skip_button")
+
 
     def _extractFromSpeed(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
@@ -436,6 +501,7 @@ class LakelandExtractor(Extractor):
 
     def _extractFromAchievement(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
+        self.features.incAggregateVal("session_count_of_achievements")
         achievement_enum = d["achievement"]
         achievement_str = LakelandExtractor._ENUM_TO_STR["ACHIEVEMENTS"]
         time_since_start = (event_client_time - self._client_start_time).seconds
@@ -446,6 +512,8 @@ class LakelandExtractor(Extractor):
     def _extractFromFarmbitdeath(self, event_client_time, event_data_complex_parsed):
         d = event_data_complex_parsed
         self._change_population(event_client_time,-1)
+        self.features.incAggregateVal("session_num_deaths")
+        self._increment_feature_in_cur_windows("window_num_deaths")
 
 
     def _extractFromBlurb(self, event_client_time, event_data_complex_parsed):
@@ -473,6 +541,7 @@ class LakelandExtractor(Extractor):
         self.update_secs_at_speed(event_client_time, self._cur_speed)
         if self._nutrition_view_on:
             self.increment_nutrition_view_secs(event_client_time)
+
 
     # UTILS
 
@@ -536,8 +605,27 @@ class LakelandExtractor(Extractor):
         if val < prev_val:
             self.features.setValByName(feature_name=feature_name, new_value=val)
 
+    def _set_feature_max_min_sess_win(self, fname_base, val):
+        """feature must have the same fname_base that gets put on the following four features:
+        - session_max_
+        - session_min_
+        - window_max_
+        - window_min_ """
+
+        self._set_feature_max_in_cur_windows(feature_name="window_max_"+fname_base, val=val)
+        self._set_feature_min_in_cur_windows(feature_name="window_min_"+fname_base, val=val)
+        self._set_feature_max_in_session(feature_name="session_max_"+fname_base, val=val)
+        self._set_feature_min_in_session(feature_name="session_min_"+fname_base, val=val)
+
+
+
     def _set_default_window_val(self, feature_name, val):
-        self.features.features[feature_name] = defaultdict(lambda: {'val': val, 'prefix': 'lvl'})
+        for w in self.window_range:
+            self.features.features[feature_name][w]['val'] = val
+
+    def _set_default_session_val(self, feature_name, val):
+        for w in self.window_range:
+            self.features.features[feature_name] = val
 
     def _change_population(self, client_time, increment):
         self._num_farmbits += increment;
@@ -595,8 +683,8 @@ class LakelandExtractor(Extractor):
             #fill
             for enum, pop in zip(emote_type_enums, emote_pops):
                 # TODO: there are instances where pop is 0, and I don't know why
-                # if pop == 0:
-                #     pop = 1
+                if pop == 0:
+                    pop = 1
                 emote_str = LakelandExtractor._ENUM_TO_STR['EMOTES'][enum]
                 total_emotes_per_capita[emote_str] += 1/pop
                 if LakelandExtractor._EMOTE_STR_TO_AFFECT[emote_str] == -1:
@@ -629,24 +717,6 @@ class LakelandExtractor(Extractor):
             #assign
 
 
-
-
-    def calculate_window_end(self, window):
-        self.calculate_window_ave_hovers(window)
-
-
-    def calculate_window_ave_hovers(self, window):
-        buys = list(LakelandExtractor._ENUM_TO_STR['BUYS'].values())[1:]
-        ave_num_tile_features = ["window_ave_num_tiles_hovered_before_placing_" + buy for buy in
-                                 LakelandExtractor._ENUM_TO_STR['BUYS'].values()]
-        for buy in buys:
-            num_buys_feature = 'window_num_buy_' + buy
-            num_hovers_feature = "window_total_num_tiles_hovered_before_placing_" + buy
-            ave_hovers_feature = "window_ave_num_tiles_hovered_before_placing_" + buy
-            num_buys = self.features.getValByIndex(num_buys_feature, window)
-            avg_hovers = 0 if not num_buys else self.features.getValByIndex(num_hovers_feature, window) / num_buys
-            self.features.setValByIndex(feature_name=ave_hovers_feature, index=window, new_value=avg_hovers)
-
     def milliseconds_to_datetime(self, milliseconds):
         # round #milliseconds to #secs because event_client_time resolves to seconds not msecs
         ret = datetime.datetime.utcfromtimestamp(milliseconds//1000)
@@ -663,10 +733,21 @@ class LakelandExtractor(Extractor):
             for i in range(len(array)):
                 array[i][-1] = self.milliseconds_to_datetime(array[i][-1]+client_time)
 
+    def average_in_windows_and_session(self, window_feature, session_feature, value):
+        for w in self._cur_windows:
+            self.average_handler_window[window_feature][w]['total'] += value
+            self.average_handler_window[window_feature][w]['n'] += 1
+            avg = self.average_handler_window[window_feature][w]['total'] / self.average_handler_window[window_feature][w]['n']
+            self.features.setValByIndex(window_feature, w, avg)
 
+        self.average_handler_session[session_feature]['total'] += value
+        self.average_handler_session[session_feature]['n'] += 1
+        avg = self.average_handler_session[session_feature]['total'] / self.average_handler_session[session_feature]['n']
+        self.features.setValByName(session_feature, avg)
 
-
-
+    def get_tile_types_xys(self, type_list):
+         return [LakelandExtractor.index_to_xy(i) for i, type in enumerate(self._tile_og_types) if
+                         LakelandExtractor._ENUM_TO_STR['TILE TYPE'][type] in type_list]  # 5 is the lake type enum
     @staticmethod
     def get_feature(base, enum, enum_type):
         return base + LakelandExtractor._ENUM_TO_STR[enum_type][enum]
@@ -682,7 +763,8 @@ class LakelandExtractor(Extractor):
     @staticmethod
     def onscreen_item_dict():
         ret = {key: 0 for key in LakelandExtractor._STR_TO_ENUM['ITEM TYPE']}
-        ret.update({key: 0 for key in LakelandExtractor._STR_TO_ENUM['TILE TYPE']})
+        ret.update({key: 0 for key in LakelandExtractor._STR_TO_ENUM['BUYS']})
+        del ret['null']
         return ret
 
     @staticmethod
@@ -696,6 +778,30 @@ class LakelandExtractor(Extractor):
         offset = datetime.timedelta(days=tdelta.days, hours=tdelta.seconds // 3500)
         ## return tzinfo(offset)
         return offset
+
+    @staticmethod
+    def index_to_xy(index):
+        x = index % 50
+        y = index // 50
+        return (x,y)
+
+    @staticmethod
+    def distance(point1, point2):
+        """
+
+        :param point1: x,y for point 1
+        :param point2: x,y for point 2
+        :return: euclidean distance between x and y
+        """
+        x1, y1 = point1[0], point1[1]
+        x2, y2 = point2[0], point2[1]
+        return sqrt((x1-x2)**2 + (y1-y2)**2)
+
+    @staticmethod
+    def read_stringified_array(arr):
+        if not arr:
+            return []
+        return [int(x) for x in arr.split(',')]
 
 class tzinfo(datetime.tzinfo):
     def __init__(self, tdelta):
