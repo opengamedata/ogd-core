@@ -1,26 +1,5 @@
 class Server
 {
-   static getGreeting(callback)
-   {
-      console.log("Making request for greeting")
-      var req = new XMLHttpRequest();
-      req.onreadystatechange = function()
-      {
-         if (this.readyState == 4 && this.status == 200)
-         {
-            console.log(`got back: ${this.responseText.toString()}`);
-            callback(this.responseText.toString());
-         }
-         else
-         {
-             console.log(`readyState = ${this.readyState}, status = ${this.status}, response = ${this.responseText.toString()}`);
-         }
-      }
-      req.open("POST", "realtime.cgi", true);
-      req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      req.send("method=say_hello");
-   }
-
    //REALTIME API CALL
 
    static get_all_active_sessions(callback, gameID, require_player_id) //gameID eg 'CRYSTAL'
