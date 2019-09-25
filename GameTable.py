@@ -5,6 +5,7 @@ from datetime import datetime
 ## import local files
 import Request
 import utils
+from schemas.Schema import Schema
 
 ## @class GameTable
 #  Dumb struct to hold useful info about the structure of database data
@@ -58,7 +59,7 @@ class GameTable:
             play_durations = [p[0]-p[1] for p in self.playtimes]
             max_play_duration = max(play_durations)
             self.min_level = 0
-            self.max_level = max_play_duration.seconds // settings['WINDOW_SIZE_SECONDS']
+            self.max_level = max_play_duration.seconds // Schema('LAKELAND').schema()['config']['WINDOW_SIZE_SECONDS']
         self.session_ids = request.retrieveSessionIDs(db_cursor=db_cursor, db_settings=db_settings)
         # logging.debug("session_ids: " + str(session_ids))
     
