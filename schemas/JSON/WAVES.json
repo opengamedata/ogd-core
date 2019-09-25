@@ -109,7 +109,13 @@
             "percentAmplitudeGoodMoves" : "percent of amplitude moves that brought amplitude closer to the correct value",
             "percentOffsetGoodMoves" : "percent of wavelength moves that brought wavelength closer to the correct value",
             "percentWavelengthGoodMoves" : "percent of wavelength moves that brought wavelength closer to the correct value",
-            "firstMoveType" : "A character indicating what type of slider move a player made first. A = Amplitude, W = Wavelength, O = Offset, null = No moves"
+            "firstMoveType" : "A character indicating what type of slider move a player made first. A = Amplitude, W = Wavelength, O = Offset, null = No moves",
+            "closenessSlope" : "The slope of the linear regression line of (closeness vs. time (seconds)) for the level",
+            "closenessIntercept" : "The intercept of the linear regression line of (closeness vs. time (seconds)) for the level",
+            "closenessR2" : "The R^2 of the linear regression line of (closeness vs. time (seconds)) for the level",
+            "rangeSlope" : "The slope of the linear regression line of (range vs. time (seconds)) for the level, where range is the total range of moves (max-min in the case of a slider, abs(begin-end) in case of an arrow)",
+            "rangeIntercept" : "The intercept of the linear regression line of (range vs. time (seconds)) for the level, where range is the total range of moves (max-min in the case of a slider, abs(begin-end) in case of an arrow)",
+            "rangeR2" : "The R^2 of the linear regression line of (range vs. time (seconds)) for the level, where range is the total range of moves (max-min in the case of a slider, abs(begin-end) in case of an arrow)"
         },
         "per_custom_count": {
             "questionAnswered" : {"count" : 4, "prefix": "QA", "desc" : "The answer the user gave to a given question (or -1 if unanswered)"},
