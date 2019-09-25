@@ -189,13 +189,16 @@ class SQL:
 
         query = sel_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
         logging.info("Running query: " + query)
-        #print(f"running query: {query}")
+        # print(f"running query: {query}")
         start = datetime.datetime.now()
         cursor.execute(query)
         time_delta = datetime.datetime.now()-start
         logging.info("Query execution completed, time to execute: {:d} min, {:.3f} sec".format( \
             math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60 ) \
         )
+        # print("Query execution completed, time to execute: {:d} min, {:.3f} sec".format( \
+        #     math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60 ) \
+        # )
         result = cursor.fetchall() if fetch_results else None
         time_delta = datetime.datetime.now()-start
         # logging.info(f"Query fetch completed, total query time: {}")
