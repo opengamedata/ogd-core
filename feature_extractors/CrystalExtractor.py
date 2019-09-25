@@ -113,10 +113,11 @@ class CrystalExtractor(Extractor):
         elif self.active_begin == level:
             pass # in this case, just keep going.
         else:
-            self.end_times[level] = event_client_time
-            time_taken = self._calcLevelTime(level)
-            self.features.incValByIndex(feature_name="durationInSecs", index=level, increment=time_taken)
+            self.end_times[self.active_begin] = event_client_time
+            time_taken = self._calcLevelTime(self.active_begin)
+            self.features.incValByIndex(feature_name="durationInSecs", index=self.active_begin, increment=time_taken)
             self.features.incAggregateVal(feature_name="sessionDurationInSecs", increment=time_taken)
+            self.start_times[level] = event_client_time
         # in any case, current level now has active begin event.
         self.active_begin = level
 

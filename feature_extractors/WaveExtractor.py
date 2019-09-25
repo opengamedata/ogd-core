@@ -189,8 +189,12 @@ class WaveExtractor(Extractor):
         elif self.active_begin == level:
             pass # in this case, just keep going.
         else:
-            self.end_times[level] = event_client_time
-            self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
+            self.end_times[self.active_begin] = event_client_time
+            try:
+                self.features.incValByIndex(feature_name="totalLevelTime", index=self.active_begin, increment=self._calcLevelTime(self.active_begin))
+            except Exception as err:
+                raise(Exception(f"{str(err)}, level={level}, method=extractFromBegin, active_begin={self.active_begin}"))
+            self.start_times[level] = event_client_time
         # in any case, current level now has active begin event.
         self.active_begin = level
 
@@ -214,16 +218,23 @@ class WaveExtractor(Extractor):
         if self.active_begin == None:
             sess_id = self.features.getValByName(feature_name="sessionID")
             logging.error(f"Got a 'Complete' event when there was no active 'Begin' event! Sess ID: {sess_id}, level: {level}")
+        elif self.active_begin != level:
+            sess_id = self.features.getValByName(feature_name="sessionID")
+            logging.error(f"Got a 'Complete' event when the active 'Begin' was for a different level ({self.active_begin})! Sess ID: {sess_id}, level: {level}")
         else:
             self.end_times[level] = event_client_time
             self.features.setValByIndex(feature_name="completed", index=level, new_value=1)
-            self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
+            try:
+                self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
+            except Exception as err:
+                raise(Exception(f"{str(err)}, level={level}, method=extractFromComplete, active_begin={self.active_begin}"))
+            self.active_begin = None
 
     ## Private function to extract features from a "SUCCEED" event.
     #  The features affected are:
     #  - succeedCount
     #
-    #  @param level The level being played when reset button was pressed.
+    #  @param level The level being played when succeed event occurred.
     def _extractFromSucceed(self, level):
         self.features.incValByIndex(feature_name="succeedCount", index=level)
 
@@ -240,9 +251,15 @@ class WaveExtractor(Extractor):
         if self.active_begin == None:
             sess_id = self.features.getValByName(feature_name="sessionID")
             logging.error(f"Got a 'Menu Button' event when there was no active 'Begin' event! Sess ID: {sess_id}, level: {level}")
+        elif self.active_begin != level:
+            sess_id = self.features.getValByName(feature_name="sessionID")
+            logging.error(f"Got a 'Menu Button' event when the active 'Begin' was for a different level ({self.active_begin})! Sess ID: {sess_id}, level: {level}")
         else:
             self.end_times[level] = event_client_time
-            self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
+            try:
+                self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
+            except Exception as err:
+                raise(Exception(f"{str(err)}, level={level}, method=extractFromMenuBtn, active_begin={self.active_begin}"))
             self.active_begin = None
 
     ## Private function to extract features from a "SKIP_BUTTON" event.
