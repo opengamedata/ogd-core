@@ -139,15 +139,24 @@ class SessionList
     let remove_set = setMinus(display_set, active_set); // subtract active from display to get inactives, which are currently displayed.
     let add_set    = setMinus(active_set, display_set); // subtract display from active to get new sessions, which were not displayed yet.
     let session_list_area = document.getElementById("session_list");
-    // If there is anything to remove, loop over all sessions in the list. When we find an inactive one, remove it.
-    if (remove_set.size > 0) {
-      let child_nodes = Array.from(session_list_area.children);
-      for (let session_link_id in child_nodes) {
-        let session_link = child_nodes[session_link_id];
-        if (remove_set.has(session_link.id)) {
-          session_link.remove();
-          if (this.selected_session_id == session_link.id) { this.clearSelected(); }
-        }
+
+    // First, refresh what's in the list.
+    let child_nodes = Array.from(session_list_area.children);
+    for (let session_link_num in child_nodes) {
+      let session_link = child_nodes[session_link_num];
+      let session_id = session_link.id;
+      // let session_link = child_nodes[`div_${session_id}`];
+      // A) If object is in remove set, remove it.
+      if (remove_set.has(session_id)) {
+        session_link.remove();
+        if (this.selected_session_id == session_link.id) { this.clearSelected(); }
+      }
+      // B) Else, update the max and current levels.
+      else {
+        let cur_level_div = document.getElementById(`cur_level_${session_id}`);
+        cur_level_div.innerText = `current: ${this.active_sessions[session_id]["cur_level"].toString()}`;
+        let max_level_div = document.getElementById(`max_level_${session_id}`);
+        max_level_div.innerText = `max: ${this.active_sessions[session_id]["max_level"].toString()}`;
       }
     }
     // loop over all newly active sessions, adding them to the list.
@@ -161,9 +170,11 @@ class SessionList
       session_link.href = `#${session_id}`;
       session_div.appendChild(session_link);
       let cur_level_div = document.createElement("div");
+      cur_level_div.id = `cur_level_${session_id}`;
       cur_level_div.innerText = `current: ${this.active_sessions[session_id]["cur_level"].toString()}`;
       session_div.appendChild(cur_level_div);
       let max_level_div = document.createElement("div");
+      max_level_div.id = `max_level_${session_id}`;
       max_level_div.innerText = `max: ${this.active_sessions[session_id]["max_level"].toString()}`;
       session_div.appendChild(max_level_div);
       session_div.appendChild(document.createElement("br"));
