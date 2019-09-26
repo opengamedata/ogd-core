@@ -40,31 +40,6 @@ def showHelp():
     print("         - help: *None*")
     print(width*"*")
 
-## Function to set up a connection to a database, via an ssh tunnel.
-#  @return A tuple consisting of the tunnel and database connection, respectively.
-def prepareDB() -> typing.Tuple:
-    # Load settings, set up consts.
-    DB_NAME_DATA = db_settings["DB_NAME_DATA"]
-    DB_USER = db_settings['DB_USER']
-    DB_PW = db_settings['DB_PW']
-    DB_HOST = db_settings['DB_HOST']
-    DB_PORT = db_settings['DB_PORT']
-    SSH_USER = ssh_settings['SSH_USER']
-    SSH_PW = ssh_settings['SSH_PW']
-    SSH_HOST = ssh_settings['SSH_HOST']
-    SSH_PORT = ssh_settings['SSH_PORT']
-
-    # set up other global vars as needed:
-    logging.basicConfig(level=logging.INFO)
-    sql_login = utils.SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
-    if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
-        ssh_login = utils.SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
-        tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
-    else:
-        db = utils.SQL.connectToMySQL(login=sql_login)
-        tunnel = None
-    return (tunnel, db)
-
 ## Function to handle execution of export code. This is the main intended use of
 #  the program.
 def runExport(month: bool = False):
@@ -101,7 +76,7 @@ def runExport(month: bool = False):
                 else today
         end_date = end_date.replace(hour=23, minute=59, second=59)
 
-    tunnel, db = prepareDB()
+    tunnel, db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
 
     # Once we have the parameters parsed out, construct the request.
     req = Request.DateRangeRequest(game_id=game_id, start_date=start_date, end_date=end_date, \
@@ -128,7 +103,7 @@ def runExport(month: bool = False):
 def showGameInfo():
     if num_args > 2:
         try:
-            tunnel, db = prepareDB()
+            tunnel, db = prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
             game_name = sys.argv[2]
             schema = Schema(f"{game_name}.json")
 

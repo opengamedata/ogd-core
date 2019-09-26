@@ -57,19 +57,28 @@ function generateTable(table, data, headers) {
           cell.appendChild(text);
           break;
         case "raw":
-            var a = document.createElement('a');
+            var raw_link = document.createElement('a');
             var linkText = document.createTextNode("Raw");
-            a.appendChild(linkText);
-            a.title = "Raw";
-            a.href = set["raw"];
-            cell.appendChild(a);
+            raw_link.appendChild(linkText);
+            raw_link.title = "Raw";
+            raw_link.href = set["raw"];
+            cell.appendChild(raw_link);
             cell.append(document.createTextNode(' - '))
-            var a = document.createElement('a');
+
+            var sql_link = document.createElement('a');
             var linkText = document.createTextNode("Processed");
-            a.appendChild(linkText);
-            a.title = "Processed";
-            a.href = set["proc"];
-            cell.appendChild(a);
+            sql_link.appendChild(linkText);
+            sql_link.title = "Processed";
+            sql_link.href = set["proc"];
+            cell.appendChild(sql_link);
+            cell.append(document.createTextNode(' - '))
+
+            var sql_link = document.createElement('a');
+            var linkText = document.createTextNode("SQL");
+            sql_link.appendChild(linkText);
+            sql_link.title = "SQL Dump";
+            sql_link.href = set["sql"];
+            cell.appendChild(sql_link);
           break;
         default:
             text = document.createTextNode(set[key]);

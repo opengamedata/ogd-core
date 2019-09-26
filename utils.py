@@ -64,6 +64,31 @@ class SSHLogin:
 #  Specifically, helps to connect to a database, make selections, and provides
 #  a nicely formatted 500 error message.
 class SQL:
+    ## Function to set up a connection to a database, via an ssh tunnel if available.
+    #  @return A tuple consisting of the tunnel and database connection, respectively.
+    def prepareDB(db_settings, ssh_settings) -> typing.Tuple:
+        # Load settings, set up consts.
+        DB_NAME_DATA = db_settings["DB_NAME_DATA"]
+        DB_USER = db_settings['DB_USER']
+        DB_PW = db_settings['DB_PW']
+        DB_HOST = db_settings['DB_HOST']
+        DB_PORT = db_settings['DB_PORT']
+        SSH_USER = ssh_settings['SSH_USER']
+        SSH_PW = ssh_settings['SSH_PW']
+        SSH_HOST = ssh_settings['SSH_HOST']
+        SSH_PORT = ssh_settings['SSH_PORT']
+
+        # set up other global vars as needed:
+        logging.basicConfig(level=logging.INFO)
+        sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
+        if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
+            ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
+            tunnel,db = SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
+        else:
+            db = SQL.connectToMySQL(login=sql_login)
+            tunnel = None
+        return (tunnel, db)
+
     ## Function to help connect to a mySQL server.
     #  Simply tries to make a connection, and prints an error in case of failure.
     #
@@ -117,7 +142,8 @@ class SQL:
     @staticmethod
     def disconnectMySQLViaSSH(tunnel, db):
         db.close()
-        tunnel.stop()
+        if tunnel is not None:
+            tunnel.stop()
 
     ## Function to build and execute SELECT statements on a database connection.
     #  @param cursor        A database cursor, retrieved from the active connection.
@@ -163,13 +189,16 @@ class SQL:
 
         query = sel_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
         logging.info("Running query: " + query)
-        #print(f"running query: {query}")
+        # print(f"running query: {query}")
         start = datetime.datetime.now()
         cursor.execute(query)
         time_delta = datetime.datetime.now()-start
         logging.info("Query execution completed, time to execute: {:d} min, {:.3f} sec".format( \
             math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60 ) \
         )
+        # print("Query execution completed, time to execute: {:d} min, {:.3f} sec".format( \
+        #     math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60 ) \
+        # )
         result = cursor.fetchall() if fetch_results else None
         time_delta = datetime.datetime.now()-start
         # logging.info(f"Query fetch completed, total query time: {}")

@@ -5,6 +5,8 @@ import logging
 import typing
 ## import local files
 import utils
+import numpy as np
+from sklearn.linear_model import LinearRegression
 from feature_extractors.Extractor import Extractor
 from GameTable import GameTable
 from schemas.Schema import Schema
@@ -31,13 +33,21 @@ class WaveExtractor(Extractor):
         self.amp_move_counts:  typing.Dict   = {}
         self.off_move_counts:  typing.Dict   = {}
         self.wave_move_counts: typing.Dict   = {}
+        self.latest_complete_lvl8 = None
+        self.latest_complete_lvl16 = None
+        self.latest_answer_Q0 = None
+        self.latest_answer_Q2 = None
         self.active_begin = None
+        self.saw_first_move: bool = False
+        self.move_closenesses_tx: typing.Dict = {}
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
-        # we specifically want to set the default value for questionAnswered to -1, for unanswered.
+        # we specifically want to set the default value for questionAnswered to "null", for unanswered.
         for ans in self.features.getValByName(feature_name="questionAnswered").keys():
             self.features.setValByIndex(feature_name="questionAnswered", index=ans, new_value="null")
         for q in self.features.getValByName(feature_name="questionCorrect"):
             self.features.setValByIndex(feature_name="questionCorrect", index=q, new_value="null")
+        for elem in self.features.getValByName(feature_name="firstMoveType"):
+            self.features.setValByIndex(feature_name="firstMoveType", index=elem, new_value="null")
 
     ## Function to perform extraction of features from a row.
     #
@@ -89,9 +99,9 @@ class WaveExtractor(Extractor):
             elif event_type == "FAIL":
                 self._extractFromFail(level)
             elif event_type in ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"] :
-                self._extractFromMoveRelease(level, event_data_complex_parsed)
+                self._extractFromMoveRelease(level, event_data_complex_parsed, event_client_time)
             elif event_type == "QUESTION_ANSWER":
-                self._extractFromQuestionAnswer(event_data_complex_parsed)
+                self._extractFromQuestionAnswer(event_data_complex_parsed, event_client_time)
                 # print("Q+A: " + str(event_data_complex_parsed))
             else:
                 raise Exception("Found an unrecognized event type: {}".format(event_type))
@@ -179,11 +189,18 @@ class WaveExtractor(Extractor):
         self.features.incValByIndex(feature_name="beginCount", index=level)
         if self.active_begin == None:
             self.start_times[level] = event_client_time
+            self.move_closenesses_tx[level] = {'t': [], 'completeness': [], 'range': []}
         elif self.active_begin == level:
             pass # in this case, just keep going.
         else:
-            self.end_times[level] = event_client_time
-            self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
+            self.end_times[self.active_begin] = event_client_time
+            self._calc_level_end(self.active_begin)
+            try:
+                self.features.incValByIndex(feature_name="totalLevelTime", index=self.active_begin, increment=self._calcLevelTime(self.active_begin))
+            except Exception as err:
+                raise(Exception(f"{str(err)}, level={level}, method=extractFromBegin, active_begin={self.active_begin}"))
+            self.start_times[level] = event_client_time
+            self.move_closenesses_tx[level] = {'t': [], 'completeness': [], 'range': []}
         # in any case, current level now has active begin event.
         self.active_begin = level
 
@@ -198,19 +215,33 @@ class WaveExtractor(Extractor):
     #  @param event_client_time The time when this event occurred, according to game client.
     def _extractFromComplete(self, level, event_client_time):
         self.features.incValByIndex(feature_name="completeCount", index=level)
+        # track latest completion of levels 8 & 16, for the timeToAnswerMS features.
+        if (level == 8):
+            self.latest_complete_lvl8 = event_client_time
+        elif (level == 16):
+            self.latest_complete_lvl16 = event_client_time
+        # Handle tracking of level play times.
         if self.active_begin == None:
             sess_id = self.features.getValByName(feature_name="sessionID")
             logging.error(f"Got a 'Complete' event when there was no active 'Begin' event! Sess ID: {sess_id}, level: {level}")
+        elif self.active_begin != level:
+            sess_id = self.features.getValByName(feature_name="sessionID")
+            logging.error(f"Got a 'Complete' event when the active 'Begin' was for a different level ({self.active_begin})! Sess ID: {sess_id}, level: {level}")
         else:
             self.end_times[level] = event_client_time
+            self._calc_level_end(level)
             self.features.setValByIndex(feature_name="completed", index=level, new_value=1)
-            self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
+            try:
+                self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
+            except Exception as err:
+                raise(Exception(f"{str(err)}, level={level}, method=extractFromComplete, active_begin={self.active_begin}"))
+            self.active_begin = None
 
     ## Private function to extract features from a "SUCCEED" event.
     #  The features affected are:
     #  - succeedCount
     #
-    #  @param level The level being played when reset button was pressed.
+    #  @param level The level being played when succeed event occurred.
     def _extractFromSucceed(self, level):
         self.features.incValByIndex(feature_name="succeedCount", index=level)
 
@@ -227,9 +258,16 @@ class WaveExtractor(Extractor):
         if self.active_begin == None:
             sess_id = self.features.getValByName(feature_name="sessionID")
             logging.error(f"Got a 'Menu Button' event when there was no active 'Begin' event! Sess ID: {sess_id}, level: {level}")
+        elif self.active_begin != level:
+            sess_id = self.features.getValByName(feature_name="sessionID")
+            logging.error(f"Got a 'Menu Button' event when the active 'Begin' was for a different level ({self.active_begin})! Sess ID: {sess_id}, level: {level}")
         else:
             self.end_times[level] = event_client_time
-            self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
+            self._calc_level_end(level)
+            try:
+                self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
+            except Exception as err:
+                raise(Exception(f"{str(err)}, level={level}, method=extractFromMenuBtn, active_begin={self.active_begin}"))
             self.active_begin = None
 
     ## Private function to extract features from a "SKIP_BUTTON" event.
@@ -257,7 +295,8 @@ class WaveExtractor(Extractor):
     def _extractFromFail(self, level):
         self.features.incValByIndex(feature_name="totalFails", index=level)
 
-    ## Private function to extract features from a "SLIDER_MOVE_RELEASE" event.
+    ## Private function to extract features from a "SLIDER_MOVE_RELEASE" or 
+    #  "ARROW_MOVE_RELEASE" event.
     #  The features affected are:
     #  - totalMoveTypeChanges
     #  - totalSliderMoves
@@ -267,7 +306,7 @@ class WaveExtractor(Extractor):
     #
     #  @param level      The level being played when event occurred.
     #  @param event_data Parsed JSON data from the row being processed.
-    def _extractFromMoveRelease(self, level, event_data):
+    def _extractFromMoveRelease(self, level, event_data, event_client_time):
         def isGoodMove(event_data):
             end_distance   = abs(event_data["correct_val"] - event_data["end_val"])
             start_distance = abs(event_data["correct_val"] - event_data["begin_val"])
@@ -282,14 +321,23 @@ class WaveExtractor(Extractor):
             self.amp_move_counts[level] += 1
             if isGoodMove(event_data):
                 self.features.incValByIndex(feature_name="amplitudeGoodMoveCount", index=level)
+            if not self.saw_first_move:
+                self.saw_first_move = True
+                self.features.setValByIndex(feature_name="firstMoveType", index=level, new_value='A')
         elif event_data["slider"] == "OFFSET":
             self.off_move_counts[level] += 1
             if isGoodMove(event_data):
                 self.features.incValByIndex(feature_name="offsetGoodMoveCount", index=level)
+            if not self.saw_first_move:
+                self.saw_first_move = True
+                self.features.setValByIndex(feature_name="firstMoveType", index=level, new_value='O')
         elif event_data["slider"] == "WAVELENGTH":
             self.wave_move_counts[level] += 1
             if isGoodMove(event_data):
                 self.features.incValByIndex(feature_name="wavelengthGoodMoveCount", index=level)
+            if not self.saw_first_move:
+                self.saw_first_move = True
+                self.features.setValByIndex(feature_name="firstMoveType", index=level, new_value='W')
         # then, log things specific to slider move:
         if event_data["event_custom"] == "SLIDER_MOVE_RELEASE":
             self.features.incValByIndex(feature_name="totalSliderMoves", index=level)
@@ -303,14 +351,39 @@ class WaveExtractor(Extractor):
         else: # log things specific to arrow move:
             self.features.incValByIndex(feature_name="totalArrowMoves", index=level)
 
+        if event_data['event_custom'] == 'ARROW_MOVE_RELEASE':
+            begin_closeness, end_closeness = None, event_data['closeness']
+            range = event_data['begin_val'] - event_data['end_val']
+            range = range if range > 0 else range*-1
+        else: #SLIDER MOVE RELEASE
+            begin_closeness, end_closeness = event_data['begin_closeness'], event_data['end_closeness']
+            range = event_data['max_val'] - event_data['min_val']
+
+        if begin_closeness and not self.move_closenesses_tx[level]:
+            self.move_closenesses_tx[level]['completeness'].append(begin_closeness)
+            self.move_closenesses_tx[level]['t'].append(self.start_times[level])
+            self.move_closenesses_tx[level]['range'].append(None)
+        self.move_closenesses_tx[level]['completeness'].append(end_closeness)
+        self.move_closenesses_tx[level]['t'].append(event_client_time)
+        self.move_closenesses_tx[level]['range'].append(range)
+
+
+
+
     ## Private function to extract features from a "QUESTION_ANSWER" event.
     #  The features affected are:
     #  - questionAnswered
     #  - questionCorrect
     #
     #  @param event_data Parsed JSON data from the row being processed.
-    def _extractFromQuestionAnswer(self, event_data):
+    def _extractFromQuestionAnswer(self, event_data, event_client_time):
         q_num = event_data["question"]
+        if (q_num == 0):
+            self.latest_answer_Q0 = event_client_time
+        elif (q_num == 2):
+            self.latest_answer_Q2 = event_client_time
+        answer_time = self._calcAnswerTime(q_num=q_num, event_client_time=event_client_time)
+        self.features.setValByIndex(feature_name="timeToAnswerMS", index=q_num, new_value=answer_time)
         self.features.setValByIndex(feature_name="questionAnswered", index=q_num,
                                     new_value=event_data["answered"])
         correctness = 1 if event_data["answered"] == event_data["answer"] else 0
@@ -346,3 +419,53 @@ class WaveExtractor(Extractor):
                 return -1
         else:
             return 0
+        
+    def _calcAnswerTime(self, q_num:int, event_client_time) -> int:
+        millis: float
+        if q_num == 0:
+            millis = 1000.0 * (event_client_time - self.latest_complete_lvl8).total_seconds()
+        elif q_num == 1:
+            millis = 1000.0 * (event_client_time - self.latest_answer_Q0).total_seconds()
+        elif q_num == 2:
+            millis = 1000.0 * (event_client_time - self.latest_complete_lvl16).total_seconds()
+        elif q_num == 3:
+            millis = 1000.0 * (event_client_time - self.latest_answer_Q2).total_seconds()
+        return int(millis)
+
+    ## Private function to do feature calculation at the end of a level.
+    #
+    #  @param lvl      The level whose features should be calculated
+    #  @return         (void)
+    def _calc_level_end(self, lvl:int):
+        closenesses = self.move_closenesses_tx[lvl]['completeness']
+        times = self.move_closenesses_tx[lvl]['t']
+        ranges = self.move_closenesses_tx[lvl]['range']
+        if times:
+            X = [(times[i]-times[0]).seconds for i in range(len(times))]
+            y = closenesses
+            intercept, slope, r_sq = self._2D_linear_regression(X, y)
+            self.features.setValByIndex(feature_name='closenessIntercept', index=lvl, new_value=intercept)
+            self.features.setValByIndex(feature_name='closenessSlope', index=lvl, new_value=slope)
+            self.features.setValByIndex(feature_name='closenessR2', index=lvl, new_value=r_sq)
+
+            if ranges[0] is None:
+                del ranges[0]
+                del times[0]
+
+            y = ranges
+            intercept, slope, r_sq = self._2D_linear_regression(X, y)
+            self.features.setValByIndex(feature_name='rangeIntercept', index=lvl, new_value=intercept)
+            self.features.setValByIndex(feature_name='rangeSlope', index=lvl, new_value=slope)
+            self.features.setValByIndex(feature_name='rangeR2', index=lvl, new_value=r_sq)
+
+
+    ## Private function to do feature calculation at the end of a level.
+    #
+    #  @param lvl      The level whose features should be calculated
+    #  @return         (void)
+    def _2D_linear_regression(self, x_vals:typing.List[float], y_vals:typing.List[float]):
+        X, y = np.array(x_vals).reshape((-1,1)), np.array(y_vals)
+        linreg = LinearRegression()
+        linreg.fit(X, y)
+        intercept, slope, r_sq = linreg.intercept_, linreg.coef_[0], linreg.score(X, y)
+        return (intercept, slope, r_sq)

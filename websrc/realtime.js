@@ -3,6 +3,8 @@
  */
 function onload()
 {
+  let check = 0
+  console.log(`update check: ${check}`);
   // Set up UI regions.
   var bar = document.querySelector('.leftbar');
   var dash = document.querySelector('.rightdash');
@@ -13,9 +15,12 @@ function onload()
   generate_options(['CRYSTAL', 'WAVES', 'LAKELAND', 'JOWILDER'])
   // Create a SessionList instance for tracking state, and start the refresh loop.
   sess_list = new SessionList();
+  document.getElementById("require_pid").onclick = function() {
+      sess_list.require_player_id = this.checked;
+  }
   window.setInterval(() => {
     try {
-      sess_list.refreshSessionDisplayList();
+      sess_list.refreshActiveSessionList();
       if (sess_list.selected_session_id != -1)
       {
         sess_list.refreshDisplayedSession();
@@ -54,6 +59,7 @@ function generate_options(option_texts){
 function change_games(list, game_name){
   list.active_game = game_name;
   list.refreshActiveSessionList();
+  list.clearSelected();
   // TODO: it may be that I should clear the selected session ID.
   //       will check on this later.
 }
@@ -86,9 +92,11 @@ class SessionList
    */
   constructor() {
     this.active_game = document.getElementById("mySelect").value;
+    this.active_sessions = [];
     this.active_session_ids = [];
     this.displayed_session_ids = [];
     this.selected_session_id = -1;
+    this.require_player_id = document.getElementById("require_pid").checked;
     this.refreshActiveSessionList();
   }
 
@@ -101,11 +109,22 @@ class SessionList
   refreshActiveSessionList() {
     let that = this;
     function active_sessions_handler(result) {
-      that.active_session_ids = JSON.parse(result);
-      console.log(`Refreshed session IDs: ${that.active_session_ids}`);
+      let parsed_sessions = 'null';
+      try
+      {
+        parsed_sessions = JSON.parse(result);
+      }
+      catch (err)
+      {
+        console.log(`Could not parse result as JSON:\n ${result}`);
+        return;
+      }
+      that.active_sessions = parsed_sessions;
+      console.log(`Refreshed session IDs: ${that.active_sessions}`);
+      that.active_session_ids = Array.from(Object.keys(that.active_sessions));
       that.refreshSessionDisplayList();
     };
-    Server.get_all_active_sessions(active_sessions_handler, this.active_game);
+    Server.get_all_active_sessions(active_sessions_handler, this.active_game, this.require_player_id);
   }
 
   /**
@@ -120,15 +139,24 @@ class SessionList
     let remove_set = setMinus(display_set, active_set); // subtract active from display to get inactives, which are currently displayed.
     let add_set    = setMinus(active_set, display_set); // subtract display from active to get new sessions, which were not displayed yet.
     let session_list_area = document.getElementById("session_list");
-    // If there is anything to remove, loop over all sessions in the list. When we find an inactive one, remove it.
-    if (remove_set.size > 0) {
-      let child_nodes = Array.from(session_list_area.children);
-      for (let session_link_id in child_nodes) {
-        let session_link = child_nodes[session_link_id];
-        if (remove_set.has(session_link.id)) {
-          session_link.remove();
-          if (this.selected_session_id == session_link.id) { this.clearSelected(); }
-        }
+
+    // First, refresh what's in the list.
+    let child_nodes = Array.from(session_list_area.children);
+    for (let session_link_num in child_nodes) {
+      let session_link = child_nodes[session_link_num];
+      let session_id = session_link.id;
+      // let session_link = child_nodes[`div_${session_id}`];
+      // A) If object is in remove set, remove it.
+      if (remove_set.has(session_id)) {
+        session_link.remove();
+        if (this.selected_session_id == session_link.id) { this.clearSelected(); }
+      }
+      // B) Else, update the max and current levels.
+      else {
+        let cur_level_div = document.getElementById(`cur_level_${session_id}`);
+        cur_level_div.innerText = `current: ${this.active_sessions[session_id]["cur_level"].toString()}`;
+        let max_level_div = document.getElementById(`max_level_${session_id}`);
+        max_level_div.innerText = `max: ${this.active_sessions[session_id]["max_level"].toString()}`;
       }
     }
     // loop over all newly active sessions, adding them to the list.
@@ -141,6 +169,14 @@ class SessionList
       session_link.innerText = session_id;
       session_link.href = `#${session_id}`;
       session_div.appendChild(session_link);
+      let cur_level_div = document.createElement("div");
+      cur_level_div.id = `cur_level_${session_id}`;
+      cur_level_div.innerText = `current: ${this.active_sessions[session_id]["cur_level"].toString()}`;
+      session_div.appendChild(cur_level_div);
+      let max_level_div = document.createElement("div");
+      max_level_div.id = `max_level_${session_id}`;
+      max_level_div.innerText = `max: ${this.active_sessions[session_id]["max_level"].toString()}`;
+      session_div.appendChild(max_level_div);
       session_div.appendChild(document.createElement("br"));
       session_list_area.appendChild(session_div);
     }
@@ -159,7 +195,16 @@ class SessionList
     let display_area = document.getElementById("prediction_display_area");
     display_area.innerText = `Session ID: ${session_id}`;
     let predictions_handler = function(result) {
-      let predictions_raw = JSON.parse(result);
+      let predictions_raw = 'null';
+      try
+      {
+        predictions_raw = JSON.parse(result);
+      }
+      catch (err)
+      {
+        console.log(`Could not parse result as JSON:\n ${result}`);
+        return;
+      }
       let prediction_list = predictions_raw[that.selected_session_id]
       // loop over all predictions, adding to the UI.
       for (let prediction_name in prediction_list) {
@@ -194,7 +239,17 @@ class SessionList
     let that = this;
     let predictions_handler = function(result) {
       // console.log(`Got back predictions: ${result}`);
-      let predictions_raw = JSON.parse(result);
+      let predictions_raw = 'null';
+      try
+      {
+        console.log(`Got back model results: ${result}`);
+        predictions_raw = JSON.parse(result);
+      }
+      catch (err)
+      {
+        console.log(`Could not parse result as JSON:\n ${result}`);
+        return;
+      }
       let prediction_list = predictions_raw[that.selected_session_id]
       // After getting the prediction values, loop over whole list,
       // updating values.
