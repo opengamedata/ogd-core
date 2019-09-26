@@ -3,15 +3,10 @@
  */
 function onload()
 {
-  let check = 0
-  console.log(`update check: ${check}`);
   // Set up UI regions.
   var bar = document.querySelector('.leftbar');
   var dash = document.querySelector('.rightdash');
   // Set up the game selection dropdown.
-  var select = document.createElement("SELECT");
-  select.id = "mySelect";
-  document.getElementById("dropdown_area").appendChild(select);
   generate_options(['CRYSTAL', 'WAVES', 'LAKELAND', 'JOWILDER'])
   // Create a SessionList instance for tracking state, and start the refresh loop.
   sess_list = new SessionList();
@@ -39,8 +34,7 @@ function onload()
  *  @param {*} option_texts A list of game names for the dropdown.
  */
 function generate_options(option_texts){
-  select = document.getElementById("mySelect");
-  let that = this; // the old this-that js hack.
+  select = document.getElementById("select_game");
   select.onchange = function(){if (this.value) change_games(sess_list, this.value);};
   for(let txt of option_texts){
     var option = document.createElement("option");
@@ -91,7 +85,7 @@ class SessionList
    * and a selected ID (for detailed display).
    */
   constructor() {
-    this.active_game = document.getElementById("mySelect").value;
+    this.active_game = document.getElementById("select_game").value;
     this.active_sessions = [];
     this.active_session_ids = [];
     this.displayed_session_ids = [];
@@ -177,6 +171,7 @@ class SessionList
 
   generateDisplayedSession(session_id)
   {
+    let that = this;
     // create a div for everything
     let session_div = document.createElement("div");
     session_div.id = session_id;
