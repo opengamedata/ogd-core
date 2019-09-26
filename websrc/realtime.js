@@ -20,10 +20,10 @@ function onload()
   }
   window.setInterval(() => {
     try {
-      sess_list.refreshActiveSessionList();
+      sess_list.updateActiveSessionList();
       if (sess_list.selected_session_id != -1)
       {
-        sess_list.refreshDisplayedSession();
+        sess_list.refreshSelectedSession();
       }
     }
     catch(err) {
@@ -58,7 +58,7 @@ function generate_options(option_texts){
  */
 function change_games(list, game_name){
   list.active_game = game_name;
-  list.refreshActiveSessionList();
+  list.updateActiveSessionList();
   list.clearSelected();
   // TODO: it may be that I should clear the selected session ID.
   //       will check on this later.
@@ -97,7 +97,7 @@ class SessionList
     this.displayed_session_ids = [];
     this.selected_session_id = -1;
     this.require_player_id = document.getElementById("require_pid").checked;
-    this.refreshActiveSessionList();
+    this.updateActiveSessionList();
   }
 
   /**
@@ -106,10 +106,12 @@ class SessionList
    * In the handler, the returned list updates the SessionList data,
    * and then makes a further call to refresh the display list.
    */
-  refreshActiveSessionList() {
+  updateActiveSessionList() {
     let that = this;
+    // let start_time = Date.now();
     function active_sessions_handler(result) {
       let parsed_sessions = 'null';
+      // console.log(`Got back with active sessions, time taken was: ${(Date.now() - start_time)/1000} seconds.`);
       try
       {
         parsed_sessions = JSON.parse(result);
@@ -122,7 +124,7 @@ class SessionList
       that.active_sessions = parsed_sessions;
       console.log(`Refreshed session IDs: ${that.active_sessions}`);
       that.active_session_ids = Array.from(Object.keys(that.active_sessions));
-      that.refreshSessionDisplayList();
+      that.updateSessionDisplayableList();
     };
     Server.get_all_active_sessions(active_sessions_handler, this.active_game, this.require_player_id);
   }
@@ -132,14 +134,21 @@ class SessionList
    * This is done in a way that preserves the order of session IDs 
    * as much as possible.
    */
-  refreshSessionDisplayList() {
+  updateSessionDisplayableList() {
     let that = this;
     let display_set = new Set(this.displayed_session_ids);
     let active_set = new Set(this.active_session_ids);
     let remove_set = setMinus(display_set, active_set); // subtract active from display to get inactives, which are currently displayed.
     let add_set    = setMinus(active_set, display_set); // subtract display from active to get new sessions, which were not displayed yet.
-    let session_list_area = document.getElementById("session_list");
 
+    this.refreshDisplayedSessionList(add_set, remove_set)
+
+    this.displayed_session_ids = [...this.active_session_ids]; // at this point, these should theoretically be the same.
+  }
+
+  refreshDisplayedSessionList(add_set, remove_set)
+  {
+    let session_list_area = document.getElementById("session_list");
     // First, refresh what's in the list.
     let child_nodes = Array.from(session_list_area.children);
     for (let session_link_num in child_nodes) {
@@ -153,34 +162,53 @@ class SessionList
       }
       // B) Else, update the max and current levels.
       else {
-        let cur_level_div = document.getElementById(`cur_level_${session_id}`);
-        cur_level_div.innerText = `current: ${this.active_sessions[session_id]["cur_level"].toString()}`;
-        let max_level_div = document.getElementById(`max_level_${session_id}`);
-        max_level_div.innerText = `max: ${this.active_sessions[session_id]["max_level"].toString()}`;
+        this.refreshDisplayedSession(session_id);
       }
     }
     // loop over all newly active sessions, adding them to the list.
     for (let id of add_set) {
       let session_id = id;
-      let session_div = document.createElement("div");
-      session_div.id = session_id;
-      let session_link = document.createElement("a");
-      session_link.onclick = function() { that.displaySelectedSession(session_id); }
-      session_link.innerText = session_id;
-      session_link.href = `#${session_id}`;
-      session_div.appendChild(session_link);
-      let cur_level_div = document.createElement("div");
-      cur_level_div.id = `cur_level_${session_id}`;
-      cur_level_div.innerText = `current: ${this.active_sessions[session_id]["cur_level"].toString()}`;
-      session_div.appendChild(cur_level_div);
-      let max_level_div = document.createElement("div");
-      max_level_div.id = `max_level_${session_id}`;
-      max_level_div.innerText = `max: ${this.active_sessions[session_id]["max_level"].toString()}`;
-      session_div.appendChild(max_level_div);
-      session_div.appendChild(document.createElement("br"));
+      let session_div = this.generateDisplayedSession(session_id);
       session_list_area.appendChild(session_div);
+
+      this.refreshDisplayedSession(session_id);
     }
-    this.displayed_session_ids = [...this.active_session_ids]; // at this point, these should theoretically be the same.
+  }
+
+  generateDisplayedSession(session_id)
+  {
+    // create a div for everything
+    let session_div = document.createElement("div");
+    session_div.id = session_id;
+    // create a link to select the session
+    let session_link = document.createElement("a");
+    session_link.onclick = function() { that.generateSelectedSession(session_id); }
+    session_link.innerText = session_id;
+    session_link.href = `#${session_id}`;
+    session_div.appendChild(session_link);
+    // create a div to display current level.
+    let cur_level_div = document.createElement("div");
+    cur_level_div.id = `cur_level_${session_id}`;
+    session_div.appendChild(cur_level_div);
+    let max_level_div = document.createElement("div");
+    max_level_div.id = `max_level_${session_id}`;
+    session_div.appendChild(max_level_div);
+    let seconds_inactive_div = document.createElement("div");
+    seconds_inactive_div.id = `seconds_inactive_${session_id}`;
+    session_div.appendChild(seconds_inactive_div);
+    session_div.appendChild(document.createElement("br"));
+
+    return session_div;
+  }
+
+  refreshDisplayedSession(session_id)
+  {
+      let cur_level_div = document.getElementById(`cur_level_${session_id}`);
+      cur_level_div.innerText = `current: ${this.active_sessions[session_id]["cur_level"].toString()}`;
+      let max_level_div = document.getElementById(`max_level_${session_id}`);
+      max_level_div.innerText = `max: ${this.active_sessions[session_id]["max_level"].toString()}`;
+      let seconds_inactive_div = document.getElementById(`seconds_inactive_${session_id}`);
+      seconds_inactive_div.innerText = `seconds inactive: ${this.active_sessions[session_id]["seconds_inactive"].toString()}`;
   }
 
   /**
@@ -189,12 +217,14 @@ class SessionList
    * the prediction values in place (without removing and replacing elements).
    * @param {*} session_id The id of the session to display.
    */
-  displaySelectedSession(session_id) {
+  generateSelectedSession(session_id) {
     let that = this;
     this.selected_session_id = session_id;
     let display_area = document.getElementById("prediction_display_area");
     display_area.innerText = `Session ID: ${session_id}`;
+    let start_time = Date.now();
     let predictions_handler = function(result) {
+      console.log(`Got back with initial predictions, time taken was: ${(Date.now() - start_time)/1000} seconds.`);
       let predictions_raw = 'null';
       try
       {
@@ -234,15 +264,16 @@ class SessionList
    * This assumes a session has been selected, and its id stored in
    * the SessionList selected_session_id variable.
    */
-  refreshDisplayedSession()
+  refreshSelectedSession()
   {
     let that = this;
+    // let start_time = Date.now();
     let predictions_handler = function(result) {
+      // console.log(`Got back with updated predictions, time taken was: ${(Date.now() - start_time)/1000} seconds.`);
       // console.log(`Got back predictions: ${result}`);
       let predictions_raw = 'null';
       try
       {
-        console.log(`Got back model results: ${result}`);
         predictions_raw = JSON.parse(result);
       }
       catch (err)
