@@ -26,7 +26,7 @@ def _cgi_debug(msg: str, level: str, file):
 class RTServer:
     @staticmethod
     def getAllActiveSessions(game_id: str, require_player_id: bool) -> typing.Dict:
-        start_time = datetime.now()
+        # start_time = datetime.now()
         tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
         log_file = open("./python_errors.log", "a+")
         try:
@@ -49,9 +49,10 @@ class RTServer:
                                                  columns=["MAX(level)"], filter=filt)
                 cur_level_raw = utils.SQL.SELECT(cursor=cursor,
                                                  db_name=DB_NAME_DATA, table=DB_TABLE,\
-                                                 columns=["level"], filter=filt, limit=1,\
+                                                 columns=["level", "server_time"], filter=filt, limit=1,\
                                                  sort_columns=["client_time"], sort_direction="DESC")
-                ret_val[sess_id] = {"session_id":sess_id, "max_level":max_level_raw[0][0], "cur_level":cur_level_raw[0][0]}
+                inactive = (datetime.now() - cur_level_raw[0][1]).seconds
+                ret_val[sess_id] = {"session_id":sess_id, "max_level":max_level_raw[0][0], "cur_level":cur_level_raw[0][0], "seconds_inactive":inactive}
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             # _cgi_debug(f"returning: {str(ret_val)}", "Info", log_file)
             # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
@@ -85,6 +86,7 @@ class RTServer:
             if len(session_data) > 0:
                 request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
                 game_table = GameTable(db, settings, request)
+                # return "Line 88: Killing features function in realtime.cgi."
                 schema = Schema(schema_name=f"{game_id}.json")
                 extractor: Extractor
                 if game_id == "WAVES":
@@ -140,22 +142,51 @@ class RTServer:
     @staticmethod
     def getPredictionsBySessID(sess_id: str, game_id: str, predictions):
         log_file = open("./python_errors.log", "a")
-        _cgi_debug(f"Trying to get predictions for session {sess_id}", "Info", log_file)
+        # _cgi_debug(f"Trying to get predictions for session {sess_id}", "Info", log_file)
         #tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
         #cursor = db.cursor()
-        start_time = datetime.now()
+        # start_time = datetime.now()
+        tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
+        log_file = open("./python_errors.log", "a+")
+        try:
+            cursor = db.cursor()
+            filt = f"`session_id`='{sess_id}'"
+            max_level_raw = utils.SQL.SELECT(cursor=cursor,
+                                             db_name=DB_NAME_DATA, table=DB_TABLE,\
+                                             columns=["MAX(level)"], filter=filt)
+            cur_level_raw = utils.SQL.SELECT(cursor=cursor,
+                                             db_name=DB_NAME_DATA, table=DB_TABLE,\
+                                             columns=["level", "server_time"], filter=filt, limit=1,\
+                                             sort_columns=["client_time"], sort_direction="DESC")
+            max_level = max_level_raw[0][0]
+            cur_level = cur_level_raw[0][0]
+            inactive = (datetime.now() - cur_level_raw[0][1]).seconds
 
-        # TODO: move models out into a JSON file.
-        models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
-        ret_val = {}
-        features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
-        # print(f"features_raw: {features_raw}")
-        features_parsed = RTServer._parseRawToDict(features_raw)
-        for model in models.keys():
-            ret_val[model] = RTServer.EvaluateLogRegModel(models[model], features_parsed)
+            # TODO: move models out into a JSON file.
+            models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
+            ret_val = {}
+            ret_val["max_level"] = max_level
+            ret_val["cur_level"] = cur_level
+            ret_val["seconds_inactive"] = inactive
+            features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
+            # return features_raw
+            # return "Killing predictions function in realtime.cgi, line 153"
+            # print(f"features_raw: {features_raw}")
+            features_parsed = RTServer._parseRawToDict(features_raw)
+            model_level = str(max(1, min(8, cur_level)))
+            for model in models[model_level].keys():
+                ret_val[model] = RTServer.EvaluateLogRegModel(models[model_level][model], features_parsed)
 
-        print(f"returning from realtime, with session_predictions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
-        return {sess_id:ret_val}
+            # print(f"returning from realtime, with session_predictions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            return {sess_id:ret_val}
+        except Exception as err:
+            #print(f"got error in RTServer.py: {str(err)}")
+            _cgi_debug(f"Got an error in getPredictionsBySessID: {str(err)}", "Error", log_file)
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            raise err
+        finally:
+            log_file.close()
 
     @staticmethod
     def _parseRawToDict(features_raw):
