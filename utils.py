@@ -66,7 +66,7 @@ class SSHLogin:
 class SQL:
     ## Function to set up a connection to a database, via an ssh tunnel if available.
     #  @return A tuple consisting of the tunnel and database connection, respectively.
-    def prepareDB(db_settings, ssh_settings) -> typing.Tuple:
+    def prepareDB(db_settings, ssh_settings) -> typing.Tuple[object, object]:
         # Load settings, set up consts.
         DB_NAME_DATA = db_settings["DB_NAME_DATA"]
         DB_USER = db_settings['DB_USER']
@@ -83,11 +83,11 @@ class SQL:
         sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
         if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
             ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
-            tunnel,db = SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
+            tunnel,db_cursor = SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
         else:
-            db = SQL.connectToMySQL(login=sql_login)
+            db_cursor = SQL.connectToMySQL(login=sql_login)
             tunnel = None
-        return (tunnel, db)
+        return (tunnel, db_cursor)
 
     ## Function to help connect to a mySQL server.
     #  Simply tries to make a connection, and prints an error in case of failure.
@@ -176,18 +176,9 @@ class SQL:
                columns: typing.List[str] = None, filter: str = None, limit: int = -1,
                sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
                distinct: bool = False, fetch_results: bool = True) -> typing.List[typing.Tuple]:
-        d = "DISTINCT " if distinct else ""
-        cols      = ",".join(columns)      if columns is not None      and len(columns) > 0      else "*"
-        sort_cols = ",".join(sort_columns) if sort_columns is not None and len(sort_columns) > 0 else None
-        table_path = db_name + "." + str(table)
-
-        sel_clause   = "SELECT " + d + cols + " FROM " + table_path
-        where_clause = "" if filter    is None else " WHERE {}".format(filter)
-        group_clause = "" if grouping  is None else " GROUP BY {}".format(grouping)
-        sort_clause  = "" if sort_cols is None else " ORDER BY {} {} ".format(sort_cols, sort_direction)
-        lim_clause   = "" if limit < 0         else " LIMIT {}".format(str(limit))
-
-        query = sel_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
+        query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, filter=filter, limit=limit,
+                                   sort_columns=sort_columns, sort_direction=sort_direction,
+                                   grouping=grouping, distinct=distinct)
         logging.info("Running query: " + query)
         # print(f"running query: {query}")
         start = datetime.datetime.now()
@@ -205,7 +196,27 @@ class SQL:
         logging.info("Query fetch completed, total query time:    {:d} min, {:.3f} sec to get {:d} rows".format( \
             math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(result) ) \
         )
+        # print("Query fetch completed, total query time:    {:d} min, {:.3f} sec to get {:d} rows".format( \
+        #     math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(result) ) \
+        # )
         return result
+
+    @staticmethod
+    def _prepareSelect(db_name: str, table:str, columns: typing.List[str] = None, filter: str = None, limit: int = -1,
+               sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
+               distinct: bool = False):
+        d = "DISTINCT " if distinct else ""
+        cols      = ",".join(columns)      if columns is not None      and len(columns) > 0      else "*"
+        sort_cols = ",".join(sort_columns) if sort_columns is not None and len(sort_columns) > 0 else None
+        table_path = db_name + "." + str(table)
+
+        sel_clause   = "SELECT " + d + cols + " FROM " + table_path
+        where_clause = "" if filter    is None else " WHERE {}".format(filter)
+        group_clause = "" if grouping  is None else " GROUP BY {}".format(grouping)
+        sort_clause  = "" if sort_cols is None else " ORDER BY {} {} ".format(sort_cols, sort_direction)
+        lim_clause   = "" if limit < 0         else " LIMIT {}".format(str(limit))
+
+        return sel_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
 
     ## Simple function to construct and log a nice server 500 error message.
     #  @param err_msg A more detailed error message with info to help debugging.
