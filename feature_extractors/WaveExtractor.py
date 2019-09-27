@@ -33,12 +33,12 @@ class WaveExtractor(Extractor):
         self.amp_move_counts:  typing.Dict   = {}
         self.off_move_counts:  typing.Dict   = {}
         self.wave_move_counts: typing.Dict   = {}
+        self.saw_first_move: typing.Dict[int, bool] = {}
         self.latest_complete_lvl8 = None
         self.latest_complete_lvl16 = None
         self.latest_answer_Q0 = None
         self.latest_answer_Q2 = None
         self.active_begin = None
-        self.saw_first_move: bool = False
         self.move_closenesses_tx: typing.Dict = {}
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
         # we specifically want to set the default value for questionAnswered to "null", for unanswered.
@@ -321,22 +321,22 @@ class WaveExtractor(Extractor):
             self.amp_move_counts[level] += 1
             if isGoodMove(event_data):
                 self.features.incValByIndex(feature_name="amplitudeGoodMoveCount", index=level)
-            if not self.saw_first_move:
-                self.saw_first_move = True
+            if not level in self.saw_first_move.keys() or not self.saw_first_move[level]:
+                self.saw_first_move[level] = True
                 self.features.setValByIndex(feature_name="firstMoveType", index=level, new_value='A')
         elif event_data["slider"] == "OFFSET":
             self.off_move_counts[level] += 1
             if isGoodMove(event_data):
                 self.features.incValByIndex(feature_name="offsetGoodMoveCount", index=level)
-            if not self.saw_first_move:
-                self.saw_first_move = True
+            if not level in self.saw_first_move.keys() or not self.saw_first_move[level]:
+                self.saw_first_move[level] = True
                 self.features.setValByIndex(feature_name="firstMoveType", index=level, new_value='O')
         elif event_data["slider"] == "WAVELENGTH":
             self.wave_move_counts[level] += 1
             if isGoodMove(event_data):
                 self.features.incValByIndex(feature_name="wavelengthGoodMoveCount", index=level)
-            if not self.saw_first_move:
-                self.saw_first_move = True
+            if not level in self.saw_first_move.keys() or not self.saw_first_move[level]:
+                self.saw_first_move[level] = True
                 self.features.setValByIndex(feature_name="firstMoveType", index=level, new_value='W')
         # then, log things specific to slider move:
         if event_data["event_custom"] == "SLIDER_MOVE_RELEASE":
