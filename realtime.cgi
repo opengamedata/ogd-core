@@ -43,10 +43,11 @@ class RTServer:
             ret_val = {}
             for item in active_sessions_raw:
                 sess_id = item[0]
-                filt = f"`session_id`='{sess_id}'"
+                filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
                 max_level_raw = utils.SQL.SELECT(cursor=cursor,
                                                  db_name=DB_NAME_DATA, table=DB_TABLE,\
                                                  columns=["MAX(level)"], filter=filt)
+                filt = f"`session_id`='{sess_id}'"
                 cur_level_raw = utils.SQL.SELECT(cursor=cursor,
                                                  db_name=DB_NAME_DATA, table=DB_TABLE,\
                                                  columns=["level", "server_time"], filter=filt, limit=1,\
@@ -150,10 +151,11 @@ class RTServer:
         log_file = open("./python_errors.log", "a+")
         try:
             cursor = db.cursor()
-            filt = f"`session_id`='{sess_id}'"
+            filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
             max_level_raw = utils.SQL.SELECT(cursor=cursor,
                                              db_name=DB_NAME_DATA, table=DB_TABLE,\
                                              columns=["MAX(level)"], filter=filt)
+            filt = f"`session_id`='{sess_id}'"
             cur_level_raw = utils.SQL.SELECT(cursor=cursor,
                                              db_name=DB_NAME_DATA, table=DB_TABLE,\
                                              columns=["level", "server_time"], filter=filt, limit=1,\
