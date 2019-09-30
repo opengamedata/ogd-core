@@ -23,7 +23,18 @@ from schemas.Schema import Schema
 def _cgi_debug(msg: str, level: str, file):
     file.write(f"[{level}] At {str(datetime.now())}, {msg}.\n")
 
+## Class to handle API calls for the realtime page.
+#  Defines a bunch of static handler functions, one for each valid API call.
 class RTServer:
+    ## Handler to retrieve all active sessions for a given game.
+    #  If the require_player_id flag is set to true, only players with a value
+    #  in the playerID column will be returned.
+    #  @param game_id The ID name of the game whose sessions should be returned.
+    #  @param require_player_id A flag to determine whether to filter out sessions
+    #                           lacking a valid playerID.
+    #  @return A dictionary mapping session ids to some data about the session.
+    #          Specifically, we get each session's max completed level, current
+    #          level, and time since last move.
     @staticmethod
     def getAllActiveSessions(game_id: str, require_player_id: bool) -> typing.Dict:
         # start_time = datetime.now()
@@ -67,6 +78,17 @@ class RTServer:
         finally:
             log_file.close()
 
+    ## Handler to retrieve features for a given session.
+    #  For now, at least, the game ID must be given as well, in order to load
+    #  information about the way that data from that game is structured.
+    #  In theory, we may be able to get the game ID by pulling it from the database,
+    #  but it's easier just to make it a parameter for the call.
+    #  @param sess_id  The id number for the session whose features are needed.
+    #  @param game_id  The id for the game being played in the given session.
+    #  @param features An optional list of specific features to be retrieved.
+    #                  By default, all available features are retrieved.
+    #  @return A dictionary mapping feature names to feature values.
+    #          If a features argument was given, only returns the corresponding features.
     @staticmethod
     def getFeaturesBySessID(sess_id: str, game_id: str, features = None) -> typing.Dict:
         tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
@@ -173,7 +195,8 @@ class RTServer:
             features_parsed = RTServer._parseRawToDict(features_raw)
             model_level = str(max(1, min(8, cur_level)))
             for model in models[model_level].keys():
-                ret_val[model] = RTServer.EvaluateLogRegModel(models[model_level][model], features_parsed)
+                raw_val = RTServer.EvaluateLogRegModel(models[model_level][model], features_parsed)
+                ret_val[model] = str(round(raw_val * 100)) + "%"
 
             # print(f"returning from realtime, with session_predictions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
