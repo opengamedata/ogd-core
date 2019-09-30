@@ -43,16 +43,18 @@ class RTServer:
             ret_val = {}
             for item in active_sessions_raw:
                 sess_id = item[0]
-                filt = f"`session_id`='{sess_id}'"
+                filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
                 max_level_raw = utils.SQL.SELECT(cursor=cursor,
                                                  db_name=DB_NAME_DATA, table=DB_TABLE,\
                                                  columns=["MAX(level)"], filter=filt)
+                filt = f"`session_id`='{sess_id}'"
                 cur_level_raw = utils.SQL.SELECT(cursor=cursor,
                                                  db_name=DB_NAME_DATA, table=DB_TABLE,\
                                                  columns=["level", "server_time"], filter=filt, limit=1,\
                                                  sort_columns=["client_time"], sort_direction="DESC")
                 inactive = (datetime.now() - cur_level_raw[0][1]).seconds
-                ret_val[sess_id] = {"session_id":sess_id, "max_level":max_level_raw[0][0], "cur_level":cur_level_raw[0][0], "seconds_inactive":inactive}
+                max_level = max_level_raw[0][0] if max_level_raw[0][0] != None else 0
+                ret_val[sess_id] = {"session_id":sess_id, "max_level":max_level, "cur_level":cur_level_raw[0][0], "seconds_inactive":inactive}
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             # _cgi_debug(f"returning: {str(ret_val)}", "Info", log_file)
             # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
@@ -150,15 +152,16 @@ class RTServer:
         log_file = open("./python_errors.log", "a+")
         try:
             cursor = db.cursor()
-            filt = f"`session_id`='{sess_id}'"
+            filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
             max_level_raw = utils.SQL.SELECT(cursor=cursor,
                                              db_name=DB_NAME_DATA, table=DB_TABLE,\
                                              columns=["MAX(level)"], filter=filt)
+            filt = f"`session_id`='{sess_id}'"
             cur_level_raw = utils.SQL.SELECT(cursor=cursor,
                                              db_name=DB_NAME_DATA, table=DB_TABLE,\
                                              columns=["level", "server_time"], filter=filt, limit=1,\
                                              sort_columns=["client_time"], sort_direction="DESC")
-            max_level = max_level_raw[0][0]
+            max_level = max_level_raw[0][0] if max_level_raw[0][0] != None else 0
             cur_level = cur_level_raw[0][0]
             inactive = (datetime.now() - cur_level_raw[0][1]).seconds
 
