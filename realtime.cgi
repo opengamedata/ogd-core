@@ -68,11 +68,6 @@ class RTServer:
             log_file.close()
 
     @staticmethod
-    def getActiveSessionsByLoc(game_id: str, state: str, city: str):
-        all_sessions = RTServer.getAllActiveSessions(game_id)
-        return all_sessions[state][city]
-
-    @staticmethod
     def getFeaturesBySessID(sess_id: str, game_id: str, features = None) -> typing.Dict:
         tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
         try:
