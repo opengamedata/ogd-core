@@ -443,7 +443,11 @@ class WaveExtractor(Extractor):
         if times:
             X = [(times[i]-times[0]).seconds for i in range(len(times))]
             y = closenesses
-            intercept, slope, r_sq = self._2D_linear_regression(X, y)
+            if len(X) > 1:
+                intercept, slope, r_sq = self._2D_linear_regression(X, y)
+                r_sq = r_sq if not np.isnan(r_sq) else 0
+            else:
+                intercept, slope, r_sq = 0,0,0
             self.features.setValByIndex(feature_name='closenessIntercept', index=lvl, new_value=intercept)
             self.features.setValByIndex(feature_name='closenessSlope', index=lvl, new_value=slope)
             self.features.setValByIndex(feature_name='closenessR2', index=lvl, new_value=r_sq)
@@ -452,8 +456,13 @@ class WaveExtractor(Extractor):
                 del ranges[0]
                 del times[0]
 
+            X = [(times[i] - times[0]).seconds for i in range(len(times))]
             y = ranges
-            intercept, slope, r_sq = self._2D_linear_regression(X, y)
+            if len(X) > 1:
+                intercept, slope, r_sq = self._2D_linear_regression(X, y)
+                r_sq = r_sq if not np.isnan(r_sq) else 0
+            else:
+                intercept, slope, r_sq = 0, 0, 0
             self.features.setValByIndex(feature_name='rangeIntercept', index=lvl, new_value=intercept)
             self.features.setValByIndex(feature_name='rangeSlope', index=lvl, new_value=slope)
             self.features.setValByIndex(feature_name='rangeR2', index=lvl, new_value=r_sq)
