@@ -237,13 +237,28 @@ class RTServer:
     def EvaluateLogRegModel(model, feature_data) -> float:
         logit = 0
         for coeff in model.keys():
-            if coeff == "Intercept":
+            # case where coefficient is a normal feature
+            if coeff in feature_data.keys():
+                try:
+                    logit += model[coeff] * feature_data[coeff]
+                except Exception as err:
+                    print(f"Got error when trying to add {coeff} term. Value is {feature_data[coeff]}. Type is {type(feature_data[coeff])}")
+                    raise err
+            # enum case, where we have coefficient = feature_name.enum_val
+            elif re.search("\w+\.\w+", coeff):
+                pieces = coeff.split(".")
+                if pieces[0] in feature_data.keys():
+                    logit += model[coeff] * (1.0 if feature_data[pieces[0]] == pieces[1] else 0.0)
+                else:
+                    print(f"Found an element of model that is not a feature: {coeff}")
+            # specific cases, where we just hardcode a thing that must be consistent across all models.
+            elif coeff == "Intercept":
                 logit += model[coeff]
+            elif coeff == "display_name":
+                pass
+            # default case, print a line.
             else:
-                # print(f"feature_data[coeff]: {str(type(feature_data[coeff]))} {feature_data[coeff]}")
-                # print(f"model[coeff]: {str(type(model[coeff]))} {model[coeff]}")
-                # print(f"product: {model[coeff] * feature_data[coeff]}")
-                logit += model[coeff] * feature_data[coeff]
+                print(f"Found an element of model that is not a feature: {coeff}")
         # print(f"logit: {logit}")
         p = 1 / (1 + math.exp(-logit))
         return p
