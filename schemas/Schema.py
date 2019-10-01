@@ -24,7 +24,7 @@ class Schema:
     def __init__(self, schema_name:str, schema_path:str = os.path.dirname(__file__) + "/JSON/"):
         # define instance vars
         self._schema:       typing.Dict = {}
-        self._feature_list: typing.Dict = None
+        self._feature_list: typing.List = None
         # set instance vars
         if not schema_name.lower().endswith(".json"):
             schema_name += ".json"

@@ -2,6 +2,7 @@
 import bisect
 import json
 import logging
+import math
 import typing
 ## import local files
 import utils
@@ -444,6 +445,8 @@ class WaveExtractor(Extractor):
             X = [(times[i]-times[0]).seconds for i in range(len(times))]
             y = closenesses
             intercept, slope, r_sq = self._2D_linear_regression(X, y)
+            if math.isnan(r_sq):
+                r_sq = 0
             self.features.setValByIndex(feature_name='closenessIntercept', index=lvl, new_value=intercept)
             self.features.setValByIndex(feature_name='closenessSlope', index=lvl, new_value=slope)
             self.features.setValByIndex(feature_name='closenessR2', index=lvl, new_value=r_sq)
@@ -454,6 +457,8 @@ class WaveExtractor(Extractor):
 
             y = ranges
             intercept, slope, r_sq = self._2D_linear_regression(X, y)
+            if math.isnan(r_sq):
+                r_sq = 0
             self.features.setValByIndex(feature_name='rangeIntercept', index=lvl, new_value=intercept)
             self.features.setValByIndex(feature_name='rangeSlope', index=lvl, new_value=slope)
             self.features.setValByIndex(feature_name='rangeR2', index=lvl, new_value=r_sq)
