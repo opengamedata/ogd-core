@@ -145,10 +145,10 @@ class RTServer:
             raise err
 
     @staticmethod
-    def getFeatureNamesByGame(game_id: str):
+    def getFeatureNamesByGame(game_id: str) -> typing.Dict[str, typing.List]:
         log_file = open("./python_errors.log", "a")
         try:
-            schema = Schema(schema_name=f"{game_id}.json")
+            schema: Schema = Schema(schema_name=f"{game_id}.json")
             # _cgi_debug(f"schema features: {schema.feature_list()}", "Info", log_file)
             return {"features": schema.feature_list()}
         except Exception as err:
@@ -182,12 +182,12 @@ class RTServer:
             cur_level = cur_level_raw[0][0]
             inactive = (datetime.now() - cur_level_raw[0][1]).seconds
 
-            # TODO: move models out into a JSON file.
+            schema: Schema = Schema(schema_name=f"{game_id}.json")
             models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
             ret_val = {}
-            ret_val["max_level"] = max_level
-            ret_val["cur_level"] = cur_level
-            ret_val["seconds_inactive"] = inactive
+            ret_val["max_level"] = {"name": "Max Level", "value": max_level}
+            ret_val["cur_level"] = {"name": "Current Level", "value": cur_level}
+            ret_val["seconds_inactive"] = {"name": "Seconds Inactive", "value": inactive}
             features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
             # return features_raw
             # return "Killing predictions function in realtime.cgi, line 153"
@@ -196,7 +196,12 @@ class RTServer:
             model_level = str(max(1, min(8, cur_level)))
             for model in models[model_level].keys():
                 raw_val = RTServer.EvaluateLogRegModel(models[model_level][model], features_parsed)
-                ret_val[model] = str(round(raw_val * 100)) + "%"
+                name: str
+                if "display_name" in models[model_level][model].keys():
+                    name = models[model_level][model]["display_name"]
+                else:
+                    name = model
+                ret_val[model] = {"name": name, "value": str(round(raw_val * 100)) + "%"}
 
             # print(f"returning from realtime, with session_predictions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
@@ -213,9 +218,9 @@ class RTServer:
     def _parseRawToDict(features_raw):
         ret_val = {}
         for feature_name in features_raw.keys():
-            if features_raw[feature_name].replace('.','',1).isdigit():
+            try:
                 ret_val[feature_name] = float(features_raw[feature_name])
-            else:
+            except ValueError as err:
                 ret_val[feature_name] = features_raw[feature_name]
         return ret_val
     ## Function to evaluate a logistic regression model, creating a prediction.
