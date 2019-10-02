@@ -93,8 +93,11 @@ class RTServer:
     #  @return A dictionary mapping feature names to feature values.
     #          If a features argument was given, only returns the corresponding features.
     @staticmethod
-    def getFeaturesBySessID(sess_id: str, game_id: str, features = None) -> typing.Dict:
+    def getFeaturesBySessID(sess_id: str, game_id: str, features: typing.List = None) -> typing.Dict:
         tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
+        # if we got a features list, it'll be a string that we must split.
+        if features is not None and type(features) == str:
+            features = features.split(",")
         try:
             log_file = open("./python_errors.log", "a+")
             _cgi_debug(f"Getting all features for session {sess_id}", "Info", log_file)
@@ -127,6 +130,7 @@ class RTServer:
                     extractor.extractFromRow(row_with_complex_parsed=row, game_table=game_table)
                 all_features = dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
                                             extractor.getCurrentFeatures() ))
+                print(f"all_features: {all_features}")
                 if features is not None and features != "null":
                     ret_val = {i:all_features[i] for i in features}
                 else:
@@ -138,7 +142,7 @@ class RTServer:
                 ret_val = {"error": "Empty Session!"}
             log_file.close()
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-            return ret_val
+            return {sess_id:ret_val}
         except Exception as err:
             print(f"got error in RTServer.py: {str(err)}")
             _cgi_debug(f"Got an error in getFeaturesBySessID: {str(err)}", "Error", log_file)
@@ -195,7 +199,7 @@ class RTServer:
             # return features_raw
             # return "Killing predictions function in realtime.cgi, line 153"
             # print(f"features_raw: {features_raw}")
-            features_parsed = RTServer._parseRawToDict(features_raw)
+            features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
             model_level = str(max(1, min(8, cur_level)))
             for model in models[model_level].keys():
                 raw_val = RTServer.EvaluateLogRegModel(models[model_level][model], features_parsed)
