@@ -57,18 +57,11 @@ class RTServer:
                 sess_id = item[0]
                 player_id = item[1]
                 if (require_player_id == "false") or re.search("^[a-z,A-Z][0-9]{3}$", player_id):
-                    filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
-                    max_level_raw = utils.SQL.SELECT(cursor=cursor,
-                                                    db_name=DB_NAME_DATA, table=DB_TABLE,\
-                                                    columns=["MAX(level)"], filter=filt)
-                    filt = f"`session_id`='{sess_id}'"
-                    cur_level_raw = utils.SQL.SELECT(cursor=cursor,
-                                                    db_name=DB_NAME_DATA, table=DB_TABLE,\
-                                                    columns=["level", "server_time"], filter=filt, limit=1,\
-                                                    sort_columns=["client_time"], sort_direction="DESC")
-                    inactive = (datetime.now() - cur_level_raw[0][1]).seconds
-                    max_level = max_level_raw[0][0] if max_level_raw[0][0] != None else 0
-                    ret_val[sess_id] = {"session_id":sess_id, "player_id":item[1], "max_level":max_level, "cur_level":cur_level_raw[0][0], "seconds_inactive":inactive}
+                    prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
+                    idle_time = prog["idle_time"]
+                    max_level = prog["max_level"]
+                    cur_level = prog["cur_level"]
+                    ret_val[sess_id] = {"session_id":sess_id, "player_id":item[1], "max_level":max_level, "cur_level":cur_level, "idle_time":idle_time}
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             # _cgi_debug(f"returning: {str(ret_val)}", "Info", log_file)
             # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
@@ -128,11 +121,22 @@ class RTServer:
                     row = list(row)
                     row[game_table.complex_data_index] = complex_data_parsed
                     extractor.extractFromRow(row_with_complex_parsed=row, game_table=game_table)
+                extractor.calculateAggregateFeatures()
                 all_features = dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
                                             extractor.getCurrentFeatures() ))
-                print(f"all_features: {all_features}")
+                # print(f"all_features: {all_features}")
+                prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
+                cur_level = prog["cur_level"]
+                ret_val = {}
                 if features is not None and features != "null":
-                    ret_val = {i:all_features[i] for i in features}
+                    for feature_name in features:
+                        if feature_name in all_features.keys():
+                            ret_val[feature_name] = {"name": feature_name, "value": all_features[feature_name]}
+                        elif feature_name in schema.perlevel_features():
+                            ret_val[feature_name] = {"name": feature_name, "value": all_features[f"lvl{cur_level}_{feature_name}"]}
+                        else:
+                            ret_val[feature_name] = {"name": feature_name, "value":None }
+                    # ret_val = {i:all_features[i] for i in features}
                 else:
                     ret_val = all_features
             else:
@@ -150,6 +154,37 @@ class RTServer:
             log_file.close()
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             raise err
+
+    ## Function to retrieve the game progress in a session.
+    #  Specifically, the current level, max level, and current idle time.
+    #  Other data could be added as needed.
+    @staticmethod
+    def getGameProgress(sess_id: str, game_id: str) -> typing.Dict[str, object]:
+        tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
+        log_file = open("./python_errors.log", "a+")
+        try:
+            cursor = db.cursor()
+            filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
+            max_level_raw = utils.SQL.SELECT(cursor=cursor,
+                                             db_name=DB_NAME_DATA, table=DB_TABLE,\
+                                             columns=["MAX(level)"], filter=filt)
+            filt = f"`session_id`='{sess_id}'"
+            cur_level_raw = utils.SQL.SELECT(cursor=cursor,
+                                             db_name=DB_NAME_DATA, table=DB_TABLE,\
+                                             columns=["level", "server_time"], filter=filt, limit=1,\
+                                             sort_columns=["client_time"], sort_direction="DESC")
+            max_level = max_level_raw[0][0] if max_level_raw[0][0] != None else 0
+            cur_level = cur_level_raw[0][0]
+            idle_time = (datetime.now() - cur_level_raw[0][1]).seconds
+
+            return {"max_level": max_level, "cur_level": cur_level, "idle_time": idle_time}
+        except Exception as err:
+            #print(f"got error in RTServer.py: {str(err)}")
+            _cgi_debug(f"Got an error in getGameProgress: {str(err)}", "Error", log_file)
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            raise err
+        finally:
+            log_file.close()
 
     @staticmethod
     def getFeatureNamesByGame(game_id: str) -> typing.Dict[str, typing.List]:
@@ -176,25 +211,17 @@ class RTServer:
         log_file = open("./python_errors.log", "a+")
         try:
             cursor = db.cursor()
-            filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
-            max_level_raw = utils.SQL.SELECT(cursor=cursor,
-                                             db_name=DB_NAME_DATA, table=DB_TABLE,\
-                                             columns=["MAX(level)"], filter=filt)
-            filt = f"`session_id`='{sess_id}'"
-            cur_level_raw = utils.SQL.SELECT(cursor=cursor,
-                                             db_name=DB_NAME_DATA, table=DB_TABLE,\
-                                             columns=["level", "server_time"], filter=filt, limit=1,\
-                                             sort_columns=["client_time"], sort_direction="DESC")
-            max_level = max_level_raw[0][0] if max_level_raw[0][0] != None else 0
-            cur_level = cur_level_raw[0][0]
-            inactive = (datetime.now() - cur_level_raw[0][1]).seconds
+            prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
+            max_level = prog["max_level"]
+            cur_level = prog["cur_level"]
+            idle_time = prog["idle_time"]
 
             schema: Schema = Schema(schema_name=f"{game_id}.json")
             models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
             ret_val = {}
             ret_val["max_level"] = {"name": "Max Level", "value": max_level}
             ret_val["cur_level"] = {"name": "Current Level", "value": cur_level}
-            ret_val["seconds_inactive"] = {"name": "Seconds Inactive", "value": inactive}
+            ret_val["seconds_inactive"] = {"name": "Seconds Inactive", "value": idle_time}
             features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
             # return features_raw
             # return "Killing predictions function in realtime.cgi, line 153"
