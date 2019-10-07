@@ -47,10 +47,6 @@ class GameTable:
         self.event_index = self.column_names.index("event")
         self.event_custom_index = self.column_names.index("event_custom")
         self.level_index = self.column_names.index("level")
-        prepared = utils.SQL._prepareSelect(db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
-                                        columns=["MAX(client_time)", "MIN(client_time)"], grouping='session_id', filter="`app_id`=\"{}\"".format(request.game_id),
-                                        distinct=True)
-        # print(f"prepared query: {prepared}")
         if request.game_id == "WAVES":
             self.max_level = 34
             self.min_level = 0
@@ -58,7 +54,6 @@ class GameTable:
             max_min_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
                                             columns=["MAX(level)", "MIN(level)"], filter=f"`app_id`='{request.game_id}'",
                                             distinct=True)
-            # raise Exception("Line 57: killing GameTable")
             self.max_level = max_min_raw[0][0]
             self.min_level = max_min_raw[0][1]
         if request.game_id == 'LAKELAND':
