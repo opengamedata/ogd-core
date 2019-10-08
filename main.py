@@ -10,6 +10,7 @@ from datetime import datetime
 import feature_extractors.Extractor
 import Request
 import utils
+from config import settings
 from FeatureExporter import FeatureExporter
 from feature_extractors.CrystalExtractor import CrystalExtractor
 from feature_extractors.WaveExtractor import WaveExtractor
@@ -189,7 +190,7 @@ print(f"Running {fname}...")
 cmd = sys.argv[1] if num_args > 1 else "help"
 if type(cmd) == str:
     # if we have a real command, load the config file.
-    settings = utils.loadJSONFile("config.json")
+    # settings = utils.loadJSONFile("config.json")
     db_settings = settings["db_config"]
     ssh_settings = settings["ssh_config"]
 

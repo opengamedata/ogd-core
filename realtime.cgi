@@ -10,9 +10,10 @@ import re
 import traceback
 import typing
 from datetime import datetime, timedelta
-# import local files
+# # import local files
 import Request
 import utils
+from config import settings
 from feature_extractors.Extractor import Extractor
 from feature_extractors.CrystalExtractor import CrystalExtractor
 from feature_extractors.WaveExtractor import WaveExtractor
@@ -306,9 +307,11 @@ class RTServer:
 try:
     header = "Content-type:text/plain \r\n\r\n"
     print(str(header))
+    # print("test return")
+    # quit()
 
     # Load settings, set up consts.
-    settings = utils.loadJSONFile("config.json")
+    # settings = utils.loadJSONFile("config.json")
     db_settings = settings["db_config"]
     DB_NAME_DATA = db_settings["DB_NAME_DATA"]
     DB_TABLE = db_settings["table"]
