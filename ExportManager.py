@@ -21,10 +21,10 @@ from feature_extractors.WaveExtractor import WaveExtractor
 from feature_extractors.CrystalExtractor import CrystalExtractor
 from feature_extractors.LakelandExtractor import LakelandExtractor
 
-## @class FeatureExporter
+## @class ExportManager
 #  A class to export features and raw data, given a Request object.
-class FeatureExporter:
-    ## Constructor for the FeatureExporter class.
+class ExportManager:
+    ## Constructor for the ExportManager class.
     #  Fairly simple, just saves some data for later use during export.
     #  @param game_id Initial id of game to export
     #                 (this can be changed, if a GameTable with a different id is
@@ -46,7 +46,7 @@ class FeatureExporter:
     #                 and export.
     def exportFromRequest(self, request: Request):
         if request.game_id != self._game_id:
-            logging.warn(f"Changing FeatureExporter game from {self._game_id} to {request.game_id}")
+            logging.warn(f"Changing ExportManager game from {self._game_id} to {request.game_id}")
             self._game_id = request.game_id
         else:
             game_table: GameTable = GameTable(db=self._db, settings=self._settings, request=request)

@@ -12,7 +12,7 @@ import feature_extractors.Extractor
 import Request
 import utils
 from config import settings
-from FeatureExporter import FeatureExporter
+from ExportManager import ExportManager
 from feature_extractors.CrystalExtractor import CrystalExtractor
 from feature_extractors.WaveExtractor import WaveExtractor
 from GameTable import GameTable
@@ -85,7 +85,7 @@ def runExport(month: bool = False):
                 max_sessions=settings["MAX_SESSIONS"], min_moves=settings["MIN_MOVES"], \
                 )
     start = datetime.now()
-    feature_exporter = FeatureExporter(req.game_id, db=db, settings=settings)
+    feature_exporter = ExportManager(req.game_id, db=db, settings=settings)
     try:
         feature_exporter.exportFromRequest(request=req)
         # cProfile.runctx("feature_exporter.exportFromRequest(request=req)",
