@@ -1,5 +1,6 @@
 # import standard libraries
 import cProfile
+import datetime
 import logging
 import math
 import os
@@ -127,7 +128,7 @@ def writeReadme():
             game_name = sys.argv[2]
             path = f"./data/{game_name}"
             os.makedirs(name=path, exist_ok=True)
-            readme        = open(f"{path}/readme.md",                "w")
+            readme = open(f"{path}/readme.md", "w")
             # Load schema, and write feature & column descriptions to the readme.
             schema = Schema(f"{game_name}.json")
             feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}

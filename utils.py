@@ -66,6 +66,7 @@ class SSHLogin:
 class SQL:
     ## Function to set up a connection to a database, via an ssh tunnel if available.
     #  @return A tuple consisting of the tunnel and database connection, respectively.
+    @staticmethod
     def prepareDB(db_settings, ssh_settings) -> typing.Tuple[object, object]:
         # Load settings, set up consts.
         DB_NAME_DATA = db_settings["DB_NAME_DATA"]
@@ -81,10 +82,13 @@ class SQL:
         # set up other global vars as needed:
         logging.basicConfig(level=logging.INFO)
         sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
+        logging.info("We're preparing database.")
         if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
+            logging.info(f"Setting up ssh host connection.")
             ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
             tunnel,db_cursor = SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
         else:
+            logging.info("Skipping SSH part of login.")
             db_cursor = SQL.connectToMySQL(login=sql_login)
             tunnel = None
         return (tunnel, db_cursor)
@@ -107,6 +111,8 @@ class SQL:
                                            database = login.db_name)
         except MySQLdb.connections.Error as err:
             logging.error("Could no connect to the MySql database: " + str(err))
+            print(f"Could not connect to the MySql database: {str(err)}")
+            traceback.print_tb(err.__traceback__)
             return None
 
     ## Function to help connect to a mySQL server over SSH.
@@ -129,21 +135,31 @@ class SQL:
                 remote_bind_address=(sql.host, sql.port), logger=tunnel_logger
             )
             tunnel.start()
-            logging.info("Connected to SSH")
+            logging.info(f"Connected to SSH at {ssh.host}:{ssh.port}, {ssh.user}")
             conn = MySQLdb.connect(host = sql.host, port = tunnel.local_bind_port,
                                            user = sql.user, password = sql.pword,
                                            database = sql.db_name)
-            logging.info("Connected to SQL")
+            logging.info(f"Connected to SQL at {sql.host}:{sql.port}/{sql.db_name}, {sql.user}")
             return (tunnel, conn)
         except Exception as err:
             logging.error("Could not connect to the MySql database: " + str(err))
-            return None
+            print(f"Could not connect to the MySql database {str(err)}")
+            if tunnel is not None:
+                tunnel.stop()
+            return (None, None)
 
     @staticmethod
     def disconnectMySQLViaSSH(tunnel, db):
-        db.close()
+        if db is not None:
+            db.close()
+            logging.info("Closed database connection")
+        else:
+            logging.info("No db to close.")
         if tunnel is not None:
             tunnel.stop()
+            logging.info("Stopped tunnel connection")
+        else:
+            logging.info("No tunnel to stop")
 
     ## Function to build and execute SELECT statements on a database connection.
     #  @param cursor        A database cursor, retrieved from the active connection.
