@@ -206,8 +206,6 @@ class RTServer:
 
     @staticmethod
     def getPredictionsBySessID(sess_id: str, game_id: str, predictions):
-        #tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
-        #cursor = db.cursor()
         # start_time = datetime.now()
         tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         try:
@@ -223,9 +221,6 @@ class RTServer:
             ret_val["cur_level"] = {"name": "Current Level", "value": cur_level}
             ret_val["seconds_inactive"] = {"name": "Seconds Inactive", "value": idle_time}
             features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
-            # return features_raw
-            # return "Killing predictions function in realtime.cgi, line 153"
-            # print(f"features_raw: {features_raw}")
             features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
             model_level = str(max(1, min(8, cur_level)))
             for model in models[model_level].keys():
@@ -255,6 +250,7 @@ class RTServer:
             except ValueError:
                 ret_val[feature_name] = features_raw[feature_name]
         return ret_val
+
     ## Function to evaluate a logistic regression model, creating a prediction.
     #  This is based around the equation for probability of Y=1, denoted as p:
     #  p = 1 / (1 + e^-logit(X)),
