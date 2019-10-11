@@ -235,7 +235,7 @@ class ExportManager:
         try:
             existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR']) or {}
         except Exception as err:
-            logging.error("Could not back up file_list.json")
+            logging.error(f"Could not back up file_list.json. Got the following error: {str(err)}")
             return False
         backup_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json.bak", "w")
         backup_csv_file.write(json.dumps(existing_csvs, indent=4))
