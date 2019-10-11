@@ -1,4 +1,3 @@
-
 import json
 import logging
 import math
@@ -200,7 +199,7 @@ class RTServer:
         models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
         if level in models.keys():
             ret_val = models[level].keys()
-        else
+        else:
             ret_val = ["No models for given level"]
         return ret_val
 
