@@ -1,4 +1,4 @@
-#!/usr/bin/python3.6
+#!/Library/Frameworks/Python.framework/Versions/3.7/bin/python3
 # import standard libraries
 import cgi
 import cgitb
@@ -42,6 +42,7 @@ class RTServer:
         # start_time = datetime.now()
         tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
         log_file = open("./python_errors.log", "a+")
+        ret_val = {}
         try:
             cursor = db.cursor()
             start_time = datetime.now() - timedelta(minutes=5)
@@ -53,7 +54,6 @@ class RTServer:
                                                    sort_columns=["session_id"], distinct=True)
 
             # _cgi_debug(f"Got result from db: {str(active_sessions_raw)}", "Info", log_file)
-            ret_val = {}
             for item in active_sessions_raw:
                 sess_id = item[0]
                 player_id = item[1]
@@ -63,17 +63,16 @@ class RTServer:
                     max_level = prog["max_level"]
                     cur_level = prog["cur_level"]
                     ret_val[sess_id] = {"session_id":sess_id, "player_id":item[1], "max_level":max_level, "cur_level":cur_level, "idle_time":idle_time}
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             # _cgi_debug(f"returning: {str(ret_val)}", "Info", log_file)
             # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
-            return ret_val
         except Exception as err:
-            #print(f"got error in RTServer.py: {str(err)}")
+            print(f"got error in RTServer.py: {str(err)}")
             _cgi_debug(f"Got an error in getAllActiveSessions: {str(err)}", "Error", log_file)
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             raise err
         finally:
             log_file.close()
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            return ret_val
 
     ## Handler to retrieve features for a given session.
     #  For now, at least, the game ID must be given as well, in order to load
@@ -89,6 +88,7 @@ class RTServer:
     @staticmethod
     def getFeaturesBySessID(sess_id: str, game_id: str, features: typing.List = None) -> typing.Dict:
         tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
+        ret_val: typing.Dict
         # if we got a features list, it'll be a string that we must split.
         if features is not None and type(features) == str:
             features = features.split(",")
@@ -101,7 +101,6 @@ class RTServer:
                                             db_name=DB_NAME_DATA, table=DB_TABLE,\
                                             filter=filt,\
                                             sort_columns=["session_n", "client_time"])
-            ret_val: typing.Dict
             if len(session_data) > 0:
                 request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
                 game_table = GameTable(db, settings, request)
@@ -145,22 +144,25 @@ class RTServer:
                 _cgi_debug(f"error, empty session! all_features: {all_features}", "Error", log_file)
                 logging.warning(f"all_features: {all_features}")
                 ret_val = {"error": "Empty Session!"}
-            log_file.close()
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-            return {sess_id:ret_val}
         except Exception as err:
             print(f"got error in RTServer.py: {str(err)}")
             _cgi_debug(f"Got an error in getFeaturesBySessID: {str(err)}", "Error", log_file)
             traceback.print_tb(err.__traceback__)
+            raise err
+        finally:
             log_file.close()
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-            raise err
+            return {sess_id:ret_val}
 
     ## Function to retrieve the game progress in a session.
     #  Specifically, the current level, max level, and current idle time.
     #  Other data could be added as needed.
     @staticmethod
     def getGameProgress(sess_id: str, game_id: str) -> typing.Dict[str, object]:
+        max_level: int
+        cur_level: int
+        idle_time: int
+    
         tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
         log_file = open("./python_errors.log", "a+")
         try:
@@ -177,29 +179,30 @@ class RTServer:
             max_level = max_level_raw[0][0] if max_level_raw[0][0] != None else 0
             cur_level = cur_level_raw[0][0]
             idle_time = (datetime.now() - cur_level_raw[0][1]).seconds
-
-            return {"max_level": max_level, "cur_level": cur_level, "idle_time": idle_time}
         except Exception as err:
             #print(f"got error in RTServer.py: {str(err)}")
             _cgi_debug(f"Got an error in getGameProgress: {str(err)}", "Error", log_file)
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             raise err
         finally:
             log_file.close()
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            return {"max_level": max_level, "cur_level": cur_level, "idle_time": idle_time}
 
     @staticmethod
     def getFeatureNamesByGame(game_id: str) -> typing.Dict[str, typing.List]:
         log_file = open("./python_errors.log", "a")
+        ret_val: typing.Dict[str, typing.List]
         try:
             schema: Schema = Schema(schema_name=f"{game_id}.json")
             # _cgi_debug(f"schema features: {schema.feature_list()}", "Info", log_file)
-            return {"features": schema.feature_list()}
+            ret_val = {"features": schema.feature_list()}
         except Exception as err:
             _cgi_debug(f"Got exception in getFeatureNamesByGame: {str(err)}", "Error", log_file)
             _cgi_debug("Had to return None", "Warning", log_file)
-            return None
+            ret_val = None
         finally:
             log_file.close()
+            return ret_val
 
     @staticmethod
     def getPredictionsBySessID(sess_id: str, game_id: str, predictions):
@@ -211,13 +214,12 @@ class RTServer:
         tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
         log_file = open("./python_errors.log", "a+")
         try:
-            cursor = db.cursor()
             prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
             max_level = prog["max_level"]
             cur_level = prog["cur_level"]
             idle_time = prog["idle_time"]
 
-            schema: Schema = Schema(schema_name=f"{game_id}.json")
+            # schema: Schema = Schema(schema_name=f"{game_id}.json")
             models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
             ret_val = {}
             ret_val["max_level"] = {"name": "Max Level", "value": max_level}
@@ -238,16 +240,15 @@ class RTServer:
                     name = model
                 ret_val[model] = {"name": name, "value": str(round(raw_val * 100)) + "%"}
 
-            # print(f"returning from realtime, with session_predictions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-            return {sess_id:ret_val}
         except Exception as err:
             #print(f"got error in RTServer.py: {str(err)}")
             _cgi_debug(f"Got an error in getPredictionsBySessID: {str(err)}", "Error", log_file)
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             raise err
         finally:
             log_file.close()
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            # print(f"returning from realtime, with session_predictions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
+            return {sess_id:ret_val}
 
     @staticmethod
     def _parseRawToDict(features_raw):
