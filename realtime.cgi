@@ -332,11 +332,11 @@ try:
         game_id = request.getvalue("gameID")
         require_player_id = request.getvalue("require_player_id")
         body = RTServer.getAllActiveSessions(game_id=game_id, require_player_id=require_player_id)
-    elif method == "get_active_sessions_by_loc":
-        game_id = request.getvalue("gameID")
-        state = request.getvalue("state")
-        city = request.getvalue("city")
-        body = RTServer.getActiveSessionsByLoc(game_id=game_id, state=state, city=city)
+    # elif method == "get_active_sessions_by_loc":
+    #     game_id = request.getvalue("gameID")
+    #     state = request.getvalue("state")
+    #     city = request.getvalue("city")
+    #     body = RTServer.getActiveSessionsByLoc(game_id=game_id, state=state, city=city)
     elif method == "get_features_by_sessID":
         game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
