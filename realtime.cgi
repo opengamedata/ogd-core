@@ -21,10 +21,6 @@ from GameTable import GameTable
 from ProcManager import ProcManager
 from schemas.Schema import Schema
 
-## Simple formatting function for writing out timestamped debug prints.
-def _cgi_debug(msg: str, level: str, file):
-    file.write(f"[{level}] At {str(datetime.now())}, {msg}.\n")
-
 ## Class to handle API calls for the realtime page.
 #  Defines a bunch of static handler functions, one for each valid API call.
 class RTServer:
@@ -41,7 +37,6 @@ class RTServer:
     def getAllActiveSessions(game_id: str, require_player_id: bool) -> typing.Dict:
         # start_time = datetime.now()
         tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
-        log_file = open("./python_errors.log", "a+")
         ret_val = {}
         try:
             cursor = db.cursor()
@@ -53,7 +48,6 @@ class RTServer:
                                                    columns=["session_id", "player_id"], filter=filt,\
                                                    sort_columns=["session_id"], distinct=True)
 
-            # _cgi_debug(f"Got result from db: {str(active_sessions_raw)}", "Info", log_file)
             for item in active_sessions_raw:
                 sess_id = item[0]
                 player_id = item[1]
@@ -63,14 +57,12 @@ class RTServer:
                     max_level = prog["max_level"]
                     cur_level = prog["cur_level"]
                     ret_val[sess_id] = {"session_id":sess_id, "player_id":item[1], "max_level":max_level, "cur_level":cur_level, "idle_time":idle_time}
-            # _cgi_debug(f"returning: {str(ret_val)}", "Info", log_file)
             # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
         except Exception as err:
             print(f"got error in RTServer.py: {str(err)}")
-            _cgi_debug(f"Got an error in getAllActiveSessions: {str(err)}", "Error", log_file)
+            logging.error(f"Got an error in getAllActiveSessions: {str(err)}")
             raise err
         finally:
-            log_file.close()
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return ret_val
 
@@ -93,8 +85,7 @@ class RTServer:
         if features is not None and type(features) == str:
             features = features.split(",")
         try:
-            log_file = open("./python_errors.log", "a+")
-            _cgi_debug(f"Getting all features for session {sess_id}", "Info", log_file)
+            logging.info(f"Getting all features for session {sess_id}")
             cursor = db.cursor()
             filt = f"`session_id`='{sess_id}'"
             session_data = utils.SQL.SELECT(cursor=cursor,
@@ -141,16 +132,15 @@ class RTServer:
                     ret_val = all_features
             else:
                 print("error, empty session!")
-                _cgi_debug(f"error, empty session! all_features: {all_features}", "Error", log_file)
+                logging.error(f"error, empty session! all_features: {all_features}")
                 logging.warning(f"all_features: {all_features}")
                 ret_val = {"error": "Empty Session!"}
         except Exception as err:
             print(f"got error in RTServer.py: {str(err)}")
-            _cgi_debug(f"Got an error in getFeaturesBySessID: {str(err)}", "Error", log_file)
+            logging.error(f"Got an error in getFeaturesBySessID: {str(err)}")
             traceback.print_tb(err.__traceback__)
             raise err
         finally:
-            log_file.close()
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return {sess_id:ret_val}
 
@@ -164,7 +154,6 @@ class RTServer:
         idle_time: int
     
         tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
-        log_file = open("./python_errors.log", "a+")
         try:
             cursor = db.cursor()
             filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
@@ -181,38 +170,31 @@ class RTServer:
             idle_time = (datetime.now() - cur_level_raw[0][1]).seconds
         except Exception as err:
             #print(f"got error in RTServer.py: {str(err)}")
-            _cgi_debug(f"Got an error in getGameProgress: {str(err)}", "Error", log_file)
+            logging.error(f"Got an error in getGameProgress: {str(err)}")
             raise err
         finally:
-            log_file.close()
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return {"max_level": max_level, "cur_level": cur_level, "idle_time": idle_time}
 
     @staticmethod
     def getFeatureNamesByGame(game_id: str) -> typing.Dict[str, typing.List]:
-        log_file = open("./python_errors.log", "a")
         ret_val: typing.Dict[str, typing.List]
         try:
             schema: Schema = Schema(schema_name=f"{game_id}.json")
-            # _cgi_debug(f"schema features: {schema.feature_list()}", "Info", log_file)
             ret_val = {"features": schema.feature_list()}
         except Exception as err:
-            _cgi_debug(f"Got exception in getFeatureNamesByGame: {str(err)}", "Error", log_file)
-            _cgi_debug("Had to return None", "Warning", log_file)
+            logging.error(f"Got exception in getFeatureNamesByGame: {str(err)}")
+            logging.warn("Had to return None")
             ret_val = None
         finally:
-            log_file.close()
             return ret_val
 
     @staticmethod
     def getPredictionsBySessID(sess_id: str, game_id: str, predictions):
-        log_file = open("./python_errors.log", "a")
-        # _cgi_debug(f"Trying to get predictions for session {sess_id}", "Info", log_file)
         #tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
         #cursor = db.cursor()
         # start_time = datetime.now()
         tunnel,db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
-        log_file = open("./python_errors.log", "a+")
         try:
             prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
             max_level = prog["max_level"]
@@ -242,10 +224,9 @@ class RTServer:
 
         except Exception as err:
             #print(f"got error in RTServer.py: {str(err)}")
-            _cgi_debug(f"Got an error in getPredictionsBySessID: {str(err)}", "Error", log_file)
+            logging.error(f"Got an error in getPredictionsBySessID: {str(err)}")
             raise err
         finally:
-            log_file.close()
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             # print(f"returning from realtime, with session_predictions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
             return {sess_id:ret_val}
@@ -320,12 +301,11 @@ try:
 
     # set up other global vars as needed:
     logging.basicConfig(level=logging.INFO)
-    log_file = open("./python_errors.log", "a+")
 
     request = cgi.FieldStorage()
     method = request.getvalue("method")
 
-    _cgi_debug(f"method requested: {method}", "Info", log_file)
+    logging.info(f"method requested: {method}")
     if method == "say_hello":
         body = "Hello, world."
     elif method == "get_all_active_sessions":
@@ -343,7 +323,7 @@ try:
         features = request.getvalue("features")
         body = RTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, features=features)
         logging.info("got features by session ID in main realtime code.")
-        _cgi_debug(f"got features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}", "Info", log_file)
+        logging.info(f"got features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}")
     elif method == "get_feature_names_by_game":
         game_id = request.getvalue("gameID")
         body = RTServer.getFeatureNamesByGame(game_id=game_id)
@@ -357,7 +337,6 @@ try:
         body = RTServer.getPredictionNamesByGame(game_id=game_id)
 
     result: str = json.dumps(body, default=lambda ob: ob.isoformat() if type(ob) == datetime else json.dumps(ob))
-    # _cgi_debug(f"method: {method}; result string: {result}", "Info", log_file)
     print(result)
 except Exception as err:
     print(f"Error in realtime script! {str(err)}, traceback:\n{traceback.format_exc()}")
