@@ -194,6 +194,17 @@ class RTServer:
             return ret_val
 
     @staticmethod
+    def getPredictionNamesByGameLevel(game_id: str, level: int):
+        ret_val: typing.List
+
+        models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
+        if level in models.keys():
+            ret_val = models[level].keys()
+        else
+            ret_val = ["No models for given level"]
+        return ret_val
+
+    @staticmethod
     def getPredictionsBySessID(sess_id: str, game_id: str, predictions):
         #tunnel,db = utils.SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
         #cursor = db.cursor()
@@ -281,11 +292,7 @@ class RTServer:
         p = 1 / (1 + math.exp(-logit))
         return p
 
-    @staticmethod
-    def getPredictionNamesByGame(game_id: str):
-        return {"stub:prediction_names":["stub:this_should_be_1", "stub:this_should_be_0.168", "stub:random_1", "stub:random_2", "stub:random_3", "stub:random_4"]}
-
-    @staticmethod
-    def _ip_to_loc(ip):
-        # in future, convert ip to a (state, city) pair
-        return ("Stub:Wisconsin", "Stub:Madison")
+    # @staticmethod
+    # def _ip_to_loc(ip):
+    #     # in future, convert ip to a (state, city) pair
+    #     return ("Stub:Wisconsin", "Stub:Madison")
