@@ -12,6 +12,7 @@ import typing
 from datetime import datetime
 ## import local files
 import utils
+from config import settings
 from GameTable import GameTable
 from ProcManager import ProcManager
 from RawManager import RawManager
@@ -31,12 +32,11 @@ class ExportManager:
     #                  given, but will generate a warning)
     #  @param db      An active database connection
     #  @param settings A dictionary of program settings, some of which are needed for export.
-    def __init__(self, game_id: str, db, settings):
+    def __init__(self, game_id: str, settings):
         if game_id is None:
             logging.error("Game ID was not given!")
         else:
             self._game_id   = game_id
-        self._db       = db
         self._settings = settings
 
     ## Public function to use for feature extraction and csv export.
@@ -49,7 +49,8 @@ class ExportManager:
             logging.warn(f"Changing ExportManager game from {self._game_id} to {request.game_id}")
             self._game_id = request.game_id
         else:
-            game_table: GameTable = GameTable(db=self._db, settings=self._settings, request=request)
+            tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
+            game_table: GameTable = GameTable(db=db, settings=self._settings, request=request)
             try:
                 parse_success: str = self._getAndParseData(request, game_table)
                 if parse_success:
@@ -58,6 +59,8 @@ class ExportManager:
                     logging.error(f"Could not complete request {str(request)}")
             except Exception as err:
                 utils.SQL.server500Error(str(err))
+            finally:
+                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
 
     ## Private function containing most of the code to handle processing of db
     #  data, and export to files.
@@ -66,7 +69,6 @@ class ExportManager:
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
     def _getAndParseData(self, request: Request, game_table: GameTable):
-        db_cursor = self._db.cursor()
         data_directory = self._settings["DATA_DIR"] + self._game_id
         db_settings = self._settings["db_config"]
         
@@ -115,53 +117,62 @@ class ExportManager:
         raw_mgr.WriteRawCSVHeader()
         proc_mgr.WriteProcCSVHeader()
 
-        num_sess = len(game_table.session_ids)
-        logging.info(f"Preparing to process {num_sess} sessions.")
-        slice_size = self._settings["BATCH_SIZE"]
-        session_slices = [[game_table.session_ids[i] for i in
-                        range( j*slice_size, min((j+1)*slice_size - 1, num_sess) )] for j in
-                        range( 0, math.ceil(num_sess / slice_size) )]
-        for next_slice in session_slices:
-            # grab data for the given session range. Sort by event time, so 
-            # TODO: Take the "WAVES" out of the line of code below.
-            filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}')"
-            next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
-                                            filter=filt, sort_columns=["session_id", "session_n"], sort_direction = "ASC",
-                                            distinct=False)
-            # now, we process each row.
-            start = datetime.now()
-            for row in next_data_set:
-                self._processRow(row, game_table, raw_mgr, proc_mgr)
-            time_delta = datetime.now() - start
-            logging.info("Slice processing time: {} min, {:.3f} sec to handle {} events".format(
-                math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(next_data_set))
-            )
-            
-            # after processing all rows for all slices, write out the session data and reset for next slice.
-            raw_mgr.WriteRawCSVLines()
-            raw_mgr.ClearLines()
-            proc_mgr.calculateAggregateFeatures()
-            proc_mgr.WriteProcCSVLines()
-            proc_mgr.ClearLines()
+        try:
+            tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
+            db_cursor = db.cursor()
+            num_sess = len(game_table.session_ids)
+            logging.info(f"Preparing to process {num_sess} sessions.")
+            slice_size = self._settings["BATCH_SIZE"]
+            session_slices = [[game_table.session_ids[i] for i in
+                            range( j*slice_size, min((j+1)*slice_size - 1, num_sess) )] for j in
+                            range( 0, math.ceil(num_sess / slice_size) )]
+            for next_slice in session_slices:
+                # grab data for the given session range. Sort by event time, so 
+                # TODO: Take the "WAVES" out of the line of code below.
+                filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}')"
+                next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
+                                                filter=filt, sort_columns=["session_id", "session_n"], sort_direction = "ASC",
+                                                distinct=False)
+                # now, we process each row.
+                start = datetime.now()
+                for row in next_data_set:
+                    self._processRow(row, game_table, raw_mgr, proc_mgr)
+                time_delta = datetime.now() - start
+                logging.info("Slice processing time: {} min, {:.3f} sec to handle {} events".format(
+                    math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(next_data_set))
+                )
+                
+                # after processing all rows for all slices, write out the session data and reset for next slice.
+                raw_mgr.WriteRawCSVLines()
+                raw_mgr.ClearLines()
+                proc_mgr.calculateAggregateFeatures()
+                proc_mgr.WriteProcCSVLines()
+                proc_mgr.ClearLines()
 
-        # args_list = ["mysqldump", f"--host={db_settings['DB_HOST']}",
-        #             f"--where=", f"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'",
-        #             f"--user={db_settings['DB_USER']}", f"--password={db_settings['DB_PW']}",
-        #             f"{db_settings['DB_NAME_DATA']}", f"{db_settings['table']}"]
-        command = f"mysqldump --host={db_settings['DB_HOST']} \
- --where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'\" \
- --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']}\
- > {sql_dump_full_path}"
-        sql_dump_file = open(sql_dump_full_path, "w")
-        # logging.info(f"running sql dump command: {subprocess.list2cmdline(args_list)}")
-        # subprocess.run(args_list, stdout=sql_dump_file)
-        logging.info(f"running sql dump command: {command}")
-        os.system(command)
-        # Finally, update the list of csv files.
-        self._updateFileExportList(dataset_id, raw_csv_full_path, proc_csv_full_path,
-                                   sql_dump_full_path, request, num_sess)
+            # args_list = ["mysqldump", f"--host={db_settings['DB_HOST']}",
+            #             f"--where=", f"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'",
+            #             f"--user={db_settings['DB_USER']}", f"--password={db_settings['DB_PW']}",
+            #             f"{db_settings['DB_NAME_DATA']}", f"{db_settings['table']}"]
+            command = f"mysqldump --host={db_settings['DB_HOST']} \
+--where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'\" \
+--user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']}\
+> {sql_dump_full_path}"
+            sql_dump_file = open(sql_dump_full_path, "w")
+            # logging.info(f"running sql dump command: {subprocess.list2cmdline(args_list)}")
+            # subprocess.run(args_list, stdout=sql_dump_file)
+            logging.info(f"running sql dump command: {command}")
+            os.system(command)
+            # Finally, update the list of csv files.
+            self._updateFileExportList(dataset_id, raw_csv_full_path, proc_csv_full_path,
+                                    sql_dump_full_path, request, num_sess)
 
-        return True
+            ret_val = True
+        except Exception as err:
+            logging.error(str(err))
+            ret_val = False
+        finally:
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            return ret_val
 
     ## Private helper function to process a single row of data.
     #  Most of the processing is delegated to Raw and Proc Managers, but this
