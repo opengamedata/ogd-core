@@ -30,6 +30,7 @@ def showHelp():
     print("<cmd>    is one of the available commands:")
     print("         - export")
     print("         - export_month")
+    print("         - export_all_months")
     print("         - help")
     print("[<args>] are the arguments for the command:")
     print("         - export: game_id, [start_date, end_date]")
@@ -39,6 +40,8 @@ def showHelp():
     print("         - export_month: game_id, [month_year]")
     print("             game_id    = id of game to export")
     print("             month_year = month (and year) to export, in form mm/yyyy (default=current month)")
+    print("         - export_all_months: game_id")
+    print("             game_id    = id of game to export")
     print("         - help: *None*")
     print(width*"*")
 
@@ -54,33 +57,19 @@ def runExport(monthly: bool = False, all_data: bool = False):
     # retrieve/calculate date range.
     start_date: datetime
     end_date: datetime
-    month_year: typing.List[int]
     # If we want to export all data for a given month, calculate a date range.
     if monthly is True:
-        from calendar import monthrange
         if all_data is True:
-            tunnel, db  = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
-            first_entry = utils.SQL.SELECT(cursor=db.cursor(), db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
-                                           columns=["server_time"], filter=f"app_id={game_id}",
-                                           sort_columns=["server_time"], sort_direction="ASC", limit=1)
-            last_entry = utils.SQL.SELECT(cursor=db.cursor(), db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
-                                           columns=["server_time"], filter=f"app_id={game_id}",
-                                           sort_columns=["server_time"], sort_direction="DESC", limit=1)
-            first_month = first_entry[0][0].month
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-            #TODO: Finish this once we have servers and stuff working again.
+            _execAllMonthExport(game_id=game_id)
         else:
+            month_year: typing.List[int]
             if num_args > 3:
                 month_year_str = sys.argv[3].split("/")
                 month_year = [int(month_year_str[0]), int(month_year_str[1])]
             else:
                 today   = datetime.now()
                 month_year = [today.month, today.year]
-            month_range = monthrange(month_year[1], month_year[0])
-            days_in_month = month_range[1]
-            start_date = datetime(year=month_year[1], month=month_year[0], day=1, hour=0, minute=0, second=0)
-            end_date   = datetime(year=month_year[1], month=month_year[0], day=days_in_month, hour=23, minute=59, second=59)
-            _execExport(game_id, start_date, end_date)
+            _execMonthExport(game_id=game_id, month=month_year[0], year=month_year[1])
     # Otherwise, create date range from given pair of dates.
     else:
         today   = datetime.now()
@@ -92,6 +81,44 @@ def runExport(monthly: bool = False, all_data: bool = False):
         end_date = end_date.replace(hour=23, minute=59, second=59)
         _execExport(game_id, start_date, end_date)
 
+def _execAllMonthExport(game_id):
+    tunnel, db  = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
+    first_entry = utils.SQL.SELECT(cursor=db.cursor(), db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
+                                    columns=["server_time"], filter=f"app_id='{game_id}'",
+                                    sort_columns=["server_time"], sort_direction="ASC", limit=1)
+    last_entry = utils.SQL.SELECT(cursor=db.cursor(), db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
+                                    columns=["server_time"], filter=f"app_id='{game_id}'",
+                                    sort_columns=["server_time"], sort_direction="DESC", limit=1)
+    # breakpoint()
+    first_month = first_entry[0][0].month
+    last_month = last_entry[0][0].month
+    first_year = first_entry[0][0].year
+    last_year = last_entry[0][0].year
+    # 1) all months needed in first year.
+    #    if all within one year, just do whole month range.
+    #    else, go through December.
+    end = 1 + (last_month if first_year == last_year else 12)
+    for month in range(first_month, end):
+        _execMonthExport(game_id=game_id, month=month, year=first_year)
+    # 2) All months of "interior" years. That is, years completely
+    #    contained within the range of years.
+    for year in range(first_year+1, last_year):
+        for month in range (1, 12+1):
+            _execMonthExport(game_id=game_id, month=month, year=year)
+    # 3) All months in final year, but only if we didn't already get
+    #    it as first year.
+    if first_year < last_year:
+        for month in range(1, last_month+1):
+            _execMonthExport(game_id=game_id, month=month, year=last_year)
+    utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+
+def _execMonthExport(game_id, month, year):
+    from calendar import monthrange
+    month_range = monthrange(year, month)
+    days_in_month = month_range[1]
+    start_date = datetime(year=year, month=month, day=1, hour=0, minute=0, second=0)
+    end_date   = datetime(year=year, month=month, day=days_in_month, hour=23, minute=59, second=59)
+    _execExport(game_id, start_date, end_date)
 
 def _execExport(game_id, start_date, end_date):
 
@@ -100,7 +127,7 @@ def _execExport(game_id, start_date, end_date):
                 max_sessions=settings["MAX_SESSIONS"], min_moves=settings["MIN_MOVES"], \
                 )
     start = datetime.now()
-    breakpoint()
+    # breakpoint()
     feature_exporter = ExportManager(req.game_id, settings=settings)
     try:
         feature_exporter.exportFromRequest(request=req)
@@ -111,8 +138,9 @@ def _execExport(game_id, start_date, end_date):
     finally:
         end = datetime.now()
         time_delta = end - start
-        print(f"Total time taken: {math.floor(time_delta.total_seconds()/60)} min, \
-                                  {time_delta.total_seconds() % 60} sec")
+        minutes = math.floor(time_delta.total_seconds()/60)
+        seconds = time_delta.total_seconds() % 60
+        print(f"Total time taken: {minutes} min, {seconds} sec")
 
 ## Function to print out info on a game from the game's schema.
 #  This does a similar function to writeReadme, but is limited to the CSV
