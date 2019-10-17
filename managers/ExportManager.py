@@ -14,8 +14,8 @@ from datetime import datetime
 import utils
 from config import settings
 from GameTable import GameTable
-from ProcManager import ProcManager
-from RawManager import RawManager
+from managers.ProcManager import ProcManager
+from managers.RawManager import RawManager
 from Request import Request
 from schemas.Schema import Schema
 from feature_extractors.WaveExtractor import WaveExtractor
