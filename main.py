@@ -12,7 +12,7 @@ import feature_extractors.Extractor
 import Request
 import utils
 from config import settings
-from ExportManager import ExportManager
+from managers.ExportManager import ExportManager
 from feature_extractors.CrystalExtractor import CrystalExtractor
 from feature_extractors.WaveExtractor import WaveExtractor
 from GameTable import GameTable

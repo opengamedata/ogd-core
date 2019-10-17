@@ -14,7 +14,7 @@ from feature_extractors.Extractor import Extractor
 from feature_extractors.CrystalExtractor import CrystalExtractor
 from feature_extractors.WaveExtractor import WaveExtractor
 from GameTable import GameTable
-from ProcManager import ProcManager
+from managers.ProcManager import ProcManager
 from schemas.Schema import Schema
 
 ## Class to handle API calls for the realtime page.
