@@ -235,9 +235,9 @@ class ExportManager:
                 {"raw":raw_csv_path,
                 "proc":proc_csv_path,
                 "sql":sql_dump_path,
-                "start_date":request.start_date.strftime("%m-%d-%Y"),
-                "end_date":request.end_date.strftime("%m-%d-%Y"),
-                "date_modified":datetime.now().strftime("%m-%d-%Y"),
+                "start_date":request.start_date.strftime("%m/%d/%Y"),
+                "end_date":request.end_date.strftime("%m/%d/%Y"),
+                "date_modified":datetime.now().strftime("%m/%d/%Y"),
                 "sessions":num_sess
                 }
             existing_csv_file.write(json.dumps(existing_csvs, indent=4))
