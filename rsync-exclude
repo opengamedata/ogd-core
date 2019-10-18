@@ -17,4 +17,7 @@ node_modules
 coffee_out.js
 browserify_out.js
 minify_out.js.report.txt
+config.py
+python_errors.log
+*__pycache__/*
 rsync-exclude
