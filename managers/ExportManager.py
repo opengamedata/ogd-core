@@ -3,6 +3,7 @@
 #  for export to CSV files.
 
 ## import standard libraries
+import git
 import json
 import logging
 import math
@@ -33,8 +34,16 @@ class ExportManager:
     #  @param db      An active database connection
     #  @param settings A dictionary of program settings, some of which are needed for export.
     def __init__(self, game_id: str, settings):
+        # Set up loggers
+        self.err_logger = logging.getLogger("err_logger")
+        file_handler = logging.FileHandler("ExportErrorReport.log")
+        self.err_logger.addHandler(file_handler)
+        self.std_logger = logging.getLogger("std_logger")
+        stdout_handler = logging.StreamHandler()
+        self.std_logger.addHandler(stdout_handler)
+
         if game_id is None:
-            logging.error("Game ID was not given!")
+            self.std_logger.error("Game ID was not given!")
         else:
             self._game_id   = game_id
         self._settings = settings
@@ -46,7 +55,7 @@ class ExportManager:
     #                 and export.
     def exportFromRequest(self, request: Request):
         if request.game_id != self._game_id:
-            logging.warn(f"Changing ExportManager game from {self._game_id} to {request.game_id}")
+            self.err_logger.warn(f"Changing ExportManager game from {self._game_id} to {request.game_id}")
             self._game_id = request.game_id
         else:
             tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
@@ -56,7 +65,7 @@ class ExportManager:
                 if parse_success:
                     print(f"Successfully completed request {str(request)}.")
                 else:
-                    logging.error(f"Could not complete request {str(request)}")
+                    self.err_logger.error(f"Could not complete request {str(request)}")
             except Exception as err:
                 utils.SQL.server500Error(str(err))
             finally:
@@ -72,7 +81,7 @@ class ExportManager:
         data_directory = self._settings["DATA_DIR"] + self._game_id
         db_settings = self._settings["db_config"]
         
-        # logging.debug("complex_data_index: {}".format(complex_data_index))
+        # self.std_logger.debug("complex_data_index: {}".format(complex_data_index))
 
         # First, get the files and game-specific vars ready
         game_schema: Schema
@@ -89,18 +98,25 @@ class ExportManager:
         else:
             raise Exception("Got an invalid game ID!")
 
-        dataset_id = "{}_{}_to_{}".format(self._game_id, request.start_date.strftime("%Y%m%d"),\
-                                        request.end_date.strftime("%Y%m%d"))
-        raw_csv_full_path = f"{data_directory}/{dataset_id}_raw.csv"
-        proc_csv_full_path = f"{data_directory}/{dataset_id}_proc.csv"
-        sql_dump_full_path = f"{data_directory}/{dataset_id}.sql"
+        _from = request.start_date.strftime("%Y%m%d")
+        _to = request.end_date.strftime("%Y%m%d")
+        repo = git.Repo(search_parent_directories=True)
+        short_hash = repo.git.rev_parse(repo.head.object.hexsha, short=7)
+        dataset_id = f"{self._game_id}_{_from}_to_{_to}"
+        raw_csv_full_path = f"{data_directory}/{dataset_id}_{short_hash}_raw.csv"
+        proc_csv_full_path = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv"
+        sql_dump_full_path = f"{data_directory}/{dataset_id}_{short_hash}.sql"
         os.makedirs(name=data_directory, exist_ok=True)
         raw_csv_file = open(raw_csv_full_path, "w")
         proc_csv_file = open(proc_csv_full_path, "w")
 
         # Now, we're ready to set up the managers:
-        raw_mgr = RawManager(game_table=game_table, game_schema=game_schema, raw_csv_file=raw_csv_file)
-        proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table, game_schema=game_schema, proc_csv_file=proc_csv_file )
+        raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
+                             raw_csv_file=raw_csv_file,
+                             err_logger=self.err_logger, std_logger=self.std_logger)
+        proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table,
+                             game_schema=game_schema, proc_csv_file=proc_csv_file,
+                             err_logger=self.err_logger, std_logger=self.std_logger)
         
         # We're moving the metadata out into a separate readme file.
         # # Next, calculate metadata
@@ -121,7 +137,7 @@ class ExportManager:
             tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
             db_cursor = db.cursor()
             num_sess = len(game_table.session_ids)
-            logging.info(f"Preparing to process {num_sess} sessions.")
+            self.std_logger.info(f"Preparing to process {num_sess} sessions.")
             slice_size = self._settings["BATCH_SIZE"]
             session_slices = [[game_table.session_ids[i] for i in
                             range( j*slice_size, min((j+1)*slice_size - 1, num_sess) )] for j in
@@ -138,7 +154,10 @@ class ExportManager:
                 for row in next_data_set:
                     self._processRow(row, game_table, raw_mgr, proc_mgr)
                 time_delta = datetime.now() - start
-                logging.info("Slice processing time: {} min, {:.3f} sec to handle {} events".format(
+                self.std_logger.info("Slice processing time: {} min, {:.3f} sec to handle {} events".format(
+                    math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(next_data_set))
+                )
+                self.err_logger.info("Slice processing time: {} min, {:.3f} sec to handle {} events".format(
                     math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(next_data_set))
                 )
                 
@@ -158,9 +177,7 @@ class ExportManager:
 --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']}\
 > {sql_dump_full_path}"
             sql_dump_file = open(sql_dump_full_path, "w")
-            # logging.info(f"running sql dump command: {subprocess.list2cmdline(args_list)}")
-            # subprocess.run(args_list, stdout=sql_dump_file)
-            logging.info(f"running sql dump command: {command}")
+            self.std_logger.info(f"running sql dump command: {command}")
             os.system(command)
             # Finally, update the list of csv files.
             self._updateFileExportList(dataset_id, raw_csv_full_path, proc_csv_full_path,
@@ -168,7 +185,8 @@ class ExportManager:
 
             ret_val = True
         except Exception as err:
-            logging.error(str(err))
+            self.std_logger.error(str(err))
+            self.err_logger.error(str(err))
             ret_val = False
         finally:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
@@ -205,7 +223,7 @@ class ExportManager:
             proc_mgr.ProcessRow(row)
         # else:
             # in this case, we should have just found 
-            # logging.warn(f"Found a session ({session_id}) which was in the slice but not in the list of sessions for processing.")
+            # self.err_logger.warn(f"Found a session ({session_id}) which was in the slice but not in the list of sessions for processing.")
 
     ## Private helper function to update the list of exported files.
     #  Given the paths of the exported files, and some other variables for
@@ -226,7 +244,7 @@ class ExportManager:
             existing_csvs = {}
         finally:
             existing_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json", "w")
-            logging.info(f"opened existing csv file at {existing_csv_file.name}")
+            self.std_logger.info(f"opened existing csv file at {existing_csv_file.name}")
             if not self._game_id in existing_csvs:
                 existing_csvs[self._game_id] = {}
             # raw_stat = os.stat(raw_csv_full_path)
@@ -246,9 +264,10 @@ class ExportManager:
         try:
             existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR']) or {}
         except Exception as err:
-            logging.error(f"Could not back up file_list.json. Got the following error: {str(err)}")
+            self.std_logger.error(f"Could not back up file_list.json. Got the following error: {str(err)}")
+            self.err_logger.error(f"Could not back up file_list.json. Got the following error: {str(err)}")
             return False
         backup_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json.bak", "w")
         backup_csv_file.write(json.dumps(existing_csvs, indent=4))
-        logging.info(f"Backed up file_list.json to {backup_csv_file.name}")
+        self.std_logger.info(f"Backed up file_list.json to {backup_csv_file.name}")
         return True
