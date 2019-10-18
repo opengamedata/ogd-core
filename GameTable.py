@@ -22,7 +22,8 @@ class GameTable:
     #  @param settings  The dictionary of settings for the app
     #  @param request   A request object, with information about a date range
     #                   and other information on what data to retrieve.
-    def __init__(self, db, settings, request: Request):
+    def __init__(self, db, settings, request: Request
+                 err_logger: logging.Logger, std_logger: logging.Logger):
         # Define instance vars
         self.column_names:       typing.List[str]
         self.complex_data_index: int
@@ -33,6 +34,8 @@ class GameTable:
         self.max_level:          int
         self.min_level:          int
         self.session_ids:        typing.List[int]
+        self._err_logger:        logging.Logger   = err_logger
+        self._std_logger:        logging.Logger   = std_logger
         # Set instance vars
         db_cursor = db.cursor()
         db_settings = settings["db_config"]
