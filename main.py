@@ -56,7 +56,8 @@ def showGameInfo():
         try:
             tunnel, db = utils.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
             game_name = sys.argv[2]
-            schema = Schema(f"{game_name}.json")
+            schema = Schema(schema_name=f"{game_name}.json",
+                            err_logger=err_logger, std_logger=std_logger)
 
             feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
             print(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
@@ -175,7 +176,7 @@ def writeReadme():
             os.makedirs(name=path, exist_ok=True)
             readme = open(f"{path}/readme.md", "w")
             # Load schema, and write feature & column descriptions to the readme.
-            schema = Schema(f"{game_name}.json")
+            schema = Schema(schema_name=f"{game_name}.json")
             feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
             readme.write(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
                                                                 proc_field_list=feature_descriptions))
@@ -232,7 +233,15 @@ f"## Field Day Open Game Data \n\
 num_args = len(sys.argv)
 # print(sys.argv)
 fname = sys.argv[0] if num_args > 0 else None
-print(f"Running {fname}...")
+# Set up loggers
+err_logger = logging.getLogger("err_logger")
+file_handler = logging.FileHandler("ExportErrorReport.log")
+err_logger.addHandler(file_handler)
+std_logger = logging.getLogger("std_logger")
+stdout_handler = logging.StreamHandler()
+std_logger.addHandler(stdout_handler)
+
+std_logger.info(f"Running {fname}...")
 cmd = sys.argv[1] if num_args > 1 else "help"
 if type(cmd) == str:
     # if we have a real command, load the config file.

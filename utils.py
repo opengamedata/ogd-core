@@ -234,6 +234,14 @@ class SQL:
 
         return sel_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
 
+    @staticmethod
+    def Query(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
+        logging.info("Running query: " + query)
+        start = datetime.datetime.now()
+        cursor.execute(query)
+        logging.info(f"Query execution completed, time to execute: {datetime.datetime.now()-start}")
+        return [col[0] for col in cursor.fetchall()] if fetch_results else None
+
     ## Simple function to construct and log a nice server 500 error message.
     #  @param err_msg A more detailed error message with info to help debugging.
     @staticmethod

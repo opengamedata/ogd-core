@@ -75,8 +75,4 @@ class GameTable:
     def _getColumnNames(db_cursor, db, db_settings):
     # TODO: Currently, this is retrieved separately from the schema. We may just want to load in one place, and check for a match or something.
         query = "SHOW COLUMNS from {}.{}".format(db_settings["DB_NAME_DATA"], db_settings["table"])
-        logging.info("Running query: " + query)
-        start = datetime.now()
-        db_cursor.execute(query)
-        logging.info(f"Query execution completed, time to execute: {datetime.now()-start}")
-        return [col[0] for col in db_cursor.fetchall()]
+        return utils.SQL.Query(cursor=db_cursor, query=query)

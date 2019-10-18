@@ -37,7 +37,8 @@ class RTServer:
     #          Specifically, we get each session's max completed level, current
     #          level, and time since last move.
     @staticmethod
-    def getAllActiveSessions(game_id: str, require_player_id: bool) -> typing.Dict:
+    def getAllActiveSessions(game_id: str, require_player_id: bool,
+                             err_logger: logging.Logger) -> typing.Dict:
         # start_time = datetime.now()
         tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         ret_val = {}
@@ -55,7 +56,8 @@ class RTServer:
                 sess_id = item[0]
                 player_id = item[1]
                 if (require_player_id == "false") or re.search("^[a-z,A-Z][0-9]{3}$", player_id):
-                    prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
+                    prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id,
+                                                    err_logger=err_logger)
                     idle_time = prog["idle_time"]
                     max_level = prog["max_level"]
                     cur_level = prog["cur_level"]
@@ -63,7 +65,7 @@ class RTServer:
             # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
         except Exception as err:
             print(f"got error in RTServer.py: {str(err)}")
-            logging.error(f"Got an error in getAllActiveSessions: {str(err)}")
+            err_logger.error(f"Got an error in getAllActiveSessions: {str(err)}")
             raise err
         finally:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
@@ -81,14 +83,15 @@ class RTServer:
     #  @return A dictionary mapping feature names to feature values.
     #          If a features argument was given, only returns the corresponding features.
     @staticmethod
-    def getFeaturesBySessID(sess_id: str, game_id: str, features: typing.List = None) -> typing.Dict:
+    def getFeaturesBySessID(sess_id: str, game_id: str, err_logger: logging.Logger,
+                            features: typing.List = None) -> typing.Dict:
         tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         ret_val: typing.Dict
         # if we got a features list, it'll be a string that we must split.
         if features is not None and type(features) == str:
             features = features.split(",")
         try:
-            logging.info(f"Getting all features for session {sess_id}")
+            err_logger.info(f"Getting all features for session {sess_id}")
             cursor = db.cursor()
             filt = f"`session_id`='{sess_id}'"
             session_data = utils.SQL.SELECT(cursor=cursor,
@@ -99,7 +102,8 @@ class RTServer:
                 request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
                 game_table = GameTable(db, settings, request)
                 # return "Line 88: Killing features function in realtime.cgi."
-                schema = Schema(schema_name=f"{game_id}.json")
+                schema = Schema(schema_name=f"{game_id}.json",
+                                err_logger=err_logger, std_logger=err_logger)
                 extractor: Extractor
                 if game_id == "WAVES":
                     extractor = WaveExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
@@ -119,7 +123,8 @@ class RTServer:
                 all_features = dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
                                             extractor.getCurrentFeatures() ))
                 # print(f"all_features: {all_features}")
-                prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
+                prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id,
+                                                err_logger=err_logger)
                 cur_level = prog["cur_level"]
                 ret_val = {}
                 if features is not None and features != "null":
@@ -135,12 +140,11 @@ class RTServer:
                     ret_val = all_features
             else:
                 print("error, empty session!")
-                logging.error(f"error, empty session! all_features: {all_features}")
-                logging.warning(f"all_features: {all_features}")
+                err_logger.error(f"error, empty session! all_features: {all_features}")
                 ret_val = {"error": "Empty Session!"}
         except Exception as err:
             print(f"got error in RTServer.py: {str(err)}")
-            logging.error(f"Got an error in getFeaturesBySessID: {str(err)}")
+            err_logger.error(f"Got an error in getFeaturesBySessID: {str(err)}")
             traceback.print_tb(err.__traceback__)
             raise err
         finally:
@@ -151,7 +155,7 @@ class RTServer:
     #  Specifically, the current level, max level, and current idle time.
     #  Other data could be added as needed.
     @staticmethod
-    def getGameProgress(sess_id: str, game_id: str) -> typing.Dict[str, object]:
+    def getGameProgress(sess_id: str, game_id: str, err_logger: logging.Logger) -> typing.Dict[str, object]:
         max_level: int
         cur_level: int
         idle_time: int
@@ -173,27 +177,28 @@ class RTServer:
             idle_time = (datetime.now() - cur_level_raw[0][1]).seconds
         except Exception as err:
             #print(f"got error in RTServer.py: {str(err)}")
-            logging.error(f"Got an error in getGameProgress: {str(err)}")
+            err_logger.error(f"Got an error in getGameProgress: {str(err)}")
             raise err
         finally:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return {"max_level": max_level, "cur_level": cur_level, "idle_time": idle_time}
 
     @staticmethod
-    def getFeatureNamesByGame(game_id: str) -> typing.Dict[str, typing.List]:
+    def getFeatureNamesByGame(game_id: str, err_logger: logging.Logger) -> typing.Dict[str, typing.List]:
         ret_val: typing.Dict[str, typing.List]
         try:
-            schema: Schema = Schema(schema_name=f"{game_id}.json")
+            schema: Schema = Schema(schema_name=f"{game_id}.json",
+                                    err_logger=err_logger, std_logger=err_logger)
             ret_val = {"features": schema.feature_list()}
         except Exception as err:
-            logging.error(f"Got exception in getFeatureNamesByGame: {str(err)}")
-            logging.warn("Had to return None")
+            err_logger.error(f"Got exception in getFeatureNamesByGame: {str(err)}")
+            err_logger.warn("Had to return None")
             ret_val = None
         finally:
             return ret_val
 
     @staticmethod
-    def getPredictionNamesByGameLevel(game_id: str, level: int):
+    def getPredictionNamesByGameLevel(game_id: str, level: int, err_logger: logging.Logger):
         ret_val: typing.List
 
         models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
@@ -204,22 +209,24 @@ class RTServer:
         return ret_val
 
     @staticmethod
-    def getPredictionsBySessID(sess_id: str, game_id: str, predictions):
+    def getPredictionsBySessID(sess_id: str, game_id: str, predictions,
+                               err_logger: logging.Logger):
         # start_time = datetime.now()
         tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         try:
-            prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
+            prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id,
+                                            err_logger=err_logger)
             max_level = prog["max_level"]
             cur_level = prog["cur_level"]
             idle_time = prog["idle_time"]
 
-            # schema: Schema = Schema(schema_name=f"{game_id}.json")
             models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
             ret_val = {}
             ret_val["max_level"] = {"name": "Max Level", "value": max_level}
             ret_val["cur_level"] = {"name": "Current Level", "value": cur_level}
             ret_val["seconds_inactive"] = {"name": "Seconds Inactive", "value": idle_time}
-            features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
+            features_raw = RTServer.getFeaturesBySessID(sess_id, game_id,
+                                                        err_logger=err_logger)
             features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
             model_level = str(max(1, min(8, cur_level)))
             for model in models[model_level].keys():
@@ -233,7 +240,7 @@ class RTServer:
 
         except Exception as err:
             #print(f"got error in RTServer.py: {str(err)}")
-            logging.error(f"Got an error in getPredictionsBySessID: {str(err)}")
+            err_logger.error(f"Got an error in getPredictionsBySessID: {str(err)}")
             raise err
         finally:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)

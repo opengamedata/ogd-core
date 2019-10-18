@@ -17,13 +17,19 @@ try:
     # print("test return")
     # quit()
 
-    # set up other global vars as needed:
-    logging.basicConfig(level=logging.INFO)
+    # Set up loggers
+    err_logger = logging.getLogger("err_logger")
+    file_handler = logging.FileHandler("ExportErrorReport.log")
+    err_logger.addHandler(file_handler)
+    std_logger = logging.getLogger("std_logger")
+    stdout_handler = logging.StreamHandler()
+    std_logger.addHandler(stdout_handler)
 
+    # set up other global vars as needed:
     request = cgi.FieldStorage()
     method = request.getvalue("method")
 
-    logging.info(f"method requested: {method}")
+    std_logger.info(f"method requested: {method}")
     if method == "say_hello":
         body = "Hello, world."
     elif method == "get_all_active_sessions":
@@ -40,8 +46,8 @@ try:
         sess_id = request.getvalue("sessID")
         features = request.getvalue("features")
         body = RTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, features=features)
-        logging.info("got features by session ID in main realtime code.")
-        logging.info(f"got features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}")
+        std_logger.info("got features by session ID in main realtime code.")
+        std_logger.info(f"got features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}")
     elif method == "get_feature_names_by_game":
         game_id = request.getvalue("gameID")
         body = RTServer.getFeatureNamesByGame(game_id=game_id)
