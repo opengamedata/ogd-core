@@ -61,7 +61,7 @@ try:
                                                err_logger=err_logger)
     elif method == "get_prediction_names_by_game":
         game_id = request.getvalue("gameID")
-        body = RTServer.getPredictionNamesByGameLevel(game_id=game_id, err_logger=err_logger, std_logger=err_logger)
+        body = RTServer.getPredictionNamesByGameLevel(game_id=game_id, err_logger=err_logger)
 
     result: str = json.dumps(body, default=lambda ob: ob.isoformat() if type(ob) == datetime else json.dumps(ob))
     print(result)

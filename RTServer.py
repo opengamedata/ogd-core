@@ -100,7 +100,7 @@ class RTServer:
                                             sort_columns=["session_n", "client_time"])
             if len(session_data) > 0:
                 request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
-                game_table = GameTable(db, settings, request)
+                game_table = GameTable(db, settings, request, err_logger=err_logger, std_logger=err_logger)
                 # return "Line 88: Killing features function in realtime.cgi."
                 schema = Schema(schema_name=f"{game_id}.json",
                                 err_logger=err_logger, std_logger=err_logger)
