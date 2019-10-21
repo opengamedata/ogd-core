@@ -22,7 +22,7 @@ class GameTable:
     #  @param settings  The dictionary of settings for the app
     #  @param request   A request object, with information about a date range
     #                   and other information on what data to retrieve.
-    def __init__(self, db, settings, request: Request
+    def __init__(self, db, settings, request: Request,
                  err_logger: logging.Logger, std_logger: logging.Logger):
         # Define instance vars
         self.column_names:       typing.List[str]

@@ -5,6 +5,7 @@ import logging
 import math
 import os
 import sys
+import traceback
 import typing
 from datetime import datetime
 # import local files
@@ -54,7 +55,7 @@ def showHelp():
 def showGameInfo():
     if num_args > 2:
         try:
-            tunnel, db = utils.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
+            tunnel, db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
             game_name = sys.argv[2]
             schema = Schema(schema_name=f"{game_name}.json",
                             err_logger=err_logger, std_logger=std_logger)
@@ -150,13 +151,15 @@ def _execExport(game_id, start_date, end_date):
                 )
     start = datetime.now()
     # breakpoint()
-    feature_exporter = ExportManager(req.game_id, settings=settings)
+    export_manager = ExportManager(game_id=req.game_id, settings=settings,\
+                                     err_logger=err_logger, std_logger=std_logger)
     try:
-        feature_exporter.exportFromRequest(request=req)
+        export_manager.exportFromRequest(request=req)
         # cProfile.runctx("feature_exporter.exportFromRequest(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
         logging.error(str(err))
+        traceback.print_tb(err.__traceback__)
     finally:
         end = datetime.now()
         time_delta = end - start
@@ -189,6 +192,7 @@ def writeReadme():
             readme.write(changelog_src.read())
         except Exception as err:
             logging.error(str(err))
+            traceback.print_tb(err.__traceback__)
     else:
         print("Error, no game name given!")
         showHelp()
@@ -237,9 +241,14 @@ fname = sys.argv[0] if num_args > 0 else None
 err_logger = logging.getLogger("err_logger")
 file_handler = logging.FileHandler("ExportErrorReport.log")
 err_logger.addHandler(file_handler)
+err_logger.setLevel(level=logging.DEBUG)
 std_logger = logging.getLogger("std_logger")
 stdout_handler = logging.StreamHandler()
 std_logger.addHandler(stdout_handler)
+std_logger.setLevel(level=logging.DEBUG)
+print("Just set up loggers, starting test...")
+err_logger.debug("Testing error logger")
+std_logger.debug("Testing standard out logger")
 
 std_logger.info(f"Running {fname}...")
 cmd = sys.argv[1] if num_args > 1 else "help"

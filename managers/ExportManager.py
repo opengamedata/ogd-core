@@ -9,6 +9,7 @@ import logging
 import math
 import os
 import subprocess
+import traceback
 import typing
 from datetime import datetime
 ## import local files
@@ -55,7 +56,8 @@ class ExportManager:
             self._game_id = request.game_id
         else:
             tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
-            game_table: GameTable = GameTable(db=db, settings=self._settings, request=request)
+            game_table: GameTable = GameTable(db=db, settings=self._settings, request=request,
+                                              err_logger=self._err_logger, std_logger=self._std_logger)
             try:
                 parse_success: str = self._getAndParseData(request, game_table)
                 if parse_success:
@@ -185,6 +187,7 @@ class ExportManager:
             ret_val = True
         except Exception as err:
             self._std_logger.error(str(err))
+            traceback.print_tb(err.__traceback__)
             self._err_logger.error(str(err))
             ret_val = False
         finally:

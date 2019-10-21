@@ -21,8 +21,8 @@ class Schema:
     #                     (if .json is not the file extension, .json will be appended)
     #  @param schema_path Path to the folder containing the JSON schema file
     #                     (if the path does not end in "/", a "/" will be appended)
-    def __init__(self, schema_name:str, schema_path:str = os.path.dirname(__file__) + "/JSON/",
-                 err_logger: logging.Logger, std_logger: logging.Logger):
+    def __init__(self, schema_name:str, err_logger: logging.Logger, std_logger: logging.Logger,
+                 schema_path:str = os.path.dirname(__file__) + "/JSON/"):
         # define instance vars
         self._schema:       typing.Dict    = {}
         self._feature_list: typing.List    = None
