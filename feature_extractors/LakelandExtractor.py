@@ -67,7 +67,8 @@ class LakelandExtractor(Extractor):
     #                    table associated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
+    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema,
+                 err_logger: logging.Logger, std_logger: logging.Logger):
         # Set window and overlap size
         config = game_schema.schema()['config']
         self._NUM_SECONDS_PER_WINDOW = config['WINDOW_SIZE_SECONDS']
@@ -76,7 +77,8 @@ class LakelandExtractor(Extractor):
         max_secs = max(p[0] - p[1] for p in game_table.playtimes).seconds
         self.window_range = range(max_secs // self._NUM_SECONDS_PER_WINDOW + 1)
         # Initialize superclass
-        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
+        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema,
+                         err_logger=err_logger, std_logger=std_logger)
         # Set any 'min' feature to have a default of positive infinity
         for k in self.features.features.keys():
             if 'min' in k:
@@ -126,8 +128,9 @@ class LakelandExtractor(Extractor):
         server_time = row_with_complex_parsed[game_table.server_time_index]
 
         # Check for invalid row.
-        if row_with_complex_parsed[game_table.session_id_index] != self.session_id:
-            logging.error("Got a row with incorrect session id!")
+        row_sess_id = row_with_complex_parsed[game_table.session_id_index]
+        if row_sess_id != self.session_id:
+            self._err_logger.error(f"Got a row with incorrect session id! Expected {self.session_id}, got {row_sess_id}!")
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
