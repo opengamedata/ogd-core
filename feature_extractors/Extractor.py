@@ -2,11 +2,13 @@
 import abc
 import logging
 import typing
+import logging
 from datetime import datetime
 ## import local files
 from GameTable import GameTable
 from schemas.Schema import Schema
 from collections import defaultdict
+from datetime import timedelta
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
@@ -78,13 +80,25 @@ class Extractor(abc.ABC):
         file.write("\n")
 
     def getCurrentFeatures(self) -> typing.List[str]:
+        def myformat(obj):
+            if type(obj) is timedelta:
+                total_secs = obj.total_seconds()
+                h = total_secs // 3600
+                m = (total_secs % 3600) // 60
+                s = (total_secs % 3600) % 60 // 1  # just for reference
+                return f"{h:02.0f}:{m:02.0f}:{s:02.3f}"
+            else:
+                return str(obj)
         column_vals = []
+        # TODO: Should we do anything if the user accidentally adds a feature? For example I accidentally was adding 2
+        # features that weren't in the schema (by misreferencing actual features), and they were appended to the end of
+        # the feature list.
         for key in self.features.featureList():
             if type(self.features.getValByName(key)) is type({}) or type(self.features.getValByName(key)) is type(defaultdict()):
                 # if it's a dictionary, expand.
-                column_vals.extend([str(self.features.getValByIndex(key, num)) for num in self.features.getValByName(feature_name=key).keys()])
+                column_vals.extend([myformat(self.features.getValByIndex(key, num)) for num in self.features.getValByName(feature_name=key).keys()])
             else:
-                column_vals.append(str(self.features.getValByName(key)))
+                column_vals.append(myformat(self.features.getValByName(key)))
         return column_vals
 
     ## Abstract declaration of a function to perform extraction of features from a row.
@@ -144,6 +158,8 @@ class Extractor(abc.ABC):
         #  @param index        The count index of the specific value, e.g. the level
         #  @return             The value stored for the given feature at given index.
         def getValByIndex(self, feature_name: str, index: int):
+            if not self._verify_feature(feature_name):
+                return None
             return self.features[feature_name][index]["val"]
 
         ## Function to get whole feature of a per-count feature (including per-level)
@@ -154,6 +170,8 @@ class Extractor(abc.ABC):
         #  @return             The feature stored for the given feature at given index.
         #                      This feature is a dictionary with a "val" and "prefix"
         def getFeatureByIndex(self, feature_name: str, index: int):
+            if not self._verify_feature(feature_name):
+                return None
             return self.features[feature_name][index]
 
         ## Function to get all data on a given feature.
@@ -164,6 +182,8 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to retrieve
         #  @return             The value stored for the given feature.
         def getValByName(self, feature_name: str):
+            if not self._verify_feature(feature_name):
+                return None
             return self.features[feature_name]
 
         ## Function to set value of a per-count feature (including per-level)
@@ -173,6 +193,8 @@ class Extractor(abc.ABC):
         #  @param index        The count index of the desired value, e.g. the level
         #  @param new_value    The value to be stored for the given feature at given index.
         def setValByIndex(self, feature_name: str, index: int, new_value):
+            if not self._verify_feature(feature_name):
+                return
             self.features[feature_name][index]["val"] = new_value
 
         ## Function to set value of a full feature
@@ -182,6 +204,8 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to retrieve
         #  @param new_value    The value to be stored for the given feature.
         def setValByName(self, feature_name: str, new_value):
+            if not self._verify_feature(feature_name):
+                return
             self.features[feature_name] = new_value
 
         ## Function to increment the value of a per-count feature (including per-level)
@@ -191,6 +215,8 @@ class Extractor(abc.ABC):
         #  @param index        The count index of the specific value, e.g. the level
         #  @param increment    The size of the increment (default = 1)
         def incValByIndex(self, feature_name: str, index: int, increment: typing.Union[int, float] = 1):
+            if not self._verify_feature(feature_name):
+                return
             self.features[feature_name][index]["val"] += increment
 
         ## Function to increment value of an aggregate feature
@@ -198,4 +224,14 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to increment
         #  @param increment    The size of the increment (default = 1)
         def incAggregateVal(self, feature_name: str, increment: typing.Union[int, float] = 1):
+            if not self._verify_feature(feature_name):
+                return
             self.features[feature_name] += increment
+
+        def _verify_feature(self, feature_name):
+            if self.features.get(feature_name) is None:
+                logging.error(f'{feature_name} does not exist.')
+                return False
+            return True
+
+

@@ -44,29 +44,37 @@ class GameTable:
         # TODO: Honestly, should just make a reverse index dictionary.
         self.complex_data_index = self.column_names.index("event_data_complex")
         self.client_time_index = self.column_names.index("client_time")
+        self.client_time_ms_index = self.column_names.index("client_time_ms")
         self.server_time_index = self.column_names.index("server_time")
         self.session_id_index = self.column_names.index("session_id")
         self.pers_session_id_index = self.column_names.index("persistent_session_id")
         self.event_index = self.column_names.index("event")
         self.event_custom_index = self.column_names.index("event_custom")
         self.level_index = self.column_names.index("level")
+        self.version_index = self.column_names.index("app_version")
         if request.game_id == "WAVES":
             self.max_level = 34
             self.min_level = 0
+        elif request.game_id == 'LAKELAND':
+            lakeland_config = Schema('LAKELAND', err_logger=err_logger, std_logger=std_logger).schema()['config']
+            self.playtimes = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"],
+                                              table=db_settings["table"],
+                                              columns=["MAX(client_time)", "MIN(client_time)"],
+                                              grouping='session_id',
+                                              filter="`app_id`=\"{}\"".format(request.game_id),
+                                              distinct=True)
+            play_durations = [p[0] - p[1] for p in self.playtimes]
+            max_play_duration = max(play_durations)
+            self.min_level = 0
+            self.max_level = min(max_play_duration.seconds, lakeland_config["MAX_SESSION_SECONDS"]) \
+                             // lakeland_config['WINDOW_SIZE_SECONDS']
+
         else:
             max_min_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
                                             columns=["MAX(level)", "MIN(level)"], filter=f"`app_id`='{request.game_id}'",
                                             distinct=True)
             self.max_level = max_min_raw[0][0]
             self.min_level = max_min_raw[0][1]
-        if request.game_id == 'LAKELAND':
-            self.playtimes = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
-                                            columns=["MAX(client_time)", "MIN(client_time)"], grouping='session_id', filter="`app_id`=\"{}\"".format(request.game_id),
-                                            distinct=True)
-            play_durations = [p[0]-p[1] for p in self.playtimes]
-            max_play_duration = max(play_durations)
-            self.min_level = 0
-            self.max_level = max_play_duration.seconds // Schema('LAKELAND').schema()['config']['WINDOW_SIZE_SECONDS']
         self.session_ids = request.retrieveSessionIDs(db_cursor=db_cursor, db_settings=db_settings)
         # logging.debug("session_ids: " + str(session_ids))
     

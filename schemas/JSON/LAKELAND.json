@@ -121,7 +121,8 @@
   },
   "features": {
     "perlevel":{
-      "eventCount":"Number of player events in the given level",
+      "EventCount":"Number of player events in the given level",
+      "ActiveEventCount": "Number of player events that require the player's active input",
       "durationInSecs":"Time (in seconds) spent on the given level",
 
       "count_gamestate_logs": "count of gamestate logs", 
@@ -193,7 +194,7 @@
       "count_open_shop": "Player feature - Number of times the player: open the shop",
       "count_deaths": "Game feature - General: num deaths per sess",
 
-      "count_encouter_tutorial": "Player feature - Number of times the player: encounter a tutorial",
+      "count_encounter_tutorial": "Player feature - Number of times the player: encounter a tutorial",
       "count_skips": "Player feature - Number of times the player: press skip button",
       "avg_time_per_blurb": "? include skips ? Player feature - General: ave time per tutorial screen (blurb) before continue",
 
@@ -207,21 +208,37 @@
       "count_change_item_mark": "Player feature - Number of times the player: change a sale/eat/feed state in an item panel",
       "count_change_tile_mark": "Player feature - Number of times the player: change a sale/eat/feed state in a farm panel",
       
-      "total_food_marked_sell": "Player feature - General: percent of food marked for sale",
-      "total_food_marked_use": "Player feature - General: percent of food marked for eat",
-      "total_food_marked_feed": "Player feature - General: percent of food marked for feed",
-      "total_milk_marked_sell": "Player feature - General: percent of milk marked for sale",
-      "total_milk_for_use": "Player feature - General: percent of milk marked for eat",
-      "total_poop_marked_sell": "Player feature - General: percent of poop marked for sale",
-      "total_poop_marked_use": "Player feature - General: percent of poop marked for fertilize",
-      
-      "percent_food_marked_sell": "Player feature - General: percent of food marked for sale",
-      "percent_food_marked_use": "Player feature - General: percent of food marked for eat",
-      "percent_food_marked_feed": "Player feature - General: percent of food marked for feed",
-      "percent_milk_marked_sell": "Player feature - General: percent of milk marked for sale",
-      "percent_milk_for_use": "Player feature - General: percent of milk marked for eat",
-      "percent_poop_marked_sell": "Player feature - General: percent of poop marked for sale",
-      "percent_poop_marked_use": "Player feature - General: percent of poop marked for fertilize",
+      "max_num_food_marked_sell": "Player feature - General: percent of food marked for sale",
+      "max_num_food_marked_use": "Player feature - General: percent of food marked for eat",
+      "max_num_food_marked_feed": "Player feature - General: percent of food marked for feed",
+      "max_num_milk_marked_sell": "Player feature - General: percent of milk marked for sale",
+      "max_num_milk_marked_use": "Player feature - General: percent of milk marked for eat",
+      "max_num_poop_marked_sell": "Player feature - General: percent of poop marked for sale",
+      "max_num_poop_marked_use": "Player feature - General: percent of poop marked for fertilize",
+
+      "max_percent_food_marked_sell": "Player feature - General: percent of food marked for sale",
+      "max_percent_food_marked_use": "Player feature - General: percent of food marked for eat",
+      "max_percent_food_marked_feed": "Player feature - General: percent of food marked for feed",
+      "max_percent_milk_marked_sell": "Player feature - General: percent of milk marked for sale",
+      "max_percent_milk_marked_use": "Player feature - General: percent of milk marked for eat",
+      "max_percent_poop_marked_sell": "Player feature - General: percent of poop marked for sale",
+      "max_percent_poop_marked_use": "Player feature - General: percent of poop marked for fertilize",
+
+      "min_num_food_marked_sell": "Player feature - General: percent of food marked for sale",
+      "min_num_food_marked_use": "Player feature - General: percent of food marked for eat",
+      "min_num_food_marked_feed": "Player feature - General: percent of food marked for feed",
+      "min_num_milk_marked_sell": "Player feature - General: percent of milk marked for sale",
+      "min_num_milk_marked_use": "Player feature - General: percent of milk marked for eat",
+      "min_num_poop_marked_sell": "Player feature - General: percent of poop marked for sale",
+      "min_num_poop_marked_use": "Player feature - General: percent of poop marked for fertilize",
+
+      "min_percent_food_marked_sell": "Player feature - General: percent of food marked for sale",
+      "min_percent_food_marked_use": "Player feature - General: percent of food marked for eat",
+      "min_percent_food_marked_feed": "Player feature - General: percent of food marked for feed",
+      "min_percent_milk_marked_sell": "Player feature - General: percent of milk marked for sale",
+      "min_percent_milk_marked_use": "Player feature - General: percent of milk marked for eat",
+      "min_percent_poop_marked_sell": "Player feature - General: percent of poop marked for sale",
+      "min_percent_poop_marked_use": "Player feature - General: percent of poop marked for fertilize",
 
       "max_num_per_capita_food_marked_sell": "Player feature - General: maximum per capita number of food marked for sale",
       "min_num_per_capita_food_marked_sell": "Player feature - General: minimum per capita number of food marked for sale",
@@ -231,8 +248,8 @@
       "min_num_per_capita_food_marked_feed": "Player feature - General: minimum per capita number of food marked for feed",
       "max_num_per_capita_milk_marked_sell": "Player feature - General: maximum per capita number of milk marked for sale",
       "min_num_per_capita_milk_marked_sell": "Player feature - General: minimum per capita number of milk marked for sale",
-      "max_num_per_capita_milk_for_use": "Player feature - General: maximum per capita number of milk marked for eat",
-      "min_num_per_capita_milk_for_use": "Player feature - General: minimum per capita number of milk marked for eat",
+      "max_num_per_capita_milk_marked_use": "Player feature - General: maximum per capita number of milk marked for eat",
+      "min_num_per_capita_milk_marked_use": "Player feature - General: minimum per capita number of milk marked for eat",
       "max_num_per_capita_poop_marked_sell": "Player feature - General: maximum per capita number of poop marked for sale",
       "min_num_per_capita_poop_marked_sell": "Player feature - General: minimum per capita number of poop marked for sale",
       "max_num_per_capita_poop_marked_use": "Player feature - General: maximum per capita number of poop marked for fertilize",
@@ -260,12 +277,11 @@
       "max_num_farms_low_productivity": "Game feature - General: max count of farms in low productivity",
       "min_num_farms_low_productivity": "Game feature - General: min count of farms in low productivity",
       "max_num_lake_tiles_in_bloom": "Game feature - General: max count of lake tiles in bloom",
-      "min_num_lake_tiles_in_bloom": "Game feature - General: min count of lake tiles in bloom"
+      "min_num_lake_tiles_in_bloom": "Game feature - General: min count of lake tiles in bloom",
 
-
-      
-
-
+      "count_food_produced": "Game feature - General: num of food produced",
+      "count_milk_produced": "Game feature - General: num of milk produced",
+      "count_poop_produced": "Game feature - General: num of poop produced"
     },
     "per_custom_count": {
     },
@@ -274,6 +290,27 @@
       "sess_count_encounter_tutorial": "Player feature - Progress: count of tutorials",
       "sess_count_skips": "Player feature - Progress: count of skips",
       "sess_count_gamestate_logs": "count of gamestate logs",
+
+      "sess_count_buy_home": "Player feature - Number of times the player: buy a home",
+      "sess_count_buy_food": "Player feature - Number of times the player: buy a food",
+      "sess_count_buy_farm": "Player feature - Number of times the player: buy a farm",
+      "sess_count_buy_fertilizer": "Player feature - Number of times the player: buy a fertilizer",
+      "sess_count_buy_livestock": "Player feature - Number of times the player: buy a livestock",
+      "sess_count_buy_skimmer": "Player feature - Number of times the player: buy a skimmer",
+      "sess_count_buy_sign": "Player feature - Number of times the player: buy a sign",
+      "sess_count_buy_road": "Player feature - Number of times the player: buy a road",
+
+      "sess_money_spent_home": "Player feature - General: money spent on home",
+      "sess_money_spent_food": "Player feature - General: money spent on food",
+      "sess_money_spent_farm": "Player feature - General: money spent on farm",
+      "sess_money_spent_fertilizer": "Player feature - General: money spent on fertilizer",
+      "sess_money_spent_livestock": "Player feature - General: money spent on livestock",
+      "sess_money_spent_skimmer": "Player feature - General: money spent on skimmer",
+      "sess_money_spent_sign": "Player feature - General: money spent on sign",
+      "sess_money_spent_road": "Player feature - General: money spent on road",
+
+      "sess_count_change_item_mark": "Player feature - Number of times the player: change a sale/eat/feed state in an item panel",
+      "sess_count_change_tile_mark": "Player feature - Number of times the player: change a sale/eat/feed state in a farm panel",
 
       "sess_time_to_exist_achievement": "Player feature - Progress: Time to the exist achievement (or 0 if not achieved)",
       "sess_time_to_group_achievement": "Player feature - Progress: Time to the group achievement (or 0 if not achieved)",
@@ -291,6 +328,8 @@
       "sess_time_to_bigbloom_achievement": "Player feature - Progress: Time to the bigbloom achievement (or 0 if not achieved)",
       "sess_time_to_hugebloom_achievement": "Player feature - Progress: Time to the hugebloom achievement (or 0 if not achieved)",
       "sess_time_to_massivebloom_achievement": "Player feature - Progress: Time to the massivebloom achievement (or 0 if not achieved)",
+
+
       
       "sess_time_to_another_death_tutorial": "Player feature - Progress: Time to another_death tutorial (or 0 if unencountered)",
       "sess_time_to_another_member_tutorial": "Player feature - Progress: Time to another_member tutorial (or 0 if unencountered)",
@@ -392,7 +431,7 @@
       "sess_max_num_per_capita_food_marked_use": "Player feature - General: maximum per capita number of food marked for eat",
       "sess_max_num_per_capita_food_marked_feed": "Player feature - General: maximum per capita number of food marked for feed",
       "sess_max_num_per_capita_milk_marked_sell": "Player feature - General: maximum per capita number of milk marked for sale",
-      "sess_max_num_per_capita_milk_for_use": "Player feature - General: maximum per capita number of milk marked for eat",
+      "sess_max_num_per_capita_milk_marked_use": "Player feature - General: maximum per capita number of milk marked for eat",
       "sess_max_num_per_capita_poop_marked_sell": "Player feature - General: maximum per capita number of poop marked for sale",
       "sess_max_num_per_capita_poop_marked_use": "Player feature - General: maximum per capita number of poop marked for fertilize",
 
@@ -400,9 +439,64 @@
       "sess_min_num_per_capita_food_marked_use": "Player feature - General: minimum per capita number of food marked for eat",
       "sess_min_num_per_capita_food_marked_feed": "Player feature - General: minimum per capita number of food marked for feed",
       "sess_min_num_per_capita_milk_marked_sell": "Player feature - General: minimum per capita number of milk marked for sale",
-      "sess_min_num_per_capita_milk_for_use": "Player feature - General: minimum per capita number of milk marked for eat",
+      "sess_min_num_per_capita_milk_marked_use": "Player feature - General: minimum per capita number of milk marked for eat",
       "sess_min_num_per_capita_poop_marked_sell": "Player feature - General: minimum per capita number of poop marked for sale",
       "sess_min_num_per_capita_poop_marked_use": "Player feature - General: minimum per capita number of poop marked for fertilize",
+
+      "sess_max_num_food_marked_sell": "Player feature - General: percent of food marked for sale",
+      "sess_max_num_food_marked_use": "Player feature - General: percent of food marked for eat",
+      "sess_max_num_food_marked_feed": "Player feature - General: percent of food marked for feed",
+      "sess_max_num_milk_marked_sell": "Player feature - General: percent of milk marked for sale",
+      "sess_max_num_milk_marked_use": "Player feature - General: percent of milk marked for eat",
+      "sess_max_num_poop_marked_sell": "Player feature - General: percent of poop marked for sale",
+      "sess_max_num_poop_marked_use": "Player feature - General: percent of poop marked for fertilize",
+
+      "sess_max_percent_food_marked_sell": "Player feature - General: percent of food marked for sale",
+      "sess_max_percent_food_marked_use": "Player feature - General: percent of food marked for eat",
+      "sess_max_percent_food_marked_feed": "Player feature - General: percent of food marked for feed",
+      "sess_max_percent_milk_marked_sell": "Player feature - General: percent of milk marked for sale",
+      "sess_max_percent_milk_marked_use": "Player feature - General: percent of milk marked for eat",
+      "sess_max_percent_poop_marked_sell": "Player feature - General: percent of poop marked for sale",
+      "sess_max_percent_poop_marked_use": "Player feature - General: percent of poop marked for fertilize",
+
+      "sess_min_num_food_marked_sell": "Player feature - General: percent of food marked for sale",
+      "sess_min_num_food_marked_use": "Player feature - General: percent of food marked for eat",
+      "sess_min_num_food_marked_feed": "Player feature - General: percent of food marked for feed",
+      "sess_min_num_milk_marked_sell": "Player feature - General: percent of milk marked for sale",
+      "sess_min_num_milk_marked_use": "Player feature - General: percent of milk marked for eat",
+      "sess_min_num_poop_marked_sell": "Player feature - General: percent of poop marked for sale",
+      "sess_min_num_poop_marked_use": "Player feature - General: percent of poop marked for fertilize",
+
+      "sess_min_percent_food_marked_sell": "Player feature - General: percent of food marked for sale",
+      "sess_min_percent_food_marked_use": "Player feature - General: percent of food marked for eat",
+      "sess_min_percent_food_marked_feed": "Player feature - General: percent of food marked for feed",
+      "sess_min_percent_milk_marked_sell": "Player feature - General: percent of milk marked for sale",
+      "sess_min_percent_milk_marked_use": "Player feature - General: percent of milk marked for eat",
+      "sess_min_percent_poop_marked_sell": "Player feature - General: percent of poop marked for sale",
+      "sess_min_percent_poop_marked_use": "Player feature - General: percent of poop marked for fertilize",
+
+      "sess_min_num_home_in_play": "Player feature - General: min number of home in play",
+      "sess_max_num_home_in_play": "Player feature - General: max number of home in play",
+      "sess_min_num_food_in_play": "Player feature - General: min number of food in play",
+      "sess_max_num_food_in_play": "Player feature - General: max number of food in play",
+      "sess_min_num_farm_in_play": "Player feature - General: min number of farm in play",
+      "sess_max_num_farm_in_play": "Player feature - General: max number of farm in play",
+      "sess_min_num_fertilizer_in_play": "Player feature - General: min number of fertilizer in play",
+      "sess_max_num_fertilizer_in_play": "Player feature - General: max number of fertilizer in play",
+      "sess_min_num_livestock_in_play": "Player feature - General: min number of livestock in play",
+      "sess_max_num_livestock_in_play": "Player feature - General: max number of livestock in play",
+      "sess_min_num_skimmer_in_play": "Player feature - General: min number of skimmer in play",
+      "sess_max_num_skimmer_in_play": "Player feature - General: max number of skimmer in play",
+      "sess_min_num_sign_in_play": "Player feature - General: min number of sign in play",
+      "sess_max_num_sign_in_play": "Player feature - General: max number of sign in play",
+      "sess_min_num_road_in_play": "Player feature - General: min number of road in play",
+      "sess_max_num_road_in_play": "Player feature - General: max number of road in play",
+      "sess_min_num_water_in_play": "Player feature - General: min number of water in play",
+      "sess_max_num_water_in_play": "Player feature - General: max number of water in play",
+      "sess_min_num_poop_in_play": "Player feature - General: min number of poop in play",
+      "sess_max_num_poop_in_play": "Player feature - General: max number of poop in play",
+      "sess_min_num_milk_in_play": "Player feature - General: min number of milk in play",
+      "sess_max_num_milk_in_play": "Player feature - General: max number of milk in play",
 
       "sess_count_fullness_motivated_txt_emotes_per_capita": "Game feature - General: max num of the fullness_motivated emotes per capita",
       "sess_count_fullness_desperate_txt_emotes_per_capita": "Game feature - General: max num of the fullness_desperate emotes per capita",
@@ -434,9 +528,21 @@
       "sess_count_open_shop": "Player feature - Number of times the player: open the shop",
       "sess_count_deaths": "Game feature - General: num deaths per sess",
 
-      "sess_sessID":"The player's sess ID number for this play sess",
-      "sess_persistentSessionID":"The sess ID for the player's device, persists across multiple players using the same device.",
-      "sess_sessEventCount":"The total number of events across the entire sess",
+      "sess_percent_building_a_farm_on_highest_nutrition_tile": "Player feature - General: percent building a farm on the best tile with the highest nutrition that was hovered over during the buy process",
+      "sess_percent_placing_fertilizer_on_lowest_nutrient_farm": " TODO:::figure out how to calculate this:::TODO Player feature - General: percent placing fertilizer on lowest nutrient farm",
+
+      "sess_EventCount":"The total number of events across the entire sess",
+      "sess_ActiveEventCount": "Number of player events that require the player's active input",
+
+
+
+      "continue": "1 if player continued, 0 if new game",
+      "language": "language name",
+      "audio": "1 if audio on, 0 if off",
+      "fullscreen": "1 if fullscreen, 0 if not",
+
+      "sessID":"The player's sess ID number for this play sess",
+      "persistentSessionID":"The sess ID for the player's device, persists across multiple players using the same device.",
       "sessDuration":"The total time (in seconds) spent over the entire sess"
     }
   },
@@ -453,8 +559,8 @@
     "event_custom":"A number corresponding to the game-specific event type for events labeled 'Custom'",
     "event_data_simple":"Unused (always=0), to be deleted",
     "event_data_complex":"Data specific to an event type, encoded as a JSON string",
-    "client_time":"The client machine time when the event was generated",
-    "client_secs_ms":"Client time in milliseconds",
+    "client_time":"The client machine time when the event was generated, 1 second resolution",
+    "client_secs_ms":"Client time milliseconds",
     "server_time":"The server machine time when the event was logged",
     "remote_addr":"The IP address for the player's computer",
     "req_id":"Another ID of some kind, to be removed",
@@ -463,7 +569,9 @@
   },
   "config": {
     "WINDOW_SIZE_SECONDS": 300,
-    "WINDOW_OVERLAP_SECONDS": 30
+    "WINDOW_OVERLAP_SECONDS": 30,
+    "MAX_SESSION_SECONDS": 7200,
+    "SUPPORTED_VERS": [9, 10]
   }
 
 }

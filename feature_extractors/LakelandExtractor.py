@@ -17,7 +17,7 @@ from copy import deepcopy
 ## @class LakelandExtractor
 #  Extractor subclass for extracting features from Lakeland game data.
 class LakelandExtractor(Extractor):
-    _SESS_PREFIX = 'sess'
+    _SESS_PREFIX = 'sess_'
     _WINDOW_PREFIX = ''
     _TUTORIAL_MODE = [
         "build_a_house",
@@ -57,6 +57,10 @@ class LakelandExtractor(Extractor):
     ]
     _BUILDING_TYPES = ["home", "farm", "livestock"]
 
+    _ACTIVE_LOGS = ["SELECTTILE", "SELECTFARMBIT", "SELECTITEM", "SELECTBUY", "BUY",
+                    "CANCELBUY","TILEUSESELECT","ITEMUSESELECT"]
+
+
     ## Constructor for the LakelandExtractor class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.
@@ -72,24 +76,27 @@ class LakelandExtractor(Extractor):
                  err_logger: logging.Logger, std_logger: logging.Logger):
         # Set window and overlap size
         config = game_schema.schema()['config']
-        self._NUM_SECONDS_PER_WINDOW = config['WINDOW_SIZE_SECONDS']
+        WINPREF, SESSPREF = LakelandExtractor._WINDOW_PREFIX, LakelandExtractor._SESS_PREFIX
+        self._NUM_SECONDS_PER_WINDOW = config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
         self._NUM_SECONDS_PER_WINDOW_OVERLAP = config["WINDOW_OVERLAP_SECONDS"]
+
         # set window range
-        max_secs = max(p[0] - p[1] for p in game_table.playtimes).seconds
-        self.window_range = range(max_secs // self._NUM_SECONDS_PER_WINDOW + 1)
         # Initialize superclass
-        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema,
-                         err_logger=err_logger, std_logger=std_logger)
-        # Set any 'min' feature to have a default of positive infinity
-        # TODO: clean this up
+        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
+        # Adjust feature default vals: Set any 'min' feature to have a default of positive infinity, any time feature to
+        # a 0 timedelta. Set it through the window range.
+        # TODO: Set default time window vals as well!
+        self.window_range = range(game_table.max_level + 1)
         for k in self.features.features.keys():
-            if 'min' in k:
-                if 'window' in k:
-                    self._set_default_window_val(feature_name=k, val=float('inf'))
-                if 'session' in k:
-                    self._set_default_session_val(feature_name=k, val=float('inf'))
+            if k.startswith(WINPREF+'min_'):
+                self._set_default_window_val(feature_name=k, val=float('inf'))
+            elif k.startswith(SESSPREF+'min_'):
+                self._set_default_session_val(feature_name=k, val=float('inf'))
             if 'time' in k:
-                self._set_default_session_val(feature_name=k, val=datetime.timedelta(0))
+                if k in game_schema._schema['features']['perlevel']:
+                    self._set_default_window_val(feature_name=k, val=datetime.timedelta(0))
+                elif k in game_schema._schema['features']['aggregate']:
+                    self._set_default_session_val(feature_name=k, val=datetime.timedelta(0))
 
         # Initialize Lakeland variables
         self._tiles = defaultdict(lambda: {'marks': [1, 1, 1, 1], 'type': 0})
@@ -105,7 +112,7 @@ class LakelandExtractor(Extractor):
         self._selected_buy_cost = 0
         self._max_num_items_on_screen = LakelandExtractor.onscreen_item_dict()
         self._num_farmbits = 0
-        self._population_history = [(0, 0)]
+        self._population_history = [(datetime.datetime.min, 0)] # client time, population
         self._emotes_by_window = defaultdict(lambda: [])
         self._windows = []
         self._cur_windows = []
@@ -116,6 +123,10 @@ class LakelandExtractor(Extractor):
         self.average_handler_window = defaultdict(lambda: {k: {'n': 0, 'total': 0} for k in self.window_range})
         self.average_handler_session = defaultdict(lambda: {'n': 0, 'total': 0})
         self.building_xys = []
+        self._halt = False
+        self._last_active_log_time = None
+
+        self.features.setValByName('sessID', new_value=session_id)
 
     ## Function to perform extraction of features from a row.
     #
@@ -124,12 +135,16 @@ class LakelandExtractor(Extractor):
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+        if self._halt:
+            return
         # put some data in local vars, for readability later.
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
         event_type = row_with_complex_parsed[game_table.event_custom_index]
-        event_client_time = row_with_complex_parsed[game_table.client_time_index]
+        event_client_time = row_with_complex_parsed[game_table.client_time_index].replace(microsecond=
+                                                    row_with_complex_parsed[game_table.client_time_ms_index]*1000)
         server_time = row_with_complex_parsed[game_table.server_time_index]
-
+        event_type_str = LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper()
+        self.version = row_with_complex_parsed[game_table.version_index]
         # Check for invalid row.
         row_sess_id = row_with_complex_parsed[game_table.session_id_index]
         if row_sess_id != self.session_id:
@@ -137,77 +152,82 @@ class LakelandExtractor(Extractor):
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
-            if self.features.getValByName(feature_name="session_persistentSessionID") == 0:
-                self.features.setValByName(feature_name="session_persistentSessionID",
+            if self.features.getValByName(feature_name="persistentSessionID") == 0:
+                self.features.setValByName(feature_name="persistentSessionID",
                                            new_value=row_with_complex_parsed[game_table.pers_session_id_index])
             # if this is the first row
             if not self._client_start_time:
                 # initialize this time as the start
                 self._client_start_time = event_client_time
                 self._last_speed_change = self._client_start_time
-
+                self._last_active_log_time = event_client_time
             # set current windows
             self._prev_windows = self._cur_windows
             self._cur_windows = self._get_windows_at_time(event_client_time)
+            if any([w > game_table.max_level for w in self._cur_windows]):
+                self._halt = True
+                return
 
             # Record that an event of any kind occurred, for the window & session
-            self._increment_feature_in_cur_windows(feature_name="window_eventCount", increment=1)
-            self.features.incAggregateVal(feature_name="session_sessionEventCount")
             time_since_start = event_client_time - self._client_start_time
-            self.features.setValByName(feature_name="sessionDuration",
-                                       new_value=time_since_start)
+            if event_type_str in LakelandExtractor._ACTIVE_LOGS:
+                self.feature_inc(feature_base="ActiveEventCount", increment=1)
+            self.feature_inc(feature_base="EventCount", increment=1)
+            self.features.setValByName(feature_name="sessDuration", new_value=time_since_start)
+
 
             # Then, handle cases for each type of event
-            if LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "GAMESTATE":
+            if event_type_str == "GAMESTATE":
                 self._extractFromGamestate(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "STARTGAME":
+            elif event_type_str == "STARTGAME":
                 self._extractFromStartgame(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "CHECKPOINT":
+            elif event_type_str == "CHECKPOINT":
                 self._extractFromCheckpoint(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "SELECTTILE":
+            elif event_type_str == "SELECTTILE":
                 self._extractFromSelecttile(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "SELECTFARMBIT":
+            elif event_type_str == "SELECTFARMBIT":
                 self._extractFromSelectfarmbit(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "SELECTITEM":
+            elif event_type_str == "SELECTITEM":
                 self._extractFromSelectitem(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "SELECTBUY":
+            elif event_type_str == "SELECTBUY":
                 self._extractFromSelectbuy(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "BUY":
+            elif event_type_str == "BUY":
                 self._extractFromBuy(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "CANCELBUY":
+            elif event_type_str == "CANCELBUY":
                 self._extractFromCancelbuy(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "ROADBUILDS":
+            elif event_type_str == "ROADBUILDS":
                 self._extractFromRoadbuilds(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "TILEUSESELECT":
+            elif event_type_str == "TILEUSESELECT":
                 self._extractFromTileuseselect(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "ITEMUSESELECT":
+            elif event_type_str == "ITEMUSESELECT":
                 self._extractFromItemuseselect(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "TOGGLENUTRITION":
+            elif event_type_str == "TOGGLENUTRITION":
                 self._extractFromTogglenutrition(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "TOGGLESHOP":
+            elif event_type_str == "TOGGLESHOP":
                 self._extractFromToggleshop(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "TOGGLEACHIEVEMENTS":
+            elif event_type_str == "TOGGLEACHIEVEMENTS":
                 self._extractFromToggleachievements(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "SKIPTUTORIAL":
+            elif event_type_str == "SKIPTUTORIAL":
                 self._extractFromSkiptutorial(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "SPEED":
+            elif event_type_str == "SPEED":
                 self._extractFromSpeed(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "ACHIEVEMENT":
+            elif event_type_str == "ACHIEVEMENT":
                 self._extractFromAchievement(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "FARMBITDEATH":
+            elif event_type_str == "FARMBITDEATH":
                 self._extractFromFarmbitdeath(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "BLURB":
+            elif event_type_str == "BLURB":
                 self._extractFromBlurb(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "CLICK":
+            elif event_type_str == "CLICK":
                 self._extractFromClick(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "RAINSTOPPED":
+            elif event_type_str == "RAINSTOPPED":
                 self._extractFromRainstopped(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "HISTORY":
+            elif event_type_str == "HISTORY":
                 self._extractFromHistory(event_client_time, event_data_complex_parsed)
-            elif LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_type].upper() == "ENDGAME":
+            elif event_type_str == "ENDGAME":
                 self._extractFromEndgame(event_client_time, event_data_complex_parsed)
             else:
                 raise Exception("Found an unrecognized event type: {}".format(event_type))
+
 
     def _extractFromGamestate(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables 
@@ -221,7 +241,7 @@ class LakelandExtractor(Extractor):
         _num_checkpoints_completed = d["num_checkpoints_completed"]
         _raining = d["raining"]
         _curr_selection_type = d["curr_selection_type"]
-        _curr_selection_data = d["curr_selection_data"]
+        _curr_selection_data = d.get("curr_selection_data")
         _camera_center = d["camera_center"]
         _gametime = d["gametime"]
         _timestamp = d["timestamp"]
@@ -247,6 +267,9 @@ class LakelandExtractor(Extractor):
         _items = array_to_mat(4, _items)
 
         # set class variables
+        if self._num_farmbits != len(_farmbits):
+            logging.warning(f'Gamestate showed {len(_farmbits)} but expected {self._num_farmbits} farmbits.')
+            self._change_population(event_client_time, len(_farmbits) - self._num_farmbits)
 
         #  feature functions
         def total_money_earned(cur_money):
@@ -282,21 +305,26 @@ class LakelandExtractor(Extractor):
 
         # set features
         self.feature_inc('count_gamestate_logs')
-        self.feature_inc("num_food_produced", _num_food_produced)
-        self.feature_inc("num_milk_produced", _num_milk_produced)
-        self.feature_inc("num_poop_produced", _num_poop_produced)
-        self.features.setValByName(feature_name="session_money_earned", new_value=total_money_earned(_money))
+        self.feature_inc("count_food_produced", _num_food_produced)
+        self.feature_inc("count_milk_produced", _num_milk_produced)
+        self.feature_inc("count_poop_produced", _num_poop_produced)
+        self.features.setValByName(feature_name=LakelandExtractor._SESS_PREFIX+"money_earned",
+                                   new_value=total_money_earned(_money))
         for (key, cur_num) in num_items_in_play(_items, _tiles).items():
             self.feature_max_min(f'num_{key}_in_play', cur_num)
-        self.feature_max_min(fname_base="ave_lake_nutrition", val=avg_lake_nutrition(_tiles))
+        self.feature_max_min(fname_base="avg_lake_nutrition", val=avg_lake_nutrition(_tiles))
         self.feature_max_min("num_farms_low_productivity", len(farms_low_productivity(_tiles)))
         self.feature_max_min("num_lake_tiles_in_bloom", len(lake_tiles_bloom(_tiles)))
 
     def _extractFromStartgame(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _tile_states = d["tile_states"]
         _tile_nutritions = d["tile_nutritions"]
+        _continue = d["continue"]
+        _language = d["language"]
+        _audio = d["audio"]
+        _fullscreen = d["fullscreen"]
 
         # set class variables
         self._tile_og_types = _tile_states
@@ -304,23 +332,23 @@ class LakelandExtractor(Extractor):
         # feature functions
 
         # set features
-
+        self.features.setValByName("continue", _continue)
+        self.features.setValByName("language", _language)
+        self.features.setValByName("audio", _audio)
+        self.features.setValByName("fullscreen", _fullscreen)
 
     def _extractFromCheckpoint(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _event_category = d["event_category"] # start or end
         _event_label = d["event_label"] # tutorial name
         _event_type = d["event_type"]
         _blurb_history = d["blurb_history"]
         _client_time = d["client_time"]
-        _cont = d["continue"]
-        _language = d["language"]
-        _audio = d["audio"]
-        _fullscreen = d["fullscreen"]
+
 
         # reformat variables
-        _blurb_history = self.reformat_history_array(_blurb_history)
+        _blurb_history = self.reformat_history_array(_blurb_history, _client_time)
 
         # helpers
         assert _event_type == 'tutorial'
@@ -328,7 +356,7 @@ class LakelandExtractor(Extractor):
         is_tutorial_start = not is_tutorial_end
         time_since_start = event_client_time - self._client_start_time
         if is_tutorial_end:
-            assert _blurb_history
+            assert _blurb_history is not None
 
         # set class variables
         self._tutorial_start_and_end_times[_event_label][is_tutorial_end] = event_client_time
@@ -343,16 +371,18 @@ class LakelandExtractor(Extractor):
 
         # set features
         if is_tutorial_start:
-            self.feature_time_since_start(feature_base=f"secs_to_{_event_label}_tutorial",
+            self.feature_time_since_start(feature_base=f"time_to_{_event_label}_tutorial",
                                           cur_client_time=event_client_time)
             self.feature_inc(feature_base='count_encounter_tutorial', increment=is_tutorial_start)
-        if is_tutorial_end:
-            self.features.setValByName(feature_name=f"session_avg_time_per_blurb_in_{_event_label}_tutorial", new_value=
-                                   avg_time_per_blurb(_event_label))
+        # TODO: Case where blurb history exists but player skipped
+        if is_tutorial_end and len(_blurb_history) > 1:
+            self.features.setValByName(
+                feature_name=f"{LakelandExtractor._SESS_PREFIX}avg_time_per_blurb_in_{_event_label}_tutorial",
+                new_value=avg_time_per_blurb(_event_label))
 
 
     def _extractFromSelecttile(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _tile = d["tile"]
         _marks = d["marks"]
@@ -361,18 +391,18 @@ class LakelandExtractor(Extractor):
         self.feature_inc("count_inspect_tile")
 
     def _extractFromSelectfarmbit(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _farmbit = d["farmbit"]
 
     def _extractFromSelectitem(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _item = d["item"]
-        _mark = d["mark"]
+
 
     def _extractFromSelectbuy(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _buy = d["buy"]
         _cost = d["cost"]
@@ -385,7 +415,7 @@ class LakelandExtractor(Extractor):
 
     def _extractFromBuy(self, event_client_time, event_data_complex_parsed):
 
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _buy = d["buy"]
         _tile = d["tile"]
@@ -401,6 +431,8 @@ class LakelandExtractor(Extractor):
         time_since_start = event_client_time - self._client_start_time
 
         # set class variables
+        if _buy == 1: #home
+            self._change_population(client_time=event_client_time, increment=1)
         self._money_spent_per_item[buy_name] += self._selected_buy_cost
         if buy_name in LakelandExtractor._BUILDING_TYPES:
             self.building_xys.append(get_tile_txy(_tile))
@@ -458,25 +490,25 @@ class LakelandExtractor(Extractor):
     #         self.features.setValByName(feature_name=fname, new_value=compliance_interval)
 
     def _extractFromCancelbuy(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _selected_buy = d["selected_buy"]
         _cost = d["cost"]
         _curr_money = d["curr_money"]
         _buy_hovers = d["buy_hovers"]
         _client_time = d["client_time"]
-        
+
         # set class variables
         self._selected_buy_cost = 0
 
     def _extractFromRoadbuilds(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _road_builds = d["road_builds"]
         _client_time = d["client_time"]
 
     def _extractFromTileuseselect(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _tile = d["tile"]
         _marks = d["marks"]
@@ -495,28 +527,28 @@ class LakelandExtractor(Extractor):
         # feature setters
         if not mark_change:
             return
-        self._increment_feature_in_cur_windows("window_num_change_tile_mark")
+        self.feature_inc(feature_base="count_change_tile_mark")
         for produced, produced_uses in [('food', food_uses), ('milk', milk_uses), ('poop', poop_uses)]:
-            mark_counts = {LakelandExtractor._ENUM_TO_STR["MARK"][k]: v for k, v in Counter(produced_uses)}
+            mark_counts = {LakelandExtractor._ENUM_TO_STR["MARK"][k]: v for k, v in Counter(produced_uses).items()}
             # for each produced item (food, milk, poop), we now have mark counts
             # {eat: ?, use: ?, sell: ?} of total numbers marked eat, use, sell.
             for use, count in mark_counts.items():
-                self.feature_max_min(f"num_{produced}_marked_{use}", count)
-                self.feature_max_min(f"num_{produced}_marked_{use}_per_capita", count / self._num_farmbits)
+                self.feature_max_min(f"num_{produced}_marked_{use}", count) #mark use = eat in case of food
+                self.feature_max_min(f"num_per_capita_{produced}_marked_{use}", count / (self._num_farmbits or 1))
                 self.feature_max_min(f"percent_{produced}_marked_{use}", count/len(produced_uses))
 
     def _extractFromItemuseselect(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _item = d["item"]
         _prev_mark = d["prev_mark"]
 
         # feature setters
         if d["prev_mark"] != _item[3]: # if the mark has changed
-            self._increment_feature_in_cur_windows("window_num_change_item_mark")
+            self.feature_inc(feature_base="count_change_item_mark")
 
     def _extractFromTogglenutrition(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _to_state = d["to_state"]
         _tile_nutritions = d["tile_nutritions"]
@@ -531,7 +563,7 @@ class LakelandExtractor(Extractor):
 
 
     def _extractFromToggleshop(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _shop_open = d["shop_open"]
 
@@ -540,7 +572,7 @@ class LakelandExtractor(Extractor):
             self.feature_inc("count_open_shop")
 
     def _extractFromToggleachievements(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _achievements_open = d["achievements_open"]
 
@@ -549,73 +581,73 @@ class LakelandExtractor(Extractor):
             self.feature_inc("count_open_achievements")
 
     def _extractFromSkiptutorial(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
 
         # set features
         self.feature_inc("count_skips")
 
     def _extractFromSpeed(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _cur_speed = d["cur_speed"]
         _prev_speed = d["prev_speed"]
         _manual = d["manual"]
-        
+
         # set class variables
         self._cur_speed = _cur_speed
-        
+
         # set features (this feature is modified by 2+ events)
         if self._cur_speed != _prev_speed:
             self.update_time_at_speed(event_client_time, _prev_speed)
 
     def _extractFromAchievement(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _achievement = d["achievement"]
-        
+
         # helpers
         achievement_str = LakelandExtractor._ENUM_TO_STR["ACHIEVEMENTS"][_achievement]
 
         # set features
         self.feature_inc("count_achievements")
-        self.feature_time_since_start(f"time_to_{achievement_str}_achievement")
-        
+        self.feature_time_since_start(f"time_to_{achievement_str}_achievement", event_client_time)
+
 
     def _extractFromFarmbitdeath(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _farmbit = d["farmbit"]
         _grave = d["grave"]
-        
+
         # set session variables
         self._change_population(event_client_time, -1)
-        
+
         # set features
-        self.feature_inc("num_deaths")
+        self.feature_inc("count_deaths")
 
     def _extractFromBlurb(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
 
     def _extractFromClick(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
 
     def _extractFromRainstopped(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
 
     def _extractFromHistory(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables 
+        # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _client_time = d["client_time"]
         _camera_history = d["camera_history"]
         _emote_history = d["emote_history"]
-        
+
         # reformat variables
-        self.reformat_history_array(_emote_history, _client_time)
-        
+        _emote_history = self.reformat_history_array(_emote_history, _client_time)
+
         # set global variables
         for e in _emote_history:
             self._add_emote_to_window_by_time(e)
@@ -623,10 +655,10 @@ class LakelandExtractor(Extractor):
     def _extractFromEndgame(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables 
         d = event_data_complex_parsed
-        (none) = d["(none)"]
+        # (none) = d["(none)"]
         self.update_time_at_speed(event_client_time, self._cur_speed)
         if self._nutrition_view_on:
-            self.increment_nutrition_view_secs(event_client_time)
+            self.set_time_in_nutrition_view(event_client_time)
 
     def calculateAggregateFeatures(self):
         self.calculate_emotes()
@@ -634,6 +666,7 @@ class LakelandExtractor(Extractor):
 
     # Individual Feature Setters (Accessed by more than one log type)
     def calculate_emotes(self):
+        sesspref, winpref = LakelandExtractor._SESS_PREFIX, LakelandExtractor._WINDOW_PREFIX
         for window, emotes in self._emotes_by_window.items():
             
             # helpers per window
@@ -655,7 +688,8 @@ class LakelandExtractor(Extractor):
             total_emotes_per_capita = {k: 0 for k in LakelandExtractor._STR_TO_ENUM['EMOTES'].keys()}
             for enum, pop in zip(emote_type_enums, emote_pops):
                 # TODO: there are instances where pop is 0, and I don't know why
-                if pop == 0:
+                if pop < 1:
+                    logging.warning(f'Found instance where population was {pop} in session {self.session_id}!')
                     pop = 1
                 emote_str = LakelandExtractor._ENUM_TO_STR['EMOTES'][enum]
                 total_emotes_per_capita[emote_str] += 1 / pop
@@ -664,15 +698,16 @@ class LakelandExtractor(Extractor):
             for emote_str, per_capita_value in total_emotes_per_capita.items():
                 if emote_str == 'null':
                     continue
-                fname_total = f'window_num_of_{emote_str}_emotes_per_capita'
-                self.features.setValByIndex(fname_total, window, per_capita_value)
+                fname_total = f'count_{emote_str}_emotes_per_capita'
+                self.features.setValByIndex(winpref+fname_total, window, per_capita_value)
+                self.features.incAggregateVal(feature_name=sesspref+fname_total, increment=per_capita_value)
 
-            self.features.setValByIndex("window_percent_positive_emotes", window, total_pos_emotes / total_emotes)
-            self.features.setValByIndex("window_percent_negative_emotes", window, total_neg_emotes / total_emotes)
-            self.features.setValByIndex("window_percent_neutral_emotes", window, total_neutral_emotes / total_emotes)
-            self.features.incAggregateVal("session_percent_positive_emotes", total_pos_emotes)
-            self.features.incAggregateVal("session_percent_negative_emotes", total_neg_emotes)
-            self.features.incAggregateVal("session_percent_neutral_emotes", total_neutral_emotes)
+            self.features.setValByIndex(winpref+"percent_positive_emotes", window, total_pos_emotes / total_emotes)
+            self.features.setValByIndex(winpref+"percent_negative_emotes", window, total_neg_emotes / total_emotes)
+            self.features.setValByIndex(winpref+"percent_neutral_emotes", window, total_neutral_emotes / total_emotes)
+            self.features.incAggregateVal(sesspref+"percent_positive_emotes", total_pos_emotes)
+            self.features.incAggregateVal(sesspref+"percent_negative_emotes", total_neg_emotes)
+            self.features.incAggregateVal(sesspref+"percent_neutral_emotes", total_neutral_emotes)
 
             # for i, (enum, pop) in enumerate(zip(emote_type_enums, emote_pops)):
             #     if i < 20:
@@ -732,7 +767,7 @@ class LakelandExtractor(Extractor):
             # a time since start has already happened
             return
         val = cur_client_time - self._client_start_time
-        self.features.setValByName(feature_base=feature_name, new_value=val)
+        self.features.setValByName(feature_name=feature_name, new_value=val)
 
     def feature_max_min(self, fname_base, val):
         """feature must have the same fname_base that gets put on the following four features:
@@ -806,16 +841,16 @@ class LakelandExtractor(Extractor):
 
     def _change_population(self, client_time, increment):
         self._num_farmbits += increment;
-        self._population_history.append((client_time, self._population_history[-1][1] + increment))
+        self._population_history.append((client_time, self._num_farmbits))
 
-    def _get_pops_at_times(self, time_list):
+    def _get_pops_at_times(self, datetime_list):
         # takes in a sorted list of times and returns the population of farmbits at those times
         ret = []
-        pop_cur = 0
-        for t in time_list:
-            while (not pop_cur + 1 >= len(self._population_history)) and self._population_history[pop_cur + 1][0] < t:
-                pop_cur += 1
-            ret.append(self._population_history[pop_cur][1])
+        pop_i = 0
+        for t in datetime_list:
+            while not (pop_i + 1 >= len(self._population_history)) and self._population_history[pop_i + 1][0] < t:
+                pop_i += 1
+            ret.append(self._population_history[pop_i][1])
         return ret
 
     def _get_windows_at_time(self, client_time):
@@ -841,7 +876,7 @@ class LakelandExtractor(Extractor):
     def milliseconds_to_datetime(self, milliseconds):
         # round #milliseconds to #secs because event_client_time resolves to seconds not msecs
         ret = datetime.datetime.utcfromtimestamp(milliseconds // 1000)
-        assert ret >= self._client_start_time
+        assert ret >= self._client_start_time - datetime.timedelta(seconds=1)
         return ret
 
     def reformat_history_array(self, array, timestamp):
@@ -857,9 +892,8 @@ class LakelandExtractor(Extractor):
         """
         if not array:
             return []
-        ret = deepcopy(array)
         if type(array[0]) == int:
-            return [[self.milliseconds_to_datetime(t) + timestamp] for t in array]
+            return [self.milliseconds_to_datetime(t + timestamp) for t in array]
         else:
             ret = deepcopy(array)
             for i in range(len(ret)):

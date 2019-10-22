@@ -1,6 +1,6 @@
 # Specific things in this project that shouldn't go to git:
 data
-config.json
+config.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
