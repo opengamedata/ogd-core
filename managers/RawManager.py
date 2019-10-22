@@ -20,19 +20,19 @@ class RawManager:
     #                       is structured.
     #  @param proc_csv_file The output file, to which we'll write the raw game data.
     def __init__(self, game_table: GameTable, game_schema: Schema,
-                 raw_csv_file: typing.IO.writable):
+                 raw_csv_file: typing.IO.writable,
+                 err_logger: logging.Logger, std_logger: logging.Logger):
         # define instance vars
-        self._lines             : typing.List[typing.List]
-        self._game_table        : GameTable
-        self._db_columns        : typing.List[str]
+        self._lines             : typing.List[typing.List] = []
+        self._game_table        : GameTable           = game_table
+        self._raw_file          : typing.IO.writable  = raw_csv_file
+        self._err_logger        : logging.Logger      = err_logger
+        self._std_logger        : logging.Logger      = std_logger
+        self._db_columns        : typing.List[str]    = game_schema.db_columns()
         self._JSON_columns      : typing.List[str]
         self._all_columns       : typing.List[str]
         self._columns_to_indices: typing.Dict
-        self._raw_file          : typing.IO.writable
         # set instance vars
-        self._lines = []
-        self._game_table = game_table
-        self._db_columns = game_schema.db_columns()
         self._JSON_columns = RawManager._generateJSONColumns(game_schema)
         self._all_columns = game_table.column_names[:game_table.complex_data_index] \
                           + self._JSON_columns \
@@ -40,7 +40,6 @@ class RawManager:
         # Not the nicest thing ever, but this function creates a dictionary that maps column names
         # to indices, so we can store each line for raw csv as a list with guaranteed consistent order.
         self._columns_to_indices = {name:index for index,name in enumerate(self._all_columns)}
-        self._raw_file = raw_csv_file
 
     ## Function to handle processing one row of data.
     #  Data is handled in three cases: data that goes before event_data_custom,
@@ -72,7 +71,7 @@ class RawManager:
     #  This is helpful if we're processing a lot of data and want to avoid
     #  Eating too much memory.
     def ClearLines(self):
-        logging.debug(f"Clearing {len(self._lines)} entries from RawManager.")
+        self._std_logger.debug(f"Clearing {len(self._lines)} entries from RawManager.")
         self._lines = []
 
     ## Function to write out the header for a raw csv file.

@@ -22,7 +22,8 @@ class GameTable:
     #  @param settings  The dictionary of settings for the app
     #  @param request   A request object, with information about a date range
     #                   and other information on what data to retrieve.
-    def __init__(self, db, settings, request: Request):
+    def __init__(self, db, settings, request: Request,
+                 err_logger: logging.Logger, std_logger: logging.Logger):
         # Define instance vars
         self.column_names:       typing.List[str]
         self.complex_data_index: int
@@ -33,6 +34,8 @@ class GameTable:
         self.max_level:          int
         self.min_level:          int
         self.session_ids:        typing.List[int]
+        self._err_logger:        logging.Logger   = err_logger
+        self._std_logger:        logging.Logger   = std_logger
         # Set instance vars
         db_cursor = db.cursor()
         db_settings = settings["db_config"]
@@ -47,10 +50,6 @@ class GameTable:
         self.event_index = self.column_names.index("event")
         self.event_custom_index = self.column_names.index("event_custom")
         self.level_index = self.column_names.index("level")
-        prepared = utils.SQL._prepareSelect(db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
-                                        columns=["MAX(client_time)", "MIN(client_time)"], grouping='session_id', filter="`app_id`=\"{}\"".format(request.game_id),
-                                        distinct=True)
-        # print(f"prepared query: {prepared}")
         if request.game_id == "WAVES":
             self.max_level = 34
             self.min_level = 0
@@ -58,7 +57,6 @@ class GameTable:
             max_min_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
                                             columns=["MAX(level)", "MIN(level)"], filter=f"`app_id`='{request.game_id}'",
                                             distinct=True)
-            # raise Exception("Line 57: killing GameTable")
             self.max_level = max_min_raw[0][0]
             self.min_level = max_min_raw[0][1]
         if request.game_id == 'LAKELAND':
@@ -80,8 +78,4 @@ class GameTable:
     def _getColumnNames(db_cursor, db, db_settings):
     # TODO: Currently, this is retrieved separately from the schema. We may just want to load in one place, and check for a match or something.
         query = "SHOW COLUMNS from {}.{}".format(db_settings["DB_NAME_DATA"], db_settings["table"])
-        logging.info("Running query: " + query)
-        start = datetime.now()
-        db_cursor.execute(query)
-        logging.info(f"Query execution completed, time to execute: {datetime.now()-start}")
-        return [col[0] for col in db_cursor.fetchall()]
+        return utils.SQL.Query(cursor=db_cursor, query=query)

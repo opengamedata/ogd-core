@@ -2,6 +2,7 @@
 import bisect
 import json
 import logging
+import math
 import typing
 ## import local files
 import utils
@@ -416,7 +417,7 @@ class WaveExtractor(Extractor):
             if lvl in self.start_times and lvl in self.end_times:
                 return (self.end_times[lvl] - self.start_times[lvl]).total_seconds()
             else:
-                return -1
+                raise Exception(f"Level {lvl} is missing a start or end time")
         else:
             return 0
         

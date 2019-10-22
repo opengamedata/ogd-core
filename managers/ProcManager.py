@@ -23,13 +23,16 @@ class ProcManager:
     #  @param proc_csv_file The output file, to which we'll write the processed
     #                       feature data.
     def __init__(self, ExtractorClass: type, game_table: GameTable, game_schema: Schema,
-                 proc_csv_file: typing.IO.writable):
+                 proc_csv_file: typing.IO.writable,
+                 err_logger: logging.Logger, std_logger: logging.Logger):
         ## Define instance vars
         self._ExtractorClass:     type               = ExtractorClass
         self._game_table:         GameTable          = game_table
         self._game_schema:        Schema             = game_schema
         self._proc_file:          typing.IO.writable = proc_csv_file
         self._session_extractors: typing.Dict[str, self._ExtractorClass] = {}
+        self._err_logger:         logging.Logger     = err_logger
+        self._std_logger:         logging.Logger     = std_logger
 
     ## Function to handle processing of a single row of data.
     #  Basically just responsible for ensuring an extractor for the session
@@ -48,7 +51,7 @@ class ProcManager:
     #   This is helpful if we're processing a lot of data and want to avoid
     #   eating too much memory.
     def ClearLines(self):
-        logging.debug(f"Clearing {len(self._session_extractors)} entries from ProcManager.")
+        self._std_logger.debug(f"Clearing {len(self._session_extractors)} entries from ProcManager.")
         self._session_extractors = {}
 
     ## Function to calculate aggregate features of all extractors created by the
