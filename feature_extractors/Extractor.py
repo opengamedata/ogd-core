@@ -1,5 +1,6 @@
 ## import standard libraries
 import abc
+import logging
 import typing
 from datetime import datetime
 ## import local files
@@ -25,10 +26,13 @@ class Extractor(abc.ABC):
     #                     table assiciated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema, level_range: range = None):
+    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema,
+                 err_logger: logging.Logger, std_logger: logging.Logger, level_range: range = None):
         self.session_id:   int               = session_id
-        self.levels:       typing.List[int]  = []
+        self._err_logger:  logging.Logger    = err_logger
+        self._std_logger:  logging.Logger    = std_logger
         self._level_range: range             = level_range if (level_range is not None) else range(game_table.min_level, game_table.max_level+1)
+        self.levels:       typing.List[int]  = []
         self.last_adjust_type: str           = None
         self.features:     Extractor.SessionFeatures = Extractor.SessionFeatures(self._level_range, game_schema)
 
