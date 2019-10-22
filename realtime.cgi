@@ -35,7 +35,8 @@ try:
     elif method == "get_all_active_sessions":
         game_id = request.getvalue("gameID")
         require_player_id = request.getvalue("require_player_id")
-        body = RTServer.getAllActiveSessions(game_id=game_id, require_player_id=require_player_id)
+        body = RTServer.getAllActiveSessions(game_id=game_id, require_player_id=require_player_id,
+                                             err_logger=err_logger)
     # elif method == "get_active_sessions_by_loc":
     #     game_id = request.getvalue("gameID")
     #     state = request.getvalue("state")
@@ -45,20 +46,22 @@ try:
         game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
         features = request.getvalue("features")
-        body = RTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, features=features)
+        body = RTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, features=features,
+                                            err_logger=err_logger)
         std_logger.info("got features by session ID in main realtime code.")
         std_logger.info(f"got features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}")
     elif method == "get_feature_names_by_game":
         game_id = request.getvalue("gameID")
-        body = RTServer.getFeatureNamesByGame(game_id=game_id)
+        body = RTServer.getFeatureNamesByGame(game_id=game_id, err_logger=err_logger)
     elif method == "get_predictions_by_sessID":
         game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
         predictions = request.getvalue("predictions")
-        body = RTServer.getPredictionsBySessID(sess_id=sess_id, game_id=game_id, predictions=predictions)
+        body = RTServer.getPredictionsBySessID(sess_id=sess_id, game_id=game_id, predictions=predictions,
+                                               err_logger=err_logger)
     elif method == "get_prediction_names_by_game":
         game_id = request.getvalue("gameID")
-        body = RTServer.getPredictionNamesByGame(game_id=game_id)
+        body = RTServer.getPredictionNamesByGameLevel(game_id=game_id, err_logger=err_logger)
 
     result: str = json.dumps(body, default=lambda ob: ob.isoformat() if type(ob) == datetime else json.dumps(ob))
     print(result)
