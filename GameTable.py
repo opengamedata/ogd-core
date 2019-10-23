@@ -57,17 +57,16 @@ class GameTable:
             self.min_level = 0
         elif request.game_id == 'LAKELAND':
             lakeland_config = Schema('LAKELAND', err_logger=err_logger, std_logger=std_logger).schema()['config']
-            self.playtimes = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"],
-                                              table=db_settings["table"],
-                                              columns=["MAX(client_time)", "MIN(client_time)"],
-                                              grouping='session_id',
-                                              filter="`app_id`=\"{}\"".format(request.game_id),
-                                              distinct=True)
-            play_durations = [p[0] - p[1] for p in self.playtimes]
-            max_play_duration = max(play_durations)
+            # self.playtimes = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"],
+            #                                   table=db_settings["table"],
+            #                                   columns=["MAX(client_time)", "MIN(client_time)"],
+            #                                   grouping='session_id',
+            #                                   filter="`app_id`=\"{}\"".format(request.game_id),
+            #                                   distinct=True)
+            # play_durations = [p[0] - p[1] for p in self.playtimes]
+            # max_play_duration = max(play_durations)
             self.min_level = 0
-            self.max_level = min(max_play_duration.seconds, lakeland_config["MAX_SESSION_SECONDS"]) \
-                             // lakeland_config['WINDOW_SIZE_SECONDS']
+            self.max_level = lakeland_config["MAX_SESSION_SECONDS"] // lakeland_config['WINDOW_SIZE_SECONDS']
 
         else:
             max_min_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],

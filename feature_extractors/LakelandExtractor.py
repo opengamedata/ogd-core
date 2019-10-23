@@ -82,7 +82,8 @@ class LakelandExtractor(Extractor):
 
         # set window range
         # Initialize superclass
-        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
+        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema,
+                         err_logger=err_logger, std_logger=std_logger)
         # Adjust feature default vals: Set any 'min' feature to have a default of positive infinity, any time feature to
         # a 0 timedelta. Set it through the window range.
         # TODO: Set default time window vals as well!
@@ -125,6 +126,9 @@ class LakelandExtractor(Extractor):
         self.building_xys = []
         self._halt = False
         self._last_active_log_time = None
+        self._continue = None
+        self._first_gamestate = True
+        self._debug = False
 
         self.features.setValByName('sessID', new_value=session_id)
 
@@ -161,6 +165,8 @@ class LakelandExtractor(Extractor):
                 self._client_start_time = event_client_time
                 self._last_speed_change = self._client_start_time
                 self._last_active_log_time = event_client_time
+                start_str = "CONTINUE" if event_data_complex_parsed["continue"] else "START"
+                logging.debug(f'\n\n\n{start_str} {self.session_id} v{self.version} @ {self._client_start_time}')
             # set current windows
             self._prev_windows = self._cur_windows
             self._cur_windows = self._get_windows_at_time(event_client_time)
@@ -169,12 +175,16 @@ class LakelandExtractor(Extractor):
                 return
 
             # Record that an event of any kind occurred, for the window & session
-            time_since_start = event_client_time - self._client_start_time
+            time_since_start = self.time_since_start(event_client_time)
             if event_type_str in LakelandExtractor._ACTIVE_LOGS:
                 self.feature_inc(feature_base="ActiveEventCount", increment=1)
             self.feature_inc(feature_base="EventCount", increment=1)
             self.features.setValByName(feature_name="sessDuration", new_value=time_since_start)
-
+            if event_type_str == "BUY" and event_data_complex_parsed["success"]:
+                debug_str = LakelandExtractor._ENUM_TO_STR['BUYS'][event_data_complex_parsed["buy"]].upper()
+            else:
+                debug_str = ''
+            logging.debug(f'{self._num_farmbits } {time_since_start} {event_type_str} {debug_str}')
 
             # Then, handle cases for each type of event
             if event_type_str == "GAMESTATE":
@@ -267,9 +277,16 @@ class LakelandExtractor(Extractor):
         _items = array_to_mat(4, _items)
 
         # set class variables
-        if self._num_farmbits != len(_farmbits):
+        # TODO: If continue, initalize variables
+        if self._first_gamestate and self._continue:
+            self._change_population(self._client_start_time, len(_farmbits) - self._num_farmbits)
+
+        if self._num_farmbits not in range(len(_farmbits), len(_farmbits)+2) and not self._debug:
+            # if the num farmbits arent as expected or just one more than expected (sometimes takes a while to show), show warning.
             logging.warning(f'Gamestate showed {len(_farmbits)} but expected {self._num_farmbits} farmbits.')
-            self._change_population(event_client_time, len(_farmbits) - self._num_farmbits)
+             # self._change_population(event_client_time, len(_farmbits) - self._num_farmbits)
+
+        self._first_gamestate = False
 
         #  feature functions
         def total_money_earned(cur_money):
@@ -328,6 +345,9 @@ class LakelandExtractor(Extractor):
 
         # set class variables
         self._tile_og_types = _tile_states
+        if _continue:
+            logging.debug('here')
+        self._continue = _continue
 
         # feature functions
 
@@ -354,7 +374,7 @@ class LakelandExtractor(Extractor):
         assert _event_type == 'tutorial'
         is_tutorial_end = 1 if _event_category == 'end' else 0
         is_tutorial_start = not is_tutorial_end
-        time_since_start = event_client_time - self._client_start_time
+        time_since_start = self.time_since_start(event_client_time)
         if is_tutorial_end:
             assert _blurb_history is not None
 
@@ -428,7 +448,7 @@ class LakelandExtractor(Extractor):
 
         # helpers
         buy_name = LakelandExtractor._ENUM_TO_STR['BUYS'][_buy]
-        time_since_start = event_client_time - self._client_start_time
+        time_since_start = self.time_since_start(event_client_time)
 
         # set class variables
         if _buy == 1: #home
@@ -608,6 +628,14 @@ class LakelandExtractor(Extractor):
 
         # helpers
         achievement_str = LakelandExtractor._ENUM_TO_STR["ACHIEVEMENTS"][_achievement]
+        logging.debug(achievement_str)
+
+        # set class variables
+        if not self._continue and achievement_str == 'thousandair':
+            paycheck_time = self.features.getValByName(LakelandExtractor._SESS_PREFIX + "time_to_paycheck_achievement")
+            time_since_start = self.time_since_start(event_client_time)
+            if (time_since_start - paycheck_time) < datetime.timedelta(seconds=1):
+                self.set_debug()
 
         # set features
         self.feature_inc("count_achievements")
@@ -766,8 +794,7 @@ class LakelandExtractor(Extractor):
         if self.features.getValByName(feature_name):
             # a time since start has already happened
             return
-        val = cur_client_time - self._client_start_time
-        self.features.setValByName(feature_name=feature_name, new_value=val)
+        self.features.setValByName(feature_name=feature_name, new_value=self.time_since_start(cur_client_time))
 
     def feature_max_min(self, fname_base, val):
         """feature must have the same fname_base that gets put on the following four features:
@@ -854,7 +881,7 @@ class LakelandExtractor(Extractor):
         return ret
 
     def _get_windows_at_time(self, client_time):
-        seconds_since_start = (client_time - self._client_start_time).seconds
+        seconds_since_start = self.time_since_start(client_time).seconds
         windows = [seconds_since_start // self._NUM_SECONDS_PER_WINDOW,
                    (seconds_since_start - self._NUM_SECONDS_PER_WINDOW_OVERLAP) // self._NUM_SECONDS_PER_WINDOW]
 
@@ -903,6 +930,14 @@ class LakelandExtractor(Extractor):
     def get_tile_types_xys(self, type_list):
         return [LakelandExtractor.index_to_xy(i) for i, type in enumerate(self._tile_og_types) if
                 LakelandExtractor._ENUM_TO_STR['TILE TYPE'][type] in type_list]  # 5 is the lake type enum
+
+    def set_debug(self):
+        logging.debug('Set debug')
+        self._debug = True
+        self.features.setValByName(feature_name='debug', new_value=1)
+
+    def time_since_start(self, client_time):
+        return client_time - self._client_start_time
 
     @staticmethod
     def onscreen_item_dict():

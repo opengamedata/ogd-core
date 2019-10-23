@@ -44,7 +44,8 @@ class ProcManager:
         session_id = row_with_complex_parsed[self._game_table.session_id_index]
         # ensure we have an extractor for the given session:
         if not session_id in self._session_extractors.keys():
-            self._session_extractors[session_id] = self._ExtractorClass(session_id, self._game_table, self._game_schema)
+            self._session_extractors[session_id] = self._ExtractorClass(session_id, self._game_table, self._game_schema,
+                                                                        self._err_logger, self._std_logger)
         self._session_extractors[session_id].extractFromRow(row_with_complex_parsed, self._game_table)
 
     ##  Function to empty the list of lines stored by the ProcManager.

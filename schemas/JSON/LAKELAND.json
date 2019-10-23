@@ -540,6 +540,7 @@
       "language": "language name",
       "audio": "1 if audio on, 0 if off",
       "fullscreen": "1 if fullscreen, 0 if not",
+      "debug": "1 if player used a debug feature, 0 if not",
 
       "sessID":"The player's sess ID number for this play sess",
       "persistentSessionID":"The sess ID for the player's device, persists across multiple players using the same device.",
