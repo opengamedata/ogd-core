@@ -196,7 +196,6 @@ class ExportManager:
             proc_mgr.WriteProcCSVLines()
             proc_mgr.ClearLines()
         return num_sess
->>>>>>> Stashed changes
 
     def _dumpToSQL(self, sql_dump_path: str, game_table: GameTable, db_settings):
         # args_list = ["mysqldump", f"--host={db_settings['DB_HOST']}",
