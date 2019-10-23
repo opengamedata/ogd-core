@@ -202,10 +202,10 @@ class ExportManager:
         #             f"--where=", f"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'",
         #             f"--user={db_settings['DB_USER']}", f"--password={db_settings['DB_PW']}",
         #             f"{db_settings['DB_NAME_DATA']}", f"{db_settings['table']}"]
-        command = f"mysqldump --host={db_settings['DB_HOST']}"
-        command += f"--where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'\""
-        command += f"--user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']}"
-        command += f"> {sql_dump_path}"
+        command = f"mysqldump --host={db_settings['DB_HOST']} \
+--where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'\"\
+--user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']}\
+> {sql_dump_path}"
         sql_dump_file = open(sql_dump_path, "w")
         self._std_logger.info(f"running sql dump command: {command}")
         os.system(command)
