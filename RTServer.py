@@ -106,9 +106,11 @@ class RTServer:
                                 err_logger=err_logger, std_logger=err_logger)
                 extractor: Extractor
                 if game_id == "WAVES":
-                    extractor = WaveExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
+                    extractor = WaveExtractor(session_id=sess_id, game_table = game_table, game_schema=schema,
+                                              err_logger=err_logger, std_logger=err_logger)
                 elif game_id == "CRYSTAL":
-                    extractor = CrystalExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
+                    extractor = CrystalExtractor(session_id=sess_id, game_table = game_table, game_schema=schema,
+                                                 err_logger=err_logger, std_logger=err_logger)
                 else:
                     raise Exception("Got an invalid game ID!")
                 for row in session_data:
