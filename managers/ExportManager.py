@@ -113,13 +113,13 @@ class ExportManager:
             os.makedirs(name=data_directory, exist_ok=True)
             raw_csv_full_path:  str = None
             proc_csv_full_path: str = None
-            num_sess:           int = None
+            num_sess:           int = len(game_table.session_ids)
             if game_schema is not None:
                 raw_csv_full_path  = f"{data_directory}/{dataset_id}_{short_hash}_raw.csv"
                 proc_csv_full_path = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv"
-                num_sess = self._extractToCSVs(raw_csv_path=raw_csv_full_path, proc_csv_path=proc_csv_full_path,\
-                                               db_cursor=db_cursor, db_settings=db_settings,\
-                                               game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
+                self._extractToCSVs(raw_csv_path=raw_csv_full_path, proc_csv_path=proc_csv_full_path,\
+                                    db_cursor=db_cursor, db_settings=db_settings,\
+                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
             sql_dump_full_path = f"{data_directory}/{dataset_id}_{short_hash}.sql"
             self._dumpToSQL(sql_dump_path=sql_dump_full_path, game_table=game_table, db_settings=db_settings)
             # Finally, update the list of csv files.
@@ -195,7 +195,7 @@ class ExportManager:
             proc_mgr.calculateAggregateFeatures()
             proc_mgr.WriteProcCSVLines()
             proc_mgr.ClearLines()
-        return num_sess
+        return
 
     def _dumpToSQL(self, sql_dump_path: str, game_table: GameTable, db_settings):
         # args_list = ["mysqldump", f"--host={db_settings['DB_HOST']}",
