@@ -5,6 +5,7 @@ import typing
 import logging
 from datetime import datetime
 ## import local files
+import utils
 from GameTable import GameTable
 from schemas.Schema import Schema
 from collections import defaultdict
@@ -29,10 +30,8 @@ class Extractor(abc.ABC):
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
     def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema,
-                 err_logger: logging.Logger, std_logger: logging.Logger, level_range: range = None):
+                 level_range: range = None):
         self.session_id:   int               = session_id
-        self._err_logger:  logging.Logger    = err_logger
-        self._std_logger:  logging.Logger    = std_logger
         self._level_range: range             = level_range if (level_range is not None) else range(game_table.min_level, game_table.max_level+1)
         self.levels:       typing.List[int]  = []
         self.last_adjust_type: str           = None
@@ -230,7 +229,8 @@ class Extractor(abc.ABC):
 
         def _verify_feature(self, feature_name):
             if self.features.get(feature_name) is None:
-                logging.error(f'{feature_name} does not exist.')
+                utils.Logger.toStdOut(f'{feature_name} does not exist.', logging.ERROR)
+                utils.Logger.toFile(f'{feature_name} does not exist.', logging.ERROR)
                 return False
             return True
 

@@ -22,8 +22,7 @@ class GameTable:
     #  @param settings  The dictionary of settings for the app
     #  @param request   A request object, with information about a date range
     #                   and other information on what data to retrieve.
-    def __init__(self, db, settings, request: Request,
-                 err_logger: logging.Logger, std_logger: logging.Logger):
+    def __init__(self, db, settings, request: Request):
         # Define instance vars
         self.column_names:       typing.List[str]
         self.complex_data_index: int
@@ -34,8 +33,6 @@ class GameTable:
         self.max_level:          int
         self.min_level:          int
         self.session_ids:        typing.List[int]
-        self._err_logger:        logging.Logger   = err_logger
-        self._std_logger:        logging.Logger   = std_logger
         # Set instance vars
         db_cursor = db.cursor()
         db_settings = settings["db_config"]
@@ -56,7 +53,7 @@ class GameTable:
             self.max_level = 34
             self.min_level = 0
         elif request.game_id == 'LAKELAND':
-            lakeland_config = Schema('LAKELAND', err_logger=err_logger, std_logger=std_logger).schema()['config']
+            lakeland_config = Schema('LAKELAND').schema()['config']
             # self.playtimes = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"],
             #                                   table=db_settings["table"],
             #                                   columns=["MAX(client_time)", "MIN(client_time)"],
@@ -75,7 +72,7 @@ class GameTable:
             self.max_level = max_min_raw[0][0]
             self.min_level = max_min_raw[0][1]
         self.session_ids = request.retrieveSessionIDs(db_cursor=db_cursor, db_settings=db_settings)
-        # logging.debug("session_ids: " + str(session_ids))
+        # utils.Logger.toStdOut("session_ids: " + str(session_ids), logging.DEBUG)
     
     ## Private helper function to retrieve a list of all database columns from the table.
     #  This requires executing a SQL statement, so it's slightly slower than

@@ -72,8 +72,7 @@ class LakelandExtractor(Extractor):
     #                    table associated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema,
-                 err_logger: logging.Logger, std_logger: logging.Logger):
+    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
         # Set window and overlap size
         config = game_schema.schema()['config']
         WINPREF, SESSPREF = LakelandExtractor._WINDOW_PREFIX, LakelandExtractor._SESS_PREFIX
@@ -82,8 +81,7 @@ class LakelandExtractor(Extractor):
 
         # set window range
         # Initialize superclass
-        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema,
-                         err_logger=err_logger, std_logger=std_logger)
+        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
         # Adjust feature default vals: Set any 'min' feature to have a default of positive infinity, any time feature to
         # a 0 timedelta. Set it through the window range.
         # TODO: Set default time window vals as well!
@@ -152,7 +150,7 @@ class LakelandExtractor(Extractor):
         # Check for invalid row.
         row_sess_id = row_with_complex_parsed[game_table.session_id_index]
         if row_sess_id != self.session_id:
-            self._err_logger.error(f"Got a row with incorrect session id! Expected {self.session_id}, got {row_sess_id}!")
+            utils.Logger.toFile(f"Got a row with incorrect session id! Expected {self.session_id}, got {row_sess_id}!", logging.ERROR)
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
@@ -166,7 +164,7 @@ class LakelandExtractor(Extractor):
                 self._last_speed_change = self._client_start_time
                 self._last_active_log_time = event_client_time
                 start_str = "CONTINUE" if event_data_complex_parsed["continue"] else "START"
-                logging.debug(f'\n\n\n{start_str} {self.session_id} v{self.version} @ {self._client_start_time}')
+                utils.Logger.toStdOut(f'\n\n\n{start_str} {self.session_id} v{self.version} @ {self._client_start_time}', logging.DEBUG)
             # set current windows
             self._prev_windows = self._cur_windows
             self._cur_windows = self._get_windows_at_time(event_client_time)
@@ -184,7 +182,7 @@ class LakelandExtractor(Extractor):
                 debug_str = LakelandExtractor._ENUM_TO_STR['BUYS'][event_data_complex_parsed["buy"]].upper()
             else:
                 debug_str = ''
-            logging.debug(f'{self._num_farmbits } {time_since_start} {event_type_str} {debug_str}')
+            utils.Logger.toStdOut(f'{self._num_farmbits } {time_since_start} {event_type_str} {debug_str}', logging.DEBUG)
 
             # Then, handle cases for each type of event
             if event_type_str == "GAMESTATE":
@@ -283,7 +281,7 @@ class LakelandExtractor(Extractor):
 
         if self._num_farmbits not in range(len(_farmbits), len(_farmbits)+2) and not self._debug:
             # if the num farmbits arent as expected or just one more than expected (sometimes takes a while to show), show warning.
-            logging.warning(f'Gamestate showed {len(_farmbits)} but expected {self._num_farmbits} farmbits.')
+            utils.Logger.toStdOut(f'Gamestate showed {len(_farmbits)} but expected {self._num_farmbits} farmbits.', logging.WARNING)
              # self._change_population(event_client_time, len(_farmbits) - self._num_farmbits)
 
         self._first_gamestate = False
@@ -346,7 +344,7 @@ class LakelandExtractor(Extractor):
         # set class variables
         self._tile_og_types = _tile_states
         if _continue:
-            logging.debug('here')
+            utils.Logger.toStdOut('here', logging.DEBUG)
         self._continue = _continue
 
         # feature functions
@@ -628,7 +626,7 @@ class LakelandExtractor(Extractor):
 
         # helpers
         achievement_str = LakelandExtractor._ENUM_TO_STR["ACHIEVEMENTS"][_achievement]
-        logging.debug(achievement_str)
+        utils.Logger.toStdOut(achievement_str, logging.DEBUG)
 
         # set class variables
         if not self._continue and achievement_str == 'thousandair':
@@ -717,7 +715,8 @@ class LakelandExtractor(Extractor):
             for enum, pop in zip(emote_type_enums, emote_pops):
                 # TODO: there are instances where pop is 0, and I don't know why
                 if pop < 1:
-                    logging.warning(f'Found instance where population was {pop} in session {self.session_id}!')
+                    utils.Logger.toStdOut(f'Found instance where population was {pop} in session {self.session_id}!', logging.WARNING)
+                    utils.Logger.toFile(f'Found instance where population was {pop} in session {self.session_id}!', logging.WARNING)
                     pop = 1
                 emote_str = LakelandExtractor._ENUM_TO_STR['EMOTES'][enum]
                 total_emotes_per_capita[emote_str] += 1 / pop
@@ -932,7 +931,7 @@ class LakelandExtractor(Extractor):
                 LakelandExtractor._ENUM_TO_STR['TILE TYPE'][type] in type_list]  # 5 is the lake type enum
 
     def set_debug(self):
-        logging.debug('Set debug')
+        utils.Logger.toStdOut('Set debug', logging.DEBUG)
         self._debug = True
         self.features.setValByName(feature_name='debug', new_value=1)
 

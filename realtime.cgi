@@ -9,6 +9,7 @@ import traceback
 from datetime import datetime
 # # import local files
 import Request
+import utils
 from RTServer import RTServer
 
 try:
@@ -17,26 +18,17 @@ try:
     # print("test return")
     # quit()
 
-    # Set up loggers
-    err_logger = logging.getLogger("err_logger")
-    file_handler = logging.FileHandler("ExportErrorReport.log")
-    err_logger.addHandler(file_handler)
-    std_logger = logging.getLogger("std_logger")
-    stdout_handler = logging.StreamHandler()
-    std_logger.addHandler(stdout_handler)
-
     # set up other global vars as needed:
     request = cgi.FieldStorage()
     method = request.getvalue("method")
 
-    std_logger.info(f"method requested: {method}")
+    utils.Logger.toStdOut(f"method requested: {method}", logging.INFO)
     if method == "say_hello":
         body = "Hello, world."
     elif method == "get_all_active_sessions":
         game_id = request.getvalue("gameID")
         require_player_id = request.getvalue("require_player_id")
-        body = RTServer.getAllActiveSessions(game_id=game_id, require_player_id=require_player_id,
-                                             err_logger=err_logger)
+        body = RTServer.getAllActiveSessions(game_id=game_id, require_player_id=require_player_id)
     # elif method == "get_active_sessions_by_loc":
     #     game_id = request.getvalue("gameID")
     #     state = request.getvalue("state")
@@ -46,22 +38,19 @@ try:
         game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
         features = request.getvalue("features")
-        body = RTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, features=features,
-                                            err_logger=err_logger)
-        std_logger.info("got features by session ID in main realtime code.")
-        std_logger.info(f"got features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}")
+        body = RTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, features=features)
+        utils.Logger.toStdOut(f"got features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}", logging.INFO)
     elif method == "get_feature_names_by_game":
         game_id = request.getvalue("gameID")
-        body = RTServer.getFeatureNamesByGame(game_id=game_id, err_logger=err_logger)
+        body = RTServer.getFeatureNamesByGame(game_id=game_id)
     elif method == "get_predictions_by_sessID":
         game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
         predictions = request.getvalue("predictions")
-        body = RTServer.getPredictionsBySessID(sess_id=sess_id, game_id=game_id, predictions=predictions,
-                                               err_logger=err_logger)
+        body = RTServer.getPredictionsBySessID(sess_id=sess_id, game_id=game_id, predictions=predictions)
     elif method == "get_prediction_names_by_game":
         game_id = request.getvalue("gameID")
-        body = RTServer.getPredictionNamesByGameLevel(game_id=game_id, err_logger=err_logger)
+        body = RTServer.getPredictionNamesByGameLevel(game_id=game_id)
 
     result: str = json.dumps(body, default=lambda ob: ob.isoformat() if type(ob) == datetime else json.dumps(ob))
     print(result)

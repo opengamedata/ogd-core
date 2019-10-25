@@ -57,8 +57,7 @@ def showGameInfo():
         try:
             tunnel, db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
             game_name = sys.argv[2]
-            schema = Schema(schema_name=f"{game_name}.json",
-                            err_logger=err_logger, std_logger=std_logger)
+            schema = Schema(schema_name=f"{game_name}.json")
 
             feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
             print(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
@@ -151,14 +150,14 @@ def _execExport(game_id, start_date, end_date):
                 )
     start = datetime.now()
     # breakpoint()
-    export_manager = ExportManager(game_id=req.game_id, settings=settings,\
-                                     err_logger=err_logger, std_logger=std_logger)
+    export_manager = ExportManager(game_id=req.game_id, settings=settings)
     try:
         export_manager.exportFromRequest(request=req)
         # cProfile.runctx("feature_exporter.exportFromRequest(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
-        logging.error(str(err))
+        utils.Logger.toStdOut(str(err), logging.ERROR)
+        utils.Logger.toFile(str(err), logging.ERROR)
         traceback.print_tb(err.__traceback__)
     finally:
         end = datetime.now()
@@ -191,7 +190,8 @@ def writeReadme():
             readme.write("\n")
             readme.write(changelog_src.read())
         except Exception as err:
-            logging.error(str(err))
+            utils.Logger.toStdOut(str(err), logging.ERROR)
+            utils.Logger.toFile(str(err), logging.ERROR)
             traceback.print_tb(err.__traceback__)
     else:
         print("Error, no game name given!")
@@ -237,20 +237,9 @@ f"## Field Day Open Game Data \n\
 num_args = len(sys.argv)
 # print(sys.argv)
 fname = sys.argv[0] if num_args > 0 else None
-# Set up loggers
-err_logger = logging.getLogger("err_logger")
-file_handler = logging.FileHandler("ExportErrorReport.log")
-err_logger.addHandler(file_handler)
-err_logger.setLevel(level=logging.DEBUG)
-std_logger = logging.getLogger("std_logger")
-stdout_handler = logging.StreamHandler()
-std_logger.addHandler(stdout_handler)
-std_logger.setLevel(level=logging.DEBUG)
-print("Just set up loggers, starting test...")
-err_logger.debug("Testing error logger")
-std_logger.debug("Testing standard out logger")
 
-std_logger.info(f"Running {fname}...")
+
+utils.Logger.toStdOut(f"Running {fname}...", logging.INFO)
 cmd = sys.argv[1] if num_args > 1 else "help"
 if type(cmd) == str:
     # if we have a real command, load the config file.

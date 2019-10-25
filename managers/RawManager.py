@@ -3,6 +3,7 @@ import json
 import logging
 import typing
 ## import local files
+import utils
 import GameTable
 from schemas.Schema import Schema
 
@@ -20,14 +21,11 @@ class RawManager:
     #                       is structured.
     #  @param proc_csv_file The output file, to which we'll write the raw game data.
     def __init__(self, game_table: GameTable, game_schema: Schema,
-                 raw_csv_file: typing.IO.writable,
-                 err_logger: logging.Logger, std_logger: logging.Logger):
+                 raw_csv_file: typing.IO.writable):
         # define instance vars
         self._lines             : typing.List[typing.List] = []
         self._game_table        : GameTable           = game_table
         self._raw_file          : typing.IO.writable  = raw_csv_file
-        self._err_logger        : logging.Logger      = err_logger
-        self._std_logger        : logging.Logger      = std_logger
         self._db_columns        : typing.List[str]    = game_schema.db_columns()
         self._JSON_columns      : typing.List[str]
         self._all_columns       : typing.List[str]
@@ -71,7 +69,7 @@ class RawManager:
     #  This is helpful if we're processing a lot of data and want to avoid
     #  Eating too much memory.
     def ClearLines(self):
-        self._std_logger.debug(f"Clearing {len(self._lines)} entries from RawManager.")
+        utils.Logger.toStdOut(f"Clearing {len(self._lines)} entries from RawManager.", logging.DEBUG)
         self._lines = []
 
     ## Function to write out the header for a raw csv file.

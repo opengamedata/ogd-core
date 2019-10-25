@@ -24,10 +24,8 @@ class CrystalExtractor(Extractor):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema,
-                 err_logger: logging.Logger, std_logger: logging.Logger):
-        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema,
-                         err_logger=err_logger, std_logger=std_logger)
+    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
+        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
         # Define custom private data.
         self.start_times: typing.Dict       = {}
         self.end_times:   typing.Dict       = {}
@@ -54,9 +52,9 @@ class CrystalExtractor(Extractor):
         # Check for invalid row.
         row_sess_id = row_with_complex_parsed[game_table.session_id_index]
         if row_sess_id != self.session_id:
-            self._err_logger.error(f"Got a row with incorrect session id! Expected {self.session_id}, got {row_sess_id}!")
+            utils.Logger.toFile(f"Got a row with incorrect session id! Expected {self.session_id}, got {row_sess_id}!", logging.ERROR)
         elif "event_custom" not in event_data_complex_parsed.keys():
-            self._err_logger.error("Invalid event_data_complex, does not contain event_custom field!")
+            utils.Logger.toFile("Invalid event_data_complex, does not contain event_custom field!", logging.ERROR)
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
@@ -139,7 +137,7 @@ class CrystalExtractor(Extractor):
         self.features.incValByIndex(feature_name="completesCount", index=level, increment=1)
         if self.active_begin == None:
             sess_id = self.features.getValByName(feature_name="sessionID")
-            self._err_logger.error(f"Got a 'Complete' event when there was no active 'Begin' event! Level {level}, Sess ID: {sess_id}")
+            utils.Logger.toFile(f"Got a 'Complete' event when there was no active 'Begin' event! Level {level}, Sess ID: {sess_id}", logging.ERROR)
         else:
             self.end_times[level] = event_client_time
             time_taken = self._calcLevelTime(level)
@@ -163,7 +161,7 @@ class CrystalExtractor(Extractor):
         self.features.incValByIndex(feature_name="menuBtnCount", index=level)
         if self.active_begin == None:
             sess_id = self.features.getValByName(feature_name="sessionID")
-            self._err_logger.error(f"Got a 'Back to Menu' event when there was no active 'Begin' event! Sess ID: {sess_id}")
+            utils.Logger.toFile(f"Got a 'Back to Menu' event when there was no active 'Begin' event! Sess ID: {sess_id}", logging.ERROR)
         else:
             self.end_times[level] = event_client_time
             time_taken = self._calcLevelTime(level)

@@ -19,7 +19,7 @@ import typing
 #  @return          A python object parsed from the JSON.
 def loadJSONFile(filename: str, path:str = "./") -> object:
     if not filename.lower().endswith(".json"):
-        logging.debug(f"Got a filename that didn't end with .json: {filename}, appending .json")
+        Logger.toStdOut(f"Got a filename that didn't end with .json: {filename}, appending .json", logging.DEBUG)
         filename = filename + ".json"
     if not path.endswith("/"):
         path = path + "/"
@@ -29,9 +29,8 @@ def loadJSONFile(filename: str, path:str = "./") -> object:
         ret_val = json.loads(json_file.read())
         json_file.close()
     except Exception as err:
-        logging.error(f"Could not read file at {path+filename}  \
-                      \nFull error message: {str(err)}          \
-                      \nCurrent directory: {os.getcwd()}")
+        Logger.toStdOut(f"Could not read file at {path+filename}\nFull error message: {str(err)}\nCurrent directory: {os.getcwd()}",
+                        logging.ERROR)
         raise err
     return ret_val
 
@@ -80,15 +79,14 @@ class SQL:
         SSH_PORT = ssh_settings['SSH_PORT']
 
         # set up other global vars as needed:
-        logging.basicConfig(level=logging.INFO)
         sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
-        logging.info("We're preparing database.")
+        Logger.toStdOut("We're preparing database.", logging.INFO)
         if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
-            logging.info(f"Setting up ssh host connection.")
+            Logger.toStdOut(f"Setting up ssh host connection.", logging.INFO)
             ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
             tunnel,db_cursor = SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
         else:
-            logging.info("Skipping SSH part of login.")
+            Logger.toStdOut("Skipping SSH part of login.", logging.INFO)
             db_cursor = SQL.connectToMySQL(login=sql_login)
             tunnel = None
         return (tunnel, db_cursor)
@@ -110,8 +108,8 @@ class SQL:
                                            user = login.user, password = login.pword,
                                            database = login.db_name)
         except MySQLdb.connections.Error as err:
-            logging.error("Could no connect to the MySql database: " + str(err))
-            print(f"Could not connect to the MySql database: {str(err)}")
+            Logger.toStdOut(f"Could not connect to the MySql database: " + str(err), logging.ERROR)
+            Logger.toPrint(f"Could not connect to the MySql database: {str(err)}", logging.ERROR)
             traceback.print_tb(err.__traceback__)
             return None
 
@@ -128,22 +126,20 @@ class SQL:
     @staticmethod
     def connectToMySQLViaSSH(sql: SQLLogin, ssh: SSHLogin):
         try:
-            tunnel_logger = logging.getLogger('tunnel_logger')
-            tunnel_logger.setLevel(logging.WARN)
             tunnel = sshtunnel.SSHTunnelForwarder(
                 (ssh.host, ssh.port), ssh_username=ssh.user, ssh_password=ssh.pword,
-                remote_bind_address=(sql.host, sql.port), logger=tunnel_logger
+                remote_bind_address=(sql.host, sql.port), logger=Logger.std_logger
             )
             tunnel.start()
-            logging.info(f"Connected to SSH at {ssh.host}:{ssh.port}, {ssh.user}")
+            Logger.toStdOut(f"Connected to SSH at {ssh.host}:{ssh.port}, {ssh.user}", logging.INFO)
             conn = MySQLdb.connect(host = sql.host, port = tunnel.local_bind_port,
                                            user = sql.user, password = sql.pword,
                                            database = sql.db_name)
-            logging.info(f"Connected to SQL at {sql.host}:{sql.port}/{sql.db_name}, {sql.user}")
+            Logger.toStdOut(f"Connected to SQL at {sql.host}:{sql.port}/{sql.db_name}, {sql.user}", logging.INFO)
             return (tunnel, conn)
         except Exception as err:
-            logging.error("Could not connect to the MySql database: " + str(err))
-            print(f"Could not connect to the MySql database {str(err)}")
+            Logger.toStdOut("Could not connect to the MySql database: " + str(err), logging.ERROR)
+            Logger.toPrint(f"Could not connect to the MySql database {str(err)}", logging.ERROR)
             if tunnel is not None:
                 tunnel.stop()
             return (None, None)
@@ -152,14 +148,14 @@ class SQL:
     def disconnectMySQLViaSSH(tunnel, db):
         if db is not None:
             db.close()
-            logging.info("Closed database connection")
+            Logger.toStdOut("Closed database connection", logging.INFO)
         else:
-            logging.info("No db to close.")
+            Logger.toStdOut("No db to close.", logging.INFO)
         if tunnel is not None:
             tunnel.stop()
-            logging.info("Stopped tunnel connection")
+            Logger.toStdOut("Stopped tunnel connection", logging.INFO)
         else:
-            logging.info("No tunnel to stop")
+            Logger.toStdOut("No tunnel to stop", logging.INFO)
 
     ## Function to build and execute SELECT statements on a database connection.
     #  @param cursor        A database cursor, retrieved from the active connection.
@@ -195,23 +191,22 @@ class SQL:
         query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, filter=filter, limit=limit,
                                    sort_columns=sort_columns, sort_direction=sort_direction,
                                    grouping=grouping, distinct=distinct)
-        logging.info("Running query: " + query)
+        Logger.toStdOut("Running query: " + query, logging.INFO)
         # print(f"running query: {query}")
         start = datetime.datetime.now()
         cursor.execute(query)
         time_delta = datetime.datetime.now()-start
-        logging.info("Query execution completed, time to execute: {:d} min, {:.3f} sec".format( \
-            math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60 ) \
-        )
+        num_min = math.floor(time_delta.total_seconds()/60)
+        num_sec = time_delta.total_seconds() % 60
+        Logger.toStdOut(f"Query execution completed, time to execute: {num_min:d} min, {num_sec:.3f} sec", logging.INFO)
         # print("Query execution completed, time to execute: {:d} min, {:.3f} sec".format( \
         #     math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60 ) \
         # )
         result = cursor.fetchall() if fetch_results else None
         time_delta = datetime.datetime.now()-start
-        # logging.info(f"Query fetch completed, total query time: {}")
-        logging.info("Query fetch completed, total query time:    {:d} min, {:.3f} sec to get {:d} rows".format( \
-            math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(result) ) \
-        )
+        num_min = math.floor(time_delta.total_seconds()/60)
+        num_sec = time_delta.total_seconds() % 60
+        Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result):d} rows", logging.INFO)
         # print("Query fetch completed, total query time:    {:d} min, {:.3f} sec to get {:d} rows".format( \
         #     math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(result) ) \
         # )
@@ -236,16 +231,63 @@ class SQL:
 
     @staticmethod
     def Query(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
-        logging.info("Running query: " + query)
+        Logger.toStdOut("Running query: " + query, logging.INFO)
         start = datetime.datetime.now()
         cursor.execute(query)
-        logging.info(f"Query execution completed, time to execute: {datetime.datetime.now()-start}")
+        Logger.toStdOut(f"Query execution completed, time to execute: {datetime.datetime.now()-start}", logging.INFO)
         return [col[0] for col in cursor.fetchall()] if fetch_results else None
 
     ## Simple function to construct and log a nice server 500 error message.
     #  @param err_msg A more detailed error message with info to help debugging.
     @staticmethod
     def server500Error(err_msg: str):
-        logging.error("HTTP Response: {}{}".format(http.HTTPStatus.INTERNAL_SERVER_ERROR.value, \
-                                http.HTTPStatus.INTERNAL_SERVER_ERROR.phrase ))
-        logging.error(f"Error Message: {err_msg}")
+        Logger.toStdOut("HTTP Response: {}{}".format(http.HTTPStatus.INTERNAL_SERVER_ERROR.value, \
+                                http.HTTPStatus.INTERNAL_SERVER_ERROR.phrase ), logging.ERROR)
+        Logger.toStdOut(f"Error Message: {err_msg}", logging.ERROR)
+
+class Logger:
+    # Set up loggers
+    err_logger = logging.getLogger("err_logger")
+    file_handler = logging.FileHandler("ExportErrorReport.log")
+    err_logger.addHandler(file_handler)
+    err_logger.setLevel(level=logging.DEBUG)
+    std_logger = logging.getLogger("std_logger")
+    stdout_handler = logging.StreamHandler()
+    std_logger.addHandler(stdout_handler)
+    std_logger.setLevel(level=logging.DEBUG)
+    print("Just set up loggers, starting test...")
+    err_logger.debug("Testing error logger")
+    std_logger.debug("Testing standard out logger")
+
+    @staticmethod
+    def toFile(message, level):
+        if level == logging.DEBUG:
+            Logger.err_logger.debug(message)
+        elif level == logging.INFO:
+            Logger.err_logger.info(message)
+        elif level == logging.WARNING:
+            Logger.err_logger.warn(message)
+        elif level == logging.ERROR:
+            Logger.err_logger.error(message)
+
+    @staticmethod
+    def toStdOut(message, level):
+        if level == logging.DEBUG:
+            Logger.std_logger.debug(message)
+        elif level == logging.INFO:
+            Logger.std_logger.info(message)
+        elif level == logging.WARNING:
+            Logger.std_logger.warn(message)
+        elif level == logging.ERROR:
+            Logger.std_logger.error(message)
+
+    @staticmethod
+    def toPrint(message, level):
+        if level == logging.DEBUG:
+            print(f"debug: {message}")
+        elif level == logging.INFO:
+            print(f"info: {message}")
+        elif level == logging.WARNING:
+            print(f"warning: {message}")
+        elif level == logging.ERROR:
+            print(f"error: {message}")
