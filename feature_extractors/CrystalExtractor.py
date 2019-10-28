@@ -64,6 +64,7 @@ class CrystalExtractor(Extractor):
             # Ensure we have private data initialized for this level.
             if not level in self.levels:
                 bisect.insort(self.levels, level)
+                self.features.initLevel(level)
                 self.totalMoleculeDragDuration[level] = 0
                 # self.start_times[level] = None
                 # self.end_times[level] = None

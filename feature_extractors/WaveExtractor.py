@@ -77,6 +77,7 @@ class WaveExtractor(Extractor):
             # Ensure we have private data initialized for the given level.
             if not level in self.levels:
                 bisect.insort(self.levels, level)
+                self.features.initLevel(level)
                 self.amp_move_counts[level] = 0
                 self.off_move_counts[level] = 0
                 self.wave_move_counts[level] = 0
@@ -115,11 +116,14 @@ class WaveExtractor(Extractor):
         if len(self.levels) > 0:
             # Calculate per-level averages and percentages, since we can't calculate
             # them until we know how many total events occur.
-            for lvl in self._level_range:
+            for lvl in self.levels:
                 total_slider_moves = self.features.getValByIndex(feature_name="totalSliderMoves", index=lvl)
                 total_moves = total_slider_moves + self.features.getValByIndex(feature_name="totalArrowMoves", index=lvl)
                 # percents of each move type
-                val   = self.amp_move_counts[lvl] / total_moves if total_moves > 0 else total_moves
+                try:
+                    val   = self.amp_move_counts[lvl] / total_moves if total_moves > 0 else total_moves
+                except Exception as err:
+                    print(f"Currently, total_moves = {total_moves}")
                 self.features.setValByIndex(feature_name="percentAmplitudeMoves", index=lvl, new_value=val)
                 val   = self.off_move_counts[lvl] / total_moves if total_moves > 0 else total_moves
                 self.features.setValByIndex(feature_name="percentOffsetMoves", index=lvl, new_value=val)
@@ -144,13 +148,13 @@ class WaveExtractor(Extractor):
                 self.features.setValByIndex(feature_name="sliderAvgRange", index=lvl, new_value=val)
             # Then, calculate true aggregates.
             num_lvl = len(self.levels)
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalSliderMoves").values()]
+            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalSliderMoves").values() if elem["val"] is not "null"]
             self.features.setValByName(feature_name="avgSliderMoves", new_value=sum(all_vals) / num_lvl)
 
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalLevelTime").values()]
+            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalLevelTime").values() if elem["val"] is not "null"]
             self.features.setValByName(feature_name="avgLevelTime", new_value=sum(all_vals) / num_lvl)
 
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalMoveTypeChanges").values()]
+            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalMoveTypeChanges").values() if elem["val"] is not "null"]
             self.features.setValByName(feature_name="avgMoveTypeChanges", new_value=sum(all_vals) / num_lvl)
 
             # Determine number of moves that occurred across all levels
@@ -168,15 +172,15 @@ class WaveExtractor(Extractor):
             self.features.setValByName(feature_name="overallPercentWavelengthMoves", new_value=perc_waves)
 
             # Calculate average ranges and std devs over all moves.
-            all_stdevs = sum([elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgStdDevs").values()])
-            all_ranges = sum([elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgRange").values()])
+            all_stdevs = sum([elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgStdDevs").values() if elem["val"] is not "null"])
+            all_ranges = sum([elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgRange").values() if elem["val"] is not "null"])
             avg_stdevs = all_stdevs / all_moves if all_moves > 0 else all_moves
             avg_ranges = all_ranges / all_moves if all_moves > 0 else all_moves
             self.features.setValByName(feature_name="overallSliderAvgStdDevs", new_value=avg_stdevs)
             self.features.setValByName(feature_name="overallSliderAvgRange", new_value=avg_ranges)
 
             # Finally, calculate average fails per level
-            all_fails = sum([elem["val"] for elem in self.features.getValByName(feature_name="totalFails").values()])
+            all_fails = sum([elem["val"] for elem in self.features.getValByName(feature_name="totalFails").values() if elem["val"] is not "null"])
             avg_fails = all_fails / all_moves if all_moves > 0 else all_moves
             self.features.setValByName(feature_name="avgFails", new_value=avg_fails)
 
