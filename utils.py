@@ -255,7 +255,6 @@ class Logger:
     stdout_handler = logging.StreamHandler()
     std_logger.addHandler(stdout_handler)
     std_logger.setLevel(level=logging.DEBUG)
-    print("Just set up loggers, starting test...")
     err_logger.debug("Testing error logger")
     std_logger.debug("Testing standard out logger")
 
