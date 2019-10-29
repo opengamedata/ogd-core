@@ -120,8 +120,8 @@ def _execAllMonthExport(game_id):
     # 1) all months needed in first year.
     #    if all within one year, just do whole month range.
     #    else, go through December.
-    end = 1 + (last_month if first_year == last_year else 12)
-    for month in range(first_month, end):
+    end = last_month-1 if first_year == last_year else 12
+    for month in range(first_month, end+1):
         _execMonthExport(game_id=game_id, month=month, year=first_year)
     # 2) All months of "interior" years. That is, years completely
     #    contained within the range of years.
@@ -131,7 +131,7 @@ def _execAllMonthExport(game_id):
     # 3) All months in final year, but only if we didn't already get
     #    it as first year.
     if first_year < last_year:
-        for month in range(1, last_month+1):
+        for month in range(1, last_month): #note, just to last_month, no +1, since we want to exclude final month
             _execMonthExport(game_id=game_id, month=month, year=last_year)
     utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
 
