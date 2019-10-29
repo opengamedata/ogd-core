@@ -83,7 +83,7 @@ class RTServer:
     @staticmethod
     def getFeaturesBySessID(sess_id: str, game_id: str, features: typing.List = None) -> typing.Dict:
         tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
-        ret_val: typing.Dict
+        ret_val: typing.Dict = {}
         # if we got a features list, it'll be a string that we must split.
         if features is not None and type(features) == str:
             features = features.split(",")
@@ -121,7 +121,6 @@ class RTServer:
                 # print(f"all_features: {all_features}")
                 prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
                 cur_level = prog["cur_level"]
-                ret_val = {}
                 if features is not None and features != "null":
                     for feature_name in features:
                         if feature_name in all_features.keys():
@@ -141,6 +140,7 @@ class RTServer:
             print(f"got error in RTServer.py: {str(err)}")
             utils.Logger.toFile(f"Got an error in getFeaturesBySessID: {str(err)}", logging.ERROR)
             traceback.print_tb(err.__traceback__)
+            ret_val = {"error": "Got error in RTServer!"}
             raise err
         finally:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
