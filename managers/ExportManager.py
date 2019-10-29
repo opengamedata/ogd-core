@@ -88,7 +88,8 @@ class ExportManager:
         elif self._game_id == "LAKELAND":
             game_schema = Schema(schema_name="LAKELAND.json")
             game_extractor = LakelandExtractor
-        elif self._game_id == "JOWILDER":
+        elif self._game_id in ["JOWILDER", "BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MAGNET", "WIND"]:
+            # all games with data but no extractor.
             game_schema = None
         else:
             raise Exception("Got an invalid game ID!")
@@ -113,7 +114,7 @@ class ExportManager:
                 self._extractToCSVs(raw_csv_path=raw_csv_full_path, proc_csv_path=proc_csv_full_path,\
                                     db_cursor=db_cursor, db_settings=db_settings,\
                                     game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
-            sql_dump_full_path = f"{data_directory}/{dataset_id}_{short_hash}.sql"
+            sql_dump_full_path = f"{data_directory}/{dataset_id}_{short_hash}.sql.gz"
             self._dumpToSQL(sql_dump_path=sql_dump_full_path, game_table=game_table, db_settings=db_settings)
             # Finally, update the list of csv files.
             self._updateFileExportList(dataset_id, raw_csv_full_path, proc_csv_full_path,
@@ -196,7 +197,7 @@ class ExportManager:
             command = f"mysqldump --host={db_settings['DB_HOST']} \
 --where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'\" \
 --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']} \
-> {sql_dump_path}"
+| gzip > {sql_dump_path}"
             sql_dump_file = open(sql_dump_path, "w")
             utils.Logger.toStdOut(f"running sql dump command: {command}", logging.INFO)
             os.system(command)
