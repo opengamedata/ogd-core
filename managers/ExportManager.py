@@ -192,13 +192,17 @@ class ExportManager:
         #             f"--where=", f"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'",
         #             f"--user={db_settings['DB_USER']}", f"--password={db_settings['DB_PW']}",
         #             f"{db_settings['DB_NAME_DATA']}", f"{db_settings['table']}"]
-        command = f"mysqldump --host={db_settings['DB_HOST']} \
+        if len(game_table.session_ids) > 0:
+            command = f"mysqldump --host={db_settings['DB_HOST']} \
 --where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'\" \
 --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']} \
 > {sql_dump_path}"
-        sql_dump_file = open(sql_dump_path, "w")
-        utils.Logger.toStdOut(f"running sql dump command: {command}", logging.INFO)
-        os.system(command)
+            sql_dump_file = open(sql_dump_path, "w")
+            utils.Logger.toStdOut(f"running sql dump command: {command}", logging.INFO)
+            os.system(command)
+        else:
+            utils.Logger.toStdOut(f"No sessions to export for {sql_dump_path}", logging.WARNING)
+            utils.Logger.toFile(f"No sessions to export for {sql_dump_path}", logging.WARNING)
 
     ## Private helper function to process a single row of data.
     #  Most of the processing is delegated to Raw and Proc Managers, but this
