@@ -117,7 +117,37 @@
       },
     "ENDGAME":{
       "(none)": " | Log itself indicates the player has left the game page. Seperate history and gamestate logs are sent."
-    }
+    },
+    "EMOTE":{
+	"farmbit": "farmbit_data_short(t) | See [Data Short](#DataShort).",
+	"emote_enum": "emote_id | See [emotes](#Emotes)."
+	},
+    "FARMFAIL":{
+        "tile": "tile_data_short(t) | Farm that failed. See [Data Short](#DataShort).",
+        "marks": "t.marks | Farm [mark indices](#Mark)."
+        },
+    "BLOOM":{
+        "tile": "tile_data_short(t) | See [Data Short](#DataShort).",
+        "marks": "t.marks | Not relevant to lake tiles. Included for uniformity."
+        },
+    "FARMHARVESTED":{
+        "tile": "tile_data_short(t) | Farm that produced corn. See [Data Short](#DataShort).",
+        "marks": "t.marks | Tile [mark indices](#Mark)."
+        },
+    "MILKPRODUCED":{
+        "tile": "tile_data_short(t) | Dairy that produced milk. See [Data Short](#DataShort).",
+        "marks": "t.marks | Tile [mark indices](#Mark)."
+        },
+    "POOPPRODUCED":{
+        "tile": "tile_data_short(t) | Dairy that produced poop. See [Data Short](#DataShort).",
+        "marks": "t.marks | Tile [mark indices](#Mark)."
+        },
+    "DEBUG":{
+        "(none)": " | Event itself means that someone has used 'spyparty' to enter debug mode."
+        },
+    "NEWFARMBIT":{
+        "farmbit": "farmbit_data_short(t) | See [Data Short](#DataShort)."
+        }
   },
   "features": {
     "perlevel":{
@@ -271,11 +301,16 @@
       "percent_positive_emotes": "Game feature - General: percent positive emotes",
       "percent_negative_emotes": "Game feature - General: percent negative emotes",
       "percent_neutral_emotes": "Game feature - General: percent neutral emotes",
+      "money_earned": "Game feature - General: money earned",
 
+
+      "total_positive_emotes": "Game feature - General: total positive emotes",
+      "total_negative_emotes": "Game feature - General: percent negative emotes",
+      "total_neutral_emotes": "Game feature - General: percent neutral emotes",
       "max_avg_lake_nutrition": "Game feature - General: ave lake nutrition",
       "min_avg_lake_nutrition": "Game feature - General: ave lake nutrition",
-      "max_num_farms_low_productivity": "Game feature - General: max count of farms in low productivity",
-      "min_num_farms_low_productivity": "Game feature - General: min count of farms in low productivity",
+      "count_farmfails": "Count of farms going into low productivity (nutrition roughly < 1%)",
+      "count_blooms": "Count of blooms",
       "max_num_lake_tiles_in_bloom": "Game feature - General: max count of lake tiles in bloom",
       "min_num_lake_tiles_in_bloom": "Game feature - General: min count of lake tiles in bloom",
 
@@ -416,7 +451,7 @@
       "sess_count_food_produced": "Game feature - General: num of food produced",
       "sess_count_milk_produced": "Game feature - General: num of milk produced",
       "sess_count_poop_produced": "Game feature - General: num of poop produced",
-      "sess_money_earned": "?? Game feature - General: money earned",
+      "sess_money_earned": "Game feature - General: money earned",
       "sess_money_spent": "Game feature - General: money earned",
 
       "sess_time_in_nutrition_view": "Player feature - Total amount of time the player: spend in nutrition view",
@@ -514,15 +549,17 @@
       "sess_percent_negative_emotes": "Game feature - General: percent negative emotes",
       "sess_percent_neutral_emotes": "Game feature - General: percent neutral emotes",
 
+      "sess_total_positive_emotes": "Game feature - General: total positive emotes",
+      "sess_total_negative_emotes": "Game feature - General: total negative emotes",
+      "sess_total_neutral_emotes": "Game feature - General: total neutral emotes",
+
       "sess_avg_distance_between_poop_placement_and_lake": " Player feature - Assessment: average distance between poop placement and lake",
       "sess_avg_avg_distance_between_buildings": "Player feature - Assessment: Average distance between buildings (when they build, how far is it from the closest thing)",
 
-      "sess_max_num_farms_low_productivity": "Game feature - General: max count of farms in low productivity",
-      "sess_min_num_farms_low_productivity": "Game feature - General: min count of farms in low productivity",
+      "sess_count_farmfails": "Count of farms going into low productivity (nutrition roughly < 1%)",
       "sess_max_avg_lake_nutrition": "Game feature - General: ave lake nutrition",
       "sess_min_avg_lake_nutrition": "Game feature - General: ave lake nutrition",
-      "sess_max_num_lake_tiles_in_bloom": "Game feature - General: max count of lake tiles in bloom",
-      "sess_min_num_lake_tiles_in_bloom": "Game feature - General: min count of lake tiles in bloom",
+      "sess_count_blooms": "Count of algae blooms",
       "sess_count_inspect_tile": "Player feature - Number of times the player: inspect a tile",
       "sess_count_open_achievements": "Player feature - Number of times the player: look at achievements",
       "sess_count_open_shop": "Player feature - Number of times the player: open the shop",
@@ -540,6 +577,7 @@
       "language": "language name",
       "audio": "1 if audio on, 0 if off",
       "fullscreen": "1 if fullscreen, 0 if not",
+      "version": "version number",
       "debug": "1 if player used a debug feature, 0 if not",
 
       "sessID":"The player's sess ID number for this play sess",
@@ -572,7 +610,7 @@
     "WINDOW_SIZE_SECONDS": 300,
     "WINDOW_OVERLAP_SECONDS": 30,
     "MAX_SESSION_SECONDS": 7200,
-    "SUPPORTED_VERS": [9, 10]
+    "SUPPORTED_VERS": [13, 14]
   }
 
 }

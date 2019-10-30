@@ -23,7 +23,15 @@
     "click": 20,
     "rainstopped": 21,
     "history": 22,
-    "endgame": 23
+    "endgame": 23,
+    "emote": 24,
+    "farmfail": 25,
+    "bloom": 26,
+    "farmharvested": 27,
+    "milkproduced": 28,
+    "poopproduced": 29,
+    "debug": 30,
+    "newfarmbit": 31
   },
   "EMOTES": {
     "null": 0,

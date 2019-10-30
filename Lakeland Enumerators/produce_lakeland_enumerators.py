@@ -5,7 +5,7 @@ import json
 def main(path_to_lakeland_readme, outpath=None):
     """
     This function takes in a path to the lakeland readme and outputs a json file of all the enumerators to the outpath.
-    This assumes event categories have not changed (as of 8/7/19) and the readme is up-to-date and has maintained its
+    This assumes event categories have not changed (as of 10/23/19) and the readme is up-to-date and has maintained its
     current format..
     :param path_to_lakeland_readme: str
     :param outpath: str
