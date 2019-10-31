@@ -138,7 +138,7 @@ class ExportManager:
                 os.rename(src_sql, sql_zip_path)
             self._dumpToSQL(sql_dump_path=sql_dump_path, game_table=game_table, db_settings=db_settings)
             sql_zip_file = zipfile.ZipFile(f"{data_directory}/{dataset_id}_{short_hash}_sql.zip", "w")
-            sql_zip_file.write(sql_dump_path, f"{dataset_id}_{short_hash}_sql.csv")
+            sql_zip_file.write(sql_dump_path, f"{dataset_id}_{short_hash}.sql")
             os.remove(sql_dump_path)
             # Finally, update the list of csv files.
             self._updateFileExportList(dataset_id, raw_csv_path, proc_csv_path,
