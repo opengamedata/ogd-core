@@ -141,8 +141,8 @@ class ExportManager:
             sql_zip_file.write(sql_dump_path, f"{dataset_id}_{short_hash}.sql")
             os.remove(sql_dump_path)
             # Finally, update the list of csv files.
-            self._updateFileExportList(dataset_id, raw_csv_path, proc_csv_path,
-                                    sql_dump_path, request, num_sess)
+            self._updateFileExportList(dataset_id, raw_zip_path, proc_zip_path,
+                                    sql_zip_path, request, num_sess)
 
             ret_val = True
         except Exception as err:
