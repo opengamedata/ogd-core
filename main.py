@@ -32,6 +32,7 @@ def showHelp():
     print("         - export")
     print("         - export_month")
     print("         - export_all_months")
+    print("         - readme")
     print("         - help")
     print("[<args>] are the arguments for the command:")
     print("         - export: game_id, [start_date, end_date]")
@@ -43,6 +44,7 @@ def showHelp():
     print("             month_year = month (and year) to export, in form mm/yyyy (default=current month)")
     print("         - export_all_months: game_id")
     print("             game_id    = id of game to export")
+    print("         - readme: *None*")
     print("         - help: *None*")
     print(width*"*")
 
