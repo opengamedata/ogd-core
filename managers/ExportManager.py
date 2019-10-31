@@ -132,7 +132,7 @@ class ExportManager:
                 os.remove(raw_csv_path)
                 os.remove(proc_csv_path)
             sql_dump_path = f"{data_directory}/{dataset_id}_{short_hash}.sql"
-            sql_zip_path = f"{data_directory}/{dataset_id}_{short_hash}.zip"
+            sql_zip_path = f"{data_directory}/{dataset_id}_{short_hash}_sql.zip"
             if self._game_id in existing_csvs and dataset_id in existing_csvs[self._game_id]:
                 src_sql = existing_csvs[self._game_id][dataset_id]['sql']
                 os.rename(src_sql, sql_zip_path)
