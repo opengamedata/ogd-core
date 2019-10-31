@@ -101,8 +101,7 @@ class ExportManager:
         dataset_id = f"{self._game_id}_{_from}_to_{_to}"
 
         try:
-            tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
-            db_cursor = db.cursor()
+            existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR'])
 
             os.makedirs(name=data_directory, exist_ok=True)
             raw_csv_full_path:  str = None
@@ -111,8 +110,13 @@ class ExportManager:
             if game_schema is not None:
                 raw_csv_full_path  = f"{data_directory}/{dataset_id}_{short_hash}_raw.csv"
                 proc_csv_full_path = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv"
+                if self._game_id in existing_csvs and dataset_id in existing_csvs[self._game_id]:
+                    src_raw = existing_csvs[self._game_id][dataset_id]['raw']
+                    src_proc = existing_csvs[self._game_id][dataset_id]['proc']
+                    os.rename(src_raw, raw_csv_full_path)
+                    os.rename(src_proc, proc_csv_full_path)
                 self._extractToCSVs(raw_csv_path=raw_csv_full_path, proc_csv_path=proc_csv_full_path,\
-                                    db_cursor=db_cursor, db_settings=db_settings,\
+                                    db_settings=db_settings,\
                                     game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
             sql_dump_full_path = f"{data_directory}/{dataset_id}_{short_hash}.sql.gz"
             self._dumpToSQL(sql_dump_path=sql_dump_full_path, game_table=game_table, db_settings=db_settings)
@@ -127,73 +131,80 @@ class ExportManager:
             utils.Logger.toFile(str(err), logging.ERROR)
             ret_val = False
         finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return ret_val
 
-    def _extractToCSVs(self, raw_csv_path: str, proc_csv_path: str, db_cursor, db_settings,
+    def _extractToCSVs(self, raw_csv_path: str, proc_csv_path: str, db_settings,
                        game_schema: Schema, game_table: GameTable, game_extractor: type) -> int:
-        raw_csv_file = open(raw_csv_path, "w")
-        proc_csv_file = open(proc_csv_path, "w")
-
-        # Now, we're ready to set up the managers:
-        raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
-                            raw_csv_file=raw_csv_file)
-        proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table,
-                            game_schema=game_schema, proc_csv_file=proc_csv_file)
-        
-        # We're moving the metadata out into a separate readme file.
-        # # Next, calculate metadata
-        # raw_metadata = utils.csvMetadata(game_name=self._game_id, begin_date=request.start_date, end_date=request.end_date,
-        #                                 field_list=game_schema.db_columns_with_types())
-        # feature_descriptions = {**game_schema.perlevel_features(), **game_schema.aggregate_features()}
-        # proc_metadata = utils.csvMetadata(game_name=self._game_id, begin_date=request.start_date, end_date=request.end_date,
-        #                                 field_list=feature_descriptions)
-        # # after generating the metadata, write to each file
-        # raw_csv_file.write(raw_metadata)
-        # proc_csv_file.write(proc_metadata)
-
-        # then write the column headers for the raw csv.
-        raw_mgr.WriteRawCSVHeader()
-        proc_mgr.WriteProcCSVHeader()
-
-        num_sess = len(game_table.session_ids)
-        utils.Logger.toStdOut(f"Preparing to process {num_sess} sessions.", logging.INFO)
-        slice_size = self._settings["BATCH_SIZE"]
-        session_slices = [[game_table.session_ids[i] for i in
-                        range( j*slice_size, min((j+1)*slice_size - 1, num_sess) )] for j in
-                        range( 0, math.ceil(num_sess / slice_size) )]
-        for next_slice in session_slices:
-            # grab data for the given session range. Sort by event time, so 
-            # TODO: Take the "WAVES" out of the line of code below.
-            if self._game_id == 'LAKELAND':
-                ver_filer = " AND (" + \
-                            ' OR '.join(
-                                f'app_version={v}' for v in game_schema.schema()['config']['SUPPORTED_VERS']) + \
-                            ")"
-            else:
-                ver_filer = ''
-            filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filer}"
-            next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
-                                            filter=filt, sort_columns=["session_id", "session_n"], sort_direction = "ASC",
-                                            distinct=False)
-            # now, we process each row.
-            start = datetime.now()
-            for row in next_data_set:
-                self._processRow(row, game_table, raw_mgr, proc_mgr)
-            time_delta = datetime.now() - start
-            num_min = math.floor(time_delta.total_seconds()/60)
-            num_sec = time_delta.total_seconds() % 60
-            num_events = len(next_data_set)
-            utils.Logger.toStdOut(f"Slice processing time: {num_min} min, {num_sec:.3f} sec to handle {num_events} events", logging.INFO)
-            utils.Logger.toFile(f"Slice processing time: {num_min} min, {num_sec:.3f} sec to handle {num_events} events", logging.INFO)
+        try:
+            tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
+            db_cursor = db.cursor()
+            raw_csv_file = open(raw_csv_path, "w")
+            proc_csv_file = open(proc_csv_path, "w")
+            # Now, we're ready to set up the managers:
+            raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
+                                raw_csv_file=raw_csv_file)
+            proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table,
+                                game_schema=game_schema, proc_csv_file=proc_csv_file)
             
-            # after processing all rows for all slices, write out the session data and reset for next slice.
-            raw_mgr.WriteRawCSVLines()
-            raw_mgr.ClearLines()
-            proc_mgr.calculateAggregateFeatures()
-            proc_mgr.WriteProcCSVLines()
-            proc_mgr.ClearLines()
-        return
+            # We're moving the metadata out into a separate readme file.
+            # # Next, calculate metadata
+            # raw_metadata = utils.csvMetadata(game_name=self._game_id, begin_date=request.start_date, end_date=request.end_date,
+            #                                 field_list=game_schema.db_columns_with_types())
+            # feature_descriptions = {**game_schema.perlevel_features(), **game_schema.aggregate_features()}
+            # proc_metadata = utils.csvMetadata(game_name=self._game_id, begin_date=request.start_date, end_date=request.end_date,
+            #                                 field_list=feature_descriptions)
+            # # after generating the metadata, write to each file
+            # raw_csv_file.write(raw_metadata)
+            # proc_csv_file.write(proc_metadata)
+
+            # then write the column headers for the raw csv.
+            raw_mgr.WriteRawCSVHeader()
+            proc_mgr.WriteProcCSVHeader()
+
+            num_sess = len(game_table.session_ids)
+            utils.Logger.toStdOut(f"Preparing to process {num_sess} sessions.", logging.INFO)
+            slice_size = self._settings["BATCH_SIZE"]
+            session_slices = [[game_table.session_ids[i] for i in
+                            range( j*slice_size, min((j+1)*slice_size - 1, num_sess) )] for j in
+                            range( 0, math.ceil(num_sess / slice_size) )]
+            for next_slice in session_slices:
+                # grab data for the given session range. Sort by event time, so 
+                # TODO: Take the "WAVES" out of the line of code below.
+                if self._game_id == 'LAKELAND':
+                    ver_filer = " AND (" + \
+                                ' OR '.join(
+                                    f'app_version={v}' for v in game_schema.schema()['config']['SUPPORTED_VERS']) + \
+                                ")"
+                else:
+                    ver_filer = ''
+                filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filer}"
+                next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
+                                                filter=filt, sort_columns=["session_id", "session_n"], sort_direction = "ASC",
+                                                distinct=False)
+                # now, we process each row.
+                start = datetime.now()
+                for row in next_data_set:
+                    self._processRow(row, game_table, raw_mgr, proc_mgr)
+                time_delta = datetime.now() - start
+                num_min = math.floor(time_delta.total_seconds()/60)
+                num_sec = time_delta.total_seconds() % 60
+                num_events = len(next_data_set)
+                utils.Logger.toStdOut(f"Slice processing time: {num_min} min, {num_sec:.3f} sec to handle {num_events} events", logging.INFO)
+                utils.Logger.toFile(f"Slice processing time: {num_min} min, {num_sec:.3f} sec to handle {num_events} events", logging.INFO)
+                
+                # after processing all rows for all slices, write out the session data and reset for next slice.
+                raw_mgr.WriteRawCSVLines()
+                raw_mgr.ClearLines()
+                proc_mgr.calculateAggregateFeatures()
+                proc_mgr.WriteProcCSVLines()
+                proc_mgr.ClearLines()
+        except Exception as err:
+            utils.Logger.toStdOut(str(err), logging.ERROR)
+            traceback.print_tb(err.__traceback__)
+            utils.Logger.toFile(str(err), logging.ERROR)
+        finally:
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            return
 
     def _dumpToSQL(self, sql_dump_path: str, game_table: GameTable, db_settings):
         # args_list = ["mysqldump", f"--host={db_settings['DB_HOST']}",
