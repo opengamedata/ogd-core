@@ -105,6 +105,7 @@ class ExportManager:
             existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR'])
 
             os.makedirs(name=data_directory, exist_ok=True)
+            readme_path:   str = f"{data_directory}/readme.md"
             raw_csv_path:  str = None
             proc_csv_path: str = None
             raw_zip_path:  str = None
@@ -123,10 +124,12 @@ class ExportManager:
                 self._extractToCSVs(raw_csv_path=raw_csv_path, proc_csv_path=proc_csv_path,\
                                     db_settings=db_settings,\
                                     game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
-                raw_zip_file = zipfile.ZipFile(raw_zip_path, "w")
-                proc_zip_file = zipfile.ZipFile(proc_zip_path, "w")
-                raw_zip_file.write(raw_csv_path, f"{dataset_id}_{short_hash}_raw.csv")
-                proc_zip_file.write(proc_csv_path, f"{dataset_id}_{short_hash}_proc.csv")
+                raw_zip_file = zipfile.ZipFile(raw_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
+                proc_zip_file = zipfile.ZipFile(proc_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
+                raw_zip_file.write(raw_csv_path, f"{dataset_id}/{dataset_id}_{short_hash}_raw.csv")
+                raw_zip_file.write(readme_path, f"{dataset_id}/readme.md")
+                proc_zip_file.write(proc_csv_path, f"{dataset_id}/{dataset_id}_{short_hash}_proc.csv")
+                proc_zip_file.write(readme_path, f"{dataset_id}/readme.md")
                 raw_zip_file.close()
                 proc_zip_file.close()
                 os.remove(raw_csv_path)
@@ -137,8 +140,9 @@ class ExportManager:
                 src_sql = existing_csvs[self._game_id][dataset_id]['sql']
                 os.rename(src_sql, sql_zip_path)
             self._dumpToSQL(sql_dump_path=sql_dump_path, game_table=game_table, db_settings=db_settings)
-            sql_zip_file = zipfile.ZipFile(f"{data_directory}/{dataset_id}_{short_hash}_sql.zip", "w")
-            sql_zip_file.write(sql_dump_path, f"{dataset_id}_{short_hash}.sql")
+            sql_zip_file = zipfile.ZipFile(sql_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
+            sql_zip_file.write(sql_dump_path, f"{dataset_id}/{dataset_id}_{short_hash}.sql")
+            sql_zip_file.write(readme_path, f"{dataset_id}/readme.md")
             os.remove(sql_dump_path)
             # Finally, update the list of csv files.
             self._updateFileExportList(dataset_id, raw_zip_path, proc_zip_path,
