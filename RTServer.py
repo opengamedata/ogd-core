@@ -232,7 +232,7 @@ class RTServer:
         except Exception as err:
             #print(f"got error in RTServer.py: {str(err)}")
             utils.Logger.toFile(f"Got an error in getPredictionsBySessID: {str(err)}", logging.ERROR)
-            ret_val = {"NoModel": "No models for given game"}
+            ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
         finally:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
