@@ -237,7 +237,7 @@ class ExportManager:
         #             f"{db_settings['DB_NAME_DATA']}", f"{db_settings['table']}"]
         if len(game_table.session_ids) > 0:
             command = f"mysqldump --host={db_settings['DB_HOST']} \
---where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'\" \
+--where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}' AND app_id='{self._game_id}'\" \
 --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']} \
  > {sql_dump_path}"
             sql_dump_file = open(sql_dump_path, "w")
