@@ -72,7 +72,7 @@ class LakelandExtractor(Extractor):
     _ACTIVE_LOGS = ["SELECTTILE", "SELECTFARMBIT", "SELECTITEM", "SELECTBUY", "BUY",
                     "CANCELBUY","TILEUSESELECT","ITEMUSESELECT"]
 
-    _NULL_FEATURE_VAL = 'null'
+    _NULL_FEATURE_VALS = ['null', 0]
 
 
     ## Constructor for the LakelandExtractor class.
@@ -738,7 +738,7 @@ class LakelandExtractor(Extractor):
         # set features
         self.feature_inc(f"count_{emote_str}_emotes_per_capita", per_capita_val)
         if emote_str == 'sale_txt':
-            self.feature_inc("money_earned", 200)
+            self.feature_inc("money_earned", 100)
 
         self.feature_average("percent_negative_emotes", is_negative)
         self.feature_average("percent_neutral_emotes", is_neutral)
@@ -934,7 +934,7 @@ class LakelandExtractor(Extractor):
         :param cur_client_time: client time at which the event happened
         """
         feature_name = LakelandExtractor._SESS_PREFIX + feature_base
-        if self.features.getValByName(feature_name) == LakelandExtractor._NULL_FEATURE_VAL:
+        if self.features.getValByName(feature_name) in LakelandExtractor._NULL_FEATURE_VALS:
             self.features.setValByName(feature_name=feature_name, new_value=self.time_since_start(cur_client_time))
 
     def feature_max_min(self, fname_base, val):
@@ -953,14 +953,15 @@ class LakelandExtractor(Extractor):
     def _increment_feature_in_cur_windows(self, feature_name, increment=None):
         increment = increment or 1
         for w in self._cur_windows:
-            if self.features.getValByIndex(feature_name=feature_name, index=w) == LakelandExtractor._NULL_FEATURE_VAL:
+            if self.features.getValByIndex(feature_name=feature_name, index=w) in LakelandExtractor._NULL_FEATURE_VALS:
                 self.features.setValByIndex(feature_name, index=w, new_value=self._get_default_val(feature_name))
             self.features.incValByIndex(feature_name=feature_name, index=w, increment=increment)
 
     def _increment_sess_feature(self, feature_name, increment=None):
         increment = increment or 1
-        if self.features.getValByName(feature_name) == LakelandExtractor._NULL_FEATURE_VAL:
+        if self.features.getValByName(feature_name) in LakelandExtractor._NULL_FEATURE_VALS:
             self.features.setValByName(feature_name, new_value=self._get_default_val(feature_name))
+        self.features.incAggregateVal(feature_name=feature_name, increment=increment)
 
 
     def _set_value_in_cur_windows(self, feature_name, value):
@@ -970,23 +971,23 @@ class LakelandExtractor(Extractor):
     def _set_feature_max_in_cur_windows(self, feature_name, val):
         for w in self._cur_windows:
             prev_val = self.features.getValByIndex(feature_name=feature_name, index=w)
-            if prev_val == LakelandExtractor._NULL_FEATURE_VAL or val > prev_val:
+            if prev_val in LakelandExtractor._NULL_FEATURE_VALS or val > prev_val:
                 self.features.setValByIndex(feature_name=feature_name, index=w, new_value=val)
 
     def _set_feature_min_in_cur_windows(self, feature_name, val):
         for w in self._cur_windows:
             prev_val = self.features.getValByIndex(feature_name=feature_name, index=w)
-            if prev_val == LakelandExtractor._NULL_FEATURE_VAL or val < prev_val:
+            if prev_val in LakelandExtractor._NULL_FEATURE_VALS or val < prev_val:
                 self.features.setValByIndex(feature_name=feature_name, index=w, new_value=val)
 
     def _set_feature_max_in_session(self, feature_name, val):
         prev_val = self.features.getValByName(feature_name=feature_name)
-        if prev_val == LakelandExtractor._NULL_FEATURE_VAL or val > prev_val:
+        if prev_val in LakelandExtractor._NULL_FEATURE_VALS or val > prev_val:
             self.features.setValByName(feature_name=feature_name, new_value=val)
 
     def _set_feature_min_in_session(self, feature_name, val):
         prev_val = self.features.getValByName(feature_name=feature_name)
-        if prev_val == LakelandExtractor._NULL_FEATURE_VAL or val < prev_val:
+        if prev_val in LakelandExtractor._NULL_FEATURE_VALS or val < prev_val:
             self.features.setValByName(feature_name=feature_name, new_value=val)
 
     def _get_default_val(self, feature_name):
