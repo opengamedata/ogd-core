@@ -579,6 +579,7 @@
       "fullscreen": "1 if fullscreen, 0 if not",
       "version": "version number",
       "debug": "1 if player used a debug feature, 0 if not",
+      "num_play": "Playthrough number (i.e., if a player has died and restarts, this number will be 1 in the first playthrough and 2 in the second)",
 
       "sessID":"The player's sess ID number for this play sess",
       "persistentSessionID":"The sess ID for the player's device, persists across multiple players using the same device.",
