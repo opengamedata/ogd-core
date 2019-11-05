@@ -192,7 +192,6 @@ def writeReadme():
             # Open files with game-specific readme data, and global db changelog.
             readme_src    = open(f"./doc/readme_src/{game_name}_readme_src.md", "r")
             readme.write(readme_src.read())
-            readme.write("\n")
         except FileNotFoundError as err:
             readme.write("No readme prepared")
             utils.Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.ERROR)
@@ -200,6 +199,8 @@ def writeReadme():
             utils.Logger.toStdOut(str(err), logging.ERROR)
             utils.Logger.toFile(str(err), logging.ERROR)
             traceback.print_tb(err.__traceback__)
+        finally:
+            readme.write("\n")
         try:
             changelog_src = open("./doc/readme_src/changelog_src.md",           "r")
             readme.write(changelog_src.read())
