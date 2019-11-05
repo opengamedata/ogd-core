@@ -184,9 +184,22 @@ def writeReadme():
             feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
             readme.write(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
                                                                 proc_field_list=feature_descriptions))
+        except Exception as err:
+            utils.Logger.toStdOut(str(err), logging.ERROR)
+            utils.Logger.toFile(str(err), logging.ERROR)
+            traceback.print_tb(err.__traceback__)
+        try:
             # Open files with game-specific readme data, and global db changelog.
             readme_src    = open(f"./doc/readme_src/{game_name}_readme_src.md", "r")
+        except FileNotFoundError as err:
+            readme.write("No readme prepared")
+            utils.Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.ERROR)
+        try:
             changelog_src = open("./doc/readme_src/changelog_src.md",           "r")
+        except FileNotFoundError as err:
+            readme.write("No changelog prepared")
+            utils.Logger.toStdOut(f"Could not find changelog_src", logging.ERROR)
+        try:
             # Finally, write those into the new readme file.
             readme.write(readme_src.read())
             readme.write("\n")
