@@ -126,10 +126,10 @@ class ExportManager:
                                     game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
                 raw_zip_file = zipfile.ZipFile(raw_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
                 proc_zip_file = zipfile.ZipFile(proc_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
-                raw_zip_file.write(raw_csv_path, f"{dataset_id}/{dataset_id}_{short_hash}_raw.csv")
-                raw_zip_file.write(readme_path, f"{dataset_id}/readme.md")
-                proc_zip_file.write(proc_csv_path, f"{dataset_id}/{dataset_id}_{short_hash}_proc.csv")
-                proc_zip_file.write(readme_path, f"{dataset_id}/readme.md")
+                self._addToZip(path=raw_zip_file, zip_file=raw_csv_path, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_raw.csv")
+                self._addToZip(path=raw_zip_file, zip_file=readme_path, path_in_zip=f"{dataset_id}/readme.md")
+                self._addToZip(path=proc_zip_file, zip_file=proc_csv_path, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_proc.csv")
+                self._addToZip(path=proc_zip_file, zip_file=readme_path, path_in_zip=f"{dataset_id}/readme.md")
                 raw_zip_file.close()
                 proc_zip_file.close()
                 os.remove(raw_csv_path)
@@ -147,7 +147,6 @@ class ExportManager:
             # Finally, update the list of csv files.
             self._updateFileExportList(dataset_id, raw_zip_path, proc_zip_path,
                                     sql_zip_path, request, num_sess)
-
             ret_val = True
         except Exception as err:
             utils.Logger.toStdOut(str(err), logging.ERROR)
@@ -156,6 +155,14 @@ class ExportManager:
             ret_val = False
         finally:
             return ret_val
+
+    def _addToZip(self, path, zip_file, path_in_zip):
+        try:
+            zip_file.write(path, path_in_zip)
+        except FileNotFoundError as err:
+            utils.Logger.toStdOut(str(err), logging.ERROR)
+            traceback.print_tb(err.__traceback__)
+            utils.Logger.toFile(str(err), logging.ERROR)
 
     def _extractToCSVs(self, raw_csv_path: str, proc_csv_path: str, db_settings,
                        game_schema: Schema, game_table: GameTable, game_extractor: type) -> int:
