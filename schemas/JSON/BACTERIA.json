@@ -3,6 +3,12 @@
     },
 
     "features": {
+        "perlevel":{
+        },
+        "per_custom_count": {
+        },
+        "aggregate":{
+        }
     },
 
     "db_columns": {
