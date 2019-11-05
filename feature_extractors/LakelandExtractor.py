@@ -138,6 +138,7 @@ class LakelandExtractor(Extractor):
         self._population_history = [(datetime.datetime.min, 0)] # client time, population
         self.building_xys = []
         self._tiles = defaultdict(lambda: {'marks': [1, 1, 1, 1], 'type': 0})
+        self._max_population = 0
 
 
 
@@ -489,8 +490,12 @@ class LakelandExtractor(Extractor):
 
         # feature functions
         def chose_highest_nutrient_tile(buy_hovers, chosen_tile):
+            building_buildable_func = self.get_building_buildable_function() if self._VERSION < 15 \
+                else lambda buy_t: buy_t[-2] # whether the tile is buildable (v15 buy hover data contains:
+                                             # [tile_data_short, buildable, hover_time]
             for t in buy_hovers:
-                if t[3] == 1:  # t has the current type of land (only type that farms can be built on)
+                # t has the current type of land (only type that farms can be built on) and a building (farm) can be placed there
+                if t[3] == 1 and building_buildable_func(t):
                     if t[1] - 2 > chosen_tile[1]:  # comparing the nutritions give or take 2/255 ~ 1% of nutrition
                        return 0  # failed to put on highest nutrition tile
             return 1
@@ -1023,6 +1028,7 @@ class LakelandExtractor(Extractor):
 
     def _change_population(self, client_time, increment):
         self._num_farmbits += increment;
+        self._max_population = max([self._num_farmbits, self._max_population])
         self._population_history.append((client_time, self._num_farmbits))
 
     def _get_pops_at_times(self, datetime_list):
@@ -1090,6 +1096,35 @@ class LakelandExtractor(Extractor):
     def time_since_start(self, client_time):
         return client_time - self._CLIENT_START_TIME
 
+    def get_building_buildable_function(self):
+        buildable_area_around_building = lambda bx, by:set((x,y) for x in range(bx-2, bx+3) for y in range(by-2, by+3))
+        buildable_xys = set()
+        for bx, by in self.building_xys:
+            buildable_xys = buildable_xys | buildable_area_around_building(bx, by)
+
+        # does not consider the small area in the beginning by the lake that players get for free.
+        def building_buildable(t):
+            type, tx, ty = t[3], t[4], t[5]
+            if type != 1: # land
+                return False
+            if not self.in_bounds(tx, ty):
+                return False
+            return (tx,ty) in buildable_xys
+
+        return building_buildable
+
+
+    def in_bounds(self, tx, ty):
+        # initial bounds 17-30 for 0 or 1 max farmbits.
+        min_bound, max_bound = 17, 30
+        # intial bounds 16-31 for 2 max farmbits, etc.
+        if self._max_population > 1:
+            change = self._max_population - 1
+            min_bound = max(0, min_bound - self._max_population)
+            max_bound = min(50, max_bound - self._max_population)
+        return all(min_bound <= z <= max_bound for z in [tx, ty])
+
+
     @staticmethod
     def onscreen_item_dict():
         ret = {key: 0 for key in LakelandExtractor._STR_TO_ENUM['ITEM TYPE']}
@@ -1146,6 +1181,7 @@ def tile_i_to_xy(i):
     ty = i//50
     tx = i%50
     return tx,ty
+
 
 
 
