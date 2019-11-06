@@ -1,6 +1,191 @@
 {
     "events":{
+    "CHECKPOINT": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "name": "event name enum",
+        "level": "enum for current checkpoint"
     },
+    "STARTGAME": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "save_code": "",
+        "fullscreen": "",
+        "music": "",
+        "hq": "",
+        "name": "event name enum",
+        "level": "enum for current checkpoint"
+    },
+    "ENDGAME": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "name": "event name enum",
+        "level": "enum for current checkpoint"
+    },
+    "NAVIGATE_CLICK": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "screen_coor": "x,y integer array of where the mouse is in current room",
+        "room_coor": "x,y integer array of where the mouse is in the game screen",
+        "level": "enum for current checkpoint"
+    },
+    "NOTEBOOK_CLICK": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "screen_coor": "x,y integer array of where the mouse is in current room",
+        "room_coor": "x,y integer array of where the mouse is in the game screen",
+        "name": "event name enum",
+        "page": "",
+        "level": "enum for current checkpoint"
+    },
+    "MAP_CLICK": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "screen_coor": "x,y integer array of where the mouse is in current room",
+        "room_coor": "x,y integer array of where the mouse is in the game screen",
+        "name": "event name enum",
+        "level": "enum for current checkpoint"
+    },
+    "NOTIFICATION_CLICK": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "screen_coor": "x,y integer array of where the mouse is in current room",
+        "room_coor": "x,y integer array of where the mouse is in the game screen",
+        "name": "event name enum",
+        "level": "enum for current checkpoint"
+    },
+    "OBJECT_CLICK": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "screen_coor": "x,y integer array of where the mouse is in current room",
+        "room_coor": "x,y integer array of where the mouse is in the game screen",
+        "name": "event name enum",
+        "level": "enum for current checkpoint"
+    },
+    "OBSERVATION_CLICK": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "screen_coor": "x,y integer array of where the mouse is in current room",
+        "room_coor": "x,y integer array of where the mouse is in the game screen",
+        "name": "event name enum",
+        "level": "enum for current checkpoint"
+    },
+    "PERSON_CLICK": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "screen_coor": "x,y integer array of where the mouse is in current room",
+        "room_coor": "x,y integer array of where the mouse is in the game screen",
+        "name": "event name enum",
+        "level": "enum for current checkpoint"
+    },
+    "CUTSCENE_CLICK": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "screen_coor": "x,y integer array of where the mouse is in current room",
+        "room_coor": "x,y integer array of where the mouse is in the game screen",
+        "name": "event name enum",
+        "level": "enum for current checkpoint"
+    },
+    "WILDCARD_CLICK": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "screen_coor": "x,y integer array of where the mouse is in current room",
+        "room_coor": "x,y integer array of where the mouse is in the game screen",
+        "name": "event name enum",
+        "correct": "correct answer to the problem (only exists for event name CHOICE) - sometimes doesnt exist??",
+        "answer": "selected answer (only exists for event name CHOICE)",
+        "level": "enum for current checkpoint"
+    },
+    "NAVIGATE_HOVER": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "start_time": "client side timestamp for the time the hover started",
+        "end_time": "client side timestamp for the time the hover ended",
+        "name": "event name enum",
+        "level": "enum for current checkpoint",
+        "answer": "selected answer (only exists for event name CHOICE)- sometimes doesnt exist??",
+        "correct": "correct answer to the problem (only exists for event name CHOICE)- sometimes doesnt exist??"
+    },
+    "NOTEBOOK_HOVER": {},
+    "MAP_HOVER": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "start_time": "client side timestamp for the time the hover started",
+        "end_time": "client side timestamp for the time the hover ended",
+        "name": "event name enum",
+        "level": "enum for current checkpoint"
+    },
+    "NOTIFICATION_HOVER": {},
+    "OBJECT_HOVER": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "start_time": "client side timestamp for the time the hover started",
+        "end_time": "client side timestamp for the time the hover ended",
+        "level": "enum for current checkpoint",
+        "name": "event name enum- sometimes doesnt exist??"
+    },
+    "OBSERVATION_HOVER": {},
+    "PERSON_HOVER": {},
+    "CUTSCENE_HOVER": {},
+    "WILDCARD_HOVER": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "start_time": "client side timestamp for the time the hover started",
+        "end_time": "client side timestamp for the time the hover ended",
+        "name": "event name enum- sometimes doesnt exist??",
+        "correct": "correct answer to the problem (only exists for event name CHOICE)- sometimes doesnt exist??",
+        "answer": "selected answer (only exists for event name CHOICE)- sometimes doesnt exist??",
+        "level": "enum for current checkpoint"
+    }
+},
 
     "features": {
         "perlevel":{
