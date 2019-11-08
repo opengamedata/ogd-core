@@ -4,6 +4,7 @@ import json
 import logging
 import math
 import typing
+import datetime
 ## import local files
 import utils
 import numpy as np
@@ -14,6 +15,7 @@ from schemas.Schema import Schema
 
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
+# TODO: Some FQIDs are called HACKME and are placeholders
 class JowilderExtractor(Extractor):
     ## Constructor for the WaveExtractor class.
     #  Initializes some custom private data (not present in base class) for use
@@ -51,8 +53,16 @@ class JowilderExtractor(Extractor):
          19: 'cutscene_hover',
          20: 'wildcard_hover'
     }
+
+    _TASK_LIST = ["", "dummy_fqid0", "dummy_fqid1"]
+
+    _NULL_FEATURE_VALS = ['null', 0]
+
     def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
+        self.cur_task = 1
+        self.time_since_start = datetime.timedelta(0)
+        self._task_complete_helper = dict()
 
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
 
@@ -78,7 +88,19 @@ class JowilderExtractor(Extractor):
             if self.features.getValByName(feature_name="persistentSessionID") == 0:
                 self.features.setValByName(feature_name="persistentSessionID",
                                            new_value=row_with_complex_parsed[game_table.pers_session_id_index])
+            if not self._CLIENT_START_TIME:
+                # initialize this time as the start
+                self._CLIENT_START_TIME = event_client_time
+
+            self.time_since_start = self.get_time_since_start(client_time=event_client_time)
+            self.features.incAggregateVal(feature_name="EventCount")
+            self.features.setValByName(feature_name="sessDuration", new_value=time_since_start)
+            debug_str = ''
+            utils.Logger.toStdOut(f'{self.time_since_start} {event_type_str} {debug_str}',
+                                  logging.DEBUG)
             # Ensure we have private data initialized for this level.
+            if "click" in event_type_str:
+                self._extractFromClick(event_client_time, event_data_complex_parsed)
             if event_type_str == "checkpoint":
                 self._extractFromCheckpoint(event_client_time, event_data_complex_parsed)
             elif event_type_str == "startgame":
@@ -121,6 +143,40 @@ class JowilderExtractor(Extractor):
                 self._extractFromCutscene_hover(event_client_time, event_data_complex_parsed)
             elif event_type_str == "wildcard_hover":
                 self._extractFromWildcard_hover(event_client_time, event_data_complex_parsed)
+
+    def _extractFromClick(self, event_client_time, event_data_complex_parsed):
+        # assign event_data_complex_parsed variables
+        d = event_data_complex_parsed
+        _room_fqid = d["room_fqid"]
+        _type = d["type"]
+        _subtype = d["subtype"]
+        _fqid = d["fqid"]
+        _event_custom = d["event_custom"]
+        _screen_coor = d["screen_coor"]
+        _room_coor = d["room_coor"]
+        _level = d["level"]
+
+        # helpers
+        clicked_fqid = _room_fqid + _fqid
+        completed_task = 0
+        if JowilderExtractor[self.cur_task] == clicked_fqid:
+            completed_task = self.cur_task
+            self.cur_task += 1
+        # set class variables
+        # feature helpers
+        def set_task_finished(completed_task):
+            self._task_complete_helper[completed_task] = event_client_time
+            if not completed_task:
+                return
+            if completed_task == 1:
+                time_to_complete = datetime.timedelta(0)
+            else:
+                prev_complete_time = self._task_complete_helper[completed_task-1]
+                time_to_complete = event_client_time - prev_complete_time
+            feature_name = 'time_to_complete_task_'+completed_task
+            self.features.setValByName(feature_name=feature_name, new_value=time_to_complete)
+        # set features
+        set_task_finished(completed_task)
 
     def _extractFromCheckpoint(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -442,3 +498,17 @@ class JowilderExtractor(Extractor):
         # helpers
         # set class variables
         # set features
+
+    def feature_time_since_start(self, feature_name, cur_client_time):
+        """
+        Sets a session time since start feature. Will not write over a feature that has already been set.
+        :param feature_base: name of feature without sess or window prefix
+        :param cur_client_time: client time at which the event happened
+        """
+        if self.getValByName(feature_name) in JowilderExtractor._NULL_FEATURE_VALS:
+            self.setValByName(feature_name=feature_name, new_value=self.time_since_start(cur_client_time))
+
+
+
+    def get_time_since_start(self, client_time):
+        return client_time - self._CLIENT_START_TIME
