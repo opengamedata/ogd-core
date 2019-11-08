@@ -1,5 +1,5 @@
 {
-    "events":{
+  "events":{
     "checkpoint": {
         "room_fqid": "fully qualified id of the room",
         "type": "type enum",
@@ -189,10 +189,22 @@
 
     "features": {
         "perlevel":{
+            "levelTimeToRead":"Total time spent reading text boxes in the level",
+            "avgTimePerWord":"Time spent reading all text boxes in the level, divided by number of words",
+            "avgTimePerTextBox":"Time spent reading all text boxes in the level, divided by number of text boxes",
+            "stdevTimePerTextBox":"Standard deviation of time spent reading text boxes in the level",
+            "percentBoxesSkipped":"Percent of text boxes in the level that were opened and closed within a very short time (i.e. skipped)."
         },
         "per_custom_count": {
+            "timeToReadBox":"Time spent reading a text box, across all times the box was opened",
+            "boxReadCount":"Number of times the text box was opened",
+            "timeToCompleteTask":"Time between event beginning a task and ending a task"
         },
         "aggregate":{
+            "totalTimeToRead":"Total time spent reading text boxes over the whole game",
+            "totalAvgTimePerWord":"Time spent reading all text boxes in the game, divided by number of words",
+            "totalAvgTimePerTextBox":"Time spent reading all text boxes in the game, divided by number of text boxes",
+            "totalStDevTimePerTextBox":"Standard deviation of time spent reading text boxes in the game"
         }
     },
 
