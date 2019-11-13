@@ -226,6 +226,8 @@ class Extractor(abc.ABC):
         def incValByIndex(self, feature_name: str, index: int, increment: typing.Union[int, float] = 1):
             if not self._verify_feature(feature_name):
                 return
+            if self.features[feature_name][index]["val"] == 'null':
+                self.features[feature_name][index]["val"] = 0
             self.features[feature_name][index]["val"] += increment
 
         ## Function to increment value of an aggregate feature

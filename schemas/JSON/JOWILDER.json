@@ -193,12 +193,11 @@
             "avgTimePerWord":"Time spent reading all text boxes in the level, divided by number of words",
             "avgTimePerTextBox":"Time spent reading all text boxes in the level, divided by number of text boxes",
             "stdevTimePerTextBox":"Standard deviation of time spent reading text boxes in the level",
-            "percentBoxesSkipped":"Percent of text boxes in the level that were opened and closed within a very short time (i.e. skipped)."
+            "percentBoxesSkipped":"Percent of text boxes in the level that were opened and closed within a very short time (i.e. skipped).",
+            "time_in_level": "time_in_level",
+            "meaningful_action_count": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations"
         },
         "per_custom_count": {
-            "timeToReadBox":"Time spent reading a text box, across all times the box was opened",
-            "boxReadCount":"Number of times the text box was opened",
-            "timeToCompleteTask":"Time between event beginning a task and ending a task"
         },
         "aggregate":{
             "totalTimeToRead":"Total time spent reading text boxes over the whole game",

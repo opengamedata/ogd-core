@@ -24,6 +24,7 @@ from schemas.Schema import Schema
 from feature_extractors.WaveExtractor import WaveExtractor
 from feature_extractors.CrystalExtractor import CrystalExtractor
 from feature_extractors.LakelandExtractor import LakelandExtractor
+from feature_extractors.JowilderExtractor import JowilderExtractor
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.
@@ -89,6 +90,9 @@ class ExportManager:
         elif self._game_id == "LAKELAND":
             game_schema = Schema(schema_name="LAKELAND.json")
             game_extractor = LakelandExtractor
+        elif self._game_id == "JOWILDER":
+            game_schema = Schema(schema_name="JOWILDER.json")
+            game_extractor = JowilderExtractor
         elif self._game_id in ["JOWILDER", "BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MAGNET", "WIND"]:
             # all games with data but no extractor.
             game_schema = None

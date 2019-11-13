@@ -56,6 +56,35 @@ class JowilderExtractor(Extractor):
 
     _TASK_LIST = ["", "dummy_fqid0", "dummy_fqid1"]
 
+    _LEVEL_TO_STR = {
+        0: 'startgame',
+        1: 'notebook',
+        2: 'wiscwonders',
+        3: 'mystery',
+        4: 'plaque',
+        5: 'notajersey',
+        6: 'trashed',
+        7: 'archivist',
+        8: 'textile',
+        9: 'logbook',
+        10: 'suffragist',
+        11: 'taxidermist',
+        12: 'wellsdidit',
+        13: 'saveteddy',
+        14: 'scratches',
+        15: "hesalive",
+        16: 'akey',
+        17: 'rescued',
+        18: 'backtowork',
+        19: 'sadanimals',
+        20: 'flaglady',
+        21: 'ecologists',
+        22: 'donethework',
+        23: 'sunset',
+    }
+
+
+
     _NULL_FEATURE_VALS = ['null', 0]
 
     def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
@@ -63,11 +92,13 @@ class JowilderExtractor(Extractor):
         self.cur_task = 1
         self.time_since_start = datetime.timedelta(0)
         self._task_complete_helper = dict()
-
+        self.level_start_timestamp = dict()
+        self._CLIENT_START_TIME = None
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
 
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
         # put some data in local vars, for readability later.
+        level = row_with_complex_parsed[game_table.level_index]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
         event_type = row_with_complex_parsed[game_table.event_custom_index]
         event_client_time = row_with_complex_parsed[game_table.client_time_index].replace(microsecond=
@@ -92,9 +123,13 @@ class JowilderExtractor(Extractor):
                 # initialize this time as the start
                 self._CLIENT_START_TIME = event_client_time
 
+            if self.level_start_timestamp.get(level) == None:
+                self.level_start_timestamp[level] = event_client_time
+            self.features.setValByIndex('time_in_level', level, event_client_time - self.level_start_timestamp[level])
+
             self.time_since_start = self.get_time_since_start(client_time=event_client_time)
             self.features.incAggregateVal(feature_name="EventCount")
-            self.features.setValByName(feature_name="sessDuration", new_value=time_since_start)
+            self.features.setValByName(feature_name="sessDuration", new_value=self.time_since_start)
             debug_str = ''
             utils.Logger.toStdOut(f'{self.time_since_start} {event_type_str} {debug_str}',
                                   logging.DEBUG)
@@ -157,26 +192,26 @@ class JowilderExtractor(Extractor):
         _level = d["level"]
 
         # helpers
-        clicked_fqid = _room_fqid + _fqid
-        completed_task = 0
-        if JowilderExtractor[self.cur_task] == clicked_fqid:
-            completed_task = self.cur_task
-            self.cur_task += 1
+        # clicked_fqid = _room_fqid + _fqid
+        # completed_task = 0
+        # if JowilderExtractor[self.cur_task] == clicked_fqid:
+        #     completed_task = self.cur_task
+        #     self.cur_task += 1
         # set class variables
         # feature helpers
-        def set_task_finished(completed_task):
-            self._task_complete_helper[completed_task] = event_client_time
-            if not completed_task:
-                return
-            if completed_task == 1:
-                time_to_complete = datetime.timedelta(0)
-            else:
-                prev_complete_time = self._task_complete_helper[completed_task-1]
-                time_to_complete = event_client_time - prev_complete_time
-            feature_name = 'time_to_complete_task_'+completed_task
-            self.features.setValByName(feature_name=feature_name, new_value=time_to_complete)
-        # set features
-        set_task_finished(completed_task)
+        # def set_task_finished(completed_task):
+        #     self._task_complete_helper[completed_task] = event_client_time
+        #     if not completed_task:
+        #         return
+        #     if completed_task == 1:
+        #         time_to_complete = datetime.timedelta(0)
+        #     else:
+        #         prev_complete_time = self._task_complete_helper[completed_task-1]
+        #         time_to_complete = event_client_time - prev_complete_time
+        #     feature_name = 'time_to_complete_task_'+completed_task
+        #     self.features.setValByName(feature_name=feature_name, new_value=time_to_complete)
+        # # set features
+        # set_task_finished(completed_task)
 
     def _extractFromCheckpoint(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -239,6 +274,9 @@ class JowilderExtractor(Extractor):
         _room_coor = d["room_coor"]
         _level = d["level"]
 
+        if _fqid != 0:
+            self.features.incValByIndex('meaningful_action_count', _level)
+
         # helpers
         # set class variables
         # set features
@@ -277,6 +315,8 @@ class JowilderExtractor(Extractor):
         # helpers
         # set class variables
         # set features
+        if _fqid != 0:
+            self.features.incValByIndex('meaningful_action_count', _level)
 
     def _extractFromNotification_click(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -392,7 +432,7 @@ class JowilderExtractor(Extractor):
         _event_custom = d["event_custom"]
         _start_time = d["start_time"]
         _end_time = d["end_time"]
-        _name = d["name"]
+        _name = d.get("name")
         _level = d["level"]
         _answer = d.get("answer")  # uncertain field
         _correct = d.get("correct")  # uncertain field
@@ -498,6 +538,9 @@ class JowilderExtractor(Extractor):
         # helpers
         # set class variables
         # set features
+
+    def calculateAggregateFeatures(self):
+        pass
 
     def feature_time_since_start(self, feature_name, cur_client_time):
         """
