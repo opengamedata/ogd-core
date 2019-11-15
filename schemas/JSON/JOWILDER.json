@@ -189,6 +189,8 @@
 
     "features": {
         "perlevel":{
+            "count_clicks": "Number of clicks",
+            "count_hovers": "Number of hovers",
             "levelTimeToRead":"Total time spent reading text boxes in the level",
             "avgTimePerWord":"Time spent reading all text boxes in the level, divided by number of words",
             "avgTimePerTextBox":"Time spent reading all text boxes in the level, divided by number of text boxes",
@@ -200,6 +202,11 @@
         "per_custom_count": {
         },
         "aggregate":{
+            "sessionID":"The player's session ID number for this play session",
+            "persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",
+            "count_clicks": "Number of clicks throughout the game",
+            "count_hovers": "Number of hovers throughout the game",
+            "sessDuration": "Length of the session",
             "totalTimeToRead":"Total time spent reading text boxes over the whole game",
             "totalAvgTimePerWord":"Time spent reading all text boxes in the game, divided by number of words",
             "totalAvgTimePerTextBox":"Time spent reading all text boxes in the game, divided by number of text boxes",

@@ -95,10 +95,11 @@ class JowilderExtractor(Extractor):
         self.level_start_timestamp = dict()
         self._CLIENT_START_TIME = None
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
+        self.level = 0
 
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
         # put some data in local vars, for readability later.
-        level = row_with_complex_parsed[game_table.level_index]
+        self.level = row_with_complex_parsed[game_table.level_index]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
         event_type = row_with_complex_parsed[game_table.event_custom_index]
         event_client_time = row_with_complex_parsed[game_table.client_time_index].replace(microsecond=
@@ -123,9 +124,9 @@ class JowilderExtractor(Extractor):
                 # initialize this time as the start
                 self._CLIENT_START_TIME = event_client_time
 
-            if self.level_start_timestamp.get(level) == None:
-                self.level_start_timestamp[level] = event_client_time
-            self.features.setValByIndex('time_in_level', level, event_client_time - self.level_start_timestamp[level])
+            if self.level_start_timestamp.get(self.level) == None:
+                self.level_start_timestamp[self.level] = event_client_time
+            self.features.setValByIndex('time_in_level', self.level, event_client_time - self.level_start_timestamp[self.level])
 
             self.time_since_start = self.get_time_since_start(client_time=event_client_time)
             self.features.incAggregateVal(feature_name="EventCount")
@@ -136,6 +137,8 @@ class JowilderExtractor(Extractor):
             # Ensure we have private data initialized for this level.
             if "click" in event_type_str:
                 self._extractFromClick(event_client_time, event_data_complex_parsed)
+            elif "hover" in event_type_str:
+                self._extractFromHover(event_client_time, event_data_complex_parsed)
             if event_type_str == "checkpoint":
                 self._extractFromCheckpoint(event_client_time, event_data_complex_parsed)
             elif event_type_str == "startgame":
@@ -212,6 +215,28 @@ class JowilderExtractor(Extractor):
         #     self.features.setValByName(feature_name=feature_name, new_value=time_to_complete)
         # # set features
         # set_task_finished(completed_task)
+        self.inc_lvl_and_sess(feature_name="count_clicks")
+
+
+    def _extractFromHover(self, event_client_time, event_data_complex_parsed):
+        # assign event_data_complex_parsed variables
+        d = event_data_complex_parsed
+        _room_fqid = d["room_fqid"]
+        _type = d["type"]
+        _subtype = d["subtype"]
+        _fqid = d["fqid"]
+        _event_custom = d["event_custom"]
+        _start_time = d["start_time"]
+        _end_time = d["end_time"]
+        _name = d.get("name")
+        _level = d["level"]
+        _answer = d.get("answer")  # uncertain field
+        _correct = d.get("correct")  # uncertain field
+
+        # helpers
+        # set class variables
+        # set features
+        self.inc_lvl_and_sess(feature_name="count_hovers")
 
     def _extractFromCheckpoint(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -542,16 +567,21 @@ class JowilderExtractor(Extractor):
     def calculateAggregateFeatures(self):
         pass
 
-    def feature_time_since_start(self, feature_name, cur_client_time):
-        """
-        Sets a session time since start feature. Will not write over a feature that has already been set.
-        :param feature_base: name of feature without sess or window prefix
-        :param cur_client_time: client time at which the event happened
-        """
-        if self.getValByName(feature_name) in JowilderExtractor._NULL_FEATURE_VALS:
-            self.setValByName(feature_name=feature_name, new_value=self.time_since_start(cur_client_time))
+    # def feature_time_since_start(self, feature_name, cur_client_time):
+    #     """
+    #     Sets a session time since start feature. Will not write over a feature that has already been set.
+    #     :param feature_base: name of feature without sess or window prefix
+    #     :param cur_client_time: client time at which the event happened
+    #     """
+    #     if self.getValByName(feature_name) in JowilderExtractor._NULL_FEATURE_VALS:
+    #         self.setValByName(feature_name=feature_name, new_value=self.time_since_start(cur_client_time))
 
 
 
     def get_time_since_start(self, client_time):
         return client_time - self._CLIENT_START_TIME
+
+    def inc_lvl_and_sess(self, feature_name, increment):
+        self.features.incValByIndex(feature_name=feature_name, index=self.level, increment=increment)
+        self.features.incAggregateVal(feature_name=feature_name, increment=increment)
+
