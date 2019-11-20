@@ -1,5 +1,5 @@
 {
-    "tunic.drycleaner.frontdesk.tunic.logbook": {
+    "tunic.drycleaner.frontdesk.logbook": {
         "scene": "drycleaner",
         "room": "frontdesk",
         "type": "objects",
@@ -10,7 +10,7 @@
         ],
         "observations": []
     },
-    "tunic.drycleaner.frontdesk.tunic.logbook.page.bingo": {
+    "tunic.drycleaner.frontdesk.logbook.page.bingo": {
         "scene": "drycleaner",
         "room": "frontdesk",
         "type": "objects",
@@ -21,7 +21,7 @@
         ],
         "observations": []
     },
-    "tunic.drycleaner.frontdesk.tunic.worker.takealook": {
+    "tunic.drycleaner.frontdesk.worker.takealook": {
         "scene": "drycleaner",
         "room": "frontdesk",
         "type": "persons",
@@ -35,7 +35,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.drycleaner.frontdesk.tunic.worker.hub": {
+    "tunic.drycleaner.frontdesk.worker.hub": {
         "scene": "drycleaner",
         "room": "frontdesk",
         "type": "persons",
@@ -129,7 +129,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.drycleaner.frontdesk.tunic.worker.done": {
+    "tunic.drycleaner.frontdesk.worker.done": {
         "scene": "drycleaner",
         "room": "frontdesk",
         "type": "persons",
@@ -159,7 +159,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.drycleaner.frontdesk.tunic.worker.done2": {
+    "tunic.drycleaner.frontdesk.worker.done2": {
         "scene": "drycleaner",
         "room": "frontdesk",
         "type": "persons",
@@ -173,7 +173,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.drycleaner.frontdesk.tunic.block_0": {
+    "tunic.drycleaner.frontdesk.block_0": {
         "scene": "drycleaner",
         "room": "frontdesk",
         "type": "observations",
@@ -184,7 +184,7 @@
             "I should find out if she can help me!"
         ]
     },
-    "tunic.drycleaner.frontdesk.tunic.block_1": {
+    "tunic.drycleaner.frontdesk.block_1": {
         "scene": "drycleaner",
         "room": "frontdesk",
         "type": "observations",
@@ -195,7 +195,7 @@
             "I should check that logbook to see who owned this slip..."
         ]
     },
-    "tunic.capitol_2.hall.tunic.chap4_finale_c": {
+    "tunic.capitol_2.hall.chap4_finale_c": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "cutscenes",
@@ -269,7 +269,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_2.hall.tunic.boss.chap4_finale_2_fail": {
+    "tunic.capitol_2.hall.boss.chap4_finale_2_fail": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "persons",
@@ -283,7 +283,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_2.hall.tunic.boss.chap4_finale_2": {
+    "tunic.capitol_2.hall.boss.chap4_finale_2": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "persons",
@@ -301,7 +301,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_2.hall.tunic.boss.chap4_finale_3": {
+    "tunic.capitol_2.hall.boss.chap4_finale_3": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "persons",
@@ -327,7 +327,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_2.hall.tunic.boss.chap4_finale_4_fail": {
+    "tunic.capitol_2.hall.boss.chap4_finale_4_fail": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "persons",
@@ -341,7 +341,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_2.hall.tunic.boss.chap4_finale_4": {
+    "tunic.capitol_2.hall.boss.chap4_finale_4": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "persons",
@@ -367,7 +367,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_2.hall.tunic.boss.chap4_finale_3_fail": {
+    "tunic.capitol_2.hall.boss.chap4_finale_3_fail": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "persons",
@@ -381,7 +381,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_2.hall.tunic.boss.chap4_finale_5": {
+    "tunic.capitol_2.hall.boss.chap4_finale_5": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "persons",
@@ -411,7 +411,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_2.hall.tunic.boss.haveyougotit": {
+    "tunic.capitol_2.hall.boss.haveyougotit": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "persons",
@@ -433,7 +433,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_2.hall.tunic.boss.chap4_finale_5_fail": {
+    "tunic.capitol_2.hall.boss.chap4_finale_5_fail": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "persons",
@@ -447,7 +447,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_2.hall.tunic.boss.chap4_finale_0_fail": {
+    "tunic.capitol_2.hall.boss.chap4_finale_0_fail": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "persons",
@@ -461,7 +461,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_2.hall.tunic.boss.chap4_finale_0": {
+    "tunic.capitol_2.hall.boss.chap4_finale_0": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "persons",
@@ -479,7 +479,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_2.hall.tunic.boss.chap4_finale_1_fail": {
+    "tunic.capitol_2.hall.boss.chap4_finale_1_fail": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "persons",
@@ -493,7 +493,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_2.hall.tunic.boss.chap4_finale_1": {
+    "tunic.capitol_2.hall.boss.chap4_finale_1": {
         "scene": "capitol_2",
         "room": "hall",
         "type": "persons",
@@ -511,7 +511,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_3.hall.tunic.chap5_finale_c": {
+    "tunic.capitol_3.hall.chap5_finale_c": {
         "scene": "capitol_3",
         "room": "hall",
         "type": "cutscenes",
@@ -585,7 +585,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_3.hall.tunic.gramps.hub": {
+    "tunic.capitol_3.hall.gramps.hub": {
         "scene": "capitol_3",
         "room": "hall",
         "type": "persons",
@@ -599,7 +599,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_3.hall.tunic.crowd.hub": {
+    "tunic.capitol_3.hall.crowd.hub": {
         "scene": "capitol_3",
         "room": "hall",
         "type": "persons",
@@ -613,7 +613,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_3.hall.tunic.teddy.speak": {
+    "tunic.capitol_3.hall.teddy.speak": {
         "scene": "capitol_3",
         "room": "hall",
         "type": "persons",
@@ -627,7 +627,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.library.microfiche.tunic.reader.paper2.bingo": {
+    "tunic.library.microfiche.reader.paper2.bingo": {
         "scene": "library",
         "room": "microfiche",
         "type": "objects",
@@ -638,7 +638,7 @@
         ],
         "observations": []
     },
-    "tunic.library.microfiche.tunic.reader": {
+    "tunic.library.microfiche.reader": {
         "scene": "library",
         "room": "microfiche",
         "type": "objects",
@@ -649,7 +649,7 @@
         ],
         "observations": []
     },
-    "tunic.library.microfiche.tunic.reader_flag.paper2.bingo": {
+    "tunic.library.microfiche.reader_flag.paper2.bingo": {
         "scene": "library",
         "room": "microfiche",
         "type": "objects",
@@ -660,7 +660,7 @@
         ],
         "observations": []
     },
-    "tunic.library.microfiche.tunic.block_0": {
+    "tunic.library.microfiche.block_0": {
         "scene": "library",
         "room": "microfiche",
         "type": "observations",
@@ -671,7 +671,7 @@
             "The libarian said I could find some information on Youmans in here..."
         ]
     },
-    "tunic.library.frontdesk.tunic.block_badge": {
+    "tunic.library.frontdesk.block_badge": {
         "scene": "library",
         "room": "frontdesk",
         "type": "cutscenes",
@@ -685,7 +685,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.library.frontdesk.tunic.wellsbadge.hub": {
+    "tunic.library.frontdesk.wellsbadge.hub": {
         "scene": "library",
         "room": "frontdesk",
         "type": "objects",
@@ -696,7 +696,7 @@
         ],
         "observations": []
     },
-    "tunic.library.frontdesk.tunic.worker.flag": {
+    "tunic.library.frontdesk.worker.flag": {
         "scene": "library",
         "room": "frontdesk",
         "type": "persons",
@@ -730,7 +730,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.library.frontdesk.tunic.worker.hello": {
+    "tunic.library.frontdesk.worker.hello": {
         "scene": "library",
         "room": "frontdesk",
         "type": "persons",
@@ -776,7 +776,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.library.frontdesk.tunic.worker.droppedbadge": {
+    "tunic.library.frontdesk.worker.droppedbadge": {
         "scene": "library",
         "room": "frontdesk",
         "type": "persons",
@@ -790,7 +790,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.library.frontdesk.tunic.worker.preflag": {
+    "tunic.library.frontdesk.worker.preflag": {
         "scene": "library",
         "room": "frontdesk",
         "type": "persons",
@@ -804,7 +804,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.library.frontdesk.tunic.worker.hello_short": {
+    "tunic.library.frontdesk.worker.hello_short": {
         "scene": "library",
         "room": "frontdesk",
         "type": "persons",
@@ -822,7 +822,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.library.frontdesk.tunic.worker.wells_recap": {
+    "tunic.library.frontdesk.worker.wells_recap": {
         "scene": "library",
         "room": "frontdesk",
         "type": "persons",
@@ -840,7 +840,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.library.frontdesk.tunic.worker.nelson_recap": {
+    "tunic.library.frontdesk.worker.nelson_recap": {
         "scene": "library",
         "room": "frontdesk",
         "type": "persons",
@@ -854,7 +854,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.library.frontdesk.tunic.worker.nelson": {
+    "tunic.library.frontdesk.worker.nelson": {
         "scene": "library",
         "room": "frontdesk",
         "type": "persons",
@@ -892,7 +892,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.library.frontdesk.tunic.worker.wells": {
+    "tunic.library.frontdesk.worker.wells": {
         "scene": "library",
         "room": "frontdesk",
         "type": "persons",
@@ -938,7 +938,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.library.frontdesk.tunic.worker.flag_recap": {
+    "tunic.library.frontdesk.worker.flag_recap": {
         "scene": "library",
         "room": "frontdesk",
         "type": "persons",
@@ -952,7 +952,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.library.frontdesk.tunic.block_nelson": {
+    "tunic.library.frontdesk.block_nelson": {
         "scene": "library",
         "room": "frontdesk",
         "type": "observations",
@@ -963,7 +963,7 @@
             "I should ask the librarian where to go next."
         ]
     },
-    "tunic.library.frontdesk.tunic.block_badge_2": {
+    "tunic.library.frontdesk.block_badge_2": {
         "scene": "library",
         "room": "frontdesk",
         "type": "observations",
@@ -974,7 +974,7 @@
             "I should ask the librarian why Wells was here."
         ]
     },
-    "tunic.kohlcenter.halloffame.tunic.togrampa": {
+    "tunic.kohlcenter.halloffame.togrampa": {
         "scene": "kohlcenter",
         "room": "halloffame",
         "type": "cutscenes",
@@ -992,7 +992,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.kohlcenter.halloffame.tunic.plaque.face.date": {
+    "tunic.kohlcenter.halloffame.plaque.face.date": {
         "scene": "kohlcenter",
         "room": "halloffame",
         "type": "objects",
@@ -1003,7 +1003,7 @@
         ],
         "observations": []
     },
-    "tunic.kohlcenter.halloffame.tunic.plaque.face": {
+    "tunic.kohlcenter.halloffame.plaque.face": {
         "scene": "kohlcenter",
         "room": "halloffame",
         "type": "objects",
@@ -1014,7 +1014,7 @@
         ],
         "observations": []
     },
-    "tunic.kohlcenter.halloffame.tunic.block_0": {
+    "tunic.kohlcenter.halloffame.block_0": {
         "scene": "kohlcenter",
         "room": "halloffame",
         "type": "observations",
@@ -1025,7 +1025,7 @@
             "Gramps said to look for clues. Better look around."
         ]
     },
-    "tunic.kohlcenter.halloffame.tunic.block_1": {
+    "tunic.kohlcenter.halloffame.block_1": {
         "scene": "kohlcenter",
         "room": "halloffame",
         "type": "observations",
@@ -1036,7 +1036,7 @@
             "Maybe I should take a closer look at that plaque..."
         ]
     },
-    "tunic.flaghouse.entry.tunic.colorbook": {
+    "tunic.flaghouse.entry.colorbook": {
         "scene": "flaghouse",
         "room": "entry",
         "type": "objects",
@@ -1047,7 +1047,7 @@
         ],
         "observations": []
     },
-    "tunic.flaghouse.entry.tunic.flag_girl.symbol_recap": {
+    "tunic.flaghouse.entry.flag_girl.symbol_recap": {
         "scene": "flaghouse",
         "room": "entry",
         "type": "persons",
@@ -1061,7 +1061,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.flaghouse.entry.tunic.flag_girl.hello_recap": {
+    "tunic.flaghouse.entry.flag_girl.hello_recap": {
         "scene": "flaghouse",
         "room": "entry",
         "type": "persons",
@@ -1075,7 +1075,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.flaghouse.entry.tunic.flag_girl.hello": {
+    "tunic.flaghouse.entry.flag_girl.hello": {
         "scene": "flaghouse",
         "room": "entry",
         "type": "persons",
@@ -1125,7 +1125,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.flaghouse.entry.tunic.flag_girl.symbol": {
+    "tunic.flaghouse.entry.flag_girl.symbol": {
         "scene": "flaghouse",
         "room": "entry",
         "type": "persons",
@@ -1155,7 +1155,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.wildlife.center.tunic.tracks.hub.deer": {
+    "tunic.wildlife.center.tracks.hub.deer": {
         "scene": "wildlife",
         "room": "center",
         "type": "objects",
@@ -1166,7 +1166,7 @@
         ],
         "observations": []
     },
-    "tunic.wildlife.center.tunic.wells.animals2": {
+    "tunic.wildlife.center.wells.animals2": {
         "scene": "wildlife",
         "room": "center",
         "type": "persons",
@@ -1180,7 +1180,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.wildlife.center.tunic.wells.animals": {
+    "tunic.wildlife.center.wells.animals": {
         "scene": "wildlife",
         "room": "center",
         "type": "persons",
@@ -1218,7 +1218,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.wildlife.center.tunic.wells.nodeer_recap": {
+    "tunic.wildlife.center.wells.nodeer_recap": {
         "scene": "wildlife",
         "room": "center",
         "type": "persons",
@@ -1236,7 +1236,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.wildlife.center.tunic.wells.nodeer": {
+    "tunic.wildlife.center.wells.nodeer": {
         "scene": "wildlife",
         "room": "center",
         "type": "persons",
@@ -1318,7 +1318,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.wildlife.center.tunic.fox.concern": {
+    "tunic.wildlife.center.fox.concern": {
         "scene": "wildlife",
         "room": "center",
         "type": "persons",
@@ -1340,7 +1340,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.wildlife.center.tunic.crane_ranger.crane": {
+    "tunic.wildlife.center.crane_ranger.crane": {
         "scene": "wildlife",
         "room": "center",
         "type": "persons",
@@ -1434,7 +1434,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.wildlife.center.tunic.expert.recap": {
+    "tunic.wildlife.center.expert.recap": {
         "scene": "wildlife",
         "room": "center",
         "type": "persons",
@@ -1448,7 +1448,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.wildlife.center.tunic.expert.removed_cup": {
+    "tunic.wildlife.center.expert.removed_cup": {
         "scene": "wildlife",
         "room": "center",
         "type": "persons",
@@ -1482,7 +1482,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.wildlife.center.tunic.coffee": {
+    "tunic.wildlife.center.coffee": {
         "scene": "wildlife",
         "room": "center",
         "type": "observations",
@@ -1493,7 +1493,7 @@
             "People sure drink a lot of coffee around here."
         ]
     },
-    "tunic.wildlife.center.tunic.remove_cup": {
+    "tunic.wildlife.center.remove_cup": {
         "scene": "wildlife",
         "room": "center",
         "type": "observations",
@@ -1504,7 +1504,7 @@
             "It's OK, girl! Look, I found you a cricket!"
         ]
     },
-    "tunic.capitol_1.hall.tunic.chap2_finale_c": {
+    "tunic.capitol_1.hall.chap2_finale_c": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "cutscenes",
@@ -1646,7 +1646,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.wells.hub": {
+    "tunic.capitol_1.hall.wells.hub": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1660,7 +1660,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.wells.chap2_teddy_finale_3": {
+    "tunic.capitol_1.hall.wells.chap2_teddy_finale_3": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1690,7 +1690,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.wells.chap2_teddy_finale_3_fail": {
+    "tunic.capitol_1.hall.wells.chap2_teddy_finale_3_fail": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1704,7 +1704,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.gramps.chap2_teddy_finale_0": {
+    "tunic.capitol_1.hall.gramps.chap2_teddy_finale_0": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1734,7 +1734,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.gramps.chap2_teddy_finale_0_fail": {
+    "tunic.capitol_1.hall.gramps.chap2_teddy_finale_0_fail": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1748,7 +1748,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.gramps.chap2_teddy_finale_2": {
+    "tunic.capitol_1.hall.gramps.chap2_teddy_finale_2": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1774,7 +1774,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.gramps.chap2_teddy_finale_4": {
+    "tunic.capitol_1.hall.gramps.chap2_teddy_finale_4": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1824,7 +1824,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.gramps.chap2_teddy_finale_4_fail": {
+    "tunic.capitol_1.hall.gramps.chap2_teddy_finale_4_fail": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1838,7 +1838,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.gramps.chap2_teddy_finale_2_fail": {
+    "tunic.capitol_1.hall.gramps.chap2_teddy_finale_2_fail": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1852,7 +1852,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_0": {
+    "tunic.capitol_1.hall.boss.chap2_finale_0": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1878,7 +1878,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_5_fail": {
+    "tunic.capitol_1.hall.boss.chap2_finale_5_fail": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1892,7 +1892,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_3_fail": {
+    "tunic.capitol_1.hall.boss.chap2_finale_3_fail": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1906,7 +1906,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.writeitup": {
+    "tunic.capitol_1.hall.boss.writeitup": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1920,7 +1920,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_1": {
+    "tunic.capitol_1.hall.boss.chap2_finale_1": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1942,7 +1942,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_teddy_finale_1_fail": {
+    "tunic.capitol_1.hall.boss.chap2_teddy_finale_1_fail": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1956,7 +1956,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_4_fail": {
+    "tunic.capitol_1.hall.boss.chap2_finale_4_fail": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1970,7 +1970,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_6": {
+    "tunic.capitol_1.hall.boss.chap2_finale_6": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -1996,7 +1996,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_teddy_finale_1": {
+    "tunic.capitol_1.hall.boss.chap2_teddy_finale_1": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -2034,7 +2034,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_2_fail": {
+    "tunic.capitol_1.hall.boss.chap2_finale_2_fail": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -2048,7 +2048,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.haveyougotit": {
+    "tunic.capitol_1.hall.boss.haveyougotit": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -2070,7 +2070,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_4": {
+    "tunic.capitol_1.hall.boss.chap2_finale_4": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -2100,7 +2100,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_5": {
+    "tunic.capitol_1.hall.boss.chap2_finale_5": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -2130,7 +2130,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_1_fail": {
+    "tunic.capitol_1.hall.boss.chap2_finale_1_fail": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -2144,7 +2144,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_6_fail": {
+    "tunic.capitol_1.hall.boss.chap2_finale_6_fail": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -2158,7 +2158,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_2": {
+    "tunic.capitol_1.hall.boss.chap2_finale_2": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -2184,7 +2184,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_0_fail": {
+    "tunic.capitol_1.hall.boss.chap2_finale_0_fail": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -2198,7 +2198,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_1.hall.tunic.boss.chap2_finale_3": {
+    "tunic.capitol_1.hall.boss.chap2_finale_3": {
         "scene": "capitol_1",
         "room": "hall",
         "type": "persons",
@@ -2232,7 +2232,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.collection.tunic.cs": {
+    "tunic.historicalsociety.collection.cs": {
         "scene": "historicalsociety",
         "room": "collection",
         "type": "cutscenes",
@@ -2294,29 +2294,29 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.collection.tunic.tunic.slip": {
+    "tunic.historicalsociety.collection.slip": {
         "scene": "historicalsociety",
         "room": "collection",
         "type": "objects",
-        "fqid": "tunic.tunic.slip",
+        "fqid": "tunic.slip",
         "text_speaker": [],
         "notifications": [
             "I'll record this in my notebook."
         ],
         "observations": []
     },
-    "tunic.historicalsociety.collection.tunic.tunic": {
+    "tunic.historicalsociety.collection": {
         "scene": "historicalsociety",
         "room": "collection",
         "type": "objects",
-        "fqid": "tunic.tunic",
+        "fqid": "tunic",
         "text_speaker": [],
         "notifications": [
             "Guess I should look for clues."
         ],
         "observations": []
     },
-    "tunic.historicalsociety.collection.tunic.gramps.found": {
+    "tunic.historicalsociety.collection.gramps.found": {
         "scene": "historicalsociety",
         "room": "collection",
         "type": "persons",
@@ -2362,7 +2362,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.collection.tunic.gramps.lost": {
+    "tunic.historicalsociety.collection.gramps.lost": {
         "scene": "historicalsociety",
         "room": "collection",
         "type": "persons",
@@ -2384,7 +2384,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.collection.tunic.gramps.look_0": {
+    "tunic.historicalsociety.collection.gramps.look_0": {
         "scene": "historicalsociety",
         "room": "collection",
         "type": "persons",
@@ -2398,7 +2398,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.stacks.tunic.journals": {
+    "tunic.historicalsociety.stacks.journals": {
         "scene": "historicalsociety",
         "room": "stacks",
         "type": "objects",
@@ -2409,7 +2409,7 @@
         ],
         "observations": []
     },
-    "tunic.historicalsociety.stacks.tunic.journals_flag.pic_2.bingo": {
+    "tunic.historicalsociety.stacks.journals_flag.pic_2.bingo": {
         "scene": "historicalsociety",
         "room": "stacks",
         "type": "objects",
@@ -2420,7 +2420,7 @@
         ],
         "observations": []
     },
-    "tunic.historicalsociety.stacks.tunic.journals_flag.pic_0.bingo": {
+    "tunic.historicalsociety.stacks.journals_flag.pic_0.bingo": {
         "scene": "historicalsociety",
         "room": "stacks",
         "type": "objects",
@@ -2431,7 +2431,7 @@
         ],
         "observations": []
     },
-    "tunic.historicalsociety.stacks.tunic.journals_flag.pic_1.bingo": {
+    "tunic.historicalsociety.stacks.journals_flag.pic_1.bingo": {
         "scene": "historicalsociety",
         "room": "stacks",
         "type": "objects",
@@ -2442,7 +2442,7 @@
         ],
         "observations": []
     },
-    "tunic.historicalsociety.stacks.tunic.journals.pic_2.bingo": {
+    "tunic.historicalsociety.stacks.journals.pic_2.bingo": {
         "scene": "historicalsociety",
         "room": "stacks",
         "type": "objects",
@@ -2453,7 +2453,7 @@
         ],
         "observations": []
     },
-    "tunic.historicalsociety.stacks.tunic.journals_flag": {
+    "tunic.historicalsociety.stacks.journals_flag": {
         "scene": "historicalsociety",
         "room": "stacks",
         "type": "objects",
@@ -2464,7 +2464,7 @@
         ],
         "observations": []
     },
-    "tunic.historicalsociety.stacks.tunic.outtolunch": {
+    "tunic.historicalsociety.stacks.outtolunch": {
         "scene": "historicalsociety",
         "room": "stacks",
         "type": "observations",
@@ -2475,7 +2475,7 @@
             "Better check back later."
         ]
     },
-    "tunic.historicalsociety.stacks.tunic.block": {
+    "tunic.historicalsociety.stacks.block": {
         "scene": "historicalsociety",
         "room": "stacks",
         "type": "observations",
@@ -2486,7 +2486,7 @@
             "The archivist said I should look in the stacks."
         ]
     },
-    "tunic.historicalsociety.collection_flag.tunic.gramps.flag": {
+    "tunic.historicalsociety.collection_flag.gramps.flag": {
         "scene": "historicalsociety",
         "room": "collection_flag",
         "type": "persons",
@@ -2528,7 +2528,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.collection_flag.tunic.gramps.recap": {
+    "tunic.historicalsociety.collection_flag.gramps.recap": {
         "scene": "historicalsociety",
         "room": "collection_flag",
         "type": "persons",
@@ -2546,7 +2546,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.entry.tunic.groupconvo_flag": {
+    "tunic.historicalsociety.entry.groupconvo_flag": {
         "scene": "historicalsociety",
         "room": "entry",
         "type": "cutscenes",
@@ -2596,7 +2596,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.entry.tunic.groupconvo": {
+    "tunic.historicalsociety.entry.groupconvo": {
         "scene": "historicalsociety",
         "room": "entry",
         "type": "cutscenes",
@@ -2662,7 +2662,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.entry.tunic.directory.closeup.archivist": {
+    "tunic.historicalsociety.entry.directory.closeup.archivist": {
         "scene": "historicalsociety",
         "room": "entry",
         "type": "objects",
@@ -2673,7 +2673,7 @@
         ],
         "observations": []
     },
-    "tunic.historicalsociety.entry.tunic.wells.flag": {
+    "tunic.historicalsociety.entry.wells.flag": {
         "scene": "historicalsociety",
         "room": "entry",
         "type": "persons",
@@ -2695,7 +2695,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.entry.tunic.wells.talktogramps": {
+    "tunic.historicalsociety.entry.wells.talktogramps": {
         "scene": "historicalsociety",
         "room": "entry",
         "type": "persons",
@@ -2709,7 +2709,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.entry.tunic.wells.flag_recap": {
+    "tunic.historicalsociety.entry.wells.flag_recap": {
         "scene": "historicalsociety",
         "room": "entry",
         "type": "persons",
@@ -2723,7 +2723,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.entry.tunic.gramps.hub": {
+    "tunic.historicalsociety.entry.gramps.hub": {
         "scene": "historicalsociety",
         "room": "entry",
         "type": "persons",
@@ -2737,7 +2737,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.entry.tunic.boss.flag": {
+    "tunic.historicalsociety.entry.boss.flag": {
         "scene": "historicalsociety",
         "room": "entry",
         "type": "persons",
@@ -2771,7 +2771,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.entry.tunic.boss.talktogramps": {
+    "tunic.historicalsociety.entry.boss.talktogramps": {
         "scene": "historicalsociety",
         "room": "entry",
         "type": "persons",
@@ -2785,7 +2785,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.entry.tunic.boss.flag_recap": {
+    "tunic.historicalsociety.entry.boss.flag_recap": {
         "scene": "historicalsociety",
         "room": "entry",
         "type": "persons",
@@ -2803,7 +2803,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.entry.tunic.block_tomap1": {
+    "tunic.historicalsociety.entry.block_tomap1": {
         "scene": "historicalsociety",
         "room": "entry",
         "type": "observations",
@@ -2814,7 +2814,7 @@
             "I should see what Gramps is up to!"
         ]
     },
-    "tunic.historicalsociety.entry.tunic.block_tomap2": {
+    "tunic.historicalsociety.entry.block_tomap2": {
         "scene": "historicalsociety",
         "room": "entry",
         "type": "observations",
@@ -2825,7 +2825,7 @@
             "I should go talk to Gramps!"
         ]
     },
-    "tunic.historicalsociety.entry.tunic.block_tocollection": {
+    "tunic.historicalsociety.entry.block_tocollection": {
         "scene": "historicalsociety",
         "room": "entry",
         "type": "observations",
@@ -2836,7 +2836,7 @@
             "I should see what Grampa is up to!"
         ]
     },
-    "tunic.historicalsociety.basement.tunic.savedteddy": {
+    "tunic.historicalsociety.basement.savedteddy": {
         "scene": "historicalsociety",
         "room": "basement",
         "type": "cutscenes",
@@ -2854,7 +2854,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.basement.tunic.ch3start": {
+    "tunic.historicalsociety.basement.ch3start": {
         "scene": "historicalsociety",
         "room": "basement",
         "type": "cutscenes",
@@ -2896,7 +2896,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.basement.tunic.seescratches": {
+    "tunic.historicalsociety.basement.seescratches": {
         "scene": "historicalsociety",
         "room": "basement",
         "type": "cutscenes",
@@ -2950,7 +2950,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.basement.tunic.gramps.whatdo": {
+    "tunic.historicalsociety.basement.gramps.whatdo": {
         "scene": "historicalsociety",
         "room": "basement",
         "type": "persons",
@@ -2968,7 +2968,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.basement.tunic.gramps.seeyalater": {
+    "tunic.historicalsociety.basement.gramps.seeyalater": {
         "scene": "historicalsociety",
         "room": "basement",
         "type": "persons",
@@ -2986,7 +2986,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.basement.tunic.janitor": {
+    "tunic.historicalsociety.basement.janitor": {
         "scene": "historicalsociety",
         "room": "basement",
         "type": "observations",
@@ -2997,7 +2997,7 @@
             "This button never works!"
         ]
     },
-    "tunic.historicalsociety.cage.tunic.confrontation": {
+    "tunic.historicalsociety.cage.confrontation": {
         "scene": "historicalsociety",
         "room": "cage",
         "type": "cutscenes",
@@ -3147,7 +3147,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.cage.tunic.unlockdoor": {
+    "tunic.historicalsociety.cage.unlockdoor": {
         "scene": "historicalsociety",
         "room": "cage",
         "type": "cutscenes",
@@ -3173,7 +3173,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.cage.tunic.glasses.afterteddy": {
+    "tunic.historicalsociety.cage.glasses.afterteddy": {
         "scene": "historicalsociety",
         "room": "cage",
         "type": "persons",
@@ -3199,7 +3199,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.cage.tunic.glasses.beforeteddy": {
+    "tunic.historicalsociety.cage.glasses.beforeteddy": {
         "scene": "historicalsociety",
         "room": "cage",
         "type": "persons",
@@ -3213,7 +3213,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.cage.tunic.teddy.trapped": {
+    "tunic.historicalsociety.cage.teddy.trapped": {
         "scene": "historicalsociety",
         "room": "cage",
         "type": "persons",
@@ -3235,7 +3235,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.cage.tunic.need_glasses": {
+    "tunic.historicalsociety.cage.need_glasses": {
         "scene": "historicalsociety",
         "room": "cage",
         "type": "observations",
@@ -3246,7 +3246,7 @@
             "I should check out that pair of glasses."
         ]
     },
-    "tunic.historicalsociety.cage.tunic.lockeddoor": {
+    "tunic.historicalsociety.cage.lockeddoor": {
         "scene": "historicalsociety",
         "room": "cage",
         "type": "observations",
@@ -3257,7 +3257,7 @@
             "It\u2019s locked!"
         ]
     },
-    "tunic.historicalsociety.frontdesk.tunic.archivist.need_glass_0": {
+    "tunic.historicalsociety.frontdesk.archivist.need_glass_0": {
         "scene": "historicalsociety",
         "room": "frontdesk",
         "type": "persons",
@@ -3271,7 +3271,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.frontdesk.tunic.archivist.hello": {
+    "tunic.historicalsociety.frontdesk.archivist.hello": {
         "scene": "historicalsociety",
         "room": "frontdesk",
         "type": "persons",
@@ -3305,7 +3305,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.frontdesk.tunic.archivist.have_glass": {
+    "tunic.historicalsociety.frontdesk.archivist.have_glass": {
         "scene": "historicalsociety",
         "room": "frontdesk",
         "type": "persons",
@@ -3387,7 +3387,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.frontdesk.tunic.archivist.need_glass_1": {
+    "tunic.historicalsociety.frontdesk.archivist.need_glass_1": {
         "scene": "historicalsociety",
         "room": "frontdesk",
         "type": "persons",
@@ -3401,7 +3401,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.frontdesk.tunic.archivist.have_glass_recap": {
+    "tunic.historicalsociety.frontdesk.archivist.have_glass_recap": {
         "scene": "historicalsociety",
         "room": "frontdesk",
         "type": "persons",
@@ -3423,7 +3423,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.frontdesk.tunic.archivist.newspaper_recap": {
+    "tunic.historicalsociety.frontdesk.archivist.newspaper_recap": {
         "scene": "historicalsociety",
         "room": "frontdesk",
         "type": "persons",
@@ -3437,7 +3437,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.frontdesk.tunic.archivist.newspaper": {
+    "tunic.historicalsociety.frontdesk.archivist.newspaper": {
         "scene": "historicalsociety",
         "room": "frontdesk",
         "type": "persons",
@@ -3519,7 +3519,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.frontdesk.tunic.archivist.foundtheodora": {
+    "tunic.historicalsociety.frontdesk.archivist.foundtheodora": {
         "scene": "historicalsociety",
         "room": "frontdesk",
         "type": "persons",
@@ -3541,7 +3541,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.frontdesk.tunic.archivist_glasses.confrontation": {
+    "tunic.historicalsociety.frontdesk.archivist_glasses.confrontation": {
         "scene": "historicalsociety",
         "room": "frontdesk",
         "type": "persons",
@@ -3603,7 +3603,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.frontdesk.tunic.archivist_glasses.confrontation_recap": {
+    "tunic.historicalsociety.frontdesk.archivist_glasses.confrontation_recap": {
         "scene": "historicalsociety",
         "room": "frontdesk",
         "type": "persons",
@@ -3617,7 +3617,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.frontdesk.tunic.magnify": {
+    "tunic.historicalsociety.frontdesk.magnify": {
         "scene": "historicalsociety",
         "room": "frontdesk",
         "type": "observations",
@@ -3628,7 +3628,7 @@
             "I bet the archivist could use this!"
         ]
     },
-    "tunic.historicalsociety.frontdesk.tunic.block_magnify": {
+    "tunic.historicalsociety.frontdesk.block_magnify": {
         "scene": "historicalsociety",
         "room": "frontdesk",
         "type": "observations",
@@ -3639,7 +3639,7 @@
             "I don't need that right now."
         ]
     },
-    "tunic.historicalsociety.frontdesk.tunic.key": {
+    "tunic.historicalsociety.frontdesk.key": {
         "scene": "historicalsociety",
         "room": "frontdesk",
         "type": "observations",
@@ -3650,7 +3650,7 @@
             "Yes! It's the key for Teddy's cage!"
         ]
     },
-    "tunic.historicalsociety.closet_dirty.tunic.trigger_coffee": {
+    "tunic.historicalsociety.closet_dirty.trigger_coffee": {
         "scene": "historicalsociety",
         "room": "closet_dirty",
         "type": "cutscenes",
@@ -3668,7 +3668,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.closet_dirty.tunic.trigger_scarf": {
+    "tunic.historicalsociety.closet_dirty.trigger_scarf": {
         "scene": "historicalsociety",
         "room": "closet_dirty",
         "type": "cutscenes",
@@ -3698,7 +3698,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.closet_dirty.tunic.what_happened": {
+    "tunic.historicalsociety.closet_dirty.what_happened": {
         "scene": "historicalsociety",
         "room": "closet_dirty",
         "type": "cutscenes",
@@ -3724,7 +3724,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.closet_dirty.tunic.door_block_clean": {
+    "tunic.historicalsociety.closet_dirty.door_block_clean": {
         "scene": "historicalsociety",
         "room": "closet_dirty",
         "type": "cutscenes",
@@ -3742,7 +3742,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.closet_dirty.tunic.door_block_talk": {
+    "tunic.historicalsociety.closet_dirty.door_block_talk": {
         "scene": "historicalsociety",
         "room": "closet_dirty",
         "type": "cutscenes",
@@ -3756,7 +3756,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.closet_dirty.tunic.gramps.archivist": {
+    "tunic.historicalsociety.closet_dirty.gramps.archivist": {
         "scene": "historicalsociety",
         "room": "closet_dirty",
         "type": "persons",
@@ -3774,7 +3774,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.closet_dirty.tunic.gramps.nothing": {
+    "tunic.historicalsociety.closet_dirty.gramps.nothing": {
         "scene": "historicalsociety",
         "room": "closet_dirty",
         "type": "persons",
@@ -3788,7 +3788,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.closet_dirty.tunic.gramps.news": {
+    "tunic.historicalsociety.closet_dirty.gramps.news": {
         "scene": "historicalsociety",
         "room": "closet_dirty",
         "type": "persons",
@@ -3854,7 +3854,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.closet_dirty.tunic.gramps.helpclean": {
+    "tunic.historicalsociety.closet_dirty.gramps.helpclean": {
         "scene": "historicalsociety",
         "room": "closet_dirty",
         "type": "persons",
@@ -3868,7 +3868,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.closet_dirty.tunic.photo": {
+    "tunic.historicalsociety.closet_dirty.photo": {
         "scene": "historicalsociety",
         "room": "closet_dirty",
         "type": "observations",
@@ -3879,7 +3879,7 @@
             "I love these photos of me and Teddy."
         ]
     },
-    "tunic.historicalsociety.closet.tunic.notebook": {
+    "tunic.historicalsociety.closet.notebook": {
         "scene": "historicalsociety",
         "room": "closet",
         "type": "objects",
@@ -3890,7 +3890,7 @@
         ],
         "observations": []
     },
-    "tunic.historicalsociety.closet.tunic.retirement_letter.hub": {
+    "tunic.historicalsociety.closet.retirement_letter.hub": {
         "scene": "historicalsociety",
         "room": "closet",
         "type": "objects",
@@ -3901,7 +3901,7 @@
         ],
         "observations": []
     },
-    "tunic.historicalsociety.closet.tunic.gramps.intro_0_cs_0": {
+    "tunic.historicalsociety.closet.gramps.intro_0_cs_0": {
         "scene": "historicalsociety",
         "room": "closet",
         "type": "persons",
@@ -3931,7 +3931,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.closet.tunic.teddy.intro_0_cs_0": {
+    "tunic.historicalsociety.closet.teddy.intro_0_cs_0": {
         "scene": "historicalsociety",
         "room": "closet",
         "type": "persons",
@@ -3957,7 +3957,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.closet.tunic.teddy.intro_0_cs_5": {
+    "tunic.historicalsociety.closet.teddy.intro_0_cs_5": {
         "scene": "historicalsociety",
         "room": "closet",
         "type": "persons",
@@ -3971,7 +3971,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.historicalsociety.closet.tunic.photo": {
+    "tunic.historicalsociety.closet.photo": {
         "scene": "historicalsociety",
         "room": "closet",
         "type": "observations",
@@ -3982,7 +3982,7 @@
             "I love these photos of me and Teddy!"
         ]
     },
-    "tunic.historicalsociety.closet.tunic.doorblock": {
+    "tunic.historicalsociety.closet.doorblock": {
         "scene": "historicalsociety",
         "room": "closet",
         "type": "observations",
@@ -3993,7 +3993,7 @@
             "I feel like I'm forgetting something."
         ]
     },
-    "tunic.capitol_0.hall.tunic.chap1_finale_c": {
+    "tunic.capitol_0.hall.chap1_finale_c": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "cutscenes",
@@ -4011,7 +4011,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_0.hall.tunic.gramps.hub": {
+    "tunic.capitol_0.hall.gramps.hub": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "persons",
@@ -4025,7 +4025,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_0.hall.tunic.boss.chap1_finale_slipfirst_0_fail": {
+    "tunic.capitol_0.hall.boss.chap1_finale_slipfirst_0_fail": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "persons",
@@ -4039,7 +4039,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_0.hall.tunic.boss.chap1_finale_1": {
+    "tunic.capitol_0.hall.boss.chap1_finale_1": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "persons",
@@ -4061,7 +4061,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_0.hall.tunic.boss.chap1_finale_plaquefirst_0_fail": {
+    "tunic.capitol_0.hall.boss.chap1_finale_plaquefirst_0_fail": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "persons",
@@ -4075,7 +4075,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_0.hall.tunic.boss.chap1_finale_0": {
+    "tunic.capitol_0.hall.boss.chap1_finale_0": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "persons",
@@ -4117,7 +4117,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_0.hall.tunic.boss.chap1_finale_slipfirst_0": {
+    "tunic.capitol_0.hall.boss.chap1_finale_slipfirst_0": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "persons",
@@ -4135,7 +4135,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_0.hall.tunic.boss.chap1_finale_plaquefirst_1": {
+    "tunic.capitol_0.hall.boss.chap1_finale_plaquefirst_1": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "persons",
@@ -4153,7 +4153,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_0.hall.tunic.boss.chap1_finale_plaquefirst_0": {
+    "tunic.capitol_0.hall.boss.chap1_finale_plaquefirst_0": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "persons",
@@ -4171,7 +4171,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_0.hall.tunic.boss.chap1_finale_slipfirst_1": {
+    "tunic.capitol_0.hall.boss.chap1_finale_slipfirst_1": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "persons",
@@ -4189,7 +4189,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_0.hall.tunic.boss.chap1_finale_1_fail": {
+    "tunic.capitol_0.hall.boss.chap1_finale_1_fail": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "persons",
@@ -4203,7 +4203,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_0.hall.tunic.boss.talktogramps": {
+    "tunic.capitol_0.hall.boss.talktogramps": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "persons",
@@ -4221,7 +4221,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_0.hall.tunic.boss.chap1_finale_0_fail": {
+    "tunic.capitol_0.hall.boss.chap1_finale_0_fail": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "persons",
@@ -4235,7 +4235,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.capitol_0.hall.tunic.boss.chap1_finale_2": {
+    "tunic.capitol_0.hall.boss.chap1_finale_2": {
         "scene": "capitol_0",
         "room": "hall",
         "type": "persons",
@@ -4277,7 +4277,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.humanecology.frontdesk.tunic.businesscards": {
+    "tunic.humanecology.frontdesk.businesscards": {
         "scene": "humanecology",
         "room": "frontdesk",
         "type": "objects",
@@ -4288,7 +4288,7 @@
         ],
         "observations": []
     },
-    "tunic.humanecology.frontdesk.tunic.businesscards.card_bingo.bingo": {
+    "tunic.humanecology.frontdesk.businesscards.card_bingo.bingo": {
         "scene": "humanecology",
         "room": "frontdesk",
         "type": "objects",
@@ -4299,7 +4299,7 @@
         ],
         "observations": []
     },
-    "tunic.humanecology.frontdesk.tunic.worker.badger": {
+    "tunic.humanecology.frontdesk.worker.badger": {
         "scene": "humanecology",
         "room": "frontdesk",
         "type": "persons",
@@ -4325,7 +4325,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.humanecology.frontdesk.tunic.worker.intro": {
+    "tunic.humanecology.frontdesk.worker.intro": {
         "scene": "humanecology",
         "room": "frontdesk",
         "type": "persons",
@@ -4387,7 +4387,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.humanecology.frontdesk.tunic.block_0": {
+    "tunic.humanecology.frontdesk.block_0": {
         "scene": "humanecology",
         "room": "frontdesk",
         "type": "observations",
@@ -4398,7 +4398,7 @@
             "I should stay and look for clues!"
         ]
     },
-    "tunic.humanecology.frontdesk.tunic.block_1": {
+    "tunic.humanecology.frontdesk.block_1": {
         "scene": "humanecology",
         "room": "frontdesk",
         "type": "observations",
@@ -4409,7 +4409,7 @@
             "I wonder if there's a clue in those business cards..."
         ]
     },
-    "tunic.nelson.trail.tunic.conclusion": {
+    "tunic.nelson.trail.conclusion": {
         "scene": "nelson",
         "room": "trail",
         "type": "cutscenes",
@@ -4463,7 +4463,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.nelson.trail.tunic.display": {
+    "tunic.nelson.trail.display": {
         "scene": "nelson",
         "room": "trail",
         "type": "cutscenes",
@@ -4513,7 +4513,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.nelson.trail.tunic.gramps.question": {
+    "tunic.nelson.trail.gramps.question": {
         "scene": "nelson",
         "room": "trail",
         "type": "persons",
@@ -4531,7 +4531,7 @@
         "notifications": [],
         "observations": []
     },
-    "tunic.nelson.trail.tunic.coffee": {
+    "tunic.nelson.trail.coffee": {
         "scene": "nelson",
         "room": "trail",
         "type": "observations",
