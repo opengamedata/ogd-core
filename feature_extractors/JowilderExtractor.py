@@ -96,6 +96,7 @@ class JowilderExtractor(Extractor):
         self._CLIENT_START_TIME = None
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
         self.level = 0
+        self.cur_question = 0
 
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
         # put some data in local vars, for readability later.
@@ -215,7 +216,7 @@ class JowilderExtractor(Extractor):
         #     self.features.setValByName(feature_name=feature_name, new_value=time_to_complete)
         # # set features
         # set_task_finished(completed_task)
-        self.inc_lvl_and_sess(feature_name="count_clicks")
+        self.inc_lvl_and_sess(feature_name="count_clicks", increment=1)
 
 
     def _extractFromHover(self, event_client_time, event_data_complex_parsed):
@@ -236,7 +237,7 @@ class JowilderExtractor(Extractor):
         # helpers
         # set class variables
         # set features
-        self.inc_lvl_and_sess(feature_name="count_hovers")
+        self.inc_lvl_and_sess(feature_name="count_hovers", increment=1)
 
     def _extractFromCheckpoint(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -444,8 +445,18 @@ class JowilderExtractor(Extractor):
         _level = d["level"]
 
         # helpers
+        click = bool(_answer)
+        wrong_guess = click and (_answer != _correct)
         # set class variables
+
         # set features
+        self.features.incValByIndex('num_wrong_guesses',self.cur_question, wrong_guess)
+        if type(self.features.getValByIndex('answers',self.cur_question)) is not str:
+            self.features.setValByIndex('answers',self.cur_question, '')
+
+
+        if _answer == _correct:
+            self.cur_question += 1
 
     def _extractFromNavigate_hover(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -583,5 +594,5 @@ class JowilderExtractor(Extractor):
 
     def inc_lvl_and_sess(self, feature_name, increment):
         self.features.incValByIndex(feature_name=feature_name, index=self.level, increment=increment)
-        self.features.incAggregateVal(feature_name=feature_name, increment=increment)
+        self.features.incAggregateVal(feature_name='sess_'+feature_name, increment=increment)
 
