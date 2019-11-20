@@ -22,6 +22,16 @@
         "name": "event name enum",
         "level": "enum for current checkpoint"
     },
+    "quiz": {
+        "room_fqid": "fully qualified id of the room",
+        "type": "type enum",
+        "subtype": "subtype enum",
+        "fqid": "fqid of the interaction, with the room_fqid subtracted",
+        "event_custom": "event enum",
+        "questions": "array of question objects, each has question, response, and response_index",
+        "name": "event name enum",
+        "level": "enum for current checkpoint"
+    },
     "endgame": {
         "room_fqid": "fully qualified id of the room",
         "type": "type enum",
