@@ -26,7 +26,7 @@ def get_all_items(jowilder_path, outpath):
 
     # seperate all that to json
     all_items = []
-    pattern = re.compile(r"""tmp_speak_command\.raw_atext = "(.*)";\ntmp_speak_command\.speaker = (.*);""")
+    pattern = re.compile(r"""tmp_.*_command\.raw_[a]*text = "(.*)";\ntmp_.*_command\.speaker = (.*);""")
     for path in allfiles:
         true_path = os.path.join(levels_path, path)
         # get text of any applicable character

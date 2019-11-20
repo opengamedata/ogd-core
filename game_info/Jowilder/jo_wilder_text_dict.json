@@ -1,0 +1,4545 @@
+{
+    "tunic.drycleaner.frontdesk.tunic.logbook": {
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "tunic.logbook",
+        "text_speaker": [],
+        "notifications": [
+            "Gotta find the entry for this slip."
+        ],
+        "observations": []
+    },
+    "tunic.drycleaner.frontdesk.tunic.logbook.page.bingo": {
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "tunic.logbook.page.bingo",
+        "text_speaker": [],
+        "notifications": [
+            "Theodora Youmans must be the owner!"
+        ],
+        "observations": []
+    },
+    "tunic.drycleaner.frontdesk.tunic.worker.takealook": {
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.takealook",
+        "text_speaker": [
+            [
+                "Take a look!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.drycleaner.frontdesk.tunic.worker.hub": {
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.hub",
+        "text_speaker": [
+            [
+                "Hi! *cough*",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Can you help-",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "*cough cough*",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Can you help me-",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "*COUGH COUGH COUGH*",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Um, are you okay?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Oh, I'm fine! Just a little hoarse.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ha! What do you call a pony with a sore throat?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Huh?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "A little horse!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Ha! You're funny.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I got that one from my Gramps!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Can you help me? I need to find the owner of this slip.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Well, I can't show our log books to just anybody.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Please?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "It's for Grampa Leo. He's a historian!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Leo... you mean Leopold?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Your gramps is awesome! Always full of stories.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yup, that's him!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Guess it couldn't hurt to let you take a look.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Here's the log book.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.drycleaner.frontdesk.tunic.worker.done": {
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.done",
+        "text_speaker": [
+            [
+                "Do you know who Theodora Youmans is?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hmmm... not sure. Why don't you try the library?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Unless you're too busy horsing around.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ha! Good one.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Thanks for the help!",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.drycleaner.frontdesk.tunic.worker.done2": {
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.done2",
+        "text_speaker": [
+            [
+                "Nice seeing you, Jolie!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.drycleaner.frontdesk.tunic.block_0": {
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "tunic.block_0",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I should find out if she can help me!"
+        ]
+    },
+    "tunic.drycleaner.frontdesk.tunic.block_1": {
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "tunic.block_1",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I should check that logbook to see who owned this slip..."
+        ]
+    },
+    "tunic.capitol_2.hall.tunic.chap4_finale_c": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "cutscenes",
+        "fqid": "tunic.chap4_finale_c",
+        "text_speaker": [
+            [
+                "Jolie! Where have you been?",
+                "boss"
+            ],
+            [
+                "Wells got in trouble for littering at the Wildlife Center.",
+                "boss"
+            ],
+            [
+                "PLEASE tell me you're doing better than he is.",
+                "boss"
+            ],
+            [
+                "I'm doing great!",
+                "null"
+            ],
+            [
+                "I figured out the flag!",
+                "null"
+            ],
+            [
+                "Good. Let's hear it.",
+                "boss"
+            ],
+            [
+                "I'm glad I put you on the case.",
+                "boss"
+            ],
+            [
+                "Thanks!",
+                "null"
+            ],
+            [
+                "Looks like your work here is done. I'll see you tomorrow at the exhibit!",
+                "boss"
+            ],
+            [
+                "Are you going home now? Tomorrow's the big day!",
+                "boss"
+            ],
+            [
+                "Gramps and I are going to the park by my house.",
+                "null"
+            ],
+            [
+                "I want to run around and play!",
+                "null"
+            ],
+            [
+                "Isn't that Governor Nelson Park?",
+                "boss"
+            ],
+            [
+                "Huh?",
+                "null"
+            ],
+            [
+                "You know, the guy who started Earth Day!",
+                "boss"
+            ],
+            [
+                "He got a park named after him? Cool!",
+                "null"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_2.hall.tunic.boss.chap4_finale_2_fail": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap4_finale_2_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_2.hall.tunic.boss.chap4_finale_2": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap4_finale_2",
+        "text_speaker": [
+            [
+                "It's an ecology flag!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hmm. What does that symbol have to do with ecology?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_2.hall.tunic.boss.chap4_finale_3": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap4_finale_3",
+        "text_speaker": [
+            [
+                "It's a theta symbol, which also looks like the letters \\\"e\\\" and \\\"o\\\" combined.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "The \\\"e\\\" stands for \\\"ecology\\\" and the \\\"o\\\" stands for \\\"organism\\\"!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Fascinating!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Do you know how our flag was used?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_2.hall.tunic.boss.chap4_finale_4_fail": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap4_finale_4_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_2.hall.tunic.boss.chap4_finale_4": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap4_finale_4",
+        "text_speaker": [
+            [
+                "Governor Nelson gave a speech in front of our flag on the very first Earth Day!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How exciting!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Governor Nelson helped launch a huge conservation movement!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Did you find any photos for the exhibit?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_2.hall.tunic.boss.chap4_finale_3_fail": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap4_finale_3_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_2.hall.tunic.boss.chap4_finale_5": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap4_finale_5",
+        "text_speaker": [
+            [
+                "Here are some photos of activists marching on the Capitol.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "They're carrying home-made ecology flags!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Nice work, Jolie!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Those are the real Wisconsin Wonders...",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ordinary people standing up for what they believe in!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_2.hall.tunic.boss.haveyougotit": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.haveyougotit",
+        "text_speaker": [
+            [
+                "Jolie! I was hoping you'd stop by. Any news on the flag artifact?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I haven't quite figured it out just yet...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Well, get on it. I'm counting on you to figure this out!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_2.hall.tunic.boss.chap4_finale_5_fail": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap4_finale_5_fail",
+        "text_speaker": [
+            [
+                "I'm not sure that's relevant here...",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_2.hall.tunic.boss.chap4_finale_0_fail": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap4_finale_0_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_2.hall.tunic.boss.chap4_finale_0": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap4_finale_0",
+        "text_speaker": [
+            [
+                "Was Wells right?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Is the symbol a deer hoof?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_2.hall.tunic.boss.chap4_finale_1_fail": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap4_finale_1_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_2.hall.tunic.boss.chap4_finale_1": {
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap4_finale_1",
+        "text_speaker": [
+            [
+                "I checked at the Wildlife Center. It's not a deer hoof!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hmmm. Then what is our flag?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_3.hall.tunic.chap5_finale_c": {
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "cutscenes",
+        "fqid": "tunic.chap5_finale_c",
+        "text_speaker": [
+            [
+                "Our next artifact is this spectacular women's suffrage tunic!",
+                "crowd"
+            ],
+            [
+                "This shirt belonged to Theodora Youmans...",
+                "jolie"
+            ],
+            [
+                "I still say taxidermy would've been better.",
+                "wells"
+            ],
+            [
+                "Admit it, you think Teddy's cute.",
+                "jolie"
+            ],
+            [
+                "Sure, for a weasel.",
+                "wells"
+            ],
+            [
+                "*sigh*",
+                "jolie"
+            ],
+            [
+                "Hey, I almost forgot.",
+                "wells"
+            ],
+            [
+                "The boss has one more badge for you!",
+                "wells"
+            ],
+            [
+                "Ooh! What badge?",
+                "jolie"
+            ],
+            [
+                "History Detective.",
+                "wells"
+            ],
+            [
+                "She wants you to keep helping out around here.",
+                "wells"
+            ],
+            [
+                "YES!!!",
+                "jolie"
+            ],
+            [
+                "I'm gonna need an office, and a flashlight, and night vision goggles...",
+                "jolie"
+            ],
+            [
+                "Don't get carried away.",
+                "wells"
+            ],
+            [
+                "Ha! Carried away? I'm just getting started.",
+                "jolie"
+            ],
+            [
+                "Jo Wilder is on the case!",
+                "jolie"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_3.hall.tunic.gramps.hub": {
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.gramps.hub",
+        "text_speaker": [
+            [
+                "null",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_3.hall.tunic.crowd.hub": {
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.crowd.hub",
+        "text_speaker": [
+            [
+                "null",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_3.hall.tunic.teddy.speak": {
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.teddy.speak",
+        "text_speaker": [
+            [
+                "null",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.library.microfiche.tunic.reader.paper2.bingo": {
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "tunic.reader.paper2.bingo",
+        "text_speaker": [],
+        "notifications": [
+            "She helped get votes for women!"
+        ],
+        "observations": []
+    },
+    "tunic.library.microfiche.tunic.reader": {
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "tunic.reader",
+        "text_speaker": [],
+        "notifications": [
+            "Where are you Theodora?"
+        ],
+        "observations": []
+    },
+    "tunic.library.microfiche.tunic.reader_flag.paper2.bingo": {
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "tunic.reader_flag.paper2.bingo",
+        "text_speaker": [],
+        "notifications": [
+            "Hey! That's Governor Nelson in front of our flag!"
+        ],
+        "observations": []
+    },
+    "tunic.library.microfiche.tunic.block_0": {
+        "scene": "library",
+        "room": "microfiche",
+        "type": "observations",
+        "fqid": "tunic.block_0",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "The libarian said I could find some information on Youmans in here..."
+        ]
+    },
+    "tunic.library.frontdesk.tunic.block_badge": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "cutscenes",
+        "fqid": "tunic.block_badge",
+        "text_speaker": [
+            [
+                "Did you drop something, Dear?",
+                "worker"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.library.frontdesk.tunic.wellsbadge.hub": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "tunic.wellsbadge.hub",
+        "text_speaker": [],
+        "notifications": [
+            "Wells! What was he doing here? I should ask the librarian."
+        ],
+        "observations": []
+    },
+    "tunic.library.frontdesk.tunic.worker.flag": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.flag",
+        "text_speaker": [
+            [
+                "Welcome back, Dear! How can I help you?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I need to learn more about this flag!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "It has something to do with ecology.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Hmm... those stripes remind me of the American flag.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Your flag must have been part of a national movement!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Go check the microfiche. Maybe you'll find something!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.library.frontdesk.tunic.worker.hello": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.hello",
+        "text_speaker": [
+            [
+                "Oh, hello there!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You look like you're on a mission.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Two missions, actually!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Have you seen a badger around here?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I'm afraid not.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Please let me know if you do. It's important!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I'm also looking for Theodora Youmans. Have you heard of her?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Theodora Youmans? Of course!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Check out our microfiche. It's right through that door.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.library.frontdesk.tunic.worker.droppedbadge": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.droppedbadge",
+        "text_speaker": [
+            [
+                "Did you drop something, Dear? There's a card on the floor.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.library.frontdesk.tunic.worker.preflag": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.preflag",
+        "text_speaker": [
+            [
+                "It's such a nice fall day.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.library.frontdesk.tunic.worker.hello_short": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.hello_short",
+        "text_speaker": [
+            [
+                "Weren't you going to check out our microfiche?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm sure you'll find Theodora in there somewhere!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.library.frontdesk.tunic.worker.wells_recap": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.wells_recap",
+        "text_speaker": [
+            [
+                "Where should I go again?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "You could try the archivist. Maybe he can help you find Wells!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.library.frontdesk.tunic.worker.nelson_recap": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.nelson_recap",
+        "text_speaker": [
+            [
+                "Check out the archives. They've got tons of old photos!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.library.frontdesk.tunic.worker.nelson": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.nelson",
+        "text_speaker": [
+            [
+                "I found the flag! Governor Nelson used it on the first Earth Day!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Wow! You figured it out!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Now I just need some old photos, like last time.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "The boss is gonna love it!!!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "You could try the archives.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Though the archivist might be too busy to help...",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Oh, trust me. He'll make time.",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.library.frontdesk.tunic.worker.wells": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.wells",
+        "text_speaker": [
+            [
+                "What was Wells doing here?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "He was looking for a taxidermist.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "What's a taxidermist?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Not sure. Here, let me look it up.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Oh my!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "\\\"Taxidermy: the art of preparing, stuffing, and mounting the skins of animals.\\\"",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Oh no... Teddy!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I need to find Wells right away!! Do you know where he is?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "You could ask the archivist. He knows everybody!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.library.frontdesk.tunic.worker.flag_recap": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.flag_recap",
+        "text_speaker": [
+            [
+                "There are some old newspapers loaded up in the microfiche.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.library.frontdesk.tunic.block_nelson": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "tunic.block_nelson",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I should ask the librarian where to go next."
+        ]
+    },
+    "tunic.library.frontdesk.tunic.block_badge_2": {
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "tunic.block_badge_2",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I should ask the librarian why Wells was here."
+        ]
+    },
+    "tunic.kohlcenter.halloffame.tunic.togrampa": {
+        "scene": "kohlcenter",
+        "room": "halloffame",
+        "type": "cutscenes",
+        "fqid": "tunic.togrampa",
+        "text_speaker": [
+            [
+                "Our shirt is too old to be a basketball jersey!",
+                "null"
+            ],
+            [
+                "I need to get to the Capitol and tell Gramps!",
+                "null"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.kohlcenter.halloffame.tunic.plaque.face.date": {
+        "scene": "kohlcenter",
+        "room": "halloffame",
+        "type": "objects",
+        "fqid": "tunic.plaque.face.date",
+        "text_speaker": [],
+        "notifications": [
+            "The slip is from 1916 but the team didn't start until 1974!"
+        ],
+        "observations": []
+    },
+    "tunic.kohlcenter.halloffame.tunic.plaque.face": {
+        "scene": "kohlcenter",
+        "room": "halloffame",
+        "type": "objects",
+        "fqid": "tunic.plaque.face",
+        "text_speaker": [],
+        "notifications": [
+            "Anything useful on here?"
+        ],
+        "observations": []
+    },
+    "tunic.kohlcenter.halloffame.tunic.block_0": {
+        "scene": "kohlcenter",
+        "room": "halloffame",
+        "type": "observations",
+        "fqid": "tunic.block_0",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "Gramps said to look for clues. Better look around."
+        ]
+    },
+    "tunic.kohlcenter.halloffame.tunic.block_1": {
+        "scene": "kohlcenter",
+        "room": "halloffame",
+        "type": "observations",
+        "fqid": "tunic.block_1",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "Maybe I should take a closer look at that plaque..."
+        ]
+    },
+    "tunic.flaghouse.entry.tunic.colorbook": {
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "objects",
+        "fqid": "tunic.colorbook",
+        "text_speaker": [],
+        "notifications": [
+            "Ooh... \\Ecology flag by Ron Cobb.\\"
+        ],
+        "observations": []
+    },
+    "tunic.flaghouse.entry.tunic.flag_girl.symbol_recap": {
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "tunic.flag_girl.symbol_recap",
+        "text_speaker": [
+            [
+                "If I were you, I'd go to the library and do some digging.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.flaghouse.entry.tunic.flag_girl.hello_recap": {
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "tunic.flag_girl.hello_recap",
+        "text_speaker": [
+            [
+                "There should be some info about that symbol in my book.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.flaghouse.entry.tunic.flag_girl.hello": {
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "tunic.flag_girl.hello",
+        "text_speaker": [
+            [
+                "Hey, nice dog! What breed is he?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Actually, he's a badger.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Oh, cool! I've never seen a badger in real life.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You've got a million flags here!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yep. I'm a vexillophile!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "A vexy-wha?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "It just means flag expert. How can I help?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm investigating this flag.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Can you take a look?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Hey, I've seen that symbol before! Check it out!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.flaghouse.entry.tunic.flag_girl.symbol": {
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "tunic.flag_girl.symbol",
+        "text_speaker": [
+            [
+                "It's an ecology flag!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Do you know what this flag was used for?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm not sure.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "If I were you, I'd go to the library and do some digging.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Good idea. Thanks!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.wildlife.center.tunic.tracks.hub.deer": {
+        "scene": "wildlife",
+        "room": "center",
+        "type": "objects",
+        "fqid": "tunic.tracks.hub.deer",
+        "text_speaker": [],
+        "notifications": [
+            "That hoofprint doesn't match the flag!"
+        ],
+        "observations": []
+    },
+    "tunic.wildlife.center.tunic.wells.animals2": {
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "tunic.wells.animals2",
+        "text_speaker": [
+            [
+                "Ugh... I think that lynx is looking at me funny.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.wildlife.center.tunic.wells.animals": {
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "tunic.wells.animals",
+        "text_speaker": [
+            [
+                "Gah. I can't believe this.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm a historian, not a zookeeper!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "And this place is dirty, and itchy, and-",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I love it!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Of course you do. You've got a rodent following you around.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Actually, badgers aren't rodents-",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Whatever.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.wildlife.center.tunic.wells.nodeer_recap": {
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "tunic.wells.nodeer_recap",
+        "text_speaker": [
+            [
+                "My friend is a flag expert.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "She should be able to help you out.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.wildlife.center.tunic.wells.nodeer": {
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "tunic.wells.nodeer",
+        "text_speaker": [
+            [
+                "So? What'd you find out?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Looks like it's not a deer hoof.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Great. Just great. Could this day get any worse?!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Hey, Wells...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I think I can help with your animal problem.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Ha! I don't need your help.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Fine. Then I guess you don't want a real, live badger for the exhibit.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Wait! What?! Really?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wells, meet Teddy.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "\ud83d\ude0a",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "He says he'd be willing to help out.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Yes!!! I'm saved!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "A real, live ferret!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "He's. A. Badger.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "And we still need to figure out that flag!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Fine, fine. Let's see...",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Actually, I went to school with somebody who LOVES old flags.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Why don't you go talk to her? I'll let her know you're coming.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.wildlife.center.tunic.fox.concern": {
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "tunic.fox.concern",
+        "text_speaker": [
+            [
+                "What is it, Teddy?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Oh no... they got sick from polluted water?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Poor foxes!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.wildlife.center.tunic.crane_ranger.crane": {
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "tunic.crane_ranger.crane",
+        "text_speaker": [
+            [
+                "Oh no! What happened to that crane?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Her beak is stuck in a coffee cup.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "It's lucky we found her.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ugh! Those cups are all over the place.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I need to get her free. She won't hold still!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Can Teddy and I help?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Sure! Give it a try.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Careful. That beak is sharp!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "We need to calm her down, Teddy.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Any ideas?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "\ud83e\uddd8",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yoga does sound nice.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "But cranes can't do yoga, Teddy!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "\ud83c\udf69",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Cranes don't eat donuts!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Besides, you just ate my last snack.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "\ud83e\udd97",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Oh yeah, cranes eat insects!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Luckily there are tons of insects around here...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Got one!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Maybe she'll let me take off the cup!",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.wildlife.center.tunic.expert.recap": {
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "tunic.expert.recap",
+        "text_speaker": [
+            [
+                "Thanks for your help, kid!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.wildlife.center.tunic.expert.removed_cup": {
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "tunic.expert.removed_cup",
+        "text_speaker": [
+            [
+                "You did it! Thanks, kid.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Can I help you with anything?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm investigating this symbol.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Does it look like a deer hoof?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "There's a diagram of animal tracks over there.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Go take a look!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.wildlife.center.tunic.coffee": {
+        "scene": "wildlife",
+        "room": "center",
+        "type": "observations",
+        "fqid": "tunic.coffee",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "People sure drink a lot of coffee around here."
+        ]
+    },
+    "tunic.wildlife.center.tunic.remove_cup": {
+        "scene": "wildlife",
+        "room": "center",
+        "type": "observations",
+        "fqid": "tunic.remove_cup",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "It's OK, girl! Look, I found you a cricket!"
+        ]
+    },
+    "tunic.capitol_1.hall.tunic.chap2_finale_c": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "cutscenes",
+        "fqid": "tunic.chap2_finale_c",
+        "text_speaker": [
+            [
+                "Ooh, nice decorations!",
+                "null"
+            ],
+            [
+                "Thanks. Did you figure out the shirt?",
+                "boss"
+            ],
+            [
+                "Yes!",
+                "null"
+            ],
+            [
+                "AND I know who took Teddy!",
+                "null"
+            ],
+            [
+                "Who on earth is Teddy?",
+                "boss"
+            ],
+            [
+                "And where's your grampa?",
+                "boss"
+            ],
+            [
+                "Here I am!",
+                "gramps"
+            ],
+            [
+                "Sorry for the delay, Boss.",
+                "gramps"
+            ],
+            [
+                "There was a bit of a... situation... in my office.",
+                "gramps"
+            ],
+            [
+                "Wells sabotaged Gramps!",
+                "null"
+            ],
+            [
+                "AND he stole Teddy!!!",
+                "null"
+            ],
+            [
+                "One step at a time, Jo.",
+                "gramps"
+            ],
+            [
+                "Did you figure out the shirt?",
+                "gramps"
+            ],
+            [
+                "I knew you could do it, Jo!",
+                "gramps"
+            ],
+            [
+                "Now can I tell you about Teddy??",
+                "null"
+            ],
+            [
+                "We need to save him!",
+                "null"
+            ],
+            [
+                "Whew.",
+                "wells"
+            ],
+            [
+                "You won't BELIEVE the day I've had!",
+                "wells"
+            ],
+            [
+                "YOU!",
+                "null"
+            ],
+            [
+                "Huh?",
+                "wells"
+            ],
+            [
+                "YOU STOLE TEDDY!",
+                "null"
+            ],
+            [
+                "I did no such thing!",
+                "wells"
+            ],
+            [
+                "Wait- who's Teddy?",
+                "wells"
+            ],
+            [
+                "Don't play dumb!",
+                "null"
+            ],
+            [
+                "Easy, Jo.",
+                "gramps"
+            ],
+            [
+                "Why don't you prove your case?",
+                "gramps"
+            ],
+            [
+                "Keep your chin up, Jo. We'll find Teddy!",
+                "gramps"
+            ],
+            [
+                "Nice work on the shirt, Jolie!",
+                "boss"
+            ],
+            [
+                "Leopold, can you run back to the museum?",
+                "boss"
+            ],
+            [
+                "The next artifact should've arrived by now.",
+                "boss"
+            ],
+            [
+                "Sure thing, Boss!",
+                "gramps"
+            ],
+            [
+                "Jo, meet me back at my office.",
+                "gramps"
+            ],
+            [
+                "I hope you find your skunk, or whatever.",
+                "wells"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.wells.hub": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.wells.hub",
+        "text_speaker": [
+            [
+                "null",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.wells.chap2_teddy_finale_3": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.wells.chap2_teddy_finale_3",
+        "text_speaker": [
+            [
+                "The archivist saw Wells at Bean Town this morning!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I DID get coffee, but that doesn't mean I stole your badger!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You just said the archivist was at Bean Town, too.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I stop at Bean Town every morning.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "But... there's more!",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.wells.chap2_teddy_finale_3_fail": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.wells.chap2_teddy_finale_3_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.gramps.chap2_teddy_finale_0": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.gramps.chap2_teddy_finale_0",
+        "text_speaker": [
+            [
+                "Alright.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Teddy is my pet badger.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "He was napping in Gramps's office...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "And someone kidnapped him!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How do you know he was kidnapped?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.gramps.chap2_teddy_finale_0_fail": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.gramps.chap2_teddy_finale_0_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.gramps.chap2_teddy_finale_2": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.gramps.chap2_teddy_finale_2",
+        "text_speaker": [
+            [
+                "I found a coffee cup from Bean Town!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "And Gramps only drinks Holdgers!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "That's true.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "How does a coffee cup prove Wells took Teddy?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.gramps.chap2_teddy_finale_4": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.gramps.chap2_teddy_finale_4",
+        "text_speaker": [
+            [
+                "Wells was looking for a taxidermist!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "HE WANTS TO KILL TEDDY!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Actually...",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I asked Wells to find a taxidermist.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I want to have animals at the exhibit!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'd prefer live animals. But we need a back-up plan.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wha... but...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Then who took Teddy???",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "No idea, kid.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "But it wasn't me.",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.gramps.chap2_teddy_finale_4_fail": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.gramps.chap2_teddy_finale_4_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.gramps.chap2_teddy_finale_2_fail": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.gramps.chap2_teddy_finale_2_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_0": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_0",
+        "text_speaker": [
+            [
+                "Yes! I solved it!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "So? What's the story?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Well, remember that slip?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "What slip?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_5_fail": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_5_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_3_fail": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_3_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.writeitup": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.writeitup",
+        "text_speaker": [
+            [
+                "Head back to the museum. Your gramps is waiting for you.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_1": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_1",
+        "text_speaker": [
+            [
+                "Okay. What did you find out?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "It's a dry cleaning receipt!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How do you know?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_teddy_finale_1_fail": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_teddy_finale_1_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_4_fail": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_4_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_6": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_6",
+        "text_speaker": [
+            [
+                "Wow! That's her!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "So Youmans wore this shirt in women's rights marches!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "What a fantastic piece of history-",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "and what impeccable research!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_teddy_finale_1": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_teddy_finale_1",
+        "text_speaker": [
+            [
+                "I found his scarf!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Teddy would NEVER leave without his scarf!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Alright, everybody hold up-",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Are you telling me there's a LIVE badger in MY museum?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "WE'LL DEAL WITH THAT LATER, MRS. M.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Watch it, Jo.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Did you find any other clues?",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_2_fail": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_2_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.haveyougotit": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.haveyougotit",
+        "text_speaker": [
+            [
+                "Jolie! I was hoping you'd stop by. Any news on the shirt artifact?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I haven't quite figured it out just yet...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Well, get on it. I'm counting on you and your gramps to figure this out!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_4": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_4",
+        "text_speaker": [
+            [
+                "The shirt belonged to Theodora Youmans!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hmm. I've heard that name before.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Who is Theodora Youmans?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I had the same question.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "So I went to the library to get some answers.",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_5": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_5",
+        "text_speaker": [
+            [
+                "Of course! Youmans was a suffragist!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yep! She fought to get women the right to vote.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Very good, Jolie!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "The fight for women's suffrage is an important part of Wisconsin history.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "But where does the shirt come in?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_1_fail": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_1_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_6_fail": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_6_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_2": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_2",
+        "text_speaker": [
+            [
+                "An expert opinion. Good thinking!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Where did you go from there?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Well, I had to figure out WHICH cleaner the receipt was from.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How did you narrow it down?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_0_fail": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_0_fail",
+        "text_speaker": [
+            [
+                "That is definitely no slip...",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_1.hall.tunic.boss.chap2_finale_3": {
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap2_finale_3",
+        "text_speaker": [
+            [
+                "You found the right cleaner on the first try?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "What a lucky break!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Gramps always says I'm his good luck charm!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "What did you do at the cleaner's?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I wanted to find out who owned the shirt-",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "So I checked the logbook.",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.collection.tunic.cs": {
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "cutscenes",
+        "fqid": "tunic.cs",
+        "text_speaker": [
+            [
+                "Look at that! It's the bee's knees!",
+                "gramps"
+            ],
+            [
+                "Can we hurry up, Gramps?",
+                "null"
+            ],
+            [
+                "Teddy and I were gonna go climb that huge tree out back!",
+                "null"
+            ],
+            [
+                "Hmmm. Don't forget about your homework.",
+                "gramps"
+            ],
+            [
+                "Your teacher said you missed 7 assignments in a row!",
+                "gramps"
+            ],
+            [
+                "Well, I did SOME of those. I just couldn't find them!",
+                "null"
+            ],
+            [
+                "Did you do all of them?",
+                "gramps"
+            ],
+            [
+                "No... because history is boring!",
+                "null"
+            ],
+            [
+                "I suppose historians are boring, too?",
+                "gramps"
+            ],
+            [
+                "No way, Gramps. You're the best!",
+                "null"
+            ],
+            [
+                "Then do it for me!",
+                "gramps"
+            ],
+            [
+                "Your teacher said you could help me for extra credit.",
+                "gramps"
+            ],
+            [
+                "Go ahead, take a peek at the shirt!",
+                "gramps"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.collection.tunic.tunic.slip": {
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "objects",
+        "fqid": "tunic.tunic.slip",
+        "text_speaker": [],
+        "notifications": [
+            "I'll record this in my notebook."
+        ],
+        "observations": []
+    },
+    "tunic.historicalsociety.collection.tunic.tunic": {
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "objects",
+        "fqid": "tunic.tunic",
+        "text_speaker": [],
+        "notifications": [
+            "Guess I should look for clues."
+        ],
+        "observations": []
+    },
+    "tunic.historicalsociety.collection.tunic.gramps.found": {
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "persons",
+        "fqid": "tunic.gramps.found",
+        "text_speaker": [
+            [
+                "Find anything?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Just this old slip from 1916.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hot Dog! I knew it!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm not so sure that this is a basketball jersey.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wait, you mean Wells is wrong?!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Could be. But we need evidence!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Why don't you head to the Basketball Center and rustle up some clues?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ooh, I like clues!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I'll be at the Capitol. Let me know if you find anything!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.collection.tunic.gramps.lost": {
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "persons",
+        "fqid": "tunic.gramps.lost",
+        "text_speaker": [
+            [
+                "Um... what did you want me to do again?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Head over to the Basketball Center.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Hopefully you can rustle up some clues!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.collection.tunic.gramps.look_0": {
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "persons",
+        "fqid": "tunic.gramps.look_0",
+        "text_speaker": [
+            [
+                "Have a look at the artifact!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.stacks.tunic.journals": {
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "tunic.journals",
+        "text_speaker": [],
+        "notifications": [
+            "I need to find more info about Theodora!"
+        ],
+        "observations": []
+    },
+    "tunic.historicalsociety.stacks.tunic.journals_flag.pic_2.bingo": {
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "tunic.journals_flag.pic_2.bingo",
+        "text_speaker": [],
+        "notifications": [
+            "I should go to the Capitol and tell Mrs. M!"
+        ],
+        "observations": []
+    },
+    "tunic.historicalsociety.stacks.tunic.journals_flag.pic_0.bingo": {
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "tunic.journals_flag.pic_0.bingo",
+        "text_speaker": [],
+        "notifications": [
+            "I should go to the Capitol and tell Mrs. M!"
+        ],
+        "observations": []
+    },
+    "tunic.historicalsociety.stacks.tunic.journals_flag.pic_1.bingo": {
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "tunic.journals_flag.pic_1.bingo",
+        "text_speaker": [],
+        "notifications": [
+            "I should go to the Capitol and tell Mrs. M!"
+        ],
+        "observations": []
+    },
+    "tunic.historicalsociety.stacks.tunic.journals.pic_2.bingo": {
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "tunic.journals.pic_2.bingo",
+        "text_speaker": [],
+        "notifications": [
+            "I should go to the Capitol and tell everyone!"
+        ],
+        "observations": []
+    },
+    "tunic.historicalsociety.stacks.tunic.journals_flag": {
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "tunic.journals_flag",
+        "text_speaker": [],
+        "notifications": [
+            "I need more context about how the flag was used."
+        ],
+        "observations": []
+    },
+    "tunic.historicalsociety.stacks.tunic.outtolunch": {
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "observations",
+        "fqid": "tunic.outtolunch",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "Better check back later."
+        ]
+    },
+    "tunic.historicalsociety.stacks.tunic.block": {
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "observations",
+        "fqid": "tunic.block",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "The archivist said I should look in the stacks."
+        ]
+    },
+    "tunic.historicalsociety.collection_flag.tunic.gramps.flag": {
+        "scene": "historicalsociety",
+        "room": "collection_flag",
+        "type": "persons",
+        "fqid": "tunic.gramps.flag",
+        "text_speaker": [
+            [
+                "Teddy! I'm sure glad to see you.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "The archivist had him locked up!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Gadzooks! Poor critter.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You're becoming quite the detective, Jo.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Notice any clues about this flag?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Well... it looks hand-stitched.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Aha! Good catch, Jo.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Go on, tell the boss what you found!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.collection_flag.tunic.gramps.recap": {
+        "scene": "historicalsociety",
+        "room": "collection_flag",
+        "type": "persons",
+        "fqid": "tunic.gramps.recap",
+        "text_speaker": [
+            [
+                "Why don't you go talk to the boss?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "She's right outside.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.entry.tunic.groupconvo_flag": {
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "cutscenes",
+        "fqid": "tunic.groupconvo_flag",
+        "text_speaker": [
+            [
+                "I'm telling you, Boss. Taxidermy is the way to go!",
+                "wells"
+            ],
+            [
+                "Nonsense. I want live animals at the exhibit, not stuffed ones.",
+                "boss"
+            ],
+            [
+                "Ah, Jolie! I'm glad you're here.",
+                "boss"
+            ],
+            [
+                "I'm putting you in charge of the flag case.",
+                "boss"
+            ],
+            [
+                "Make sure to get some old photos for the exhibit, like last time!",
+                "boss"
+            ],
+            [
+                "Wait! Can't I do it?",
+                "wells"
+            ],
+            [
+                "The symbol on the flag looks sort of like a deer hoof.",
+                "wells"
+            ],
+            [
+                "It could be an early design for the Wisconsin state flag!",
+                "wells"
+            ],
+            [
+                "Wells, you already have a job to do.",
+                "boss"
+            ],
+            [
+                "Jolie, you can look into this deer hoof theory.",
+                "boss"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.entry.tunic.groupconvo": {
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "cutscenes",
+        "fqid": "tunic.groupconvo",
+        "text_speaker": [
+            [
+                "Let's get started. The Wisconsin Wonders exhibit opens tomorrow!",
+                "boss"
+            ],
+            [
+                "Who wants to investigate the shirt artifact?",
+                "boss"
+            ],
+            [
+                "Well, Leopold here is always losing papers...",
+                "wells"
+            ],
+            [
+                "Hey!",
+                "null"
+            ],
+            [
+                "It's true, they do keep going missing lately.",
+                "gramps"
+            ],
+            [
+                "Ha. Told you so!",
+                "wells"
+            ],
+            [
+                "Besides, I already figured out the shirt.",
+                "wells"
+            ],
+            [
+                "It's a women's basketball jersey!",
+                "wells"
+            ],
+            [
+                "That settles it.",
+                "boss"
+            ],
+            [
+                "Wells, finish up your report.",
+                "boss"
+            ],
+            [
+                "Leopold, why don't you help me set up in the Capitol?",
+                "boss"
+            ],
+            [
+                "We need to talk about that missing paperwork.",
+                "boss"
+            ],
+            [
+                "Will do, Boss.",
+                "gramps"
+            ],
+            [
+                "Hey Jo, let's take a look at the shirt!",
+                "gramps"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.entry.tunic.directory.closeup.archivist": {
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "objects",
+        "fqid": "tunic.directory.closeup.archivist",
+        "text_speaker": [],
+        "notifications": [
+            "The archivist must've taken Teddy!"
+        ],
+        "observations": []
+    },
+    "tunic.historicalsociety.entry.tunic.wells.flag": {
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "tunic.wells.flag",
+        "text_speaker": [
+            [
+                "What now, kid?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Do you really think that symbol is a deer hoof?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Not sure. Do I look like a deer expert to you?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.entry.tunic.wells.talktogramps": {
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "tunic.wells.talktogramps",
+        "text_speaker": [
+            [
+                "Why don't you go play with your grampa?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.entry.tunic.wells.flag_recap": {
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "tunic.wells.flag_recap",
+        "text_speaker": [
+            [
+                "Come on, kid. You're slowing me down.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.entry.tunic.gramps.hub": {
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "tunic.gramps.hub",
+        "text_speaker": [
+            [
+                "null",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.entry.tunic.boss.flag": {
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "tunic.boss.flag",
+        "text_speaker": [
+            [
+                "Do you know where I can find a deer expert?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hmm. You could try the Aldo Leopold Wildlife Center.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ugh. I have to head over there and check out the animals.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'll ride with you!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "FINE. That possum better not scratch my leather seats...",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "He's a badger!",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.entry.tunic.boss.talktogramps": {
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "tunic.boss.talktogramps",
+        "text_speaker": [
+            [
+                "Your grampa is waiting for you in the collection room.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.entry.tunic.boss.flag_recap": {
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "tunic.boss.flag_recap",
+        "text_speaker": [
+            [
+                "Head over to the Wildlife Center!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm sure they'll be able to help.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.entry.tunic.block_tomap1": {
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "observations",
+        "fqid": "tunic.block_tomap1",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I should see what Gramps is up to!"
+        ]
+    },
+    "tunic.historicalsociety.entry.tunic.block_tomap2": {
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "observations",
+        "fqid": "tunic.block_tomap2",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I should go talk to Gramps!"
+        ]
+    },
+    "tunic.historicalsociety.entry.tunic.block_tocollection": {
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "observations",
+        "fqid": "tunic.block_tocollection",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I should see what Grampa is up to!"
+        ]
+    },
+    "tunic.historicalsociety.basement.tunic.savedteddy": {
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "cutscenes",
+        "fqid": "tunic.savedteddy",
+        "text_speaker": [
+            [
+                "Gramps must be up in the collection room.",
+                "null"
+            ],
+            [
+                "Let's go find him!",
+                "null"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.basement.tunic.ch3start": {
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "cutscenes",
+        "fqid": "tunic.ch3start",
+        "text_speaker": [
+            [
+                "Jo!",
+                "gramps"
+            ],
+            [
+                "Check out the next artifact!",
+                "gramps"
+            ],
+            [
+                "What is it?",
+                "null"
+            ],
+            [
+                "I think it's a flag! Pretty spiffy, eh?",
+                "gramps"
+            ],
+            [
+                "I don't have time for this, Gramps.",
+                "null"
+            ],
+            [
+                "Teddy is still missing!",
+                "null"
+            ],
+            [
+                "We'll find him, Jo.",
+                "gramps"
+            ],
+            [
+                "Want to look for more clues?",
+                "gramps"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.basement.tunic.seescratches": {
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "cutscenes",
+        "fqid": "tunic.seescratches",
+        "text_speaker": [
+            [
+                "Hey, look at those scratches!",
+                "null"
+            ],
+            [
+                "The kidnapper probably took Teddy on the elevator!",
+                "null"
+            ],
+            [
+                "Great Scott, you\u2019re right!",
+                "gramps"
+            ],
+            [
+                "Why isn't the button working?",
+                "null"
+            ],
+            [
+                "We'll need a key card.",
+                "gramps"
+            ],
+            [
+                "I had one, but Teddy chewed it up.",
+                "gramps"
+            ],
+            [
+                "I\u2019ve got Wells\u2019s ID!",
+                "null"
+            ],
+            [
+                "Let's follow those scratch marks!",
+                "null"
+            ],
+            [
+                "Jo! I can't go with you. I need to take the artifact upstairs.",
+                "gramps"
+            ],
+            [
+                "It's okay, Gramps. I'll go by myself.",
+                "null"
+            ],
+            [
+                "Teddy, here I come!",
+                "null"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.basement.tunic.gramps.whatdo": {
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "persons",
+        "fqid": "tunic.gramps.whatdo",
+        "text_speaker": [
+            [
+                "We'll find Teddy.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "We just have to keep our eyes open!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.basement.tunic.gramps.seeyalater": {
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "persons",
+        "fqid": "tunic.gramps.seeyalater",
+        "text_speaker": [
+            [
+                "I'll be in the collection room. Come find me when you're ready to check out the artifact.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Good luck!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.basement.tunic.janitor": {
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "observations",
+        "fqid": "tunic.janitor",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "This button never works!"
+        ]
+    },
+    "tunic.historicalsociety.cage.tunic.confrontation": {
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "cutscenes",
+        "fqid": "tunic.confrontation",
+        "text_speaker": [
+            [
+                "Hey!",
+                "archivist"
+            ],
+            [
+                "What are you doing down here?",
+                "archivist"
+            ],
+            [
+                "GRRRRRRR",
+                "null"
+            ],
+            [
+                "GAH! And what is THAT doing out of its cage?!",
+                "archivist"
+            ],
+            [
+                "You stole Teddy! How could you?!",
+                "null"
+            ],
+            [
+                "What's going on here?",
+                "boss"
+            ],
+            [
+                "Thanks for coming, Boss.",
+                "archivist"
+            ],
+            [
+                "I told you!",
+                "archivist"
+            ],
+            [
+                "I captured a badger in our museum!",
+                "archivist"
+            ],
+            [
+                "He's been eating my lunch every day this week!",
+                "archivist"
+            ],
+            [
+                "No he hasn't!",
+                "null"
+            ],
+            [
+                "\ud83d\ude10",
+                "null"
+            ],
+            [
+                "Teddy! Did you really eat his lunch?",
+                "null"
+            ],
+            [
+                "\ud83d\ude10",
+                "null"
+            ],
+            [
+                "Did you steal Gramps's paperwork too?!",
+                "null"
+            ],
+            [
+                "\ud83d\ude10",
+                "null"
+            ],
+            [
+                "And my homework?!?!",
+                "null"
+            ],
+            [
+                "\ud83d\ude10",
+                "null"
+            ],
+            [
+                "See?!",
+                "archivist"
+            ],
+            [
+                "That thing's a monster!",
+                "archivist"
+            ],
+            [
+                "I don't have time for this.",
+                "boss"
+            ],
+            [
+                "Jolie- keep your badger under control, or he'll have to go.",
+                "boss"
+            ],
+            [
+                "YEAH!",
+                "archivist"
+            ],
+            [
+                "And you, Frank-",
+                "boss"
+            ],
+            [
+                "YEAH!",
+                "archivist"
+            ],
+            [
+                "Wait- me?",
+                "archivist"
+            ],
+            [
+                "You can't just steal Jolie's pet. Don't you know badgers are protected animals?",
+                "boss"
+            ],
+            [
+                "Besides, he looks friendly to me.",
+                "boss"
+            ],
+            [
+                "Wha?!",
+                "archivist"
+            ],
+            [
+                "Ugh. Fine.",
+                "archivist"
+            ],
+            [
+                "\ud83d\ude1d",
+                "null"
+            ],
+            [
+                "Alright, Jolie. Back to work.",
+                "boss"
+            ],
+            [
+                "Your grampa is waiting for you in the collection room.",
+                "boss"
+            ],
+            [
+                "Come on, Teddy.",
+                "null"
+            ],
+            [
+                "Let's go find Gramps!",
+                "null"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.cage.tunic.unlockdoor": {
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "cutscenes",
+        "fqid": "tunic.unlockdoor",
+        "text_speaker": [
+            [
+                "I found the key!",
+                "null"
+            ],
+            [
+                "\u2764\ufe0f",
+                "teddy"
+            ],
+            [
+                "Come on, let's get out of here!",
+                "null"
+            ],
+            [
+                "Here's your scarf back!",
+                "null"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.cage.tunic.glasses.afterteddy": {
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "persons",
+        "fqid": "tunic.glasses.afterteddy",
+        "text_speaker": [
+            [
+                "Whoever lost these glasses probably took Teddy!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How can I find out whose glasses these are?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Oh! There was a staff directory in the entryway!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I'll go look at everyone's pictures!",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.cage.tunic.glasses.beforeteddy": {
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "persons",
+        "fqid": "tunic.glasses.beforeteddy",
+        "text_speaker": [
+            [
+                "I wonder whose glasses these are.",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.cage.tunic.teddy.trapped": {
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "persons",
+        "fqid": "tunic.teddy.trapped",
+        "text_speaker": [
+            [
+                "Teddy!!!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "\ud83d\ude2d",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Hang on. I\u2019ll get you out of there!",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.cage.tunic.need_glasses": {
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "observations",
+        "fqid": "tunic.need_glasses",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I should check out that pair of glasses."
+        ]
+    },
+    "tunic.historicalsociety.cage.tunic.lockeddoor": {
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "observations",
+        "fqid": "tunic.lockeddoor",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "It\u2019s locked!"
+        ]
+    },
+    "tunic.historicalsociety.frontdesk.tunic.archivist.need_glass_0": {
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.archivist.need_glass_0",
+        "text_speaker": [
+            [
+                "Can't believe I lost my reading glasses.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.frontdesk.tunic.archivist.hello": {
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.archivist.hello",
+        "text_speaker": [
+            [
+                "I need your help!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "*grumble grumble*",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "And you are?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm Leopold's grandkid!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I don't have time for kids.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Now if only I could read this thing. Blasted tiny letters...",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.frontdesk.tunic.archivist.have_glass": {
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.archivist.have_glass",
+        "text_speaker": [
+            [
+                "Ah, that's better!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Did you have a question?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yes! I was wondering-",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Wait a minute!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Where did you get that coffee?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Oh, that's from Bean Town.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I ran into Wells there this morning.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wells? I knew it!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Knew what?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Did you have a question or not?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yes!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Do you know anything about this slip?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I found it on an old shirt.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "An old shirt? Try the university.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You can talk to a textile expert there.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "What's a textile expert?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "They study clothes and fabric.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Great! Thanks for the help!",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.frontdesk.tunic.archivist.need_glass_1": {
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.archivist.need_glass_1",
+        "text_speaker": [
+            [
+                "I used to have a magnifying glass around here\u2026",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.frontdesk.tunic.archivist.have_glass_recap": {
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.archivist.have_glass_recap",
+        "text_speaker": [
+            [
+                "You're still here? I'm trying to work!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Run along to the university.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You can talk to a textile expert there.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.frontdesk.tunic.archivist.newspaper_recap": {
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.archivist.newspaper_recap",
+        "text_speaker": [
+            [
+                "What are you waiting for? The Stacks are right outside the door.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.frontdesk.tunic.archivist.newspaper": {
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.archivist.newspaper",
+        "text_speaker": [
+            [
+                "I need to find Wells!!!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Calm down, kid. I haven't seen him.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I can't calm down. This is important!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Sorry, can't help you.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ugh. Fine.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Do you have any info on Theodora Youmans?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Theodora Youmans? Is that who owned the shirt?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yep.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Why didn't you say so?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Youmans was a suffragist here in Wisconsin.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "She led marches and helped women get the right to vote!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wait a sec. Women couldn't vote?!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Nope. But Youmans and other suffragists worked hard to change that.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Thanks to them, Wisconsin was the first state to approve votes for women!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wow!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Here's a call number to find more info in the Stacks.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Where are the Stacks?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Right outside the door.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.frontdesk.tunic.archivist.foundtheodora": {
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.archivist.foundtheodora",
+        "text_speaker": [
+            [
+                "I found it!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Theodora wearing the shirt!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "You better get to the capitol!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.frontdesk.tunic.archivist_glasses.confrontation": {
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.archivist_glasses.confrontation",
+        "text_speaker": [
+            [
+                "You again! Don't let him hurt me!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "\ud83d\ude44",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Actually, we're just here for some photos.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "It's for the flag display!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wait a minute...",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "YOU'RE the new history detective everybody's talking about?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Guess so!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "YOU?!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Teddy's helping too.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "What kind of photos do you need?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Something to do with ecology and Wisconsin.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Here's a call number for the Stacks. Go find some photos.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Just please, don't let your badger eat them!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.frontdesk.tunic.archivist_glasses.confrontation_recap": {
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.archivist_glasses.confrontation_recap",
+        "text_speaker": [
+            [
+                "The Stacks are right outside the door. Go find some photos!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.frontdesk.tunic.magnify": {
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "tunic.magnify",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I bet the archivist could use this!"
+        ]
+    },
+    "tunic.historicalsociety.frontdesk.tunic.block_magnify": {
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "tunic.block_magnify",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I don't need that right now."
+        ]
+    },
+    "tunic.historicalsociety.frontdesk.tunic.key": {
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "tunic.key",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "Yes! It's the key for Teddy's cage!"
+        ]
+    },
+    "tunic.historicalsociety.closet_dirty.tunic.trigger_coffee": {
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "cutscenes",
+        "fqid": "tunic.trigger_coffee",
+        "text_speaker": [
+            [
+                "Is this your coffee, Gramps?",
+                "null"
+            ],
+            [
+                "Nope, that's from Bean Town. I only drink Holdgers!",
+                "gramps"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet_dirty.tunic.trigger_scarf": {
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "cutscenes",
+        "fqid": "tunic.trigger_scarf",
+        "text_speaker": [
+            [
+                "Teddy's scarf! Somebody must've taken him!",
+                "null"
+            ],
+            [
+                "Try not to panic, Jo.",
+                "gramps"
+            ],
+            [
+                "Maybe he just got scared and ran off.",
+                "gramps"
+            ],
+            [
+                "But he never goes anywhere without his scarf!",
+                "null"
+            ],
+            [
+                "I think he's in trouble!",
+                "null"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet_dirty.tunic.what_happened": {
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "cutscenes",
+        "fqid": "tunic.what_happened",
+        "text_speaker": [
+            [
+                "What the-",
+                "null"
+            ],
+            [
+                "What happened here?!",
+                "null"
+            ],
+            [
+                "I don't know!",
+                "gramps"
+            ],
+            [
+                "I got here and the whole place was ransacked!",
+                "gramps"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet_dirty.tunic.door_block_clean": {
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "cutscenes",
+        "fqid": "tunic.door_block_clean",
+        "text_speaker": [
+            [
+                "I should help Gramps clean.",
+                "null"
+            ],
+            [
+                "Maybe there's a clue in this mess!",
+                "null"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet_dirty.tunic.door_block_talk": {
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "cutscenes",
+        "fqid": "tunic.door_block_talk",
+        "text_speaker": [
+            [
+                "Poor Gramps! I should make sure he's okay.",
+                "null"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet_dirty.tunic.gramps.archivist": {
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "persons",
+        "fqid": "tunic.gramps.archivist",
+        "text_speaker": [
+            [
+                "What should I do first?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Head upstairs and talk to the archivist. He might be able to help!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet_dirty.tunic.gramps.nothing": {
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "persons",
+        "fqid": "tunic.gramps.nothing",
+        "text_speaker": [
+            [
+                "So much cleaning to do...",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet_dirty.tunic.gramps.news": {
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "persons",
+        "fqid": "tunic.gramps.news",
+        "text_speaker": [
+            [
+                "Who could've done this?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I have an idea.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "He's wrong about old shirts and his name rhymes with \\\"smells\\\"...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hold your horses, Jo.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "BUT WELLS STOLE TEDDY!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Could be. But we need evidence.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Fine. Let's investigate!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I'm afraid my papers have gone missing in this mess.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You'll have to get started without me.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Don't worry, Gramps. I'll find Teddy!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "And I'll figure out the shirt, too.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I knew I could count on you, Jo!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Why don't you go upstairs and see the archivist?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "He's our expert record keeper.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet_dirty.tunic.gramps.helpclean": {
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "persons",
+        "fqid": "tunic.gramps.helpclean",
+        "text_speaker": [
+            [
+                "Can you help me tidy up?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet_dirty.tunic.photo": {
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "observations",
+        "fqid": "tunic.photo",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I love these photos of me and Teddy."
+        ]
+    },
+    "tunic.historicalsociety.closet.tunic.notebook": {
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "objects",
+        "fqid": "tunic.notebook",
+        "text_speaker": [],
+        "notifications": [
+            "Found it!"
+        ],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet.tunic.retirement_letter.hub": {
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "objects",
+        "fqid": "tunic.retirement_letter.hub",
+        "text_speaker": [],
+        "notifications": [
+            "Gramps is the best historian ever!"
+        ],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet.tunic.gramps.intro_0_cs_0": {
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "persons",
+        "fqid": "tunic.gramps.intro_0_cs_0",
+        "text_speaker": [
+            [
+                "Whatcha doing over there, Jo?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Just talking to Teddy.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I gotta run to my meeting!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Meetings are BORING!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Grab your notebook and come upstairs!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet.tunic.teddy.intro_0_cs_0": {
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "persons",
+        "fqid": "tunic.teddy.intro_0_cs_0",
+        "text_speaker": [
+            [
+                "Hang tight, Teddy.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I'll hurry back and then we can go exploring!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Now where did I put my notebook?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "\ud83d\ude34",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet.tunic.teddy.intro_0_cs_5": {
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "persons",
+        "fqid": "tunic.teddy.intro_0_cs_5",
+        "text_speaker": [
+            [
+                "\ud83d\ude34",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.historicalsociety.closet.tunic.photo": {
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "observations",
+        "fqid": "tunic.photo",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I love these photos of me and Teddy!"
+        ]
+    },
+    "tunic.historicalsociety.closet.tunic.doorblock": {
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "observations",
+        "fqid": "tunic.doorblock",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I feel like I'm forgetting something."
+        ]
+    },
+    "tunic.capitol_0.hall.tunic.chap1_finale_c": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "cutscenes",
+        "fqid": "tunic.chap1_finale_c",
+        "text_speaker": [
+            [
+                "Come on, Jo!",
+                "gramps"
+            ],
+            [
+                "Meet me back in my office and we'll get started!",
+                "gramps"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_0.hall.tunic.gramps.hub": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.gramps.hub",
+        "text_speaker": [
+            [
+                "null",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_0.hall.tunic.boss.chap1_finale_slipfirst_0_fail": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap1_finale_slipfirst_0_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_0.hall.tunic.boss.chap1_finale_1": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap1_finale_1",
+        "text_speaker": [
+            [
+                "Ah, yes! The basketball jersey.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "IT'S NOT A JERSEY!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How do you know?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_0.hall.tunic.boss.chap1_finale_plaquefirst_0_fail": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap1_finale_plaquefirst_0_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_0.hall.tunic.boss.chap1_finale_0": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap1_finale_0",
+        "text_speaker": [
+            [
+                "Jolie! What are you doing here?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "The shirt is not a basketball jersey!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Aha! Did you find something?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "What are you talking about?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Gramps had me look for clues about the artifact.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "WELLS WAS WRONG AND GRAMPS WAS RIGHT!!!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hold on.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Which artifact?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_0.hall.tunic.boss.chap1_finale_slipfirst_0": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap1_finale_slipfirst_0",
+        "text_speaker": [
+            [
+                "I found this slip on the shirt. It's from 1916!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How does that prove our shirt is not a jersey?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_0.hall.tunic.boss.chap1_finale_plaquefirst_1": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap1_finale_plaquefirst_1",
+        "text_speaker": [
+            [
+                "I found this slip on the shirt. It's from 1916!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Our shirt was around WAYYY before the women's basketball team!",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_0.hall.tunic.boss.chap1_finale_plaquefirst_0": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap1_finale_plaquefirst_0",
+        "text_speaker": [
+            [
+                "I checked the Basketball Center. The women's team didn't start until 1974!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How does that prove our shirt is not a jersey?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_0.hall.tunic.boss.chap1_finale_slipfirst_1": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap1_finale_slipfirst_1",
+        "text_speaker": [
+            [
+                "I checked the Basketball Center. The women's team didn't start until 1974!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Our shirt was around WAYYY before the women's basketball team!",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_0.hall.tunic.boss.chap1_finale_1_fail": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap1_finale_1_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_0.hall.tunic.boss.talktogramps": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.talktogramps",
+        "text_speaker": [
+            [
+                "Well? What are you still doing here?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Go find your grampa and get to work!",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_0.hall.tunic.boss.chap1_finale_0_fail": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap1_finale_0_fail",
+        "text_speaker": [
+            [
+                "I don't think we have anything like THAT in the collections...",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.capitol_0.hall.tunic.boss.chap1_finale_2": {
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "tunic.boss.chap1_finale_2",
+        "text_speaker": [
+            [
+                "Wow!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I think you're right, Jolie.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Leopold, I need you to work on this right away.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yippee!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How 'bout it, Jo? Want to help me investigate?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Not really...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Let me know when you figure it out.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "In the meantime, I need to have a word with Wells.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.humanecology.frontdesk.tunic.businesscards": {
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "tunic.businesscards",
+        "text_speaker": [],
+        "notifications": [
+            "Which place might know about the slip?"
+        ],
+        "observations": []
+    },
+    "tunic.humanecology.frontdesk.tunic.businesscards.card_bingo.bingo": {
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "tunic.businesscards.card_bingo.bingo",
+        "text_speaker": [],
+        "notifications": [
+            "This place was around in 1916! I can start there!"
+        ],
+        "observations": []
+    },
+    "tunic.humanecology.frontdesk.tunic.worker.badger": {
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.badger",
+        "text_speaker": [
+            [
+                "You haven't seen any badgers around here, have you?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Badgers? No.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "But I hear the museum's got one on the loose!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yeah. Thanks anyway.",
+                "SPEAKER_AVATAR"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.humanecology.frontdesk.tunic.worker.intro": {
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "tunic.worker.intro",
+        "text_speaker": [
+            [
+                "Hello there!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wow! What is all this stuff?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "It's our Norwegian Craft exhibit!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Can I give you the tour?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Sorry, I'm in a hurry.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Do you know what this slip is?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Looks like a dry cleaning receipt.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ooh, thanks!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Now I just need to find all the cleaners from wayyyy back in 1916.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Yikes... this could take a while.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Maybe I can help!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I've got a stack of business cards from my favorite cleaners.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Why don't you take a look?",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.humanecology.frontdesk.tunic.block_0": {
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "tunic.block_0",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I should stay and look for clues!"
+        ]
+    },
+    "tunic.humanecology.frontdesk.tunic.block_1": {
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "tunic.block_1",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "I wonder if there's a clue in those business cards..."
+        ]
+    },
+    "tunic.nelson.trail.tunic.conclusion": {
+        "scene": "nelson",
+        "room": "trail",
+        "type": "cutscenes",
+        "fqid": "tunic.conclusion",
+        "text_speaker": [
+            [
+                "Wow!",
+                "null"
+            ],
+            [
+                "The Capitol looks so pretty from here!",
+                "null"
+            ],
+            [
+                "Neat, isn't it?",
+                "gramps"
+            ],
+            [
+                "That's where it all happens.",
+                "gramps"
+            ],
+            [
+                "Wisconsin folks come together at the Capitol to make their voices heard.",
+                "gramps"
+            ],
+            [
+                "Like they did with Earth Day!",
+                "null"
+            ],
+            [
+                "You know, there's a nice little Earth Day display down the path.",
+                "gramps"
+            ],
+            [
+                "Go check it out!",
+                "gramps"
+            ],
+            [
+                "Aren't you coming too?",
+                "null"
+            ],
+            [
+                "Oh, you go ahead.",
+                "gramps"
+            ],
+            [
+                "I'll stay here and watch the sunset.",
+                "null"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.nelson.trail.tunic.display": {
+        "scene": "nelson",
+        "room": "trail",
+        "type": "cutscenes",
+        "fqid": "tunic.display",
+        "text_speaker": [
+            [
+                "Wow!",
+                "null"
+            ],
+            [
+                "Governor Nelson was just a normal guy from Wisconsin...",
+                "null"
+            ],
+            [
+                "And he changed the world!",
+                "null"
+            ],
+            [
+                "We should have a march, Teddy.",
+                "null"
+            ],
+            [
+                "No more plastic cups!!!",
+                "null"
+            ],
+            [
+                "\ud83d\udc9a",
+                "null"
+            ],
+            [
+                "Maybe they'll even name a park after us!",
+                "null"
+            ],
+            [
+                "Except our park will have roller coasters, and cute animals, and snacks.",
+                "null"
+            ],
+            [
+                "Make sure to get plenty of rest tonight, Teddy.",
+                "null"
+            ],
+            [
+                "We've got work to do!",
+                "null"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.nelson.trail.tunic.gramps.question": {
+        "scene": "nelson",
+        "room": "trail",
+        "type": "persons",
+        "fqid": "tunic.gramps.question",
+        "text_speaker": [
+            [
+                "You and Teddy go check out the Earth Day display.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'll stay here with the sunset.",
+                "SPEAKER_PERSON"
+            ]
+        ],
+        "notifications": [],
+        "observations": []
+    },
+    "tunic.nelson.trail.tunic.coffee": {
+        "scene": "nelson",
+        "room": "trail",
+        "type": "observations",
+        "fqid": "tunic.coffee",
+        "text_speaker": [],
+        "notifications": [],
+        "observations": [
+            "Ugh! Somebody needs to do something about all these cups!"
+        ]
+    }
+}

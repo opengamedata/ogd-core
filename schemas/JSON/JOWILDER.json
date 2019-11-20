@@ -200,6 +200,11 @@
             "meaningful_action_count": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations"
         },
         "per_custom_count": {
+            "num_wrong_guesses": {
+                "count": 19,
+                "prefix": "Q",
+                "desc": "number of wrong guesses for each assessment prompt"
+            }
         },
         "aggregate":{
             "sessionID":"The player's session ID number for this play session",
