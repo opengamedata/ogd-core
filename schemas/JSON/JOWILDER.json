@@ -194,7 +194,7 @@
         "correct": "correct answer to the problem (only exists for event name CHOICE) - sometimes doesn't exist??",
         "answer": "selected answer (only exists for event name CHOICE) - sometimes doesn't exist??",
         "level": "enum for current checkpoint"
-    },
+    }
 },
 
     "features": {

@@ -38,11 +38,43 @@ def enum_to_interactive_entry(enum):
   return _enum_to_interactive_entry.get(enum)
 
 
-_interactive_entry_to_enum = {v: k for k, v in _enum_to_interactive_entry.items()}
+_interactive_entry_to_char = {v: chr(65+i+(i>25)*6) for i, v in _enum_to_interactive_entry.items()}
+"""{'tunic.entry_voteforgramps': 'A',
+ 'tunic.entry_tunic': 'B',
+ 'tunic.entry_cleanerslip': 'C',
+ 'tunic.entry_basketballplaque': 'D',
+ 'tunic.entry_teddytaken': 'E',
+ 'tunic.entry_javajacket': 'F',
+ 'tunic.entry_onthecase': 'G',
+ 'tunic.entry_archivistcoffee': 'H',
+ 'tunic.entry_expert': 'I',
+ 'tunic.entry_logbook': 'J',
+ 'tunic.entry_cleanercard': 'K',
+ 'tunic.entry_microfiche': 'L',
+ 'tunic.entry_newspaper': 'M',
+ 'tunic.entry_taxidermy': 'N',
+ 'tunic.entry_wellsid': 'O',
+ 'tunic.entry_stacks_slip': 'P',
+ 'tunic.entry_theodora': 'Q',
+ 'tunic.entry_scratches': 'R',
+ 'tunic.entry_glasses': 'S',
+ 'tunic.entry_teddyfree': 'T',
+ 'tunic.entry_teddyfound': 'U',
+ 'tunic.entry_key': 'V',
+ 'tunic.entry_staffdir': 'W',
+ 'tunic.entry_flag': 'X',
+ 'tunic.entry_wellshoof': 'Y',
+ 'tunic.entry_tracks': 'Z',
+ 'tunic.entry_littering': 'a',
+ 'tunic.entry_flaglady': 'b',
+ 'tunic.entry_ecologyflag': 'c',
+ 'tunic.entry_theta': 'd',
+ 'tunic.entry_nelson': 'e',
+ 'tunic.entry_activists': 'f'}"""
 
+def interactive_entry_to_char(entry_fqid):
+  return _interactive_entry_to_char.get(entry_fqid) or ''
 
-def interactive_entry_to_enum(entry_fqid):
-  return _interactive_entry_to_enum.get(entry_fqid)
 
 _assessment_answers = {
   1: ['tunic.entry_tunic','HACKME','tunic.entry_basketballplaque','tunic.entry_cleanerslip'],

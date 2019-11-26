@@ -12,6 +12,7 @@ from sklearn.linear_model import LinearRegression
 from feature_extractors.Extractor import Extractor
 from GameTable import GameTable
 from schemas.Schema import Schema
+from game_info.Jowilder import Jowilder_Enumerators as je
 
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
@@ -97,6 +98,10 @@ class JowilderExtractor(Extractor):
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
         self.level = 0
         self.cur_question = 0
+        self._VERSION = None
+        self.last_display_time_text = ()
+        self.average_handler_level = {}
+        self.average_handler_session = {}
 
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
         # put some data in local vars, for readability later.
@@ -124,6 +129,7 @@ class JowilderExtractor(Extractor):
             if not self._CLIENT_START_TIME:
                 # initialize this time as the start
                 self._CLIENT_START_TIME = event_client_time
+                self._VERSION = row_with_complex_parsed[game_table.version_index]
 
             if self.level_start_timestamp.get(self.level) == None:
                 self.level_start_timestamp[self.level] = event_client_time
@@ -133,7 +139,10 @@ class JowilderExtractor(Extractor):
             self.features.incAggregateVal(feature_name="EventCount")
             self.features.setValByName(feature_name="sessDuration", new_value=self.time_since_start)
             debug_str = ''
-            utils.Logger.toStdOut(f'{self.time_since_start} {event_type_str} {debug_str}',
+            if event_type_str == "wildcard_click":
+                d = event_data_complex_parsed
+                debug_str = f'ans: {d.get("answer")}, corr: {d.get("correct")}'
+            utils.Logger.toStdOut(f'{self.level} {self.cur_question} {self.time_since_start} {event_type_str} {debug_str}',
                                   logging.DEBUG)
             # Ensure we have private data initialized for this level.
             if "click" in event_type_str:
@@ -194,14 +203,28 @@ class JowilderExtractor(Extractor):
         _screen_coor = d["screen_coor"]
         _room_coor = d["room_coor"]
         _level = d["level"]
+        _text = d["text"] if self._VERSION == 5 else None
 
-        # helpers
+        # # helpers
+        calc_speed = bool(self.last_display_time_text)
+        if calc_speed:
+            last_time, last_text = self.last_display_time_text
+            time_diff_secs = (event_client_time - last_time).microseconds / 1000 / 1000
+            word_count = len(last_text.split())
+            wps = word_count / time_diff_secs
+        else:
+            wps = None
+
         # clicked_fqid = _room_fqid + _fqid
         # completed_task = 0
         # if JowilderExtractor[self.cur_task] == clicked_fqid:
         #     completed_task = self.cur_task
         #     self.cur_task += 1
+        
         # set class variables
+        if _text:
+            self.last_display_time_text = (event_client_time, _text)
+        
         # feature helpers
         # def set_task_finished(completed_task):
         #     self._task_complete_helper[completed_task] = event_client_time
@@ -217,6 +240,7 @@ class JowilderExtractor(Extractor):
         # # set features
         # set_task_finished(completed_task)
         self.inc_lvl_and_sess(feature_name="count_clicks", increment=1)
+        self.avg_lvl_and_sess(fname_base='words_per_second', value=wps)
 
 
     def _extractFromHover(self, event_client_time, event_data_complex_parsed):
@@ -445,17 +469,31 @@ class JowilderExtractor(Extractor):
         _level = d["level"]
 
         # helpers
+        if self.cur_question > 18:
+            utils.Logger.std_logger.warn(f'Question {self.cur_question} > max (18)!')
+            return
+
         click = bool(_answer)
         wrong_guess = click and (_answer != _correct)
+        if _correct == 'HACKME':
+            wrong_guess = _answer in ['tunic.entry_basketballplaque', 'tunic.entry_cleanerslip']
+
+        answer_char = je.interactive_entry_to_char(_answer) if click else ''
+        prev_answers = self.features.getValByIndex('answers', self.cur_question)
+        if prev_answers == 'null':
+            self.features.setValByIndex('answers', self.cur_question, '')
+            prev_answers = ''
+
+
+
         # set class variables
 
         # set features
-        self.features.incValByIndex('num_wrong_guesses',self.cur_question, wrong_guess)
-        if type(self.features.getValByIndex('answers',self.cur_question)) is not str:
-            self.features.setValByIndex('answers',self.cur_question, '')
+        if wrong_guess:
+            self.features.incValByIndex('num_wrong_guesses',self.cur_question)
+        self.features.setValByIndex('answers', self.cur_question, prev_answers + answer_char)
 
-
-        if _answer == _correct:
+        if click and not wrong_guess:
             self.cur_question += 1
 
     def _extractFromNavigate_hover(self, event_client_time, event_data_complex_parsed):
@@ -595,4 +633,20 @@ class JowilderExtractor(Extractor):
     def inc_lvl_and_sess(self, feature_name, increment):
         self.features.incValByIndex(feature_name=feature_name, index=self.level, increment=increment)
         self.features.incAggregateVal(feature_name='sess_'+feature_name, increment=increment)
+        
+    def avg_lvl_and_sess(self, fname_base, value):
+        if value is None:
+            return
+        lvl_pref, sess_pref = '', 'sess_'
+        lvl_feature, session_feature = lvl_pref + fname_base, sess_pref + fname_base
+        self.average_handler_level[lvl_feature][self.level]['total'] += value
+        self.average_handler_level[lvl_feature][self.level]['n'] += 1
+        avg = self.average_handler_level[lvl_feature][self.level]['total'] / self.average_handler_level[lvl_feature][self.level]['n']
+        self.features.setValByIndex(lvl_feature, self.level, avg)
+
+        self.average_handler_session[session_feature]['total'] += value
+        self.average_handler_session[session_feature]['n'] += 1
+        avg = self.average_handler_session[session_feature]['total'] / self.average_handler_session[session_feature][
+            'n']
+        self.features.setValByName(session_feature, avg)
 
