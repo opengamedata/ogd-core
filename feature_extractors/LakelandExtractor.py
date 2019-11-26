@@ -167,6 +167,7 @@ class LakelandExtractor(Extractor):
                 debug_str = LakelandExtractor._ENUM_TO_STR['BUYS'][event_data_complex_parsed["buy"]].upper()
             if event_type_str == 'STARTGAME':
                 debug_str = "START" if event_data_complex_parsed.get("continue") == False else "CONTINUE"
+                debug_str += f' Language: {event_data_complex_parsed.get("language")}'
             else:
                 debug_str = ''
             utils.Logger.toStdOut(f'{self._num_farmbits } {time_since_start} {event_type_str} {debug_str}', logging.DEBUG)
@@ -712,6 +713,11 @@ class LakelandExtractor(Extractor):
         is_positive = affect == 1
         is_neutral = affect == 0
         is_negative = affect == -1
+        if(self._num_farmbits) < 1:
+            utils.Logger.toFile(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.", logging.WARN)
+            utils.Logger.toStdOut(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.", logging.WARN)
+            self._num_farmbits = 1
+
         per_capita_val = 1/self._num_farmbits
 
         # set features
