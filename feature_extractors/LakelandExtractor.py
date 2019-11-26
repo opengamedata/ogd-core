@@ -1,7 +1,7 @@
 """ Lakeland Feature Extractor
 Note that a separate file unique to the lakeland extractor is necessary to run this script.
 The file is Lakeland Enumerators.json, and is required for the line:
-_STR_TO_ENUM = utils.loadJSONFile("Lakeland Enumerators/Lakeland Enumerators.json")
+_STR_TO_ENUM = utils.loadJSONFile("game_info/Lakeland/Lakeland Enumerators.json")
 
 This json file is created from the fielddaylab/lakeland README on github via
 "produce_lakeland_enumerators.py". Please run that script with the appropriate inpath and outpath before running this
@@ -41,7 +41,7 @@ class LakelandExtractor(Extractor):
         "buy_fertilizer",
         "buy_livestock",
     ]
-    _STR_TO_ENUM = utils.loadJSONFile("Lakeland Enumerators/Lakeland Enumerators.json")
+    _STR_TO_ENUM = utils.loadJSONFile("game_info/Lakeland/Lakeland Enumerators.json")
     _ENUM_TO_STR = {cat: {y: x for x, y in ydict.items()} for cat, ydict in _STR_TO_ENUM.items()}
     _ITEM_MARK_COMBINATIONS = [('food', 'sell'), ('food', 'use'), ('food', 'eat'),
                                ('milk', 'sell'), ('milk', 'use'), ('poop', 'sell'), ('poop', 'use')
