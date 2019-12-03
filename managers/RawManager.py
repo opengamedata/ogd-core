@@ -59,10 +59,14 @@ class RawManager:
             else: # must be at complex_data_index, so process all its columns.
                 complex_data_parsed = row_with_complex_parsed[self._game_table.complex_data_index]
                 for key in complex_data_parsed.keys():
-                    index = self._columns_to_indices[key]
+                    try:
+                        index = self._columns_to_indices[key]
+                    except KeyError as e:
+                        utils.Logger.err_logger(f'{e}: Key error because {key} of {row_with_complex_parsed} is not in the SCHEMA',logging.WARNING)
+                        continue
                     item = complex_data_parsed[key]
-                    line[index] = f"\"{str(item)}\"" if (type(item) == type({}) or type(item) == str) \
-                             else item
+                    line[index] = f"\"{str(item)}\"" if (type(item) == type({}) or type(item) == str) else item
+
         self._lines.append(",".join([str(item) for item in line]) + "\n")
 
     ## Function to empty the list of lines stored by the RawManager.

@@ -214,13 +214,19 @@
                 "count": 19,
                 "prefix": "Q",
                 "desc": "number of wrong guesses for each assessment prompt"
+            },
+            "answers": {
+                "count": 19,
+                "prefix": "Q",
+                "desc": "list the different answers that the player chose, by id#"
             }
         },
         "aggregate":{
             "sessionID":"The player's session ID number for this play session",
             "persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",
-            "count_clicks": "Number of clicks throughout the game",
-            "count_hovers": "Number of hovers throughout the game",
+            "sess_count_clicks": "Number of clicks throughout the game",
+            "sess_count_hovers": "Number of hovers throughout the game",
+            "EventCount": "count of all log events in the game",
             "sessDuration": "Length of the session",
             "totalTimeToRead":"Total time spent reading text boxes over the whole game",
             "totalAvgTimePerWord":"Time spent reading all text boxes in the game, divided by number of words",
@@ -248,5 +254,8 @@
         "req_id":"Another ID of some kind, to be removed",
         "session_n":"Counter of events in the session, from 0. A row with session_n = i is the (i+1)-th event of the session",
         "http_user_agent":"Data on the type of web browser, OS, etc. in use by the player"
-    }
+    },
+    "config": {
+    "SUPPORTED_VERS": [4,6]
+  }
 }
