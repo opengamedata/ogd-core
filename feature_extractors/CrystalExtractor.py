@@ -34,9 +34,9 @@ class CrystalExtractor(Extractor):
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
         # we specifically want to set the default value for questionAnswered to -1, for unanswered.
         for ans in self.features.getValByName(feature_name="questionAnswered").keys():
-            self.features.setValByIndex(feature_name="questionAnswered", index=ans, new_value="null")
+            self.features.setValByIndex(feature_name="questionAnswered", index=ans, new_value=None)
         for q in self.features.getValByName(feature_name="questionCorrect"):
-            self.features.setValByIndex(feature_name="questionCorrect", index=q, new_value="null")
+            self.features.setValByIndex(feature_name="questionCorrect", index=q, new_value=None)
 
     ## Function to perform extraction of features from a row.
     #

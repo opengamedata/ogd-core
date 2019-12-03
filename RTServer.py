@@ -124,7 +124,7 @@ class RTServer:
                 # print(f"all_features: {all_features}")
                 prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
                 cur_level = prog["cur_level"]
-                if features is not None and features != "null":
+                if features is not None and features != None:
                     for feature_name in features:
                         if feature_name in all_features.keys():
                             ret_val[feature_name] = {"name": feature_name, "value": all_features[feature_name]}

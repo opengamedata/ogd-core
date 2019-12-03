@@ -137,10 +137,10 @@ class Extractor(abc.ABC):
             # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
             # which in turn maps each level to a value and prefix.
             perlevels = game_schema.perlevel_features()
-            features = {f:{lvl:{"val":"null", "prefix":"lvl"} for lvl in level_range } for f in perlevels}
+            features = {f:{lvl:{"val":None, "prefix":"lvl"} for lvl in level_range } for f in perlevels}
             # next, do something similar for other per-custom-count features.
             percounts = game_schema.percount_features()
-            features.update({f:{num:{"val":"null", "prefix":percounts[f]["prefix"]} for num in range(0, percounts[f]["count"]) } for f in percounts})
+            features.update({f:{num:{"val":None, "prefix":percounts[f]["prefix"]} for num in range(0, percounts[f]["count"]) } for f in percounts})
             # finally, add in aggregate-only features.
             features.update({f:0 for f in game_schema.aggregate_features()})
             return features
@@ -151,13 +151,13 @@ class Extractor(abc.ABC):
         def featureList(self):
             return self.features.keys()
 
-        ## Function to initialize any "null" values of per-level features to 0, for given level.
-        #  This means we can have "null" values for unreached levels, and 0's for features that
+        ## Function to initialize any previously uninitialized values of per-level features to 0, for given level.
+        #  This means we can have "None" values for unreached levels, and 0's for features that
         #  simply never got incremented.
         #  @param level The level for which we should initialize values.
         def initLevel(self, level):
             for f_name in self.perlevels:
-                if self.features[f_name][level]["val"] == "null":
+                if self.features[f_name][level]["val"] == None:
                     self.features[f_name][level]["val"] = 0
 
         ## Function to get value of a per-count feature (including per-level)

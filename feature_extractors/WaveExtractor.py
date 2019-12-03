@@ -42,13 +42,13 @@ class WaveExtractor(Extractor):
         self.active_begin = None
         self.move_closenesses_tx: typing.Dict = {}
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
-        # we specifically want to set the default value for questionAnswered to "null", for unanswered.
+        # we specifically want to set the default value for questionAnswered to None, for unanswered.
         for ans in self.features.getValByName(feature_name="questionAnswered").keys():
-            self.features.setValByIndex(feature_name="questionAnswered", index=ans, new_value="null")
+            self.features.setValByIndex(feature_name="questionAnswered", index=ans, new_value=None)
         for q in self.features.getValByName(feature_name="questionCorrect"):
-            self.features.setValByIndex(feature_name="questionCorrect", index=q, new_value="null")
+            self.features.setValByIndex(feature_name="questionCorrect", index=q, new_value=None)
         for elem in self.features.getValByName(feature_name="firstMoveType"):
-            self.features.setValByIndex(feature_name="firstMoveType", index=elem, new_value="null")
+            self.features.setValByIndex(feature_name="firstMoveType", index=elem, new_value=None)
 
     ## Function to perform extraction of features from a row.
     #
@@ -148,13 +148,13 @@ class WaveExtractor(Extractor):
                 self.features.setValByIndex(feature_name="sliderAvgRange", index=lvl, new_value=val)
             # Then, calculate true aggregates.
             num_lvl = len(self.levels)
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalSliderMoves").values() if elem["val"] is not "null"]
+            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalSliderMoves").values() if elem["val"] is not None]
             self.features.setValByName(feature_name="avgSliderMoves", new_value=sum(all_vals) / num_lvl)
 
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalLevelTime").values() if elem["val"] is not "null"]
+            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalLevelTime").values() if elem["val"] is not None]
             self.features.setValByName(feature_name="avgLevelTime", new_value=sum(all_vals) / num_lvl)
 
-            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalMoveTypeChanges").values() if elem["val"] is not "null"]
+            all_vals = [elem["val"] for elem in self.features.getValByName(feature_name="totalMoveTypeChanges").values() if elem["val"] is not None]
             self.features.setValByName(feature_name="avgMoveTypeChanges", new_value=sum(all_vals) / num_lvl)
 
             # Determine number of moves that occurred across all levels
@@ -172,15 +172,15 @@ class WaveExtractor(Extractor):
             self.features.setValByName(feature_name="overallPercentWavelengthMoves", new_value=perc_waves)
 
             # Calculate average ranges and std devs over all moves.
-            all_stdevs = sum([elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgStdDevs").values() if elem["val"] is not "null"])
-            all_ranges = sum([elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgRange").values() if elem["val"] is not "null"])
+            all_stdevs = sum([elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgStdDevs").values() if elem["val"] is not None])
+            all_ranges = sum([elem["val"] for elem in self.features.getValByName(feature_name="sliderAvgRange").values() if elem["val"] is not None])
             avg_stdevs = all_stdevs / all_moves if all_moves > 0 else all_moves
             avg_ranges = all_ranges / all_moves if all_moves > 0 else all_moves
             self.features.setValByName(feature_name="overallSliderAvgStdDevs", new_value=avg_stdevs)
             self.features.setValByName(feature_name="overallSliderAvgRange", new_value=avg_ranges)
 
             # Finally, calculate average fails per level
-            all_fails = sum([elem["val"] for elem in self.features.getValByName(feature_name="totalFails").values() if elem["val"] is not "null"])
+            all_fails = sum([elem["val"] for elem in self.features.getValByName(feature_name="totalFails").values() if elem["val"] is not None])
             avg_fails = all_fails / all_moves if all_moves > 0 else all_moves
             self.features.setValByName(feature_name="avgFails", new_value=avg_fails)
 
