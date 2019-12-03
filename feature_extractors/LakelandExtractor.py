@@ -11,10 +11,10 @@ script.
 
 
 ## import standard libraries
-import bisect
 import datetime
 import logging
-import json
+import sys
+import traceback
 
 ## import local files
 import typing
@@ -98,6 +98,7 @@ class LakelandExtractor(Extractor):
         self.WINDOW_RANGE = range(game_table.max_level + 1)
         self._cur_gameplay = 1
         self._startgame_count = 0
+        self.debug_strs = []
 
 
         # set window range
@@ -106,6 +107,20 @@ class LakelandExtractor(Extractor):
         
         self.reset()
         self.setValByName('num_play', self._cur_gameplay)
+    
+    def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+        try:
+            self._extractFromRow(row_with_complex_parsed, game_table)
+        except Exception as e:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            for place in [utils.Logger.toFile, utils.Logger.toStdOut]:
+                place('\n'.join(self.debug_strs), logging.ERROR)
+                place('\n'.join(traceback.format_exception(exc_type, exc_value, exc_traceback)), logging.ERROR)
+                # if len(self.debug_strs) > 10:
+                    # self.debug_strs = self.debug_strs[:5] + ['...'] + self.debug_strs[-5:]
+            if True:
+                pass
+
 
     ## Function to perform extraction of features from a row.
     #
@@ -113,7 +128,7 @@ class LakelandExtractor(Extractor):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def _extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
         if self._halt:
             return
 
@@ -149,8 +164,8 @@ class LakelandExtractor(Extractor):
                 self._CLIENT_START_TIME = event_client_time
                 self._last_speed_change = self._CLIENT_START_TIME
                 self._last_active_log_time = event_client_time
-                utils.Logger.toStdOut(f'\n\n\nPlay {self._cur_gameplay} \n'+
-                                      f'{self.session_id} v{self._VERSION} @ {self._CLIENT_START_TIME}', logging.DEBUG)
+                self.add_debug_str(f'{"*"*10}\nPlay {self._cur_gameplay} \n'+
+                                      f'{self.session_id} v{self._VERSION} @ {self._CLIENT_START_TIME}')
             # set current windows
             self._cur_windows = self._get_windows_at_time(event_client_time)
             if any([w > game_table.max_level for w in self._cur_windows]):
@@ -170,7 +185,7 @@ class LakelandExtractor(Extractor):
                 debug_str += f' Language: {event_data_complex_parsed.get("language")}'
             else:
                 debug_str = ''
-            utils.Logger.toStdOut(f'{self._num_farmbits } {time_since_start} {event_type_str} {debug_str}', logging.DEBUG)
+            self.add_debug_str(f'{self._num_farmbits } {time_since_start} {event_type_str} {debug_str}')
 
             # Then, handle cases for each type of event
             if event_type_str == "GAMESTATE":
@@ -290,7 +305,7 @@ class LakelandExtractor(Extractor):
 
         if self._num_farmbits != len(_farmbits):
             # if the num farmbits arent as expected or just one more than expected (sometimes takes a while to show), show warning.
-            utils.Logger.toStdOut(f'Gamestate showed {len(_farmbits)} but expected {self._num_farmbits} farmbits.', logging.WARNING)
+            self.log_warning(f'Gamestate showed {len(_farmbits)} but expected {self._num_farmbits} farmbits.')
              # self._change_population(event_client_time, len(_farmbits) - self._num_farmbits)
 
         self._first_gamestate = False
@@ -299,18 +314,14 @@ class LakelandExtractor(Extractor):
         # def farms_low_productivity(tiles):
         #     return [t for t in tiles if t[3] == 9 and t[1] < 3]  # type == farm and nutrition < 3 (the circle is heavily black)
 
-        # def lake_tiles_bloom(tiles):
+        0# def lake_tiles_bloom(tiles):
         #     return [t for t in tiles if t[3] == 5 and t[1] > 25]  # lake tiles bloom when nutrition > 10% of 255,
         # so technically not all tiles > 25 nutrition are blooming, but we will put the cutoff here
 
         def avg_lake_nutrition(tiles):
-            tile_nutritions = [t[1] for t in tiles]
-            lake_nutritions = []
-            for og_type, nutrition in zip(self._TILE_OG_TYPES, tile_nutritions):
-                if LakelandExtractor._ENUM_TO_STR["TILE TYPE"][og_type] == "lake":
-                    lake_nutritions.append(nutrition)
+            lake_nutritions = [t[1] for t in tiles if t[2] == 5] # 5 is the lake enum for tile type
             if len(lake_nutritions) == 0:
-                utils.Logger.toStdOut(f'No lake nutritions!!', logging.DEBUG)
+                self.log_warning(f'No lake nutritions!!')
 
             return sum(lake_nutritions) / len(lake_nutritions)
 
@@ -339,9 +350,9 @@ class LakelandExtractor(Extractor):
     def _extractFromStartgame(self, event_client_time, event_data_complex_parsed):
         self._startgame_count += 1
         if self._startgame_count > 1:
-            utils.Logger.toStdOut(f"Starting game {self._startgame_count}.", logging.DEBUG)
+            self.add_debug_str(f"Starting game {self._startgame_count}.")
         if self._startgame_count != self._cur_gameplay:
-            utils.Logger.toStdOut(f"Starting game {self._cur_gameplay} but this is the {self._startgame_count}th start!", logging.WARNING)
+            self.log_warning(f"Starting game {self._cur_gameplay} but this is the {self._startgame_count}th start!")
 
         # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
@@ -488,6 +499,9 @@ class LakelandExtractor(Extractor):
         def dist_to_lake(tile):
             tile_pt = (tile[4], tile[5])
             lake_xys = self.get_tile_types_xys(['lake'])
+            if not lake_xys:
+                self.log_warning('There were no lake tiles found!')
+                return None
             min_lake_dist = sqrt(min([distance(tile_pt, lake_pt) for lake_pt in lake_xys]))
             return min_lake_dist
 
@@ -509,7 +523,9 @@ class LakelandExtractor(Extractor):
         if buy_name == 'fertilizer':
             self.feature_average(fname_base="percent_placing_fertilizer_on_lowest_nutrient_farm",
                                  value=chose_lowest_nutrient_farm(_buy_hovers, _tile))
-            self.feature_average("avg_distance_between_poop_placement_and_lake", dist_to_lake(_tile))
+            dist = dist_to_lake(_tile)
+            if dist:
+                self.feature_average("avg_distance_between_poop_placement_and_lake", dist)
         if buy_name in LakelandExtractor._BUILDING_TYPES:
             self.feature_average(fname_base='avg_avg_distance_between_buildings', value=avg_distance_between_buildings())
 
@@ -640,7 +656,6 @@ class LakelandExtractor(Extractor):
 
         # helpers
         achievement_str = LakelandExtractor._ENUM_TO_STR["ACHIEVEMENTS"][_achievement]
-        utils.Logger.toStdOut(achievement_str, logging.DEBUG)
 
         # set features
         self.feature_count("count_achievements")
@@ -715,7 +730,7 @@ class LakelandExtractor(Extractor):
         is_negative = affect == -1
         if(self._num_farmbits) < 1:
             utils.Logger.toFile(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.", logging.WARN)
-            utils.Logger.toStdOut(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.", logging.WARN)
+            self.log_warning(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.")
             self._num_farmbits = 1
 
         per_capita_val = 1/self._num_farmbits
@@ -794,7 +809,7 @@ class LakelandExtractor(Extractor):
     def _extractFromDebug(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
-        utils.Logger.toStdOut('Set debug', logging.DEBUG)
+        self.add_debug_str('Set debug')
 
         # helpers
         self._debug = True
@@ -1027,7 +1042,10 @@ class LakelandExtractor(Extractor):
             return ret
 
     def get_tile_types_xys(self, type_list):
-        return [LakelandExtractor.index_to_xy(i) for i, type in enumerate(self._TILE_OG_TYPES) if
+        if not self._TILE_OG_TYPES:
+            self.log_warning("THERE ARE NO OG TYPES")
+        else:
+            return [LakelandExtractor.index_to_xy(i) for i, type in enumerate(self._TILE_OG_TYPES) if
                 LakelandExtractor._ENUM_TO_STR['TILE TYPE'][type] in type_list]  # 5 is the lake type enum
 
 
@@ -1062,6 +1080,15 @@ class LakelandExtractor(Extractor):
             max_bound = min(50, max_bound - self._max_population)
         return all(min_bound <= z <= max_bound for z in [tx, ty])
 
+    def add_debug_str(self, s):
+        self.debug_strs.append(s)
+        
+    def log_warning(self, message):
+        self.add_debug_str('WARNING: '+message)
+        debug_str = '\n'.join(self.debug_strs)
+        utils.Logger.toFile(debug_str, logging.WARN)
+        self.debug_strs = []
+        
     def reset(self):
         self.levels:       typing.List[int]  = []
         self.last_adjust_type: str           = None
