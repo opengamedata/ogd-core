@@ -203,7 +203,7 @@ class JowilderExtractor(Extractor):
         _screen_coor = d["screen_coor"]
         _room_coor = d["room_coor"]
         _level = d["level"]
-        _text = d["text"] if self._VERSION == 5 else None
+        _text = d.get("text") if self._VERSION == 6 else None
 
         # # helpers
         calc_speed = bool(self.last_display_time_text)
