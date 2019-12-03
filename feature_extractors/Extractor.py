@@ -82,10 +82,12 @@ class Extractor(abc.ABC):
         def myformat(obj):
             if type(obj) is timedelta:
                 total_secs = obj.total_seconds()
-                h = total_secs // 3600
-                m = (total_secs % 3600) // 60
-                s = (total_secs % 3600) % 60 // 1  # just for reference
-                return f"{h:02.0f}:{m:02.0f}:{s:02.3f}"
+                # h = total_secs // 3600
+                # m = (total_secs % 3600) // 60
+                # s = (total_secs % 3600) % 60 // 1  # just for reference
+                # return f"{h:02.0f}:{m:02.0f}:{s:02.3f}"
+                return total_secs
+
             else:
                 return str(obj)
         column_vals = []
