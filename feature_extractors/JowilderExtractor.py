@@ -5,6 +5,9 @@ import logging
 import math
 import typing
 import datetime
+import sys
+import traceback
+from collections import defaultdict
 ## import local files
 import utils
 import numpy as np
@@ -30,6 +33,9 @@ class JowilderExtractor(Extractor):
     #                    table assiciated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
+    
+    _SESS_PREFIX = 'sess_'
+    _LEVEL_PREFIX = ''
 
     _EVENT_CUSTOM_TO_STR = {
          0: 'checkpoint',
@@ -52,7 +58,8 @@ class JowilderExtractor(Extractor):
          17: 'observation_hover',
          18: 'person_hover',
          19: 'cutscene_hover',
-         20: 'wildcard_hover'
+         20: 'wildcard_hover',
+         21: 'quiz'
     }
 
     _TASK_LIST = ["", "dummy_fqid0", "dummy_fqid1"]
@@ -84,9 +91,7 @@ class JowilderExtractor(Extractor):
         23: 'sunset',
     }
 
-
-
-    _NULL_FEATURE_VALS = ['null', 0]
+    _NULL_FEATURE_VALS = ['null', 0, None]
 
     def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
@@ -95,17 +100,32 @@ class JowilderExtractor(Extractor):
         self._task_complete_helper = dict()
         self.level_start_timestamp = dict()
         self._CLIENT_START_TIME = None
-        self.features.setValByName(feature_name="sessionID", new_value=session_id)
+        self.setValByName(feature_name="sessionID", new_value=session_id)
         self.level = 0
+        self._cur_levels = [self.level]
         self.cur_question = 0
         self._VERSION = None
         self.last_display_time_text = ()
-        self.average_handler_level = {}
-        self.average_handler_session = {}
+        self.average_handler_level = defaultdict(lambda: {k: {'n': 0, 'total': 0} for k in self._level_range})
+        self.average_handler_session = defaultdict(lambda: {'n': 0, 'total': 0})
+        self.debug_strs = []
 
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+        try:
+            self._extractFromRow(row_with_complex_parsed, game_table)
+        except Exception:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            for place in [utils.Logger.toFile, utils.Logger.toStdOut]:
+                place('\n'.join(traceback.format_exception(exc_type, exc_value, exc_traceback)), logging.ERROR)
+                place('DEBUG STRINGS:', logging.ERROR)
+                place('\n'.join(self.debug_strs), logging.ERROR)
+
+            
+
+    def _extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
         # put some data in local vars, for readability later.
         self.level = row_with_complex_parsed[game_table.level_index]
+        self._cur_levels = [self.level]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
         event_type = row_with_complex_parsed[game_table.event_custom_index]
         event_client_time = row_with_complex_parsed[game_table.client_time_index].replace(microsecond=
@@ -123,8 +143,8 @@ class JowilderExtractor(Extractor):
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
-            if self.features.getValByName(feature_name="persistentSessionID") == 0:
-                self.features.setValByName(feature_name="persistentSessionID",
+            if self.getValByName(feature_name="persistentSessionID") == 0:
+                self.setValByName(feature_name="persistentSessionID",
                                            new_value=row_with_complex_parsed[game_table.pers_session_id_index])
             if not self._CLIENT_START_TIME:
                 # initialize this time as the start
@@ -133,17 +153,16 @@ class JowilderExtractor(Extractor):
 
             if self.level_start_timestamp.get(self.level) == None:
                 self.level_start_timestamp[self.level] = event_client_time
-            self.features.setValByIndex('time_in_level', self.level, event_client_time - self.level_start_timestamp[self.level])
+            self.setValByIndex('time_in_level', self.level, event_client_time - self.level_start_timestamp[self.level])
 
             self.time_since_start = self.get_time_since_start(client_time=event_client_time)
-            self.features.incAggregateVal(feature_name="EventCount")
-            self.features.setValByName(feature_name="sessDuration", new_value=self.time_since_start)
+            self.feature_count(feature_base="EventCount")
+            self.setValByName(feature_name="sessDuration", new_value=self.time_since_start)
             debug_str = ''
             if event_type_str == "wildcard_click":
                 d = event_data_complex_parsed
                 debug_str = f'ans: {d.get("answer")}, corr: {d.get("correct")}'
-            utils.Logger.toStdOut(f'{self.level} {self.cur_question} {self.time_since_start} {event_type_str} {debug_str}',
-                                  logging.DEBUG)
+            self.add_debug_str(f'{self.level} {self.cur_question} {self.time_since_start} {event_type_str} {debug_str}')
             # Ensure we have private data initialized for this level.
             if "click" in event_type_str:
                 self._extractFromClick(event_client_time, event_data_complex_parsed)
@@ -206,12 +225,15 @@ class JowilderExtractor(Extractor):
         _text = d.get("text") if self._VERSION == 6 else None
 
         # # helpers
-        calc_speed = bool(self.last_display_time_text)
-        if calc_speed:
+        if self.last_display_time_text:
             last_time, last_text = self.last_display_time_text
-            time_diff_secs = (event_client_time - last_time).microseconds / 1000 / 1000
-            word_count = len(last_text.split())
-            wps = word_count / time_diff_secs
+            time_diff_secs = (event_client_time - last_time).total_seconds()
+            if time_diff_secs <= 0:
+                self.log_warning(f"The player read '{last_text}' in 0 seconds! (time_diff_secs = {time_diff_secs} <= 0")
+                wps = None
+            else:
+                word_count = len(last_text.split())
+                wps = word_count / time_diff_secs
         else:
             wps = None
 
@@ -222,8 +244,10 @@ class JowilderExtractor(Extractor):
         #     self.cur_task += 1
         
         # set class variables
-        if _text:
+        if _text and _text != 'undefined':
             self.last_display_time_text = (event_client_time, _text)
+        else:
+            self.last_display_time_text = ()
         
         # feature helpers
         # def set_task_finished(completed_task):
@@ -236,11 +260,11 @@ class JowilderExtractor(Extractor):
         #         prev_complete_time = self._task_complete_helper[completed_task-1]
         #         time_to_complete = event_client_time - prev_complete_time
         #     feature_name = 'time_to_complete_task_'+completed_task
-        #     self.features.setValByName(feature_name=feature_name, new_value=time_to_complete)
+        #     self.setValByName(feature_name=feature_name, new_value=time_to_complete)
         # # set features
         # set_task_finished(completed_task)
-        self.inc_lvl_and_sess(feature_name="count_clicks", increment=1)
-        self.avg_lvl_and_sess(fname_base='words_per_second', value=wps)
+        self.feature_count(feature_base="count_clicks")
+        self.feature_average(fname_base='words_per_second', value=wps)
 
 
     def _extractFromHover(self, event_client_time, event_data_complex_parsed):
@@ -261,7 +285,7 @@ class JowilderExtractor(Extractor):
         # helpers
         # set class variables
         # set features
-        self.inc_lvl_and_sess(feature_name="count_hovers", increment=1)
+        self.feature_count(feature_base="count_hovers")
 
     def _extractFromCheckpoint(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -325,7 +349,7 @@ class JowilderExtractor(Extractor):
         _level = d["level"]
 
         if _fqid != 0:
-            self.features.incValByIndex('meaningful_action_count', _level)
+            self.feature_count('meaningful_action_count')
 
         # helpers
         # set class variables
@@ -366,7 +390,7 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
         if _fqid != 0:
-            self.features.incValByIndex('meaningful_action_count', _level)
+            self.feature_count('meaningful_action_count')
 
     def _extractFromNotification_click(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -464,37 +488,52 @@ class JowilderExtractor(Extractor):
         _screen_coor = d["screen_coor"]
         _room_coor = d["room_coor"]
         _name = d["name"]
-        _correct = d.get("correct")  # uncertain field
-        _answer = d["answer"]
         _level = d["level"]
+        # v4-
+        _correct = d.get("correct")  # v4- only
+        _answer = d.get("answer")  # v4- only
+        # v6+
+        _cur_cmd_fqid = d.get("cur_cmd_fqid")  # v6+ only
+        _cur_cmd_type = d.get("cur_cmd_type")  # v6+ only
+        _text = d.get("text")  # v6+ only
+        _interacted_fqid = d.get("interacted_fqid")  # v6+ only
 
-        # helpers
         if self.cur_question > 18:
-            utils.Logger.std_logger.warn(f'Question {self.cur_question} > max (18)!')
+            self.log_warning(f'Question {self.cur_question} > max (18)!')
             return
 
-        click = bool(_answer)
-        wrong_guess = click and (_answer != _correct)
-        if _correct == 'HACKME':
-            wrong_guess = _answer in ['tunic.entry_basketballplaque', 'tunic.entry_cleanerslip']
+        answer = _answer or _interacted_fqid
+        correct = _correct or _cur_cmd_fqid
 
-        answer_char = je.interactive_entry_to_char(_answer) if click else ''
-        prev_answers = self.features.getValByIndex('answers', self.cur_question)
-        if prev_answers == 'null':
-            self.features.setValByIndex('answers', self.cur_question, '')
-            prev_answers = ''
+        if self._VERSION in [4,6]:
+
+            # helpers
+            click = bool(_answer)
+            wrong_guess = click and (_answer != _correct)
+            if _correct == 'HACKME':
+                wrong_guess = _answer in ['tunic.entry_basketballplaque', 'tunic.entry_cleanerslip']
+
+            answer_char = je.interactive_entry_to_char(_answer) if click else ''
+            prev_answers = self.getValByIndex('answers', self.cur_question)
+            if prev_answers in JowilderExtractor._NULL_FEATURE_VALS:
+                self.setValByIndex('answers', self.cur_question, '')
+                prev_answers = ''
+
+            # set class variables
+
+            # set features
+            if wrong_guess:
+                self.features.incValByIndex('num_wrong_guesses',self.cur_question)
+            self.features.setValByIndex('answers', self.cur_question, prev_answers + answer_char)
+
+            if click and not wrong_guess:
+                self.cur_question += 1
+
+        # elif self._VERSION == 6:
+        #     click = bool(_interacted_fqid)
+        #     wrong_guess = click and (_)
 
 
-
-        # set class variables
-
-        # set features
-        if wrong_guess:
-            self.features.incValByIndex('num_wrong_guesses',self.cur_question)
-        self.features.setValByIndex('answers', self.cur_question, prev_answers + answer_char)
-
-        if click and not wrong_guess:
-            self.cur_question += 1
 
     def _extractFromNavigate_hover(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -605,9 +644,15 @@ class JowilderExtractor(Extractor):
         _start_time = d["start_time"]
         _end_time = d["end_time"]
         _name = d.get("name")  # uncertain field
-        _correct = d.get("correct")  # uncertain field
-        _answer = d.get("answer")  # uncertain field
         _level = d["level"]
+        # v4-
+        _correct = d.get("correct")  # v4- only
+        _answer = d.get("answer")  # v4- only
+        # v6+
+        _cur_cmd_fqid = d.get("cur_cmd_fqid")  # v6+ only
+        _cur_cmd_type = d.get("cur_cmd_type")  # v6+ only
+        _text = d.get("text")  # v6+ only
+        _interacted_fqid = d.get("interacted_fqid")  # v6+ only
 
         # helpers
         # set class variables
@@ -619,7 +664,7 @@ class JowilderExtractor(Extractor):
     # def feature_time_since_start(self, feature_name, cur_client_time):
     #     """
     #     Sets a session time since start feature. Will not write over a feature that has already been set.
-    #     :param feature_base: name of feature without sess or window prefix
+    #     :param feature_base: name of feature without sess or level prefix
     #     :param cur_client_time: client time at which the event happened
     #     """
     #     if self.getValByName(feature_name) in JowilderExtractor._NULL_FEATURE_VALS:
@@ -629,24 +674,127 @@ class JowilderExtractor(Extractor):
 
     def get_time_since_start(self, client_time):
         return client_time - self._CLIENT_START_TIME
-
-    def inc_lvl_and_sess(self, feature_name, increment):
-        self.features.incValByIndex(feature_name=feature_name, index=self.level, increment=increment)
-        self.features.incAggregateVal(feature_name='sess_'+feature_name, increment=increment)
-        
-    def avg_lvl_and_sess(self, fname_base, value):
+    
+    def feature_average(self, fname_base, value):
         if value is None:
             return
-        lvl_pref, sess_pref = '', 'sess_'
-        lvl_feature, session_feature = lvl_pref + fname_base, sess_pref + fname_base
-        self.average_handler_level[lvl_feature][self.level]['total'] += value
-        self.average_handler_level[lvl_feature][self.level]['n'] += 1
-        avg = self.average_handler_level[lvl_feature][self.level]['total'] / self.average_handler_level[lvl_feature][self.level]['n']
-        self.features.setValByIndex(lvl_feature, self.level, avg)
+        lvl_pref, sess_pref = JowilderExtractor._LEVEL_PREFIX, JowilderExtractor._SESS_PREFIX
+        level_feature, session_feature = lvl_pref + fname_base, sess_pref + fname_base
+        for lvl in self._cur_levels:
+            self.average_handler_level[level_feature][lvl]['total'] += value
+            self.average_handler_level[level_feature][lvl]['n'] += 1
+            avg = self.average_handler_level[level_feature][lvl]['total'] / \
+                  self.average_handler_level[level_feature][lvl]['n']
+            self.setValByIndex(level_feature, lvl, avg)
 
         self.average_handler_session[session_feature]['total'] += value
         self.average_handler_session[session_feature]['n'] += 1
         avg = self.average_handler_session[session_feature]['total'] / self.average_handler_session[session_feature][
             'n']
-        self.features.setValByName(session_feature, avg)
+        self.setValByName(session_feature, avg)
+    
+    def feature_count(self, feature_base):
+        self.feature_inc(feature_base=feature_base, increment=1)
+
+    def feature_inc(self, feature_base, increment):
+        lvl_pref, sess_pref = JowilderExtractor._LEVEL_PREFIX, JowilderExtractor._SESS_PREFIX
+        self._increment_feature_in_cur_levels(feature_name=lvl_pref + feature_base, increment=increment)
+        self._increment_sess_feature(feature_name=sess_pref + feature_base, increment=increment)
+
+    def feature_time_since_start(self, feature_base, cur_client_time):
+        """
+        Sets a session time since start feature. Will not write over a feature that has already been set.
+        :param feature_base: name of feature without sess or level prefix
+        :param cur_client_time: client time at which the event happened
+        """
+        feature_name = JowilderExtractor._SESS_PREFIX + feature_base
+        if self.getValByName(feature_name) in JowilderExtractor._NULL_FEATURE_VALS:
+            self.setValByName(feature_name=feature_name, new_value=self.get_time_since_start(cur_client_time))
+
+    def feature_max_min(self, fname_base, val):
+        """feature must have the same fname_base that gets put on the following four features:
+        - {_SESS_PREFIX}max_
+        - {_SESS_PREFIX}min_
+        - {_LEVEL_PREFIX}max_
+        - {_LEVEL_PREFIX}min_ """
+
+        lvl_pref, sess_pref = JowilderExtractor._LEVEL_PREFIX, JowilderExtractor._SESS_PREFIX
+        self._set_feature_max_in_cur_levels(feature_name=lvl_pref + "max_" + fname_base, val=val)
+        self._set_feature_min_in_cur_levels(feature_name=lvl_pref + "min_" + fname_base, val=val)
+        self._set_feature_max_in_session(feature_name=sess_pref + "max_" + fname_base, val=val)
+        self._set_feature_min_in_session(feature_name=sess_pref + "min_" + fname_base, val=val)
+
+    def _increment_feature_in_cur_levels(self, feature_name, increment=None):
+        increment = increment or 1
+        for lvl in self._cur_levels:
+            if self.getValByIndex(feature_name=feature_name, index=lvl) in JowilderExtractor._NULL_FEATURE_VALS:
+                self.setValByIndex(feature_name, index=lvl, new_value=self._get_default_val(feature_name))
+            self.features.incValByIndex(feature_name=feature_name, index=lvl, increment=increment)
+
+    def _increment_sess_feature(self, feature_name, increment=None):
+        increment = increment or 1
+        if self.getValByName(feature_name) in JowilderExtractor._NULL_FEATURE_VALS:
+            self.setValByName(feature_name, new_value=self._get_default_val(feature_name))
+        self.features.incAggregateVal(feature_name=feature_name, increment=increment)
+
+
+    def _set_value_in_cur_levels(self, feature_name, value):
+        for lvl in self._cur_levels:
+            self.setValByIndex(feature_name=feature_name, index=lvl, new_value=value)
+
+    def _set_feature_max_in_cur_levels(self, feature_name, val):
+        for lvl in self._cur_levels:
+            prev_val = self.getValByIndex(feature_name=feature_name, index=lvl)
+            if prev_val in JowilderExtractor._NULL_FEATURE_VALS or val > prev_val:
+                self.setValByIndex(feature_name=feature_name, index=lvl, new_value=val)
+
+    def _set_feature_min_in_cur_levels(self, feature_name, val):
+        for lvl in self._cur_levels:
+            prev_val = self.getValByIndex(feature_name=feature_name, index=lvl)
+            if prev_val in JowilderExtractor._NULL_FEATURE_VALS or val < prev_val:
+                self.setValByIndex(feature_name=feature_name, index=lvl, new_value=val)
+
+    def _set_feature_max_in_session(self, feature_name, val):
+        prev_val = self.getValByName(feature_name=feature_name)
+        if prev_val in JowilderExtractor._NULL_FEATURE_VALS or val > prev_val:
+            self.setValByName(feature_name=feature_name, new_value=val)
+
+    def _set_feature_min_in_session(self, feature_name, val):
+        prev_val = self.getValByName(feature_name=feature_name)
+        if prev_val in JowilderExtractor._NULL_FEATURE_VALS or val < prev_val:
+            self.setValByName(feature_name=feature_name, new_value=val)
+
+    def _get_default_val(self, feature_name):
+        startswith = lambda prefix: feature_name.startswith(JowilderExtractor._SESS_PREFIX+prefix) or \
+            feature_name.startswith(JowilderExtractor._LEVEL_PREFIX+prefix)
+        if startswith('min_'):
+            return float('inf')
+        if startswith('time_in_'):
+            return datetime.timedelta(0)
+        else:
+            return 0
+
+    def getValByName(self, feature_name):
+        return self.features.getValByName(feature_name)
+
+    def setValByName(self, feature_name, new_value):
+        self.features.setValByName(feature_name, new_value)
+
+    def getValByIndex(self, feature_name, index):
+        return self.features.getValByIndex(feature_name, index)
+
+    def setValByIndex(self, feature_name, index, new_value):
+        self.features.setValByIndex(feature_name, index, new_value)
+
+        
+    def add_debug_str(self, s):
+        self.debug_strs.append(s)
+    
+    def log_warning(self, message):
+        self.add_debug_str('WARNING: '+message)
+        debug_str = '\n'.join(self.debug_strs)
+        utils.Logger.toFile(debug_str, logging.WARN)
+        self.debug_strs = []
+        
+        
 
