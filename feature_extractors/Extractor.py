@@ -86,7 +86,9 @@ class Extractor(abc.ABC):
                 # m = (total_secs % 3600) // 60
                 # s = (total_secs % 3600) % 60 // 1  # just for reference
                 # return f"{h:02.0f}:{m:02.0f}:{s:02.3f}"
-                return total_secs
+                return str(total_secs)
+            if obj is None:
+                return ''
 
             else:
                 return str(obj)
