@@ -73,7 +73,7 @@ class LakelandExtractor(Extractor):
     _ACTIVE_LOGS = ["SELECTTILE", "SELECTFARMBIT", "SELECTITEM", "SELECTBUY", "BUY",
                     "CANCELBUY","TILEUSESELECT","ITEMUSESELECT"]
 
-    _NULL_FEATURE_VALS = ['null', 0]
+    _NULL_FEATURE_VALS = ['null', 0, None]
 
 
     ## Constructor for the LakelandExtractor class.
