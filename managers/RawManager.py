@@ -62,7 +62,7 @@ class RawManager:
                     try:
                         index = self._columns_to_indices[key]
                     except KeyError as e:
-                        utils.Logger.err_logger(f'{e}: Key error because {key} of {row_with_complex_parsed} is not in the SCHEMA',logging.WARNING)
+                        utils.Logger.toFile(f'{e}: Key error because {key} of {row_with_complex_parsed} is not in the SCHEMA',logging.WARNING)
                         continue
                     item = complex_data_parsed[key]
                     line[index] = f"\"{str(item)}\"" if (type(item) == type({}) or type(item) == str) else item
