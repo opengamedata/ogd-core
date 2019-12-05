@@ -80,14 +80,15 @@ class Extractor(abc.ABC):
 
     def getCurrentFeatures(self) -> typing.List[str]:
         def myformat(obj):
-            if type(obj) is timedelta:
+            if obj == None:
+                return ""
+            elif type(obj) is timedelta:
                 total_secs = obj.total_seconds()
                 # h = total_secs // 3600
                 # m = (total_secs % 3600) // 60
                 # s = (total_secs % 3600) % 60 // 1  # just for reference
                 # return f"{h:02.0f}:{m:02.0f}:{s:02.3f}"
                 return total_secs
-
             else:
                 return str(obj)
         column_vals = []
@@ -95,7 +96,8 @@ class Extractor(abc.ABC):
         # features that weren't in the schema (by misreferencing actual features), and they were appended to the end of
         # the feature list.
         for key in self.features.featureList():
-            if type(self.features.getValByName(key)) is type({}) or type(self.features.getValByName(key)) is type(defaultdict()):
+            key_type = type(self.features.getValByName(key))
+            if key_type is type({}) or key_type is type(defaultdict()):
                 # if it's a dictionary, expand.
                 column_vals.extend([myformat(self.features.getValByIndex(key, num)) for num in self.features.getValByName(feature_name=key).keys()])
             else:
