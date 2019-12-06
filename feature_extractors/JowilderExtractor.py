@@ -701,6 +701,11 @@ class JowilderExtractor(Extractor):
         self._increment_feature_in_cur_levels(feature_name=lvl_pref + feature_base, increment=increment)
         self._increment_sess_feature(feature_name=sess_pref + feature_base, increment=increment)
 
+    def feature_cc_inc(self, feature_name, index, increment):
+        if self.getValByIndex(feature_name=feature_name, index=index) in JowilderExtractor._NULL_FEATURE_VALS:
+            self.setValByIndex(feature_name, index=index, new_value=self._get_default_val(feature_name))
+        self.features.incValByIndex(feature_name=feature_name, index=index, increment=increment)
+
     def feature_time_since_start(self, feature_base, cur_client_time):
         """
         Sets a session time since start feature. Will not write over a feature that has already been set.
