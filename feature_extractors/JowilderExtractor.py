@@ -533,6 +533,10 @@ class JowilderExtractor(Extractor):
         #     click = bool(_interacted_fqid)
         #     wrong_guess = click and (_)
 
+        # set features
+        if wrong_guess:
+            self.feature_cc_inc('num_wrong_guesses',self.cur_question,increment=1)
+        self.features.setValByIndex('answers', self.cur_question, prev_answers + answer_char)
 
 
     def _extractFromNavigate_hover(self, event_client_time, event_data_complex_parsed):
