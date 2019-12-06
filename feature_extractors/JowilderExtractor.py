@@ -7,7 +7,7 @@ import typing
 import datetime
 import sys
 import traceback
-from collections import defaultdict
+from collections import defaultdict, deque
 ## import local files
 import utils
 import numpy as np
@@ -109,6 +109,10 @@ class JowilderExtractor(Extractor):
         self.average_handler_level = defaultdict(lambda: {k: {'n': 0, 'total': 0} for k in self._level_range})
         self.average_handler_session = defaultdict(lambda: {'n': 0, 'total': 0})
         self.debug_strs = []
+        self.last_logged_text = None
+        self.made_choice = False
+
+
 
     def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
         try:
@@ -118,7 +122,7 @@ class JowilderExtractor(Extractor):
             for place in [utils.Logger.toFile, utils.Logger.toStdOut]:
                 place('\n'.join(traceback.format_exception(exc_type, exc_value, exc_traceback)), logging.ERROR)
                 place('DEBUG STRINGS:', logging.ERROR)
-                place('\n'.join(self.debug_strs), logging.ERROR)
+                place(self.get_debug_string(num_lines=20), logging.ERROR)
 
             
 
@@ -158,11 +162,19 @@ class JowilderExtractor(Extractor):
             self.time_since_start = self.get_time_since_start(client_time=event_client_time)
             self.feature_count(feature_base="EventCount")
             self.setValByName(feature_name="sessDuration", new_value=self.time_since_start)
-            debug_str = ''
+            debug_strs = []
+            if event_data_complex_parsed.get("text"):
+                debug_strs.append("Text: "+event_data_complex_parsed.get("text"))
             if event_type_str == "wildcard_click":
                 d = event_data_complex_parsed
-                debug_str = f'ans: {d.get("answer")}, corr: {d.get("correct")}'
-            self.add_debug_str(f'{self.level} {self.cur_question} {self.time_since_start} {event_type_str} {debug_str}')
+                if self._VERSION <= 4:
+                    debug_strs.append(f'ans: {d.get("answer")}')
+                    debug_strs.append(f'corr: {d.get("correct")}')
+                if self._VERSION == 6:
+                    debug_strs.append(f'ans: {d.get("interacted_fqid") if d.get("cur_cmd_type")==2 else None}')
+                    debug_strs.append(f'corr: {d.get("cur_cmd_fqid") if d.get("cur_cmd_type")==2 else None}')  # v6+ only
+                    debug_strs.append(f'type: {d.get("cur_cmd_type")}')
+            self.add_debug_str(f'{self.level} {self.cur_question} {self.time_since_start} {event_type_str} {"|".join(debug_strs)}')
             # Ensure we have private data initialized for this level.
             if "click" in event_type_str:
                 self._extractFromClick(event_client_time, event_data_complex_parsed)
@@ -222,20 +234,25 @@ class JowilderExtractor(Extractor):
         _screen_coor = d["screen_coor"]
         _room_coor = d["room_coor"]
         _level = d["level"]
-        _text = d.get("text") if self._VERSION == 6 else None
+        _text = d.get("text") if self._VERSION == 6 and d.get("text") != "undefined" else None
+
+        self.feature_count(feature_base="count_clicks")
+        if _subtype == "wildcard" and d.get("cur_cmd_type") == 2:
+            return
 
         # # helpers
+        wps = None
         if self.last_display_time_text:
             last_time, last_text = self.last_display_time_text
             time_diff_secs = (event_client_time - last_time).total_seconds()
-            if time_diff_secs <= 0:
-                self.log_warning(f"The player read '{last_text}' in 0 seconds! (time_diff_secs = {time_diff_secs} <= 0")
-                wps = None
+            if last_text == self.last_logged_text:
+                utils.Logger.toFile(f"The player read {last_text} twice in a row.", logging.WARN)
+            elif time_diff_secs <= 0:
+                self.log_warning(f"The player read '{last_text}' in 0 seconds! (time_diff_secs = {time_diff_secs} <= 0)",3)
             else:
                 word_count = len(last_text.split())
                 wps = word_count / time_diff_secs
-        else:
-            wps = None
+                self.last_logged_text = last_text
 
         # clicked_fqid = _room_fqid + _fqid
         # completed_task = 0
@@ -244,8 +261,9 @@ class JowilderExtractor(Extractor):
         #     self.cur_task += 1
         
         # set class variables
-        if _text and _text != 'undefined':
-            self.last_display_time_text = (event_client_time, _text)
+        if _text:
+            if (not self.last_display_time_text) or (self.last_logged_text != _text):
+                self.last_display_time_text = (event_client_time, _text)
         else:
             self.last_display_time_text = ()
         
@@ -263,7 +281,7 @@ class JowilderExtractor(Extractor):
         #     self.setValByName(feature_name=feature_name, new_value=time_to_complete)
         # # set features
         # set_task_finished(completed_task)
-        self.feature_count(feature_base="count_clicks")
+
         self.feature_average(fname_base='words_per_second', value=wps)
 
 
@@ -498,40 +516,61 @@ class JowilderExtractor(Extractor):
         _text = d.get("text")  # v6+ only
         _interacted_fqid = d.get("interacted_fqid")  # v6+ only
 
-        if self.cur_question > 18:
-            self.log_warning(f'Question {self.cur_question} > max (18)!')
-            return
+        # if self.cur_question > 18:
+        #     self.log_warning(f'Question {self.cur_question} > max (18)!')
+        #     return
 
-        answer = _answer or _interacted_fqid
-        correct = _correct or _cur_cmd_fqid
+        # answer = _cur_cmd_fqid if _cur_cmd_type==2 else _answer or None
+        # correct = _interacted_fqid if _cur_cmd_type==2 else _answer or None
 
-        if self._VERSION in [4,6]:
+        # if self._VERSION == 4:
+        #
+        #     # helpers
+        #     click = bool(answer)
+        #     wrong_guess = click and (answer != correct)
+        #     if correct == 'HACKME':
+        #         wrong_guess = answer in ['tunic.entry_basketballplaque', 'tunic.entry_cleanerslip']
+        #
+        #     answer_char = je.interactive_entry_to_char(answer) if click else ''
+        #     prev_answers = self.getValByIndex('answers', self.cur_question)
+        #     if prev_answers in JowilderExtractor._NULL_FEATURE_VALS:
+        #         self.setValByIndex('answers', self.cur_question, '')
+        #         prev_answers = ''
+        #
+        #     # set class variables
+        #
+        #     # set features
+        #     if wrong_guess:
+        #         self.feature_cc_inc('num_wrong_guesses',self.cur_question, 1)
+        #     self.features.setValByIndex('answers', self.cur_question, prev_answers + answer_char)
+        #
+        #     if click and not wrong_guess:
+        #         self.cur_question += 1
+        #
+        # # elif self._VERSION == 6:
+        # #     click = bool(_interacted_fqid)
+        # #     wrong_guess = click and (_)
 
-            # helpers
-            click = bool(_answer)
-            wrong_guess = click and (_answer != _correct)
-            if _correct == 'HACKME':
-                wrong_guess = _answer in ['tunic.entry_basketballplaque', 'tunic.entry_cleanerslip']
+        if self._VERSION == 6:
+            choice = _cur_cmd_type == 2
+            if choice and _interacted_fqid and not self.made_choice:
+                self.made_choice = True
+                got_correct_ans = _cur_cmd_fqid == _interacted_fqid
+                if _interacted_fqid == 'HACKME':
+                    got_correct_ans = _interacted_fqid in ['tunic.entry_basketballplaque', 'tunic.entry_cleanerslip']
+                answer_char = je.interactive_entry_to_char(_interacted_fqid)
+                cur_question = je.answer_to_question(_cur_cmd_fqid)
+                prev_answers = self.getValByIndex('answers', cur_question)
+                if prev_answers in JowilderExtractor._NULL_FEATURE_VALS:
+                    self.setValByIndex('answers', cur_question, '')
+                    prev_answers = ''
+                if not got_correct_ans:
+                    self.feature_cc_inc('num_wrong_guesses', cur_question, 1)
+                self.setValByIndex('answers', cur_question, prev_answers + answer_char)
+            elif not choice:
+                self.made_choice = False
 
-            answer_char = je.interactive_entry_to_char(_answer) if click else ''
-            prev_answers = self.getValByIndex('answers', self.cur_question)
-            if prev_answers in JowilderExtractor._NULL_FEATURE_VALS:
-                self.setValByIndex('answers', self.cur_question, '')
-                prev_answers = ''
 
-            # set class variables
-
-            # set features
-            if wrong_guess:
-                self.features.incValByIndex('num_wrong_guesses',self.cur_question)
-            self.features.setValByIndex('answers', self.cur_question, prev_answers + answer_char)
-
-            if click and not wrong_guess:
-                self.cur_question += 1
-
-        # elif self._VERSION == 6:
-        #     click = bool(_interacted_fqid)
-        #     wrong_guess = click and (_)
 
 
 
@@ -791,13 +830,18 @@ class JowilderExtractor(Extractor):
     def setValByIndex(self, feature_name, index, new_value):
         self.features.setValByIndex(feature_name, index, new_value)
 
-        
+
+    def get_debug_string(self, num_lines=20):
+        ret = [f'{"*" * 10} {self.session_id} v{self._VERSION} @ {self._CLIENT_START_TIME} {"*"*10}']
+        ret.extend(deque(self.debug_strs, num_lines))
+        return '\n'.join(ret)
+
     def add_debug_str(self, s):
         self.debug_strs.append(s)
     
-    def log_warning(self, message):
+    def log_warning(self, message, num_lines=20):
         self.add_debug_str('WARNING: '+message)
-        debug_str = '\n'.join(self.debug_strs)
+        debug_str = '\n\n'+self.get_debug_string(num_lines+1)
         utils.Logger.toFile(debug_str, logging.WARN)
         self.debug_strs = []
         
