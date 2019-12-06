@@ -83,3 +83,27 @@ _assessment_answers = {
   3: ['tunic.entry_teddytaken','tunic.entry_javajacket','tunic.entry_archivistcoffee','tunic.entry_taxidermy'],
   4: ['tunic.entry_tracks', 'tunic.entry_ecologyflag', 'tunic.entry_theta','tunic.entry_nelson','tunic.entry_activists']
 }
+
+_answer_fqid_to_q_num = {
+  'tunic.entry_tunic': 0,
+ 'HACKME': 1,
+ 'tunic.entry_basketballplaque': 2,
+ 'tunic.entry_cleanerslip': 4,
+ 'tunic.entry_expert': 5,
+ 'tunic.entry_cleanercard': 6,
+ 'tunic.entry_logbook': 7,
+ 'tunic.entry_newspaper': 8,
+ 'tunic.entry_theodora': 9,
+ 'tunic.entry_teddytaken': 10,
+ 'tunic.entry_javajacket': 11,
+ 'tunic.entry_archivistcoffee': 12,
+ 'tunic.entry_taxidermy': 13,
+ 'tunic.entry_tracks': 14,
+ 'tunic.entry_ecologyflag': 15,
+ 'tunic.entry_theta': 16,
+ 'tunic.entry_nelson': 17,
+ 'tunic.entry_activists': 18
+}
+
+answer_to_question = lambda ans: _answer_fqid_to_q_num[ans]
+
