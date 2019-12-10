@@ -111,6 +111,11 @@ class JowilderExtractor(Extractor):
         self.debug_strs = []
         self.last_logged_text = None
         self.made_choice = False
+        self.time_before_answer = None
+        self.last_click_time = None
+        self.text_fqid_start_end = []
+        self.last_click_type = ''
+        self.this_click_type = ''
 
 
 
@@ -235,8 +240,15 @@ class JowilderExtractor(Extractor):
         _room_coor = d["room_coor"]
         _level = d["level"]
         _text = d.get("text") if self._VERSION == 6 and d.get("text") != "undefined" else None
+        _text_fqid = d.get("text_fqid")
 
+        self.last_click_type = self.this_click_type
+        self.this_click_type = _subtype
         self.feature_count(feature_base="count_clicks")
+        if self.last_click_time:
+            self.feature_average('avg_time_between_clicks',event_client_time - self.last_click_time)
+        self.last_click_time = event_client_time
+
         if _subtype == "wildcard" and d.get("cur_cmd_type") == 2:
             return
 
@@ -266,7 +278,16 @@ class JowilderExtractor(Extractor):
                 self.last_display_time_text = (event_client_time, _text)
         else:
             self.last_display_time_text = ()
-        
+
+        if self.text_fqid_start_end and self.text_fqid_start_end[0] != _text_fqid:
+            self.feature_average('avgTimePerTextBox', self.text_fqid_start_end[2] - self.text_fqid_start_end[1])
+            self.text_fqid_start_end = []
+        if _text_fqid:
+            if not self.text_fqid_start_end:
+                self.text_fqid_start_end = [_text_fqid, event_client_time, event_client_time]
+            elif _text_fqid == self.text_fqid_start_end[0]:
+                self.text_fqid_start_end[2] = event_client_time
+
         # feature helpers
         # def set_task_finished(completed_task):
         #     self._task_complete_helper[completed_task] = event_client_time
@@ -551,31 +572,42 @@ class JowilderExtractor(Extractor):
         # #     click = bool(_interacted_fqid)
         # #     wrong_guess = click and (_)
 
+        def set_answer_features(cur_question):
+            answer_char = je.interactive_entry_to_char(_interacted_fqid)
+            prev_answers = self.getValByIndex('answers', cur_question)
+            if prev_answers in JowilderExtractor._NULL_FEATURE_VALS:
+                self.setValByIndex('answers', cur_question, '')
+                prev_answers = ''
+            self.setValByIndex('answers', cur_question, prev_answers + answer_char)
+            answer_number = len(prev_answers) + 1
+            if answer_number <= 3:
+                self.setValByIndex(f'A{answer_number}', cur_question, answer_char)
+                self.setValByIndex(f'A{answer_number}_time', cur_question, event_client_time - self.time_before_answer)
+
+
+            # got_correct_ans = _cur_cmd_fqid == _interacted_fqid
+            # if _interacted_fqid == 'HACKME':
+            #     got_correct_ans = _interacted_fqid in ['tunic.entry_basketballplaque', 'tunic.entry_cleanerslip']
+            # if not got_correct_ans:
+            #     self.feature_cc_inc('num_wrong_guesses', cur_question, 1)
+
+
         if self._VERSION == 6:
             choice = _cur_cmd_type == 2
-            if choice and _interacted_fqid and not self.made_choice:
-                self.made_choice = True
-                got_correct_ans = _cur_cmd_fqid == _interacted_fqid
-                if _interacted_fqid == 'HACKME':
-                    got_correct_ans = _interacted_fqid in ['tunic.entry_basketballplaque', 'tunic.entry_cleanerslip']
-                answer_char = je.interactive_entry_to_char(_interacted_fqid)
+            if choice:
                 cur_question = je.answer_to_question(_cur_cmd_fqid)
-                prev_answers = self.getValByIndex('answers', cur_question)
-                if prev_answers in JowilderExtractor._NULL_FEATURE_VALS:
-                    self.setValByIndex('answers', cur_question, '')
-                    prev_answers = ''
-                if not got_correct_ans:
-                    self.feature_cc_inc('num_wrong_guesses', cur_question, 1)
-                self.setValByIndex('answers', cur_question, prev_answers + answer_char)
-            elif not choice:
+                if _interacted_fqid and self.last_click_type == 'notebook' and not self.made_choice:
+                    self.made_choice = True
+                    self.feature_cc_inc('num_guesses', cur_question, 1)
+                    set_answer_features(cur_question)
+            else:
                 self.made_choice = False
+                self.time_before_answer = event_client_time
+
 
 
 
         # set features
-        if wrong_guess:
-            self.feature_cc_inc('num_wrong_guesses',self.cur_question,increment=1)
-        self.features.setValByIndex('answers', self.cur_question, prev_answers + answer_char)
 
 
     def _extractFromNavigate_hover(self, event_client_time, event_data_complex_parsed):
@@ -724,18 +756,22 @@ class JowilderExtractor(Extractor):
         lvl_pref, sess_pref = JowilderExtractor._LEVEL_PREFIX, JowilderExtractor._SESS_PREFIX
         level_feature, session_feature = lvl_pref + fname_base, sess_pref + fname_base
         for lvl in self._cur_levels:
+            if not self.average_handler_level[level_feature][lvl]['total']:
+                self.average_handler_level[level_feature][lvl]['total'] = self._get_default_val(level_feature)
             self.average_handler_level[level_feature][lvl]['total'] += value
             self.average_handler_level[level_feature][lvl]['n'] += 1
             avg = self.average_handler_level[level_feature][lvl]['total'] / \
                   self.average_handler_level[level_feature][lvl]['n']
             self.setValByIndex(level_feature, lvl, avg)
 
+        if not self.average_handler_session[session_feature]['total']:
+            self.average_handler_session[session_feature]['total'] = self._get_default_val(session_feature)
         self.average_handler_session[session_feature]['total'] += value
         self.average_handler_session[session_feature]['n'] += 1
         avg = self.average_handler_session[session_feature]['total'] / self.average_handler_session[session_feature][
             'n']
         self.setValByName(session_feature, avg)
-    
+
     def feature_count(self, feature_base):
         self.feature_inc(feature_base=feature_base, increment=1)
 
@@ -817,7 +853,7 @@ class JowilderExtractor(Extractor):
             feature_name.startswith(JowilderExtractor._LEVEL_PREFIX+prefix)
         if startswith('min_'):
             return float('inf')
-        if startswith('time_in_'):
+        if 'time' in feature_name.lower():
             return datetime.timedelta(0)
         else:
             return 0

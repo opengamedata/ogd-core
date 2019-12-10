@@ -241,17 +241,14 @@
           	"EventCount": "number of total events",
             "count_clicks": "Number of clicks",
             "count_hovers": "Number of hovers",
-            "levelTimeToRead":"Total time spent reading text boxes in the level",
-            "avgTimePerWord":"Time spent reading all text boxes in the level, divided by number of words",
             "avgTimePerTextBox":"Time spent reading all text boxes in the level, divided by number of text boxes",
-            "stdevTimePerTextBox":"Standard deviation of time spent reading text boxes in the level",
-            "percentBoxesSkipped":"Percent of text boxes in the level that were opened and closed within a very short time (i.e. skipped).",
             "time_in_level": "time_in_level",
             "meaningful_action_count": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations",
-			"words_per_second": "words per second read"
+			"words_per_second": "words per second read",
+			"avg_time_between_clicks": "average time between clicks"
         },
         "per_custom_count": {
-            "num_wrong_guesses": {
+            "num_guesses": {
                 "count": 19,
                 "prefix": "Q",
                 "desc": "number of wrong guesses for each assessment prompt"
@@ -260,6 +257,36 @@
                 "count": 19,
                 "prefix": "Q",
                 "desc": "list the different answers that the player chose, by id#"
+            },
+            "A1": {
+                "count": 19,
+                "prefix": "Q",
+                "desc": "first answer the player chose"
+            },
+            "A2": {
+                "count": 19,
+                "prefix": "Q",
+                "desc": "second answer the player chose"
+            },
+            "A3": {
+                "count": 19,
+                "prefix": "Q",
+                "desc": "third answer the player chose"
+            },
+            "A1_time": {
+                "count": 19,
+                "prefix": "Q",
+                "desc": "time for the first answer the player chose"
+            },
+            "A2_time": {
+                "count": 19,
+                "prefix": "Q",
+                "desc": "time for the second answer the player chose"
+            },
+            "A3_time": {
+                "count": 19,
+                "prefix": "Q",
+                "desc": "time for the third answer the player chose"
             }
         },
         "aggregate":{
@@ -274,8 +301,10 @@
             "sess_avgTimePerWord":"Time spent reading all text boxes in the game, divided by number of words",
             "sess_avgTimePerTextBox":"Time spent reading all text boxes in the game, divided by number of text boxes",
             "sess_stDevTimePerTextBox":"Standard deviation of time spent reading text boxes in the game",
-			"sess_words_per_second": "words per second read"
-        }
+			"sess_words_per_second": "words per second read",
+			"sess_avg_time_between_clicks": "average time between clicks",
+			"sess_avgTimePerTextBox":"Time spent reading all text boxes in the level, divided by number of text boxes"
+		}
     },
 
     "db_columns": {
