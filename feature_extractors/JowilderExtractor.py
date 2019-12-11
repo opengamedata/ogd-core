@@ -116,6 +116,7 @@ class JowilderExtractor(Extractor):
         self.text_fqid_start_end = []
         self.last_click_type = ''
         self.this_click_type = ''
+        self.cur_question = 0
 
 
 
@@ -572,17 +573,17 @@ class JowilderExtractor(Extractor):
         # #     click = bool(_interacted_fqid)
         # #     wrong_guess = click and (_)
 
-        def set_answer_features(cur_question):
+        def set_answer_features():
             answer_char = je.interactive_entry_to_char(_interacted_fqid)
-            prev_answers = self.getValByIndex('answers', cur_question)
+            prev_answers = self.getValByIndex('answers', self.cur_question)
             if prev_answers in JowilderExtractor._NULL_FEATURE_VALS:
-                self.setValByIndex('answers', cur_question, '')
+                self.setValByIndex('answers', self.cur_question, '')
                 prev_answers = ''
-            self.setValByIndex('answers', cur_question, prev_answers + answer_char)
+            self.setValByIndex('answers', self.cur_question, prev_answers + answer_char)
             answer_number = len(prev_answers) + 1
             if answer_number <= 3:
-                self.setValByIndex(f'A{answer_number}', cur_question, answer_char)
-                self.setValByIndex(f'A{answer_number}_time', cur_question, event_client_time - self.time_before_answer)
+                self.setValByIndex(f'A{answer_number}', self.cur_question, answer_char)
+                self.setValByIndex(f'A{answer_number}_time', self.cur_question, event_client_time - self.time_before_answer)
 
 
             # got_correct_ans = _cur_cmd_fqid == _interacted_fqid
@@ -593,16 +594,14 @@ class JowilderExtractor(Extractor):
 
 
         if self._VERSION == 6:
-            choice = _cur_cmd_type == 2
-            if choice:
-                cur_question = je.answer_to_question(_cur_cmd_fqid)
-                if _interacted_fqid and self.last_click_type == 'notebook' and not self.made_choice:
-                    self.made_choice = True
-                    self.feature_cc_inc('num_guesses', cur_question, 1)
-                    set_answer_features(cur_question)
-            else:
-                self.made_choice = False
+            just_made_choice = _interacted_fqid and _cur_cmd_type == 1
+            if _cur_cmd_type == 1:
+                if _interacted_fqid and self.last_click_type == 'notebook':
+                    self.feature_cc_inc('num_guesses', self.cur_question, 1)
+                    set_answer_features()
                 self.time_before_answer = event_client_time
+            elif _cur_cmd_type == 2:
+                self.cur_question = je.answer_to_question(_cur_cmd_fqid)
 
 
 
