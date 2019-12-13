@@ -248,7 +248,8 @@
             "percentBoxesSkipped":"Percent of text boxes in the level that were opened and closed within a very short time (i.e. skipped).",
             "time_in_level": "time_in_level",
             "meaningful_action_count": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations",
-			"words_per_second": "words per second read"
+			"words_per_second": "words per second read",
+			"count_notebook_uses": "number of times the player opened the notebook in the given level"
         },
         "per_custom_count": {
             "num_wrong_guesses": {
@@ -274,7 +275,8 @@
             "sess_avgTimePerWord":"Time spent reading all text boxes in the game, divided by number of words",
             "sess_avgTimePerTextBox":"Time spent reading all text boxes in the game, divided by number of text boxes",
             "sess_stDevTimePerTextBox":"Standard deviation of time spent reading text boxes in the game",
-			"sess_words_per_second": "words per second read"
+			"sess_words_per_second": "words per second read",
+			"sess_count_notebook_uses": "number of times the player opened the notebook over the whole game"
         }
     },
 

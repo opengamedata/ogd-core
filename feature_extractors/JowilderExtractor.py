@@ -605,6 +605,8 @@ class JowilderExtractor(Extractor):
         # helpers
         # set class variables
         # set features
+        if d.get("name") == "open":
+            self.feature_inc(feature_base="count_notebook_uses", increment=1)
 
     def _extractFromMap_hover(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -739,6 +741,9 @@ class JowilderExtractor(Extractor):
     def feature_count(self, feature_base):
         self.feature_inc(feature_base=feature_base, increment=1)
 
+    # Helper function to increment both the per-level and full-session values of corresponding features.
+    # Takes a base name common to the per-level and full-session features, adds a prefix to each,
+    # and increments each by given increment.
     def feature_inc(self, feature_base, increment):
         lvl_pref, sess_pref = JowilderExtractor._LEVEL_PREFIX, JowilderExtractor._SESS_PREFIX
         self._increment_feature_in_cur_levels(feature_name=lvl_pref + feature_base, increment=increment)
