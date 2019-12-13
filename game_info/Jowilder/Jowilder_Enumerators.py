@@ -84,6 +84,28 @@ _assessment_answers = {
   4: ['tunic.entry_tracks', 'tunic.entry_ecologyflag', 'tunic.entry_theta','tunic.entry_nelson','tunic.entry_activists']
 }
 
+q_to_lvl = {
+ 0: 1,
+ 1: 1,
+ 2: 1,
+ 3: 1,
+ 4: 2,
+ 5: 2,
+ 6: 2,
+ 7: 2,
+ 8: 2,
+ 9: 2,
+ 10: 3,
+ 11: 3,
+ 12: 3,
+ 13: 3,
+ 14: 4,
+ 15: 4,
+ 16: 4,
+ 17: 4,
+ 18: 4
+}
+
 _answer_fqid_to_q_num = {
   'tunic.entry_tunic4': 0,
  'HACKME4': 1,
@@ -105,6 +127,7 @@ _answer_fqid_to_q_num = {
  'tunic.entry_nelson22': 17,
  'tunic.entry_activists22': 18
 }
+
 
 answer_to_question = lambda ans,lvl: _answer_fqid_to_q_num[f'{ans}{lvl}']
 
