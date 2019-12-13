@@ -84,7 +84,7 @@ _assessment_answers = {
   4: ['tunic.entry_tracks', 'tunic.entry_ecologyflag', 'tunic.entry_theta','tunic.entry_nelson','tunic.entry_activists']
 }
 
-q_to_lvl = {
+q_to_assessment = {
  0: 1,
  1: 1,
  2: 1,
@@ -105,6 +105,21 @@ q_to_lvl = {
  17: 4,
  18: 4
 }
+
+assessement_to_lvl = {
+    1: 4,
+    2: 12,
+    3: 12,
+    4: 22
+}
+assessment_to_last_q = {
+    1: 3,
+    2: 9,
+    3: 13,
+    4: 18
+}
+
+
 
 _answer_fqid_to_q_num = {
   'tunic.entry_tunic4': 0,
