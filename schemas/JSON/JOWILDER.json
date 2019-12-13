@@ -304,7 +304,7 @@
             "sess_stDevTimePerTextBox":"Standard deviation of time spent reading text boxes in the game",
 			"sess_words_per_second": "words per second read",
 			"sess_count_notebook_uses": "number of times the player opened the notebook over the whole game",
-			"sess_avg_time_between_clicks": "average time between clicks",
+			"sess_avg_time_between_clicks": "average time between clicks"
 		}
     },
 
