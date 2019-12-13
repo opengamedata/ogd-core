@@ -85,25 +85,46 @@ _assessment_answers = {
 }
 
 _answer_fqid_to_q_num = {
-  'tunic.entry_tunic': 0,
- 'HACKME': 1,
- 'tunic.entry_basketballplaque': 2,
- 'tunic.entry_cleanerslip': 4,
- 'tunic.entry_expert': 5,
- 'tunic.entry_cleanercard': 6,
- 'tunic.entry_logbook': 7,
- 'tunic.entry_newspaper': 8,
- 'tunic.entry_theodora': 9,
- 'tunic.entry_teddytaken': 10,
- 'tunic.entry_javajacket': 11,
- 'tunic.entry_archivistcoffee': 12,
- 'tunic.entry_taxidermy': 13,
- 'tunic.entry_tracks': 14,
- 'tunic.entry_ecologyflag': 15,
- 'tunic.entry_theta': 16,
- 'tunic.entry_nelson': 17,
- 'tunic.entry_activists': 18
+  'tunic.entry_tunic4': 0,
+ 'HACKME4': 1,
+ 'tunic.entry_basketballplaque4': 2,
+ 'tunic.entry_cleanerslip4': 3,
+ 'tunic.entry_cleanerslip12': 4,
+ 'tunic.entry_expert12': 5,
+ 'tunic.entry_cleanercard12': 6,
+ 'tunic.entry_logbook12': 7,
+ 'tunic.entry_newspaper12': 8,
+ 'tunic.entry_theodora12': 9,
+ 'tunic.entry_teddytaken12': 10,
+ 'tunic.entry_javajacket12': 11,
+ 'tunic.entry_archivistcoffee12': 12,
+ 'tunic.entry_taxidermy12': 13,
+ 'tunic.entry_tracks22': 14,
+ 'tunic.entry_ecologyflag22': 15,
+ 'tunic.entry_theta22': 16,
+ 'tunic.entry_nelson22': 17,
+ 'tunic.entry_activists22': 18
 }
 
-answer_to_question = lambda ans: _answer_fqid_to_q_num[ans]
+answer_to_question = lambda ans,lvl: _answer_fqid_to_q_num[f'{ans}{lvl}']
+
+_answer_chars = ['B',
+ None, # standin for D or C
+ 'D',
+ 'C',
+ 'C',
+ 'I',
+ 'K',
+ 'J',
+ 'M',
+ 'Q',
+ 'E',
+ 'F',
+ 'H',
+ 'N',
+ 'Z',
+ 'c',
+ 'd',
+ 'e',
+ 'f']
 
