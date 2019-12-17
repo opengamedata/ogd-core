@@ -85,7 +85,9 @@ def runExport(monthly: bool = False, all_data: bool = False):
     # If we want to export all data for a given month, calculate a date range.
     if monthly is True:
         if all_data is True:
+            utils.Logger.toStdOut(f"Exporting all months of {game_id}...", logging.DEBUG)
             _execAllMonthExport(game_id=game_id)
+            utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
         else:
             month_year: typing.List[int]
             if num_args > 3:
@@ -94,17 +96,21 @@ def runExport(monthly: bool = False, all_data: bool = False):
             else:
                 today   = datetime.now()
                 month_year = [today.month, today.year]
+            utils.Logger.toStdOut(f"Exporting {month_year[0]/month_year[1]} data for {game_id}...", logging.DEBUG)
             _execMonthExport(game_id=game_id, month=month_year[0], year=month_year[1])
+            utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
     # Otherwise, create date range from given pair of dates.
     else:
         today   = datetime.now()
         start_date = datetime.strptime(sys.argv[3], "%m/%d/%Y") if num_args > 4 \
                 else today
-        start_date = start_date.replace(day=1, hour=0, minute=0, second=0)
+        start_date = start_date.replace(hour=0, minute=0, second=0)
         end_date   = datetime.strptime(sys.argv[4], "%m/%d/%Y") if num_args > 4 \
                 else today
         end_date = end_date.replace(hour=23, minute=59, second=59)
+        utils.Logger.toStdOut(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.DEBUG)
         _execExport(game_id, start_date, end_date)
+        utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
 
 def _execAllMonthExport(game_id):
     tunnel, db  = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
