@@ -363,6 +363,11 @@ class JowilderExtractor(Extractor):
         # helpers
         # set class variables
         # set features
+        self.setValByName('fullscreen', _fullscreen)
+        self.setValByName('music', _music)
+        self.setValByName('hq', _hq)
+        self.setValByName('save_code', _save_code)
+
 
     def _extractFromEndgame(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables

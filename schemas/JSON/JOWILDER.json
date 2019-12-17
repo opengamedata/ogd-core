@@ -304,7 +304,11 @@
             "sess_stDevTimePerTextBox":"Standard deviation of time spent reading text boxes in the game",
 			"sess_words_per_second": "words per second read",
 			"sess_count_notebook_uses": "number of times the player opened the notebook over the whole game",
-			"sess_avg_time_between_clicks": "average time between clicks"
+			"sess_avg_time_between_clicks": "average time between clicks",
+			"save_code": "the save code the user inputted (or 0 if NA)",
+			"music": "boolean (1/0) whether or not the player turned music on",
+			"hq": "boolean (1/0) for whether or not the player turned hq graphics on",
+			"fullscreen": "boolean (1/0) whether or not the player checked fullscreen"
 		}
     },
 
