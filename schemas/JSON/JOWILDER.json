@@ -225,15 +225,15 @@
 	"text": "cmd_txt | Only exists in versions 6+ (v6+)",
 	"interacted_fqid": "clicked_fqid | Only exists in versions 6+ (v6+)"
 	},
-    "quiz": {
-        "room_fqid": "fully qualified id of the room",
-        "type": "type enum",
-        "subtype": "subtype enum",
-        "fqid": "fqid of the interaction, with the room_fqid subtracted",
-        "event_custom": "event enum",
-        "questions": "array of question objects, each has question, response, and response_index",
-        "name": "event name enum",
-        "level": "enum for current checkpoint"
+"quiz": {
+	"room_fqid": "fully qualified id of the room",
+	"type": "type enum",
+	"subtype": "subtype enum",
+	"fqid": "fqid of the interaction, with the room_fqid subtracted",
+	"event_custom": "event enum",
+	"questions": "array of question objects, each has question, response, and response_index",
+	"name": "event name enum",
+	"level": "enum for current checkpoint"
     }
   },
 	"features": {
@@ -288,11 +288,17 @@
                 "count": 19,
                 "prefix": "Q",
                 "desc": "time for the third answer the player chose"
-            }
+			},
+			"quiz_response" : {
+				"count": 3,
+				"prefix": "R",
+				"desc": "player's quiz responses"
+			}
         },
         "aggregate":{
             "sessionID":"The player's session ID number for this play session",
-            "persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",
+			"persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",
+			"max_level":"Highest level reached in the session",
 			"sessDuration": "Length of the session",
             "sess_count_clicks": "Number of clicks throughout the game",
             "sess_count_hovers": "Number of hovers throughout the game",

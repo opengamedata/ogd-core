@@ -187,6 +187,8 @@ class JowilderExtractor(Extractor):
                 self._extractFromHover(event_client_time, event_data_complex_parsed)
             if event_type_str == "checkpoint":
                 self._extractFromCheckpoint(event_client_time, event_data_complex_parsed)
+            elif event_type_str == "quiz":
+                self._extractFromQuiz(event_client_time, event_data_complex_parsed)
             elif event_type_str == "startgame":
                 self._extractFromStartgame(event_client_time, event_data_complex_parsed)
             elif event_type_str == "endgame":
@@ -344,6 +346,24 @@ class JowilderExtractor(Extractor):
         # helpers
         # set class variables
         # set features
+
+    def _extractFromQuiz(self, event_client_time, event_data_complex_parsed):
+        # assign event_data_complex_parsed variables
+        d = event_data_complex_parsed
+        _room_fqid = d["room_fqid"]
+        _type = d["type"]
+        _subtype = d["subtype"]
+        _fqid = d["fqid"]
+        _event_custom = d["event_custom"]
+        _questions = d["questions"]
+        _name = d["name"]
+        _level = d["level"]
+
+        # helpers
+        # set class variables
+        # set features
+        for i, response in enumerate(_questions):
+            self.features.setValByIndex(feature_name="quiz_response", index=i, new_value=response["response_index"])
 
     def _extractFromStartgame(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
