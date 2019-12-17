@@ -420,6 +420,8 @@ class JowilderExtractor(Extractor):
         # helpers
         # set class variables
         # set features
+        if d.get("name") == "open":
+            self.feature_inc(feature_base="count_notebook_uses", increment=1)
 
     def _extractFromMap_click(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -649,8 +651,6 @@ class JowilderExtractor(Extractor):
         # helpers
         # set class variables
         # set features
-        if d.get("name") == "open":
-            self.feature_inc(feature_base="count_notebook_uses", increment=1)
 
     def _extractFromMap_hover(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
