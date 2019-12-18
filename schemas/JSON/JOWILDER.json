@@ -314,7 +314,8 @@
 			"save_code": "the save code the user inputted (or 0 if NA)",
 			"music": "boolean (1/0) whether or not the player turned music on",
 			"hq": "boolean (1/0) for whether or not the player turned hq graphics on",
-			"fullscreen": "boolean (1/0) whether or not the player checked fullscreen"
+			"fullscreen": "boolean (1/0) whether or not the player checked fullscreen",
+			"max_level": "the highest level the player got"
 		}
     },
 

@@ -137,6 +137,7 @@ class JowilderExtractor(Extractor):
         # put some data in local vars, for readability later.
         self.level = row_with_complex_parsed[game_table.level_index]
         self._cur_levels = [self.level]
+        self.setValByName('max_level', self.level)
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
         event_type = row_with_complex_parsed[game_table.event_custom_index]
         event_client_time = row_with_complex_parsed[game_table.client_time_index].replace(microsecond=
