@@ -135,9 +135,12 @@ class JowilderExtractor(Extractor):
 
     def _extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
         # put some data in local vars, for readability later.
+        old_level = self.level
         self.level = row_with_complex_parsed[game_table.level_index]
         self._cur_levels = [self.level]
         self.setValByName('max_level', self.level)
+        if not old_level == self.level:
+            self.new_level()
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
         event_type = row_with_complex_parsed[game_table.event_custom_index]
         event_client_time = row_with_complex_parsed[game_table.client_time_index].replace(microsecond=
@@ -772,6 +775,9 @@ class JowilderExtractor(Extractor):
         # helpers
         # set class variables
         # set features
+
+    def new_level(self):
+        self._set_value_in_cur_levels('count_notebook_uses',0)
 
     def calculateAggregateFeatures(self):
         pass
