@@ -181,6 +181,10 @@ class RTServer:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return {"max_level": max_level, "cur_level": cur_level, "idle_time": idle_time}
 
+    ## Handler to get a list of all feature names for a given game.
+    #  @param  game_id The id for the game being played in the given session.
+    #  @return A dictionary mapping "features" to a list of feature names,
+    #          or None if an eror occurred when reading the game schema.
     @staticmethod
     def getFeatureNamesByGame(game_id: str) -> typing.Dict[str, typing.List]:
         ret_val: typing.Dict[str, typing.List]
@@ -194,8 +198,14 @@ class RTServer:
         finally:
             return ret_val
 
+    ## Handler to get a list of all prediction names for a given game level.
+    #  This is based on the assumption that models for the game are stored in a file
+    #  with naming format game_id_models.json.
+    #  @param  game_id The id for the game being played in the given session.
+    #  @param  level   The level for which we want a list of models
+    #  @return A list of all prediction names.
     @staticmethod
-    def getPredictionNamesByGameLevel(game_id: str, level: int):
+    def getPredictionNamesByGameLevel(game_id: str, level: int) -> typing.List:
         ret_val: typing.List
 
         models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
@@ -242,6 +252,10 @@ class RTServer:
             # print(f"returning from realtime, with session_predictions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
             return {sess_id:ret_val}
 
+    ## Simple helper method to take in a raw (string) version of a feature from file,
+    #  and parse it to a float if the feature is numeric, else maintain it as a string.
+    #  @param  features_raw A dictionary mapping feature names to raw (string) values.
+    #  @return A dictionary mapping feature names to parsed values (i.e. numeric inputs are parsed to floats)
     @staticmethod
     def _parseRawToDict(features_raw):
         ret_val = {}
