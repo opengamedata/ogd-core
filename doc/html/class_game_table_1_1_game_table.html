@@ -95,6 +95,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a354141997986901db4358cee0d9984bd"><td class="memItemLeft" align="right" valign="top"><a id="a354141997986901db4358cee0d9984bd"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>client_time_index</b></td></tr>
 <tr class="separator:a354141997986901db4358cee0d9984bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a754f6666ab7dab1d33b15d65f680b4ab"><td class="memItemLeft" align="right" valign="top"><a id="a754f6666ab7dab1d33b15d65f680b4ab"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>client_time_ms_index</b></td></tr>
+<tr class="separator:a754f6666ab7dab1d33b15d65f680b4ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7cf4156fd03345293215d6d4d498fd1c"><td class="memItemLeft" align="right" valign="top"><a id="a7cf4156fd03345293215d6d4d498fd1c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>server_time_index</b></td></tr>
 <tr class="separator:a7cf4156fd03345293215d6d4d498fd1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -113,6 +116,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a02fa6ac31ffbf6a255909e3ef29a95eb"><td class="memItemLeft" align="right" valign="top"><a id="a02fa6ac31ffbf6a255909e3ef29a95eb"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>level_index</b></td></tr>
 <tr class="separator:a02fa6ac31ffbf6a255909e3ef29a95eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7893a1ff1ed2c2128dd47c01da41086c"><td class="memItemLeft" align="right" valign="top"><a id="a7893a1ff1ed2c2128dd47c01da41086c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>version_index</b></td></tr>
+<tr class="separator:a7893a1ff1ed2c2128dd47c01da41086c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a914077ba90cddbfbd8b13bea56f4008d"><td class="memItemLeft" align="right" valign="top"><a id="a914077ba90cddbfbd8b13bea56f4008d"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>max_level</b></td></tr>
 <tr class="separator:a914077ba90cddbfbd8b13bea56f4008d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,9 +134,15 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a095999b1c52a72cbb04109151d664e20"><td class="memItemLeft" align="right" valign="top"><a id="a095999b1c52a72cbb04109151d664e20"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>query</b> = &quot;SHOW COLUMNS from {}.{}&quot;.format(db_settings[&quot;DB_NAME_DATA&quot;], db_settings[&quot;table&quot;])</td></tr>
 <tr class="separator:a095999b1c52a72cbb04109151d664e20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9290ce9f5db52bb5b7ebc0c7d6b1b934"><td class="memItemLeft" align="right" valign="top"><a id="a9290ce9f5db52bb5b7ebc0c7d6b1b934"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>start</b> = datetime.now()</td></tr>
-<tr class="separator:a9290ce9f5db52bb5b7ebc0c7d6b1b934"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1df63d3fca77aca00ffb15f2e7560fba"><td class="memItemLeft" align="right" valign="top"><a id="a1df63d3fca77aca00ffb15f2e7560fba"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>cursor</b></td></tr>
+<tr class="separator:a1df63d3fca77aca00ffb15f2e7560fba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a112f8dd82056e71caa9607557d9363ec"><td class="memItemLeft" align="right" valign="top"><a id="a112f8dd82056e71caa9607557d9363ec"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>db_cursor</b></td></tr>
+<tr class="separator:a112f8dd82056e71caa9607557d9363ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c11c519852db4faefb4d1a76f051d89"><td class="memItemLeft" align="right" valign="top"><a id="a2c11c519852db4faefb4d1a76f051d89"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>query</b></td></tr>
+<tr class="separator:a2c11c519852db4faefb4d1a76f051d89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>

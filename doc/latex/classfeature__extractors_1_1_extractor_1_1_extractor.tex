@@ -1,0 +1,156 @@
+\hypertarget{classfeature__extractors_1_1_extractor_1_1_extractor}{}\section{feature\+\_\+extractors.\+Extractor.\+Extractor Class Reference}
+\label{classfeature__extractors_1_1_extractor_1_1_extractor}\index{feature\_extractors.Extractor.Extractor@{feature\_extractors.Extractor.Extractor}}
+
+
+Abstract base class for game feature extractors.  
+
+
+Inheritance diagram for feature\+\_\+extractors.\+Extractor.\+Extractor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.253731cm]{classfeature__extractors_1_1_extractor_1_1_extractor}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features}{Session\+Features}}
+\begin{DoxyCompactList}\small\item\em Private \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor}{Extractor}} class to track feature data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor_a0074111f7f38f5205766e5e88d3fb62c}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self, int session\+\_\+id, \mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}} game\+\_\+table, \mbox{\hyperlink{classschemas_1_1_schema_1_1_schema}{Schema}} game\+\_\+schema, range level\+\_\+range=None)
+\begin{DoxyCompactList}\small\item\em Base constructor for \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor}{Extractor}} classes. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor_a532d1edd279592d6a7bc287d6de2a310}{write\+Current\+Features}} (self, typing.\+I\+O.\+writable file)
+\begin{DoxyCompactList}\small\item\em Function to print data from an extractor to file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_extractor_1_1_extractor_af3bfb3281b2ed3310f65e8317947354d}\label{classfeature__extractors_1_1_extractor_1_1_extractor_af3bfb3281b2ed3310f65e8317947354d}} 
+typing.\+List\mbox{[}str\mbox{]} {\bfseries get\+Current\+Features} (self)
+\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor_a98fc31f77b3c7650f49480097f1f6da4}{extract\+From\+Row}} (self, row\+\_\+with\+\_\+complex\+\_\+parsed, \mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}} game\+\_\+table)
+\begin{DoxyCompactList}\small\item\em Abstract declaration of a function to perform extraction of features from a row. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor_a7622c0b66dd98f59a8010c3511f4bdad}{calculate\+Aggregate\+Features}} (self)
+\begin{DoxyCompactList}\small\item\em Abstract declaration of a function to perform calculation of aggregate features from existing per-\/level/per-\/custom-\/count features. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor_a7cf66d598a6ec479e3f65db57ec454a0}{write\+C\+S\+V\+Header}} (\mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}} game\+\_\+table, \mbox{\hyperlink{classschemas_1_1_schema_1_1_schema}{Schema}} game\+\_\+schema, typing.\+I\+O.\+writable file)
+\begin{DoxyCompactList}\small\item\em Static function to print column headers to a file. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_extractor_1_1_extractor_a0b2024828a8be05ca1cadeac54ddc9d9}\label{classfeature__extractors_1_1_extractor_1_1_extractor_a0b2024828a8be05ca1cadeac54ddc9d9}} 
+typing.\+List\mbox{[}str\mbox{]} {\bfseries get\+Feature\+Names} (\mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}} game\+\_\+table, \mbox{\hyperlink{classschemas_1_1_schema_1_1_schema}{Schema}} game\+\_\+schema)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_extractor_1_1_extractor_af0798db610596efbedabee5dd257afaa}\label{classfeature__extractors_1_1_extractor_1_1_extractor_af0798db610596efbedabee5dd257afaa}} 
+{\bfseries column\+\_\+vals} = self.\+get\+Current\+Features()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Abstract base class for game feature extractors. 
+
+Gives a few static functions to be used across all extractor classes, and defines an interface that the \mbox{\hyperlink{class_proc_manager}{Proc\+Manager}} can use. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classfeature__extractors_1_1_extractor_1_1_extractor_a0074111f7f38f5205766e5e88d3fb62c}\label{classfeature__extractors_1_1_extractor_1_1_extractor_a0074111f7f38f5205766e5e88d3fb62c}} 
+\index{feature\_extractors.Extractor.Extractor@{feature\_extractors.Extractor.Extractor}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!feature\_extractors.Extractor.Extractor@{feature\_extractors.Extractor.Extractor}}
+\subsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Extractor.\+Extractor.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{int}]{session\+\_\+id,  }\item[{\mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}}}]{game\+\_\+table,  }\item[{\mbox{\hyperlink{classschemas_1_1_schema_1_1_schema}{Schema}}}]{game\+\_\+schema,  }\item[{range }]{level\+\_\+range = {\ttfamily None} }\end{DoxyParamCaption})}
+
+
+
+Base constructor for \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor}{Extractor}} classes. 
+
+The constructor sets an extractor\textquotesingle{}s session id and range of levels, as well as initializing the features dictionary and list of played levels.
+
+
+\begin{DoxyParams}{Parameters}
+{\em session\+\_\+id} & The id of the session from which we will extract features. \\
+\hline
+{\em game\+\_\+table} & A data structure containing information on how the db table assiciated with this game is structured. \\
+\hline
+{\em game\+\_\+schema} & A dictionary that defines how the game data itself is structured. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfeature__extractors_1_1_extractor_1_1_extractor_a7622c0b66dd98f59a8010c3511f4bdad}\label{classfeature__extractors_1_1_extractor_1_1_extractor_a7622c0b66dd98f59a8010c3511f4bdad}} 
+\index{feature\_extractors.Extractor.Extractor@{feature\_extractors.Extractor.Extractor}!calculateAggregateFeatures@{calculateAggregateFeatures}}
+\index{calculateAggregateFeatures@{calculateAggregateFeatures}!feature\_extractors.Extractor.Extractor@{feature\_extractors.Extractor.Extractor}}
+\subsubsection{\texorpdfstring{calculateAggregateFeatures()}{calculateAggregateFeatures()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Extractor.\+Extractor.\+calculate\+Aggregate\+Features (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+
+
+Abstract declaration of a function to perform calculation of aggregate features from existing per-\/level/per-\/custom-\/count features. 
+
+
+
+Reimplemented in \mbox{\hyperlink{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a9f6f9e4a7857cb4905f27e5dad7e1404}{feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor}}, \mbox{\hyperlink{classfeature__extractors_1_1_jowilder_extractor_1_1_jowilder_extractor_aa8634d50ee53ef7244de9a53f45ba9e5}{feature\+\_\+extractors.\+Jowilder\+Extractor.\+Jowilder\+Extractor}}, \mbox{\hyperlink{classfeature__extractors_1_1_wave_extractor_1_1_wave_extractor_a68b4f2df1be2e63fa34ba3813e77efbb}{feature\+\_\+extractors.\+Wave\+Extractor.\+Wave\+Extractor}}, and \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ac0aa2a8037f8e7575788a8ac88836538}{feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor}}.
+
+\mbox{\Hypertarget{classfeature__extractors_1_1_extractor_1_1_extractor_a98fc31f77b3c7650f49480097f1f6da4}\label{classfeature__extractors_1_1_extractor_1_1_extractor_a98fc31f77b3c7650f49480097f1f6da4}} 
+\index{feature\_extractors.Extractor.Extractor@{feature\_extractors.Extractor.Extractor}!extractFromRow@{extractFromRow}}
+\index{extractFromRow@{extractFromRow}!feature\_extractors.Extractor.Extractor@{feature\_extractors.Extractor.Extractor}}
+\subsubsection{\texorpdfstring{extractFromRow()}{extractFromRow()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Extractor.\+Extractor.\+extract\+From\+Row (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{row\+\_\+with\+\_\+complex\+\_\+parsed,  }\item[{\mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}}}]{game\+\_\+table }\end{DoxyParamCaption})}
+
+
+
+Abstract declaration of a function to perform extraction of features from a row. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+with\+\_\+complex\+\_\+parsed} & A row of game data from the db, with the \char`\"{}complex data\char`\"{} already parsed from J\+S\+ON. \\
+\hline
+{\em game\+\_\+table} & A data structure containing information on how the db table assiciated with this game is structured. \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented in \mbox{\hyperlink{classfeature__extractors_1_1_jowilder_extractor_1_1_jowilder_extractor_a02ab1ac9f1234341dc74610d4a5606d0}{feature\+\_\+extractors.\+Jowilder\+Extractor.\+Jowilder\+Extractor}}, \mbox{\hyperlink{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1648b69f5bf98cad7a5c67a2c5be90f9}{feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor}}, \mbox{\hyperlink{classfeature__extractors_1_1_wave_extractor_1_1_wave_extractor_a3dbf40e07ac5c4c28037f331cc268798}{feature\+\_\+extractors.\+Wave\+Extractor.\+Wave\+Extractor}}, and \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a916b4ecdb7842673f8f62d61732d5624}{feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor}}.
+
+\mbox{\Hypertarget{classfeature__extractors_1_1_extractor_1_1_extractor_a7cf66d598a6ec479e3f65db57ec454a0}\label{classfeature__extractors_1_1_extractor_1_1_extractor_a7cf66d598a6ec479e3f65db57ec454a0}} 
+\index{feature\_extractors.Extractor.Extractor@{feature\_extractors.Extractor.Extractor}!writeCSVHeader@{writeCSVHeader}}
+\index{writeCSVHeader@{writeCSVHeader}!feature\_extractors.Extractor.Extractor@{feature\_extractors.Extractor.Extractor}}
+\subsubsection{\texorpdfstring{writeCSVHeader()}{writeCSVHeader()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Extractor.\+Extractor.\+write\+C\+S\+V\+Header (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}}}]{game\+\_\+table,  }\item[{\mbox{\hyperlink{classschemas_1_1_schema_1_1_schema}{Schema}}}]{game\+\_\+schema,  }\item[{typing.\+I\+O.\+writable}]{file }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Static function to print column headers to a file. 
+
+We first create a feature dictionary, then essentially write out each key, with some formatting to add prefixes to features that repeat per-\/level (or repeat with a custom count).
+
+
+\begin{DoxyParams}{Parameters}
+{\em game\+\_\+table} & A data structure containing information on how the db table assiciated with this game is structured. \\
+\hline
+{\em game\+\_\+schema} & A dictionary that defines how the game data itself is structured. \\
+\hline
+{\em file} & An open csv file to which we will write column headers. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfeature__extractors_1_1_extractor_1_1_extractor_a532d1edd279592d6a7bc287d6de2a310}\label{classfeature__extractors_1_1_extractor_1_1_extractor_a532d1edd279592d6a7bc287d6de2a310}} 
+\index{feature\_extractors.Extractor.Extractor@{feature\_extractors.Extractor.Extractor}!writeCurrentFeatures@{writeCurrentFeatures}}
+\index{writeCurrentFeatures@{writeCurrentFeatures}!feature\_extractors.Extractor.Extractor@{feature\_extractors.Extractor.Extractor}}
+\subsubsection{\texorpdfstring{writeCurrentFeatures()}{writeCurrentFeatures()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Extractor.\+Extractor.\+write\+Current\+Features (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{typing.\+I\+O.\+writable}]{file }\end{DoxyParamCaption})}
+
+
+
+Function to print data from an extractor to file. 
+
+This function should be the same across all \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor}{Extractor}} subtypes. Simply prints out each value from the extractor\textquotesingle{}s features dictionary.
+
+
+\begin{DoxyParams}{Parameters}
+{\em file} & An open csv file to which we will write column headers. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+feature\+\_\+extractors/Extractor.\+py\end{DoxyCompactItemize}

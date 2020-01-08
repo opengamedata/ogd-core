@@ -1,0 +1,575 @@
+\hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor}{}\section{feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor Class Reference}
+\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor}\index{feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}}
+
+
+Extractor subclass for extracting features from Lakeland game data.  
+
+
+Inheritance diagram for feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a37d5fb9484dbf1a2c841828f0348cf1e}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self, int session\+\_\+id, \mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}} game\+\_\+table, \mbox{\hyperlink{classschemas_1_1_schema_1_1_schema}{Schema}} game\+\_\+schema, typing.\+I\+O.\+writable proc\+\_\+file)
+\begin{DoxyCompactList}\small\item\em Constructor for the \mbox{\hyperlink{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor}{Lakeland\+Extractor}} class. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1648b69f5bf98cad7a5c67a2c5be90f9}{extract\+From\+Row}} (self, row\+\_\+with\+\_\+complex\+\_\+parsed, \mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}} game\+\_\+table)
+\begin{DoxyCompactList}\small\item\em Abstract declaration of a function to perform extraction of features from a row. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a9f6f9e4a7857cb4905f27e5dad7e1404}{calculate\+Aggregate\+Features}} (self)
+\begin{DoxyCompactList}\small\item\em Abstract declaration of a function to perform calculation of aggregate features from existing per-\/level/per-\/custom-\/count features. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1b700952f8188eef3228623827884640}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1b700952f8188eef3228623827884640}} 
+def {\bfseries set\+\_\+time\+\_\+in\+\_\+nutrition\+\_\+view} (self, event\+\_\+client\+\_\+time)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1f6696969378d6ad50f47e82f5dd981e}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1f6696969378d6ad50f47e82f5dd981e}} 
+def {\bfseries update\+\_\+time\+\_\+at\+\_\+speed} (self, event\+\_\+client\+\_\+time, prev\+\_\+speed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ae450d07986e11e6b67c77d5c5a90d67a}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ae450d07986e11e6b67c77d5c5a90d67a}} 
+def {\bfseries feature\+\_\+average} (self, fname\+\_\+base, value)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ae4e1e209f19a5d363afc29edc903ab40}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ae4e1e209f19a5d363afc29edc903ab40}} 
+def {\bfseries feature\+\_\+count} (self, feature\+\_\+base)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_af86be163763adc0001d6a7c550dd5ae7}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_af86be163763adc0001d6a7c550dd5ae7}} 
+def {\bfseries feature\+\_\+inc} (self, feature\+\_\+base, increment)
+\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_acfdaa7661f906b76bf5b59566b9d632e}{feature\+\_\+time\+\_\+since\+\_\+start}} (self, feature\+\_\+base, cur\+\_\+client\+\_\+time)
+\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a685cb5796cd86197ff016e3a9dd82827}{feature\+\_\+max\+\_\+min}} (self, fname\+\_\+base, val)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_abbe9b103f5e53b450aced416ab1d4c7c}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_abbe9b103f5e53b450aced416ab1d4c7c}} 
+def {\bfseries get\+Val\+By\+Name} (self, feature\+\_\+name)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aff06430e699729536ca75cf8b69572dc}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aff06430e699729536ca75cf8b69572dc}} 
+def {\bfseries set\+Val\+By\+Name} (self, feature\+\_\+name, new\+\_\+value)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a177a9920db50d9aadd0db90535681bc4}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a177a9920db50d9aadd0db90535681bc4}} 
+def {\bfseries get\+Val\+By\+Index} (self, feature\+\_\+name, index)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ae438def1aeb9fb05440b2921c7b7f93c}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ae438def1aeb9fb05440b2921c7b7f93c}} 
+def {\bfseries set\+Val\+By\+Index} (self, feature\+\_\+name, index, new\+\_\+value)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a0e20607dd203c1e6e6325ed6dbe297db}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a0e20607dd203c1e6e6325ed6dbe297db}} 
+def {\bfseries milliseconds\+\_\+to\+\_\+datetime} (self, milliseconds)
+\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a8cbbd4e53b43a675d378f330e24db86c}{reformat\+\_\+history\+\_\+array}} (self, array, timestamp)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a0a249ba836f9e6f96cef62f4bff23923}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a0a249ba836f9e6f96cef62f4bff23923}} 
+def {\bfseries get\+\_\+tile\+\_\+types\+\_\+xys} (self, type\+\_\+list)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a42c6ffba312b6e8ad9b067cfce1bac50}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a42c6ffba312b6e8ad9b067cfce1bac50}} 
+def {\bfseries time\+\_\+since\+\_\+start} (self, client\+\_\+time)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a4d3149c39ee396530980df86e92e781e}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a4d3149c39ee396530980df86e92e781e}} 
+def {\bfseries get\+\_\+building\+\_\+buildable\+\_\+function} (self)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a53fd136f5bdefe2ce71a635a77712c61}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a53fd136f5bdefe2ce71a635a77712c61}} 
+def {\bfseries in\+\_\+bounds} (self, tx, ty)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a6a06031cc996cfeca7eeb43dc8b2bd91}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a6a06031cc996cfeca7eeb43dc8b2bd91}} 
+def {\bfseries add\+\_\+debug\+\_\+str} (self, s)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a84cb04bc896096776732bd18fdd9c9a7}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a84cb04bc896096776732bd18fdd9c9a7}} 
+def {\bfseries log\+\_\+warning} (self, message)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_afa6b73b54b2c7a79f20b4ea3a01bcadb}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_afa6b73b54b2c7a79f20b4ea3a01bcadb}} 
+def {\bfseries reset} (self)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a8d63cba4024fedd6cf732480c4fdfcb4}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a8d63cba4024fedd6cf732480c4fdfcb4}} 
+def {\bfseries onscreen\+\_\+item\+\_\+dict} ()
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a0d23b6bd8657447843741c39231ce6da}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a0d23b6bd8657447843741c39231ce6da}} 
+def {\bfseries index\+\_\+to\+\_\+xy} (index)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a09ed491d864f8ba3fad25cf1b438a893}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a09ed491d864f8ba3fad25cf1b438a893}} 
+{\bfseries W\+I\+N\+D\+O\+W\+\_\+\+R\+A\+N\+GE}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_acce9df95367cc937bfdb1d24130a59dd}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_acce9df95367cc937bfdb1d24130a59dd}} 
+{\bfseries debug\+\_\+strs}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ad2c4e94cca44d08fbc6147f61ea219bd}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ad2c4e94cca44d08fbc6147f61ea219bd}} 
+{\bfseries average\+\_\+handler\+\_\+window}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ab72addb4e9bf2bf1fc58966523b173cf}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ab72addb4e9bf2bf1fc58966523b173cf}} 
+{\bfseries average\+\_\+handler\+\_\+session}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1bcb1b84164ed13b07ad90a740e98a8d}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1bcb1b84164ed13b07ad90a740e98a8d}} 
+{\bfseries building\+\_\+xys}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ab6b667d3c3001472e4de2fbf562ecdbc}{\+\_\+extract\+From\+Row}} (self, row\+\_\+with\+\_\+complex\+\_\+parsed, \mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}} game\+\_\+table)
+\begin{DoxyCompactList}\small\item\em Function to perform extraction of features from a row. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ac8316b40850223dd094d734d885dd8e9}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ac8316b40850223dd094d734d885dd8e9}} 
+def {\bfseries \+\_\+extract\+From\+Gamestate} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_adc7a5f9742dd808eb9c3801d6f287bd2}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_adc7a5f9742dd808eb9c3801d6f287bd2}} 
+def {\bfseries \+\_\+extract\+From\+Startgame} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a3772520b60a5b558d5fb7d2de4ac9a6c}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a3772520b60a5b558d5fb7d2de4ac9a6c}} 
+def {\bfseries \+\_\+extract\+From\+Checkpoint} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1f3c992e229463292dfda1ccc35570bf}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1f3c992e229463292dfda1ccc35570bf}} 
+def {\bfseries \+\_\+extract\+From\+Selecttile} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a327ffb227e6e696ed44d49603b47b1fa}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a327ffb227e6e696ed44d49603b47b1fa}} 
+def {\bfseries \+\_\+extract\+From\+Selectfarmbit} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ab71734879f626e1bca4383d2fae3c2ed}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ab71734879f626e1bca4383d2fae3c2ed}} 
+def {\bfseries \+\_\+extract\+From\+Selectitem} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1d4cf4969c4ad43bb397b5555fad82ad}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1d4cf4969c4ad43bb397b5555fad82ad}} 
+def {\bfseries \+\_\+extract\+From\+Selectbuy} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aebf3ea9436dbbe1892396bf04f77ffe3}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aebf3ea9436dbbe1892396bf04f77ffe3}} 
+def {\bfseries \+\_\+extract\+From\+Buy} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a31d6458415badca7ebcedc082ed69db3}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a31d6458415badca7ebcedc082ed69db3}} 
+def {\bfseries \+\_\+extract\+From\+Cancelbuy} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_afff38abbca92157db4b40a2a811dd85e}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_afff38abbca92157db4b40a2a811dd85e}} 
+def {\bfseries \+\_\+extract\+From\+Roadbuilds} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a5d331f3434ef0f247c917f186cf555cf}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a5d331f3434ef0f247c917f186cf555cf}} 
+def {\bfseries \+\_\+extract\+From\+Tileuseselect} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_abd0620b1274a5402265aa4d098deaeb7}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_abd0620b1274a5402265aa4d098deaeb7}} 
+def {\bfseries \+\_\+extract\+From\+Itemuseselect} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_abeda3105674afe8c74c8af3f362bb2d1}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_abeda3105674afe8c74c8af3f362bb2d1}} 
+def {\bfseries \+\_\+extract\+From\+Togglenutrition} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a8e6b518778e0abddf424c63c86a16cdd}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a8e6b518778e0abddf424c63c86a16cdd}} 
+def {\bfseries \+\_\+extract\+From\+Toggleshop} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a4641970c117da671359d9b0f305e28b2}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a4641970c117da671359d9b0f305e28b2}} 
+def {\bfseries \+\_\+extract\+From\+Toggleachievements} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a5760fe21fa36376cc09f07cbeb5091c3}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a5760fe21fa36376cc09f07cbeb5091c3}} 
+def {\bfseries \+\_\+extract\+From\+Skiptutorial} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a28dbe31c955844f20ffe308c1db1a044}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a28dbe31c955844f20ffe308c1db1a044}} 
+def {\bfseries \+\_\+extract\+From\+Speed} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ad70890275088db94d0627ec92a4c5449}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ad70890275088db94d0627ec92a4c5449}} 
+def {\bfseries \+\_\+extract\+From\+Achievement} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a4b31497ce463a73f676ab3803caaa9aa}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a4b31497ce463a73f676ab3803caaa9aa}} 
+def {\bfseries \+\_\+extract\+From\+Farmbitdeath} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a4ee784abbc81a1f82b2333b317315c7b}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a4ee784abbc81a1f82b2333b317315c7b}} 
+def {\bfseries \+\_\+extract\+From\+Blurb} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_af5a8aaf54baf672582e392bc56a55984}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_af5a8aaf54baf672582e392bc56a55984}} 
+def {\bfseries \+\_\+extract\+From\+Click} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa29d461436adf18f0fb6ce895ca7696e}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa29d461436adf18f0fb6ce895ca7696e}} 
+def {\bfseries \+\_\+extract\+From\+Rainstopped} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa12dfb5c88f09a7cd4651fb47ccab65a}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa12dfb5c88f09a7cd4651fb47ccab65a}} 
+def {\bfseries \+\_\+extract\+From\+History} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a4c27bc7aaa00fbf15f5b6d62ff177e28}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a4c27bc7aaa00fbf15f5b6d62ff177e28}} 
+def {\bfseries \+\_\+extract\+From\+Endgame} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a5a43ad2e39c5c071d560710c8bf59e0d}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a5a43ad2e39c5c071d560710c8bf59e0d}} 
+def {\bfseries \+\_\+extract\+From\+Emote} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a9bbef667894546e319a5c96d7df86a5d}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a9bbef667894546e319a5c96d7df86a5d}} 
+def {\bfseries \+\_\+extract\+From\+Farmfail} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ac892dab4308efa0116263a9579bb88f5}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ac892dab4308efa0116263a9579bb88f5}} 
+def {\bfseries \+\_\+extract\+From\+Bloom} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a2c0e486690061aa37b2e891088279ca0}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a2c0e486690061aa37b2e891088279ca0}} 
+def {\bfseries \+\_\+extract\+From\+Farmharvested} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa1b0527af1243835adffc77206727ef6}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa1b0527af1243835adffc77206727ef6}} 
+def {\bfseries \+\_\+extract\+From\+Milkproduced} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ac56923ceb52c3e969021d626e85af0ad}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ac56923ceb52c3e969021d626e85af0ad}} 
+def {\bfseries \+\_\+extract\+From\+Poopproduced} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a05eb519eeefaf2a9f73c246aa003ac27}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a05eb519eeefaf2a9f73c246aa003ac27}} 
+def {\bfseries \+\_\+extract\+From\+Debug} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ac43b697ca415fc0bd63537776a791e03}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ac43b697ca415fc0bd63537776a791e03}} 
+def {\bfseries \+\_\+extract\+From\+Newfarmbit} (self, event\+\_\+client\+\_\+time, event\+\_\+data\+\_\+complex\+\_\+parsed)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a251ddfe4e65b04fc091176f2e403a45b}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a251ddfe4e65b04fc091176f2e403a45b}} 
+def {\bfseries \+\_\+increment\+\_\+feature\+\_\+in\+\_\+cur\+\_\+windows} (self, feature\+\_\+name, increment=None)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a3558cc461a96e3d01c25863729265216}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a3558cc461a96e3d01c25863729265216}} 
+def {\bfseries \+\_\+increment\+\_\+sess\+\_\+feature} (self, feature\+\_\+name, increment=None)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aba367d6b31c33877143af2e277d1ee09}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aba367d6b31c33877143af2e277d1ee09}} 
+def {\bfseries \+\_\+set\+\_\+value\+\_\+in\+\_\+cur\+\_\+windows} (self, feature\+\_\+name, value)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a0dccf2a0d38928ea312b1ae25b42dec7}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a0dccf2a0d38928ea312b1ae25b42dec7}} 
+def {\bfseries \+\_\+set\+\_\+feature\+\_\+max\+\_\+in\+\_\+cur\+\_\+windows} (self, feature\+\_\+name, val)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa7d018ca78359db7f286416f54124e64}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa7d018ca78359db7f286416f54124e64}} 
+def {\bfseries \+\_\+set\+\_\+feature\+\_\+min\+\_\+in\+\_\+cur\+\_\+windows} (self, feature\+\_\+name, val)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a913fc89222ea35419b348b86860b1467}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a913fc89222ea35419b348b86860b1467}} 
+def {\bfseries \+\_\+set\+\_\+feature\+\_\+max\+\_\+in\+\_\+session} (self, feature\+\_\+name, val)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a925d7d69d6e8fd8ea4d3bd8950171bea}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a925d7d69d6e8fd8ea4d3bd8950171bea}} 
+def {\bfseries \+\_\+set\+\_\+feature\+\_\+min\+\_\+in\+\_\+session} (self, feature\+\_\+name, val)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a6e5fe9538a62f399f333e69e0a13e55f}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a6e5fe9538a62f399f333e69e0a13e55f}} 
+def {\bfseries \+\_\+get\+\_\+default\+\_\+val} (self, feature\+\_\+name)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a59e2396dc6d47317f232b45a5b32d73f}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a59e2396dc6d47317f232b45a5b32d73f}} 
+def {\bfseries \+\_\+change\+\_\+population} (self, client\+\_\+time, increment)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a93b935da4ecd78d03df0961034d1f337}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a93b935da4ecd78d03df0961034d1f337}} 
+def {\bfseries \+\_\+get\+\_\+pops\+\_\+at\+\_\+times} (self, datetime\+\_\+list)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a5e04793612e1d84d60cf7ef9c1ac4727}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a5e04793612e1d84d60cf7ef9c1ac4727}} 
+def {\bfseries \+\_\+get\+\_\+windows\+\_\+at\+\_\+time} (self, client\+\_\+time)
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ab77cd6addd69dc37a72d29ad0a9c02a5}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ab77cd6addd69dc37a72d29ad0a9c02a5}} 
+def {\bfseries \+\_\+add\+\_\+emote\+\_\+to\+\_\+window\+\_\+by\+\_\+time} (self, emote)
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ae26622d35525482bd0ef293247fddc27}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ae26622d35525482bd0ef293247fddc27}} 
+{\bfseries \+\_\+\+N\+U\+M\+\_\+\+S\+E\+C\+O\+N\+D\+S\+\_\+\+P\+E\+R\+\_\+\+W\+I\+N\+D\+OW}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a9f5621fc1d29ad2838fb146153d224e1}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a9f5621fc1d29ad2838fb146153d224e1}} 
+{\bfseries \+\_\+\+N\+U\+M\+\_\+\+S\+E\+C\+O\+N\+D\+S\+\_\+\+P\+E\+R\+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+O\+V\+E\+R\+L\+AP}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa0e65016564cd781145ff9d68770ff44}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa0e65016564cd781145ff9d68770ff44}} 
+{\bfseries \+\_\+\+G\+A\+M\+E\+\_\+\+S\+C\+H\+E\+MA}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a54d399bceee44c096b16a7383bc4037c}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a54d399bceee44c096b16a7383bc4037c}} 
+{\bfseries \+\_\+\+W\+R\+I\+T\+E\+\_\+\+F\+E\+A\+T\+U\+R\+ES}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a12318092c1ced8a0ee3cd02fbf8c375a}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a12318092c1ced8a0ee3cd02fbf8c375a}} 
+{\bfseries \+\_\+cur\+\_\+gameplay}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa5d709df851ff8533d91f7a88b2ba5d4}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa5d709df851ff8533d91f7a88b2ba5d4}} 
+{\bfseries \+\_\+startgame\+\_\+count}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aad2f50337ebed47a2ab87ccb88f36a0d}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aad2f50337ebed47a2ab87ccb88f36a0d}} 
+{\bfseries \+\_\+\+V\+E\+R\+S\+I\+ON}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a0c26b16de9193c3ba724ccea8764722f}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a0c26b16de9193c3ba724ccea8764722f}} 
+{\bfseries \+\_\+\+C\+L\+I\+E\+N\+T\+\_\+\+S\+T\+A\+R\+T\+\_\+\+T\+I\+ME}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ad8a38f64a1d13acce150a7af5f4f0947}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ad8a38f64a1d13acce150a7af5f4f0947}} 
+{\bfseries \+\_\+last\+\_\+speed\+\_\+change}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a3f5428269d55162404ee061221bc7104}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a3f5428269d55162404ee061221bc7104}} 
+{\bfseries \+\_\+last\+\_\+active\+\_\+log\+\_\+time}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ad4e764c3b2ad158300aab34f6e20c914}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ad4e764c3b2ad158300aab34f6e20c914}} 
+{\bfseries \+\_\+cur\+\_\+windows}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a3fba3748718b52350361cafbc94b6869}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a3fba3748718b52350361cafbc94b6869}} 
+{\bfseries \+\_\+halt}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a7ed94f3062ae07af6011b10e28b08cfd}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a7ed94f3062ae07af6011b10e28b08cfd}} 
+{\bfseries \+\_\+first\+\_\+gamestate}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ac623ce34728c25475c96a2f81bbae09e}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ac623ce34728c25475c96a2f81bbae09e}} 
+{\bfseries \+\_\+\+T\+I\+L\+E\+\_\+\+O\+G\+\_\+\+T\+Y\+P\+ES}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ad33b00f46b1220cbce4fc483cec12afc}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ad33b00f46b1220cbce4fc483cec12afc}} 
+{\bfseries \+\_\+continue}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aaba55d2c970176da9c896230f610d27c}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aaba55d2c970176da9c896230f610d27c}} 
+{\bfseries \+\_\+selected\+\_\+buy\+\_\+cost}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a03e0cf1b8568856dd727a1e6a909c29d}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a03e0cf1b8568856dd727a1e6a909c29d}} 
+{\bfseries \+\_\+cur\+\_\+money}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_af22b1520782922d34f0504d2393f65c4}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_af22b1520782922d34f0504d2393f65c4}} 
+{\bfseries \+\_\+nutrition\+\_\+view\+\_\+on}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ae5bc6f6a5587192ee749ab33c72fb790}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ae5bc6f6a5587192ee749ab33c72fb790}} 
+{\bfseries \+\_\+last\+\_\+nutrition\+\_\+open}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a7b4e503ad7af75bfdbfadea6e947f082}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a7b4e503ad7af75bfdbfadea6e947f082}} 
+{\bfseries \+\_\+cur\+\_\+speed}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a71fd39eba05a928875506f4ad7ddc7df}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a71fd39eba05a928875506f4ad7ddc7df}} 
+{\bfseries \+\_\+end}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a5a5798365a9871422392a00898f9a273}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a5a5798365a9871422392a00898f9a273}} 
+{\bfseries \+\_\+num\+\_\+farmbits}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a9461414fe9fbf1525ea93c0db669d6fa}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a9461414fe9fbf1525ea93c0db669d6fa}} 
+{\bfseries \+\_\+debug}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1630d1062d7fc46e1474a4ce310d957a}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1630d1062d7fc46e1474a4ce310d957a}} 
+{\bfseries \+\_\+max\+\_\+population}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_af8a065d7582c8fb5afd19e207a863a87}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_af8a065d7582c8fb5afd19e207a863a87}} 
+{\bfseries \+\_\+emotes\+\_\+by\+\_\+window}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a720edf3a3fdc62c018f1f7083ed20df8}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a720edf3a3fdc62c018f1f7083ed20df8}} 
+{\bfseries \+\_\+tutorial\+\_\+times\+\_\+per\+\_\+blurb}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ad01421f264601d86ea8fc1437ba48752}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ad01421f264601d86ea8fc1437ba48752}} 
+{\bfseries \+\_\+population\+\_\+history}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a86802da130feb1207eef785194b8df7f}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a86802da130feb1207eef785194b8df7f}} 
+{\bfseries \+\_\+tiles}
+\end{DoxyCompactItemize}
+\subsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a8372a5ddfd85fbee502d1f93d569f64b}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a8372a5ddfd85fbee502d1f93d569f64b}} 
+string {\bfseries \+\_\+\+S\+E\+S\+S\+\_\+\+P\+R\+E\+F\+IX} = \textquotesingle{}sess\+\_\+\textquotesingle{}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a607d6896df201d0858869874ebfd9496}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a607d6896df201d0858869874ebfd9496}} 
+string {\bfseries \+\_\+\+W\+I\+N\+D\+O\+W\+\_\+\+P\+R\+E\+F\+IX} = \textquotesingle{}\textquotesingle{}
+\item 
+list {\bfseries \+\_\+\+T\+U\+T\+O\+R\+I\+A\+L\+\_\+\+M\+O\+DE}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a6d49ad733b2f9f35a2563fb2be71017f}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a6d49ad733b2f9f35a2563fb2be71017f}} 
+{\bfseries \+\_\+\+S\+T\+R\+\_\+\+T\+O\+\_\+\+E\+N\+UM} = \mbox{\hyperlink{namespaceutils_a05bb98273ce91cd5c7922286b703596f}{utils.\+load\+J\+S\+O\+N\+File}}(\char`\"{}game\+\_\+info/Lakeland/Lakeland Enumerators.\+json\char`\"{})
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a5a70f5ecf7f2e603ef4a0ef1c00ad526}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a5a70f5ecf7f2e603ef4a0ef1c00ad526}} 
+dictionary {\bfseries \+\_\+\+E\+N\+U\+M\+\_\+\+T\+O\+\_\+\+S\+TR} = \{cat\+: \{y\+: x for x, y in ydict.\+items()\} for cat, ydict in \+\_\+\+S\+T\+R\+\_\+\+T\+O\+\_\+\+E\+N\+U\+M.\+items()\}
+\item 
+list {\bfseries \+\_\+\+I\+T\+E\+M\+\_\+\+M\+A\+R\+K\+\_\+\+C\+O\+M\+B\+I\+N\+A\+T\+I\+O\+NS}
+\item 
+dictionary {\bfseries \+\_\+\+E\+M\+O\+T\+E\+\_\+\+S\+T\+R\+\_\+\+T\+O\+\_\+\+A\+F\+F\+E\+CT}
+\item 
+list {\bfseries \+\_\+\+T\+U\+T\+\_\+\+N\+A\+M\+E\+\_\+\+C\+O\+M\+P\+L\+I\+A\+N\+T\+\_\+\+B\+U\+Y\+\_\+\+N\+A\+ME}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a51cd38e519d3f386dbdc82afd50d64cb}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a51cd38e519d3f386dbdc82afd50d64cb}} 
+list {\bfseries \+\_\+\+B\+U\+I\+L\+D\+I\+N\+G\+\_\+\+T\+Y\+P\+ES} = \mbox{[}\char`\"{}home\char`\"{}, \char`\"{}farm\char`\"{}, \char`\"{}livestock\char`\"{}\mbox{]}
+\item 
+list {\bfseries \+\_\+\+A\+C\+T\+I\+V\+E\+\_\+\+L\+O\+GS}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a42ea6adaef6f31d7441d6e88b622fe3b}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a42ea6adaef6f31d7441d6e88b622fe3b}} 
+list {\bfseries \+\_\+\+N\+U\+L\+L\+\_\+\+F\+E\+A\+T\+U\+R\+E\+\_\+\+V\+A\+LS} = \mbox{[}\textquotesingle{}null\textquotesingle{}, 0, None\mbox{]}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Extractor subclass for extracting features from Lakeland game data. 
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a37d5fb9484dbf1a2c841828f0348cf1e}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a37d5fb9484dbf1a2c841828f0348cf1e}} 
+\index{feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}}
+\subsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{int}]{session\+\_\+id,  }\item[{\mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}}}]{game\+\_\+table,  }\item[{\mbox{\hyperlink{classschemas_1_1_schema_1_1_schema}{Schema}}}]{game\+\_\+schema,  }\item[{typing.\+I\+O.\+writable}]{proc\+\_\+file }\end{DoxyParamCaption})}
+
+
+
+Constructor for the \mbox{\hyperlink{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor}{Lakeland\+Extractor}} class. 
+
+Initializes some custom private data (not present in base class) for use when calculating some features. Sets the session\+ID feature.
+
+
+\begin{DoxyParams}{Parameters}
+{\em session\+\_\+id} & The id number for the session whose data is being processed by this extractor instance. \\
+\hline
+{\em game\+\_\+table} & A data structure containing information on how the db table associated with this game is structured. \\
+\hline
+{\em game\+\_\+schema} & A dictionary that defines how the game data itself is structured. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ab6b667d3c3001472e4de2fbf562ecdbc}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_ab6b667d3c3001472e4de2fbf562ecdbc}} 
+\index{feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}!\_extractFromRow@{\_extractFromRow}}
+\index{\_extractFromRow@{\_extractFromRow}!feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}}
+\subsubsection{\texorpdfstring{\_extractFromRow()}{\_extractFromRow()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor.\+\_\+extract\+From\+Row (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{row\+\_\+with\+\_\+complex\+\_\+parsed,  }\item[{\mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}}}]{game\+\_\+table }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Function to perform extraction of features from a row. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+with\+\_\+complex\+\_\+parsed} & A row of game data from the db, with the \char`\"{}complex data\char`\"{} already parsed from J\+S\+ON. \\
+\hline
+{\em game\+\_\+table} & A data structure containing information on how the db table assiciated with this game is structured. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a9f6f9e4a7857cb4905f27e5dad7e1404}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a9f6f9e4a7857cb4905f27e5dad7e1404}} 
+\index{feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}!calculateAggregateFeatures@{calculateAggregateFeatures}}
+\index{calculateAggregateFeatures@{calculateAggregateFeatures}!feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}}
+\subsubsection{\texorpdfstring{calculateAggregateFeatures()}{calculateAggregateFeatures()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor.\+calculate\+Aggregate\+Features (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+
+
+Abstract declaration of a function to perform calculation of aggregate features from existing per-\/level/per-\/custom-\/count features. 
+
+
+
+Reimplemented from \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor_a7622c0b66dd98f59a8010c3511f4bdad}{feature\+\_\+extractors.\+Extractor.\+Extractor}}.
+
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1648b69f5bf98cad7a5c67a2c5be90f9}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a1648b69f5bf98cad7a5c67a2c5be90f9}} 
+\index{feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}!extractFromRow@{extractFromRow}}
+\index{extractFromRow@{extractFromRow}!feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}}
+\subsubsection{\texorpdfstring{extractFromRow()}{extractFromRow()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor.\+extract\+From\+Row (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{row\+\_\+with\+\_\+complex\+\_\+parsed,  }\item[{\mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}}}]{game\+\_\+table }\end{DoxyParamCaption})}
+
+
+
+Abstract declaration of a function to perform extraction of features from a row. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+with\+\_\+complex\+\_\+parsed} & A row of game data from the db, with the \char`\"{}complex data\char`\"{} already parsed from J\+S\+ON. \\
+\hline
+{\em game\+\_\+table} & A data structure containing information on how the db table assiciated with this game is structured. \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor_a98fc31f77b3c7650f49480097f1f6da4}{feature\+\_\+extractors.\+Extractor.\+Extractor}}.
+
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a685cb5796cd86197ff016e3a9dd82827}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a685cb5796cd86197ff016e3a9dd82827}} 
+\index{feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}!feature\_max\_min@{feature\_max\_min}}
+\index{feature\_max\_min@{feature\_max\_min}!feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}}
+\subsubsection{\texorpdfstring{feature\_max\_min()}{feature\_max\_min()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor.\+feature\+\_\+max\+\_\+min (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{fname\+\_\+base,  }\item[{}]{val }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}feature must have the same fname_base that gets put on the following four features:
+- {_SESS_PREFIX}max_
+- {_SESS_PREFIX}min_
+- {_WINDOW_PREFIX}max_
+- {_WINDOW_PREFIX}min_ \end{DoxyVerb}
+ \mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_acfdaa7661f906b76bf5b59566b9d632e}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_acfdaa7661f906b76bf5b59566b9d632e}} 
+\index{feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}!feature\_time\_since\_start@{feature\_time\_since\_start}}
+\index{feature\_time\_since\_start@{feature\_time\_since\_start}!feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}}
+\subsubsection{\texorpdfstring{feature\_time\_since\_start()}{feature\_time\_since\_start()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor.\+feature\+\_\+time\+\_\+since\+\_\+start (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{feature\+\_\+base,  }\item[{}]{cur\+\_\+client\+\_\+time }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Sets a session time since start feature. Will not write over a feature that has already been set.
+:param feature_base: name of feature without sess or window prefix
+:param cur_client_time: client time at which the event happened
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a8cbbd4e53b43a675d378f330e24db86c}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a8cbbd4e53b43a675d378f330e24db86c}} 
+\index{feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}!reformat\_history\_array@{reformat\_history\_array}}
+\index{reformat\_history\_array@{reformat\_history\_array}!feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}}
+\subsubsection{\texorpdfstring{reformat\_history\_array()}{reformat\_history\_array()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor.\+reformat\+\_\+history\+\_\+array (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{array,  }\item[{}]{timestamp }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}This function should be done in the reformatting step. History arrays contain timestamps relative to another
+timestamp that is when the array is sent through the logger. This function returns an array with absolute
+datetimes.
+:param self: self
+:param array: array to be processed. These arrays are either a list of times relative to client time or a list
+of subarrays with the last item as the time before timestamp.
+:param timestamp: time that each element is relative to (Javascript Date.now(), milliseconds since beginning 1970 UTC)
+:return: A 2D array where each subarray's final element is the absolute client time.
+\end{DoxyVerb}
+ 
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a568671b7a01b23730042e462330de0e2}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a568671b7a01b23730042e462330de0e2}} 
+\index{feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}!\_ACTIVE\_LOGS@{\_ACTIVE\_LOGS}}
+\index{\_ACTIVE\_LOGS@{\_ACTIVE\_LOGS}!feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}}
+\subsubsection{\texorpdfstring{\_ACTIVE\_LOGS}{\_ACTIVE\_LOGS}}
+{\footnotesize\ttfamily list feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor.\+\_\+\+A\+C\+T\+I\+V\+E\+\_\+\+L\+O\+GS\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=  [\textcolor{stringliteral}{"SELECTTILE"}, \textcolor{stringliteral}{"SELECTFARMBIT"}, \textcolor{stringliteral}{"SELECTITEM"}, \textcolor{stringliteral}{"SELECTBUY"}, \textcolor{stringliteral}{"BUY"},}
+\DoxyCodeLine{                    \textcolor{stringliteral}{"CANCELBUY"},\textcolor{stringliteral}{"TILEUSESELECT"},\textcolor{stringliteral}{"ITEMUSESELECT"}]}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a574c39d64680169366838cc0c9390b45}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a574c39d64680169366838cc0c9390b45}} 
+\index{feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}!\_EMOTE\_STR\_TO\_AFFECT@{\_EMOTE\_STR\_TO\_AFFECT}}
+\index{\_EMOTE\_STR\_TO\_AFFECT@{\_EMOTE\_STR\_TO\_AFFECT}!feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}}
+\subsubsection{\texorpdfstring{\_EMOTE\_STR\_TO\_AFFECT}{\_EMOTE\_STR\_TO\_AFFECT}}
+{\footnotesize\ttfamily dictionary feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor.\+\_\+\+E\+M\+O\+T\+E\+\_\+\+S\+T\+R\+\_\+\+T\+O\+\_\+\+A\+F\+F\+E\+CT\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=  \{}
+\DoxyCodeLine{        \textcolor{stringliteral}{"null"}: 0,}
+\DoxyCodeLine{        \textcolor{stringliteral}{"fullness\_motivated\_txt"}: 0,}
+\DoxyCodeLine{        \textcolor{stringliteral}{"fullness\_desperate\_txt"}: -1,}
+\DoxyCodeLine{        \textcolor{stringliteral}{"energy\_desperate\_txt"}: -1,}
+\DoxyCodeLine{        \textcolor{stringliteral}{"joy\_motivated\_txt"}: 0,}
+\DoxyCodeLine{        \textcolor{stringliteral}{"joy\_desperate\_txt"}: -1,}
+\DoxyCodeLine{        \textcolor{stringliteral}{"puke\_txt"}: -1,}
+\DoxyCodeLine{        \textcolor{stringliteral}{"yum\_txt"}: 0,}
+\DoxyCodeLine{        \textcolor{stringliteral}{"tired\_txt"}: -1,}
+\DoxyCodeLine{        \textcolor{stringliteral}{"happy\_txt"}: 1,}
+\DoxyCodeLine{        \textcolor{stringliteral}{"swim\_txt"}: 0,}
+\DoxyCodeLine{        \textcolor{stringliteral}{"sale\_txt"}: 0}
+\DoxyCodeLine{    \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aea2f506ba8c5466d089938697f80bca7}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aea2f506ba8c5466d089938697f80bca7}} 
+\index{feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}!\_ITEM\_MARK\_COMBINATIONS@{\_ITEM\_MARK\_COMBINATIONS}}
+\index{\_ITEM\_MARK\_COMBINATIONS@{\_ITEM\_MARK\_COMBINATIONS}!feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}}
+\subsubsection{\texorpdfstring{\_ITEM\_MARK\_COMBINATIONS}{\_ITEM\_MARK\_COMBINATIONS}}
+{\footnotesize\ttfamily list feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor.\+\_\+\+I\+T\+E\+M\+\_\+\+M\+A\+R\+K\+\_\+\+C\+O\+M\+B\+I\+N\+A\+T\+I\+O\+NS\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=  [(\textcolor{stringliteral}{'food'}, \textcolor{stringliteral}{'sell'}), (\textcolor{stringliteral}{'food'}, \textcolor{stringliteral}{'use'}), (\textcolor{stringliteral}{'food'}, \textcolor{stringliteral}{'eat'}),}
+\DoxyCodeLine{                               (\textcolor{stringliteral}{'milk'}, \textcolor{stringliteral}{'sell'}), (\textcolor{stringliteral}{'milk'}, \textcolor{stringliteral}{'use'}), (\textcolor{stringliteral}{'poop'}, \textcolor{stringliteral}{'sell'}), (\textcolor{stringliteral}{'poop'}, \textcolor{stringliteral}{'use'})}
+\DoxyCodeLine{                               ]}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa347f1504a4f4804f03df9f2d8d277e2}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_aa347f1504a4f4804f03df9f2d8d277e2}} 
+\index{feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}!\_TUT\_NAME\_COMPLIANT\_BUY\_NAME@{\_TUT\_NAME\_COMPLIANT\_BUY\_NAME}}
+\index{\_TUT\_NAME\_COMPLIANT\_BUY\_NAME@{\_TUT\_NAME\_COMPLIANT\_BUY\_NAME}!feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}}
+\subsubsection{\texorpdfstring{\_TUT\_NAME\_COMPLIANT\_BUY\_NAME}{\_TUT\_NAME\_COMPLIANT\_BUY\_NAME}}
+{\footnotesize\ttfamily list feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor.\+\_\+\+T\+U\+T\+\_\+\+N\+A\+M\+E\+\_\+\+C\+O\+M\+P\+L\+I\+A\+N\+T\+\_\+\+B\+U\+Y\+\_\+\+N\+A\+ME\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=  [}
+\DoxyCodeLine{        (\textcolor{stringliteral}{"build\_a\_house"}, \textcolor{stringliteral}{"house"}),}
+\DoxyCodeLine{        (\textcolor{stringliteral}{"buy\_food"}, \textcolor{stringliteral}{"food"}),}
+\DoxyCodeLine{        (\textcolor{stringliteral}{"build\_a\_farm"}, \textcolor{stringliteral}{"farm"}),}
+\DoxyCodeLine{        (\textcolor{stringliteral}{"buy\_fertilizer"}, \textcolor{stringliteral}{"fertilizer"}),}
+\DoxyCodeLine{        (\textcolor{stringliteral}{"buy\_livestock"}, \textcolor{stringliteral}{"livestock"}),}
+\DoxyCodeLine{    ]}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a95e4ab631aaa37ddffa30749e5221bba}\label{classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor_a95e4ab631aaa37ddffa30749e5221bba}} 
+\index{feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}!\_TUTORIAL\_MODE@{\_TUTORIAL\_MODE}}
+\index{\_TUTORIAL\_MODE@{\_TUTORIAL\_MODE}!feature\_extractors.LakelandExtractor.LakelandExtractor@{feature\_extractors.LakelandExtractor.LakelandExtractor}}
+\subsubsection{\texorpdfstring{\_TUTORIAL\_MODE}{\_TUTORIAL\_MODE}}
+{\footnotesize\ttfamily list feature\+\_\+extractors.\+Lakeland\+Extractor.\+Lakeland\+Extractor.\+\_\+\+T\+U\+T\+O\+R\+I\+A\+L\+\_\+\+M\+O\+DE\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{=  [}
+\DoxyCodeLine{        \textcolor{stringliteral}{"build\_a\_house"},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"buy\_food"},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"build\_a\_farm"},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"timewarp"},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"sell\_food"},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"buy\_fertilizer"},}
+\DoxyCodeLine{        \textcolor{stringliteral}{"buy\_livestock"},}
+\DoxyCodeLine{    ]}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+feature\+\_\+extractors/Lakeland\+Extractor.\+py\end{DoxyCompactItemize}

@@ -1,12 +1,11 @@
 var searchData=
 [
-  ['daterangerequest',['DateRangeRequest',['../class_request_1_1_date_range_request.html',1,'Request']]],
-  ['datetofilesafestring',['dateToFileSafeString',['../namespaceutils.html#ab2f8ec31af461e89fcc8e5d030cfd5fc',1,'utils']]],
-  ['db_5fcolumns',['db_columns',['../classschemas_1_1_schema_1_1_schema.html#a0441b3d86b6254c0b58d69053264ae56',1,'schemas::Schema::Schema']]],
-  ['db_5fcolumns_5fwith_5ftypes',['db_columns_with_types',['../classschemas_1_1_schema_1_1_schema.html#a8195db97a01c5a742d0a2734605acf82',1,'schemas::Schema::Schema']]],
-  ['data_20logging_20info_3a',['Data Logging Info:',['../md_doc_readme_src__c_r_y_s_t_a_l_readme_src.html',1,'']]],
-  ['data_20logging_20info_3a',['Data Logging Info:',['../md_doc_readme_src__j_o_w_i_l_d_e_r_readme_src.html',1,'']]],
-  ['data_20logging_20info_3a',['Data Logging Info:',['../md_doc_readme_src__l_a_k_e_l_a_n_d_readme_src.html',1,'']]],
-  ['data_20logging_20info_3a',['Data Logging Info:',['../md_doc_readme_src__w_a_v_e_s_readme_src.html',1,'']]],
-  ['py',['py',['../namespace_data_to_c_s_v_1_1py.html',1,'DataToCSV']]]
+  ['calculateaggregatefeatures',['calculateAggregateFeatures',['../classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor.html#ac0aa2a8037f8e7575788a8ac88836538',1,'feature_extractors.CrystalExtractor.CrystalExtractor.calculateAggregateFeatures()'],['../classfeature__extractors_1_1_extractor_1_1_extractor.html#a7622c0b66dd98f59a8010c3511f4bdad',1,'feature_extractors.Extractor.Extractor.calculateAggregateFeatures()'],['../classfeature__extractors_1_1_jowilder_extractor_1_1_jowilder_extractor.html#aa8634d50ee53ef7244de9a53f45ba9e5',1,'feature_extractors.JowilderExtractor.JowilderExtractor.calculateAggregateFeatures()'],['../classfeature__extractors_1_1_lakeland_extractor_1_1_lakeland_extractor.html#a9f6f9e4a7857cb4905f27e5dad7e1404',1,'feature_extractors.LakelandExtractor.LakelandExtractor.calculateAggregateFeatures()'],['../classfeature__extractors_1_1_wave_extractor_1_1_wave_extractor.html#a68b4f2df1be2e63fa34ba3813e77efbb',1,'feature_extractors.WaveExtractor.WaveExtractor.calculateAggregateFeatures()'],['../class_proc_manager_1_1_proc_manager.html#a5961b8a9141b674e42921cb8a3866a72',1,'ProcManager.ProcManager.calculateAggregateFeatures()']]],
+  ['clearlines',['ClearLines',['../class_proc_manager_1_1_proc_manager.html#a672b24c4a817fc8cc7d4c1dafb47d6b8',1,'ProcManager.ProcManager.ClearLines()'],['../class_raw_manager_1_1_raw_manager.html#ab8a53bb1ce2f9004fba4648f3a0a6e11',1,'RawManager.RawManager.ClearLines()']]],
+  ['connecttomysql',['connectToMySQL',['../classutils_1_1_s_q_l.html#a4130ca2a1312987f2284f2ac1667b860',1,'utils::SQL']]],
+  ['connecttomysqlviassh',['connectToMySQLViaSSH',['../classutils_1_1_s_q_l.html#ae60554dc510963a7dcc4bc544992f8d2',1,'utils::SQL']]],
+  ['crystalextractor',['CrystalExtractor',['../classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor.html',1,'feature_extractors::CrystalExtractor']]],
+  ['cycle_5fcarbon_5freadme_5fsrc',['CYCLE_CARBON_readme_src',['../md_doc_readme_src__c_y_c_l_e__c_a_r_b_o_n_readme_src.html',1,'']]],
+  ['cycle_5fnitrogen_5freadme_5fsrc',['CYCLE_NITROGEN_readme_src',['../md_doc_readme_src__c_y_c_l_e__n_i_t_r_o_g_e_n_readme_src.html',1,'']]],
+  ['cycle_5fwater_5freadme_5fsrc',['CYCLE_WATER_readme_src',['../md_doc_readme_src__c_y_c_l_e__w_a_t_e_r_readme_src.html',1,'']]]
 ];

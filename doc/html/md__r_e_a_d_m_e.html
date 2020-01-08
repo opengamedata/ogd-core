@@ -67,8 +67,12 @@ $(function() {
 <div class="title">README </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Python re-implementation of some of the features of the original logger code.</p>
-<p>In particular, this includes code to extract features from a database, and write the results to a csv. </p>
+<div class="textblock"><p>Python3 implementation of the Open Game Gata feature extractor</p>
+<p>This code pulls raw game data from a SQL database, chooses appropiate features to extract based on the "game_id" and writes results to a csv file for data mining</p>
+<p>See <a href="http://opengamedata.fielddaylab.wisc.edu">http://opengamedata.fielddaylab.wisc.edu</a> for .sql exports of raw game data and the assocated output of this code based on several games produced by Field Day.</p>
+<p>Please feel free to modify this code, add new features or games and share back to the authors. We will deploy improvements to the Open Game Data site.</p>
+<div class="fragment"><div class="line">usage: &lt;python&gt; main.py &lt;cmd&gt; [&lt;args&gt;]</div><div class="line"></div><div class="line">&lt;python&gt; is your python command.</div><div class="line">&lt;cmd&gt;    is one of the available commands:</div><div class="line">         - export</div><div class="line">         - export_month</div><div class="line">         - help</div><div class="line">[&lt;args&gt;] are the arguments for the command:</div><div class="line">         - export: game_id, [start_date, end_date]</div><div class="line">             game_id    = id of game to export</div><div class="line">             start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)</div><div class="line">             end_date   = ending date for export, in form mm/dd/yyyy (default=current day)</div><div class="line">         - export_month: game_id, [month_year]</div><div class="line">             game_id    = id of game to export</div><div class="line">             month_year = month (and year) to export, in form mm/yyyy (default=current month)</div></div><!-- fragment --><p>Example use: </p><div class="fragment"><div class="line">python3 main.py export 1/1/2019 2/28/2019</div></div><!-- fragment --><p> In the example above, all data from beginning of January to end of February (in 2019) is exported to file.</p>
+<div class="fragment"><div class="line">python3 main.py export_month 1/2019</div></div><!-- fragment --><p> In the example above, all data from the month of January 2019 is exported to file. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->

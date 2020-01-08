@@ -69,6 +69,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="classutils_1_1_s_q_l-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">utils.SQL Class Reference</div>  </div>
@@ -80,6 +81,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:aede5d687b4b358601a48b40aeaeb338f"><td class="memItemLeft" align="right" valign="top">typing.Tuple[object, object]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classutils_1_1_s_q_l.html#aede5d687b4b358601a48b40aeaeb338f">prepareDB</a> (db_settings, ssh_settings)</td></tr>
+<tr class="memdesc:aede5d687b4b358601a48b40aeaeb338f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to set up a connection to a database, via an ssh tunnel if available.  <a href="#aede5d687b4b358601a48b40aeaeb338f">More...</a><br /></td></tr>
+<tr class="separator:aede5d687b4b358601a48b40aeaeb338f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4130ca2a1312987f2284f2ac1667b860"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classutils_1_1_s_q_l.html#a4130ca2a1312987f2284f2ac1667b860">connectToMySQL</a> (<a class="el" href="classutils_1_1_s_q_l_login.html">SQLLogin</a> login)</td></tr>
 <tr class="memdesc:a4130ca2a1312987f2284f2ac1667b860"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to help connect to a mySQL server.  <a href="#a4130ca2a1312987f2284f2ac1667b860">More...</a><br /></td></tr>
 <tr class="separator:a4130ca2a1312987f2284f2ac1667b860"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -92,9 +96,18 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>disconnectMySQLViaSSH<
 <tr class="memitem:a43152b5f69fea05be945a40d5c5dbf6e"><td class="memItemLeft" align="right" valign="top">typing.List[typing.Tuple]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classutils_1_1_s_q_l.html#a43152b5f69fea05be945a40d5c5dbf6e">SELECT</a> (cursor, str db_name, str table, typing.List[str] columns=None, str filter=None, int limit=-1, typing.List[str] sort_columns=None, sort_direction=&quot;ASC&quot;, str grouping=None, bool distinct=False, bool fetch_results=True)</td></tr>
 <tr class="memdesc:a43152b5f69fea05be945a40d5c5dbf6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to build and execute SELECT statements on a database connection.  <a href="#a43152b5f69fea05be945a40d5c5dbf6e">More...</a><br /></td></tr>
 <tr class="separator:a43152b5f69fea05be945a40d5c5dbf6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af152813f7d7923bad1ecb883177c5030"><td class="memItemLeft" align="right" valign="top"><a id="af152813f7d7923bad1ecb883177c5030"></a>
+typing.List[typing.Tuple]&#160;</td><td class="memItemRight" valign="bottom"><b>Query</b> (cursor, str query, bool fetch_results=True)</td></tr>
+<tr class="separator:af152813f7d7923bad1ecb883177c5030"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa45d1f8a1dc595e0156e3acda4310295"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classutils_1_1_s_q_l.html#aa45d1f8a1dc595e0156e3acda4310295">server500Error</a> (str err_msg)</td></tr>
 <tr class="memdesc:aa45d1f8a1dc595e0156e3acda4310295"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple function to construct and log a nice server 500 error message.  <a href="#aa45d1f8a1dc595e0156e3acda4310295">More...</a><br /></td></tr>
 <tr class="separator:aa45d1f8a1dc595e0156e3acda4310295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
+Static Private Member Functions</h2></td></tr>
+<tr class="memitem:abfb0ac8f802c09a77409dbd1da9ea9fd"><td class="memItemLeft" align="right" valign="top"><a id="abfb0ac8f802c09a77409dbd1da9ea9fd"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>_prepareSelect</b> (str db_name, str table, typing.List[str] columns=None, str filter=None, int limit=-1, typing.List[str] sort_columns=None, sort_direction=&quot;ASC&quot;, str grouping=None, bool distinct=False)</td></tr>
+<tr class="separator:abfb0ac8f802c09a77409dbd1da9ea9fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A utility class containing some functions to assist in retrieving from a database. </p>
@@ -187,6 +200,45 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>disconnectMySQLViaSSH<
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An open connection to the database if successful, otherwise None. </dd></dl>
+
+</div>
+</div>
+<a id="aede5d687b4b358601a48b40aeaeb338f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aede5d687b4b358601a48b40aeaeb338f">&#9670;&nbsp;</a></span>prepareDB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"> typing.Tuple[object, object] utils.SQL.prepareDB </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>db_settings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>ssh_settings</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Function to set up a connection to a database, via an ssh tunnel if available. </p>
+<dl class="section return"><dt>Returns</dt><dd>A tuple consisting of the tunnel and database connection, respectively. </dd></dl>
 
 </div>
 </div>

@@ -1,0 +1,176 @@
+\hypertarget{class_r_t_server_1_1_r_t_server}{}\section{R\+T\+Server.\+R\+T\+Server Class Reference}
+\label{class_r_t_server_1_1_r_t_server}\index{RTServer.RTServer@{RTServer.RTServer}}
+
+
+Class to handle A\+PI calls for the realtime page.  
+
+
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+typing.\+Dict \mbox{\hyperlink{class_r_t_server_1_1_r_t_server_a36d42dbd33f9a79872c66c332a6d5591}{get\+All\+Active\+Sessions}} (str game\+\_\+id, bool require\+\_\+player\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Handler to retrieve all active sessions for a given game. \end{DoxyCompactList}\item 
+typing.\+Dict \mbox{\hyperlink{class_r_t_server_1_1_r_t_server_a293c91396d24ffed4891b61337856373}{get\+Features\+By\+Sess\+ID}} (str sess\+\_\+id, str game\+\_\+id, typing.\+List features=None)
+\begin{DoxyCompactList}\small\item\em Handler to retrieve features for a given session. \end{DoxyCompactList}\item 
+typing.\+Dict\mbox{[}str, object\mbox{]} \mbox{\hyperlink{class_r_t_server_1_1_r_t_server_a005a0fe014193b09a5e708714f64b5e4}{get\+Game\+Progress}} (str sess\+\_\+id, str game\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Function to retrieve the game progress in a session. \end{DoxyCompactList}\item 
+typing.\+Dict\mbox{[}str, typing.\+List\mbox{]} \mbox{\hyperlink{class_r_t_server_1_1_r_t_server_aa1154804acf028df8741b5ff5282458c}{get\+Feature\+Names\+By\+Game}} (str game\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Handler to get a list of all feature names for a given game. \end{DoxyCompactList}\item 
+typing.\+List \mbox{\hyperlink{class_r_t_server_1_1_r_t_server_a53ed74b50b616e1db6094a9ae62243f5}{get\+Prediction\+Names\+By\+Game\+Level}} (str game\+\_\+id, int level)
+\begin{DoxyCompactList}\small\item\em Handler to get a list of all prediction names for a given game level. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_r_t_server_1_1_r_t_server_a4baab4e1403e5201c3e73f590b1e50e9}\label{class_r_t_server_1_1_r_t_server_a4baab4e1403e5201c3e73f590b1e50e9}} 
+def {\bfseries get\+Predictions\+By\+Sess\+ID} (str sess\+\_\+id, str game\+\_\+id, predictions)
+\item 
+float \mbox{\hyperlink{class_r_t_server_1_1_r_t_server_a4a3465a37859b43a764b131725087740}{Evaluate\+Log\+Reg\+Model}} (model, feature\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Function to evaluate a logistic regression model, creating a prediction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_r_t_server_1_1_r_t_server_afee7379654c01974287933197f16ab6a}\label{class_r_t_server_1_1_r_t_server_afee7379654c01974287933197f16ab6a}} 
+{\bfseries db\+\_\+settings} = settings\mbox{[}\char`\"{}db\+\_\+config\char`\"{}\mbox{]}
+\item 
+\mbox{\Hypertarget{class_r_t_server_1_1_r_t_server_a996f612769b2cc41a2ecf2beda6a5984}\label{class_r_t_server_1_1_r_t_server_a996f612769b2cc41a2ecf2beda6a5984}} 
+{\bfseries D\+B\+\_\+\+N\+A\+M\+E\+\_\+\+D\+A\+TA} = db\+\_\+settings\mbox{[}\char`\"{}D\+B\+\_\+\+N\+A\+M\+E\+\_\+\+D\+A\+TA\char`\"{}\mbox{]}
+\item 
+\mbox{\Hypertarget{class_r_t_server_1_1_r_t_server_ac48b02f533dbb33c511bf3133127b4d5}\label{class_r_t_server_1_1_r_t_server_ac48b02f533dbb33c511bf3133127b4d5}} 
+{\bfseries D\+B\+\_\+\+T\+A\+B\+LE} = db\+\_\+settings\mbox{[}\char`\"{}table\char`\"{}\mbox{]}
+\item 
+\mbox{\Hypertarget{class_r_t_server_1_1_r_t_server_a4a347320e716f5984ac4595303e0c695}\label{class_r_t_server_1_1_r_t_server_a4a347320e716f5984ac4595303e0c695}} 
+{\bfseries ssh\+\_\+settings} = settings\mbox{[}\char`\"{}ssh\+\_\+config\char`\"{}\mbox{]}
+\end{DoxyCompactItemize}
+\subsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{class_r_t_server_1_1_r_t_server_a5f00435013297e6a4aeaa004dc7dabc7}{\+\_\+parse\+Raw\+To\+Dict}} (features\+\_\+raw)
+\begin{DoxyCompactList}\small\item\em Simple helper method to take in a raw (string) version of a feature from file, and parse it to a float if the feature is numeric, else maintain it as a string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class to handle A\+PI calls for the realtime page. 
+
+Defines a bunch of static handler functions, one for each valid A\+PI call. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_r_t_server_1_1_r_t_server_a5f00435013297e6a4aeaa004dc7dabc7}\label{class_r_t_server_1_1_r_t_server_a5f00435013297e6a4aeaa004dc7dabc7}} 
+\index{RTServer.RTServer@{RTServer.RTServer}!\_parseRawToDict@{\_parseRawToDict}}
+\index{\_parseRawToDict@{\_parseRawToDict}!RTServer.RTServer@{RTServer.RTServer}}
+\subsubsection{\texorpdfstring{\_parseRawToDict()}{\_parseRawToDict()}}
+{\footnotesize\ttfamily def R\+T\+Server.\+R\+T\+Server.\+\_\+parse\+Raw\+To\+Dict (\begin{DoxyParamCaption}\item[{}]{features\+\_\+raw }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+
+
+Simple helper method to take in a raw (string) version of a feature from file, and parse it to a float if the feature is numeric, else maintain it as a string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em features\+\_\+raw} & A dictionary mapping feature names to raw (string) values. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A dictionary mapping feature names to parsed values (i.\+e. numeric inputs are parsed to floats) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_r_t_server_1_1_r_t_server_a4a3465a37859b43a764b131725087740}\label{class_r_t_server_1_1_r_t_server_a4a3465a37859b43a764b131725087740}} 
+\index{RTServer.RTServer@{RTServer.RTServer}!EvaluateLogRegModel@{EvaluateLogRegModel}}
+\index{EvaluateLogRegModel@{EvaluateLogRegModel}!RTServer.RTServer@{RTServer.RTServer}}
+\subsubsection{\texorpdfstring{EvaluateLogRegModel()}{EvaluateLogRegModel()}}
+{\footnotesize\ttfamily  float R\+T\+Server.\+R\+T\+Server.\+Evaluate\+Log\+Reg\+Model (\begin{DoxyParamCaption}\item[{}]{model,  }\item[{}]{feature\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Function to evaluate a logistic regression model, creating a prediction. 
+
+This is based around the equation for probability of Y=1, denoted as p\+: p = 1 / (1 + e$^\wedge$-\/logit(X)), where X is the input data used to predict Y, and logit(\+X) = b0 + b1$\ast$x1 + b2$\ast$x2 + ... + bn$\ast$xn, where bi are the coefficients. Based on information at \href{https://www.medcalc.org/manual/logistic_regression.php}{\texttt{ https\+://www.\+medcalc.\+org/manual/logistic\+\_\+regression.\+php}} \mbox{\Hypertarget{class_r_t_server_1_1_r_t_server_a36d42dbd33f9a79872c66c332a6d5591}\label{class_r_t_server_1_1_r_t_server_a36d42dbd33f9a79872c66c332a6d5591}} 
+\index{RTServer.RTServer@{RTServer.RTServer}!getAllActiveSessions@{getAllActiveSessions}}
+\index{getAllActiveSessions@{getAllActiveSessions}!RTServer.RTServer@{RTServer.RTServer}}
+\subsubsection{\texorpdfstring{getAllActiveSessions()}{getAllActiveSessions()}}
+{\footnotesize\ttfamily  typing.\+Dict R\+T\+Server.\+R\+T\+Server.\+get\+All\+Active\+Sessions (\begin{DoxyParamCaption}\item[{str}]{game\+\_\+id,  }\item[{bool}]{require\+\_\+player\+\_\+id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler to retrieve all active sessions for a given game. 
+
+If the require\+\_\+player\+\_\+id flag is set to true, only players with a value in the player\+ID column will be returned. 
+\begin{DoxyParams}{Parameters}
+{\em game\+\_\+id} & The ID name of the game whose sessions should be returned. \\
+\hline
+{\em require\+\_\+player\+\_\+id} & A flag to determine whether to filter out sessions lacking a valid player\+ID. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A dictionary mapping session ids to some data about the session. Specifically, we get each session\textquotesingle{}s max completed level, current level, and time since last move. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_r_t_server_1_1_r_t_server_aa1154804acf028df8741b5ff5282458c}\label{class_r_t_server_1_1_r_t_server_aa1154804acf028df8741b5ff5282458c}} 
+\index{RTServer.RTServer@{RTServer.RTServer}!getFeatureNamesByGame@{getFeatureNamesByGame}}
+\index{getFeatureNamesByGame@{getFeatureNamesByGame}!RTServer.RTServer@{RTServer.RTServer}}
+\subsubsection{\texorpdfstring{getFeatureNamesByGame()}{getFeatureNamesByGame()}}
+{\footnotesize\ttfamily  typing.\+Dict\mbox{[}str, typing.\+List\mbox{]} R\+T\+Server.\+R\+T\+Server.\+get\+Feature\+Names\+By\+Game (\begin{DoxyParamCaption}\item[{str}]{game\+\_\+id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler to get a list of all feature names for a given game. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em game\+\_\+id} & The id for the game being played in the given session. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A dictionary mapping \char`\"{}features\char`\"{} to a list of feature names, or None if an eror occurred when reading the game schema. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_r_t_server_1_1_r_t_server_a293c91396d24ffed4891b61337856373}\label{class_r_t_server_1_1_r_t_server_a293c91396d24ffed4891b61337856373}} 
+\index{RTServer.RTServer@{RTServer.RTServer}!getFeaturesBySessID@{getFeaturesBySessID}}
+\index{getFeaturesBySessID@{getFeaturesBySessID}!RTServer.RTServer@{RTServer.RTServer}}
+\subsubsection{\texorpdfstring{getFeaturesBySessID()}{getFeaturesBySessID()}}
+{\footnotesize\ttfamily  typing.\+Dict R\+T\+Server.\+R\+T\+Server.\+get\+Features\+By\+Sess\+ID (\begin{DoxyParamCaption}\item[{str}]{sess\+\_\+id,  }\item[{str}]{game\+\_\+id,  }\item[{typing.\+List }]{features = {\ttfamily None} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler to retrieve features for a given session. 
+
+For now, at least, the game ID must be given as well, in order to load information about the way that data from that game is structured. In theory, we may be able to get the game ID by pulling it from the database, but it\textquotesingle{}s easier just to make it a parameter for the call. 
+\begin{DoxyParams}{Parameters}
+{\em sess\+\_\+id} & The id number for the session whose features are needed. \\
+\hline
+{\em game\+\_\+id} & The id for the game being played in the given session. \\
+\hline
+{\em features} & An optional list of specific features to be retrieved. By default, all available features are retrieved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A dictionary mapping feature names to feature values. If a features argument was given, only returns the corresponding features. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_r_t_server_1_1_r_t_server_a005a0fe014193b09a5e708714f64b5e4}\label{class_r_t_server_1_1_r_t_server_a005a0fe014193b09a5e708714f64b5e4}} 
+\index{RTServer.RTServer@{RTServer.RTServer}!getGameProgress@{getGameProgress}}
+\index{getGameProgress@{getGameProgress}!RTServer.RTServer@{RTServer.RTServer}}
+\subsubsection{\texorpdfstring{getGameProgress()}{getGameProgress()}}
+{\footnotesize\ttfamily  typing.\+Dict\mbox{[}str, object\mbox{]} R\+T\+Server.\+R\+T\+Server.\+get\+Game\+Progress (\begin{DoxyParamCaption}\item[{str}]{sess\+\_\+id,  }\item[{str}]{game\+\_\+id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Function to retrieve the game progress in a session. 
+
+Specifically, the current level, max level, and current idle time. Other data could be added as needed. \mbox{\Hypertarget{class_r_t_server_1_1_r_t_server_a53ed74b50b616e1db6094a9ae62243f5}\label{class_r_t_server_1_1_r_t_server_a53ed74b50b616e1db6094a9ae62243f5}} 
+\index{RTServer.RTServer@{RTServer.RTServer}!getPredictionNamesByGameLevel@{getPredictionNamesByGameLevel}}
+\index{getPredictionNamesByGameLevel@{getPredictionNamesByGameLevel}!RTServer.RTServer@{RTServer.RTServer}}
+\subsubsection{\texorpdfstring{getPredictionNamesByGameLevel()}{getPredictionNamesByGameLevel()}}
+{\footnotesize\ttfamily  typing.\+List R\+T\+Server.\+R\+T\+Server.\+get\+Prediction\+Names\+By\+Game\+Level (\begin{DoxyParamCaption}\item[{str}]{game\+\_\+id,  }\item[{int}]{level }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Handler to get a list of all prediction names for a given game level. 
+
+This is based on the assumption that models for the game are stored in a file with naming format game\+\_\+id\+\_\+models.\+json. 
+\begin{DoxyParams}{Parameters}
+{\em game\+\_\+id} & The id for the game being played in the given session. \\
+\hline
+{\em level} & The level for which we want a list of models \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list of all prediction names. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+R\+T\+Server.\+py\end{DoxyCompactItemize}

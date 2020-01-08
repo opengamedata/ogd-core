@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['idlistrequest',['IDListRequest',['../class_request_1_1_i_d_list_request.html',1,'Request']]]
+  ['jowilderextractor',['JowilderExtractor',['../classfeature__extractors_1_1_jowilder_extractor_1_1_jowilder_extractor.html',1,'feature_extractors::JowilderExtractor']]]
 ];

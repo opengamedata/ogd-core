@@ -71,6 +71,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">feature_extractors.Extractor.Extractor.SessionFeatures Class Reference</div>  </div>
@@ -88,6 +89,9 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self, ra
 <tr class="memitem:a5e4db04ec6f3c1359823f8ece468f955"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features.html#a5e4db04ec6f3c1359823f8ece468f955">featureList</a> (self)</td></tr>
 <tr class="memdesc:a5e4db04ec6f3c1359823f8ece468f955"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter function to retrieve a list of all features in the <a class="el" href="classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features.html" title="Private Extractor class to track feature data.">SessionFeatures</a> dictionary.  <a href="#a5e4db04ec6f3c1359823f8ece468f955">More...</a><br /></td></tr>
 <tr class="separator:a5e4db04ec6f3c1359823f8ece468f955"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47d153676bf4b32b9d7d686b34378090"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features.html#a47d153676bf4b32b9d7d686b34378090">initLevel</a> (self, level)</td></tr>
+<tr class="memdesc:a47d153676bf4b32b9d7d686b34378090"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to initialize any previously uninitialized values of per-level features to 0, for given level.  <a href="#a47d153676bf4b32b9d7d686b34378090">More...</a><br /></td></tr>
+<tr class="separator:a47d153676bf4b32b9d7d686b34378090"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a239bd49dfe33736f8c76edccfa7a50b2"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features.html#a239bd49dfe33736f8c76edccfa7a50b2">getValByIndex</a> (self, str feature_name, int index)</td></tr>
 <tr class="memdesc:a239bd49dfe33736f8c76edccfa7a50b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to get value of a per-count feature (including per-level) For a per-level feature, index is the level.  <a href="#a239bd49dfe33736f8c76edccfa7a50b2">More...</a><br /></td></tr>
 <tr class="separator:a239bd49dfe33736f8c76edccfa7a50b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,15 +116,21 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>__init__</b> (self, ra
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a9bf201ba0b88d15f849a3e864d518bb2"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features.html#a9bf201ba0b88d15f849a3e864d518bb2">generateFeatureDict</a> (range level_range, <a class="el" href="classschemas_1_1_schema_1_1_schema.html">Schema</a> game_schema)</td></tr>
-<tr class="memdesc:a9bf201ba0b88d15f849a3e864d518bb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static function to generate a dictionary of game feature data from a given schema.  <a href="#a9bf201ba0b88d15f849a3e864d518bb2">More...</a><br /></td></tr>
-<tr class="separator:a9bf201ba0b88d15f849a3e864d518bb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f528a465e33496604fe188f7a45b40d"><td class="memItemLeft" align="right" valign="top">typing.Dict&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfeature__extractors_1_1_extractor_1_1_extractor_1_1_session_features.html#a3f528a465e33496604fe188f7a45b40d">generateFeatureDict</a> (range level_range, <a class="el" href="classschemas_1_1_schema_1_1_schema.html">Schema</a> game_schema)</td></tr>
+<tr class="memdesc:a3f528a465e33496604fe188f7a45b40d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static function to generate a dictionary of game feature data from a given schema.  <a href="#a3f528a465e33496604fe188f7a45b40d">More...</a><br /></td></tr>
+<tr class="separator:a3f528a465e33496604fe188f7a45b40d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ac4873f8095469c9063bc3f8c4b6b8042"><td class="memItemLeft" align="right" valign="top"><a id="ac4873f8095469c9063bc3f8c4b6b8042"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>features</b></td></tr>
 <tr class="separator:ac4873f8095469c9063bc3f8c4b6b8042"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a033985eedb7009c0b22688ba44cdf228"><td class="memItemLeft" align="right" valign="top"><a id="a033985eedb7009c0b22688ba44cdf228"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>_verify_feature</b> (self, feature_name)</td></tr>
+<tr class="separator:a033985eedb7009c0b22688ba44cdf228"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Private <a class="el" href="classfeature__extractors_1_1_extractor_1_1_extractor.html" title="Abstract base class for game feature extractors.">Extractor</a> class to track feature data. </p>
@@ -147,8 +157,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a9bf201ba0b88d15f849a3e864d518bb2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9bf201ba0b88d15f849a3e864d518bb2">&#9670;&nbsp;</a></span>generateFeatureDict()</h2>
+<a id="a3f528a465e33496604fe188f7a45b40d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f528a465e33496604fe188f7a45b40d">&#9670;&nbsp;</a></span>generateFeatureDict()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -157,7 +167,7 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">def feature_extractors.Extractor.Extractor.SessionFeatures.generateFeatureDict </td>
+          <td class="memname"> typing.Dict feature_extractors.Extractor.Extractor.SessionFeatures.generateFeatureDict </td>
           <td>(</td>
           <td class="paramtype">range&#160;</td>
           <td class="paramname"><em>level_range</em>, </td>
@@ -406,6 +416,42 @@ Public Attributes</h2></td></tr>
     <tr><td class="paramname">feature_name</td><td>The name of the feature to increment </td></tr>
     <tr><td class="paramname">index</td><td>The count index of the specific value, e.g. the level </td></tr>
     <tr><td class="paramname">increment</td><td>The size of the increment (default = 1) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a47d153676bf4b32b9d7d686b34378090"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47d153676bf4b32b9d7d686b34378090">&#9670;&nbsp;</a></span>initLevel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def feature_extractors.Extractor.Extractor.SessionFeatures.initLevel </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>level</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to initialize any previously uninitialized values of per-level features to 0, for given level. </p>
+<p>This means we can have "None" values for unreached levels, and 0's for features that simply never got incremented. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">level</td><td>The level for which we should initialize values. </td></tr>
   </table>
   </dd>
 </dl>

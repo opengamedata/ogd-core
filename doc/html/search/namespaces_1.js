@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['utils',['utils',['../namespaceutils.html',1,'']]]
+  ['lakelandextractor',['LakelandExtractor',['../namespacefeature__extractors_1_1_lakeland_extractor.html',1,'feature_extractors']]]
 ];

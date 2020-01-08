@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['featureexporter',['FeatureExporter',['../class_feature_exporter.html',1,'FeatureExporter'],['../class_feature_exporter_1_1_feature_exporter.html',1,'FeatureExporter.FeatureExporter']]]
+  ['gametable',['GameTable',['../class_game_table.html',1,'GameTable'],['../class_game_table_1_1_game_table.html',1,'GameTable.GameTable']]]
 ];
