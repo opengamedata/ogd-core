@@ -169,6 +169,12 @@ class LakelandExtractor(Extractor):
                 self._last_active_log_time = event_client_time
                 self.add_debug_str(f'{"*"*10}\nPlay {self._cur_gameplay} \n'+
                                       f'{self.session_id} v{self._VERSION} @ {self._CLIENT_START_TIME}')
+                self.setValByName("play_year", self._CLIENT_START_TIME.year)
+                self.setValByName("play_month",self._CLIENT_START_TIME.month)
+                self.setValByName("play_day", self._CLIENT_START_TIME.day)
+                self.setValByName("play_hour", self._CLIENT_START_TIME.hour)
+                self.setValByName("play_minute", self._CLIENT_START_TIME.minute)
+                self.setValByName("play_second", self._CLIENT_START_TIME.second)
             # set current windows
             self._cur_windows = self._get_windows_at_time(event_client_time)
             if any([w > game_table.max_level for w in self._cur_windows]):

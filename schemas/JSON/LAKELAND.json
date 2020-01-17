@@ -320,7 +320,7 @@
     },
     "per_custom_count": {
     },
-    "aggregate":{
+    "aggregate": {
       "sess_count_achievements": "Player feature - Progress: count of achievements",
       "sess_count_encounter_tutorial": "Player feature - Progress: count of tutorials",
       "sess_count_skips": "Player feature - Progress: count of skips",
@@ -570,6 +570,13 @@
 
       "sess_EventCount":"The total number of events across the entire sess",
       "sess_ActiveEventCount": "Number of player events that require the player's active input",
+      
+      "play_year": "year started the game (UTC)",
+      "play_month": "month started the game (UTC)",
+      "play_day": "day started the game (UTC)",
+      "play_hour": "hour started the game (UTC)",
+      "play_minute": "minute started the game (UTC)",
+      "play_second": "second started the game (UTC)",
 
 
 
