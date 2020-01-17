@@ -573,6 +573,7 @@
 
 
 
+
       "continue": "1 if player continued, 0 if new game",
       "language": "language name",
       "audio": "1 if audio on, 0 if off",
@@ -583,7 +584,8 @@
 
       "sessID":"The player's sess ID number for this play sess",
       "persistentSessionID":"The sess ID for the player's device, persists across multiple players using the same device.",
-      "sessDuration":"The total time (in seconds) spent over the entire sess"
+      "sessDuration":"The total time (in seconds) spent over the entire sess",
+      "player_id": "Player ID"
     }
   },
 

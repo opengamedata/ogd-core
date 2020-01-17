@@ -49,6 +49,7 @@ class GameTable:
         self.event_custom_index = self.column_names.index("event_custom")
         self.level_index = self.column_names.index("level")
         self.version_index = self.column_names.index("app_version")
+        self.player_id_index = self.column_names.index("player_id")
         if request.game_id == "WAVES":
             self.max_level = 34
             self.min_level = 0

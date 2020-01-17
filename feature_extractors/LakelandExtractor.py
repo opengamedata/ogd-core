@@ -157,6 +157,9 @@ class LakelandExtractor(Extractor):
             if self.getValByName(feature_name="persistentSessionID") == 0:
                 self.setValByName(feature_name="persistentSessionID",
                                            new_value=row_with_complex_parsed[game_table.pers_session_id_index])
+            if self.getValByName(feature_name="player_id") == 0:
+                self.setValByName(feature_name="player_id",
+                                           new_value=row_with_complex_parsed[game_table.player_id_index])
 
             # if this is the first row
             if not self._CLIENT_START_TIME:
