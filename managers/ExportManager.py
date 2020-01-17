@@ -206,10 +206,7 @@ class ExportManager:
                 # grab data for the given session range. Sort by event time, so 
                 # TODO: Take the "WAVES" out of the line of code below.
                 if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
-                    ver_filer = " AND (" + \
-                                ' OR '.join(
-                                    f'app_version={v}' for v in game_schema.schema()['config']['SUPPORTED_VERS']) + \
-                                ")"
+                    ver_filer = f" AND app_version IN ({','.join([str(x) for x in game_schema.schema()['config']['SUPPORTED_VERS']])}) "
                 else:
                     ver_filer = ''
                 filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filer}"
