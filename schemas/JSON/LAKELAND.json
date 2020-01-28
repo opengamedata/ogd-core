@@ -211,7 +211,6 @@
       "avg_num_tiles_hovered_before_placing_sign": "Player feature - General: ave num tiles hovered before placing sign",
       "avg_num_tiles_hovered_before_placing_road": "Player feature - General: ave num tiles hovered before placing (the first) road",
 
-      "percent_compliance_with_a_tutorial_within_x_seconds": "Player feature - Assessment: percent of compliance with a tutorial within x seconds",
       "avg_distance_between_poop_placement_and_lake": "Player feature - Assessment: average distance between poop placement and lake",
       "avg_avg_distance_between_buildings": "Player feature - Assessment: Average distance between buildings (when they build, how far is it from the closest thing)",
 
@@ -226,7 +225,6 @@
 
       "count_encounter_tutorial": "Player feature - Number of times the player: encounter a tutorial",
       "count_skips": "Player feature - Number of times the player: press skip button",
-      "avg_time_per_blurb": "? include skips ? Player feature - General: ave time per tutorial screen (blurb) before continue",
 
       "time_in_nutrition_view": "Player feature - Total amount of time the player: spend in nutrition view",
 
@@ -311,8 +309,6 @@
       "min_avg_lake_nutrition": "Game feature - General: ave lake nutrition",
       "count_farmfails": "Count of farms going into low productivity (nutrition roughly < 1%)",
       "count_blooms": "Count of blooms",
-      "max_num_lake_tiles_in_bloom": "Game feature - General: max count of lake tiles in bloom",
-      "min_num_lake_tiles_in_bloom": "Game feature - General: min count of lake tiles in bloom",
 
       "count_food_produced": "Game feature - General: num of food produced",
       "count_milk_produced": "Game feature - General: num of milk produced",
@@ -392,14 +388,6 @@
       "sess_time_to_timewarp_tutorial": "Player feature - Progress: Time to timewarp tutorial (or 0 if unencountered)",
       "sess_time_to_unattended_farm_tutorial": "Player feature - Progress: Time to unattended_farm tutorial (or 0 if unencountered)",
       "sess_time_to_unused_fertilizer_tutorial": "Player feature - Progress: Time to unused_fertilizer tutorial (or 0 if unencountered)",
-
-      "build_a_house_compliance_interval": "The time from the build_a_house tutorial and buying a house",
-      "buy_food_compliance_interval": "The time from the buy_food tutorial and buying food",
-      "build_a_farm_compliance_interval": "The time from the build_a_farm tutorial and buying a farm",
-      "timewarp_compliance_interval": "The time from the timewarp tutorial and buying XXX",
-      "sell_food_compliance_interval": "The time from the sell_food tutorial and buying XXX",
-      "buy_fertilizer_compliance_interval": "The time from the buy_fertilizer tutorial and buying fertilizer",
-      "buy_livestock_compliance_interval": "The time from the buy_livestock tutorial and buying a dairy",
 
       "sess_avg_num_tiles_hovered_before_placing_home": "Player feature - General: ave num tiles hovered before placing home",
       "sess_avg_num_tiles_hovered_before_placing_food": "Player feature - General: ave num tiles hovered before placing food",
@@ -564,6 +552,7 @@
       "sess_count_open_achievements": "Player feature - Number of times the player: look at achievements",
       "sess_count_open_shop": "Player feature - Number of times the player: open the shop",
       "sess_count_deaths": "Game feature - General: num deaths per sess",
+      "event_sequence": "Sequence of buys, deaths, blooms in the game",
 
       "sess_percent_building_a_farm_on_highest_nutrition_tile": "Player feature - General: percent building a farm on the best tile with the highest nutrition that was hovered over during the buy process",
       "sess_percent_placing_fertilizer_on_lowest_nutrient_farm": " TODO:::figure out how to calculate this:::TODO Player feature - General: percent placing fertilizer on lowest nutrient farm",

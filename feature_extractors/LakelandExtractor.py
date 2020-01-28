@@ -538,6 +538,8 @@ class LakelandExtractor(Extractor):
         if buy_name in LakelandExtractor._BUILDING_TYPES:
             self.feature_average(fname_base='avg_avg_distance_between_buildings', value=avg_distance_between_buildings())
 
+        self._add_event(_buy)
+
 
 
     # def _tutorial_compliance_check(self, tut_name, event_client_time):
@@ -571,7 +573,10 @@ class LakelandExtractor(Extractor):
         _marks = d["marks"]
 
         # helpers
-        mark_change = self._tiles[(get_tile_txy(_tile))]['type'] == _tile[3] # tile 3 is type
+        mark_change = self._tiles[(get_tile_txy(_tile))]['marks'] != _marks
+        if not mark_change:
+            return
+        self._tiles[(get_tile_txy(_tile))]['marks'] = _marks
         all_farm_marks = [t["marks"] for t in self._tiles.values() if t["type"] == 9] # 9 == farm
         all_dairy_marks = [t["marks"] for t in self._tiles.values() if t["type"] == 10] # 10 == livestock
         food_uses = [t[0] for t in all_farm_marks] + [t[1] for t in all_farm_marks] # mark index=0,1 food mark
@@ -579,11 +584,10 @@ class LakelandExtractor(Extractor):
         poop_uses = [t[1] for t in all_dairy_marks] # mark index=1 is the poop mark
 
         # set class variables
-        self._tiles[get_tile_txy(_tile)]['type'] = _tile[3] # tile index 3 is type
+        # self._tiles[get_tile_txy(_tile)]['type'] = _tile[3] # tile index 3 is type
 
         # feature setters
-        if not mark_change:
-            return
+
         self.feature_count(feature_base="count_change_tile_mark")
         for produced, produced_uses in [('food', food_uses), ('milk', milk_uses), ('poop', poop_uses)]:
             mark_counts = {LakelandExtractor._ENUM_TO_STR["MARK"][k]: v for k, v in Counter(produced_uses).items()}
@@ -682,6 +686,7 @@ class LakelandExtractor(Extractor):
 
         # set features
         self.feature_count("count_deaths")
+        self._add_event("D")
 
     def _extractFromBlurb(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -781,6 +786,7 @@ class LakelandExtractor(Extractor):
         # set class variables
         # set features
         self.feature_count("count_blooms")
+        self._add_event("B")
 
     def _extractFromFarmharvested(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -987,9 +993,12 @@ class LakelandExtractor(Extractor):
     #     return sum(all_deltas) / len(all_deltas)
 
 
+    def _add_event(self, event_char):
+        old = self.getValByName("event_sequence") or ''
+        self.setValByName("event_sequence", old+str(event_char))
 
     def _change_population(self, client_time, increment):
-        self._num_farmbits += increment;
+        self._num_farmbits += increment
         self._max_population = max([self._num_farmbits, self._max_population])
         self._population_history.append((client_time, self._num_farmbits))
 
@@ -1128,6 +1137,7 @@ class LakelandExtractor(Extractor):
         self._last_active_log_time = None
         self._last_speed_change = None
         self._last_nutrition_open = None
+        self._last_event_time = None
 
         # Gamestate Trackers: Continue Independent
         self._selected_buy_cost = 0
