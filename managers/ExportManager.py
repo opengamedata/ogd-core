@@ -116,7 +116,7 @@ class ExportManager:
             proc_zip_path: str = None
             num_sess:           int = len(game_table.session_ids)
             if game_schema is not None:
-                raw_csv_path  = f"{data_directory}/{dataset_id}_{short_hash}_raw.csv"
+                raw_csv_path  = f"{data_directory}/{dataset_id}_{short_hash}_raw.tsv" # changed .csv to .tsv
                 proc_csv_path = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv"
                 raw_zip_path  = f"{data_directory}/{dataset_id}_{short_hash}_raw.zip"
                 proc_zip_path = f"{data_directory}/{dataset_id}_{short_hash}_proc.zip"

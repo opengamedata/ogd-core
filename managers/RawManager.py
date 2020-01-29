@@ -67,7 +67,7 @@ class RawManager:
                     item = complex_data_parsed[key]
                     line[index] = f"\"{str(item)}\"" if (type(item) == type({}) or type(item) == str) else item
 
-        self._lines.append(",".join([str(item) for item in line]) + "\n")
+        self._lines.append("\t".join([str(item) for item in line]) + "\n") # changed , to \t
 
     ## Function to empty the list of lines stored by the RawManager.
     #  This is helpful if we're processing a lot of data and want to avoid
@@ -78,7 +78,7 @@ class RawManager:
 
     ## Function to write out the header for a raw csv file.
     def WriteRawCSVHeader(self):
-        self._raw_file.write(",".join(self._all_columns) + "\n")
+        self._raw_file.write("\t".join(self._all_columns) + "\n")# changed , to \t
 
     ## Function to write out all lines of raw data that have been parsed so far.
     def WriteRawCSVLines(self):
