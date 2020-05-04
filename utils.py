@@ -157,6 +157,8 @@ class SQL:
         else:
             Logger.toStdOut("No tunnel to stop", logging.INFO)
 
+
+
     ## Function to build and execute SELECT statements on a database connection.
     #  @param cursor        A database cursor, retrieved from the active connection.
     #  @param db_name       The name of the database to which we are connected.
@@ -184,7 +186,15 @@ class SQL:
     #  @return              A collection of all rows from the selection, if fetch_results is true,
     #                           otherwise None.
     @staticmethod
-    def SELECT(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
+    def SELECT(cursor, db_name: str, table:str, columns: typing.List[str] = None, filter: str = None, limit: int = -1,
+               sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
+               distinct: bool = False, fetch_results: bool = True) -> typing.List[typing.Tuple]:
+        query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, filter=filter, limit=limit,
+                                   sort_columns=sort_columns, sort_direction=sort_direction, grouping=grouping,
+                                   distinct=distinct)
+        return SQL.SELECTfromQuery(cursor=cursor, query=query, fetch_results=fetch_results)
+    @staticmethod
+    def SELECTfromQuery(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
         Logger.toStdOut("Running query: " + query, logging.INFO)
         # print(f"running query: {query}")
         start = datetime.datetime.now()
