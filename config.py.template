@@ -1,4 +1,4 @@
-{
+settings = {
     "DATA_DIR": "./data/",
     "db_config":
     {
