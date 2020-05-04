@@ -107,7 +107,7 @@ class RTServer:
                 elif game_id == "CRYSTAL":
                     extractor = CrystalExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
                 elif game_id == "LAKELAND":
-                    extractor = LakelandExtractor(session_id=sess_id, game_table=game_table, game_schema=schema)
+                    extractor = LakelandExtractor(session_id=sess_id, game_table=game_table, game_schema=schema, proc_file=None)
                 else:
                     raise Exception("Got an invalid game ID!")
                 for row in session_data:
