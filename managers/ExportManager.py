@@ -205,9 +205,9 @@ class ExportManager:
                             range( 0, math.ceil(num_sess / slice_size) )]
             for next_slice in session_slices:
                 # grab data for the given session range. Sort by event time, so
-                select_query = self._select_query_from_slice(next_slice=next_slice)
+                select_query = self._select_query_from_slice(next_slice=next_slice, game_schema=game_schema)
                 self._select_queries.append(select_query)
-                next_data_set = utils.SQL.SELECT(cursor=db_cursor, query=select_query, fetch_results=True)
+                next_data_set = utils.SQL.SELECTfromQuery(cursor=db_cursor, query=select_query, fetch_results=True)
                 # now, we process each row.
                 start = datetime.now()
                 for row in next_data_set:
@@ -237,8 +237,8 @@ class ExportManager:
         if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
             ver_filter = f" AND app_version in ({','.join([str(x) for x in game_schema.schema()['config']['SUPPORTED_VERS']])}) "
         else:
-            ver_filer = ''
-        filt = f"(session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}') AND app_id_fast='{self._game_id}'{ver_filter}"
+            ver_filter = ''
+        filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
         query = utils.SQL._prepareSelect(db_name=settings["db_config"]["DB_NAME_DATA"],
                                          table=settings["db_config"]["table"], columns=None, filter=filt, limit=-1,
                                          sort_columns=["session_id", "session_n"], sort_direction="ASC",
@@ -264,8 +264,8 @@ class ExportManager:
                 utils.SQL.Query(db_cursor, create_query)
                 for select_query in self._select_queries:
                     insert_into_query = get_insert_into_query(select_query)
-                    utils.SQL.query(db_cursor, insert_into_query)
-                utils.SQL.query(alter_query)
+                    utils.SQL.Query(db_cursor, insert_into_query)
+                utils.SQL.Query(db_cursor, alter_query)
             except Exception as err:
                 utils.Logger.toStdOut(str(err), logging.ERROR)
                 traceback.print_tb(err.__traceback__)
