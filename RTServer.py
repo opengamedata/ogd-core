@@ -137,12 +137,13 @@ class RTServer:
                     ret_val = all_features
             else:
                 print("error, empty session!")
-                utils.Logger.toFile(f"error, empty session! all_features: {all_features}", logging.ERROR)
+                utils.Logger.toFile(f"error, empty session!", logging.ERROR)
                 ret_val = {"error": "Empty Session!"}
         except Exception as err:
             print(f"got error in RTServer.py: {str(err)}")
-            utils.Logger.toFile(f"Got an error in getFeaturesBySessID: {str(err)}", logging.ERROR)
             traceback.print_tb(err.__traceback__)
+            utils.Logger.toFile(f"Got an error in getFeaturesBySessID: {str(err)}", logging.ERROR)
+            # traceback.print_tb(err.__traceback__)
             ret_val = {"error": "Got error in RTServer!"}
             raise err
         finally:
@@ -158,27 +159,40 @@ class RTServer:
         cur_level: int
         idle_time: int
     
-        tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
+        #+++
+        start = datetime.now()
+        #---
+        # tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         try:
-            cursor = db.cursor()
-            filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
-            max_level_raw = utils.SQL.SELECT(cursor=cursor,
-                                             db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
-                                             columns=["MAX(level)"], filter=filt)
-            filt = f"`session_id`='{sess_id}'"
-            cur_level_raw = utils.SQL.SELECT(cursor=cursor,
-                                             db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
-                                             columns=["level", "server_time"], filter=filt, limit=1,\
-                                             sort_columns=["client_time"], sort_direction="DESC")
-            max_level = max_level_raw[0][0] if max_level_raw[0][0] != None else 0
-            cur_level = cur_level_raw[0][0]
-            idle_time = (datetime.now() - cur_level_raw[0][1]).seconds
+            # cursor = db.cursor()
+            # filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
+            # max_level_raw = utils.SQL.SELECT(cursor=cursor,
+            #                                  db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
+            #                                  columns=["MAX(level)"], filter=filt)
+            # filt = f"`session_id`='{sess_id}'"
+            # cur_level_raw = utils.SQL.SELECT(cursor=cursor,
+            #                                  db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
+            #                                  columns=["level", "server_time"], filter=filt, limit=1,\
+            #                                  sort_columns=["client_time"], sort_direction="DESC")
+            # max_level = max_level_raw[0][0] if max_level_raw[0][0] != None else 0
+            # cur_level = cur_level_raw[0][0]
+            max_level = 1
+            cur_level = 1
+            # idle_time = (datetime.now() - cur_level_raw[0][1]).seconds
+            idle_time = 5
+            #+++
+            end = datetime.now()
+            time_delta = end - start
+            minutes = math.floor(time_delta.total_seconds()/60)
+            seconds = time_delta.total_seconds() % 60
+            utils.Logger.toFile(f"Total time taken to get game progress: {minutes} min, {seconds} sec", logging.DEBUG)
+            #---
         except Exception as err:
             #print(f"got error in RTServer.py: {str(err)}")
             utils.Logger.toFile(f"Got an error in getGameProgress: {str(err)}", logging.ERROR)
             raise err
         finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            # utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return {"max_level": max_level, "cur_level": cur_level, "idle_time": idle_time}
 
     ## Handler to get a list of all feature names for a given game.

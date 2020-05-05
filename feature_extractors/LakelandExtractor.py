@@ -95,7 +95,10 @@ class LakelandExtractor(Extractor):
         self._NUM_SECONDS_PER_WINDOW_OVERLAP = config["WINDOW_OVERLAP_SECONDS"]
         self._GAME_SCHEMA = game_schema
         # TODO: Ask John whether this is needed - the point of extractors is they aren't responsible for knowing when to write data.
-        self._WRITE_FEATURES = lambda: self.writeCurrentFeatures(file=proc_file)
+        if proc_file:
+            self._WRITE_FEATURES = lambda: self.writeCurrentFeatures(file=proc_file)
+        else:
+            self._WRITE_FEATURES = lambda: print("Dumping feature data, no writable file was given!")
         self.WINDOW_RANGE = range(game_table.max_level + 1)
         self._cur_gameplay = 1
         self._startgame_count = 0
