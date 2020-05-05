@@ -1,16 +1,18 @@
-#!/Library/Frameworks/Python.framework/Versions/3.7/bin/python3
+#!C:\Program Files\Python38\python.exe -u
 #/usr/bin/python3.6
 # import standard libraries
 import cgi
 import cgitb
 import json
 import logging
+import math
 import traceback
 from datetime import datetime
 # # import local files
 import Request
 import utils
 from RTServer import RTServer
+from SimRTServer import SimRTServer
 
 try:
     header = "Content-type:text/plain \r\n\r\n"
@@ -51,6 +53,24 @@ try:
     elif method == "get_prediction_names_by_game":
         game_id = request.getvalue("gameID")
         body = RTServer.getPredictionNamesByGameLevel(game_id=game_id)
+    elif method == "sim_all_active_sessions":
+        game_id = request.getvalue("gameID")
+        require_player_id = request.getvalue("require_player_id")
+        sim_time = int(request.getvalue("sim_time"))
+        body = SimRTServer.getAllActiveSessions(game_id=game_id, require_player_id=require_player_id, sim_time=sim_time)
+    elif method == "sim_features_by_sessID":
+        game_id = request.getvalue("gameID")
+        sess_id = request.getvalue("sessID")
+        features = request.getvalue("features")
+        sim_time = int(request.getvalue("sim_time"))
+        body = SimRTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, sim_time=sim_time, features=features)
+        utils.Logger.toStdOut(f"got simulated features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}, sim_time={sim_time}", logging.INFO)
+    elif method == "sim_predictions_by_sessID":
+        game_id = request.getvalue("gameID")
+        sess_id = request.getvalue("sessID")
+        predictions = request.getvalue("predictions")
+        sim_time = int(request.getvalue("sim_time"))
+        body = SimRTServer.getPredictionsBySessID(sess_id=sess_id, game_id=game_id, sim_time=sim_time, predictions=predictions)
 
     result: str = json.dumps(body, default=lambda ob: ob.isoformat() if type(ob) == datetime else json.dumps(ob))
     print(result)
