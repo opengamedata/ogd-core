@@ -116,3 +116,7 @@ venv.bak/
 # VSCode
 .vscode
 /JohnsLogs/
+
+
+OGD_venv/
+john_temp/
