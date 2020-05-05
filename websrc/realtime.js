@@ -203,7 +203,7 @@ class SessionList
       let max_level_div = document.getElementById(`max_level_${session_id}`);
       max_level_div.innerText = `max: ${this.active_sessions[session_id]["max_level"].toString()}`;
       let seconds_inactive_div = document.getElementById(`seconds_inactive_${session_id}`);
-      seconds_inactive_div.innerText = `seconds inactive: ${this.active_sessions[session_id]["seconds_inactive"].toString()}`;
+      seconds_inactive_div.innerText = `seconds inactive: ${this.active_sessions[session_id]["idle_time"].toString()}`;
   }
 
   /**
