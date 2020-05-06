@@ -222,6 +222,7 @@
       "count_open_achievements": "Player feature - Number of times the player: look at achievements",
       "count_open_shop": "Player feature - Number of times the player: open the shop",
       "count_deaths": "Game feature - General: num deaths per sess",
+      "count_rains": "Count of how many times it rained",
 
       "count_encounter_tutorial": "Player feature - Number of times the player: encounter a tutorial",
       "count_skips": "Player feature - Number of times the player: press skip button",
@@ -321,6 +322,8 @@
       "sess_count_encounter_tutorial": "Player feature - Progress: count of tutorials",
       "sess_count_skips": "Player feature - Progress: count of skips",
       "sess_count_gamestate_logs": "count of gamestate logs",
+      "sess_count_rains": "Count of how many times it rained",
+
 
       "sess_count_buy_home": "Player feature - Number of times the player: buy a home",
       "sess_count_buy_food": "Player feature - Number of times the player: buy a food",

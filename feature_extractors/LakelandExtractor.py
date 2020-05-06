@@ -489,20 +489,27 @@ class LakelandExtractor(Extractor):
 
         # feature functions
         def chose_highest_nutrient_tile(buy_hovers, chosen_tile):
+            if not buy_hovers:
+                return None
             building_buildable_func = self.get_building_buildable_function() if self._VERSION < 15 \
                 else lambda buy_t: buy_t[-2] # whether the tile is buildable (v15 buy hover data contains:
                                              # [tile_data_short, buildable, hover_time]
             for t in buy_hovers:
                 # t has the current type of land (only type that farms can be built on) and a building (farm) can be placed there
                 if t[3] == 1 and building_buildable_func(t):
-                    if t[1] - 2 > chosen_tile[1]:  # comparing the nutritions give or take 2/255 ~ 1% of nutrition
+                    # if any tile found has a nutrient value more than 2 above the chosen tile, fail
+                    if t[1] > (chosen_tile[1]+2):  # comparing the nutritions give or take 2/255 ~ 1% of nutrition
                        return 0  # failed to put on highest nutrition tile
             return 1
 
+        # I think that the calculation was mostly fine, but it definitely doesnt work if player never hovers tiles.
         def chose_lowest_nutrient_farm(buy_hovers, chosen_tile):
+            if not buy_hovers:
+                return None
             for t in buy_hovers:
                 if t[3] == 9:  # t has the current type of farm (only type that fertilizer can be built on)
-                    if t[1] - 2 < chosen_tile[1]:  # comparing the nutritions give or take 2/255 ~ 1% of nutrition
+                    # if any tile found has a nutrient value less than 2 below the chosen tile, fail
+                    if t[1] < (chosen_tile[1]-2):  # comparing the nutritions give or take 2/255 ~ 1% of nutrition
                         return 0  # failed to put on lowest nutrition tile
             return 1
 
@@ -700,6 +707,7 @@ class LakelandExtractor(Extractor):
     def _extractFromRainstopped(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
+        self.feature_count("count_rains")
 
     def _extractFromHistory(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -864,6 +872,8 @@ class LakelandExtractor(Extractor):
 
     # Feature Type Setters 
     def feature_average(self, fname_base, value):
+        if value == None:
+            return
         win_pref, sess_pref = LakelandExtractor._WINDOW_PREFIX, LakelandExtractor._SESS_PREFIX
         window_feature, session_feature = win_pref + fname_base, sess_pref + fname_base
         for w in self._cur_windows:
