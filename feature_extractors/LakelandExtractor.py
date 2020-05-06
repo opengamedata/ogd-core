@@ -711,6 +711,7 @@ class LakelandExtractor(Extractor):
         # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         self.feature_count("count_rains")
+        self.feature_time_since_start("time_to_first_rain", event_client_time)
 
     def _extractFromHistory(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables

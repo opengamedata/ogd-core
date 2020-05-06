@@ -392,7 +392,9 @@
       "sess_time_to_unattended_farm_tutorial": "Player feature - Progress: Time to unattended_farm tutorial (or 0 if unencountered)",
       "sess_time_to_unused_fertilizer_tutorial": "Player feature - Progress: Time to unused_fertilizer tutorial (or 0 if unencountered)",
 
-      "sess_avg_num_tiles_hovered_before_placing_home": "Player feature - General: ave num tiles hovered before placing home",
+      "sess_time_to_first_rain": "Time to the first rain the player experienced",
+
+      "sess_avg_num_tiles_hovered_before_placing_home",: "Player feature - General: ave num tiles hovered before placing home",
       "sess_avg_num_tiles_hovered_before_placing_food": "Player feature - General: ave num tiles hovered before placing food",
       "sess_avg_num_tiles_hovered_before_placing_farm": "Player feature - General: ave num tiles hovered before placing farm",
       "sess_avg_num_tiles_hovered_before_placing_fertilizer": "Player feature - General: ave num tiles hovered before placing fertilizer",
