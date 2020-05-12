@@ -174,8 +174,10 @@ class ExportManager:
         try:
             tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
             db_cursor = db.cursor()
-            raw_csv_file = open(raw_csv_path, "w")
-            proc_csv_file = open(proc_csv_path, "w")
+            else:
+                db_cursor = db
+            raw_csv_file = open(raw_csv_path, "w", encoding="utf-8")
+            proc_csv_file = open(proc_csv_path, "w", encoding="utf-8")
             # Now, we're ready to set up the managers:
             raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
                                 raw_csv_file=raw_csv_file)

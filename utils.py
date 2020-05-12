@@ -106,7 +106,7 @@ class SQL:
         try:
             return MySQLdb.connect(host = login.host, port = login.port,
                                            user = login.user, password = login.pword,
-                                           database = login.db_name)
+                                           database = login.db_name, charset='utf8')
         except MySQLdb.connections.Error as err:
             Logger.toStdOut(f"Could not connect to the MySql database: " + str(err), logging.ERROR)
             Logger.toPrint(f"Could not connect to the MySql database: {str(err)}", logging.ERROR)
@@ -134,7 +134,7 @@ class SQL:
             Logger.toStdOut(f"Connected to SSH at {ssh.host}:{ssh.port}, {ssh.user}", logging.INFO)
             conn = MySQLdb.connect(host = sql.host, port = tunnel.local_bind_port,
                                            user = sql.user, password = sql.pword,
-                                           database = sql.db_name)
+                                           database = sql.db_name, charset='utf8')
             Logger.toStdOut(f"Connected to SQL at {sql.host}:{sql.port}/{sql.db_name}, {sql.user}", logging.INFO)
             return (tunnel, conn)
         except Exception as err:
