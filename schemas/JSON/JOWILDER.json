@@ -292,8 +292,84 @@
 			"quiz_response" : {
 				"count": 3,
 				"prefix": "R",
-				"desc": "player's quiz responses"
-			}
+				"desc": "player's quiz responses",
+    "first_enc_time": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "first enc time"
+    },
+    "num_enc": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "num enc"
+    },
+    "first_enc_duration": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "first enc duration"
+    },
+    "total_enc_duration": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "total enc duration"
+    },
+    "next_int": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "next int"
+    },
+    "num_ints_to_next_obj": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "num ints to next obj"
+    },
+    "num_actions_to_next_obj": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "num actions to next obj"
+    },
+    "num_meaningful_actions_to_next_obj": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "num meaningful actions to next obj"
+    },
+    "num_ntbk_opens_to_next_obj": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "num ntbk opens to next obj"
+    },
+    "num_boxes": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "num boxes"
+    },
+    "num_words": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "num words"
+    },
+    "first_enc_avg_wps": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "first enc avg wps"
+    },
+    "first_enc_avg_tbps": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "first enc avg tbps"
+    },
+    "first_enc_var_wps": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "first enc var wps"
+    },
+    "first_enc_var_tbps": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "first enc var tbps"
+    }
+}
+
         },
         "aggregate":{
             "sessionID":"The player's session ID number for this play session",
@@ -315,7 +391,6 @@
 			"music": "boolean (1/0) whether or not the player turned music on",
 			"hq": "boolean (1/0) for whether or not the player turned hq graphics on",
 			"fullscreen": "boolean (1/0) whether or not the player checked fullscreen",
-			"max_level": "the highest level the player got"
 		}
     },
 
