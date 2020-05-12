@@ -174,8 +174,6 @@ class ExportManager:
         try:
             tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
             db_cursor = db.cursor()
-            else:
-                db_cursor = db
             raw_csv_file = open(raw_csv_path, "w", encoding="utf-8")
             proc_csv_file = open(proc_csv_path, "w", encoding="utf-8")
             # Now, we're ready to set up the managers:
