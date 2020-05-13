@@ -246,8 +246,16 @@
             "meaningful_action_count": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations",
 			"words_per_second": "words per second read",
 			"count_notebook_uses": "number of times the player opened the notebook in the given level",
-			"avg_time_between_clicks": "average time between clicks"
-        },
+			"avg_time_between_clicks": "average time between clicks",
+			"first_enc_words_read": "sum words read in every first encounter",
+			"first_enc_boxes_read": "boxes read in every first encounter",
+			"num_enc": "number of encounters",
+			"first_enc_duration": "duration of first encounters",
+			"first_enc_avg_wps": "average words per second in each first encounter",
+			"first_enc_var_wps": "variance words per second in each first encounter",
+			"first_enc_avg_tbps": "average text boxes per second in each first encounter",
+			"first_enc_var_tbps": "variance text boxes per second in each first encounter"
+		},
         "per_custom_count": {
             "num_guesses": {
                 "count": 19,
@@ -292,83 +300,88 @@
 			"quiz_response" : {
 				"count": 3,
 				"prefix": "R",
-				"desc": "player's quiz responses",
-    "first_enc_time": {
+				"desc": "player's quiz responses"
+			},
+    "itime_to": {
         "count": 189,
         "prefix": "int",
         "desc": "first enc time"
     },
-    "num_enc": {
+    "inum_enc": {
         "count": 189,
         "prefix": "int",
         "desc": "num enc"
     },
-    "first_enc_duration": {
+    "ifirst_enc_duration": {
         "count": 189,
         "prefix": "int",
         "desc": "first enc duration"
     },
-    "total_enc_duration": {
+    "itotal_duration": {
         "count": 189,
         "prefix": "int",
         "desc": "total enc duration"
     },
-    "next_int": {
+    "inext_int": {
         "count": 189,
         "prefix": "int",
         "desc": "next int"
     },
-    "num_ints_to_next_obj": {
+    "inum_ints_to_next_obj": {
         "count": 189,
         "prefix": "int",
         "desc": "num ints to next obj"
     },
-    "num_actions_to_next_obj": {
+    "inum_actions_to_next_obj": {
         "count": 189,
         "prefix": "int",
         "desc": "num actions to next obj"
     },
-    "num_meaningful_actions_to_next_obj": {
+    "inum_meaningful_actions_to_next_obj": {
         "count": 189,
         "prefix": "int",
         "desc": "num meaningful actions to next obj"
     },
-    "num_ntbk_opens_to_next_obj": {
+    "inum_ntbk_opens_to_next_obj": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "num ntbk opens to next obj"
+},
+				"time_to_next_obj": {
         "count": 189,
         "prefix": "int",
         "desc": "num ntbk opens to next obj"
     },
-    "num_boxes": {
+    "ifirst_enc_boxes_read": {
         "count": 189,
         "prefix": "int",
         "desc": "num boxes"
     },
-    "num_words": {
+    "ifirst_enc_words_read": {
         "count": 189,
         "prefix": "int",
         "desc": "num words"
     },
-    "first_enc_avg_wps": {
+    "ifirst_enc_avg_wps": {
         "count": 189,
         "prefix": "int",
         "desc": "first enc avg wps"
     },
-    "first_enc_avg_tbps": {
+    "ifirst_enc_avg_tbps": {
         "count": 189,
         "prefix": "int",
         "desc": "first enc avg tbps"
     },
-    "first_enc_var_wps": {
+    "ifirst_enc_var_wps": {
         "count": 189,
         "prefix": "int",
         "desc": "first enc var wps"
     },
-    "first_enc_var_tbps": {
+    "ifirst_enc_var_tbps": {
         "count": 189,
         "prefix": "int",
         "desc": "first enc var tbps"
     }
-}
 
         },
         "aggregate":{
@@ -387,6 +400,15 @@
 			"sess_words_per_second": "words per second read",
 			"sess_count_notebook_uses": "number of times the player opened the notebook over the whole game",
 			"sess_avg_time_between_clicks": "average time between clicks",
+			"sess_first_enc_words_read": "sum words read in every first encounter",
+			"sess_first_enc_boxes_read": "boxes read in every first encounter",
+			"sess_num_enc": "number of encounters",
+			"sess_first_enc_duration": "duration of first encounters",
+			"sess_first_enc_avg_wps": "average words per second in each first encounter",
+			"sess_first_enc_var_wps": "variance words per second in each first encounter",
+			"sess_first_enc_avg_tbps": "average text boxes per second in each first encounter",
+			"sess_first_enc_var_tbps": "variance text boxes per second in each first encounter",
+
 			"save_code": "the save code the user inputted (or 0 if NA)",
 			"music": "boolean (1/0) whether or not the player turned music on",
 			"hq": "boolean (1/0) for whether or not the player turned hq graphics on",

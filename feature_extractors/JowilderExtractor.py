@@ -92,6 +92,7 @@ class JowilderExtractor(Extractor):
         23: 'sunset',
     }
 
+
     _NULL_FEATURE_VALS = ['null', 0, None]
 
     def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
@@ -108,7 +109,11 @@ class JowilderExtractor(Extractor):
         self._VERSION = None
         self.last_display_time_text = ()
         self.average_handler_level = defaultdict(lambda: {k: {'n': 0, 'total': 0} for k in self._level_range})
+        self.average_handler_interaction = defaultdict(lambda: {k: {'n': 0, 'total': 0} for k in range(189)})
         self.average_handler_session = defaultdict(lambda: {'n': 0, 'total': 0})
+        self.variance_handler_level = defaultdict(lambda: {k: [] for k in self._level_range})
+        self.variance_handler_interaction = defaultdict(lambda: {k: [] for k in range(189)})
+        self.variance_handler_session = defaultdict(lambda: [])
         self.debug_strs = []
         self.last_logged_text = None
         self.asked = False
@@ -119,6 +124,11 @@ class JowilderExtractor(Extractor):
         self.this_click_type = ''
         self.cur_question = 0
         self.chosen_answer = ''
+        self.prev_interaction = None
+        self.cur_interaction = None
+        self.next_objective = None
+        self.cur_objective = None
+        self.finished_encounters = defaultdict(lambda: False)
 
 
 
@@ -255,6 +265,8 @@ class JowilderExtractor(Extractor):
 
         self.last_click_type = self.this_click_type
         self.this_click_type = f'{_subtype}_{_name}'
+        self.prev_interaction = self.cur_interaction or self.prev_interaction
+        self.cur_interaction = je._fqid_to_enum.get(_text_fqid)
         self.feature_count(feature_base="count_clicks")
         if self.last_click_time:
             self.feature_average('avg_time_between_clicks',event_client_time - self.last_click_time)
@@ -265,6 +277,8 @@ class JowilderExtractor(Extractor):
 
         # # helpers
         wps = None
+        word_count = None
+        time_diff_secs = None
         if self.last_display_time_text:
             last_time, last_text = self.last_display_time_text
             time_diff_secs = (event_client_time - last_time).total_seconds()
@@ -313,8 +327,24 @@ class JowilderExtractor(Extractor):
         #     self.setValByName(feature_name=feature_name, new_value=time_to_complete)
         # # set features
         # set_task_finished(completed_task)
+        if self.cur_interaction is not None:
+            self.feature_time_since_start('time_to', cur_client_time=event_client_time,
+                                          interaction_num=self.cur_interaction)
+        if self.prev_interaction != self.cur_interaction:
+            self.feature_count("num_enc", self.cur_interaction)
+        if not self.finished_encounters[self.prev_interaction] and word_count is not None:
+            self.feature_inc("first_enc_words_read", word_count, interaction_num=self.prev_interaction)
+            self.feature_inc("first_enc_boxes_read", 1, interaction_num=self.prev_interaction)
+            self.feature_inc("first_enc_duration", time_diff_secs, interaction_num=self.prev_interaction)
+            self.feature_average("first_enc_avg_wps", wps, interaction_num=self.prev_interaction)
+            self.feature_variance("first_enc_var_wps", wps, interaction_num=self.prev_interaction)
+            self.feature_average("first_enc_avg_tbps", 1/time_diff_secs, interaction_num=self.prev_interaction)
+            self.feature_variance("first_enc_var_tbps", 1/time_diff_secs, interaction_num=self.prev_interaction)
 
         self.feature_average(fname_base='words_per_second', value=wps)
+
+        if self.prev_interaction is not None and self.prev_interaction != self.cur_interaction:
+            self.finished_encounters[self.prev_interaction] = True
 
 
     def _extractFromHover(self, event_client_time, event_data_complex_parsed):
