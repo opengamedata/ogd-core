@@ -266,7 +266,7 @@ class JowilderExtractor(Extractor):
         self.last_click_type = self.this_click_type
         self.this_click_type = f'{_subtype}_{_name}'
         self.prev_interaction = self.cur_interaction or self.prev_interaction
-        self.cur_interaction = je._fqid_to_enum.get(_text_fqid)
+        self.cur_interaction = je.fqid_to_enum.get(_text_fqid)
         self.feature_count(feature_base="count_clicks")
         if self.last_click_time:
             self.feature_average('avg_time_between_clicks',event_client_time - self.last_click_time)
