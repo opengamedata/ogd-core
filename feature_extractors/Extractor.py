@@ -247,7 +247,9 @@ class Extractor(abc.ABC):
             self.features[feature_name] += increment
 
         def _verify_feature(self, feature_name):
-            if self.features.get(feature_name) is None:
+            try:
+                _ = self.features[feature_name]
+            except KeyError:
                 utils.Logger.toStdOut(f'{feature_name} does not exist.', logging.ERROR)
                 utils.Logger.toFile(f'{feature_name} does not exist.', logging.ERROR)
                 return False
