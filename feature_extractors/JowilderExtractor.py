@@ -36,6 +36,7 @@ class JowilderExtractor(Extractor):
     
     _SESS_PREFIX = 'sess_'
     _LEVEL_PREFIX = ''
+    _INT_PREFIX = 'i'
 
     _EVENT_CUSTOM_TO_STR = {
          0: 'checkpoint',
