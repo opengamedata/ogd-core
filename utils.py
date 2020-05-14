@@ -252,7 +252,7 @@ class SQL:
 class Logger:
     # Set up loggers
     err_logger = logging.getLogger("err_logger")
-    file_handler = logging.FileHandler("ExportErrorReport.log")
+    file_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
     err_logger.addHandler(file_handler)
     err_logger.setLevel(level=logging.DEBUG)
     std_logger = logging.getLogger("std_logger")
