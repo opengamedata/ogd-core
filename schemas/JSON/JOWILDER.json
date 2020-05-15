@@ -322,36 +322,6 @@
         "prefix": "int",
         "desc": "total enc duration"
     },
-    "inext_int": {
-        "count": 189,
-        "prefix": "int",
-        "desc": "next int"
-    },
-    "inum_ints_to_next_obj": {
-        "count": 189,
-        "prefix": "int",
-        "desc": "num ints to next obj"
-    },
-    "inum_actions_to_next_obj": {
-        "count": 189,
-        "prefix": "int",
-        "desc": "num actions to next obj"
-    },
-    "inum_meaningful_actions_to_next_obj": {
-        "count": 189,
-        "prefix": "int",
-        "desc": "num meaningful actions to next obj"
-    },
-    "inum_ntbk_opens_to_next_obj": {
-        "count": 189,
-        "prefix": "int",
-        "desc": "num ntbk opens to next obj"
-},
-				"time_to_next_obj": {
-        "count": 189,
-        "prefix": "int",
-        "desc": "num ntbk opens to next obj"
-    },
     "ifirst_enc_boxes_read": {
         "count": 189,
         "prefix": "int",
@@ -381,9 +351,38 @@
         "count": 189,
         "prefix": "int",
         "desc": "first enc var tbps"
+    },
+			    "onext_int": {
+        "count": 80,
+        "prefix": "obj",
+        "desc": "next int"
+    },
+    "onum_enc": {
+        "count": 80,
+        "prefix": "obj",
+        "desc": "num ints to next obj"
+    },
+    "ocount_clicks": {
+        "count": 80,
+        "prefix": "obj",
+        "desc": "num actions to next obj"
+    },
+    "omeaningful_action_count": {
+        "count": 80,
+        "prefix": "obj",
+        "desc": "num meaningful actions to next obj"
+    },
+    "ocount_notebook_uses": {
+        "count": 80,
+        "prefix": "obj",
+        "desc": "num ntbk opens to next obj"
+},
+				"otime_to_next_obj": {
+        "count": 80,
+        "prefix": "obj",
+        "desc": "num ntbk opens to next obj"
     }
-
-        },
+		},
         "aggregate":{
             "sessionID":"The player's session ID number for this play session",
 			"persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",

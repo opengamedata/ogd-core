@@ -37,6 +37,7 @@ class JowilderExtractor(Extractor):
     _SESS_PREFIX = 'sess_'
     _LEVEL_PREFIX = ''
     _INT_PREFIX = 'i'
+    _OBJ_PREFIX = 'o'
 
     _EVENT_CUSTOM_TO_STR = {
          0: 'checkpoint',
@@ -126,8 +127,7 @@ class JowilderExtractor(Extractor):
         self.chosen_answer = ''
         self.prev_interaction = None
         self.cur_interaction = None
-        self.next_objective = None
-        self.cur_objective = None
+        self.cur_objective = 0
         self.finished_encounters = defaultdict(lambda: False)
 
 
@@ -176,6 +176,7 @@ class JowilderExtractor(Extractor):
                 # initialize this time as the start
                 self._CLIENT_START_TIME = event_client_time
                 self._VERSION = row_with_complex_parsed[game_table.version_index]
+                self.last_click_time = self._CLIENT_START_TIME
 
             if self.level_start_timestamp.get(self.level) == None:
                 self.level_start_timestamp[self.level] = event_client_time
@@ -261,90 +262,107 @@ class JowilderExtractor(Extractor):
         _room_coor = d["room_coor"]
         _level = d["level"]
         _text = d.get("text") if self._VERSION == 6 and d.get("text") != "undefined" else None
-        _text_fqid = d.get("text_fqid")
+        _text_fqid = d.get("text_fqid") or d.get("cur_cmd_fqid")
 
-        self.last_click_type = self.this_click_type
-        self.this_click_type = f'{_subtype}_{_name}'
-        self.prev_interaction = self.cur_interaction or self.prev_interaction
-        self.cur_interaction = je.fqid_to_enum.get(_text_fqid)
-        self.feature_count(feature_base="count_clicks")
-        if self.last_click_time:
-            self.feature_average('avg_time_between_clicks',event_client_time - self.last_click_time)
-        self.last_click_time = event_client_time
+        # for all clicks, increment count clicks
 
-        if _subtype == "wildcard" and d.get("cur_cmd_type") == 2:
+
+        #
+        if _subtype == "wildcard" and d.get("cur_cmd_type") == 2: # what does this mean?
             return
 
-        # # helpers
-        wps = None
-        word_count = None
-        time_diff_secs = None
-        if self.last_display_time_text:
-            last_time, last_text = self.last_display_time_text
-            time_diff_secs = (event_client_time - last_time).total_seconds()
+        def finish_text(last_time, last_text, last_interaction):
+            time_diff_secs = (event_client_time - last_time).seconds
+            # record unexpected behavior
             if last_text == self.last_logged_text:
                 utils.Logger.toFile(f"The player read {last_text} twice in a row.", logging.WARN)
             elif time_diff_secs <= 0:
                 self.log_warning(f"The player read '{last_text}' in 0 seconds! (time_diff_secs = {time_diff_secs} <= 0)",3)
             else:
+                # record word speed
                 word_count = len(last_text.split())
                 wps = word_count / time_diff_secs
                 self.last_logged_text = last_text
+                self.feature_average(fname_base='words_per_second', value=wps)
+                if not self.finished_encounters[last_interaction]:
+                    # if encounter is unfinished, record encounter features
+                    self.feature_inc("first_enc_words_read", word_count, interaction_num=last_interaction)
+                    self.feature_inc("first_enc_boxes_read", 1, interaction_num=last_interaction)
+                    self.feature_average("first_enc_avg_wps", wps, interaction_num=last_interaction)
+                    self.feature_variance("first_enc_var_wps", wps, interaction_num=last_interaction)
+                    self.feature_average("first_enc_avg_tbps", 1 / time_diff_secs,
+                                         interaction_num=last_interaction)
+                    self.feature_variance("first_enc_var_tbps", 1 / time_diff_secs,
+                                          interaction_num=last_interaction)
 
-        # clicked_fqid = _room_fqid + _fqid
-        # completed_task = 0
-        # if JowilderExtractor[self.cur_task] == clicked_fqid:
-        #     completed_task = self.cur_task
-        #     self.cur_task += 1
-        
-        # set class variables
-        if _text:
+        def new_click():
+            self.feature_count(feature_base="count_clicks", objective_num=self.cur_objective)
+
+
+            # record information on what click type and where we are in the game
+            self.last_click_type = self.this_click_type
+            self.this_click_type = f'{_subtype}_{_name}'
+            time_between_clicks = event_client_time - self.last_click_time
+            if self.cur_interaction is not None:
+                self.feature_cc_inc(self._INT_PREFIX+"total_duration", self.cur_interaction, time_between_clicks)
+                if not self.finished_encounters[self.cur_interaction]:
+                    self.feature_inc("first_enc_duration", time_between_clicks, interaction_num=self.cur_interaction)
+            if self.cur_objective is not None:
+                self.feature_cc_inc(self._OBJ_PREFIX+"time_to_next_obj", index=self.cur_objective, increment=time_between_clicks)
+            self.feature_average('avg_time_between_clicks', time_between_clicks)
+
+            self.last_click_time = event_client_time
+
+        def new_objective(new_obj):
+            # set val to 0 if not already
+            self.feature_cc_inc("omeaningful_action_count", index=self.cur_objective, increment=0)
+            self.cur_objective = new_obj
+
+        def new_interaction(new_int):
+            self.feature_time_since_start('time_to', cur_client_time=event_client_time,
+                                          interaction_num=new_int)
+            self.feature_count("num_enc", interaction_num=new_int, objective_num=self.cur_objective)
+
+
+            f = JowilderExtractor._OBJ_PREFIX + "next_int"
+            if self.getValByIndex(f, index=self.cur_objective) is None:
+                self.setValByIndex(f, index=self.cur_objective, new_value=new_int)
+
+            finish_interaction()
+            self.cur_interaction = new_int
+
+        def finish_interaction():
+
+            self.prev_interaction = self.cur_interaction
+            self.cur_interaction = None
+
+            self.finished_encounters[self.cur_interaction] = True
+
+
+
+
+        interaction_enum = je.fqid_to_enum.get(_text_fqid)
+        new_click()
+        if self.last_display_time_text: # if the previous log had text
+            last_time, last_text = self.last_display_time_text
+            finish_text(last_time, last_text, last_interaction=self.cur_interaction)
+
+        if _text: # if the current log has text
             if (not self.last_display_time_text) or (self.last_logged_text != _text):
                 self.last_display_time_text = (event_client_time, _text)
         else:
             self.last_display_time_text = ()
 
-        if self.text_fqid_start_end and self.text_fqid_start_end[0] != _text_fqid:
-            self.feature_average('avgTimePerTextBox', self.text_fqid_start_end[2] - self.text_fqid_start_end[1])
-            self.text_fqid_start_end = []
-        if _text_fqid:
-            if not self.text_fqid_start_end:
-                self.text_fqid_start_end = [_text_fqid, event_client_time, event_client_time]
-            elif _text_fqid == self.text_fqid_start_end[0]:
-                self.text_fqid_start_end[2] = event_client_time
+        if interaction_enum != self.cur_interaction: # if the current interaction has changed
+            if self.cur_interaction is not None:
+                finish_interaction()
+            if interaction_enum is not None: # if current there is currently an interaction
+                new_interaction(new_int=interaction_enum)
+            if interaction_enum is not None and interaction_enum <= je.max_objective:  # if it is one of the objective interactions (0-max_obj)
+                if interaction_enum != self.cur_objective and not self.finished_encounters[interaction_enum]: # if its different from the current objective
+                    new_objective(new_obj=interaction_enum)
 
-        # feature helpers
-        # def set_task_finished(completed_task):
-        #     self._task_complete_helper[completed_task] = event_client_time
-        #     if not completed_task:
-        #         return
-        #     if completed_task == 1:
-        #         time_to_complete = datetime.timedelta(0)
-        #     else:
-        #         prev_complete_time = self._task_complete_helper[completed_task-1]
-        #         time_to_complete = event_client_time - prev_complete_time
-        #     feature_name = 'time_to_complete_task_'+completed_task
-        #     self.setValByName(feature_name=feature_name, new_value=time_to_complete)
-        # # set features
-        # set_task_finished(completed_task)
-        if self.cur_interaction is not None:
-            self.feature_time_since_start('time_to', cur_client_time=event_client_time,
-                                          interaction_num=self.cur_interaction)
-        if self.prev_interaction != self.cur_interaction:
-            self.feature_count("num_enc", self.cur_interaction)
-        if not self.finished_encounters[self.prev_interaction] and word_count is not None:
-            self.feature_inc("first_enc_words_read", word_count, interaction_num=self.prev_interaction)
-            self.feature_inc("first_enc_boxes_read", 1, interaction_num=self.prev_interaction)
-            self.feature_inc("first_enc_duration", time_diff_secs, interaction_num=self.prev_interaction)
-            self.feature_average("first_enc_avg_wps", wps, interaction_num=self.prev_interaction)
-            self.feature_variance("first_enc_var_wps", wps, interaction_num=self.prev_interaction)
-            self.feature_average("first_enc_avg_tbps", 1/time_diff_secs, interaction_num=self.prev_interaction)
-            self.feature_variance("first_enc_var_tbps", 1/time_diff_secs, interaction_num=self.prev_interaction)
 
-        self.feature_average(fname_base='words_per_second', value=wps)
-
-        if self.prev_interaction is not None and self.prev_interaction != self.cur_interaction:
-            self.finished_encounters[self.prev_interaction] = True
 
 
     def _extractFromHover(self, event_client_time, event_data_complex_parsed):
@@ -452,7 +470,7 @@ class JowilderExtractor(Extractor):
         _level = d["level"]
 
         if _fqid != 0:
-            self.feature_count('meaningful_action_count')
+            self.feature_count('meaningful_action_count', objective_num=self.cur_objective)
 
         # helpers
         # set class variables
@@ -476,7 +494,7 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
         if d.get("name") == "open":
-            self.feature_inc(feature_base="count_notebook_uses", increment=1)
+            self.feature_inc(feature_base="count_notebook_uses", increment=1, objective_num=self.cur_objective)
 
     def _extractFromMap_click(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -917,18 +935,21 @@ def get_variance():
             self.setValByIndex(int_feature, interaction_num, variance(self.variance_handler_interaction[int_feature][interaction_num]))
 
 
-    def feature_count(self, feature_base, interaction_num=None):
-        self.feature_inc(feature_base=feature_base, increment=1, interaction_num=interaction_num)
+    def feature_count(self, feature_base, interaction_num=None, objective_num=None):
+        self.feature_inc(feature_base=feature_base, increment=1, interaction_num=interaction_num,
+                         objective_num=objective_num)
 
     # Helper function to increment both the per-level and full-session values of corresponding features.
     # Takes a base name common to the per-level and full-session features, adds a prefix to each,
     # and increments each by given increment.
-    def feature_inc(self, feature_base, increment, interaction_num=None):
+    def feature_inc(self, feature_base, increment, interaction_num=None, objective_num=None):
         lvl_pref, sess_pref = JowilderExtractor._LEVEL_PREFIX, JowilderExtractor._SESS_PREFIX
         self._increment_feature_in_cur_levels(feature_name=lvl_pref + feature_base, increment=increment)
         self._increment_sess_feature(feature_name=sess_pref + feature_base, increment=increment)
         if interaction_num is not None:
             self.feature_cc_inc(JowilderExtractor._INT_PREFIX+feature_base, interaction_num, increment)
+        if objective_num is not None:
+            self.feature_cc_inc(JowilderExtractor._OBJ_PREFIX+feature_base, objective_num, increment)
 
 
     def feature_cc_inc(self, feature_name, index, increment):
@@ -1013,7 +1034,7 @@ def get_variance():
             feature_name.startswith(JowilderExtractor._LEVEL_PREFIX+prefix)
         if startswith('min_'):
             return float('inf')
-        if 'time' in feature_name.lower():
+        if 'time' in feature_name.lower() or 'duration' in feature_name.lower():
             return datetime.timedelta(0)
         else:
             return 0
