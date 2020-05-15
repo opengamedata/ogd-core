@@ -40,6 +40,7 @@ class GameTable:
         # Take note of specific indices which will be useful when using a GameTable
         # TODO: Honestly, should just make a reverse index dictionary.
         self.complex_data_index = self.column_names.index("event_data_complex")
+        self.remote_addr_index = self.column_names.index("remote_addr")
         self.client_time_index = self.column_names.index("client_time")
         self.client_time_ms_index = self.column_names.index("client_time_ms")
         self.server_time_index = self.column_names.index("server_time")

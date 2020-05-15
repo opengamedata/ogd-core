@@ -36,6 +36,7 @@ class JowilderExtractor(Extractor):
     
     _SESS_PREFIX = 'sess_'
     _LEVEL_PREFIX = ''
+    _INT_PREFIX = 'i'
 
     _EVENT_CUSTOM_TO_STR = {
          0: 'checkpoint',
@@ -91,6 +92,7 @@ class JowilderExtractor(Extractor):
         23: 'sunset',
     }
 
+
     _NULL_FEATURE_VALS = ['null', 0, None]
 
     def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
@@ -107,7 +109,11 @@ class JowilderExtractor(Extractor):
         self._VERSION = None
         self.last_display_time_text = ()
         self.average_handler_level = defaultdict(lambda: {k: {'n': 0, 'total': 0} for k in self._level_range})
+        self.average_handler_interaction = defaultdict(lambda: {k: {'n': 0, 'total': 0} for k in range(189)})
         self.average_handler_session = defaultdict(lambda: {'n': 0, 'total': 0})
+        self.variance_handler_level = defaultdict(lambda: {k: [] for k in self._level_range})
+        self.variance_handler_interaction = defaultdict(lambda: {k: [] for k in range(189)})
+        self.variance_handler_session = defaultdict(lambda: [])
         self.debug_strs = []
         self.last_logged_text = None
         self.asked = False
@@ -118,6 +124,11 @@ class JowilderExtractor(Extractor):
         self.this_click_type = ''
         self.cur_question = 0
         self.chosen_answer = ''
+        self.prev_interaction = None
+        self.cur_interaction = None
+        self.next_objective = None
+        self.cur_objective = None
+        self.finished_encounters = defaultdict(lambda: False)
 
 
 
@@ -254,6 +265,8 @@ class JowilderExtractor(Extractor):
 
         self.last_click_type = self.this_click_type
         self.this_click_type = f'{_subtype}_{_name}'
+        self.prev_interaction = self.cur_interaction or self.prev_interaction
+        self.cur_interaction = je.fqid_to_enum.get(_text_fqid)
         self.feature_count(feature_base="count_clicks")
         if self.last_click_time:
             self.feature_average('avg_time_between_clicks',event_client_time - self.last_click_time)
@@ -264,6 +277,8 @@ class JowilderExtractor(Extractor):
 
         # # helpers
         wps = None
+        word_count = None
+        time_diff_secs = None
         if self.last_display_time_text:
             last_time, last_text = self.last_display_time_text
             time_diff_secs = (event_client_time - last_time).total_seconds()
@@ -312,8 +327,24 @@ class JowilderExtractor(Extractor):
         #     self.setValByName(feature_name=feature_name, new_value=time_to_complete)
         # # set features
         # set_task_finished(completed_task)
+        if self.cur_interaction is not None:
+            self.feature_time_since_start('time_to', cur_client_time=event_client_time,
+                                          interaction_num=self.cur_interaction)
+        if self.prev_interaction != self.cur_interaction:
+            self.feature_count("num_enc", self.cur_interaction)
+        if not self.finished_encounters[self.prev_interaction] and word_count is not None:
+            self.feature_inc("first_enc_words_read", word_count, interaction_num=self.prev_interaction)
+            self.feature_inc("first_enc_boxes_read", 1, interaction_num=self.prev_interaction)
+            self.feature_inc("first_enc_duration", time_diff_secs, interaction_num=self.prev_interaction)
+            self.feature_average("first_enc_avg_wps", wps, interaction_num=self.prev_interaction)
+            self.feature_variance("first_enc_var_wps", wps, interaction_num=self.prev_interaction)
+            self.feature_average("first_enc_avg_tbps", 1/time_diff_secs, interaction_num=self.prev_interaction)
+            self.feature_variance("first_enc_var_tbps", 1/time_diff_secs, interaction_num=self.prev_interaction)
 
         self.feature_average(fname_base='words_per_second', value=wps)
+
+        if self.prev_interaction is not None and self.prev_interaction != self.cur_interaction:
+            self.finished_encounters[self.prev_interaction] = True
 
 
     def _extractFromHover(self, event_client_time, event_data_complex_parsed):
@@ -795,8 +826,8 @@ class JowilderExtractor(Extractor):
 
     def get_time_since_start(self, client_time):
         return client_time - self._CLIENT_START_TIME
-    
-    def feature_average(self, fname_base, value):
+
+    def feature_average(self, fname_base, value, interaction_num=None):
         if value is None:
             return
         lvl_pref, sess_pref = JowilderExtractor._LEVEL_PREFIX, JowilderExtractor._SESS_PREFIX
@@ -818,31 +849,109 @@ class JowilderExtractor(Extractor):
             'n']
         self.setValByName(session_feature, avg)
 
-    def feature_count(self, feature_base):
-        self.feature_inc(feature_base=feature_base, increment=1)
+        if interaction_num is not None:
+            int_feature = JowilderExtractor._INT_PREFIX + fname_base
+            if not self.average_handler_interaction[int_feature][interaction_num]['total']:
+                self.average_handler_interaction[int_feature][interaction_num]['total'] = self._get_default_val(int_feature)
+            self.average_handler_interaction[int_feature][interaction_num]['total'] += value
+            self.average_handler_interaction[int_feature][interaction_num]['n'] += 1
+            avg = self.average_handler_interaction[int_feature][interaction_num]['total'] / \
+                  self.average_handler_interaction[int_feature][interaction_num]['n']
+            self.setValByIndex(int_feature, interaction_num, avg)
+
+    def feature_variance(self, fname_base, value, interaction_num=None):
+        """
+        This function can be redone to reduce memory usage at the expense of some (perhaps minimal accuracy along the form
+        of (from wikipedia):
+        K = n = Ex = Ex2 = 0.0
+
+def add_variable(x):
+    if (n == 0):
+        K = x
+    n = n + 1
+    Ex += x - K
+    Ex2 += (x - K) * (x - K)
+
+def remove_variable(x):
+    n = n - 1
+    Ex -= (x - K)
+    Ex2 -= (x - K) * (x - K)
+
+def get_meanvalue():
+    return K + Ex / n
+
+def get_variance():
+    return (Ex2 - (Ex * Ex) / n) / (n - 1)
+
+        :param fname_base:
+        :param value:
+        :param interaction_num:
+        :return:
+        """
+        def variance(l):
+            N = len(l)
+            if N == 0:
+                return None
+            Ex = sum(l)
+            Ex2 = sum([x*x for x in l])
+            mean_sq = (Ex/N)*(Ex/N)
+            mean_x2 = Ex2/N
+            return mean_x2 - mean_sq
+
+        if value is None:
+            return
+        lvl_pref, sess_pref = JowilderExtractor._LEVEL_PREFIX, JowilderExtractor._SESS_PREFIX
+        level_feature, session_feature = lvl_pref + fname_base, sess_pref + fname_base
+        for lvl in self._cur_levels:
+            self.variance_handler_level[level_feature][lvl] += [value]
+            var = variance(self.variance_handler_level[level_feature][lvl])
+            self.setValByIndex(level_feature, lvl, var)
+
+        self.variance_handler_session[level_feature] += [value]
+        var = variance(self.variance_handler_session[session_feature])
+        self.setValByName(session_feature, var)
+
+        if interaction_num is not None:
+            int_feature = JowilderExtractor._INT_PREFIX + fname_base
+            self.variance_handler_interaction[int_feature][interaction_num] += [value]
+            self.setValByIndex(int_feature, interaction_num, variance(self.variance_handler_interaction[int_feature][interaction_num]))
+
+
+    def feature_count(self, feature_base, interaction_num=None):
+        self.feature_inc(feature_base=feature_base, increment=1, interaction_num=interaction_num)
 
     # Helper function to increment both the per-level and full-session values of corresponding features.
     # Takes a base name common to the per-level and full-session features, adds a prefix to each,
     # and increments each by given increment.
-    def feature_inc(self, feature_base, increment):
+    def feature_inc(self, feature_base, increment, interaction_num=None):
         lvl_pref, sess_pref = JowilderExtractor._LEVEL_PREFIX, JowilderExtractor._SESS_PREFIX
         self._increment_feature_in_cur_levels(feature_name=lvl_pref + feature_base, increment=increment)
         self._increment_sess_feature(feature_name=sess_pref + feature_base, increment=increment)
+        if interaction_num is not None:
+            self.feature_cc_inc(JowilderExtractor._INT_PREFIX+feature_base, interaction_num, increment)
+
 
     def feature_cc_inc(self, feature_name, index, increment):
         if self.getValByIndex(feature_name=feature_name, index=index) in JowilderExtractor._NULL_FEATURE_VALS:
             self.setValByIndex(feature_name, index=index, new_value=self._get_default_val(feature_name))
         self.features.incValByIndex(feature_name=feature_name, index=index, increment=increment)
 
-    def feature_time_since_start(self, feature_base, cur_client_time):
+    def feature_time_since_start(self, feature_base, cur_client_time, interaction_num=None):
         """
         Sets a session time since start feature. Will not write over a feature that has already been set.
         :param feature_base: name of feature without sess or level prefix
         :param cur_client_time: client time at which the event happened
         """
-        feature_name = JowilderExtractor._SESS_PREFIX + feature_base
-        if self.getValByName(feature_name) in JowilderExtractor._NULL_FEATURE_VALS:
-            self.setValByName(feature_name=feature_name, new_value=self.get_time_since_start(cur_client_time))
+
+        if interaction_num is not None:
+            feature_name = JowilderExtractor._INT_PREFIX + feature_base
+            if self.getValByIndex(feature_name, interaction_num) in JowilderExtractor._NULL_FEATURE_VALS:
+                self.setValByIndex(feature_name=feature_name, new_value=self.get_time_since_start(cur_client_time),
+                               index=interaction_num)
+        else:
+            feature_name = JowilderExtractor._SESS_PREFIX + feature_base
+            if self.getValByName(feature_name) in JowilderExtractor._NULL_FEATURE_VALS:
+                self.setValByName(feature_name=feature_name, new_value=self.get_time_since_start(cur_client_time))
 
     def feature_max_min(self, fname_base, val):
         """feature must have the same fname_base that gets put on the following four features:

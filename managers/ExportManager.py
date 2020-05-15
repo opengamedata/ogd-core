@@ -43,6 +43,7 @@ class ExportManager:
         else:
             self._game_id   = game_id
         self._settings = settings
+        self._select_queries = []
 
     ## Public function to use for feature extraction and csv export.
     #  Extracts features and exports raw and processed csv's based on the given
@@ -143,7 +144,7 @@ class ExportManager:
             if self._game_id in existing_csvs and dataset_id in existing_csvs[self._game_id]:
                 src_sql = existing_csvs[self._game_id][dataset_id]['sql']
                 os.rename(src_sql, sql_zip_path)
-            self._dumpToSQL(sql_dump_path=sql_dump_path, game_table=game_table, db_settings=db_settings)
+            self._dumpToSQL(sql_dump_path=sql_dump_path, game_table=game_table, db_settings=db_settings, temp_table = f'{dataset_id}_{short_hash}')
             sql_zip_file = zipfile.ZipFile(sql_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
             sql_zip_file.write(sql_dump_path, f"{dataset_id}/{dataset_id}_{short_hash}.sql")
             sql_zip_file.write(readme_path, f"{dataset_id}/readme.md")
@@ -173,8 +174,8 @@ class ExportManager:
         try:
             tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
             db_cursor = db.cursor()
-            raw_csv_file = open(raw_csv_path, "w")
-            proc_csv_file = open(proc_csv_path, "w")
+            raw_csv_file = open(raw_csv_path, "w", encoding="utf-8")
+            proc_csv_file = open(proc_csv_path, "w", encoding="utf-8")
             # Now, we're ready to set up the managers:
             raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
                                 raw_csv_file=raw_csv_file)
@@ -203,16 +204,10 @@ class ExportManager:
                             range( j*slice_size, min((j+1)*slice_size - 1, num_sess) )] for j in
                             range( 0, math.ceil(num_sess / slice_size) )]
             for next_slice in session_slices:
-                # grab data for the given session range. Sort by event time, so 
-                # TODO: Take the "WAVES" out of the line of code below.
-                if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
-                    ver_filer = f" AND app_version IN ({','.join([str(x) for x in game_schema.schema()['config']['SUPPORTED_VERS']])}) "
-                else:
-                    ver_filer = ''
-                filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filer}"
-                next_data_set = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
-                                                filter=filt, sort_columns=["session_id", "session_n"], sort_direction = "ASC",
-                                                distinct=False)
+                # grab data for the given session range. Sort by event time, so
+                select_query = self._select_query_from_slice(next_slice=next_slice, game_schema=game_schema)
+                self._select_queries.append(select_query)
+                next_data_set = utils.SQL.SELECTfromQuery(cursor=db_cursor, query=select_query, fetch_results=True)
                 # now, we process each row.
                 start = datetime.now()
                 for row in next_data_set:
@@ -238,22 +233,59 @@ class ExportManager:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return
 
-    def _dumpToSQL(self, sql_dump_path: str, game_table: GameTable, db_settings):
+    def _select_query_from_slice(self, next_slice: list, game_schema: Schema):
+        if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
+            ver_filter = f" AND app_version in ({','.join([str(x) for x in game_schema.schema()['config']['SUPPORTED_VERS']])}) "
+        else:
+            ver_filter = ''
+        filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
+        query = utils.SQL._prepareSelect(db_name=settings["db_config"]["DB_NAME_DATA"],
+                                         table=settings["db_config"]["table"], columns=None, filter=filt, limit=-1,
+                                         sort_columns=["session_id", "session_n"], sort_direction="ASC",
+                                         grouping=None, distinct=False)
+        return query
+
+    def _dumpToSQL(self, sql_dump_path: str, game_table: GameTable, db_settings, temp_table: str):
         # args_list = ["mysqldump", f"--host={db_settings['DB_HOST']}",
         #             f"--where=", f"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'",
         #             f"--user={db_settings['DB_USER']}", f"--password={db_settings['DB_PW']}",
         #             f"{db_settings['DB_NAME_DATA']}", f"{db_settings['table']}"]
         if len(game_table.session_ids) > 0:
+            db_name = db_settings["DB_NAME_DATA"]
+            table = db_settings["table"]
+            from_table_path = db_name + "." + str(table)
+            to_table_path = db_name + "." + temp_table
+            create_query = f'CREATE TABLE {to_table_path} LIKE {from_table_path};'
+            get_insert_into_query = lambda select_query: f'INSERT INTO {to_table_path} '+select_query
+            alter_query = f'ALTER TABLE {to_table_path} DROP COLUMN remote_addr;'
+            try:
+                tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
+                db_cursor = db.cursor()
+                utils.SQL.Query(db_cursor, create_query)
+                for select_query in self._select_queries:
+                    insert_into_query = get_insert_into_query(select_query)
+                    utils.SQL.Query(db_cursor, insert_into_query)
+                utils.SQL.Query(db_cursor, alter_query)
+            except Exception as err:
+                utils.Logger.toStdOut(str(err), logging.ERROR)
+                traceback.print_tb(err.__traceback__)
+                utils.Logger.toFile(str(err), logging.ERROR)
+            finally:
+                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+#             command = f"mysqldump --host={db_settings['DB_HOST']} \
+# --where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}' AND app_id='{self._game_id}'\" \
+# --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']} \
+#  > {sql_dump_path}"
             command = f"mysqldump --host={db_settings['DB_HOST']} \
---where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}' AND app_id='{self._game_id}'\" \
---user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']} \
- > {sql_dump_path}"
+            --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {to_table_path} \
+             > {sql_dump_path}"
             sql_dump_file = open(sql_dump_path, "w")
             utils.Logger.toStdOut(f"running sql dump command: {command}", logging.INFO)
             os.system(command)
         else:
             utils.Logger.toStdOut(f"No sessions to export for {sql_dump_path}", logging.WARNING)
             utils.Logger.toFile(f"No sessions to export for {sql_dump_path}", logging.WARNING)
+
 
     ## Private helper function to process a single row of data.
     #  Most of the processing is delegated to Raw and Proc Managers, but this

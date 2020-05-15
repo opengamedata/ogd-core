@@ -106,7 +106,7 @@ class SQL:
         try:
             return MySQLdb.connect(host = login.host, port = login.port,
                                            user = login.user, password = login.pword,
-                                           database = login.db_name)
+                                           database = login.db_name, charset='utf8')
         except MySQLdb.connections.Error as err:
             Logger.toStdOut(f"Could not connect to the MySql database: " + str(err), logging.ERROR)
             Logger.toPrint(f"Could not connect to the MySql database: {str(err)}", logging.ERROR)
@@ -134,7 +134,7 @@ class SQL:
             Logger.toStdOut(f"Connected to SSH at {ssh.host}:{ssh.port}, {ssh.user}", logging.INFO)
             conn = MySQLdb.connect(host = sql.host, port = tunnel.local_bind_port,
                                            user = sql.user, password = sql.pword,
-                                           database = sql.db_name)
+                                           database = sql.db_name, charset='utf8')
             Logger.toStdOut(f"Connected to SQL at {sql.host}:{sql.port}/{sql.db_name}, {sql.user}", logging.INFO)
             return (tunnel, conn)
         except Exception as err:
@@ -156,6 +156,8 @@ class SQL:
             Logger.toStdOut("Stopped tunnel connection", logging.INFO)
         else:
             Logger.toStdOut("No tunnel to stop", logging.INFO)
+
+
 
     ## Function to build and execute SELECT statements on a database connection.
     #  @param cursor        A database cursor, retrieved from the active connection.
@@ -184,13 +186,15 @@ class SQL:
     #  @return              A collection of all rows from the selection, if fetch_results is true,
     #                           otherwise None.
     @staticmethod
-    def SELECT(cursor, db_name: str, table: str,
-               columns: typing.List[str] = None, filter: str = None, limit: int = -1,
+    def SELECT(cursor, db_name: str, table:str, columns: typing.List[str] = None, filter: str = None, limit: int = -1,
                sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
                distinct: bool = False, fetch_results: bool = True) -> typing.List[typing.Tuple]:
         query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, filter=filter, limit=limit,
-                                   sort_columns=sort_columns, sort_direction=sort_direction,
-                                   grouping=grouping, distinct=distinct)
+                                   sort_columns=sort_columns, sort_direction=sort_direction, grouping=grouping,
+                                   distinct=distinct)
+        return SQL.SELECTfromQuery(cursor=cursor, query=query, fetch_results=fetch_results)
+    @staticmethod
+    def SELECTfromQuery(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
         Logger.toStdOut("Running query: " + query, logging.INFO)
         # print(f"running query: {query}")
         start = datetime.datetime.now()
@@ -248,7 +252,7 @@ class SQL:
 class Logger:
     # Set up loggers
     err_logger = logging.getLogger("err_logger")
-    file_handler = logging.FileHandler("ExportErrorReport.log")
+    file_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
     err_logger.addHandler(file_handler)
     err_logger.setLevel(level=logging.DEBUG)
     std_logger = logging.getLogger("std_logger")
