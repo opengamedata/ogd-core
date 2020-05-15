@@ -132,9 +132,9 @@ class JowilderExtractor(Extractor):
 
 
 
-    def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
         try:
-            self._extractFromRow(row_with_complex_parsed, game_table)
+            self._extractFeaturesFromRow(row_with_complex_parsed, game_table)
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             for place in [utils.Logger.toFile, utils.Logger.toStdOut]:
@@ -144,7 +144,7 @@ class JowilderExtractor(Extractor):
 
             
 
-    def _extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def _extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
         # put some data in local vars, for readability later.
         old_level = self.level
         self.level = row_with_complex_parsed[game_table.level_index]
