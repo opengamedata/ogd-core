@@ -114,7 +114,7 @@ class Extractor(abc.ABC):
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
     @abc.abstractmethod
-    def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
         pass
 
     ## Abstract declaration of a function to perform calculation of aggregate features

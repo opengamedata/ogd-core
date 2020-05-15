@@ -108,7 +108,7 @@ class LakelandExtractor(Extractor):
         self.reset()
         self.setValByName('num_play', self._cur_gameplay)
     
-    def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
         try:
             self._extractFromRow(row_with_complex_parsed, game_table)
         except Exception as e:
