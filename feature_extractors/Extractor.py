@@ -232,6 +232,15 @@ class Extractor(abc.ABC):
                 return
             self.features[feature_name][index]["val"] = new_value
 
+        ## Function to set value of a per-level feature
+        #  Pure syntax sugar, calls setValByIndex using level as the index.
+        #
+        #  @param feature_name The name of the feature to set
+        #  @param index        The count index of the desired value, e.g. the level
+        #  @param new_value    The value to be stored for the given feature at given index.
+        def setValByLevel(self, feature_name: str, level: int, new_value):
+            self.setValByIndex(feature_name=feature_name, index=level, new_value=new_value)
+
         ## Function to set value of a full feature
         #  Intended for use with aggregate features. Not recommended for setting
         #  per-count features.
@@ -255,6 +264,15 @@ class Extractor(abc.ABC):
             if self.features[feature_name][index]["val"] == 'null':
                 self.features[feature_name][index]["val"] = 0
             self.features[feature_name][index]["val"] += increment
+
+        ## Function to increment the value of a per-level feature
+        #  Pure syntax sugar, calls incValByIndex using level as the index.
+        #
+        #  @param feature_name The name of the feature to increment
+        #  @param index        The count index of the specific value, e.g. the level
+        #  @param increment    The size of the increment (default = 1)
+        def incValByLevel(self, feature_name: str, level: int, increment: typing.Union[int, float] = 1):
+            self.incValByIndex(feature_name=feature_name, index=level, increment=increment)
 
         ## Function to increment value of an aggregate feature
         #
