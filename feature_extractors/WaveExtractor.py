@@ -56,7 +56,7 @@ class WaveExtractor(Extractor):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
         # put some data in local vars, for readability later.
         level = row_with_complex_parsed[game_table.level_index]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
