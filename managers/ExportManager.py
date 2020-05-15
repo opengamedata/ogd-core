@@ -201,7 +201,7 @@ class ExportManager:
             utils.Logger.toStdOut(f"Preparing to process {num_sess} sessions.", logging.INFO)
             slice_size = self._settings["BATCH_SIZE"]
             session_slices = [[game_table.session_ids[i] for i in
-                            range( j*slice_size, min((j+1)*slice_size - 1, num_sess) )] for j in
+                            range( j*slice_size, min((j+1)*slice_size, num_sess) )] for j in
                             range( 0, math.ceil(num_sess / slice_size) )]
             for next_slice in session_slices:
                 # grab data for the given session range. Sort by event time, so
