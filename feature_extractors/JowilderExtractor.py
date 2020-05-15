@@ -967,14 +967,16 @@ def get_variance():
         self._set_feature_min_in_session(feature_name=sess_pref + "min_" + fname_base, val=val)
 
     def _increment_feature_in_cur_levels(self, feature_name, increment=None):
-        increment = increment or 1
+        if increment is None:
+            increment = 1
         for lvl in self._cur_levels:
             if self.getValByIndex(feature_name=feature_name, index=lvl) in JowilderExtractor._NULL_FEATURE_VALS:
                 self.setValByIndex(feature_name, index=lvl, new_value=self._get_default_val(feature_name))
             self.features.incValByIndex(feature_name=feature_name, index=lvl, increment=increment)
 
     def _increment_sess_feature(self, feature_name, increment=None):
-        increment = increment or 1
+        if increment is None:
+            increment = 1
         if self.getValByName(feature_name) in JowilderExtractor._NULL_FEATURE_VALS:
             self.setValByName(feature_name, new_value=self._get_default_val(feature_name))
         self.features.incAggregateVal(feature_name=feature_name, increment=increment)
