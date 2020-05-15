@@ -35,6 +35,7 @@ class Extractor(abc.ABC):
         self._level_range: range             = level_range if (level_range is not None) else range(game_table.min_level, game_table.max_level+1)
         self.levels:       typing.List[int]  = []
         self.last_adjust_type: str           = None
+        self.sequences:    typing.List       = []
         self.features:     Extractor.SessionFeatures = Extractor.SessionFeatures(self._level_range, game_schema)
 
     ## Static function to print column headers to a file.
@@ -106,6 +107,24 @@ class Extractor(abc.ABC):
             else:
                 column_vals.append(myformat(self.features.getValByName(key)))
         return column_vals
+
+    def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+        self.extractSequencesFromRow(row_data=row_with_complex_parsed, game_table=game_table)
+        self.extractFeaturesFromRow(row_with_complex_parsed=row_with_complex_parsed, game_table=game_table)
+
+    def extractSequencesFromRow(self, row_data, game_table: GameTable):
+        for sequence in self.sequences:
+            event_data = self.extractCustomSequenceEventFromRow(row_data=row_data, game_table=game_table)
+            sequence.RegisterEvent(row_data[game_table.complex_data_index]["event_custom"], event_data=event_data)
+
+    ## Function to custom-extract event data for a sequence.
+    #  *** This function MUST BE OVERRIDDEN if you want sequence data other than the event types. ***
+    #  For now, it's assumed that all sequences an extractor might want to record have a common custom-data need.
+    #  At the very least, the extractor could take the union of all data its various sequences may need.
+    #  In general, however, if the extractor needs multiple kinds of sequences or sequence data,
+    #  it is probably better to do dedicated sequence analysis.
+    def extractCustomSequenceEventDataFromRow(self, row_data, game_table: GameTable):
+        return None
 
     ## Abstract declaration of a function to perform extraction of features from a row.
     #
@@ -252,5 +271,21 @@ class Extractor(abc.ABC):
                 utils.Logger.toFile(f'{feature_name} does not exist.', logging.ERROR)
                 return False
             return True
+
+    ## Simple helper class to track a sequence of events, based on move types.
+    class Sequence:
+        def __init__(self, end_function: typing.Callable[typing.List[typing.Tuple], None], end_event_type, end_event_count:int=1):
+            self._fnEnd:          = end_function
+            self._end_event_type  = end_event_type
+            self._end_event_count = 0               # current count of end events
+            self._end_at_count    = end_event_count # number of end events to count before ending the sequence.
+            self._events          = []
+
+        def RegisterEvent(self, event_type, event_data):
+            self._events.append((event_type, event_data))
+            if event_type == self._end_event_type:
+                self._end_event_count += 1
+            if self._end_event_count == self._end_at_count:
+                self._fnEnd(self._events)
 
 
