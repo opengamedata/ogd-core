@@ -1,0 +1,69 @@
+\hypertarget{class_request_1_1_date_range_request}{}\section{Request.\+Date\+Range\+Request Class Reference}
+\label{class_request_1_1_date_range_request}\index{Request.DateRangeRequest@{Request.DateRangeRequest}}
+
+
+Class representing a request that includes a range of dates to be retrieved for the given game.  
+
+
+Inheritance diagram for Request.\+Date\+Range\+Request\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_request_1_1_date_range_request}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_request_1_1_date_range_request_ab0c6e3c82af42ad30b607e345bd8e2df}\label{class_request_1_1_date_range_request_ab0c6e3c82af42ad30b607e345bd8e2df}} 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, str game\+\_\+id=None, int max\+\_\+sessions=None, int min\+\_\+moves=None, date start\+\_\+date=None, date end\+\_\+date=None)
+\item 
+def \mbox{\hyperlink{class_request_1_1_date_range_request_a0b6830007ee05d000d2ac4492003a46a}{\+\_\+\+\_\+str\+\_\+\+\_\+}} (self)
+\begin{DoxyCompactList}\small\item\em String representation of a request. \end{DoxyCompactList}\item 
+typing.\+List \mbox{\hyperlink{class_request_1_1_date_range_request_a6225fcabddc26682a0964b9438d3e845}{retrieve\+Session\+I\+Ds}} (self, db\+\_\+cursor, db\+\_\+settings)
+\begin{DoxyCompactList}\small\item\em Method to retrieve the list of I\+Ds for all sessions covered by the request. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_request_1_1_date_range_request_a667ad2ef0f00da24694442cf2763eff8}\label{class_request_1_1_date_range_request_a667ad2ef0f00da24694442cf2763eff8}} 
+{\bfseries start\+\_\+date}
+\item 
+\mbox{\Hypertarget{class_request_1_1_date_range_request_a59104452d705a5c4d6c874e644b7d414}\label{class_request_1_1_date_range_request_a59104452d705a5c4d6c874e644b7d414}} 
+{\bfseries end\+\_\+date}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class representing a request that includes a range of dates to be retrieved for the given game. 
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_request_1_1_date_range_request_a0b6830007ee05d000d2ac4492003a46a}\label{class_request_1_1_date_range_request_a0b6830007ee05d000d2ac4492003a46a}} 
+\index{Request.DateRangeRequest@{Request.DateRangeRequest}!\_\_str\_\_@{\_\_str\_\_}}
+\index{\_\_str\_\_@{\_\_str\_\_}!Request.DateRangeRequest@{Request.DateRangeRequest}}
+\subsubsection{\texorpdfstring{\_\_str\_\_()}{\_\_str\_\_()}}
+{\footnotesize\ttfamily def Request.\+Date\+Range\+Request.\+\_\+\+\_\+str\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+
+
+String representation of a request. 
+
+Just gives game id, and date range. \mbox{\Hypertarget{class_request_1_1_date_range_request_a6225fcabddc26682a0964b9438d3e845}\label{class_request_1_1_date_range_request_a6225fcabddc26682a0964b9438d3e845}} 
+\index{Request.DateRangeRequest@{Request.DateRangeRequest}!retrieveSessionIDs@{retrieveSessionIDs}}
+\index{retrieveSessionIDs@{retrieveSessionIDs}!Request.DateRangeRequest@{Request.DateRangeRequest}}
+\subsubsection{\texorpdfstring{retrieveSessionIDs()}{retrieveSessionIDs()}}
+{\footnotesize\ttfamily  typing.\+List Request.\+Date\+Range\+Request.\+retrieve\+Session\+I\+Ds (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{db\+\_\+cursor,  }\item[{}]{db\+\_\+settings }\end{DoxyParamCaption})}
+
+
+
+Method to retrieve the list of I\+Ds for all sessions covered by the request. 
+
+
+
+Reimplemented from \mbox{\hyperlink{class_request_1_1_request_aa65df0d73c5d2524053dbedd666c7d9e}{Request.\+Request}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Request.\+py\end{DoxyCompactItemize}

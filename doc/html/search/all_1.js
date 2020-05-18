@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['column_5fnames',['column_names',['../class_game_table_1_1_game_table.html#a596b733cc376c6d28de396ab7a011c1e',1,'GameTable::GameTable']]],
-  ['complex_5fdata_5findex',['complex_data_index',['../class_game_table_1_1_game_table.html#ad1f48adb24bc7144f6f6ba628791ffa0',1,'GameTable::GameTable']]],
-  ['connecttomysql',['connectToMySQL',['../classutils_1_1_s_q_l.html#a14e6fa55980163558cddfd54a68c516c',1,'utils::SQL']]],
-  ['csvmetadata',['csvMetadata',['../namespaceutils.html#a9c96cba3c2b57d7b3d4c66964f689f57',1,'utils']]]
+  ['aggregate_5ffeatures',['aggregate_features',['../classschemas_1_1_schema_1_1_schema.html#a65c1e410bba5f9c14aa5f90558f1313f',1,'schemas::Schema::Schema']]],
+  ['avg',['avg',['../namespacefeature__extractors_1_1_lakeland_extractor.html#a8fddc453d0515d3be0e46dca69c77a8a',1,'feature_extractors::LakelandExtractor']]],
+  ['adding_20a_20new_20game_20data_20exporter_2fextractor_3a',['Adding a new game data exporter/extractor:',['../md_doc__adding_a__game.html',1,'']]],
+  ['architecture',['Architecture',['../md_doc__architecture.html',1,'']]]
 ];

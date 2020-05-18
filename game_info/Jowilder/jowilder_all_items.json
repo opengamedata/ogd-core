@@ -1,0 +1,4989 @@
+[
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/drycleaner/rooms/frontdesk/objects/logbook.meta",
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "logbook",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/drycleaner/rooms/frontdesk/objects/logbook/views/page/zones/bingo.meta",
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "logbook.views.page.zones.bingo",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/drycleaner/rooms/frontdesk/objects/logbook/views/page.meta",
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "logbook.views.page",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/drycleaner/rooms/frontdesk/persons/worker.meta",
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/drycleaner/rooms/frontdesk/persons/worker/speaks/takealook.meta",
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.takealook",
+        "text_speaker": [
+            [
+                "Take a look!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/drycleaner/rooms/frontdesk/persons/worker/speaks/hub.meta",
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.hub",
+        "text_speaker": [
+            [
+                "Hi! *cough*",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Can you help-",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "*cough cough*",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Can you help me-",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "*COUGH COUGH COUGH*",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Um, are you okay?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Oh, I'm fine! Just a little hoarse.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ha! What do you call a pony with a sore throat?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Huh?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "A little horse!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Ha! You're funny.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I got that one from my Gramps!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Can you help me? I need to find the owner of this slip.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Well, I can't show our log books to just anybody.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Please?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "It's for Grampa Leo. He's a historian!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Leo... you mean Leopold?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Your gramps is awesome! Always full of stories.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yup, that's him!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Guess it couldn't hurt to let you take a look.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Here's the log book.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/drycleaner/rooms/frontdesk/persons/worker/speaks/done.meta",
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.done",
+        "text_speaker": [
+            [
+                "Do you know who Theodora Youmans is?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hmmm... not sure. Why don't you try the library?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Unless you're too busy horsing around.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ha! Good one.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Thanks for the help!",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/drycleaner/rooms/frontdesk/persons/worker/speaks/done2.meta",
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.done2",
+        "text_speaker": [
+            [
+                "Nice seeing you, Jolie!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/drycleaner/rooms/frontdesk/portholes/toentry.meta",
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "portholes",
+        "fqid": "toentry",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/drycleaner/rooms/frontdesk/observations/block_0.meta",
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "block_0",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/drycleaner/rooms/frontdesk/observations/block_1.meta",
+        "scene": "drycleaner",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "block_1",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/cutscenes/chap4_finale_c.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "cutscenes",
+        "fqid": "chap4_finale_c",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/wildcards/chap4_finale.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "wildcards",
+        "fqid": "chap4_finale",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/inerts/shirt.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "inerts",
+        "fqid": "shirt",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/inerts/flag.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "inerts",
+        "fqid": "flag",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/inerts/rotunda.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "inerts",
+        "fqid": "rotunda",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss/speaks/chap4_finale_2_fail.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap4_finale_2_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss/speaks/chap4_finale_2.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap4_finale_2",
+        "text_speaker": [
+            [
+                "It's an ecology flag!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hmm. What does that symbol have to do with ecology?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss/speaks/chap4_finale_3.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap4_finale_3",
+        "text_speaker": [
+            [
+                "It's a theta symbol, which also looks like the letters \\\"e\\\" and \\\"o\\\" combined.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "The \\\"e\\\" stands for \\\"ecology\\\" and the \\\"o\\\" stands for \\\"organism\\\"!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Fascinating!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Do you know how our flag was used?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss/speaks/chap4_finale_4_fail.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap4_finale_4_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss/speaks/chap4_finale_4.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap4_finale_4",
+        "text_speaker": [
+            [
+                "Governor Nelson gave a speech in front of our flag on the very first Earth Day!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How exciting!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Governor Nelson helped launch a huge conservation movement!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Did you find any photos for the exhibit?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss/speaks/chap4_finale_3_fail.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap4_finale_3_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss/speaks/chap4_finale_5.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap4_finale_5",
+        "text_speaker": [
+            [
+                "Here are some photos of activists marching on the Capitol.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "They're carrying home-made ecology flags!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Nice work, Jolie!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Those are the real Wisconsin Wonders...",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ordinary people standing up for what they believe in!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss/speaks/haveyougotit.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.haveyougotit",
+        "text_speaker": [
+            [
+                "Jolie! I was hoping you'd stop by. Any news on the flag artifact?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I haven't quite figured it out just yet...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Well, get on it. I'm counting on you to figure this out!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss/speaks/chap4_finale_5_fail.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap4_finale_5_fail",
+        "text_speaker": [
+            [
+                "I'm not sure that's relevant here...",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss/speaks/chap4_finale_0_fail.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap4_finale_0_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss/speaks/chap4_finale_0.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap4_finale_0",
+        "text_speaker": [
+            [
+                "Was Wells right?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Is the symbol a deer hoof?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss/speaks/chap4_finale_1_fail.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap4_finale_1_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss/speaks/chap4_finale_1.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap4_finale_1",
+        "text_speaker": [
+            [
+                "I checked at the Wildlife Center. It's not a deer hoof!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hmmm. Then what is our flag?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/persons/boss.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_2/rooms/hall/portholes/toentry.meta",
+        "scene": "capitol_2",
+        "room": "hall",
+        "type": "portholes",
+        "fqid": "toentry",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/cutscenes/chap5_finale_c.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "cutscenes",
+        "fqid": "chap5_finale_c",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/wildcards/credits.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "wildcards",
+        "fqid": "credits",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/inerts/shirt.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "inerts",
+        "fqid": "shirt",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/inerts/flag.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "inerts",
+        "fqid": "flag",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/inerts/stool.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "inerts",
+        "fqid": "stool",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/inerts/rotunda.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "inerts",
+        "fqid": "rotunda",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/inerts/crowd.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "inerts",
+        "fqid": "crowd",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/persons/gramps/speaks/hub.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "gramps.speaks.hub",
+        "text_speaker": [
+            [
+                "null",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/persons/crowd/speaks/hub.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "crowd.speaks.hub",
+        "text_speaker": [
+            [
+                "null",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/persons/teddy.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "teddy",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/persons/gramps.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "gramps",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/persons/crowd.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "crowd",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/persons/teddy/speaks/speak.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "teddy.speaks.speak",
+        "text_speaker": [
+            [
+                "null",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_3/rooms/hall/portholes/toentry.meta",
+        "scene": "capitol_3",
+        "room": "hall",
+        "type": "portholes",
+        "fqid": "toentry",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/inerts/fgboxes.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "inerts",
+        "fqid": "fgboxes",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/inerts/chair.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "inerts",
+        "fqid": "chair",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader/views/paper0/zones/prev.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader.views.paper0.zones.prev",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader/views/paper0/zones/next.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader.views.paper0.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader/views/paper1/zones/prev.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader.views.paper1.zones.prev",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader/views/paper1/zones/next.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader.views.paper1.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader/views/paper2.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader.views.paper2",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader/views/paper0.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader.views.paper0",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader/views/paper1.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader.views.paper1",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader/views/paper2/zones/bingo.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader.views.paper2.zones.bingo",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader/views/paper2/zones/prev.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader.views.paper2.zones.prev",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader/views/paper2/zones/next.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader.views.paper2.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader_flag/views/paper0/zones/prev.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader_flag.views.paper0.zones.prev",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader_flag/views/paper0/zones/next.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader_flag.views.paper0.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader_flag/views/paper1/zones/prev.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader_flag.views.paper1.zones.prev",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader_flag/views/paper1/zones/next.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader_flag.views.paper1.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader_flag/views/paper2.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader_flag.views.paper2",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader_flag/views/paper0.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader_flag.views.paper0",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader_flag/views/paper1.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader_flag.views.paper1",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader_flag/views/paper2/zones/bingo.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader_flag.views.paper2.zones.bingo",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader_flag/views/paper2/zones/prev.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader_flag.views.paper2.zones.prev",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader_flag/views/paper2/zones/next.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader_flag.views.paper2.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/objects/reader_flag.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "objects",
+        "fqid": "reader_flag",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/portholes/tofrontdesk.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "portholes",
+        "fqid": "tofrontdesk",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/microfiche/observations/block_0.meta",
+        "scene": "library",
+        "room": "microfiche",
+        "type": "observations",
+        "fqid": "block_0",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/cutscenes/block_badge.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "cutscenes",
+        "fqid": "block_badge",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/inerts/desk.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "inerts",
+        "fqid": "desk",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/inerts/scanner.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "inerts",
+        "fqid": "scanner",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/inerts/microfiche_sign.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "inerts",
+        "fqid": "microfiche_sign",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/inerts/deskchair.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "inerts",
+        "fqid": "deskchair",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/inerts/fgdesks.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "inerts",
+        "fqid": "fgdesks",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/objects/wellsbadge/views/hub.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "wellsbadge.views.hub",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/objects/wellsbadge.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "wellsbadge",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/persons/worker.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/persons/worker/speaks/flag.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.flag",
+        "text_speaker": [
+            [
+                "Welcome back, Dear! How can I help you?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I need to learn more about this flag!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "It has something to do with ecology.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Hmm... those stripes remind me of the American flag.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Your flag must have been part of a national movement!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Go check the microfiche. Maybe you'll find something!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/persons/worker/speaks/hello.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.hello",
+        "text_speaker": [
+            [
+                "Oh, hello there!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You look like you're on a mission.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Two missions, actually!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Have you seen a badger around here?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I'm afraid not.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Please let me know if you do. It's important!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I'm also looking for Theodora Youmans. Have you heard of her?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Theodora Youmans? Of course!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Check out our microfiche. It's right through that door.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/persons/worker/speaks/droppedbadge.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.droppedbadge",
+        "text_speaker": [
+            [
+                "Did you drop something, Dear? There's a card on the floor.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/persons/worker/speaks/preflag.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.preflag",
+        "text_speaker": [
+            [
+                "It's such a nice fall day.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/persons/worker/speaks/hello_short.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.hello_short",
+        "text_speaker": [
+            [
+                "Weren't you going to check out our microfiche?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm sure you'll find Theodora in there somewhere!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/persons/worker/speaks/wells_recap.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.wells_recap",
+        "text_speaker": [
+            [
+                "Where should I go again?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "You could try the archivist. Maybe he can help you find Wells!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/persons/worker/speaks/nelson_recap.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.nelson_recap",
+        "text_speaker": [
+            [
+                "Check out the archives. They've got tons of old photos!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/persons/worker/speaks/nelson.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.nelson",
+        "text_speaker": [
+            [
+                "I found the flag! Governor Nelson used it on the first Earth Day!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Wow! You figured it out!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Now I just need some old photos, like last time.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "The boss is gonna love it!!!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "You could try the archives.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Though the archivist might be too busy to help...",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Oh, trust me. He'll make time.",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/persons/worker/speaks/wells.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.wells",
+        "text_speaker": [
+            [
+                "What was Wells doing here?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "He was looking for a taxidermist.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "What's a taxidermist?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Not sure. Here, let me look it up.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Oh my!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "\\\"Taxidermy: the art of preparing, stuffing, and mounting the skins of animals.\\\"",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Oh no... Teddy!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I need to find Wells right away!! Do you know where he is?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "You could ask the archivist. He knows everybody!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/persons/worker/speaks/flag_recap.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.flag_recap",
+        "text_speaker": [
+            [
+                "There are some old newspapers loaded up in the microfiche.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/portholes/toentry.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "portholes",
+        "fqid": "toentry",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/portholes/tomicrofiche.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "portholes",
+        "fqid": "tomicrofiche",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/observations/block_nelson.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "block_nelson",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/library/rooms/frontdesk/observations/block_badge_2.meta",
+        "scene": "library",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "block_badge_2",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/kohlcenter/rooms/halloffame/cutscenes/togrampa.meta",
+        "scene": "kohlcenter",
+        "room": "halloffame",
+        "type": "cutscenes",
+        "fqid": "togrampa",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/kohlcenter/rooms/halloffame/inerts/fgcans.meta",
+        "scene": "kohlcenter",
+        "room": "halloffame",
+        "type": "inerts",
+        "fqid": "fgcans",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/kohlcenter/rooms/halloffame/objects/plaque/views/face/zones/date.meta",
+        "scene": "kohlcenter",
+        "room": "halloffame",
+        "type": "objects",
+        "fqid": "plaque.views.face.zones.date",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/kohlcenter/rooms/halloffame/objects/plaque/views/face.meta",
+        "scene": "kohlcenter",
+        "room": "halloffame",
+        "type": "objects",
+        "fqid": "plaque.views.face",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/kohlcenter/rooms/halloffame/objects/plaque.meta",
+        "scene": "kohlcenter",
+        "room": "halloffame",
+        "type": "objects",
+        "fqid": "plaque",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/kohlcenter/rooms/halloffame/portholes/toentry.meta",
+        "scene": "kohlcenter",
+        "room": "halloffame",
+        "type": "portholes",
+        "fqid": "toentry",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/kohlcenter/rooms/halloffame/observations/block_0.meta",
+        "scene": "kohlcenter",
+        "room": "halloffame",
+        "type": "observations",
+        "fqid": "block_0",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/kohlcenter/rooms/halloffame/observations/block_1.meta",
+        "scene": "kohlcenter",
+        "room": "halloffame",
+        "type": "observations",
+        "fqid": "block_1",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/flaghouse/rooms/entry/inerts/desk.meta",
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "inerts",
+        "fqid": "desk",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/flaghouse/rooms/entry/objects/colorbook/views/hub.meta",
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "objects",
+        "fqid": "colorbook.views.hub",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/flaghouse/rooms/entry/objects/colorbook.meta",
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "objects",
+        "fqid": "colorbook",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/flaghouse/rooms/entry/persons/flag_girl.meta",
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "flag_girl",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/flaghouse/rooms/entry/persons/flag_girl/speaks/symbol_recap.meta",
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "flag_girl.speaks.symbol_recap",
+        "text_speaker": [
+            [
+                "If I were you, I'd go to the library and do some digging.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/flaghouse/rooms/entry/persons/flag_girl/speaks/hello_recap.meta",
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "flag_girl.speaks.hello_recap",
+        "text_speaker": [
+            [
+                "There should be some info about that symbol in my book.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/flaghouse/rooms/entry/persons/flag_girl/speaks/hello.meta",
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "flag_girl.speaks.hello",
+        "text_speaker": [
+            [
+                "Hey, nice dog! What breed is he?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Actually, he's a badger.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Oh, cool! I've never seen a badger in real life.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You've got a million flags here!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yep. I'm a vexillophile!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "A vexy-wha?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "It just means flag expert. How can I help?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm investigating this flag.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Can you take a look?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Hey, I've seen that symbol before! Check it out!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/flaghouse/rooms/entry/persons/flag_girl/speaks/symbol.meta",
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "flag_girl.speaks.symbol",
+        "text_speaker": [
+            [
+                "It's an ecology flag!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Do you know what this flag was used for?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm not sure.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "If I were you, I'd go to the library and do some digging.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Good idea. Thanks!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/flaghouse/rooms/entry/portholes/tomap.meta",
+        "scene": "flaghouse",
+        "room": "entry",
+        "type": "portholes",
+        "fqid": "tomap",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/inerts/tree.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "inerts",
+        "fqid": "tree",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/inerts/lynx.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "inerts",
+        "fqid": "lynx",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/inerts/bison.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "inerts",
+        "fqid": "bison",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/inerts/owl.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "inerts",
+        "fqid": "owl",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/inerts/foreground.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "inerts",
+        "fqid": "foreground",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/inerts/fencing.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "inerts",
+        "fqid": "fencing",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/inerts/fox.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "inerts",
+        "fqid": "fox",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/inerts/crane.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "inerts",
+        "fqid": "crane",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/objects/tracks/views/hub.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "objects",
+        "fqid": "tracks.views.hub",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/objects/tracks/views/hub/zones/deer.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "objects",
+        "fqid": "tracks.views.hub.zones.deer",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/objects/tracks.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "objects",
+        "fqid": "tracks",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/persons/crane_ranger.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "crane_ranger",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/persons/wells/speaks/animals2.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "wells.speaks.animals2",
+        "text_speaker": [
+            [
+                "Ugh... I think that lynx is looking at me funny.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/persons/wells/speaks/animals.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "wells.speaks.animals",
+        "text_speaker": [
+            [
+                "Gah. I can't believe this.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm a historian, not a zookeeper!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "And this place is dirty, and itchy, and-",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I love it!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Of course you do. You've got a rodent following you around.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Actually, badgers aren't rodents-",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Whatever.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/persons/wells/speaks/nodeer_recap.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "wells.speaks.nodeer_recap",
+        "text_speaker": [
+            [
+                "My friend is a flag expert.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "She should be able to help you out.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/persons/wells/speaks/nodeer.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "wells.speaks.nodeer",
+        "text_speaker": [
+            [
+                "So? What'd you find out?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Looks like it's not a deer hoof.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Great. Just great. Could this day get any worse?!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Hey, Wells...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I think I can help with your animal problem.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Ha! I don't need your help.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Fine. Then I guess you don't want a real, live badger for the exhibit.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Wait! What?! Really?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wells, meet Teddy.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "\ud83d\ude0a",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "He says he'd be willing to help out.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Yes!!! I'm saved!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "A real, live ferret!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "He's. A. Badger.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "And we still need to figure out that flag!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Fine, fine. Let's see...",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Actually, I went to school with somebody who LOVES old flags.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Why don't you go talk to her? I'll let her know you're coming.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/persons/fox/speaks/concern.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "fox.speaks.concern",
+        "text_speaker": [
+            [
+                "What is it, Teddy?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Oh no... they got sick from polluted water?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Poor foxes!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/persons/crane_ranger/speaks/crane.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "crane_ranger.speaks.crane",
+        "text_speaker": [
+            [
+                "Oh no! What happened to that crane?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Her beak is stuck in a coffee cup.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "It's lucky we found her.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ugh! Those cups are all over the place.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I need to get her free. She won't hold still!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Can Teddy and I help?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Sure! Give it a try.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Careful. That beak is sharp!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "We need to calm her down, Teddy.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Any ideas?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "\ud83e\uddd8",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yoga does sound nice.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "But cranes can't do yoga, Teddy!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "\ud83c\udf69",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Cranes don't eat donuts!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Besides, you just ate my last snack.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "\ud83e\udd97",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Oh yeah, cranes eat insects!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Luckily there are tons of insects around here...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Got one!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Maybe she'll let me take off the cup!",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/persons/expert.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "expert",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/persons/fox.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "fox",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/persons/expert/speaks/recap.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "expert.speaks.recap",
+        "text_speaker": [
+            [
+                "Thanks for your help, kid!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/persons/expert/speaks/removed_cup.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "expert.speaks.removed_cup",
+        "text_speaker": [
+            [
+                "You did it! Thanks, kid.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Can I help you with anything?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm investigating this symbol.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Does it look like a deer hoof?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "There's a diagram of animal tracks over there.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Go take a look!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/persons/wells.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "persons",
+        "fqid": "wells",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/portholes/tomap.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "portholes",
+        "fqid": "tomap",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/observations/coffee.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "observations",
+        "fqid": "coffee",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/wildlife/rooms/center/observations/remove_cup.meta",
+        "scene": "wildlife",
+        "room": "center",
+        "type": "observations",
+        "fqid": "remove_cup",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/cutscenes/chap2_finale_c.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "cutscenes",
+        "fqid": "chap2_finale_c",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/wildcards/chap2_finale.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "wildcards",
+        "fqid": "chap2_finale",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/wildcards/chap2_teddy_finale.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "wildcards",
+        "fqid": "chap2_teddy_finale",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/inerts/shirt.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "inerts",
+        "fqid": "shirt",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/inerts/rotunda.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "inerts",
+        "fqid": "rotunda",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/wells/speaks/hub.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "wells.speaks.hub",
+        "text_speaker": [
+            [
+                "null",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/wells/speaks/chap2_teddy_finale_3.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "wells.speaks.chap2_teddy_finale_3",
+        "text_speaker": [
+            [
+                "The archivist saw Wells at Bean Town this morning!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I DID get coffee, but that doesn't mean I stole your badger!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You just said the archivist was at Bean Town, too.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I stop at Bean Town every morning.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "But... there's more!",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/wells/speaks/chap2_teddy_finale_3_fail.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "wells.speaks.chap2_teddy_finale_3_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/gramps/speaks/chap2_teddy_finale_0.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "gramps.speaks.chap2_teddy_finale_0",
+        "text_speaker": [
+            [
+                "Alright.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Teddy is my pet badger.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "He was napping in Gramps's office...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "And someone kidnapped him!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How do you know he was kidnapped?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/gramps/speaks/chap2_teddy_finale_0_fail.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "gramps.speaks.chap2_teddy_finale_0_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/gramps/speaks/chap2_teddy_finale_2.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "gramps.speaks.chap2_teddy_finale_2",
+        "text_speaker": [
+            [
+                "I found a coffee cup from Bean Town!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "And Gramps only drinks Holdgers!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "That's true.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "How does a coffee cup prove Wells took Teddy?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/gramps/speaks/chap2_teddy_finale_4.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "gramps.speaks.chap2_teddy_finale_4",
+        "text_speaker": [
+            [
+                "Wells was looking for a taxidermist!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "HE WANTS TO KILL TEDDY!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Actually...",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I asked Wells to find a taxidermist.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I want to have animals at the exhibit!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'd prefer live animals. But we need a back-up plan.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wha... but...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Then who took Teddy???",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "No idea, kid.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "But it wasn't me.",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/gramps/speaks/chap2_teddy_finale_4_fail.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "gramps.speaks.chap2_teddy_finale_4_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/gramps/speaks/chap2_teddy_finale_2_fail.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "gramps.speaks.chap2_teddy_finale_2_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_0.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_0",
+        "text_speaker": [
+            [
+                "Yes! I solved it!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "So? What's the story?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Well, remember that slip?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "What slip?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_5_fail.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_5_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_3_fail.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_3_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/writeitup.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.writeitup",
+        "text_speaker": [
+            [
+                "Head back to the museum. Your gramps is waiting for you.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_1.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_1",
+        "text_speaker": [
+            [
+                "Okay. What did you find out?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "It's a dry cleaning receipt!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How do you know?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_teddy_finale_1_fail.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_teddy_finale_1_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_4_fail.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_4_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_6.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_6",
+        "text_speaker": [
+            [
+                "Wow! That's her!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "So Youmans wore this shirt in women's rights marches!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "What a fantastic piece of history-",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "and what impeccable research!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_teddy_finale_1.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_teddy_finale_1",
+        "text_speaker": [
+            [
+                "I found his scarf!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Teddy would NEVER leave without his scarf!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Alright, everybody hold up-",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Are you telling me there's a LIVE badger in MY museum?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "WE'LL DEAL WITH THAT LATER, MRS. M.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Watch it, Jo.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Did you find any other clues?",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_2_fail.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_2_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/haveyougotit.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.haveyougotit",
+        "text_speaker": [
+            [
+                "Jolie! I was hoping you'd stop by. Any news on the shirt artifact?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I haven't quite figured it out just yet...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Well, get on it. I'm counting on you and your gramps to figure this out!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_4.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_4",
+        "text_speaker": [
+            [
+                "The shirt belonged to Theodora Youmans!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hmm. I've heard that name before.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Who is Theodora Youmans?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I had the same question.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "So I went to the library to get some answers.",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_5.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_5",
+        "text_speaker": [
+            [
+                "Of course! Youmans was a suffragist!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yep! She fought to get women the right to vote.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Very good, Jolie!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "The fight for women's suffrage is an important part of Wisconsin history.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "But where does the shirt come in?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_1_fail.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_1_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_6_fail.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_6_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_2.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_2",
+        "text_speaker": [
+            [
+                "An expert opinion. Good thinking!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Where did you go from there?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Well, I had to figure out WHICH cleaner the receipt was from.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How did you narrow it down?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_0_fail.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_0_fail",
+        "text_speaker": [
+            [
+                "That is definitely no slip...",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss/speaks/chap2_finale_3.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap2_finale_3",
+        "text_speaker": [
+            [
+                "You found the right cleaner on the first try?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "What a lucky break!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Gramps always says I'm his good luck charm!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "What did you do at the cleaner's?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I wanted to find out who owned the shirt-",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "So I checked the logbook.",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/gramps.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "gramps",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/wells.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "wells",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/persons/boss.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_1/rooms/hall/portholes/toentry.meta",
+        "scene": "capitol_1",
+        "room": "hall",
+        "type": "portholes",
+        "fqid": "toentry",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection/cutscenes/cs.meta",
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "cutscenes",
+        "fqid": "cs",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection/inerts/dust.meta",
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "inerts",
+        "fqid": "dust",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection/inerts/fgartifacts.meta",
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "inerts",
+        "fqid": "fgartifacts",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection/objects/tunic/views/slip.meta",
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "objects",
+        "fqid": "tunic.views.slip",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection/objects/tunic/views/hub.meta",
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "objects",
+        "fqid": "tunic.views.hub",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection/objects/tunic/views/hub/zones/slip.meta",
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "objects",
+        "fqid": "tunic.views.hub.zones.slip",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection/objects/tunic.meta",
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "objects",
+        "fqid": "tunic",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection/persons/gramps/speaks/found.meta",
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "persons",
+        "fqid": "gramps.speaks.found",
+        "text_speaker": [
+            [
+                "Find anything?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Just this old slip from 1916.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hot Dog! I knew it!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm not so sure that this is a basketball jersey.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wait, you mean Wells is wrong?!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Could be. But we need evidence!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Why don't you head to the Basketball Center and rustle up some clues?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ooh, I like clues!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I'll be at the Capitol. Let me know if you find anything!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection/persons/gramps/speaks/lost.meta",
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "persons",
+        "fqid": "gramps.speaks.lost",
+        "text_speaker": [
+            [
+                "Um... what did you want me to do again?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Head over to the Basketball Center.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Hopefully you can rustle up some clues!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection/persons/gramps/speaks/look_0.meta",
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "persons",
+        "fqid": "gramps.speaks.look_0",
+        "text_speaker": [
+            [
+                "Have a look at the artifact!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection/persons/gramps.meta",
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "persons",
+        "fqid": "gramps",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection/portholes/toentry.meta",
+        "scene": "historicalsociety",
+        "room": "collection",
+        "type": "portholes",
+        "fqid": "toentry",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/inerts/fgcarts.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "inerts",
+        "fqid": "fgcarts",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_1.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_1",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_0_old.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_0_old",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_1_old.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_1_old",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_2/zones/bingo.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_2.zones.bingo",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_2/zones/next.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_2.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/hub.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.hub",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_0.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_0",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_2_old/zones/next.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_2_old.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_1_old/zones/next.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_1_old.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_0_old/zones/next.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_0_old.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_0/zones/bingo.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_0.zones.bingo",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_0/zones/next.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_0.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_1/zones/bingo.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_1.zones.bingo",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_1/zones/next.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_1.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_2_old.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_2_old",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/hub/zones/topics.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.hub.zones.topics",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/hub/zones/topics_old.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.hub.zones.topics_old",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag/views/pic_2.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag.views.pic_2",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals/views/pic_1.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals.views.pic_1",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals/views/pic_2/zones/bingo.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals.views.pic_2.zones.bingo",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals/views/pic_2/zones/next.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals.views.pic_2.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals/views/hub.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals.views.hub",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals/views/pic_0.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals.views.pic_0",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals/views/pic_0/zones/next.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals.views.pic_0.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals/views/pic_1/zones/next.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals.views.pic_1.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals/views/hub/zones/topics.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals.views.hub.zones.topics",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals/views/pic_2.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals.views.pic_2",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/objects/journals_flag.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "objects",
+        "fqid": "journals_flag",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/portholes/tofrontdesk.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "portholes",
+        "fqid": "tofrontdesk",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/portholes/toentry.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "portholes",
+        "fqid": "toentry",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/observations/outtolunch.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "observations",
+        "fqid": "outtolunch",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/stacks/observations/block.meta",
+        "scene": "historicalsociety",
+        "room": "stacks",
+        "type": "observations",
+        "fqid": "block",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection_flag/persons/gramps/speaks/flag.meta",
+        "scene": "historicalsociety",
+        "room": "collection_flag",
+        "type": "persons",
+        "fqid": "gramps.speaks.flag",
+        "text_speaker": [
+            [
+                "Teddy! I'm sure glad to see you.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "The archivist had him locked up!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Gadzooks! Poor critter.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You're becoming quite the detective, Jo.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Notice any clues about this flag?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Well... it looks hand-stitched.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Aha! Good catch, Jo.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Go on, tell the boss what you found!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection_flag/persons/gramps/speaks/recap.meta",
+        "scene": "historicalsociety",
+        "room": "collection_flag",
+        "type": "persons",
+        "fqid": "gramps.speaks.recap",
+        "text_speaker": [
+            [
+                "Why don't you go talk to the boss?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "She's right outside.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection_flag/persons/gramps.meta",
+        "scene": "historicalsociety",
+        "room": "collection_flag",
+        "type": "persons",
+        "fqid": "gramps",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/collection_flag/portholes/toentry.meta",
+        "scene": "historicalsociety",
+        "room": "collection_flag",
+        "type": "portholes",
+        "fqid": "toentry",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/cutscenes/groupconvo_flag.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "cutscenes",
+        "fqid": "groupconvo_flag",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/cutscenes/groupconvo.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "cutscenes",
+        "fqid": "groupconvo",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/inerts/fgdust.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "inerts",
+        "fqid": "fgdust",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/objects/directory.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "objects",
+        "fqid": "directory",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/objects/directory/views/closeup.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "objects",
+        "fqid": "directory.views.closeup",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/objects/directory/views/closeup/zones/archivist.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "objects",
+        "fqid": "directory.views.closeup.zones.archivist",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/objects/report/views/closeup.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "objects",
+        "fqid": "report.views.closeup",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/objects/report.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "objects",
+        "fqid": "report",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/persons/wells/speaks/flag.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "wells.speaks.flag",
+        "text_speaker": [
+            [
+                "What now, kid?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Do you really think that symbol is a deer hoof?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Not sure. Do I look like a deer expert to you?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/persons/wells/speaks/talktogramps.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "wells.speaks.talktogramps",
+        "text_speaker": [
+            [
+                "Why don't you go play with your grampa?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/persons/wells/speaks/flag_recap.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "wells.speaks.flag_recap",
+        "text_speaker": [
+            [
+                "Come on, kid. You're slowing me down.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/persons/gramps/speaks/hub.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "gramps.speaks.hub",
+        "text_speaker": [
+            [
+                "null",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/persons/boss/speaks/flag.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "boss.speaks.flag",
+        "text_speaker": [
+            [
+                "Do you know where I can find a deer expert?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hmm. You could try the Aldo Leopold Wildlife Center.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ugh. I have to head over there and check out the animals.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'll ride with you!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "FINE. That possum better not scratch my leather seats...",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "He's a badger!",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/persons/boss/speaks/talktogramps.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "boss.speaks.talktogramps",
+        "text_speaker": [
+            [
+                "Your grampa is waiting for you in the collection room.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/persons/boss/speaks/flag_recap.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "boss.speaks.flag_recap",
+        "text_speaker": [
+            [
+                "Head over to the Wildlife Center!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm sure they'll be able to help.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/persons/gramps.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "gramps",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/persons/wells.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "wells",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/persons/boss.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "persons",
+        "fqid": "boss",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/portholes/tostacks.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "portholes",
+        "fqid": "tostacks",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/portholes/tocollection.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "portholes",
+        "fqid": "tocollection",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/portholes/tocollectionflag.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "portholes",
+        "fqid": "tocollectionflag",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/portholes/tomap.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "portholes",
+        "fqid": "tomap",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/portholes/tobasement.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "portholes",
+        "fqid": "tobasement",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/observations/block_tomap1.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "observations",
+        "fqid": "block_tomap1",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/observations/block_tomap2.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "observations",
+        "fqid": "block_tomap2",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/entry/observations/block_tocollection.meta",
+        "scene": "historicalsociety",
+        "room": "entry",
+        "type": "observations",
+        "fqid": "block_tocollection",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/cutscenes/savedteddy.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "cutscenes",
+        "fqid": "savedteddy",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/cutscenes/ch3start.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "cutscenes",
+        "fqid": "ch3start",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/cutscenes/seescratches.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "cutscenes",
+        "fqid": "seescratches",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/inerts/janitorcart.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "inerts",
+        "fqid": "janitorcart",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/inerts/fgpipes.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "inerts",
+        "fqid": "fgpipes",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/inerts/scratches.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "inerts",
+        "fqid": "scratches",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/inerts/box.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "inerts",
+        "fqid": "box",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/persons/gramps/speaks/whatdo.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "persons",
+        "fqid": "gramps.speaks.whatdo",
+        "text_speaker": [
+            [
+                "We'll find Teddy.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "We just have to keep our eyes open!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/persons/gramps/speaks/seeyalater.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "persons",
+        "fqid": "gramps.speaks.seeyalater",
+        "text_speaker": [
+            [
+                "I'll be in the collection room. Come find me when you're ready to check out the artifact.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Good luck!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/persons/gramps.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "persons",
+        "fqid": "gramps",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/portholes/tocage.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "portholes",
+        "fqid": "tocage",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/portholes/toentry.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "portholes",
+        "fqid": "toentry",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/portholes/tocloset.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "portholes",
+        "fqid": "tocloset",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/portholes/tocloset_dirty.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "portholes",
+        "fqid": "tocloset_dirty",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/basement/observations/janitor.meta",
+        "scene": "historicalsociety",
+        "room": "basement",
+        "type": "observations",
+        "fqid": "janitor",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/cutscenes/confrontation.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "cutscenes",
+        "fqid": "confrontation",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/cutscenes/unlockdoor.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "cutscenes",
+        "fqid": "unlockdoor",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/inerts/door.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "inerts",
+        "fqid": "door",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/inerts/fg.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "inerts",
+        "fqid": "fg",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/inerts/fence.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "inerts",
+        "fqid": "fence",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/inerts/pipes.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "inerts",
+        "fqid": "pipes",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/inerts/fence_front.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "inerts",
+        "fqid": "fence_front",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/persons/glasses.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "persons",
+        "fqid": "glasses",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/persons/glasses/speaks/afterteddy.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "persons",
+        "fqid": "glasses.speaks.afterteddy",
+        "text_speaker": [
+            [
+                "Whoever lost these glasses probably took Teddy!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How can I find out whose glasses these are?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Oh! There was a staff directory in the entryway!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I'll go look at everyone's pictures!",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/persons/glasses/speaks/beforeteddy.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "persons",
+        "fqid": "glasses.speaks.beforeteddy",
+        "text_speaker": [
+            [
+                "I wonder whose glasses these are.",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/persons/teddy.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "persons",
+        "fqid": "teddy",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/persons/teddy/speaks/trapped.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "persons",
+        "fqid": "teddy.speaks.trapped",
+        "text_speaker": [
+            [
+                "Teddy!!!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "\ud83d\ude2d",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Hang on. I\u2019ll get you out of there!",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/portholes/tobasement.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "portholes",
+        "fqid": "tobasement",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/observations/need_glasses.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "observations",
+        "fqid": "need_glasses",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/cage/observations/lockeddoor.meta",
+        "scene": "historicalsociety",
+        "room": "cage",
+        "type": "observations",
+        "fqid": "lockeddoor",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/inerts/desk.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "inerts",
+        "fqid": "desk",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/inerts/deskchair.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "inerts",
+        "fqid": "deskchair",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/inerts/coffee.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "inerts",
+        "fqid": "coffee",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/inerts/fgoffice.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "inerts",
+        "fqid": "fgoffice",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/inerts/chair.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "inerts",
+        "fqid": "chair",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/persons/archivist_glasses.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "archivist_glasses",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/persons/archivist.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "archivist",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/persons/archivist/speaks/need_glass_0.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "archivist.speaks.need_glass_0",
+        "text_speaker": [
+            [
+                "Can't believe I lost my reading glasses.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/persons/archivist/speaks/hello.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "archivist.speaks.hello",
+        "text_speaker": [
+            [
+                "I need your help!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "*grumble grumble*",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "And you are?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'm Leopold's grandkid!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I don't have time for kids.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Now if only I could read this thing. Blasted tiny letters...",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/persons/archivist/speaks/have_glass.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "archivist.speaks.have_glass",
+        "text_speaker": [
+            [
+                "Ah, that's better!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Did you have a question?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yes! I was wondering-",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Wait a minute!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Where did you get that coffee?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Oh, that's from Bean Town.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I ran into Wells there this morning.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wells? I knew it!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Knew what?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Did you have a question or not?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yes!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Do you know anything about this slip?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I found it on an old shirt.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "An old shirt? Try the university.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You can talk to a textile expert there.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "What's a textile expert?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "They study clothes and fabric.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Great! Thanks for the help!",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/persons/archivist/speaks/need_glass_1.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "archivist.speaks.need_glass_1",
+        "text_speaker": [
+            [
+                "I used to have a magnifying glass around here\u2026",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/persons/archivist/speaks/have_glass_recap.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "archivist.speaks.have_glass_recap",
+        "text_speaker": [
+            [
+                "You're still here? I'm trying to work!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Run along to the university.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You can talk to a textile expert there.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/persons/archivist/speaks/newspaper_recap.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "archivist.speaks.newspaper_recap",
+        "text_speaker": [
+            [
+                "What are you waiting for? The Stacks are right outside the door.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/persons/archivist/speaks/newspaper.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "archivist.speaks.newspaper",
+        "text_speaker": [
+            [
+                "I need to find Wells!!!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Calm down, kid. I haven't seen him.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I can't calm down. This is important!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Sorry, can't help you.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ugh. Fine.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Do you have any info on Theodora Youmans?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Theodora Youmans? Is that who owned the shirt?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yep.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Why didn't you say so?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Youmans was a suffragist here in Wisconsin.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "She led marches and helped women get the right to vote!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wait a sec. Women couldn't vote?!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Nope. But Youmans and other suffragists worked hard to change that.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Thanks to them, Wisconsin was the first state to approve votes for women!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wow!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Here's a call number to find more info in the Stacks.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Where are the Stacks?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Right outside the door.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/persons/archivist/speaks/foundtheodora.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "archivist.speaks.foundtheodora",
+        "text_speaker": [
+            [
+                "I found it!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Theodora wearing the shirt!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "You better get to the capitol!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/persons/archivist_glasses/speaks/confrontation.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "archivist_glasses.speaks.confrontation",
+        "text_speaker": [
+            [
+                "You again! Don't let him hurt me!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "\ud83d\ude44",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Actually, we're just here for some photos.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "It's for the flag display!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wait a minute...",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "YOU'RE the new history detective everybody's talking about?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Guess so!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "YOU?!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Teddy's helping too.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "What kind of photos do you need?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Something to do with ecology and Wisconsin.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Here's a call number for the Stacks. Go find some photos.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Just please, don't let your badger eat them!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/persons/archivist_glasses/speaks/confrontation_recap.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "archivist_glasses.speaks.confrontation_recap",
+        "text_speaker": [
+            [
+                "The Stacks are right outside the door. Go find some photos!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/portholes/tostacks.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "portholes",
+        "fqid": "tostacks",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/observations/magnify.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "magnify",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/observations/block_magnify.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "block_magnify",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/frontdesk/observations/key.meta",
+        "scene": "historicalsociety",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "key",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/secret/inerts/fuzzy.meta",
+        "scene": "historicalsociety",
+        "room": "secret",
+        "type": "inerts",
+        "fqid": "fuzzy",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/secret/inerts/fg.meta",
+        "scene": "historicalsociety",
+        "room": "secret",
+        "type": "inerts",
+        "fqid": "fg",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/cutscenes/trigger_coffee.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "cutscenes",
+        "fqid": "trigger_coffee",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/cutscenes/trigger_scarf.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "cutscenes",
+        "fqid": "trigger_scarf",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/cutscenes/what_happened.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "cutscenes",
+        "fqid": "what_happened",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/cutscenes/door_block_clean.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "cutscenes",
+        "fqid": "door_block_clean",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/cutscenes/door_block_talk.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "cutscenes",
+        "fqid": "door_block_talk",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/inerts/desk.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "inerts",
+        "fqid": "desk",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/inerts/fgdesk.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "inerts",
+        "fqid": "fgdesk",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/inerts/deskchair.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "inerts",
+        "fqid": "deskchair",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/inerts/fgpipes.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "inerts",
+        "fqid": "fgpipes",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/inerts/fire.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "inerts",
+        "fqid": "fire",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/inerts/chair.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "inerts",
+        "fqid": "chair",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/persons/gramps/speaks/archivist.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "persons",
+        "fqid": "gramps.speaks.archivist",
+        "text_speaker": [
+            [
+                "What should I do first?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Head upstairs and talk to the archivist. He might be able to help!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/persons/gramps/speaks/nothing.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "persons",
+        "fqid": "gramps.speaks.nothing",
+        "text_speaker": [
+            [
+                "So much cleaning to do...",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/persons/gramps/speaks/news.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "persons",
+        "fqid": "gramps.speaks.news",
+        "text_speaker": [
+            [
+                "Who could've done this?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I have an idea.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "He's wrong about old shirts and his name rhymes with \\\"smells\\\"...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hold your horses, Jo.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "BUT WELLS STOLE TEDDY!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Could be. But we need evidence.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Fine. Let's investigate!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I'm afraid my papers have gone missing in this mess.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "You'll have to get started without me.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Don't worry, Gramps. I'll find Teddy!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "And I'll figure out the shirt, too.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I knew I could count on you, Jo!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Why don't you go upstairs and see the archivist?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "He's our expert record keeper.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/persons/gramps/speaks/helpclean.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "persons",
+        "fqid": "gramps.speaks.helpclean",
+        "text_speaker": [
+            [
+                "Can you help me tidy up?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/persons/gramps.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "persons",
+        "fqid": "gramps",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/portholes/tobasement.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "portholes",
+        "fqid": "tobasement",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet_dirty/observations/photo.meta",
+        "scene": "historicalsociety",
+        "room": "closet_dirty",
+        "type": "observations",
+        "fqid": "photo",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/cutscenes/intro.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "cutscenes",
+        "fqid": "intro",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/inerts/desk.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "inerts",
+        "fqid": "desk",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/inerts/fgdesk.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "inerts",
+        "fqid": "fgdesk",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/inerts/fgpipes.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "inerts",
+        "fqid": "fgpipes",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/inerts/fire.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "inerts",
+        "fqid": "fire",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/inerts/chair.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "inerts",
+        "fqid": "chair",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/objects/retirement_letter.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "objects",
+        "fqid": "retirement_letter",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/objects/notebook.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "objects",
+        "fqid": "notebook",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/objects/retirement_letter/views/hub.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "objects",
+        "fqid": "retirement_letter.views.hub",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/objects/notebook/views/hub.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "objects",
+        "fqid": "notebook.views.hub",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/persons/gramps/speaks/intro_0_cs_0.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "persons",
+        "fqid": "gramps.speaks.intro_0_cs_0",
+        "text_speaker": [
+            [
+                "Whatcha doing over there, Jo?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Just talking to Teddy.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I gotta run to my meeting!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Meetings are BORING!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Grab your notebook and come upstairs!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/persons/teddy.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "persons",
+        "fqid": "teddy",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/persons/gramps.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "persons",
+        "fqid": "gramps",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/persons/teddy/speaks/intro_0_cs_0.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "persons",
+        "fqid": "teddy.speaks.intro_0_cs_0",
+        "text_speaker": [
+            [
+                "Hang tight, Teddy.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "I'll hurry back and then we can go exploring!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Now where did I put my notebook?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "\ud83d\ude34",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/persons/teddy/speaks/intro_0_cs_5.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "persons",
+        "fqid": "teddy.speaks.intro_0_cs_5",
+        "text_speaker": [
+            [
+                "\ud83d\ude34",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/portholes/tobasement.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "portholes",
+        "fqid": "tobasement",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/observations/photo.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "observations",
+        "fqid": "photo",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/historicalsociety/rooms/closet/observations/doorblock.meta",
+        "scene": "historicalsociety",
+        "room": "closet",
+        "type": "observations",
+        "fqid": "doorblock",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/cutscenes/chap1_finale_c.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "cutscenes",
+        "fqid": "chap1_finale_c",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/wildcards/chap1_finale.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "wildcards",
+        "fqid": "chap1_finale",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/inerts/rotunda.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "inerts",
+        "fqid": "rotunda",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/gramps/speaks/hub.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "gramps.speaks.hub",
+        "text_speaker": [
+            [
+                "null",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/boss/speaks/chap1_finale_slipfirst_0_fail.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap1_finale_slipfirst_0_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/boss/speaks/chap1_finale_1.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap1_finale_1",
+        "text_speaker": [
+            [
+                "Ah, yes! The basketball jersey.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "IT'S NOT A JERSEY!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How do you know?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/boss/speaks/chap1_finale_plaquefirst_0_fail.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap1_finale_plaquefirst_0_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/boss/speaks/chap1_finale_0.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap1_finale_0",
+        "text_speaker": [
+            [
+                "Jolie! What are you doing here?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "The shirt is not a basketball jersey!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Aha! Did you find something?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "What are you talking about?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Gramps had me look for clues about the artifact.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "WELLS WAS WRONG AND GRAMPS WAS RIGHT!!!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Hold on.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Which artifact?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/boss/speaks/chap1_finale_slipfirst_0.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap1_finale_slipfirst_0",
+        "text_speaker": [
+            [
+                "I found this slip on the shirt. It's from 1916!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How does that prove our shirt is not a jersey?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/boss/speaks/chap1_finale_plaquefirst_1.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap1_finale_plaquefirst_1",
+        "text_speaker": [
+            [
+                "I found this slip on the shirt. It's from 1916!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Our shirt was around WAYYY before the women's basketball team!",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/boss/speaks/chap1_finale_plaquefirst_0.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap1_finale_plaquefirst_0",
+        "text_speaker": [
+            [
+                "I checked the Basketball Center. The women's team didn't start until 1974!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How does that prove our shirt is not a jersey?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/boss/speaks/chap1_finale_slipfirst_1.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap1_finale_slipfirst_1",
+        "text_speaker": [
+            [
+                "I checked the Basketball Center. The women's team didn't start until 1974!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Our shirt was around WAYYY before the women's basketball team!",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/boss/speaks/chap1_finale_1_fail.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap1_finale_1_fail",
+        "text_speaker": [
+            [
+                "That doesn't prove your case.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/boss/speaks/talktogramps.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.talktogramps",
+        "text_speaker": [
+            [
+                "Well? What are you still doing here?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Go find your grampa and get to work!",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/boss/speaks/chap1_finale_0_fail.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap1_finale_0_fail",
+        "text_speaker": [
+            [
+                "I don't think we have anything like THAT in the collections...",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/boss/speaks/chap1_finale_2.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss.speaks.chap1_finale_2",
+        "text_speaker": [
+            [
+                "Wow!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I think you're right, Jolie.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Leopold, I need you to work on this right away.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yippee!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "How 'bout it, Jo? Want to help me investigate?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Not really...",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Let me know when you figure it out.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "In the meantime, I need to have a word with Wells.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/gramps.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "gramps",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/persons/boss.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "persons",
+        "fqid": "boss",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/capitol_0/rooms/hall/portholes/toentry.meta",
+        "scene": "capitol_0",
+        "room": "hall",
+        "type": "portholes",
+        "fqid": "toentry",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/inerts/fgtextile.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "inerts",
+        "fqid": "fgtextile",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/objects/businesscards.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "businesscards",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/objects/businesscards/views/card_0/zones/next.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "businesscards.views.card_0.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/objects/businesscards/views/card_1/zones/next.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "businesscards.views.card_1.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/objects/businesscards/views/card_bingo.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "businesscards.views.card_bingo",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/objects/businesscards/views/card_bingo/zones/bingo.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "businesscards.views.card_bingo.zones.bingo",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/objects/businesscards/views/card_bingo/zones/next.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "businesscards.views.card_bingo.zones.next",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/objects/businesscards/views/card_1.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "businesscards.views.card_1",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/objects/businesscards/views/card_0.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "objects",
+        "fqid": "businesscards.views.card_0",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/persons/worker.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/persons/worker/speaks/badger.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.badger",
+        "text_speaker": [
+            [
+                "You haven't seen any badgers around here, have you?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Badgers? No.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "But I hear the museum's got one on the loose!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Yeah. Thanks anyway.",
+                "SPEAKER_AVATAR"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/persons/worker/speaks/intro.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "persons",
+        "fqid": "worker.speaks.intro",
+        "text_speaker": [
+            [
+                "Hello there!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Wow! What is all this stuff?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "It's our Norwegian Craft exhibit!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Can I give you the tour?",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Sorry, I'm in a hurry.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Do you know what this slip is?",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Looks like a dry cleaning receipt.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Ooh, thanks!",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Now I just need to find all the cleaners from wayyyy back in 1916.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Yikes... this could take a while.",
+                "SPEAKER_AVATAR"
+            ],
+            [
+                "Maybe I can help!",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I've got a stack of business cards from my favorite cleaners.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "Why don't you take a look?",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/portholes/tohallway.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "portholes",
+        "fqid": "tohallway",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/observations/block_0.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "block_0",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/humanecology/rooms/frontdesk/observations/block_1.meta",
+        "scene": "humanecology",
+        "room": "frontdesk",
+        "type": "observations",
+        "fqid": "block_1",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/nelson/rooms/trail/cutscenes/conclusion.meta",
+        "scene": "nelson",
+        "room": "trail",
+        "type": "cutscenes",
+        "fqid": "conclusion",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/nelson/rooms/trail/cutscenes/display.meta",
+        "scene": "nelson",
+        "room": "trail",
+        "type": "cutscenes",
+        "fqid": "display",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/nelson/rooms/trail/inerts/dust.meta",
+        "scene": "nelson",
+        "room": "trail",
+        "type": "inerts",
+        "fqid": "dust",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/nelson/rooms/trail/inerts/trees.meta",
+        "scene": "nelson",
+        "room": "trail",
+        "type": "inerts",
+        "fqid": "trees",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/nelson/rooms/trail/inerts/city.meta",
+        "scene": "nelson",
+        "room": "trail",
+        "type": "inerts",
+        "fqid": "city",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/nelson/rooms/trail/inerts/lake.meta",
+        "scene": "nelson",
+        "room": "trail",
+        "type": "inerts",
+        "fqid": "lake",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/nelson/rooms/trail/inerts/midground.meta",
+        "scene": "nelson",
+        "room": "trail",
+        "type": "inerts",
+        "fqid": "midground",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/nelson/rooms/trail/objects/sign.meta",
+        "scene": "nelson",
+        "room": "trail",
+        "type": "objects",
+        "fqid": "sign",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/nelson/rooms/trail/objects/sign/views/view.meta",
+        "scene": "nelson",
+        "room": "trail",
+        "type": "objects",
+        "fqid": "sign.views.view",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/nelson/rooms/trail/persons/gramps/speaks/question.meta",
+        "scene": "nelson",
+        "room": "trail",
+        "type": "persons",
+        "fqid": "gramps.speaks.question",
+        "text_speaker": [
+            [
+                "You and Teddy go check out the Earth Day display.",
+                "SPEAKER_PERSON"
+            ],
+            [
+                "I'll stay here with the sunset.",
+                "SPEAKER_PERSON"
+            ]
+        ]
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/nelson/rooms/trail/persons/gramps.meta",
+        "scene": "nelson",
+        "room": "trail",
+        "type": "persons",
+        "fqid": "gramps",
+        "text_speaker": []
+    },
+    {
+        "path": "/Users/johnmccloskey/Development/jo_wilder/assets/data/levels/tunic/scenes/nelson/rooms/trail/observations/coffee.meta",
+        "scene": "nelson",
+        "room": "trail",
+        "type": "observations",
+        "fqid": "coffee",
+        "text_speaker": []
+    }
+]

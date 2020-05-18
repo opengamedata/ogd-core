@@ -1,0 +1,329 @@
+\hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor}{}\section{feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor Class Reference}
+\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor}\index{feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}}
+
+
+Extractor subclass for extracting features from Crystal game data.  
+
+
+Inheritance diagram for feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_aea1e68ff155db25ec9ec391e5f65fa92}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self, int session\+\_\+id, \mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}} game\+\_\+table, \mbox{\hyperlink{classschemas_1_1_schema_1_1_schema}{Schema}} game\+\_\+schema)
+\begin{DoxyCompactList}\small\item\em Constructor for the \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor}{Crystal\+Extractor}} class. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a916b4ecdb7842673f8f62d61732d5624}{extract\+From\+Row}} (self, row\+\_\+with\+\_\+complex\+\_\+parsed, \mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}} game\+\_\+table)
+\begin{DoxyCompactList}\small\item\em Function to perform extraction of features from a row. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ac0aa2a8037f8e7575788a8ac88836538}{calculate\+Aggregate\+Features}} (self)
+\begin{DoxyCompactList}\small\item\em Function to perform calculation of aggregate features from existing per-\/level/per-\/custom-\/count features. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a1ef83a8220aed0858a87829de0002f77}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a1ef83a8220aed0858a87829de0002f77}} 
+{\bfseries total\+Molecule\+Drag\+Duration}
+\item 
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_aa47c2d1bc42bff117848aae0d7a391a4}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_aa47c2d1bc42bff117848aae0d7a391a4}} 
+{\bfseries active\+\_\+begin}
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a85c2bdd0c3fe28398b783eafe1f0cbf2}{\+\_\+extract\+From\+Begin}} (self, level, event\+\_\+client\+\_\+time)
+\begin{DoxyCompactList}\small\item\em Private function to extract features from a \char`\"{}\+B\+E\+G\+I\+N\char`\"{} event. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a6e5f9339f47a3a6b84bf65285e330769}{\+\_\+extract\+From\+Complete}} (self, level, event\+\_\+client\+\_\+time, event\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Private function to extract features from a \char`\"{}\+C\+O\+M\+P\+L\+E\+T\+E\char`\"{} event. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ac1b89594e83806ff6075259c596e0c38}{\+\_\+extract\+From\+Menu\+Btn}} (self, level, event\+\_\+client\+\_\+time)
+\begin{DoxyCompactList}\small\item\em Private function to extract features from a \char`\"{}\+B\+A\+C\+K\+\_\+\+T\+O\+\_\+\+M\+E\+N\+U\char`\"{} event. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ab8d672619c0ae4495d273406b935c112}{\+\_\+extract\+From\+Molecule\+Release}} (self, level, event\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Private function to extract features from a \char`\"{}\+M\+O\+L\+E\+C\+U\+L\+E\+\_\+\+R\+E\+L\+E\+A\+S\+E\char`\"{} event. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ad9596536a08c941fdad97c72ab2262fe}{\+\_\+extract\+From\+Molecule\+Rotate}} (self, level, event\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Private function to extract features from a \char`\"{}\+M\+O\+L\+E\+C\+U\+L\+E\+\_\+\+R\+O\+T\+A\+T\+E\char`\"{} event. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ab17cf3538783740964e3befadd1d089d}{\+\_\+extract\+From\+Clear\+Btn\+Press}} (self, level)
+\begin{DoxyCompactList}\small\item\em Private function to extract features from a \char`\"{}\+C\+L\+E\+A\+R\+\_\+\+B\+T\+N\+\_\+\+P\+R\+E\+S\+S\char`\"{} event. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a6663edde4eaa797cbd1d46c87aec0b36}{\+\_\+extract\+From\+Museum\+Close}} (self, event\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Private function to extract features from a \char`\"{}\+M\+U\+S\+E\+U\+M\+\_\+\+C\+L\+O\+S\+E\char`\"{} event. \end{DoxyCompactList}\item 
+def \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_aad9c54b2a84c7179f7263b1eb586830e}{\+\_\+extract\+From\+Question\+Answer}} (self, event\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Private function to extract features from a \char`\"{}\+Q\+U\+E\+S\+T\+I\+O\+N\+\_\+\+A\+N\+S\+W\+E\+R\char`\"{} event. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a88a5fe53cddfcaed7008e4f40fc09876}{\+\_\+calc\+Level\+Time}} (self, int lvl)
+\begin{DoxyCompactList}\small\item\em Private function to calculate the time spent on a level for the given level and play index (each level may have been played multiple times). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Extractor subclass for extracting features from Crystal game data. 
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_aea1e68ff155db25ec9ec391e5f65fa92}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_aea1e68ff155db25ec9ec391e5f65fa92}} 
+\index{feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}}
+\subsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{int}]{session\+\_\+id,  }\item[{\mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}}}]{game\+\_\+table,  }\item[{\mbox{\hyperlink{classschemas_1_1_schema_1_1_schema}{Schema}}}]{game\+\_\+schema }\end{DoxyParamCaption})}
+
+
+
+Constructor for the \mbox{\hyperlink{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor}{Crystal\+Extractor}} class. 
+
+Initializes some custom private data (not present in base class) for use when calculating some features. Sets the session\+ID feature. Further, initializes all Q\&A features to -\/1, representing unanswered questions.
+
+
+\begin{DoxyParams}{Parameters}
+{\em session\+\_\+id} & The id number for the session whose data is being processed by this extractor instance. \\
+\hline
+{\em game\+\_\+table} & A data structure containing information on how the db table assiciated with this game is structured. \\
+\hline
+{\em game\+\_\+schema} & A dictionary that defines how the game data itself is structured. \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a88a5fe53cddfcaed7008e4f40fc09876}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a88a5fe53cddfcaed7008e4f40fc09876}} 
+\index{feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}!\_calcLevelTime@{\_calcLevelTime}}
+\index{\_calcLevelTime@{\_calcLevelTime}!feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}}
+\subsubsection{\texorpdfstring{\_calcLevelTime()}{\_calcLevelTime()}}
+{\footnotesize\ttfamily  int feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor.\+\_\+calc\+Level\+Time (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{int}]{lvl }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Private function to calculate the time spent on a level for the given level and play index (each level may have been played multiple times). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lvl} & The level whose play time should be calculated \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The play time if level is valid, -\/1 if level was not completed, 0 if level was never attempted. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a85c2bdd0c3fe28398b783eafe1f0cbf2}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a85c2bdd0c3fe28398b783eafe1f0cbf2}} 
+\index{feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}!\_extractFromBegin@{\_extractFromBegin}}
+\index{\_extractFromBegin@{\_extractFromBegin}!feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}}
+\subsubsection{\texorpdfstring{\_extractFromBegin()}{\_extractFromBegin()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor.\+\_\+extract\+From\+Begin (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{level,  }\item[{}]{event\+\_\+client\+\_\+time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Private function to extract features from a \char`\"{}\+B\+E\+G\+I\+N\char`\"{} event. 
+
+The features affected are\+:
+\begin{DoxyItemize}
+\item start\+\_\+times (used to calculate duration\+In\+Secs and session\+Duration\+In\+Secs)
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em level} & The level being played when event occurred. \\
+\hline
+{\em event\+\_\+client\+\_\+time} & The time when this event occurred, according to game client. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ab17cf3538783740964e3befadd1d089d}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ab17cf3538783740964e3befadd1d089d}} 
+\index{feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}!\_extractFromClearBtnPress@{\_extractFromClearBtnPress}}
+\index{\_extractFromClearBtnPress@{\_extractFromClearBtnPress}!feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}}
+\subsubsection{\texorpdfstring{\_extractFromClearBtnPress()}{\_extractFromClearBtnPress()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor.\+\_\+extract\+From\+Clear\+Btn\+Press (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{level }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Private function to extract features from a \char`\"{}\+C\+L\+E\+A\+R\+\_\+\+B\+T\+N\+\_\+\+P\+R\+E\+S\+S\char`\"{} event. 
+
+The features affected are\+:
+\begin{DoxyItemize}
+\item clear\+Btn\+Presses
+\item session\+Clear\+Btn\+Presses
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em level} & The level being played when clear button was pressed. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a6e5f9339f47a3a6b84bf65285e330769}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a6e5f9339f47a3a6b84bf65285e330769}} 
+\index{feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}!\_extractFromComplete@{\_extractFromComplete}}
+\index{\_extractFromComplete@{\_extractFromComplete}!feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}}
+\subsubsection{\texorpdfstring{\_extractFromComplete()}{\_extractFromComplete()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor.\+\_\+extract\+From\+Complete (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{level,  }\item[{}]{event\+\_\+client\+\_\+time,  }\item[{}]{event\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Private function to extract features from a \char`\"{}\+C\+O\+M\+P\+L\+E\+T\+E\char`\"{} event. 
+
+The features affected are\+:
+\begin{DoxyItemize}
+\item end\+\_\+times (used to calculate duration\+In\+Secs and session\+Duration\+In\+Secs)
+\item duration\+In\+Secs
+\item session\+Duration\+In\+Secs
+\item completes\+Count
+\item final\+Score
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em level} & The level being played when event occurred. \\
+\hline
+{\em event\+\_\+client\+\_\+time} & The time when this event occurred, according to game client. \\
+\hline
+{\em event\+\_\+data} & Parsed J\+S\+ON data from the row being processed. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ac1b89594e83806ff6075259c596e0c38}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ac1b89594e83806ff6075259c596e0c38}} 
+\index{feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}!\_extractFromMenuBtn@{\_extractFromMenuBtn}}
+\index{\_extractFromMenuBtn@{\_extractFromMenuBtn}!feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}}
+\subsubsection{\texorpdfstring{\_extractFromMenuBtn()}{\_extractFromMenuBtn()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor.\+\_\+extract\+From\+Menu\+Btn (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{level,  }\item[{}]{event\+\_\+client\+\_\+time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Private function to extract features from a \char`\"{}\+B\+A\+C\+K\+\_\+\+T\+O\+\_\+\+M\+E\+N\+U\char`\"{} event. 
+
+The features affected are\+:
+\begin{DoxyItemize}
+\item end\+\_\+times (used to calculate total\+Level\+Time and avg\+Level\+Time)
+\item duration\+In\+Secs
+\item session\+Duration\+In\+Secs
+\item menu\+Btn\+Count
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em level} & The level being played when event occurred. \\
+\hline
+{\em event\+\_\+client\+\_\+time} & The time when this event occurred, according to game client. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ab8d672619c0ae4495d273406b935c112}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ab8d672619c0ae4495d273406b935c112}} 
+\index{feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}!\_extractFromMoleculeRelease@{\_extractFromMoleculeRelease}}
+\index{\_extractFromMoleculeRelease@{\_extractFromMoleculeRelease}!feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}}
+\subsubsection{\texorpdfstring{\_extractFromMoleculeRelease()}{\_extractFromMoleculeRelease()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor.\+\_\+extract\+From\+Molecule\+Release (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{level,  }\item[{}]{event\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Private function to extract features from a \char`\"{}\+M\+O\+L\+E\+C\+U\+L\+E\+\_\+\+R\+E\+L\+E\+A\+S\+E\char`\"{} event. 
+
+The features affected are\+:
+\begin{DoxyItemize}
+\item total\+Molecule\+Drag\+Duration (used to calculate avg\+Molecule\+Drag\+Duration\+In\+Secs)
+\item molecule\+Move\+Count
+\item session\+Molecule\+Move\+Count
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em level} & The level being played when event occurred. \\
+\hline
+{\em event\+\_\+data} & Parsed J\+S\+ON data from the row being processed. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ad9596536a08c941fdad97c72ab2262fe}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ad9596536a08c941fdad97c72ab2262fe}} 
+\index{feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}!\_extractFromMoleculeRotate@{\_extractFromMoleculeRotate}}
+\index{\_extractFromMoleculeRotate@{\_extractFromMoleculeRotate}!feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}}
+\subsubsection{\texorpdfstring{\_extractFromMoleculeRotate()}{\_extractFromMoleculeRotate()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor.\+\_\+extract\+From\+Molecule\+Rotate (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{level,  }\item[{}]{event\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Private function to extract features from a \char`\"{}\+M\+O\+L\+E\+C\+U\+L\+E\+\_\+\+R\+O\+T\+A\+T\+E\char`\"{} event. 
+
+The features affected are\+:
+\begin{DoxyItemize}
+\item stamp\+Rotate\+Count
+\item session\+Stamp\+Rotate\+Count
+\item single\+Rotate\+Count
+\item session\+Single\+Rotate\+Count
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em level} & The level being played when event occurred. \\
+\hline
+{\em event\+\_\+data} & Parsed J\+S\+ON data from the row being processed. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a6663edde4eaa797cbd1d46c87aec0b36}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a6663edde4eaa797cbd1d46c87aec0b36}} 
+\index{feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}!\_extractFromMuseumClose@{\_extractFromMuseumClose}}
+\index{\_extractFromMuseumClose@{\_extractFromMuseumClose}!feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}}
+\subsubsection{\texorpdfstring{\_extractFromMuseumClose()}{\_extractFromMuseumClose()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor.\+\_\+extract\+From\+Museum\+Close (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{event\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Private function to extract features from a \char`\"{}\+M\+U\+S\+E\+U\+M\+\_\+\+C\+L\+O\+S\+E\char`\"{} event. 
+
+The features affected are\+:
+\begin{DoxyItemize}
+\item session\+Museum\+Duration\+In\+Secs
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em event\+\_\+data} & Parsed J\+S\+ON data from the row being processed. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_aad9c54b2a84c7179f7263b1eb586830e}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_aad9c54b2a84c7179f7263b1eb586830e}} 
+\index{feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}!\_extractFromQuestionAnswer@{\_extractFromQuestionAnswer}}
+\index{\_extractFromQuestionAnswer@{\_extractFromQuestionAnswer}!feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}}
+\subsubsection{\texorpdfstring{\_extractFromQuestionAnswer()}{\_extractFromQuestionAnswer()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor.\+\_\+extract\+From\+Question\+Answer (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{event\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Private function to extract features from a \char`\"{}\+Q\+U\+E\+S\+T\+I\+O\+N\+\_\+\+A\+N\+S\+W\+E\+R\char`\"{} event. 
+
+The features affected are\+:
+\begin{DoxyItemize}
+\item question\+Answered
+\item question\+Correct
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em event\+\_\+data\+\_\+parsed} & Parsed J\+S\+ON data from the row being processed. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ac0aa2a8037f8e7575788a8ac88836538}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_ac0aa2a8037f8e7575788a8ac88836538}} 
+\index{feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}!calculateAggregateFeatures@{calculateAggregateFeatures}}
+\index{calculateAggregateFeatures@{calculateAggregateFeatures}!feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}}
+\subsubsection{\texorpdfstring{calculateAggregateFeatures()}{calculateAggregateFeatures()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor.\+calculate\+Aggregate\+Features (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+
+
+Function to perform calculation of aggregate features from existing per-\/level/per-\/custom-\/count features. 
+
+
+
+Reimplemented from \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor_a7622c0b66dd98f59a8010c3511f4bdad}{feature\+\_\+extractors.\+Extractor.\+Extractor}}.
+
+\mbox{\Hypertarget{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a916b4ecdb7842673f8f62d61732d5624}\label{classfeature__extractors_1_1_crystal_extractor_1_1_crystal_extractor_a916b4ecdb7842673f8f62d61732d5624}} 
+\index{feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}!extractFromRow@{extractFromRow}}
+\index{extractFromRow@{extractFromRow}!feature\_extractors.CrystalExtractor.CrystalExtractor@{feature\_extractors.CrystalExtractor.CrystalExtractor}}
+\subsubsection{\texorpdfstring{extractFromRow()}{extractFromRow()}}
+{\footnotesize\ttfamily def feature\+\_\+extractors.\+Crystal\+Extractor.\+Crystal\+Extractor.\+extract\+From\+Row (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{row\+\_\+with\+\_\+complex\+\_\+parsed,  }\item[{\mbox{\hyperlink{class_game_table_1_1_game_table}{Game\+Table}}}]{game\+\_\+table }\end{DoxyParamCaption})}
+
+
+
+Function to perform extraction of features from a row. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em row\+\_\+with\+\_\+complex\+\_\+parsed} & A row of game data from the db, with the \char`\"{}complex data\char`\"{} already parsed from J\+S\+ON. \\
+\hline
+{\em game\+\_\+table} & A data structure containing information on how the db table assiciated with this game is structured. \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented from \mbox{\hyperlink{classfeature__extractors_1_1_extractor_1_1_extractor_a98fc31f77b3c7650f49480097f1f6da4}{feature\+\_\+extractors.\+Extractor.\+Extractor}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+feature\+\_\+extractors/Crystal\+Extractor.\+py\end{DoxyCompactItemize}

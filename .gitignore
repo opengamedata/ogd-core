@@ -1,6 +1,6 @@
 # Specific things in this project that shouldn't go to git:
-data/
-config.json
+data
+config.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -109,3 +109,10 @@ venv.bak/
 
 # Mac OS metadata stuff
 .DS_Store
+
+# PyCharm
+.idea
+
+# VSCode
+.vscode
+/JohnsLogs/
