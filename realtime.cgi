@@ -1,5 +1,5 @@
-#!/Library/Frameworks/Python.framework/Versions/3.7/bin/python3
-#/usr/bin/python3.6
+#!/usr/bin/python3.6
+#/Library/Frameworks/Python.framework/Versions/3.7/bin/python3
 # import standard libraries
 import cgi
 import cgitb
