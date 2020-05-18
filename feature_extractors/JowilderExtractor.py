@@ -283,7 +283,6 @@ class JowilderExtractor(Extractor):
                 word_count = len(last_text.split())
                 wps = word_count / time_diff_secs
                 self.last_logged_text = last_text
-                self.feature_average(fname_base='words_per_second', value=wps)
                 if not self.finished_encounters[last_interaction]:
                     # if encounter is unfinished, record encounter features
                     self.feature_inc("first_enc_words_read", word_count, interaction_num=last_interaction)
@@ -326,7 +325,8 @@ class JowilderExtractor(Extractor):
 
             f = JowilderExtractor._OBJ_PREFIX + "next_int"
             if self.getValByIndex(f, index=self.cur_objective) is None:
-                self.setValByIndex(f, index=self.cur_objective, new_value=new_int)
+                if self.cur_objective != 0:
+                    self.setValByIndex(f, index=self.cur_objective, new_value=new_int)
 
             finish_interaction()
             self.cur_interaction = new_int
@@ -440,7 +440,6 @@ class JowilderExtractor(Extractor):
         self.setValByName('music', _music)
         self.setValByName('hq', _hq)
         self.setValByName('save_code', _save_code)
-
 
     def _extractFromEndgame(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -925,7 +924,7 @@ def get_variance():
             var = variance(self.variance_handler_level[level_feature][lvl])
             self.setValByIndex(level_feature, lvl, var)
 
-        self.variance_handler_session[level_feature] += [value]
+        self.variance_handler_session[session_feature] += [value]
         var = variance(self.variance_handler_session[session_feature])
         self.setValByName(session_feature, var)
 
