@@ -294,8 +294,8 @@ class Extractor(abc.ABC):
 
     ## Simple helper class to track a sequence of events, based on move types.
     class Sequence:
-        def __init__(self, end_function: typing.Callable[typing.List[typing.Tuple], None], end_event_type, end_event_count:int=1):
-            self._fnEnd:          = end_function
+        def __init__(self, end_function: typing.Callable[[typing.List[typing.Tuple]], None], end_event_type, end_event_count:int=1):
+            self._fnEnd          = end_function
             self._end_event_type  = end_event_type
             self._end_event_count = 0               # current count of end events
             self._end_at_count    = end_event_count # number of end events to count before ending the sequence.
