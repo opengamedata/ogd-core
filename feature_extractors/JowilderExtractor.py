@@ -8,6 +8,7 @@ import datetime
 import sys
 import traceback
 from collections import defaultdict, deque
+from config import settings
 ## import local files
 import utils
 import numpy as np
@@ -103,9 +104,10 @@ class JowilderExtractor(Extractor):
         self._task_complete_helper = dict()
         self.level_start_timestamp = dict()
         self._CLIENT_START_TIME = None
+        self.game_started = False
         self.setValByName(feature_name="sessionID", new_value=session_id)
-        self.level = 0
-        self._cur_levels = [self.level]
+        self.level = None
+        self._cur_levels = []
         self.cur_question = 0
         self._VERSION = None
         self.last_display_time_text = ()
@@ -127,8 +129,11 @@ class JowilderExtractor(Extractor):
         self.chosen_answer = ''
         self.prev_interaction = None
         self.cur_interaction = None
-        self.cur_objective = 0
+        self.cur_objective = None
         self.finished_encounters = defaultdict(lambda: False)
+        self.objective_chain_started = False
+        self.verbose = False # bool(settings['john_sessids'])
+        self.halt = False
 
 
 
@@ -146,12 +151,15 @@ class JowilderExtractor(Extractor):
 
     def _extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
         # put some data in local vars, for readability later.
+        if self.halt:
+            return
         old_level = self.level
-        self.level = row_with_complex_parsed[game_table.level_index]
-        self._cur_levels = [self.level]
-        self.setValByName('max_level', self.level)
+        if self.game_started:
+            self.level = row_with_complex_parsed[game_table.level_index]
+        if self.level is not None:
+            self._cur_levels = [self.level]
         if not old_level == self.level:
-            self.new_level()
+            self.new_level(old_level)
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
         event_type = row_with_complex_parsed[game_table.event_custom_index]
         event_client_time = row_with_complex_parsed[game_table.client_time_index].replace(microsecond=
@@ -177,15 +185,26 @@ class JowilderExtractor(Extractor):
                 self._CLIENT_START_TIME = event_client_time
                 self._VERSION = row_with_complex_parsed[game_table.version_index]
                 self.last_click_time = self._CLIENT_START_TIME
+                self.setValByName("play_year", self._CLIENT_START_TIME.year)
+                self.setValByName("play_month",self._CLIENT_START_TIME.month)
+                self.setValByName("play_day", self._CLIENT_START_TIME.day)
+                self.setValByName("play_hour", self._CLIENT_START_TIME.hour)
+                self.setValByName("play_minute", self._CLIENT_START_TIME.minute)
+                self.setValByName("play_second", self._CLIENT_START_TIME.second)
+                if self.verbose:
+                    print(f'{"*" * 10} {self.session_id} v{self._VERSION} @ {self._CLIENT_START_TIME} {"*" * 10}')
 
-            if self.level_start_timestamp.get(self.level) == None:
-                self.level_start_timestamp[self.level] = event_client_time
-            self.setValByIndex('time_in_level', self.level, event_client_time - self.level_start_timestamp[self.level])
+            if self.level is not None:
+                if self.level_start_timestamp.get(self.level) == None:
+                    self.level_start_timestamp[self.level] = event_client_time
+                self.setValByIndex('time_in_level', self.level, event_client_time - self.level_start_timestamp[self.level])
 
             self.time_since_start = self.get_time_since_start(client_time=event_client_time)
             self.feature_count(feature_base="EventCount")
             self.setValByName(feature_name="sessDuration", new_value=self.time_since_start)
             debug_strs = []
+            if event_data_complex_parsed.get("save_code"):
+                debug_strs.append("Save code: "+event_data_complex_parsed.get("save_code"))
             if event_data_complex_parsed.get("text"):
                 debug_strs.append("Text: "+event_data_complex_parsed.get("text"))
             if event_type_str == "wildcard_click":
@@ -272,7 +291,7 @@ class JowilderExtractor(Extractor):
             return
 
         def finish_text(last_time, last_text, last_interaction):
-            time_diff_secs = (event_client_time - last_time).seconds
+            time_diff_secs = (event_client_time - last_time).microseconds / 1000000
             # record unexpected behavior
             if last_text == self.last_logged_text:
                 utils.Logger.toFile(f"The player read {last_text} twice in a row.", logging.WARN)
@@ -314,7 +333,18 @@ class JowilderExtractor(Extractor):
 
         def new_objective(new_obj):
             # set val to 0 if not already
-            self.feature_cc_inc("omeaningful_action_count", index=self.cur_objective, increment=0)
+            if self.cur_objective is not None:
+                for f in [
+                    "omeaningful_action_count",
+                    "onum_enc",
+                    "ocount_clicks",
+                    "ocount_notebook_uses",
+                ]:
+                    self.feature_cc_inc(f, index=self.cur_objective, increment=0)
+            if not self.objective_chain_started:
+                self.setValByName("sess_start_obj", new_obj)
+                self.objective_chain_started = True
+            self.setValByName("sess_end_obj", new_obj)
             self.cur_objective = new_obj
 
         def new_interaction(new_int):
@@ -324,9 +354,8 @@ class JowilderExtractor(Extractor):
 
 
             f = JowilderExtractor._OBJ_PREFIX + "next_int"
-            if self.getValByIndex(f, index=self.cur_objective) is None:
-                if self.cur_objective != 0:
-                    self.setValByIndex(f, index=self.cur_objective, new_value=new_int)
+            if self.cur_objective is not None and self.getValByIndex(f, index=self.cur_objective) is None:
+                self.setValByIndex(f, index=self.cur_objective, new_value=new_int)
 
             finish_interaction()
             self.cur_interaction = new_int
@@ -340,6 +369,8 @@ class JowilderExtractor(Extractor):
 
 
 
+        if not self.game_started:
+            return
 
         interaction_enum = je.fqid_to_enum.get(_text_fqid)
         new_click()
@@ -436,10 +467,17 @@ class JowilderExtractor(Extractor):
         # helpers
         # set class variables
         # set features
-        self.setValByName('fullscreen', _fullscreen)
-        self.setValByName('music', _music)
-        self.setValByName('hq', _hq)
+        if self.game_started:
+            self.log_warning('Player had a second startgame event!')
+            self.halt = True
+            return
+        self.setValByName('fullscreen', int(_fullscreen))
+        self.setValByName('music', int(_music))
+        self.setValByName('hq', int(_hq))
         self.setValByName('save_code', _save_code)
+        self.setValByName("continue", 0)
+
+        self.game_started = True
 
     def _extractFromEndgame(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -824,8 +862,20 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
 
-    def new_level(self):
+    def new_level(self, old_level):
+        if self.level > self.getValByName('max_level'):
+            self.setValByName('max_level', self.level)
+        if old_level is None:
+            self.setValByName('start_level', self.level)
+            if self.level != 0 and not self.getValByName("save_code"):
+                    self.setValByName("continue", 1)
+
         self._set_value_in_cur_levels('count_notebook_uses',0)
+        self._set_value_in_cur_levels('count_hovers', 0)
+
+        for obj in range(je.level_to_start_obj[self.level]):
+            self.finished_encounters[obj] = True
+
 
     def calculateAggregateFeatures(self):
         pass
@@ -952,6 +1002,8 @@ def get_variance():
 
 
     def feature_cc_inc(self, feature_name, index, increment):
+        if index is None:
+            return
         if self.getValByIndex(feature_name=feature_name, index=index) in JowilderExtractor._NULL_FEATURE_VALS:
             self.setValByIndex(feature_name, index=index, new_value=self._get_default_val(feature_name))
         self.features.incValByIndex(feature_name=feature_name, index=index, increment=increment)
@@ -1058,6 +1110,8 @@ def get_variance():
 
     def add_debug_str(self, s):
         self.debug_strs.append(s)
+        if self.verbose:
+            print(s)
     
     def log_warning(self, message, num_lines=20):
         self.add_debug_str('WARNING: '+message)

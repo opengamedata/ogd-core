@@ -382,10 +382,7 @@
     }
 		},
         "aggregate":{
-            "sessionID":"The player's session ID number for this play session",
-			"persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",
-			"max_level":"Highest level reached in the session",
-			"sessDuration": "Length of the session",
+
             "sess_count_clicks": "Number of clicks throughout the game",
             "sess_count_hovers": "Number of hovers throughout the game",
 			"sess_meaningful_action_count": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations",
@@ -400,11 +397,28 @@
 			"sess_first_enc_var_wps": "variance words per second in each first encounter",
 			"sess_first_enc_avg_tbps": "average text boxes per second in each first encounter",
 			"sess_first_enc_var_tbps": "variance text boxes per second in each first encounter",
+          "sess_start_obj": "objective the player started with",
+          "sess_end_obj": "objective the player ended with",
 
+			"start_level": "Level the player started at",
+			"max_level":"Highest level reached in the session",
+			"sessDuration": "Length of the session",
+
+			      "play_year": "year started the game (UTC)",
+      "play_month": "month started the game (UTC)",
+      "play_day": "day started the game (UTC)",
+      "play_hour": "hour started the game (UTC)",
+      "play_minute": "minute started the game (UTC)",
+      "play_second": "second started the game (UTC)",
+
+			"continue": "1 if continuing a game, 0 otherwise",
 			"save_code": "the save code the user inputted (or 0 if NA)",
 			"music": "boolean (1/0) whether or not the player turned music on",
 			"hq": "boolean (1/0) for whether or not the player turned hq graphics on",
-			"fullscreen": "boolean (1/0) whether or not the player checked fullscreen"
+			"fullscreen": "boolean (1/0) whether or not the player checked fullscreen",
+
+						"sessionID":"The player's session ID number for this play session",
+			"persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device."
 		}
     },
 
