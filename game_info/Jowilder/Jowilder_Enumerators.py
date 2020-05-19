@@ -168,6 +168,9 @@ _answer_chars = ['B',
  'e',
  'f']
 
+# objective is defined but what you have to click in order to start that objective.
+# objective 0 is slightly different as you start the game with that objective
+# do you always need an objective? idk.
 fqid_to_enum = {'tunic.historicalsociety.closet.gramps.intro_0_cs_0': 0,
  'tunic.historicalsociety.closet.teddy.intro_0_cs_0': 1,
  'tunic.historicalsociety.closet.notebook': 2,
@@ -359,3 +362,35 @@ fqid_to_enum = {'tunic.historicalsociety.closet.gramps.intro_0_cs_0': 0,
  'tunic.capitol_3.hall.teddy.speak': 188}
 
 max_objective = 79
+
+save_code_to_obj = {'startgame': 0,
+ 'notebook': 3,
+ 'wiscwonders': 4,
+ 'mysteryslip': 6,
+ 'plaque': 8,
+ 'notajersey': 12,
+ 'trashed': 13,
+ 'archivist': 19,
+ 'textile': 21,
+ 'logbook': 23,
+ 'suffragist': 26,
+ 'taxidermist': 28,
+ 'wellsdidit': 30,
+ 'saveteddy': 43,
+ 'scratches': 45,
+ 'hesalive': 46,
+ 'akey': 48,
+ 'rescued': 50,
+ 'backtowork': 52,
+ 'sadanimals': 62,
+ 'flaglady': 65,
+ 'ecologists': 67,
+ 'donethework': 69,
+ 'sunset': 77}
+
+# level to first objective in level.
+level_to_start_obj = {0: 0, 1: 3, 2: 4, 3: 6, 4: 8, 5: 12, 6: 13, 7: 19, 8: 21, 9: 23, 10: 26, 11: 28, 12: 30, 13: 43,
+                      14: 45, 15: 46, 16: 48, 17: 50, 18: 52, 19: 62, 20: 65, 21: 67, 22: 69, 23: 77}
+
+if __name__ == '__main__':
+ print({i:v for i,(k,v) in enumerate(save_code_to_obj.items())})
