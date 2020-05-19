@@ -51,7 +51,9 @@ class RawManager:
             # since the other stuff comes in tuples, which have a consistent order.
             # A little inconsistent, but... whatever.
             # I don't know of a good way to get column names with the other row data.
-            if i < self._game_table.complex_data_index:
+            if i == self._game_table.remote_addr_index:
+                line[i] = None
+            elif i < self._game_table.complex_data_index:
                 line[i] = f"\"{col}\"" if type(col) == str else col
             elif i > self._game_table.complex_data_index:
                 index = i + len(self._JSON_columns) - 1
