@@ -293,9 +293,7 @@ class JowilderExtractor(Extractor):
         def finish_text(last_time, last_text, last_interaction):
             time_diff_secs = (event_client_time - last_time).microseconds / 1000000
             # record unexpected behavior
-            if last_text == self.last_logged_text:
-                utils.Logger.toFile(f"The player read {last_text} twice in a row.", logging.WARN)
-            elif time_diff_secs <= 0:
+            if time_diff_secs <= 0:
                 self.log_warning(f"The player read '{last_text}' in 0 seconds! (time_diff_secs = {time_diff_secs} <= 0)",3)
             else:
                 # record word speed
@@ -376,10 +374,13 @@ class JowilderExtractor(Extractor):
         new_click()
         if self.last_display_time_text: # if the previous log had text
             last_time, last_text = self.last_display_time_text
-            finish_text(last_time, last_text, last_interaction=self.cur_interaction)
+            if _text == last_text:
+                utils.Logger.toFile(f"The player read {last_text} twice in a row!", logging.WARN)
+            else:
+                finish_text(last_time, last_text, last_interaction=self.cur_interaction)
 
         if _text: # if the current log has text
-            if (not self.last_display_time_text) or (self.last_logged_text != _text):
+            if (not self.last_display_time_text) or (self.last_display_time_text[1] != _text):
                 self.last_display_time_text = (event_client_time, _text)
         else:
             self.last_display_time_text = ()
