@@ -4,11 +4,15 @@ import typing
 from datetime import date
 # include local files
 import utils
+from schemas.Schema import Schema
+
 
 ## @class Request
 #  Dumb struct to hold data related to requests for data export.
 #  This way, we've at least got a list of what is available in a request.
 #  Acts as a base class for more specific types of request.
+
+
 class Request(abc.ABC):
     ## Constructor for the request base class.
     #  Just stores whatever data is given. No checking done to ensure we have all
@@ -50,8 +54,15 @@ class DateRangeRequest(Request):
     #  the request.
     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
         # We grab the ids for all sessions that have 0th move in the proper date range.
-        filt = "`app_id`=\"{}\" AND `session_n`='0' AND (`server_time` BETWEEN '{}' AND '{}')".format( \
-                        self.game_id, self.start_date.isoformat(), self.end_date.isoformat())
+        if self.game_id == "LAKELAND":
+            supported_vers = Schema(schema_name="LAKELAND.json").schema()['config']['SUPPORTED_VERS']
+        elif self.game_id == "JOWILDER":
+            supported_vers = Schema(schema_name="JOWILDER.json").schema()['config']['SUPPORTED_VERS']
+        else:
+            supported_vers = []
+        ver_filter = f" AND `app_version` in ({','.join([str(x) for x in supported_vers])}) " if supported_vers else ''
+        filt = "`app_id`=\"{}\" AND `session_n`='0' AND (`server_time` BETWEEN '{}' AND '{}'){}".format( \
+                        self.game_id, self.start_date.isoformat(), self.end_date.isoformat(), ver_filter)
         session_ids_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
                                 columns=["`session_id`"], filter=filt,
                                 sort_columns=["`session_id`"], sort_direction="ASC", distinct=True, limit=self.max_sessions)
