@@ -6,13 +6,10 @@ from datetime import date
 import utils
 from schemas.Schema import Schema
 
-
 ## @class Request
 #  Dumb struct to hold data related to requests for data export.
 #  This way, we've at least got a list of what is available in a request.
 #  Acts as a base class for more specific types of request.
-
-
 class Request(abc.ABC):
     ## Constructor for the request base class.
     #  Just stores whatever data is given. No checking done to ensure we have all

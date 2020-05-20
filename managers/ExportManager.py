@@ -94,7 +94,7 @@ class ExportManager:
         elif self._game_id == "JOWILDER":
             game_schema = Schema(schema_name="JOWILDER.json")
             game_extractor = JowilderExtractor
-        elif self._game_id in ["JOWILDER", "BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MAGNET", "WIND"]:
+        elif self._game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MAGNET", "WIND"]:
             # all games with data but no extractor.
             game_schema = None
         else:
@@ -258,6 +258,7 @@ class ExportManager:
             create_query = f'CREATE TABLE {to_table_path} LIKE {from_table_path};'
             get_insert_into_query = lambda select_query: f'INSERT INTO {to_table_path} '+select_query
             alter_query = f'ALTER TABLE {to_table_path} DROP COLUMN remote_addr;'
+            drop_query = f'DROP TABLE {to_table_path};'
             try:
                 tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
                 db_cursor = db.cursor()
@@ -266,22 +267,23 @@ class ExportManager:
                     insert_into_query = get_insert_into_query(select_query)
                     utils.SQL.Query(db_cursor, insert_into_query)
                 utils.SQL.Query(db_cursor, alter_query)
+#             command = f"mysqldump --host={db_settings['DB_HOST']} \
+# --where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}' AND app_id='{self._game_id}'\" \
+# --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']} \
+#  > {sql_dump_path}"
+                command = f"mysqldump --host={db_settings['DB_HOST']} \
+                --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {to_table_path} \
+                 > {sql_dump_path}"
+                sql_dump_file = open(sql_dump_path, "w")
+                utils.Logger.toStdOut(f"running sql dump command: {command}", logging.INFO)
+                os.system(command)
+                utils.SQL.query(db_cursor, drop_query)
             except Exception as err:
                 utils.Logger.toStdOut(str(err), logging.ERROR)
                 traceback.print_tb(err.__traceback__)
                 utils.Logger.toFile(str(err), logging.ERROR)
             finally:
                 utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-#             command = f"mysqldump --host={db_settings['DB_HOST']} \
-# --where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}' AND app_id='{self._game_id}'\" \
-# --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']} \
-#  > {sql_dump_path}"
-            command = f"mysqldump --host={db_settings['DB_HOST']} \
-            --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {to_table_path} \
-             > {sql_dump_path}"
-            sql_dump_file = open(sql_dump_path, "w")
-            utils.Logger.toStdOut(f"running sql dump command: {command}", logging.INFO)
-            os.system(command)
         else:
             utils.Logger.toStdOut(f"No sessions to export for {sql_dump_path}", logging.WARNING)
             utils.Logger.toFile(f"No sessions to export for {sql_dump_path}", logging.WARNING)
