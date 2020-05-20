@@ -94,7 +94,7 @@ class ExportManager:
         elif self._game_id == "JOWILDER":
             game_schema = Schema(schema_name="JOWILDER.json")
             game_extractor = JowilderExtractor
-        elif self._game_id in ["JOWILDER", "BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MAGNET", "WIND"]:
+        elif self._game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MAGNET", "WIND"]:
             # all games with data but no extractor.
             game_schema = None
         else:
