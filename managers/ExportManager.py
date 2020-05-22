@@ -274,7 +274,7 @@ class ExportManager:
 # --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']} \
 #  > {sql_dump_path}"
                 command = f"mysqldump --host={db_settings['DB_HOST']} \
-                --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {to_table_path} \
+                --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {temp_table} \
                  > {sql_dump_path}"
                 sql_dump_file = open(sql_dump_path, "w")
                 utils.Logger.toStdOut(f"running sql dump command: {command}", logging.INFO)
