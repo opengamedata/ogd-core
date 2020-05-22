@@ -279,7 +279,7 @@ class ExportManager:
                 sql_dump_file = open(sql_dump_path, "w")
                 utils.Logger.toStdOut(f"running sql dump command: {command}", logging.INFO)
                 os.system(command)
-                utils.SQL.query(db_cursor, drop_query)
+                utils.SQL.Query(db_cursor, drop_query)
             except Exception as err:
                 utils.Logger.toStdOut(str(err), logging.ERROR)
                 traceback.print_tb(err.__traceback__)
