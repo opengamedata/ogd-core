@@ -238,7 +238,9 @@ class ExportManager:
             ver_filter = f" AND app_version in ({','.join([str(x) for x in game_schema.schema()['config']['SUPPORTED_VERS']])}) "
         else:
             ver_filter = ''
-        filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
+        id_string = ','.join([f"'{x}'" for x in next_slice])
+        # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
+        filt = f"app_id='{self._game_id}' AND session_id  IN ({id_string}){ver_filter}"
         query = utils.SQL._prepareSelect(db_name=settings["db_config"]["DB_NAME_DATA"],
                                          table=settings["db_config"]["table"], columns=None, filter=filt, limit=-1,
                                          sort_columns=["session_id", "session_n"], sort_direction="ASC",
