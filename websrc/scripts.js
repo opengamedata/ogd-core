@@ -57,6 +57,7 @@ function generateTable(table, data, headers) {
           cell.appendChild(text);
           break;
         case "raw":
+            if(set["sql"] != null){
             var raw_link = document.createElement('a');
             var linkText = document.createTextNode("Raw");
             raw_link.appendChild(linkText);
@@ -64,7 +65,9 @@ function generateTable(table, data, headers) {
             raw_link.href = set["raw"];
             cell.appendChild(raw_link);
             cell.append(document.createTextNode(' - '))
-
+                        }
+                        
+            if(set["sql"] != null){
             var sql_link = document.createElement('a');
             var linkText = document.createTextNode("Processed");
             sql_link.appendChild(linkText);
@@ -72,13 +75,17 @@ function generateTable(table, data, headers) {
             sql_link.href = set["proc"];
             cell.appendChild(sql_link);
             cell.append(document.createTextNode(' - '))
+            }
 
-            var sql_link = document.createElement('a');
+            if(set["sql"] != null){
+                        var sql_link = document.createElement('a');
             var linkText = document.createTextNode("SQL");
             sql_link.appendChild(linkText);
             sql_link.title = "SQL Dump";
-            sql_link.href = set["sql"];
-            cell.appendChild(sql_link);
+                        sql_link.href = set["sql"];
+                                    cell.appendChild(sql_link);
+
+            }
           break;
         default:
             text = document.createTextNode(set[key]);
