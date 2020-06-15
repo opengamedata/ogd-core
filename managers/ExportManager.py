@@ -203,7 +203,7 @@ class ExportManager:
             session_slices = [[game_table.session_ids[i] for i in
                             range( j*slice_size, min((j+1)*slice_size, num_sess) )] for j in
                             range( 0, math.ceil(num_sess / slice_size) )]
-            for next_slice in session_slices:
+            for i, next_slice in enumerate(session_slices):
                 # grab data for the given session range. Sort by event time, so
                 select_query = self._select_query_from_slice(next_slice=next_slice, game_schema=game_schema)
                 self._select_queries.append(select_query)
@@ -216,8 +216,10 @@ class ExportManager:
                 num_min = math.floor(time_delta.total_seconds()/60)
                 num_sec = time_delta.total_seconds() % 60
                 num_events = len(next_data_set)
-                utils.Logger.toStdOut(f"Slice processing time: {num_min} min, {num_sec:.3f} sec to handle {num_events} events", logging.INFO)
-                utils.Logger.toFile(f"Slice processing time: {num_min} min, {num_sec:.3f} sec to handle {num_events} events", logging.INFO)
+
+                status_string = f"Processing time for slice [{i+1}/{len(session_slices)}]: {num_min} min, {num_sec:.3f} sec to handle {num_events} events"
+                utils.Logger.toStdOut(status_string, logging.INFO)
+                utils.Logger.toFile(status_string, logging.INFO)
                 
                 # after processing all rows for all slices, write out the session data and reset for next slice.
                 raw_mgr.WriteRawCSVLines()
