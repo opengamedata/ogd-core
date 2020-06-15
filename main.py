@@ -96,7 +96,7 @@ def runExport(monthly: bool = False, all_data: bool = False):
             else:
                 today   = datetime.now()
                 month_year = [today.month, today.year]
-            utils.Logger.toStdOut(f"Exporting {month_year[0]/month_year[1]} data for {game_id}...", logging.DEBUG)
+            utils.Logger.toStdOut(f"Exporting {month_year[0]}/{month_year[1]} data for {game_id}...", logging.DEBUG)
             _execMonthExport(game_id=game_id, month=month_year[0], year=month_year[1])
             utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
     # Otherwise, create date range from given pair of dates.
