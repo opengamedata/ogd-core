@@ -205,7 +205,7 @@ class ExportManager:
                             range( 0, math.ceil(num_sess / slice_size) )]
             for i, next_slice in enumerate(session_slices):
                 # grab data for the given session range. Sort by event time, so
-                select_query = self._select_query_from_slice(next_slice=next_slice, game_schema=game_schema)
+                select_query = self._selectQueryFromSlice(slice=next_slice, game_schema=game_schema)
                 self._select_queries.append(select_query)
                 next_data_set = utils.SQL.SELECTfromQuery(cursor=db_cursor, query=select_query, fetch_results=True)
                 # now, we process each row.
@@ -235,12 +235,12 @@ class ExportManager:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return
 
-    def _select_query_from_slice(self, next_slice: list, game_schema: Schema):
+    def _selectQueryFromSlice(self, slice: list, game_schema: Schema):
         if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
             ver_filter = f" AND app_version in ({','.join([str(x) for x in game_schema.schema()['config']['SUPPORTED_VERS']])}) "
         else:
             ver_filter = ''
-        filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
+        filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{slice[0]}' AND '{slice[-1]}'){ver_filter}"
         query = utils.SQL._prepareSelect(db_name=settings["db_config"]["DB_NAME_DATA"],
                                          table=settings["db_config"]["table"], columns=None, filter=filt, limit=-1,
                                          sort_columns=["session_id", "session_n"], sort_direction="ASC",
