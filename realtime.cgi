@@ -28,9 +28,19 @@ try:
     if method == "say_hello":
         body = "Hello, world."
     elif method == "get_all_active_sessions":
+        #+++
+        start = datetime.now()
+        #---
         game_id = request.getvalue("gameID")
         require_player_id = request.getvalue("require_player_id")
         body = RTServer.getAllActiveSessions(game_id=game_id, require_player_id=require_player_id)
+        #+++
+        end = datetime.now()
+        time_delta = end - start
+        minutes = math.floor(time_delta.total_seconds()/60)
+        seconds = time_delta.total_seconds() % 60
+        utils.Logger.toFile(f"Total time taken to get active sessions: {minutes} min, {seconds} sec", logging.DEBUG)
+        #---
     # elif method == "get_active_sessions_by_loc":
     #     game_id = request.getvalue("gameID")
     #     state = request.getvalue("state")
