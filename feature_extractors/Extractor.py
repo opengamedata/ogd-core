@@ -114,7 +114,7 @@ class Extractor(abc.ABC):
 
     def extractSequencesFromRow(self, row_data, game_table: GameTable):
         for sequence in self.sequences:
-            event_data = self.extractCustomSequenceEventFromRow(row_data=row_data, game_table=game_table)
+            event_data = self.extractCustomSequenceEventDataFromRow(row_data=row_data, game_table=game_table)
             sequence.RegisterEvent(row_data[game_table.complex_data_index]["event_custom"], event_data=event_data)
 
     ## Function to custom-extract event data for a sequence.
