@@ -251,27 +251,31 @@ class SQL:
 
 class Logger:
     # Set up loggers
-    err_logger = logging.getLogger("err_logger")
-    file_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
-    err_logger.addHandler(file_handler)
-    err_logger.setLevel(level=logging.DEBUG)
+    file_logger = logging.getLogger("file_logger")
+    # file_logger.setLevel(level=logging.DEBUG)
+    err_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
+    err_handler.setLevel(logging.WARN)
+    debug_handler = logging.FileHandler("ExportDebugReport.log", encoding="utf-8")
+    debug_handler.setLevel(level=logging.DEBUG)
+    file_logger.addHandler(err_handler)
+    file_logger.addHandler(debug_handler)
     std_logger = logging.getLogger("std_logger")
     stdout_handler = logging.StreamHandler()
     std_logger.addHandler(stdout_handler)
     std_logger.setLevel(level=logging.DEBUG)
-    err_logger.debug("Testing error logger")
+    file_logger.debug("Testing error logger")
     std_logger.debug("Testing standard out logger")
 
     @staticmethod
     def toFile(message, level):
         if level == logging.DEBUG:
-            Logger.err_logger.debug(message)
+            Logger.file_logger.debug(message)
         elif level == logging.INFO:
-            Logger.err_logger.info(message)
+            Logger.file_logger.info(message)
         elif level == logging.WARNING:
-            Logger.err_logger.warn(message)
+            Logger.file_logger.warn(message)
         elif level == logging.ERROR:
-            Logger.err_logger.error(message)
+            Logger.file_logger.error(message)
 
     @staticmethod
     def toStdOut(message, level):
