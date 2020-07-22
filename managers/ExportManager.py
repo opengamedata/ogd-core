@@ -139,16 +139,16 @@ class ExportManager:
                 proc_zip_file.close()
                 os.remove(raw_csv_path)
                 os.remove(proc_csv_path)
-            sql_dump_path = f"{data_directory}/{dataset_id}_{short_hash}.sql"
-            sql_zip_path = f"{data_directory}/{dataset_id}_{short_hash}_sql.zip"
+            # sql_dump_path = f"{data_directory}/{dataset_id}_{short_hash}.sql"
+            sql_zip_path = None # f"{data_directory}/{dataset_id}_{short_hash}_sql.zip"
             if self._game_id in existing_csvs and dataset_id in existing_csvs[self._game_id]:
                 src_sql = existing_csvs[self._game_id][dataset_id]['sql']
                 os.rename(src_sql, sql_zip_path)
-            self._dumpToSQL(sql_dump_path=sql_dump_path, game_table=game_table, db_settings=db_settings, temp_table = f'{dataset_id}_{short_hash}')
-            sql_zip_file = zipfile.ZipFile(sql_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
-            sql_zip_file.write(sql_dump_path, f"{dataset_id}/{dataset_id}_{short_hash}.sql")
-            sql_zip_file.write(readme_path, f"{dataset_id}/readme.md")
-            os.remove(sql_dump_path)
+            # self._dumpToSQL(sql_dump_path=sql_dump_path, game_table=game_table, db_settings=db_settings, temp_table = f'{dataset_id}_{short_hash}')
+            # sql_zip_file = zipfile.ZipFile(sql_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
+            # sql_zip_file.write(sql_dump_path, f"{dataset_id}/{dataset_id}_{short_hash}.sql")
+            # sql_zip_file.write(readme_path, f"{dataset_id}/readme.md")
+            # os.remove(sql_dump_path)
             # Finally, update the list of csv files.
             self._updateFileExportList(dataset_id, raw_zip_path, proc_zip_path,
                                     sql_zip_path, request, num_sess)
@@ -240,7 +240,9 @@ class ExportManager:
             ver_filter = f" AND app_version in ({','.join([str(x) for x in game_schema.schema()['config']['SUPPORTED_VERS']])}) "
         else:
             ver_filter = ''
-        filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{slice[0]}' AND '{slice[-1]}'){ver_filter}"
+        id_string = ','.join([f"'{x}'" for x in slice])
+        # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
+        filt = f"app_id='{self._game_id}' AND session_id  IN ({id_string}){ver_filter}"
         query = utils.SQL._prepareSelect(db_name=settings["db_config"]["DB_NAME_DATA"],
                                          table=settings["db_config"]["table"], columns=None, filter=filt, limit=-1,
                                          sort_columns=["session_id", "session_n"], sort_direction="ASC",
@@ -274,12 +276,12 @@ class ExportManager:
 # --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']} \
 #  > {sql_dump_path}"
                 command = f"mysqldump --host={db_settings['DB_HOST']} \
-                --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {to_table_path} \
+                --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {temp_table} \
                  > {sql_dump_path}"
                 sql_dump_file = open(sql_dump_path, "w")
                 utils.Logger.toStdOut(f"running sql dump command: {command}", logging.INFO)
                 os.system(command)
-                utils.SQL.query(db_cursor, drop_query)
+                utils.SQL.Query(db_cursor, drop_query)
             except Exception as err:
                 utils.Logger.toStdOut(str(err), logging.ERROR)
                 traceback.print_tb(err.__traceback__)
