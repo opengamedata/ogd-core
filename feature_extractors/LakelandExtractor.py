@@ -15,16 +15,16 @@ import datetime
 import logging
 import sys
 import traceback
+import typing
+from collections import defaultdict, Counter
+from copy import deepcopy
+from math import sqrt
 
 ## import local files
-import typing
 import utils
 from feature_extractors.Extractor import Extractor
 from GameTable import GameTable
 from schemas.Schema import Schema
-from collections import defaultdict, Counter
-from math import sqrt
-from copy import deepcopy
 
 
 ## @class LakelandExtractor
