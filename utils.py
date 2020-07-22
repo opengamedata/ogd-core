@@ -106,7 +106,7 @@ class SQL:
         try:
             return MySQLdb.connect(host = login.host, port = login.port,
                                            user = login.user, password = login.pword,
-                                           database = login.db_name)
+                                           database = login.db_name, charset='utf8')
         except MySQLdb.connections.Error as err:
             Logger.toStdOut(f"Could not connect to the MySql database: " + str(err), logging.ERROR)
             Logger.toPrint(f"Could not connect to the MySql database: {str(err)}", logging.ERROR)
@@ -134,7 +134,7 @@ class SQL:
             Logger.toStdOut(f"Connected to SSH at {ssh.host}:{ssh.port}, {ssh.user}", logging.INFO)
             conn = MySQLdb.connect(host = sql.host, port = tunnel.local_bind_port,
                                            user = sql.user, password = sql.pword,
-                                           database = sql.db_name)
+                                           database = sql.db_name, charset='utf8')
             Logger.toStdOut(f"Connected to SQL at {sql.host}:{sql.port}/{sql.db_name}, {sql.user}", logging.INFO)
             return (tunnel, conn)
         except Exception as err:
@@ -251,27 +251,31 @@ class SQL:
 
 class Logger:
     # Set up loggers
-    err_logger = logging.getLogger("err_logger")
-    file_handler = logging.FileHandler("ExportErrorReport.log")
-    err_logger.addHandler(file_handler)
-    err_logger.setLevel(level=logging.DEBUG)
+    file_logger = logging.getLogger("file_logger")
+    # file_logger.setLevel(level=logging.DEBUG)
+    err_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
+    err_handler.setLevel(logging.WARN)
+    debug_handler = logging.FileHandler("ExportDebugReport.log", encoding="utf-8")
+    debug_handler.setLevel(level=logging.DEBUG)
+    file_logger.addHandler(err_handler)
+    file_logger.addHandler(debug_handler)
     std_logger = logging.getLogger("std_logger")
     stdout_handler = logging.StreamHandler()
     std_logger.addHandler(stdout_handler)
     std_logger.setLevel(level=logging.DEBUG)
-    err_logger.debug("Testing error logger")
+    file_logger.debug("Testing error logger")
     std_logger.debug("Testing standard out logger")
 
     @staticmethod
     def toFile(message, level):
         if level == logging.DEBUG:
-            Logger.err_logger.debug(message)
+            Logger.file_logger.debug(message)
         elif level == logging.INFO:
-            Logger.err_logger.info(message)
+            Logger.file_logger.info(message)
         elif level == logging.WARNING:
-            Logger.err_logger.warn(message)
+            Logger.file_logger.warn(message)
         elif level == logging.ERROR:
-            Logger.err_logger.error(message)
+            Logger.file_logger.error(message)
 
     @staticmethod
     def toStdOut(message, level):

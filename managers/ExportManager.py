@@ -94,7 +94,7 @@ class ExportManager:
         elif self._game_id == "JOWILDER":
             game_schema = Schema(schema_name="JOWILDER.json")
             game_extractor = JowilderExtractor
-        elif self._game_id in ["JOWILDER", "BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MAGNET", "WIND"]:
+        elif self._game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MAGNET", "WIND"]:
             # all games with data but no extractor.
             game_schema = None
         else:
@@ -174,8 +174,8 @@ class ExportManager:
         try:
             tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
             db_cursor = db.cursor()
-            raw_csv_file = open(raw_csv_path, "w")
-            proc_csv_file = open(proc_csv_path, "w")
+            raw_csv_file = open(raw_csv_path, "w", encoding="utf-8")
+            proc_csv_file = open(proc_csv_path, "w", encoding="utf-8")
             # Now, we're ready to set up the managers:
             raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
                                 raw_csv_file=raw_csv_file)
@@ -201,11 +201,11 @@ class ExportManager:
             utils.Logger.toStdOut(f"Preparing to process {num_sess} sessions.", logging.INFO)
             slice_size = self._settings["BATCH_SIZE"]
             session_slices = [[game_table.session_ids[i] for i in
-                            range( j*slice_size, min((j+1)*slice_size - 1, num_sess) )] for j in
+                            range( j*slice_size, min((j+1)*slice_size, num_sess) )] for j in
                             range( 0, math.ceil(num_sess / slice_size) )]
-            for next_slice in session_slices:
+            for i, next_slice in enumerate(session_slices):
                 # grab data for the given session range. Sort by event time, so
-                select_query = self._select_query_from_slice(next_slice=next_slice, game_schema=game_schema)
+                select_query = self._selectQueryFromSlice(slice=next_slice, game_schema=game_schema)
                 self._select_queries.append(select_query)
                 next_data_set = utils.SQL.SELECTfromQuery(cursor=db_cursor, query=select_query, fetch_results=True)
                 # now, we process each row.
@@ -216,8 +216,10 @@ class ExportManager:
                 num_min = math.floor(time_delta.total_seconds()/60)
                 num_sec = time_delta.total_seconds() % 60
                 num_events = len(next_data_set)
-                utils.Logger.toStdOut(f"Slice processing time: {num_min} min, {num_sec:.3f} sec to handle {num_events} events", logging.INFO)
-                utils.Logger.toFile(f"Slice processing time: {num_min} min, {num_sec:.3f} sec to handle {num_events} events", logging.INFO)
+
+                status_string = f"Processing time for slice [{i+1}/{len(session_slices)}]: {num_min} min, {num_sec:.3f} sec to handle {num_events} events"
+                utils.Logger.toStdOut(status_string, logging.INFO)
+                utils.Logger.toFile(status_string, logging.INFO)
                 
                 # after processing all rows for all slices, write out the session data and reset for next slice.
                 raw_mgr.WriteRawCSVLines()
@@ -233,12 +235,12 @@ class ExportManager:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return
 
-    def _select_query_from_slice(self, next_slice: list, game_schema: Schema):
+    def _selectQueryFromSlice(self, slice: list, game_schema: Schema):
         if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
             ver_filter = f" AND app_version in ({','.join([str(x) for x in game_schema.schema()['config']['SUPPORTED_VERS']])}) "
         else:
             ver_filter = ''
-        filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
+        filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{slice[0]}' AND '{slice[-1]}'){ver_filter}"
         query = utils.SQL._prepareSelect(db_name=settings["db_config"]["DB_NAME_DATA"],
                                          table=settings["db_config"]["table"], columns=None, filter=filt, limit=-1,
                                          sort_columns=["session_id", "session_n"], sort_direction="ASC",
@@ -258,6 +260,7 @@ class ExportManager:
             create_query = f'CREATE TABLE {to_table_path} LIKE {from_table_path};'
             get_insert_into_query = lambda select_query: f'INSERT INTO {to_table_path} '+select_query
             alter_query = f'ALTER TABLE {to_table_path} DROP COLUMN remote_addr;'
+            drop_query = f'DROP TABLE {to_table_path};'
             try:
                 tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
                 db_cursor = db.cursor()
@@ -266,22 +269,23 @@ class ExportManager:
                     insert_into_query = get_insert_into_query(select_query)
                     utils.SQL.Query(db_cursor, insert_into_query)
                 utils.SQL.Query(db_cursor, alter_query)
+#             command = f"mysqldump --host={db_settings['DB_HOST']} \
+# --where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}' AND app_id='{self._game_id}'\" \
+# --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']} \
+#  > {sql_dump_path}"
+                command = f"mysqldump --host={db_settings['DB_HOST']} \
+                --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {to_table_path} \
+                 > {sql_dump_path}"
+                sql_dump_file = open(sql_dump_path, "w")
+                utils.Logger.toStdOut(f"running sql dump command: {command}", logging.INFO)
+                os.system(command)
+                utils.SQL.query(db_cursor, drop_query)
             except Exception as err:
                 utils.Logger.toStdOut(str(err), logging.ERROR)
                 traceback.print_tb(err.__traceback__)
                 utils.Logger.toFile(str(err), logging.ERROR)
             finally:
                 utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-#             command = f"mysqldump --host={db_settings['DB_HOST']} \
-# --where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}' AND app_id='{self._game_id}'\" \
-# --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']} \
-#  > {sql_dump_path}"
-            command = f"mysqldump --host={db_settings['DB_HOST']} \
-            --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {to_table_path} \
-             > {sql_dump_path}"
-            sql_dump_file = open(sql_dump_path, "w")
-            utils.Logger.toStdOut(f"running sql dump command: {command}", logging.INFO)
-            os.system(command)
         else:
             utils.Logger.toStdOut(f"No sessions to export for {sql_dump_path}", logging.WARNING)
             utils.Logger.toFile(f"No sessions to export for {sql_dump_path}", logging.WARNING)

@@ -241,13 +241,19 @@
           	"EventCount": "number of total events",
             "count_clicks": "Number of clicks",
             "count_hovers": "Number of hovers",
-            "avgTimePerTextBox":"Time spent reading all text boxes in the level, divided by number of text boxes",
             "time_in_level": "time_in_level",
             "meaningful_action_count": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations",
-			"words_per_second": "words per second read",
 			"count_notebook_uses": "number of times the player opened the notebook in the given level",
-			"avg_time_between_clicks": "average time between clicks"
-        },
+			"avg_time_between_clicks": "average time between clicks",
+			"first_enc_words_read": "sum words read in every first encounter",
+			"first_enc_boxes_read": "boxes read in every first encounter",
+			"num_enc": "number of encounters",
+			"first_enc_duration": "duration of first encounters",
+			"first_enc_avg_wps": "average words per second in each first encounter",
+			"first_enc_var_wps": "variance words per second in each first encounter",
+			"first_enc_avg_tbps": "average text boxes per second in each first encounter",
+			"first_enc_var_tbps": "variance text boxes per second in each first encounter"
+		},
         "per_custom_count": {
             "num_guesses": {
                 "count": 19,
@@ -293,29 +299,126 @@
 				"count": 3,
 				"prefix": "R",
 				"desc": "player's quiz responses"
-			}
-        },
+			},
+    "itime_to": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "first enc time"
+    },
+    "inum_enc": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "num enc"
+    },
+    "ifirst_enc_duration": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "first enc duration"
+    },
+    "itotal_duration": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "total enc duration"
+    },
+    "ifirst_enc_boxes_read": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "num boxes"
+    },
+    "ifirst_enc_words_read": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "num words"
+    },
+    "ifirst_enc_avg_wps": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "first enc avg wps"
+    },
+    "ifirst_enc_avg_tbps": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "first enc avg tbps"
+    },
+    "ifirst_enc_var_wps": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "first enc var wps"
+    },
+    "ifirst_enc_var_tbps": {
+        "count": 189,
+        "prefix": "int",
+        "desc": "first enc var tbps"
+    },
+			    "onext_int": {
+        "count": 80,
+        "prefix": "obj",
+        "desc": "next int"
+    },
+    "onum_enc": {
+        "count": 80,
+        "prefix": "obj",
+        "desc": "num ints to next obj"
+    },
+    "ocount_clicks": {
+        "count": 80,
+        "prefix": "obj",
+        "desc": "num actions to next obj"
+    },
+    "omeaningful_action_count": {
+        "count": 80,
+        "prefix": "obj",
+        "desc": "num meaningful actions to next obj"
+    },
+    "ocount_notebook_uses": {
+        "count": 80,
+        "prefix": "obj",
+        "desc": "num ntbk opens to next obj"
+},
+				"otime_to_next_obj": {
+        "count": 80,
+        "prefix": "obj",
+        "desc": "num ntbk opens to next obj"
+    }
+		},
         "aggregate":{
-            "sessionID":"The player's session ID number for this play session",
-			"persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",
-			"max_level":"Highest level reached in the session",
-			"sessDuration": "Length of the session",
+
             "sess_count_clicks": "Number of clicks throughout the game",
             "sess_count_hovers": "Number of hovers throughout the game",
 			"sess_meaningful_action_count": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations",
             "sess_EventCount": "count of all log events in the game",
-            "sess_timeToRead":"Total time spent reading text boxes over the whole game",
-            "sess_avgTimePerWord":"Time spent reading all text boxes in the game, divided by number of words",
-            "sess_avgTimePerTextBox":"Time spent reading all text boxes in the game, divided by number of text boxes",
-            "sess_stDevTimePerTextBox":"Standard deviation of time spent reading text boxes in the game",
-			"sess_words_per_second": "words per second read",
 			"sess_count_notebook_uses": "number of times the player opened the notebook over the whole game",
 			"sess_avg_time_between_clicks": "average time between clicks",
+			"sess_first_enc_words_read": "sum words read in every first encounter",
+			"sess_first_enc_boxes_read": "boxes read in every first encounter",
+			"sess_num_enc": "number of encounters",
+			"sess_first_enc_duration": "duration of first encounters",
+			"sess_first_enc_avg_wps": "average words per second in each first encounter",
+			"sess_first_enc_var_wps": "variance words per second in each first encounter",
+			"sess_first_enc_avg_tbps": "average text boxes per second in each first encounter",
+			"sess_first_enc_var_tbps": "variance text boxes per second in each first encounter",
+          "sess_start_obj": "objective the player started with",
+          "sess_end_obj": "objective the player ended with",
+
+			"start_level": "Level the player started at",
+			"max_level":"Highest level reached in the session",
+			"sessDuration": "Length of the session",
+
+			      "play_year": "year started the game (UTC)",
+      "play_month": "month started the game (UTC)",
+      "play_day": "day started the game (UTC)",
+      "play_hour": "hour started the game (UTC)",
+      "play_minute": "minute started the game (UTC)",
+      "play_second": "second started the game (UTC)",
+
+			"continue": "1 if continuing a game, 0 otherwise",
 			"save_code": "the save code the user inputted (or 0 if NA)",
 			"music": "boolean (1/0) whether or not the player turned music on",
 			"hq": "boolean (1/0) for whether or not the player turned hq graphics on",
 			"fullscreen": "boolean (1/0) whether or not the player checked fullscreen",
-			"max_level": "the highest level the player got"
+
+						"sessionID":"The player's session ID number for this play session",
+			"persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device."
 		}
     },
 

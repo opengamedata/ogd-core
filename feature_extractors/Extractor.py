@@ -35,6 +35,7 @@ class Extractor(abc.ABC):
         self._level_range: range             = level_range if (level_range is not None) else range(game_table.min_level, game_table.max_level+1)
         self.levels:       typing.List[int]  = []
         self.last_adjust_type: str           = None
+        self.sequences:    typing.List       = []
         self.features:     Extractor.SessionFeatures = Extractor.SessionFeatures(self._level_range, game_schema)
 
     ## Static function to print column headers to a file.
@@ -107,6 +108,24 @@ class Extractor(abc.ABC):
                 column_vals.append(myformat(self.features.getValByName(key)))
         return column_vals
 
+    def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+        self.extractSequencesFromRow(row_data=row_with_complex_parsed, game_table=game_table)
+        self.extractFeaturesFromRow(row_with_complex_parsed=row_with_complex_parsed, game_table=game_table)
+
+    def extractSequencesFromRow(self, row_data, game_table: GameTable):
+        for sequence in self.sequences:
+            event_data = self.extractCustomSequenceEventFromRow(row_data=row_data, game_table=game_table)
+            sequence.RegisterEvent(row_data[game_table.complex_data_index]["event_custom"], event_data=event_data)
+
+    ## Function to custom-extract event data for a sequence.
+    #  *** This function MUST BE OVERRIDDEN if you want sequence data other than the event types. ***
+    #  For now, it's assumed that all sequences an extractor might want to record have a common custom-data need.
+    #  At the very least, the extractor could take the union of all data its various sequences may need.
+    #  In general, however, if the extractor needs multiple kinds of sequences or sequence data,
+    #  it is probably better to do dedicated sequence analysis.
+    def extractCustomSequenceEventDataFromRow(self, row_data, game_table: GameTable):
+        return None
+
     ## Abstract declaration of a function to perform extraction of features from a row.
     #
     #  @param row_with_complex_parsed A row of game data from the db, with the
@@ -114,7 +133,7 @@ class Extractor(abc.ABC):
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
     @abc.abstractmethod
-    def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
         pass
 
     ## Abstract declaration of a function to perform calculation of aggregate features
@@ -213,6 +232,15 @@ class Extractor(abc.ABC):
                 return
             self.features[feature_name][index]["val"] = new_value
 
+        ## Function to set value of a per-level feature
+        #  Pure syntax sugar, calls setValByIndex using level as the index.
+        #
+        #  @param feature_name The name of the feature to set
+        #  @param index        The count index of the desired value, e.g. the level
+        #  @param new_value    The value to be stored for the given feature at given index.
+        def setValByLevel(self, feature_name: str, level: int, new_value):
+            self.setValByIndex(feature_name=feature_name, index=level, new_value=new_value)
+
         ## Function to set value of a full feature
         #  Intended for use with aggregate features. Not recommended for setting
         #  per-count features.
@@ -237,6 +265,15 @@ class Extractor(abc.ABC):
                 self.features[feature_name][index]["val"] = 0
             self.features[feature_name][index]["val"] += increment
 
+        ## Function to increment the value of a per-level feature
+        #  Pure syntax sugar, calls incValByIndex using level as the index.
+        #
+        #  @param feature_name The name of the feature to increment
+        #  @param index        The count index of the specific value, e.g. the level
+        #  @param increment    The size of the increment (default = 1)
+        def incValByLevel(self, feature_name: str, level: int, increment: typing.Union[int, float] = 1):
+            self.incValByIndex(feature_name=feature_name, index=level, increment=increment)
+
         ## Function to increment value of an aggregate feature
         #
         #  @param feature_name The name of the feature to increment
@@ -247,10 +284,28 @@ class Extractor(abc.ABC):
             self.features[feature_name] += increment
 
         def _verify_feature(self, feature_name):
-            if self.features.get(feature_name) is None:
+            try:
+                _ = self.features[feature_name]
+            except KeyError:
                 utils.Logger.toStdOut(f'{feature_name} does not exist.', logging.ERROR)
                 utils.Logger.toFile(f'{feature_name} does not exist.', logging.ERROR)
                 return False
             return True
+
+    ## Simple helper class to track a sequence of events, based on move types.
+    class Sequence:
+        def __init__(self, end_function: typing.Callable[[typing.List[typing.Tuple]], None], end_event_type, end_event_count:int=1):
+            self._fnEnd          = end_function
+            self._end_event_type  = end_event_type
+            self._end_event_count = 0               # current count of end events
+            self._end_at_count    = end_event_count # number of end events to count before ending the sequence.
+            self._events          = []
+
+        def RegisterEvent(self, event_type, event_data):
+            self._events.append((event_type, event_data))
+            if event_type == self._end_event_type:
+                self._end_event_count += 1
+            if self._end_event_count == self._end_at_count:
+                self._fnEnd(self._events)
 
 
