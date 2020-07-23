@@ -80,16 +80,17 @@ class ExportManager:
         
         # utils.Logger.toStdOut("complex_data_index: {}".format(complex_data_index), logging.DEBUG)
 
-        # First, get the files and game-specific vars ready
-        game_schema, game_extractor = self._getExtractor()
-
-        _from = request.start_date.strftime("%Y%m%d")
-        _to = request.end_date.strftime("%Y%m%d")
-        repo = git.Repo(search_parent_directories=True)
-        short_hash = repo.git.rev_parse(repo.head.object.hexsha, short=7)
-        dataset_id = f"{self._game_id}_{_from}_to_{_to}"
-
         try:
+            # First, get the files and game-specific vars ready
+            game_schema, game_extractor = self._getExtractor()
+            # also figure out hash and dataset ID.
+            _from = request.start_date.strftime("%Y%m%d")
+            _to = request.end_date.strftime("%Y%m%d")
+            repo = git.Repo(search_parent_directories=True)
+            short_hash = repo.git.rev_parse(repo.head.object.hexsha, short=7)
+            dataset_id = f"{self._game_id}_{_from}_to_{_to}"
+
+            # get the current list, and set up our paths.
             existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR'])
 
             os.makedirs(name=data_directory, exist_ok=True)
@@ -98,7 +99,7 @@ class ExportManager:
             proc_csv_path: str = None
             raw_zip_path:  str = None
             proc_zip_path: str = None
-            num_sess:           int = len(game_table.session_ids)
+            num_sess:      int = len(game_table.session_ids)
             if game_schema is not None:
                 raw_csv_path  = f"{data_directory}/{dataset_id}_{short_hash}_raw.tsv" # changed .csv to .tsv
                 proc_csv_path = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv"
