@@ -58,7 +58,7 @@ class ExportManager:
             tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
             game_table: GameTable = GameTable(db=db, settings=self._settings, request=request)
             try:
-                parse_success: str = self._getAndParseData(request, game_table)
+                parse_success: bool = self._getAndParseData(request, game_table)
                 if parse_success:
                     utils.Logger.toStdOut(f"Successfully completed request {str(request)}.", logging.INFO)
                 else:
@@ -74,7 +74,7 @@ class ExportManager:
     #                    and export
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
-    def _getAndParseData(self, request: Request, game_table: GameTable):
+    def _getAndParseData(self, request: Request, game_table: GameTable) -> bool:
         data_directory = self._settings["DATA_DIR"] + self._game_id
         db_settings = self._settings["db_config"]
         
