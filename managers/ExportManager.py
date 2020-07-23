@@ -81,24 +81,7 @@ class ExportManager:
         # utils.Logger.toStdOut("complex_data_index: {}".format(complex_data_index), logging.DEBUG)
 
         # First, get the files and game-specific vars ready
-        game_extractor: type
-        if self._game_id == "WAVES":
-            game_schema = Schema(schema_name="WAVES.json")
-            game_extractor = WaveExtractor
-        elif self._game_id == "CRYSTAL":
-            game_schema = Schema(schema_name="CRYSTAL.json")
-            game_extractor = CrystalExtractor
-        elif self._game_id == "LAKELAND":
-            game_schema = Schema(schema_name="LAKELAND.json")
-            game_extractor = LakelandExtractor
-        elif self._game_id == "JOWILDER":
-            game_schema = Schema(schema_name="JOWILDER.json")
-            game_extractor = JowilderExtractor
-        elif self._game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MAGNET", "WIND"]:
-            # all games with data but no extractor.
-            game_schema = None
-        else:
-            raise Exception("Got an invalid game ID!")
+        game_schema, game_extractor = self._genExtractor()
 
         _from = request.start_date.strftime("%Y%m%d")
         _to = request.end_date.strftime("%Y%m%d")
@@ -160,6 +143,28 @@ class ExportManager:
             ret_val = False
         finally:
             return ret_val
+
+    def _genExtractor(self):
+        game_extractor: type = None
+        game_schema: Schema = None
+        if self._game_id == "WAVES":
+            game_schema = Schema(schema_name="WAVES.json")
+            game_extractor = WaveExtractor
+        elif self._game_id == "CRYSTAL":
+            game_schema = Schema(schema_name="CRYSTAL.json")
+            game_extractor = CrystalExtractor
+        elif self._game_id == "LAKELAND":
+            game_schema = Schema(schema_name="LAKELAND.json")
+            game_extractor = LakelandExtractor
+        elif self._game_id == "JOWILDER":
+            game_schema = Schema(schema_name="JOWILDER.json")
+            game_extractor = JowilderExtractor
+        elif self._game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MAGNET", "WIND"]:
+            # all games with data but no extractor.
+            pass
+        else:
+            raise Exception("Got an invalid game ID!")
+        return game_schema, game_extractor
 
     def _addToZip(self, path, zip_file, path_in_zip):
         try:
