@@ -81,7 +81,7 @@ class ExportManager:
         # utils.Logger.toStdOut("complex_data_index: {}".format(complex_data_index), logging.DEBUG)
 
         # First, get the files and game-specific vars ready
-        game_schema, game_extractor = self._genExtractor()
+        game_schema, game_extractor = self._getExtractor()
 
         _from = request.start_date.strftime("%Y%m%d")
         _to = request.end_date.strftime("%Y%m%d")
@@ -144,7 +144,7 @@ class ExportManager:
         finally:
             return ret_val
 
-    def _genExtractor(self):
+    def _getExtractor(self):
         game_extractor: type = None
         game_schema: Schema = None
         if self._game_id == "WAVES":
