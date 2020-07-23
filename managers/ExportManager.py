@@ -104,14 +104,14 @@ class ExportManager:
                 proc_csv_path = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv"
                 raw_zip_path  = f"{data_directory}/{dataset_id}_{short_hash}_raw.zip"
                 proc_zip_path = f"{data_directory}/{dataset_id}_{short_hash}_proc.zip"
+                self._extractToCSVs(raw_csv_path=raw_csv_path, proc_csv_path=proc_csv_path,\
+                                    db_settings=db_settings,\
+                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
                 if self._game_id in existing_csvs and dataset_id in existing_csvs[self._game_id]:
                     src_raw = existing_csvs[self._game_id][dataset_id]['raw']
                     src_proc = existing_csvs[self._game_id][dataset_id]['proc']
                     os.rename(src_raw, raw_zip_path)
                     os.rename(src_proc, proc_zip_path)
-                self._extractToCSVs(raw_csv_path=raw_csv_path, proc_csv_path=proc_csv_path,\
-                                    db_settings=db_settings,\
-                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
                 raw_zip_file = zipfile.ZipFile(raw_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
                 proc_zip_file = zipfile.ZipFile(proc_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
                 self._addToZip(path=raw_csv_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_raw.csv")
