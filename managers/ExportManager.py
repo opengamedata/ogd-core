@@ -82,6 +82,7 @@ class ExportManager:
         # utils.Logger.toStdOut("complex_data_index: {}".format(complex_data_index), logging.DEBUG)
 
         try:
+            # TODO: get this pile of crap organized
             # First, get the files and game-specific vars ready
             game_schema, game_extractor = self._getExtractor()
             # also figure out hash and dataset ID.
@@ -259,50 +260,6 @@ class ExportManager:
                                          sort_columns=["session_id", "session_n"], sort_direction="ASC",
                                          grouping=None, distinct=False)
         return query
-
-    def _dumpToSQL(self, sql_dump_path: str, game_table: GameTable, db_settings, temp_table: str):
-        # args_list = ["mysqldump", f"--host={db_settings['DB_HOST']}",
-        #             f"--where=", f"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}'",
-        #             f"--user={db_settings['DB_USER']}", f"--password={db_settings['DB_PW']}",
-        #             f"{db_settings['DB_NAME_DATA']}", f"{db_settings['table']}"]
-        if len(game_table.session_ids) > 0:
-            db_name = db_settings["DB_NAME_DATA"]
-            table = db_settings["table"]
-            from_table_path = db_name + "." + str(table)
-            to_table_path = db_name + "." + temp_table
-            create_query = f'CREATE TABLE {to_table_path} LIKE {from_table_path};'
-            get_insert_into_query = lambda select_query: f'INSERT INTO {to_table_path} '+select_query
-            alter_query = f'ALTER TABLE {to_table_path} DROP COLUMN remote_addr;'
-            drop_query = f'DROP TABLE {to_table_path};'
-            try:
-                tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
-                db_cursor = db.cursor()
-                utils.SQL.Query(db_cursor, create_query)
-                for select_query in self._select_queries:
-                    insert_into_query = get_insert_into_query(select_query)
-                    utils.SQL.Query(db_cursor, insert_into_query)
-                utils.SQL.Query(db_cursor, alter_query)
-#             command = f"mysqldump --host={db_settings['DB_HOST']} \
-# --where=\"session_id BETWEEN '{game_table.session_ids[0]}' AND '{game_table.session_ids[-1]}' AND app_id='{self._game_id}'\" \
-# --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {db_settings['table']} \
-#  > {sql_dump_path}"
-                command = f"mysqldump --host={db_settings['DB_HOST']} \
-                --user={db_settings['DB_USER']} --password={db_settings['DB_PW']} {db_settings['DB_NAME_DATA']} {temp_table} \
-                 > {sql_dump_path}"
-                sql_dump_file = open(sql_dump_path, "w")
-                utils.Logger.toStdOut(f"running sql dump command: {command}", logging.INFO)
-                os.system(command)
-                utils.SQL.Query(db_cursor, drop_query)
-            except Exception as err:
-                utils.Logger.toStdOut(str(err), logging.ERROR)
-                traceback.print_tb(err.__traceback__)
-                utils.Logger.toFile(str(err), logging.ERROR)
-            finally:
-                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-        else:
-            utils.Logger.toStdOut(f"No sessions to export for {sql_dump_path}", logging.WARNING)
-            utils.Logger.toFile(f"No sessions to export for {sql_dump_path}", logging.WARNING)
-
 
     ## Private helper function to process a single row of data.
     #  Most of the processing is delegated to Raw and Proc Managers, but this
