@@ -97,20 +97,14 @@ class ExportManager:
 
             os.makedirs(name=data_directory, exist_ok=True)
             readme_path:   str = f"{data_directory}/readme.md"
-            proc_csv_path: str = None
-            raw_csv_path:  str = None
-            dump_csv_path:  str = None
-            proc_zip_path: str = None
-            raw_zip_path:  str = None
-            dump_zip_path:  str = None
+            proc_csv_path: str = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv"
+            raw_csv_path:  str = f"{data_directory}/{dataset_id}_{short_hash}_raw.tsv" # changed .csv to .tsv
+            dump_csv_path: str = f"{data_directory}/{dataset_id}_{short_hash}_dump.tsv"
+            proc_zip_path: str = f"{data_directory}/{dataset_id}_{short_hash}_proc.zip"
+            raw_zip_path:  str = f"{data_directory}/{dataset_id}_{short_hash}_raw.zip"
+            dump_zip_path: str = f"{data_directory}/{dataset_id}_{short_hash}_dump.zip"
             num_sess:      int = len(game_table.session_ids)
             if game_schema is not None:
-                proc_csv_path = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv"
-                raw_csv_path  = f"{data_directory}/{dataset_id}_{short_hash}_raw.tsv" # changed .csv to .tsv
-                dump_csv_path  = f"{data_directory}/{dataset_id}_{short_hash}_dump.tsv"
-                proc_zip_path = f"{data_directory}/{dataset_id}_{short_hash}_proc.zip"
-                raw_zip_path  = f"{data_directory}/{dataset_id}_{short_hash}_raw.zip"
-                dump_zip_path  = f"{data_directory}/{dataset_id}_{short_hash}_dump.zip"
                 self._extractToCSVs(raw_csv_path=raw_csv_path, proc_csv_path=proc_csv_path, dump_csv_path=dump_csv_path,\
                                     db_settings=db_settings,\
                                     game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
@@ -121,21 +115,41 @@ class ExportManager:
                     os.rename(src_proc, proc_zip_path)
                     os.rename(src_raw, raw_zip_path)
                     os.rename(src_dump, dump_zip_path)
-                proc_zip_file = zipfile.ZipFile(proc_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
-                raw_zip_file = zipfile.ZipFile(raw_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
-                dump_zip_file = zipfile.ZipFile(dump_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
-                self._addToZip(path=proc_csv_path, zip_file=proc_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_proc.csv")
-                self._addToZip(path=readme_path, zip_file=proc_zip_file, path_in_zip=f"{dataset_id}/readme.md")
-                self._addToZip(path=raw_csv_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_raw.csv")
-                self._addToZip(path=readme_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/readme.md")
-                self._addToZip(path=dump_csv_path, zip_file=dump_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_dump.csv")
-                self._addToZip(path=readme_path, zip_file=dump_zip_file, path_in_zip=f"{dataset_id}/readme.md")
-                proc_zip_file.close()
-                raw_zip_file.close()
-                dump_zip_file.close()
-                os.remove(proc_csv_path)
-                os.remove(raw_csv_path)
-                os.remove(dump_csv_path)
+                try:
+                    proc_zip_file = zipfile.ZipFile(proc_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
+                    self._addToZip(path=proc_csv_path, zip_file=proc_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_proc.csv")
+                    self._addToZip(path=readme_path, zip_file=proc_zip_file, path_in_zip=f"{dataset_id}/readme.md")
+                    os.remove(proc_csv_path)
+                except FileNotFoundError as err:
+                    utils.Logger.toStdOut(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    traceback.print_tb(err.__traceback__)
+                    utils.Logger.toFile(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                finally:
+                    proc_zip_file.close()
+
+                try:
+                    raw_zip_file = zipfile.ZipFile(raw_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
+                    self._addToZip(path=raw_csv_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_raw.csv")
+                    self._addToZip(path=readme_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/readme.md")
+                    os.remove(raw_csv_path)
+                except FileNotFoundError as err:
+                    utils.Logger.toStdOut(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    traceback.print_tb(err.__traceback__)
+                    utils.Logger.toFile(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                finally:
+                    raw_zip_file.close()
+
+                try:
+                    dump_zip_file = zipfile.ZipFile(dump_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
+                    self._addToZip(path=dump_csv_path, zip_file=dump_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_dump.csv")
+                    self._addToZip(path=readme_path, zip_file=dump_zip_file, path_in_zip=f"{dataset_id}/readme.md")
+                    os.remove(dump_csv_path)
+                except FileNotFoundError as err:
+                    utils.Logger.toStdOut(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    traceback.print_tb(err.__traceback__)
+                    utils.Logger.toFile(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                finally:
+                    dump_zip_file.close()
             # Finally, update the list of csv files.
             self._updateFileExportList(dataset_id=dataset_id, raw_path=raw_zip_path, proc_path=proc_zip_path,
                                     dump_path=dump_zip_path, request=request, num_sess=num_sess)
