@@ -19,6 +19,7 @@ from config import settings
 from GameTable import GameTable
 from managers.ProcManager import ProcManager
 from managers.RawManager import RawManager
+from managers.DumpManager import DumpManager
 from Request import Request
 from schemas.Schema import Schema
 from feature_extractors.WaveExtractor import WaveExtractor
@@ -95,47 +96,48 @@ class ExportManager:
 
             os.makedirs(name=data_directory, exist_ok=True)
             readme_path:   str = f"{data_directory}/readme.md"
-            raw_csv_path:  str = None
             proc_csv_path: str = None
-            raw_zip_path:  str = None
+            raw_csv_path:  str = None
+            dump_csv_path:  str = None
             proc_zip_path: str = None
+            raw_zip_path:  str = None
+            dump_zip_path:  str = None
             num_sess:      int = len(game_table.session_ids)
             if game_schema is not None:
-                raw_csv_path  = f"{data_directory}/{dataset_id}_{short_hash}_raw.tsv" # changed .csv to .tsv
                 proc_csv_path = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv"
-                raw_zip_path  = f"{data_directory}/{dataset_id}_{short_hash}_raw.zip"
+                raw_csv_path  = f"{data_directory}/{dataset_id}_{short_hash}_raw.tsv" # changed .csv to .tsv
+                dump_csv_path  = f"{data_directory}/{dataset_id}_{short_hash}_dump.tsv"
                 proc_zip_path = f"{data_directory}/{dataset_id}_{short_hash}_proc.zip"
-                self._extractToCSVs(raw_csv_path=raw_csv_path, proc_csv_path=proc_csv_path,\
+                raw_zip_path  = f"{data_directory}/{dataset_id}_{short_hash}_raw.zip"
+                dump_zip_path  = f"{data_directory}/{dataset_id}_{short_hash}_dump.zip"
+                self._extractToCSVs(raw_csv_path=raw_csv_path, proc_csv_path=proc_csv_path, dump_csv_path=dump_csv_path,\
                                     db_settings=db_settings,\
                                     game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
                 if self._game_id in existing_csvs and dataset_id in existing_csvs[self._game_id]:
-                    src_raw = existing_csvs[self._game_id][dataset_id]['raw']
                     src_proc = existing_csvs[self._game_id][dataset_id]['proc']
-                    os.rename(src_raw, raw_zip_path)
+                    src_raw = existing_csvs[self._game_id][dataset_id]['raw']
+                    src_dump = existing_csvs[self._game_id][dataset_id]['dump']
                     os.rename(src_proc, proc_zip_path)
-                raw_zip_file = zipfile.ZipFile(raw_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
+                    os.rename(src_raw, raw_zip_path)
+                    os.rename(src_dump, dump_zip_path)
                 proc_zip_file = zipfile.ZipFile(proc_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
-                self._addToZip(path=raw_csv_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_raw.csv")
-                self._addToZip(path=readme_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/readme.md")
+                raw_zip_file = zipfile.ZipFile(raw_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
+                dump_zip_file = zipfile.ZipFile(dump_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
                 self._addToZip(path=proc_csv_path, zip_file=proc_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_proc.csv")
                 self._addToZip(path=readme_path, zip_file=proc_zip_file, path_in_zip=f"{dataset_id}/readme.md")
-                raw_zip_file.close()
+                self._addToZip(path=raw_csv_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_raw.csv")
+                self._addToZip(path=readme_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/readme.md")
+                self._addToZip(path=dump_csv_path, zip_file=dump_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_dump.csv")
+                self._addToZip(path=readme_path, zip_file=dump_zip_file, path_in_zip=f"{dataset_id}/readme.md")
                 proc_zip_file.close()
-                os.remove(raw_csv_path)
+                raw_zip_file.close()
+                dump_zip_file.close()
                 os.remove(proc_csv_path)
-            # sql_dump_path = f"{data_directory}/{dataset_id}_{short_hash}.sql"
-            sql_zip_path = None # f"{data_directory}/{dataset_id}_{short_hash}_sql.zip"
-            if self._game_id in existing_csvs and dataset_id in existing_csvs[self._game_id]:
-                src_sql = existing_csvs[self._game_id][dataset_id]['sql']
-                os.rename(src_sql, sql_zip_path)
-            # self._dumpToSQL(sql_dump_path=sql_dump_path, game_table=game_table, db_settings=db_settings, temp_table = f'{dataset_id}_{short_hash}')
-            # sql_zip_file = zipfile.ZipFile(sql_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
-            # sql_zip_file.write(sql_dump_path, f"{dataset_id}/{dataset_id}_{short_hash}.sql")
-            # sql_zip_file.write(readme_path, f"{dataset_id}/readme.md")
-            # os.remove(sql_dump_path)
+                os.remove(raw_csv_path)
+                os.remove(dump_csv_path)
             # Finally, update the list of csv files.
-            self._updateFileExportList(dataset_id, raw_zip_path, proc_zip_path,
-                                    sql_zip_path, request, num_sess)
+            self._updateFileExportList(dataset_id=dataset_id, raw_path=raw_zip_path, proc_path=proc_zip_path,
+                                    dump_path=dump_zip_path, request=request, num_sess=num_sess)
             ret_val = True
         except Exception as err:
             utils.Logger.toStdOut(str(err), logging.ERROR)
@@ -175,18 +177,21 @@ class ExportManager:
             traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(str(err), logging.ERROR)
 
-    def _extractToCSVs(self, raw_csv_path: str, proc_csv_path: str, db_settings,
-                       game_schema: Schema, game_table: GameTable, game_extractor: type) -> int:
+    def _extractToCSVs(self, raw_csv_path: str, proc_csv_path: str, dump_csv_path: str,
+                db_settings, game_schema: Schema, game_table: GameTable, game_extractor: type) -> int:
         try:
             tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
             db_cursor = db.cursor()
-            raw_csv_file = open(raw_csv_path, "w", encoding="utf-8")
             proc_csv_file = open(proc_csv_path, "w", encoding="utf-8")
+            raw_csv_file = open(raw_csv_path, "w", encoding="utf-8")
+            dump_csv_file = open(dump_csv_path, "w", encoding="utf-8")
             # Now, we're ready to set up the managers:
-            raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
-                                raw_csv_file=raw_csv_file)
             proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table,
                                 game_schema=game_schema, proc_csv_file=proc_csv_file)
+            raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
+                                raw_csv_file=raw_csv_file)
+            dump_mgr = DumpManager(game_table=game_table, game_schema=game_schema,
+                                dump_csv_file=dump_csv_file)
             
             # We're moving the metadata out into a separate readme file.
             # # Next, calculate metadata
@@ -342,8 +347,8 @@ class ExportManager:
     #  @param proc_csv_path Path to the newly exported feature csv, including filename
     #  @param request       The original request for data export
     #  @param num_sess      The number of sessions included in the recent export.
-    def _updateFileExportList(self, dataset_id: str, raw_csv_path: str, proc_csv_path: str,
-        sql_dump_path: str, request: Request, num_sess: int):
+    def _updateFileExportList(self, dataset_id: str, raw_path: str, proc_path: str,
+        dump_path: str, request: Request, num_sess: int):
         self._backupFileExportList()
         try:
             existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR'])
@@ -357,9 +362,9 @@ class ExportManager:
             # raw_stat = os.stat(raw_csv_full_path)
             # proc_stat = os.stat(proc_csv_full_path)
             existing_csvs[self._game_id][dataset_id] = \
-                {"raw":raw_csv_path,
-                "proc":proc_csv_path,
-                "sql":sql_dump_path,
+                {"raw":raw_path,
+                "proc":proc_path,
+                "dump":dump_path,
                 "start_date":request.start_date.strftime("%m/%d/%Y"),
                 "end_date":request.end_date.strftime("%m/%d/%Y"),
                 "date_modified":datetime.now().strftime("%m/%d/%Y"),
