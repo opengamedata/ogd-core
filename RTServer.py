@@ -43,6 +43,9 @@ class RTServer:
         tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         ret_val = {}
         try:
+            #+++
+            start = datetime.now()
+            #---
             cursor = db.cursor()
             start_time = datetime.now() - timedelta(minutes=5)
             player_id_filter = "AND `player_id` IS NOT NULL" if require_player_id else ""
@@ -51,7 +54,13 @@ class RTServer:
                                                    db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
                                                    columns=["session_id", "player_id"], filter=filt,\
                                                    sort_columns=["session_id"], distinct=True)
-
+            #+++
+            end = datetime.now()
+            time_delta = end - start
+            minutes = math.floor(time_delta.total_seconds()/60)
+            seconds = time_delta.total_seconds() % 60
+            utils.Logger.toFile(f"Total time taken to fetch active sessions from database: {minutes} min, {seconds} sec", logging.DEBUG)
+            #---
             for item in active_sessions_raw:
                 sess_id = item[0]
                 player_id = item[1]
