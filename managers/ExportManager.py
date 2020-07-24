@@ -206,8 +206,9 @@ class ExportManager:
             # proc_csv_file.write(proc_metadata)
 
             # then write the column headers for the raw csv.
-            raw_mgr.WriteRawCSVHeader()
             proc_mgr.WriteProcCSVHeader()
+            raw_mgr.WriteRawCSVHeader()
+            dump_mgr.WriteDumpCSVHeader()
 
             num_sess = len(game_table.session_ids)
             utils.Logger.toStdOut(f"Preparing to process {num_sess} sessions.", logging.INFO)
@@ -223,7 +224,7 @@ class ExportManager:
                 # now, we process each row.
                 start = datetime.now()
                 for row in next_data_set:
-                    self._processRow(row, game_table, raw_mgr, proc_mgr)
+                    self._processRow(row=row, game_table=game_table, raw_mgr=raw_mgr, proc_mgr=proc_mgr, dump_mgr=dump_mgr)
                 time_delta = datetime.now() - start
                 num_min = math.floor(time_delta.total_seconds()/60)
                 num_sec = time_delta.total_seconds() % 60
@@ -234,11 +235,13 @@ class ExportManager:
                 utils.Logger.toFile(status_string, logging.INFO)
                 
                 # after processing all rows for all slices, write out the session data and reset for next slice.
-                raw_mgr.WriteRawCSVLines()
-                raw_mgr.ClearLines()
                 proc_mgr.calculateAggregateFeatures()
                 proc_mgr.WriteProcCSVLines()
                 proc_mgr.ClearLines()
+                raw_mgr.WriteRawCSVLines()
+                raw_mgr.ClearLines()
+                dump_mgr.WriteDumpCSVLines()
+                dump_mgr.ClearLines()
         except Exception as err:
             utils.Logger.toStdOut(str(err), logging.ERROR)
             traceback.print_tb(err.__traceback__)
@@ -269,7 +272,7 @@ class ExportManager:
     #                    table assiciated with the given game is structured. 
     #  @raw_mgr          An instance of RawManager used to track raw data.
     #  @proc_mgr         An instance of ProcManager used to extract and track feature data.
-    def _processRow(self, row: typing.Tuple, game_table: GameTable, raw_mgr: RawManager, proc_mgr: ProcManager):
+    def _processRow(self, row: typing.Tuple, game_table: GameTable, raw_mgr: RawManager, proc_mgr: ProcManager, dump_mgr: DumpManager):
         session_id = row[game_table.session_id_index]
 
         # parse out complex data from json
@@ -288,8 +291,9 @@ class ExportManager:
         row[game_table.complex_data_index] = complex_data_parsed
 
         if session_id in game_table.session_ids:
-            raw_mgr.ProcessRow(row)
             proc_mgr.ProcessRow(row)
+            raw_mgr.ProcessRow(row)
+            dump_mgr.ProcessRow(row)
         # else:
             # in this case, we should have just found 
             # utils.Logger.toFile(f"Found a session ({session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
