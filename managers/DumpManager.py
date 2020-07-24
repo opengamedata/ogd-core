@@ -24,22 +24,18 @@ class DumpManager:
         # define instance vars
         self._lines             : typing.List[typing.List] = []
         self._game_table        : GameTable           = game_table
-        self._dump_file          : typing.IO.writable  = dump_csv_file
+        self._dump_file         : typing.IO.writable  = dump_csv_file
         self._db_columns        : typing.List[str]    = game_schema.db_columns()
-        self._all_columns       : typing.List[str]
-        # set instance vars
-        self._all_columns = game_table.column_names
 
     ## Function to handle processing one row of data.
     #  @param row_with_complex_parsed A tuple of the row data. We assume the
     #                      event_data_complex has already been parsed from JSON.
     def ProcessRow(self, row_with_complex_parsed: typing.Tuple):
-        line = [None] * len(self._all_columns)
+        line = [None] * len(self._db_columns)
         for i,col in enumerate(row_with_complex_parsed):
             # only set a value if this was not the remote address (IP) column.
             if i != self._game_table.remote_addr_index:
                 line[i] = f"\"{col}\"" if type(col) == str else col
-
         self._lines.append("\t".join([str(item) for item in line]) + "\n") # changed , to \t
 
     ## Function to empty the list of lines stored by the DumpManager.
@@ -51,7 +47,7 @@ class DumpManager:
 
     ## Function to write out the header for a dump csv file.
     def WriteDumpCSVHeader(self):
-        self._dump_file.write("\t".join(self._all_columns) + "\n")# changed , to \t
+        self._dump_file.write("\t".join(self._db_columns) + "\n")# changed , to \t
 
     ## Function to write out all lines of dumped data that have been parsed so far.
     def WriteDumpCSVLines(self):
