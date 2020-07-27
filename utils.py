@@ -269,24 +269,24 @@ class Logger:
     @staticmethod
     def toFile(message, level):
         if level == logging.DEBUG:
-            Logger.file_logger.debug(message)
+            Logger.file_logger.debug(f"DEBUG: {message}")
         elif level == logging.INFO:
-            Logger.file_logger.info(message)
+            Logger.file_logger.info(f"INFO: {message}")
         elif level == logging.WARNING:
-            Logger.file_logger.warn(message)
+            Logger.file_logger.warning(f"WARNING: {message}")
         elif level == logging.ERROR:
-            Logger.file_logger.error(message)
+            Logger.file_logger.error(f"ERROR: {message}")
 
     @staticmethod
     def toStdOut(message, level):
         if level == logging.DEBUG:
-            Logger.std_logger.debug(message)
+            Logger.std_logger.debug(f"DEBUG: {message}")
         elif level == logging.INFO:
-            Logger.std_logger.info(message)
+            Logger.std_logger.info(f"INFO: {message}")
         elif level == logging.WARNING:
-            Logger.std_logger.warn(message)
+            Logger.std_logger.warn(f"WARNING: {message}")
         elif level == logging.ERROR:
-            Logger.std_logger.error(message)
+            Logger.std_logger.error(f"ERROR: {message}")
 
     @staticmethod
     def toPrint(message, level):
