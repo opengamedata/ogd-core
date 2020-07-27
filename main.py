@@ -259,13 +259,16 @@ f"## Field Day Open Game Data \n\
 
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
-opts, args = getopt.gnu_getopt(sys.argv, shortopts="", longopts=["from-file="])
-num_args = len(args)
-# print(sys.argv)
-fname = args if num_args > 0 else None
+utils.Logger.toStdOut(f"Running {sys.argv[0]}...", logging.INFO)
+utils.Logger.toFile(f"Running {sys.argv[0]}...", logging.INFO)
+try:
+    opts, args = getopt.gnu_getopt(sys.argv, shortopts="", longopts=["from-file="])
+    num_args = len(args)
+    cmd = args if num_args > 1 else "help"
+except getopt.GetoptError as err:
+    print(f"Error, invalid option given!\n{err}")
+    cmd = "help"
 
-utils.Logger.toStdOut(f"Running {fname}...", logging.INFO)
-cmd = args if num_args > 1 else "help"
 if type(cmd) == str:
     # if we have a real command, load the config file.
     # settings = utils.loadJSONFile("config.json")
@@ -288,7 +291,7 @@ if type(cmd) == str:
         writeReadme()
     else:
         if not cmd == "help":
-            print("Invalid Command!")
+            print(f"Invalid Command {cmd}!")
         showHelp()
 else:
     print("Command is not a string!")
