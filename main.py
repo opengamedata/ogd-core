@@ -1,6 +1,7 @@
 # import standard libraries
 import cProfile
 import datetime
+import getopt
 import logging
 import math
 import os
@@ -58,7 +59,7 @@ def showGameInfo():
     if num_args > 2:
         try:
             tunnel, db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
-            game_name = sys.argv[2]
+            game_name = args[2]
             schema = Schema(schema_name=f"{game_name}.json")
 
             feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
@@ -75,7 +76,7 @@ def showGameInfo():
 def runExport(monthly: bool = False, all_data: bool = False):
     # retrieve game id
     if num_args > 2:
-        game_id = sys.argv[2]
+        game_id = args[2]
     else:
         showHelp()
         return
@@ -91,7 +92,7 @@ def runExport(monthly: bool = False, all_data: bool = False):
         else:
             month_year: typing.List[int]
             if num_args > 3:
-                month_year_str = sys.argv[3].split("/")
+                month_year_str = args[3].split("/")
                 month_year = [int(month_year_str[0]), int(month_year_str[1])]
             else:
                 today   = datetime.now()
@@ -102,10 +103,10 @@ def runExport(monthly: bool = False, all_data: bool = False):
     # Otherwise, create date range from given pair of dates.
     else:
         today   = datetime.now()
-        start_date = datetime.strptime(sys.argv[3], "%m/%d/%Y") if num_args > 4 \
+        start_date = datetime.strptime(args[3], "%m/%d/%Y") if num_args > 4 \
                 else today
         start_date = start_date.replace(hour=0, minute=0, second=0)
-        end_date   = datetime.strptime(sys.argv[4], "%m/%d/%Y") if num_args > 4 \
+        end_date   = datetime.strptime(args[4], "%m/%d/%Y") if num_args > 4 \
                 else today
         end_date = end_date.replace(hour=23, minute=59, second=59)
         utils.Logger.toStdOut(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.DEBUG)
@@ -181,7 +182,7 @@ def _execExport(game_id, start_date, end_date):
 def writeReadme():
     if num_args > 2:
         try:
-            game_name = sys.argv[2]
+            game_name = args[2]
             path = f"./data/{game_name}"
             os.makedirs(name=path, exist_ok=True)
             readme = open(f"{path}/readme.md", "w")
@@ -258,13 +259,13 @@ f"## Field Day Open Game Data \n\
 
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
-num_args = len(sys.argv)
+opts, args = getopt.gnu_getopt(sys.argv, shortopts="", longopts=["from-file="])
+num_args = len(args)
 # print(sys.argv)
-fname = sys.argv[0] if num_args > 0 else None
-
+fname = args if num_args > 0 else None
 
 utils.Logger.toStdOut(f"Running {fname}...", logging.INFO)
-cmd = sys.argv[1] if num_args > 1 else "help"
+cmd = args if num_args > 1 else "help"
 if type(cmd) == str:
     # if we have a real command, load the config file.
     # settings = utils.loadJSONFile("config.json")
