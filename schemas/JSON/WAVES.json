@@ -145,6 +145,7 @@
         "app_version":"The version of the game from which the event came",
         "session_id":"Unique identifier for the gameplay session",
         "persistent_session_id":"Unique identifier across all gameplay sessions from a single computer",
+        "player_id":"A custom, per-player ID, only exists if player entered an ID on one of our custom portal pages, else null",
         "level":"The game level in which the event was logged",
         "event":"The type of event logged",
         "event_custom":"A number corresponding to the game-specific event type for events labeled 'Custom'",
