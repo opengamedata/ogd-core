@@ -328,6 +328,7 @@ class ExportManager:
         try:
             existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR'])
         except Exception as err:
+            utils.Logger.toFile(err, logging.WARNING)
             existing_csvs = {}
         finally:
             existing_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json", "w")
