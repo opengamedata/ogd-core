@@ -33,6 +33,7 @@ def showHelp():
     print("         - export")
     print("         - export_month")
     print("         - export_all_months")
+    print("         - info")
     print("         - readme")
     print("         - help")
     print("[<args>] are the arguments for the command:")
@@ -45,7 +46,10 @@ def showHelp():
     print("             month_year = month (and year) to export, in form mm/yyyy (default=current month)")
     print("         - export_all_months: game_id")
     print("             game_id    = id of game to export")
-    print("         - readme: *None*")
+    print("         - info: game_id")
+    print("             game_id    = id of game whose info should be shown")
+    print("         - readme: game_id")
+    print("             game_id    = id of game whose readme should be generated")
     print("         - help: *None*")
     print(width*"*")
 
@@ -271,7 +275,6 @@ try:
 except getopt.GetoptError as err:
     print(f"Error, invalid option given!\n{err}")
     cmd = "help"
-
 if type(cmd) == str:
     # if we have a real command, load the config file.
     # settings = utils.loadJSONFile("config.json")
