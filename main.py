@@ -54,27 +54,6 @@ def showHelp():
     print(width*"*")
 
 
-## Function to print out info on a game from the game's schema.
-#  This does a similar function to writeReadme, but is limited to the CSV
-#  metadata part (basically what was in the schema, at one time written into
-#  the csv's themselves). Further, the output is printed rather than written
-#  to file.
-def showGameInfo():
-    if num_args > 2:
-        try:
-            tunnel, db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
-            game_name = args[2]
-            schema = Schema(schema_name=f"{game_name}.json")
-
-            feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-            print(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
-                                                         proc_field_list=feature_descriptions))
-        finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-    else:
-        print("Error, no game name given!")
-        showHelp()
-
 ## Function to handle execution of export code. This is the main intended use of
 #  the program.
 def runExport(monthly: bool = False, all_data: bool = False):
@@ -178,6 +157,27 @@ def _execExport(game_id, start_date, end_date):
         minutes = math.floor(time_delta.total_seconds()/60)
         seconds = time_delta.total_seconds() % 60
         print(f"Total time taken: {minutes} min, {seconds} sec")
+
+## Function to print out info on a game from the game's schema.
+#  This does a similar function to writeReadme, but is limited to the CSV
+#  metadata part (basically what was in the schema, at one time written into
+#  the csv's themselves). Further, the output is printed rather than written
+#  to file.
+def showGameInfo():
+    if num_args > 2:
+        try:
+            tunnel, db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
+            game_name = args[2]
+            schema = Schema(schema_name=f"{game_name}.json")
+
+            feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
+            print(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
+                                                         proc_field_list=feature_descriptions))
+        finally:
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+    else:
+        print("Error, no game name given!")
+        showHelp()
 
 ## Function to write out the readme file for a given game.
 #  This includes the CSV metadata (data from the schema, originally written into
