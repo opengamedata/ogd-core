@@ -120,6 +120,7 @@ def _execAllMonthExport(game_id):
     last_entry = utils.SQL.SELECT(cursor=db.cursor(), db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
                                     columns=["server_time"], filter=f"app_id='{game_id}'",
                                     sort_columns=["server_time"], sort_direction="DESC", limit=1)
+    utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
     # breakpoint()
     first_month = first_entry[0][0].month
     last_month = last_entry[0][0].month
@@ -141,7 +142,6 @@ def _execAllMonthExport(game_id):
     if first_year < last_year:
         for month in range(1, last_month): #note, just to last_month, no +1, since we want to exclude final month
             _execMonthExport(game_id=game_id, month=month, year=last_year)
-    utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
 
 def _execMonthExport(game_id, month, year):
     from calendar import monthrange
