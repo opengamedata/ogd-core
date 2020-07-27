@@ -296,10 +296,9 @@ if type(cmd) == str:
     elif cmd == "readme":
         writeReadme()
     elif cmd == "help" or "-h" in opts.keys() or "--help" in opts.keys()
-    else:
-        if not cmd == "help":
-            print(f"Invalid Command {cmd}!")
         showHelp()
+    else:
+        print(f"Invalid Command {cmd}!")
 else:
     print("Command is not a string!")
     showHelp()
