@@ -69,6 +69,17 @@ class ExportManager:
             finally:
                 utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
 
+    def extractFromFile(self, file_path, delimiter=','):
+        try:
+            data = open(file=file_path, mode="r")
+        except FileNotFoundError as err:
+            utils.Logger.toStdOut(err, logging.ERROR)
+            utils.Logger.toFile(err, logging.ERROR)
+            return
+        else:
+            game_table = GameTable.fromFile(file_path, delimiter)
+
+
     ## Private function containing most of the code to handle processing of db
     #  data, and export to files.
     #  @param request    A data structure carrying parameters for feature extraction
