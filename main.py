@@ -295,7 +295,7 @@ if type(cmd) == str:
         showGameInfo()
     elif cmd == "readme":
         writeReadme()
-    elif cmd == "help" or "-h" in opts.keys() or "--help" in opts.keys()
+    elif cmd == "help" or "-h" in opts.keys() or "--help" in opts.keys():
         showHelp()
     else:
         print(f"Invalid Command {cmd}!")
