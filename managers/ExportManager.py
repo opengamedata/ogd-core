@@ -208,17 +208,6 @@ class ExportManager:
             dump_mgr = DumpManager(game_table=game_table, game_schema=game_schema,
                                 dump_csv_file=dump_csv_file)
             
-            # We're moving the metadata out into a separate readme file.
-            # # Next, calculate metadata
-            # raw_metadata = utils.csvMetadata(game_name=self._game_id, begin_date=request.start_date, end_date=request.end_date,
-            #                                 field_list=game_schema.db_columns_with_types())
-            # feature_descriptions = {**game_schema.perlevel_features(), **game_schema.aggregate_features()}
-            # proc_metadata = utils.csvMetadata(game_name=self._game_id, begin_date=request.start_date, end_date=request.end_date,
-            #                                 field_list=feature_descriptions)
-            # # after generating the metadata, write to each file
-            # raw_csv_file.write(raw_metadata)
-            # proc_csv_file.write(proc_metadata)
-
             # then write the column headers for the raw csv.
             proc_mgr.WriteProcCSVHeader()
             raw_mgr.WriteRawCSVHeader()
