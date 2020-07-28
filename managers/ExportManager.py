@@ -57,7 +57,7 @@ class ExportManager:
             self._game_id = request.game_id
         else:
             tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
-            game_table: GameTable = GameTable(db=db, settings=self._settings, request=request)
+            game_table: GameTable = GameTable.FromDB(db=db, settings=self._settings, request=request)
             try:
                 parse_success: bool = self._getAndParseData(request, game_table)
                 if parse_success:
