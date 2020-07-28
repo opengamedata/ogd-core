@@ -166,7 +166,7 @@ def _execExport(game_id, start_date, end_date):
 def showGameInfo():
     if num_args > 2:
         try:
-            tunnel, db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
+            # tunnel, db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
             game_name = args[2]
             schema = Schema(schema_name=f"{game_name}.json")
 
@@ -174,7 +174,7 @@ def showGameInfo():
             print(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
                                                          proc_field_list=feature_descriptions))
         finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            # utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
     else:
         print("Error, no game name given!")
         showHelp()
