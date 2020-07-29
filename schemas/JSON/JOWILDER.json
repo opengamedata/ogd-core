@@ -444,6 +444,6 @@
         "http_user_agent":"Data on the type of web browser, OS, etc. in use by the player"
     },
     "config": {
-    "SUPPORTED_VERS": [6]
+    "SUPPORTED_VERS": [6,7,8,9]
   }
 }
