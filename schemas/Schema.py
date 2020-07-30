@@ -23,8 +23,8 @@ class Schema:
     #                     (if the path does not end in "/", a "/" will be appended)
     def __init__(self, schema_name:str, schema_path:str = os.path.dirname(__file__) + "/JSON/"):
         # define instance vars
-        self._schema:       typing.Dict    = {}
-        self._feature_list: typing.List    = None
+        self._schema:       typing.Dict = {}
+        self._feature_list: typing.List = None
         # set instance vars
         if not schema_name.lower().endswith(".json"):
             schema_name += ".json"
@@ -42,6 +42,9 @@ class Schema:
     ## Function to retrieve the full schema dictionary.
     def schema(self) -> typing.Dict:
         return self._schema
+
+    def level_range(self) -> typing.Dict:
+        return self._schema["level_range"]
 
     ## Function to retrieve the dictionary of event types for the game.
     def events(self) -> typing.Dict:

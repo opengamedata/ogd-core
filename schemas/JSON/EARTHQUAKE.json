@@ -1,4 +1,6 @@
 {
+    "level_range": { "min":1, "max":47 },
+
     "events":{
     },
 

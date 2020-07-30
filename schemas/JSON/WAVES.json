@@ -1,4 +1,6 @@
 {
+    "level_range": { "min":0, "max":34 },
+
     "events":{
         "COMPLETE":{
             "event_custom":"string",
