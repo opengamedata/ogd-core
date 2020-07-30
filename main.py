@@ -158,6 +158,13 @@ def _execExport(game_id, start_date, end_date):
         seconds = time_delta.total_seconds() % 60
         print(f"Total time taken: {minutes} min, {seconds} sec")
 
+def ExtractFromFile():
+    if num_args > 2:
+        file_name = args[2]
+    else:
+        showHelp()
+        return
+
 ## Function to print out info on a game from the game's schema.
 #  This does a similar function to writeReadme, but is limited to the CSV
 #  metadata part (basically what was in the schema, at one time written into
@@ -291,6 +298,8 @@ if type(cmd) == str:
         runExport(monthly=True)
     elif cmd == "export_all_months":
         runExport(monthly=True, all_data=True)
+    elif cmd == "extract":
+        ExtractFromFile()
     elif cmd == "info":
         showGameInfo()
     elif cmd == "readme":
