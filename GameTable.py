@@ -1,6 +1,7 @@
 ## import standard libraries
 import logging
 import typing
+import pandas as pd
 from datetime import datetime
 ## import local files
 import Request
@@ -22,7 +23,7 @@ class GameTable:
     #  @param settings  The dictionary of settings for the app
     #  @param request   A request object, with information about a date range
     #                   and other information on what data to retrieve.
-    def __init__(self, game_id, column_names: typing.List[str], max_level, min_level):
+    def __init__(self, game_id, column_names: typing.List[str], session_ids, max_level, min_level):
         # Define instance vars
         self.game_id:      str              = game_id
         self.column_names: typing.List[str] = column_names
@@ -43,9 +44,7 @@ class GameTable:
         # lastly, get max and min levels, and get the session ids.
         self.max_level:            int = max_level
         self.min_level:            int = min_level
-        self.session_ids:        typing.List[int]
-
-        self.session_ids = request.retrieveSessionIDs(db_cursor=db_cursor, db_settings=db_settings)
+        self.session_ids:          typing.List[int] = session_ids
         # utils.Logger.toStdOut("session_ids: " + str(session_ids), logging.DEBUG)
     
     @staticmethod
@@ -54,20 +53,9 @@ class GameTable:
         # TODO: Currently, this is retrieved separately from the schema. We may just want to load in one place, and check for a match or something.
         query = "SHOW COLUMNS from {}.{}".format(db_settings["DB_NAME_DATA"], db_settings["table"])
         db_cursor = db.cursor()
-        column_names = utils.SQL.Query(cursor=db_cursor, query=query)
-        if request.game_id == "WAVES":
-            max_level = 34
-            min_level = 0
-        elif request.game_id == 'LAKELAND':
+        col_names = utils.SQL.Query(cursor=db_cursor, query=query)
+        if request.game_id == 'LAKELAND':
             lakeland_config = Schema('LAKELAND').schema()['config']
-            # self.playtimes = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"],
-            #                                   table=db_settings["table"],
-            #                                   columns=["MAX(client_time)", "MIN(client_time)"],
-            #                                   grouping='session_id',
-            #                                   filter="`app_id`=\"{}\"".format(request.game_id),
-            #                                   distinct=True)
-            # play_durations = [p[0] - p[1] for p in self.playtimes]
-            # max_play_duration = max(play_durations)
             min_level = 0
             max_level = lakeland_config["MAX_SESSION_SECONDS"] // lakeland_config['WINDOW_SIZE_SECONDS']
         else:
@@ -76,19 +64,14 @@ class GameTable:
                                             distinct=True)
             max_level = max_min_raw[0][0]
             min_level = max_min_raw[0][1]
-        return GameTable(game_id=request.game_id, column_names=column_names, max_level=max_level, min_level=min_level)
+        sess_ids = request.retrieveSessionIDs(db_cursor=db_cursor, db_settings=db_settings)
+        return GameTable(game_id=request.game_id, column_names=col_names, session_ids=sess_ids, max_level=max_level, min_level=min_level)
 
     @staticmethod
-    def FromFile():
-        game_id = ""
-        column_names = []
-        max_level = 0
-        min_level = 0
-        return GameTable(game_id=game_id, column_names=column_names, max_level=max_level, min_level=min_level)
-    
-    ## Private helper function to retrieve a list of all database columns from the table.
-    #  This requires executing a SQL statement, so it's slightly slower than
-    #  using the schema, but is guaranteed to be correct for what's in the db.
-    #  Just used to initialize the column_names member of the GameTable class.
-    @staticmethod
-    def _getColumnNames(db_cursor, db, db_settings):
+    def FromCSV(data_frame: pd.DataFrame):
+        col_names = list(data_frame.columns)
+        game_id = data_frame['app_id'][0]
+        sess_ids = list(data_frame['session_id'].unique())
+        min_level = data_frame['level'].min()
+        max_level = data_frame['level'].max()
+        return GameTable(game_id=game_id, column_names=col_names, session_ids=sess_ids, max_level=max_level, min_level=min_level)
