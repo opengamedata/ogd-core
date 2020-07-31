@@ -193,6 +193,7 @@ class SQL:
                                    sort_columns=sort_columns, sort_direction=sort_direction, grouping=grouping,
                                    distinct=distinct)
         return SQL.SELECTfromQuery(cursor=cursor, query=query, fetch_results=fetch_results)
+
     @staticmethod
     def SELECTfromQuery(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
         Logger.toStdOut("Running query: " + query, logging.INFO)
