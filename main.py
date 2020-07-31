@@ -17,7 +17,6 @@ from config import settings
 from managers.ExportManager import ExportManager
 from feature_extractors.CrystalExtractor import CrystalExtractor
 from feature_extractors.WaveExtractor import WaveExtractor
-from GameTable import GameTable
 from schemas.Schema import Schema
 
 ## Function to print a "help" listing for the export tool.
@@ -145,7 +144,8 @@ def _execExport(game_id, start_date, end_date):
     # breakpoint()
     export_manager = ExportManager(game_id=req.game_id, settings=settings)
     try:
-        export_manager.exportFromRequest(request=req)
+        schema = Schema(game_id)
+        export_manager.exportFromRequest(request=req, game_schema=schema)
         # cProfile.runctx("feature_exporter.exportFromRequest(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:

@@ -12,11 +12,13 @@ import subprocess
 import traceback
 import typing
 import zipfile
+import pandas as pd
 from datetime import datetime
 ## import local files
 import utils
 from config import settings
 from GameTable import GameTable
+from managers.DataManager import *
 from managers.ProcManager import ProcManager
 from managers.RawManager import RawManager
 from managers.DumpManager import DumpManager
@@ -44,14 +46,14 @@ class ExportManager:
         else:
             self._game_id   = game_id
         self._settings = settings
-        self._select_queries = []
+        # self._select_queries = []
 
     ## Public function to use for feature extraction and csv export.
     #  Extracts features and exports raw and processed csv's based on the given
     #  request.
     #  @param request A data structure carrying parameters for feature extraction
     #                 and export.
-    def exportFromRequest(self, request: Request):
+    def exportFromRequest(self, request: Request, game_schema: Schema):
         if request.game_id != self._game_id:
             utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.game_id}", logging.WARNING)
             self._game_id = request.game_id
@@ -59,9 +61,12 @@ class ExportManager:
             try:
                 tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
                 game_table: GameTable = GameTable.FromDB(db=db, settings=self._settings, request=request)
-                parse_success: bool = self._getAndParseData(request, game_table)
+                date_range = (request.start_date.strftime("%Y%m%d"), request.end_date.strftime("%Y%m%d"))
+                data_manager = SQLDataManager(game_id=request.game_id, game_schema=game_schema, settings=settings)
+                parse_success: bool = self._getAndParseData(data_manager=data_manager, date_range=date_range, game_table=game_table, skip_proc=request.skip_proc)
                 if parse_success:
                     utils.Logger.toStdOut(f"Successfully completed request {str(request)}.", logging.INFO)
+                    utils.Logger.toFile(f"Successfully completed request {str(request)}.", logging.INFO)
                 else:
                     utils.Logger.toFile(f"Could not complete request {str(request)}", logging.ERROR)
             except Exception as err:
@@ -71,13 +76,24 @@ class ExportManager:
 
     def extractFromFile(self, file_path, delimiter=','):
         try:
-            data = open(file=file_path, mode="r")
+            data_frame = pd.read_csv(filepath_or_buffer=file_path, delimiter=delimiter)
         except FileNotFoundError as err:
             utils.Logger.toStdOut(err, logging.ERROR)
             utils.Logger.toFile(err, logging.ERROR)
             return
         else:
-            game_table = GameTable.fromFile(file_path, delimiter)
+            game_table = GameTable.FromCSV(data_frame=data_frame)
+            try:
+                data_manager = CSVDataManager(game_id=data_frame['app_id'][0], data_frame=data_frame)
+                date_range = (data_frame['server_time'].min(), data_frame['server_time'].max())
+                parse_success: bool = self._getAndParseData(data_manager=data_manager, date_range=date_range, game_table=game_table)
+                if parse_success:
+                    utils.Logger.toStdOut(f"Successfully completed extraction from {file_path}.", logging.INFO)
+                else:
+                    utils.Logger.toFile(f"Could not complete extraction from {file_path}", logging.ERROR)
+            except Exception as err:
+                utils.SQL.server500Error(str(err))
+
 
 
     ## Private function containing most of the code to handle processing of db
@@ -86,9 +102,9 @@ class ExportManager:
     #                    and export
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
-    def _getAndParseData(self, request: Request, game_table: GameTable) -> bool:
+    def _getAndParseData(self, data_manager: DataManager, date_range: typing.Tuple, game_table: GameTable, skip_proc: bool = False) -> bool:
         data_directory = self._settings["DATA_DIR"] + self._game_id
-        db_settings = self._settings["db_config"]
+        # db_settings = self._settings["db_config"]
         
         # utils.Logger.toStdOut("complex_data_index: {}".format(complex_data_index), logging.DEBUG)
 
@@ -97,8 +113,8 @@ class ExportManager:
             # First, get the files and game-specific vars ready
             game_schema, game_extractor = self._getExtractor()
             # also figure out hash and dataset ID.
-            _from = request.start_date.strftime("%Y%m%d")
-            _to = request.end_date.strftime("%Y%m%d")
+            _from = date_range[0]
+            _to = date_range[1]
             repo = git.Repo(search_parent_directories=True)
             short_hash = repo.git.rev_parse(repo.head.object.hexsha, short=7)
             dataset_id = f"{self._game_id}_{_from}_to_{_to}"
@@ -108,36 +124,36 @@ class ExportManager:
 
             os.makedirs(name=data_directory, exist_ok=True)
             readme_path:   str = f"{data_directory}/readme.md"
-            proc_csv_path: str = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv"
+            proc_csv_path: str = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv" if not skip_proc else None
             raw_csv_path:  str = f"{data_directory}/{dataset_id}_{short_hash}_raw.tsv" # changed .csv to .tsv
             dump_csv_path: str = f"{data_directory}/{dataset_id}_{short_hash}_dump.tsv"
-            proc_zip_path: str = f"{data_directory}/{dataset_id}_{short_hash}_proc.zip"
+            proc_zip_path: str = f"{data_directory}/{dataset_id}_{short_hash}_proc.zip" if not skip_proc else None
             raw_zip_path:  str = f"{data_directory}/{dataset_id}_{short_hash}_raw.zip"
             dump_zip_path: str = f"{data_directory}/{dataset_id}_{short_hash}_dump.zip"
             num_sess:      int = len(game_table.session_ids)
             if game_schema is not None:
                 self._extractToCSVs(raw_csv_path=raw_csv_path, proc_csv_path=proc_csv_path, dump_csv_path=dump_csv_path,\
-                                    db_settings=db_settings,\
-                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
+                                    data_manager=data_manager,\
+                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor, skip_proc=skip_proc)
                 if self._game_id in existing_csvs and dataset_id in existing_csvs[self._game_id]:
-                    src_proc = existing_csvs[self._game_id][dataset_id]['proc']
+                    src_proc = existing_csvs[self._game_id][dataset_id]['proc'] if not skip_proc else None
                     src_raw = existing_csvs[self._game_id][dataset_id]['raw']
                     src_dump = existing_csvs[self._game_id][dataset_id]['dump']
-                    os.rename(src_proc, proc_zip_path)
+                    os.rename(src_proc, proc_zip_path) if not skip_proc else None
                     os.rename(src_raw, raw_zip_path)
                     os.rename(src_dump, dump_zip_path)
-                try:
-                    proc_zip_file = zipfile.ZipFile(proc_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
-                    self._addToZip(path=proc_csv_path, zip_file=proc_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_proc.csv")
-                    self._addToZip(path=readme_path, zip_file=proc_zip_file, path_in_zip=f"{dataset_id}/readme.md")
-                    os.remove(proc_csv_path)
-                except FileNotFoundError as err:
-                    utils.Logger.toStdOut(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                    traceback.print_tb(err.__traceback__)
-                    utils.Logger.toFile(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                finally:
-                    proc_zip_file.close()
-
+                if not skip_proc:
+                    try:
+                        proc_zip_file = zipfile.ZipFile(proc_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
+                        self._addToZip(path=proc_csv_path, zip_file=proc_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_proc.csv")
+                        self._addToZip(path=readme_path, zip_file=proc_zip_file, path_in_zip=f"{dataset_id}/readme.md")
+                        os.remove(proc_csv_path)
+                    except FileNotFoundError as err:
+                        utils.Logger.toStdOut(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                        traceback.print_tb(err.__traceback__)
+                        utils.Logger.toFile(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    finally:
+                        proc_zip_file.close()
                 try:
                     raw_zip_file = zipfile.ZipFile(raw_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
                     self._addToZip(path=raw_csv_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_raw.tsv")
@@ -163,7 +179,7 @@ class ExportManager:
                     dump_zip_file.close()
             # Finally, update the list of csv files.
             self._updateFileExportList(dataset_id=dataset_id, raw_path=raw_zip_path, proc_path=proc_zip_path,
-                                    dump_path=dump_zip_path, request=request, num_sess=num_sess)
+                                    dump_path=dump_zip_path, date_range=date_range, num_sess=num_sess)
             ret_val = True
         except Exception as err:
             utils.Logger.toStdOut(str(err), logging.ERROR)
@@ -203,24 +219,23 @@ class ExportManager:
             traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(str(err), logging.ERROR)
 
-    def _extractToCSVs(self, raw_csv_path: str, proc_csv_path: str, dump_csv_path: str,
-                db_settings, game_schema: Schema, game_table: GameTable, game_extractor: type) -> int:
+    def _extractToCSVs(self, raw_csv_path: str, proc_csv_path: str, dump_csv_path: str, data_manager: DataManager,
+                       game_schema: Schema, game_table: GameTable, game_extractor: type, skip_proc: bool = False):
         try:
-            tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
-            db_cursor = db.cursor()
-            proc_csv_file = open(proc_csv_path, "w", encoding="utf-8")
+            proc_csv_file = open(proc_csv_path, "w", encoding="utf-8") if not skip_proc else None
             raw_csv_file = open(raw_csv_path, "w", encoding="utf-8")
             dump_csv_file = open(dump_csv_path, "w", encoding="utf-8")
             # Now, we're ready to set up the managers:
             proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table,
-                                game_schema=game_schema, proc_csv_file=proc_csv_file)
+                                game_schema=game_schema, proc_csv_file=proc_csv_file) if not skip_proc else None
             raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
                                 raw_csv_file=raw_csv_file)
             dump_mgr = DumpManager(game_table=game_table, game_schema=game_schema,
                                 dump_csv_file=dump_csv_file)
             
             # then write the column headers for the raw csv.
-            proc_mgr.WriteProcCSVHeader()
+            if not skip_proc:
+                proc_mgr.WriteProcCSVHeader()
             raw_mgr.WriteRawCSVHeader()
             dump_mgr.WriteDumpCSVHeader()
 
@@ -231,10 +246,7 @@ class ExportManager:
                             range( j*slice_size, min((j+1)*slice_size, num_sess) )] for j in
                             range( 0, math.ceil(num_sess / slice_size) )]
             for i, next_slice in enumerate(session_slices):
-                # grab data for the given session range. Sort by event time, so
-                select_query = self._selectQueryFromSlice(slice=next_slice, game_schema=game_schema)
-                self._select_queries.append(select_query)
-                next_data_set = utils.SQL.SELECTfromQuery(cursor=db_cursor, query=select_query, fetch_results=True)
+                next_data_set = data_manager.RetrieveSliceData(next_slice)
                 # now, we process each row.
                 start = datetime.now()
                 for row in next_data_set:
@@ -249,9 +261,10 @@ class ExportManager:
                 utils.Logger.toFile(status_string, logging.INFO)
                 
                 # after processing all rows for all slices, write out the session data and reset for next slice.
-                proc_mgr.calculateAggregateFeatures()
-                proc_mgr.WriteProcCSVLines()
-                proc_mgr.ClearLines()
+                if not skip_proc:
+                    proc_mgr.calculateAggregateFeatures()
+                    proc_mgr.WriteProcCSVLines()
+                    proc_mgr.ClearLines()
                 raw_mgr.WriteRawCSVLines()
                 raw_mgr.ClearLines()
                 dump_mgr.WriteDumpCSVLines()
@@ -261,22 +274,7 @@ class ExportManager:
             traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(str(err), logging.ERROR)
         finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return
-
-    def _selectQueryFromSlice(self, slice: list, game_schema: Schema):
-        if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
-            ver_filter = f" AND app_version in ({','.join([str(x) for x in game_schema.schema()['config']['SUPPORTED_VERS']])}) "
-        else:
-            ver_filter = ''
-        id_string = ','.join([f"'{x}'" for x in slice])
-        # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-        filt = f"app_id='{self._game_id}' AND session_id  IN ({id_string}){ver_filter}"
-        query = utils.SQL._prepareSelect(db_name=settings["db_config"]["DB_NAME_DATA"],
-                                         table=settings["db_config"]["table"], columns=None, filter=filt, limit=-1,
-                                         sort_columns=["session_id", "session_n"], sort_direction="ASC",
-                                         grouping=None, distinct=False)
-        return query
 
     ## Private helper function to process a single row of data.
     #  Most of the processing is delegated to Raw and Proc Managers, but this
@@ -305,9 +303,13 @@ class ExportManager:
         row[game_table.complex_data_index] = complex_data_parsed
 
         if session_id in game_table.session_ids:
-            proc_mgr.ProcessRow(row)
-            raw_mgr.ProcessRow(row)
-            dump_mgr.ProcessRow(row)
+            # we check if there's an instance given, if not we obviously skip.
+            if proc_mgr is not None:
+                proc_mgr.ProcessRow(row)
+            if raw_mgr is not None:
+                raw_mgr.ProcessRow(row)
+            if dump_mgr is not None:
+                dump_mgr.ProcessRow(row)
         # else:
             # in this case, we should have just found 
             # utils.Logger.toFile(f"Found a session ({session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
@@ -323,7 +325,7 @@ class ExportManager:
     #  @param request       The original request for data export
     #  @param num_sess      The number of sessions included in the recent export.
     def _updateFileExportList(self, dataset_id: str, raw_path: str, proc_path: str,
-        dump_path: str, request: Request, num_sess: int):
+        dump_path: str, date_range: typing.Tuple, num_sess: int):
         self._backupFileExportList()
         try:
             existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR'])
@@ -341,8 +343,8 @@ class ExportManager:
                 {"raw":raw_path,
                 "proc":proc_path,
                 "dump":dump_path,
-                "start_date":request.start_date.strftime("%m/%d/%Y"),
-                "end_date":request.end_date.strftime("%m/%d/%Y"),
+                "start_date":date_range[0],
+                "end_date":date_range[1],
                 "date_modified":datetime.now().strftime("%m/%d/%Y"),
                 "sessions":num_sess
                 }
