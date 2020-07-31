@@ -137,9 +137,10 @@ def _execMonthExport(game_id, month, year):
 
 def _execExport(game_id, start_date, end_date):
     # Once we have the parameters parsed out, construct the request.
+    skip_proc = "--no-extract" in opts
     req = Request.DateRangeRequest(game_id=game_id, start_date=start_date, end_date=end_date, \
                 max_sessions=settings["MAX_SESSIONS"], min_moves=settings["MIN_MOVES"], \
-                )
+                skip_proc=skip_proc)
     start = datetime.now()
     # breakpoint()
     export_manager = ExportManager(game_id=req.game_id, settings=settings)
@@ -172,15 +173,16 @@ def ExtractFromFile():
 #  to file.
 def showGameInfo():
     if num_args > 2:
-        try:
+        # try:
             # tunnel, db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
-            game_name = args[2]
-            schema = Schema(schema_name=f"{game_name}.json")
+        game_name = args[2]
+        schema = Schema(schema_name=f"{game_name}.json")
 
-            feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-            print(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
-                                                         proc_field_list=feature_descriptions))
-        finally:
+        feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
+        print(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),\
+                                                        proc_field_list=feature_descriptions))
+        # finally:
+        #     pass
             # utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
     else:
         print("Error, no game name given!")
@@ -273,12 +275,13 @@ f"## Field Day Open Game Data \n\
 utils.Logger.toStdOut(f"Running {sys.argv[0]}...", logging.INFO)
 utils.Logger.toFile(f"Running {sys.argv[0]}...", logging.INFO)
 try:
-    arg_options = ["help", "from-file="]
+    arg_options = ["help", "no-extract"]
     optupi, args = getopt.gnu_getopt(sys.argv, shortopts="-h", longopts=arg_options)
 
     opts = {opt[0]: opt[1] for opt in optupi}
+    print(f"optupi:{optupi}\nargs:{args}\nopts:{opts}")
     num_args = len(args)
-    cmd = args if num_args > 1 else "help"
+    cmd = args[1] if num_args > 1 else "help"
 except getopt.GetoptError as err:
     print(f"Error, invalid option given!\n{err}")
     cmd = "help"

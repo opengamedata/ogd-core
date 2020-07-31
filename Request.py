@@ -22,8 +22,9 @@ class Request(abc.ABC):
     #  @param min_moves    The minimum number of moves (events) per session.
     #                      Any session with fewer moves is ignored.
     # TODO: Not actually sure if I ever set up code to ignore sessions with < min_moves.
-    def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None):
+    def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None, skip_proc: bool = False):
         self.game_id = game_id
+        self.skip_proc = skip_proc
         self.max_sessions = max_sessions
         self.min_moves = min_moves
 
@@ -37,8 +38,8 @@ class Request(abc.ABC):
 #  for the given game.
 class DateRangeRequest(Request):
     def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None,
-                 start_date: date = None, end_date: date = None):
-        Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves)
+                 start_date: date = None, end_date: date = None, skip_proc: bool = False):
+        Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves, skip_proc=skip_proc)
         self.start_date = start_date
         self.end_date = end_date
 
@@ -68,8 +69,8 @@ class DateRangeRequest(Request):
 ## Class representing a request for a specific list of session IDs.
 class IDListRequest(Request):
     def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None,
-                    session_ids = []):
-        Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves)
+                    session_ids = [], skip_proc: bool = False):
+        Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves, skip_proc=skip_proc)
         self._session_ids = session_ids
 
     ## Method to retrieve the list of IDs for all sessions covered by
@@ -77,9 +78,9 @@ class IDListRequest(Request):
     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
         return self._session_ids
 
-# class GameInfoRequest(Request):
-#     def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None):
-#         Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves)
+class FileRequest(Request):
+    def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None):
+        Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves, skip_proc=False)
 
-#     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
-#         return []
+    def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
+        return []
