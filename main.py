@@ -136,10 +136,11 @@ def _execMonthExport(game_id, month, year):
 
 def _execExport(game_id, start_date, end_date):
     # Once we have the parameters parsed out, construct the request.
-    skip_proc = "--no-extract" in opts
+    use_proc = not ("--no-extract" in opts)
+    export_files = Request.ExportFiles(dump=True, raw=True, proc=use_proc) 
     req = Request.DateRangeRequest(game_id=game_id, start_date=start_date, end_date=end_date, \
                 max_sessions=settings["MAX_SESSIONS"], min_moves=settings["MIN_MOVES"], \
-                skip_proc=skip_proc)
+                export_files=export_files)
     start = datetime.now()
     # breakpoint()
     export_manager = ExportManager(game_id=req.game_id, settings=settings)
@@ -149,9 +150,10 @@ def _execExport(game_id, start_date, end_date):
         # cProfile.runctx("feature_exporter.exportFromRequest(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
-        utils.Logger.toStdOut(str(err), logging.ERROR)
-        utils.Logger.toFile(str(err), logging.ERROR)
+        msg = f"{type(err)} {str(err)}"
+        utils.Logger.toStdOut(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
+        utils.Logger.toFile(msg, logging.ERROR)
     finally:
         end = datetime.now()
         time_delta = end - start
@@ -161,10 +163,35 @@ def _execExport(game_id, start_date, end_date):
 
 def ExtractFromFile():
     if num_args > 2:
-        file_name = args[2]
+        game_id = args[2]
     else:
         showHelp()
         return
+    if num_args > 3:
+        file_path = args[3]
+    else:
+        showHelp()
+        return
+    start = datetime.now()
+    export_files = Request.ExportFiles(dump=False, raw=False, proc=True) 
+    req = Request.FileRequest(file_path=file_path, game_id=game_id, export_files=export_files)
+    # breakpoint()
+    export_manager = ExportManager(game_id=req.game_id, settings=settings)
+    try:
+        export_manager.extractFromFile(request=req, delimiter='\t')
+        # cProfile.runctx("feature_exporter.exportFromRequest(request=req)",
+                        # {'req':req, 'feature_exporter':feature_exporter}, {})
+    except Exception as err:
+        msg = f"{type(err)} {str(err)}"
+        utils.Logger.toStdOut(msg, logging.ERROR)
+        traceback.print_tb(err.__traceback__)
+        utils.Logger.toFile(msg, logging.ERROR)
+    finally:
+        end = datetime.now()
+        time_delta = end - start
+        minutes = math.floor(time_delta.total_seconds()/60)
+        seconds = time_delta.total_seconds() % 60
+        print(f"Total time taken: {minutes} min, {seconds} sec")
 
 ## Function to print out info on a game from the game's schema.
 #  This does a similar function to writeReadme, but is limited to the CSV
@@ -205,9 +232,10 @@ def writeReadme():
             readme.write(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
                                                                 proc_field_list=feature_descriptions))
         except Exception as err:
-            utils.Logger.toStdOut(str(err), logging.ERROR)
-            utils.Logger.toFile(str(err), logging.ERROR)
+            msg = f"{type(err)} {str(err)}"
+            utils.Logger.toStdOut(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
+            utils.Logger.toFile(msg, logging.ERROR)
         try:
             # Open files with game-specific readme data, and global db changelog.
             readme_src    = open(f"./doc/readme_src/{game_name}_readme_src.md", "r")
@@ -216,9 +244,10 @@ def writeReadme():
             readme.write("No readme prepared")
             utils.Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.ERROR)
         except Exception as err:
-            utils.Logger.toStdOut(str(err), logging.ERROR)
-            utils.Logger.toFile(str(err), logging.ERROR)
+            msg = f"{type(err)} {str(err)}"
+            utils.Logger.toStdOut(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
+            utils.Logger.toFile(msg, logging.ERROR)
         finally:
             readme.write("\n")
         try:
@@ -228,9 +257,10 @@ def writeReadme():
             readme.write("No changelog prepared")
             utils.Logger.toStdOut(f"Could not find changelog_src", logging.ERROR)
         except Exception as err:
-            utils.Logger.toStdOut(str(err), logging.ERROR)
-            utils.Logger.toFile(str(err), logging.ERROR)
+            msg = f"{type(err)} {str(err)}"
+            utils.Logger.toStdOut(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
+            utils.Logger.toFile(msg, logging.ERROR)
     else:
         print("Error, no game name given!")
         showHelp()
