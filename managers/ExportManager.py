@@ -7,6 +7,7 @@ import git
 import json
 import logging
 import math
+import logging
 import os
 import subprocess
 import traceback
@@ -70,7 +71,10 @@ class ExportManager:
                 else:
                     utils.Logger.toFile(f"Could not complete request {str(request)}", logging.ERROR)
             except Exception as err:
-                utils.SQL.server500Error(str(err))
+                msg = f"{type(err)} {str(err)}"
+                utils.SQL.server500Error(msg)
+                utils.Logger.toFile(msg, logging.ERROR)
+                traceback.print_tb(err.__traceback__)
             finally:
                 utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
 
@@ -96,7 +100,10 @@ class ExportManager:
                 else:
                     utils.Logger.toFile(f"Could not complete extraction from {request.file_path}", logging.ERROR)
             except Exception as err:
-                utils.SQL.server500Error(str(err))
+                msg = f"{type(err)} {str(err)}"
+                utils.SQL.server500Error(msg)
+                utils.Logger.toFile(msg, logging.ERROR)
+                traceback.print_tb(err.__traceback__)
 
 
 
@@ -188,9 +195,10 @@ class ExportManager:
                                     dump_path=dump_zip_path, date_range=date_range, num_sess=num_sess)
             ret_val = True
         except Exception as err:
-            utils.Logger.toStdOut(str(err), logging.ERROR)
+            msg = f"{type(err)} {str(err)}"
+            utils.Logger.toStdOut(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
-            utils.Logger.toFile(str(err), logging.ERROR)
+            utils.Logger.toFile(msg, logging.ERROR)
             ret_val = False
         finally:
             return ret_val
@@ -278,9 +286,10 @@ class ExportManager:
                     dump_mgr.WriteDumpCSVLines()
                     dump_mgr.ClearLines()
         except Exception as err:
-            utils.Logger.toStdOut(str(err), logging.ERROR)
+            msg = f"{type(err)} {str(err)}"
+            utils.Logger.toStdOut(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
-            utils.Logger.toFile(str(err), logging.ERROR)
+            utils.Logger.toFile(msg, logging.ERROR)
         finally:
             return
 
@@ -296,8 +305,14 @@ class ExportManager:
         session_id = row[game_table.session_id_index]
 
         # parse out complex data from json
-        col = row[game_table.complex_data_index]
-        complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[game_table.event_index]}
+        col = row[game_table.complex_data_index].replace("'", "\"")
+        try:
+            complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[game_table.event_index]}
+        except Exception as err:
+            msg = f"When trying to parse {col}, get error\n{type(err)} {str(err)}"
+            utils.Logger.toStdOut(msg, logging.ERROR)
+            raise err
+
         # make sure we get *something* in the event_custom name
         # TODO: Make a better solution for games without event_custom fields in the logs themselves
         if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
@@ -338,7 +353,8 @@ class ExportManager:
         try:
             existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR'])
         except Exception as err:
-            utils.Logger.toFile(err, logging.WARNING)
+            msg = f"{type(err)} {str(err)}"
+            utils.Logger.toFile(msg, logging.WARNING)
             existing_csvs = {}
         finally:
             existing_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json", "w")
@@ -362,8 +378,9 @@ class ExportManager:
         try:
             existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR']) or {}
         except Exception as err:
-            utils.Logger.toStdOut(f"Could not back up file_list.json. Got the following error: {str(err)}", logging.ERROR)
-            utils.Logger.toFile(f"Could not back up file_list.json. Got the following error: {str(err)}", logging.ERROR)
+            msg = f"{type(err)} {str(err)}"
+            utils.Logger.toStdOut(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
+            utils.Logger.toFile(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
             return False
         backup_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json.bak", "w")
         backup_csv_file.write(json.dumps(existing_csvs, indent=4))
