@@ -14,7 +14,7 @@ class DataManager(abc.ABC):
     ## Abstract method to retrieve the data for a given set of ids.
     #  the request.
     @abc.abstractmethod
-    def RetrieveSliceData(self, id_list) -> typing.List:
+    def RetrieveSliceData(self, id_list) -> typing.List[typing.Tuple]:
         pass
 
 class SQLDataManager(DataManager):
@@ -25,7 +25,7 @@ class SQLDataManager(DataManager):
         self._tunnel, self._db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
         self._db_cursor = self._db.cursor()
 
-    def RetrieveSliceData(self, id_list) -> typing.List:
+    def RetrieveSliceData(self, id_list) -> typing.List[typing.Tuple]:
         # grab data for the given session range. Sort by event time, so
         if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
             ver_filter = f" AND app_version in ({','.join([str(x) for x in self._game_schema.schema()['config']['SUPPORTED_VERS']])}) "
@@ -49,5 +49,5 @@ class CSVDataManager(DataManager):
         DataManager.__init__(self, game_id=game_id)
         self._data = data_frame
 
-    def RetrieveSliceData(self, id_list) -> typing.List:
-        return self._data.loc[self._data['session_id'].isin(id_list)].tolist()
+    def RetrieveSliceData(self, id_list) -> typing.List[typing.Tuple]:
+        return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
