@@ -29,7 +29,7 @@ def loadJSONFile(filename: str, path:str = "./") -> object:
         ret_val = json.loads(json_file.read())
         json_file.close()
     except Exception as err:
-        Logger.toStdOut(f"Could not read file at {path+filename}\nFull error message: {str(err)}\nCurrent directory: {os.getcwd()}",
+        Logger.toStdOut(f"Could not read file at {path+filename}\nFull error message: {type(err)} {str(err)}\nCurrent directory: {os.getcwd()}",
                         logging.ERROR)
         raise err
     return ret_val
@@ -138,8 +138,9 @@ class SQL:
             Logger.toStdOut(f"Connected to SQL at {sql.host}:{sql.port}/{sql.db_name}, {sql.user}", logging.INFO)
             return (tunnel, conn)
         except Exception as err:
-            Logger.toStdOut("Could not connect to the MySql database: " + str(err), logging.ERROR)
-            Logger.toPrint(f"Could not connect to the MySql database {str(err)}", logging.ERROR)
+            msg = f"{type(err)} {str(err)}"
+            Logger.toStdOut(f"Could not connect to the MySql database: {msg}", logging.ERROR)
+            Logger.toPrint(f"Could not connect to the MySql database {msg}", logging.ERROR)
             if tunnel is not None:
                 tunnel.stop()
             return (None, None)

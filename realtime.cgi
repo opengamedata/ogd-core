@@ -85,8 +85,9 @@ try:
     result: str = json.dumps(body, default=lambda ob: ob.isoformat() if type(ob) == datetime else json.dumps(ob))
     print(result)
 except Exception as err:
-    print(f"Error in realtime script! {str(err)}, traceback:\n{traceback.format_exc()}")
+    msg = f"{type(err)} {str(err)}"
+    print(f"Error in realtime script! {msg}, traceback:\n{traceback.format_exc()}")
     traceback.print_tb(err.__traceback__)
     #print(f"Traceback: {traceback.print_stack(limit=10)}")
     err_file = open("./python_errors.log", "a")
-    err_file.write(f"{str(err)}\n")
+    err_file.write(f"{msg}\n")

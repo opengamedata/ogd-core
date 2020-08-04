@@ -72,8 +72,9 @@ class RTServer:
                     ret_val[sess_id] = {"session_id":sess_id, "player_id":item[1], "max_level":max_level, "cur_level":cur_level, "idle_time":idle_time}
             # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
         except Exception as err:
-            print(f"got error in RTServer.py: {str(err)}")
-            utils.Logger.toFile(f"Got an error in getAllActiveSessions: {str(err)}", logging.ERROR)
+            msg = f"{type(err)} {str(err)}"
+            print(f"got error in RTServer.py: {msg}")
+            utils.Logger.toFile(f"Got an error in getAllActiveSessions: {msg}", logging.ERROR)
             raise err
         finally:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
@@ -149,9 +150,10 @@ class RTServer:
                 utils.Logger.toFile(f"error, empty session!", logging.ERROR)
                 ret_val = {"error": "Empty Session!"}
         except Exception as err:
-            print(f"got error in RTServer.py: {str(err)}")
+            msg = f"{type(err)} {str(err)}"
+            print(f"got error in RTServer.py: {msg}")
             traceback.print_tb(err.__traceback__)
-            utils.Logger.toFile(f"Got an error in getFeaturesBySessID: {str(err)}", logging.ERROR)
+            utils.Logger.toFile(f"Got an error in getFeaturesBySessID: {msg}", logging.ERROR)
             # traceback.print_tb(err.__traceback__)
             ret_val = {"error": "Got error in RTServer!"}
             raise err
@@ -198,7 +200,7 @@ class RTServer:
             #---
         except Exception as err:
             #print(f"got error in RTServer.py: {str(err)}")
-            utils.Logger.toFile(f"Got an error in getGameProgress: {str(err)}", logging.ERROR)
+            utils.Logger.toFile(f"Got an error in getGameProgress: {type(err)} {str(err)}", logging.ERROR)
             raise err
         finally:
             # utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
@@ -215,7 +217,7 @@ class RTServer:
             schema: Schema = Schema(schema_name=f"{game_id}.json")
             ret_val = {"features": schema.feature_list()}
         except Exception as err:
-            utils.Logger.toFile(f"Got exception in getFeatureNamesByGame: {str(err)}", logging.ERROR)
+            utils.Logger.toFile(f"Got exception in getFeatureNamesByGame: {type(err) str(err)}", logging.ERROR)
             utils.Logger.toFile("Had to return None", logging.WARNING)
             ret_val = None
         finally:
@@ -267,7 +269,7 @@ class RTServer:
 
         except Exception as err:
             #print(f"got error in RTServer.py: {str(err)}")
-            utils.Logger.toFile(f"Got an error in getPredictionsBySessID: {str(err)}", logging.ERROR)
+            utils.Logger.toFile(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", logging.ERROR)
             ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
         finally:
@@ -305,7 +307,7 @@ class RTServer:
                 try:
                     logit += model[coeff] * feature_data[coeff]
                 except Exception as err:
-                    print(f"Got error when trying to add {coeff} term. Value is {feature_data[coeff]}. Type is {type(feature_data[coeff])}")
+                    print(f"Got {type(err)} error when trying to add {coeff} term. Value is {feature_data[coeff]}. Type is {type(feature_data[coeff])}")
                     raise err
             # enum case, where we have coefficient = feature_name.enum_val
             elif re.search("\w+\.\w+", coeff):
