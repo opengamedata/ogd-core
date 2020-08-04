@@ -62,7 +62,10 @@ class JowilderExtractor(Extractor):
          18: 'person_hover',
          19: 'cutscene_hover',
          20: 'wildcard_hover',
-         21: 'quiz'
+         21: 'quiz',
+         22: 'quizquestion',
+         23: 'quizstart',
+         24: 'quizend',
     }
 
     _TASK_LIST = ["", "dummy_fqid0", "dummy_fqid1"]
@@ -99,6 +102,10 @@ class JowilderExtractor(Extractor):
 
     def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
+        config = game_schema.schema()['config']
+        self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
+        self._IDLE_THRESH = datetime.timedelta(seconds=self._IDLE_THRESH_SECONDS)
+
         self.cur_task = 1
         self.time_since_start = datetime.timedelta(0)
         self._task_complete_helper = dict()
@@ -122,6 +129,7 @@ class JowilderExtractor(Extractor):
         self.asked = False
         self.time_before_answer = None
         self.last_click_time = None
+        self.last_click_hover_time = None
         self.text_fqid_start_end = []
         self.last_click_type = ''
         self.this_click_type = ''
@@ -134,6 +142,9 @@ class JowilderExtractor(Extractor):
         self.objective_chain_started = False
         self.verbose = False # bool(settings['john_sessids'])
         self.halt = False
+        self._active = True
+        self._last_quizstart = None
+        self._quiztimes = [None]*16
 
 
 
@@ -185,6 +196,8 @@ class JowilderExtractor(Extractor):
                 self._CLIENT_START_TIME = event_client_time
                 self._VERSION = row_with_complex_parsed[game_table.version_index]
                 self.last_click_time = self._CLIENT_START_TIME
+                self.last_click_hover_time = self._CLIENT_START_TIME
+                self.setValByName("version", self._VERSION)
                 self.setValByName("play_year", self._CLIENT_START_TIME.year)
                 self.setValByName("play_month",self._CLIENT_START_TIME.month)
                 self.setValByName("play_day", self._CLIENT_START_TIME.day)
@@ -224,6 +237,12 @@ class JowilderExtractor(Extractor):
                 self._extractFromCheckpoint(event_client_time, event_data_complex_parsed)
             elif event_type_str == "quiz":
                 self._extractFromQuiz(event_client_time, event_data_complex_parsed)
+            elif event_type_str == "quizquestion":
+               self._extractFromQuizquestion(event_client_time, event_data_complex_parsed)
+            elif event_type_str == "quizstart":
+                self._extractFromQuizstart(event_client_time, event_data_complex_parsed)
+            elif event_type_str == "quizend":
+                self._extractFromQuizend(event_client_time, event_data_complex_parsed)
             elif event_type_str == "startgame":
                 self._extractFromStartgame(event_client_time, event_data_complex_parsed)
             elif event_type_str == "endgame":
@@ -266,6 +285,20 @@ class JowilderExtractor(Extractor):
                 self._extractFromWildcard_hover(event_client_time, event_data_complex_parsed)
 
     def _extractFromClickOrHover(self, event_client_time, event_data_complex_parsed):
+        time_between_click_hovers = event_client_time - self.last_click_hover_time
+
+        if time_between_click_hovers < self._IDLE_THRESH:
+            active_time = time_between_click_hovers
+            idle_time = datetime.timedelta(0)
+        else:
+            self.feature_count('count_idle')
+            active_time = datetime.timedelta(0)
+            idle_time = time_between_click_hovers
+        self.feature_inc('time_active', active_time)
+        self.feature_inc('time_idle', idle_time)
+
+
+        self.last_click_hover_time = event_client_time
         pass
 
     def _extractFromClick(self, event_client_time, event_data_complex_parsed):
@@ -313,12 +346,13 @@ class JowilderExtractor(Extractor):
 
         def new_click():
             self.feature_count(feature_base="count_clicks", objective_num=self.cur_objective)
+            time_between_clicks = event_client_time - self.last_click_time
+
 
 
             # record information on what click type and where we are in the game
             self.last_click_type = self.this_click_type
             self.this_click_type = f'{_subtype}_{_name}'
-            time_between_clicks = event_client_time - self.last_click_time
             if self.cur_interaction is not None:
                 self.feature_cc_inc(self._INT_PREFIX+"total_duration", self.cur_interaction, time_between_clicks)
                 if not self.finished_encounters[self.cur_interaction]:
@@ -326,6 +360,11 @@ class JowilderExtractor(Extractor):
             if self.cur_objective is not None:
                 self.feature_cc_inc(self._OBJ_PREFIX+"time_to_next_obj", index=self.cur_objective, increment=time_between_clicks)
             self.feature_average('avg_time_between_clicks', time_between_clicks)
+
+            if time_between_clicks < self._IDLE_THRESH:
+                self.feature_inc('time_active_clicking', time_between_clicks)
+
+
 
             self.last_click_time = event_client_time
 
@@ -450,6 +489,89 @@ class JowilderExtractor(Extractor):
         for i, response in enumerate(_questions):
             self.features.setValByIndex(feature_name="quiz_response", index=i, new_value=response["response_index"])
 
+
+    def _extractFromQuizquestion(self, event_client_time, event_data_complex_parsed):
+        # assign event_data_complex_parsed variables
+        d = event_data_complex_parsed
+        _room_fqid = d["room_fqid"]
+        _type = d["type"]
+        _subtype = d["subtype"]
+        _fqid = d["fqid"]
+        _event_custom = d["event_custom"]
+        _quiz_number = d["quiz_number"]
+        _question = d["question"]
+        _question_index = d["question_index"]
+        _response = d["response"]
+        _response_index = d["response_index"]
+        _name = d["name"]
+        _level = d["level"]
+
+        # helpers
+        index = je.quizn_answern_to_index(_quiz_number, _question_index)
+        if index%4==0:
+            time_taken = event_client_time - self._last_quizstart
+        else:
+            time_taken = event_client_time - self._quiztimes[index - 1]
+
+
+        # set class variables
+        self._quiztimes[index] = event_client_time
+
+        # set features
+
+        if self.getValByIndex("sa_time", index=index) in self._NULL_FEATURE_VALS:
+            self.setValByIndex("sa_time", index=index, new_value=time_taken)
+        self.setValByIndex("sa_index", index=index, new_value=_response_index)
+        self.setValByIndex("sa_text", index=index, new_value=_response)
+        self.feature_cc_inc("sa_num_answers", index=index)
+
+    def _extractFromQuizstart(self, event_client_time, event_data_complex_parsed):
+        # assign event_data_complex_parsed variables
+        d = event_data_complex_parsed
+        _room_fqid = d["room_fqid"]
+        _type = d["type"]
+        _subtype = d["subtype"]
+        _fqid = d["fqid"]
+        _event_custom = d["event_custom"]
+        _quiz_number = d["quiz_number"]
+        _name = d["name"]
+        _level = d["level"]
+
+        # helpers
+        assert self._last_quizstart is None
+        self._last_quizstart = event_client_time
+        # set class variables
+        # set features
+
+    def _extractFromQuizend(self, event_client_time, event_data_complex_parsed):
+        # assign event_data_complex_parsed variables
+        d = event_data_complex_parsed
+        _room_fqid = d["room_fqid"]
+        _type = d["type"]
+        _subtype = d["subtype"]
+        _fqid = d["fqid"]
+        _event_custom = d["event_custom"]
+        _quiz_number = d["quiz_number"]
+        _name = d["name"]
+        _level = d["level"]
+
+
+
+
+        # helpers
+
+        assert self._last_quizstart is not None
+        quiz_duration = event_client_time - self._last_quizstart
+        quiz_index = je.quizn_to_index(_quiz_number)
+
+
+        # set class variables
+        self._last_quizstart = None
+
+        # set features
+        self.setValByIndex(feature_name='s_time', index=quiz_index, new_value=quiz_duration)
+
+
     def _extractFromStartgame(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
@@ -465,6 +587,7 @@ class JowilderExtractor(Extractor):
         _name = d["name"]
         _level = d["level"]
 
+
         # helpers
         # set class variables
         # set features
@@ -477,6 +600,12 @@ class JowilderExtractor(Extractor):
         self.setValByName('hq', int(_hq))
         self.setValByName('save_code', _save_code)
         self.setValByName("continue", 0)
+
+        if self._VERSION >= 7:
+            _script_type = d["script_type"]
+            _script_version = d["script_version"]
+            self.setValByName("script_type", _script_type)
+            self.setValByName("script_version", _script_version)
 
         self.game_started = True
 
