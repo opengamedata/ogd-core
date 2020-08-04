@@ -1,6 +1,7 @@
 # import standard libraries
 import json
 import logging
+import traceback
 import typing
 # import local files
 import GameTable
