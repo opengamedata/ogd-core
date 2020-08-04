@@ -124,6 +124,10 @@ class WaveExtractor(Extractor):
                     val   = self.amp_move_counts[lvl] / total_moves if total_moves > 0 else total_moves
                 except Exception as err:
                     print(f"Currently, total_moves = {total_moves}")
+                    msg = f"{type(err)} {str(err)}"
+                    utils.Logger.toStdOut(msg, logging.ERROR)
+                    traceback.print_tb(err.__traceback__)
+                    utils.Logger.toFile(msg, logging.ERROR)
                 self.features.setValByIndex(feature_name="percentAmplitudeMoves", index=lvl, new_value=val)
                 val   = self.off_move_counts[lvl] / total_moves if total_moves > 0 else total_moves
                 self.features.setValByIndex(feature_name="percentOffsetMoves", index=lvl, new_value=val)
@@ -205,7 +209,7 @@ class WaveExtractor(Extractor):
             try:
                 self.features.incValByIndex(feature_name="totalLevelTime", index=self.active_begin, increment=self._calcLevelTime(self.active_begin))
             except Exception as err:
-                raise(Exception(f"{str(err)}, level={level}, method=extractFromBegin, active_begin={self.active_begin}"))
+                raise(Exception(f"{type(err)} {str(err)}, level={level}, method=extractFromBegin, active_begin={self.active_begin}"))
             self.start_times[level] = event_client_time
             self.move_closenesses_tx[level] = {'t': [], 'completeness': [], 'range': []}
         # in any case, current level now has active begin event.
@@ -241,7 +245,7 @@ class WaveExtractor(Extractor):
             try:
                 self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
             except Exception as err:
-                raise(Exception(f"{str(err)}, level={level}, method=extractFromComplete, active_begin={self.active_begin}"))
+                raise(Exception(f"{type(err)} {str(err)}, level={level}, method=extractFromComplete, active_begin={self.active_begin}"))
             self.active_begin = None
 
     ## Private function to extract features from a "SUCCEED" event.
@@ -274,7 +278,7 @@ class WaveExtractor(Extractor):
             try:
                 self.features.incValByIndex(feature_name="totalLevelTime", index=level, increment=self._calcLevelTime(level))
             except Exception as err:
-                raise(Exception(f"{str(err)}, level={level}, method=extractFromMenuBtn, active_begin={self.active_begin}"))
+                raise(Exception(f"{type(err)} {str(err)}, level={level}, method=extractFromMenuBtn, active_begin={self.active_begin}"))
             self.active_begin = None
 
     ## Private function to extract features from a "SKIP_BUTTON" event.
@@ -448,7 +452,11 @@ class WaveExtractor(Extractor):
         times = self.move_closenesses_tx[lvl]['t']
         ranges = self.move_closenesses_tx[lvl]['range']
         if times:
-            X = [(times[i]-times[0]).seconds for i in range(len(times))]
+            try:
+                X = [(times[i]-times[0]).seconds for i in range(len(times))]
+            except Exception as err:
+                print(times[0])
+                raise err
             y = closenesses
             if len(X) > 1:
                 intercept, slope, r_sq = self._2D_linear_regression(X, y)
