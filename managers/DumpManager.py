@@ -35,7 +35,12 @@ class DumpManager:
         for i,col in enumerate(row_with_complex_parsed):
             # only set a value if this was not the remote address (IP) column.
             if i != self._game_table.remote_addr_index:
-                line[i] = f"\"{col}\"" if type(col) == str else col
+                if type(col) == str:
+                    line[i] = f"\"{col}\""
+                elif type(col) == dict:
+                    line[i] = json.dumps(col)
+                else:
+                    line[i] = col
         self._lines.append("\t".join([str(item) for item in line]) + "\n") # changed , to \t
 
     ## Function to empty the list of lines stored by the DumpManager.
