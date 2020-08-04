@@ -6,6 +6,17 @@ from datetime import date
 import utils
 from schemas.Schema import Schema
 
+## @class FileExports
+#  Completely dumb struct that just enforces the names of the three kinds of file we can output.
+#  @param dump Bool stating whether to output a dump file or not.
+#  @param raw  Bool stating whether to output a raw file or not.
+#  @param proc Bool stating whether to output a processed feature file or not.
+class ExportFiles:
+    def __init__(self, dump:bool = True, raw:bool = True, proc:bool = True):
+        self.dump = dump
+        self.raw = raw
+        self.proc = proc
+
 ## @class Request
 #  Dumb struct to hold data related to requests for data export.
 #  This way, we've at least got a list of what is available in a request.
@@ -22,9 +33,9 @@ class Request(abc.ABC):
     #  @param min_moves    The minimum number of moves (events) per session.
     #                      Any session with fewer moves is ignored.
     # TODO: Not actually sure if I ever set up code to ignore sessions with < min_moves.
-    def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None, skip_proc: bool = False):
+    def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None, export_files: ExportFiles = ExportFiles()):
+        self.export_files = export_files
         self.game_id = game_id
-        self.skip_proc = skip_proc
         self.max_sessions = max_sessions
         self.min_moves = min_moves
 
@@ -38,8 +49,8 @@ class Request(abc.ABC):
 #  for the given game.
 class DateRangeRequest(Request):
     def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None,
-                 start_date: date = None, end_date: date = None, skip_proc: bool = False):
-        Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves, skip_proc=skip_proc)
+                 start_date: date = None, end_date: date = None, export_files: ExportFiles = ExportFiles()):
+        Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves, export_files=export_files)
         self.start_date = start_date
         self.end_date = end_date
 
@@ -69,8 +80,8 @@ class DateRangeRequest(Request):
 ## Class representing a request for a specific list of session IDs.
 class IDListRequest(Request):
     def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None,
-                    session_ids = [], skip_proc: bool = False):
-        Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves, skip_proc=skip_proc)
+                    session_ids = [], export_files: ExportFiles = ExportFiles()):
+        Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves, export_files=export_files)
         self._session_ids = session_ids
 
     ## Method to retrieve the list of IDs for all sessions covered by
@@ -79,8 +90,9 @@ class IDListRequest(Request):
         return self._session_ids
 
 class FileRequest(Request):
-    def __init__(self, game_id: str = None, max_sessions: int = None, min_moves: int = None):
-        Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves, skip_proc=False)
+    def __init__(self, file_path, game_id: str = None, export_files: ExportFiles = ExportFiles(), max_sessions: int = None, min_moves: int = None):
+        Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves, export_files=export_files)
+        self.file_path = file_path
 
     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
         return []
