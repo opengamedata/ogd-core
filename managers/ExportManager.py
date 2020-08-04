@@ -80,7 +80,9 @@ class ExportManager:
 
     def extractFromFile(self, request: Request, delimiter=','):
         try:
-            data_frame = pd.read_csv(filepath_or_buffer=file_path, delimiter=delimiter)
+            zipped_file = zipfile.ZipFile(request.file_path)
+            with zipped_file.open(zipped_file.namelist()[0]) as f:
+                data_frame = pd.read_csv(filepath_or_buffer=f, delimiter=delimiter, parse_dates=['server_time', 'client_time'])
         except FileNotFoundError as err:
             utils.Logger.toStdOut(err, logging.ERROR)
             utils.Logger.toFile(err, logging.ERROR)
@@ -134,12 +136,12 @@ class ExportManager:
             existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR'])
             os.makedirs(name=data_directory, exist_ok=True)
             readme_path:   str = f"{data_directory}/readme.md"
-            proc_csv_path: str = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv" if not skip_proc else None
-            raw_csv_path:  str = f"{data_directory}/{dataset_id}_{short_hash}_raw.tsv" # changed .csv to .tsv
-            dump_csv_path: str = f"{data_directory}/{dataset_id}_{short_hash}_dump.tsv"
-            proc_zip_path: str = f"{data_directory}/{dataset_id}_{short_hash}_proc.zip" if not skip_proc else None
-            raw_zip_path:  str = f"{data_directory}/{dataset_id}_{short_hash}_raw.zip"
-            dump_zip_path: str = f"{data_directory}/{dataset_id}_{short_hash}_dump.zip"
+            proc_csv_path: str = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv" if export_files.proc else None
+            proc_zip_path: str = f"{data_directory}/{dataset_id}_{short_hash}_proc.zip" if export_files.proc else None
+            raw_csv_path:  str = f"{data_directory}/{dataset_id}_{short_hash}_raw.tsv" if export_files.raw else None # changed .csv to .tsv
+            raw_zip_path:  str = f"{data_directory}/{dataset_id}_{short_hash}_raw.zip" if export_files.raw else None
+            dump_csv_path: str = f"{data_directory}/{dataset_id}_{short_hash}_dump.tsv" if export_files.dump else None
+            dump_zip_path: str = f"{data_directory}/{dataset_id}_{short_hash}_dump.zip" if export_files.dump else None
             num_sess:      int = len(game_table.session_ids)
             # If we have a schema, we can do feature extraction.
             if game_schema is not None:
@@ -167,29 +169,42 @@ class ExportManager:
                         utils.Logger.toFile(f"FileNotFoundError Exception: {err}", logging.ERROR)
                     finally:
                         proc_zip_file.close()
-                try:
-                    raw_zip_file = zipfile.ZipFile(raw_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
-                    self._addToZip(path=raw_csv_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_raw.tsv")
-                    self._addToZip(path=readme_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/readme.md")
-                    os.remove(raw_csv_path)
-                except FileNotFoundError as err:
-                    utils.Logger.toStdOut(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                    traceback.print_tb(err.__traceback__)
-                    utils.Logger.toFile(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                finally:
-                    raw_zip_file.close()
-
-                try:
-                    dump_zip_file = zipfile.ZipFile(dump_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
-                    self._addToZip(path=dump_csv_path, zip_file=dump_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_dump.tsv")
-                    self._addToZip(path=readme_path, zip_file=dump_zip_file, path_in_zip=f"{dataset_id}/readme.md")
-                    os.remove(dump_csv_path)
-                except FileNotFoundError as err:
-                    utils.Logger.toStdOut(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                    traceback.print_tb(err.__traceback__)
-                    utils.Logger.toFile(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                finally:
-                    dump_zip_file.close()
+                if export_files.raw:
+                    try:
+                        # if we have already done this dataset before, rename old zip files
+                        # (of course, first check if we ever exported this game before).
+                        if previously_exported:
+                            src_raw = existing_csvs[self._game_id][dataset_id]['raw']
+                            if src_raw is not None:
+                                os.rename(src_raw, raw_zip_path)
+                        raw_zip_file = zipfile.ZipFile(raw_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
+                        self._addToZip(path=raw_csv_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_raw.tsv")
+                        self._addToZip(path=readme_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/readme.md")
+                        os.remove(raw_csv_path)
+                    except FileNotFoundError as err:
+                        utils.Logger.toStdOut(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                        traceback.print_tb(err.__traceback__)
+                        utils.Logger.toFile(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    finally:
+                        raw_zip_file.close()
+                if export_files.dump:
+                    try:
+                        # if we have already done this dataset before, rename old zip files
+                        # (of course, first check if we ever exported this game before).
+                        if previously_exported:
+                            src_dump = existing_csvs[self._game_id][dataset_id]['dump']
+                            if src_dump is not None:
+                                os.rename(src_dump, dump_zip_path)
+                        dump_zip_file = zipfile.ZipFile(dump_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
+                        self._addToZip(path=dump_csv_path, zip_file=dump_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_dump.tsv")
+                        self._addToZip(path=readme_path, zip_file=dump_zip_file, path_in_zip=f"{dataset_id}/readme.md")
+                        os.remove(dump_csv_path)
+                    except FileNotFoundError as err:
+                        utils.Logger.toStdOut(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                        traceback.print_tb(err.__traceback__)
+                        utils.Logger.toFile(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    finally:
+                        dump_zip_file.close()
             # Finally, update the list of csv files.
             self._updateFileExportList(dataset_id=dataset_id, raw_path=raw_zip_path, proc_path=proc_zip_path,
                                     dump_path=dump_zip_path, date_range=date_range, num_sess=num_sess)
@@ -236,22 +251,22 @@ class ExportManager:
     def _extractToCSVs(self, raw_csv_path: str, proc_csv_path: str, dump_csv_path: str, data_manager: DataManager,
                        game_schema: Schema, game_table: GameTable, game_extractor: type, export_files: ExportFiles = False):
         try:
-            proc_csv_file = open(proc_csv_path, "w", encoding="utf-8") if not skip_proc else None
-            raw_csv_file = open(raw_csv_path, "w", encoding="utf-8")
-            dump_csv_file = open(dump_csv_path, "w", encoding="utf-8")
-            # Now, we're ready to set up the managers:
-            proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table,
-                                game_schema=game_schema, proc_csv_file=proc_csv_file) if not skip_proc else None
-            raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
-                                raw_csv_file=raw_csv_file)
-            dump_mgr = DumpManager(game_table=game_table, game_schema=game_schema,
-                                dump_csv_file=dump_csv_file)
-            
-            # then write the column headers for the raw csv.
-            if not skip_proc:
+            proc_mgr = raw_mgr = dump_mgr = None
+            if export_files.proc:
+                proc_csv_file = open(proc_csv_path, "w", encoding="utf-8")
+                proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table,
+                                    game_schema=game_schema, proc_csv_file=proc_csv_file)
                 proc_mgr.WriteProcCSVHeader()
-            raw_mgr.WriteRawCSVHeader()
-            dump_mgr.WriteDumpCSVHeader()
+            if export_files.raw:
+                raw_csv_file = open(raw_csv_path, "w", encoding="utf-8")
+                raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
+                                    raw_csv_file=raw_csv_file)
+                raw_mgr.WriteRawCSVHeader()
+            if export_files.dump:
+                dump_csv_file = open(dump_csv_path, "w", encoding="utf-8")
+                dump_mgr = DumpManager(game_table=game_table, game_schema=game_schema,
+                                    dump_csv_file=dump_csv_file)
+                dump_mgr.WriteDumpCSVHeader()
 
             num_sess = len(game_table.session_ids)
             utils.Logger.toStdOut(f"Preparing to process {num_sess} sessions.", logging.INFO)
@@ -268,7 +283,10 @@ class ExportManager:
                 time_delta = datetime.now() - start
                 num_min = math.floor(time_delta.total_seconds()/60)
                 num_sec = time_delta.total_seconds() % 60
-                num_events = len(next_data_set)
+                try:
+                    num_events = len(next_data_set)
+                except Exception as err:
+                    raise Exception(f"Error while processing {next_data_set}, type={type(next_data_set)}")
 
                 status_string = f"Processing time for slice [{i+1}/{len(session_slices)}]: {num_min} min, {num_sec:.3f} sec to handle {num_events} events"
                 utils.Logger.toStdOut(status_string, logging.INFO)
@@ -363,6 +381,10 @@ class ExportManager:
                 existing_csvs[self._game_id] = {}
             # raw_stat = os.stat(raw_csv_full_path)
             # proc_stat = os.stat(proc_csv_full_path)
+            if self._game_id in existing_csvs.keys() and dataset_id in existing_csvs[self._game_id].keys():
+                proc_path = proc_path if proc_path is not None else existing_csvs[self._game_id][dataset_id]["proc"]
+                raw_path = raw_path if raw_path is not None else existing_csvs[self._game_id][dataset_id]["raw"]
+                dump_path = dump_path if dump_path is not None else existing_csvs[self._game_id][dataset_id]["dump"]
             existing_csvs[self._game_id][dataset_id] = \
                 {"raw":raw_path,
                 "proc":proc_path,
