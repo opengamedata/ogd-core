@@ -270,14 +270,15 @@ class Logger:
 
     @staticmethod
     def toFile(message, level):
+        now = datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
         if level == logging.DEBUG:
-            Logger.file_logger.debug(f"DEBUG: {message}")
+            Logger.file_logger.debug(f"DEBUG: {now} {message}")
         elif level == logging.INFO:
-            Logger.file_logger.info(f"INFO: {message}")
+            Logger.file_logger.info(f"INFO: {now} {message}")
         elif level == logging.WARNING:
-            Logger.file_logger.warning(f"WARNING: {message}")
+            Logger.file_logger.warning(f"WARNING: {now} {message}")
         elif level == logging.ERROR:
-            Logger.file_logger.error(f"ERROR: {message}")
+            Logger.file_logger.error(f"ERROR: {now} {message}")
 
     @staticmethod
     def toStdOut(message, level):
