@@ -329,9 +329,9 @@ class ExportManager:
         session_id = row[game_table.session_id_index]
 
         # parse out complex data from json
-        col = row[game_table.complex_data_index].replace("'", "\"")
+        col = row[game_table.complex_data_index]
         try:
-            complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[game_table.event_index]}
+            complex_data_parsed = json.loads(col.replace("'", "\"")) if (col is not None) else {"event_custom":row[game_table.event_index]}
         except Exception as err:
             msg = f"When trying to parse {col}, get error\n{type(err)} {str(err)}"
             utils.Logger.toStdOut(msg, logging.ERROR)
