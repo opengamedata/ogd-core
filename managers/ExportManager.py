@@ -62,7 +62,7 @@ class ExportManager:
             try:
                 tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
                 game_table: GameTable = GameTable.FromDB(db=db, settings=self._settings, request=request)
-                date_range = (request.start_date.strftime("%Y%m%d"), request.end_date.strftime("%Y%m%d"))
+                date_range = (request.start_date, request.end_date)
                 data_manager = SQLDataManager(game_id=request.game_id, game_schema=game_schema, settings=settings)
                 parse_success: bool = self._getAndParseData(data_manager=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files)
                 if parse_success:
@@ -95,7 +95,7 @@ class ExportManager:
                 # end = datetime.strptime(data_frame['server_time'].max().split(' ')[0], "%Y-%m-%d")
                 start = data_frame['server_time'].min()
                 end = data_frame['server_time'].max()
-                date_range = (start.strftime("%Y%m%d"), end.strftime("%Y%m%d"))
+                date_range = (start, end)
                 parse_success: bool = self._getAndParseData(data_manager=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files)
                 if parse_success:
                     utils.Logger.toStdOut(f"Successfully completed extraction from {request.file_path}.", logging.INFO)
@@ -126,8 +126,8 @@ class ExportManager:
             # First, get the files and game-specific vars ready
             game_schema, game_extractor = self._getExtractor()
             # also figure out hash and dataset ID.
-            _from = date_range[0]
-            _to = date_range[1]
+            _from = date_range[0].strftime("%Y%m%d")
+            _to = date_range[1].strftime("%Y%m%d")
             repo = git.Repo(search_parent_directories=True)
             short_hash = repo.git.rev_parse(repo.head.object.hexsha, short=7)
             dataset_id = f"{self._game_id}_{_from}_to_{_to}"
@@ -389,8 +389,8 @@ class ExportManager:
                 {"raw":raw_path,
                 "proc":proc_path,
                 "dump":dump_path,
-                "start_date":date_range[0],
-                "end_date":date_range[1],
+                "start_date":date_range[0].strftime("%m/%d/%y"),
+                "end_date":date_range[1].strftime("%m/%d/%y"),
                 "date_modified":datetime.now().strftime("%m/%d/%Y"),
                 "sessions":num_sess
                 }
