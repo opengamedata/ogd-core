@@ -254,7 +254,12 @@
 			"first_enc_avg_wps": "average words per second in each first encounter",
 			"first_enc_var_wps": "variance words per second in each first encounter",
 			"first_enc_avg_tbps": "average text boxes per second in each first encounter",
-			"first_enc_var_tbps": "variance text boxes per second in each first encounter"
+			"first_enc_var_tbps": "variance text boxes per second in each first encounter",
+		    "time_idle": "Amount of time in gameplay spent idle (time past IDLE_THRESH_SECONDS without clicks/hovers)",
+		    "count_idle": "Count going active > idle in game (time past IDLE_THRESH_SECONDS without clicks/hovers)",
+
+		    "time_active": "Amount of time in gameplay spent actively playing (not going more than IDLE_THRESH_SECONDS without an clicks/hovers)",
+			"time_active_clicking": "time spent acitvely clicking in the game"
 		},
         "per_custom_count": {
             "num_guesses": {
@@ -300,8 +305,34 @@
 			"quiz_response" : {
 				"count": 3,
 				"prefix": "R",
-				"desc": "player's quiz responses"
+				"desc": "player's quiz responses (only used in v6)"
 			},
+			"sa_index": {
+				"count": 16,
+				"prefix": "SA",
+				"desc": "Survey answer index for the given question"
+			},
+			"sa_text": {
+				"count": 16,
+				"prefix": "SA",
+				"desc": "Survey answer text for the given question"
+			},
+			"sa_time": {
+				"count": 16,
+				"prefix": "SA",
+				"desc": "Time to the initial survey answer for the given question"
+			},
+			"sa_num_answers": {
+				"count": 16,
+				"prefix": "SA",
+				"desc": "Players may select an answer multiple times or change answers. This counts the number of times the player answered a given question"
+			},
+			"s_time": {
+				"count": 4,
+				"prefix": "S",
+				"desc": "Time taken to answer a given survey"
+			},
+
     "itime_to": {
         "count": 189,
         "prefix": "int",
@@ -399,8 +430,13 @@
 			"sess_first_enc_var_wps": "variance words per second in each first encounter",
 			"sess_first_enc_avg_tbps": "average text boxes per second in each first encounter",
 			"sess_first_enc_var_tbps": "variance text boxes per second in each first encounter",
-          "sess_start_obj": "objective the player started with",
-          "sess_end_obj": "objective the player ended with",
+		  "sess_start_obj": "objective the player started with",
+		  "sess_end_obj": "objective the player ended with",
+
+			"sess_time_idle": "time spent idle in session (past IDLE_THRESH seconds without clicks/hovers)",
+			"sess_count_idle": "count going active to idle in session (past IDLE_THRESH seconds without clicks/hovers)",
+			"sess_time_active": "time spent acitvely playing the game",
+			"sess_time_active_clicking": "time spent acitvely clicking in the game",
 
 			"start_level": "Level the player started at",
 			"max_level":"Highest level reached in the session",
@@ -418,6 +454,9 @@
 			"music": "boolean (1/0) whether or not the player turned music on",
 			"hq": "boolean (1/0) for whether or not the player turned hq graphics on",
 			"fullscreen": "boolean (1/0) whether or not the player checked fullscreen",
+			"script_type": "enum for script type (only used in v7+)",
+			"script_version": "version of the script type (only used in v7+)",
+			"version": "version of the game (database app_version)",
 
 						"sessionID":"The player's session ID number for this play session",
 			"persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device."
@@ -446,6 +485,7 @@
         "http_user_agent":"Data on the type of web browser, OS, etc. in use by the player"
     },
     "config": {
-    "SUPPORTED_VERS": [6,7,8,9]
-  }
+    	"SUPPORTED_VERS": [6,7,8,9],
+		"IDLE_THRESH_SECONDS": 15
+	}
 }
