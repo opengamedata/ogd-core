@@ -25,7 +25,7 @@ from schemas.Schema import Schema
 def showHelp():
     width = 30
     print(width*"*")
-    print("usage: <python> main.py <cmd> [<args>]")
+    print("usage: <python> main.py <cmd> [<args>] [<opt-args>]")
     print("")
     print("<python> is your python command.")
     print("<cmd>    is one of the available commands:")
@@ -54,6 +54,8 @@ def showHelp():
     print("         - readme: game_id")
     print("             game_id    = id of game whose readme should be generated")
     print("         - help: *None*")
+    print("[<opt-args>] are optional arguments, which affect certain commands:")
+    print("         --no-extract: for any export command, skip feature extraction to *_proc.csv file.")
     print(width*"*")
 
 
