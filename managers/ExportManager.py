@@ -309,6 +309,12 @@ class ExportManager:
             traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(msg, logging.ERROR)
         finally:
+            if export_files.proc:
+                proc_csv_file.close()
+            if export_files.raw:
+                raw_csv_file.close()
+            if export_files.dump:
+                dump_csv_file.close()
             return
 
     ## Private helper function to process a single row of data.
