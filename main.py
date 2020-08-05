@@ -315,7 +315,6 @@ try:
     optupi, args = getopt.gnu_getopt(sys.argv, shortopts="-h", longopts=arg_options)
 
     opts = {opt[0]: opt[1] for opt in optupi}
-    print(f"optupi:{optupi}\nargs:{args}\nopts:{opts}")
     num_args = len(args)
     cmd = args[1] if num_args > 1 else "help"
 except getopt.GetoptError as err:
