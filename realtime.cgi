@@ -1,5 +1,10 @@
 #!C:\Program Files\Python38\python.exe -u
 #/usr/bin/python3.6
+
+# Before doing anything at all, send the header.
+header = "Content-type:text/plain \r\n\r\n"
+print(str(header))
+
 # import standard libraries
 import cgi
 import cgitb
@@ -15,8 +20,6 @@ from RTServer import RTServer
 from SimRTServer import SimRTServer
 
 try:
-    header = "Content-type:text/plain \r\n\r\n"
-    print(str(header))
     # print("test return")
     # quit()
 
