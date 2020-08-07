@@ -255,9 +255,12 @@ class Logger:
     # Set up loggers
     file_logger = logging.getLogger("file_logger")
     # file_logger.setLevel(level=logging.DEBUG)
-    err_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
-    err_handler.setLevel(logging.WARN)
-    debug_handler = logging.FileHandler("ExportDebugReport.log", encoding="utf-8")
+    try:
+        err_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
+        debug_handler = logging.FileHandler("ExportDebugReport.log", encoding="utf-8")
+    except PermissionError as err:
+        print(f"Failed permissions check for log files. No logging on server.")
+    err_handler.setLevel(level=logging.WARN)
     debug_handler.setLevel(level=logging.DEBUG)
     file_logger.addHandler(err_handler)
     file_logger.addHandler(debug_handler)
