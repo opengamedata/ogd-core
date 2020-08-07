@@ -232,41 +232,33 @@ def writeReadme():
             path = f"./data/{game_name}"
             os.makedirs(name=path, exist_ok=True)
             readme = open(f"{path}/readme.md", "w")
+            try:
+                # Open files with game-specific readme data, and global db changelog.
+                readme_src    = open(f"./doc/readme_src/{game_name}_readme_src.md", "r")
+                readme.write(readme_src.read())
+            except FileNotFoundError as err:
+                readme.write("No readme prepared")
+                utils.Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.ERROR)
+            finally:
+                readme.write("\n")
             # Load schema, and write feature & column descriptions to the readme.
             schema = Schema(schema_name=f"{game_name}.json")
             feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
             readme.write(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
                                                                 proc_field_list=feature_descriptions))
-        except Exception as err:
-            msg = f"{type(err)} {str(err)}"
-            utils.Logger.toStdOut(msg, logging.ERROR)
-            traceback.print_tb(err.__traceback__)
-            utils.Logger.toFile(msg, logging.ERROR)
-        try:
-            # Open files with game-specific readme data, and global db changelog.
-            readme_src    = open(f"./doc/readme_src/{game_name}_readme_src.md", "r")
-            readme.write(readme_src.read())
-        except FileNotFoundError as err:
-            readme.write("No readme prepared")
-            utils.Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.ERROR)
+            try:
+                changelog_src = open("./doc/readme_src/changelog_src.md", "r")
+                readme.write(changelog_src.read())
+            except FileNotFoundError as err:
+                readme.write("No changelog prepared")
+                utils.Logger.toStdOut(f"Could not find changelog_src", logging.ERROR)
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.toStdOut(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(msg, logging.ERROR)
         finally:
-            readme.write("\n")
-        try:
-            changelog_src = open("./doc/readme_src/changelog_src.md",           "r")
-            readme.write(changelog_src.read())
-        except FileNotFoundError as err:
-            readme.write("No changelog prepared")
-            utils.Logger.toStdOut(f"Could not find changelog_src", logging.ERROR)
-        except Exception as err:
-            msg = f"{type(err)} {str(err)}"
-            utils.Logger.toStdOut(msg, logging.ERROR)
-            traceback.print_tb(err.__traceback__)
-            utils.Logger.toFile(msg, logging.ERROR)
+            readme.close()
     else:
         print("Error, no game name given!")
         showHelp()
