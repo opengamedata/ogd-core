@@ -1,5 +1,5 @@
-#!C:\Program Files\Python38\python.exe -u
-#/usr/bin/python3.6
+#!/usr/bin/python3.6
+#C:\Program Files\Python38\python.exe -u
 
 # Before doing anything at all, send the header.
 header = "Content-type:text/plain \r\n\r\n"
