@@ -252,10 +252,16 @@ class SQL:
         Logger.toStdOut(f"Error Message: {err_msg}", logging.ERROR)
 
 class Logger:
-    # Set up loggers
+    # Set up loggers. First, the std out logger
+    std_logger = logging.getLogger("std_logger")
+    stdout_handler = logging.StreamHandler()
+    std_logger.addHandler(stdout_handler)
+    std_logger.setLevel(level=logging.DEBUG)
+    std_logger.debug("Testing standard out logger")
+
+    # Then, set up the file logger. Check for permissions errors.
     file_logger = logging.getLogger("file_logger")
     # file_logger.setLevel(level=logging.DEBUG)
-    err_handler = debug_handler = None
     try:
         err_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
         debug_handler = logging.FileHandler("ExportDebugReport.log", encoding="utf-8")
@@ -263,15 +269,11 @@ class Logger:
         print(f"Failed permissions check for log files. No logging on server.")
     else:
         err_handler.setLevel(level=logging.WARN)
-        debug_handler.setLevel(level=logging.DEBUG)
         file_logger.addHandler(err_handler)
+        debug_handler.setLevel(level=logging.DEBUG)
         file_logger.addHandler(debug_handler)
-        std_logger = logging.getLogger("std_logger")
-        stdout_handler = logging.StreamHandler()
-        std_logger.addHandler(stdout_handler)
-        std_logger.setLevel(level=logging.DEBUG)
+    finally:
         file_logger.debug("Testing error logger")
-        std_logger.debug("Testing standard out logger")
 
     @staticmethod
     def toFile(message, level):
