@@ -266,7 +266,7 @@ class Logger:
         err_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
         debug_handler = logging.FileHandler("ExportDebugReport.log", encoding="utf-8")
     except PermissionError as err:
-        print(f"Failed permissions check for log files. No logging on server.")
+        std_logger.exception(f"Failed permissions check for log files. No logging on server.", stack_info=True)
     else:
         err_handler.setLevel(level=logging.WARN)
         file_logger.addHandler(err_handler)
