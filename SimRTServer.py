@@ -149,7 +149,6 @@ class SimRTServer:
             print(f"got error in SimRTServer.py: {str(err)}")
             traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(f"Got an error in getFeaturesBySessID: {str(err)}", logging.ERROR)
-            # traceback.print_tb(err.__traceback__)
             ret_val = {"error": "Got error in SimRTServer!"}
             raise err
         finally:

@@ -86,8 +86,7 @@ try:
     print(result)
 except Exception as err:
     msg = f"{type(err)} {str(err)}"
-    print(f"Error in realtime script! {msg}, traceback:\n{traceback.format_exc()}")
+    utils.Logger.toPrint(f"Error in realtime script! {msg}, traceback:\n{traceback.format_exc()}", level=logging.ERROR)
     traceback.print_tb(err.__traceback__)
+    utils.Logger.toFile(f"Error in realtime script! {msg}, traceback:\n{traceback.format_exc()}", level=logging.ERROR)
     #print(f"Traceback: {traceback.print_stack(limit=10)}")
-    err_file = open("./python_errors.log", "a")
-    err_file.write(f"{msg}\n")
