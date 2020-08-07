@@ -255,44 +255,48 @@ class Logger:
     # Set up loggers
     file_logger = logging.getLogger("file_logger")
     # file_logger.setLevel(level=logging.DEBUG)
+    err_handler = debug_handler = None
     try:
         err_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
         debug_handler = logging.FileHandler("ExportDebugReport.log", encoding="utf-8")
     except PermissionError as err:
         print(f"Failed permissions check for log files. No logging on server.")
-    err_handler.setLevel(level=logging.WARN)
-    debug_handler.setLevel(level=logging.DEBUG)
-    file_logger.addHandler(err_handler)
-    file_logger.addHandler(debug_handler)
-    std_logger = logging.getLogger("std_logger")
-    stdout_handler = logging.StreamHandler()
-    std_logger.addHandler(stdout_handler)
-    std_logger.setLevel(level=logging.DEBUG)
-    file_logger.debug("Testing error logger")
-    std_logger.debug("Testing standard out logger")
+    else:
+        err_handler.setLevel(level=logging.WARN)
+        debug_handler.setLevel(level=logging.DEBUG)
+        file_logger.addHandler(err_handler)
+        file_logger.addHandler(debug_handler)
+        std_logger = logging.getLogger("std_logger")
+        stdout_handler = logging.StreamHandler()
+        std_logger.addHandler(stdout_handler)
+        std_logger.setLevel(level=logging.DEBUG)
+        file_logger.debug("Testing error logger")
+        std_logger.debug("Testing standard out logger")
 
     @staticmethod
     def toFile(message, level):
         now = datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
-        if level == logging.DEBUG:
-            Logger.file_logger.debug(f"DEBUG: {now} {message}")
-        elif level == logging.INFO:
-            Logger.file_logger.info(f"INFO: {now} {message}")
-        elif level == logging.WARNING:
-            Logger.file_logger.warning(f"WARNING: {now} {message}")
-        elif level == logging.ERROR:
-            Logger.file_logger.error(f"ERROR: {now} {message}")
+        if Logger.file_logger is not None:
+            if level == logging.DEBUG:
+                Logger.file_logger.debug(f"DEBUG: {now} {message}")
+            elif level == logging.INFO:
+                Logger.file_logger.info(f"INFO: {now} {message}")
+            elif level == logging.WARNING:
+                Logger.file_logger.warning(f"WARNING: {now} {message}")
+            elif level == logging.ERROR:
+                Logger.file_logger.error(f"ERROR: {now} {message}")
 
     @staticmethod
     def toStdOut(message, level):
-        if level == logging.DEBUG:
-            Logger.std_logger.debug(f"DEBUG: {message}")
-        elif level == logging.INFO:
-            Logger.std_logger.info(f"INFO: {message}")
-        elif level == logging.WARNING:
-            Logger.std_logger.warn(f"WARNING: {message}")
-        elif level == logging.ERROR:
-            Logger.std_logger.error(f"ERROR: {message}")
+        if Logger.std_logger is not None:
+            if level == logging.DEBUG:
+                Logger.std_logger.debug(f"DEBUG: {message}")
+            elif level == logging.INFO:
+                Logger.std_logger.info(f"INFO: {message}")
+            elif level == logging.WARNING:
+                Logger.std_logger.warn(f"WARNING: {message}")
+            elif level == logging.ERROR:
+                Logger.std_logger.error(f"ERROR: {message}")
 
     @staticmethod
     def toPrint(message, level):
