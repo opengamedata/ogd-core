@@ -217,7 +217,7 @@ class RTServer:
             schema: Schema = Schema(schema_name=f"{game_id}.json")
             ret_val = {"features": schema.feature_list()}
         except Exception as err:
-            utils.Logger.toFile(f"Got exception in getFeatureNamesByGame: {type(err) str(err)}", logging.ERROR)
+            utils.Logger.toFile(f"Got exception in getFeatureNamesByGame: {type(err)} {str(err)}", logging.ERROR)
             utils.Logger.toFile("Had to return None", logging.WARNING)
             ret_val = None
         finally:
