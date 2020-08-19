@@ -2,7 +2,6 @@ import json
 import logging
 import math
 import random
-import re
 import traceback
 import typing
 from datetime import datetime, timedelta
@@ -301,42 +300,6 @@ class RTServer:
                 ret_val[feature_name] = features_raw[feature_name]
         return ret_val
 
-    ## Function to evaluate a logistic regression model, creating a prediction.
-    #  This is based around the equation for probability of Y=1, denoted as p:
-    #  p = 1 / (1 + e^-logit(X)),
-    #  where X is the input data used to predict Y, and
-    #  logit(X) = b0 + b1*x1 + b2*x2 + ... + bn*xn,
-    #  where bi are the coefficients.
-    #  Based on information at https://www.medcalc.org/manual/logistic_regression.php
-    @staticmethod
-    def EvaluateLogRegModel(model, feature_data) -> float:
-        logit = 0
-        for coeff in model.keys():
-            # case where coefficient is a normal feature
-            if coeff in feature_data.keys():
-                try:
-                    logit += model[coeff] * feature_data[coeff]
-                except Exception as err:
-                    print(f"Got {type(err)} error when trying to add {coeff} term. Value is {feature_data[coeff]}. Type is {type(feature_data[coeff])}")
-                    raise err
-            # enum case, where we have coefficient = feature_name.enum_val
-            elif re.search("\w+\.\w+", coeff):
-                pieces = coeff.split(".")
-                if pieces[0] in feature_data.keys():
-                    logit += model[coeff] * (1.0 if feature_data[pieces[0]] == pieces[1] else 0.0)
-                else:
-                    print(f"Found an element of model that is not a feature: {coeff}")
-            # specific cases, where we just hardcode a thing that must be consistent across all models.
-            elif coeff == "Intercept":
-                logit += model[coeff]
-            elif coeff == "display_name":
-                pass
-            # default case, print a line.
-            else:
-                print(f"Found an element of model that is not a feature: {coeff}")
-        # print(f"logit: {logit}")
-        p = 1 / (1 + math.exp(-logit))
-        return p
 
     # @staticmethod
     # def _ip_to_loc(ip):
