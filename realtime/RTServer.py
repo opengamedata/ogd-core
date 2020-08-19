@@ -16,6 +16,8 @@ from feature_extractors.WaveExtractor import WaveExtractor
 from feature_extractors.LakelandExtractor import LakelandExtractor
 from GameTable import GameTable
 from managers.ProcManager import ProcManager
+from models.Model import *
+from realtime.ModelManager import ModelManager
 from schemas.Schema import Schema
 
 ## Class to handle API calls for the realtime page.
@@ -233,11 +235,13 @@ class RTServer:
     def getPredictionNamesByGameLevel(game_id: str, level: int) -> typing.List:
         ret_val: typing.List
 
-        models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
-        if level in models.keys():
-            ret_val = models[level].keys()
-        else:
+        # models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
+        model_mgr = ModelManager(game_id)
+        models = model_mgr.ListModels(level)
+        if len(models) < 1:
             ret_val = ["No models for given level"]
+        else:
+            ret_val = models
         return ret_val
 
     @staticmethod
@@ -250,22 +254,28 @@ class RTServer:
             cur_level = prog["cur_level"]
             idle_time = prog["idle_time"]
 
-            models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
             ret_val = {}
             ret_val["max_level"] = {"name": "Max Level", "value": max_level}
             ret_val["cur_level"] = {"name": "Current Level", "value": cur_level}
             ret_val["seconds_inactive"] = {"name": "Seconds Inactive", "value": idle_time}
-            features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
-            features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
-            model_level = str(max(1, min(8, cur_level)))
-            for model in models[model_level].keys():
-                raw_val = RTServer.EvaluateLogRegModel(models[model_level][model], features_parsed)
-                name: str
-                if "display_name" in models[model_level][model].keys():
-                    name = models[model_level][model]["display_name"]
+            # model_level = str(max(1, min(8, cur_level)))
+            # models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
+            model_mgr = ModelManager(game_id)
+            # NOTE: We assume current level is the one to use. If player back-tracks, you may end up with "earlier" model relative to max level.
+            model_list = model_mgr.ListModels(cur_level)
+            for model_name in predictions:
+                if model_name in model_list:
+                    model = model_mgr.LoadModel(model_name=model_name)
+                    if model.GetInputType() == ModelInputType.FEATURE:
+                        features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
+                        features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
+                        raw_val = model.Eval(features_parsed)
+                    elif model.GetInputType() == ModelInputType.SEQUENCE:
+                        # TODO: support "sequence" types of model
+                        raw_val = -1
+                    ret_val[model] = {"name": name, "value": str(round(raw_val * 100)) + "%"}
                 else:
-                    name = model
-                ret_val[model] = {"name": name, "value": str(round(raw_val * 100)) + "%"}
+                    ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
 
         except Exception as err:
             #print(f"got error in RTServer.py: {str(err)}")

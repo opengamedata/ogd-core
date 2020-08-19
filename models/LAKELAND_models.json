@@ -1,7 +1,9 @@
 {
-    "1":{
-        "dummyModel":{
-          "display_name": "Dummy Model"
-        }
+    "dummyModel":{
+      "type": "SingleFeature",
+      "levels": [],
+      "params": {
+        "column_name":"sess_count_achievements"
+      }
     }
 }
