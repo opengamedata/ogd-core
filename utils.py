@@ -108,8 +108,9 @@ class SQL:
                                            user = login.user, password = login.pword,
                                            database = login.db_name, charset='utf8')
         except MySQLdb.connections.Error as err:
-            Logger.toStdOut(f"Could not connect to the MySql database: " + str(err), logging.ERROR)
-            Logger.toPrint(f"Could not connect to the MySql database: {str(err)}", logging.ERROR)
+            msg = f"Could not connect to the MySql database:\n{str(err)}"
+            Logger.toStdOut(msg, logging.ERROR)
+            Logger.toPrint(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
             return None
 
