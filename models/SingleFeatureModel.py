@@ -2,7 +2,7 @@
 import logging
 import typing
 ## import local libraries
-from FeatureModel import FeatureModel
+from models.FeatureModel import FeatureModel
 
 ## @class SingleFeatureModel
 #  Implementation for models which simply mirror a single feature to the dashboard.

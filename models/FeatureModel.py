@@ -3,7 +3,7 @@ import abc
 import typing
 import logging
 ## import local libraries
-from Model import *
+from models.Model import *
 
 ## @class FeatureModel
 #  Abstract base class for models that use per-session feature data as input rows.

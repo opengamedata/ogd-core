@@ -5,7 +5,7 @@ import math
 import re
 import typing
 ## import local libraries
-from FeatureModel import FeatureModel
+from models.FeatureModel import FeatureModel
 
 ## @class LogisticModel
 class LogisticModel(FeatureModel):
