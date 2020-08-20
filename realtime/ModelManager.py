@@ -5,6 +5,7 @@ import typing
 import logging
 ## import local files
 from models.SingleFeatureModel import SingleFeatureModel
+from models.LogisticModel import LogisticModel
 import utils
 
 ## @class ModelManager
@@ -20,6 +21,8 @@ class ModelManager():
         model_info = self._models[model_name]
         if model_info["type"] == "SingleFeature":
             return SingleFeatureModel(**model_info["params"])
+        elif model_info["type"] == "Logistic":
+            return LogisticModel(**model_info["params"])
     
     def ListModels(self, level: int = None):
         if level is None:
