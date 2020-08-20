@@ -142,6 +142,7 @@ class SQL:
             msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
             Logger.toStdOut(msg, logging.ERROR)
             Logger.toPrint(msg, logging.ERROR)
+            traceback.print_tb(err.__traceback__)
             if tunnel is not None:
                 tunnel.stop()
             return (None, None)
