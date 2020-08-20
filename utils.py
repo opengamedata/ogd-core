@@ -108,7 +108,7 @@ class SQL:
                                            user = login.user, password = login.pword,
                                            database = login.db_name, charset='utf8')
         except MySQLdb.connections.Error as err:
-            msg = f"Could not connect to the MySql database:\n{str(err)}"
+            msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
             Logger.toStdOut(msg, logging.ERROR)
             Logger.toPrint(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
@@ -139,9 +139,9 @@ class SQL:
             Logger.toStdOut(f"Connected to SQL at {sql.host}:{sql.port}/{sql.db_name}, {sql.user}", logging.INFO)
             return (tunnel, conn)
         except Exception as err:
-            msg = f"{type(err)} {str(err)}"
-            Logger.toStdOut(f"Could not connect to the MySql database: {msg}", logging.ERROR)
-            Logger.toPrint(f"Could not connect to the MySql database {msg}", logging.ERROR)
+            msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
+            Logger.toStdOut(msg, logging.ERROR)
+            Logger.toPrint(msg, logging.ERROR)
             if tunnel is not None:
                 tunnel.stop()
             return (None, None)
