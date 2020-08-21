@@ -5,5 +5,13 @@
       "params": {
         "column_name":"sess_count_achievements"
       }
+    },
+
+    "dummyLogistic": {
+      "type": "Logistic",
+      "levels": [],
+      "params": {
+        "coefficient_map": {"sess_count_achievements": 0.5, "sess_count_deaths": 0.25}
+      }
     }
 }
