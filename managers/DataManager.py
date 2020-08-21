@@ -45,6 +45,7 @@ class SQLDataManager(DataManager):
         utils.SQL.disconnectMySQLViaSSH(tunnel=self._tunnel, db=self._db)
 
 class CSVDataManager(DataManager):
+    # TODO: Take a path, rather than an existing dataframe.
     def __init__(self, game_id: str, data_frame: pd.DataFrame):
         DataManager.__init__(self, game_id=game_id)
         self._data = data_frame
