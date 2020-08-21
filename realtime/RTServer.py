@@ -49,6 +49,7 @@ class RTServer:
         for item in active_sessions_raw:
             sess_id = item[0]
             player_id = item[1]
+            # TODO: is require_player_id really coming in as a string?
             if (require_player_id == "false") or re.search("^[a-z,A-Z][0-9]{3}$", player_id):
                 prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
                 idle_time = prog["idle_time"]
@@ -298,12 +299,19 @@ class RTServer:
             finally:
                 utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
         elif RTServer.rt_settings["data_source"] == "FILE":
-            raise Exception("not supported!")
-            # path = RTServer.rt_settings["path"]
-            # data = pd.read_csv(path, sep="\t")
-            # if require_player_id:
-            #     sess_dict = data[["session_id", "player_id"]].groupby("session_id")
-            #     active_sessions_raw = [(key, sess_dict[key][0]) for key in sess_dict.keys()]
+            raise Exception("not supported!") # TODO: remove this line after implementing the queries.
+            path = RTServer.rt_settings["path"]
+            data = pd.read_csv(path, sep="\t")
+            if require_player_id:
+                # TODO: Add pandas query to get a list of all unique session IDs in the table, paired with a player ID.
+                # Any sessions that do not have a player ID should be left out.
+                # Results should be stored in active_sessions_raw, as a list of Tuples with form (session_id, player_id)
+                pass
+            else:
+                # TODO: Add pandas query to get a list of all unique session IDs in the table, paired with a player ID *or None*.
+                # That is, we don't require a player ID for each session, just include it if it has a value, else leave the column value as None or null or whatever.
+                # Results should have same form as the other case.
+                pass
         return active_sessions_raw
     
     @staticmethod
@@ -330,10 +338,15 @@ class RTServer:
             finally:
                 utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
         elif RTServer.rt_settings["data_source"] == "FILE":
-            raise Exception("not supported!")
-            # path = RTServer.rt_settings["path"]
-            # data = pd.read_csv(path, sep="\t", index_col="session_id")
-            # game_table = GameTable.FromCSV(data)
+            raise Exception("not supported!") # TODO: remove this line after implementing the queries.
+            path = RTServer.rt_settings["path"]
+            data = pd.read_csv(path, sep="\t")
+            game_table = GameTable.FromCSV(data)
+            # TODO: Add pandas query to get all rows with given session_id, sorted in ascending order by session_n.
+            # Results should be stored in session_data as a list of tuples.
+            # Example line of code doing the conversion to list of tuples is here:
+            # return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
+            # Basically, use itertuples(index=False, name=None) to convert from series to tuples, and wrap everything in list(...)
         return session_data, game_table
 
     # @staticmethod
