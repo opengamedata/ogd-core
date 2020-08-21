@@ -71,7 +71,6 @@ class RTServer:
     #          If a features argument was given, only returns the corresponding features.
     @staticmethod
     def getFeaturesBySessID(sess_id: str, game_id: str, features: typing.List = None) -> typing.Dict:
-        tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         ret_val: typing.Dict = {}
         # if we got a features list, it'll be a string that we must split.
         if features is not None and type(features) == str:
@@ -241,7 +240,7 @@ class RTServer:
                     elif model.GetInputType() == ModelInputType.SEQUENCE:
                         # TODO: support "sequence" types of model
                         raw_val = -1
-                    ret_val[model] = {"name": name, "value": str(round(raw_val * 100)) + "%"}
+                    ret_val[model] = {"name": model_name, "value": str(round(raw_val * 100)) + "%"}
                 else:
                     ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
 
