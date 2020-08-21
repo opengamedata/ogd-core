@@ -214,7 +214,6 @@ class RTServer:
     @staticmethod
     def getPredictionsBySessID(sess_id: str, game_id: str, predictions):
         # start_time = datetime.now()
-        tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         try:
             prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
             max_level = prog["max_level"]
@@ -230,6 +229,7 @@ class RTServer:
             model_mgr = ModelManager(game_id)
             # NOTE: We assume current level is the one to use. If player back-tracks, you may end up with "earlier" model relative to max level.
             model_list = model_mgr.ListModels(cur_level)
+            # print(f"***List of valid models***: {model_list}")
             for model_name in predictions:
                 if model_name in model_list:
                     model = model_mgr.LoadModel(model_name=model_name)
@@ -250,7 +250,6 @@ class RTServer:
             ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
         finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             # print(f"returning from realtime, with session_predictions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
             return {sess_id:ret_val}
 
