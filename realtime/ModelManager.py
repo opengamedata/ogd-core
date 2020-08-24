@@ -26,6 +26,7 @@ class ModelManager():
             return LogisticModel(**model_info["params"])
 
     def _validLevel(self, model_name: str, level: int):
+        # print(f"Checking validity of model {model_name} for level {level}")
         levels = self._models[model_name]["levels"]
         if levels == None or levels == []:
             return True
@@ -38,5 +39,6 @@ class ModelManager():
         if level is None:
             return list(self._models.keys())
         else:
-            print(f"Listing models for level {level}.")
-            return [key for key in self._models.keys() if self._validLevel(model_name=key, level=level)]
+            valid_models = [key for key in self._models.keys() if self._validLevel(model_name=key, level=level)]
+            # print(f"Listing models for level {level}: {valid_models}")
+            return valid_models

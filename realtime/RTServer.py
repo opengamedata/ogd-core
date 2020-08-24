@@ -122,8 +122,8 @@ class RTServer:
                 ret_val = {"error": "Empty Session!"}
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
-            print(f"got error in RTServer.py: {msg}")
-            traceback.print_tb(err.__traceback__)
+            # print(f"got error in RTServer.py: {msg}")
+            # traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(f"Got an error in getFeaturesBySessID: {msg}", logging.ERROR)
             # traceback.print_tb(err.__traceback__)
             ret_val = {"error": "Got error in RTServer!"}
@@ -237,22 +237,24 @@ class RTServer:
                     if model.GetInputType() == ModelInputType.FEATURE:
                         features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
                         features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
-                        raw_val = model.Eval(features_parsed)
+                        result_list = model.Eval([features_parsed])
                     elif model.GetInputType() == ModelInputType.SEQUENCE:
                         # TODO: support "sequence" types of model
-                        raw_val = -1
-                    ret_val[model] = {"name": model_name, "value": str(round(raw_val * 100)) + "%"}
+                        result_list = [-1]
+                    ret_val[sess_id] = {"name": model_name, "value": str(result_list)}
                 else:
-                    ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
+                    ret_val[sess_id] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
 
         except Exception as err:
-            #print(f"got error in RTServer.py: {str(err)}")
+            # print(f"got error in RTServer.py: {str(err)}")
+            # traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", logging.ERROR)
             ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
         finally:
-            # print(f"returning from realtime, with session_predictions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
-            return {sess_id:ret_val}
+            result = {sess_id:ret_val}
+            # print(f"returning from realtime, with session_predictions: {result}") # Time spent was {(datetime.now()-start_time).seconds} seconds.")
+            return result
 
     ## Simple helper method to take in a raw (string) version of a feature from file,
     #  and parse it to a float if the feature is numeric, else maintain it as a string.
