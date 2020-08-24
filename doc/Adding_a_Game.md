@@ -1,12 +1,13 @@
 ## Adding a new game data exporter/extractor:
 
 First, a bit of terminology:
-- feature: Some bit of data considered to be useful for analysis of game play. Usually calculated from game event data.
-- per-level feature: A feature that records data about what a player did over the course of a level in the game. 
-- per-custom-count feature: A feature that records data about some _thing_ that may have multiple instances over a gameplay session. A common example would be question-answer prompts. 
-- aggregate feature: A feature which records data across an entire gameplay session (as opposed to an individual level, for example). 
-- raw csv: A csv file containing raw game event data. More-or-less a database dump, but with JSON objects split across columns.
-- processed csv: A csv file primarily containing feature data. This typically includes a great many per-level features (i.e. one instance of each feature per game level), a few per-custom-count features, and a moderate number of aggregate features.
+- **feature**: Some bit of data considered to be useful for analysis of game play. Usually calculated from game event data.
+- **per-level feature**: A feature that records data about what a player did over the course of a level in the game. 
+- **per-custom-count feature**: A feature that records data about some _thing_ that may have multiple instances over a gameplay session. A common example would be question-answer prompts. 
+- **aggregate feature**: A feature which records data across an entire gameplay session (as opposed to an individual level, for example).
+- **dump file**: A file (TSV) containing a direct dump of game event data from a database. Maintains the column structure of the original database, with JSON-encoded custom event data.
+- **raw file**: A file (typically TSV, older versions used CSV) containing raw game event data. Similar to a dump file, but with JSON objects from custom event data split across columns (sub-objects are not split).
+- **processed csv**: A csv file primarily containing feature data. This typically includes a great many per-level features (i.e. one instance of each feature per game level), a few per-custom-count features, and a moderate number of aggregate features.
 
 In order to add a new game to the feature extraction tool, complete the following steps:
 
