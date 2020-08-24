@@ -31,7 +31,16 @@
     "milkproduced": 28,
     "poopproduced": 29,
     "debug": 30,
-    "newfarmbit": 31
+    "newfarmbit": 31,
+	"availablefood":32,
+	"moneyrate": 33,
+	"sadfarmbits": 34,
+	"lakenutrition": 35,
+	"salestart": 36,
+	"saleend": 37,
+	"rainstarted": 38,
+	"eatfood": 39,
+	"reset":  40
   },
   "EMOTES": {
     "null": 0,
