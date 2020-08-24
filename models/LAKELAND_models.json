@@ -1,9 +1,16 @@
 {
-    "dummyModel":{
-      "type": "SingleFeature",
+  "dummyModel":{
+    "type": "SingleFeature",
+    "levels": [],
+    "params": {
+      "column_name":"sess_count_achievements"
+    }
+  },
+  "DeathPredictionModel":{
+    "type": "SimpleDeathPredictionModel",
       "levels": [],
-      "params": {
-        "column_name":"sess_count_achievements"
+      "params":{
+        "session": ""
       }
     },
 
