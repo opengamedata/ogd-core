@@ -19,7 +19,7 @@ Below, we will cover the steps in detail.
     In the case of a linear regression model, for example, the `Eval(...)` function will return a linear combination of feature values, with coefficients determined at model training time.
 
     To simplify the issue of controlling input types, we provide `FeatureModel` and `SequenceModel` subclasses of `Model`. These simply hard-code the input type passed to the super constructor, so further subclasses need not be concerned with managing the input type. Simply choose either `FeatureModel` or `SequenceModel` as the parent of your new model class.  
-    Do note, however, that `FeatureModel` and `SequenceModel` each implement `Eval(...)` with a call to an abstract function `_eval(...)`. Thus, you should implement the `_eval(...)` function when subclassing from `FeatureModel` or `SequenceModel`.
+    Do note, however, that `FeatureModel` and `SequenceModel` each implement `Eval(...)` with a call to an abstract function `_eval(...)`. **Thus, you should implement the** `_eval(...)` **function when subclassing from** `FeatureModel` **or** `SequenceModel`.
 
     While your model may be entirely self-contained within the `Model` subclass, you can also add parameters for the class constructor (the `__init__` function, in our case). This allows for easy creation of multiple instances of models of the same type. Consider, for example, the constructor for the `LogisticModel` class:
     ```python
