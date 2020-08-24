@@ -16,10 +16,10 @@ class SimpleDeathPredictionModel(SequenceModel):
     #
     #  @param rows : A row of data for a session, which should be a mapping of column names to
     #  @return     : A result for the given row of data
-    def _eval(self, session: typing.Dict):
+    def _eval(self, rows: typing.List):
         death_trig_flag = False
         row_cnt = 0
-        for i, row in enumerate(session):
+        for i, row in enumerate(rows):
             if row.category == 24:
                 if row.emote_enum == 2:
                     death_trig_flag = True
