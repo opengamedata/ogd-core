@@ -4,6 +4,7 @@ import logging
 import typing
 import logging
 ## import local files
+from models.SimpleDeathPredictionModel import SimpleDeathPredictionModel
 from models.SingleFeatureModel import SingleFeatureModel
 from models.LogisticModel import LogisticModel
 import utils
@@ -24,6 +25,8 @@ class ModelManager():
             return SingleFeatureModel(**model_info["params"])
         elif model_info["type"] == "Logistic":
             return LogisticModel(**model_info["params"])
+        if model_info["type"] == "SimpleDeathPrediction":
+            return SimpleDeathPredictionModel(**model_info["params"])
 
     def _validLevel(self, model_name: str, level: int):
         levels = self._models[model_name]["levels"]

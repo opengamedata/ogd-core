@@ -306,11 +306,19 @@ class RTServer:
                 # TODO: Add pandas query to get a list of all unique session IDs in the table, paired with a player ID.
                 # Any sessions that do not have a player ID should be left out.
                 # Results should be stored in active_sessions_raw, as a list of Tuples with form (session_id, player_id)
+                active_sessions_raw = list(
+                    data[((data['session_id'].unique()) & (data['player_id'] is not None))][
+                        'session_id', 'player_id'].itertuples(name=None, index=False)
+                )
                 pass
             else:
                 # TODO: Add pandas query to get a list of all unique session IDs in the table, paired with a player ID *or None*.
                 # That is, we don't require a player ID for each session, just include it if it has a value, else leave the column value as None or null or whatever.
                 # Results should have same form as the other case.
+                active_sessions_raw = list(
+                    data[(data['session_id'].unique())][
+                        'session_id', 'player_id'].itertuples(name=None, index=False)
+                )
                 pass
         return active_sessions_raw
     
@@ -347,6 +355,11 @@ class RTServer:
             # Example line of code doing the conversion to list of tuples is here:
             # return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
             # Basically, use itertuples(index=False, name=None) to convert from series to tuples, and wrap everything in list(...)
+            return list(
+                data[(data['session_id'] == session_id)].sort_values(
+                    "session_n", axis=0, ascending=True, inplace=True, na_position='last').itertuples(
+                    index=False, name=None))
+
         return session_data, game_table
 
     # @staticmethod
