@@ -1,9 +1,24 @@
 {
-    "dummyModel":{
-      "type": "SingleFeature",
+  "dummyModel":{
+    "type": "SingleFeature",
+    "levels": [],
+    "params": {
+      "column_name":"sess_count_achievements"
+    }
+  },
+  "DeathPredictionModel":{
+    "type": "SimpleDeathPredictionModel",
+      "levels": [],
+      "params":{
+        "session": ""
+      }
+    },
+
+    "dummyLogistic": {
+      "type": "Logistic",
       "levels": [],
       "params": {
-        "column_name":"sess_count_achievements"
+        "coefficient_map": {"sess_count_achievements": 0.5, "sess_count_deaths": 0.25}
       }
     }
 }

@@ -19,14 +19,6 @@ class Model(abc.ABC):
         self._input_type : ModelInputType   = input_type
         self._levels     : typing.List[int] = levels
 
-    def ValidLevel(self, level: int):
-        if self._levels == None or self._levels == []:
-            return True
-        elif level in self._levels:
-            return True
-        else:
-            return False
-
     def GetInputType(self):
         return self._input_type
 

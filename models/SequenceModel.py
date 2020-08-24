@@ -11,3 +11,14 @@ from models.Model import *
 class SequenceModel(Model):
     def __init__(self, levels: typing.List[int] = []):
         super().__init__(levels=levels, input_type=ModelInputType.SEQUENCE)
+
+    def Eval(self, rows: typing.List) -> typing.List:
+        return self._eval(rows)
+
+    ## Abstract declaration of a function to perform calculation of a model results from a row.
+    #
+    #  @param rows : A row of data for a session, which should be a mapping of column names to 
+    #  @return     : A result for the given row of data
+    @abc.abstractmethod
+    def _eval(self, row: typing.Dict):
+        pass

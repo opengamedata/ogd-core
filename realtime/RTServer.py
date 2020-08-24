@@ -1,7 +1,9 @@
 import json
 import logging
 import math
+import pandas as pd
 import random
+import re
 import traceback
 import typing
 from datetime import datetime, timedelta
@@ -24,10 +26,11 @@ from schemas.Schema import Schema
 class RTServer:
 
     # Load settings, set up consts.
-    db_settings = settings["db_config"]
-    DB_NAME_DATA = db_settings["DB_NAME_DATA"]
-    DB_TABLE = db_settings["table"]
     ssh_settings = settings["ssh_config"]
+    rt_settings  = settings["realtime_config"]
+    db_settings  = settings["db_config"]
+    DB_NAME_DATA = db_settings["DB_NAME_DATA"]
+    DB_TABLE     = db_settings["table"]
 
     ## Handler to retrieve all active sessions for a given game.
     #  If the require_player_id flag is set to true, only players with a value
@@ -41,45 +44,20 @@ class RTServer:
     @staticmethod
     def getAllActiveSessions(game_id: str, require_player_id: bool) -> typing.Dict:
         # start_time = datetime.now()
-        tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         ret_val = {}
-        try:
-            #+++
-            start = datetime.now()
-            #---
-            cursor = db.cursor()
-            start_time = datetime.now() - timedelta(minutes=5)
-            player_id_filter = "AND `player_id` IS NOT NULL" if require_player_id else ""
-            filt = f"`app_id`='{game_id}' AND `server_time` > '{start_time.isoformat()}' {player_id_filter}"
-            active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
-                                                   db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
-                                                   columns=["session_id", "player_id"], filter=filt,\
-                                                   sort_columns=["session_id"], distinct=True)
-            #+++
-            end = datetime.now()
-            time_delta = end - start
-            minutes = math.floor(time_delta.total_seconds()/60)
-            seconds = time_delta.total_seconds() % 60
-            utils.Logger.toFile(f"Total time taken to fetch active sessions from database: {minutes} min, {seconds} sec", logging.DEBUG)
-            #---
-            for item in active_sessions_raw:
-                sess_id = item[0]
-                player_id = item[1]
-                if (require_player_id == "false") or re.search("^[a-z,A-Z][0-9]{3}$", player_id):
-                    prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
-                    idle_time = prog["idle_time"]
-                    max_level = prog["max_level"]
-                    cur_level = prog["cur_level"]
-                    ret_val[sess_id] = {"session_id":sess_id, "player_id":item[1], "max_level":max_level, "cur_level":cur_level, "idle_time":idle_time}
-            # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
-        except Exception as err:
-            msg = f"{type(err)} {str(err)}"
-            print(f"got error in RTServer.py: {msg}")
-            utils.Logger.toFile(f"Got an error in getAllActiveSessions: {msg}", logging.ERROR)
-            raise err
-        finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-            return ret_val
+        active_sessions_raw = RTServer._fetchActiveSessions(game_id=game_id, require_player_id=require_player_id)
+        for item in active_sessions_raw:
+            sess_id = item[0]
+            player_id = item[1]
+            # TODO: is require_player_id really coming in as a string?
+            if (require_player_id == "false") or re.search("^[a-z,A-Z][0-9]{3}$", player_id):
+                prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
+                idle_time = prog["idle_time"]
+                max_level = prog["max_level"]
+                cur_level = prog["cur_level"]
+                ret_val[sess_id] = {"session_id":sess_id, "player_id":item[1], "max_level":max_level, "cur_level":cur_level, "idle_time":idle_time}
+        # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
+        return ret_val
 
     ## Handler to retrieve features for a given session.
     #  For now, at least, the game ID must be given as well, in order to load
@@ -94,22 +72,14 @@ class RTServer:
     #          If a features argument was given, only returns the corresponding features.
     @staticmethod
     def getFeaturesBySessID(sess_id: str, game_id: str, features: typing.List = None) -> typing.Dict:
-        tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         ret_val: typing.Dict = {}
         # if we got a features list, it'll be a string that we must split.
         if features is not None and type(features) == str:
             features = features.split(",")
+        request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
+        session_data, game_table = RTServer._fetchSessionData(sess_id, settings=settings, request=request)
         try:
-            utils.Logger.toFile(f"Getting all features for session {sess_id}", logging.INFO)
-            cursor = db.cursor()
-            filt = f"`session_id`='{sess_id}'"
-            session_data = utils.SQL.SELECT(cursor=cursor,
-                                            db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
-                                            filter=filt,\
-                                            sort_columns=["session_n", "client_time"])
             if len(session_data) > 0:
-                request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
-                game_table = GameTable.FromDB(db=db, settings=settings, request=request)
                 # return "Line 88: Killing features function in realtime.cgi."
                 schema = Schema(schema_name=f"{game_id}.json")
                 extractor: Extractor
@@ -152,14 +122,13 @@ class RTServer:
                 ret_val = {"error": "Empty Session!"}
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
-            print(f"got error in RTServer.py: {msg}")
-            traceback.print_tb(err.__traceback__)
+            # print(f"got error in RTServer.py: {msg}")
+            # traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(f"Got an error in getFeaturesBySessID: {msg}", logging.ERROR)
             # traceback.print_tb(err.__traceback__)
             ret_val = {"error": "Got error in RTServer!"}
             raise err
         finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return {sess_id:ret_val}
 
     ## Function to retrieve the game progress in a session.
@@ -246,7 +215,6 @@ class RTServer:
     @staticmethod
     def getPredictionsBySessID(sess_id: str, game_id: str, predictions):
         # start_time = datetime.now()
-        tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         try:
             prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
             max_level = prog["max_level"]
@@ -262,29 +230,31 @@ class RTServer:
             model_mgr = ModelManager(game_id)
             # NOTE: We assume current level is the one to use. If player back-tracks, you may end up with "earlier" model relative to max level.
             model_list = model_mgr.ListModels(cur_level)
+            # print(f"***List of valid models***: {model_list}")
             for model_name in predictions:
                 if model_name in model_list:
                     model = model_mgr.LoadModel(model_name=model_name)
                     if model.GetInputType() == ModelInputType.FEATURE:
                         features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
                         features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
-                        raw_val = model.Eval(features_parsed)
+                        result_list = model.Eval([features_parsed])
                     elif model.GetInputType() == ModelInputType.SEQUENCE:
                         # TODO: support "sequence" types of model
-                        raw_val = -1
-                    ret_val[model] = {"name": name, "value": str(round(raw_val * 100)) + "%"}
+                        result_list = [-1]
+                    ret_val[sess_id] = {"name": model_name, "value": str(result_list)}
                 else:
-                    ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
+                    ret_val[sess_id] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
 
         except Exception as err:
-            #print(f"got error in RTServer.py: {str(err)}")
+            # print(f"got error in RTServer.py: {str(err)}")
+            # traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", logging.ERROR)
             ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
         finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-            # print(f"returning from realtime, with session_predictions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
-            return {sess_id:ret_val}
+            result = {sess_id:ret_val}
+            # print(f"returning from realtime, with session_predictions: {result}") # Time spent was {(datetime.now()-start_time).seconds} seconds.")
+            return result
 
     ## Simple helper method to take in a raw (string) version of a feature from file,
     #  and parse it to a float if the feature is numeric, else maintain it as a string.
@@ -300,6 +270,99 @@ class RTServer:
                 ret_val[feature_name] = features_raw[feature_name]
         return ret_val
 
+    @staticmethod
+    def _fetchActiveSessions(game_id, require_player_id):
+        if RTServer.rt_settings["data_source"] == "DB":
+            try:
+                tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
+                #+++
+                start = datetime.now()
+                #---
+                cursor = db.cursor()
+                start_time = datetime.now() - timedelta(minutes=5)
+                player_id_filter = "AND `player_id` IS NOT NULL" if require_player_id else ""
+                filt = f"`app_id`='{game_id}' AND `server_time` > '{start_time.isoformat()}' {player_id_filter}"
+                active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
+                                                    db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
+                                                    columns=["session_id", "player_id"], filter=filt,\
+                                                    sort_columns=["session_id"], distinct=True)
+                #+++
+                end = datetime.now()
+                time_delta = end - start
+                minutes = math.floor(time_delta.total_seconds()/60)
+                seconds = time_delta.total_seconds() % 60
+                utils.Logger.toFile(f"Total time taken to fetch active sessions from database: {minutes} min, {seconds} sec", logging.DEBUG)
+                #---
+            except Exception as err:
+                msg = f"{type(err)} {str(err)}"
+                print(f"got error in RTServer.py: {msg}")
+                utils.Logger.toFile(f"Got an error in _fetchActiveSessions: {msg}", logging.ERROR)
+                raise err
+            finally:
+                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+        elif RTServer.rt_settings["data_source"] == "FILE":
+            raise Exception("not supported!") # TODO: remove this line after implementing the queries.
+            path = RTServer.rt_settings["path"]
+            data = pd.read_csv(path, sep="\t")
+            if require_player_id:
+                # TODO: Add pandas query to get a list of all unique session IDs in the table, paired with a player ID.
+                # Any sessions that do not have a player ID should be left out.
+                # Results should be stored in active_sessions_raw, as a list of Tuples with form (session_id, player_id)
+                active_sessions_raw = list(
+                    data[((data['session_id'].unique()) & (data['player_id'] is not None))][
+                        'session_id', 'player_id'].itertuples(name=None, index=False)
+                )
+                pass
+            else:
+                # TODO: Add pandas query to get a list of all unique session IDs in the table, paired with a player ID *or None*.
+                # That is, we don't require a player ID for each session, just include it if it has a value, else leave the column value as None or null or whatever.
+                # Results should have same form as the other case.
+                active_sessions_raw = list(
+                    data[(data['session_id'].unique())][
+                        'session_id', 'player_id'].itertuples(name=None, index=False)
+                )
+                pass
+        return active_sessions_raw
+    
+    @staticmethod
+    def _fetchSessionData(session_id, settings, request):
+        session_data = []
+        if RTServer.rt_settings["data_source"] == "DB":
+            try:
+                tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
+                game_table = GameTable.FromDB(db=db, settings=settings, request=request)
+                utils.Logger.toFile(f"Getting all features for session {session_id}", logging.INFO)
+                cursor = db.cursor()
+                filt = f"`session_id`='{session_id}'"
+                session_data = utils.SQL.SELECT(cursor=cursor,
+                                                db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
+                                                filter=filt,\
+                                                sort_columns=["session_n", "client_time"])
+            except Exception as err:
+                msg = f"{type(err)} {str(err)}"
+                print(f"got error in RTServer.py: {msg}")
+                traceback.print_tb(err.__traceback__)
+                utils.Logger.toFile(f"Got an error in _fetchSessionData: {msg}", logging.ERROR)
+                # traceback.print_tb(err.__traceback__)
+                raise err
+            finally:
+                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+        elif RTServer.rt_settings["data_source"] == "FILE":
+            raise Exception("not supported!") # TODO: remove this line after implementing the queries.
+            path = RTServer.rt_settings["path"]
+            data = pd.read_csv(path, sep="\t")
+            game_table = GameTable.FromCSV(data)
+            # TODO: Add pandas query to get all rows with given session_id, sorted in ascending order by session_n.
+            # Results should be stored in session_data as a list of tuples.
+            # Example line of code doing the conversion to list of tuples is here:
+            # return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
+            # Basically, use itertuples(index=False, name=None) to convert from series to tuples, and wrap everything in list(...)
+            return list(
+                data[(data['session_id'] == session_id)].sort_values(
+                    "session_n", axis=0, ascending=True, inplace=True, na_position='last').itertuples(
+                    index=False, name=None))
+
+        return session_data, game_table
 
     # @staticmethod
     # def _ip_to_loc(ip):

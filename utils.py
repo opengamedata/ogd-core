@@ -136,7 +136,7 @@ class SQL:
             conn = MySQLdb.connect(host = sql.host, port = tunnel.local_bind_port,
                                            user = sql.user, password = sql.pword,
                                            database = sql.db_name, charset='utf8')
-            Logger.toStdOut(f"Connected to SQL at {sql.host}:{sql.port}/{sql.db_name}, {sql.user}", logging.INFO)
+            Logger.toStdOut(f"Connected to SQL at {sql.host}:{tunnel.local_bind_port}/{sql.db_name}, {sql.user}", logging.INFO)
             return (tunnel, conn)
         except Exception as err:
             msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
