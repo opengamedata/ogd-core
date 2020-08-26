@@ -7,6 +7,11 @@ import logging
 from models.SimpleDeathPredictionModel import SimpleDeathPredictionModel
 from models.SingleFeatureModel import SingleFeatureModel
 from models.LogisticModel import LogisticModel
+from models.Lakeland_featseq_velocity import FarmAchSeqPercentModel, FarmAchVelocityModel
+from models.Lakeland_featseq_velocity import BloomAchSeqPercentModel, BloomAchVelocityModel
+from models.Lakeland_featseq_velocity import MoneyAchSeqPercentModel, MoneyAchVelocityModel
+from models.Lakeland_featseq_velocity import PopAchSeqPercentModel, PopAchVelocityModel
+from models.Lakeland_featseq_velocity import ReqTutSeqPercentModel, ReqTutVelocityModel
 import utils
 
 ## @class ModelManager
@@ -25,8 +30,28 @@ class ModelManager():
             return SingleFeatureModel(**model_info["params"])
         elif model_info["type"] == "Logistic":
             return LogisticModel(**model_info["params"])
-        if model_info["type"] == "SimpleDeathPrediction":
+        elif model_info["type"] == "SimpleDeathPrediction":
             return SimpleDeathPredictionModel(**model_info["params"])
+        elif model_info["type"] == "BloomAchSeqPercent":
+            return BloomAchSeqPercentModel(**model_info["params"])
+        elif model_info["type"] == "BloomAchVelocity":
+            return BloomAchVelocityModel(**model_info["params"])
+        elif model_info["type"] == "MoneyAchSeqPercent":
+            return MoneyAchSeqPercentModel(**model_info["params"])
+        elif model_info["type"] == "MoneyAchVelocity":
+            return MoneyAchVelocityModel(**model_info["params"])
+        elif model_info["type"] == "PopAchSeqPercent":
+            return PopAchSeqPercentModel(**model_info["params"])
+        elif model_info["type"] == "PopAchVelocity":
+            return PopAchVelocityModel(**model_info["params"])
+        elif model_info["type"] == "FarmAchSeqPercent":
+            return FarmAchSeqPercentModel(**model_info["params"])
+        elif model_info["type"] == "FarmAchVelocity":
+            return FarmAchVelocityModel(**model_info["params"])
+        elif model_info["type"] == "ReqTutSeqPercent":
+            return ReqTutSeqPercentModel(**model_info["params"])
+        elif model_info["type"] == "ReqTutVelocity":
+            return ReqTutVelocityModel(**model_info["params"])
 
     def _validLevel(self, model_name: str, level: int):
         # print(f"Checking validity of model {model_name} for level {level}")

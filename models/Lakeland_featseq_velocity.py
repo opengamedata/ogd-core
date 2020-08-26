@@ -1,9 +1,12 @@
 from abc import ABC
-from datetime import timedelta
 from typing import List, Optional
 import pandas as pd
 from bisect import bisect_left
 import numpy as np
+import os
+import json
+from datetime import timedelta
+from models import FeatureModel
 
 _POP_ACHS = "exist group town city".split()
 _FARM_ACHS = "farmer farmers farmtown megafarm".split()
@@ -21,6 +24,7 @@ def _get_sess_active_time_to_achievement_list(achs):
 def _get_sess_active_time_to_tutorial_list(tuts):
     return [f'sess_time_active_to_{t}_tutorial' for t in tuts]
 
+
 def _get_quantiles(df, feats, filter_debug=True, filter_continue=True):
     filter_strings = []
     if filter_debug:
@@ -28,45 +32,79 @@ def _get_quantiles(df, feats, filter_debug=True, filter_continue=True):
     if filter_continue:
         filter_strings += ['(c==0)']
     if filter_strings:
-        df = df.rename({"continue": "c"}, axis=1).query(' & '.join(filter_strings)).rename({"c": "continue"},
-                                                                                           axis=1)
+        df = df.rename({"continue": "c"}, axis=1).query(' & '.join(filter_strings)).rename({"c": "continue"}, axis=1)
     df = df[feats].replace(0.0, pd.NA)
     df = df.quantile(np.arange(0, 1, .01))
     quantiles = df.to_dict('list')
     return quantiles
 
 
-class FeatureQuantiles(object):
+class _FeatureQuantiles(object):
 
-    def __init__(self, df):
-        if type(df) is str:
-            df = pd.read_csv(path, index_col='sessID')
+    def __init__(self, arg):
+        if type(arg) is tuple:
+            nocont, withcont = arg
+            with open(nocont) as f:
+                self._nocont_quantiles = json.load(f)
+            with open(withcont) as f:
+                self._withcont_quantiles = json.load(f)
+            return
+
+        df = arg
         cols = df.select_dtypes(include="number").columns
-        self._nocont_quantiles = FeatureQuantiles._get_quantiles(df, cols, filter_continue=True)
-        self._withcont_quantiles = FeatureQuantiles._get_quantiles(df, cols, filter_continue=False)
+        self._nocont_quantiles = _get_quantiles(df, cols, filter_continue=True)
+        self._withcont_quantiles = _get_quantiles(df, cols, filter_continue=False)
 
-    def get_quantile(self, feat, value, include_continues=False, verbose=True, lo_to_hi=True):
+    @classmethod
+    def fromDF(cls, df: pd.DataFrame) -> 'FeatureQuantiles':
+        return cls(df)
+
+    @classmethod
+    def fromCSV(cls, csv_path: str) -> 'FeatureQuantiles':
+        df = pd.read_csv(csv_path, index_col='sessID')
+        return cls(df)
+
+    @classmethod
+    def fromJSONs(cls, no_continue_json_path: str, with_continue_json_path: str) -> 'FeatureQuantiles':
+        return cls((no_continue_json_path, with_continue_json_path))
+
+    def get_quantile(self, feat: str, value, include_continues: bool = False, verbose: bool = False,
+                     lo_to_hi: bool = True) -> int:
         quants = self._withcont_quantiles if include_continues else self._nocont_quantiles
         quantile = bisect_left(quants[feat], value)
         if verbose:
             compare_str = "higher" if lo_to_hi else "lower"
-            continue_str = "(including continues)" if include_continues else ""
+            continue_str = " (including continues)" if include_continues else ""
+            # print(quantile, len(quants[feat]))
+            high_quant = quants[feat][quantile] if quantile < len(quants[feat]) else None
+            low_quant = quants[feat][quantile - 1] if quantile > 0 else None
+            quantile = quantile if lo_to_hi else 100 - quantile
+            low_quant_offset = -1 if lo_to_hi else +1
+            quant_low_str = f'{quantile + low_quant_offset}%={low_quant}'
+            quant_high_str = f'{quantile}%={high_quant}'
+            quant_str = f"{quant_low_str} and {quant_high_str}" if lo_to_hi else f"{quant_high_str} and {quant_low_str}"
             print(
-                f'A {feat} of {value} units is {compare_str} than {quantile}% (the {quantile} percentile is {quants[feat][quantile]}) of sessions{continue_str}.')
+                f'A {feat} of {value} units is {compare_str} than {quantile}% (between {quant_str}) of sessions{continue_str}.')
         return quantile
 
+    def _export_quantiles(self, no_continue_json_path, with_continue_json_path):
+        with open(no_continue_json_path, 'w+') as f:
+            json.dump(self._nocont_quantiles, f, indent=4)
+        with open(with_continue_json_path, 'w+') as f:
+            json.dump(self._withcont_quantiles, f, indent=4)
 
-_featureQuantiles = FeatureQuantiles(
-    r"C:\Users\johnm\Development\FieldDay\opengamedata\data\LAKELAND\LAKELAND_20200501_to_20200530_de56000_proc\LAKELAND_20200501_to_20200530\LAKELAND_20200501_to_20200530_de56000_proc.csv")
+
+_featureQuantiles = _FeatureQuantiles.fromJSONs(no_continue_json_path="lakeland_data\quantiles_no_continue.json",
+                                               with_continue_json_path="lakeland_data\quantiles_with_continue.json")
 
 
-class FeatSeqPercent(object):
-    def __init__(self, feature_sequence: List[str], time_feat: str = 'sess_time_active'):
+class FeatSeqPercentModel(FeatureModel):
+    def __init__(self, feature_sequence: List[str], levels: List[int] = [], time_feat: str = 'sess_time_active'):
         self._feature_sequence = feature_sequence
         self._time_feat = time_feat
         super().__init__()
 
-    def calc(self, sess: dict, verbose: bool = False) -> Optional[float]:
+    def _eval(self, sess: dict, verbose: bool = False) -> Optional[float]:
         if sess['continue'] or sess['debug']:
             return None
         time_to_vals = [sess[f] for f in self._feature_sequence]
@@ -85,43 +123,43 @@ class FeatSeqPercent(object):
         return percentile_if_next_feat_now
 
 
-class FarmAchSeqPercent(FeatSeqPercent):
+class FarmAchSeqPercentModel(FeatSeqPercentModel):
     def __init__(self):
         use_feats = _get_sess_active_time_to_achievement_list(_FARM_ACHS)
         super().__init__(use_feats)
 
 
-class BloomAchSeqPercent(FeatSeqPercent):
+class BloomAchSeqPercentModel(FeatSeqPercentModel):
     def __init__(self):
         use_feats = _get_sess_active_time_to_achievement_list(_BLOOM_ACHS)
         super().__init__(use_feats)
 
 
-class MoneyAchSeqPercent(FeatSeqPercent):
+class MoneyAchSeqPercentModel(FeatSeqPercentModel):
     def __init__(self):
         use_feats = _get_sess_active_time_to_achievement_list(_MONEY_ACHS)
         super().__init__(use_feats)
 
 
-class PopAchSeqPercent(FeatSeqPercent):
+class PopAchSeqPercentModel(FeatSeqPercentModel):
     def __init__(self):
         use_feats = _get_sess_active_time_to_achievement_list(_POP_ACHS)
         super().__init__(use_feats)
 
 
-class ReqTutSeqPercent(FeatSeqPercent):
+class ReqTutSeqPercentModel(FeatSeqPercentModel):
     def __init__(self):
         use_feats = _get_sess_active_time_to_tutorial_list(_REQ_TUTORIALS)
         super().__init__(use_feats)
 
 
-class FeatVelocity(object):
-    def __init__(self, feat_list: List[str], time_feat='sess_time_active'):
+class FeatVelocityModel(FeatureModel):
+    def __init__(self, feat_list: List[str], levels: List[int] = [], time_feat='sess_time_active'):
         self._feat_list = feat_list
         self._time_feat = time_feat
         super().__init__()
 
-    def calc(self, sess: dict, verbose: bool = False) -> Optional[float]:
+    def _eval(self, sess: dict, verbose: bool = False) -> Optional[float]:
         if sess['continue'] or sess['debug']:
             return None
         time_to_vals = [sess[f] for f in self._feat_list]
@@ -138,31 +176,31 @@ class FeatVelocity(object):
         return time / num_reached_feats
 
 
-class FarmAchVelocity(FeatVelocity):
+class FarmAchVelocityModel(FeatVelocityModel):
     def __init__(self):
         use_feats = _get_sess_active_time_to_achievement_list(_FARM_ACHS)
         super().__init__(use_feats)
 
 
-class BloomAchVelocity(FeatVelocity):
+class BloomAchVelocityModel(FeatVelocityModel):
     def __init__(self):
         use_feats = _get_sess_active_time_to_achievement_list(_BLOOM_ACHS)
         super().__init__(use_feats)
 
 
-class MoneyAchVelocity(FeatVelocity):
+class MoneyAchVelocityModel(FeatVelocityModel):
     def __init__(self):
         use_feats = _get_sess_active_time_to_achievement_list(_MONEY_ACHS)
         super().__init__(use_feats)
 
 
-class PopAchVelocity(FeatVelocity):
+class PopAchVelocityModel(FeatVelocityModel):
     def __init__(self):
         use_feats = _get_sess_active_time_to_achievement_list(_POP_ACHS)
         super().__init__(use_feats)
 
 
-class ReqTutVelocity(FeatVelocity):
+class ReqTutVelocityModel(FeatVelocityModel):
     def __init__(self):
         use_feats = _get_sess_active_time_to_tutorial_list(_REQ_TUTORIALS)
         super().__init__(use_feats)

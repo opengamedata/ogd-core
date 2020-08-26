@@ -20,5 +20,65 @@
       "params": {
         "coefficient_map": {"sess_count_achievements": 0.5, "sess_count_deaths": 0.25}
       }
+    },
+    "BloomAchSeqPercentModel":{
+    "type": "BloomAchSeqPercent",
+      "levels": [],
+      "params":{
+      }
+    },
+  "BloomAchVelocityModel":{
+    "type": "BloomAchVelocity",
+      "levels": [],
+      "params":{
+      }
+    },
+  "MoneyAchSeqPercentModel":{
+    "type": "MoneyAchSeqPercent",
+      "levels": [],
+      "params":{
+      }
+    },
+  "MoneyAchVelocityModel":{
+    "type": "MoneyAchVelocity",
+      "levels": [],
+      "params":{
+      }
+    },
+  "PopAchSeqPercentModel":{
+    "type": "PopAchSeqPercent",
+      "levels": [],
+      "params":{
+      }
+    },
+  "PopAchVelocityModel":{
+    "type": "PopAchVelocity",
+      "levels": [],
+      "params":{
+      }
+    },
+  "FarmAchSeqPercentModel":{
+    "type": "FarmAchSeqPercent",
+      "levels": [],
+      "params":{
+      }
+    },
+  "FarmAchVelocityModel":{
+    "type": "FarmAchVelocity",
+      "levels": [],
+      "params":{
+      }
+    },
+  "ReqTutSeqPercentModel":{
+    "type": "ReqTutSeqPercent",
+      "levels": [],
+      "params":{
+      }
+    },
+  "ReqTutVelocityModel":{
+    "type": "ReqTutVelocity",
+      "levels": [],
+      "params":{
+      }
     }
 }
