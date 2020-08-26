@@ -17,8 +17,8 @@ class SequenceModel(Model):
 
     ## Abstract declaration of a function to perform calculation of a model results from a row.
     #
-    #  @param rows : A row of data for a session, which should be a mapping of column names to 
+    #  @param rows : A list of rows of data for a session, which should each be a mapping of column names to values.
     #  @return     : A result for the given row of data
     @abc.abstractmethod
-    def _eval(self, row: typing.Dict):
+    def _eval(self, rows: typing.List):
         pass
