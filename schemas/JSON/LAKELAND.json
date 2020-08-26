@@ -187,6 +187,8 @@
 
       "min_num_home_in_play": "Player feature - General: min number of home in play",
       "max_num_home_in_play": "Player feature - General: max number of home in play",
+      "min_num_grave_in_play": "Player feature - General: min number of grave in play",
+      "max_num_grave_in_play": "Player feature - General: max number of grave in play",
       "min_num_food_in_play": "Player feature - General: min number of food in play",
       "max_num_food_in_play": "Player feature - General: max number of food in play",
       "min_num_farm_in_play": "Player feature - General: min number of farm in play",
@@ -225,6 +227,8 @@
       "build_sequences": "Player feature - General: Build Sequences (as binary columns if they exist)[Home, Farm, Farm, Farm],[Home, Farm, Home, Farm], Etc.",
 
       "count_inspect_tile": "Player feature - Number of times the player: inspect a tile",
+      "count_inspect_farmbit": "Player feature - Number of times the player: inspect a farmbit",
+      "count_inspect_item": "Player feature - Number of times the player: inspect a item",
       "count_open_achievements": "Player feature - Number of times the player: look at achievements",
       "count_open_shop": "Player feature - Number of times the player: open the shop",
       "count_deaths": "Game feature - General: num deaths per sess",
@@ -507,6 +511,8 @@
       "sess_time_active_to_first_swim_emote":   "Session time to first emote type",
       "sess_time_to_first_sale_emote":   "Session time to first emote type (same as sess_time_to_first_sale)",
       "sess_time_active_to_first_sale_emote":   "Session time to first emote type (same as sess_time_to_first_sale)",
+      "sess_time_to_reset":   "Session time to first emote type (same as sess_time_to_first_sale)",
+      "sess_time_active_to_reset":   "Session time to first emote type (same as sess_time_to_first_sale)",
 
 
 
@@ -617,8 +623,8 @@
 
       "sess_min_num_home_in_play": "Player feature - General: min number of home in play",
       "sess_max_num_home_in_play": "Player feature - General: max number of home in play",
-      "sess_min_num_food_in_play": "Player feature - General: min number of food in play",
-      "sess_max_num_food_in_play": "Player feature - General: max number of food in play",
+      "sess_min_num_grave_in_play": "Player feature - General: min number of home in play",
+      "sess_max_num_grave_in_play": "Player feature - General: max number of home in play",
       "sess_min_num_farm_in_play": "Player feature - General: min number of farm in play",
       "sess_max_num_farm_in_play": "Player feature - General: max number of farm in play",
       "sess_min_num_fertilizer_in_play": "Player feature - General: min number of fertilizer in play",
@@ -631,8 +637,9 @@
       "sess_max_num_sign_in_play": "Player feature - General: max number of sign in play",
       "sess_min_num_road_in_play": "Player feature - General: min number of road in play",
       "sess_max_num_road_in_play": "Player feature - General: max number of road in play",
-      "sess_min_num_water_in_play": "Player feature - General: min number of water in play",
-      "sess_max_num_water_in_play": "Player feature - General: max number of water in play",
+
+      "sess_min_num_food_in_play": "Player feature - General: min number of food in play",
+      "sess_max_num_food_in_play": "Player feature - General: max number of food in play",
       "sess_min_num_poop_in_play": "Player feature - General: min number of poop in play",
       "sess_max_num_poop_in_play": "Player feature - General: max number of poop in play",
       "sess_min_num_milk_in_play": "Player feature - General: min number of milk in play",
@@ -666,6 +673,8 @@
       "sess_min_avg_lake_nutrition": "Game feature - General: ave lake nutrition",
       "sess_count_blooms": "Count of algae blooms",
       "sess_count_inspect_tile": "Player feature - Number of times the player: inspect a tile",
+      "sess_count_inspect_farmbit": "Player feature - Number of times the player: inspect a farmbit",
+      "sess_count_inspect_item": "Player feature - Number of times the player: inspect a item",
       "sess_count_open_achievements": "Player feature - Number of times the player: look at achievements",
       "sess_count_open_shop": "Player feature - Number of times the player: open the shop",
       "sess_count_deaths": "Game feature - General: num deaths per sess",
@@ -735,7 +744,7 @@
     "WINDOW_OVERLAP_SECONDS": 0,
     "MAX_SESSION_SECONDS": 2700,
     "IDLE_THRESH_SECONDS": 30,
-    "SUPPORTED_VERS": [13, 14, 15]
+    "SUPPORTED_VERS": [13, 14, 15, 18]
 
   }
 
