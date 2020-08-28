@@ -1069,7 +1069,7 @@ class LakelandExtractor(Extractor):
         d = event_data_complex_parsed
         _foods = d["food"]  # gg.food | Current amount of food available on board  |
         _farmbits = d["farmbit"]  # gg.farmbits.length | Current number of farmbits on board  |
-        _foodrate = d["foodrate"]  # gg.food/gg.farmbits.length | Food available per farmbit  |
+        _foodrate = d["food_perfarmbit"]  # gg.food/gg.farmbits.length | Food available per farmbit  |
 
         #helpers
         # set class variables
@@ -1100,7 +1100,7 @@ class LakelandExtractor(Extractor):
         # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
         _lake_pos_tile = d["lake_pos_tile"]  # gg.lake_nutes.length | Number of lake tiles on the board  |
-        _totalnutrition = d["totalnutrition"]  # gg.lake_nutes.reduce((a,b) => a + b, 0) | Total nutrition of the lake
+        _total_nutrition = d["total_nutrition"]  # gg.lake_nutes.reduce((a,b) => a + b, 0) | Total nutrition of the lake
 
         #helpers
         # set class variables
@@ -1116,7 +1116,7 @@ class LakelandExtractor(Extractor):
         # set class variables
         # set features
 
-        item_type_str = self._ENUM_TO_STR["ITEM TYPE"][_item]
+        item_type_str = self._ENUM_TO_STR["ITEM TYPE"][_item[2]]
         # items_on_screen[item_type_str] -= 1
 
         self.feature_time_since_start(f"time_to_first_{item_type_str}_sale")
