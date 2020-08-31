@@ -21,7 +21,7 @@ from realtime.RTServer import RTServer
 from realtime.SimRTServer import SimRTServer
 
 try:
-    # print("test return")
+    # print("{\"msg\": \"test return\"}")
     # quit()
 
     # set up other global vars as needed:
