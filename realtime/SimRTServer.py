@@ -59,6 +59,7 @@ class SimRTServer:
             # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
         except Exception as err:
             print(f"got error in SimRTServer.py: {str(err)}", file=sys.stderr)
+            traceback.print_tb(err.__traceback__, file=sys.stderr)
             utils.Logger.toFile(f"Got an error in getAllActiveSessions: {str(err)}", logging.ERROR)
             raise err
         finally:
@@ -85,7 +86,6 @@ class SimRTServer:
             utils.Logger.toFile(f"Getting all features for session {sess_id}", logging.INFO)
             request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
             session_data, game_table = SimRTServer._fetchSessionData(sess_id, settings=settings, request=request, sim_time=sim_time)
-            game_table = GameTable.FromDB(db=db, settings=settings, request=request)
             if len(session_data) > 0:
                 # return "Line 88: Killing features function in realtime.cgi."
                 schema = Schema(schema_name=f"{game_id}.json")
@@ -124,12 +124,12 @@ class SimRTServer:
                 else:
                     ret_val = all_features
             else:
-                print("error, empty session!")
-                utils.Logger.toFile(f"error, empty session!", logging.ERROR)
+                print(f"Error, empty session {sess_id}!", file=sys.stderr)
+                utils.Logger.toFile(f"error, empty session {sess_id}!", logging.ERROR)
                 ret_val = {"error": "Empty Session!"}
         except Exception as err:
-            print(f"got error in SimRTServer.py: {str(err)}")
-            traceback.print_tb(err.__traceback__)
+            print(f"got error in SimRTServer.py: {str(err)}", file=sys.stderr)
+            traceback.print_tb(err.__traceback__, file=sys.stderr)
             utils.Logger.toFile(f"Got an error in getFeaturesBySessID: {str(err)}", logging.ERROR)
             ret_val = {"error": "Got error in SimRTServer!"}
             raise err
@@ -162,7 +162,7 @@ class SimRTServer:
             cur_level = cur_level_raw[0][0]
             idle_time = (datetime.now() - cur_level_raw[0][1]).seconds
         except Exception as err:
-            #print(f"got error in SimRTServer.py: {str(err)}")
+            print(f"got error in SimRTServer.py: {str(err)}", file=sys.stderr)
             utils.Logger.toFile(f"Got an error in getGameProgress: {str(err)}", logging.ERROR)
             raise err
         finally:
