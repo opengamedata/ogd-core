@@ -6,7 +6,7 @@ import numpy as np
 import os
 import json
 from datetime import timedelta
-from models import FeatureModel
+from models.FeatureModel import FeatureModel
 
 _POP_ACHS = "exist group town city".split()
 _FARM_ACHS = "farmer farmers farmtown megafarm".split()
@@ -94,8 +94,8 @@ class _FeatureQuantiles(object):
             json.dump(self._withcont_quantiles, f, indent=4)
 
 
-_featureQuantiles = _FeatureQuantiles.fromJSONs(no_continue_json_path="lakeland_data\quantiles_no_continue.json",
-                                               with_continue_json_path="lakeland_data\quantiles_with_continue.json")
+_featureQuantiles = _FeatureQuantiles.fromJSONs(no_continue_json_path="models/lakeland_data/quantiles_no_continue.json",
+                                               with_continue_json_path="models/lakeland_data/quantiles_with_continue.json")
 
 
 class FeatSeqPercentModel(FeatureModel):
@@ -205,7 +205,11 @@ class ReqTutVelocityModel(FeatVelocityModel):
         use_feats = _get_sess_active_time_to_tutorial_list(_REQ_TUTORIALS)
         super().__init__(use_feats)
 
-
-
-
+feature_models = [
+    FarmAchVelocityModel, FarmAchSeqPercentModel,
+    BloomAchVelocityModel, BloomAchSeqPercentModel,
+    MoneyAchVelocityModel, MoneyAchSeqPercentModel,
+    PopAchVelocityModel, PopAchSeqPercentModel,
+    ReqTutVelocityModel, ReqTutSeqPercentModel
+]
 
