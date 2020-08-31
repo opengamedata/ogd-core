@@ -196,7 +196,6 @@ class RTServer:
             ret_val = None
         finally:
             return ret_val
-
     ## Handler to get a list of all prediction names for a given game level.
     #  This is based on the assumption that models for the game are stored in a file
     #  with naming format game_id_models.json.
@@ -256,7 +255,6 @@ class RTServer:
             # traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", logging.ERROR)
             print(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", file=sys.stderr)
-
             ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
         finally:
