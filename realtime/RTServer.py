@@ -359,10 +359,8 @@ class RTServer:
             # Example line of code doing the conversion to list of tuples is here:
             # return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
             # Basically, use itertuples(index=False, name=None) to convert from series to tuples, and wrap everything in list(...)
-            return list(
-                data[(data['session_id'] == session_id)].sort_values(
-                    "session_n", axis=0, ascending=True, inplace=True, na_position='last').itertuples(
-                    index=False, name=None))
+            queried_data = data[(data['session_id'] == session_id)].sort_values("session_n", axis=0, ascending=True, inplace=True, na_position='last')
+            session_data = list(queried_data.itertuples(index=False, name=None))
 
         return session_data, game_table
 
