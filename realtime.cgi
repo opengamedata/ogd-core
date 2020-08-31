@@ -82,7 +82,7 @@ try:
     elif method == "sim_predictions_by_sessID":
         game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
-        predictions = request.getvalue("predictions")
+        predictions = request.getvalue("predictions").split(",")
         sim_time = int(request.getvalue("sim_time"))
         body = SimRTServer.getPredictionsBySessID(sess_id=sess_id, game_id=game_id, sim_time=sim_time, predictions=predictions)
 
