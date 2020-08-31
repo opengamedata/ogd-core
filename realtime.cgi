@@ -11,6 +11,7 @@ import cgitb
 import json
 import logging
 import math
+import sys
 import traceback
 from datetime import datetime
 # # import local files
@@ -89,7 +90,7 @@ try:
     print(result)
 except Exception as err:
     msg = f"{type(err)} {str(err)}"
-    utils.Logger.toPrint(f"Error in realtime script! {msg}, traceback:\n{traceback.format_exc()}", level=logging.ERROR)
-    traceback.print_tb(err.__traceback__)
+    print(f"Error in realtime script! {msg}, traceback:\n{traceback.format_exc()}", file=sys.stderr)
+    traceback.print_tb(err.__traceback__, file=sys.stderr)
     utils.Logger.toFile(f"Error in realtime script! {msg}, traceback:\n{traceback.format_exc()}", level=logging.ERROR)
     #print(f"Traceback: {traceback.print_stack(limit=10)}")

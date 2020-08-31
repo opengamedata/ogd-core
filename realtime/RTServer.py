@@ -4,6 +4,7 @@ import math
 import pandas as pd
 import random
 import re
+import sys
 import traceback
 import typing
 from datetime import datetime, timedelta
@@ -125,6 +126,7 @@ class RTServer:
             # print(f"got error in RTServer.py: {msg}")
             # traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(f"Got an error in getFeaturesBySessID: {msg}", logging.ERROR)
+            print(f"Error: Got an error in getFeaturesBySessID: {msg}", file=sys.stderr)
             # traceback.print_tb(err.__traceback__)
             ret_val = {"error": "Got error in RTServer!"}
             raise err
@@ -171,6 +173,7 @@ class RTServer:
         except Exception as err:
             #print(f"got error in RTServer.py: {str(err)}")
             utils.Logger.toFile(f"Got an error in getGameProgress: {type(err)} {str(err)}", logging.ERROR)
+            print(f"Error: Got an error in getGameProgress: {type(err)} {str(err)}", file=sys.stderr)
             raise err
         finally:
             # utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
@@ -189,6 +192,7 @@ class RTServer:
         except Exception as err:
             utils.Logger.toFile(f"Got exception in getFeatureNamesByGame: {type(err)} {str(err)}", logging.ERROR)
             utils.Logger.toFile("Had to return None", logging.WARNING)
+            print(f"Got exception in getFeatureNamesByGame: {type(err)} {str(err)}", file=sys.stderr)
             ret_val = None
         finally:
             return ret_val
@@ -251,7 +255,7 @@ class RTServer:
             # print(f"got error in RTServer.py: {str(err)}")
             # traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", logging.ERROR)
-            utils.Logger.toStdOut(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", logging.ERROR)
+            print(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", file=sys.stderr)
 
             ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
@@ -299,7 +303,7 @@ class RTServer:
                 #---
             except Exception as err:
                 msg = f"{type(err)} {str(err)}"
-                print(f"got error in RTServer.py: {msg}")
+                print(f"Got an error in _fetchActiveSessions: {msg}", file=sys.stderr)
                 utils.Logger.toFile(f"Got an error in _fetchActiveSessions: {msg}", logging.ERROR)
                 raise err
             finally:
@@ -344,8 +348,8 @@ class RTServer:
                                                 sort_columns=["session_n", "client_time"])
             except Exception as err:
                 msg = f"{type(err)} {str(err)}"
-                print(f"got error in RTServer.py: {msg}")
-                traceback.print_tb(err.__traceback__)
+                print(f"Got an error in _fetchSessionData: {msg}", file=sys.stderr)
+                traceback.print_tb(err.__traceback__, file=sys.stderr)
                 utils.Logger.toFile(f"Got an error in _fetchSessionData: {msg}", logging.ERROR)
                 # traceback.print_tb(err.__traceback__)
                 raise err
