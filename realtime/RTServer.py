@@ -239,8 +239,10 @@ class RTServer:
                         features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
                         result_list = model.Eval([features_parsed])
                     elif model.GetInputType() == ModelInputType.SEQUENCE:
-                        # TODO: support "sequence" types of model
-                        result_list = [-1]
+                        # first, get the list of events for the session.
+                        request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
+                        session_data, game_table = RTServer._fetchSessionData(sess_id, settings=settings, request=request)
+                        result_list = model.Eval(session_data)
                     ret_val[sess_id] = {"name": model_name, "value": str(result_list)}
                 else:
                     ret_val[sess_id] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
