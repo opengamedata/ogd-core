@@ -249,7 +249,6 @@ class RTServer:
                     ret_val[sess_id] = {"name": model_name, "value": str(result_list)}
                 else:
                     ret_val[sess_id] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
-
         except Exception as err:
             # print(f"got error in RTServer.py: {str(err)}")
             # traceback.print_tb(err.__traceback__)
