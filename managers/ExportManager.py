@@ -59,12 +59,12 @@ class ExportManager:
             utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.game_id}", logging.WARNING)
             self._game_id = request.game_id
         else:
+            tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
+            if db is None or tunnel is None:
+                utils.Logger.toFile(f"Could not complete request {str(request)}, database connection failed.", logging.ERROR)
+                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+                return
             try:
-                tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
-                if db is None or tunnel is None:
-                    utils.Logger.toFile(f"Could not complete request {str(request)}, database connection failed.", logging.ERROR)
-                    utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-                    return
                 game_table: GameTable = GameTable.FromDB(db=db, settings=self._settings, request=request)
                 date_range = (request.start_date, request.end_date)
                 data_manager = SQLDataManager(game_id=request.game_id, game_schema=game_schema, settings=settings)
