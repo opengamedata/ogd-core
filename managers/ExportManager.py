@@ -59,21 +59,20 @@ class ExportManager:
             utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.game_id}", logging.WARNING)
             self._game_id = request.game_id
         else:
-            tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
-            if db is None or tunnel is None:
-                utils.Logger.toFile(f"Could not complete request {str(request)}, database connection failed.", logging.ERROR)
-                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-                return
             try:
-                game_table: GameTable = GameTable.FromDB(db=db, settings=self._settings, request=request)
-                date_range = (request.start_date, request.end_date)
-                data_manager = SQLDataManager(game_id=request.game_id, game_schema=game_schema, settings=settings)
-                parse_success: bool = self._getAndParseData(data_manager=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files)
-                if parse_success:
-                    utils.Logger.toStdOut(f"Successfully completed request {str(request)}.", logging.INFO)
-                    utils.Logger.toFile(f"Successfully completed request {str(request)}.", logging.INFO)
+                tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
+                if db is not None and tunnel is not None:
+                    game_table: GameTable = GameTable.FromDB(db=db, settings=self._settings, request=request)
+                    date_range = (request.start_date, request.end_date)
+                    data_manager = SQLDataManager(game_id=request.game_id, game_schema=game_schema, settings=settings)
+                    parse_success: bool = self._getAndParseData(data_manager=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files)
+                    if parse_success:
+                        utils.Logger.toStdOut(f"Successfully completed request {str(request)}.", logging.INFO)
+                        utils.Logger.toFile(f"Successfully completed request {str(request)}.", logging.INFO)
+                    else:
+                        utils.Logger.toFile(f"Could not complete request {str(request)}", logging.ERROR)
                 else:
-                    utils.Logger.toFile(f"Could not complete request {str(request)}", logging.ERROR)
+                    utils.Logger.toFile(f"Could not complete request {str(request)}, database connection failed.", logging.ERROR)
             except Exception as err:
                 msg = f"{type(err)} {str(err)}"
                 utils.SQL.server500Error(msg)
