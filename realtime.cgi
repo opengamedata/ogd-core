@@ -11,6 +11,7 @@ import cgitb
 import json
 import logging
 import math
+import sys
 import traceback
 from datetime import datetime
 # # import local files
@@ -20,7 +21,7 @@ from realtime.RTServer import RTServer
 from realtime.SimRTServer import SimRTServer
 
 try:
-    # print("test return")
+    # print("{\"msg\": \"test return\"}")
     # quit()
 
     # set up other global vars as needed:
@@ -81,7 +82,7 @@ try:
     elif method == "sim_predictions_by_sessID":
         game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
-        predictions = request.getvalue("predictions")
+        predictions = request.getvalue("predictions").split(",")
         sim_time = int(request.getvalue("sim_time"))
         body = SimRTServer.getPredictionsBySessID(sess_id=sess_id, game_id=game_id, sim_time=sim_time, predictions=predictions)
 
@@ -89,7 +90,7 @@ try:
     print(result)
 except Exception as err:
     msg = f"{type(err)} {str(err)}"
-    utils.Logger.toPrint(f"Error in realtime script! {msg}, traceback:\n{traceback.format_exc()}", level=logging.ERROR)
-    traceback.print_tb(err.__traceback__)
+    print(f"Error in realtime script! {msg}, traceback:\n{traceback.format_exc()}", file=sys.stderr)
+    traceback.print_tb(err.__traceback__, file=sys.stderr)
     utils.Logger.toFile(f"Error in realtime script! {msg}, traceback:\n{traceback.format_exc()}", level=logging.ERROR)
     #print(f"Traceback: {traceback.print_stack(limit=10)}")

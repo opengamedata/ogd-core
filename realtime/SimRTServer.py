@@ -3,6 +3,7 @@ import logging
 import math
 import random
 import re
+import sys
 import traceback
 import typing
 from datetime import datetime, timedelta
@@ -16,6 +17,8 @@ from feature_extractors.WaveExtractor import WaveExtractor
 from feature_extractors.LakelandExtractor import LakelandExtractor
 from GameTable import GameTable
 from managers.ProcManager import ProcManager
+from models.Model import *
+from realtime.ModelManager import ModelManager
 from schemas.Schema import Schema
 
 ## Class to handle API calls for the realtime page.
@@ -23,10 +26,11 @@ from schemas.Schema import Schema
 class SimRTServer:
 
     # Load settings, set up consts.
+    ssh_settings = settings["ssh_config"]
+    rt_settings  = settings["realtime_config"]
     db_settings = settings["db_sim_config"]
     DB_NAME_DATA = db_settings["DB_NAME_DATA"]
     DB_TABLE = db_settings["table"]
-    ssh_settings = settings["ssh_config"]
 
     ## Handler to retrieve all active sessions for a given game.
     #  If the require_player_id flag is set to true, only players with a value
@@ -40,21 +44,9 @@ class SimRTServer:
     @staticmethod
     def getAllActiveSessions(game_id: str, require_player_id: bool, sim_time: int) -> typing.Dict:
         # start_time = datetime.now()
-        tunnel,db = utils.SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
         ret_val = {}
         try:
-            cursor = db.cursor()
-            active_window = 60*5 # 5 minutes is window to look for active players.
-            start_time = datetime.now() - timedelta(minutes=5)
-            player_id_filter = "AND `player_id` IS NOT NULL" if require_player_id else ""
-            filt = f"`app_id`='{game_id}' AND `time_elapsed` < {sim_time} AND `time_elapsed` >= {max(0, sim_time-active_window)} {player_id_filter}"
-            active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
-                                                   db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
-                                                   columns=["session_id", "player_id"], filter=filt,\
-                                                   sort_columns=["session_id"], distinct=True)
-            #+++
-            utils.Logger.toFile(f"active_sessions_raw: {active_sessions_raw}", logging.DEBUG)
-            #---
+            active_sessions_raw = SimRTServer._fetchActiveSessions(game_id=game_id, require_player_id=require_player_id, sim_time=sim_time)
             for item in active_sessions_raw:
                 sess_id = item[0]
                 player_id = item[1]
@@ -64,16 +56,13 @@ class SimRTServer:
                     max_level = prog["max_level"]
                     cur_level = prog["cur_level"]
                     ret_val[sess_id] = {"session_id":sess_id, "player_id":item[1], "max_level":max_level, "cur_level":cur_level, "idle_time":idle_time}
-            #+++
-            utils.Logger.toFile(f"active sessions ready: {ret_val}", logging.DEBUG)
-            #---
             # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
         except Exception as err:
-            print(f"got error in SimRTServer.py: {str(err)}")
+            print(f"got error in SimRTServer.py: {str(err)}", file=sys.stderr)
+            traceback.print_tb(err.__traceback__, file=sys.stderr)
             utils.Logger.toFile(f"Got an error in getAllActiveSessions: {str(err)}", logging.ERROR)
             raise err
         finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return ret_val
 
     ## Handler to retrieve features for a given session.
@@ -89,22 +78,15 @@ class SimRTServer:
     #          If a features argument was given, only returns the corresponding features.
     @staticmethod
     def getFeaturesBySessID(sess_id: str, game_id: str, sim_time: int, features: typing.List = None) -> typing.Dict:
-        tunnel,db = utils.SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
         ret_val: typing.Dict = {}
         # if we got a features list, it'll be a string that we must split.
         if features is not None and type(features) == str:
             features = features.split(",")
         try:
             utils.Logger.toFile(f"Getting all features for session {sess_id}", logging.INFO)
-            cursor = db.cursor()
-            filt = f"`session_id`='{sess_id}' AND `time_elapsed` < {sim_time}"
-            session_data = utils.SQL.SELECT(cursor=cursor,
-                                            db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
-                                            filter=filt,\
-                                            sort_columns=["session_n", "client_time"])
+            request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
+            session_data, game_table = SimRTServer._fetchSessionData(sess_id, settings=settings, request=request, sim_time=sim_time)
             if len(session_data) > 0:
-                request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
-                game_table = GameTable.FromDB(db=db, settings=settings, request=request)
                 # return "Line 88: Killing features function in realtime.cgi."
                 schema = Schema(schema_name=f"{game_id}.json")
                 extractor: Extractor
@@ -142,17 +124,16 @@ class SimRTServer:
                 else:
                     ret_val = all_features
             else:
-                print("error, empty session!")
-                utils.Logger.toFile(f"error, empty session!", logging.ERROR)
+                print(f"Error, empty session {sess_id}!", file=sys.stderr)
+                utils.Logger.toFile(f"error, empty session {sess_id}!", logging.ERROR)
                 ret_val = {"error": "Empty Session!"}
         except Exception as err:
-            print(f"got error in SimRTServer.py: {str(err)}")
-            traceback.print_tb(err.__traceback__)
+            print(f"got error in SimRTServer.py: {str(err)}", file=sys.stderr)
+            traceback.print_tb(err.__traceback__, file=sys.stderr)
             utils.Logger.toFile(f"Got an error in getFeaturesBySessID: {str(err)}", logging.ERROR)
-            ret_val = {"error": "Got error in SimRTServer!"}
+            ret_val = {"error": f"Got error in SimRTServer! {str(err)}"}
             raise err
         finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return {sess_id:ret_val}
 
     ## Function to retrieve the game progress in a session.
@@ -181,7 +162,7 @@ class SimRTServer:
             cur_level = cur_level_raw[0][0]
             idle_time = (datetime.now() - cur_level_raw[0][1]).seconds
         except Exception as err:
-            #print(f"got error in SimRTServer.py: {str(err)}")
+            print(f"got error in SimRTServer.py: {str(err)}", file=sys.stderr)
             utils.Logger.toFile(f"Got an error in getGameProgress: {str(err)}", logging.ERROR)
             raise err
         finally:
@@ -215,11 +196,13 @@ class SimRTServer:
     def getPredictionNamesByGameLevel(game_id: str, level: int) -> typing.List:
         ret_val: typing.List
 
-        models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
-        if level in models.keys():
-            ret_val = models[level].keys()
-        else:
+        # models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
+        model_mgr = ModelManager(game_id)
+        models = model_mgr.ListModels(level)
+        if len(models) < 1:
             ret_val = ["No models for given level"]
+        else:
+            ret_val = models
         return ret_val
 
     @staticmethod
@@ -232,26 +215,34 @@ class SimRTServer:
             cur_level = prog["cur_level"]
             idle_time = prog["idle_time"]
 
-            models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
             ret_val = {}
             ret_val["max_level"] = {"name": "Max Level", "value": max_level}
             ret_val["cur_level"] = {"name": "Current Level", "value": cur_level}
             ret_val["seconds_inactive"] = {"name": "Seconds Inactive", "value": idle_time}
-            features_raw = SimRTServer.getFeaturesBySessID(sess_id, game_id, sim_time=sim_time)
-            features_parsed = SimRTServer._parseRawToDict(features_raw[sess_id])
-            model_level = str(max(1, min(8, cur_level)))
-            for model in models[model_level].keys():
-                raw_val = SimRTServer.EvaluateLogRegModel(models[model_level][model], features_parsed)
-                name: str
-                if "display_name" in models[model_level][model].keys():
-                    name = models[model_level][model]["display_name"]
-                else:
-                    name = model
-                ret_val[model] = {"name": name, "value": str(round(raw_val * 100)) + "%"}
+            # model_level = str(max(1, min(8, cur_level)))
+            # models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
+            model_mgr = ModelManager(game_id)
+            # NOTE: We assume current level is the one to use. If player back-tracks, you may end up with "earlier" model relative to max level.
+            model_list = model_mgr.ListModels(cur_level)
 
+            for model_name in predictions:
+                if model_name in model_list:
+                    model = model_mgr.LoadModel(model_name=model_name)
+                    if model.GetInputType() == ModelInputType.FEATURE:
+                        features_raw = SimRTServer.getFeaturesBySessID(sess_id, game_id, sim_time=sim_time)
+                        features_parsed = SimRTServer._parseRawToDict(features_raw[sess_id])
+                        result_list = model.Eval([features_parsed])
+                    elif model.GetInputType() == ModelInputType.SEQUENCE:
+                        request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
+                        session_data, game_table = SimRTServer._fetchSessionData(sess_id, settings=settings, request=request)
+                        result_list = model.Eval(session_data)
+                    ret_val[sess_id] = {"name": model_name, "value": str(result_list)}
+                else:
+                    ret_val[sess_id] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
         except Exception as err:
-            #print(f"got error in SimRTServer.py: {str(err)}")
-            utils.Logger.toFile(f"Got an error in getPredictionsBySessID: {str(err)}", logging.ERROR)
+            utils.Logger.toFile(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", logging.ERROR)
+            print(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", file=sys.stderr)
+            traceback.print_tb(err.__traceback__, file=sys.stderr)
             ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
         finally:
@@ -273,39 +264,63 @@ class SimRTServer:
                 ret_val[feature_name] = features_raw[feature_name]
         return ret_val
 
-    ## Function to evaluate a logistic regression model, creating a prediction.
-    #  This is based around the equation for probability of Y=1, denoted as p:
-    #  p = 1 / (1 + e^-logit(X)),
-    #  where X is the input data used to predict Y, and
-    #  logit(X) = b0 + b1*x1 + b2*x2 + ... + bn*xn,
-    #  where bi are the coefficients.
-    #  Based on information at https://www.medcalc.org/manual/logistic_regression.php
     @staticmethod
-    def EvaluateLogRegModel(model, feature_data) -> float:
-        logit = 0
-        for coeff in model.keys():
-            # case where coefficient is a normal feature
-            if coeff in feature_data.keys():
-                try:
-                    logit += model[coeff] * feature_data[coeff]
-                except Exception as err:
-                    print(f"Got error when trying to add {coeff} term. Value is {feature_data[coeff]}. Type is {type(feature_data[coeff])}")
-                    raise err
-            # enum case, where we have coefficient = feature_name.enum_val
-            elif re.search("\w+\.\w+", coeff):
-                pieces = coeff.split(".")
-                if pieces[0] in feature_data.keys():
-                    logit += model[coeff] * (1.0 if feature_data[pieces[0]] == pieces[1] else 0.0)
-                else:
-                    print(f"Found an element of model that is not a feature: {coeff}")
-            # specific cases, where we just hardcode a thing that must be consistent across all models.
-            elif coeff == "Intercept":
-                logit += model[coeff]
-            elif coeff == "display_name":
-                pass
-            # default case, print a line.
-            else:
-                print(f"Found an element of model that is not a feature: {coeff}")
-        # print(f"logit: {logit}")
-        p = 1 / (1 + math.exp(-logit))
-        return p
+    def _fetchActiveSessions(game_id, require_player_id, sim_time):
+        if SimRTServer.rt_settings["data_source"] == "DB":
+            try:
+                tunnel,db = utils.SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
+                #+++
+                start = datetime.now()
+                #---
+                cursor = db.cursor()
+                active_window = 60*5 # 5 minutes is window to look for active players.
+                player_id_filter = "AND `player_id` IS NOT NULL" if require_player_id else ""
+                filt = f"`app_id`='{game_id}' AND `time_elapsed` < {sim_time} AND `time_elapsed` >= {max(0, sim_time-active_window)} {player_id_filter}"
+                active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
+                                                    db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
+                                                    columns=["session_id", "player_id"], filter=filt,\
+                                                    sort_columns=["session_id"], distinct=True)
+                #+++
+                end = datetime.now()
+                time_delta = end - start
+                minutes = math.floor(time_delta.total_seconds()/60)
+                seconds = time_delta.total_seconds() % 60
+                utils.Logger.toFile(f"Total time taken to fetch active sessions from database: {minutes} min, {seconds} sec", logging.DEBUG)
+                #---
+            except Exception as err:
+                msg = f"{type(err)} {str(err)}"
+                print(f"Got an error in _fetchActiveSessions: {msg}", file=sys.stderr)
+                utils.Logger.toFile(f"Got an error in _fetchActiveSessions: {msg}", logging.ERROR)
+                raise err
+            finally:
+                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+        elif SimRTServer.rt_settings["data_source"] == "FILE":
+            raise Exception("not supported!") # TODO: remove this line after implementing the queries.
+        return active_sessions_raw
+    
+    @staticmethod
+    def _fetchSessionData(session_id, settings, request, sim_time):
+        session_data = []
+        if SimRTServer.rt_settings["data_source"] == "DB":
+            try:
+                tunnel,db = utils.SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
+                game_table = GameTable.FromDB(db=db, settings=settings, request=request)
+                utils.Logger.toFile(f"Getting all features for session {session_id}", logging.INFO)
+                cursor = db.cursor()
+                filt = f"`session_id`='{sess_id}' AND `time_elapsed` < {sim_time}"
+                session_data = utils.SQL.SELECT(cursor=cursor,
+                                                db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
+                                                filter=filt,\
+                                                sort_columns=["session_n", "client_time"])
+            except Exception as err:
+                msg = f"{type(err)} {str(err)}"
+                print(f"Got an error in _fetchSessionData: {msg}", file=sys.stderr)
+                traceback.print_tb(err.__traceback__, file=sys.stderr)
+                utils.Logger.toFile(f"Got an error in _fetchSessionData: {msg}", logging.ERROR)
+                raise err
+            finally:
+                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+        elif SimRTServer.rt_settings["data_source"] == "FILE":
+            raise Exception("not supported!") # TODO: remove this line after implementing the queries.
+
+        return session_data, game_table
