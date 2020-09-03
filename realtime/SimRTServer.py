@@ -128,11 +128,11 @@ class SimRTServer:
                 utils.Logger.toFile(f"error, empty session {sess_id}!", logging.ERROR)
                 ret_val = {"error": "Empty Session!"}
         except Exception as err:
-            print(f"got error in SimRTServer.py: {str(err)}", file=sys.stderr)
-            traceback.print_tb(err.__traceback__, file=sys.stderr)
+            utils.Logger.toStdOut(f"got error in SimRTServer.py: {str(err)}", logging.ERROR)
+            traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(f"Got an error in getFeaturesBySessID: {str(err)}", logging.ERROR)
-            ret_val = {"error": f"Got error in SimRTServer! {str(err)}"}
-            raise err
+            ret_val = {"error": f"Got error in SimRTServer! sess_id={sess_id}, err={str(err)}, tb={traceback.format_exc()}"}
+            #raise err
         finally:
             return {sess_id:ret_val}
 
@@ -236,9 +236,9 @@ class SimRTServer:
                         request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
                         session_data, game_table = SimRTServer._fetchSessionData(sess_id, settings=settings, request=request)
                         result_list = model.Eval(session_data)
-                    ret_val[sess_id] = {"name": model_name, "value": str(result_list)}
+                    ret_val[model_name] = {"name": model_name, "value": str(result_list)}
                 else:
-                    ret_val[sess_id] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
+                    ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
         except Exception as err:
             utils.Logger.toFile(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", logging.ERROR)
             print(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", file=sys.stderr)
@@ -307,7 +307,7 @@ class SimRTServer:
                 game_table = GameTable.FromDB(db=db, settings=settings, request=request)
                 utils.Logger.toFile(f"Getting all features for session {session_id}", logging.INFO)
                 cursor = db.cursor()
-                filt = f"`session_id`='{sess_id}' AND `time_elapsed` < {sim_time}"
+                filt = f"`session_id`='{session_id}' AND `time_elapsed` < {sim_time}"
                 session_data = utils.SQL.SELECT(cursor=cursor,
                                                 db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
                                                 filter=filt,\
