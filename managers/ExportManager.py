@@ -61,7 +61,7 @@ class ExportManager:
         else:
             try:
                 tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
-                if db is not None and tunnel is not None:
+                if db is not None:
                     game_table: GameTable = GameTable.FromDB(db=db, settings=self._settings, request=request)
                     date_range = (request.start_date, request.end_date)
                     data_manager = SQLDataManager(game_id=request.game_id, game_schema=game_schema, settings=settings)
