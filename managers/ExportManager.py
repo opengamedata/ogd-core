@@ -70,6 +70,7 @@ class ExportManager:
                         utils.Logger.toStdOut(f"Successfully completed request {str(request)}.", logging.INFO)
                         utils.Logger.toFile(f"Successfully completed request {str(request)}.", logging.INFO)
                     else:
+                        utils.Logger.toStdOut(f"Could not complete request {str(request)}", logging.ERROR)
                         utils.Logger.toFile(f"Could not complete request {str(request)}", logging.ERROR)
                 else:
                     utils.Logger.toFile(f"Could not complete request {str(request)}, database connection failed.", logging.ERROR)
