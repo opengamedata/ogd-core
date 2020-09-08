@@ -124,10 +124,10 @@ class LakelandExtractor(Extractor):
             if len(self.debug_strs) > 10:
                 debug_strs = self.debug_strs[:5] + ['...'] + self.debug_strs[-5:]
             else:
-                debug_strs = self.debug_strs;
+                debug_strs = self.debug_strs
             exc_type, exc_value, exc_traceback = sys.exc_info()
             for place in [utils.Logger.toFile, utils.Logger.toStdOut]:
-                place('\n'.join(debug_strs), logging.ERROR)
+                place('\n'.join(debug_strs), logging.DEBUG)
                 place('\n'.join(traceback.format_exception(exc_type, exc_value, exc_traceback)), logging.ERROR)
             if True:
                 pass
@@ -963,7 +963,7 @@ class LakelandExtractor(Extractor):
         is_neutral = affect == 0
         is_negative = affect == -1
         if(self._num_farmbits) < 1:
-            utils.Logger.toFile(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.", logging.WARN)
+            # utils.Logger.toFile(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.", logging.WARN)
             self.log_warning(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.")
             self._num_farmbits = 1
 
