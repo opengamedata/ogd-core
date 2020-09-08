@@ -1,5 +1,7 @@
 from zipfile import ZipFile
 import pandas as pd
+from collections.abc import Mapping
+from functools import partial
 
 
 # paste from feature_utils.py
@@ -56,3 +58,24 @@ def getLogDFbyPaths(proc_paths, zipped=True, index_cols=['sessionID'], sep=','):
         else:
             df[index_cols[0]] = [x for x in df.index]
     return df, metadata
+
+
+class LazyDict(Mapping):
+
+    def __init__(self, function, *function_args, **function_kwargs):
+        self.function = partial(function, *function_args, **function_kwargs)
+        self._d = {}
+        super().__init__()
+
+    def __getitem__(self, item):
+        val = self._d.get(item)
+        if val is None:
+            val = self.function(item)
+            self._d[item] = val
+        return val
+
+    def __len__(self):
+        return len(self._d)
+
+    def __iter__(self):
+        return iter(self._d)

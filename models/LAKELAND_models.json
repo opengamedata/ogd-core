@@ -21,63 +21,150 @@
       }
     },
     "BloomAchSeqPercentModel":{
-    "type": "BloomAchSeqPercent",
-      "levels": [],
-      "params":{
-      }
+    "type": "FeatSeqPercent",
+    "levels": [],
+    "params": {
+        "sequence": [
+            "sess_time_active_to_bloom_achievement",
+            "sess_time_active_to_bigbloom_achievement",
+            "sess_time_active_to_hugebloom_achievement",
+            "sess_time_active_to_massivebloom_achievement"
+        ],
+        "quantile_json_path": "models/lakeland_data/quantiles_no_continue.json",
+        "time_feat": "sess_active_time"
+    }
     },
   "BloomAchVelocityModel":{
-    "type": "BloomAchVelocity",
-      "levels": [],
-      "params":{
-      }
+    "type": "FeatVelocity",
+    "levels": [],
+    "params": {
+        "feature_list": [
+            "sess_time_active_to_bloom_achievement",
+            "sess_time_active_to_bigbloom_achievement",
+            "sess_time_active_to_hugebloom_achievement",
+            "sess_time_active_to_massivebloom_achievement"
+        ],
+        "time_feat": "sess_active_time"
+    }
     },
   "MoneyAchSeqPercentModel":{
-    "type": "MoneyAchSeqPercent",
-      "levels": [],
-      "params":{
-      }
+    "type": "FeatSeqPercent",
+    "levels": [],
+    "params": {
+        "sequence": [
+            "sess_time_active_to_paycheck_achievement",
+            "sess_time_active_to_thousandair_achievement",
+            "sess_time_active_to_stability_achievement",
+            "sess_time_active_to_riches_achievement"
+        ],
+        "quantile_json_path": "models/lakeland_data/quantiles_no_continue.json",
+        "time_feat": "sess_active_time"
+    }
     },
   "MoneyAchVelocityModel":{
-    "type": "MoneyAchVelocity",
-      "levels": [],
-      "params":{
-      }
+    "type": "FeatVelocity",
+    "levels": [],
+    "params": {
+        "feature_list": [
+            "sess_time_active_to_paycheck_achievement",
+            "sess_time_active_to_thousandair_achievement",
+            "sess_time_active_to_stability_achievement",
+            "sess_time_active_to_riches_achievement"
+        ],
+        "time_feat": "sess_active_time"
+    }
     },
   "PopAchSeqPercentModel":{
-    "type": "PopAchSeqPercent",
-      "levels": [],
-      "params":{
-      }
+    "type": "FeatSeqPercent",
+    "levels": [],
+    "params": {
+        "sequence": [
+            "sess_time_active_to_exist_achievement",
+            "sess_time_active_to_group_achievement",
+            "sess_time_active_to_town_achievement",
+            "sess_time_active_to_city_achievement"
+        ],
+        "quantile_json_path": "models/lakeland_data/quantiles_no_continue.json",
+        "time_feat": "sess_active_time"
+    }
     },
   "PopAchVelocityModel":{
-    "type": "PopAchVelocity",
-      "levels": [],
-      "params":{
-      }
+    "type": "FeatVelocity",
+    "levels": [],
+    "params": {
+        "feature_list": [
+            "sess_time_active_to_exist_achievement",
+            "sess_time_active_to_group_achievement",
+            "sess_time_active_to_town_achievement",
+            "sess_time_active_to_city_achievement"
+        ],
+        "time_feat": "sess_active_time"
+    }
     },
   "FarmAchSeqPercentModel":{
-    "type": "FarmAchSeqPercent",
-      "levels": [],
-      "params":{
-      }
+    "type": "FeatSeqPercent",
+    "levels": [],
+    "params": {
+        "sequence": [
+            "sess_time_active_to_farmer_achievement",
+            "sess_time_active_to_farmers_achievement",
+            "sess_time_active_to_farmtown_achievement",
+            "sess_time_active_to_megafarm_achievement"
+        ],
+        "quantile_json_path": "models/lakeland_data/quantiles_no_continue.json",
+        "time_feat": "sess_active_time"
+    }
     },
   "FarmAchVelocityModel":{
-    "type": "FarmAchVelocity",
-      "levels": [],
-      "params":{
-      }
+        "type": "FeatVelocity",
+    "levels": [],
+    "params": {
+        "feature_list": [
+            "sess_time_active_to_farmer_achievement",
+            "sess_time_active_to_farmers_achievement",
+            "sess_time_active_to_farmtown_achievement",
+            "sess_time_active_to_megafarm_achievement"
+        ],
+        "time_feat": "sess_active_time"
+    }
     },
   "ReqTutSeqPercentModel":{
-    "type": "ReqTutSeqPercent",
-      "levels": [],
-      "params":{
-      }
+    "type": "FeatSeqPercent",
+    "levels": [],
+    "params": {
+        "sequence": [
+            "sess_time_active_to_buy_food_tutorial",
+            "sess_time_active_to_build_a_farm_tutorial",
+            "sess_time_active_to_timewarp_tutorial",
+            "sess_time_active_to_successful_harvest_tutorial",
+            "sess_time_active_to_sell_food_tutorial",
+            "sess_time_active_to_buy_fertilizer_tutorial",
+            "sess_time_active_to_buy_livestock_tutorial",
+            "sess_time_active_to_livestock_tutorial",
+            "sess_time_active_to_poop_tutorial",
+            "sess_time_active_to_rain_tutorial"
+        ],
+        "quantile_json_path": "models/lakeland_data/quantiles_no_continue.json",
+        "time_feat": "sess_active_time"
+    }
     },
   "ReqTutVelocityModel":{
-    "type": "ReqTutVelocity",
-      "levels": [],
-      "params":{
-      }
+    "type": "FeatVelocity",
+    "levels": [],
+    "params": {
+        "feature_list": [
+            "sess_time_active_to_buy_food_tutorial",
+            "sess_time_active_to_build_a_farm_tutorial",
+            "sess_time_active_to_timewarp_tutorial",
+            "sess_time_active_to_successful_harvest_tutorial",
+            "sess_time_active_to_sell_food_tutorial",
+            "sess_time_active_to_buy_fertilizer_tutorial",
+            "sess_time_active_to_buy_livestock_tutorial",
+            "sess_time_active_to_livestock_tutorial",
+            "sess_time_active_to_poop_tutorial",
+            "sess_time_active_to_rain_tutorial"
+        ],
+        "time_feat": "sess_active_time"
+    }
     }
 }

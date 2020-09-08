@@ -128,6 +128,7 @@ class ExportManager:
             # TODO: get this pile of crap organized
             # First, get the files and game-specific vars ready
             game_schema, game_extractor = self._getExtractor()
+            export_files.proc = export_files.proc and (game_extractor is not None) # if no game extractor, don't try to extract.
             # also figure out hash and dataset ID.
             _from = date_range[0].strftime("%Y%m%d")
             _to = date_range[1].strftime("%Y%m%d")
@@ -252,7 +253,7 @@ class ExportManager:
             utils.Logger.toFile(str(err), logging.ERROR)
 
     def _extractToCSVs(self, raw_csv_path: str, proc_csv_path: str, dump_csv_path: str, data_manager: DataManager,
-                       game_schema: Schema, game_table: GameTable, game_extractor: type, export_files: ExportFiles = False):
+                       game_schema: Schema, game_table: GameTable, game_extractor: type, export_files: ExportFiles):
         try:
             proc_mgr = raw_mgr = dump_mgr = None
             if export_files.proc:
