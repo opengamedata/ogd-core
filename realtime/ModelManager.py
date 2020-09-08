@@ -9,6 +9,7 @@ from models.SingleFeatureModel import SingleFeatureModel
 from models.LogisticModel import LogisticModel
 from models.FeatSeqPercent import FeatSeqPercentModel
 from models.FeatVelocity import FeatVelocityModel
+from models.TimeSinceEventTypes import TimeSinceEventTypesModel
 import utils
 
 ## @class ModelManager
@@ -49,6 +50,12 @@ class ModelManager():
             return FeatSeqPercentModel(**model_info["params"])
         elif model_info["type"] == "ReqTutVelocity":
             return FeatVelocityModel(**model_info["params"])
+        elif model_info["type"] == "TimeSinceImpact":
+            return TimeSinceEventTypesModel(**model_info["params"])
+        elif model_info["type"] == "TimeSinceActive":
+            return TimeSinceEventTypesModel(**model_info["params"])
+        elif model_info["type"] == "TimeSinceExploratory":
+            return TimeSinceEventTypesModel(**model_info["params"])
 
     def _validLevel(self, model_name: str, level: int):
         # print(f"Checking validity of model {model_name} for level {level}")
