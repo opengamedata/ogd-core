@@ -21,7 +21,7 @@
       }
     },
     "BloomAchSeqPercentModel":{
-    "type": "FeatSeqPercent",
+    "type": "BloomAchSeqPercent",
     "levels": [],
     "params": {
         "sequence": [
@@ -35,7 +35,7 @@
     }
     },
   "BloomAchVelocityModel":{
-    "type": "FeatVelocity",
+    "type": "BloomAchVelocity",
     "levels": [],
     "params": {
         "feature_list": [
@@ -48,7 +48,7 @@
     }
     },
   "MoneyAchSeqPercentModel":{
-    "type": "FeatSeqPercent",
+    "type": "MoneyAchSeqPercent",
     "levels": [],
     "params": {
         "sequence": [
@@ -62,7 +62,7 @@
     }
     },
   "MoneyAchVelocityModel":{
-    "type": "FeatVelocity",
+    "type": "MoneyAchVelocity",
     "levels": [],
     "params": {
         "feature_list": [
@@ -75,7 +75,7 @@
     }
     },
   "PopAchSeqPercentModel":{
-    "type": "FeatSeqPercent",
+    "type": "PopAchSeqPercent",
     "levels": [],
     "params": {
         "sequence": [
@@ -89,7 +89,7 @@
     }
     },
   "PopAchVelocityModel":{
-    "type": "FeatVelocity",
+    "type": "PopAchVelocity",
     "levels": [],
     "params": {
         "feature_list": [
@@ -102,7 +102,7 @@
     }
     },
   "FarmAchSeqPercentModel":{
-    "type": "FeatSeqPercent",
+    "type": "FarmAchSeqPercent",
     "levels": [],
     "params": {
         "sequence": [
@@ -116,7 +116,7 @@
     }
     },
   "FarmAchVelocityModel":{
-        "type": "FeatVelocity",
+        "type": "FarmAchVelocity",
     "levels": [],
     "params": {
         "feature_list": [
@@ -129,7 +129,7 @@
     }
     },
   "ReqTutSeqPercentModel":{
-    "type": "FeatSeqPercent",
+    "type": "ReqTutSeqPercent",
     "levels": [],
     "params": {
         "sequence": [
@@ -149,7 +149,7 @@
     }
     },
   "ReqTutVelocityModel":{
-    "type": "FeatVelocity",
+    "type": "ReqTutVelocity",
     "levels": [],
     "params": {
         "feature_list": [
