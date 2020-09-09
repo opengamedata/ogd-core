@@ -17,9 +17,20 @@ import datetime
 # _IMPACT_EVENTS = ["BUY", "TILEUSESELECT", "ITEMUSESELECT"]
 # [7, 10, 11]
 
-
+## @class TimeSinceEventTypesModel
+# Returns time (in seconds) since last received an event from event_list, defaulting to time since first event if
+# the given events have never been received.
+# @param levels: Levels applicable for model
+# @param event_list: events since which time is calculated (using any event, not all events)
 class TimeSinceEventTypesModel(SequenceModel):
     def __init__(self, levels: List[int] = [], event_list: List[int] =[0]):
+        '''
+        @class TimeSinceEventTypesModel
+        Returns time (in seconds) since last received an event from event_list, defaulting to time since first event if
+        the given events have never been received.
+        :param levels: Levels applicable for model
+        :param event_list: events since which time is calculated (using any event, not all events)
+        '''
         self._event_list = set(event_list)
         super().__init__()
 

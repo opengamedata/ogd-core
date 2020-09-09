@@ -2,8 +2,21 @@ from typing import List, Optional
 from models.FeatureModel import FeatureModel
 from datetime import timedelta
 
+## @class
+# Calculates number of checkpoint features in list achieved per 1000 seconds of gameplay time, given by time_feat.
+# @param feature_list: list of features to use.
+# @param levels: Levels to use this feature during
+# @param time_feat: sessDuration" or "sess_time_active", depending if the model should be used for active time or
+# overall time.
 class FeatVelocityModel(FeatureModel):
     def __init__(self, feature_list: List[str], levels: List[int] = [], time_feat='sess_time_active'):
+        '''
+        Calculates number of checkpoint features in list achieved per 1000 seconds of gameplay time, given by time_feat.
+        :param feature_list: list of features to use.
+        :param levels: Levels to use this feature during
+        :param time_feat: sessDuration" or "sess_time_active", depending if the model should be used for active time or
+        overall time.
+        '''
         self._feat_list = feature_list
         self._time_feat = time_feat
         super().__init__()
@@ -22,7 +35,7 @@ class FeatVelocityModel(FeatureModel):
         if type(time) is timedelta:  # proc features give float, but cgi might give timedelta
             time = time.seconds
 
-        return time / num_reached_feats
+        return num_reached_feats / time * 1000
 
 
     def __repr__(self):
