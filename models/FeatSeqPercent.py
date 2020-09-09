@@ -93,7 +93,7 @@ class FeatSeqPercentModel(FeatureModel):
         self._feature_sequence = feature_sequence
         self._time_feat = time_feat
         self._featureQuantiles = _FeatureQuantiles.fromJSON(
-            no_continue_json_path=quantile_json_path)
+            quantile_json_path=quantile_json_path)
 
         super().__init__()
 

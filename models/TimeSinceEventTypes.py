@@ -1,5 +1,5 @@
 from typing import List, Optional, Dict, Any
-from models import SequenceModel
+from models.SequenceModel import SequenceModel
 import datetime
 
 # popular lakeland event lists
@@ -29,6 +29,7 @@ class TimeSinceEventTypesModel(SequenceModel):
         for event in events:
             if event["event_custom"] in self._event_list:
                 break
-
         event_time = event["server_time"]
+        if type(event_time) is str: # fix for tests, datetimes don't always get parsed ahead of time
+            event_time = datetime.datetime.fromisoformat(event_time)
         return (now - event_time).seconds

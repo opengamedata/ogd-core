@@ -1,10 +1,10 @@
 from typing import List, Optional
-from models import FeatureModel
+from models.FeatureModel import FeatureModel
 from datetime import timedelta
 
 class FeatVelocityModel(FeatureModel):
-    def __init__(self, feat_list: List[str], levels: List[int] = [], time_feat='sess_time_active'):
-        self._feat_list = feat_list
+    def __init__(self, feature_list: List[str], levels: List[int] = [], time_feat='sess_time_active'):
+        self._feat_list = feature_list
         self._time_feat = time_feat
         super().__init__()
 

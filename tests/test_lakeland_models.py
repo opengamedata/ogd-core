@@ -1,11 +1,14 @@
 import unittest
+import pytest
 from tests import helpers
+from realtime.ModelManager import ModelManager
+from models.Model import ModelInputType
 
 # run as python -m unittest tests.test_models from the opengamedata dir
 
 
-test_zip_path = lambda kind: f'tests/test_data/LAKELAND_20200501_to_20200530_5c141b6_{kind}.zip'
-test_v18_zip_paths = lambda kind: f'tests/test_data/sample_v18_{kind}.zip'
+zip_path = lambda kind: f'tests/test_data/LAKELAND_20200501_to_20200530_5c141b6_{kind}.zip'
+v18_zip_paths = lambda kind: f'tests/test_data/sample_v18_{kind}.zip'
 kind_to_sep = {
     "dump": '\t',
     "proc": ',',
@@ -18,29 +21,28 @@ def get_df(kind, kind_to_path_func):
                             sep=kind_to_sep[kind])
     return df
 
-test_dfs = helpers.LazyDict(get_df, kind_to_path_func=test_zip_path)
-test_v18_dfs = helpers.LazyDict(get_df, kind_to_path_func=test_v18_zip_paths)
+dfs = helpers.LazyDict(get_df, kind_to_path_func=zip_path)
+v18_dfs = helpers.LazyDict(get_df, kind_to_path_func=v18_zip_paths)
 
-test_proc_sessions = test_dfs['proc'].to_dict('records')
-test_v18_dumps = [groupdf.to_dict('records') for _, groupdf in test_v18_dfs['dump'].groupby('sess_id')]
+proc_sessions = v18_dfs['proc'].to_dict('records')
+v18_dumps = [groupdf.to_dict('records') for _, groupdf in v18_dfs['dump'].groupby('sess_id')]
 
-feature_models = []
+model_mgr = ModelManager(game_name="LAKELAND")
+all_models = [model_mgr.LoadModel(model_name) for model_name in model_mgr.ListModels()]
+# print(*list(zip(model_mgr.ListModels(), all_models)), sep='\n')
+feature_models = [model for model in all_models if model and model.GetInputType() == ModelInputType.FEATURE]
+sequence_models = [model for model in all_models if model and model.GetInputType() == ModelInputType.SEQUENCE]
 
-sequence_models = []
+@pytest.mark.parametrize("model", feature_models)
+def test_feature_model(model):
+    print(model, model.Eval(proc_sessions), sep='\n')
 
-def test_feature_models():
-    for m in feature_models:
-        print(m, m.Eval(test_proc_sessions), sep='\n')
-
-def test_sequence_models():
-    for session_dump in test_v18_dumps:
-        for m in sequence_models:
-            print(m, m.Eval(session_dump), sep='\n')
-
-
-
-
-
+@pytest.mark.parametrize("model", sequence_models)
+def test_sequence_model(model):
+    print(model)
+    for session_dump in v18_dumps:
+        print(model.Eval(session_dump), end=', ')
+    print()
 
 
 if __name__ == '__main__':
