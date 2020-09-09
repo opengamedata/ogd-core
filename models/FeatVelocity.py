@@ -23,3 +23,8 @@ class FeatVelocityModel(FeatureModel):
             time = time.seconds
 
         return time / num_reached_feats
+
+
+    def __repr__(self):
+        return f"FeatVelocityModel(feature_list={self._feat_list}, time_feat='{self._time_feat}'" \
+               f", levels={self._levels}, input_type={self._input_type})"

@@ -90,6 +90,7 @@ class _FeatureQuantiles(object):
 class FeatSeqPercentModel(FeatureModel):
     def __init__(self, feature_sequence: List[str], levels: List[int] = [], time_feat: str = 'sess_time_active',
                  quantile_json_path: str = "models/lakeland_data/quantiles_no_continue.json"):
+        self._quantile_json_path = quantile_json_path
         self._feature_sequence = feature_sequence
         self._time_feat = time_feat
         self._featureQuantiles = _FeatureQuantiles.fromJSON(
@@ -114,5 +115,10 @@ class FeatSeqPercentModel(FeatureModel):
         percentile_if_next_feat_now = self._featureQuantiles.get_quantile(next_feat, cur_time, verbose=verbose)
 
         return percentile_if_next_feat_now
+
+    def __repr__(self):
+        return f"FeatSeqPercentModel(feature_sequence={self._feature_sequence}, time_feat='{self._time_feat}'" \
+               f"quantile_json_path='{self._quantile_json_path}'" \
+               f", levels={self._levels}, input_type={self._input_type})"
 
 

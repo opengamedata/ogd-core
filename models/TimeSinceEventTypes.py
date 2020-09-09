@@ -33,3 +33,8 @@ class TimeSinceEventTypesModel(SequenceModel):
         if type(event_time) is str: # fix for tests, datetimes don't always get parsed ahead of time
             event_time = datetime.datetime.fromisoformat(event_time)
         return (now - event_time).seconds
+
+
+    def __repr__(self):
+        return f"TimeSinceEventTypesModel(event_list={self._event_list}" \
+               f", levels={self._levels}, input_type={self._input_type})"
