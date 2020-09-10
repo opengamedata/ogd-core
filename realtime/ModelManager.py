@@ -4,7 +4,7 @@ import logging
 import typing
 import logging
 ## import local files
-from models.SimpleDeathPredictionModel import SimpleDeathPredictionModel
+from models.DeathPredModel import SimpleDeathPredModel, SimpleFoodDeathPredModel, SimpleMoneyDeathPredModel
 from models.SingleFeatureModel import SingleFeatureModel
 from models.LogisticModel import LogisticModel
 from models.FeatSeqPercent import FeatSeqPercentModel
@@ -30,7 +30,11 @@ class ModelManager():
         elif model_info["type"] == "Logistic":
             return LogisticModel(**model_info["params"])
         elif model_info["type"] == "SimpleDeathPrediction":
-            return SimpleDeathPredictionModel(**model_info["params"])
+            return SimpleDeathPredModel(**model_info["params"])
+        elif model_info["type"] == "FoodDeathPrediction":
+            return SimpleFoodDeathPredModel(**model_info["params"])
+        elif model_info["type"] == "MoneyDeathPrediction":
+            return SimpleMoneyDeathPredModel(**model_info["params"])
         elif model_info["type"] == "BloomAchSeqPercent":
             return FeatSeqPercentModel(**model_info["params"])
         elif model_info["type"] == "BloomAchVelocity":

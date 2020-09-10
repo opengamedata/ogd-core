@@ -6,10 +6,25 @@
       "column_name":"sess_count_achievements"
     }
   },
-  "DeathPredictionModel":{
-    "type": "SimpleDeathPredictionModel",
+  "SimpleDeathPredictionModel":{
+    "type": "SimpleDeathPrediction",
       "levels": [],
       "params":{
+        "time_int":404
+      }
+    },
+  "SimpleFoodDeathPredictionModel":{
+    "type": "FoodDeathPrediction",
+      "levels": [],
+      "params":{
+        "food":0
+      }
+    },
+  "SimpleMoneyDeathPredictionModel":{
+    "type": "MoneyDeathPrediction",
+      "levels": [],
+      "params":{
+        "money":300
       }
     },
 

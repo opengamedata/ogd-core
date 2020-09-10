@@ -9,8 +9,6 @@ from tests import helpers
 from realtime.ModelManager import ModelManager
 from models.Model import ModelInputType
 
-# run as python -m unittest tests.test_models from the opengamedata dir
-
 
 zip_path = lambda kind: f'tests/test_data/LAKELAND_20200501_to_20200530_5c141b6_{kind}.zip'
 v18_zip_paths = lambda kind: f'tests/test_data/sample_v18_{kind}.zip'
