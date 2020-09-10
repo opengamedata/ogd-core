@@ -199,5 +199,11 @@
         ]]
       ]
     }
+  },
+  "PopulationModel":{
+    "type": "Population",
+    "levels": [],
+    "params": {
+    }
   }
 }
