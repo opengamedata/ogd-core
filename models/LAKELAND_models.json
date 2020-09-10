@@ -187,5 +187,17 @@
     "params": {
       "event_list": [3, 4, 5, 14, 13, 12]
     }
+  },
+  "TimeSinceLastFarmHouseDairyModel": {
+    "type": "TimeSinceLastFarmHouseDairy",
+    "levels": [],
+    "params": {
+      "event_list": [
+        [7, [
+          [["event_data_complex", "buy"], "in", [1,3,5]],
+          [["event_data_complex", "success"], "eq", true]
+        ]]
+      ]
+    }
   }
 }

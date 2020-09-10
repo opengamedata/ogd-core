@@ -56,6 +56,8 @@ class ModelManager():
             return TimeSinceEventTypesModel(**model_info["params"])
         elif model_info["type"] == "TimeSinceExploratory":
             return TimeSinceEventTypesModel(**model_info["params"])
+        elif model_info["type"] == "TimeSinceLastFarmHouseDairy":
+            return TimeSinceEventTypesModel(**model_info["params"])
 
     def _validLevel(self, model_name: str, level: int):
         # print(f"Checking validity of model {model_name} for level {level}")
