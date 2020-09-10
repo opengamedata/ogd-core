@@ -1,5 +1,6 @@
 import unittest
 import pytest
+import json
 from tests import helpers
 from realtime.ModelManager import ModelManager
 from models.Model import ModelInputType
@@ -19,6 +20,8 @@ def get_df(kind, kind_to_path_func):
     df, _ = helpers.getLogDFbyPaths([kind_to_path_func(kind)],
                             index_cols=False,
                             sep=kind_to_sep[kind])
+    if kind=="dump":
+        df["event_data_complex"] = df["event_data_complex"].apply(lambda s: json.loads(s))
     return df
 
 dfs = helpers.LazyDict(get_df, kind_to_path_func=zip_path)
@@ -35,11 +38,11 @@ sequence_models = [model for model in all_models if model and model.GetInputType
 
 @pytest.mark.parametrize("model", feature_models)
 def test_feature_model(model):
-    print(model, model.Eval(proc_sessions), sep='\n')
+    print(f'\nRunning {model}:', model.Eval(proc_sessions), sep='\n')
 
 @pytest.mark.parametrize("model", sequence_models)
 def test_sequence_model(model):
-    print(model)
+    print(f'\nRunning {model}:')
     for session_dump in v18_dumps:
         print(model.Eval(session_dump), end=', ')
     print()
