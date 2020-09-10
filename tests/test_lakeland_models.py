@@ -1,3 +1,7 @@
+'''
+In the commandline, run "py.test -s tests\" from the project directory.
+'''
+
 import unittest
 import pytest
 import json
