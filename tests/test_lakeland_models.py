@@ -3,6 +3,9 @@ Example commands to be run in the commandline from the project directory:
 py.test tests -s
 pytest  tests/test_lakeland_models.py -s -k PopulationModel
 pytest tests/test_lakeland_models.py::test_sequence_model[20070509155287116-PopulationModel] -vsl
+pytest  tests/test_lakeland_models.py::test_sequence_model[20070513431426580-PopulationModel] --log-level=DEBUG
+    --log-file=tests/logs/pop_negative_20070513431426580-PopulationModel.log -vl
+    (logging is only helpful if there are logging.debug("") etc. statements in the model/test)
 
 -v: verbose
 -s: show print statements
