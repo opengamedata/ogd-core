@@ -23,15 +23,30 @@ class TownCompositionModel(SequenceModel):
         farms = 0
         dairy = 0
         for event in events:
+            # buying a home
             if event["event_custom"] == 7 and event["event_data_complex"]["buy"] == 1 and \
                     event["event_data_complex"]["success"] is True:
                 homes += 1
+            # buying a farm
             elif event["event_custom"] == 7 and event["event_data_complex"]["buy"] == 3 and \
                     event["event_data_complex"]["success"] is True:
                 farms += 1
+            # buying a dairy farm
             elif event["event_custom"] == 7 and event["event_data_complex"]["buy"] == 5 and \
                     event["event_data_complex"]["success"] is True:
                 dairy += 1
+            # farmbit death (loses home)
+            elif event["event_custom"] == 18:
+                homes -= 1
+            # reset (set all values back to zero)
+            elif event["event_custom"] == 40:
+                homes = 0
+                farms = 0
+                dairy = 0
+            # if there's a continue event, return None (since the current homes/farms/dairy aren't tallied)
+            # TODO: Add functionality to deal with this
+            elif event["event_custom"] == 1 and event["event_data_complex"]["continue"] == 1:
+                return None
         return [homes, farms, dairy]
 
 
