@@ -11,6 +11,7 @@ from models.FeatSeqPercent import FeatSeqPercentModel
 from models.FeatVelocity import FeatVelocityModel
 from models.TimeSinceEventTypes import TimeSinceEventTypesModel
 from models.PopulationModel import PopulationModel
+from models.TownCompositionModel import TownCompositionModel
 import utils
 
 ## @class ModelManager
@@ -61,6 +62,8 @@ class ModelManager():
             return TimeSinceEventTypesModel(**model_info["params"])
         elif model_info["type"] == "Population":
             return PopulationModel(**model_info["params"])
+        elif model_info["type"] == "TownComposition":
+            return TownCompositionModel(**model_info["params"])
 
     def _validLevel(self, model_name: str, level: int):
         # print(f"Checking validity of model {model_name} for level {level}")

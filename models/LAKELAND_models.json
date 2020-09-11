@@ -205,5 +205,11 @@
     "levels": [],
     "params": {
     }
+  },
+  "TownCompositionModel":{
+    "type": "TownComposition",
+    "levels": [],
+    "params": {
+    }
   }
 }
