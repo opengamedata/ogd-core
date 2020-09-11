@@ -7,6 +7,7 @@ pytest tests/test_lakeland_models.py::test_sequence_model[20070509155287116-Popu
 -v: verbose
 -s: show print statements
 -l: show local variables on error
+-x: stop at first error
 '''
 
 import unittest
@@ -41,7 +42,7 @@ v18_dfs = helpers.LazyDict(get_df, kind_to_path_func=v18_zip_paths)
 proc_sessions = v18_dfs['proc'].to_dict('records')
 proc_session_names = [f'{x["sessID"]}.{x["num_play"]}' for x in proc_sessions]
 v18_dumps = [groupdf.to_dict('records') for _, groupdf in v18_dfs['dump'].groupby('sess_id')]
-v18_dump_ids = [d[0]["sess_id"] for d in v18_dumps]
+v18_dump_ids = [str(d[0]["sess_id"]) for d in v18_dumps]
 
 model_mgr = ModelManager(game_name="LAKELAND")
 model_names = model_mgr.ListModels()
