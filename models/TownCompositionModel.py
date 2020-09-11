@@ -24,13 +24,13 @@ class TownCompositionModel(SequenceModel):
         dairy = 0
         for event in events:
             if event["event_custom"] == 7 and event["event_data_complex"]["buy"] == 1 and \
-                    event["event_data_complex"]["success"] == True:
+                    event["event_data_complex"]["success"] is True:
                 homes += 1
             elif event["event_custom"] == 7 and event["event_data_complex"]["buy"] == 3 and \
-                    event["event_data_complex"]["success"] == True:
+                    event["event_data_complex"]["success"] is True:
                 farms += 1
             elif event["event_custom"] == 7 and event["event_data_complex"]["buy"] == 5 and \
-                    event["event_data_complex"]["success"] == True:
+                    event["event_data_complex"]["success"] is True:
                 dairy += 1
         return [homes, farms, dairy]
 
