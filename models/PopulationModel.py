@@ -18,19 +18,26 @@ class PopulationModel(SequenceModel):
         super().__init__()
 
     def _eval(self, events: List[Dict[str, Any]], verbose: bool = False) -> int:
+        skip = True
         assert events
         population = 0
         for event in events:
             # If the event is a newfarmbit, add 1 to population.
             # If the event is a farmbitdeath, subtract 1 from the population.
-            if event["event_custom"] == 31:
+            event_custom = event["event_custom"]
+            if skip:
+                if event_custom not in [1, 31]: # newgames start with STARTGAME; continues start with NEWFARMBIT
+                    continue
+                else:
+                    population = 0
+                    skip = False
+            if event_custom == 31: # newfarmbit
                 population += 1
-            if event["event_custom"] == 18:
+            elif event_custom == 18: # death
                 population = population - 1
-            if population < 0:
-                print("Population became negative")
-            if event["event_custom"] == 40:
-                population = 0
+                assert population >= 0, "Population became negative"
+            elif event_custom in [40,23]: # reset / endgame
+                skip = True
         return population
 
 
