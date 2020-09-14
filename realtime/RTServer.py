@@ -234,17 +234,22 @@ class RTServer:
             # NOTE: We assume current level is the one to use. If player back-tracks, you may end up with "earlier" model relative to max level.
             model_list = model_mgr.ListModels(cur_level)
             # print(f"***List of valid models***: {model_list}")
+            # Retrieve data for the session, before we start looping over all sessions.
+            # TODO: Set this up so we can get the raw session data, then pass that in to do feature extraction.
+            request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
+            session_data, game_table = RTServer._fetchSessionData(sess_id, settings=settings, request=request)
+            for row in session_data:
+                col = row[game_table.complex_data_index]
+                row[game_table.complex_data_index] = json.loads(col.replace("'", "\"")) if (col is not None) else {"event_custom":row[game_table.event_index]}
+            features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
+            features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
+            # For each model in the model list, call eval on the proper type of data.
             for model_name in predictions:
                 if model_name in model_list:
                     model = model_mgr.LoadModel(model_name=model_name)
                     if model.GetInputType() == ModelInputType.FEATURE:
-                        features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
-                        features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
                         result_list = model.Eval([features_parsed])
                     elif model.GetInputType() == ModelInputType.SEQUENCE:
-                        # first, get the list of events for the session.
-                        request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
-                        session_data, game_table = RTServer._fetchSessionData(sess_id, settings=settings, request=request)
                         result_list = model.Eval(session_data)
                     ret_val[sess_id] = {"name": model_name, "value": str(result_list)}
                 else:
