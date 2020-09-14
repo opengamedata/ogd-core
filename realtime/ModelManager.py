@@ -6,6 +6,7 @@ import logging
 ## import local files
 from models.SimpleDeathPredictionModel import SimpleDeathPredictionModel
 from models.SingleFeatureModel import SingleFeatureModel
+from models.NthEventModel import NthEventModel
 from models.LogisticModel import LogisticModel
 from models.FeatSeqPercent import FeatSeqPercentModel
 from models.FeatVelocity import FeatVelocityModel
@@ -28,6 +29,8 @@ class ModelManager():
         model_info = self._models[model_name]
         if model_info["type"] == "SingleFeature":
             return SingleFeatureModel(**model_info["params"])
+        if model_info["type"] == "NthEvent":
+            return NthEventModel(**model_info["params"])
         elif model_info["type"] == "Logistic":
             return LogisticModel(**model_info["params"])
         elif model_info["type"] == "SimpleDeathPrediction":

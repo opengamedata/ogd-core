@@ -6,10 +6,18 @@
       "column_name":"sess_count_achievements"
     }
   },
+  "dummySequenceModel": {
+    "type": "NthEvent",
+    "levels": [],
+    "params": {
+      "n": 0
+    }
+  },
   "DeathPredictionModel":{
     "type": "SimpleDeathPredictionModel",
       "levels": [],
       "params":{
+        "time_int": ""
       }
     },
 
