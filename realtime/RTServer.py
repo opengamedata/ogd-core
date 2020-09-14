@@ -237,10 +237,12 @@ class RTServer:
             # Retrieve data for the session, before we start looping over all sessions.
             # TODO: Set this up so we can get the raw session data, then pass that in to do feature extraction.
             request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
-            session_data, game_table = RTServer._fetchSessionData(sess_id, settings=settings, request=request)
+            session_data_raw, game_table = RTServer._fetchSessionData(sess_id, settings=settings, request=request)
+            session_data = [list(row) for row in session_data_raw]
             for row in session_data:
                 col = row[game_table.complex_data_index]
                 row[game_table.complex_data_index] = json.loads(col.replace("'", "\"")) if (col is not None) else {"event_custom":row[game_table.event_index]}
+            session_data_parsed = [game_table.RowToDict(row) for row in session_data]
             features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
             features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
             # For each model in the model list, call eval on the proper type of data.
@@ -250,7 +252,7 @@ class RTServer:
                     if model.GetInputType() == ModelInputType.FEATURE:
                         result_list = model.Eval([features_parsed])
                     elif model.GetInputType() == ModelInputType.SEQUENCE:
-                        result_list = model.Eval(session_data)
+                        result_list = model.Eval(session_data_parsed)
                     ret_val[sess_id] = {"name": model_name, "value": str(result_list)}
                 else:
                     ret_val[sess_id] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
