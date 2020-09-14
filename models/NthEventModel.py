@@ -14,4 +14,4 @@ class NthEventModel(SequenceModel):
         self._n = n
 
     def _eval(self, rows: typing.List[typing.Dict[str, typing.Any]]) -> typing.Any:
-        return rows[n]
+        return rows[self._n]
