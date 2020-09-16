@@ -152,8 +152,8 @@ def _execExport(game_id, start_date, end_date):
     export_manager = ExportManager(game_id=req.game_id, settings=settings)
     try:
         schema = Schema(game_id)
-        export_manager.exportFromRequest(request=req, game_schema=schema)
-        # cProfile.runctx("feature_exporter.exportFromRequest(request=req)",
+        export_manager.exportFromSQL(request=req, game_schema=schema)
+        # cProfile.runctx("feature_exporter.exportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
         msg = f"{type(err)} {str(err)}"
@@ -185,7 +185,7 @@ def ExtractFromFile():
     export_manager = ExportManager(game_id=req.game_id, settings=settings)
     try:
         export_manager.extractFromFile(request=req, delimiter='\t')
-        # cProfile.runctx("feature_exporter.exportFromRequest(request=req)",
+        # cProfile.runctx("feature_exporter.exportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
         msg = f"{type(err)} {str(err)}"
