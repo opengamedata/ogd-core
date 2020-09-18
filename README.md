@@ -11,6 +11,7 @@ Setup:
 * Install python3 (could write a whole chapter on this)
 * Install mysql client: "brew install mysql" on osx
 * Install dependancies: "pip3 install -r requirements.txt"
+* Install more dependancies: "pip3 install -U scikit-learn scipy pandas gitpython"
 * Modify the config.py.template for servers and authentication
 
 
