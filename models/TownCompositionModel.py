@@ -23,32 +23,40 @@ class TownCompositionModel(SequenceModel):
         farms = 0
         dairy = 0
         for event in events:
-            # buying a home
-            if event["event_custom"] == 7 and event["event_data_complex"]["buy"] == 1 and \
-                    event["event_data_complex"]["success"] is True:
-                homes += 1
-            # buying a farm
-            elif event["event_custom"] == 7 and event["event_data_complex"]["buy"] == 3 and \
-                    event["event_data_complex"]["success"] is True:
-                farms += 1
-            # buying a dairy farm
-            elif event["event_custom"] == 7 and event["event_data_complex"]["buy"] == 5 and \
-                    event["event_data_complex"]["success"] is True:
-                dairy += 1
-            # farmbit death (loses home)
+            # gamestate
+            if event["event_custom"] == 0:
+                h = 0
+                f = 0
+                d = 0
+                tile_string = event["event_data_complex"]["tiles"]
+                _tile = self._read_stringified_array(tile_string)
+                tile = self._array_to_mat(4, _tile)
+                for i in range(0, len(tile)):
+                    if tile[i][3] == 8:
+                        h += 1
+                    elif tile[i][3] == 9:
+                        f += 1
+                    elif tile[i][3] == 10:
+                        d += 1
+                homes = h
+                farms = f
+                dairy = d
+            # farmbit death
             elif event["event_custom"] == 18:
                 homes -= 1
-            # reset (set all values back to zero)
-            elif event["event_custom"] == 40:
-                homes = 0
-                farms = 0
-                dairy = 0
-            # if there's a continue event, return None (since the current homes/farms/dairy aren't tallied)
-            # TODO: Add functionality to deal with this
-            elif event["event_custom"] == 1 and event["event_data_complex"]["continue"] == 1:
-                return None
         return [homes, farms, dairy]
 
+    # reformat raw variable functions
+    def _read_stringified_array(self, arr: str) -> List[int]:
+        if not arr:
+            return []
+        return [int(x) for x in arr.split(',')]
 
-    def __repr__(self):
+
+    def _array_to_mat(self, num_columns: int, arr: List[int]) -> List[List[int]]:
+        assert len(arr) % num_columns == 0
+        return [arr[i:i + num_columns] for i in range(0, len(arr), num_columns)]
+
+
+def __repr__(self):
         return f"TownCompositionModel(levels={self._levels}, input_type={self._input_type})"
