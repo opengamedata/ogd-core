@@ -21,7 +21,14 @@ class PopulationModel(SequenceModel):
         '''
         super().__init__()
 
-    def _eval(self, events: List[Dict[str, Any]], verbose: bool = False) -> int:
+    def _eval(self, rows: List[Dict[str, Any]]) -> int:
+        try:
+            pop = self._eval_assert(rows)
+        except AssertionError:
+            return -1
+        return pop
+
+    def _eval_assert(self, events: List[Dict[str, Any]]) -> int:
         start_time = datetime.datetime.fromisoformat(events[0]["client_time"])
         skip = True
         assert events
@@ -33,19 +40,23 @@ class PopulationModel(SequenceModel):
             event_str = LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_custom]
             if event_str not in ["emote"]:
                 cur_time = datetime.datetime.fromisoformat(event["client_time"])
+                debug_str = ''
                 if event_str == "buy" and event["event_data_complex"]["success"]:
-                    buy_str = LakelandExtractor._ENUM_TO_STR['BUYS'][event["event_data_complex"]["buy"]].upper()
-                    event_str = f'{event_str} {buy_str}'
+                    debug_str = LakelandExtractor._ENUM_TO_STR['BUYS'][event["event_data_complex"]["buy"]].upper()
                 if event_str == 'startgame':
                     debug_str = "START" if not event["event_data_complex"].get("continue") else "CONTINUE"
                     debug_str += f' Language: {event["event_data_complex"].get("language")}'
-                    event_str = f'{event_str} {debug_str}'
+                if event_str in ['availablefood', 'sadfarmbit']:
+                    true_pop = event["event_data_complex"].get("farmbit")
+                    debug_str = f'true pop = {true_pop}'
+                    assert population == true_pop, f"Expected {population} farmbits, but true_pop is {true_pop}"
+
+                event_str = f'{event_str} {debug_str}'
                 logging.debug(f"{population:<3} {event_str:<20} {cur_time-start_time}")
             if skip:
                 if event_custom not in [1, 31]: # newgames start with STARTGAME; continues start with NEWFARMBIT
                     continue
                 else:
-                    population = 0
                     skip = False
             if event_custom == 31: # newfarmbit
                 population += 1
@@ -54,6 +65,7 @@ class PopulationModel(SequenceModel):
                 assert population >= 0, "Population became negative"
             elif event_custom in [40,23]: # reset / endgame
                 skip = True
+                population = 0
         return population
 
 

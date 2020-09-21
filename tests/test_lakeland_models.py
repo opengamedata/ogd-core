@@ -14,6 +14,7 @@ pytest  tests/test_lakeland_models.py::test_sequence_model[20070513431426580-Pop
 '''
 
 import unittest
+import logging
 import pytest
 import json
 from tests import helpers
@@ -68,7 +69,11 @@ def test_feature_model(model,proc_sessions):
 @pytest.mark.parametrize("model", sequence_models, ids=sequence_model_names)
 @pytest.mark.parametrize("session_dump", v18_dumps, ids=v18_dump_ids)
 def test_sequence_model(model, session_dump):
-    print(model.Eval(session_dump), end=', ')
+    try:
+        print(model.Eval(session_dump), end=', ')
+    except AssertionError:
+        logging.exception("Caught exception")
+        raise
 
 
 if __name__ == '__main__':
