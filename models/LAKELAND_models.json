@@ -219,5 +219,11 @@
     "levels": [],
     "params": {
     }
+  },
+  "DiagonalFarmDetectorModel":{
+    "type": "DiagonalFarmDetector",
+    "levels": [],
+    "params": {
+    }
   }
 }
