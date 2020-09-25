@@ -6,6 +6,14 @@ See http://opengamedata.fielddaylab.wisc.edu for .sql exports of raw game data a
 
 Please feel free to modify this code, add new features or games and share back to the authors. We will deploy improvements to the Open Game Data site.
 
+Setup:
+
+* Install python3 (could write a whole chapter on this)
+* Install mysql client: "brew install mysql" on osx
+* Install dependancies: "pip3 install -r requirements.txt"
+* Install more dependancies: "pip3 install -U scikit-learn scipy pandas gitpython"
+* Modify the config.py.template for servers and authentication
+
 
 ```
 usage: <python> main.py <cmd> [<args>]

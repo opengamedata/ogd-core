@@ -6,11 +6,14 @@ import logging
 ## import local files
 from models.DeathPredModel import SimpleDeathPredModel, SimpleFoodDeathPredModel, SimpleMoneyDeathPredModel
 from models.SingleFeatureModel import SingleFeatureModel
+from models.NthEventModel import NthEventModel
 from models.LogisticModel import LogisticModel
 from models.FeatSeqPercent import FeatSeqPercentModel
 from models.FeatVelocity import FeatVelocityModel
 from models.TimeSinceEventTypes import TimeSinceEventTypesModel
 from models.PopulationModel import PopulationModel
+from models.TownCompositionModel import TownCompositionModel
+from models.DiagonalFarmDetectorModel import DiagonalFarmDetectorModel
 import utils
 
 ## @class ModelManager
@@ -27,6 +30,8 @@ class ModelManager():
         model_info = self._models[model_name]
         if model_info["type"] == "SingleFeature":
             return SingleFeatureModel(**model_info["params"])
+        if model_info["type"] == "NthEvent":
+            return NthEventModel(**model_info["params"])
         elif model_info["type"] == "Logistic":
             return LogisticModel(**model_info["params"])
         elif model_info["type"] == "SimpleDeathPrediction":
@@ -65,6 +70,10 @@ class ModelManager():
             return TimeSinceEventTypesModel(**model_info["params"])
         elif model_info["type"] == "Population":
             return PopulationModel(**model_info["params"])
+        elif model_info["type"] == "TownComposition":
+            return TownCompositionModel(**model_info["params"])
+        elif model_info["type"] == "DiagonalFarmDetector":
+            return DiagonalFarmDetectorModel(**model_info["params"])
 
     def _validLevel(self, model_name: str, level: int):
         # print(f"Checking validity of model {model_name} for level {level}")

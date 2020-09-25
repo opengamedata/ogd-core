@@ -8,6 +8,15 @@
   },
   "SimpleDeathPredictionModel":{
     "type": "SimpleDeathPrediction",
+  "dummySequenceModel": {
+    "type": "NthEvent",
+    "levels": [],
+    "params": {
+      "n": 0
+    }
+  },
+  "DeathPredictionModel":{
+    "type": "SimpleDeathPredictionModel",
       "levels": [],
       "params":{
         "time_int":404
@@ -217,6 +226,18 @@
   },
   "PopulationModel":{
     "type": "Population",
+    "levels": [],
+    "params": {
+    }
+  },
+  "TownCompositionModel":{
+    "type": "TownComposition",
+    "levels": [],
+    "params": {
+    }
+  },
+  "DiagonalFarmDetectorModel":{
+    "type": "DiagonalFarmDetector",
     "levels": [],
     "params": {
     }
