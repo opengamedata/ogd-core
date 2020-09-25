@@ -20,7 +20,7 @@ ACHIEV_ENUM = 17
 
 class DeathThresholdModel(DeathPredModel):
     def __init__(self, levels=[]):
-        super().__init__(df)
+        super().__init__()
         self.thresh_df = pd.DataFrame()
         self.res_df = pd.DataFrame()
 
