@@ -4,7 +4,7 @@ import abc
 import typing
 import logging
 from abc import ABC
-
+from statistics import median
 import pandas as pd
 import numpy as np
 import json
@@ -29,6 +29,7 @@ class DeathPredModel(SequenceModel, ABC):
                           'persistent_sess_id', 'event', 'event_data_simple',
                           'server_time', 'remote_addr', 'req_id']
         self.df, self.filtered_df = pd.DataFrame(), pd.DataFrame()
+        self.thresh_df = pd.DataFrame()
         self.farmBits = {}
         self.query = f'(event_custom == {FB_DEATH_ENUM}) | (event_custom == {EMOTE_EVT_ENUM})'
 
@@ -81,12 +82,27 @@ class DeathPredModel(SequenceModel, ABC):
 
     def process_hunger_df(self):
         self.filtered_df = self.df.query(self.query)
-        drop_list = []
-        for x in self.filtered_df[self.filtered_df.event_custom == EMOTE_EVT_ENUM].itertuples():
-            if x.event_data_complex['emote_enum'] != EMOTE_DESPERATE_ENUM:
-                drop_list.append(x.Index)
+        self.preprocess_df()
+        temp = self.filtered_df[
+            (self.filtered_df['event_custom'] == 18) |
+            (self.filtered_df['event_custom'] == 24) &
+            ((self.filtered_df['emote_enum'] == 7) |
+             (self.filtered_df['emote_enum'] == 2))]
+        self.filtered_df = pd.DataFrame()
+        self.filtered_df = temp
 
-        return self.filtered_df.drop(index=drop_list, axis=0)
+    def preprocess_df(self):
+        self.thresh_df = pd.DataFrame(
+            list(self.filtered_df['event_data_complex'].values))
+        farmbit = ['tile.tx', 'tile.ty', 'name', 'job_state',
+                   'job_type', 'fullness', 'energy', 'joy', 'fulfillment']
+        self.filtered_df['n_row'] = [i for i in range(len(self.filtered_df.index))]
+        self.thresh_df['n_row'] = [i for i in range(len(self.thresh_df.index))]
+        self.thresh_df[farmbit] = pd.DataFrame(
+            self.thresh_df.farmbit.tolist(), index=self.thresh_df.index)
+        self.filtered_df = self.filtered_df.merge(
+            self.thresh_df, on=['n_row', 'event_custom'], how='outer'
+        )
 
     def get_farmbit_data(self, x):
         return {
