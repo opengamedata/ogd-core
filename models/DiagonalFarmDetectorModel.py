@@ -23,12 +23,9 @@ class DiagonalFarmDetectorModel(SequenceModel):
         farmcount = 0
         diagonals = []
         diagonals_only = 0
-        for event in events:
+        for event in reversed(events):
             # gamestate
             if event["event_custom"] == 0:
-                farmcount = 0
-                diagonals = []
-                diagonals_only = 0
                 tile_string = event["event_data_complex"]["tiles"]
                 _tile = self._read_stringified_array(tile_string)
                 tile = self._array_to_mat(4, _tile)
@@ -39,6 +36,7 @@ class DiagonalFarmDetectorModel(SequenceModel):
                         diagonals.append(self._left_diagonal(i, tile))
                         if self._diagonal_neighbors_present(i, tile) and not self._adjacent_neighbors_present(i, tile):
                             diagonals_only += 1
+                break
         if diagonals:
             biggest_diagonal = max(diagonals)
         else:
