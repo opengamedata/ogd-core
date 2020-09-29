@@ -15,6 +15,7 @@ from models.PopulationModel import PopulationModel
 from models.TownCompositionModel import TownCompositionModel
 from models.DiagonalFarmDetectorModel import DiagonalFarmDetectorModel
 from models.RecentPurchasesModel import RecentPurchasesModel
+from models.MoneyAccumulationModel import MoneyAccumulationModel
 import utils
 
 ## @class ModelManager
@@ -77,6 +78,8 @@ class ModelManager():
             return DiagonalFarmDetectorModel(**model_info["params"])
         elif model_info["type"] == "RecentPurchases":
             return RecentPurchasesModel(**model_info["params"])
+        elif model_info["type"] == "MoneyAccumulation":
+            return MoneyAccumulationModel(**model_info["params"])
 
     def _validLevel(self, model_name: str, level: int):
         # print(f"Checking validity of model {model_name} for level {level}")

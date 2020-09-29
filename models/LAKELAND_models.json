@@ -245,5 +245,11 @@
     "levels": [],
     "params": {
     }
+  },
+  "MoneyAccumulationModel":{
+    "type": "MoneyAccumulation",
+    "levels": [],
+    "params": {
+    }
   }
 }

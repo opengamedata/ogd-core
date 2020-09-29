@@ -46,7 +46,7 @@ class RecentPurchasesModel(SequenceModel):
                     signs += 1
                 elif event["event_data_complex"]["buy"] == 8:
                     roads += 1
-                # Check if ten purchases have been tallied. If so, break from the loops.
+                # Check if ten purchases have been tallied. If so, break from the loop.
                 count += 1
                 if count >= 10:
                     break
