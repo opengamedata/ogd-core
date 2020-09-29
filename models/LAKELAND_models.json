@@ -239,5 +239,11 @@
     "levels": [],
     "params": {
     }
+  },
+  "RecentPurchasesModel":{
+    "type": "RecentPurchases",
+    "levels": [],
+    "params": {
+    }
   }
 }

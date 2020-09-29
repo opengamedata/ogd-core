@@ -14,6 +14,7 @@ from models.TimeSinceEventTypes import TimeSinceEventTypesModel
 from models.PopulationModel import PopulationModel
 from models.TownCompositionModel import TownCompositionModel
 from models.DiagonalFarmDetectorModel import DiagonalFarmDetectorModel
+from models.RecentPurchasesModel import RecentPurchasesModel
 import utils
 
 ## @class ModelManager
@@ -74,6 +75,8 @@ class ModelManager():
             return TownCompositionModel(**model_info["params"])
         elif model_info["type"] == "DiagonalFarmDetector":
             return DiagonalFarmDetectorModel(**model_info["params"])
+        elif model_info["type"] == "RecentPurchases":
+            return RecentPurchasesModel(**model_info["params"])
 
     def _validLevel(self, model_name: str, level: int):
         # print(f"Checking validity of model {model_name} for level {level}")

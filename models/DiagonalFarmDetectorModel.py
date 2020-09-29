@@ -6,14 +6,16 @@ from models.SequenceModel import SequenceModel
 # ["HOME", "FARM", "LIVESTOCK"] = [1,3,5]
 
 ## @class TownCompositionModel
-# Returns a tuple with (1) the total number of farms and (2) the length of the longest consecutive diagonal of farms
+# Returns a tuple with (1) the total number of farms, (2) the length of the longest consecutive diagonal
+# of farms, and (3) the number of farms with at least one diagonal neighbor, but zero adjacent neighbors
 # @param levels: Levels applicable for model
 class DiagonalFarmDetectorModel(SequenceModel):
     def __init__(self, levels: List[int] = []):
         '''
         @class TownCompositionModel
-        Returns a tuple with (1) the total number of farms and (2) the length of the longest consecutive
-        diagonal of farms
+        Returns a tuple with (1) the total number of farms, (2) the length of the longest consecutive
+        diagonal of farms, and (3) the number of farms with at least one diagonal neighbor, but zero
+        adjacent neighbors
         :param levels: Levels applicable for model
         '''
         super().__init__()
