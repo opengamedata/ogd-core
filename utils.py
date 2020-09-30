@@ -302,6 +302,13 @@ class Logger:
                 Logger.std_logger.warn(f"WARNING: {message}")
             elif level == logging.ERROR:
                 Logger.std_logger.error(f"ERROR: {message}")
+    
+    # Function to print a method to both the standard out and file logs.
+    # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
+    @staticmethod
+    def Log(message, level):
+        Logger.toFile(message, level)
+        Logger.toStdOut(message, level)
 
     @staticmethod
     def toPrint(message, level):
