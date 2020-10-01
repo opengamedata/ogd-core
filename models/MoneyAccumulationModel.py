@@ -21,8 +21,12 @@ class MoneyAccumulationModel(SequenceModel):
         farms = 0
         dairy = 0
         money = 0
+        money_since_gamestate = 0
         for event in reversed(events):
-            # gamestate
+            # tally money for selling stuff since most recent gamestate event
+            if event["event_custom"] == 37:
+                money_since_gamestate += event["event_data_complex"]["worth"]
+            # get tallies from most recent gamestate event
             if event["event_custom"] == 0:
                 money = event["event_data_complex"]["money"]
                 tile_string = event["event_data_complex"]["tiles"]
@@ -36,7 +40,7 @@ class MoneyAccumulationModel(SequenceModel):
                     elif tile[i][3] == 10:
                         dairy += 1
                 break
-        return [money, homes + farms + dairy]
+        return [money + money_since_gamestate, homes + farms + dairy]
 
     # reformat raw variable functions
     def _read_stringified_array(self, arr: str) -> List[int]:
