@@ -1,18 +1,16 @@
 from typing import List, Optional, Dict, Any
 from models.SequenceModel import SequenceModel
 
-# birth/death events
-# "BUY" = 7
-# ["HOME", "FARM", "LIVESTOCK"] = [1,3,5]
-
-## @class TownCompositionModel
-# Returns a list with the number of homes, farms, and dairy farms (in that order)
+## @class MoneyAccumulationModel
+# Returns a list with (1) the current amount of money and (2) the total number of homes,
+# farms, and dairy farms
 # @param levels: Levels applicable for model
-class TownCompositionModel(SequenceModel):
+class MoneyAccumulationModel(SequenceModel):
     def __init__(self, levels: List[int] = []):
         '''
-        @class TownCompositionModel
-        Returns a list with the number of homes, farms, and dairy farms (in that order)
+        @class MoneyAccumulationModel
+        Returns a tuple with (1) the current amount of money and (2) the total number of homes,
+        farms, and dairy farms
         :param levels: Levels applicable for model
         '''
         super().__init__()
@@ -22,9 +20,15 @@ class TownCompositionModel(SequenceModel):
         homes = 0
         farms = 0
         dairy = 0
+        money = 0
+        money_since_gamestate = 0
         for event in reversed(events):
-            # gamestate
+            # tally money for selling stuff since most recent gamestate event
+            if event["event_custom"] == 37:
+                money_since_gamestate += event["event_data_complex"]["worth"]
+            # get tallies from most recent gamestate event
             if event["event_custom"] == 0:
+                money = event["event_data_complex"]["money"]
                 tile_string = event["event_data_complex"]["tiles"]
                 _tile = self._read_stringified_array(tile_string)
                 tile = self._array_to_mat(4, _tile)
@@ -36,7 +40,7 @@ class TownCompositionModel(SequenceModel):
                     elif tile[i][3] == 10:
                         dairy += 1
                 break
-        return [homes, farms, dairy]
+        return [money + money_since_gamestate, homes + farms + dairy]
 
     # reformat raw variable functions
     def _read_stringified_array(self, arr: str) -> List[int]:
@@ -51,4 +55,4 @@ class TownCompositionModel(SequenceModel):
 
 
 def __repr__(self):
-        return f"TownCompositionModel(levels={self._levels}, input_type={self._input_type})"
+        return f"MoneyAccumulationModel(levels={self._levels}, input_type={self._input_type})"

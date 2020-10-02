@@ -17,7 +17,21 @@
     "type": "SimpleDeathPredictionModel",
       "levels": [],
       "params":{
-        "time_int": ""
+        "time_int":404
+      }
+    },
+  "SimpleFoodDeathPredictionModel":{
+    "type": "FoodDeathPrediction",
+      "levels": [],
+      "params":{
+        "food":0
+      }
+    },
+  "SimpleMoneyDeathPredictionModel":{
+    "type": "MoneyDeathPrediction",
+      "levels": [],
+      "params":{
+        "money":300
       }
     },
 
@@ -216,6 +230,24 @@
   },
   "TownCompositionModel":{
     "type": "TownComposition",
+    "levels": [],
+    "params": {
+    }
+  },
+  "DiagonalFarmDetectorModel":{
+    "type": "DiagonalFarmDetector",
+    "levels": [],
+    "params": {
+    }
+  },
+  "RecentPurchasesModel":{
+    "type": "RecentPurchases",
+    "levels": [],
+    "params": {
+    }
+  },
+  "MoneyAccumulationModel":{
+    "type": "MoneyAccumulation",
     "levels": [],
     "params": {
     }

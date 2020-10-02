@@ -4,7 +4,7 @@ import logging
 import typing
 import logging
 ## import local files
-from models.SimpleDeathPredictionModel import SimpleDeathPredictionModel
+from models.DeathPredModel import SimpleDeathPredModel, SimpleFoodDeathPredModel, SimpleMoneyDeathPredModel
 from models.SingleFeatureModel import SingleFeatureModel
 from models.NthEventModel import NthEventModel
 from models.LogisticModel import LogisticModel
@@ -13,6 +13,9 @@ from models.FeatVelocity import FeatVelocityModel
 from models.TimeSinceEventTypes import TimeSinceEventTypesModel
 from models.PopulationModel import PopulationModel
 from models.TownCompositionModel import TownCompositionModel
+from models.DiagonalFarmDetectorModel import DiagonalFarmDetectorModel
+from models.RecentPurchasesModel import RecentPurchasesModel
+from models.MoneyAccumulationModel import MoneyAccumulationModel
 import utils
 
 ## @class ModelManager
@@ -34,7 +37,11 @@ class ModelManager():
         elif model_info["type"] == "Logistic":
             return LogisticModel(**model_info["params"])
         elif model_info["type"] == "SimpleDeathPrediction":
-            return SimpleDeathPredictionModel(**model_info["params"])
+            return SimpleDeathPredModel(**model_info["params"])
+        elif model_info["type"] == "FoodDeathPrediction":
+            return SimpleFoodDeathPredModel(**model_info["params"])
+        elif model_info["type"] == "MoneyDeathPrediction":
+            return SimpleMoneyDeathPredModel(**model_info["params"])
         elif model_info["type"] == "BloomAchSeqPercent":
             return FeatSeqPercentModel(**model_info["params"])
         elif model_info["type"] == "BloomAchVelocity":
@@ -67,6 +74,12 @@ class ModelManager():
             return PopulationModel(**model_info["params"])
         elif model_info["type"] == "TownComposition":
             return TownCompositionModel(**model_info["params"])
+        elif model_info["type"] == "DiagonalFarmDetector":
+            return DiagonalFarmDetectorModel(**model_info["params"])
+        elif model_info["type"] == "RecentPurchases":
+            return RecentPurchasesModel(**model_info["params"])
+        elif model_info["type"] == "MoneyAccumulation":
+            return MoneyAccumulationModel(**model_info["params"])
 
     def _validLevel(self, model_name: str, level: int):
         # print(f"Checking validity of model {model_name} for level {level}")
