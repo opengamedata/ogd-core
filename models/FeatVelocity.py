@@ -1,5 +1,5 @@
 from typing import List, Optional
-from models import FeatureModel
+from models.FeatureModel import FeatureModel
 from datetime import timedelta
 
 class FeatVelocityModel(FeatureModel):
