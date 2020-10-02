@@ -94,5 +94,6 @@ class FileRequest(Request):
         Request.__init__(self, game_id=game_id, max_sessions=max_sessions, min_moves=min_moves, export_files=export_files)
         self.file_path = file_path
 
+    # TODO: actually get the sessionIDs, so this request behaves properly.
     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
         return []
