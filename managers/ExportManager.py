@@ -20,6 +20,7 @@ import utils
 from config import settings
 from GameTable import GameTable
 from managers.DataManager import *
+from managers.FileManager import *
 from managers.ProcManager import ProcManager
 from managers.RawManager import RawManager
 from managers.DumpManager import DumpManager
