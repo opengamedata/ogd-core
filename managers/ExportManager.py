@@ -54,7 +54,7 @@ class ExportManager:
     #  request.
     #  @param request A data structure carrying parameters for feature extraction
     #                 and export.
-    def exportFromSQL(self, request: Request, game_schema: Schema):
+    def ExportFromSQL(self, request: Request, game_schema: Schema):
         if request.game_id != self._game_id:
             utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.game_id}", logging.WARNING)
             self._game_id = request.game_id
@@ -81,8 +81,11 @@ class ExportManager:
             finally:
                 utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
 
-    def extractFromFile(self, request: FileRequest, delimiter=','):
-        # 1) we get the source, which is a file.
+    def ExtractFromFile(self, request: FileRequest, delimiter=','):
+        if request.game_id != self._game_id:
+            utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.game_id}", logging.WARNING)
+            self._game_id = request.game_id
+        # 1) We first get the source, which is a file.
         try:
             zipped_file = zipfile.ZipFile(request.file_path)
             with zipped_file.open(zipped_file.namelist()[0]) as f:
