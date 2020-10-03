@@ -22,7 +22,7 @@ import utils
 class ModelManager():
     def __init__(self, game_name):
         self._models = utils.loadJSONFile(filename=f"{game_name}_models.json", path="./models/")
-        print(f"In ModelManager, got the following list: {self._models}")
+        #print(f"In ModelManager, got the following list: {self._models}")
         # in the future, extend this with other ways of loading models.
     
     def AddModelInfo(self, model_info):
