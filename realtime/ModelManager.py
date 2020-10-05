@@ -14,13 +14,15 @@ from models.TimeSinceEventTypes import TimeSinceEventTypesModel
 from models.PopulationModel import PopulationModel
 from models.TownCompositionModel import TownCompositionModel
 from models.DiagonalFarmDetectorModel import DiagonalFarmDetectorModel
+from models.RecentPurchasesModel import RecentPurchasesModel
+from models.MoneyAccumulationModel import MoneyAccumulationModel
 import utils
 
 ## @class ModelManager
 class ModelManager():
     def __init__(self, game_name):
         self._models = utils.loadJSONFile(filename=f"{game_name}_models.json", path="./models/")
-        print(f"In ModelManager, got the following list: {self._models}")
+        #print(f"In ModelManager, got the following list: {self._models}")
         # in the future, extend this with other ways of loading models.
     
     def AddModelInfo(self, model_info):
@@ -74,6 +76,10 @@ class ModelManager():
             return TownCompositionModel(**model_info["params"])
         elif model_info["type"] == "DiagonalFarmDetector":
             return DiagonalFarmDetectorModel(**model_info["params"])
+        elif model_info["type"] == "RecentPurchases":
+            return RecentPurchasesModel(**model_info["params"])
+        elif model_info["type"] == "MoneyAccumulation":
+            return MoneyAccumulationModel(**model_info["params"])
 
     def _validLevel(self, model_name: str, level: int):
         # print(f"Checking validity of model {model_name} for level {level}")

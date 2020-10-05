@@ -104,10 +104,13 @@ class SQL:
     @staticmethod
     def connectToMySQL(login: SQLLogin):
         try:
-            return MySQLdb.connect(host = login.host, port = login.port,
-                                           user = login.user, password = login.pword,
-                                           database = login.db_name, charset='utf8')
-        except MySQLdb.connections.Error as err:
+            conn = MySQLdb.connect(host = login.host, port = login.port,
+                                   user = login.user, password = login.pword,
+                                   database = login.db_name, charset='utf8')
+            Logger.toStdOut(f"Connected to SQL (no SSH) at {login.host}:{login.port}/{login.db_name}, {login.user}", logging.INFO)
+            return conn
+        #except MySQLdb.connections.Error as err:
+        except Exception as err:
             msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
             Logger.toStdOut(msg, logging.ERROR)
             Logger.toPrint(msg, logging.ERROR)
@@ -127,16 +130,26 @@ class SQL:
     @staticmethod
     def connectToMySQLViaSSH(sql: SQLLogin, ssh: SSHLogin):
         try:
+            # First, connect to SSH
             tunnel = sshtunnel.SSHTunnelForwarder(
                 (ssh.host, ssh.port), ssh_username=ssh.user, ssh_password=ssh.pword,
                 remote_bind_address=(sql.host, sql.port), logger=Logger.std_logger
             )
             tunnel.start()
             Logger.toStdOut(f"Connected to SSH at {ssh.host}:{ssh.port}, {ssh.user}", logging.INFO)
+        except Exception as err:
+            msg = f"Could not connect to the SSH: {type(err)} {str(err)}"
+            Logger.toStdOut(msg, logging.ERROR)
+            Logger.toFile(msg, logging.ERROR)
+            Logger.toPrint(msg, logging.ERROR)
+            traceback.print_tb(err.__traceback__)
+            return (None, None)
+        # Then, connect to MySQL
+        try:
             conn = MySQLdb.connect(host = sql.host, port = tunnel.local_bind_port,
                                            user = sql.user, password = sql.pword,
                                            database = sql.db_name, charset='utf8')
-            Logger.toStdOut(f"Connected to SQL at {sql.host}:{tunnel.local_bind_port}/{sql.db_name}, {sql.user}", logging.INFO)
+            Logger.toStdOut(f"Connected to SQL (via SSH) at {sql.host}:{tunnel.local_bind_port}/{sql.db_name}, {sql.user}", logging.INFO)
             return (tunnel, conn)
         except Exception as err:
             msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
@@ -302,6 +315,13 @@ class Logger:
                 Logger.std_logger.warn(f"WARNING: {message}")
             elif level == logging.ERROR:
                 Logger.std_logger.error(f"ERROR: {message}")
+    
+    # Function to print a method to both the standard out and file logs.
+    # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
+    @staticmethod
+    def Log(message, level):
+        Logger.toFile(message, level)
+        Logger.toStdOut(message, level)
 
     @staticmethod
     def toPrint(message, level):

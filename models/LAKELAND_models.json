@@ -6,8 +6,6 @@
       "column_name":"sess_count_achievements"
     }
   },
-  "SimpleDeathPredictionModel":{
-    "type": "SimpleDeathPrediction",
   "dummySequenceModel": {
     "type": "NthEvent",
     "levels": [],
@@ -238,6 +236,18 @@
   },
   "DiagonalFarmDetectorModel":{
     "type": "DiagonalFarmDetector",
+    "levels": [],
+    "params": {
+    }
+  },
+  "RecentPurchasesModel":{
+    "type": "RecentPurchases",
+    "levels": [],
+    "params": {
+    }
+  },
+  "MoneyAccumulationModel":{
+    "type": "MoneyAccumulation",
     "levels": [],
     "params": {
     }
