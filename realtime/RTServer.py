@@ -196,14 +196,14 @@ class RTServer:
             ret_val = None
         finally:
             return ret_val
-    ## Handler to get a list of all prediction names for a given game level.
+    ## Handler to get a list of all model names for a given game level.
     #  This is based on the assumption that models for the game are stored in a file
     #  with naming format game_id_models.json.
     #  @param  game_id The id for the game being played in the given session.
     #  @param  level   The level for which we want a list of models
-    #  @return A list of all prediction names.
+    #  @return A list of all model names.
     @staticmethod
-    def getPredictionNamesByGameLevel(game_id: str, level: int) -> typing.List:
+    def getModelNamesByGameLevel(game_id: str, level: int) -> typing.List:
         ret_val: typing.List
 
         # models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
@@ -216,7 +216,7 @@ class RTServer:
         return ret_val
 
     @staticmethod
-    def getPredictionsBySessID(sess_id: str, game_id: str, predictions):
+    def getModelsBySessID(sess_id: str, game_id: str, models):
         # start_time = datetime.now()
         try:
             prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
@@ -234,31 +234,38 @@ class RTServer:
             # NOTE: We assume current level is the one to use. If player back-tracks, you may end up with "earlier" model relative to max level.
             model_list = model_mgr.ListModels(cur_level)
             # print(f"***List of valid models***: {model_list}")
-            for model_name in predictions:
+            # Retrieve data for the session, before we start looping over all sessions.
+            # TODO: Set this up so we can get the raw session data, then pass that in to do feature extraction.
+            request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
+            session_data_raw, game_table = RTServer._fetchSessionData(sess_id, settings=settings, request=request)
+            session_data = [list(row) for row in session_data_raw]
+            for row in session_data:
+                col = row[game_table.complex_data_index]
+                row[game_table.complex_data_index] = json.loads(col.replace("'", "\"")) if (col is not None) else {"event_custom":row[game_table.event_index]}
+            session_data_parsed = [game_table.RowToDict(row) for row in session_data]
+            features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
+            features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
+            # For each model in the model list, call eval on the proper type of data.
+            for model_name in models:
                 if model_name in model_list:
                     model = model_mgr.LoadModel(model_name=model_name)
                     if model.GetInputType() == ModelInputType.FEATURE:
-                        features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
-                        features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
                         result_list = model.Eval([features_parsed])
                     elif model.GetInputType() == ModelInputType.SEQUENCE:
-                        # first, get the list of events for the session.
-                        request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
-                        session_data, game_table = RTServer._fetchSessionData(sess_id, settings=settings, request=request)
-                        result_list = model.Eval(session_data)
+                        result_list = model.Eval(session_data_parsed)
                     ret_val[sess_id] = {"name": model_name, "value": str(result_list)}
                 else:
                     ret_val[sess_id] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
         except Exception as err:
             # print(f"got error in RTServer.py: {str(err)}")
             # traceback.print_tb(err.__traceback__)
-            utils.Logger.toFile(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", logging.ERROR)
-            print(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", file=sys.stderr)
+            utils.Logger.toFile(f"Got an error in getModelsBySessID: {type(err)} {str(err)}", logging.ERROR)
+            print(f"Got an error in getModelsBySessID: {type(err)} {str(err)}", file=sys.stderr)
             ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
         finally:
             result = {sess_id:ret_val}
-            # print(f"returning from realtime, with session_predictions: {result}") # Time spent was {(datetime.now()-start_time).seconds} seconds.")
+            # print(f"returning from realtime, with session_models: {result}") # Time spent was {(datetime.now()-start_time).seconds} seconds.")
             return result
 
     ## Simple helper method to take in a raw (string) version of a feature from file,

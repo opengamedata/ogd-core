@@ -6,10 +6,32 @@
       "column_name":"sess_count_achievements"
     }
   },
+  "dummySequenceModel": {
+    "type": "NthEvent",
+    "levels": [],
+    "params": {
+      "n": 0
+    }
+  },
   "DeathPredictionModel":{
     "type": "SimpleDeathPredictionModel",
       "levels": [],
       "params":{
+        "time_int":404
+      }
+    },
+  "SimpleFoodDeathPredictionModel":{
+    "type": "FoodDeathPrediction",
+      "levels": [],
+      "params":{
+        "food":0
+      }
+    },
+  "SimpleMoneyDeathPredictionModel":{
+    "type": "MoneyDeathPrediction",
+      "levels": [],
+      "params":{
+        "money":300
       }
     },
 
@@ -21,21 +43,21 @@
       }
     },
     "BloomAchSeqPercentModel":{
-    "type": "FeatSeqPercent",
+    "type": "BloomAchSeqPercent",
     "levels": [],
     "params": {
-        "sequence": [
+        "feature_sequence": [
             "sess_time_active_to_bloom_achievement",
             "sess_time_active_to_bigbloom_achievement",
             "sess_time_active_to_hugebloom_achievement",
             "sess_time_active_to_massivebloom_achievement"
         ],
         "quantile_json_path": "models/lakeland_data/quantiles_no_continue.json",
-        "time_feat": "sess_active_time"
+        "time_feat": "sess_time_active"
     }
     },
   "BloomAchVelocityModel":{
-    "type": "FeatVelocity",
+    "type": "BloomAchVelocity",
     "levels": [],
     "params": {
         "feature_list": [
@@ -44,25 +66,25 @@
             "sess_time_active_to_hugebloom_achievement",
             "sess_time_active_to_massivebloom_achievement"
         ],
-        "time_feat": "sess_active_time"
+        "time_feat": "sess_time_active"
     }
     },
   "MoneyAchSeqPercentModel":{
-    "type": "FeatSeqPercent",
+    "type": "MoneyAchSeqPercent",
     "levels": [],
     "params": {
-        "sequence": [
+        "feature_sequence": [
             "sess_time_active_to_paycheck_achievement",
             "sess_time_active_to_thousandair_achievement",
             "sess_time_active_to_stability_achievement",
             "sess_time_active_to_riches_achievement"
         ],
         "quantile_json_path": "models/lakeland_data/quantiles_no_continue.json",
-        "time_feat": "sess_active_time"
+        "time_feat": "sess_time_active"
     }
     },
   "MoneyAchVelocityModel":{
-    "type": "FeatVelocity",
+    "type": "MoneyAchVelocity",
     "levels": [],
     "params": {
         "feature_list": [
@@ -71,25 +93,25 @@
             "sess_time_active_to_stability_achievement",
             "sess_time_active_to_riches_achievement"
         ],
-        "time_feat": "sess_active_time"
+        "time_feat": "sess_time_active"
     }
     },
   "PopAchSeqPercentModel":{
-    "type": "FeatSeqPercent",
+    "type": "PopAchSeqPercent",
     "levels": [],
     "params": {
-        "sequence": [
+        "feature_sequence": [
             "sess_time_active_to_exist_achievement",
             "sess_time_active_to_group_achievement",
             "sess_time_active_to_town_achievement",
             "sess_time_active_to_city_achievement"
         ],
         "quantile_json_path": "models/lakeland_data/quantiles_no_continue.json",
-        "time_feat": "sess_active_time"
+        "time_feat": "sess_time_active"
     }
     },
   "PopAchVelocityModel":{
-    "type": "FeatVelocity",
+    "type": "PopAchVelocity",
     "levels": [],
     "params": {
         "feature_list": [
@@ -98,25 +120,25 @@
             "sess_time_active_to_town_achievement",
             "sess_time_active_to_city_achievement"
         ],
-        "time_feat": "sess_active_time"
+        "time_feat": "sess_time_active"
     }
     },
   "FarmAchSeqPercentModel":{
-    "type": "FeatSeqPercent",
+    "type": "FarmAchSeqPercent",
     "levels": [],
     "params": {
-        "sequence": [
+        "feature_sequence": [
             "sess_time_active_to_farmer_achievement",
             "sess_time_active_to_farmers_achievement",
             "sess_time_active_to_farmtown_achievement",
             "sess_time_active_to_megafarm_achievement"
         ],
         "quantile_json_path": "models/lakeland_data/quantiles_no_continue.json",
-        "time_feat": "sess_active_time"
+        "time_feat": "sess_time_active"
     }
     },
   "FarmAchVelocityModel":{
-        "type": "FeatVelocity",
+        "type": "FarmAchVelocity",
     "levels": [],
     "params": {
         "feature_list": [
@@ -125,14 +147,14 @@
             "sess_time_active_to_farmtown_achievement",
             "sess_time_active_to_megafarm_achievement"
         ],
-        "time_feat": "sess_active_time"
+        "time_feat": "sess_time_active"
     }
     },
   "ReqTutSeqPercentModel":{
-    "type": "FeatSeqPercent",
+    "type": "ReqTutSeqPercent",
     "levels": [],
     "params": {
-        "sequence": [
+        "feature_sequence": [
             "sess_time_active_to_buy_food_tutorial",
             "sess_time_active_to_build_a_farm_tutorial",
             "sess_time_active_to_timewarp_tutorial",
@@ -145,11 +167,11 @@
             "sess_time_active_to_rain_tutorial"
         ],
         "quantile_json_path": "models/lakeland_data/quantiles_no_continue.json",
-        "time_feat": "sess_active_time"
+        "time_feat": "sess_time_active"
     }
     },
   "ReqTutVelocityModel":{
-    "type": "FeatVelocity",
+    "type": "ReqTutVelocity",
     "levels": [],
     "params": {
         "feature_list": [
@@ -164,7 +186,70 @@
             "sess_time_active_to_poop_tutorial",
             "sess_time_active_to_rain_tutorial"
         ],
-        "time_feat": "sess_active_time"
+        "time_feat": "sess_time_active"
     }
+    },
+  "TimeSinceImpactModel": {
+    "type": "TimeSinceImpact",
+    "levels": [],
+    "params": {
+      "event_list": [7,10,11]
     }
+  },
+    "TimeSinceActiveEvent": {
+    "type": "TimeSinceActive",
+    "levels": [],
+    "params": {
+      "event_list": [3, 4, 5, 6, 7, 8, 10, 11, 1, 12, 13, 14, 15, 16]
+    }
+  },
+    "TimeSinceExploratoryModel": {
+    "type": "TimeSinceExploratory",
+    "levels": [],
+    "params": {
+      "event_list": [3, 4, 5, 14, 13, 12]
+    }
+  },
+  "TimeSinceLastFarmHouseDairyModel": {
+    "type": "TimeSinceLastFarmHouseDairy",
+    "levels": [],
+    "params": {
+      "event_list": [
+        [7, [
+          [["event_data_complex", "buy"], "in", [1,3,5]],
+          [["event_data_complex", "success"], "eq", true]
+        ]]
+      ]
+    }
+  },
+  "PopulationModel":{
+    "type": "Population",
+    "levels": [],
+    "params": {
+    }
+  },
+  "TownCompositionModel":{
+    "type": "TownComposition",
+    "levels": [],
+    "params": {
+    }
+  },
+  "DiagonalFarmDetectorModel":{
+    "type": "DiagonalFarmDetector",
+    "levels": [],
+    "params": {
+    }
+  },
+  "RecentPurchasesModel":{
+    "type": "RecentPurchases",
+    "levels": [],
+    "params": {
+    }
+  },
+  "MoneyAccumulationModel":{
+    "type": "MoneyAccumulation",
+    "levels": [],
+    "params": {
+    }
+  }
 }

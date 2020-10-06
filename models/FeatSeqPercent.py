@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 import pandas as pd
 from bisect import bisect_left
 import numpy as np
@@ -15,15 +15,15 @@ successful_harvest sell_food buy_fertilizer buy_livestock \
 livestock poop rain".split()  # skip build_a_house - it comes at 0.0
 
 
-def _get_sess_active_time_to_achievement_list(achs):
+def _get_sess_active_time_to_achievement_list(achs: List[str]) -> List[str]:
     return [f'sess_time_active_to_{a}_achievement' for a in achs]
 
 
-def _get_sess_active_time_to_tutorial_list(tuts):
+def _get_sess_active_time_to_tutorial_list(tuts: List[str]) -> List[str]:
     return [f'sess_time_active_to_{t}_tutorial' for t in tuts]
 
 
-def _get_quantiles(df, feats, filter_debug=True, filter_continue=True):
+def _get_quantiles(df: pd.DataFrame, feats: List[str], filter_debug:bool=True, filter_continue:bool=True) -> Dict[str, List[float]]:
     filter_strings = []
     if filter_debug:
         filter_strings += ['(debug==0)']
@@ -36,7 +36,8 @@ def _get_quantiles(df, feats, filter_debug=True, filter_continue=True):
     quantiles = df.to_dict('list')
     return quantiles
 
-
+## @class _FeatureQuantiles
+# A private class used to create singleton access to quantile data used by the FeatSeqPercentModel class.
 class _FeatureQuantiles(object):
 
     def __init__(self, arg, filter_continue=True):
@@ -86,14 +87,32 @@ class _FeatureQuantiles(object):
 
 
 
+## @class FeatSeqPercentModel
+# Feature to output the percentile that a session is at along a progression of gameplay timestamp features. Depends
+# heavily on the logic used to produce the quantiles file. The following exemplifies current implementation:
+#
+# Example: A game has 10 checkpoints. Joey has reached 3/10 checkpoints. His total playtime so far is 45 seconds.
+# The model will return the percentile of reaching checkpoint 4 at 45 seconds. If historically 70% of students take
+# longer than 45 seconds to reach checkpoint 4, the model will return 30%.
+#
+# Example: A game has 10 checkpoints. Joey has reached 10/10 checkpoints. His total playtime so far is 190 seconds.
+# He reached checkpoint 10 at 185 seconds. The model will return the percentile of reaching checkpoint 10 at 185
+# seconds, and will continue returning that same value for this session.
+#
+# @param feature_sequence: sequence of timedelta features that are to be in strictly ascending order
+# @param levels: levels applicable to this model
+# @param time_feat: "sessDuration" or "sess_time_active", depending if the model should be used for active time or
+# overall time. Make sure that the quantiles file uses the same time feature.
+# @param quantile_json_path: Path to a quantiles JSON file constructed by the _FeatureQuantiles private class
 
 class FeatSeqPercentModel(FeatureModel):
     def __init__(self, feature_sequence: List[str], levels: List[int] = [], time_feat: str = 'sess_time_active',
                  quantile_json_path: str = "models/lakeland_data/quantiles_no_continue.json"):
+        self._quantile_json_path = quantile_json_path
         self._feature_sequence = feature_sequence
         self._time_feat = time_feat
         self._featureQuantiles = _FeatureQuantiles.fromJSON(
-            no_continue_json_path=quantile_json_path)
+            quantile_json_path=quantile_json_path)
 
         super().__init__()
 
@@ -114,5 +133,10 @@ class FeatSeqPercentModel(FeatureModel):
         percentile_if_next_feat_now = self._featureQuantiles.get_quantile(next_feat, cur_time, verbose=verbose)
 
         return percentile_if_next_feat_now
+
+    def __repr__(self):
+        return f"FeatSeqPercentModel(feature_sequence={self._feature_sequence}, time_feat='{self._time_feat}'" \
+               f"quantile_json_path='{self._quantile_json_path}'" \
+               f", levels={self._levels}, input_type={self._input_type})"
 
 

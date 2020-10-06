@@ -59,14 +59,14 @@ try:
     elif method == "get_feature_names_by_game":
         game_id = request.getvalue("gameID")
         body = RTServer.getFeatureNamesByGame(game_id=game_id)
-    elif method == "get_predictions_by_sessID":
+    elif method == "get_models_by_sessID":
         game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
-        predictions = request.getvalue("predictions")
-        body = RTServer.getPredictionsBySessID(sess_id=sess_id, game_id=game_id, predictions=predictions)
-    elif method == "get_prediction_names_by_game":
+        models = request.getvalue("models")
+        body = RTServer.getModelsBySessID(sess_id=sess_id, game_id=game_id, models=models)
+    elif method == "get_model_names_by_game":
         game_id = request.getvalue("gameID")
-        body = RTServer.getPredictionNamesByGameLevel(game_id=game_id)
+        body = RTServer.getModelNamesByGameLevel(game_id=game_id)
     elif method == "sim_all_active_sessions":
         game_id = request.getvalue("gameID")
         require_player_id = request.getvalue("require_player_id")
@@ -79,12 +79,12 @@ try:
         sim_time = int(request.getvalue("sim_time"))
         body = SimRTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, sim_time=sim_time, features=features)
         utils.Logger.toStdOut(f"got simulated features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}, sim_time={sim_time}", logging.INFO)
-    elif method == "sim_predictions_by_sessID":
+    elif method == "sim_models_by_sessID":
         game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
-        predictions = request.getvalue("predictions").split(",")
+        models = request.getvalue("models").split(",")
         sim_time = int(request.getvalue("sim_time"))
-        body = SimRTServer.getPredictionsBySessID(sess_id=sess_id, game_id=game_id, sim_time=sim_time, predictions=predictions)
+        body = SimRTServer.getModelsBySessID(sess_id=sess_id, game_id=game_id, sim_time=sim_time, models=models)
 
     result: str = json.dumps(body, default=lambda ob: ob.isoformat() if type(ob) == datetime else json.dumps(ob))
     print(result)

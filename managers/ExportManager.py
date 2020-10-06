@@ -20,10 +20,11 @@ import utils
 from config import settings
 from GameTable import GameTable
 from managers.DataManager import *
+from managers.FileManager import *
 from managers.ProcManager import ProcManager
 from managers.RawManager import RawManager
 from managers.DumpManager import DumpManager
-from Request import Request, ExportFiles
+from Request import *
 from schemas.Schema import Schema
 from feature_extractors.WaveExtractor import WaveExtractor
 from feature_extractors.CrystalExtractor import CrystalExtractor
@@ -50,67 +51,72 @@ class ExportManager:
         # self._select_queries = []
 
     ## Public function to use for feature extraction and csv export.
-    #  Extracts features and exports raw and processed csv's based on the given
-    #  request.
+    #  Just sets up SQL-specific stuff, then defers to runExport to handle the rest.
+    #  This call to runExport extracts features and exports raw and processed csv's based on the given request.
     #  @param request A data structure carrying parameters for feature extraction
     #                 and export.
-    def exportFromRequest(self, request: Request, game_schema: Schema):
+    def ExportFromSQL(self, request: Request, game_schema: Schema):
         if request.game_id != self._game_id:
             utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.game_id}", logging.WARNING)
             self._game_id = request.game_id
+        # 1) we first get the source, which is a SQL connection.
+        tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
+        if db is None:
+            msg = f"Could not complete request {str(request)}, database connection failed."
+            utils.Logger.toStdOut(msg, logging.ERROR)
+            utils.Logger.toFile(msg, logging.ERROR)
+            return
+        # If that was successful, we set up data retrieval with a game table and SQLDataManager.
         try:
-            tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
-            if db is not None:
-                game_table: GameTable = GameTable.FromDB(db=db, settings=self._settings, request=request)
-                date_range = (request.start_date, request.end_date)
-                data_manager = SQLDataManager(game_id=request.game_id, game_schema=game_schema, settings=settings)
-                parse_success: bool = self._getAndParseData(data_manager=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files)
-                if parse_success:
-                    utils.Logger.toStdOut(f"Successfully completed request {str(request)}.", logging.INFO)
-                    utils.Logger.toFile(f"Successfully completed request {str(request)}.", logging.INFO)
-                else:
-                    utils.Logger.toStdOut(f"Could not complete request {str(request)}", logging.ERROR)
-                    utils.Logger.toFile(f"Could not complete request {str(request)}", logging.ERROR)
+            data_manager = SQLDataManager(game_id=request.game_id, game_schema=game_schema, settings=settings)
+            date_range = (request.start_date, request.end_date)
+            game_table: GameTable = GameTable.FromDB(db=db, settings=self._settings, request=request)
+            # once we've set up DataManager and gotten a bit of data, we can run the Export.
+            if self._runExport(data_mgr=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files):
+                utils.Logger.toStdOut(f"Successfully completed request {str(request)}.", logging.INFO)
+                utils.Logger.toFile(f"Successfully completed request {str(request)}.", logging.INFO)
             else:
-                utils.Logger.toFile(f"Could not complete request {str(request)}, database connection failed.", logging.ERROR)
+                utils.Logger.Log(f"Could not complete request {str(request)}", logging.ERROR)
         except Exception as err:
-            msg = f"{type(err)} {str(err)}"
+            msg = f"General error ExportFromSQL: {type(err)} {str(err)}"
             utils.SQL.server500Error(msg)
             utils.Logger.toFile(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
         finally:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
 
-    def extractFromFile(self, request: Request, delimiter=','):
+    def ExtractFromFile(self, request: FileRequest, delimiter=','):
+        if request.game_id != self._game_id:
+            utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.game_id}", logging.WARNING)
+            self._game_id = request.game_id
+        # 1) We first get the source, which is a file.
         try:
             zipped_file = zipfile.ZipFile(request.file_path)
             with zipped_file.open(zipped_file.namelist()[0]) as f:
                 data_frame = pd.read_csv(filepath_or_buffer=f, delimiter=delimiter, parse_dates=['server_time', 'client_time'])
         except FileNotFoundError as err:
-            utils.Logger.toStdOut(err, logging.ERROR)
-            utils.Logger.toFile(err, logging.ERROR)
+            msg = f"Could not complete request {str(request)}, failed to open {request.file_path}. {str(err)}"
+            utils.Logger.toStdOut(msg, logging.ERROR)
+            utils.Logger.toFile(msg, logging.ERROR)
             return
-        else:
-            game_table = GameTable.FromCSV(data_frame=data_frame)
-            try:
-                data_manager = CSVDataManager(game_id=data_frame['app_id'][0], data_frame=data_frame)
-                # start = datetime.strptime(data_frame['server_time'].min().split(' ')[0], "%Y-%m-%d")
-                # end = datetime.strptime(data_frame['server_time'].max().split(' ')[0], "%Y-%m-%d")
-                start = data_frame['server_time'].min()
-                end = data_frame['server_time'].max()
-                date_range = (start, end)
-                parse_success: bool = self._getAndParseData(data_manager=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files)
-                if parse_success:
-                    utils.Logger.toStdOut(f"Successfully completed extraction from {request.file_path}.", logging.INFO)
-                else:
-                    utils.Logger.toFile(f"Could not complete extraction from {request.file_path}", logging.ERROR)
-            except Exception as err:
-                msg = f"{type(err)} {str(err)}"
-                utils.SQL.server500Error(msg)
-                utils.Logger.toFile(msg, logging.ERROR)
-                traceback.print_tb(err.__traceback__)
-
-
+        # If that was successful, we then set up data retrieval with a game table and CSVDataManager.
+        try:
+            data_manager = CSVDataManager(game_id=data_frame['app_id'][0], data_frame=data_frame)
+            date_range = (data_frame['server_time'].min(), data_frame['server_time'].max())
+            game_table: GameTable = GameTable.FromCSV(data_frame=data_frame)
+            # start = datetime.strptime(data_frame['server_time'].min().split(' ')[0], "%Y-%m-%d")
+            # end = datetime.strptime(data_frame['server_time'].max().split(' ')[0], "%Y-%m-%d")
+            # date_range = (start, end)
+            # once we've set up DataManager and gotten a bit of data, we can run the Export.
+            if self._runExport(data_mgr=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files):
+                utils.Logger.toStdOut(f"Successfully completed extraction from {request.file_path}.", logging.INFO)
+            else:
+                utils.Logger.toFile(f"Could not complete extraction from {request.file_path}", logging.ERROR)
+        except Exception as err:
+            msg = f"General error ExtractFromFile: {type(err)} {str(err)}"
+            utils.SQL.server500Error(msg)
+            utils.Logger.toFile(msg, logging.ERROR)
+            traceback.print_tb(err.__traceback__)
 
     ## Private function containing most of the code to handle processing of db
     #  data, and export to files.
@@ -118,101 +124,31 @@ class ExportManager:
     #                    and export
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
-    def _getAndParseData(self, data_manager: DataManager, date_range: typing.Tuple, game_table: GameTable, export_files: ExportFiles) -> bool:
-        data_directory = self._settings["DATA_DIR"] + self._game_id
-        # db_settings = self._settings["db_config"]
-        
+    def _runExport(self, data_manager: DataManager, date_range: typing.Tuple, game_table: GameTable, files: typing.Dict) -> bool:
         # utils.Logger.toStdOut("complex_data_index: {}".format(complex_data_index), logging.DEBUG)
-
         try:
-            # TODO: get this pile of crap organized
-            # First, get the files and game-specific vars ready
-            game_schema, game_extractor = self._getExtractor()
-            export_files.proc = export_files.proc and (game_extractor is not None) # if no game extractor, don't try to extract.
-            # also figure out hash and dataset ID.
-            _from = date_range[0].strftime("%Y%m%d")
-            _to = date_range[1].strftime("%Y%m%d")
-            repo = git.Repo(search_parent_directories=True)
-            short_hash = repo.git.rev_parse(repo.head.object.hexsha, short=7)
-            dataset_id = f"{self._game_id}_{_from}_to_{_to}"
-
-            # get the current list, and set up our paths.
-            existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR'])
-            os.makedirs(name=data_directory, exist_ok=True)
-            readme_path:   str = f"{data_directory}/readme.md"
-            proc_csv_path: str = f"{data_directory}/{dataset_id}_{short_hash}_proc.csv" if export_files.proc else None
-            proc_zip_path: str = f"{data_directory}/{dataset_id}_{short_hash}_proc.zip" if export_files.proc else None
-            raw_csv_path:  str = f"{data_directory}/{dataset_id}_{short_hash}_raw.tsv" if export_files.raw else None # changed .csv to .tsv
-            raw_zip_path:  str = f"{data_directory}/{dataset_id}_{short_hash}_raw.zip" if export_files.raw else None
-            dump_csv_path: str = f"{data_directory}/{dataset_id}_{short_hash}_dump.tsv" if export_files.dump else None
-            dump_zip_path: str = f"{data_directory}/{dataset_id}_{short_hash}_dump.zip" if export_files.dump else None
-            num_sess:      int = len(game_table.session_ids)
+            # 2) Prepare files for export.
+            file_manager = FileManager(export_files=request.export_files, game_id=self._game_id, \
+                                       data_dir=self._settings["DATA_DIR"], date_range=date_range)
+            files = file_manager.OpenFiles()
+            # 3a) Prepare schema and extractor
+            game_schema, game_extractor = self._prepareSchema()
+            # if game doesn't have an extractor, make sure we don't try to export it.
+            if game_extractor is None:
+                request.export_files.proc = False
             # If we have a schema, we can do feature extraction.
             if game_schema is not None:
-                # perform extraction
-                self._extractToCSVs(raw_csv_path=raw_csv_path, proc_csv_path=proc_csv_path, dump_csv_path=dump_csv_path,\
-                                    data_manager=data_manager,\
-                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor, export_files=export_files)
-                # for each file, try to save out the csv/tsv to a file - if it's one that should be exported, that is.
-                previously_exported = (self._game_id in existing_csvs and dataset_id in existing_csvs[self._game_id]) 
-                if export_files.proc:
-                    try:
-                        # if we have already done this dataset before, rename old zip files
-                        # (of course, first check if we ever exported this game before).
-                        if previously_exported:
-                            src_proc = existing_csvs[self._game_id][dataset_id]['proc']
-                            if src_proc is not None:
-                                os.rename(src_proc, proc_zip_path)
-                        proc_zip_file = zipfile.ZipFile(proc_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
-                        self._addToZip(path=proc_csv_path, zip_file=proc_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_proc.csv")
-                        self._addToZip(path=readme_path, zip_file=proc_zip_file, path_in_zip=f"{dataset_id}/readme.md")
-                        os.remove(proc_csv_path)
-                    except FileNotFoundError as err:
-                        utils.Logger.toStdOut(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                        traceback.print_tb(err.__traceback__)
-                        utils.Logger.toFile(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                    finally:
-                        proc_zip_file.close()
-                if export_files.raw:
-                    try:
-                        # if we have already done this dataset before, rename old zip files
-                        # (of course, first check if we ever exported this game before).
-                        if previously_exported:
-                            src_raw = existing_csvs[self._game_id][dataset_id]['raw']
-                            if src_raw is not None:
-                                os.rename(src_raw, raw_zip_path)
-                        raw_zip_file = zipfile.ZipFile(raw_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
-                        self._addToZip(path=raw_csv_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_raw.tsv")
-                        self._addToZip(path=readme_path, zip_file=raw_zip_file, path_in_zip=f"{dataset_id}/readme.md")
-                        os.remove(raw_csv_path)
-                    except FileNotFoundError as err:
-                        utils.Logger.toStdOut(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                        traceback.print_tb(err.__traceback__)
-                        utils.Logger.toFile(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                    finally:
-                        raw_zip_file.close()
-                if export_files.dump:
-                    try:
-                        # if we have already done this dataset before, rename old zip files
-                        # (of course, first check if we ever exported this game before).
-                        if previously_exported:
-                            src_dump = existing_csvs[self._game_id][dataset_id]['dump']
-                            if src_dump is not None:
-                                os.rename(src_dump, dump_zip_path)
-                        dump_zip_file = zipfile.ZipFile(dump_zip_path, "w", compression=zipfile.ZIP_DEFLATED)
-                        self._addToZip(path=dump_csv_path, zip_file=dump_zip_file, path_in_zip=f"{dataset_id}/{dataset_id}_{short_hash}_dump.tsv")
-                        self._addToZip(path=readme_path, zip_file=dump_zip_file, path_in_zip=f"{dataset_id}/readme.md")
-                        os.remove(dump_csv_path)
-                    except FileNotFoundError as err:
-                        utils.Logger.toStdOut(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                        traceback.print_tb(err.__traceback__)
-                        utils.Logger.toFile(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                    finally:
-                        dump_zip_file.close()
-            # Finally, update the list of csv files.
-            self._updateFileExportList(dataset_id=dataset_id, raw_path=raw_zip_path, proc_path=proc_zip_path,
-                                    dump_path=dump_zip_path, date_range=date_range, num_sess=num_sess)
-            ret_val = True
+                # 4) Loop over data, running extractors.
+                num_sess: int = self._extractToCSVs(files=files, data_manager=data_manager,\
+                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
+                # 5) Save and close files
+                file_manager.ZipCSVs()
+                # 6) Finally, update the list of csv files.
+                self._updateFileExportList(dataset_id=dataset_id, raw_path=raw_zip_path, proc_path=proc_zip_path,
+                                           dump_path=dump_zip_path, date_range=date_range, num_sess=num_sess)
+                ret_val = True
+            else:
+                ret_val = False
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.toStdOut(msg, logging.ERROR)
@@ -222,7 +158,7 @@ class ExportManager:
         finally:
             return ret_val
 
-    def _getExtractor(self):
+    def _prepareSchema(self):
         game_extractor: type = None
         game_schema: Schema = None
         if self._game_id == "WAVES":
@@ -244,32 +180,21 @@ class ExportManager:
             raise Exception("Got an invalid game ID!")
         return game_schema, game_extractor
 
-    def _addToZip(self, path, zip_file, path_in_zip):
-        try:
-            zip_file.write(path, path_in_zip)
-        except FileNotFoundError as err:
-            utils.Logger.toStdOut(str(err), logging.ERROR)
-            traceback.print_tb(err.__traceback__)
-            utils.Logger.toFile(str(err), logging.ERROR)
-
-    def _extractToCSVs(self, raw_csv_path: str, proc_csv_path: str, dump_csv_path: str, data_manager: DataManager,
-                       game_schema: Schema, game_table: GameTable, game_extractor: type, export_files: ExportFiles):
+    def _extractToCSVs(self, files: typing.Dict, data_manager: DataManager,
+                       game_schema: Schema, game_table: GameTable, game_extractor: type):
         try:
             proc_mgr = raw_mgr = dump_mgr = None
-            if export_files.proc:
-                proc_csv_file = open(proc_csv_path, "w", encoding="utf-8")
+            if files["proc"] is not None:
                 proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table,
-                                    game_schema=game_schema, proc_csv_file=proc_csv_file)
+                                    game_schema=game_schema, proc_csv_file=files["proc"])
                 proc_mgr.WriteProcCSVHeader()
-            if export_files.raw:
-                raw_csv_file = open(raw_csv_path, "w", encoding="utf-8")
+            if files["raw"] is not None:
                 raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
-                                    raw_csv_file=raw_csv_file)
+                                    raw_csv_file=files["raw"])
                 raw_mgr.WriteRawCSVHeader()
-            if export_files.dump:
-                dump_csv_file = open(dump_csv_path, "w", encoding="utf-8")
+            if files["dump"] is not None:
                 dump_mgr = DumpManager(game_table=game_table, game_schema=game_schema,
-                                    dump_csv_file=dump_csv_file)
+                                    dump_csv_file=files["dump"])
                 dump_mgr.WriteDumpCSVHeader()
 
             num_sess = len(game_table.session_ids)
@@ -307,19 +232,22 @@ class ExportManager:
                 if export_files.dump:
                     dump_mgr.WriteDumpCSVLines()
                     dump_mgr.ClearLines()
+            ret_val = num_sess
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.toStdOut(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(msg, logging.ERROR)
+            ret_val = -1
         finally:
+            # Save out all the files.
             if export_files.proc:
                 proc_csv_file.close()
             if export_files.raw:
                 raw_csv_file.close()
             if export_files.dump:
                 dump_csv_file.close()
-            return
+            return ret_val
 
     ## Private helper function to process a single row of data.
     #  Most of the processing is delegated to Raw and Proc Managers, but this

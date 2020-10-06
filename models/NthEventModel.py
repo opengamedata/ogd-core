@@ -13,5 +13,5 @@ class NthEventModel(SequenceModel):
         super().__init__(levels)
         self._n = n
 
-    def _eval(self, rows: typing.Dict):
-        return rows[n]
+    def _eval(self, rows: typing.List[typing.Dict[str, typing.Any]]) -> typing.Any:
+        return rows[self._n]

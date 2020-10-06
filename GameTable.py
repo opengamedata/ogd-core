@@ -75,3 +75,8 @@ class GameTable:
         min_level = data_frame['level'].min()
         max_level = data_frame['level'].max()
         return GameTable(game_id=game_id, column_names=col_names, session_ids=sess_ids, max_level=max_level, min_level=min_level)
+
+    ## Simple utility function to turn a raw row from the file/database into a dictionary,
+    #  indexed with the column names retrieved from the file/database.
+    def RowToDict(self, row):
+        return {self.column_names[i]: row[i] for i in range(len(self.column_names))}
