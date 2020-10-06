@@ -17,7 +17,7 @@ from feature_extractors.WaveExtractor import WaveExtractor
 from feature_extractors.LakelandExtractor import LakelandExtractor
 from GameTable import GameTable
 from managers.ProcManager import ProcManager
-from models.Model import *
+# from models.Model import *
 from realtime.ModelManager import ModelManager
 from schemas.Schema import Schema
 
