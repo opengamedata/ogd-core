@@ -17,7 +17,7 @@ from feature_extractors.WaveExtractor import WaveExtractor
 from feature_extractors.LakelandExtractor import LakelandExtractor
 from GameTable import GameTable
 from managers.ProcManager import ProcManager
-from models.Model import *
+# from models.Model import *
 from realtime.ModelManager import ModelManager
 from schemas.Schema import Schema
 
@@ -186,14 +186,14 @@ class SimRTServer:
         finally:
             return ret_val
 
-    ## Handler to get a list of all prediction names for a given game level.
+    ## Handler to get a list of all model names for a given game level.
     #  This is based on the assumption that models for the game are stored in a file
     #  with naming format game_id_models.json.
     #  @param  game_id The id for the game being played in the given session.
     #  @param  level   The level for which we want a list of models
-    #  @return A list of all prediction names.
+    #  @return A list of all model names.
     @staticmethod
-    def getPredictionNamesByGameLevel(game_id: str, level: int) -> typing.List:
+    def getModelNamesByGameLevel(game_id: str, level: int) -> typing.List:
         ret_val: typing.List
 
         # models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
@@ -206,7 +206,7 @@ class SimRTServer:
         return ret_val
 
     @staticmethod
-    def getPredictionsBySessID(sess_id: str, game_id: str, sim_time: int, predictions):
+    def getModelsBySessID(sess_id: str, game_id: str, sim_time: int, models):
         # start_time = datetime.now()
         tunnel,db = utils.SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
         try:
@@ -225,7 +225,7 @@ class SimRTServer:
             # NOTE: We assume current level is the one to use. If player back-tracks, you may end up with "earlier" model relative to max level.
             model_list = model_mgr.ListModels(cur_level)
 
-            for model_name in predictions:
+            for model_name in models:
                 if model_name in model_list:
                     model = model_mgr.LoadModel(model_name=model_name)
                     if model.GetInputType() == ModelInputType.FEATURE:
@@ -240,14 +240,14 @@ class SimRTServer:
                 else:
                     ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
         except Exception as err:
-            utils.Logger.toFile(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", logging.ERROR)
-            print(f"Got an error in getPredictionsBySessID: {type(err)} {str(err)}", file=sys.stderr)
+            utils.Logger.toFile(f"Got an error in getModelsBySessID: {type(err)} {str(err)}", logging.ERROR)
+            print(f"Got an error in getModelsBySessID: {type(err)} {str(err)}", file=sys.stderr)
             traceback.print_tb(err.__traceback__, file=sys.stderr)
             ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
         finally:
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-            # print(f"returning from realtime, with session_predictions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
+            # print(f"returning from realtime, with session_models. Time spent was {(datetime.now()-start_time).seconds} seconds.")
             return {sess_id:ret_val}
 
     ## Simple helper method to take in a raw (string) version of a feature from file,
