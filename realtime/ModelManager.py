@@ -16,6 +16,8 @@ from models.TownCompositionModel import TownCompositionModel
 from models.DiagonalFarmDetectorModel import DiagonalFarmDetectorModel
 from models.RecentPurchasesModel import RecentPurchasesModel
 from models.MoneyAccumulationModel import MoneyAccumulationModel
+from models.TutorialProgressionModel import TutorialProgressionModel
+from models.PlayingTimeModel import PlayingTimeModel
 import utils
 
 ## @class ModelManager
@@ -36,6 +38,10 @@ class ModelManager():
             return NthEventModel(**model_info["params"])
         elif model_info["type"] == "Logistic":
             return LogisticModel(**model_info["params"])
+        elif model_info["type"] == "TutorialProgressionModel":
+            return TutorialProgressionModel(**model_info["params"])
+        elif model_info["type"] == "PlayingTimeModel":
+            return PlayingTimeModel(**model_info["params"])
         elif model_info["type"] == "SimpleDeathPrediction":
             return SimpleDeathPredModel(**model_info["params"])
         elif model_info["type"] == "FoodDeathPrediction":

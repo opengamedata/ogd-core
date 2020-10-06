@@ -13,6 +13,30 @@
       "n": 0
     }
   },
+  "PlayingTimeModel": {
+    "type": "PlayingTimeModel",
+    "levels": [],
+    "params": {
+      "features": [
+        "sess_time_in_secs",
+        "sess_time_active"
+      ]
+    }
+  },
+  "TutorialProgressionModel": {
+    "type": "TutorialProgressionModel",
+    "levels": [],
+    "params": {
+      "tut_features" : [
+        "sess_time_to_first_home_buy",
+        "sess_time_to_sell_food_tutorial",
+        "sess_time_to_first_livestock_buy",
+        "sess_time_to_first_farm_buy",
+        "sess_time_to_first_fertilizer_buy",
+        "sess_time_to_extra_life_tutorial"
+      ]
+    }
+  },
   "DeathPredictionModel":{
     "type": "SimpleDeathPredictionModel",
       "levels": [],
