@@ -1,3 +1,7 @@
+## @module PopulationModel
+# Returns the current population (number of living farmbits)
+# @param levels: Levels applicable for model
+
 from typing import List, Optional, Dict, Any
 import logging
 import datetime
