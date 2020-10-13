@@ -19,6 +19,8 @@ from models.MoneyAccumulationModel import MoneyAccumulationModel
 from models.TutorialProgressionModel import TutorialProgressionModel
 from models.PlayingTimeModel import PlayingTimeModel
 from models.TimeSinceLastSaleModel import TimeSinceLastSaleModel
+from models.ActionsLastXSecondsModel import ActionsLastXSecondsModel
+from models.SimpleFarmAbandonmentModel import SimpleFarmAbandonmentModel
 import utils
 
 ## @class ModelManager
@@ -41,6 +43,10 @@ class ModelManager():
             return LogisticModel(**model_info["params"])
         elif model_info["type"] == "TutorialProgressionModel":
             return TutorialProgressionModel(**model_info["params"])
+        elif model_info["type"] == "ActionsLastXSecondsModel":
+            return ActionsLastXSecondsModel(**model_info["params"])
+        elif model_info["type"] == "SimpleFarmAbandonmentModel":
+            return SimpleFarmAbandonmentModel(**model_info["params"])
         elif model_info["type"] == "PlayingTimeModel":
             return PlayingTimeModel(**model_info["params"])
         elif model_info["type"] == "SimpleDeathPrediction":

@@ -23,6 +23,18 @@
       ]
     }
   },
+  "ActionsLastXSecondsModel": {
+    "type": "ActionsLastXSecondsModel",
+    "levels": [],
+    "params": {
+      "time": 30
+    }
+  },
+  "SimpleFarmAbandonmentModel": {
+    "type": "SimpleFarmAbandonmentModel",
+    "levels": []
+    }
+  },
   "TutorialProgressionModel": {
     "type": "TutorialProgressionModel",
     "levels": [],
