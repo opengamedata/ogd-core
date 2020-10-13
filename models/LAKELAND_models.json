@@ -275,5 +275,11 @@
     "levels": [],
     "params": {
     }
+  },
+  "TimeSinceLastSaleModel":{
+    "type": "TimeSinceLastSale",
+    "levels": [],
+    "params": {
+    }
   }
 }

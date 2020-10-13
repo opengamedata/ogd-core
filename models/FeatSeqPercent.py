@@ -1,3 +1,22 @@
+## @module FeatSeqPercentModel
+# Feature to output the percentile that a session is at along a progression of gameplay timestamp features. Depends
+# heavily on the logic used to produce the quantiles file. The following exemplifies current implementation:
+#
+# Example: A game has 10 checkpoints. Joey has reached 3/10 checkpoints. His total playtime so far is 45 seconds.
+# The model will return the percentile of reaching checkpoint 4 at 45 seconds. If historically 70% of students take
+# longer than 45 seconds to reach checkpoint 4, the model will return 30%.
+#
+# Example: A game has 10 checkpoints. Joey has reached 10/10 checkpoints. His total playtime so far is 190 seconds.
+# He reached checkpoint 10 at 185 seconds. The model will return the percentile of reaching checkpoint 10 at 185
+# seconds, and will continue returning that same value for this session.
+#
+# @param feature_sequence: sequence of timedelta features that are to be in strictly ascending order
+# @param levels: levels applicable to this model
+# @param time_feat: "sessDuration" or "sess_time_active", depending if the model should be used for active time or
+# overall time. Make sure that the quantiles file uses the same time feature.
+# @param quantile_json_path: Path to a quantiles JSON file constructed by the _FeatureQuantiles private class
+
+
 from typing import List, Optional, Dict, Any
 import pandas as pd
 from bisect import bisect_left
