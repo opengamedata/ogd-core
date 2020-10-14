@@ -183,37 +183,38 @@ class RTServer:
     #  @param  game_id The id for the game being played in the given session.
     #  @return A dictionary mapping "features" to a list of feature names,
     #          or None if an eror occurred when reading the game schema.
-    @staticmethod
-    def getFeatureNamesByGame(game_id: str) -> typing.Dict[str, typing.List]:
-        ret_val: typing.Dict[str, typing.List]
-        try:
-            schema: Schema = Schema(schema_name=f"{game_id}.json")
-            ret_val = {"features": schema.feature_list()}
-        except Exception as err:
-            utils.Logger.toFile(f"Got exception in getFeatureNamesByGame: {type(err)} {str(err)}", logging.ERROR)
-            utils.Logger.toFile("Had to return None", logging.WARNING)
-            print(f"Got exception in getFeatureNamesByGame: {type(err)} {str(err)}", file=sys.stderr)
-            ret_val = None
-        finally:
-            return ret_val
+    # @staticmethod
+    # def getFeatureNamesByGame(game_id: str) -> typing.Dict[str, typing.List]:
+    #     ret_val: typing.Dict[str, typing.List]
+    #     try:
+    #         schema: Schema = Schema(schema_name=f"{game_id}.json")
+    #         ret_val = {"features": schema.feature_list()}
+    #     except Exception as err:
+    #         utils.Logger.toFile(f"Got exception in getFeatureNamesByGame: {type(err)} {str(err)}", logging.ERROR)
+    #         utils.Logger.toFile("Had to return None", logging.WARNING)
+    #         print(f"Got exception in getFeatureNamesByGame: {type(err)} {str(err)}", file=sys.stderr)
+    #         ret_val = None
+    #     finally:
+    #         return ret_val
+
     ## Handler to get a list of all model names for a given game level.
     #  This is based on the assumption that models for the game are stored in a file
     #  with naming format game_id_models.json.
     #  @param  game_id The id for the game being played in the given session.
     #  @param  level   The level for which we want a list of models
     #  @return A list of all model names.
-    @staticmethod
-    def getModelNamesByGameLevel(game_id: str, level: int) -> typing.List:
-        ret_val: typing.List
+    # @staticmethod
+    # def getModelNamesByGameLevel(game_id: str, level: int) -> typing.List:
+    #     ret_val: typing.List
 
-        # models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
-        model_mgr = ModelManager(game_id)
-        models = model_mgr.ListModels(level)
-        if len(models) < 1:
-            ret_val = ["No models for given level"]
-        else:
-            ret_val = models
-        return ret_val
+    #     # models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
+    #     model_mgr = ModelManager(game_id)
+    #     models = model_mgr.ListModels(level)
+    #     if len(models) < 1:
+    #         ret_val = ["No models for given level"]
+    #     else:
+    #         ret_val = models
+    #     return ret_val
 
     @staticmethod
     def getModelsBySessID(sess_id: str, game_id: str, models):
@@ -223,7 +224,6 @@ class RTServer:
             max_level = prog["max_level"]
             cur_level = prog["cur_level"]
             idle_time = prog["idle_time"]
-
             ret_val = {}
             ret_val["max_level"] = {"name": "Max Level", "value": max_level}
             ret_val["cur_level"] = {"name": "Current Level", "value": cur_level}
@@ -253,9 +253,9 @@ class RTServer:
                         result_list = model.Eval([features_parsed])
                     elif model.GetInputType() == ModelInputType.SEQUENCE:
                         result_list = model.Eval(session_data_parsed)
-                    ret_val[sess_id] = {"name": model_name, "value": str(result_list)}
+                    ret_val[model_name] = {"name": model_name, "value": str(result_list)}
                 else:
-                    ret_val[sess_id] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
+                    ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
         except Exception as err:
             # print(f"got error in RTServer.py: {str(err)}")
             # traceback.print_tb(err.__traceback__)

@@ -76,7 +76,7 @@ class SimRTServer:
     #                  By default, all available features are retrieved.
     #  @return A dictionary mapping feature names to feature values.
     #          If a features argument was given, only returns the corresponding features.
-    @staticmethod
+    # @staticmethod
     def getFeaturesBySessID(sess_id: str, game_id: str, sim_time: int, features: typing.List = None) -> typing.Dict:
         ret_val: typing.Dict = {}
         # if we got a features list, it'll be a string that we must split.
@@ -173,18 +173,18 @@ class SimRTServer:
     #  @param  game_id The id for the game being played in the given session.
     #  @return A dictionary mapping "features" to a list of feature names,
     #          or None if an eror occurred when reading the game schema.
-    @staticmethod
-    def getFeatureNamesByGame(game_id: str) -> typing.Dict[str, typing.List]:
-        ret_val: typing.Dict[str, typing.List]
-        try:
-            schema: Schema = Schema(schema_name=f"{game_id}.json")
-            ret_val = {"features": schema.feature_list()}
-        except Exception as err:
-            utils.Logger.toFile(f"Got exception in getFeatureNamesByGame: {str(err)}", logging.ERROR)
-            utils.Logger.toFile("Had to return None", logging.WARNING)
-            ret_val = None
-        finally:
-            return ret_val
+    # @staticmethod
+    # def getFeatureNamesByGame(game_id: str) -> typing.Dict[str, typing.List]:
+    #     ret_val: typing.Dict[str, typing.List]
+    #     try:
+    #         schema: Schema = Schema(schema_name=f"{game_id}.json")
+    #         ret_val = {"features": schema.feature_list()}
+    #     except Exception as err:
+    #         utils.Logger.toFile(f"Got exception in getFeatureNamesByGame: {str(err)}", logging.ERROR)
+    #         utils.Logger.toFile("Had to return None", logging.WARNING)
+    #         ret_val = None
+    #     finally:
+    #         return ret_val
 
     ## Handler to get a list of all model names for a given game level.
     #  This is based on the assumption that models for the game are stored in a file
@@ -192,18 +192,18 @@ class SimRTServer:
     #  @param  game_id The id for the game being played in the given session.
     #  @param  level   The level for which we want a list of models
     #  @return A list of all model names.
-    @staticmethod
-    def getModelNamesByGameLevel(game_id: str, level: int) -> typing.List:
-        ret_val: typing.List
+    # @staticmethod
+    # def getModelNamesByGameLevel(game_id: str, level: int) -> typing.List:
+    #     ret_val: typing.List
 
-        # models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
-        model_mgr = ModelManager(game_id)
-        models = model_mgr.ListModels(level)
-        if len(models) < 1:
-            ret_val = ["No models for given level"]
-        else:
-            ret_val = models
-        return ret_val
+    #     # models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
+    #     model_mgr = ModelManager(game_id)
+    #     models = model_mgr.ListModels(level)
+    #     if len(models) < 1:
+    #         ret_val = ["No models for given level"]
+    #     else:
+    #         ret_val = models
+    #     return ret_val
 
     @staticmethod
     def getModelsBySessID(sess_id: str, game_id: str, sim_time: int, models):
@@ -234,7 +234,7 @@ class SimRTServer:
                         result_list = model.Eval([features_parsed])
                     elif model.GetInputType() == ModelInputType.SEQUENCE:
                         request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
-                        session_data, game_table = SimRTServer._fetchSessionData(sess_id, settings=settings, request=request)
+                        session_data, game_table = SimRTServer._fetchSessionData(sess_id, settings=settings, request=request, sim_time=sim_time)
                         result_list = model.Eval(session_data)
                     ret_val[model_name] = {"name": model_name, "value": str(result_list)}
                 else:
