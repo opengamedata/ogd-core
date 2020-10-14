@@ -225,20 +225,42 @@ class SimRTServer:
             # NOTE: We assume current level is the one to use. If player back-tracks, you may end up with "earlier" model relative to max level.
             model_list = model_mgr.ListModels(cur_level)
 
+            request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
+            session_data_raw, game_table = SimRTServer._fetchSessionData(sess_id, settings=settings, request=request, sim_time=sim_time)
+            session_data = [list(row) for row in session_data_raw]
+            for row in session_data:
+                col = row[game_table.complex_data_index]
+                row[game_table.complex_data_index] = json.loads(col.replace("'", "\"")) if (col is not None) else {"event_custom":row[game_table.event_index]}
+            session_data_parsed = [game_table.RowToDict(row) for row in session_data]
+            features_raw = SimRTServer.getFeaturesBySessID(sess_id, game_id, sim_time=sim_time)
+            features_parsed = SimRTServer._parseRawToDict(features_raw[sess_id])
+            # For each model in the model list, call eval on the proper type of data.
             for model_name in models:
                 if model_name in model_list:
                     model = model_mgr.LoadModel(model_name=model_name)
                     if model.GetInputType() == ModelInputType.FEATURE:
-                        features_raw = SimRTServer.getFeaturesBySessID(sess_id, game_id, sim_time=sim_time)
-                        features_parsed = SimRTServer._parseRawToDict(features_raw[sess_id])
                         result_list = model.Eval([features_parsed])
+                        result_list = result_list[0] # so, technically we get back a list of results for each session given, and we only give one session.
                     elif model.GetInputType() == ModelInputType.SEQUENCE:
-                        request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
-                        session_data, game_table = SimRTServer._fetchSessionData(sess_id, settings=settings, request=request, sim_time=sim_time)
-                        result_list = model.Eval(session_data)
+                        result_list = model.Eval(session_data_parsed)
                     ret_val[model_name] = {"name": model_name, "value": str(result_list)}
                 else:
                     ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
+
+            # for model_name in models:
+            #     if model_name in model_list:
+            #         model = model_mgr.LoadModel(model_name=model_name)
+            #         if model.GetInputType() == ModelInputType.FEATURE:
+            #             features_raw = SimRTServer.getFeaturesBySessID(sess_id, game_id, sim_time=sim_time)
+            #             features_parsed = SimRTServer._parseRawToDict(features_raw[sess_id])
+            #             result_list = model.Eval([features_parsed])
+            #         elif model.GetInputType() == ModelInputType.SEQUENCE:
+            #             request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
+            #             session_data, game_table = SimRTServer._fetchSessionData(sess_id, settings=settings, request=request, sim_time=sim_time)
+            #             result_list = model.Eval(session_data)
+            #         ret_val[model_name] = {"name": model_name, "value": str(result_list)}
+            #     else:
+            #         ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
         except Exception as err:
             utils.Logger.toFile(f"Got an error in getModelsBySessID: {type(err)} {str(err)}", logging.ERROR)
             print(f"Got an error in getModelsBySessID: {type(err)} {str(err)}", file=sys.stderr)
