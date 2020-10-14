@@ -249,12 +249,15 @@ class RTServer:
             for model_name in models:
                 if model_name in model_list:
                     model = model_mgr.LoadModel(model_name=model_name)
-                    if model.GetInputType() == ModelInputType.FEATURE:
-                        result_list = model.Eval([features_parsed])
-                        result_list = result_list[0] # so, technically we get back a list of results for each session given, and we only give one session.
-                    elif model.GetInputType() == ModelInputType.SEQUENCE:
-                        result_list = model.Eval(session_data_parsed)
-                    ret_val[model_name] = {"name": model_name, "value": str(result_list)}
+                    try:
+                        if model.GetInputType() == ModelInputType.FEATURE:
+                            result_list = model.Eval([features_parsed])
+                            result_list = result_list[0] # so, technically we get back a list of results for each session given, and we only give one session.
+                        elif model.GetInputType() == ModelInputType.SEQUENCE:
+                            result_list = model.Eval(session_data_parsed)
+                        ret_val[model_name] = {"name": model_name, "value": str(result_list)}
+                    except Exception as err:
+                        ret_val[model_name] = {"name": model_name, "value": f"Failed with error {err}"}
                 else:
                     ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
         except Exception as err:
