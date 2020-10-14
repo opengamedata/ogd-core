@@ -249,22 +249,7 @@ class SimRTServer:
                     except Exception as err:
                         ret_val[model_name] = {"name": model_name, "success": False, "value": f"Failed with error {err}"}
                 else:
-                    ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
-
-            # for model_name in models:
-            #     if model_name in model_list:
-            #         model = model_mgr.LoadModel(model_name=model_name)
-            #         if model.GetInputType() == ModelInputType.FEATURE:
-            #             features_raw = SimRTServer.getFeaturesBySessID(sess_id, game_id, sim_time=sim_time)
-            #             features_parsed = SimRTServer._parseRawToDict(features_raw[sess_id])
-            #             result_list = model.Eval([features_parsed])
-            #         elif model.GetInputType() == ModelInputType.SEQUENCE:
-            #             request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
-            #             session_data, game_table = SimRTServer._fetchSessionData(sess_id, settings=settings, request=request, sim_time=sim_time)
-            #             result_list = model.Eval(session_data)
-            #         ret_val[model_name] = {"name": model_name, "value": str(result_list)}
-            #     else:
-            #         ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
+                    ret_val[model_name] = {"name": model_name, "success": False, "value": f"Invalid model for level {cur_level}!"}
         except Exception as err:
             utils.Logger.toFile(f"Got an error in getModelsBySessID: {type(err)} {str(err)}", logging.ERROR)
             print(f"Got an error in getModelsBySessID: {type(err)} {str(err)}", file=sys.stderr)

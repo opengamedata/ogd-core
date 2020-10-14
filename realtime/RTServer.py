@@ -260,7 +260,7 @@ class RTServer:
                     except Exception as err:
                         ret_val[model_name] = {"name": model_name, "success": False, "value": f"Failed with error {err}"}
                 else:
-                    ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
+                    ret_val[model_name] = {"name": model_name, "success": False, "value": f"Invalid model for level {cur_level}!"}
         except Exception as err:
             # print(f"got error in RTServer.py: {str(err)}")
             # traceback.print_tb(err.__traceback__)
