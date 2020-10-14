@@ -4,12 +4,15 @@ from models.SequenceModel import SequenceModel
 ## @class MoneyAccumulationModel
 # Returns a list with (1) the current amount of money and (2) the total number of homes,
 # farms, and dairy farms
+# Rationale: These two values give a simple-to-interpret snapshot of how much money someone is
+# hanging onto compared to how well-developed their town is. If money is high, but the town is
+# small, it could represent indecision in the player.
 # @param levels: Levels applicable for model
 class MoneyAccumulationModel(SequenceModel):
     def __init__(self, levels: List[int] = []):
         '''
         @class MoneyAccumulationModel
-        Returns a tuple with (1) the current amount of money and (2) the total number of homes,
+        Returns a list with (1) the current amount of money and (2) the total number of homes,
         farms, and dairy farms
         :param levels: Levels applicable for model
         '''

@@ -1,19 +1,19 @@
 from typing import List, Optional, Dict, Any
 from models.SequenceModel import SequenceModel
 
-# birth/death events
-# "BUY" = 7
-# ["HOME", "FARM", "LIVESTOCK"] = [1,3,5]
 
-## @class TownCompositionModel
-# Returns a tuple with (1) the total number of farms, (2) the length of the longest consecutive diagonal
+## @class DiagonalFarmDetectorModel
+# Returns a list with (1) the total number of farms, (2) the length of the longest consecutive diagonal
 # of farms, and (3) the number of farms with at least one diagonal neighbor, but zero adjacent neighbors
+# Rationale: The ratio of the first two values gives a reasonable first impression of how much the player
+# is using diagonals. If the third value is high (or really, if it's much above zero), it gives very strong
+# evidence the player is using the diagonal strategy.
 # @param levels: Levels applicable for model
 class DiagonalFarmDetectorModel(SequenceModel):
     def __init__(self, levels: List[int] = []):
         '''
         @class TownCompositionModel
-        Returns a tuple with (1) the total number of farms, (2) the length of the longest consecutive
+        Returns a list with (1) the total number of farms, (2) the length of the longest consecutive
         diagonal of farms, and (3) the number of farms with at least one diagonal neighbor, but zero
         adjacent neighbors
         :param levels: Levels applicable for model

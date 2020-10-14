@@ -7,6 +7,7 @@ from models.SequenceModel import SequenceModel
 
 ## @class TownCompositionModel
 # Returns a list with the number of homes, farms, and dairy farms (in that order)
+# Rationale: This is a quick and easy way to see the current town composition.
 # @param levels: Levels applicable for model
 class TownCompositionModel(SequenceModel):
     def __init__(self, levels: List[int] = []):

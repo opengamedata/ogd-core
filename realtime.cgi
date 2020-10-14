@@ -14,7 +14,7 @@ import math
 import sys
 import traceback
 from datetime import datetime
-# # import local files
+# import local files
 import Request
 import utils
 from realtime.RTServer import RTServer

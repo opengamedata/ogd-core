@@ -1,3 +1,11 @@
+## @module
+# Calculates number of checkpoint features in list achieved per 1000 seconds of gameplay time, given by time_feat.
+# @param feature_list: list of features to use.
+# @param levels: Levels to use this feature during
+# @param time_feat: sessDuration" or "sess_time_active", depending if the model should be used for active time or
+# overall time.
+
+
 from typing import List, Optional
 from models.FeatureModel import FeatureModel
 from datetime import timedelta
