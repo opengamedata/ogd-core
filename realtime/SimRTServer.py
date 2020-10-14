@@ -17,6 +17,7 @@ from feature_extractors.WaveExtractor import WaveExtractor
 from feature_extractors.LakelandExtractor import LakelandExtractor
 from GameTable import GameTable
 from managers.ProcManager import ProcManager
+from models.Model import ModelInputType
 # from models.Model import *
 from realtime.ModelManager import ModelManager
 from schemas.Schema import Schema
@@ -244,9 +245,9 @@ class SimRTServer:
                             result_list = result_list[0] # so, technically we get back a list of results for each session given, and we only give one session.
                         elif model.GetInputType() == ModelInputType.SEQUENCE:
                             result_list = model.Eval(session_data_parsed)
-                        ret_val[model_name] = {"name": model_name, "value": str(result_list)}
+                        ret_val[model_name] = {"name": model_name, "success": True, "value": str(result_list)}
                     except Exception as err:
-                        ret_val[model_name] = {"name": model_name, "value": f"Failed with error {err}"}
+                        ret_val[model_name] = {"name": model_name, "success": False, "value": f"Failed with error {err}"}
                 else:
                     ret_val[model_name] = {"name": model_name, "value": f"Invalid model for level {cur_level}!"}
 
