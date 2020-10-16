@@ -77,7 +77,7 @@ class SimRTServer:
     #                  By default, all available features are retrieved.
     #  @return A dictionary mapping feature names to feature values.
     #          If a features argument was given, only returns the corresponding features.
-    # @staticmethod
+    @staticmethod
     def getFeaturesBySessID(sess_id: str, game_id: str, sim_time: int, features: typing.List = None) -> typing.Dict:
         ret_val: typing.Dict = {}
         # if we got a features list, it'll be a string that we must split.
