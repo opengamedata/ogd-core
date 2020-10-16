@@ -248,6 +248,8 @@ class SimRTServer:
                         ret_val[model_name] = {"name": model_name, "success": True, "value": str(result_list)}
                     except Exception as err:
                         ret_val[model_name] = {"name": model_name, "success": False, "value": f"Failed with error {err}"}
+                        utils.Logger.toStdOut(f"Got an error in getModelsBySessID: {type(err)} {str(err)}", logging.ERROR)
+                        traceback.print_tb(err.__traceback__, file=sys.stderr)
                 else:
                     ret_val[model_name] = {"name": model_name, "success": False, "value": f"Invalid model for level {cur_level}!"}
         except Exception as err:
