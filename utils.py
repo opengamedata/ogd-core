@@ -165,14 +165,14 @@ class SQL:
     def disconnectMySQLViaSSH(tunnel, db):
         if db is not None:
             db.close()
-            Logger.toStdOut("Closed database connection", logging.INFO)
+            # Logger.toStdOut("Closed database connection", logging.INFO)
         else:
             Logger.toStdOut("No db to close.", logging.INFO)
         if tunnel is not None:
             tunnel.stop()
-            Logger.toStdOut("Stopped tunnel connection", logging.INFO)
+            # Logger.toStdOut("Stopped tunnel connection", logging.INFO)
         else:
-            Logger.toStdOut("No tunnel to stop", logging.INFO)
+            # Logger.toStdOut("No tunnel to stop", logging.INFO)
 
 
 
