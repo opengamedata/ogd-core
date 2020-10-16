@@ -171,7 +171,7 @@ class SQL:
         if tunnel is not None:
             tunnel.stop()
             # Logger.toStdOut("Stopped tunnel connection", logging.INFO)
-        else:
+        # else:
             # Logger.toStdOut("No tunnel to stop", logging.INFO)
 
 
