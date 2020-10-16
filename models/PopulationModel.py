@@ -33,7 +33,7 @@ class PopulationModel(SequenceModel):
         return pop
 
     def _eval_assert(self, events: List[Dict[str, Any]]) -> int:
-        start_time = datetime.datetime.fromisoformat(events[0]["client_time"])
+        # start_time = datetime.datetime.fromisoformat(events[0]["client_time"])
         skip = True
         assert events
         population = 0
@@ -43,7 +43,7 @@ class PopulationModel(SequenceModel):
             event_custom = event["event_custom"]
             event_str = LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][event_custom]
             if event_str not in ["emote"]:
-                cur_time = datetime.datetime.fromisoformat(event["client_time"])
+                # cur_time = datetime.datetime.fromisoformat(event["client_time"])
                 debug_str = ''
                 if event_str == "buy" and event["event_data_complex"]["success"]:
                     debug_str = LakelandExtractor._ENUM_TO_STR['BUYS'][event["event_data_complex"]["buy"]].upper()
@@ -56,7 +56,7 @@ class PopulationModel(SequenceModel):
                     assert population == true_pop, f"Expected {population} farmbits, but true_pop is {true_pop}"
 
                 event_str = f'{event_str} {debug_str}'
-                logging.debug(f"{population:<3} {event_str:<20} {cur_time-start_time}")
+                # logging.debug(f"{population:<3} {event_str:<20} {cur_time-start_time}")
             if skip:
                 if event_custom not in [1, 31]: # newgames start with STARTGAME; continues start with NEWFARMBIT
                     continue
