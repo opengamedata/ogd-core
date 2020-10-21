@@ -102,5 +102,6 @@ class ModelManager():
             return list(self._models.keys())
         else:
             valid_models = [key for key in self._models.keys() if self._validLevel(model_name=key, level=level)]
+            # utils.Logger.toStdOut(f"Valid models are: {valid_models}", logging.INFO)
             # print(f"Listing models for level {level}: {valid_models}")
             return valid_models

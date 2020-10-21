@@ -26,7 +26,7 @@ class DeathPredModel(SequenceModel, ABC):
         self.levels = levels
         self.time_int, self.food, self.money = time_int, food, money
         self.df_filter = ['app_id', 'app_id_fast', 'player_id', 'app_version',
-                          'persistent_sess_id', 'event', 'event_data_simple',
+                          'persistent_session_id', 'event', 'event_data_simple',
                           'server_time', 'remote_addr', 'req_id']
         self.df, self.filtered_df = pd.DataFrame(), pd.DataFrame()
         self.farmBits = {}
@@ -38,7 +38,7 @@ class DeathPredModel(SequenceModel, ABC):
     #  @return     : A result for the given row of data
 
     def all_hunger_death_eval(self):
-        sessions = list(self.df['sess_id'].drop_duplicates())
+        sessions = list(self.df['session_id'].drop_duplicates())
         res = True
         for sess in sessions:
             self.hunger_death_sess_eval(sess)
@@ -61,7 +61,7 @@ class DeathPredModel(SequenceModel, ABC):
         return True
 
     def hunger_death_sess_eval(self, sess: int):
-        for i, x in enumerate(self.filtered_df[(self.filtered_df['sess_id'] == sess)].itertuples()):
+        for i, x in enumerate(self.filtered_df[(self.filtered_df['session_id'] == sess)].itertuples()):
             farmbit = x.event_data_complex['farmbit'][2]
             key = f'{sess}_{farmbit}'
             if x.event_custom == EMOTE_EVT_ENUM:
