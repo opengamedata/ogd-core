@@ -2,6 +2,10 @@
     "level_range": { "min":0, "max":0 },
 
     "events":{
+        "SELECTITEM":{
+        "item": "item_data_short(it) | See [Data Short](#DataShort).",
+        "mark": "it.mark | Item [mark index](#Mark)."
+        }
     },
 
     "features": {
