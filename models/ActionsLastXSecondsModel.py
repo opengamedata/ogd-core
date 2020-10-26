@@ -22,26 +22,27 @@ class ActionsLastXSecondsModel(SequenceModel):
 
     def _eval(self, events: List[Dict[str, Any]], verbose: bool = False):
         assert events
-        df = pd.from_records(events)
+        self.df = pd.DataFrame.from_records(events)
         df_filter = ['app_id', 'app_id_fast', 'player_id', 'app_version',
                      'persistent_sess_id', 'event', 'event_data_simple',
                      'server_time', 'remote_addr', 'req_id', 'http_user_agent']
-        df['utc_time_secs'] = pd.Series(df['client_time'].apply(
+        if set(df_filter).issubset(set(self.df.columns)):
+            self.df = self.df.drop(columns=df_filter, axis=0)
+        self.df['utc_time_secs'] = pd.Series(self.df['client_time'].apply(
             lambda x: dt.fromisoformat(x).timestamp()), dtype=int)
-        df['event_data_complex'] = df['event_data_complex'].apply(
-            lambda x: json.loads(x))
-        return self.get_res(df)
+        return self.get_res()
 
-    def get_res(self, df):
+    def get_res(self):
         res_dict = {}
         now = dt.utcnow().timestamp()
-        for x in df[df['utc_time_secs'] > now - self.time]:
-            if x.event_custom in list(self._ACTIVE_EVENTS.keys()):
-                if x.utc_time_secs > now - self.time:
+        for x in self.df[(self.df['utc_time_secs'] > (now - self.time))].itertuples():
+            if x.event_custom in self._ACTIVE_EVENTS.keys():
+                print("YES")
+                if x.utc_time_secs > (now - self.time):
                     event_val = f'{self._ACTIVE_EVENTS[x.event_custom]}_cnt'
                     if event_val not in res_dict:
                         res_dict[event_val] = 1
                     else:
                         res_dict[event_val] += 1
-        res_dict['actions_per_secs'] = sum(res_dict.values) / self.time
+        res_dict['actions_per_secs'] = sum(res_dict.values()) / self.time
         return res_dict

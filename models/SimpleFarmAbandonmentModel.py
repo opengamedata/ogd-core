@@ -13,17 +13,26 @@ BUY_FARM_EVT = 3
 TILE_TYPE_FARM = 9
 
 log_type_dict = {
-    GAMESTATE_EVT:"gamestate",
-    BUY_EVT:"fertilizer",
-    FARMFAIL_EVT:"farmfail",
-    FARMGROWTH_EVT:"farmgrowth"
+    GAMESTATE_EVT: "gamestate",
+    BUY_EVT: "fertilizer",
+    FARMFAIL_EVT: "farmfail",
+    FARMGROWTH_EVT: "farmgrowth"
 }
+
 
 class SimpleFarmAbandonmentModel(SequenceModel):
     def __init__(self, levels: List[int] = []):
         super().__init__()
+
     def _eval(self, events: List[Dict[str, Any]], verbose: bool = False):
-        self.df = pd.from_records(events)
+        self.df = pd.DataFrame.from_records(events)
+        df_filter = ['app_id', 'app_id_fast', 'player_id', 'app_version',
+                     'persistent_sess_id', 'event', 'event_data_simple',
+                     'server_time', 'remote_addr', 'req_id', 'http_user_agent']
+        if set(df_filter).issubset(set(self.df.columns)):
+            self.df = self.df.drop(columns=df_filter, axis=0)
+        self.df['utc_time_secs'] = pd.Series(self.df['client_time'].apply(
+            lambda x: dt.fromisoformat(x).timestamp()), dtype=int)
         farm_fails = self.process_feature(FARMFAIL_EVT)
         return self.compose_results(self.add_time_abd(self.process_feature(BUY_EVT, False, BUY_FARM_EVT), farm_fails))
 
@@ -61,8 +70,11 @@ class SimpleFarmAbandonmentModel(SequenceModel):
         }
 
     def add_tiles(self, frame, is_gamestate=False):
+        if len(frame.index) == 0:
+            return frame
+
         if is_gamestate:
-            #frame['tiles'] = frame['tiles'].apply(lambda x: compile_gs_tiles(x))
+            # frame['tiles'] = frame['tiles'].apply(lambda x: compile_gs_tiles(x))
             pass
         else:
             frame['tile'] = frame['tile'].apply(lambda x: self.dict_tile(x, 0))
@@ -101,5 +113,3 @@ class SimpleFarmAbandonmentModel(SequenceModel):
         frame['abd_ratio'] = [abd_ratio[x.sess_id] for x in frame.itertuples()]
         frame['avg_abd'] = [avg_abd[x.sess_id] for x in frame.itertuples()]
         return frame[['sess_id', 'tile', 'utc_time_secs', 'time_abandoned', 'avg_abd', 'abd_ratio']]
-
-
