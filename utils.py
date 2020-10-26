@@ -80,13 +80,13 @@ class SQL:
 
         # set up other global vars as needed:
         sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
-        Logger.toStdOut("We're preparing database.", logging.INFO)
+        # Logger.toStdOut("We're preparing database.", logging.INFO)
         if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
-            Logger.toStdOut(f"Setting up ssh host connection.", logging.INFO)
+            # Logger.toStdOut(f"Setting up ssh host connection.", logging.INFO)
             ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
             tunnel,db_cursor = SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
         else:
-            Logger.toStdOut("Skipping SSH part of login.", logging.INFO)
+            # Logger.toStdOut("Skipping SSH part of login.", logging.INFO)
             db_cursor = SQL.connectToMySQL(login=sql_login)
             tunnel = None
         return (tunnel, db_cursor)
@@ -165,14 +165,14 @@ class SQL:
     def disconnectMySQLViaSSH(tunnel, db):
         if db is not None:
             db.close()
-            Logger.toStdOut("Closed database connection", logging.INFO)
+            # Logger.toStdOut("Closed database connection", logging.INFO)
         else:
             Logger.toStdOut("No db to close.", logging.INFO)
         if tunnel is not None:
             tunnel.stop()
-            Logger.toStdOut("Stopped tunnel connection", logging.INFO)
-        else:
-            Logger.toStdOut("No tunnel to stop", logging.INFO)
+            # Logger.toStdOut("Stopped tunnel connection", logging.INFO)
+        # else:
+            # Logger.toStdOut("No tunnel to stop", logging.INFO)
 
 
 

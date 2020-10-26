@@ -19,6 +19,7 @@ from models.MoneyAccumulationModel import MoneyAccumulationModel
 from models.TutorialProgressionModel import TutorialProgressionModel
 from models.PlayingTimeModel import PlayingTimeModel
 from models.TimeSinceLastSaleModel import TimeSinceLastSaleModel
+from models.MapSummaryModel import MapSummaryModel
 from models.ActionsLastXSecondsModel import ActionsLastXSecondsModel
 from models.SimpleFarmAbandonmentModel import SimpleFarmAbandonmentModel
 import utils
@@ -95,6 +96,8 @@ class ModelManager():
             return MoneyAccumulationModel(**model_info["params"])
         elif model_info["type"] == "TimeSinceLastSale":
             return TimeSinceLastSaleModel(**model_info["params"])
+        elif model_info["type"] == "MapSummary":
+            return MapSummaryModel(**model_info["params"])
 
     def _validLevel(self, model_name: str, level: int):
         # print(f"Checking validity of model {model_name} for level {level}")
@@ -111,5 +114,6 @@ class ModelManager():
             return list(self._models.keys())
         else:
             valid_models = [key for key in self._models.keys() if self._validLevel(model_name=key, level=level)]
+            # utils.Logger.toStdOut(f"Valid models are: {valid_models}", logging.INFO)
             # print(f"Listing models for level {level}: {valid_models}")
             return valid_models

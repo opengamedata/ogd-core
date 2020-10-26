@@ -12,7 +12,7 @@ from models.SequenceModel import SequenceModel
 class DiagonalFarmDetectorModel(SequenceModel):
     def __init__(self, levels: List[int] = []):
         '''
-        @class TownCompositionModel
+        @class DiagonalFarmDetectorModel
         Returns a list with (1) the total number of farms, (2) the length of the longest consecutive
         diagonal of farms, and (3) the number of farms with at least one diagonal neighbor, but zero
         adjacent neighbors

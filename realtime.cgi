@@ -50,35 +50,35 @@ try:
     #     state = request.getvalue("state")
     #     city = request.getvalue("city")
     #     body = RTServer.getActiveSessionsByLoc(game_id=game_id, state=state, city=city)
-    elif method == "get_features_by_sessID":
-        game_id = request.getvalue("gameID")
-        sess_id = request.getvalue("sessID")
-        features = request.getvalue("features")
-        body = RTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, features=features)
-        utils.Logger.toStdOut(f"got features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}", logging.INFO)
-    elif method == "get_feature_names_by_game":
-        game_id = request.getvalue("gameID")
-        body = RTServer.getFeatureNamesByGame(game_id=game_id)
+    # elif method == "get_features_by_sessID":
+    #     game_id = request.getvalue("gameID")
+    #     sess_id = request.getvalue("sessID")
+    #     features = request.getvalue("features")
+    #     body = RTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, features=features)
+    #     utils.Logger.toStdOut(f"got features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}", logging.INFO)
+    # elif method == "get_feature_names_by_game":
+    #     game_id = request.getvalue("gameID")
+    #     body = RTServer.getFeatureNamesByGame(game_id=game_id)
     elif method == "get_models_by_sessID":
         game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
         models = request.getvalue("models")
         body = RTServer.getModelsBySessID(sess_id=sess_id, game_id=game_id, models=models)
-    elif method == "get_model_names_by_game":
-        game_id = request.getvalue("gameID")
-        body = RTServer.getModelNamesByGameLevel(game_id=game_id)
+    # elif method == "get_model_names_by_game":
+    #     game_id = request.getvalue("gameID")
+    #     body = RTServer.getModelNamesByGameLevel(game_id=game_id)
     elif method == "sim_all_active_sessions":
         game_id = request.getvalue("gameID")
         require_player_id = request.getvalue("require_player_id")
         sim_time = int(request.getvalue("sim_time"))
         body = SimRTServer.getAllActiveSessions(game_id=game_id, require_player_id=require_player_id, sim_time=sim_time)
-    elif method == "sim_features_by_sessID":
-        game_id = request.getvalue("gameID")
-        sess_id = request.getvalue("sessID")
-        features = request.getvalue("features")
-        sim_time = int(request.getvalue("sim_time"))
-        body = SimRTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, sim_time=sim_time, features=features)
-        utils.Logger.toStdOut(f"got simulated features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}, sim_time={sim_time}", logging.INFO)
+    # elif method == "sim_features_by_sessID":
+    #     game_id = request.getvalue("gameID")
+    #     sess_id = request.getvalue("sessID")
+    #     features = request.getvalue("features")
+    #     sim_time = int(request.getvalue("sim_time"))
+    #     body = SimRTServer.getFeaturesBySessID(sess_id=sess_id, game_id=game_id, sim_time=sim_time, features=features)
+    #     utils.Logger.toStdOut(f"got simulated features by session ID in main realtime code, sess_id={sess_id}, game_id={game_id}, sim_time={sim_time}", logging.INFO)
     elif method == "sim_models_by_sessID":
         game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")

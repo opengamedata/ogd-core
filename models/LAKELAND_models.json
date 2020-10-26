@@ -293,5 +293,11 @@
     "levels": [],
     "params": {
     }
+  },
+  "MapSummaryModel":{
+    "type": "MapSummary",
+    "levels": [],
+    "params": {
+    }
   }
 }
