@@ -4,6 +4,9 @@ from datetime import datetime as dt
 import json
 from models.SequenceModel import SequenceModel
 
+## @class ActionsLastXSecondsModel
+# Returns a dictionary of active events for the last X seconds
+# @param levels: Levels applicable for model, time: last x seconds
 class ActionsLastXSecondsModel(SequenceModel):
 
     def __init__(self, time=30, levels: List[int] = []):
@@ -20,26 +23,23 @@ class ActionsLastXSecondsModel(SequenceModel):
                           12: 'TOGGLENUTRITION', 13: "TOGGLESHOP", 14: "TOGGLEACHIEVEMENTS",
                           15: "SKIPTUTORIAL", 16: "SPEED"}
 
+    def get_utc(self, data):
+        dt_string = '%Y-%m-%d %H:%M:%S'
+        return dt.strptime(data, dt_string).timestamp()
+
     def _eval(self, events: List[Dict[str, Any]], verbose: bool = False):
         assert events
-        self.df = pd.DataFrame.from_records(events)
-        df_filter = ['app_id', 'app_id_fast', 'player_id', 'app_version',
-                     'persistent_sess_id', 'event', 'event_data_simple',
-                     'server_time', 'remote_addr', 'req_id', 'http_user_agent']
-        if set(df_filter).issubset(set(self.df.columns)):
-            self.df = self.df.drop(columns=df_filter, axis=0)
-        self.df['utc_time_secs'] = pd.Series(self.df['client_time'].apply(
-            lambda x: dt.fromisoformat(x).timestamp()), dtype=int)
-        return self.get_res()
+        return self.get_res(events)
 
-    def get_res(self):
+    def get_res(self, events):
         res_dict = {}
         now = dt.utcnow().timestamp()
-        for x in self.df[(self.df['utc_time_secs'] > (now - self.time))].itertuples():
-            if x.event_custom in self._ACTIVE_EVENTS.keys():
-                print("YES")
-                if x.utc_time_secs > (now - self.time):
-                    event_val = f'{self._ACTIVE_EVENTS[x.event_custom]}_cnt'
+        for row in events:
+            evt_time = self.get_utc(row['client_time'])
+            if (evt_time > (now-self.time)) and (evt_time < now):
+                if row['event_custom'] in self._ACTIVE_EVENTS.keys():
+                    evt = self._ACTIVE_EVENTS[row['event_custom']]
+                    event_val = f'{evt}_cnt'
                     if event_val not in res_dict:
                         res_dict[event_val] = 1
                     else:

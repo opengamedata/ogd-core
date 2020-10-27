@@ -1,10 +1,8 @@
-## import standard libraries
 import typing
 from statistics import median
 from typing import List, Any
 
 from datetime import datetime as dt
-## import local libraries
 from models.SequenceModel import SequenceModel
 
 EMOTE_DESPERATE_ENUM = 2
@@ -13,6 +11,9 @@ EMOTE_EVT_ENUM = 24
 MONEY_RATE_ENUM = 33
 FOOD_AV_ENUM = 32
 
+## @class SimpleDeathPredModel
+# Returns the number of deaths caused by hunger, or None if no deaths due to hunger
+# @param levels: Levels applicable for model
 
 class SimpleDeathPredModel(SequenceModel):
     def __init__(self, levels: typing.List[int] = []):
@@ -67,7 +68,9 @@ class SimpleDeathPredModel(SequenceModel):
         else:
             return spdh_cnt
 
-
+## @class SimpleMoneyDeathPredModel
+# Returns a dictionary of money data X seconds before deaths, or None if no logs were found in the timeframes
+# @param levels: Levels applicable for model, tbd: Time before death to collect money logs
 class SimpleMoneyDeathPredModel(SimpleDeathPredModel):
 
     def __init__(self, levels: typing.List[int] = [], tbd=60):
@@ -92,7 +95,9 @@ class SimpleMoneyDeathPredModel(SimpleDeathPredModel):
         return {"max": max(money_log), "avg": sum(money_log) / len(money_log), "min": min(money_log),
                 "median": median(money_log)}
 
-
+## @class SimpleFoodDeathPredModel
+# Returns a dictionary of food data X seconds before deaths, or None if no logs were found in the timeframes
+# @param levels: Levels applicable for model, tbd: Time before death to collect food logs
 class SimpleFoodDeathPredModel(SimpleDeathPredModel):
 
     def __init__(self, levels: typing.List[int] = [], tbd=60):

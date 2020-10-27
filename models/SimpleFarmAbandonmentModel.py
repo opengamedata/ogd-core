@@ -19,6 +19,9 @@ log_type_dict = {
     FARMGROWTH_EVT: "farmgrowth"
 }
 
+## @class SimpleFarmAbandonmentModel
+# Returns a dictionary of farms abandoned and amount of time it is abandoned
+# @param levels: Levels applicable for model
 
 class SimpleFarmAbandonmentModel(SequenceModel):
     def __init__(self, levels: List[int] = []):

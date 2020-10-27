@@ -4,7 +4,9 @@ from models.SequenceModel import SequenceModel
 
 FB_DEATH_ENUM = 18
 
-
+## @class DeathCountModel
+# Returns the number of deaths in the game
+# @param levels: Levels applicable for model
 class DeathCountModel(SequenceModel):
 
     def __init__(self, levels=[]):

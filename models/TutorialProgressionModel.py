@@ -11,6 +11,10 @@ from datetime import datetime as dt
 ## import local libraries
 from models.FeatureModel import FeatureModel
 
+## @class TutorialProgressionModel
+# Returns dictionary of time of first pivotal tutorial events in the game
+# @param levels: Levels applicable for model, tut_features: tutorial features
+
 CHECKPOINT_EVT = 2
 extract_firsts = dict(sess_time_to_first_home_buy="first_house", sess_time_to_sell_food_tutorial="first_sale",
                       sess_time_to_first_livestock_buy="first_livestock", sess_time_to_first_farm_buy="first_farm",
