@@ -22,6 +22,7 @@ from models.TimeSinceLastSaleModel import TimeSinceLastSaleModel
 from models.MapSummaryModel import MapSummaryModel
 from models.ActionsLastXSecondsModel import ActionsLastXSecondsModel
 from models.SimpleFarmAbandonmentModel import SimpleFarmAbandonmentModel
+from models.DeathCountModel import DeathCountModel
 import utils
 
 ## @class ModelManager
@@ -50,11 +51,13 @@ class ModelManager():
             return SimpleFarmAbandonmentModel(**model_info["params"])
         elif model_info["type"] == "PlayingTimeModel":
             return PlayingTimeModel(**model_info["params"])
-        elif model_info["type"] == "SimpleDeathPrediction":
+        elif model_info["type"] == "SimpleDeathPredModel":
             return SimpleDeathPredModel(**model_info["params"])
-        elif model_info["type"] == "FoodDeathPrediction":
+        elif model_info["type"] == "DeathCountModel":
+            return DeathCountModel(**model_info["params"])
+        elif model_info["type"] == "SimpleFoodDeathPredModel":
             return SimpleFoodDeathPredModel(**model_info["params"])
-        elif model_info["type"] == "MoneyDeathPrediction":
+        elif model_info["type"] == "SimpleMoneyDeathPredModel":
             return SimpleMoneyDeathPredModel(**model_info["params"])
         elif model_info["type"] == "BloomAchSeqPercent":
             return FeatSeqPercentModel(**model_info["params"])
