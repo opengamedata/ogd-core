@@ -17,9 +17,6 @@ class PlayingTimeModel(FeatureModel):
         super().__init__()
         self._features = features
 
-    def Eval(self):
-        return self._eval()
-
     def _eval(self, sess: dict, verbose: bool = False):
         res = {}
         if sess['continue'] or sess['debug']:

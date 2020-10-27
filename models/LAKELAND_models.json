@@ -50,28 +50,30 @@
       ]
     }
   },
-  "DeathPredictionModel":{
-    "type": "SimpleDeathPredictionModel",
+  "SimpleDeathPredModel":{
+    "type": "SimpleDeathPredModel",
       "levels": [],
       "params":{
-        "time_int":404
       }
     },
-  "SimpleFoodDeathPredictionModel":{
-    "type": "FoodDeathPrediction",
+  "SimpleFoodDeathPredModel":{
+    "type": "SimpleFoodDeathPredModel",
       "levels": [],
       "params":{
-        "food":0
       }
     },
-  "SimpleMoneyDeathPredictionModel":{
-    "type": "MoneyDeathPrediction",
+  "SimpleMoneyDeathPredModel":{
+    "type": "SimpleMoneyDeathPredModel",
       "levels": [],
       "params":{
-        "money":300
       }
     },
-
+  "DeathCountModel":{
+    "type": "DeathCountModel",
+      "levels": [],
+      "params":{
+      }
+    },
     "dummyLogistic": {
       "type": "Logistic",
       "levels": [],

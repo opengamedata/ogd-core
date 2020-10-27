@@ -112,4 +112,7 @@ class SimpleFarmAbandonmentModel(SequenceModel):
 
         frame['abd_ratio'] = [abd_ratio[x.sess_id] for x in frame.itertuples()]
         frame['avg_abd'] = [avg_abd[x.sess_id] for x in frame.itertuples()]
+        if 'tile' not in frame.columns:
+            return 'None abandoned' #might be something wrong here
         return frame[['sess_id', 'tile', 'utc_time_secs', 'time_abandoned', 'avg_abd', 'abd_ratio']]
+
