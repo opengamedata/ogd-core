@@ -61,6 +61,23 @@ class RTServer:
         # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
         return ret_val
 
+    @staticmethod
+    def getAllActiveSessionsByClassroom(game_id: str, class_id: bool) -> typing.Dict:
+        # start_time = datetime.now()
+        ret_val = {}
+        active_sessions_raw = RTServer._fetchActiveSessions(game_id=game_id, require_player_id=True, class_id=class_id)
+        for item in active_sessions_raw:
+            sess_id = item[0]
+            player_id = item[1]
+            if re.search("^[0-9]+$", player_id):
+                prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
+                idle_time = prog["idle_time"]
+                max_level = prog["max_level"]
+                cur_level = prog["cur_level"]
+                ret_val[sess_id] = {"session_id":sess_id, "player_id":item[1], "max_level":max_level, "cur_level":cur_level, "idle_time":idle_time}
+        # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
+        return ret_val
+
     ## Handler to retrieve features for a given session.
     #  For now, at least, the game ID must be given as well, in order to load
     #  information about the way that data from that game is structured.
@@ -290,7 +307,7 @@ class RTServer:
         return ret_val
 
     @staticmethod
-    def _fetchActiveSessions(game_id, require_player_id):
+    def _fetchActiveSessions(game_id, require_player_id, class_id=None):
         if RTServer.rt_settings["data_source"] == "DB":
             try:
                 tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
@@ -300,7 +317,8 @@ class RTServer:
                 cursor = db.cursor()
                 start_time = datetime.now() - timedelta(minutes=5)
                 player_id_filter = "AND `player_id` IS NOT NULL" if require_player_id else ""
-                filt = f"`app_id`='{game_id}' AND `server_time` > '{start_time.isoformat()}' {player_id_filter}"
+                join_statement   = "INNER JOIN players ON `player_id`" if class_id is not None else ""
+                filt = f"`app_id`='{game_id}' AND `server_time` > '{start_time.isoformat()}' {player_id_filter} {join_statement}"
                 active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
                                                     db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
                                                     columns=["session_id", "player_id"], filter=filt,\
