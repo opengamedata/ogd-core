@@ -59,7 +59,7 @@ try:
     elif method == "get_models_by_sessID":
         game_id = request.getvalue("gameID")
         sess_id = request.getvalue("sessID")
-        models = request.getvalue("models")
+        models = request.getvalue("models").split(",")
         body = RTServer.getModelsBySessID(sess_id=sess_id, game_id=game_id, models=models)
     # elif method == "get_model_names_by_game":
     #     game_id = request.getvalue("gameID")
