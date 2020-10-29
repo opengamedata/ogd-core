@@ -46,7 +46,7 @@ class LakelandExtractor(Extractor):
     _ITEM_MARK_COMBINATIONS = [('food', 'sell'), ('food', 'use'), ('food', 'eat'),
                                ('milk', 'sell'), ('milk', 'use'), ('poop', 'sell'), ('poop', 'use')
                                ]
-    _EMOTE_STR_TO_AFFECT = {
+    _EMOTE_STR_TO_AFFECT = { # 0 neutral, -1 negative, 1 positive
         "null": 0,
         "fullness_motivated_txt": 0,
         "fullness_desperate_txt": -1,
@@ -68,7 +68,7 @@ class LakelandExtractor(Extractor):
         ("buy_fertilizer", "fertilizer"),
         ("buy_livestock", "livestock"),
     ]
-    _BUILDING_TYPES = ['farm', 'livestock', 'home', 'road', 'sign', 'grave']
+    _BUILDING_TYPES = ['farm', 'livestock', 'home', 'road', 'sign', 'grave'] # cannot remove these items
 
     _ACTIVE_EVENTS = ["SELECTTILE", "SELECTFARMBIT", "SELECTITEM", "SELECTBUY", "BUY",
                     "CANCELBUY","TILEUSESELECT","ITEMUSESELECT", 'STARTGAME', 'TOGGLENUTRITION',

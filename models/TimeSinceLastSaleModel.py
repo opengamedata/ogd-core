@@ -2,7 +2,7 @@ from typing import List, Optional, Dict, Any
 from models.SequenceModel import SequenceModel
 import datetime
 
-## @class TimeSinceEventTypesModel
+## @class TimeSinceLastSaleModel
 # Returns the number of seconds since the last purchase a player made
 # Rationale: This seems like the simplest and easiest to interpret measure of whether a player
 # is stagnating by not selling anything.
@@ -11,7 +11,7 @@ import datetime
 class TimeSinceLastSaleModel(SequenceModel):
     def __init__(self, levels: List[int] = []):
         '''
-        @class MoneyAccumulationModel
+        @class TimeSinceLastSaleModel
         Returns the number of seconds since the last purchase a player made
         :param levels: Levels applicable for model
         '''

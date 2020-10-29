@@ -16,7 +16,13 @@ from models.TownCompositionModel import TownCompositionModel
 from models.DiagonalFarmDetectorModel import DiagonalFarmDetectorModel
 from models.RecentPurchasesModel import RecentPurchasesModel
 from models.MoneyAccumulationModel import MoneyAccumulationModel
+from models.TutorialProgressionModel import TutorialProgressionModel
+from models.PlayingTimeModel import PlayingTimeModel
 from models.TimeSinceLastSaleModel import TimeSinceLastSaleModel
+from models.MapSummaryModel import MapSummaryModel
+from models.ActionsLastXSecondsModel import ActionsLastXSecondsModel
+from models.SimpleFarmAbandonmentModel import SimpleFarmAbandonmentModel
+from models.DeathCountModel import DeathCountModel
 import utils
 
 ## @class ModelManager
@@ -37,11 +43,21 @@ class ModelManager():
             return NthEventModel(**model_info["params"])
         elif model_info["type"] == "Logistic":
             return LogisticModel(**model_info["params"])
-        elif model_info["type"] == "SimpleDeathPrediction":
+        elif model_info["type"] == "TutorialProgressionModel":
+            return TutorialProgressionModel(**model_info["params"])
+        elif model_info["type"] == "ActionsLastXSecondsModel":
+            return ActionsLastXSecondsModel(**model_info["params"])
+        elif model_info["type"] == "SimpleFarmAbandonmentModel":
+            return SimpleFarmAbandonmentModel(**model_info["params"])
+        elif model_info["type"] == "PlayingTimeModel":
+            return PlayingTimeModel(**model_info["params"])
+        elif model_info["type"] == "SimpleDeathPredModel":
             return SimpleDeathPredModel(**model_info["params"])
-        elif model_info["type"] == "FoodDeathPrediction":
+        elif model_info["type"] == "DeathCountModel":
+            return DeathCountModel(**model_info["params"])
+        elif model_info["type"] == "SimpleFoodDeathPredModel":
             return SimpleFoodDeathPredModel(**model_info["params"])
-        elif model_info["type"] == "MoneyDeathPrediction":
+        elif model_info["type"] == "SimpleMoneyDeathPredModel":
             return SimpleMoneyDeathPredModel(**model_info["params"])
         elif model_info["type"] == "BloomAchSeqPercent":
             return FeatSeqPercentModel(**model_info["params"])
@@ -83,6 +99,8 @@ class ModelManager():
             return MoneyAccumulationModel(**model_info["params"])
         elif model_info["type"] == "TimeSinceLastSale":
             return TimeSinceLastSaleModel(**model_info["params"])
+        elif model_info["type"] == "MapSummary":
+            return MapSummaryModel(**model_info["params"])
 
     def _validLevel(self, model_name: str, level: int):
         # print(f"Checking validity of model {model_name} for level {level}")

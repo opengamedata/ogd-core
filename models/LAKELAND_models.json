@@ -13,28 +13,67 @@
       "n": 0
     }
   },
-  "DeathPredictionModel":{
-    "type": "SimpleDeathPredictionModel",
+  "PlayingTimeModel": {
+    "type": "PlayingTimeModel",
+    "levels": [],
+    "params": {
+      "features": [
+        "sess_time_in_secs",
+        "sess_time_active"
+      ]
+    }
+  },
+  "ActionsLastXSecondsModel": {
+    "type": "ActionsLastXSecondsModel",
+    "levels": [],
+    "params": {
+      "time": 30
+    }
+  },
+  "SimpleFarmAbandonmentModel": {
+    "type": "SimpleFarmAbandonmentModel",
+    "levels": [],
+    "params": {
+    }
+  },
+  "TutorialProgressionModel": {
+    "type": "TutorialProgressionModel",
+    "levels": [],
+    "params": {
+      "tut_features" : [
+        "sess_time_to_first_home_buy",
+        "sess_time_to_sell_food_tutorial",
+        "sess_time_to_first_livestock_buy",
+        "sess_time_to_first_farm_buy",
+        "sess_time_to_first_fertilizer_buy",
+        "sess_time_to_extra_life_tutorial"
+      ]
+    }
+  },
+  "SimpleDeathPredModel":{
+    "type": "SimpleDeathPredModel",
       "levels": [],
       "params":{
-        "time_int":404
       }
     },
-  "SimpleFoodDeathPredictionModel":{
-    "type": "FoodDeathPrediction",
+  "SimpleFoodDeathPredModel":{
+    "type": "SimpleFoodDeathPredModel",
       "levels": [],
       "params":{
-        "food":0
       }
     },
-  "SimpleMoneyDeathPredictionModel":{
-    "type": "MoneyDeathPrediction",
+  "SimpleMoneyDeathPredModel":{
+    "type": "SimpleMoneyDeathPredModel",
       "levels": [],
       "params":{
-        "money":300
       }
     },
-
+  "DeathCountModel":{
+    "type": "DeathCountModel",
+      "levels": [],
+      "params":{
+      }
+    },
     "dummyLogistic": {
       "type": "Logistic",
       "levels": [],
@@ -254,6 +293,12 @@
   },
   "TimeSinceLastSaleModel":{
     "type": "TimeSinceLastSale",
+    "levels": [],
+    "params": {
+    }
+  },
+  "MapSummaryModel":{
+    "type": "MapSummary",
     "levels": [],
     "params": {
     }
