@@ -203,10 +203,10 @@ class SQL:
     #  @return              A collection of all rows from the selection, if fetch_results is true,
     #                           otherwise None.
     @staticmethod
-    def SELECT(cursor, db_name: str, table:str, columns: typing.List[str] = None, filter: str = None, limit: int = -1,
+    def SELECT(cursor, db_name: str, table:str, columns: typing.List[str] = None, join: str = None, filter: str = None, limit: int = -1,
                sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
                distinct: bool = False, fetch_results: bool = True) -> typing.List[typing.Tuple]:
-        query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, filter=filter, limit=limit,
+        query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, join=join, filter=filter, limit=limit,
                                    sort_columns=sort_columns, sort_direction=sort_direction, grouping=grouping,
                                    distinct=distinct)
         return SQL.SELECTfromQuery(cursor=cursor, query=query, fetch_results=fetch_results)
@@ -235,7 +235,7 @@ class SQL:
         return result
 
     @staticmethod
-    def _prepareSelect(db_name: str, table:str, columns: typing.List[str] = None, filter: str = None, limit: int = -1,
+    def _prepareSelect(db_name: str, table:str, columns: typing.List[str] = None, join: str = None, filter: str = None, limit: int = -1,
                sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
                distinct: bool = False):
         d = "DISTINCT " if distinct else ""
@@ -244,12 +244,13 @@ class SQL:
         table_path = db_name + "." + str(table)
 
         sel_clause   = "SELECT " + d + cols + " FROM " + table_path
+        join_clause  = "" if join      is None else join
         where_clause = "" if filter    is None else " WHERE {}".format(filter)
         group_clause = "" if grouping  is None else " GROUP BY {}".format(grouping)
         sort_clause  = "" if sort_cols is None else " ORDER BY {} {} ".format(sort_cols, sort_direction)
         lim_clause   = "" if limit < 0         else " LIMIT {}".format(str(limit))
 
-        return sel_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
+        return sel_clause + join_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
 
     @staticmethod
     def Query(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
