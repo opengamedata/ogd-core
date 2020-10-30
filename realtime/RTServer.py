@@ -309,6 +309,9 @@ class RTServer:
     @staticmethod
     def _fetchActiveSessions(game_id, require_player_id, class_id=None):
         if RTServer.rt_settings["data_source"] == "DB":
+            # if we're using DB, allow realtime settings to override base settings.
+            RTServer.db_settings["DB_HOST"]   = RTServer.rt_settings["DB_HOST"]
+            RTServer.ssh_settings["SSH_HOST"] = RTServer.rt_settings["SSH_HOST"]
             try:
                 tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
                 #+++
