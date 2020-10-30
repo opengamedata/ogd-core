@@ -244,11 +244,11 @@ class SQL:
         table_path = db_name + "." + str(table)
 
         sel_clause   = "SELECT " + d + cols + " FROM " + table_path
-        join_clause  = "" if join      is None else join
-        where_clause = "" if filter    is None else " WHERE {}".format(filter)
-        group_clause = "" if grouping  is None else " GROUP BY {}".format(grouping)
-        sort_clause  = "" if sort_cols is None else " ORDER BY {} {} ".format(sort_cols, sort_direction)
-        lim_clause   = "" if limit < 0         else " LIMIT {}".format(str(limit))
+        join_clause  = "" if join      is None else f" {join}"
+        where_clause = "" if filter    is None else f" WHERE {filter}"
+        group_clause = "" if grouping  is None else f" GROUP BY {grouping}"
+        sort_clause  = "" if sort_cols is None else f" ORDER BY {sort_cols} {sort_direction} "
+        lim_clause   = "" if limit < 0         else f" LIMIT {str(limit)}"
 
         return sel_clause + join_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
 
