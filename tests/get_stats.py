@@ -13,7 +13,7 @@ session_results_list = []
 ids = []
 
 model_mgr = ModelManager(game_name="LAKELAND")
-model = model_mgr.LoadModel('TownCompositionModel')
+model = model_mgr.LoadModel('DiagonalFarmDetectorModel')
 
 #for session in unique_ids:
 #    next_session = df.loc[df['sess_id'] == session]
@@ -33,8 +33,10 @@ for session in unique_ids:
     split_values = []
     for i in range(25, len(next_session_dict), 25):
         next_session_result = model.Eval(next_session_dict[0:i])
-        split_values.append(next_session_result[0] + next_session_result[1] + next_session_result[2])
-        #split_values.append(next_session_result)
+        next_session_result = str(next_session_result)
+        ":".join(next_session_result)
+        #split_values.append(next_session_result[0] + next_session_result[1] + next_session_result[2])
+        split_values.append(next_session_result)
     session_results_list.append(split_values)
     ids.append(session)
 
@@ -46,18 +48,7 @@ for i in range(0,len(ids)):
         ith_row.append(session_results_list[i][j])
     rows.append(ith_row)
 
-#rows = [[ids[i], session_results_list[i][j] for j in range(0,len(session_results_list[i]))] for i in range(0,len(ids))]
-
 print(rows)
 
 out_df = pd.DataFrame(rows)
-out_df.to_csv("buildings_stats_v18.csv")
-
-#np.savetxt("population_stats.csv",
-#           rows,
-#           delimiter =", ",
-#           fmt ='% s')
-#print(session_results_list)
-#print(ids)
-#print(np.mean(session_results_list))
-#print(np.std(session_results_list))
+out_df.to_csv("diagonal_farm_detector_stats_v18.csv")
