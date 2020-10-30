@@ -326,10 +326,10 @@ class RTServer:
                 else:
                     join_statement = ""
                     column_names   = [f"session_id", "player_id"]
-                filt = f"`app_id`='{game_id}' AND `server_time` > '{start_time.isoformat()}' {player_id_filter} {join_statement}"
+                filt = f"`app_id`='{game_id}' AND `server_time` > '{start_time.isoformat()}' {player_id_filter}"
                 active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
                                                     db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
-                                                    columns=column_names, filter=filt,\
+                                                    columns=column_names, join=join_statement, filter=filt,\
                                                     sort_columns=["session_id"], distinct=True)
                 #+++
                 end = datetime.now()
