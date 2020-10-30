@@ -331,12 +331,12 @@ class RTServer:
                 time_delta = end - start
                 minutes = math.floor(time_delta.total_seconds()/60)
                 seconds = time_delta.total_seconds() % 60
-                utils.Logger.toFile(f"Total time taken to fetch active sessions from database: {minutes} min, {seconds} sec", logging.DEBUG)
+                utils.Logger.toStdOut(f"Total time taken to fetch active sessions from database: {minutes} min, {seconds} sec", logging.DEBUG)
                 #---
             except Exception as err:
                 msg = f"{type(err)} {str(err)}"
                 print(f"Got an error in _fetchActiveSessions: {msg}", file=sys.stderr)
-                utils.Logger.toFile(f"Got an error in _fetchActiveSessions: {msg}", logging.ERROR)
+                utils.Logger.toStdOut(f"Got an error in _fetchActiveSessions: {msg}", logging.ERROR)
                 raise err
             finally:
                 utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
