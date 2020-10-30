@@ -319,7 +319,7 @@ class RTServer:
                 #---
                 cursor = db.cursor()
                 start_time = datetime.now() - timedelta(minutes=5)
-                player_id_filter = "AND `player_id` IS NOT NULL" if require_player_id else ""
+                player_id_filter = f"AND `{RTServer.DB_TABLE}.player_id` IS NOT NULL" if require_player_id else ""
                 if class_id is not None:
                     join_statement = f"INNER JOIN players ON {RTServer.DB_TABLE}.player_id=players.player_id" 
                     column_names = [f"{RTServer.DB_TABLE}.session_id", f"{RTServer.DB_TABLE}.player_id", "players.username"]
