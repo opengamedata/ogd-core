@@ -69,12 +69,13 @@ class RTServer:
         for session in active_sessions_raw:
             sess_id = session[0]
             player_id = session[1]
+            username = session[2]
             if re.search("^[0-9]+$", player_id):
                 prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
                 idle_time = prog["idle_time"]
                 max_level = prog["max_level"]
                 cur_level = prog["cur_level"]
-                ret_val[sess_id] = {"session_id":sess_id, "player_id":session[1], "max_level":max_level, "cur_level":cur_level, "idle_time":idle_time}
+                ret_val[sess_id] = {"session_id":sess_id, "username":username, "max_level":max_level, "cur_level":cur_level, "idle_time":idle_time}
         # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
         return ret_val
 
