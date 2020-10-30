@@ -94,7 +94,7 @@ class TimeSinceEventTypesModel(SequenceModel):
     def _eval(self, events: List[Dict[str, Any]], verbose: bool = False) -> Optional[int]:
         if not events:
             return None
-        now = datetime.datetime.now() # assume this script in the same timezone as server, and server exports
+        now = events[-1]["client_time"] # assume this script in the same timezone as server, and server exports
         for event in reversed(events):
             event_filters = self._parsed_filters[event["event_custom"]]
             # if event_filters:
@@ -102,9 +102,11 @@ class TimeSinceEventTypesModel(SequenceModel):
             if any(f(event) for f in event_filters):
                 break
 
-        event_time = event["server_time"]
+        event_time = event["client_time"]
         if type(event_time) is str: # fix for tests, datetimes don't always get parsed ahead of time
             event_time = datetime.datetime.fromisoformat(event_time)
+        if type(now) is str:
+            now = datetime.datetime.fromisoformat(now)
         return (now - event_time).seconds
 
 

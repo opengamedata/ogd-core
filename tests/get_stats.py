@@ -13,7 +13,7 @@ session_results_list = []
 ids = []
 
 model_mgr = ModelManager(game_name="LAKELAND")
-model = model_mgr.LoadModel('DiagonalFarmDetectorModel')
+model = model_mgr.LoadModel('TimeSinceLastFarmHouseDairyModel')
 
 #for session in unique_ids:
 #    next_session = df.loc[df['sess_id'] == session]
@@ -51,4 +51,4 @@ for i in range(0,len(ids)):
 print(rows)
 
 out_df = pd.DataFrame(rows)
-out_df.to_csv("diagonal_farm_detector_stats_v18.csv")
+out_df.to_csv("tests/stats_results/time_since_farm_house_dairy_stats_v18.csv")
