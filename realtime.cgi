@@ -92,7 +92,7 @@ try:
     time_delta = end - start
     minutes = math.floor(time_delta.total_seconds()/60)
     seconds = time_delta.total_seconds() % 60
-    utils.Logger.toFile(f"Total time taken to {method}: {minutes} min, {seconds} sec", logging.DEBUG)
+    utils.Logger.toStdOut(f"Total time taken to {method}: {minutes} min, {seconds} sec", logging.DEBUG)
     #---
 
     result: str = json.dumps(body, default=lambda ob: ob.isoformat() if type(ob) == datetime else json.dumps(ob))
@@ -101,5 +101,5 @@ except Exception as err:
     msg = f"{type(err)} {str(err)}"
     print(f"Error in realtime script! {msg}, traceback:\n{traceback.format_exc()}", file=sys.stderr)
     traceback.print_tb(err.__traceback__, file=sys.stderr)
-    utils.Logger.toFile(f"Error in realtime script! {msg}, traceback:\n{traceback.format_exc()}", level=logging.ERROR)
+    # utils.Logger.toStdOut(f"Error in realtime script! {msg}, traceback:\n{traceback.format_exc()}", level=logging.ERROR)
     #print(f"Traceback: {traceback.print_stack(limit=10)}")
