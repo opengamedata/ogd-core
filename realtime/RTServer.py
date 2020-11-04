@@ -103,7 +103,9 @@ class RTServer:
         if features is not None and type(features) == str:
             features = features.split(",")
         request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
+        start_time = datetime.now()
         session_data, game_table = RTServer._fetchSessionData(sess_id, settings=settings, request=request)
+        utils.Logger.toStdOut(f"Time to fetch session data: {datetime.now() - start_time}")
         try:
             if len(session_data) > 0:
                 # return "Line 88: Killing features function in realtime.cgi."
@@ -117,6 +119,8 @@ class RTServer:
                     extractor = LakelandExtractor(session_id=sess_id, game_table=game_table, game_schema=schema, proc_file=None)
                 else:
                     raise Exception("Got an invalid game ID!")
+
+                start_time = datetime.now()
                 for row in session_data:
                     col = row[game_table.complex_data_index]
                     complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[game_table.event_index]}
@@ -126,6 +130,8 @@ class RTServer:
                     row[game_table.complex_data_index] = complex_data_parsed
                     extractor.extractFromRow(row_with_complex_parsed=row, game_table=game_table)
                 extractor.calculateAggregateFeatures()
+                utils.Logger.toStdOut(f"Time to process rows: {datetime.now() - start_time}")
+
                 all_features = dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
                                             extractor.getCurrentFeatures() ))
                 # print(f"all_features: {all_features}")
@@ -391,7 +397,6 @@ class RTServer:
     
     @staticmethod
     def _fetchSessionData(session_id, settings, request):
-        start_time = datetime.now()
         session_data = []
         if RTServer.rt_settings["data_source"] == "DB":
             try:
@@ -426,7 +431,6 @@ class RTServer:
             queried_data = data[(data['session_id'] == session_id)].sort_values("session_n", axis=0, ascending=True, inplace=True, na_position='last')
             session_data = list(queried_data.itertuples(index=False, name=None))
 
-        utils.Logger.toStdOut(f"Time to fetch session data: {datetime.now() - start_time}")
         return session_data, game_table
 
     # @staticmethod
