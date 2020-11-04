@@ -391,6 +391,7 @@ class RTServer:
     
     @staticmethod
     def _fetchSessionData(session_id, settings, request):
+        start_time = datetime.now()
         session_data = []
         if RTServer.rt_settings["data_source"] == "DB":
             try:
@@ -425,6 +426,7 @@ class RTServer:
             queried_data = data[(data['session_id'] == session_id)].sort_values("session_n", axis=0, ascending=True, inplace=True, na_position='last')
             session_data = list(queried_data.itertuples(index=False, name=None))
 
+        utils.Logger.toStdOut(f"Time to fetch session data: {datetime.now() - start_time}")
         return session_data, game_table
 
     # @staticmethod
