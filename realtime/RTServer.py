@@ -245,7 +245,7 @@ class RTServer:
     def getModelsBySessID(sess_id: str, game_id: str, models):
         # start_time = datetime.now()
         ret_val = {}
-        msg = ""
+        message = ""
         try:
             # prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
             # max_level = prog["max_level"]
@@ -297,7 +297,7 @@ class RTServer:
                         traceback.print_tb(err.__traceback__, file=sys.stderr)
                 else:
                     ret_val[model_name] = {"name": model_name, "success": False, "value": f"Invalid model for level {cur_level}!"}
-            msg = f"Time to get session data: {fetch_time}, time to process models: {datetime.now() - start_time}"
+            message = f"Time to get session data: {fetch_time}, time to process models: {datetime.now() - start_time}"
         except Exception as err:
             # print(f"got error in RTServer.py: {str(err)}")
             # traceback.print_tb(err.__traceback__)
@@ -307,7 +307,7 @@ class RTServer:
             ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
         finally:
-            result = {sess_id:ret_val, "message":msg}
+            result = {sess_id:ret_val, "message":message}
             # print(f"returning from realtime, with session_models: {result}") # Time spent was {(datetime.now()-start_time).seconds} seconds.")
             return result
 
