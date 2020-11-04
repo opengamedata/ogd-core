@@ -257,6 +257,7 @@ class RTServer:
             # models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
             # print(f"***List of valid models***: {model_list}")
             # Retrieve data for the session, before we start looping over all sessions.
+            start_time = datetime.now()
             request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
             sess_and_feats = RTServer.getSessionAndFeaturesBySessID(sess_id, game_id)
             # TODO: streamline this process. Shouldn't need to call to get the table.
@@ -270,7 +271,9 @@ class RTServer:
                 row[game_table.complex_data_index] = json.loads(col.replace("'", "\"")) if (col is not None) else {"event_custom":row[game_table.event_index]}
             session_data_parsed = [game_table.RowToDict(row) for row in session_data]
             features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
+            fetch_time = datetime.now() - start_time
 
+            start_time = datetime.now()
             model_mgr = ModelManager(game_id)
             # NOTE: We assume current level is the one to use. If player back-tracks, you may end up with "earlier" model relative to max level.
             cur_level = 1; # TODO: eventually, we'll want to actually get levels, for games which use levels.
@@ -292,6 +295,7 @@ class RTServer:
                         traceback.print_tb(err.__traceback__, file=sys.stderr)
                 else:
                     ret_val[model_name] = {"name": model_name, "success": False, "value": f"Invalid model for level {cur_level}!"}
+            msg = f"Time to get session data: {fetch_time}, time to process models: {datetime.now() - start_time}"
         except Exception as err:
             # print(f"got error in RTServer.py: {str(err)}")
             # traceback.print_tb(err.__traceback__)
@@ -300,7 +304,7 @@ class RTServer:
             ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
         finally:
-            result = {sess_id:ret_val}
+            result = {sess_id:ret_val, "message":msg}
             # print(f"returning from realtime, with session_models: {result}") # Time spent was {(datetime.now()-start_time).seconds} seconds.")
             return result
 
