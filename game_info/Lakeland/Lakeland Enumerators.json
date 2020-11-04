@@ -40,7 +40,9 @@
 	"saleend": 37,
 	"rainstarted": 38,
 	"eatfood": 39,
-	"reset":  40
+  "reset":  40,
+  "count": 41,
+  "farmgrowth": 42
   },
   "EMOTES": {
     "null": 0,
