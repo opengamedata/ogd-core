@@ -302,7 +302,8 @@ class RTServer:
             # print(f"got error in RTServer.py: {str(err)}")
             # traceback.print_tb(err.__traceback__)
             utils.Logger.toStdOut(f"Got an error in getModelsBySessID: {type(err)} {str(err)}", logging.ERROR)
-            print(f"Got an error in getModelsBySessID: {type(err)} {str(err)}", file=sys.stderr)
+            traceback.print_tb(err.__traceback__, file=sys.stderr)
+            # print(f"Got an error in getModelsBySessID: {type(err)} {str(err)}", file=sys.stderr)
             ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
         finally:
