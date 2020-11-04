@@ -97,7 +97,7 @@ class RTServer:
     #  @return A dictionary mapping feature names to feature values.
     #          If a features argument was given, only returns the corresponding features.
     @staticmethod
-    def getFeaturesBySessID(sess_id: str, game_id: str, features: typing.List = None) -> typing.Dict:
+    def getSessionAndFeaturesBySessID(sess_id: str, game_id: str, features: typing.List = None) -> typing.Dict:
         ret_val: typing.Dict = {}
         # if we got a features list, it'll be a string that we must split.
         if features is not None and type(features) == str:
@@ -129,8 +129,8 @@ class RTServer:
                 all_features = dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
                                             extractor.getCurrentFeatures() ))
                 # print(f"all_features: {all_features}")
-                prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
-                cur_level = prog["cur_level"]
+                # prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
+                cur_level = 1 # prog["cur_level"] # TODO: get back to not hard-coding level
                 if features is not None and features != None:
                     for feature_name in features:
                         if feature_name in all_features.keys():
@@ -156,7 +156,7 @@ class RTServer:
             ret_val = {"error": "Got error in RTServer!"}
             raise err
         finally:
-            return {sess_id:ret_val}
+            return {sess_id:{"features": ret_val, "session": session_data, "table": game_table}}
 
     ## Function to retrieve the game progress in a session.
     #  Specifically, the current level, max level, and current idle time.
@@ -244,32 +244,37 @@ class RTServer:
     @staticmethod
     def getModelsBySessID(sess_id: str, game_id: str, models):
         # start_time = datetime.now()
+        ret_val = {}
         try:
-            prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
-            max_level = prog["max_level"]
-            cur_level = prog["cur_level"]
-            idle_time = prog["idle_time"]
-            ret_val = {}
-            ret_val["max_level"] = {"name": "Max Level", "value": max_level}
-            ret_val["cur_level"] = {"name": "Current Level", "value": cur_level}
-            ret_val["seconds_inactive"] = {"name": "Seconds Inactive", "value": idle_time}
+            # prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
+            # max_level = prog["max_level"]
+            # cur_level = prog["cur_level"]
+            # idle_time = prog["idle_time"]
+            # ret_val["max_level"] = {"name": "Max Level", "value": max_level}
+            # ret_val["cur_level"] = {"name": "Current Level", "value": cur_level}
+            # ret_val["seconds_inactive"] = {"name": "Seconds Inactive", "value": idle_time}
             # model_level = str(max(1, min(8, cur_level)))
             # models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
-            model_mgr = ModelManager(game_id)
-            # NOTE: We assume current level is the one to use. If player back-tracks, you may end up with "earlier" model relative to max level.
-            model_list = model_mgr.ListModels(cur_level)
             # print(f"***List of valid models***: {model_list}")
             # Retrieve data for the session, before we start looping over all sessions.
-            # TODO: Set this up so we can get the raw session data, then pass that in to do feature extraction.
             request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
-            session_data_raw, game_table = RTServer._fetchSessionData(sess_id, settings=settings, request=request)
+            sess_and_feats = RTServer.getSessionAndFeaturesBySessID(sess_id, game_id)
+            # TODO: streamline this process. Shouldn't need to call to get the table.
+            features_raw = sess_and_feats["features"]
+            session_data_raw = sess_and_feats["session"]
+            game_table = sess_and_feats["table"]
+            # session_data_raw, game_table = RTServer._fetchSessionData(sess_id, settings=settings, request=request)
             session_data = [list(row) for row in session_data_raw]
             for row in session_data:
                 col = row[game_table.complex_data_index]
                 row[game_table.complex_data_index] = json.loads(col.replace("'", "\"")) if (col is not None) else {"event_custom":row[game_table.event_index]}
             session_data_parsed = [game_table.RowToDict(row) for row in session_data]
-            features_raw = RTServer.getFeaturesBySessID(sess_id, game_id)
             features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
+
+            model_mgr = ModelManager(game_id)
+            # NOTE: We assume current level is the one to use. If player back-tracks, you may end up with "earlier" model relative to max level.
+            cur_level = 1; # TODO: eventually, we'll want to actually get levels, for games which use levels.
+            model_list = model_mgr.ListModels(cur_level)
             # For each model in the model list, call eval on the proper type of data.
             for model_name in models:
                 if model_name in model_list:
