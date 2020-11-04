@@ -272,7 +272,7 @@ class RTServer:
                 col = row[game_table.complex_data_index]
                 row[game_table.complex_data_index] = json.loads(col.replace("'", "\"")) if (col is not None) else {"event_custom":row[game_table.event_index]}
             session_data_parsed = [game_table.RowToDict(row) for row in session_data]
-            features_parsed = RTServer._parseRawToDict(features_raw[sess_id])
+            features_parsed = RTServer._parseRawToDict(features_raw)
             fetch_time = datetime.now() - start_time
 
             start_time = datetime.now()
