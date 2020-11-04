@@ -23,7 +23,7 @@
       ]
     }
   },
-  "ActionsLastXSecondsModel": {
+  "ActionsLast30SecondsModel": {
     "type": "ActionsLastXSecondsModel",
     "levels": [],
     "params": {
