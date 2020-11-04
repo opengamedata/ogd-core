@@ -293,7 +293,7 @@ class Logger:
         file_logger.debug("Testing error logger")
 
     @staticmethod
-    def toFile(message, level):
+    def toFile(message, level=logging.DEBUG):
         now = datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
         if Logger.file_logger is not None:
             if level == logging.DEBUG:
@@ -306,7 +306,7 @@ class Logger:
                 Logger.file_logger.error(f"ERROR: {now} {message}")
 
     @staticmethod
-    def toStdOut(message, level):
+    def toStdOut(message, level=logging.DEBUG):
         if Logger.std_logger is not None:
             if level == logging.DEBUG:
                 Logger.std_logger.debug(f"DEBUG: {message}")
@@ -320,12 +320,12 @@ class Logger:
     # Function to print a method to both the standard out and file logs.
     # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
     @staticmethod
-    def Log(message, level):
+    def Log(message, level=logging.DEBUG):
         Logger.toFile(message, level)
         Logger.toStdOut(message, level)
 
     @staticmethod
-    def toPrint(message, level):
+    def toPrint(message, level=logging.DEBUG):
         if level == logging.DEBUG:
             print(f"debug: {message}")
         elif level == logging.INFO:
