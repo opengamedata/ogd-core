@@ -105,7 +105,7 @@ class RTServer:
         request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
         start_time = datetime.now()
         session_data, game_table = RTServer._fetchSessionData(sess_id, settings=settings, request=request)
-        utils.Logger.toStdOut(f"Time to fetch session data: {datetime.now() - start_time}")
+        utils.Logger.toStdOut(f"Time to fetch session data: {datetime.now() - start_time}", logging.DEBUG)
         try:
             if len(session_data) > 0:
                 # return "Line 88: Killing features function in realtime.cgi."
@@ -130,7 +130,7 @@ class RTServer:
                     row[game_table.complex_data_index] = complex_data_parsed
                     extractor.extractFromRow(row_with_complex_parsed=row, game_table=game_table)
                 extractor.calculateAggregateFeatures()
-                utils.Logger.toStdOut(f"Time to process rows: {datetime.now() - start_time}")
+                utils.Logger.toStdOut(f"Time to process rows: {datetime.now() - start_time}", logging.DEBUG)
 
                 all_features = dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
                                             extractor.getCurrentFeatures() ))
