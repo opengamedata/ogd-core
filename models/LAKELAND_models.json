@@ -13,7 +13,7 @@
       "n": 0
     }
   },
-  "PlayingTimeModel": {
+  "PlayingTime": {
     "type": "PlayingTimeModel",
     "levels": [],
     "params": {
@@ -23,20 +23,20 @@
       ]
     }
   },
-  "ActionsLast30SecondsModel": {
+  "ActionsLast30Seconds": {
     "type": "ActionsLastXSecondsModel",
     "levels": [],
     "params": {
       "time": 30
     }
   },
-  "SimpleFarmAbandonmentModel": {
+  "SimpleFarmAbandonment": {
     "type": "SimpleFarmAbandonmentModel",
     "levels": [],
     "params": {
     }
   },
-  "TutorialProgressionModel": {
+  "TutorialProgression": {
     "type": "TutorialProgressionModel",
     "levels": [],
     "params": {
@@ -50,25 +50,25 @@
       ]
     }
   },
-  "SimpleDeathPredModel":{
+  "SimpleDeathPred":{
     "type": "SimpleDeathPredModel",
       "levels": [],
       "params":{
       }
     },
-  "SimpleFoodDeathPredModel":{
+  "SimpleFoodDeathPred":{
     "type": "SimpleFoodDeathPredModel",
       "levels": [],
       "params":{
       }
     },
-  "SimpleMoneyDeathPredModel":{
+  "SimpleMoneyDeathPred":{
     "type": "SimpleMoneyDeathPredModel",
       "levels": [],
       "params":{
       }
     },
-  "DeathCountModel":{
+  "DeathCount":{
     "type": "DeathCountModel",
       "levels": [],
       "params":{
@@ -81,7 +81,7 @@
         "coefficient_map": {"sess_count_achievements": 0.5, "sess_count_deaths": 0.25}
       }
     },
-    "BloomAchSeqPercentModel":{
+    "BloomAchSeqPercent":{
     "type": "BloomAchSeqPercent",
     "levels": [],
     "params": {
@@ -95,7 +95,7 @@
         "time_feat": "sess_time_active"
     }
     },
-  "BloomAchVelocityModel":{
+  "BloomAchVelocity":{
     "type": "BloomAchVelocity",
     "levels": [],
     "params": {
@@ -108,7 +108,7 @@
         "time_feat": "sess_time_active"
     }
     },
-  "MoneyAchSeqPercentModel":{
+  "MoneyAchSeqPercent":{
     "type": "MoneyAchSeqPercent",
     "levels": [],
     "params": {
@@ -122,7 +122,7 @@
         "time_feat": "sess_time_active"
     }
     },
-  "MoneyAchVelocityModel":{
+  "MoneyAchVelocity":{
     "type": "MoneyAchVelocity",
     "levels": [],
     "params": {
@@ -135,7 +135,7 @@
         "time_feat": "sess_time_active"
     }
     },
-  "PopAchSeqPercentModel":{
+  "PopAchSeqPercent":{
     "type": "PopAchSeqPercent",
     "levels": [],
     "params": {
@@ -149,7 +149,7 @@
         "time_feat": "sess_time_active"
     }
     },
-  "PopAchVelocityModel":{
+  "PopAchVelocity":{
     "type": "PopAchVelocity",
     "levels": [],
     "params": {
@@ -162,7 +162,7 @@
         "time_feat": "sess_time_active"
     }
     },
-  "FarmAchSeqPercentModel":{
+  "FarmAchSeqPercent":{
     "type": "FarmAchSeqPercent",
     "levels": [],
     "params": {
@@ -176,7 +176,7 @@
         "time_feat": "sess_time_active"
     }
     },
-  "FarmAchVelocityModel":{
+  "FarmAchVelocity":{
         "type": "FarmAchVelocity",
     "levels": [],
     "params": {
@@ -189,7 +189,7 @@
         "time_feat": "sess_time_active"
     }
     },
-  "ReqTutSeqPercentModel":{
+  "ReqTutSeqPercent":{
     "type": "ReqTutSeqPercent",
     "levels": [],
     "params": {
@@ -209,7 +209,7 @@
         "time_feat": "sess_time_active"
     }
     },
-  "ReqTutVelocityModel":{
+  "ReqTutVelocity":{
     "type": "ReqTutVelocity",
     "levels": [],
     "params": {
@@ -228,28 +228,28 @@
         "time_feat": "sess_time_active"
     }
     },
-  "TimeSinceImpactModel": {
+  "TimeSinceImpact": {
     "type": "TimeSinceImpact",
     "levels": [],
     "params": {
       "event_list": [7,10,11]
     }
   },
-    "TimeSinceActiveEvent": {
+  "TimeSinceActiveEvent": {
     "type": "TimeSinceActive",
     "levels": [],
     "params": {
       "event_list": [3, 4, 5, 6, 7, 8, 10, 11, 1, 12, 13, 14, 15, 16]
     }
   },
-    "TimeSinceExploratoryModel": {
+    "TimeSinceExploratory": {
     "type": "TimeSinceExploratory",
     "levels": [],
     "params": {
       "event_list": [3, 4, 5, 14, 13, 12]
     }
   },
-  "TimeSinceLastFarmHouseDairyModel": {
+  "TimeSinceLastFarmHouseDairy": {
     "type": "TimeSinceLastFarmHouseDairy",
     "levels": [],
     "params": {
@@ -261,43 +261,43 @@
       ]
     }
   },
-  "PopulationModel":{
+  "Population":{
     "type": "Population",
     "levels": [],
     "params": {
     }
   },
-  "TownCompositionModel":{
+  "TownComposition":{
     "type": "TownComposition",
     "levels": [],
     "params": {
     }
   },
-  "DiagonalFarmDetectorModel":{
+  "DiagonalFarmDetector":{
     "type": "DiagonalFarmDetector",
     "levels": [],
     "params": {
     }
   },
-  "RecentPurchasesModel":{
+  "RecentPurchases":{
     "type": "RecentPurchases",
     "levels": [],
     "params": {
     }
   },
-  "MoneyAccumulationModel":{
+  "MoneyAccumulation":{
     "type": "MoneyAccumulation",
     "levels": [],
     "params": {
     }
   },
-  "TimeSinceLastSaleModel":{
+  "TimeSinceLastSale":{
     "type": "TimeSinceLastSale",
     "levels": [],
     "params": {
     }
   },
-  "MapSummaryModel":{
+  "MapSummary":{
     "type": "MapSummary",
     "levels": [],
     "params": {
