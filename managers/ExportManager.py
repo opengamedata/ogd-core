@@ -72,7 +72,7 @@ class ExportManager:
             date_range = (request.start_date, request.end_date)
             game_table: GameTable = GameTable.FromDB(db=db, settings=self._settings, request=request)
             # once we've set up DataManager and gotten a bit of data, we can run the Export.
-            if self._runExport(data_mgr=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files):
+            if self._runExport(data_manager=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files):
                 utils.Logger.toStdOut(f"Successfully completed request {str(request)}.", logging.INFO)
                 utils.Logger.toFile(f"Successfully completed request {str(request)}.", logging.INFO)
             else:
@@ -108,7 +108,7 @@ class ExportManager:
             # end = datetime.strptime(data_frame['server_time'].max().split(' ')[0], "%Y-%m-%d")
             # date_range = (start, end)
             # once we've set up DataManager and gotten a bit of data, we can run the Export.
-            if self._runExport(data_mgr=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files):
+            if self._runExport(data_manager=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files):
                 utils.Logger.toStdOut(f"Successfully completed extraction from {request.file_path}.", logging.INFO)
             else:
                 utils.Logger.toFile(f"Could not complete extraction from {request.file_path}", logging.ERROR)
