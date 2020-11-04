@@ -260,7 +260,8 @@ class RTServer:
             # Retrieve data for the session, before we start looping over all sessions.
             start_time = datetime.now()
             request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
-            sess_and_feats = RTServer.getSessionAndFeaturesBySessID(sess_id, game_id)
+            sess_and_feats_ob = RTServer.getSessionAndFeaturesBySessID(sess_id, game_id)
+            sess_and_feats = sess_and_feats_ob[sess_id]
             # TODO: streamline this process. Shouldn't need to call to get the table.
             features_raw = sess_and_feats["features"]
             session_data_raw = sess_and_feats["session"]
