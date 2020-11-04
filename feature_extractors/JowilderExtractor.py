@@ -205,7 +205,7 @@ class JowilderExtractor(Extractor):
                 self.setValByName("play_minute", self._CLIENT_START_TIME.minute)
                 self.setValByName("play_second", self._CLIENT_START_TIME.second)
                 if self.verbose:
-                    print(f'{"*" * 10} {self.session_id} v{self._VERSION} @ {self._CLIENT_START_TIME} {"*" * 10}')
+                    utils.Logger.toStdOut(f'{"*" * 10} {self.session_id} v{self._VERSION} @ {self._CLIENT_START_TIME} {"*" * 10}')
 
             if self.level is not None:
                 if self.level_start_timestamp.get(self.level) == None:
@@ -1241,7 +1241,7 @@ def get_variance():
     def add_debug_str(self, s):
         self.debug_strs.append(s)
         if self.verbose:
-            print(s)
+            utils.Logger.toStdOut(s)
     
     def log_warning(self, message, num_lines=20):
         self.add_debug_str('WARNING: '+message)
