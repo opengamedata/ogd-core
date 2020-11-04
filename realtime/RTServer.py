@@ -45,9 +45,11 @@ class RTServer:
     #          level, and time since last move.
     @staticmethod
     def getAllActiveSessions(game_id: str, require_player_id: bool) -> typing.Dict:
-        # start_time = datetime.now()
         ret_val = {}
+        start_time = datetime.now()
         active_sessions_raw = RTServer._fetchActiveSessions(game_id=game_id, require_player_id=require_player_id)
+        fetch_time = datetime.now() - start_time
+        start_time = datetime.now()
         for item in active_sessions_raw:
             sess_id = item[0]
             player_id = item[1]
@@ -59,13 +61,16 @@ class RTServer:
                 cur_level = prog["cur_level"]
                 ret_val[sess_id] = {"session_id":sess_id, "player_id":item[1], "max_level":max_level, "cur_level":cur_level, "idle_time":idle_time}
         # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
+        ret_val["message"] = f"Time to fetch sessions: {fetch_time}, time to get progress: {datetime.now() - start_time}"
         return ret_val
 
     @staticmethod
     def getAllActiveSessionsByClassroom(game_id: str, class_id: bool) -> typing.Dict:
-        # start_time = datetime.now()
         ret_val = {}
+        start_time = datetime.now()
         active_sessions_raw = RTServer._fetchActiveSessions(game_id=game_id, require_player_id=True, class_id=class_id)
+        fetch_time = datetime.now() - start_time
+        start_time = datetime.now()
         for session in active_sessions_raw:
             sess_id = session[0]
             player_id = session[1]
@@ -77,6 +82,7 @@ class RTServer:
                 cur_level = prog["cur_level"]
                 ret_val[sess_id] = {"session_id":sess_id, "username":username, "max_level":max_level, "cur_level":cur_level, "idle_time":idle_time}
         # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
+        ret_val["message"] = f"Time to fetch sessions: {fetch_time}, time to get progress: {datetime.now() - start_time}"
         return ret_val
 
     ## Handler to retrieve features for a given session.
