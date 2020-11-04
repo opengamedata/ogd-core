@@ -245,6 +245,7 @@ class RTServer:
     def getModelsBySessID(sess_id: str, game_id: str, models):
         # start_time = datetime.now()
         ret_val = {}
+        msg = ""
         try:
             # prog = RTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
             # max_level = prog["max_level"]
