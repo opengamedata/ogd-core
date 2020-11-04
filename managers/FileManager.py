@@ -25,7 +25,7 @@ class FileManager(abc.ABC):
             # then set up our paths.
             full_data_dir = self._data_dir + game_id
             self._readme_path = f"{full_data_dir}/readme.md"
-            base_path = f"{full_data_dir}/{self._dataset_id}_{self._short_hash}""
+            base_path = f"{full_data_dir}/{self._dataset_id}_{self._short_hash}"
             # finally, generate file names.
             self._file_names["proc"] = base_path+"_proc.csv" if export_files.proc else None
             self._file_names["raw"]  = base_path+"_raw.tsv"  if export_files.raw  else None

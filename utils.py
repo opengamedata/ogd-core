@@ -203,10 +203,10 @@ class SQL:
     #  @return              A collection of all rows from the selection, if fetch_results is true,
     #                           otherwise None.
     @staticmethod
-    def SELECT(cursor, db_name: str, table:str, columns: typing.List[str] = None, filter: str = None, limit: int = -1,
+    def SELECT(cursor, db_name: str, table:str, columns: typing.List[str] = None, join: str = None, filter: str = None, limit: int = -1,
                sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
                distinct: bool = False, fetch_results: bool = True) -> typing.List[typing.Tuple]:
-        query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, filter=filter, limit=limit,
+        query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, join=join, filter=filter, limit=limit,
                                    sort_columns=sort_columns, sort_direction=sort_direction, grouping=grouping,
                                    distinct=distinct)
         return SQL.SELECTfromQuery(cursor=cursor, query=query, fetch_results=fetch_results)
@@ -235,7 +235,7 @@ class SQL:
         return result
 
     @staticmethod
-    def _prepareSelect(db_name: str, table:str, columns: typing.List[str] = None, filter: str = None, limit: int = -1,
+    def _prepareSelect(db_name: str, table:str, columns: typing.List[str] = None, join: str = None, filter: str = None, limit: int = -1,
                sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
                distinct: bool = False):
         d = "DISTINCT " if distinct else ""
@@ -244,12 +244,13 @@ class SQL:
         table_path = db_name + "." + str(table)
 
         sel_clause   = "SELECT " + d + cols + " FROM " + table_path
-        where_clause = "" if filter    is None else " WHERE {}".format(filter)
-        group_clause = "" if grouping  is None else " GROUP BY {}".format(grouping)
-        sort_clause  = "" if sort_cols is None else " ORDER BY {} {} ".format(sort_cols, sort_direction)
-        lim_clause   = "" if limit < 0         else " LIMIT {}".format(str(limit))
+        join_clause  = "" if join      is None else f" {join}"
+        where_clause = "" if filter    is None else f" WHERE {filter}"
+        group_clause = "" if grouping  is None else f" GROUP BY {grouping}"
+        sort_clause  = "" if sort_cols is None else f" ORDER BY {sort_cols} {sort_direction} "
+        lim_clause   = "" if limit < 0         else f" LIMIT {str(limit)}"
 
-        return sel_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
+        return sel_clause + join_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
 
     @staticmethod
     def Query(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
@@ -282,7 +283,7 @@ class Logger:
         err_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
         debug_handler = logging.FileHandler("ExportDebugReport.log", encoding="utf-8")
     except PermissionError as err:
-        std_logger.exception(f"Failed permissions check for log files. No logging on server.", stack_info=True)
+        std_logger.exception(f"Failed permissions check for log files. No file logging on server.", stack_info=False)
     else:
         err_handler.setLevel(level=logging.WARN)
         file_logger.addHandler(err_handler)
@@ -292,7 +293,7 @@ class Logger:
         file_logger.debug("Testing error logger")
 
     @staticmethod
-    def toFile(message, level):
+    def toFile(message, level=logging.DEBUG):
         now = datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
         if Logger.file_logger is not None:
             if level == logging.DEBUG:
@@ -305,7 +306,7 @@ class Logger:
                 Logger.file_logger.error(f"ERROR: {now} {message}")
 
     @staticmethod
-    def toStdOut(message, level):
+    def toStdOut(message, level=logging.DEBUG):
         if Logger.std_logger is not None:
             if level == logging.DEBUG:
                 Logger.std_logger.debug(f"DEBUG: {message}")
@@ -319,12 +320,12 @@ class Logger:
     # Function to print a method to both the standard out and file logs.
     # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
     @staticmethod
-    def Log(message, level):
+    def Log(message, level=logging.DEBUG):
         Logger.toFile(message, level)
         Logger.toStdOut(message, level)
 
     @staticmethod
-    def toPrint(message, level):
+    def toPrint(message, level=logging.DEBUG):
         if level == logging.DEBUG:
             print(f"debug: {message}")
         elif level == logging.INFO:

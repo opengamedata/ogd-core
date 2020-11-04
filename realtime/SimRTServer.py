@@ -66,6 +66,30 @@ class SimRTServer:
         finally:
             return ret_val
 
+    @staticmethod
+    def getAllActiveSessionsByClassroom(game_id: str, class_id: bool, sim_time: int) -> typing.Dict:
+        # start_time = datetime.now()
+        ret_val = {}
+        try:
+            active_sessions_raw = SimRTServer._fetchActiveSessions(game_id=game_id, require_player_id=True, class_id=class_id, sim_time=sim_time)
+            for item in active_sessions_raw:
+                sess_id = item[0]
+                player_id = item[1]
+                if re.search("^[0-9]+$", player_id):
+                    prog = SimRTServer.getGameProgress(sess_id=sess_id, game_id=game_id)
+                    idle_time = prog["idle_time"]
+                    max_level = prog["max_level"]
+                    cur_level = prog["cur_level"]
+                    ret_val[sess_id] = {"session_id":sess_id, "player_id":item[1], "max_level":max_level, "cur_level":cur_level, "idle_time":idle_time}
+            # print(f"returning from realtime, with all active sessions. Time spent was {(datetime.now()-start_time).seconds} seconds.")
+        except Exception as err:
+            print(f"got error in SimRTServer.py: {str(err)}", file=sys.stderr)
+            traceback.print_tb(err.__traceback__, file=sys.stderr)
+            utils.Logger.toFile(f"Got an error in getAllActiveSessions: {str(err)}", logging.ERROR)
+            raise err
+        finally:
+            return ret_val
+
     ## Handler to retrieve features for a given session.
     #  For now, at least, the game ID must be given as well, in order to load
     #  information about the way that data from that game is structured.
@@ -278,7 +302,7 @@ class SimRTServer:
         return ret_val
 
     @staticmethod
-    def _fetchActiveSessions(game_id, require_player_id, sim_time):
+    def _fetchActiveSessions(game_id, require_player_id, class_id, sim_time):
         if SimRTServer.rt_settings["data_source"] == "DB":
             try:
                 tunnel,db = utils.SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
@@ -288,7 +312,8 @@ class SimRTServer:
                 cursor = db.cursor()
                 active_window = 60*5 # 5 minutes is window to look for active players.
                 player_id_filter = "AND `player_id` IS NOT NULL" if require_player_id else ""
-                filt = f"`app_id`='{game_id}' AND `time_elapsed` < {sim_time} AND `time_elapsed` >= {max(0, sim_time-active_window)} {player_id_filter}"
+                join_statement   = "INNER JOIN players ON `player_id`" if class_id is not None else ""
+                filt = f"`app_id`='{game_id}' AND `time_elapsed` < {sim_time} AND `time_elapsed` >= {max(0, sim_time-active_window)} {player_id_filter} {join_statement}"
                 active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
                                                     db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
                                                     columns=["session_id", "player_id"], filter=filt,\
