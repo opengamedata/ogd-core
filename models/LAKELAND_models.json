@@ -36,7 +36,7 @@
     "params": {
       "column_name":"sessDuration"
     }
-  }
+  },
   "ActionsLast30Seconds": {
     "type": "ActionsLastXSecondsModel",
     "levels": [],
