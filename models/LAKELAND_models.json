@@ -23,6 +23,13 @@
       ]
     }
   },
+  "ActiveTime" : {
+    "type": "SingleFeature",
+    "levels": [],
+    "params": {
+      "column_name":"sess_time_active"
+    }
+  },
   "ActionsLast30Seconds": {
     "type": "ActionsLastXSecondsModel",
     "levels": [],
