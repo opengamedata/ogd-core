@@ -30,6 +30,13 @@
       "column_name":"sess_time_active"
     }
   },
+  "SessionTime" : {
+    "type": "SingleFeature",
+    "levels": [],
+    "params": {
+      "column_name":"sessDuration"
+    }
+  }
   "ActionsLast30Seconds": {
     "type": "ActionsLastXSecondsModel",
     "levels": [],
