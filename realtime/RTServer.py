@@ -176,24 +176,24 @@ class RTServer:
         #+++
         start = datetime.now()
         #---
-        # tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
+        tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         try:
-            # cursor = db.cursor()
+            cursor = db.cursor()
             # filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
             # max_level_raw = utils.SQL.SELECT(cursor=cursor,
             #                                  db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
             #                                  columns=["MAX(level)"], filter=filt)
-            # filt = f"`session_id`='{sess_id}'"
-            # cur_level_raw = utils.SQL.SELECT(cursor=cursor,
-            #                                  db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
-            #                                  columns=["level", "server_time"], filter=filt, limit=1,\
-            #                                  sort_columns=["client_time"], sort_direction="DESC")
+            filt = f"`session_id`='{sess_id}'"
+            cur_level_raw = utils.SQL.SELECT(cursor=cursor,
+                                             db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
+                                             columns=["level", "server_time"], filter=filt, limit=1,\
+                                             sort_columns=["client_time"], sort_direction="DESC")
             # max_level = max_level_raw[0][0] if max_level_raw[0][0] != None else 0
-            # cur_level = cur_level_raw[0][0]
+            cur_level = cur_level_raw[0][0]
             max_level = 1
-            cur_level = 1
-            # idle_time = (datetime.now() - cur_level_raw[0][1]).seconds
-            idle_time = 5
+            # cur_level = 1
+            idle_time = (datetime.now() - cur_level_raw[0][1]).seconds
+            # idle_time = 5
             #+++
             end = datetime.now()
             time_delta = end - start

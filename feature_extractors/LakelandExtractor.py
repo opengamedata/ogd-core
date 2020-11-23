@@ -104,7 +104,7 @@ class LakelandExtractor(Extractor):
         if proc_file:
             self._WRITE_FEATURES = lambda: self.writeCurrentFeatures(file=proc_file)
         else:
-            self._WRITE_FEATURES = lambda: print("Dumping feature data, no writable file was given!")
+            self._WRITE_FEATURES = lambda: utils.Logger.toStdOut("Dumping feature data, no writable file was given!")
         self._cur_gameplay = 1
         self._startgame_count = 0
         self.debug_strs = []

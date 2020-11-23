@@ -123,7 +123,7 @@ class WaveExtractor(Extractor):
                 try:
                     val   = self.amp_move_counts[lvl] / total_moves if total_moves > 0 else total_moves
                 except Exception as err:
-                    print(f"Currently, total_moves = {total_moves}")
+                    utils.Logger.toStdOut(f"Currently, total_moves = {total_moves}")
                     msg = f"{type(err)} {str(err)}"
                     utils.Logger.toStdOut(msg, logging.ERROR)
                     traceback.print_tb(err.__traceback__)
@@ -455,7 +455,7 @@ class WaveExtractor(Extractor):
             try:
                 X = [(times[i]-times[0]).seconds for i in range(len(times))]
             except Exception as err:
-                print(times[0])
+                utils.Logger.toStdOut(times[0])
                 raise err
             y = closenesses
             if len(X) > 1:
