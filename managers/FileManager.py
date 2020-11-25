@@ -79,9 +79,9 @@ class FileManager(abc.ABC):
         # (of course, first check if we ever exported this game before).
         try:
             if (self._game_id in existing_csvs and self._dataset_id in existing_csvs[self._game_id]):
-                src_proc = existing_csvs[self._game_id][dataset_id]['proc']
-                src_raw  = existing_csvs[self._game_id][dataset_id]['raw']
-                src_dump = existing_csvs[self._game_id][dataset_id]['dump']
+                src_proc = existing_csvs[self._game_id][self._dataset_id]['proc']
+                src_raw  = existing_csvs[self._game_id][self._dataset_id]['raw']
+                src_dump = existing_csvs[self._game_id][self._dataset_id]['dump']
                 if src_proc is not None:
                     os.rename(src_proc, self._zip_names["proc"])
                 if src_raw is not None:
@@ -148,23 +148,23 @@ class FileManager(abc.ABC):
     def UpdateFileExportList(self, date_range: typing.Tuple, num_sess: int):
         self._backupFileExportList()
         try:
-            existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR'])
+            existing_csvs = utils.loadJSONFile("file_list.json", self._data_dir)
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.toFile(msg, logging.WARNING)
             existing_csvs = {}
         finally:
-            existing_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json", "w")
+            existing_csv_file = open(f"{self._data_dir}file_list.json", "w")
             utils.Logger.toStdOut(f"opened existing csv file at {existing_csv_file.name}", logging.INFO)
             if not self._game_id in existing_csvs.keys():
                 existing_csvs[self._game_id] = {}
             # raw_stat = os.stat(raw_csv_full_path)
             # proc_stat = os.stat(proc_csv_full_path)
-            if dataset_id in existing_csvs[self._game_id].keys():
+            if self._dataset_id in existing_csvs[self._game_id].keys():
                 proc_path = self._file_names["proc"] if self._file_names["proc"] is not None else existing_csvs[self._game_id][self._dataset_id]["proc"]
                 raw_path  = self._file_names["raw"]  if self._file_names["raw"]  is not None else existing_csvs[self._game_id][self._dataset_id]["raw"]
                 dump_path = self._file_names["dump"] if self._file_names["dump"] is not None else existing_csvs[self._game_id][self._dataset_id]["dump"]
-            existing_csvs[self._game_id][dataset_id] = \
+            existing_csvs[self._game_id][self._dataset_id] = \
                 {
                     "proc":proc_path,
                     "raw" :raw_path,
@@ -178,13 +178,13 @@ class FileManager(abc.ABC):
 
     def _backupFileExportList(self) -> bool:
         try:
-            existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR']) or {}
+            existing_csvs = utils.loadJSONFile("file_list.json", self._data_dir) or {}
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.toStdOut(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
             utils.Logger.toFile(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
             return False
-        backup_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json.bak", "w")
+        backup_csv_file = open(f"{self._data_dir}file_list.json.bak", "w")
         backup_csv_file.write(json.dumps(existing_csvs, indent=4))
         utils.Logger.toStdOut(f"Backed up file_list.json to {backup_csv_file.name}", logging.INFO)
         return True
