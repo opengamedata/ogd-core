@@ -125,22 +125,21 @@ class ExportManager:
     def _runExport(self, data_manager: DataManager, date_range: typing.Tuple, game_table: GameTable, files: typing.Dict) -> bool:
         # utils.Logger.toStdOut("complex_data_index: {}".format(complex_data_index), logging.DEBUG)
         try:
-            # 2) Prepare files for export.
-            file_manager = FileManager(export_files=request.export_files, game_id=self._game_id, \
-                                       data_dir=self._settings["DATA_DIR"], date_range=date_range)
-            files = file_manager.OpenFiles()
-            # 3a) Prepare schema and extractor
+            # 2a) Prepare schema and extractor, if game doesn't have an extractor, make sure we don't try to export it.
             game_schema, game_extractor = self._prepareSchema()
-            # if game doesn't have an extractor, make sure we don't try to export it.
             if game_extractor is None:
-                request.export_files.proc = False
+                export_files.proc = False
+            # 2b) Prepare files for export.
+            file_manager = FileManager(export_files=export_files, game_id=self._game_id, \
+                                       data_dir=self._settings["DATA_DIR"], date_range=date_range)
+            file_manager.OpenFiles()
             # If we have a schema, we can do feature extraction.
             if game_schema is not None:
                 # 4) Loop over data, running extractors.
                 num_sess: int = self._extractToCSVs(files=files, data_manager=data_manager,\
                                     game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
                 # 5) Save and close files
-                file_manager.ZipCSVs()
+                file_manager.ZipFiles()
                 # 6) Finally, update the list of csv files.
                 self._updateFileExportList(dataset_id=dataset_id, raw_path=raw_zip_path, proc_path=proc_zip_path,
                                            dump_path=dump_zip_path, date_range=date_range, num_sess=num_sess)
