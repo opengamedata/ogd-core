@@ -122,7 +122,7 @@ class ExportManager:
     #                    and export
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
-    def _runExport(self, data_manager: DataManager, date_range: typing.Tuple, game_table: GameTable, files: typing.Dict) -> bool:
+    def _runExport(self, data_manager: DataManager, date_range: typing.Tuple, game_table: GameTable, export_files: ExportFiles) -> bool:
         # utils.Logger.toStdOut("complex_data_index: {}".format(complex_data_index), logging.DEBUG)
         try:
             # 2a) Prepare schema and extractor, if game doesn't have an extractor, make sure we don't try to export it.
@@ -136,13 +136,12 @@ class ExportManager:
             # If we have a schema, we can do feature extraction.
             if game_schema is not None:
                 # 4) Loop over data, running extractors.
-                num_sess: int = self._extractToCSVs(files=files, data_manager=data_manager,\
-                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
+                num_sess: int = self._extractToCSVs(file_manager=file_manager, data_manager=data_manager,\
+                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor, export_files=export_files)
                 # 5) Save and close files
                 file_manager.ZipFiles()
                 # 6) Finally, update the list of csv files.
-                self._updateFileExportList(dataset_id=dataset_id, raw_path=raw_zip_path, proc_path=proc_zip_path,
-                                           dump_path=dump_zip_path, date_range=date_range, num_sess=num_sess)
+                file_manager.UpdateFileExportList(date_range=date_range, num_sess=num_sess)
                 ret_val = True
             else:
                 ret_val = False
@@ -177,19 +176,19 @@ class ExportManager:
             raise Exception("Got an invalid game ID!")
         return game_schema, game_extractor
 
-    def _extractToCSVs(self, files: typing.Dict, data_manager: DataManager,
-                       game_schema: Schema, game_table: GameTable, game_extractor: type):
+    def _extractToCSVs(self, file_manager: FileManager, data_manager: DataManager,
+                       game_schema: Schema, game_table: GameTable, game_extractor: type, export_files: ExportFiles):
         try:
             proc_mgr = raw_mgr = dump_mgr = None
-            if files["proc"] is not None:
+            if export_files.proc:
                 proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table,
                                     game_schema=game_schema, proc_csv_file=file_manager.GetProcFile())
                 proc_mgr.WriteProcCSVHeader()
-            if files["raw"] is not None:
+            if export_files.raw:
                 raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
                                     raw_csv_file=file_manager.GetRawFile())
                 raw_mgr.WriteRawCSVHeader()
-            if files["dump"] is not None:
+            if export_files.dump:
                 dump_mgr = DumpManager(game_table=game_table, game_schema=game_schema,
                                     dump_csv_file=file_manager.GetDumpFile())
                 dump_mgr.WriteDumpCSVHeader()
