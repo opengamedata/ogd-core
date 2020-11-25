@@ -161,9 +161,9 @@ class FileManager(abc.ABC):
             # raw_stat = os.stat(raw_csv_full_path)
             # proc_stat = os.stat(proc_csv_full_path)
             prior_export = self._dataset_id in existing_csvs[self._game_id].keys()
-            proc_path = self._file_names["proc"] if self._file_names["proc"] is not None else (existing_csvs[self._game_id][self._dataset_id]["proc"] if prior_export else None)
-            raw_path  = self._file_names["raw"]  if self._file_names["raw"]  is not None else (existing_csvs[self._game_id][self._dataset_id]["raw"]  if prior_export else None)
-            dump_path = self._file_names["dump"] if self._file_names["dump"] is not None else (existing_csvs[self._game_id][self._dataset_id]["dump"] if prior_export else None)
+            proc_path = self._zip_names["proc"] if self._zip_names["proc"] is not None else (existing_csvs[self._game_id][self._dataset_id]["proc"] if prior_export else None)
+            raw_path  = self._zip_names["raw"]  if self._zip_names["raw"]  is not None else (existing_csvs[self._game_id][self._dataset_id]["raw"]  if prior_export else None)
+            dump_path = self._zip_names["dump"] if self._zip_names["dump"] is not None else (existing_csvs[self._game_id][self._dataset_id]["dump"] if prior_export else None)
             existing_csvs[self._game_id][self._dataset_id] = \
             {
                 "proc":proc_path,
