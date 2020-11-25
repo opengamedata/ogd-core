@@ -160,20 +160,20 @@ class FileManager(abc.ABC):
                 existing_csvs[self._game_id] = {}
             # raw_stat = os.stat(raw_csv_full_path)
             # proc_stat = os.stat(proc_csv_full_path)
-            if self._dataset_id in existing_csvs[self._game_id].keys():
-                proc_path = self._file_names["proc"] if self._file_names["proc"] is not None else existing_csvs[self._game_id][self._dataset_id]["proc"]
-                raw_path  = self._file_names["raw"]  if self._file_names["raw"]  is not None else existing_csvs[self._game_id][self._dataset_id]["raw"]
-                dump_path = self._file_names["dump"] if self._file_names["dump"] is not None else existing_csvs[self._game_id][self._dataset_id]["dump"]
+            prior_export = self._dataset_id in existing_csvs[self._game_id].keys()
+            proc_path = self._file_names["proc"] if self._file_names["proc"] is not None else (existing_csvs[self._game_id][self._dataset_id]["proc"] if prior_export else "")
+            raw_path  = self._file_names["raw"]  if self._file_names["raw"]  is not None else (existing_csvs[self._game_id][self._dataset_id]["raw"]  if prior_export else "")
+            dump_path = self._file_names["dump"] if self._file_names["dump"] is not None else (existing_csvs[self._game_id][self._dataset_id]["dump"] if prior_export else "")
             existing_csvs[self._game_id][self._dataset_id] = \
-                {
-                    "proc":proc_path,
-                    "raw" :raw_path,
-                    "dump":dump_path,
-                    "start_date"   :date_range[0].strftime("%m/%d/%y"),
-                    "end_date"     :date_range[1].strftime("%m/%d/%y"),
-                    "date_modified":datetime.now().strftime("%m/%d/%Y"),
-                    "sessions":num_sess
-                }
+            {
+                "proc":proc_path,
+                "raw" :raw_path,
+                "dump":dump_path,
+                "start_date"   :date_range[0].strftime("%m/%d/%y"),
+                "end_date"     :date_range[1].strftime("%m/%d/%y"),
+                "date_modified":datetime.now().strftime("%m/%d/%Y"),
+                "sessions":num_sess
+            }
             existing_csv_file.write(json.dumps(existing_csvs, indent=4))
 
     def _backupFileExportList(self) -> bool:
