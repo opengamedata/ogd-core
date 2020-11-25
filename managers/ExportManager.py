@@ -3,11 +3,9 @@
 #  for export to CSV files.
 
 ## import standard libraries
-import git
 import json
 import logging
 import math
-import logging
 import os
 import subprocess
 import traceback
