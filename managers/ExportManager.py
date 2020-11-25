@@ -3,11 +3,9 @@
 #  for export to CSV files.
 
 ## import standard libraries
-import git
 import json
 import logging
 import math
-import logging
 import os
 import subprocess
 import traceback
@@ -124,28 +122,26 @@ class ExportManager:
     #                    and export
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
-    def _runExport(self, data_manager: DataManager, date_range: typing.Tuple, game_table: GameTable, files: typing.Dict) -> bool:
+    def _runExport(self, data_manager: DataManager, date_range: typing.Tuple, game_table: GameTable, export_files: ExportFiles) -> bool:
         # utils.Logger.toStdOut("complex_data_index: {}".format(complex_data_index), logging.DEBUG)
         try:
-            # 2) Prepare files for export.
-            file_manager = FileManager(export_files=request.export_files, game_id=self._game_id, \
-                                       data_dir=self._settings["DATA_DIR"], date_range=date_range)
-            files = file_manager.OpenFiles()
-            # 3a) Prepare schema and extractor
+            # 2a) Prepare schema and extractor, if game doesn't have an extractor, make sure we don't try to export it.
             game_schema, game_extractor = self._prepareSchema()
-            # if game doesn't have an extractor, make sure we don't try to export it.
             if game_extractor is None:
-                request.export_files.proc = False
+                export_files.proc = False
+            # 2b) Prepare files for export.
+            file_manager = FileManager(export_files=export_files, game_id=self._game_id, \
+                                       data_dir=self._settings["DATA_DIR"], date_range=date_range)
+            file_manager.OpenFiles()
             # If we have a schema, we can do feature extraction.
             if game_schema is not None:
                 # 4) Loop over data, running extractors.
-                num_sess: int = self._extractToCSVs(files=files, data_manager=data_manager,\
-                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor)
+                num_sess: int = self._extractToCSVs(file_manager=file_manager, data_manager=data_manager,\
+                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor, export_files=export_files)
                 # 5) Save and close files
-                file_manager.ZipCSVs()
+                file_manager.ZipFiles()
                 # 6) Finally, update the list of csv files.
-                self._updateFileExportList(dataset_id=dataset_id, raw_path=raw_zip_path, proc_path=proc_zip_path,
-                                           dump_path=dump_zip_path, date_range=date_range, num_sess=num_sess)
+                file_manager.UpdateFileExportList(date_range=date_range, num_sess=num_sess)
                 ret_val = True
             else:
                 ret_val = False
@@ -180,21 +176,21 @@ class ExportManager:
             raise Exception("Got an invalid game ID!")
         return game_schema, game_extractor
 
-    def _extractToCSVs(self, files: typing.Dict, data_manager: DataManager,
-                       game_schema: Schema, game_table: GameTable, game_extractor: type):
+    def _extractToCSVs(self, file_manager: FileManager, data_manager: DataManager,
+                       game_schema: Schema, game_table: GameTable, game_extractor: type, export_files: ExportFiles):
         try:
             proc_mgr = raw_mgr = dump_mgr = None
-            if files["proc"] is not None:
+            if export_files.proc:
                 proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table,
-                                    game_schema=game_schema, proc_csv_file=files["proc"])
+                                    game_schema=game_schema, proc_csv_file=file_manager.GetProcFile())
                 proc_mgr.WriteProcCSVHeader()
-            if files["raw"] is not None:
+            if export_files.raw:
                 raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
-                                    raw_csv_file=files["raw"])
+                                    raw_csv_file=file_manager.GetRawFile())
                 raw_mgr.WriteRawCSVHeader()
-            if files["dump"] is not None:
+            if export_files.dump:
                 dump_mgr = DumpManager(game_table=game_table, game_schema=game_schema,
-                                    dump_csv_file=files["dump"])
+                                    dump_csv_file=file_manager.GetDumpFile())
                 dump_mgr.WriteDumpCSVHeader()
 
             num_sess = len(game_table.session_ids)
@@ -241,12 +237,13 @@ class ExportManager:
             ret_val = -1
         finally:
             # Save out all the files.
-            if export_files.proc:
-                proc_csv_file.close()
-            if export_files.raw:
-                raw_csv_file.close()
-            if export_files.dump:
-                dump_csv_file.close()
+            file_manager.CloseFiles()
+            # if export_files.proc:
+            #     proc_csv_file.close()
+            # if export_files.raw:
+            #     raw_csv_file.close()
+            # if export_files.dump:
+            #     dump_csv_file.close()
             return ret_val
 
     ## Private helper function to process a single row of data.
@@ -303,46 +300,46 @@ class ExportManager:
     #  @param proc_csv_path Path to the newly exported feature csv, including filename
     #  @param request       The original request for data export
     #  @param num_sess      The number of sessions included in the recent export.
-    def _updateFileExportList(self, dataset_id: str, raw_path: str, proc_path: str,
-        dump_path: str, date_range: typing.Tuple, num_sess: int):
-        self._backupFileExportList()
-        try:
-            existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR'])
-        except Exception as err:
-            msg = f"{type(err)} {str(err)}"
-            utils.Logger.toFile(msg, logging.WARNING)
-            existing_csvs = {}
-        finally:
-            existing_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json", "w")
-            utils.Logger.toStdOut(f"opened existing csv file at {existing_csv_file.name}", logging.INFO)
-            if not self._game_id in existing_csvs:
-                existing_csvs[self._game_id] = {}
-            # raw_stat = os.stat(raw_csv_full_path)
-            # proc_stat = os.stat(proc_csv_full_path)
-            if self._game_id in existing_csvs.keys() and dataset_id in existing_csvs[self._game_id].keys():
-                proc_path = proc_path if proc_path is not None else existing_csvs[self._game_id][dataset_id]["proc"]
-                raw_path = raw_path if raw_path is not None else existing_csvs[self._game_id][dataset_id]["raw"]
-                dump_path = dump_path if dump_path is not None else existing_csvs[self._game_id][dataset_id]["dump"]
-            existing_csvs[self._game_id][dataset_id] = \
-                {"raw":raw_path,
-                "proc":proc_path,
-                "dump":dump_path,
-                "start_date":date_range[0].strftime("%m/%d/%y"),
-                "end_date":date_range[1].strftime("%m/%d/%y"),
-                "date_modified":datetime.now().strftime("%m/%d/%Y"),
-                "sessions":num_sess
-                }
-            existing_csv_file.write(json.dumps(existing_csvs, indent=4))
+    # def _updateFileExportList(self, dataset_id: str, raw_path: str, proc_path: str,
+    #     dump_path: str, date_range: typing.Tuple, num_sess: int):
+    #     self._backupFileExportList()
+    #     try:
+    #         existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR'])
+    #     except Exception as err:
+    #         msg = f"{type(err)} {str(err)}"
+    #         utils.Logger.toFile(msg, logging.WARNING)
+    #         existing_csvs = {}
+    #     finally:
+    #         existing_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json", "w")
+    #         utils.Logger.toStdOut(f"opened existing csv file at {existing_csv_file.name}", logging.INFO)
+    #         if not self._game_id in existing_csvs:
+    #             existing_csvs[self._game_id] = {}
+    #         # raw_stat = os.stat(raw_csv_full_path)
+    #         # proc_stat = os.stat(proc_csv_full_path)
+    #         if self._game_id in existing_csvs.keys() and dataset_id in existing_csvs[self._game_id].keys():
+    #             proc_path = proc_path if proc_path is not None else existing_csvs[self._game_id][dataset_id]["proc"]
+    #             raw_path = raw_path if raw_path is not None else existing_csvs[self._game_id][dataset_id]["raw"]
+    #             dump_path = dump_path if dump_path is not None else existing_csvs[self._game_id][dataset_id]["dump"]
+    #         existing_csvs[self._game_id][dataset_id] = \
+    #             {"raw":raw_path,
+    #             "proc":proc_path,
+    #             "dump":dump_path,
+    #             "start_date":date_range[0].strftime("%m/%d/%y"),
+    #             "end_date":date_range[1].strftime("%m/%d/%y"),
+    #             "date_modified":datetime.now().strftime("%m/%d/%Y"),
+    #             "sessions":num_sess
+    #             }
+    #         existing_csv_file.write(json.dumps(existing_csvs, indent=4))
 
-    def _backupFileExportList(self) -> bool:
-        try:
-            existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR']) or {}
-        except Exception as err:
-            msg = f"{type(err)} {str(err)}"
-            utils.Logger.toStdOut(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
-            utils.Logger.toFile(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
-            return False
-        backup_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json.bak", "w")
-        backup_csv_file.write(json.dumps(existing_csvs, indent=4))
-        utils.Logger.toStdOut(f"Backed up file_list.json to {backup_csv_file.name}", logging.INFO)
-        return True
+    # def _backupFileExportList(self) -> bool:
+    #     try:
+    #         existing_csvs = utils.loadJSONFile("file_list.json", self._settings['DATA_DIR']) or {}
+    #     except Exception as err:
+    #         msg = f"{type(err)} {str(err)}"
+    #         utils.Logger.toStdOut(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
+    #         utils.Logger.toFile(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
+    #         return False
+    #     backup_csv_file = open(f"{self._settings['DATA_DIR']}file_list.json.bak", "w")
+    #     backup_csv_file.write(json.dumps(existing_csvs, indent=4))
+    #     utils.Logger.toStdOut(f"Backed up file_list.json to {backup_csv_file.name}", logging.INFO)
+    #     return True
