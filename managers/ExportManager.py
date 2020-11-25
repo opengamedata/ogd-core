@@ -156,18 +156,14 @@ class ExportManager:
 
     def _prepareSchema(self):
         game_extractor: type = None
-        game_schema: Schema = None
+        game_schema: Schema  = Schema(schema_name=f"{self._game_id}.json")
         if self._game_id == "WAVES":
-            game_schema = Schema(schema_name="WAVES.json")
             game_extractor = WaveExtractor
         elif self._game_id == "CRYSTAL":
-            game_schema = Schema(schema_name="CRYSTAL.json")
             game_extractor = CrystalExtractor
         elif self._game_id == "LAKELAND":
-            game_schema = Schema(schema_name="LAKELAND.json")
             game_extractor = LakelandExtractor
         elif self._game_id == "JOWILDER":
-            game_schema = Schema(schema_name="JOWILDER.json")
             game_extractor = JowilderExtractor
         elif self._game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MAGNET", "WIND"]:
             # all games with data but no extractor.
