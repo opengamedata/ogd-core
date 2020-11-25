@@ -61,9 +61,9 @@ class FileManager(abc.ABC):
             full_data_dir = self._data_dir + self._game_id
             os.makedirs(name=full_data_dir, exist_ok=True)
             # Then open up the files themselves.
-            self._files["proc"] = open(self._file_names["proc"], "w", encoding="utf-8") if export_files.proc else None
-            self._files["raw"]  = open(self._file_names["raw"] , "w", encoding="utf-8") if export_files.raw else None
-            self._files["dump"] = open(self._file_names["dump"], "w", encoding="utf-8") if export_files.dump else None
+            self._files["proc"] = open(self._file_names["proc"], "w", encoding="utf-8") if (self._file_names["proc"] is not None) else None
+            self._files["raw"]  = open(self._file_names["raw"] , "w", encoding="utf-8") if (self._file_names["raw"] is not None) else None
+            self._files["dump"] = open(self._file_names["dump"], "w", encoding="utf-8") if (self._file_names["dump"] is not None) else None
 
     def CloseFiles(self):
         if self._files["proc"] is not None:
