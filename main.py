@@ -91,7 +91,7 @@ def runExport(monthly: bool = False, all_data: bool = False):
     # Otherwise, create date range from given pair of dates.
     else:
         today   = datetime.now()
-        start_date = datetime.strptime(args[3], "%m/%d/%Y") if num_args > 4 \
+        start_date = datetime.strptime(args[3], "%m/%d/%Y") if num_args > 3 \
                 else today
         start_date = start_date.replace(hour=0, minute=0, second=0)
         end_date   = datetime.strptime(args[4], "%m/%d/%Y") if num_args > 4 \
