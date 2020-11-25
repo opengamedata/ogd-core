@@ -184,15 +184,15 @@ class ExportManager:
             proc_mgr = raw_mgr = dump_mgr = None
             if files["proc"] is not None:
                 proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table,
-                                    game_schema=game_schema, proc_csv_file=files["proc"])
+                                    game_schema=game_schema, proc_csv_file=file_manager.GetProcFile())
                 proc_mgr.WriteProcCSVHeader()
             if files["raw"] is not None:
                 raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
-                                    raw_csv_file=files["raw"])
+                                    raw_csv_file=file_manager.GetRawFile())
                 raw_mgr.WriteRawCSVHeader()
             if files["dump"] is not None:
                 dump_mgr = DumpManager(game_table=game_table, game_schema=game_schema,
-                                    dump_csv_file=files["dump"])
+                                    dump_csv_file=file_manager.GetDumpFile())
                 dump_mgr.WriteDumpCSVHeader()
 
             num_sess = len(game_table.session_ids)
@@ -239,12 +239,13 @@ class ExportManager:
             ret_val = -1
         finally:
             # Save out all the files.
-            if export_files.proc:
-                proc_csv_file.close()
-            if export_files.raw:
-                raw_csv_file.close()
-            if export_files.dump:
-                dump_csv_file.close()
+            file_manager.CloseFiles()
+            # if export_files.proc:
+            #     proc_csv_file.close()
+            # if export_files.raw:
+            #     raw_csv_file.close()
+            # if export_files.dump:
+            #     dump_csv_file.close()
             return ret_val
 
     ## Private helper function to process a single row of data.

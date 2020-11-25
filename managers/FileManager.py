@@ -47,6 +47,15 @@ class FileManager(abc.ABC):
     def GetFiles(self):
         return self._files
 
+    def GetProcFile(self):
+        return self._files["proc"]
+
+    def GetRawFile(self):
+        return self._files["raw"]
+
+    def GetDumpFile(self):
+        return self._files["dump"]
+
     def OpenFiles(self):
             # Ensure we have a data directory.
             full_data_dir = self._data_dir + self._game_id
