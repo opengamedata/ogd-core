@@ -45,21 +45,21 @@ usage: <python> main.py <cmd> [<args>]
 
 Example use:
 ```
-python3 main.py export 1/1/2019 2/28/2019
+python3 main.py export JOWILDER 1/1/2019 2/28/2019
 ```
-In the example above, all data from beginning of January to end of February (in 2019) is exported to dump and processed files.
+In the example above, all JOWILDER data from beginning of January to end of February (in 2019) is exported to dump and processed files.
 
 ```
-python3 main.py export_month 1/2019
+python3 main.py export_month JOWILDER 1/2019
 ```
-In the example above, all data from the month of January 2019 is exported to dump and processed files.
+In the example above, all JOWILDER data for the month of January 2019 is exported to dump and processed files.
 
 ```
-python3 main.py export_all_months
+python3 main.py JOWILDER export_all_months
 ```
-In the example above, all available data is exported to dump and processed files, separated by month.
+In the example above, all available JOWILDER data is exported to dump and processed files, separated by month.
 
 ```
 python3 main.py extract JOWILDER C:\path\to\opengamedata-backend\data\JOWILDER\JOWILDER_20190101_to_20190228_1234abc_dump.zip
 ```
-In the example above, data from a previously exported dump file is extracted to a processed file.
+In the example above, data from a previously exported dump file of JOWILDER data is extracted to a processed file.
