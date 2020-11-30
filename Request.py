@@ -14,7 +14,7 @@ from schemas.Schema import Schema
 class ExportFiles:
     def __init__(self, dump:bool = True, raw:bool = True, proc:bool = True):
         self.dump = dump
-        self.raw = raw
+        self.raw = False
         self.proc = proc
 
 ## @class Request
