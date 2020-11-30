@@ -144,7 +144,7 @@ def _execMonthExport(game_id, month, year):
 def _execExport(game_id, start_date, end_date):
     # Once we have the parameters parsed out, construct the request.
     use_proc = not ("--no-extract" in opts)
-    export_files = Request.ExportFiles(dump=True, raw=True, proc=use_proc) 
+    export_files = Request.ExportFiles(dump=True, raw=False, proc=use_proc) 
     req = Request.DateRangeRequest(game_id=game_id, start_date=start_date, end_date=end_date, \
                 max_sessions=settings["MAX_SESSIONS"], min_moves=settings["MIN_MOVES"], \
                 export_files=export_files)
