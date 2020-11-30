@@ -110,6 +110,7 @@ def _execAllMonthExport(game_id):
                                     columns=["server_time"], filter=f"app_id='{game_id}'",
                                     sort_columns=["server_time"], sort_direction="DESC", limit=1)
     utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+    utils.Logger.Log(f"For {game_id}, exporting all data in range {first_entry} - {last_entry}")
     # breakpoint()
     first_month = first_entry[0][0].month
     last_month = last_entry[0][0].month
