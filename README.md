@@ -15,6 +15,7 @@ Setup:
 * Install more dependancies: "pip3 install -U scikit-learn scipy pandas gitpython"
 * Modify the config.py.template for servers and authentication
 
+Running Data Exports:  
 
 ```
 usage: <python> main.py <cmd> [<args>]
@@ -37,6 +38,7 @@ usage: <python> main.py <cmd> [<args>]
              game_id    = id of game to export
              file_name  = name of a .zip file containing dump data
 ```
+(you can see a similar printout directly from the system by running ```python3 main.py --help```)
 
 Example use:
 ```
