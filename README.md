@@ -23,6 +23,7 @@ usage: <python> main.py <cmd> [<args>]
 <cmd>    is one of the available commands:
          - export
          - export_month
+         - extract
          - help
 [<args>] are the arguments for the command:
          - export: game_id, [start_date, end_date]
@@ -32,6 +33,9 @@ usage: <python> main.py <cmd> [<args>]
          - export_month: game_id, [month_year]
              game_id    = id of game to export
              month_year = month (and year) to export, in form mm/yyyy (default=current month)
+         - extract: game_id, file_name
+             game_id    = id of game to export
+             file_name  = name of a .zip file containing dump data
 ```
 
 Example use:
