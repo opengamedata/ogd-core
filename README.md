@@ -50,6 +50,6 @@ python3 main.py export_month 1/2019
 In the example above, all data from the month of January 2019 is exported to dump and processed files.
 
 ```
-python3 main.py extract JOWILDER C:\path\to\JOWILDER_20190101_to_20190228_1234abc_dump.zip
+python3 main.py extract JOWILDER C:\path\to\opengamedata-backend\data\JOWILDER\JOWILDER_20190101_to_20190228_1234abc_dump.zip
 ```
-In the example above, data from a previously exported dump file is extracted to a processed files.
+In the example above, data from a previously exported dump file is extracted to a processed file.
