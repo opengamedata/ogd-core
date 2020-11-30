@@ -24,6 +24,7 @@ usage: <python> main.py <cmd> [<args>]
 <cmd>    is one of the available commands:
          - export
          - export_month
+         - export_all_months
          - extract
          - help
 [<args>] are the arguments for the command:
@@ -34,6 +35,8 @@ usage: <python> main.py <cmd> [<args>]
          - export_month: game_id, [month_year]
              game_id    = id of game to export
              month_year = month (and year) to export, in form mm/yyyy (default=current month)
+         - export_all_months: game_id
+             game_id    = id of game to export
          - extract: game_id, file_name
              game_id    = id of game to export
              file_name  = name of a .zip file containing dump data
@@ -50,6 +53,11 @@ In the example above, all data from beginning of January to end of February (in 
 python3 main.py export_month 1/2019
 ```
 In the example above, all data from the month of January 2019 is exported to dump and processed files.
+
+```
+python3 main.py export_all_months
+```
+In the example above, all available data is exported to dump and processed files, separated by month.
 
 ```
 python3 main.py extract JOWILDER C:\path\to\opengamedata-backend\data\JOWILDER\JOWILDER_20190101_to_20190228_1234abc_dump.zip
