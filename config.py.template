@@ -2,19 +2,19 @@ settings = {
     "DATA_DIR": "./data/",
     "db_config":
     {
-        "DB_HOST" : "hostname",
-        "DB_USER" : "user",
+        "DB_HOST" : "127.0.0.1",
+        "DB_USER" : "username",
         "DB_PW" : "password",
-        "DB_NAME_DATA" : "database name",
-        "table" : "table name",
-        "DB_PORT" : 1234
+        "DB_NAME_DATA" : "logger",
+        "table" : "log",
+        "DB_PORT" : 3306
     },
     "ssh_config":
     {
         "SSH_HOST" : "hostname",
-        "SSH_USER" : "user",
-        "SSH_PW" : "password",
-        "SSH_PORT" : 1234
+        "SSH_USER" : "WCER AD User",
+        "SSH_PW" : "WCER AD Password",
+        "SSH_PORT" : 22
     },
     "realtime_config":
     {
