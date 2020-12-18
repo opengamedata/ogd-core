@@ -32,6 +32,7 @@ def showHelp():
     print("         - export")
     print("         - export_month")
     print("         - export_all_months")
+    print("         - dump")
     print("         - extract")
     print("         - info")
     print("         - readme")
@@ -46,6 +47,8 @@ def showHelp():
     print("             month_year = month (and year) to export, in form mm/yyyy (default=current month)")
     print("         - export_all_months: game_id")
     print("             game_id    = id of game to export")
+    print("         - dump: game_id, [start_date, end_date]")
+    print("             game_id    = id of game to get dump file from")
     print("         - extract: game_id, file_name")
     print("             game_id    = id of game whose data is in the file")
     print("             file_name  = file from which to extract feature data")
@@ -61,7 +64,7 @@ def showHelp():
 
 ## Function to handle execution of export code. This is the main intended use of
 #  the program.
-def runExport(monthly: bool = False, all_data: bool = False):
+def runExport(monthly: bool = False, all_data: bool = False, dump: bool = False):
     # retrieve game id
     if num_args > 2:
         game_id = args[2]
@@ -98,7 +101,7 @@ def runExport(monthly: bool = False, all_data: bool = False):
                 else today
         end_date = end_date.replace(hour=23, minute=59, second=59)
         utils.Logger.toStdOut(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.DEBUG)
-        _execExport(game_id, start_date, end_date)
+        _execExport(game_id, start_date, end_date, dump)
         utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
 
 def _execAllMonthExport(game_id):
@@ -141,10 +144,14 @@ def _execMonthExport(game_id, month, year):
     end_date   = datetime(year=year, month=month, day=days_in_month, hour=23, minute=59, second=59)
     _execExport(game_id, start_date, end_date)
 
-def _execExport(game_id, start_date, end_date):
+def _execExport(game_id, start_date, end_date, dump = False):
     # Once we have the parameters parsed out, construct the request.
-    use_proc = not ("--no-extract" in opts)
-    export_files = Request.ExportFiles(dump=True, raw=False, proc=use_proc) 
+    export_files : ExportFiles
+    if dump:
+        export_files = Request.ExportFiles(dump=True, raw=False, proc=False)
+    else:
+        use_proc = not ("--no-extract" in opts)
+        export_files = Request.ExportFiles(dump=True, raw=False, proc=use_proc) 
     req = Request.DateRangeRequest(game_id=game_id, start_date=start_date, end_date=end_date, \
                 max_sessions=settings["MAX_SESSIONS"], min_moves=settings["MIN_MOVES"], \
                 export_files=export_files)
@@ -329,6 +336,8 @@ if type(cmd) == str:
         runExport(monthly=True)
     elif cmd == "export_all_months":
         runExport(monthly=True, all_data=True)
+    elif cmd == "dump":
+        runExport(dump=True)
     elif cmd == "extract":
         ExtractFromFile()
     elif cmd == "info":
