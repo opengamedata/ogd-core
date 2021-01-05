@@ -489,7 +489,6 @@ class JowilderExtractor(Extractor):
         for i, response in enumerate(_questions):
             self.features.setValByIndex(feature_name="quiz_response", index=i, new_value=response["response_index"])
 
-
     def _extractFromQuizquestion(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
@@ -508,22 +507,22 @@ class JowilderExtractor(Extractor):
 
         # helpers
         index = je.quizn_answern_to_index(_quiz_number, _question_index)
-        if index%4==0:
+        if index % 4 == 0 and self._last_quizstart is not None:
             time_taken = event_client_time - self._last_quizstart
-        else:
+        elif self._quiztimes[index - 1] is not None:
             time_taken = event_client_time - self._quiztimes[index - 1]
-
+        else:
+            time_taken = None
 
         # set class variables
         self._quiztimes[index] = event_client_time
 
         # set features
-
         if self.getValByIndex("sa_time", index=index) in self._NULL_FEATURE_VALS:
             self.setValByIndex("sa_time", index=index, new_value=time_taken)
         self.setValByIndex("sa_index", index=index, new_value=_response_index)
         self.setValByIndex("sa_text", index=index, new_value=_response)
-        self.feature_cc_inc("sa_num_answers", index=index)
+        self.feature_cc_inc("sa_num_answers", index=index, increment=1)
 
     def _extractFromQuizstart(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -540,6 +539,7 @@ class JowilderExtractor(Extractor):
         # helpers
         assert self._last_quizstart is None
         self._last_quizstart = event_client_time
+
         # set class variables
         # set features
 
@@ -555,22 +555,16 @@ class JowilderExtractor(Extractor):
         _name = d["name"]
         _level = d["level"]
 
-
-
-
         # helpers
-
         assert self._last_quizstart is not None
         quiz_duration = event_client_time - self._last_quizstart
         quiz_index = je.quizn_to_index(_quiz_number)
-
 
         # set class variables
         self._last_quizstart = None
 
         # set features
         self.setValByIndex(feature_name='s_time', index=quiz_index, new_value=quiz_duration)
-
 
     def _extractFromStartgame(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -1248,6 +1242,3 @@ def get_variance():
         debug_str = '\n\n'+self.get_debug_string(num_lines+1)
         utils.Logger.toFile(debug_str, logging.WARN)
         self.debug_strs = []
-        
-        
-

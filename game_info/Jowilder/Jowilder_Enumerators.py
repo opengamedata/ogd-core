@@ -393,17 +393,14 @@ level_to_start_obj = {0: 0, 1: 3, 2: 4, 3: 6, 4: 8, 5: 12, 6: 13, 7: 19, 8: 21, 
                       14: 45, 15: 46, 16: 48, 17: 50, 18: 52, 19: 62, 20: 65, 21: 67, 22: 69, 23: 77}
 
 def quizn_answern_to_index(quizn, answern):
-  adjusted_quizn = quizn - 2
+  adjusted_quizn = quizn_to_index(quizn)
   index = adjusted_quizn * 4 + answern
   assert -1 < index
   assert index < 17
   return index
 
-
 def quizn_to_index(quizn):
-  assert quizn >= 2
-  assert quizn <= 5
-  return quizn-2
+  return quizn - 2 if 2 <= quizn <= 5 else quizn
 
 if __name__ == '__main__':
- print({i:v for i,(k,v) in enumerate(save_code_to_obj.items())})
+  print({i:v for i,(k,v) in enumerate(save_code_to_obj.items())})
