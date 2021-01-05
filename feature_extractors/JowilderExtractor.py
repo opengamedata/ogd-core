@@ -507,12 +507,12 @@ class JowilderExtractor(Extractor):
 
         # helpers
         index = je.quizn_answern_to_index(_quiz_number, _question_index)
-        if index % 4 == 0 and self._last_quizstart is not None:
-            time_taken = event_client_time - self._last_quizstart
+        time_taken = None
+        if index % 4 == 0:
+            if self._last_quizstart is not None:
+                time_taken = event_client_time - self._last_quizstart
         elif self._quiztimes[index - 1] is not None:
-            time_taken = event_client_time - self._quiztimes[index - 1]
-        else:
-            time_taken = None
+            time_taken = event_client_time - self._quiztimes[index - 1]   
 
         # set class variables
         self._quiztimes[index] = event_client_time
