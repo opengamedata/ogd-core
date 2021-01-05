@@ -54,7 +54,6 @@ def showHelp():
     print("             game_id    = id of game whose readme should be generated")
     print("         - help: *None*")
     print("[<opt-args>] are optional arguments, which affect certain commands:")
-    print("         --no-extract: for any export command, skip feature extraction to *_proc.csv file.")
     print("         --file: specifies a file to export events or features")
     print(width*"*")
 
@@ -143,7 +142,6 @@ def _execMonthExport(game_id, month, year, events, features):
 
 def _execExport(game_id, start_date, end_date, events, features):
     # Once we have the parameters parsed out, construct the request.
-    # use_proc = not ("--no-extract" in opts)
     export_files = Request.ExportFiles(dump=events, raw=False, proc=features)
     req = Request.DateRangeRequest(game_id=game_id, start_date=start_date, end_date=end_date, \
                 max_sessions=settings["MAX_SESSIONS"], min_moves=settings["MIN_MOVES"], \
