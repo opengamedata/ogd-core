@@ -33,12 +33,12 @@ class FileManager(abc.ABC):
             self._readme_path = f"{full_data_dir}/readme.md"
             base_path = f"{full_data_dir}/{self._dataset_id}_{self._short_hash}"
             # finally, generate file names.
-            self._file_names["proc"] = base_path+"_proc.csv" if export_files.proc else None
+            self._file_names["proc"] = base_path+"_session_features.csv" if export_files.proc else None
             self._file_names["raw"]  = base_path+"_raw.tsv"  if export_files.raw  else None
-            self._file_names["dump"] = base_path+"_dump.tsv" if export_files.dump else None
-            self._zip_names["proc"] = base_path+"_proc.zip" if export_files.proc else None
+            self._file_names["dump"] = base_path+"_events.tsv" if export_files.dump else None
+            self._zip_names["proc"] = base_path+"_session_features.zip" if export_files.proc else None
             self._zip_names["raw"]  = base_path+"_raw.zip"  if export_files.raw  else None
-            self._zip_names["dump"] = base_path+"_dump.zip" if export_files.dump else None
+            self._zip_names["dump"] = base_path+"_events.zip" if export_files.dump else None
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.Log(msg, logging.ERROR)
