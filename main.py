@@ -60,7 +60,7 @@ def showHelp():
 
 ## Function to handle execution of export code. This is the main intended use of
 #  the program.
-def runExport(monthly: bool = False, all_data: bool = False, events: bool = False, features: bool = False):
+def runExport(monthly: bool = False, events: bool = False, features: bool = False):
     # retrieve game id
     if num_args > 2:
         game_id = args[2]
@@ -72,21 +72,16 @@ def runExport(monthly: bool = False, all_data: bool = False, events: bool = Fals
     end_date: datetime
     # If we want to export all data for a given month, calculate a date range.
     if monthly is True:
-        if all_data is True:
-            utils.Logger.toStdOut(f"Exporting all months of {game_id}...", logging.DEBUG)
-            _execAllMonthExport(game_id=game_id, events=events, features=features)
-            utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
+        month_year: typing.List[int]
+        if num_args > 3:
+            month_year_str = args[3].split("/")
+            month_year = [int(month_year_str[0]), int(month_year_str[1])]
         else:
-            month_year: typing.List[int]
-            if num_args > 3:
-                month_year_str = args[3].split("/")
-                month_year = [int(month_year_str[0]), int(month_year_str[1])]
-            else:
-                today   = datetime.now()
-                month_year = [today.month, today.year]
-            utils.Logger.toStdOut(f"Exporting {month_year[0]}/{month_year[1]} data for {game_id}...", logging.DEBUG)
-            _execMonthExport(game_id=game_id, month=month_year[0], year=month_year[1], events=events, features=features)
-            utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
+            today   = datetime.now()
+            month_year = [today.month, today.year]
+        utils.Logger.toStdOut(f"Exporting {month_year[0]}/{month_year[1]} data for {game_id}...", logging.DEBUG)
+        _execMonthExport(game_id=game_id, month=month_year[0], year=month_year[1], events=events, features=features)
+        utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
     # Otherwise, create date range from given pair of dates.
     else:
         today   = datetime.now()
@@ -99,38 +94,6 @@ def runExport(monthly: bool = False, all_data: bool = False, events: bool = Fals
         utils.Logger.toStdOut(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.DEBUG)
         _execExport(game_id, start_date, end_date, events=events, features=features)
         utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
-
-def _execAllMonthExport(game_id, events, features):
-    tunnel, db  = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
-    first_entry = utils.SQL.SELECT(cursor=db.cursor(), db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
-                                    columns=["server_time"], filter=f"app_id='{game_id}'",
-                                    sort_columns=["server_time"], sort_direction="ASC", limit=1)
-    last_entry = utils.SQL.SELECT(cursor=db.cursor(), db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
-                                    columns=["server_time"], filter=f"app_id='{game_id}'",
-                                    sort_columns=["server_time"], sort_direction="DESC", limit=1)
-    utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-    utils.Logger.Log(f"For {game_id}, exporting all data in range {first_entry} - {last_entry}")
-    # breakpoint()
-    first_month = first_entry[0][0].month
-    last_month = last_entry[0][0].month
-    first_year = first_entry[0][0].year
-    last_year = last_entry[0][0].year
-    # 1) all months needed in first year.
-    #    if all within one year, just do whole month range.
-    #    else, go through December.
-    end = last_month-1 if first_year == last_year else 12
-    for month in range(first_month, end+1):
-        _execMonthExport(game_id=game_id, month=month, year=first_year, events=events, features=features)
-    # 2) All months of "interior" years. That is, years completely
-    #    contained within the range of years.
-    for year in range(first_year+1, last_year):
-        for month in range (1, 12+1):
-            _execMonthExport(game_id=game_id, month=month, year=year, events=events, features=features)
-    # 3) All months in final year, but only if we didn't already get
-    #    it as first year.
-    if first_year < last_year:
-        for month in range(1, last_month): #note, just to last_month, no +1, since we want to exclude final month
-            _execMonthExport(game_id=game_id, month=month, year=last_year, events=events, features=features)
 
 def _execMonthExport(game_id, month, year, events, features):
     from calendar import monthrange
