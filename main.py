@@ -62,7 +62,7 @@ def showHelp():
 #  the program.
 def runExport(monthly: bool = False, events: bool = False, features: bool = False):
     if "--file" in opts.keys():
-        ExtractFromFile(file_path=opts["--file"], events=True, features=True)
+        _extractFromFile(file_path=opts["--file"], events=True, features=True)
     else:
         # retrieve game id
         if num_args > 2:
@@ -132,7 +132,7 @@ def _execExport(game_id, start_date, end_date, events, features):
         seconds = time_delta.total_seconds() % 60
         print(f"Total time taken: {minutes} min, {seconds} sec")
 
-def ExtractFromFile(file_path: str, events: bool = False, features: bool = False):
+def _extractFromFile(file_path: str, events: bool = False, features: bool = False):
     if num_args > 2:
         game_id = args[2]
     else:
