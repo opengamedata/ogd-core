@@ -61,39 +61,42 @@ def showHelp():
 ## Function to handle execution of export code. This is the main intended use of
 #  the program.
 def runExport(monthly: bool = False, events: bool = False, features: bool = False):
-    # retrieve game id
-    if num_args > 2:
-        game_id = args[2]
+    if "--file" in opts.keys():
+        ExtractFromFile(file_path=opts["--file"], events=True, features=True)
     else:
-        showHelp()
-        return
-    # retrieve/calculate date range.
-    start_date: datetime
-    end_date: datetime
-    # If we want to export all data for a given month, calculate a date range.
-    if monthly is True:
-        month_year: typing.List[int]
-        if num_args > 3:
-            month_year_str = args[3].split("/")
-            month_year = [int(month_year_str[0]), int(month_year_str[1])]
+        # retrieve game id
+        if num_args > 2:
+            game_id = args[2]
+        else:
+            showHelp()
+            return
+        # retrieve/calculate date range.
+        start_date: datetime
+        end_date: datetime
+        # If we want to export all data for a given month, calculate a date range.
+        if monthly is True:
+            month_year: typing.List[int]
+            if num_args > 3:
+                month_year_str = args[3].split("/")
+                month_year = [int(month_year_str[0]), int(month_year_str[1])]
+            else:
+                today   = datetime.now()
+                month_year = [today.month, today.year]
+            utils.Logger.toStdOut(f"Exporting {month_year[0]}/{month_year[1]} data for {game_id}...", logging.DEBUG)
+            _execMonthExport(game_id=game_id, month=month_year[0], year=month_year[1], events=events, features=features)
+            utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
+        # Otherwise, create date range from given pair of dates.
         else:
             today   = datetime.now()
-            month_year = [today.month, today.year]
-        utils.Logger.toStdOut(f"Exporting {month_year[0]}/{month_year[1]} data for {game_id}...", logging.DEBUG)
-        _execMonthExport(game_id=game_id, month=month_year[0], year=month_year[1], events=events, features=features)
-        utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
-    # Otherwise, create date range from given pair of dates.
-    else:
-        today   = datetime.now()
-        start_date = datetime.strptime(args[3], "%m/%d/%Y") if num_args > 3 \
-                else today
-        start_date = start_date.replace(hour=0, minute=0, second=0)
-        end_date   = datetime.strptime(args[4], "%m/%d/%Y") if num_args > 4 \
-                else today
-        end_date = end_date.replace(hour=23, minute=59, second=59)
-        utils.Logger.toStdOut(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.DEBUG)
-        _execExport(game_id, start_date, end_date, events=events, features=features)
-        utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
+            start_date = datetime.strptime(args[3], "%m/%d/%Y") if num_args > 3 \
+                    else today
+            start_date = start_date.replace(hour=0, minute=0, second=0)
+            end_date   = datetime.strptime(args[4], "%m/%d/%Y") if num_args > 4 \
+                    else today
+            end_date = end_date.replace(hour=23, minute=59, second=59)
+            utils.Logger.toStdOut(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.DEBUG)
+            _execExport(game_id, start_date, end_date, events=events, features=features)
+            utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
 
 def _execMonthExport(game_id, month, year, events, features):
     from calendar import monthrange
@@ -278,20 +281,11 @@ if type(cmd) == str:
     cmd = cmd.lower()
 
     if cmd == "export":
-        if "--file" in opts.keys():
-            ExtractFromFile(file_path=opts["--file"], events=True, features=True)
-        else:
-            runExport(events=True, features=True)
+        runExport(events=True, features=True)
     elif cmd == "export-events":
-        if "--file" in opts.keys():
-            ExtractFromFile(file_path=opts["--file"], events=True)
-        else:
-            runExport(events=True)
+        runExport(events=True)
     elif cmd == "export-session-features":
-        if "--file" in opts.keys():
-            ExtractFromFile(file_path=opts["--file"], features=True)
-        else:
-            runExport(features=True)
+        runExport(features=True)
     elif cmd == "info":
         showGameInfo()
     elif cmd == "readme":
