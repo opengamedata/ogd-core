@@ -34,4 +34,4 @@ jobs:
         run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
 
       -name: Connect SSH
-        run: ssh ${{secrets.SSH_USER}}@fieldday-web.ad.education.wisc.edu -p=${{secrets.SSH_PASS}} cronjob.sh
+        run: ssh ${{secrets.VPN_USER}}@fieldday-web.ad.education.wisc.edu -p=${{secrets.VPN_PASS}} cronjob.sh
