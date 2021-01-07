@@ -180,6 +180,9 @@ class ExportManager:
                 proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table,
                                     game_schema=game_schema, proc_csv_file=file_manager.GetProcFile())
                 proc_mgr.WriteProcCSVHeader()
+
+                if self._game_id == "JOWILDER":
+                    proc_mgr.SetSurveyTSVFile(file_manager.GetSurveyFile())
             if export_files.raw:
                 raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
                                     raw_csv_file=file_manager.GetRawFile())
@@ -217,6 +220,8 @@ class ExportManager:
                 if export_files.proc:
                     proc_mgr.calculateAggregateFeatures()
                     proc_mgr.WriteProcCSVLines()
+                    if self._game_id == "JOWILDER":
+                        proc_mgr.WriteSurveyTSV()
                     proc_mgr.ClearLines()
                 if export_files.raw:
                     raw_mgr.WriteRawCSVLines()

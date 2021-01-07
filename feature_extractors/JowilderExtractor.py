@@ -1242,3 +1242,55 @@ def get_variance():
         debug_str = '\n\n'+self.get_debug_string(num_lines+1)
         utils.Logger.toFile(debug_str, logging.WARN)
         self.debug_strs = []
+
+
+    # Work in progress
+
+    def writeTSVHeader(self, game_table: GameTable, game_schema: Schema, file: typing.IO.writable):
+        """Write the relevant survey column headers to a .tsv file."""
+        columns = self.getSurveyFeatureNames(game_table=game_table, game_schema=game_schema)
+        file.write("\t".join(columns))
+        file.write("\n")
+
+    def getSurveyFeatureNames(self, game_table: GameTable, game_schema: Schema) -> typing.List[str]:
+        """Returns only the script_version and survey response columns from the table."""
+        columns = []
+        for key in self.features.featureList():
+            if key != "script_version" and not key.startswith("sa_"):
+                continue
+            # TODO(@nspevacek): Fix "ERROR: <class 'TypeError'> 'SessionFeatures' object is not subscriptable"
+            if type(self.features[key]) is type({}):
+                # if it's a dictionary, expand.
+                columns.extend(["{}{}_{}".format(self.features[key][num]["prefix"], num, key) for num in self.features[key].keys()])
+            else:
+                columns.append(str(key))
+        return columns
+
+    def writeSurveyFeatures(self, file: typing.IO.writable):
+        column_vals = self.getSurveyFeatures()
+        file.write("\t".join(column_vals))
+        file.write("\n")
+
+    def getSurveyFeatures(self) -> typing.List[str]:
+        def myformat(obj):
+            if obj == None:
+                return ""
+            elif type(obj) is datetime.timedelta:
+                total_secs = obj.total_seconds()
+                return str(total_secs)
+            if obj is None:
+                return ''
+
+            else:
+                return str(obj)
+        column_vals = []
+        for key in self.features.featureList():
+            if key != "script_version" and not key.startswith("sa_"):
+                continue
+            key_type = type(self.features.getValByName(key))
+            if key_type is type({}) or key_type is type(defaultdict()):
+                # if it's a dictionary, expand.
+                column_vals.extend([myformat(self.features.getValByIndex(key, num)) for num in self.features.getValByName(feature_name=key).keys()])
+            else:
+                column_vals.append(myformat(self.features.getValByName(key)))
+        return column_vals

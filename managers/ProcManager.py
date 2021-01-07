@@ -7,6 +7,7 @@ import typing
 import GameTable
 import utils
 from feature_extractors.WaveExtractor import WaveExtractor
+from feature_extractors.JowilderExtractor import JowilderExtractor
 from schemas.Schema import Schema
 
 ## @class ProcManager
@@ -72,3 +73,12 @@ class ProcManager:
     def WriteProcCSVLines(self):
         for extractor in self._session_extractors.values():
             extractor.writeCurrentFeatures(file=self._proc_file)
+
+    def SetSurveyTSVFile(self, survey_tsv_file: typing.IO.writable):
+        self._survey_tsv_file = survey_tsv_file
+
+    def WriteSurveyTSV(self):
+        for extractor in self._session_extractors.values():
+            if type(extractor) is JowilderExtractor:
+                extractor.writeTSVHeader(self._game_table, self._game_schema, self._survey_tsv_file)
+                extractor.writeSurveyFeatures(self._game_table, self._game_schema, self._survey_tsv_file)

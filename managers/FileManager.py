@@ -39,6 +39,8 @@ class FileManager(abc.ABC):
             self._zip_names["proc"] = base_path+"_session_features.zip" if export_files.proc else None
             self._zip_names["raw"]  = base_path+"_raw.zip"  if export_files.raw  else None
             self._zip_names["dump"] = base_path+"_events.zip" if export_files.dump else None
+            if self._game_id == "JOWILDER":
+                self._file_names["survey"] = base_path+"_survey.tsv" if export_files.proc else None
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.Log(msg, logging.ERROR)
@@ -56,6 +58,10 @@ class FileManager(abc.ABC):
     def GetDumpFile(self):
         return self._files["dump"]
 
+    # For Jowilder survey response export
+    def GetSurveyFile(self):
+        return self._files["survey"]
+
     def OpenFiles(self):
             # Ensure we have a data directory.
             full_data_dir = self._data_dir + self._game_id
@@ -64,6 +70,8 @@ class FileManager(abc.ABC):
             self._files["proc"] = open(self._file_names["proc"], "w", encoding="utf-8") if (self._file_names["proc"] is not None) else None
             self._files["raw"]  = open(self._file_names["raw"] , "w", encoding="utf-8") if (self._file_names["raw"] is not None) else None
             self._files["dump"] = open(self._file_names["dump"], "w", encoding="utf-8") if (self._file_names["dump"] is not None) else None
+            if self._game_id == "JOWILDER":
+                self._files["survey"] = open(self._file_names["survey"], "w", encoding="utf-8") if (self._file_names["survey"] is not None) else None
 
     def CloseFiles(self):
         if self._files["proc"] is not None:
@@ -72,6 +80,8 @@ class FileManager(abc.ABC):
             self._files["raw"].close()
         if self._files["dump"] is not None:
             self._files["dump"].close()
+        if self._game_id == "JOWILDER" and self._files["survey"] is not None:
+            self._files["survey"].close()
 
     def ZipFiles(self):
         existing_csvs = utils.loadJSONFile("file_list.json", self._data_dir)
@@ -99,6 +109,9 @@ class FileManager(abc.ABC):
                 proc_zip_file = zipfile.ZipFile(self._zip_names["proc"], "w", compression=zipfile.ZIP_DEFLATED)
                 self._addToZip(path=self._file_names["proc"], zip_file=proc_zip_file, path_in_zip=f"{base_path}_proc.csv")
                 self._addToZip(path=self._readme_path,        zip_file=proc_zip_file, path_in_zip=f"{self._dataset_id}/readme.md")
+                if self._game_id == "JOWILDER":
+                    self._addToZip(path=self._file_names["survey"], zip_file=proc_zip_file, path_in_zip=f"{base_path}_survey.tsv")
+                    os.remove(self._file_names["survey"])
                 os.remove(self._file_names["proc"])
             except FileNotFoundError as err:
                 utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
