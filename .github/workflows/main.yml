@@ -23,15 +23,13 @@ jobs:
 
     # Steps to get set up for an export
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      - name: Get OpenConnect
-        run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
- 
-      -name: Connect VPN
-        run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-
-      -name: Connect SSH
-        run: ssh ${{secrets.VPN_USER}}@fieldday-web.ad.education.wisc.edu -p=${{secrets.VPN_PASS}} cronjob.sh
+    # Runs a single command using the runners shell
+    - name: Get OpenConnect
+      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
+    -name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    -name: Connect SSH
+      run: ssh ${{secrets.VPN_USER}}@fieldday-web.ad.education.wisc.edu -p=${{secrets.VPN_PASS}} cronjob.sh
