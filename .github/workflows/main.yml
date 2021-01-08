@@ -34,4 +34,4 @@ jobs:
     - name: Clone code
       uses: actions/checkout@v2
     - name: Set up code
-      run: cp config.py.template config.py && sed -i 's/hostname/${{secrets.SSH_HOST}}/g' && more config.py
+      run: cp config.py.template config.py && sed -i 's/hostname/${{secrets.SSH_HOST}}/g' config.py && more config.py
