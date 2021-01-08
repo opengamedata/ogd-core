@@ -23,23 +23,31 @@ usage: <python> main.py <cmd> [<args>]
 <python> is your python command.
 <cmd>    is one of the available commands:
          - export
-         - export_month
-         - export_all_months
-         - extract
+         - export-events
+         - export-session-features
+         - info
+         - readme
          - help
 [<args>] are the arguments for the command:
          - export: game_id, [start_date, end_date]
              game_id    = id of game to export
              start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)
              end_date   = ending date for export, in form mm/dd/yyyy (default=current day)
-         - export_month: game_id, [month_year]
+         - export-events: game_id, [start_date, end_date]
              game_id    = id of game to export
-             month_year = month (and year) to export, in form mm/yyyy (default=current month)
-         - export_all_months: game_id
+             start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)
+             end_date   = ending date for export, in form mm/dd/yyyy (default=current day)
+         - export-session-features: game_id, [start_date, end_date]
              game_id    = id of game to export
-         - extract: game_id, file_name
-             game_id    = id of game to export
-             file_name  = name of a .zip file containing dump data
+             start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)
+             end_date   = ending date for export, in form mm/dd/yyyy (default=current day)
+         - info: game_id
+             game_id    = id of game whose info should be shown
+         - readme: game_id
+             game_id    = id of game whose readme should be generated
+         - help: *None*
+[<opt-args>] are option arguments, which affect certain commands:
+         --file: specifies a file to export events or features
 ```
 (you can see a similar printout directly from the system by running ```python3 main.py --help```)
 
@@ -47,19 +55,19 @@ Example use:
 ```
 python3 main.py export JOWILDER 1/1/2019 2/28/2019
 ```
-In the example above, all JOWILDER data from beginning of January to end of February (in 2019) is exported to dump and processed files.
+In the example above, all JOWILDER data from beginning of January to end of February (in 2019) is exported. This includes both the events and the processed session features.
 
 ```
-python3 main.py export_month JOWILDER 1/2019
+python3 main.py export-events JOWILDER 1/1/2019 2/28/2019
 ```
-In the example above, all JOWILDER data for the month of January 2019 is exported to dump and processed files.
+In the example above, only the events from the JOWILDER data during given date range are exported.
 
 ```
-python3 main.py JOWILDER export_all_months
+python3 main.py export-session-features JOWILDER 1/1/2019 2/28/2019
 ```
-In the example above, all available JOWILDER data is exported to dump and processed files, separated by month.
+In the example above, only the processed session features from the JOWILDER data during given date range are exported.
 
 ```
-python3 main.py extract JOWILDER C:\path\to\opengamedata-backend\data\JOWILDER\JOWILDER_20190101_to_20190228_1234abc_dump.zip
+python3 main.py export JOWILDER --file=C:\path\to\opengamedata-backend\data\JOWILDER\JOWILDER_20190101_to_20190228_1234abc_dump.zip
 ```
-In the example above, data from a previously exported dump file of JOWILDER data is extracted to a processed file.
+In the example above, events and processed session features are exported from the data at the specified file path.
