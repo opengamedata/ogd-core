@@ -77,8 +77,10 @@ class ProcManager:
     def SetSurveyTSVFile(self, survey_tsv_file: typing.IO.writable):
         self._survey_tsv_file = survey_tsv_file
 
+    def WriteSurveyTSVHeader(self):
+        self._ExtractorClass.writeTSVHeader(self._game_table, self._game_schema, self._survey_tsv_file)
+
     def WriteSurveyTSV(self):
         for extractor in self._session_extractors.values():
             if type(extractor) is JowilderExtractor:
-                extractor.writeTSVHeader(self._game_table, self._game_schema, self._survey_tsv_file)
-                extractor.writeSurveyFeatures(self._game_table, self._game_schema, self._survey_tsv_file)
+                extractor.writeSurveyFeatures(self._survey_tsv_file)

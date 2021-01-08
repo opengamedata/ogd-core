@@ -183,6 +183,7 @@ class ExportManager:
 
                 if self._game_id == "JOWILDER":
                     proc_mgr.SetSurveyTSVFile(file_manager.GetSurveyFile())
+                    proc_mgr.WriteSurveyTSVHeader()
             if export_files.raw:
                 raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
                                     raw_csv_file=file_manager.GetRawFile())

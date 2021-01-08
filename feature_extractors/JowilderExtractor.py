@@ -1246,22 +1246,24 @@ def get_variance():
 
     # Work in progress
 
-    def writeTSVHeader(self, game_table: GameTable, game_schema: Schema, file: typing.IO.writable):
+    @staticmethod
+    def writeTSVHeader(game_table: GameTable, game_schema: Schema, file: typing.IO.writable):
         """Write the relevant survey column headers to a .tsv file."""
-        columns = self.getSurveyFeatureNames(game_table=game_table, game_schema=game_schema)
+        columns = JowilderExtractor.getSurveyFeatureNames(game_table=game_table, game_schema=game_schema)
         file.write("\t".join(columns))
         file.write("\n")
 
-    def getSurveyFeatureNames(self, game_table: GameTable, game_schema: Schema) -> typing.List[str]:
+    @staticmethod
+    def getSurveyFeatureNames(game_table: GameTable, game_schema: Schema) -> typing.List[str]:
         """Returns only the script_version and survey response columns from the table."""
         columns = []
-        for key in self.features.featureList():
+        features = Extractor.SessionFeatures.generateFeatureDict(range(game_table.min_level, game_table.max_level+1), game_schema)
+        for key in features.keys():
             if key != "script_version" and not key.startswith("sa_"):
                 continue
-            # TODO(@nspevacek): Fix "ERROR: <class 'TypeError'> 'SessionFeatures' object is not subscriptable"
-            if type(self.features[key]) is type({}):
+            if type(features[key]) is type({}):
                 # if it's a dictionary, expand.
-                columns.extend(["{}{}_{}".format(self.features[key][num]["prefix"], num, key) for num in self.features[key].keys()])
+                columns.extend(["{}{}_{}".format(features[key][num]["prefix"], num, key) for num in features[key].keys()])
             else:
                 columns.append(str(key))
         return columns
