@@ -31,6 +31,7 @@ jobs:
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    - name: Set up code
+    - name: Clone code
       uses: actions/checkout@v2
-      run: cp config.py.template config.py && sed -i 's/hostname/${{secrets.SSH_HOST}}/g' && cat config.py
+    - name: Set up code
+      run: cp config.py.template config.py && sed -i 's/hostname/${{secrets.SSH_HOST}}/g' && more config.py
