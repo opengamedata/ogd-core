@@ -45,5 +45,8 @@ jobs:
       run: sed -i 's/username/${{secrets.SQL_USER}}/g' config.py
     - name: Set SQL password
       run: sed -i 's/password/${{secrets.SQL_PASS}}/g' config.py
-    - run: ls
-    - run: pwd
+    - name: Create rsync password file
+      run: echo ${{secrets.VPN_PASS}} > rsync_pass.txt
+    - run: chmod 600 rsync_pass.txt
+    - name: Sync data files to remote server
+      run: rsync -vrc --password-file=rsync_pass.txt ./data ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}}:/var/www/opengamedata/data
