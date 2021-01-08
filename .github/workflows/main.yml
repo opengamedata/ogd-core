@@ -18,7 +18,7 @@ jobs:
   # This workflow contains a single job called "monthly_export"
   monthly_export:
     # The type of runner that the job will run on
-    name: Export Monthly Data
+    name: Export Monthly Data - Crystal
     runs-on: ubuntu-latest
 
     # Steps to get set up for an export
@@ -31,5 +31,6 @@ jobs:
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    - name: Connect SSH
-      run: ssh ${{secrets.VPN_USER}}@fieldday-web.ad.education.wisc.edu -p=${{secrets.VPN_PASS}} cronjob.sh
+    - name: Set up code
+      uses: actions/checkout@v2
+      run: cp config.py.template config.py && sed -i 's/hostname/${{secrets.SSH_HOST}}/g' && cat config.py
