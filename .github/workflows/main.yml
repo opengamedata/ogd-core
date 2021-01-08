@@ -34,4 +34,8 @@ jobs:
     - name: Clone code
       uses: actions/checkout@v2
     - name: Set up code
-      run: cp config.py.template config.py && sed -i 's/hostname/${{secrets.SSH_HOST}}/g' config.py && echo Testing output of hostname ${{secrets.SSH_HOST}}
+      run: cp config.py.template config.py 
+      run: sed -i 's/hostname/${{secrets.SSH_HOST}}/g' config.py
+      run: sed -i 's/WCER AD User/${{secrets.VPN_USER}}/g' config.py
+      run: sed -i 's/WCER AD Password/${{secrets.VPN_PASS}}/g' config.py
+      run: echo Testing output of hostname ${{secrets.SSH_HOST}}
