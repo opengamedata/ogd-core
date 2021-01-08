@@ -1243,19 +1243,16 @@ def get_variance():
         utils.Logger.toFile(debug_str, logging.WARN)
         self.debug_strs = []
 
-
-    # Work in progress
-
     @staticmethod
     def writeTSVHeader(game_table: GameTable, game_schema: Schema, file: typing.IO.writable):
-        """Write the relevant survey column headers to a .tsv file."""
+        """Write the survey column headers to a .tsv file."""
         columns = JowilderExtractor.getSurveyFeatureNames(game_table=game_table, game_schema=game_schema)
         file.write("\t".join(columns))
         file.write("\n")
 
     @staticmethod
     def getSurveyFeatureNames(game_table: GameTable, game_schema: Schema) -> typing.List[str]:
-        """Returns only the script_version and survey response columns from the table."""
+        """Retreives script_version and survey response column headers from the game table."""
         columns = []
         features = Extractor.SessionFeatures.generateFeatureDict(range(game_table.min_level, game_table.max_level+1), game_schema)
         for key in features.keys():
@@ -1269,11 +1266,13 @@ def get_variance():
         return columns
 
     def writeSurveyFeatures(self, file: typing.IO.writable):
+        """Writes the survey features to a .tsv file."""
         column_vals = self.getSurveyFeatures()
         file.write("\t".join(column_vals))
         file.write("\n")
 
     def getSurveyFeatures(self) -> typing.List[str]:
+        """Retrieves script_version and survey features from the feature list."""
         def myformat(obj):
             if obj == None:
                 return ""
@@ -1282,7 +1281,6 @@ def get_variance():
                 return str(total_secs)
             if obj is None:
                 return ''
-
             else:
                 return str(obj)
         column_vals = []
