@@ -45,4 +45,5 @@ jobs:
       run: sed -i 's/username/${{secrets.SQL_USER}}/g' config.py
     - name: Set SQL password
       run: sed -i 's/password/${{secrets.SQL_PASS}}/g' config.py
-    - run: echo Testing output of hostname ${{secrets.SSH_HOST}}
+    - run: ls
+    - run: pwd
