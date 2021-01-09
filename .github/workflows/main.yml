@@ -29,9 +29,8 @@ jobs:
     # Runs a single command using the runners shell
     - name: Get OpenConnect
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
-    - run: echo Python before trying to get 3.8.1 && python3 --version
     - name: Get correct Python
-      run: sudo apt-get install python3=3.8.1
+      run: sudo apt-get install python3.8
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Clone code
@@ -55,6 +54,6 @@ jobs:
     #   run: rsync -vc --password-file=rsync_pass.txt ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}}:/var/www/opengamedata/data/file_list.json ./data/file_list.json
     # - run: cp ./data/file_list.json ./data/file_list.json.bak
     # - name: Execute data export
-    - run: echo Python after trying to get 3.8.1 && python3 --version
+    - run: echo Python after trying to get 3.8.1 && python3.8 --version
     # - name: Sync data files to remote server
     #   run: rsync -vrc --password-file=rsync_pass.txt ./data ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}}:/var/www/opengamedata/data
