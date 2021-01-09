@@ -29,6 +29,9 @@ jobs:
     # Runs a single command using the runners shell
     - name: Get OpenConnect
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
+    - run: echo Python before trying to get 3.8 && python --version
+    - name: Get correct Python
+      run: sudo apt-get install python=3.8
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Clone code
@@ -48,5 +51,10 @@ jobs:
     - name: Create rsync password file
       run: echo ${{secrets.VPN_PASS}} > rsync_pass.txt
     - run: chmod 600 rsync_pass.txt
-    - name: Sync data files to remote server
-      run: rsync -vrc --password-file=rsync_pass.txt ./data ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}}:/var/www/opengamedata/data
+    # - name: Pull list of data files from remote
+    #   run: rsync -vc --password-file=rsync_pass.txt ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}}:/var/www/opengamedata/data/file_list.json ./data/file_list.json
+    # - run: cp ./data/file_list.json ./data/file_list.json.bak
+    # - name: Execute data export
+    - run: echo Python after trying to get 3.8 && python --version
+    # - name: Sync data files to remote server
+    #   run: rsync -vrc --password-file=rsync_pass.txt ./data ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}}:/var/www/opengamedata/data
