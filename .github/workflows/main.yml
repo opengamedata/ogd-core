@@ -35,9 +35,9 @@ jobs:
     #   run: sudo apt-get install python-mysqldb
     - name: Set up Python libraries
       run: |
-        python -m pip3 install --upgrade pip
-        python -m pip3 install setuptools
-        python -m pip3 install -r requirements.txt
+        python3.8 -m pip install --upgrade pip
+        python3.8 -m pip install setuptools
+        python3.8 -m pip install -r requirements.txt
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Clone code
