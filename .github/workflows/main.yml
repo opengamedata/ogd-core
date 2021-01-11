@@ -33,8 +33,8 @@ jobs:
       run: sudo apt-get install python3.8
     - name: Set up Python libraries
       run: |
-        pip3.8 install --upgrade pip
-        pip3.8 install -r requirements.txt
+        pip3 install --upgrade pip3
+        pip3 install -r requirements.txt
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Clone code
