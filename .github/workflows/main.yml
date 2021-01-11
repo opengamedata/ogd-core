@@ -32,7 +32,9 @@ jobs:
     - name: Get correct Python
       run: sudo apt-get install python3.8
     - name: Set up Python libraries
-      run: pip install -r requirements.txt
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Clone code
