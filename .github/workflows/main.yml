@@ -31,11 +31,12 @@ jobs:
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
     - name: Get correct Python
       run: sudo apt-get install python3.8
-    - name: Try another approach to getting python mysql set up.
-      run: sudo apt-get install python-mysqldb
+    # - name: Try another approach to getting python mysql set up.
+    #   run: sudo apt-get install python-mysqldb
     - name: Set up Python libraries
       run: |
         pip3 install --upgrade pip
+        pip3 install mysql-python
         pip3 install setuptools
         pip3 install -r requirements.txt
     - name: Connect VPN
