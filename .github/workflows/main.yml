@@ -55,16 +55,17 @@ jobs:
       run: sed -i 's/username/${{secrets.SQL_USER}}/g' config.py
     - name: Set SQL password
       run: sed -i 's/password/${{secrets.SQL_PASS}}/g' config.py
-    # - name: Create rsync password file
-    #   run: echo ${{secrets.VPN_PASS}} > rsync_pass.txt
-    # - run: chmod 600 rsync_pass.txt
-    # - name: Pull list of data files from remote
-    #   run: rsync -vc --password-file=rsync_pass.txt ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}}:/var/www/opengamedata/data/file_list.json ./data/file_list.json
-    # - run: cp ./data/file_list.json ./data/file_list.json.bak
     - name: Execute data export
       run: python3.8 main.py export MAGNETS 1/1/2021 1/2/2021
-    # - name: Sync data files to remote server
-    #   run: rsync -vrc --password-file=rsync_pass.txt ./data ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}}:/var/www/opengamedata/data
+    # - name: Pull list of data files from remote
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.VPN_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
     - name: Upload zips as artifacts
       uses: actions/upload-artifact@v2
       with:
