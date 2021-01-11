@@ -31,6 +31,8 @@ jobs:
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
     - name: Get correct Python
       run: sudo apt-get install python3.8
+    - name: Try another approach to getting python mysql set up.
+      run: sudo apt-get install python-mysqldb
     - name: Set up Python libraries
       run: |
         pip3 install --upgrade pip
