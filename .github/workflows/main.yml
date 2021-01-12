@@ -18,7 +18,7 @@ jobs:
   # This workflow contains a single job called "monthly_export"
   monthly_export:
     # The type of runner that the job will run on
-    name: Export Monthly Data - Crystal
+    name: Export Data - Magnets
     runs-on: ubuntu-latest
 
     # Steps to get set up for an export
