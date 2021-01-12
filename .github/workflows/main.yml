@@ -32,7 +32,9 @@ jobs:
     - name: Ensure we have mysql client installed.
       run: sudo apt-get install mysql-client
     - name: Get correct Python
-      run: sudo apt-get install python3.8
+      run: |
+        sudo apt-get install python3.8
+        sudo apt-get install python3.8-dev
     - name: Set up local bin in path # there is a warning about this in pip output, so we'll do this and see if that makes things better.
       run: export PATH=/home/runner/.local/bin:$PATH
     - name: Set up Python libraries
