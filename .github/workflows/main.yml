@@ -60,7 +60,7 @@ jobs:
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Execute data export
-      run: python3.8 main.py export MAGNETS 1/1/2021 1/2/2021
+      run: python3.8 main.py export MAGNET 1/1/2021 1/2/2021
     - name: Upload files to opengamedata via rsync
       uses: burnett01/rsync-deployments@4.1
       with:
