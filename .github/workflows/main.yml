@@ -74,7 +74,7 @@ jobs:
     #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
     - name: test ssh separately
       run: |
-        echo ${{secrets.FILE_DEPLOY_KEY}} > deploy_key.txt
+        echo "${{secrets.FILE_DEPLOY_KEY}}" > deploy_key.txt
         ssh-add deploy_key.txt
         ssh ${{secrets.FILE_USER}}@fieldday-web.ad.education.wisc.edu pwd
     # - name: Upload zips as artifacts
