@@ -70,7 +70,7 @@ jobs:
     - name: Test ssh with just username and password.
       uses: garygrossgarten/github-action-ssh@release
       with:
-        command: whoami
+        command: pwd & ls
         host: ${{secrets.FILE_HOST}}
         username: ${{secrets.VPN_USER}}
         password: ${{secrets.VPN_PASS}}
