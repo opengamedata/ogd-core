@@ -74,5 +74,5 @@ jobs:
         path: data/*
         remote_path: /var/www/opengamedata/data/
         remote_host: fieldday-web.ad.education.wisc.edu
-        remote_user: ${{ secrets.FILE_USER }}
+        remote_user: ${{ secrets.VPN_USER }}
         remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
