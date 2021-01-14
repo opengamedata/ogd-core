@@ -68,12 +68,12 @@ jobs:
       with:
         path: ./data/MAGNET/*.zip
     - name: Test ssh with just username and password.
-      uses: appleboy/ssh-action@master
+      uses: garygrossgarten/github-action-ssh@release
       with:
+        command: whoami
         host: ${{secrets.FILE_HOST}}
         username: ${{secrets.VPN_USER}}
         password: ${{secrets.VPN_PASS}}
-        script: whoami
     # - name: Upload files to opengamedata via rsync
       # uses: burnett01/rsync-deployments@4.1
       # with:
