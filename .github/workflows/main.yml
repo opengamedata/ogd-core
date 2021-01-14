@@ -29,8 +29,8 @@ jobs:
     # Runs a single command using the runners shell
     - name: Get OpenConnect
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
-    - name: Ensure we have mysql client installed.
-      run: sudo apt-get install mysql-client
+    # - name: Ensure we have mysql client installed.
+    #   run: sudo apt-get install mysql-client
     # - name: Get correct Python
     #   run: |
     #     sudo apt-get install python3.8
@@ -43,20 +43,20 @@ jobs:
     #     python3.8 -m pip install setuptools
     #     python3.8 -m pip install wheel
     #     python3.8 -m pip install -r requirements.txt
-    - name: Clone code
-      uses: actions/checkout@v2
-    - name: Set up code
-      run: cp config.py.template config.py 
-    - name: Set SSH hostname
-      run: sed -i 's/hostname/${{secrets.SSH_HOST}}/g' config.py
-    - name: Set SSH username
-      run: sed -i 's/WCER AD User/${{secrets.VPN_USER}}/g' config.py
-    - name: Set SSH password
-      run: sed -i 's/WCER AD Password/${{secrets.VPN_PASS}}/g' config.py
-    - name: Set SQL username
-      run: sed -i 's/username/${{secrets.SQL_USER}}/g' config.py
-    - name: Set SQL password
-      run: sed -i 's/password/${{secrets.SQL_PASS}}/g' config.py
+    # - name: Clone code
+    #   uses: actions/checkout@v2
+    # - name: Set up code
+    #   run: cp config.py.template config.py 
+    # - name: Set SSH hostname
+    #   run: sed -i 's/hostname/${{secrets.SSH_HOST}}/g' config.py
+    # - name: Set SSH username
+    #   run: sed -i 's/WCER AD User/${{secrets.VPN_USER}}/g' config.py
+    # - name: Set SSH password
+    #   run: sed -i 's/WCER AD Password/${{secrets.VPN_PASS}}/g' config.py
+    # - name: Set SQL username
+    #   run: sed -i 's/username/${{secrets.SQL_USER}}/g' config.py
+    # - name: Set SQL password
+    #   run: sed -i 's/password/${{secrets.SQL_PASS}}/g' config.py
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     # - name: Execute data export
