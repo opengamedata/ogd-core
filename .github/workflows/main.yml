@@ -67,16 +67,14 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         path: ./data/MAGNET/*.zip
-    - name: Upload files to opengamedata via rsync
-      uses: Pendect/action-rsyncer@v1.1.0
-      env:
-        DEPLOY_KEY: ${{secrets.FILE_DEPLOY_KEY}}
+    - name: Test ssh with just username and password.
+      uses: appleboy/ssh-action@master
       with:
-        flags: -vrc
-        options: ''
-        ssh_options: ''
-        src: 'data/*'
-        dest: '${{secrets.FILE_USER}}@fieldday-web.ad.education.wisc.edu:/var/www/opengamedata/data'
+        host: ${{secrets.FILE_HOST}}
+        username: ${{secrets.VPN_USER}}
+        password: ${{secrets.VPN_PASS}}
+        script: whoami
+    # - name: Upload files to opengamedata via rsync
       # uses: burnett01/rsync-deployments@4.1
       # with:
       #   switches: -vrc
