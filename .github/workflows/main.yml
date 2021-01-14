@@ -73,7 +73,7 @@ jobs:
         command: pwd & ls
         host: ${{secrets.FILE_HOST}}
         username: ${{secrets.VPN_USER}}
-        password: ${{secrets.VPN_PASS}}
+        privateKey: ${{secrets.FILE_DEPLOY_KEY}}
     # - name: Upload files to opengamedata via rsync
       # uses: burnett01/rsync-deployments@4.1
       # with:
