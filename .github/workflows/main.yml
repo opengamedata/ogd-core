@@ -69,7 +69,7 @@ jobs:
         path: ./data/MAGNET/*.zip
     - name: Upload files to opengamedata via rsync
       uses: Pendect/actin-rsyncer@v1.1.0
-      evn:
+      env:
         DEPLOY_KEY: ${{secrets.FILE_DEPLOY_KEY}}
       with:
         flags: -vrc
