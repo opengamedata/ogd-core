@@ -1,5 +1,5 @@
 {
-    "level_range": { "min":0, "max":2 },
+    "level_range": { "min":0, "max":5 },
 
     "events":{
         "COMPLETE": {
@@ -7,12 +7,22 @@
                 "northDist": "float",
                 "southDist": "float"
             },
+            "guessScoreIfSwitched": {
+                "northPoleToSouthGuess": "float",
+                "southPoleToNorthGuess": "float"
+            },
             "numCompasses": "int",
             "ironFilingsUsed": "boolean",
             "magneticFilmUsed": "boolean",
             "levelTime": "float",
             "numLevels": "int",
             "numTimesPolesMoved": "int",
+            "magnetLocation": {
+                "xNorth": "float",
+                "yNorth": "float",
+                "xSouth": "float",
+                "ySouth": "float"
+            },
             "event_custom": "COMPLETE"
         },
         "DRAG_TOOL": {
@@ -51,7 +61,14 @@
 
     "features": {
         "perlevel":{
-            "eventCount":"Number of player events in the given level"
+            "eventCount":"Number of player events in the given level",
+            "southPoleScore": "The score for the south pole placement",
+            "northPoleScore": "The score for the north pole placement",
+            "numberOfCompassesUsed": "How many of the six compasses were placed before guessing",
+            "usedMagneticFilm": "Indicates whether the magnetic film was placed",
+            "usedIronFilings": "Indicates whether the iron filings were placed",
+            "numTimesPolesMoved": "The number of times the poles were moved before finalizing the guess",
+            "levelTime": "The amount of time spent in the level"
         },
         "per_custom_count": {
         },
@@ -59,12 +76,6 @@
             "sessionID":"The player's session ID number for this play session",
             "persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",
             "sessionEventCount":"The total number of events across the entire session",
-            "southPoleScore": "The score for the south pole placement",
-            "northPoleScore": "The score for the north pole placement",
-            "numberOfCompassesUsed": "How many of the six compasses were placed before guessing",
-            "usedMagneticFilm": "Indicates whether the magnetic film was placed",
-            "usedIronFilings": "Indicates whether the iron filings were placed",
-            "numTimesPolesMoved": "The number of times the poles were moved before finalizing the guess",
             "sessionTime": "The total number of seconds spent"
         }
     },
@@ -89,5 +100,9 @@
         "req_id":"Another ID of some kind, to be removed",
         "session_n":"Counter of events in the session, from 0. A row with session_n = i is the (i+1)-th event of the session",
         "http_user_agent":"Data on the type of web browser, OS, etc. in use by the player"
-    }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [2]
+	}
 }
