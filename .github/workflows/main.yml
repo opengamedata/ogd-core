@@ -23,6 +23,8 @@ jobs:
 
     # Steps to get set up for an export
     steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
     - name: Do Export
       uses: ./.github/actions/export_month
       with:
