@@ -37,5 +37,8 @@
         "req_id":"Another ID of some kind, to be removed",
         "session_n":"Counter of events in the session, from 0. A row with session_n = i is the (i+1)-th event of the session",
         "http_user_agent":"Data on the type of web browser, OS, etc. in use by the player"
-    }
+    },
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
 }

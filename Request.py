@@ -63,12 +63,7 @@ class DateRangeRequest(Request):
     #  the request.
     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
         # We grab the ids for all sessions that have 0th move in the proper date range.
-        if self.game_id == "LAKELAND":
-            supported_vers = Schema(schema_name="LAKELAND.json").schema()['config']['SUPPORTED_VERS']
-        elif self.game_id == "JOWILDER":
-            supported_vers = Schema(schema_name="JOWILDER.json").schema()['config']['SUPPORTED_VERS']
-        else:
-            supported_vers = []
+        supported_vers = Schema(schema_name=f"{self.game_id}.json").schema()['config']['SUPPORTED_VERS']
         ver_filter = f" AND `app_version` in ({','.join([str(x) for x in supported_vers])}) " if supported_vers else ''
         filt = "`app_id`=\"{}\" AND `session_n`='0' AND (`server_time` BETWEEN '{}' AND '{}'){}".format( \
                         self.game_id, self.start_date.isoformat(), self.end_date.isoformat(), ver_filter)
