@@ -15,40 +15,53 @@ runs:
     # Runs a single command using the runners shell
     - name: Get OpenConnect
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
+      shell: bash
     - name: Ensure we have mysql client installed.
       run: sudo apt-get install mysql-client
+      shell: bash
     - name: Get correct Python
       run: |
         sudo apt-get install python3.8
         sudo apt-get install python3.8-dev
+      shell: bash
     - name: Set up local bin in path # there is a warning about this in pip output, so we'll do this and see if that makes things better.
       run: export PATH=/home/runner/.local/bin:$PATH
+      shell: bash
     - name: Set up Python libraries
       run: |
         python3.8 -m pip install --upgrade pip
         python3.8 -m pip install setuptools
         python3.8 -m pip install wheel
         python3.8 -m pip install -r requirements.txt
-    - name: Clone code
-      uses: actions/checkout@v2
+      shell: bash
+    # - name: Clone code
+    #   uses: actions/checkout@v2
     - name: Set up code
       run: cp config.py.template config.py 
+      shell: bash
     - name: Set SSH hostname
       run: sed -i 's/hostname/${{secrets.SSH_HOST}}/g' config.py
+      shell: bash
     - name: Set SSH username
       run: sed -i 's/WCER AD User/${{secrets.VPN_USER}}/g' config.py
+      shell: bash
     - name: Set SSH password
       run: sed -i 's/WCER AD Password/${{secrets.VPN_PASS}}/g' config.py
+      shell: bash
     - name: Set SQL username
       run: sed -i 's/username/${{secrets.SQL_USER}}/g' config.py
+      shell: bash
     - name: Set SQL password
       run: sed -i 's/password/${{secrets.SQL_PASS}}/g' config.py
+      shell: bash
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+      shell: bash
     - name: Execute data export
       run: |
         python3.8 main.py readme ${{ inputs.game }}
         python3.8 main.py export_month ${{ inputs.game }} ${{ inputs.month_year }}
+      shell: bash
     - name: Upload zips as artifacts
       uses: actions/upload-artifact@v2
       with:
