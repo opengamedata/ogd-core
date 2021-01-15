@@ -23,63 +23,8 @@ jobs:
 
     # Steps to get set up for an export
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-
-    # Runs a single command using the runners shell
-    - name: Get OpenConnect
-      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
-    # - name: Ensure we have mysql client installed.
-    #   run: sudo apt-get install mysql-client
-    # - name: Get correct Python
-    #   run: |
-    #     sudo apt-get install python3.8
-    #     sudo apt-get install python3.8-dev
-    # - name: Set up local bin in path # there is a warning about this in pip output, so we'll do this and see if that makes things better.
-    #   run: export PATH=/home/runner/.local/bin:$PATH
-    # - name: Set up Python libraries
-    #   run: |
-    #     python3.8 -m pip install --upgrade pip
-    #     python3.8 -m pip install setuptools
-    #     python3.8 -m pip install wheel
-    #     python3.8 -m pip install -r requirements.txt
-    # - name: Clone code
-    #   uses: actions/checkout@v2
-    # - name: Set up code
-    #   run: cp config.py.template config.py 
-    # - name: Set SSH hostname
-    #   run: sed -i 's/hostname/${{secrets.SSH_HOST}}/g' config.py
-    # - name: Set SSH username
-    #   run: sed -i 's/WCER AD User/${{secrets.VPN_USER}}/g' config.py
-    # - name: Set SSH password
-    #   run: sed -i 's/WCER AD Password/${{secrets.VPN_PASS}}/g' config.py
-    # - name: Set SQL username
-    #   run: sed -i 's/username/${{secrets.SQL_USER}}/g' config.py
-    # - name: Set SQL password
-    #   run: sed -i 's/password/${{secrets.SQL_PASS}}/g' config.py
-    - name: Connect VPN
-      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    # - name: Execute data export
-    #   run: |
-    #     python3.8 main.py readme MAGNET
-    #     python3.8 main.py export MAGNET 1/1/2021 1/2/2021
-    - name: Upload zips as artifacts
-      uses: actions/upload-artifact@v2
+    - name: Do Export
+      uses: actions/export_month@master
       with:
-        path: ./data/MAGNET/*.zip
-    - name: Test ssh with just username and password.
-      uses: garygrossgarten/github-action-ssh@release
-      with:
-        command: pwd & ls
-        host: ${{secrets.FILE_HOST}}
-        username: ${{secrets.FILE_USER}}
-        privateKey: ${{secrets.FILE_DEPLOY_KEY}}
-    # - name: Upload files to opengamedata via rsync
-      # uses: burnett01/rsync-deployments@4.1
-      # with:
-      #   switches: -vrc
-      #   path: data/*
-      #   remote_path: /var/www/opengamedata/data/
-      #   remote_host: fieldday-web.ad.education.wisc.edu
-      #   remote_user: ${{ secrets.VPN_USER }}
-      #   remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+        game: 'MAGNET'
+        month_year: '1/2021'
