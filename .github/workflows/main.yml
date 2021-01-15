@@ -24,7 +24,7 @@ jobs:
     # Steps to get set up for an export
     steps:
     - name: Do Export
-      uses: ./.github/actions/export_month
+      uses: ./.github/actions/export_month.yml
       with:
         game: 'MAGNET'
         month_year: '1/2021'
