@@ -29,8 +29,6 @@ class MagnetExtractor(Extractor):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
         # Define custom private data.
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
-        config = game_schema.schema()['config']
-        self._SUPPORTED_VERS = config['SUPPORTED_VERS']
 
     ## Function to perform extraction of features from a row.
     #
@@ -40,8 +38,6 @@ class MagnetExtractor(Extractor):
     #                     table assiciated with this game is structured.
     def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
         # put some data in local vars, for readability later.
-        if row_with_complex_parsed[game_table.complex_data_index]["app_version"] not in self._SUPPORTED_VERS:
-            return
         level = row_with_complex_parsed[game_table.level_index]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
         event_client_time = row_with_complex_parsed[game_table.client_time_index]
@@ -97,8 +93,8 @@ class MagnetExtractor(Extractor):
     def _extractFromComplete(self, level, event_client_time, event_data):
         south_score = event_data["guessScore"]["southDist"]
         north_score = event_data["guessScore"]["northDist"]
-        #south_score_if_switched = event_data["guessScoreIfSwitched"]["northPoleToSouthGuess"]
-        #north_score_if_switched = event_data["guessScoreIfSwitched"]["southPoleToNorthGuess"]
+        south_score_if_switched = event_data["guessScoreIfSwitched"]["northPoleToSouthGuess"]
+        north_score_if_switched = event_data["guessScoreIfSwitched"]["southPoleToNorthGuess"]
         num_compasses = event_data["numCompasses"]
         iron_filings = event_data["ironFilingsUsed"]
         magnetic_film = event_data["magneticFilmUsed"]
@@ -106,8 +102,8 @@ class MagnetExtractor(Extractor):
         time_spent = event_data["levelTime"]
         self.features.setValByIndex(feature_name="southPoleScore", index=level, new_value=south_score)
         self.features.setValByIndex(feature_name="northPoleScore", index=level, new_value=north_score)
-        #self.features.setValByIndex(feature_name="northPoleToSouthGuess", index=level, new_value=south_score_if_switched)
-        #self.features.setValByIndex(feature_name="southPoleToNorthGuess", index=level, new_value=north_score_if_switched)
+        self.features.setValByIndex(feature_name="northPoleToSouthGuess", index=level, new_value=south_score_if_switched)
+        self.features.setValByIndex(feature_name="southPoleToNorthGuess", index=level, new_value=north_score_if_switched)
         self.features.setValByIndex(feature_name="numberOfCompassesUsed", index=level, new_value=num_compasses)
         self.features.setValByIndex(feature_name="usedIronFilings", index=level, new_value=iron_filings)
         self.features.setValByIndex(feature_name="usedMagneticFilm", index=level, new_value=magnetic_film)

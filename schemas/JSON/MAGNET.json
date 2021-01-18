@@ -64,6 +64,8 @@
             "eventCount":"Number of player events in the given level",
             "southPoleScore": "The score for the south pole placement",
             "northPoleScore": "The score for the north pole placement",
+            "northPoleToSouthGuess": "The score for the south pole placement if the poles were switched.",
+            "southPoleToNorthGuess": "The score for the north pole placement if the poles were switched.",
             "numberOfCompassesUsed": "How many of the six compasses were placed before guessing",
             "usedMagneticFilm": "Indicates whether the magnetic film was placed",
             "usedIronFilings": "Indicates whether the iron filings were placed",
