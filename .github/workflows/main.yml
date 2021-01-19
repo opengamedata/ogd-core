@@ -35,6 +35,10 @@ jobs:
     runs-on: ubuntu-latest
     # Steps to set up for and execute an export
     steps:
+    - name: Get OpenConnect
+      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
+    - name: Connect VPN
+      run: echo ${{ inputs.vpn_pass }} | sudo openconnect --protocol=gp -u ${{ inputs.vpn_user }} --passwd-on-stdin soe.vpn.wisc.edu &
     - uses: actions/checkout@v2
     - name: Do Export
       uses: ./.github/actions/export_month
