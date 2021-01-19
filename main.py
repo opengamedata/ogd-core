@@ -55,7 +55,7 @@ def showHelp():
     print("         - help: *None*")
     print("[<opt-args>] are optional arguments, which affect certain commands:")
     print("         --file: specifies a file to export events or features")
-    print("         --monthly: with this option, specify dates by mm/yyyy instead of mm/dd/yyyy.")
+    print("         --monthly: with this flag, specify dates by mm/yyyy instead of mm/dd/yyyy.")
     print(width*"*")
 
 

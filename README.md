@@ -46,6 +46,7 @@ usage: <python> main.py <cmd> [<args>]
          - help: *None*
 [<opt-args>] are option arguments, which affect certain commands:
          --file: specifies a file to export events or features
+         --monthly: with this flag, specify dates by mm/yyyy instead of mm/dd/yyyy
 ```
 (you can see a similar printout directly from the system by running ```python3 main.py --help```)
 
