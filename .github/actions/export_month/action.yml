@@ -84,10 +84,3 @@ runs:
         python3.8 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
       shell: bash
         # python3.8 main.py export ${{ inputs.game }} $MONTH_YEAR --monthly
-    # - name: Test ssh with just username and password.
-    #   uses: garygrossgarten/github-action-ssh@release
-    #   with:
-    #     command: pwd & ls
-    #     host: ${{secrets.FILE_HOST}}
-    #     username: ${{secrets.FILE_USER}}
-    #     privateKey: ${{secrets.FILE_DEPLOY_KEY}}
