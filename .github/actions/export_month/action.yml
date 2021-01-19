@@ -9,6 +9,10 @@ inputs:
    description: "The game with data to export."
    required: true
    default: 'Crystal'
+  ssh_host:
+    description: "The server hosting the OGD database."
+    required: true
+    default: none
 runs:
   using: "composite"
   steps:
@@ -36,43 +40,43 @@ runs:
       shell: bash
     # - name: Clone code
     #   uses: actions/checkout@v2
-    - name: Set up code
-      run: cp config.py.template config.py 
-      shell: bash
-    - name: Set SSH hostname
-      run: sed -i 's/hostname/${{secrets.SSH_HOST}}/g' config.py
-      shell: bash
-    - name: Set SSH username
-      run: sed -i 's/WCER AD User/${{secrets.VPN_USER}}/g' config.py
-      shell: bash
-    - name: Set SSH password
-      run: sed -i 's/WCER AD Password/${{secrets.VPN_PASS}}/g' config.py
-      shell: bash
-    - name: Set SQL username
-      run: sed -i 's/username/${{secrets.SQL_USER}}/g' config.py
-      shell: bash
-    - name: Set SQL password
-      run: sed -i 's/password/${{secrets.SQL_PASS}}/g' config.py
-      shell: bash
-    - name: Connect VPN
-      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-      shell: bash
-    - name: Execute data export
-      run: |
-        python3.8 main.py readme ${{ inputs.game }}
-        python3.8 main.py export_month ${{ inputs.game }} ${{ inputs.month_year }}
-      shell: bash
-    - name: Upload zips as artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        path: ./data/${{ inputs.game }}/*.zip
-    - name: Test ssh with just username and password.
-      uses: garygrossgarten/github-action-ssh@release
-      with:
-        command: pwd & ls
-        host: ${{secrets.FILE_HOST}}
-        username: ${{secrets.FILE_USER}}
-        privateKey: ${{secrets.FILE_DEPLOY_KEY}}
+    # - name: Set up code
+    #   run: cp config.py.template config.py 
+    #   shell: bash
+    # - name: Set SSH hostname
+    #   run: sed -i 's/hostname/${{secrets.SSH_HOST}}/g' config.py
+    #   shell: bash
+    # - name: Set SSH username
+    #   run: sed -i 's/WCER AD User/${{secrets.VPN_USER}}/g' config.py
+    #   shell: bash
+    # - name: Set SSH password
+    #   run: sed -i 's/WCER AD Password/${{secrets.VPN_PASS}}/g' config.py
+    #   shell: bash
+    # - name: Set SQL username
+    #   run: sed -i 's/username/${{secrets.SQL_USER}}/g' config.py
+    #   shell: bash
+    # - name: Set SQL password
+    #   run: sed -i 's/password/${{secrets.SQL_PASS}}/g' config.py
+    #   shell: bash
+    # - name: Connect VPN
+    #   run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    #   shell: bash
+    # - name: Execute data export
+    #   run: |
+    #     python3.8 main.py readme ${{ inputs.game }}
+    #     python3.8 main.py export_month ${{ inputs.game }} ${{ inputs.month_year }}
+    #   shell: bash
+    # - name: Upload zips as artifacts
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     path: ./data/${{ inputs.game }}/*.zip
+    # - name: Test ssh with just username and password.
+    #   uses: garygrossgarten/github-action-ssh@release
+    #   with:
+    #     command: pwd & ls
+    #     host: ${{secrets.FILE_HOST}}
+    #     username: ${{secrets.FILE_USER}}
+    #     privateKey: ${{secrets.FILE_DEPLOY_KEY}}
     # - name: Upload files to opengamedata via rsync
       # uses: burnett01/rsync-deployments@4.1
       # with:
