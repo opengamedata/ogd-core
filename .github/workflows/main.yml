@@ -15,8 +15,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Get current month
       run: |
-        MONTH=$(date -d "$(date +%Y-%m-01) -1 month" + '%m')
-        YEAR=$(date -d "$(date +%Y-%m-01) -1 month" + '%Y')
+        MONTH=$(date -d "$(date +%Y-%m-01) -1 month" +'%m')
+        YEAR=$(date -d "$(date +%Y-%m-01) -1 month" +'%Y')
         MONTH_YEAR=$MONTH/$YEAR
         echo $MONTH_YEAR
     - name: Get OpenConnect
