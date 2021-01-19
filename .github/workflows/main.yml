@@ -62,9 +62,11 @@ jobs:
       uses: garygrossgarten/github-action-ssh@release
       with:
         command: pwd & ls
-        host: ${{secrets.FILE_HOST}}
-        username: ${{secrets.FILE_USER}}
-        privateKey: ${{secrets.FILE_DEPLOY_KEY}}
+        host: fieldday-web.ad.education.wisc.edu
+        username: ${{secrets.VPN_USER}}
+        password: ${{secrets.VPN_PASS}}
+        # username: davidgagnon
+        # privateKey: ${{secrets.FILE_DEPLOY_KEY}}
 
   # balloon:
   #   name: Export Balloon
