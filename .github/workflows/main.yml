@@ -5,9 +5,32 @@ on:
     - cron: '1 0 2 * *'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
-  # This workflow contains a single job called "monthly_export"
+  aqualab:
+    name: Export Aqualab
+    runs-on: ubuntu-latest
+    # Steps to set up for and execute an export
+    steps:
+    - uses: actions/checkout@v2
+    - name: Do Export
+      uses: ./.github/actions/export_month
+      with:
+        game: 'AQUALAB'
+        ssh_host: ${{secrets.SSH_HOST}}
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+    # - name: Upload files to opengamedata via rsync
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.FILE_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+
   bacteria:
-    # The type of runner that the job will run on
     name: Export Bacteria
     runs-on: ubuntu-latest
     # Steps to set up for and execute an export
@@ -32,22 +55,296 @@ jobs:
     #     remote_user: ${{ secrets.FILE_USER }}
     #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
 
-  earthquake:
-    # The type of runner that the job will run on
-    name: Export Earthquake
-    runs-on: ubuntu-latest
-    # Steps to set up for and execute an export
-    steps:
-    - uses: actions/checkout@v2
-    - name: Do Export
-      uses: ./.github/actions/export_month
-      with:
-        game: 'EARTHQUAKE'
-        ssh_host: ${{secrets.SSH_HOST}}
-        vpn_user: ${{secrets.VPN_USER}}
-        vpn_pass: ${{secrets.VPN_PASS}}
-        sql_user: ${{secrets.SQL_USER}}
-        sql_pass: ${{secrets.SQL_PASS}}
+  # balloon:
+  #   name: Export Balloon
+  #   runs-on: ubuntu-latest
+  #   # Steps to set up for and execute an export
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Do Export
+  #     uses: ./.github/actions/export_month
+  #     with:
+  #       game: 'BALLOON'
+  #       ssh_host: ${{secrets.SSH_HOST}}
+  #       vpn_user: ${{secrets.VPN_USER}}
+  #       vpn_pass: ${{secrets.VPN_PASS}}
+  #       sql_user: ${{secrets.SQL_USER}}
+  #       sql_pass: ${{secrets.SQL_PASS}}
+    # - name: Upload files to opengamedata via rsync
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.FILE_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+
+  # crystal:
+  #   name: Export Crystal
+  #   runs-on: ubuntu-latest
+  #   # Steps to set up for and execute an export
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Do Export
+  #     uses: ./.github/actions/export_month
+  #     with:
+  #       game: 'CRYSTAL'
+  #       ssh_host: ${{secrets.SSH_HOST}}
+  #       vpn_user: ${{secrets.VPN_USER}}
+  #       vpn_pass: ${{secrets.VPN_PASS}}
+  #       sql_user: ${{secrets.SQL_USER}}
+  #       sql_pass: ${{secrets.SQL_PASS}}
+    # - name: Upload files to opengamedata via rsync
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.FILE_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+
+  # carbon:
+  #   name: Export Carbon Cycle
+  #   runs-on: ubuntu-latest
+  #   # Steps to set up for and execute an export
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Do Export
+  #     uses: ./.github/actions/export_month
+  #     with:
+  #       game: 'CYCLE_CARBON'
+  #       ssh_host: ${{secrets.SSH_HOST}}
+  #       vpn_user: ${{secrets.VPN_USER}}
+  #       vpn_pass: ${{secrets.VPN_PASS}}
+  #       sql_user: ${{secrets.SQL_USER}}
+  #       sql_pass: ${{secrets.SQL_PASS}}
+    # - name: Upload files to opengamedata via rsync
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.FILE_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+
+  # nitrogen:
+  #   name: Export Nitrogen Cycle
+  #   runs-on: ubuntu-latest
+  #   # Steps to set up for and execute an export
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Do Export
+  #     uses: ./.github/actions/export_month
+  #     with:
+  #       game: 'CYCLE_NITROGEN'
+  #       ssh_host: ${{secrets.SSH_HOST}}
+  #       vpn_user: ${{secrets.VPN_USER}}
+  #       vpn_pass: ${{secrets.VPN_PASS}}
+  #       sql_user: ${{secrets.SQL_USER}}
+  #       sql_pass: ${{secrets.SQL_PASS}}
+    # - name: Upload files to opengamedata via rsync
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.FILE_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+
+  # water:
+  #   name: Export Water Cycle
+  #   runs-on: ubuntu-latest
+  #   # Steps to set up for and execute an export
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Do Export
+  #     uses: ./.github/actions/export_month
+  #     with:
+  #       game: 'CYCLE_WATER'
+  #       ssh_host: ${{secrets.SSH_HOST}}
+  #       vpn_user: ${{secrets.VPN_USER}}
+  #       vpn_pass: ${{secrets.VPN_PASS}}
+  #       sql_user: ${{secrets.SQL_USER}}
+  #       sql_pass: ${{secrets.SQL_PASS}}
+    # - name: Upload files to opengamedata via rsync
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.FILE_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+
+  # earthquake:
+  #   name: Export Earthquake
+  #   runs-on: ubuntu-latest
+  #   # Steps to set up for and execute an export
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Do Export
+  #     uses: ./.github/actions/export_month
+  #     with:
+  #       game: 'EARTHQUAKE'
+  #       ssh_host: ${{secrets.SSH_HOST}}
+  #       vpn_user: ${{secrets.VPN_USER}}
+  #       vpn_pass: ${{secrets.VPN_PASS}}
+  #       sql_user: ${{secrets.SQL_USER}}
+  #       sql_pass: ${{secrets.SQL_PASS}}
+    # - name: Upload files to opengamedata via rsync
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.FILE_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+
+  # jowilder:
+  #   name: Export Jo Wilder
+  #   runs-on: ubuntu-latest
+  #   # Steps to set up for and execute an export
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Do Export
+  #     uses: ./.github/actions/export_month
+  #     with:
+  #       game: 'JOWILDER'
+  #       ssh_host: ${{secrets.SSH_HOST}}
+  #       vpn_user: ${{secrets.VPN_USER}}
+  #       vpn_pass: ${{secrets.VPN_PASS}}
+  #       sql_user: ${{secrets.SQL_USER}}
+  #       sql_pass: ${{secrets.SQL_PASS}}
+    # - name: Upload files to opengamedata via rsync
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.FILE_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+
+  # lakeland:
+  #   name: Export Lakeland
+  #   runs-on: ubuntu-latest
+  #   # Steps to set up for and execute an export
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Do Export
+  #     uses: ./.github/actions/export_month
+  #     with:
+  #       game: 'LAKELAND'
+  #       ssh_host: ${{secrets.SSH_HOST}}
+  #       vpn_user: ${{secrets.VPN_USER}}
+  #       vpn_pass: ${{secrets.VPN_PASS}}
+  #       sql_user: ${{secrets.SQL_USER}}
+  #       sql_pass: ${{secrets.SQL_PASS}}
+    # - name: Upload files to opengamedata via rsync
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.FILE_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+
+  # magnet:
+  #   name: Export Magnet
+  #   runs-on: ubuntu-latest
+  #   # Steps to set up for and execute an export
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Do Export
+  #     uses: ./.github/actions/export_month
+  #     with:
+  #       game: 'MAGNET'
+  #       ssh_host: ${{secrets.SSH_HOST}}
+  #       vpn_user: ${{secrets.VPN_USER}}
+  #       vpn_pass: ${{secrets.VPN_PASS}}
+  #       sql_user: ${{secrets.SQL_USER}}
+  #       sql_pass: ${{secrets.SQL_PASS}}
+    # - name: Upload files to opengamedata via rsync
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.FILE_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+
+  # stemports:
+  #   name: Export STEMports
+  #   runs-on: ubuntu-latest
+  #   # Steps to set up for and execute an export
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Do Export
+  #     uses: ./.github/actions/export_month
+  #     with:
+  #       game: 'BALLOON'
+  #       ssh_host: ${{secrets.SSH_HOST}}
+  #       vpn_user: ${{secrets.VPN_USER}}
+  #       vpn_pass: ${{secrets.VPN_PASS}}
+  #       sql_user: ${{secrets.SQL_USER}}
+  #       sql_pass: ${{secrets.SQL_PASS}}
+    # - name: Upload files to opengamedata via rsync
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.FILE_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+
+  # waves:
+  #   name: Export Waves
+  #   runs-on: ubuntu-latest
+  #   # Steps to set up for and execute an export
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Do Export
+  #     uses: ./.github/actions/export_month
+  #     with:
+  #       game: 'WAVES'
+  #       ssh_host: ${{secrets.SSH_HOST}}
+  #       vpn_user: ${{secrets.VPN_USER}}
+  #       vpn_pass: ${{secrets.VPN_PASS}}
+  #       sql_user: ${{secrets.SQL_USER}}
+  #       sql_pass: ${{secrets.SQL_PASS}}
+    # - name: Upload files to opengamedata via rsync
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.FILE_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+
+  # wind:
+  #   name: Export Wind
+  #   runs-on: ubuntu-latest
+  #   # Steps to set up for and execute an export
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Do Export
+  #     uses: ./.github/actions/export_month
+  #     with:
+  #       game: 'WIND'
+  #       ssh_host: ${{secrets.SSH_HOST}}
+  #       vpn_user: ${{secrets.VPN_USER}}
+  #       vpn_pass: ${{secrets.VPN_PASS}}
+  #       sql_user: ${{secrets.SQL_USER}}
+  #       sql_pass: ${{secrets.SQL_PASS}}
     # - name: Upload files to opengamedata via rsync
     #   uses: burnett01/rsync-deployments@4.1
     #   with:
