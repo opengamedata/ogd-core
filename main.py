@@ -264,7 +264,7 @@ f"## Field Day Open Game Data \n\
 utils.Logger.toStdOut(f"Running {sys.argv[0]}...", logging.INFO)
 utils.Logger.toFile(f"Running {sys.argv[0]}...", logging.INFO)
 try:
-    arg_options = ["file=", "help"]
+    arg_options = ["file=", "help", "monthly"]
     optupi, args = getopt.gnu_getopt(sys.argv, shortopts="-h", longopts=arg_options)
 
     opts = {opt[0]: opt[1] for opt in optupi}
