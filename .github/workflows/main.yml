@@ -39,12 +39,12 @@ jobs:
         vpn_pass: ${{secrets.VPN_PASS}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-    - name: Upload files to opengamedata via rsync
-      uses: burnett01/rsync-deployments@4.1
-      with:
-        switches: -vrc
-        path: data/*
-        remote_path: /var/www/opengamedata/data/
-        remote_host: ${{ secrets.FILE_HOST }}
-        remote_user: ${{ secrets.VPN_USER }}
-        remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+    # - name: Upload files to opengamedata via rsync
+    #   uses: burnett01/rsync-deployments@4.1
+    #   with:
+    #     switches: -vrc
+    #     path: data/*
+    #     remote_path: /var/www/opengamedata/data/
+    #     remote_host: ${{ secrets.FILE_HOST }}
+    #     remote_user: ${{ secrets.VPN_USER }}
+    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
