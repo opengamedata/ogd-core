@@ -1,42 +1,53 @@
 # Workflow to run monthly exports of data.
 name: Automated Monthly Exports
 on:
-  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+  schedule:
+    - cron: '1 0 2 * *'
+  workflow_dispatch # Allow manual trigger of this workflow from the Actions tab
 jobs:
   # This workflow contains a single job called "monthly_export"
-  monthly_export:
+  bacteria:
     # The type of runner that the job will run on
     name: Export Earthquake
     runs-on: ubuntu-latest
-
-    # Steps to get set up for an export
+    # Steps to set up for and execute an export
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    - name: Get export month
-      run: |
-        MONTH=$(date -d "$(date +%Y-%m-01) -1 month" +'%m')
-        YEAR=$(date -d "$(date +%Y-%m-01) -1 month" +'%Y')
-        MONTH_YEAR=$MONTH/$YEAR
-        echo $MONTH_YEAR
-    - name: Get OpenConnect
-      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
-    - name: Connect VPN
-      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Do Export
       uses: ./.github/actions/export_month
       with:
-        game: 'EARTHQUAKE'
-        month_year: $MONTH_YEAR
+        game: 'BACTERIA'
         ssh_host: ${{secrets.SSH_HOST}}
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-    - name: Upload zips as artifacts
-      uses: actions/upload-artifact@v2
+    - name: Upload files to opengamedata via rsync
+      uses: burnett01/rsync-deployments@4.1
       with:
-        path: ./data/EARTHQUAKE/*.zip
+        switches: -vrc
+        path: data/*
+        remote_path: /var/www/opengamedata/data/
+        remote_host: ${{ secrets.FILE_HOST }}
+        remote_user: ${{ secrets.FILE_USER }}
+        remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+
+  earthquake:
+    # The type of runner that the job will run on
+    name: Export Earthquake
+    runs-on: ubuntu-latest
+    # Steps to set up for and execute an export
+    steps:
+    - uses: actions/checkout@v2
+    - name: Do Export
+      uses: ./.github/actions/export_month
+      with:
+        game: 'EARTHQUAKE'
+        ssh_host: ${{secrets.SSH_HOST}}
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
     - name: Upload files to opengamedata via rsync
       uses: burnett01/rsync-deployments@4.1
       with:

@@ -32,10 +32,22 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Get export month
+      run: |
+        MONTH=$(date -d "$(date +%Y-%m-01) -1 month" +'%m')
+        YEAR=$(date -d "$(date +%Y-%m-01) -1 month" +'%Y')
+        MONTH_YEAR=$MONTH/$YEAR
+        echo exporting $MONTH_YEAR
     # Runs a single command using the runners shell
     # - name: Ensure we have mysql client installed.
     #   run: sudo apt-get install mysql-client
       # shell: bash
+    - name: Get OpenConnect
+      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
+      shell: bash
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+      shell: bash
     - name: Get correct Python
       run: |
         sudo apt-get install python3.8
@@ -74,7 +86,7 @@ runs:
     - name: Execute data export
       run: |
         python3.8 main.py readme ${{ inputs.game }}
-        python3.8 main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly
+        python3.8 main.py export ${{ inputs.game }} $MONTH_YEAR --monthly
       shell: bash
     # - name: Test ssh with just username and password.
     #   uses: garygrossgarten/github-action-ssh@release
