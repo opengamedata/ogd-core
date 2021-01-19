@@ -38,6 +38,7 @@ runs:
         YEAR=$(date -d "$(date +%Y-%m-01) -1 month" +'%Y')
         MONTH_YEAR=$MONTH/$YEAR
         echo exporting $MONTH_YEAR
+      shell: bash
     # Runs a single command using the runners shell
     # - name: Ensure we have mysql client installed.
     #   run: sudo apt-get install mysql-client
@@ -46,7 +47,7 @@ runs:
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
       shell: bash
     - name: Connect VPN
-      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+      run: echo ${{ inputs.vpn_pass }} | sudo openconnect --protocol=gp -u ${{ inputs.vpn_user }} --passwd-on-stdin soe.vpn.wisc.edu &
       shell: bash
     - name: Get correct Python
       run: |
