@@ -55,12 +55,13 @@ def showHelp():
     print("         - help: *None*")
     print("[<opt-args>] are optional arguments, which affect certain commands:")
     print("         --file: specifies a file to export events or features")
+    print("         --monthly: with this option, specify dates by mm/yyyy instead of mm/dd/yyyy.")
     print(width*"*")
 
 
 ## Function to handle execution of export code. This is the main intended use of
 #  the program.
-def runExport(monthly: bool = False, events: bool = False, features: bool = False):
+def runExport(events: bool = False, features: bool = False):
     if "--file" in opts.keys():
         _extractFromFile(file_path=opts["--file"], events=True, features=True)
     else:
@@ -74,7 +75,7 @@ def runExport(monthly: bool = False, events: bool = False, features: bool = Fals
         start_date: datetime
         end_date: datetime
         # If we want to export all data for a given month, calculate a date range.
-        if monthly is True:
+        if "--monthly" in opts.keys():
             month_year: typing.List[int]
             if num_args > 3:
                 month_year_str = args[3].split("/")
