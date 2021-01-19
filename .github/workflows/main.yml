@@ -49,24 +49,24 @@ jobs:
         vpn_pass: ${{secrets.VPN_PASS}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-    # - name: Upload files to opengamedata via rsync
-    #   uses: burnett01/rsync-deployments@4.1
-    #   with:
-    #     switches: -vrc
-    #     path: data/*
-    #     remote_path: /var/www/opengamedata/data/
-    #     remote_host: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
-    #     remote_user: servicefieldday # ${{ secrets.FILE_USER }}
-    #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
-    - name: Test ssh with just username and password.
-      uses: garygrossgarten/github-action-ssh@release
+    - name: Upload files to opengamedata via rsync
+      uses: burnett01/rsync-deployments@4.1
       with:
-        command: pwd & ls
-        host: fieldday-web.ad.education.wisc.edu
-        username: ${{secrets.VPN_USER}}
+        switches: -vrc
+        path: data/*
+        remote_path: /var/www/opengamedata/data/
+        remote_host: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
+        remote_user: ${{ secrets.VPN_USER }}
+        remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+    # - name: Test ssh with just username and password.
+    #   uses: garygrossgarten/github-action-ssh@release
+    #   with:
+    #     command: pwd & ls
+    #     host: fieldday-web.ad.education.wisc.edu
+    #     username: ${{secrets.VPN_USER}}
         # password: ${{secrets.VPN_PASS}}
         # username: davidgagnon
-        privateKey: ${{secrets.FILE_DEPLOY_KEY}}
+        # privateKey: ${{secrets.FILE_DEPLOY_KEY}}
 
   # balloon:
   #   name: Export Balloon
