@@ -33,9 +33,9 @@ runs:
   using: "composite"
   steps:
     # Runs a single command using the runners shell
-    - name: Ensure we have mysql client installed.
-      run: sudo apt-get install mysql-client
-      shell: bash
+    # - name: Ensure we have mysql client installed.
+    #   run: sudo apt-get install mysql-client
+      # shell: bash
     - name: Get correct Python
       run: |
         sudo apt-get install python3.8
