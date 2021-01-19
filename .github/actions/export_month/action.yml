@@ -33,9 +33,6 @@ runs:
   using: "composite"
   steps:
     # Runs a single command using the runners shell
-    - name: Get OpenConnect
-      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
-      shell: bash
     - name: Ensure we have mysql client installed.
       run: sudo apt-get install mysql-client
       shell: bash
@@ -73,9 +70,6 @@ runs:
       shell: bash
     - name: Set SQL password
       run: sed -i 's/password/${{inputs.sql_pass}}/g' config.py
-      shell: bash
-    - name: Connect VPN
-      run: echo ${{ inputs.vpn_pass }} | sudo openconnect --protocol=gp -u ${{ inputs.vpn_user }} --passwd-on-stdin soe.vpn.wisc.edu &
       shell: bash
     - name: Execute data export
       run: |
