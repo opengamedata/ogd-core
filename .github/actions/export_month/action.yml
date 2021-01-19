@@ -74,14 +74,14 @@ runs:
     - name: Set SQL password
       run: sed -i 's/password/${{inputs.sql_pass}}/g' config.py
       shell: bash
-    # - name: Connect VPN
-    #   run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    #   shell: bash
-    # - name: Execute data export
-    #   run: |
-    #     python3.8 main.py readme ${{ inputs.game }}
-    #     python3.8 main.py export_month ${{ inputs.game }} ${{ inputs.month_year }}
-    #   shell: bash
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+      shell: bash
+    - name: Execute data export
+      run: |
+        python3.8 main.py readme ${{ inputs.game }}
+        python3.8 main.py export_month ${{ inputs.game }} ${{ inputs.month_year }}
+      shell: bash
     # - name: Upload zips as artifacts
     #   uses: actions/upload-artifact@v2
     #   with:
