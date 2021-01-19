@@ -8,7 +8,7 @@ jobs:
   # This workflow contains a single job called "monthly_export"
   bacteria:
     # The type of runner that the job will run on
-    name: Export Earthquake
+    name: Export Bacteria
     runs-on: ubuntu-latest
     # Steps to set up for and execute an export
     steps:
