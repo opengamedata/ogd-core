@@ -48,3 +48,7 @@ jobs:
     #     remote_host: ${{ secrets.FILE_HOST }}
     #     remote_user: ${{ secrets.VPN_USER }}
     #     remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+    - name: Upload zips as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./data/${{ inputs.game }}/*.zip
