@@ -30,3 +30,8 @@ jobs:
       with:
         game: 'MAGNET'
         month_year: '1/2021'
+        ssh_host: ${{secrets.SSH_HOST}}
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
