@@ -1,23 +1,24 @@
 # Workflow to run monthly exports of data.
 name: Automated Monthly Exports
-
-# Controls when the action will run. 
 on:
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
   # This workflow contains a single job called "monthly_export"
   monthly_export:
     # The type of runner that the job will run on
-    name: Export Data - Magnets
+    name: Export Earthquake
     runs-on: ubuntu-latest
 
     # Steps to get set up for an export
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
+    - name: Get current month
+      run: |
+        MONTH=$(date -d "$(date +%Y-%m-01) -1 month" + '%m')
+        YEAR=$(date -d "$(date +%Y-%m-01) -1 month" + '%Y')
+        MONTH_YEAR=$MONTH/$YEAR
+        echo $MONTH_YEAR
     - name: Get OpenConnect
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
     - name: Connect VPN
@@ -26,7 +27,7 @@ jobs:
       uses: ./.github/actions/export_month
       with:
         game: 'EARTHQUAKE'
-        month_year: '1/2021'
+        month_year: $MONTH_YEAR
         ssh_host: ${{secrets.SSH_HOST}}
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
