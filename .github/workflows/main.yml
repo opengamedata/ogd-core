@@ -3,7 +3,7 @@ name: Automated Monthly Exports
 on:
   schedule:
     - cron: '1 0 2 * *'
-  workflow_dispatch # Allow manual trigger of this workflow from the Actions tab
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
   # This workflow contains a single job called "monthly_export"
   bacteria:
