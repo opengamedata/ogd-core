@@ -60,7 +60,7 @@ jobs:
         privateKey: ${{secrets.FILE_DEPLOY_KEY}}
     - name: Upload files to opengamedata via rsync
       run: |
-        echo ${{secrets.FILE_KEY}} > file_key
+        echo ${{secrets.FILE_DEPLOY_KEY}} > file_key
         rsync -vrc -e "ssh -i file_key" ./data/ ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}}:/var/www/opengamedata/data/
     #   uses: trendyminds/github-actions-rsync@v1.0.0
     #   with:
