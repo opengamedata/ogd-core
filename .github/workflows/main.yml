@@ -59,15 +59,18 @@ jobs:
         # username: davidgagnon
         privateKey: ${{secrets.FILE_DEPLOY_KEY}}
     - name: Upload files to opengamedata via rsync
-      uses: trendyminds/github-actions-rsync@v1.0.0
-      with:
-        RSYNC_OPTIONS: -vrc
-        RSYNC_SOURCE: data/*
-        RSYNC_TARGET: /var/www/opengamedata/data/
-      env:
-        SSH_HOSTNAME: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
-        SSH_USERNAME: ${{ secrets.VPN_USER }}
-        SSH_PRIVATE_KEY: ${{ secrets.FILE_DEPLOY_KEY }}
+      run: |
+        echo ${{secrets.FILE_KEY}} > file_key
+        rsync -vrc -e "ssh -i file_key" ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}}:/var/www/opengamedata/data/ ./data/*
+    #   uses: trendyminds/github-actions-rsync@v1.0.0
+    #   with:
+    #     RSYNC_OPTIONS: -vrc
+    #     RSYNC_SOURCE: data/*
+    #     RSYNC_TARGET: /var/www/opengamedata/data/
+    #   env:
+    #     SSH_HOSTNAME: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
+    #     SSH_USERNAME: ${{ secrets.VPN_USER }}
+    #     SSH_PRIVATE_KEY: ${{ secrets.FILE_DEPLOY_KEY }}
       # uses: burnett01/rsync-deployments@4.1
       # with:
       #   switches: -vrc
