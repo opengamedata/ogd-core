@@ -59,7 +59,7 @@ jobs:
         # username: davidgagnon
         privateKey: ${{secrets.FILE_DEPLOY_KEY}}
     - name: Upload files to opengamedata via rsync
-      uses: trendyminds/github-actions-rsync@master
+      uses: trendyminds/github-actions-rsync@1.0.0
       with:
         RSYNC_OPTIONS: -vrc
         RSYNC_SOURCE: data/*
