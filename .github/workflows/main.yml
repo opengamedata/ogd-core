@@ -50,14 +50,23 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
     - name: Upload files to opengamedata via rsync
-      uses: burnett01/rsync-deployments@4.1
+      uses: trendyminds/github-actions-rsync@master
       with:
-        switches: -vrc
-        path: data/*
-        remote_path: /var/www/opengamedata/data/
-        remote_host: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
-        remote_user: ${{ secrets.VPN_USER }}
-        remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+        RSYNC_OPTIONS: -vrc
+        RSYNC_SOURCE: data/*
+        RSYNC_TARGET: /var/www/opengamedata/data/
+      env:
+        SSH_HOSTNAME: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
+        SSH_USERNAME: ${{ secrets.VPN_USER }}
+        SSH_PRIVATE_KEY: ${{ secrets.FILE_DEPLOY_KEY }}
+      # uses: burnett01/rsync-deployments@4.1
+      # with:
+      #   switches: -vrc
+      #   path: data/*
+      #   remote_path: /var/www/opengamedata/data/
+      #   remote_host: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
+      #   remote_user: ${{ secrets.VPN_USER }}
+      #   remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
     # - name: Test ssh with just username and password.
     #   uses: garygrossgarten/github-action-ssh@release
     #   with:
