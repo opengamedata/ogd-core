@@ -49,6 +49,15 @@ jobs:
         vpn_pass: ${{secrets.VPN_PASS}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
+    - name: Test ssh with key
+      uses: garygrossgarten/github-action-ssh@release
+      with:
+        command: pwd & ls
+        host: ${{secrets.FILE_HOST}}
+        username: ${{secrets.VPN_USER}}
+        # password: ${{secrets.VPN_PASS}}
+        # username: davidgagnon
+        privateKey: ${{secrets.FILE_DEPLOY_KEY}}
     - name: Upload files to opengamedata via rsync
       uses: trendyminds/github-actions-rsync@master
       with:
@@ -67,15 +76,6 @@ jobs:
       #   remote_host: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
       #   remote_user: ${{ secrets.VPN_USER }}
       #   remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
-    # - name: Test ssh with just username and password.
-    #   uses: garygrossgarten/github-action-ssh@release
-    #   with:
-    #     command: pwd & ls
-    #     host: fieldday-web.ad.education.wisc.edu
-    #     username: ${{secrets.VPN_USER}}
-        # password: ${{secrets.VPN_PASS}}
-        # username: davidgagnon
-        # privateKey: ${{secrets.FILE_DEPLOY_KEY}}
 
   # balloon:
   #   name: Export Balloon
