@@ -1,0 +1,65 @@
+# Workflow to run monthly exports of data.
+name: SCP Testing
+on:
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+jobs:
+
+  bacteria:
+    name: Export Bacteria
+    runs-on: ubuntu-latest
+    # Steps to set up for and execute an export
+    steps:
+    - name: Get OpenConnect
+      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - uses: actions/checkout@v2
+    - name: Do Export
+      uses: ./.github/actions/export_month
+      with:
+        game: 'BACTERIA'
+        ssh_host: ${{secrets.SSH_HOST}}
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+    - name: Test ssh with GH action
+      uses: garygrossgarten/github-action-ssh@release
+      with:
+        command: pwd & ls
+        host: ${{secrets.FILE_HOST}}
+        username: ${{secrets.VPN_USER}}
+        # password: ${{secrets.VPN_PASS}}
+        # username: davidgagnon
+        privateKey: ${{secrets.FILE_DEPLOY_KEY}}
+    # - name: Make sure manually running ssh is good
+    #   run: |
+    #     echo '${{secrets.FILE_DEPLOY_KEY}}' >> key.txt
+    #     ssh -i key.txt ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}} pwd
+    - name: Upload files to opengamedata via scp
+    #   run: scp -i key.txt ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/BACTERIA
+      uses: appleboy/scp-action@v0.1.0
+      with:
+        host: ${{secrets.FILE_HOST}}
+        username: ${{secrets.VPN_USER}}
+        # key: ${{secrets.FILE_DEPLOY_KEY}}
+        password: ${{secrets.VPN_PASS}}
+        source: "./data/BACTERIA/*"
+        target: "/var/www/opengamedata/BACTERIA/"
+    #   uses: trendyminds/github-actions-rsync@v1.0.0
+    #   with:
+    #     RSYNC_OPTIONS: -vrc
+    #     RSYNC_SOURCE: data/*
+    #     RSYNC_TARGET: /var/www/opengamedata/data/
+    #   env:
+    #     SSH_HOSTNAME: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
+    #     SSH_USERNAME: ${{ secrets.VPN_USER }}
+    #     SSH_PRIVATE_KEY: ${{ secrets.FILE_DEPLOY_KEY }}
+      # uses: burnett01/rsync-deployments@4.1
+      # with:
+      #   switches: -vrc
+      #   path: data/*
+      #   remote_path: /var/www/opengamedata/data/
+      #   remote_host: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
+      #   remote_user: ${{ secrets.VPN_USER }}
+      #   remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
