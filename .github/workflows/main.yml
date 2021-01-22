@@ -64,13 +64,13 @@ jobs:
     #     ssh -i key.txt ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}} pwd
     - name: Upload files to opengamedata via scp
     #   run: scp -i key.txt ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/BACTERIA
-      uses: horochx/deploy-via-scp@master
+      uses: nogsantos/scp-deploy@master
       with:
-        host: fieldday-web.ad.eduation.wisc.edu # ${{secrets.FILE_HOST}}
+        host: fieldday-web.ad.education.wisc.edu # ${{secrets.FILE_HOST}}
         user: ${{secrets.VPN_USER}}
         key: ${{secrets.FILE_DEPLOY_KEY}}
         # password: ${{secrets.VPN_PASS}}
-        local: "./data/BACTERIA/*"
+        src: "./data/BACTERIA/*"
         remote: "/var/www/opengamedata/BACTERIA/"
     #   uses: trendyminds/github-actions-rsync@v1.0.0
     #   with:
