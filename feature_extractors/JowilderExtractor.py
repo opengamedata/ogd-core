@@ -1252,11 +1252,11 @@ def get_variance():
 
     @staticmethod
     def getSurveyFeatureNames(game_table: GameTable, game_schema: Schema) -> typing.List[str]:
-        """Retreives script_version and survey response column headers from the game table."""
+        """Retreives relevant column headers from the game table."""
         columns = []
         features = Extractor.SessionFeatures.generateFeatureDict(range(game_table.min_level, game_table.max_level+1), game_schema)
         for key in features.keys():
-            if key != "script_version" and not key.startswith("sa_"):
+            if key not in ['sess_time_active', 'max_level', 'script_type'] and not key.startswith("sa_"):
                 continue
             if type(features[key]) is type({}):
                 # if it's a dictionary, expand.
@@ -1272,7 +1272,7 @@ def get_variance():
         file.write("\n")
 
     def getSurveyFeatures(self) -> typing.List[str]:
-        """Retrieves script_version and survey features from the feature list."""
+        """Retrieves relevant features from the feature list."""
         def myformat(obj):
             if obj == None:
                 return ""
@@ -1285,7 +1285,7 @@ def get_variance():
                 return str(obj)
         column_vals = []
         for key in self.features.featureList():
-            if key != "script_version" and not key.startswith("sa_"):
+            if key not in ['sess_time_active', 'max_level', 'script_type'] and not key.startswith("sa_"):
                 continue
             key_type = type(self.features.getValByName(key))
             if key_type is type({}) or key_type is type(defaultdict()):
