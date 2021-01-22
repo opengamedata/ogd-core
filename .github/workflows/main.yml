@@ -64,7 +64,7 @@ jobs:
     #     ssh -i key.txt ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}} pwd
     - name: Upload files to opengamedata via scp
     #   run: scp -i key.txt ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/BACTERIA
-      uses: appleboy/scp-action@v0.1.0
+      uses: appleboy/scp-action@v0.0.6
       with:
         host: ${{secrets.FILE_HOST}}
         username: ${{secrets.VPN_USER}}
