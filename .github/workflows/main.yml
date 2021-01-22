@@ -62,7 +62,7 @@ jobs:
     #   run: |
     #     echo '${{secrets.FILE_DEPLOY_KEY}}' >> key.txt
     #     ssh -i key.txt ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}} pwd
-    # - name: Upload files to opengamedata via scp
+    - name: Upload files to opengamedata via scp
     #   run: scp -i key.txt ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/BACTERIA
       uses: horochx/deploy-via-scp@master
       with:
