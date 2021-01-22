@@ -31,7 +31,7 @@ jobs:
         username: ${{ secrets.FILE_USER }}
         key: ${{ secrets.FILE_DEPLOY_KEY }}
         #password: ${{ secrets.VPN_PASS }}
-        source: "./*"
+        source: "./index.html"
         target: "/var/www/opengamedata/github_actions_test/"
     #   uses: trendyminds/github-actions-rsync@v1.0.0
     #   with:
