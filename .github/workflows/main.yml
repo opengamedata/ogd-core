@@ -66,12 +66,12 @@ jobs:
     #   run: scp -i key.txt ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/BACTERIA
       uses: appleboy/scp-action@master
       with:
-        host: fieldday-web.ad.education.wisc.edu # ${{secrets.FILE_HOST}}
-        user: ${{secrets.VPN_USER}}
+        host: ${{secrets.FILE_HOST}}
+        username: ${{secrets.VPN_USER}}
         # key: ${{secrets.FILE_DEPLOY_KEY}}
         password: ${{secrets.VPN_PASS}}
-        src: "./data/BACTERIA/*"
-        remote: "/var/www/opengamedata/BACTERIA/"
+        source: "./data/BACTERIA/*"
+        target: "/var/www/opengamedata/BACTERIA/"
     #   uses: trendyminds/github-actions-rsync@v1.0.0
     #   with:
     #     RSYNC_OPTIONS: -vrc
