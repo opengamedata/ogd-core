@@ -41,12 +41,12 @@ jobs:
         # password: ${{secrets.VPN_PASS}}
         # username: davidgagnon
         privateKey: ${{secrets.FILE_DEPLOY_KEY}}
-    - name: Make sure manually running ssh is good
-      run: |
-        mkdir -p ~/.ssh
-        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ~/.ssh/id_rsa
-        ssh ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}} pwd
-    - name: Upload files to opengamedata via scp
+    # - name: Make sure manually running ssh is good
+    #   run: |
+    #     mkdir -p ~/.ssh
+    #     echo '${{secrets.FILE_DEPLOY_KEY}}' >> ~/.ssh/id_rsa
+    #     ssh ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}} pwd
+    # - name: Upload files to opengamedata via scp
     #   run: scp -i key.txt ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/BACTERIA
       # uses: appleboy/scp-action@v0.0.6
       # with:
@@ -65,6 +65,7 @@ jobs:
     #     SSH_HOSTNAME: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
     #     SSH_USERNAME: ${{ secrets.VPN_USER }}
     #     SSH_PRIVATE_KEY: ${{ secrets.FILE_DEPLOY_KEY }}
+    name: Upload files with rsync
       uses: burnett01/rsync-deployments@4.1
       with:
         switches: -vrc
