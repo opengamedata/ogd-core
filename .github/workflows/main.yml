@@ -50,13 +50,13 @@ jobs:
       run: echo 'this is a test of scp' > scp_test.txt
     - name: Upload files to opengamedata via scp
     #   run: scp -i key.txt ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/BACTERIA
-      uses: nogsantos/scp-deploy@master
+      uses: horochx/deploy-via-scp@master
       with:
         host: ${{secrets.FILE_HOST}}
         user: ${{secrets.VPN_USER}}
         key: ${{secrets.FILE_DEPLOY_KEY}}
         # password: ${{secrets.VPN_PASS}}
-        src: "scp_test.txt"
+        local: "scp_test.txt"
         remote: "/var/www/opengamedata/"
         # source: "./data/BACTERIA/*"
         # target: "/var/www/opengamedata/${{matrix.game}}/"
