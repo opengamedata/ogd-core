@@ -60,8 +60,9 @@ jobs:
         privateKey: ${{secrets.FILE_DEPLOY_KEY}}
     - name: Make sure manually running ssh is good
       run: |
-        echo '${{secrets.FILE_DEPLOY_KEY}}' >> key.txt
-        ssh -i key.txt ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}} pwd
+        mkdir -p ~/.ssh
+        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ~/.ssh/id_rsa
+        ssh ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}} pwd
     # - name: Upload files to opengamedata via scp
     #   run: scp -i key.txt ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/BACTERIA
       # uses: appleboy/scp-action@v0.0.6
