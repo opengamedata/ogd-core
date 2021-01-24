@@ -40,15 +40,15 @@ jobs:
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - uses: actions/checkout@v2
-    - name: Do Export
-      uses: ./.github/actions/export_month
-      with:
-        game: 'BACTERIA'
-        ssh_host: ${{secrets.SSH_HOST}}
-        vpn_user: ${{secrets.VPN_USER}}
-        vpn_pass: ${{secrets.VPN_PASS}}
-        sql_user: ${{secrets.SQL_USER}}
-        sql_pass: ${{secrets.SQL_PASS}}
+    # - name: Do Export
+    #   uses: ./.github/actions/export_month
+    #   with:
+    #     game: 'BACTERIA'
+    #     ssh_host: ${{secrets.SSH_HOST}}
+    #     vpn_user: ${{secrets.VPN_USER}}
+    #     vpn_pass: ${{secrets.VPN_PASS}}
+    #     sql_user: ${{secrets.SQL_USER}}
+    #     sql_pass: ${{secrets.SQL_PASS}}
     - name: Test ssh with GH action
       uses: garygrossgarten/github-action-ssh@release
       with:
