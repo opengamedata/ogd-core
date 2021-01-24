@@ -50,14 +50,14 @@ jobs:
       run: echo 'this is a test of scp' > scp_test.txt
     - name: Upload files to opengamedata via scp
     #   run: scp -i key.txt ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/BACTERIA
-      uses: horochx/deploy-via-scp@master
+      uses: appleboy/scp-action@v0.0.6
       with:
         host: ${{secrets.FILE_HOST}}
-        user: ${{secrets.VPN_USER}}
+        username: ${{secrets.VPN_USER}}
         key: ${{secrets.FILE_DEPLOY_KEY}}
         # password: ${{secrets.VPN_PASS}}
-        local: "scp_test.txt"
-        remote: "/var/www/opengamedata/"
+        source: "scp_test.txt"
+        target: "/var/www/opengamedata/"
         # source: "./data/BACTERIA/*"
         # target: "/var/www/opengamedata/${{matrix.game}}/"
     #   uses: trendyminds/github-actions-rsync@v1.0.0
