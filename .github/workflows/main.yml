@@ -59,10 +59,10 @@ jobs:
         # username: davidgagnon
         privateKey: ${{secrets.FILE_DEPLOY_KEY}}
     # - name: Make sure manually running ssh is good
-    #   run: |
-    #     echo '${{secrets.FILE_DEPLOY_KEY}}' >> key.txt
-    #     ssh -i key.txt ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}} pwd
-    - name: Upload files to opengamedata via scp
+      run: |
+        echo '${{secrets.FILE_DEPLOY_KEY}}' >> key.txt
+        ssh -i key.txt ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}} pwd
+    # - name: Upload files to opengamedata via scp
     #   run: scp -i key.txt ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/BACTERIA
       # uses: appleboy/scp-action@v0.0.6
       # with:
@@ -81,14 +81,14 @@ jobs:
     #     SSH_HOSTNAME: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
     #     SSH_USERNAME: ${{ secrets.VPN_USER }}
     #     SSH_PRIVATE_KEY: ${{ secrets.FILE_DEPLOY_KEY }}
-      uses: burnett01/rsync-deployments@4.1
-      with:
-        switches: -vrc
-        path: data/*
-        remote_path: /var/www/opengamedata/data/
-        remote_host: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
-        remote_user: ${{ secrets.VPN_USER }}
-        remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
+      # uses: burnett01/rsync-deployments@4.1
+      # with:
+      #   switches: -vrc
+      #   path: data/*
+      #   remote_path: /var/www/opengamedata/data/
+      #   remote_host: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
+      #   remote_user: ${{ secrets.VPN_USER }}
+      #   remote_key: ${{ secrets.FILE_DEPLOY_KEY }}
 
   # balloon:
   #   name: Export Balloon
