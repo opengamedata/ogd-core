@@ -65,7 +65,7 @@ jobs:
     #     SSH_HOSTNAME: fieldday-web.ad.education.wisc.edu # ${{ secrets.FILE_HOST }}
     #     SSH_USERNAME: ${{ secrets.VPN_USER }}
     #     SSH_PRIVATE_KEY: ${{ secrets.FILE_DEPLOY_KEY }}
-    name: Upload files with rsync
+    - name: Upload files with rsync
       uses: burnett01/rsync-deployments@4.1
       with:
         switches: -vrc
