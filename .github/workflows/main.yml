@@ -58,7 +58,7 @@ jobs:
         # password: ${{secrets.VPN_PASS}}
         # username: davidgagnon
         privateKey: ${{secrets.FILE_DEPLOY_KEY}}
-    # - name: Make sure manually running ssh is good
+    - name: Make sure manually running ssh is good
       run: |
         echo '${{secrets.FILE_DEPLOY_KEY}}' >> key.txt
         ssh -i key.txt ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}} pwd
