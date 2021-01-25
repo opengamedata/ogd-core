@@ -41,16 +41,16 @@ jobs:
         # password: ${{secrets.VPN_PASS}}
         # username: davidgagnon
         privateKey: ${{secrets.FILE_DEPLOY_KEY}}
-    # - name: Make sure manually running ssh is good
-    #   run: |
-    #     mkdir -p ~/.ssh
-    #     echo '${{secrets.FILE_DEPLOY_KEY}}' >> ~/.ssh/id_rsa
-    #     chmod 600 ~/.ssh/id_rsa
+    - name: Make sure manually running ssh is good
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
     #     ssh -o StrictHostKeyChecking=no ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}} pwd
     - name: Make a test file to upload
       run: echo 'this is a test of scp' > scp_test.txt
     - name: Upload files to opengamedata via scp
-      run: scp -o StrictHostKeyChecking=no ./scp_test.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata
+      run: scp -o StrictHostKeyChecking=no ./scp_test.txt ${{ secrets.FILE_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata
       # run: scp -o StrictHostKeyChecking=no ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/BACTERIA
     #   uses: appleboy/scp-action@v0.0.6
     #   with:
