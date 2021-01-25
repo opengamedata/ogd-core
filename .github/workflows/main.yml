@@ -45,6 +45,7 @@ jobs:
       run: |
         mkdir -p ~/.ssh
         echo '${{secrets.FILE_DEPLOY_KEY}}' >> ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
         ssh -o StrictHostKeyChecking=no ${{secrets.VPN_USER}}@${{secrets.FILE_HOST}} pwd
     # - name: Make a test file to upload
     #   run: echo 'this is a test of scp' > scp_test.txt
