@@ -37,4 +37,4 @@ jobs:
         mkdir -p ~/.ssh
         echo '${{secrets.FILE_DEPLOY_KEY}}' >> ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        scp -o StrictHostKeyChecking=no ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/BACTERIA
+        scp -o StrictHostKeyChecking=no ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/BACTERIA/
