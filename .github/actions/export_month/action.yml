@@ -81,6 +81,6 @@ runs:
     - name: Execute data export
       run: |
         python3.8 main.py readme ${{ inputs.game }}
-        python3.8 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
+        python3.8 main.py export ${{ inputs.game }} $MONTH_YEAR --monthly
       shell: bash
-        # python3.8 main.py export ${{ inputs.game }} $MONTH_YEAR --monthly
+      # python3.8 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
