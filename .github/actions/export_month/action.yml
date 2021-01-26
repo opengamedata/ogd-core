@@ -64,7 +64,7 @@ runs:
       run: cp config.py.template config.py 
       shell: bash
     - name: Set SSH hostname
-      run: sed -i 's/hostname/${{inputs.ssh_host}}/g' config.py
+      run: sed -i 's/hostname/${{inputs.sql_host}}/g' config.py
       shell: bash
     - name: Set SSH username
       run: sed -i 's/WCER AD User/${{inputs.vpn_user}}/g' config.py
