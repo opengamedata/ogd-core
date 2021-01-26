@@ -27,9 +27,9 @@ jobs:
       uses: ./.github/actions/export_month
       with:
         game: ${{matrix.game}}
-        ssh_host: ${{secrets.SSH_HOST}}
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
     - name: Upload files to opengamedata via scp

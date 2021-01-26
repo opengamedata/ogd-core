@@ -9,10 +9,6 @@ inputs:
    description: "The game with data to export."
    required: true
    default: 'Crystal'
-  ssh_host:
-    description: "The server hosting the OGD database."
-    required: true
-    default: '127.0.0.1'
   vpn_user:
     description: "Username for logging in to the VPN."
     required: true
@@ -21,6 +17,10 @@ inputs:
     description: "Password for logging in to the VPN."
     required: true
     default: 'password placeholder'
+  sql_host:
+    description: "The server hosting the OGD database."
+    required: true
+    default: '127.0.0.1'
   sql_user:
     description: "Username for logging in to the SQL database."
     required: true
