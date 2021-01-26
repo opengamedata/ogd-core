@@ -11,7 +11,8 @@ jobs:
     strategy:
       matrix:
         # game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, STEMPORTS, WAVES, WIND]
-        game: [BACTERIA]
+        game: [LAKELAND, JOWILDER]
+      fail-fast: false # we don't want to cancel just because one game fails.
 
   # bacteria:
   #   name: Export Bacteria
@@ -38,3 +39,21 @@ jobs:
         echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/BACTERIA/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/BACTERIA/
+  
+  trigger_reindex:
+    name: Reindex OpenGameData Files
+    runs-on: ubuntu-latest
+    if: always()
+    needs: export_data
+    steps:
+    - name: Get OpenConnect
+      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - name: Trigger reindex via ssh
+      run: echo "placeholder for reindexing!"
+      # run: |
+      #   mkdir -p ~/.ssh
+      #   echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+      #   chmod 600 ./key.txt
+      #   ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} python3 /var/www/opengamedata/reindex.py
