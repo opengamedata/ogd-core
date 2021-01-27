@@ -141,6 +141,7 @@ class ExportManager:
                 # 5) Save and close files
                 file_manager.ZipFiles()
                 # 6) Finally, update the list of csv files.
+                file_manager.WriteMetadataFile(date_range=date_range, num_sess=num_sess)
                 file_manager.UpdateFileExportList(date_range=date_range, num_sess=num_sess)
                 ret_val = True
             else:

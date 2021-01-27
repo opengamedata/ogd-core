@@ -135,6 +135,38 @@ class FileManager(abc.ABC):
             utils.Logger.Log(str(err), logging.ERROR)
             traceback.print_tb(err.__traceback__)
 
+    ## Public function to write out a tiny metadata file for indexing OGD data files.
+    #  Using the paths of the exported files, and given some other variables for
+    #  deriving file metadata, this simply outputs a new file_name.meta file.
+    #  @param date_range    The range of dates included in the exported data.
+    #  @param num_sess      The number of sessions included in the recent export.
+    def WriteMetadataFile(self, date_range: typing.Tuple, num_sess: int):
+        try:
+            # Ensure we have a data directory.
+            full_data_dir = self._data_dir + self._game_id
+            os.makedirs(name=full_data_dir, exist_ok=True)
+            # calculate the path and name of the metadata file, and open/make it.
+            meta_file_name = f"{full_data_dir}/{self._dataset_id}_{self._short_hash}.meta"
+            meta_file = open(meta_file_name, "w", encoding="utf-8")
+        except Exception as err:
+            msg = f"Could not open file for metadata. {type(err)} {str(err)}"
+            utils.Logger.toFile(msg, logging.WARNING)
+        else:
+            metadata  = \
+            {
+                "game_id":self._game_id,
+                "dataset_id"   :self._dataset_id,
+                "proc":self._zip_names["proc"],
+                "raw" :self._zip_names["raw"],
+                "dump":self._zip_names["dump"],
+                "start_date"   :date_range[0].strftime("%m/%d/%y"),
+                "end_date"     :date_range[1].strftime("%m/%d/%y"),
+                "date_modified":datetime.now().strftime("%m/%d/%Y"),
+                "sessions":num_sess
+            }
+            meta_file.write(json.dumps(metadata, indent=4))
+            meta_file.close()
+
     ## Public function to update the list of exported files.
     #  Given the paths of the exported files, and some other variables for
     #  deriving file metadata, this simply updates the JSON file to the latest
