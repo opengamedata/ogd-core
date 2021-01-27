@@ -34,6 +34,73 @@ def loadJSONFile(filename: str, path:str = "./") -> object:
         raise err
     return ret_val
 
+def GenerateReadme(game_name:str, schema, path:str = "./"):
+    try:
+        os.makedirs(name=path, exist_ok=True)
+        readme = open(f"{path}/readme.md", "w")
+        # 1. Open files with game-specific readme data, and global db changelog.
+        try:
+            readme_src = open(f"./doc/readme_src/{game_name}_readme_src.md", "r")
+            readme.write(readme_src.read())
+            readme_src.close()
+        except FileNotFoundError as err:
+            readme.write("No readme prepared")
+            Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.ERROR)
+        finally:
+            readme.write("\n")
+        # 2. Use schema to write feature & column descriptions to the readme.
+        feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
+        readme.write(GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
+                                                            proc_field_list=feature_descriptions))
+        try:
+            changelog_src = open("./doc/readme_src/changelog_src.md", "r")
+            readme.write(changelog_src.read())
+        except FileNotFoundError as err:
+            readme.write("No changelog prepared")
+            Logger.toStdOut(f"Could not find changelog_src", logging.ERROR)
+    except Exception as err:
+        msg = f"{type(err)} {str(err)}"
+        Logger.toStdOut(msg, logging.ERROR)
+        traceback.print_tb(err.__traceback__)
+        Logger.toFile(msg, logging.ERROR)
+    finally:
+        readme.close()
+
+## Function to generate metadata for a given game.
+#  The "fields" are a sort of generalization of columns. Basically, columns which
+#  are repeated (say, once per level) all fall under a single field.
+#  Columns which are completely unique correspond to individual fields.
+#
+#  @param game_name         The name of the game for which the csv metadata is being generated.
+#  @param raw_field_list    A mapping of raw csv "fields" to descriptions of the fields.
+#  @param proc_field_list   A mapping of processed csv features to descriptions of the features.
+#  @return                  A string containing metadata for the given game.
+def GenCSVMetadata(game_name: str, raw_field_list: typing.Dict[str,str], proc_field_list: typing.Dict[str,str]) -> str:
+    raw_field_descriptions = [f"{key} - {raw_field_list[key]}" for key in raw_field_list.keys()]
+    proc_field_descriptions = [f"{key} - {proc_field_list[key]}" for key in proc_field_list.keys()]
+    raw_field_string = "\n".join(raw_field_descriptions)
+    proc_field_string = "\n".join(proc_field_descriptions)
+    template_str = \
+f"## Field Day Open Game Data \n\
+### Retrieved from https://fielddaylab.wisc.edu/opengamedata \n\
+### These anonymous data are provided in service of future educational data mining research. \n\
+### They are made available under the Creative Commons CCO 1.0 Universal license. \n\
+### See https://creativecommons.org/publicdomain/zero/1.0/ \n\
+\n\
+## Suggested citation: \n\
+### Field Day. (2019). Open Educational Game Play Logs - [dataset ID]. Retrieved [today's date] from https://fielddaylab.wisc.edu/opengamedata \n\
+\n\
+## Game: {game_name} \n\
+\n\
+## Field Descriptions: \n\
+### Raw CSV Columns:\n\
+{raw_field_string}\n\
+\n\
+### Processed Features:\n\
+{proc_field_string}\n\
+\n"
+    return template_str
+
 ## Function that converts a datetime object into a filename-friendly format.
 #  Yes, there is undoubtedly a built-in way to do this, but this is what I've got.
 #  @param date  The datetime object to be formatted.

@@ -173,7 +173,7 @@ def showGameInfo():
         schema = Schema(schema_name=f"{game_name}.json")
 
         feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-        print(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),\
+        print(utils.GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),\
                                                         proc_field_list=feature_descriptions))
         # finally:
         #     pass
@@ -191,73 +191,16 @@ def writeReadme():
         try:
             game_name = args[2]
             path = f"./data/{game_name}"
-            os.makedirs(name=path, exist_ok=True)
-            readme = open(f"{path}/readme.md", "w")
-            try:
-                # Open files with game-specific readme data, and global db changelog.
-                readme_src    = open(f"./doc/readme_src/{game_name}_readme_src.md", "r")
-                readme.write(readme_src.read())
-            except FileNotFoundError as err:
-                readme.write("No readme prepared")
-                utils.Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.ERROR)
-            finally:
-                readme.write("\n")
-            # Load schema, and write feature & column descriptions to the readme.
             schema = Schema(schema_name=f"{game_name}.json")
-            feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-            readme.write(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
-                                                                proc_field_list=feature_descriptions))
-            try:
-                changelog_src = open("./doc/readme_src/changelog_src.md", "r")
-                readme.write(changelog_src.read())
-            except FileNotFoundError as err:
-                readme.write("No changelog prepared")
-                utils.Logger.toStdOut(f"Could not find changelog_src", logging.ERROR)
+            utils.GenerateReadme(game_name=game_name, schema=schema, path=path)
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.toStdOut(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(msg, logging.ERROR)
-        finally:
-            readme.close()
     else:
         print("Error, no game name given!")
         showHelp()
-
-## Function to generate metadata for a given game.
-#  The "fields" are a sort of generalization of columns. Basically, columns which
-#  are repeated (say, once per level) all fall under a single field.
-#  Columns which are completely unique correspond to individual fields.
-#
-#  @param game_name         The name of the game for which the csv metadata is being generated.
-#  @param raw_field_list    A mapping of raw csv "fields" to descriptions of the fields.
-#  @param proc_field_list   A mapping of processed csv features to descriptions of the features.
-#  @return                  A string containing metadata for the given game.
-def _genCSVMetadata(game_name: str, raw_field_list: typing.Dict[str,str], proc_field_list: typing.Dict[str,str]) -> str:
-    raw_field_descriptions = [f"{key} - {raw_field_list[key]}" for key in raw_field_list.keys()]
-    proc_field_descriptions = [f"{key} - {proc_field_list[key]}" for key in proc_field_list.keys()]
-    raw_field_string = "\n".join(raw_field_descriptions)
-    proc_field_string = "\n".join(proc_field_descriptions)
-    template_str = \
-f"## Field Day Open Game Data \n\
-### Retrieved from https://fielddaylab.wisc.edu/opengamedata \n\
-### These anonymous data are provided in service of future educational data mining research. \n\
-### They are made available under the Creative Commons CCO 1.0 Universal license. \n\
-### See https://creativecommons.org/publicdomain/zero/1.0/ \n\
-\n\
-## Suggested citation: \n\
-### Field Day. (2019). Open Educational Game Play Logs - [dataset ID]. Retrieved [today's date] from https://fielddaylab.wisc.edu/opengamedata \n\
-\n\
-## Game: {game_name} \n\
-\n\
-## Field Descriptions: \n\
-### Raw CSV Columns:\n\
-{raw_field_string}\n\
-\n\
-### Processed Features:\n\
-{proc_field_string}\n\
-\n"
-    return template_str
 
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
