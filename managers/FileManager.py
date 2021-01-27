@@ -57,13 +57,13 @@ class FileManager(abc.ABC):
         return self._files["dump"]
 
     def OpenFiles(self):
-            # Ensure we have a data directory.
-            full_data_dir = self._data_dir + self._game_id
-            os.makedirs(name=full_data_dir, exist_ok=True)
-            # Then open up the files themselves.
-            self._files["proc"] = open(self._file_names["proc"], "w", encoding="utf-8") if (self._file_names["proc"] is not None) else None
-            self._files["raw"]  = open(self._file_names["raw"] , "w", encoding="utf-8") if (self._file_names["raw"] is not None) else None
-            self._files["dump"] = open(self._file_names["dump"], "w", encoding="utf-8") if (self._file_names["dump"] is not None) else None
+        # Ensure we have a data directory.
+        full_data_dir = self._data_dir + self._game_id
+        os.makedirs(name=full_data_dir, exist_ok=True)
+        # Then open up the files themselves.
+        self._files["proc"] = open(self._file_names["proc"], "w", encoding="utf-8") if (self._file_names["proc"] is not None) else None
+        self._files["raw"]  = open(self._file_names["raw"] , "w", encoding="utf-8") if (self._file_names["raw"] is not None) else None
+        self._files["dump"] = open(self._file_names["dump"], "w", encoding="utf-8") if (self._file_names["dump"] is not None) else None
 
     def CloseFiles(self):
         if self._files["proc"] is not None:
@@ -168,21 +168,17 @@ class FileManager(abc.ABC):
             meta_file.close()
 
     ## Public function to update the list of exported files.
-    #  Given the paths of the exported files, and some other variables for
+    #  Using the paths of the exported files, and given some other variables for
     #  deriving file metadata, this simply updates the JSON file to the latest
     #  list of files.
-    #  @param dataset_id    The id used to identify a specific data set, based on
-    #                       game id, and range of dates.
-    #  @param raw_csv_path  Path to the newly exported raw csv, including filename
-    #  @param proc_csv_path Path to the newly exported feature csv, including filename
-    #  @param request       The original request for data export
+    #  @param date_range    The range of dates included in the exported data.
     #  @param num_sess      The number of sessions included in the recent export.
     def UpdateFileExportList(self, date_range: typing.Tuple, num_sess: int):
         self._backupFileExportList()
         try:
             existing_csvs = utils.loadJSONFile("file_list.json", self._data_dir)
         except Exception as err:
-            msg = f"{type(err)} {str(err)}"
+            msg = f"Could not load file list. {type(err)} {str(err)}"
             utils.Logger.toFile(msg, logging.WARNING)
             existing_csvs = {}
         finally:
@@ -207,6 +203,7 @@ class FileManager(abc.ABC):
                 "sessions":num_sess
             }
             existing_csv_file.write(json.dumps(existing_csvs, indent=4))
+            existing_csv_file.close()
 
     def _backupFileExportList(self) -> bool:
         try:
