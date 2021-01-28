@@ -139,6 +139,12 @@ class ExportManager:
                 num_sess: int = self._extractToCSVs(file_manager=file_manager, data_manager=data_manager,\
                                     game_schema=game_schema, game_table=game_table, game_extractor=game_extractor, export_files=export_files)
                 # 5) Save and close files
+                # before we zip stuff up, let's ensure the readme is in place:
+                try:
+                    readme = open(file_manager._readme_path, mode='r')
+                except FileNotFoundError:
+                    utils.Logger.Log(f"Missing readme for {self._game_id}, generating new readme...")
+                    utils.GenerateReadme(game_name=self._game_id, schema=game_schema, path=f"./data/{self._game_id}")
                 file_manager.ZipFiles()
                 # 6) Finally, update the list of csv files.
                 file_manager.WriteMetadataFile(date_range=date_range, num_sess=num_sess)
