@@ -52,6 +52,7 @@ def GenerateReadme(game_name:str, schema, path:str = "./"):
         feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
         readme.write(GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
                                                             proc_field_list=feature_descriptions))
+        # 3. Append any important data from the data changelog.
         try:
             changelog_src = open("./doc/readme_src/changelog_src.md", "r")
             readme.write(changelog_src.read())
