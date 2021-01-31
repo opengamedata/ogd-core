@@ -11,9 +11,9 @@ def meta_to_index(meta, data_dir):
     # proc_stat = os.stat(proc_csv_full_path)
     return \
         {
-            "proc":f"{data_dir}{meta['dataset_id']}_session_features.zip" if meta['proc'] is not None else None,
-            "raw":f"{data_dir}{meta['dataset_id']}_raw.zip" if meta['raw'] is not None else None,
-            "dump":f"{data_dir}{meta['dataset_id']}_events.zip" if meta['dump'] is not None else None,
+            "proc":f"{data_dir}{meta['proc'].split('/')[-1]}" if meta['proc'] is not None else None,
+            "raw":f"{data_dir}{meta['raw'].split('/')[-1]}" if meta['raw'] is not None else None,
+            "dump":f"{data_dir}{meta['dump'].split('/')[-1]}" if meta['dump'] is not None else None,
             "start_date"   :meta['start_date'],
             "end_date"     :meta['end_date'],
             "date_modified":meta['date_modified'],
