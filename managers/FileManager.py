@@ -2,6 +2,7 @@ import git
 import json
 import logging
 import os
+import re
 import traceback
 import typing
 import zipfile
@@ -141,31 +142,49 @@ class FileManager(abc.ABC):
     #  @param date_range    The range of dates included in the exported data.
     #  @param num_sess      The number of sessions included in the recent export.
     def WriteMetadataFile(self, date_range: typing.Tuple, num_sess: int):
+        # First, ensure we have a data directory.
         try:
-            # Ensure we have a data directory.
             full_data_dir = self._data_dir + self._game_id
             os.makedirs(name=full_data_dir, exist_ok=True)
-            # calculate the path and name of the metadata file, and open/make it.
-            meta_file_name = f"{full_data_dir}/{self._dataset_id}_{self._short_hash}.meta"
-            meta_file = open(meta_file_name, "w", encoding="utf-8")
         except Exception as err:
-            msg = f"Could not open file for metadata. {type(err)} {str(err)}"
+            msg = f"Could not set up folder {full_data_dir}. {type(err)} {str(err)}"
             utils.Logger.toFile(msg, logging.WARNING)
         else:
-            metadata  = \
-            {
-                "game_id":self._game_id,
-                "dataset_id"   :self._dataset_id,
-                "proc":self._zip_names["proc"],
-                "raw" :self._zip_names["raw"],
-                "dump":self._zip_names["dump"],
-                "start_date"   :date_range[0].strftime("%m/%d/%y"),
-                "end_date"     :date_range[1].strftime("%m/%d/%y"),
-                "date_modified":datetime.now().strftime("%m/%d/%Y"),
-                "sessions":num_sess
-            }
-            meta_file.write(json.dumps(metadata, indent=4))
-            meta_file.close()
+            # Second, remove old metas, if they exist.
+            try:
+                start_range = date_range[0].strftime("%Y%m%d")
+                end_range = date_range[1].strftime("%Y%m%d")
+                match_string = f"{self._game_id}_{start_range}_to_{end_range}_\\w*\\.meta"
+                old_metas = [f for f in os.listdir(full_data_dir) if re.match(match_string, f)]
+                for old_meta in old_metas:
+                    utils.Logger.Log(f"Removing old meta file, {old_meta}")
+                    os.remove(f"{full_data_dir}/{old_meta}")
+            except Exception as err:
+                msg = f"Could not remove old meta file {old_meta}. {type(err)} {str(err)}"
+                utils.Logger.toFile(msg, logging.WARNING)
+            # Third, write the new meta file.
+            try:
+                # calculate the path and name of the metadata file, and open/make it.
+                meta_file_name = f"{full_data_dir}/{self._dataset_id}_{self._short_hash}.meta"
+                meta_file = open(meta_file_name, "w", encoding="utf-8")
+            except Exception as err:
+                msg = f"Could not open file for metadata. {type(err)} {str(err)}"
+                utils.Logger.toFile(msg, logging.WARNING)
+            else:
+                metadata  = \
+                {
+                    "game_id":self._game_id,
+                    "dataset_id"   :self._dataset_id,
+                    "proc":self._zip_names["proc"],
+                    "raw" :self._zip_names["raw"],
+                    "dump":self._zip_names["dump"],
+                    "start_date"   :date_range[0].strftime("%m/%d/%y"),
+                    "end_date"     :date_range[1].strftime("%m/%d/%y"),
+                    "date_modified":datetime.now().strftime("%m/%d/%Y"),
+                    "sessions":num_sess
+                }
+                meta_file.write(json.dumps(metadata, indent=4))
+                meta_file.close()
 
     ## Public function to update the list of exported files.
     #  Using the paths of the exported files, and given some other variables for
