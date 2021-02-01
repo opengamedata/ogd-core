@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, STEMPORTS, WAVES, WIND]
-        game: [LAKELAND, JOWILDER]
+        game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, STEMPORTS, WAVES, WIND]
+        # game: [LAKELAND, JOWILDER]
       fail-fast: false # we don't want to cancel just because one game fails.
 
   # bacteria:
@@ -51,9 +51,9 @@ jobs:
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Trigger reindex via ssh
-      run: echo "placeholder for reindexing!"
-      # run: |
-      #   mkdir -p ~/.ssh
-      #   echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
-      #   chmod 600 ./key.txt
-      #   ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} python3 /var/www/opengamedata/reindex.py
+      # run: echo "placeholder for reindexing!"
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} python3 /var/www/opengamedata/reindexer.py
