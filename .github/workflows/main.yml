@@ -19,6 +19,10 @@ jobs:
   #   runs-on: ubuntu-latest
     # Steps to set up for and execute an export
     steps:
+    - name: Get correct Python
+      run: |
+        sudo apt-get -q install python3.8
+        sudo apt-get -q install python3.8-dev
     - name: Get OpenConnect
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
     - uses: actions/checkout@v2
