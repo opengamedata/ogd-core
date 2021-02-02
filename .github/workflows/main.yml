@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, STEMPORTS, WAVES, WIND]
-        # game: [LAKELAND, JOWILDER]
+        # don't use the first one until we've got STEMPORTS
+        # game: [Aqualab, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, STEMPORTS, WAVES, WIND]
+        # game: [Aqualab, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, WAVES, WIND]
+        game: [Aqualab, WAVES, CRYSTAL]
       fail-fast: false # we don't want to cancel just because one game fails.
 
   # bacteria:
