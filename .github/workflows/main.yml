@@ -21,9 +21,9 @@ jobs:
     steps:
     - name: Get OpenConnect
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
+    - uses: actions/checkout@v2
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    - uses: actions/checkout@v2
     - name: Do Export
       uses: ./.github/actions/export_month
       with:
