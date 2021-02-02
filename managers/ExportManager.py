@@ -176,7 +176,7 @@ class ExportManager:
             # all games with data but no extractor.
             pass
         else:
-            raise Exception("Got an invalid game ID!")
+            raise Exception(f"Got an invalid game ID ({self._game_id})!")
         return game_schema, game_extractor
 
     def _extractToCSVs(self, file_manager: FileManager, data_manager: DataManager,
