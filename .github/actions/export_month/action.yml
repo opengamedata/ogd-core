@@ -37,7 +37,7 @@ runs:
         MONTH=$(date -d "$(date +%Y-%m-01) -1 month" +'%m')
         YEAR=$(date -d "$(date +%Y-%m-01) -1 month" +'%Y')
         MONTH_YEAR=$MONTH/$YEAR
-        echo "::set-env name=MONTH_YEAR::$MONTH_YEAR"
+        echo "MONTH_YEAR=" $MONTH_YEAR >> $GITHUB_ENV
         echo exporting $MONTH_YEAR
       shell: bash
     # Runs a single command using the runners shell
@@ -75,6 +75,6 @@ runs:
       run: sed -i 's/password/${{inputs.sql_pass}}/g' config.py
       shell: bash
     - name: Execute data export
-      run: python3.8 main.py export ${{ inputs.game }} $MONTH_YEAR --monthly
+      run: python3.8 main.py export ${{ inputs.game }} ${{env.MONTH_YEAR}} --monthly
       shell: bash
       # python3.8 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
