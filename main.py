@@ -167,17 +167,12 @@ def _extractFromFile(file_path: str, events: bool = False, features: bool = Fals
 #  to file.
 def showGameInfo():
     if num_args > 2:
-        # try:
-            # tunnel, db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
         game_name = args[2]
         schema = Schema(schema_name=f"{game_name}.json")
 
         feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
         print(utils.GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),\
                                                         proc_field_list=feature_descriptions))
-        # finally:
-        #     pass
-            # utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
     else:
         print("Error, no game name given!")
         showHelp()
