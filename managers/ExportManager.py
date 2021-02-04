@@ -63,6 +63,7 @@ class ExportManager:
             msg = f"Could not complete request {str(request)}, database connection failed."
             utils.Logger.toStdOut(msg, logging.ERROR)
             utils.Logger.toFile(msg, logging.ERROR)
+            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return
         # If that was successful, we set up data retrieval with a game table and SQLDataManager.
         try:
