@@ -392,15 +392,38 @@ save_code_to_obj = {'startgame': 0,
 level_to_start_obj = {0: 0, 1: 3, 2: 4, 3: 6, 4: 8, 5: 12, 6: 13, 7: 19, 8: 21, 9: 23, 10: 26, 11: 28, 12: 30, 13: 43,
                       14: 45, 15: 46, 16: 48, 17: 50, 18: 52, 19: 62, 20: 65, 21: 67, 22: 69, 23: 77}
 
-def quizn_answern_to_index(quizn, answern):
-  adjusted_quizn = quizn_to_index(quizn)
-  index = adjusted_quizn * 4 + answern
-  assert -1 < index
-  assert index < 17
-  return index
+def quiz_question_to_index(quiz, question):
+  """See: https://github.com/fielddaylab/jo_wilder/blob/master/src/scenes/quiz.js
+
+  Each quiz is defined as a seperate dictionary, which means the index of each
+  question is specific to its position in that dictionary, rather than its position
+  in the overall question list.
+
+  The quiz_indexes dictionary contains the proper indexing for all questions in each 
+  of the 5 quizzes.
+
+  Returns:
+    The remapped index given a quiz and question number.
+  """
+  quiz_indexes = {
+    0: {0: 0, 1: 1},
+    2: {0: 2, 1: 3, 2: 4, 3: 5},
+    3: {0: 6, 1: 7, 2: 8, 3: 9},
+    4: {0: 10, 1: 11, 2: 12, 3: 13},
+    5: {0: 14, 1: 15, 2: 16, 3: 17}
+  }
+
+  return quiz_indexes[quiz][question]
 
 def quizn_to_index(quizn):
-  return quizn - 2 if 2 <= quizn <= 5 else quizn
+  """See: https://github.com/fielddaylab/jo_wilder/blob/master/src/scenes/quiz.js
+
+  For some reason there are 5 quizzes, but there is no quiz numbered 1.
+
+  Returns:
+    The correct quiz number for quizzes 2-5, or 0 for quiz 0.
+  """
+  return quizn - 1 if quizn >= 2 else quizn
 
 if __name__ == '__main__':
   print({i:v for i,(k,v) in enumerate(save_code_to_obj.items())})

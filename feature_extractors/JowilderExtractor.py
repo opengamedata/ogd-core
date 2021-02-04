@@ -144,7 +144,7 @@ class JowilderExtractor(Extractor):
         self.halt = False
         self._active = True
         self._last_quizstart = None
-        self._quiztimes = [None]*16
+        self._quiztimes = [None]*18
 
 
 
@@ -506,7 +506,7 @@ class JowilderExtractor(Extractor):
         _level = d["level"]
 
         # helpers
-        index = je.quizn_answern_to_index(_quiz_number, _question_index)
+        index = je.quiz_question_to_index(_quiz_number, _question_index)
         time_taken = None
         if index % 4 == 0:
             if self._last_quizstart is not None:

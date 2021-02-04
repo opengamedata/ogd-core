@@ -308,22 +308,22 @@
 				"desc": "player's quiz responses (only used in v6)"
 			},
 			"sa_index": {
-				"count": 16,
+				"count": 18,
 				"prefix": "SA",
 				"desc": "Survey answer index for the given question"
 			},
 			"sa_text": {
-				"count": 16,
+				"count": 18,
 				"prefix": "SA",
 				"desc": "Survey answer text for the given question"
 			},
 			"sa_time": {
-				"count": 16,
+				"count": 18,
 				"prefix": "SA",
 				"desc": "Time to the initial survey answer for the given question"
 			},
 			"sa_num_answers": {
-				"count": 16,
+				"count": 18,
 				"prefix": "SA",
 				"desc": "Players may select an answer multiple times or change answers. This counts the number of times the player answered a given question"
 			},
