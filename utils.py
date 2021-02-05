@@ -10,6 +10,7 @@ import os
 import sshtunnel
 import traceback
 import typing
+from config import settings
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
 #  @param filename  The name of the JSON file. If the file extension is not .json,
@@ -348,7 +349,14 @@ class Logger:
     std_logger = logging.getLogger("std_logger")
     stdout_handler = logging.StreamHandler()
     std_logger.addHandler(stdout_handler)
-    std_logger.setLevel(level=logging.DEBUG)
+    if settings['DEBUG_LEVEL'] == "ERROR":
+        std_logger.setLevel(level=logging.ERROR)
+    elif settings['DEBUG_LEVEL'] == "WARNING":
+        std_logger.setLevel(level=logging.WARNING)
+    elif settings['DEBUG_LEVEL'] == "INFO":
+        std_logger.setLevel(level=logging.INFO)
+    elif settings['DEBUG_LEVEL'] == "DEBUG":
+        std_logger.setLevel(level=logging.DEBUG)
     std_logger.debug("Testing standard out logger")
 
     # Then, set up the file logger. Check for permissions errors.
