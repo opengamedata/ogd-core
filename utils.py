@@ -201,7 +201,7 @@ class SQL:
         connected_ssh = False
         while tries < 5 and connected_ssh == False:
             if tries > 0:
-                print("Re-attempting to connect to SSH.")
+                Logger.toStdOut("Re-attempting to connect to SSH.", logging.INFO)
             try:
                 # First, connect to SSH
                 tunnel = sshtunnel.SSHTunnelForwarder(
