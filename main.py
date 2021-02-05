@@ -188,8 +188,9 @@ def writeReadme():
             path = f"./data/{game_name}"
             schema = Schema(schema_name=f"{game_name}.json")
             utils.GenerateReadme(game_name=game_name, schema=schema, path=path)
+            utils.Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
         except Exception as err:
-            msg = f"{type(err)} {str(err)}"
+            msg = f"Could not create a readme for {game_name}: {type(err)} {str(err)}"
             utils.Logger.toStdOut(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(msg, logging.ERROR)
