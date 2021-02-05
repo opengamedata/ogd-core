@@ -963,7 +963,7 @@ class LakelandExtractor(Extractor):
         is_neutral = affect == 0
         is_negative = affect == -1
         if(self._num_farmbits) < 1:
-            # utils.Logger.toFile(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.", logging.WARN)
+            # utils.Logger.toFile(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.", logging.WARNING)
             self.log_warning(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.")
             self._num_farmbits = 1
 
@@ -1492,7 +1492,7 @@ class LakelandExtractor(Extractor):
     def log_warning(self, message):
         self.add_debug_str('WARNING: '+message)
         debug_str = '\n'.join(self.debug_strs)
-        utils.Logger.toFile(debug_str, logging.WARN)
+        utils.Logger.toFile(debug_str, logging.WARNING)
         self.debug_strs = []
         
     def reset(self):

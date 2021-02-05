@@ -414,7 +414,7 @@ class JowilderExtractor(Extractor):
         if self.last_display_time_text: # if the previous log had text
             last_time, last_text = self.last_display_time_text
             if _text == last_text:
-                utils.Logger.toFile(f"The player read {last_text} twice in a row!", logging.WARN)
+                utils.Logger.toFile(f"The player read {last_text} twice in a row!", logging.WARNING)
             else:
                 finish_text(last_time, last_text, last_interaction=self.cur_interaction)
 
@@ -985,7 +985,7 @@ class JowilderExtractor(Extractor):
 
         if self.cur_question in [10,16] and self.chosen_answer and _interacted_fqid:
             utils.Logger.toFile(f'During Jowilder Q{self.cur_question}, player chose {self.chosen_answer} '
-                                f'but accidentally hovered over {_interacted_fqid}, choosing that on accident.', logging.WARN)
+                                f'but accidentally hovered over {_interacted_fqid}, choosing that on accident.', logging.WARNING)
             self.chosen_answer = _interacted_fqid
 
         # helpers
@@ -1246,7 +1246,7 @@ def get_variance():
     def log_warning(self, message, num_lines=20):
         self.add_debug_str('WARNING: '+message)
         debug_str = '\n\n'+self.get_debug_string(num_lines+1)
-        utils.Logger.toFile(debug_str, logging.WARN)
+        utils.Logger.toFile(debug_str, logging.WARNING)
         self.debug_strs = []
         
         
