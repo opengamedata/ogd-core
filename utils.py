@@ -45,7 +45,7 @@ def GenerateReadme(game_name:str, schema, path:str = "./"):
             readme_src.close()
         except FileNotFoundError as err:
             readme.write("No readme prepared")
-            Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.ERROR)
+            Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.WARNING)
         finally:
             readme.write("\n")
         # 2. Use schema to write feature & column descriptions to the readme.
@@ -58,7 +58,7 @@ def GenerateReadme(game_name:str, schema, path:str = "./"):
             readme.write(changelog_src.read())
         except FileNotFoundError as err:
             readme.write("No changelog prepared")
-            Logger.toStdOut(f"Could not find changelog_src", logging.ERROR)
+            Logger.toStdOut(f"Could not find changelog_src", logging.WARNING)
     except Exception as err:
         msg = f"{type(err)} {str(err)}"
         Logger.toStdOut(msg, logging.ERROR)
@@ -360,7 +360,7 @@ class Logger:
     except PermissionError as err:
         std_logger.exception(f"Failed permissions check for log files. No file logging on server.", stack_info=False)
     else:
-        err_handler.setLevel(level=logging.WARN)
+        err_handler.setLevel(level=logging.WARNING)
         file_logger.addHandler(err_handler)
         debug_handler.setLevel(level=logging.DEBUG)
         file_logger.addHandler(debug_handler)
