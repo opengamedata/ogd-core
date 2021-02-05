@@ -288,14 +288,14 @@ class SQL:
 
     @staticmethod
     def SELECTfromQuery(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
-        Logger.toStdOut("Running query: " + query, logging.INFO)
+        Logger.toStdOut("Running query: " + query, logging.DEBUG)
         # print(f"running query: {query}")
         start = datetime.datetime.now()
         cursor.execute(query)
         time_delta = datetime.datetime.now()-start
         num_min = math.floor(time_delta.total_seconds()/60)
         num_sec = time_delta.total_seconds() % 60
-        Logger.toStdOut(f"Query execution completed, time to execute: {num_min:d} min, {num_sec:.3f} sec", logging.INFO)
+        Logger.toStdOut(f"Query execution completed, time to execute: {num_min:d} min, {num_sec:.3f} sec", logging.DEBUG)
         # print("Query execution completed, time to execute: {:d} min, {:.3f} sec".format( \
         #     math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60 ) \
         # )
@@ -303,7 +303,7 @@ class SQL:
         time_delta = datetime.datetime.now()-start
         num_min = math.floor(time_delta.total_seconds()/60)
         num_sec = time_delta.total_seconds() % 60
-        Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result):d} rows", logging.INFO)
+        Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result):d} rows", logging.DEBUG)
         # print("Query fetch completed, total query time:    {:d} min, {:.3f} sec to get {:d} rows".format( \
         #     math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(result) ) \
         # )
@@ -329,10 +329,10 @@ class SQL:
 
     @staticmethod
     def Query(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
-        Logger.toStdOut("Running query: " + query, logging.INFO)
+        Logger.toStdOut("Running query: " + query, logging.DEBUG)
         start = datetime.datetime.now()
         cursor.execute(query)
-        Logger.toStdOut(f"Query execution completed, time to execute: {datetime.datetime.now()-start}", logging.INFO)
+        Logger.toStdOut(f"Query execution completed, time to execute: {datetime.datetime.now()-start}", logging.DEBUG)
         return [col[0] for col in cursor.fetchall()] if fetch_results else None
 
     ## Simple function to construct and log a nice server 500 error message.
