@@ -111,7 +111,6 @@ def _execExport(game_id, start_date, end_date, events, features):
     # Once we have the parameters parsed out, construct the request.
     export_files = Request.ExportFiles(dump=events, raw=False, proc=features)
     req = Request.DateRangeRequest(game_id=game_id, start_date=start_date, end_date=end_date, \
-                max_sessions=settings["MAX_SESSIONS"], min_moves=settings["MIN_MOVES"], \
                 export_files=export_files)
     start = datetime.now()
     # breakpoint()

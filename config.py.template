@@ -23,8 +23,6 @@ settings = {
         "SSH_HOST": "rt_hostname",
         "path": "path\\to\\dump\\file.tsv"
     },
-    "MIN_MOVES":1,
     "BATCH_SIZE":1000,
-    "MAX_SESSIONS":-1,
     "DEBUG_LEVEL":"INFO"
 }
