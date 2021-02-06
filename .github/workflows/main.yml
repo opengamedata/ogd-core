@@ -26,6 +26,12 @@ jobs:
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - name: Fail the thing right now, if VPN conn is bad
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata; pwd;"
     - name: Get correct Python
       run: |
         sudo apt-get -q install python3.8
@@ -41,11 +47,11 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
     - name: Upload files to opengamedata via scp
-      run: |
-        mkdir -p ~/.ssh
-        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
-        chmod 600 ./key.txt
-        scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
+      # run: |
+        # mkdir -p ~/.ssh
+        # echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        # chmod 600 ./key.txt
+      run: scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
   
   trigger_reindex:
     name: Reindex OpenGameData Files
