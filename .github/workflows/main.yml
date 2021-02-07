@@ -47,10 +47,10 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
     - name: Upload files to opengamedata via scp
-      # run: |
-        # mkdir -p ~/.ssh
-        # echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
-        # chmod 600 ./key.txt
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
       run: scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
   
   trigger_reindex:
