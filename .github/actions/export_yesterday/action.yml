@@ -39,7 +39,7 @@ runs:
     - name: Get yesterday, for export
       run: |
         YESTERDAY=$(date -d "$(date +%Y-%m-%d) -1 day" +'%m/%d/%Y')
-        TODAY=$(date -d "$(date +%Y-%m-%d) +'%m/%d/%Y')
+        TODAY=$(date -d "$(date +%Y-%m-%d)" +'%m/%d/%Y')
         echo "YESTERDAY=" $YESTERDAY >> $GITHUB_ENV
         echo "TODAY=" $TODAY >> $GITHUB_ENV
       shell: bash
