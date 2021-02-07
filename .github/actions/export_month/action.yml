@@ -1,10 +1,6 @@
 name: "Export Monthly Data"
-description: "Given a game and a month, this action will export the month's data for that game."
+description: "Given a game, this action will export last month's data for that game."
 inputs:
-  month_year: # month and year
-    description: "The month and year to export."
-    required: true
-    default: ''
   game:
    description: "The game with data to export."
    required: true
