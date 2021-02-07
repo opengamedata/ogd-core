@@ -9,8 +9,6 @@ from feature_extractors.Extractor import Extractor
 from GameTable import GameTable
 from schemas.Schema import Schema
 
-# add a comment to magnet extractor, so we can test CI script trigger.
-
 ## @class MagnetExtractor
 #  Extractor subclass for extracting features from Magnet game data.
 class MagnetExtractor(Extractor):

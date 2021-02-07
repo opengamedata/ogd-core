@@ -18,6 +18,8 @@ from GameTable import GameTable
 from schemas.Schema import Schema
 from game_info.Jowilder import Jowilder_Enumerators as je
 
+# temp comment
+
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
 # TODO: Some FQIDs are called HACKME and are placeholders
