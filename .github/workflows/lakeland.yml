@@ -1,4 +1,4 @@
-# Workflow to run monthly exports of data.
+# Workflow to test-run data when we modify LakelandExtractor.
 name: Lakeland Exporter CI Test
 on:
   push:
