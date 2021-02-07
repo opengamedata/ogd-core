@@ -36,6 +36,13 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Get yesterday, for export
+      run: |
+        YESTERDAY=$(date -d "$(date +%Y-%m-%d) -1 day" +'%m/%d/%Y')
+        TODAY=$(date -d "$(date +%Y-%m-%d) +'%m/%d/%Y')
+        echo "YESTERDAY=" $YESTERDAY >> $GITHUB_ENV
+        echo "TODAY=" $TODAY >> $GITHUB_ENV
+      shell: bash
     # Runs a single command using the runners shell
     - name: Set up Python libraries
       run: |
@@ -65,6 +72,6 @@ runs:
       run: sed -i 's/password/${{inputs.sql_pass}}/g' config.py
       shell: bash
     - name: Execute data export
-      run: python3.8 main.py export ${{ inputs.game }} ${{inputs.start_date}} ${{inputs.end_date}}
+      run: python3.8 main.py export ${{ inputs.game }} ${{env.YESTERDAY}} ${{env.TODAY}}
       shell: bash
       # python3.8 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
