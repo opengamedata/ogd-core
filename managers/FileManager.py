@@ -178,8 +178,8 @@ class FileManager(abc.ABC):
                     "proc":self._zip_names["proc"],
                     "raw" :self._zip_names["raw"],
                     "dump":self._zip_names["dump"],
-                    "start_date"   :date_range[0].strftime("%m/%d/%y"),
-                    "end_date"     :date_range[1].strftime("%m/%d/%y"),
+                    "start_date"   :date_range[0].strftime("%m/%d/%Y"),
+                    "end_date"     :date_range[1].strftime("%m/%d/%Y"),
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions":num_sess
                 }
@@ -216,8 +216,8 @@ class FileManager(abc.ABC):
                 "proc":proc_path,
                 "raw" :raw_path,
                 "dump":dump_path,
-                "start_date"   :date_range[0].strftime("%m/%d/%y"),
-                "end_date"     :date_range[1].strftime("%m/%d/%y"),
+                "start_date"   :date_range[0].strftime("%m/%d/%Y"),
+                "end_date"     :date_range[1].strftime("%m/%d/%Y"),
                 "date_modified":datetime.now().strftime("%m/%d/%Y"),
                 "sessions":num_sess
             }
