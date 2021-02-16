@@ -75,7 +75,10 @@ class FileManager(abc.ABC):
             self._files["dump"].close()
 
     def ZipFiles(self):
-        existing_csvs = utils.loadJSONFile("file_list.json", self._data_dir)
+        try:
+            existing_csvs = utils.loadJSONFile("file_list.json", self._data_dir)
+        except Exception as err:
+            existing_csvs = {}
         # if we have already done this dataset before, rename old zip files
         # (of course, first check if we ever exported this game before).
         try:
