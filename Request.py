@@ -72,6 +72,9 @@ class IDListRequest(Request):
         Request.__init__(self, game_id=game_id, export_files=export_files)
         self._session_ids = session_ids
 
+    def __str__(self):
+        return f"{self.game_id}: {self._session_ids[0]}-{self._session_ids[-1]}"
+
     ## Method to retrieve the list of IDs for all sessions covered by
     #  the request. Should just be the original request list.
     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
@@ -81,6 +84,9 @@ class FileRequest(Request):
     def __init__(self, file_path, game_id: str = None, export_files: ExportFiles = ExportFiles()):
         Request.__init__(self, game_id=game_id, export_files=export_files)
         self.file_path = file_path
+
+    def __str__(self):
+        return f"{self.game_id}: {str(self.file_path)}"
 
     # TODO: actually get the sessionIDs, so this request behaves properly.
     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
