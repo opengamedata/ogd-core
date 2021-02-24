@@ -17,9 +17,6 @@ jobs:
       fail-fast: false # we don't want to cancel just because one game fails.
       max-parallel: 1
 
-  # bacteria:
-  #   name: Export Bacteria
-  #   runs-on: ubuntu-latest
     # Steps to set up for and execute an export
     steps:
     - name: Get OpenConnect
