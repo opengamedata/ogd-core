@@ -27,6 +27,10 @@ def loadJSONFile(filename: str, path:str = "./") -> object:
     ret_val = None
     try:
         json_file = open(path+filename, "r")
+    except FileNotFoundError as err:
+        Logger.toStdOut(f"File {path+filename} does not exist.", logging.WARNING)
+        raise err
+    try:
         ret_val = json.loads(json_file.read())
         json_file.close()
     except Exception as err:
