@@ -8,14 +8,23 @@ on:
         description: "The game to be exported"
         required: true
         default: "JOWILDER"
+      monthly:
+        description: "If true, use month/year. Else, use start and end dates"
+        required: true
+        default: false
       start_date:
         description: "The start date for the export"
-        required: true
+        required: false
         default: "01/01/2021"
       end_date:
         description: "The end date for the export"
-        required: true
+        required: false
         default: "01/01/2021"
+      month_year:
+        description: "The month and year export. Only used if 'monthly' is true."
+        required: false
+        default: "01/2021"
+
 jobs:
   export_data:
     name: Export Game
@@ -32,7 +41,19 @@ jobs:
         sudo apt-get -q install python3.8
         sudo apt-get -q install python3.8-dev
     - uses: actions/checkout@v2
-    - name: Do Export
+    - name: Do Export of Month
+      if: ${{ github.event.inputs.monthly }} == true
+      uses: ./.github/actions/export_custom_month
+      with:
+        game: ${{github.event.inputs.game}}
+        month_year: ${{github.event.inputs.month_year}}
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{secrets.SQL_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+    - name: Do Export of Range
+      if: ${{ github.event.inputs.monthly }} == false
       uses: ./.github/actions/export_custom
       with:
         game: ${{github.event.inputs.game}}
