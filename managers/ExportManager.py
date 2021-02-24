@@ -19,9 +19,9 @@ from config import settings
 from GameTable import GameTable
 from managers.DataManager import *
 from managers.FileManager import *
-from managers.ProcManager import ProcManager
+from managers.SessionProcessor import SessionProcessor
 from managers.RawManager import RawManager
-from managers.DumpManager import DumpManager
+from managers.EventProcessor import EventProcessor
 from Request import *
 from schemas.Schema import Schema
 from feature_extractors.WaveExtractor import WaveExtractor
@@ -183,19 +183,19 @@ class ExportManager:
     def _extractToCSVs(self, file_manager: FileManager, data_manager: DataManager,
                        game_schema: Schema, game_table: GameTable, game_extractor: type, export_files: ExportFiles):
         try:
-            proc_mgr = raw_mgr = dump_mgr = None
+            sess_processor = raw_mgr = evt_processor = None
             if export_files.proc:
-                proc_mgr = ProcManager(ExtractorClass=game_extractor, game_table=game_table,
+                sess_processor = SessionProcessor(ExtractorClass=game_extractor, game_table=game_table,
                                     game_schema=game_schema, proc_csv_file=file_manager.GetProcFile())
-                proc_mgr.WriteProcCSVHeader()
+                sess_processor.WriteProcCSVHeader()
             if export_files.raw:
                 raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
                                     raw_csv_file=file_manager.GetRawFile())
                 raw_mgr.WriteRawCSVHeader()
             if export_files.dump:
-                dump_mgr = DumpManager(game_table=game_table, game_schema=game_schema,
+                evt_processor = EventProcessor(game_table=game_table, game_schema=game_schema,
                                     dump_csv_file=file_manager.GetDumpFile())
-                dump_mgr.WriteDumpCSVHeader()
+                evt_processor.WriteDumpCSVHeader()
 
             num_sess = len(game_table.session_ids)
             utils.Logger.toStdOut(f"Preparing to process {num_sess} sessions.", logging.INFO)
@@ -208,7 +208,7 @@ class ExportManager:
                 # now, we process each row.
                 start = datetime.now()
                 for row in next_data_set:
-                    self._processRow(row=row, game_table=game_table, raw_mgr=raw_mgr, proc_mgr=proc_mgr, dump_mgr=dump_mgr)
+                    self._processRow(row=row, game_table=game_table, raw_mgr=raw_mgr, sess_processor=sess_processor, evt_processor=evt_processor)
                 time_delta = datetime.now() - start
                 num_min = math.floor(time_delta.total_seconds()/60)
                 num_sec = time_delta.total_seconds() % 60
@@ -223,15 +223,15 @@ class ExportManager:
                 
                 # after processing all rows for all slices, write out the session data and reset for next slice.
                 if export_files.proc:
-                    proc_mgr.calculateAggregateFeatures()
-                    proc_mgr.WriteProcCSVLines()
-                    proc_mgr.ClearLines()
+                    sess_processor.calculateAggregateFeatures()
+                    sess_processor.WriteProcCSVLines()
+                    sess_processor.ClearLines()
                 if export_files.raw:
                     raw_mgr.WriteRawCSVLines()
                     raw_mgr.ClearLines()
                 if export_files.dump:
-                    dump_mgr.WriteDumpCSVLines()
-                    dump_mgr.ClearLines()
+                    evt_processor.WriteDumpCSVLines()
+                    evt_processor.ClearLines()
             ret_val = num_sess
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
@@ -257,8 +257,8 @@ class ExportManager:
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
     #  @raw_mgr          An instance of RawManager used to track raw data.
-    #  @proc_mgr         An instance of ProcManager used to extract and track feature data.
-    def _processRow(self, row: typing.Tuple, game_table: GameTable, raw_mgr: RawManager, proc_mgr: ProcManager, dump_mgr: DumpManager):
+    #  @sess_processor         An instance of SessionProcessor used to extract and track feature data.
+    def _processRow(self, row: typing.Tuple, game_table: GameTable, raw_mgr: RawManager, sess_processor: SessionProcessor, evt_processor: EventProcessor):
         session_id = row[game_table.session_id_index]
 
         # parse out complex data from json
@@ -285,12 +285,12 @@ class ExportManager:
 
         if session_id in game_table.session_ids:
             # we check if there's an instance given, if not we obviously skip.
-            if proc_mgr is not None:
-                proc_mgr.ProcessRow(row)
+            if sess_processor is not None:
+                sess_processor.ProcessRow(row)
             if raw_mgr is not None:
                 raw_mgr.ProcessRow(row)
-            if dump_mgr is not None:
-                dump_mgr.ProcessRow(row)
+            if evt_processor is not None:
+                evt_processor.ProcessRow(row)
         # else:
             # in this case, we should have just found 
             # utils.Logger.toFile(f"Found a session ({session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)

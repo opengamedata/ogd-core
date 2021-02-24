@@ -7,10 +7,10 @@ import utils
 import GameTable
 from schemas.Schema import Schema
 
-## @class DumpManager
+## @class EventProcessor
 #  Class to manage data for a csv dump file.
-class DumpManager:
-    ## Constructor for the DumpManager class.
+class EventProcessor:
+    ## Constructor for the EventProcessor class.
     #  Stores some of the passed data, and generates some other members.
     #  In particular, generates a mapping from column names back to indices of columns in the
     #  dump csv.
@@ -43,11 +43,11 @@ class DumpManager:
                     line[i] = col
         self._lines.append("\t".join([str(item) for item in line]) + "\n") # changed , to \t
 
-    ## Function to empty the list of lines stored by the DumpManager.
+    ## Function to empty the list of lines stored by the EventProcessor.
     #  This is helpful if we're processing a lot of data and want to avoid
     #  Eating too much memory.
     def ClearLines(self):
-        utils.Logger.toStdOut(f"Clearing {len(self._lines)} entries from DumpManager.", logging.DEBUG)
+        utils.Logger.toStdOut(f"Clearing {len(self._lines)} entries from EventProcessor.", logging.DEBUG)
         self._lines = []
 
     ## Function to write out the header for a dump csv file.

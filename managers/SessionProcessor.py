@@ -9,10 +9,10 @@ import utils
 from feature_extractors.WaveExtractor import WaveExtractor
 from schemas.Schema import Schema
 
-## @class ProcManager
+## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.
-class ProcManager:
-    ## Constructor for the ProcManager class.
+class SessionProcessor:
+    ## Constructor for the SessionProcessor class.
     #  Simply stores some data for use later, including the type of extractor to
     #  use.
     #
@@ -49,15 +49,15 @@ class ProcManager:
                 self._session_extractors[session_id] = self._ExtractorClass(session_id, self._game_table, self._game_schema)
         self._session_extractors[session_id].extractFromRow(row_with_complex_parsed, self._game_table)
 
-    ##  Function to empty the list of lines stored by the ProcManager.
+    ##  Function to empty the list of lines stored by the SessionProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid
     #   eating too much memory.
     def ClearLines(self):
-        utils.Logger.toStdOut(f"Clearing {len(self._session_extractors)} entries from ProcManager.", logging.DEBUG)
+        utils.Logger.toStdOut(f"Clearing {len(self._session_extractors)} entries from SessionProcessor.", logging.DEBUG)
         self._session_extractors = {}
 
     ## Function to calculate aggregate features of all extractors created by the
-    #  ProcManager. Just calls the function once on each extractor.
+    #  SessionProcessor. Just calls the function once on each extractor.
     def calculateAggregateFeatures(self):
         for extractor in self._session_extractors.values():
             extractor.calculateAggregateFeatures()
@@ -68,7 +68,7 @@ class ProcManager:
         self._ExtractorClass.writeCSVHeader(game_table=self._game_table, game_schema=self._game_schema, file=self._proc_file)
 
     ## Function to write out all data for the extractors created by the
-    #  ProcManager. Just calls the "write" function once for each extractor.
+    #  SessionProcessor. Just calls the "write" function once for each extractor.
     def WriteProcCSVLines(self):
         for extractor in self._session_extractors.values():
             extractor.writeCurrentFeatures(file=self._proc_file)

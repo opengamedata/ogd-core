@@ -199,33 +199,35 @@ class FileManager(abc.ABC):
         self._backupFileExportList()
         try:
             existing_csvs = utils.loadJSONFile("file_list.json", self._data_dir)
+        except FileNotFoundError as err:
+            utils.Logger.toFile("file_list.json does not exist.", logging.WARNING)
+            existing_csvs = {}
         except Exception as err:
             msg = f"Could not load file list. {type(err)} {str(err)}"
-            utils.Logger.toFile(msg, logging.WARNING)
+            utils.Logger.toFile(msg, logging.ERROR)
             existing_csvs = {}
         finally:
-            existing_csv_file = open(f"{self._data_dir}file_list.json", "w")
-            utils.Logger.toStdOut(f"opened existing csv file at {existing_csv_file.name}", logging.INFO)
-            if not self._game_id in existing_csvs.keys():
-                existing_csvs[self._game_id] = {}
-            # raw_stat = os.stat(raw_csv_full_path)
-            # proc_stat = os.stat(proc_csv_full_path)
-            prior_export = self._dataset_id in existing_csvs[self._game_id].keys()
-            proc_path = self._zip_names["proc"] if self._zip_names["proc"] is not None else (existing_csvs[self._game_id][self._dataset_id]["proc"] if prior_export else None)
-            raw_path  = self._zip_names["raw"]  if self._zip_names["raw"]  is not None else (existing_csvs[self._game_id][self._dataset_id]["raw"]  if prior_export else None)
-            dump_path = self._zip_names["dump"] if self._zip_names["dump"] is not None else (existing_csvs[self._game_id][self._dataset_id]["dump"] if prior_export else None)
-            existing_csvs[self._game_id][self._dataset_id] = \
-            {
-                "proc":proc_path,
-                "raw" :raw_path,
-                "dump":dump_path,
-                "start_date"   :date_range[0].strftime("%m/%d/%Y"),
-                "end_date"     :date_range[1].strftime("%m/%d/%Y"),
-                "date_modified":datetime.now().strftime("%m/%d/%Y"),
-                "sessions":num_sess
-            }
-            existing_csv_file.write(json.dumps(existing_csvs, indent=4))
-            existing_csv_file.close()
+            with open(f"{self._data_dir}file_list.json", "w") as existing_csv_file:
+                utils.Logger.toStdOut(f"opened csv file at {existing_csv_file.name}", logging.INFO)
+                if not self._game_id in existing_csvs.keys():
+                    existing_csvs[self._game_id] = {}
+                # raw_stat = os.stat(raw_csv_full_path)
+                # proc_stat = os.stat(proc_csv_full_path)
+                prior_export = self._dataset_id in existing_csvs[self._game_id].keys()
+                proc_path = self._zip_names["proc"] if self._zip_names["proc"] is not None else (existing_csvs[self._game_id][self._dataset_id]["proc"] if prior_export else None)
+                raw_path  = self._zip_names["raw"]  if self._zip_names["raw"]  is not None else (existing_csvs[self._game_id][self._dataset_id]["raw"]  if prior_export else None)
+                dump_path = self._zip_names["dump"] if self._zip_names["dump"] is not None else (existing_csvs[self._game_id][self._dataset_id]["dump"] if prior_export else None)
+                existing_csvs[self._game_id][self._dataset_id] = \
+                {
+                    "proc":proc_path,
+                    "raw" :raw_path,
+                    "dump":dump_path,
+                    "start_date"   :date_range[0].strftime("%m/%d/%Y"),
+                    "end_date"     :date_range[1].strftime("%m/%d/%Y"),
+                    "date_modified":datetime.now().strftime("%m/%d/%Y"),
+                    "sessions":num_sess
+                }
+                existing_csv_file.write(json.dumps(existing_csvs, indent=4))
 
     def _backupFileExportList(self) -> bool:
         try:
