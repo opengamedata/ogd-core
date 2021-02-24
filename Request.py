@@ -8,12 +8,12 @@ from schemas.Schema import Schema
 
 ## @class FileExports
 #  Completely dumb struct that just enforces the names of the three kinds of file we can output.
-#  @param dump Bool stating whether to output a dump file or not.
+#  @param events Bool stating whether to output a events file or not.
 #  @param raw  Bool stating whether to output a raw file or not.
 #  @param proc Bool stating whether to output a processed feature file or not.
 class ExportFiles:
-    def __init__(self, dump:bool = True, raw:bool = True, proc:bool = True):
-        self.dump = dump
+    def __init__(self, events:bool = True, raw:bool = True, proc:bool = True):
+        self.events = events
         self.raw = False
         self.proc = proc
 
