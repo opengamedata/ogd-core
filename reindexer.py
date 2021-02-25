@@ -8,10 +8,10 @@ def meta_to_index(meta, data_dir):
     if not data_dir.endswith("/"):
         data_dir = data_dir + "/"
     # raw_stat = os.stat(raw_csv_full_path)
-    # proc_stat = os.stat(proc_csv_full_path)
+    # sessions_stat = os.stat(sessions_csv_full_path)
     return \
         {
-            "proc":f"{data_dir}{meta['proc'].split('/')[-1]}" if meta['proc'] is not None else None,
+            "sessions":f"{data_dir}{meta['sessions'].split('/')[-1]}" if meta['sessions'] is not None else None,
             "raw":f"{data_dir}{meta['raw'].split('/')[-1]}" if meta['raw'] is not None else None,
             "events":f"{data_dir}{meta['events'].split('/')[-1]}" if meta['events'] is not None else None,
             "start_date"   :meta['start_date'],
@@ -52,7 +52,7 @@ def index_zip(root, name, indexed_files):
         print(f"Indexing {os.path.join(root, name)}")
         indexed_files[game_id][dataset_id] = \
             {
-                "proc":f"{root}{name}" if kind == 'session' else None,
+                "sessions":f"{root}{name}" if kind == 'session' else None,
                 "raw":f"{root}{name}" if kind == 'raw' else None,
                 "events":f"{root}{name}" if kind == 'events' else None,
                 "start_date"   :start_date,
@@ -61,9 +61,9 @@ def index_zip(root, name, indexed_files):
                 "sessions"     :None
             }
     else:
-        if indexed_files[game_id][dataset_id]["proc"] == None and kind == 'session':
+        if indexed_files[game_id][dataset_id]["sessions"] == None and kind == 'session':
             print(f"Updating index with {os.path.join(root, name)}")
-            indexed_files[game_id][dataset_id]["proc"] = f"{root}{name}"
+            indexed_files[game_id][dataset_id]["sessions"] = f"{root}{name}"
         if indexed_files[game_id][dataset_id]["raw"] == None and kind == 'raw':
             print(f"Updating index with {os.path.join(root, name)}")
             indexed_files[game_id][dataset_id]["raw"] = f"{root}{name}"

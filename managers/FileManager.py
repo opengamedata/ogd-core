@@ -13,9 +13,9 @@ from Request import *
 
 class FileManager(abc.ABC):
     def __init__(self, export_files: ExportFiles, game_id, data_dir: str, date_range: typing.Tuple):
-        self._file_names : typing.Dict = {"proc":None, "raw":None, "events":None}
-        self._zip_names  : typing.Dict = {"proc":None, "raw":None, "events":None}
-        self._files      : typing.Dict = {"proc":None, "raw":None, "events":None}
+        self._file_names : typing.Dict = {"sessions":None, "raw":None, "events":None}
+        self._zip_names  : typing.Dict = {"sessions":None, "raw":None, "events":None}
+        self._files      : typing.Dict = {"sessions":None, "raw":None, "events":None}
         self._data_dir   : str         = data_dir
         self._game_id    : str         = game_id
         self._readme_path: str
@@ -34,10 +34,10 @@ class FileManager(abc.ABC):
             self._readme_path = f"{full_data_dir}/readme.md"
             base_path = f"{full_data_dir}/{self._dataset_id}_{self._short_hash}"
             # finally, generate file names.
-            self._file_names["proc"] = base_path+"_session_features.csv" if export_files.proc else None
+            self._file_names["sessions"] = base_path+"_session_features.csv" if export_files.sessions else None
             self._file_names["raw"]  = base_path+"_raw.tsv"  if export_files.raw  else None
             self._file_names["events"] = base_path+"_events.tsv" if export_files.events else None
-            self._zip_names["proc"] = base_path+"_session_features.zip" if export_files.proc else None
+            self._zip_names["sessions"] = base_path+"_session_features.zip" if export_files.sessions else None
             self._zip_names["raw"]  = base_path+"_raw.zip"  if export_files.raw  else None
             self._zip_names["events"] = base_path+"_events.zip" if export_files.events else None
         except Exception as err:
@@ -48,8 +48,8 @@ class FileManager(abc.ABC):
     def GetFiles(self):
         return self._files
 
-    def GetProcFile(self):
-        return self._files["proc"]
+    def GetSessionsFile(self):
+        return self._files["sessions"]
 
     def GetRawFile(self):
         return self._files["raw"]
@@ -62,13 +62,13 @@ class FileManager(abc.ABC):
         full_data_dir = self._data_dir + self._game_id
         os.makedirs(name=full_data_dir, exist_ok=True)
         # Then open up the files themselves.
-        self._files["proc"] = open(self._file_names["proc"], "w", encoding="utf-8") if (self._file_names["proc"] is not None) else None
+        self._files["sessions"] = open(self._file_names["sessions"], "w", encoding="utf-8") if (self._file_names["sessions"] is not None) else None
         self._files["raw"]  = open(self._file_names["raw"] , "w", encoding="utf-8") if (self._file_names["raw"] is not None) else None
         self._files["events"] = open(self._file_names["events"], "w", encoding="utf-8") if (self._file_names["events"] is not None) else None
 
     def CloseFiles(self):
-        if self._files["proc"] is not None:
-            self._files["proc"].close()
+        if self._files["sessions"] is not None:
+            self._files["sessions"].close()
         if self._files["raw"] is not None:
             self._files["raw"].close()
         if self._files["events"] is not None:
@@ -83,11 +83,11 @@ class FileManager(abc.ABC):
         # (of course, first check if we ever exported this game before).
         try:
             if (self._game_id in existing_csvs and self._dataset_id in existing_csvs[self._game_id]):
-                src_proc = existing_csvs[self._game_id][self._dataset_id]['proc']
+                src_sessions = existing_csvs[self._game_id][self._dataset_id]['sessions']
                 src_raw  = existing_csvs[self._game_id][self._dataset_id]['raw']
                 src_events = existing_csvs[self._game_id][self._dataset_id]['events']
-                if src_proc is not None:
-                    os.rename(src_proc, self._zip_names["proc"])
+                if src_sessions is not None:
+                    os.rename(src_sessions, self._zip_names["sessions"])
                 if src_raw is not None:
                     os.rename(src_raw, self._zip_names["raw"])
                 if src_events is not None:
@@ -98,17 +98,17 @@ class FileManager(abc.ABC):
             traceback.print_tb(err.__traceback__)
         # for each file, try to save out the csv/tsv to a file - if it's one that should be exported, that is.
         base_path = f"{self._dataset_id}/{self._dataset_id}_{self._short_hash}"
-        if self._files["proc"] is not None:
+        if self._files["sessions"] is not None:
             try:
-                proc_zip_file = zipfile.ZipFile(self._zip_names["proc"], "w", compression=zipfile.ZIP_DEFLATED)
-                self._addToZip(path=self._file_names["proc"], zip_file=proc_zip_file, path_in_zip=f"{base_path}_proc.csv")
-                self._addToZip(path=self._readme_path,        zip_file=proc_zip_file, path_in_zip=f"{self._dataset_id}/readme.md")
-                os.remove(self._file_names["proc"])
+                sessions_zip_file = zipfile.ZipFile(self._zip_names["sessions"], "w", compression=zipfile.ZIP_DEFLATED)
+                self._addToZip(path=self._file_names["sessions"], zip_file=sessions_zip_file, path_in_zip=f"{base_path}_sessions.csv")
+                self._addToZip(path=self._readme_path,        zip_file=sessions_zip_file, path_in_zip=f"{self._dataset_id}/readme.md")
+                os.remove(self._file_names["sessions"])
             except FileNotFoundError as err:
                 utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
                 traceback.print_tb(err.__traceback__)
             finally:
-                proc_zip_file.close()
+                sessions_zip_file.close()
         if self._files["raw"] is not None:
             try:
                 raw_zip_file = zipfile.ZipFile(self._zip_names["raw"], "w", compression=zipfile.ZIP_DEFLATED)
@@ -178,7 +178,7 @@ class FileManager(abc.ABC):
                 {
                     "game_id":self._game_id,
                     "dataset_id"   :self._dataset_id,
-                    "proc":self._zip_names["proc"],
+                    "sessions":self._zip_names["sessions"],
                     "raw" :self._zip_names["raw"],
                     "events":self._zip_names["events"],
                     "start_date"   :date_range[0].strftime("%m/%d/%Y"),
@@ -212,14 +212,14 @@ class FileManager(abc.ABC):
                 if not self._game_id in existing_csvs.keys():
                     existing_csvs[self._game_id] = {}
                 # raw_stat = os.stat(raw_csv_full_path)
-                # proc_stat = os.stat(proc_csv_full_path)
+                # sessions_stat = os.stat(sessions_csv_full_path)
                 prior_export = self._dataset_id in existing_csvs[self._game_id].keys()
-                proc_path = self._zip_names["proc"] if self._zip_names["proc"] is not None else (existing_csvs[self._game_id][self._dataset_id]["proc"] if prior_export else None)
+                sessions_path = self._zip_names["sessions"] if self._zip_names["sessions"] is not None else (existing_csvs[self._game_id][self._dataset_id]["sessions"] if prior_export else None)
                 raw_path  = self._zip_names["raw"]  if self._zip_names["raw"]  is not None else (existing_csvs[self._game_id][self._dataset_id]["raw"]  if prior_export else None)
                 events_path = self._zip_names["events"] if self._zip_names["events"] is not None else (existing_csvs[self._game_id][self._dataset_id]["events"] if prior_export else None)
                 existing_csvs[self._game_id][self._dataset_id] = \
                 {
-                    "proc":proc_path,
+                    "sessions":sessions_path,
                     "raw" :raw_path,
                     "events":events_path,
                     "start_date"   :date_range[0].strftime("%m/%d/%Y"),

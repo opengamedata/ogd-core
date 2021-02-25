@@ -129,7 +129,7 @@ class ExportManager:
             # 2a) Prepare schema and extractor, if game doesn't have an extractor, make sure we don't try to export it.
             game_schema, game_extractor = self._prepareSchema()
             if game_extractor is None:
-                export_files.proc = False
+                export_files.sessions = False
             # 2b) Prepare files for export.
             file_manager = FileManager(export_files=export_files, game_id=self._game_id, \
                                        data_dir=self._settings["DATA_DIR"], date_range=date_range)
@@ -184,10 +184,10 @@ class ExportManager:
                        game_schema: Schema, game_table: GameTable, game_extractor: type, export_files: ExportFiles):
         try:
             sess_processor = raw_mgr = evt_processor = None
-            if export_files.proc:
+            if export_files.sessions:
                 sess_processor = SessionProcessor(ExtractorClass=game_extractor, game_table=game_table,
-                                    game_schema=game_schema, proc_csv_file=file_manager.GetProcFile())
-                sess_processor.WriteProcCSVHeader()
+                                    game_schema=game_schema, sessions_csv_file=file_manager.GetSessionsFile())
+                sess_processor.WriteSessionCSVHeader()
             if export_files.raw:
                 raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
                                     raw_csv_file=file_manager.GetRawFile())
@@ -222,9 +222,9 @@ class ExportManager:
                 utils.Logger.toFile(status_string, logging.INFO)
                 
                 # after processing all rows for all slices, write out the session data and reset for next slice.
-                if export_files.proc:
+                if export_files.sessions:
                     sess_processor.calculateAggregateFeatures()
-                    sess_processor.WriteProcCSVLines()
+                    sess_processor.WriteSessionCSVLines()
                     sess_processor.ClearLines()
                 if export_files.raw:
                     raw_mgr.WriteRawCSVLines()
@@ -242,8 +242,8 @@ class ExportManager:
         finally:
             # Save out all the files.
             file_manager.CloseFiles()
-            # if export_files.proc:
-            #     proc_csv_file.close()
+            # if export_files.sessions:
+            #     sessions_csv_file.close()
             # if export_files.raw:
             #     raw_csv_file.close()
             # if export_files.events:
@@ -251,7 +251,7 @@ class ExportManager:
             return ret_val
 
     ## Private helper function to process a single row of data.
-    #  Most of the processing is delegated to Raw and Proc Managers, but this
+    #  Most of the processing is delegated to Events and Session Processors, but this
     #  function does a bit of pre-processing to parse the event_data_custom.
     #  @param row        The raw row data from a SQL query result.
     #  @param game_table A data structure containing information on how the db

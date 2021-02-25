@@ -93,7 +93,7 @@ class LakelandExtractor(Extractor):
     #                    table associated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema, proc_file: typing.IO.writable):
+    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema, sessions_file: typing.IO.writable):
         # Set window and overlap size
         config = game_schema.schema()['config']
         self._NUM_SECONDS_PER_WINDOW = config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
@@ -102,8 +102,8 @@ class LakelandExtractor(Extractor):
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
         self.WINDOW_RANGE = range(game_table.max_level + 1)
         self._WINDOW_RANGES = self._get_window_ranges()
-        if proc_file:
-            self._WRITE_FEATURES = lambda: self.writeCurrentFeatures(file=proc_file)
+        if sessions_file:
+            self._WRITE_FEATURES = lambda: self.writeCurrentFeatures(file=sessions_file)
         else:
             self._WRITE_FEATURES = lambda: utils.Logger.toStdOut("Dumping feature data, no writable file was given!")
         self._cur_gameplay = 1
