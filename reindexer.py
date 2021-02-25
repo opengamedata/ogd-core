@@ -13,7 +13,7 @@ def meta_to_index(meta, data_dir):
         {
             "proc":f"{data_dir}{meta['proc'].split('/')[-1]}" if meta['proc'] is not None else None,
             "raw":f"{data_dir}{meta['raw'].split('/')[-1]}" if meta['raw'] is not None else None,
-            "dump":f"{data_dir}{meta['dump'].split('/')[-1]}" if meta['dump'] is not None else None,
+            "events":f"{data_dir}{meta['events'].split('/')[-1]}" if meta['events'] is not None else None,
             "start_date"   :meta['start_date'],
             "end_date"     :meta['end_date'],
             "date_modified":meta['date_modified'],
@@ -54,7 +54,7 @@ def index_zip(root, name, indexed_files):
             {
                 "proc":f"{root}{name}" if kind == 'session' else None,
                 "raw":f"{root}{name}" if kind == 'raw' else None,
-                "dump":f"{root}{name}" if kind == 'events' else None,
+                "events":f"{root}{name}" if kind == 'events' else None,
                 "start_date"   :start_date,
                 "end_date"     :end_date,
                 "date_modified":None,
@@ -67,9 +67,9 @@ def index_zip(root, name, indexed_files):
         if indexed_files[game_id][dataset_id]["raw"] == None and kind == 'raw':
             print(f"Updating index with {os.path.join(root, name)}")
             indexed_files[game_id][dataset_id]["raw"] = f"{root}{name}"
-        if indexed_files[game_id][dataset_id]["dump"] == None and kind == 'events':
+        if indexed_files[game_id][dataset_id]["events"] == None and kind == 'events':
             print(f"Updating index with {os.path.join(root, name)}")
-            indexed_files[game_id][dataset_id]["dump"] = f"{root}{name}"
+            indexed_files[game_id][dataset_id]["events"] = f"{root}{name}"
     return indexed_files
 
 def generate_index(walk_data):

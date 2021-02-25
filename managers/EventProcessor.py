@@ -8,23 +8,23 @@ import GameTable
 from schemas.Schema import Schema
 
 ## @class EventProcessor
-#  Class to manage data for a csv dump file.
+#  Class to manage data for a csv events file.
 class EventProcessor:
     ## Constructor for the EventProcessor class.
     #  Stores some of the passed data, and generates some other members.
     #  In particular, generates a mapping from column names back to indices of columns in the
-    #  dump csv.
+    #  events csv.
     #  @param game_table    A data structure containing information on how the db
     #                       table assiciated with the given game is structured. 
     #  @param game_schema   A dictionary that defines how the game data itself
     #                       is structured.
-    #  @param dump_csv_file The output file, to which we'll write the dumped game data.
+    #  @param events_csv_file The output file, to which we'll write the event game data.
     def __init__(self, game_table: GameTable, game_schema: Schema,
-                 dump_csv_file: typing.IO.writable):
+                  events_csv_file: typing.IO.writable):
         # define instance vars
         self._lines             : typing.List[typing.List] = []
         self._game_table        : GameTable           = game_table
-        self._dump_file         : typing.IO.writable  = dump_csv_file
+        self._events_file       : typing.IO.writable  = events_csv_file
         self._db_columns        : typing.List[str]    = game_schema.db_columns()
 
     ## Function to handle processing one row of data.
@@ -50,11 +50,11 @@ class EventProcessor:
         utils.Logger.toStdOut(f"Clearing {len(self._lines)} entries from EventProcessor.", logging.DEBUG)
         self._lines = []
 
-    ## Function to write out the header for a dump csv file.
-    def WriteDumpCSVHeader(self):
-        self._dump_file.write("\t".join(self._db_columns) + "\n")# changed , to \t
+    ## Function to write out the header for a events csv file.
+    def WriteEventsCSVHeader(self):
+        self._events_file.write("\t".join(self._db_columns) + "\n")# changed , to \t
 
-    ## Function to write out all lines of dumped data that have been parsed so far.
-    def WriteDumpCSVLines(self):
+    ## Function to write out all lines of event data that have been parsed so far.
+    def WriteEventsCSVLines(self):
         for line in self._lines:
-            self._dump_file.write(line)
+            self._events_file.write(line)

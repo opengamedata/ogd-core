@@ -192,10 +192,10 @@ class ExportManager:
                 raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
                                     raw_csv_file=file_manager.GetRawFile())
                 raw_mgr.WriteRawCSVHeader()
-            if export_files.dump:
+            if export_files.events:
                 evt_processor = EventProcessor(game_table=game_table, game_schema=game_schema,
-                                    dump_csv_file=file_manager.GetDumpFile())
-                evt_processor.WriteDumpCSVHeader()
+                                    events_csv_file=file_manager.GetEventsFile())
+                evt_processor.WriteEventsCSVHeader()
 
             num_sess = len(game_table.session_ids)
             utils.Logger.toStdOut(f"Preparing to process {num_sess} sessions.", logging.INFO)
@@ -229,8 +229,8 @@ class ExportManager:
                 if export_files.raw:
                     raw_mgr.WriteRawCSVLines()
                     raw_mgr.ClearLines()
-                if export_files.dump:
-                    evt_processor.WriteDumpCSVLines()
+                if export_files.events:
+                    evt_processor.WriteEventsCSVLines()
                     evt_processor.ClearLines()
             ret_val = num_sess
         except Exception as err:
@@ -246,8 +246,8 @@ class ExportManager:
             #     proc_csv_file.close()
             # if export_files.raw:
             #     raw_csv_file.close()
-            # if export_files.dump:
-            #     dump_csv_file.close()
+            # if export_files.events:
+            #     events_csv_file.close()
             return ret_val
 
     ## Private helper function to process a single row of data.

@@ -21,7 +21,7 @@ settings = {
         "data_source": "DB",
         "DB_HOST" : "rt_hostname",
         "SSH_HOST": "rt_hostname",
-        "path": "path\\to\\dump\\file.tsv"
+        "path": "path\\to\\events\\file.tsv"
     },
     "BATCH_SIZE":1000,
     "DEBUG_LEVEL":"INFO"

@@ -67,6 +67,6 @@ python3 main.py export-session-features JOWILDER 1/1/2019 2/28/2019
 In the example above, only the processed session features from the JOWILDER data during given date range are exported.
 
 ```
-python3 main.py export JOWILDER --file=C:\path\to\opengamedata-backend\data\JOWILDER\JOWILDER_20190101_to_20190228_1234abc_dump.zip
+python3 main.py export JOWILDER --file=C:\path\to\opengamedata-backend\data\JOWILDER\JOWILDER_20190101_to_20190228_1234abc_events.zip
 ```
 In the example above, events and processed session features are exported from the data at the specified file path.
