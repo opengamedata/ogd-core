@@ -79,7 +79,7 @@ def GenerateReadme(game_name:str, schema, path:str = "./"):
 #
 #  @param game_name         The name of the game for which the csv metadata is being generated.
 #  @param raw_field_list    A mapping of raw csv "fields" to descriptions of the fields.
-#  @param sessions_field_list   A mapping of processed csv features to descriptions of the features.
+#  @param sessions_field_list   A mapping of session csv features to descriptions of the features.
 #  @return                  A string containing metadata for the given game.
 def GenCSVMetadata(game_name: str, raw_field_list: typing.Dict[str,str], sessions_field_list: typing.Dict[str,str]) -> str:
     raw_field_descriptions = [f"{key} - {raw_field_list[key]}" for key in raw_field_list.keys()]
@@ -102,7 +102,7 @@ f"## Field Day Open Game Data \n\
 ### Raw CSV Columns:\n\
 {raw_field_string}\n\
 \n\
-### Processed Features:\n\
+### Processed Session Features:\n\
 {sessions_field_string}\n\
 \n"
     return template_str
