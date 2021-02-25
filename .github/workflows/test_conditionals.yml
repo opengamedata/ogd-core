@@ -3,6 +3,10 @@ name: Test running conditionals.
 on:
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
     inputs:
+      game:
+        description: "The games to be exported, comma-separated"
+        required: true
+        default: "JOWILDER"
       monthly:
         description: "The conditional"
         required: true
@@ -11,6 +15,11 @@ jobs:
   test_export:
     name: Export Game
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        game: [ ${{ github.event.inputs.game }} ]
+      fail-fast: false # we don't want to cancel just because one game fails.
+      max-parallel: 1
 
     steps:
     - name: Do Export of Month
