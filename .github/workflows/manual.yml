@@ -42,7 +42,7 @@ jobs:
         sudo apt-get -q install python3.8-dev
     - uses: actions/checkout@v2
     - name: Do Export of Month
-      if: ${{ github.event.inputs.monthly }} == 'true'
+      if: github.event.inputs.monthly == 'true'
       uses: ./.github/actions/export_custom_month
       with:
         game: ${{github.event.inputs.game}}
@@ -53,7 +53,7 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
     - name: Do Export of Range
-      if: ${{ github.event.inputs.monthly }} == 'false'
+      if: github.event.inputs.monthly == 'false'
       uses: ./.github/actions/export_custom
       with:
         game: ${{github.event.inputs.game}}
