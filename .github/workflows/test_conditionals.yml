@@ -9,6 +9,10 @@ on:
         default: false
 jobs:
   test_export:
+    name: Export Game
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Do Export of Month
       if: ${{ github.event.inputs.monthly }} == 'true'
       run: echo Did it!
