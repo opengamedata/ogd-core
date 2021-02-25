@@ -17,5 +17,5 @@ jobs:
       if: ${{ github.event.inputs.monthly == 'true' }}
       run: echo Did it!
     - name: Do Export of Range
-      if: ${{ github.event.inputs.monthly == 'false' }}
+      if: ${{ github.event.inputs.monthly != 'true' }}
       run: echo Did not do it!
