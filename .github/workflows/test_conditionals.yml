@@ -1,0 +1,17 @@
+# Workflow to test-run data when we modify CrystalExtractor.
+name: Test running conditionals.
+on:
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+    inputs:
+      monthly:
+        description: "The conditional"
+        required: true
+        default: false
+jobs:
+  test_export:
+    - name: Do Export of Month
+      if: ${{ github.event.inputs.monthly }} == 'true'
+      run: echo Did it!
+    - name: Do Export of Range
+      if: ${{ github.event.inputs.monthly }} == 'false'
+      run: echo Didn't do it!
