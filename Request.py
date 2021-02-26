@@ -10,12 +10,12 @@ from schemas.Schema import Schema
 #  Completely dumb struct that just enforces the names of the three kinds of file we can output.
 #  @param events Bool stating whether to output a events file or not.
 #  @param raw  Bool stating whether to output a raw file or not.
-#  @param proc Bool stating whether to output a processed feature file or not.
+#  @param sessions Bool stating whether to output a processed session feature file or not.
 class ExportFiles:
-    def __init__(self, events:bool = True, raw:bool = True, proc:bool = True):
+    def __init__(self, events:bool = True, raw:bool = True, sessions:bool = True):
         self.events = events
         self.raw = False
-        self.proc = proc
+        self.sessions = sessions
 
 ## @class Request
 #  Dumb struct to hold data related to requests for data export.
