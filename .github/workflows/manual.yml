@@ -5,9 +5,9 @@ on:
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
     inputs:
       game:
-        description: "The game to be exported"
+        description: "The game(s) to be exported, comma-separated"
         required: true
-        default: "JOWILDER"
+        default: "['BACTERIA']"
       monthly:
         description: "If true, use month/year. Else, use start and end dates"
         required: true
@@ -21,14 +21,18 @@ on:
         required: false
         default: "01/01/2021"
       month_year:
-        description: "The month and year export. Only used if 'monthly' is true."
+        description: "The month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
         required: false
-        default: "01/2021"
+        default: "['01/2021']"
 
 jobs:
   export_data:
     name: Export Game
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        game: ${{ FromJson(github.event.inputs.game) }}
+        month_year: ${{ FromJson(github.event.inputs.month_year) }}
 
     # Steps to set up for and execute an export
     steps:
