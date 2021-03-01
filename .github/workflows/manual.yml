@@ -36,6 +36,8 @@ jobs:
       matrix:
         game: ${{ FromJson(github.event.inputs.game) }}
         month_year: ${{ FromJson(github.event.inputs.month_year) }}
+      fail-fast: false # we don't want to cancel just because one game fails.
+      max-parallel: 1
 
     # Steps to set up for and execute an export
     steps:
