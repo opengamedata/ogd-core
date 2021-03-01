@@ -22,6 +22,8 @@ jobs:
       max-parallel: 1
 
     steps:
+    - name: print out the game name
+      run: echo ${{matrix.game}}
     - name: Do Export of Month
       if: github.event.inputs.monthly == 'true'
       run: echo Did it!
