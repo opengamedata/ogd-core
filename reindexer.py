@@ -77,7 +77,7 @@ def generate_index(walk_data):
     zips = []
     for root, subdirs, files in walk_data:
         for name in files:
-            if not 'BACKUP' in name:
+            if not 'BACKUP' in root:
                 ext = name.split('.')[-1]
                 if (ext == 'meta'):
                     print(f"Indexing {os.path.join(root, name)}")
