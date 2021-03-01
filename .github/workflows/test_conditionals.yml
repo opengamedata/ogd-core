@@ -6,7 +6,7 @@ on:
       game:
         description: "The games to be exported, comma-separated"
         required: true
-        default: "JOWILDER"
+        default: ["JOWILDER"]
       monthly:
         description: "The conditional"
         required: true
