@@ -77,13 +77,16 @@ def generate_index(walk_data):
     zips = []
     for root, subdirs, files in walk_data:
         for name in files:
-            ext = name.split('.')[-1]
-            if (ext == 'meta'):
-                print(f"Indexing {os.path.join(root, name)}")
-                indexed_files = index_meta(root, name, indexed_files)
-            elif (ext == 'zip'):
-                print(f"Reserving {os.path.join(root, name)}")
-                zips.append((root, name))
+            if not 'BACKUP' in name:
+                ext = name.split('.')[-1]
+                if (ext == 'meta'):
+                    print(f"Indexing {os.path.join(root, name)}")
+                    indexed_files = index_meta(root, name, indexed_files)
+                elif (ext == 'zip'):
+                    print(f"Reserving {os.path.join(root, name)}")
+                    zips.append((root, name))
+                else:
+                    print(f"Doing nothing with {os.path.join(root, name)}")
             else:
                 print(f"Doing nothing with {os.path.join(root, name)}")
     for root,name in zips:
