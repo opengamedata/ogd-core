@@ -49,8 +49,8 @@ jobs:
       if: github.event.inputs.monthly == 'true'
       uses: ./.github/actions/export_custom_month
       with:
-        game: ${{github.event.inputs.game}}
-        month_year: ${{github.event.inputs.month_year}}
+        game: ${{matrix.game}}
+        month_year: ${{matrix.month_year}}
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
         sql_host: ${{secrets.SQL_HOST}}
@@ -60,7 +60,7 @@ jobs:
       if: github.event.inputs.monthly == 'false'
       uses: ./.github/actions/export_custom
       with:
-        game: ${{github.event.inputs.game}}
+        game: ${{matrix.game}}
         start_date: ${{github.event.inputs.start_date}}
         end_date: ${{github.event.inputs.end_date}}
         vpn_user: ${{secrets.VPN_USER}}
