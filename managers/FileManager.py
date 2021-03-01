@@ -216,7 +216,7 @@ class FileManager(abc.ABC):
                 prior_export = self._dataset_id in existing_csvs[self._game_id].keys()
                 sessions_path = self._zip_names["sessions_f"] if self._zip_names["sessions_f"] is not None else (existing_csvs[self._game_id][self._dataset_id]["sessions_f"] if prior_export else None)
                 raw_path  = self._zip_names["raw_f"]  if self._zip_names["raw_f"]  is not None else (existing_csvs[self._game_id][self._dataset_id]["raw_f"]  if prior_export else None)
-                events_path = self._zip_names["events_f"] if self._zip_names["eventsPf"] is not None else (existing_csvs[self._game_id][self._dataset_id]["events_f"] if prior_export else None)
+                events_path = self._zip_names["events_f"] if self._zip_names["events_f"] is not None else (existing_csvs[self._game_id][self._dataset_id]["events_f"] if prior_export else None)
                 existing_csvs[self._game_id][self._dataset_id] = \
                 {
                     "sessions_f":sessions_path,
