@@ -137,8 +137,17 @@ class ExportManager:
             # If we have a schema, we can do feature extraction.
             if game_schema is not None:
                 # 4) Loop over data, running extractors.
+                start = datetime.now()
+
                 num_sess: int = self._extractToCSVs(file_manager=file_manager, data_manager=data_manager,\
                                     game_schema=game_schema, game_table=game_table, game_extractor=game_extractor, export_files=export_files)
+
+                time_delta = datetime.now() - start
+                num_min = math.floor(time_delta.total_seconds()/60)
+                num_sec = time_delta.total_seconds() % 60
+                status_string = f"Total Data Extraction Time: {num_min} min, {num_sec:.3f} sec"
+                utils.Logger.toStdOut(status_string, logging.INFO)
+                utils.Logger.toFile(status_string, logging.INFO)
                 # 5) Save and close files
                 # before we zip stuff up, let's ensure the readme is in place:
                 try:
