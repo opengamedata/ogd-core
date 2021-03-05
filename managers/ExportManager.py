@@ -216,34 +216,31 @@ class ExportManager:
                             range( j*slice_size, min((j+1)*slice_size, num_sess) )] for j in
                             range( 0, math.ceil(num_sess / slice_size) )]
             for i, next_slice in enumerate(session_slices):
-                next_data_set = data_manager.RetrieveSliceData(next_slice)
-                # now, we process each row.
-                start = datetime.now()
-                for row in next_data_set:
-                    self._processRow(row=row, game_table=game_table, raw_mgr=raw_mgr, sess_processor=sess_processor, evt_processor=evt_processor)
-                time_delta = datetime.now() - start
-                num_min = math.floor(time_delta.total_seconds()/60)
-                num_sec = time_delta.total_seconds() % 60
                 try:
-                    num_events = len(next_data_set)
+                    start = datetime.now()
+                    next_data_set = data_manager.RetrieveSliceData(next_slice)
+                    # now, we process each row.
+                    for row in next_data_set:
+                        self._processRow(row=row, game_table=game_table, raw_mgr=raw_mgr, sess_processor=sess_processor, evt_processor=evt_processor)
+                    # after processing all rows for each slice, write out the session data and reset for next slice.
+                    if export_files.sessions:
+                        sess_processor.calculateAggregateFeatures()
+                        sess_processor.WriteSessionCSVLines()
+                        sess_processor.ClearLines()
+                    if export_files.raw:
+                        raw_mgr.WriteRawCSVLines()
+                        raw_mgr.ClearLines()
+                    if export_files.events:
+                        evt_processor.WriteEventsCSVLines()
+                        evt_processor.ClearLines()
                 except Exception as err:
                     raise Exception(f"Error while processing {next_data_set}, type={type(next_data_set)}")
-
-                status_string = f"Processing time for slice [{i+1}/{len(session_slices)}]: {num_min} min, {num_sec:.3f} sec to handle {num_events} events"
-                utils.Logger.toStdOut(status_string, logging.INFO)
-                utils.Logger.toFile(status_string, logging.INFO)
-                
-                # after processing all rows for all slices, write out the session data and reset for next slice.
-                if export_files.sessions:
-                    sess_processor.calculateAggregateFeatures()
-                    sess_processor.WriteSessionCSVLines()
-                    sess_processor.ClearLines()
-                if export_files.raw:
-                    raw_mgr.WriteRawCSVLines()
-                    raw_mgr.ClearLines()
-                if export_files.events:
-                    evt_processor.WriteEventsCSVLines()
-                    evt_processor.ClearLines()
+                else:
+                    time_delta = datetime.now() - start
+                    num_min = math.floor(time_delta.total_seconds()/60)
+                    num_sec = time_delta.total_seconds() % 60
+                    num_events = len(next_data_set)
+                    utils.Logger.Log(f"Processing time for slice [{i+1}/{len(session_slices)}]: {num_min} min, {num_sec:.3f} sec to handle {num_events} events", logging.INFO)
             ret_val = num_sess
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
