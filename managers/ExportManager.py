@@ -61,8 +61,7 @@ class ExportManager:
         tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
         if db is None:
             msg = f"Could not complete request {str(request)}, database connection failed."
-            utils.Logger.toStdOut(msg, logging.ERROR)
-            utils.Logger.toFile(msg, logging.ERROR)
+            utils.Logger.Log(msg, logging.ERROR)
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return
         # If that was successful, we set up data retrieval with a game table and SQLDataManager.
@@ -72,8 +71,7 @@ class ExportManager:
             game_table: GameTable = GameTable.FromDB(db=db, settings=self._settings, request=request)
             # once we've set up DataManager and gotten a bit of data, we can run the Export.
             if self._runExport(data_manager=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files):
-                utils.Logger.toStdOut(f"Successfully completed request {str(request)}.", logging.INFO)
-                utils.Logger.toFile(f"Successfully completed request {str(request)}.", logging.INFO)
+                utils.Logger.Log(f"Successfully completed request {str(request)}.", logging.INFO)
             else:
                 utils.Logger.Log(f"Could not complete request {str(request)}", logging.ERROR)
         except Exception as err:
@@ -145,9 +143,7 @@ class ExportManager:
                 time_delta = datetime.now() - start
                 num_min = math.floor(time_delta.total_seconds()/60)
                 num_sec = time_delta.total_seconds() % 60
-                status_string = f"Total Data Extraction Time: {num_min} min, {num_sec:.3f} sec"
-                utils.Logger.toStdOut(status_string, logging.INFO)
-                utils.Logger.toFile(status_string, logging.INFO)
+                utils.Logger.Log(f"Total Data Extraction Time: {num_min} min, {num_sec:.3f} sec", logging.INFO)
                 # 5) Save and close files
                 # before we zip stuff up, let's ensure the readme is in place:
                 try:
