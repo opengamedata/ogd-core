@@ -58,6 +58,7 @@ class ExportManager:
             utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.game_id}", logging.WARNING)
             self._game_id = request.game_id
         # 1) we first get the source, which is a SQL connection.
+        start = datetime.now()
         tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
         if db is None:
             msg = f"Could not complete request {str(request)}, database connection failed."
@@ -69,6 +70,12 @@ class ExportManager:
             data_manager = SQLDataManager(game_id=request.game_id, game_schema=game_schema, settings=settings)
             date_range = (request.start_date, request.end_date)
             game_table: GameTable = GameTable.FromDB(db=db, settings=self._settings, request=request)
+
+            #***
+            time_delta = datetime.now() - start
+            num_min = math.floor(time_delta.total_seconds()/60)
+            num_sec = time_delta.total_seconds() % 60
+            utils.Logger.Log(f"Database Connection Time: {num_min} min, {num_sec:.3f} sec", logging.INFO)
             # once we've set up DataManager and gotten a bit of data, we can run the Export.
             if self._runExport(data_manager=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files):
                 utils.Logger.Log(f"Successfully completed request {str(request)}.", logging.INFO)
