@@ -27,6 +27,10 @@ def loadJSONFile(filename: str, path:str = "./") -> object:
     ret_val = None
     try:
         json_file = open(path+filename, "r")
+    except FileNotFoundError as err:
+        Logger.toStdOut(f"File {path+filename} does not exist.", logging.WARNING)
+        raise err
+    try:
         ret_val = json.loads(json_file.read())
         json_file.close()
     except Exception as err:
@@ -52,7 +56,7 @@ def GenerateReadme(game_name:str, schema, path:str = "./"):
         # 2. Use schema to write feature & column descriptions to the readme.
         feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
         readme.write(GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
-                                                            proc_field_list=feature_descriptions))
+                                                            sessions_field_list=feature_descriptions))
         # 3. Append any important data from the data changelog.
         try:
             changelog_src = open("./doc/readme_src/changelog_src.md", "r")
@@ -75,13 +79,13 @@ def GenerateReadme(game_name:str, schema, path:str = "./"):
 #
 #  @param game_name         The name of the game for which the csv metadata is being generated.
 #  @param raw_field_list    A mapping of raw csv "fields" to descriptions of the fields.
-#  @param proc_field_list   A mapping of processed csv features to descriptions of the features.
+#  @param sessions_field_list   A mapping of session csv features to descriptions of the features.
 #  @return                  A string containing metadata for the given game.
-def GenCSVMetadata(game_name: str, raw_field_list: typing.Dict[str,str], proc_field_list: typing.Dict[str,str]) -> str:
+def GenCSVMetadata(game_name: str, raw_field_list: typing.Dict[str,str], sessions_field_list: typing.Dict[str,str]) -> str:
     raw_field_descriptions = [f"{key} - {raw_field_list[key]}" for key in raw_field_list.keys()]
-    proc_field_descriptions = [f"{key} - {proc_field_list[key]}" for key in proc_field_list.keys()]
+    sessions_field_descriptions = [f"{key} - {sessions_field_list[key]}" for key in sessions_field_list.keys()]
     raw_field_string = "\n".join(raw_field_descriptions)
-    proc_field_string = "\n".join(proc_field_descriptions)
+    sessions_field_string = "\n".join(sessions_field_descriptions)
     template_str = \
 f"## Field Day Open Game Data \n\
 ### Retrieved from https://fielddaylab.wisc.edu/opengamedata \n\
@@ -98,8 +102,8 @@ f"## Field Day Open Game Data \n\
 ### Raw CSV Columns:\n\
 {raw_field_string}\n\
 \n\
-### Processed Features:\n\
-{proc_field_string}\n\
+### Processed Session Features:\n\
+{sessions_field_string}\n\
 \n"
     return template_str
 

@@ -14,7 +14,7 @@ from datetime import timedelta
 ## @class Extractor
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
-#  and defines an interface that the ProcManager can use.
+#  and defines an interface that the SessionProcessor can use.
 class Extractor(abc.ABC):
     ## @var Schema _schema
     #  The schema specifying structure of data associated with an extractor.

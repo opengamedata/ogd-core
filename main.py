@@ -99,7 +99,7 @@ def runExport(events: bool = False, features: bool = False):
             _execExport(game_id, start_date, end_date, events=events, features=features)
             utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
 
-def _execMonthExport(game_id, month, year, events, features):
+def _execMonthExport(game_id, month, year, events: bool, features: bool):
     from calendar import monthrange
     month_range = monthrange(year, month)
     days_in_month = month_range[1]
@@ -107,9 +107,9 @@ def _execMonthExport(game_id, month, year, events, features):
     end_date   = datetime(year=year, month=month, day=days_in_month, hour=23, minute=59, second=59)
     _execExport(game_id, start_date, end_date, events, features)
 
-def _execExport(game_id, start_date, end_date, events, features):
+def _execExport(game_id, start_date, end_date, events: bool, features: bool):
     # Once we have the parameters parsed out, construct the request.
-    export_files = Request.ExportFiles(dump=events, raw=False, proc=features)
+    export_files = Request.ExportFiles(events=events, raw=False, sessions=features)
     req = Request.DateRangeRequest(game_id=game_id, start_date=start_date, end_date=end_date, \
                 export_files=export_files)
     start = datetime.now()
@@ -139,7 +139,7 @@ def _extractFromFile(file_path: str, events: bool = False, features: bool = Fals
         showHelp()
         return
     start = datetime.now()
-    export_files = Request.ExportFiles(dump=events, raw=False, proc=features) 
+    export_files = Request.ExportFiles(events=events, raw=False, sessions=features) 
     req = Request.FileRequest(file_path=file_path, game_id=game_id, export_files=export_files)
     # breakpoint()
     export_manager = ExportManager(game_id=req.game_id, settings=settings)
@@ -171,7 +171,7 @@ def showGameInfo():
 
         feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
         print(utils.GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),\
-                                                        proc_field_list=feature_descriptions))
+                                                        sessions_field_list=feature_descriptions))
     else:
         print("Error, no game name given!")
         showHelp()

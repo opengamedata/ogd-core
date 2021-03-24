@@ -19,7 +19,7 @@ class RawManager:
     #                       table assiciated with the given game is structured. 
     #  @param game_schema   A dictionary that defines how the game data itself
     #                       is structured.
-    #  @param proc_csv_file The output file, to which we'll write the raw game data.
+    #  @param sessions_csv_file The output file, to which we'll write the raw game data.
     def __init__(self, game_table: GameTable, game_schema: Schema,
                  raw_csv_file: typing.IO.writable):
         # define instance vars

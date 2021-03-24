@@ -40,7 +40,7 @@ class FeatVelocityModel(FeatureModel):
             time = max(time_to_vals)
         else:
             time = sess[self._time_feat]
-        if type(time) is timedelta:  # proc features give float, but cgi might give timedelta
+        if type(time) is timedelta:  # sessions features give float, but cgi might give timedelta
             time = time.seconds
 
         return num_reached_feats / time * 1000

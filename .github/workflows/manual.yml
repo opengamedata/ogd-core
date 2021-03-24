@@ -1,0 +1,99 @@
+
+# Workflow to run monthly exports of data.
+# All games, and months, for copy-paste:
+# game: ['AQUALAB', 'BACTERIA', 'BALLOON', 'CRYSTAL', 'CYCLE_CARBON', 'CYCLE_NITROGEN', 'CYCLE_WATER', 'EARTHQUAKE', 'JOWILDER', 'LAKELAND', 'MAGNET', 'STEMPORTS', 'WAVES', 'WIND']
+# month-year: ['03/2019', '04/2019', '05/2019', '06/2019', '07/2019', '08/2019', '09/2019', '10/2019', '11/2019', '12/2019', '01/2020', '02/2020', '03/2020', '04/2020', '05/2020', '06/2020', '07/2020', '08/2020', '09/2020']
+name: Manual Export
+on:
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+    inputs:
+      game:
+        description: "The game(s) to be exported, comma-separated"
+        required: true
+        default: "['BACTERIA']"
+      monthly:
+        description: "If true, use month/year. Else, use start and end dates"
+        required: true
+        default: false
+      start_date:
+        description: "The start date for the export"
+        required: false
+        default: "01/01/2021"
+      end_date:
+        description: "The end date for the export"
+        required: false
+        default: "01/01/2021"
+      month_year:
+        description: "The month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
+        required: false
+        default: "['01/2021']"
+
+jobs:
+  export_data:
+    name: Export Game
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        game: ${{ FromJson(github.event.inputs.game) }}
+        month_year: ${{ FromJson(github.event.inputs.month_year) }}
+      fail-fast: false # we don't want to cancel just because one game fails.
+      max-parallel: 1
+
+    # Steps to set up for and execute an export
+    steps:
+    - name: Get OpenConnect
+      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get -q update && sudo apt-get -q install openconnect
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - name: Get correct Python
+      run: |
+        sudo apt-get -q install python3.8
+        sudo apt-get -q install python3.8-dev
+    - uses: actions/checkout@v2
+    - name: Do Export of Month
+      if: github.event.inputs.monthly == 'true'
+      uses: ./.github/actions/export_custom_month
+      with:
+        game: ${{matrix.game}}
+        month_year: ${{matrix.month_year}}
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{secrets.SQL_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+    - name: Do Export of Range
+      if: github.event.inputs.monthly == 'false'
+      uses: ./.github/actions/export_custom
+      with:
+        game: ${{matrix.game}}
+        start_date: ${{github.event.inputs.start_date}}
+        end_date: ${{github.event.inputs.end_date}}
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{secrets.SQL_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+    - name: Upload files to opengamedata via scp
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
+        scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
+  
+  trigger_reindex:
+    name: Reindex OpenGameData Files
+    runs-on: ubuntu-latest
+    if: always()
+    needs: export_data
+    steps:
+    - name: Get OpenConnect
+      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - name: Trigger reindex via ssh
+      # run: echo "placeholder for reindexing!"
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata; pwd; ls; python3 reindexer.py;"

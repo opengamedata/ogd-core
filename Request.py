@@ -8,14 +8,14 @@ from schemas.Schema import Schema
 
 ## @class FileExports
 #  Completely dumb struct that just enforces the names of the three kinds of file we can output.
-#  @param dump Bool stating whether to output a dump file or not.
+#  @param events Bool stating whether to output a events file or not.
 #  @param raw  Bool stating whether to output a raw file or not.
-#  @param proc Bool stating whether to output a processed feature file or not.
+#  @param sessions Bool stating whether to output a processed session feature file or not.
 class ExportFiles:
-    def __init__(self, dump:bool = True, raw:bool = True, proc:bool = True):
-        self.dump = dump
+    def __init__(self, events:bool = True, raw:bool = True, sessions:bool = True):
+        self.events = events
         self.raw = False
-        self.proc = proc
+        self.sessions = sessions
 
 ## @class Request
 #  Dumb struct to hold data related to requests for data export.
@@ -72,6 +72,9 @@ class IDListRequest(Request):
         Request.__init__(self, game_id=game_id, export_files=export_files)
         self._session_ids = session_ids
 
+    def __str__(self):
+        return f"{self.game_id}: {self._session_ids[0]}-{self._session_ids[-1]}"
+
     ## Method to retrieve the list of IDs for all sessions covered by
     #  the request. Should just be the original request list.
     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
@@ -81,6 +84,9 @@ class FileRequest(Request):
     def __init__(self, file_path, game_id: str = None, export_files: ExportFiles = ExportFiles()):
         Request.__init__(self, game_id=game_id, export_files=export_files)
         self.file_path = file_path
+
+    def __str__(self):
+        return f"{self.game_id}: {str(self.file_path)}"
 
     # TODO: actually get the sessionIDs, so this request behaves properly.
     def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:

@@ -21,3 +21,4 @@ config.py
 python_errors.log
 *__pycache__/*
 rsync-exclude
+*.log

@@ -1,9 +1,16 @@
-# Workflow to test-run data when we modify LakelandExtractor.
-name: Lakeland Exporter CI Test
+# Workflow to run a test export of Crystal whenever we change the core OGD backend code.
+# Chose Crystal simply because it has an extractor, but not a particularly complex one.
+name: OpenGameData Backend Continuous Integration
 on:
   push:
     paths:
-    - 'feature_extractors/LakelandExtractor.py'
+    - 'managers/**'
+    - 'schemas/Schema.py'
+    - 'main.py'
+    - 'GameTable.py'
+    - 'Request.py'
+    - 'utils.py'
+
 jobs:
   test_export:
     runs-on: ubuntu-latest
@@ -20,7 +27,7 @@ jobs:
     - name: Do Export
       uses: ./.github/actions/export_yesterday
       with:
-        game: LAKELAND
+        game: CRYSTAL
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
         sql_host: ${{secrets.SQL_HOST}}
@@ -29,4 +36,4 @@ jobs:
     - name: Upload zips as artifacts
       uses: actions/upload-artifact@v2
       with:
-        path: ./data/LAKELAND/*.zip
+        path: ./data/CRYSTAL/*.zip

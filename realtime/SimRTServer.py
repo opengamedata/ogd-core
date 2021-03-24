@@ -16,7 +16,7 @@ from feature_extractors.CrystalExtractor import CrystalExtractor
 from feature_extractors.WaveExtractor import WaveExtractor
 from feature_extractors.LakelandExtractor import LakelandExtractor
 from GameTable import GameTable
-from managers.ProcManager import ProcManager
+from managers.SessionProcessor import SessionProcessor
 from models.Model import ModelInputType
 # from models.Model import *
 from realtime.ModelManager import ModelManager
@@ -120,7 +120,7 @@ class SimRTServer:
                 elif game_id == "CRYSTAL":
                     extractor = CrystalExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
                 elif game_id == "LAKELAND":
-                    extractor = LakelandExtractor(session_id=sess_id, game_table=game_table, game_schema=schema, proc_file=None)
+                    extractor = LakelandExtractor(session_id=sess_id, game_table=game_table, game_schema=schema, sessions_file=None)
                 else:
                     raise Exception("Got an invalid game ID!")
                 for row in session_data:
