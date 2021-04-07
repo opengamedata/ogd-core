@@ -4,6 +4,7 @@ on:
   push:
     paths:
     - 'feature_extractors/JowilderExtractor.py'
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
   test_export:
     runs-on: ubuntu-18.04
