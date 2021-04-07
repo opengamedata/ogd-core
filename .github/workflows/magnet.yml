@@ -6,7 +6,7 @@ on:
     - 'feature_extractors/MagnetExtractor.py'
 jobs:
   test_export:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
     - name: Get OpenConnect
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get -q update && sudo apt-get -q install openconnect
