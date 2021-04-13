@@ -148,8 +148,6 @@ class JowilderExtractor(Extractor):
         self._last_quizstart = None
         self._quiztimes = [None]*16
 
-
-
     def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
         try:
             self._extractFeaturesFromRow(row_with_complex_parsed, game_table)
@@ -159,8 +157,6 @@ class JowilderExtractor(Extractor):
                 place('\n'.join(traceback.format_exception(exc_type, exc_value, exc_traceback)), logging.ERROR)
                 place('DEBUG STRINGS:', logging.ERROR)
                 place(self.get_debug_string(num_lines=20), logging.ERROR)
-
-            
 
     def _extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
         # put some data in local vars, for readability later.
@@ -435,9 +431,6 @@ class JowilderExtractor(Extractor):
                 if interaction_enum != self.cur_objective and not self.finished_encounters[interaction_enum]: # if its different from the current objective
                     new_objective(new_obj=interaction_enum)
 
-
-
-
     def _extractFromHover(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
@@ -490,7 +483,6 @@ class JowilderExtractor(Extractor):
         # set features
         for i, response in enumerate(_questions):
             self.features.setValByIndex(feature_name="quiz_response", index=i, new_value=response["response_index"])
-
 
     def _extractFromQuizquestion(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -572,7 +564,6 @@ class JowilderExtractor(Extractor):
 
         # set features
         self.setValByIndex(feature_name='s_time', index=quiz_index, new_value=quiz_duration)
-
 
     def _extractFromStartgame(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -865,7 +856,6 @@ class JowilderExtractor(Extractor):
 
         # set features
 
-
     def _extractFromNavigate_hover(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
         d = event_data_complex_parsed
@@ -1008,7 +998,6 @@ class JowilderExtractor(Extractor):
         for obj in range(je.level_to_start_obj[self.level]):
             self.finished_encounters[obj] = True
 
-
     def calculateAggregateFeatures(self):
         pass
 
@@ -1064,23 +1053,23 @@ class JowilderExtractor(Extractor):
         of (from wikipedia):
         K = n = Ex = Ex2 = 0.0
 
-def add_variable(x):
-    if (n == 0):
-        K = x
-    n = n + 1
-    Ex += x - K
-    Ex2 += (x - K) * (x - K)
+        def add_variable(x):
+            if (n == 0):
+                K = x
+            n = n + 1
+            Ex += x - K
+            Ex2 += (x - K) * (x - K)
 
-def remove_variable(x):
-    n = n - 1
-    Ex -= (x - K)
-    Ex2 -= (x - K) * (x - K)
+        def remove_variable(x):
+            n = n - 1
+            Ex -= (x - K)
+            Ex2 -= (x - K) * (x - K)
 
-def get_meanvalue():
-    return K + Ex / n
+        def get_meanvalue():
+            return K + Ex / n
 
-def get_variance():
-    return (Ex2 - (Ex * Ex) / n) / (n - 1)
+        def get_variance():
+            return (Ex2 - (Ex * Ex) / n) / (n - 1)
 
         :param fname_base:
         :param value:
