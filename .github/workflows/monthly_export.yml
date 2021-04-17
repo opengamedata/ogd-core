@@ -7,7 +7,7 @@ on:
 jobs:
   export_data:
     name: Export All Games
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     strategy:
       matrix:
         # don't use the first one until we've got STEMPORTS and AQUALAB

@@ -80,8 +80,17 @@ class MagnetExtractor(Extractor):
     def calculateAggregateFeatures(self):
         # Calculate per-level averages and percentages, since we can't calculate
         # them until we know how many total events occur.
+        totalScore = 0
         for level in self.levels:
-            pass
+            southScore = self.features.getValByIndex(feature_name="southPoleScore", index=level)
+            northScore = self.features.getValByIndex(feature_name="northPoleScore", index=level)
+            totalScore = totalScore + southScore + northScore
+        numPlays = self.features.getValByName(feature_name="numberOfCompletePlays")
+        if numPlays != 0:
+            avgScore = totalScore / numPlays
+        else:
+            avgScore = 0
+        self.features.setValByName(feature_name="averageScore", new_value=avgScore)
 
 
     ## Private function to extract features from a "COMPLETE" event.

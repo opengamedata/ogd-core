@@ -78,7 +78,9 @@
             "sessionID":"The player's session ID number for this play session",
             "persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",
             "sessionEventCount":"The total number of events across the entire session",
-            "sessionTime": "The total number of seconds spent"
+            "sessionTime": "The total number of seconds spent",
+            "numberOfCompletePlays": "The number of times the player played the game",
+            "averageScore": "The average score across all complete plays"
         }
     },
 
