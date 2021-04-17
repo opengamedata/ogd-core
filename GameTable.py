@@ -29,6 +29,7 @@ class GameTable:
         self.column_names: typing.List[str] = column_names
         # Take note of specific indices which will be useful when using a GameTable
         # TODO: Honestly, should just make a reverse index dictionary.
+        self.app_version_index:    int = self.column_names.index("app_version")
         self.complex_data_index:   int = self.column_names.index("event_data_complex")
         self.remote_addr_index:    int = self.column_names.index("remote_addr")
         self.client_time_index:    int = self.column_names.index("client_time")
