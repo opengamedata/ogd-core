@@ -52,7 +52,7 @@ class GameTable:
     def FromDB(db, settings, request: Request):
         db_settings = settings["db_config"]
         # TODO: Currently, this is retrieved separately from the schema. We may just want to load in one place, and check for a match or something.
-        query = "SHOW COLUMNS from {}.{}".format(db_settings["DB_NAME_DATA"], db_settings["table"])
+        query = f"SHOW COLUMNS from {db_settings['DB_NAME_DATA']}.{db_settings['table']}"
         db_cursor = db.cursor()
         col_names = utils.SQL.Query(cursor=db_cursor, query=query)
         if request.game_id == 'LAKELAND':

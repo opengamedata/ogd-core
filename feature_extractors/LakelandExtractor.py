@@ -319,7 +319,7 @@ class LakelandExtractor(Extractor):
             elif event_type_str == "RESET":
                 self._extractFromReset(event_client_time, event_data_complex_parsed)
             else:
-                raise Exception("Found an unrecognized event type: {}".format(event_type))
+                raise Exception(f"Found an unrecognized event type: {event_type}")
 
     def _extractFromFirst(self, event_client_time, event_data_complex_parsed):
         self._CLIENT_START_TIME = event_client_time
