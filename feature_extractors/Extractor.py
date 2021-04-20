@@ -61,7 +61,7 @@ class Extractor(abc.ABC):
         for key in features.keys():
             if type(features[key]) is type({}):
                 # if it's a dictionary, expand.
-                columns.extend(["{}{}_{}".format(features[key][num]["prefix"], num, key) for num in features[key].keys()])
+                columns.extend([f"{features[key][num]['prefix']}{num}_{key}" for num in features[key].keys()])
             else:
                 columns.append(str(key))
         return columns

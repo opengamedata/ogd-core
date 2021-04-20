@@ -92,7 +92,7 @@ class CrystalExtractor(Extractor):
             elif event_type == "QUESTION_ANSWER":
                 self._extractFromQuestionAnswer(event_data_complex_parsed)
             else:
-                raise Exception("Found an unrecognized event type: {}".format(event_type))
+                raise Exception(f"Found an unrecognized event type: {event_type}")
                                                
     ## Function to perform calculation of aggregate features from existing
     #  per-level/per-custom-count features.
