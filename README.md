@@ -10,7 +10,8 @@ Please feel free to modify this code, add new features or games and share back t
 Setup:
 
 * Install python3 (could write a whole chapter on this)
-* Install dependancies: "pip3 install -r requirements.txt"
+* Install mysql client for your os. See https://pypi.org/project/mysqlclient/
+* Install python dependancies: "pip3 install -r requirements.txt"
 * Modify the config.py.template for servers and authentication
 
 Running Data Exports:  
