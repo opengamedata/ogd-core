@@ -344,8 +344,9 @@ class SQL:
     #  @param err_msg A more detailed error message with info to help debugging.
     @staticmethod
     def server500Error(err_msg: str):
-        Logger.toStdOut("HTTP Response: {}{}".format(http.HTTPStatus.INTERNAL_SERVER_ERROR.value, \
-                                http.HTTPStatus.INTERNAL_SERVER_ERROR.phrase ), logging.ERROR)
+        val = http.HTTPStatus.INTERNAL_SERVER_ERROR.value
+        phrase = http.HTTPStatus.INTERNAL_SERVER_ERROR.phrase
+        Logger.toStdOut(f"HTTP Response: {val}{phrase}", logging.ERROR)
         Logger.toStdOut(f"Error Message: {err_msg}", logging.ERROR)
 
 class Logger:

@@ -130,7 +130,7 @@ class ExportManager:
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
     def _runExport(self, data_manager: DataManager, date_range: typing.Tuple, game_table: GameTable, export_files: ExportFiles) -> bool:
-        # utils.Logger.toStdOut("complex_data_index: {}".format(complex_data_index), logging.DEBUG)
+        # utils.Logger.toStdOut(f"complex_data_index: {complex_data_index}", logging.DEBUG)
         try:
             # 2a) Prepare schema and extractor, if game doesn't have an extractor, make sure we don't try to export it.
             game_schema, game_extractor = self._prepareSchema()
