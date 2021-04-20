@@ -87,7 +87,7 @@
     "features": {
         "perlevel": {
             "totalSliderMoves": {
-                "type" : "totalSliderMoves"
+                "type" : "totalSliderMoves",
                 "enabled": true,
                 "events": ["SLIDER_MOVE_RELEASE"],
                 "description": "slider moves across a given level [count of 'SLIDER_MOVE_RELEASE' events]"
