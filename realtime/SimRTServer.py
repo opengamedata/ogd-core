@@ -31,7 +31,7 @@ class SimRTServer:
     rt_settings  = settings["realtime_config"]
     db_settings = settings["db_sim_config"]
     DB_NAME_DATA = db_settings["DB_NAME_DATA"]
-    DB_TABLE = db_settings["table"]
+    DB_TABLE = db_settings["TABLE"]
 
     ## Handler to retrieve all active sessions for a given game.
     #  If the require_player_id flag is set to true, only players with a value

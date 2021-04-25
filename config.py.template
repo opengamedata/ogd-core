@@ -6,7 +6,7 @@ settings = {
         "DB_USER" : "username",
         "DB_PW" : "password",
         "DB_NAME_DATA" : "logger",
-        "table" : "log",
+        "TABLE" : "log",
         "DB_PORT" : 3306
     },
     "ssh_config":

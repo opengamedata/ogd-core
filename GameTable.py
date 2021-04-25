@@ -52,7 +52,7 @@ class GameTable:
     def FromDB(db, settings, request: Request):
         db_settings = settings["db_config"]
         # TODO: Currently, this is retrieved separately from the schema. We may just want to load in one place, and check for a match or something.
-        query = f"SHOW COLUMNS from {db_settings['DB_NAME_DATA']}.{db_settings['table']}"
+        query = f"SHOW COLUMNS from {db_settings['DB_NAME_DATA']}.{db_settings['TABLE']}"
         db_cursor = db.cursor()
         col_names = utils.SQL.Query(cursor=db_cursor, query=query)
         if request.game_id == 'LAKELAND':
@@ -60,7 +60,7 @@ class GameTable:
             min_level = 0
             max_level = lakeland_config["MAX_SESSION_SECONDS"] // lakeland_config['WINDOW_SIZE_SECONDS']
         else:
-            max_min_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
+            max_min_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["TABLE"],
                                             columns=["MAX(level)", "MIN(level)"], filter=f"`app_id`='{request.game_id}'",
                                             distinct=True)
             max_level = max_min_raw[0][0]

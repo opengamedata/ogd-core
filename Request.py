@@ -62,7 +62,7 @@ class DateRangeRequest(Request):
         supported_vers = Schema(schema_name=f"{self.game_id}.json").schema()['config']['SUPPORTED_VERS']
         ver_filter = f" AND `app_version` in ({','.join([str(x) for x in supported_vers])}) " if supported_vers else ''
         filt = f"`app_id`=\"{self.game_id}\" AND `session_n`='0' AND (`server_time` BETWEEN '{start}' AND '{end}'){ver_filter}"
-        session_ids_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["table"],
+        session_ids_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["TABLE"],
                                 columns=["`session_id`"], filter=filt,
                                 sort_columns=["`session_id`"], sort_direction="ASC", distinct=True)
         return [sess[0] for sess in session_ids_raw]
