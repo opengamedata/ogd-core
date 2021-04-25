@@ -28,7 +28,7 @@ class SQLDataManager(DataManager):
     def RetrieveSliceData(self, id_list) -> typing.List[typing.Tuple]:
         # grab data for the given session range. Sort by event time, so
         if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
-            ver_filter = f" AND app_version in ({','.join([str(x) for x in self._game_schema.schema()['config']['SUPPORTED_VERS']])}) "
+            ver_filter = f" AND app_version in ({','.join([str(x) for x in self._game_schema['config']['SUPPORTED_VERS']])}) "
         else:
             ver_filter = ''
         id_string = ','.join([f"'{x}'" for x in id_list])

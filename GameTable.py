@@ -56,7 +56,7 @@ class GameTable:
         db_cursor = db.cursor()
         col_names = utils.SQL.Query(cursor=db_cursor, query=query)
         if request.game_id == 'LAKELAND':
-            lakeland_config = Schema('LAKELAND').schema()['config']
+            lakeland_config = Schema('LAKELAND')['config']
             min_level = 0
             max_level = lakeland_config["MAX_SESSION_SECONDS"] // lakeland_config['WINDOW_SIZE_SECONDS']
         else:
