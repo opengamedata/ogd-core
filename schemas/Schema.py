@@ -39,36 +39,35 @@ class Schema:
                                + list(self._schema["features"]["per_custom_count"].keys()) \
                                + list(self._schema["features"]["aggregate"].keys())
 
-    ## Function to retrieve the full schema dictionary.
-    def schema(self) -> typing.Dict:
-        return self._schema
+    def __getitem__(self, key):
+        return self._schema[key]
 
     def level_range(self) -> typing.Dict:
-        return self._schema["level_range"]
+        return self["level_range"]
 
     ## Function to retrieve the dictionary of event types for the game.
     def events(self) -> typing.Dict:
-        return self._schema["events"]
+        return self["events"]
 
     ## Function to retrieve the names of all event types for the game.
     def event_types(self):
-        return self._schema["events"].keys()
+        return self["events"].keys()
 
     ## Function to retrieve the dictionary of categorized features to extract.
     def features(self) -> typing.Dict:
-        return self._schema["features"]
+        return self["features"]
 
     ## Function to retrieve the dictionary of per-level features.
     def perlevel_features(self) -> typing.Dict:
-        return self._schema["features"]["perlevel"]
+        return self["features"]["perlevel"]
 
     ## Function to retrieve the dictionary of per-custom-count features.
     def percount_features(self) -> typing.Dict:
-        return self._schema["features"]["per_custom_count"]
+        return self["features"]["per_custom_count"]
 
     ## Function to retrieve the dictionary of aggregate features.
     def aggregate_features(self) -> typing.Dict:
-        return self._schema["features"]["aggregate"]
+        return self["features"]["aggregate"]
 
     ## Function to retrieve the compiled list of all feature names.
     def feature_list(self) -> typing.List:
@@ -76,8 +75,8 @@ class Schema:
 
     ## Function to retrieve the dictionary of database columns.
     def db_columns_with_types(self) -> typing.Dict:
-        return self._schema["db_columns"]
+        return self["db_columns"]
 
     ## Function to retrieve the names of all database columns.
     def db_columns(self):
-        return self._schema["db_columns"].keys()
+        return self["db_columns"].keys()
