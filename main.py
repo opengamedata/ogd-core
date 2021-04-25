@@ -95,9 +95,9 @@ def runExport(events: bool = False, features: bool = False):
             end_date   = datetime.strptime(args[4], "%m/%d/%Y") if num_args > 4 \
                     else today
             end_date = end_date.replace(hour=23, minute=59, second=59)
-            utils.Logger.toStdOut(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.DEBUG)
+            utils.Logger.Log(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.DEBUG)
             _execExport(game_id, start_date, end_date, events=events, features=features)
-            utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
+            utils.Logger.Log(f"Done with {game_id}.", logging.DEBUG)
 
 def _execMonthExport(game_id, month, year, events: bool, features: bool):
     from calendar import monthrange
