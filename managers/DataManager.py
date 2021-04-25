@@ -35,7 +35,7 @@ class SQLDataManager(DataManager):
         # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
         filt = f"app_id='{self._game_id}' AND session_id  IN ({id_string}){ver_filter}"
         query = utils.SQL._prepareSelect(db_name=self._settings["db_config"]["DB_NAME_DATA"],
-                                         table=self._settings["db_config"]["table"], columns=None, filter=filt, limit=-1,
+                                         table=self._settings["db_config"]["TABLE"], columns=None, filter=filt, limit=-1,
                                          sort_columns=["session_id", "session_n"], sort_direction="ASC",
                                          grouping=None, distinct=False)
         # self._select_queries.append(select_query) # this doesn't appear to be used???
