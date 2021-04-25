@@ -10,7 +10,7 @@ from GameTable import GameTable
 #  The Eval function takes a list of row data, computes some statistic, and returns a list of results.
 #  If the model works on features from session data, it should calculate one result for each row (each row being a session).
 #  If the model works on a raw list of recent events, it should calculate a single result (each row being an event).
-class WaveFeature(abc.ABC):
+class Feature(abc.ABC):
     def __init__(self, game_table: GameTable, min_data_version:int=-math.inf, max_data_version:int=math.inf):
         self._game_table = GameTable
         self._min_data_version = min_data_version
