@@ -65,7 +65,7 @@ class ExportManager:
             msg = f"Could not complete request {str(request)}, database connection failed."
             utils.Logger.Log(msg, logging.ERROR)
             utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-            return
+            raise ConnectionError() # if we couldn't connect, we're DOA
         # If that was successful, we set up data retrieval with a game table and SQLDataManager.
         try:
             data_manager = SQLDataManager(game_id=request.game_id, game_schema=game_schema, settings=settings)
