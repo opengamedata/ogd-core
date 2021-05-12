@@ -4,6 +4,7 @@ on:
   push:
     paths:
     - 'feature_extractors/CrystalExtractor.py'
+    - '.github/workflows/crystal.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
   test_export:
