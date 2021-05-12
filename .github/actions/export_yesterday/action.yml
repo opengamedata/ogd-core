@@ -33,6 +33,10 @@ inputs:
     description: "Password for logging in to the SQL database."
     required: true
     default: 'password placeholder'
+  log_level:
+    description: "Logging level to use for export process"
+    required: true
+    default: "DEBUG"
 runs:
   using: "composite"
   steps:
@@ -55,6 +59,9 @@ runs:
     #   uses: actions/checkout@v2
     - name: Set up code
       run: cp config.py.template config.py 
+      shell: bash
+    - name: Set Logger level
+      run: sed -i 's/DEBUG_LEVEL/${{inputs.log_level}}/g' config.py
       shell: bash
     - name: Set SSH hostname
       run: sed -i 's/hostname/${{inputs.sql_host}}/g' config.py
