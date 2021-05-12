@@ -114,8 +114,8 @@ def _execExport(game_id, start_date, end_date, events: bool, features: bool):
                 export_files=export_files)
     start = datetime.now()
     # breakpoint()
-    export_manager = ExportManager(game_id=req.game_id, settings=settings)
     try:
+        export_manager = ExportManager(game_id=req.game_id, settings=settings)
         schema = Schema(game_id)
         export_manager.ExportFromSQL(request=req, game_schema=schema)
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
@@ -125,6 +125,7 @@ def _execExport(game_id, start_date, end_date, events: bool, features: bool):
         utils.Logger.toStdOut(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
         utils.Logger.toFile(msg, logging.ERROR)
+        sys.exit(1)
     finally:
         end = datetime.now()
         time_delta = end - start
