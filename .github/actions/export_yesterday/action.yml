@@ -61,7 +61,7 @@ runs:
       run: cp config.py.template config.py 
       shell: bash
     - name: Set Logger level
-      run: sed -i 's/DEBUG_LEVEL/${{inputs.log_level}}/g' config.py
+      run: sed -i 's/INFO/${{inputs.log_level}}/g' config.py
       shell: bash
     - name: Set SSH hostname
       run: sed -i 's/hostname/${{inputs.sql_host}}/g' config.py
