@@ -5,6 +5,7 @@ on:
     paths:
     - 'feature_extractors/MagnetExtractor.py'
     - '.github/workflows/magnet.yml'
+    - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
   test_export:

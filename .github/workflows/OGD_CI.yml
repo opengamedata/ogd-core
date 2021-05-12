@@ -11,6 +11,7 @@ on:
     - 'Request.py'
     - 'utils.py'
     - '.github/workflows/OGD_CI.yml'
+    - '.github/actions/export_yesterday/**'
 
 jobs:
   test_export:

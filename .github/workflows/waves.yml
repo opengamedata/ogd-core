@@ -5,6 +5,7 @@ on:
     paths:
     - 'feature_extractors/WaveExtractor.py'
     - '.github/workflows/waves.yml'
+    - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
   test_export:
