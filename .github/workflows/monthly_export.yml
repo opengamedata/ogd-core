@@ -52,7 +52,7 @@ jobs:
   
   trigger_reindex:
     name: Reindex OpenGameData Files
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     if: always()
     needs: export_data
     steps:
