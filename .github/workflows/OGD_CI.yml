@@ -10,6 +10,7 @@ on:
     - 'GameTable.py'
     - 'Request.py'
     - 'utils.py'
+    - '.github/workflows/OGD_CI.yml'
 
 jobs:
   test_export:
