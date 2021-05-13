@@ -109,9 +109,9 @@ def _execMonthExport(game_id, month, year, events: bool, features: bool):
 
 def _execExport(game_id, start_date, end_date, events: bool, features: bool):
     # Once we have the parameters parsed out, construct the request.
-    export_files = Request.ExportFiles(events=events, raw=False, sessions=features)
+    exporter_files = Request.ExporterFiles(events=events, raw=False, sessions=features)
     req = Request.DateRangeRequest(game_id=game_id, start_date=start_date, end_date=end_date, \
-                export_files=export_files)
+                exporter_files=exporter_files)
     start = datetime.now()
     # breakpoint()
     try:
@@ -140,8 +140,8 @@ def _extractFromFile(file_path: str, events: bool = False, features: bool = Fals
         showHelp()
         return
     start = datetime.now()
-    export_files = Request.ExportFiles(events=events, raw=False, sessions=features) 
-    req = Request.FileRequest(file_path=file_path, game_id=game_id, export_files=export_files)
+    exporter_files = Request.ExporterFiles(events=events, raw=False, sessions=features) 
+    req = Request.FileRequest(file_path=file_path, game_id=game_id, exporter_files=exporter_files)
     # breakpoint()
     export_manager = ExportManager(game_id=req.game_id, settings=settings)
     try:

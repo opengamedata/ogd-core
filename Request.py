@@ -6,12 +6,13 @@ from datetime import date
 import utils
 from schemas.Schema import Schema
 
-## @class FileExports
+
+## @class ExporterFiles
 #  Completely dumb struct that just enforces the names of the three kinds of file we can output.
 #  @param events Bool stating whether to output a events file or not.
 #  @param raw  Bool stating whether to output a raw file or not.
 #  @param sessions Bool stating whether to output a processed session feature file or not.
-class ExportFiles:
+class ExporterFiles:
     def __init__(self, events:bool = True, raw:bool = True, sessions:bool = True):
         self.events = events
         self.raw = False
@@ -29,9 +30,9 @@ class Request(abc.ABC):
     #                 Should correspond to the app_id in the database.
     #  @param start_date   The starting date for our range of data to process.
     #  @param end_date     The ending date for our range of data to process.
-    def __init__(self, game_id: str = None, export_files: ExportFiles = ExportFiles()):
-        self.export_files = export_files
-        self.game_id = game_id
+    def __init__(self, range_type: RangeType, exporter_files: ExporterFiles = ExporterFiles()):
+        self._range_type = range_type
+        self._exporter_files = exporter_files
 
     ## Abstract method to retrieve the list of IDs for all sessions covered by
     #  the request.
@@ -43,8 +44,8 @@ class Request(abc.ABC):
 #  for the given game.
 class DateRangeRequest(Request):
     def __init__(self, game_id: str = None, start_date: date = None, end_date: date = None,
-                 export_files: ExportFiles = ExportFiles()):
-        Request.__init__(self, game_id=game_id, export_files=export_files)
+                 exporter_files: ExporterFiles = ExporterFiles()):
+        Request.__init__(self, game_id=game_id, exporter_files=exporter_files)
         self.start_date = start_date
         self.end_date = end_date
 
@@ -69,8 +70,8 @@ class DateRangeRequest(Request):
 
 ## Class representing a request for a specific list of session IDs.
 class IDListRequest(Request):
-    def __init__(self, game_id: str = None, session_ids = [], export_files: ExportFiles = ExportFiles()):
-        Request.__init__(self, game_id=game_id, export_files=export_files)
+    def __init__(self, game_id: str = None, session_ids = [], exporter_files: ExporterFiles = ExporterFiles()):
+        Request.__init__(self, game_id=game_id, exporter_files=exporter_files)
         self._session_ids = session_ids
 
     def __str__(self):
@@ -82,8 +83,8 @@ class IDListRequest(Request):
         return self._session_ids
 
 class FileRequest(Request):
-    def __init__(self, file_path, game_id: str = None, export_files: ExportFiles = ExportFiles()):
-        Request.__init__(self, game_id=game_id, export_files=export_files)
+    def __init__(self, file_path, game_id: str = None, exporter_files: ExporterFiles = ExporterFiles()):
+        Request.__init__(self, game_id=game_id, exporter_files=exporter_files)
         self.file_path = file_path
 
     def __str__(self):

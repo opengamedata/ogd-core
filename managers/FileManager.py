@@ -12,7 +12,7 @@ import utils
 from Request import *
 
 class FileManager(abc.ABC):
-    def __init__(self, export_files: ExportFiles, game_id, data_dir: str, date_range: typing.Tuple):
+    def __init__(self, exporter_files: ExporterFiles, game_id, data_dir: str, date_range: typing.Tuple):
         self._file_names : typing.Dict = {"sessions_f":None, "raw_f":None, "events_f":None}
         self._zip_names  : typing.Dict = {"sessions_f":None, "raw_f":None, "events_f":None}
         self._files      : typing.Dict = {"sessions_f":None, "raw_f":None, "events_f":None}
@@ -34,12 +34,12 @@ class FileManager(abc.ABC):
             self._readme_path = f"{full_data_dir}/readme.md"
             base_path = f"{full_data_dir}/{self._dataset_id}_{self._short_hash}"
             # finally, generate file names.
-            self._file_names["sessions_f"] = base_path+"_session-features.csv" if export_files.sessions else None
-            self._file_names["raw_f"]  = base_path+"_raw.tsv"  if export_files.raw  else None
-            self._file_names["events_f"] = base_path+"_events.tsv" if export_files.events else None
-            self._zip_names["sessions_f"] = base_path+"_session-features.zip" if export_files.sessions else None
-            self._zip_names["raw_f"]  = base_path+"_raw.zip"  if export_files.raw  else None
-            self._zip_names["events_f"] = base_path+"_events.zip" if export_files.events else None
+            self._file_names["sessions_f"] = base_path+"_session-features.csv" if exporter_files.sessions else None
+            self._file_names["raw_f"]  = base_path+"_raw.tsv"  if exporter_files.raw  else None
+            self._file_names["events_f"] = base_path+"_events.tsv" if exporter_files.events else None
+            self._zip_names["sessions_f"] = base_path+"_session-features.zip" if exporter_files.sessions else None
+            self._zip_names["raw_f"]  = base_path+"_raw.zip"  if exporter_files.raw  else None
+            self._zip_names["events_f"] = base_path+"_events.zip" if exporter_files.events else None
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.Log(msg, logging.ERROR)

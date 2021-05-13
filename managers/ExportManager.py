@@ -78,7 +78,7 @@ class ExportManager:
             num_sec = time_delta.total_seconds() % 60
             utils.Logger.Log(f"Database Connection Time: {num_min} min, {num_sec:.3f} sec", logging.INFO)
             # once we've set up DataManager and gotten a bit of data, we can run the Export.
-            if self._runExport(data_manager=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files):
+            if self._runExport(data_manager=data_manager, date_range=date_range, game_table=game_table, exporter_files=request.exporter_files):
                 utils.Logger.Log(f"Successfully completed request {str(request)}.", logging.INFO)
             else:
                 utils.Logger.Log(f"Could not complete request {str(request)}", logging.ERROR)
@@ -113,7 +113,7 @@ class ExportManager:
             # end = datetime.strptime(data_frame['server_time'].max().split(' ')[0], "%Y-%m-%d")
             # date_range = (start, end)
             # once we've set up DataManager and gotten a bit of data, we can run the Export.
-            if self._runExport(data_manager=data_manager, date_range=date_range, game_table=game_table, export_files=request.export_files):
+            if self._runExport(data_manager=data_manager, date_range=date_range, game_table=game_table, exporter_files=request.exporter_files):
                 utils.Logger.toStdOut(f"Successfully completed extraction from {request.file_path}.", logging.INFO)
             else:
                 utils.Logger.toFile(f"Could not complete extraction from {request.file_path}", logging.ERROR)
@@ -129,15 +129,15 @@ class ExportManager:
     #                    and export
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
-    def _runExport(self, data_manager: DataManager, date_range: typing.Tuple, game_table: GameTable, export_files: ExportFiles) -> bool:
+    def _runExport(self, data_manager: DataManager, date_range: typing.Tuple, game_table: GameTable, exporter_files: ExporterFiles) -> bool:
         # utils.Logger.toStdOut(f"complex_data_index: {complex_data_index}", logging.DEBUG)
         try:
             # 2a) Prepare schema and extractor, if game doesn't have an extractor, make sure we don't try to export it.
             game_schema, game_extractor = self._prepareSchema()
             if game_extractor is None:
-                export_files.sessions = False
+                exporter_files.sessions = False
             # 2b) Prepare files for export.
-            file_manager = FileManager(export_files=export_files, game_id=self._game_id, \
+            file_manager = FileManager(exporter_files=exporter_files, game_id=self._game_id, \
                                        data_dir=self._settings["DATA_DIR"], date_range=date_range)
             file_manager.OpenFiles()
             # If we have a schema, we can do feature extraction.
@@ -146,7 +146,7 @@ class ExportManager:
                 start = datetime.now()
 
                 num_sess: int = self._extractToCSVs(file_manager=file_manager, data_manager=data_manager,\
-                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor, export_files=export_files)
+                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor, exporter_files=exporter_files)
 
                 time_delta = datetime.now() - start
                 num_min = math.floor(time_delta.total_seconds()/60)
@@ -196,18 +196,18 @@ class ExportManager:
         return game_schema, game_extractor
 
     def _extractToCSVs(self, file_manager: FileManager, data_manager: DataManager,
-                       game_schema: Schema, game_table: GameTable, game_extractor: type, export_files: ExportFiles):
+                       game_schema: Schema, game_table: GameTable, game_extractor: type, exporter_files: ExporterFiles):
         try:
             sess_processor = raw_mgr = evt_processor = None
-            if export_files.sessions:
+            if exporter_files.sessions:
                 sess_processor = SessionProcessor(ExtractorClass=game_extractor, game_table=game_table,
                                     game_schema=game_schema, sessions_csv_file=file_manager.GetSessionsFile())
                 sess_processor.WriteSessionCSVHeader()
-            if export_files.raw:
+            if exporter_files.raw:
                 raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
                                     raw_csv_file=file_manager.GetRawFile())
                 raw_mgr.WriteRawCSVHeader()
-            if export_files.events:
+            if exporter_files.events:
                 evt_processor = EventProcessor(game_table=game_table, game_schema=game_schema,
                                     events_csv_file=file_manager.GetEventsFile())
                 evt_processor.WriteEventsCSVHeader()
@@ -226,14 +226,14 @@ class ExportManager:
                     for row in next_data_set:
                         self._processRow(row=row, game_table=game_table, raw_mgr=raw_mgr, sess_processor=sess_processor, evt_processor=evt_processor)
                     # after processing all rows for each slice, write out the session data and reset for next slice.
-                    if export_files.sessions:
+                    if exporter_files.sessions:
                         sess_processor.calculateAggregateFeatures()
                         sess_processor.WriteSessionCSVLines()
                         sess_processor.ClearLines()
-                    if export_files.raw:
+                    if exporter_files.raw:
                         raw_mgr.WriteRawCSVLines()
                         raw_mgr.ClearLines()
-                    if export_files.events:
+                    if exporter_files.events:
                         evt_processor.WriteEventsCSVLines()
                         evt_processor.ClearLines()
                 except Exception as err:
@@ -254,11 +254,11 @@ class ExportManager:
         finally:
             # Save out all the files.
             file_manager.CloseFiles()
-            # if export_files.sessions:
+            # if exporter_files.sessions:
             #     sessions_csv_file.close()
-            # if export_files.raw:
+            # if exporter_files.raw:
             #     raw_csv_file.close()
-            # if export_files.events:
+            # if exporter_files.events:
             #     events_csv_file.close()
             return ret_val
 
