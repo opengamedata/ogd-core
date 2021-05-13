@@ -4,6 +4,7 @@ on:
   push:
     paths:
     - 'feature_extractors/WaveExtractor.py'
+    - 'schemas/JSON/WAVES.json'
     - '.github/workflows/waves.yml'
     - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab

@@ -4,6 +4,7 @@ on:
   push:
     paths:
     - 'feature_extractors/CrystalExtractor.py'
+    - 'schemas/JSON/CRYSTAL.json'
     - '.github/workflows/crystal.yml'
     - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
