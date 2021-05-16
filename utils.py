@@ -139,7 +139,7 @@ class SQL:
     ## Function to set up a connection to a database, via an ssh tunnel if available.
     #  @return A tuple consisting of the tunnel and database connection, respectively.
     @staticmethod
-    def prepareDB(db_settings, ssh_settings) -> typing.Tuple[object, object]:
+    def prepareDB(db_settings:typing.Dict[str,typing.Any], ssh_settings:typing.Dict[str,typing.Any]) -> typing.Tuple[object, object]:
         # Load settings, set up consts.
         DB_NAME_DATA = db_settings["DB_NAME_DATA"]
         DB_USER = db_settings['DB_USER']
@@ -381,7 +381,7 @@ class Logger:
         file_logger.debug("Testing error logger")
 
     @staticmethod
-    def toFile(message, level=logging.DEBUG):
+    def toFile(message:str, level=logging.DEBUG) -> None:
         now = datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
         if Logger.file_logger is not None:
             if level == logging.DEBUG:
@@ -394,7 +394,7 @@ class Logger:
                 Logger.file_logger.error(f"ERROR: {now} {message}")
 
     @staticmethod
-    def toStdOut(message, level=logging.DEBUG):
+    def toStdOut(message:str, level=logging.DEBUG) -> None:
         if Logger.std_logger is not None:
             if level == logging.DEBUG:
                 Logger.std_logger.debug(f"DEBUG: {message}")
@@ -408,12 +408,12 @@ class Logger:
     # Function to print a method to both the standard out and file logs.
     # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
     @staticmethod
-    def Log(message, level=logging.DEBUG):
+    def Log(message:str, level=logging.DEBUG) -> None:
         Logger.toFile(message, level)
         Logger.toStdOut(message, level)
 
     @staticmethod
-    def toPrint(message, level=logging.DEBUG):
+    def toPrint(message:str, level=logging.DEBUG) -> None:
         if level == logging.DEBUG:
             print(f"debug: {message}")
         elif level == logging.INFO:
