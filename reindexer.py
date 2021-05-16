@@ -1,5 +1,6 @@
 # Rudolph, the red-nosed reindexer...
 import json
+import logging
 import os
 import utils
 
@@ -51,7 +52,7 @@ def index_zip(root, name, indexed_files):
     # if we already indexed something with this dataset id, then only update if this one is newer.
     # else, just stick this new meta in the index.
     if not dataset_id in indexed_files[game_id].keys():
-        print(f"Indexing {os.path.join(root, name)}")
+        utils.Logger.toPrint(f"Indexing {os.path.join(root, name)}", logging.INFO)
         indexed_files[game_id][dataset_id] = \
             {
                 "sessions_f":f"{root}{name}" if kind == 'session-features' else None,
@@ -64,13 +65,13 @@ def index_zip(root, name, indexed_files):
             }
     else:
         if indexed_files[game_id][dataset_id]["sessions_f"] == None and kind == 'session-features':
-            print(f"Updating index with {os.path.join(root, name)}")
+            utils.Logger.toPrint(f"Updating index with {os.path.join(root, name)}", logging.INFO)
             indexed_files[game_id][dataset_id]["sessions_f"] = f"{root}{name}"
         if indexed_files[game_id][dataset_id]["raw_f"] == None and kind == 'raw':
-            print(f"Updating index with {os.path.join(root, name)}")
+            utils.Logger.toPrint(f"Updating index with {os.path.join(root, name)}", logging.INFO)
             indexed_files[game_id][dataset_id]["raw_f"] = f"{root}{name}"
         if indexed_files[game_id][dataset_id]["events_f"] == None and kind == 'events':
-            print(f"Updating index with {os.path.join(root, name)}")
+            utils.Logger.toPrint(f"Updating index with {os.path.join(root, name)}", logging.INFO)
             indexed_files[game_id][dataset_id]["events_f"] = f"{root}{name}"
     return indexed_files
 
@@ -82,15 +83,15 @@ def generate_index(walk_data):
             if not 'BACKUP' in root:
                 ext = name.split('.')[-1]
                 if (ext == 'meta'):
-                    print(f"Indexing {os.path.join(root, name)}")
+                    utils.Logger.toPrint(f"Indexing {os.path.join(root, name)}", logging.INFO)
                     indexed_files = index_meta(root, name, indexed_files)
                 elif (ext == 'zip'):
-                    print(f"Reserving {os.path.join(root, name)}")
+                    utils.Logger.toPrint(f"Reserving {os.path.join(root, name)}", logging.DEBUG)
                     zips.append((root, name))
                 else:
-                    print(f"Doing nothing with {os.path.join(root, name)}")
+                    utils.Logger.toPrint(f"Doing nothing with {os.path.join(root, name)}", logging.DEBUG)
             else:
-                print(f"Doing nothing with {os.path.join(root, name)}")
+                utils.Logger.toPrint(f"Doing nothing with {os.path.join(root, name)}", logging.DEBUG)
     for root,name in zips:
         indexed_files = index_zip(root, name, indexed_files)
     return indexed_files
