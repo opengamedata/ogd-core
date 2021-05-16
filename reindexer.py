@@ -37,6 +37,8 @@ def index_meta(root, name, indexed_files):
     return indexed_files
 
 def index_zip(root, name, indexed_files):
+    # for reference, here's how the indices of a tsv file should look, if we're not dealing with a "cycle" game.
+    PIECE_INDICES = {'name':0, 'start_date':1, 'to':2, 'end_date':3, 'id':4, 'file_type':5}
     top = name.split('.')
     pieces = top[0].split('_')
     game_id = pieces[0] if pieces[0] != 'CYCLE' else f"{pieces[0]}_{pieces[1]}"
