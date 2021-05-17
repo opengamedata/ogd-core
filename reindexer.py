@@ -2,7 +2,9 @@
 import json
 import logging
 import os
+import pandas as pd
 import utils
+import zipfile
 
 def meta_to_index(meta, data_dir):
     # just in case it didn't already end with a /
@@ -47,6 +49,12 @@ def index_zip(root, name, indexed_files):
     end_date = pieces[-3]
     dataset_id  = f"{game_id}_{start_date}_to_{end_date}"
     kind = pieces[-1]
+    # after getting info from filename on the game id, start/end dates, etc. we can peek at the file and count the rows, *if* it's a session file.
+    session_ct = None
+    if kind == "session-features":
+        with zipfile.ZipFile(name, 'r') as zip:
+            data = pd.read_csv(zip.open(f"{top[0]}.tsv"))
+            session_ct = len(data.index)
     if not game_id in indexed_files.keys():
         indexed_files[game_id] = {}
     # if we already indexed something with this dataset id, then only update if this one is newer.
@@ -55,13 +63,13 @@ def index_zip(root, name, indexed_files):
         utils.Logger.toPrint(f"Indexing {os.path.join(root, name)}", logging.INFO)
         indexed_files[game_id][dataset_id] = \
             {
-                "sessions_f":f"{root}{name}" if kind == 'session-features' else None,
-                "raw_f":f"{root}{name}" if kind == 'raw' else None,
-                "events_f":f"{root}{name}" if kind == 'events' else None,
+                "sessions_f"   :f"{root}{name}" if kind == 'session-features' else None,
+                "raw_f"        :f"{root}{name}" if kind == 'raw' else None,
+                "events_f"     :f"{root}{name}" if kind == 'events' else None,
                 "start_date"   :start_date,
                 "end_date"     :end_date,
                 "date_modified":None,
-                "sessions"     :None
+                "sessions"     :session_ct
             }
     else:
         if indexed_files[game_id][dataset_id]["sessions_f"] == None and kind == 'session-features':
