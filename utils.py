@@ -378,7 +378,7 @@ class Logger:
         debug_handler.setLevel(level=logging.DEBUG)
         file_logger.addHandler(debug_handler)
     finally:
-        file_logger.debug("Testing error logger")
+        file_logger.debug("Testing file logger")
 
     @staticmethod
     def toFile(message:str, level=logging.DEBUG) -> None:
