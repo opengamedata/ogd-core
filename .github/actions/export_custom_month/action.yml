@@ -47,9 +47,9 @@ runs:
     - name: Set up code
       run: cp config.py.template config.py 
       shell: bash
-    - name: Set table to the 2019-2020 one
-      run: sed -i 's/logger/logger2020/g' config.py
-      shell: bash
+    # - name: Set table to the 2019-2020 one
+    #   run: sed -i 's/logger/logger2020/g' config.py
+    #   shell: bash
     - name: Set SSH hostname
       run: sed -i 's/hostname/${{inputs.sql_host}}/g' config.py
       shell: bash
