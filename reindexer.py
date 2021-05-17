@@ -12,9 +12,9 @@ def meta_to_index(meta, data_dir):
     # sessions_stat = os.stat(sessions_csv_full_path)
     return \
         {
-            "sessions_f":f"{data_dir}{meta['sessions_f'].split('/')[-1]}" if meta['sessions_f'] is not None else None,
-            "raw_f":f"{data_dir}{meta['raw_f'].split('/')[-1]}" if meta['raw_f'] is not None else None,
-            "events_f":f"{data_dir}{meta['events_f'].split('/')[-1]}" if meta['events_f'] is not None else None,
+            "sessions_f":f"{data_dir}{meta['sessions_f'].split('/')[-1]}" if ('sessions_f' in meta.keys() and meta['sessions_f'] is not None) else None,
+            "raw_f":f"{data_dir}{meta['raw_f'].split('/')[-1]}" if ('raw_f' in meta.keys() and meta['raw_f'] is not None) else None,
+            "events_f":f"{data_dir}{meta['events_f'].split('/')[-1]}" if ('events_f' in meta.keys() and meta['events_f'] is not None) else None,
             "start_date"   :meta['start_date'],
             "end_date"     :meta['end_date'],
             "date_modified":meta['date_modified'],
