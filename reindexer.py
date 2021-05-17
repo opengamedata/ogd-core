@@ -52,8 +52,8 @@ def index_zip(root, name, indexed_files):
     # after getting info from filename on the game id, start/end dates, etc. we can peek at the file and count the rows, *if* it's a session file.
     session_ct = None
     if kind == "session-features":
-        with zipfile.ZipFile(name, 'r') as zip:
-            data = pd.read_csv(zip.open(f"{top[0]}.tsv"))
+        with zipfile.ZipFile(f"{root}{name}", 'r') as zip:
+            data = pd.read_csv(zip.open(f"{root}{top[0]}.tsv"))
             session_ct = len(data.index)
     if not game_id in indexed_files.keys():
         indexed_files[game_id] = {}
