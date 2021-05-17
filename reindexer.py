@@ -1,4 +1,5 @@
 # Rudolph, the red-nosed reindexer...
+import argparse
 import json
 import logging
 import os
@@ -104,6 +105,15 @@ def generate_index(walk_data):
         indexed_files = index_zip(root, name, indexed_files)
     return indexed_files
 
+arg_parser = argparse.ArgumentParser()
+arg_parser.add_argument("-l", "--level", help="Set the logging level to DEBUG, INFO, or WARN", type=str, choices=['DEBUG', 'INFO', 'WARN'])
+args = arg_parser.parse_args()
+if args.level == 'WARN':
+    utils.Logger.std_logger.setLevel(logging.WARN)
+elif args.level == 'INFO':
+    utils.Logger.std_logger.setLevel(logging.INFO)
+elif args.level == 'DEBUG':
+    utils.Logger.std_logger.setLevel(logging.DEBUG)
 data_dirs = os.walk("./data/")
 indexed_files = generate_index(data_dirs)
 # print(f"Final set of indexed files: {indexed_files}")
