@@ -1,6 +1,15 @@
 # global imports
+import http
+import logging
+import math
+import MySQLdb
+import sshtunnel
 import typing
 # local imports
+from interfaces.DataInterface import DataInterface
+from schemas.Schema import Schema
+from utils import Logger
+
 
 ## Dumb struct to collect data used to establish a connection to a SQL database.
 class SQLLogin:

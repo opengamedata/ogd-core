@@ -1,13 +1,9 @@
 ## @namespace utils
 #  A module of utility functions used in the feature_extraction_to_csv project
 import datetime
-import http
 import json
 import logging
-import math
-import MySQLdb
 import os
-import sshtunnel
 import traceback
 import typing
 from config import settings
