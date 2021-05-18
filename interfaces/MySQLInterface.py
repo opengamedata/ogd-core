@@ -56,12 +56,12 @@ class SQL:
         if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
             # Logger.toStdOut(f"Setting up ssh host connection.", logging.INFO)
             ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
-            tunnel,db_cursor = SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
+            tunnel,db_conn = SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
         else:
             # Logger.toStdOut("Skipping SSH part of login.", logging.INFO)
-            db_cursor = SQL.connectToMySQL(login=sql_login)
+            db_conn = SQL.connectToMySQL(login=sql_login)
             tunnel = None
-        return (tunnel, db_cursor)
+        return (tunnel, db_conn)
 
     ## Function to help connect to a mySQL server.
     #  Simply tries to make a connection, and prints an error in case of failure.
@@ -76,11 +76,11 @@ class SQL:
     @staticmethod
     def connectToMySQL(login: SQLLogin) -> Union[connections.Connection, None]:
         try:
-            conn = connect(host = login.host, port = login.port,
+            db_conn = connect(host = login.host, port = login.port,
                            user = login.user, password = login.pword,
                        database = login.db_name, charset='utf8')
             Logger.toStdOut(f"Connected to SQL (no SSH) at {login.host}:{login.port}/{login.db_name}, {login.user}", logging.INFO)
-            return conn
+            return db_conn
         #except MySQLdb.connections.Error as err:
         except Exception as err:
             msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
@@ -128,11 +128,11 @@ class SQL:
         if connected_ssh == True:
             # Then, connect to MySQL
             try:
-                conn = connect(host = sql.host, port = tunnel.local_bind_port,
+                db_conn = connect(host = sql.host, port = tunnel.local_bind_port,
                                user = sql.user, password = sql.pword,
                            database = sql.db_name, charset='utf8')
                 Logger.toStdOut(f"Connected to SQL (via SSH) at {sql.host}:{tunnel.local_bind_port}/{sql.db_name}, {sql.user}", logging.INFO)
-                return (tunnel, conn)
+                return (tunnel, db_conn)
             except Exception as err:
                 msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
                 Logger.Log(msg, logging.ERROR)
