@@ -271,7 +271,7 @@ class MySQLInterface(DataInterface):
     def Close(self) -> bool:
         pass
 
-    def _retrieveFromIDs(self, ids: List[int]) -> List:
+    def _retrieveFromIDs(self, id_list: List[int]) -> List:
         # grab data for the given session range. Sort by event time, so
         if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
             ver_filter = f" AND app_version in ({','.join([str(x) for x in self._game_schema.schema()['config']['SUPPORTED_VERS']])}) "

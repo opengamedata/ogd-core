@@ -9,12 +9,12 @@ class DataInterface(abc.ABC):
         self._game_id : str  = game_id
         self._is_open : bool = False
 
-    def RetrieveFromIDs(self, ids: typing.List[int]) -> typing.List:
+    def RetrieveFromIDs(self, id_list: typing.List[int]) -> typing.List:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve data, the source interface is not open!")
             return []
         else:
-            return self._retrieveFromIDs(ids)
+            return self._retrieveFromIDs(id_list)
 
     def IDsFromDates(self, min, max):
         if not self._is_open:
@@ -22,11 +22,11 @@ class DataInterface(abc.ABC):
         else:
             return self._IDsFromDates(min=min, max=max)
 
-    def DatesFromIDs(self, ids:typing.List[int]):
+    def DatesFromIDs(self, id_list:typing.List[int]):
         if not self._is_open:
             utils.Logger.Log("Can't retrieve dates, the source interface is not open!")
         else:
-            return self._datesFromIDs(ids=ids)
+            return self._datesFromIDs(id_list=id_list)
     
     def IsOpen(self) -> bool:
         return True if self._is_open else False
@@ -40,7 +40,7 @@ class DataInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _retrieveFromIDs(self, ids: typing.List[int]) -> typing.List:
+    def _retrieveFromIDs(self, id_list: typing.List[int]) -> typing.List:
         pass
 
     @abc.abstractmethod
@@ -48,5 +48,5 @@ class DataInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _datesFromIDs(self, ids:typing.List[int]):
+    def _datesFromIDs(self, id_list:typing.List[int]):
         pass
