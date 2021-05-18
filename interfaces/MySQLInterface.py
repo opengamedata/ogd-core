@@ -258,8 +258,10 @@ class MySQLInterface(DataInterface):
         self._db_cursor = None
         self.Open()
         
-    @abc.abstractmethod
-    def Open(self) -> bool:
+    def Open(self, force_reopen:bool = False) -> bool:
+        if force_reopen:
+            self.Close()
+            self.Open(force_reopen=False)
         if not self._is_open:
             self._tunnel, self._db = SQL.prepareDB(db_settings=self._settings["db_config"], ssh_settings=self._settings["ssh_config"])
             self._db_cursor = self._db.cursor()

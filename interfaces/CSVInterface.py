@@ -12,9 +12,11 @@ class CSVInterface(DataInterface):
         super().__init__(game_id=game_id)
         self._data = data_frame
 
-    @abc.abstractmethod
-    def Open(self) -> bool:
-        pass
+    def Open(self, force_reopen:bool = False) -> bool:
+        if force_reopen or not self.IsOpen():
+            self._data = pd.read_csv(filepath_or_buffer=self._file, delimiter=self._delimiter, parse_dates=['server_time', 'client_time'])
+            self._is_open = True
+        return True
 
     @abc.abstractmethod
     def Close(self) -> bool:

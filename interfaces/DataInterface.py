@@ -36,7 +36,7 @@ class DataInterface(abc.ABC):
         return True if self._is_open else False
 
     @abc.abstractmethod
-    def Open(self) -> bool:
+    def Open(self, force_reopen:bool = False) -> bool:
         pass
 
     @abc.abstractmethod
