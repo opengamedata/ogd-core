@@ -184,9 +184,10 @@ class SQL:
     #  @return              A collection of all rows from the selection, if fetch_results is true,
     #                           otherwise None.
     @staticmethod
-    def SELECT(cursor, db_name: str, table:str, columns: List[str] = None, join: str = None, filter: str = None, limit: int = -1,
-               sort_columns: List[str] = None, sort_direction = "ASC", grouping: str = None,
-               distinct: bool = False, fetch_results: bool = True) -> List[Tuple]:
+    def SELECT(cursor      :cursors.Cursor,    db_name       :str,         table         :str,
+               columns     :List[str] = None,  join          :str = None,  filter        :str = None,
+               sort_columns:List[str] = None,  sort_direction:str = "ASC", grouping      :str = None,
+               distinct    :bool      = False, limit         :int = -1,    fetch_results :bool = True) -> Union[List[Tuple],None]:
         query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, join=join, filter=filter, limit=limit,
                                    sort_columns=sort_columns, sort_direction=sort_direction, grouping=grouping,
                                    distinct=distinct)

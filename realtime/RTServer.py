@@ -187,8 +187,8 @@ class RTServer:
             filt = f"`session_id`='{sess_id}'"
             cur_level_raw = SQL.SELECT(cursor=cursor,
                                              db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
-                                             columns=["level", "server_time"], filter=filt, limit=1,\
-                                             sort_columns=["client_time"], sort_direction="DESC")
+                                             columns=["level", "server_time"], filter=filt,\
+                                             sort_columns=["client_time"], sort_direction="DESC", limit=1)
             # max_level = max_level_raw[0][0] if max_level_raw[0][0] != None else 0
             cur_level = cur_level_raw[0][0]
             max_level = 1
