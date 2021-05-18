@@ -418,7 +418,7 @@ class RTServer:
                 # traceback.print_tb(err.__traceback__)
                 raise err
             finally:
-                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+                SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
         elif RTServer.rt_settings["data_source"] == "FILE":
             raise Exception("not supported!") # TODO: remove this line after implementing the queries.
             path = RTServer.rt_settings["path"]
