@@ -9,6 +9,10 @@ class DataInterface(abc.ABC):
         self._game_id : str  = game_id
         self._is_open : bool = False
 
+    def __del__(self):
+        if self.IsOpen():
+            self.Close()
+
     def RetrieveFromIDs(self, id_list: typing.List[int]) -> typing.List:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve data, the source interface is not open!")

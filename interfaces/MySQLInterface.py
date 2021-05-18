@@ -257,9 +257,6 @@ class MySQLInterface(DataInterface):
         self._db = None
         self._db_cursor = None
         self.Open()
-
-    def __del__(self):
-        SQL.disconnectMySQLViaSSH(tunnel=self._tunnel, db=self._db)
         
     @abc.abstractmethod
     def Open(self) -> bool:
