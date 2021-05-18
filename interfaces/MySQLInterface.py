@@ -145,7 +145,7 @@ class SQL:
             return (None, None)
 
     @staticmethod
-    def disconnectMySQLViaSSH(tunnel, db) -> None:
+    def disconnectMySQLViaSSH(tunnel:sshtunnel.SSHTunnelForwarder, db:connections.Connection) -> None:
         if db is not None:
             db.close()
             # Logger.toStdOut("Closed database connection", logging.INFO)
@@ -156,8 +156,6 @@ class SQL:
             # Logger.toStdOut("Stopped tunnel connection", logging.INFO)
         # else:
             # Logger.toStdOut("No tunnel to stop", logging.INFO)
-
-
 
     ## Function to build and execute SELECT statements on a database connection.
     #  @param cursor        A database cursor, retrieved from the active connection.
