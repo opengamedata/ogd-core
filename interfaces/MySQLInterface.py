@@ -2,11 +2,11 @@
 import http
 import logging
 import math
-import MySQLdb
 import sshtunnel
 import traceback
-import typing
 from datetime import datetime
+from MySQLdb import connect, connections
+from typing import Any, Dict, List, Tuple, Union
 # local imports
 from interfaces.DataInterface import DataInterface
 from schemas.Schema import Schema
@@ -38,7 +38,7 @@ class SQL:
     ## Function to set up a connection to a database, via an ssh tunnel if available.
     #  @return A tuple consisting of the tunnel and database connection, respectively.
     @staticmethod
-    def prepareDB(db_settings:typing.Dict[str,typing.Any], ssh_settings:typing.Dict[str,typing.Any]) -> typing.Tuple[object, object]:
+    def prepareDB(db_settings:Dict[str,Any], ssh_settings:Dict[str,Any]) -> Tuple[Union[sshtunnel.SSHTunnelForwarder,None], Union[connections.Connection,None]]:
         # Load settings, set up consts.
         DB_NAME_DATA = db_settings["DB_NAME_DATA"]
         DB_USER = db_settings['DB_USER']
@@ -74,11 +74,11 @@ class SQL:
     #  @return          An open connection to the database if successful,
     #                       otherwise None.
     @staticmethod
-    def connectToMySQL(login: SQLLogin):
+    def connectToMySQL(login: SQLLogin) -> Union[connections.Connection, None]:
         try:
-            conn = MySQLdb.connect(host = login.host, port = login.port,
-                                   user = login.user, password = login.pword,
-                                   database = login.db_name, charset='utf8')
+            conn = connect(host = login.host, port = login.port,
+                           user = login.user, password = login.pword,
+                       database = login.db_name, charset='utf8')
             Logger.toStdOut(f"Connected to SQL (no SSH) at {login.host}:{login.port}/{login.db_name}, {login.user}", logging.INFO)
             return conn
         #except MySQLdb.connections.Error as err:
@@ -100,15 +100,18 @@ class SQL:
     #  @return          An open connection to the database if successful,
     #                       otherwise None.
     @staticmethod
-    def connectToMySQLViaSSH(sql: SQLLogin, ssh: SSHLogin):
-        tries = 0
-        connected_ssh = False
-        tunnel = None
-        while tries < 5 and connected_ssh == False:
+    def connectToMySQLViaSSH(sql: SQLLogin, ssh: SSHLogin) -> Tuple[Union[sshtunnel.SSHTunnelForwarder,None], Union[connections.Connection,None]]:
+        MAX_TRIES : int = 5
+        tries : int = 0
+        connected_ssh : bool = False
+        tunnel : Union[sshtunnel.SSHTunnelForwarder, None] = None
+        conn   : Union[connections.Connection, None] = None
+
+        # First, connect to SSH
+        while connected_ssh == False and tries < MAX_TRIES:
             if tries > 0:
                 Logger.toStdOut("Re-attempting to connect to SSH.", logging.INFO)
             try:
-                # First, connect to SSH
                 tunnel = sshtunnel.SSHTunnelForwarder(
                     (ssh.host, ssh.port), ssh_username=ssh.user, ssh_password=ssh.pword,
                     remote_bind_address=(sql.host, sql.port), logger=Logger.std_logger
@@ -122,12 +125,12 @@ class SQL:
                 Logger.toPrint(msg, logging.ERROR)
                 traceback.print_tb(err.__traceback__)
                 tries = tries + 1
-        if connected_ssh:
+        if connected_ssh == True:
             # Then, connect to MySQL
             try:
-                conn = MySQLdb.connect(host = sql.host, port = tunnel.local_bind_port,
-                                            user = sql.user, password = sql.pword,
-                                            database = sql.db_name, charset='utf8')
+                conn = connect(host = sql.host, port = tunnel.local_bind_port,
+                               user = sql.user, password = sql.pword,
+                           database = sql.db_name, charset='utf8')
                 Logger.toStdOut(f"Connected to SQL (via SSH) at {sql.host}:{tunnel.local_bind_port}/{sql.db_name}, {sql.user}", logging.INFO)
                 return (tunnel, conn)
             except Exception as err:
@@ -142,7 +145,7 @@ class SQL:
             return (None, None)
 
     @staticmethod
-    def disconnectMySQLViaSSH(tunnel, db):
+    def disconnectMySQLViaSSH(tunnel, db) -> None:
         if db is not None:
             db.close()
             # Logger.toStdOut("Closed database connection", logging.INFO)
@@ -183,16 +186,16 @@ class SQL:
     #  @return              A collection of all rows from the selection, if fetch_results is true,
     #                           otherwise None.
     @staticmethod
-    def SELECT(cursor, db_name: str, table:str, columns: typing.List[str] = None, join: str = None, filter: str = None, limit: int = -1,
-               sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
-               distinct: bool = False, fetch_results: bool = True) -> typing.List[typing.Tuple]:
+    def SELECT(cursor, db_name: str, table:str, columns: List[str] = None, join: str = None, filter: str = None, limit: int = -1,
+               sort_columns: List[str] = None, sort_direction = "ASC", grouping: str = None,
+               distinct: bool = False, fetch_results: bool = True) -> List[Tuple]:
         query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, join=join, filter=filter, limit=limit,
                                    sort_columns=sort_columns, sort_direction=sort_direction, grouping=grouping,
                                    distinct=distinct)
         return SQL.SELECTfromQuery(cursor=cursor, query=query, fetch_results=fetch_results)
 
     @staticmethod
-    def SELECTfromQuery(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
+    def SELECTfromQuery(cursor, query: str, fetch_results: bool = True) -> List[Tuple]:
         Logger.toStdOut("Running query: " + query, logging.DEBUG)
         # print(f"running query: {query}")
         start = datetime.now()
@@ -215,8 +218,8 @@ class SQL:
         return result
 
     @staticmethod
-    def _prepareSelect(db_name: str, table:str, columns: typing.List[str] = None, join: str = None, filter: str = None, limit: int = -1,
-               sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
+    def _prepareSelect(db_name: str, table:str, columns: List[str] = None, join: str = None, filter: str = None, limit: int = -1,
+               sort_columns: List[str] = None, sort_direction = "ASC", grouping: str = None,
                distinct: bool = False):
         d = "DISTINCT " if distinct else ""
         cols      = ",".join(columns)      if columns is not None      and len(columns) > 0      else "*"
@@ -233,7 +236,7 @@ class SQL:
         return sel_clause + join_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
 
     @staticmethod
-    def Query(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
+    def Query(cursor, query: str, fetch_results: bool = True) -> List[Tuple]:
         Logger.toStdOut("Running query: " + query, logging.DEBUG)
         start = datetime.now()
         cursor.execute(query)
