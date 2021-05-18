@@ -4,7 +4,9 @@ import logging
 import math
 import MySQLdb
 import sshtunnel
+import traceback
 import typing
+from datetime import datetime
 # local imports
 from interfaces.DataInterface import DataInterface
 from schemas.Schema import Schema
@@ -101,6 +103,7 @@ class SQL:
     def connectToMySQLViaSSH(sql: SQLLogin, ssh: SSHLogin):
         tries = 0
         connected_ssh = False
+        tunnel = None
         while tries < 5 and connected_ssh == False:
             if tries > 0:
                 Logger.toStdOut("Re-attempting to connect to SSH.", logging.INFO)
@@ -192,9 +195,9 @@ class SQL:
     def SELECTfromQuery(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
         Logger.toStdOut("Running query: " + query, logging.DEBUG)
         # print(f"running query: {query}")
-        start = datetime.datetime.now()
+        start = datetime.now()
         cursor.execute(query)
-        time_delta = datetime.datetime.now()-start
+        time_delta = datetime.now()-start
         num_min = math.floor(time_delta.total_seconds()/60)
         num_sec = time_delta.total_seconds() % 60
         Logger.toStdOut(f"Query execution completed, time to execute: {num_min:d} min, {num_sec:.3f} sec", logging.DEBUG)
@@ -202,7 +205,7 @@ class SQL:
         #     math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60 ) \
         # )
         result = cursor.fetchall() if fetch_results else None
-        time_delta = datetime.datetime.now()-start
+        time_delta = datetime.now()-start
         num_min = math.floor(time_delta.total_seconds()/60)
         num_sec = time_delta.total_seconds() % 60
         Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result):d} rows", logging.DEBUG)
@@ -232,9 +235,9 @@ class SQL:
     @staticmethod
     def Query(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
         Logger.toStdOut("Running query: " + query, logging.DEBUG)
-        start = datetime.datetime.now()
+        start = datetime.now()
         cursor.execute(query)
-        Logger.toStdOut(f"Query execution completed, time to execute: {datetime.datetime.now()-start}", logging.DEBUG)
+        Logger.toStdOut(f"Query execution completed, time to execute: {datetime.now()-start}", logging.DEBUG)
         return [col[0] for col in cursor.fetchall()] if fetch_results else None
 
     ## Simple function to construct and log a nice server 500 error message.
