@@ -1,12 +1,13 @@
 ## import standard libraries
 import abc
+import enum
 import typing
 import logging
-from enum import Enum
 
-class ModelInputType(Enum):
-    FEATURE  = 0
-    SEQUENCE = 1
+@enum.unique
+class ModelInputType(enum.Enum):
+    FEATURE  = enum.auto()
+    SEQUENCE = enum.auto()
 
 ## @class Model
 #  Abstract base class for models to be displayed in realtime dashboard.
