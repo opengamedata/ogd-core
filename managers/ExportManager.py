@@ -18,7 +18,7 @@ import utils
 from config import settings
 from GameTable import GameTable
 from interfaces.MySQLInterface import SQL
-from managers.DataManager import *
+from interfaces.MySQLInterface import MySQLInterface
 from managers.FileManager import *
 from managers.SessionProcessor import SessionProcessor
 from managers.RawManager import RawManager
