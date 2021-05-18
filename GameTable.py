@@ -62,8 +62,8 @@ class GameTable:
             max_level = lakeland_config["MAX_SESSION_SECONDS"] // lakeland_config['WINDOW_SIZE_SECONDS']
         else:
             max_min_raw = SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["TABLE"],
-                                            columns=["MAX(level)", "MIN(level)"], filter=f"`app_id`='{request.game_id}'",
-                                            distinct=True)
+                                     columns=["MAX(level)", "MIN(level)"], filter=f"`app_id`='{request.game_id}'",
+                                     distinct=True)
             max_level = max_min_raw[0][0]
             min_level = max_min_raw[0][1]
         sess_ids = request.retrieveSessionIDs(db_cursor=db_cursor, db_settings=db_settings)
