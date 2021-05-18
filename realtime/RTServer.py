@@ -17,6 +17,7 @@ from feature_extractors.CrystalExtractor import CrystalExtractor
 from feature_extractors.WaveExtractor import WaveExtractor
 from feature_extractors.LakelandExtractor import LakelandExtractor
 from GameTable import GameTable
+from interfaces.MySQLInterface import SQL
 from managers.SessionProcessor import SessionProcessor
 from models.Model import ModelInputType
 # from models.Model import *
@@ -176,15 +177,15 @@ class RTServer:
         #+++
         start = datetime.now()
         #---
-        tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
+        tunnel,db = SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
         try:
             cursor = db.cursor()
             # filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE'"
-            # max_level_raw = utils.SQL.SELECT(cursor=cursor,
+            # max_level_raw = SQL.SELECT(cursor=cursor,
             #                                  db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
             #                                  columns=["MAX(level)"], filter=filt)
             filt = f"`session_id`='{sess_id}'"
-            cur_level_raw = utils.SQL.SELECT(cursor=cursor,
+            cur_level_raw = SQL.SELECT(cursor=cursor,
                                              db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
                                              columns=["level", "server_time"], filter=filt, limit=1,\
                                              sort_columns=["client_time"], sort_direction="DESC")
@@ -207,7 +208,7 @@ class RTServer:
             print(f"Error: Got an error in getGameProgress: {type(err)} {str(err)}", file=sys.stderr)
             raise err
         finally:
-            # utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            # SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return {"max_level": max_level, "cur_level": cur_level, "idle_time": idle_time}
 
     ## Handler to get a list of all feature names for a given game.
@@ -338,7 +339,7 @@ class RTServer:
             RTServer.db_settings["DB_HOST"]   = RTServer.rt_settings["DB_HOST"]
             RTServer.ssh_settings["SSH_HOST"] = RTServer.rt_settings["SSH_HOST"]
             try:
-                tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
+                tunnel,db = SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
                 #+++
                 start = datetime.now()
                 #---
@@ -353,7 +354,7 @@ class RTServer:
                     join_statement = ""
                     column_names   = [f"session_id", "player_id"]
                 filt = f"{RTServer.DB_TABLE}.app_id='{game_id}' AND {RTServer.DB_TABLE}.server_time > '{start_time.isoformat()}' {player_id_filter}"
-                active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
+                active_sessions_raw = SQL.SELECT(cursor=cursor,
                                                     db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
                                                     columns=column_names, join=join_statement, filter=filt,\
                                                     sort_columns=["session_id"], distinct=True)
@@ -370,7 +371,7 @@ class RTServer:
                 utils.Logger.toStdOut(f"Got an error in _fetchActiveSessions: {msg}", logging.ERROR)
                 raise err
             finally:
-                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+                SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
         elif RTServer.rt_settings["data_source"] == "FILE":
             raise Exception("not supported!") # TODO: remove this line after implementing the queries.
             path = RTServer.rt_settings["path"]
@@ -400,12 +401,12 @@ class RTServer:
         session_data = []
         if RTServer.rt_settings["data_source"] == "DB":
             try:
-                tunnel,db = utils.SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
+                tunnel,db = SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
                 game_table = GameTable.FromDB(db=db, settings=settings, request=request)
                 utils.Logger.toStdOut(f"Getting all features for session {session_id}", logging.INFO)
                 cursor = db.cursor()
                 filt = f"`session_id`='{session_id}'"
-                session_data = utils.SQL.SELECT(cursor=cursor,
+                session_data = SQL.SELECT(cursor=cursor,
                                                 db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
                                                 filter=filt,\
                                                 sort_columns=["session_n", "client_time"])

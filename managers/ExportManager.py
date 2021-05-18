@@ -17,6 +17,7 @@ from datetime import datetime
 import utils
 from config import settings
 from GameTable import GameTable
+from interfaces.MySQLInterface import SQL
 from managers.DataManager import *
 from managers.FileManager import *
 from managers.SessionProcessor import SessionProcessor
@@ -60,11 +61,11 @@ class ExportManager:
             self._game_id = request.game_id
         # 1) we first get the source, which is a SQL connection.
         start = datetime.now()
-        tunnel, db  = utils.SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
+        tunnel, db  = SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
         if db is None:
             msg = f"Could not complete request {str(request)}, database connection failed."
             utils.Logger.Log(msg, logging.ERROR)
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             raise ConnectionError() # if we couldn't connect, we're DOA
         # If that was successful, we set up data retrieval with a game table and SQLDataManager.
         try:
@@ -84,11 +85,11 @@ class ExportManager:
                 utils.Logger.Log(f"Could not complete request {str(request)}", logging.ERROR)
         except Exception as err:
             msg = f"General error ExportFromSQL: {type(err)} {str(err)}"
-            utils.SQL.server500Error(msg)
+            SQL.server500Error(msg)
             utils.Logger.toFile(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
         finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
 
     def ExtractFromFile(self, request: FileRequest, delimiter=','):
         if request.game_id != self._game_id:
@@ -119,7 +120,7 @@ class ExportManager:
                 utils.Logger.toFile(f"Could not complete extraction from {request.file_path}", logging.ERROR)
         except Exception as err:
             msg = f"General error ExtractFromFile: {type(err)} {str(err)}"
-            utils.SQL.server500Error(msg)
+            SQL.server500Error(msg)
             utils.Logger.toFile(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
 
