@@ -5,7 +5,7 @@ import math
 import sshtunnel
 import traceback
 from datetime import datetime
-from MySQLdb import connect, connections
+from MySQLdb import connect, connections, cursors
 from typing import Any, Dict, List, Tuple, Union
 # local imports
 from interfaces.DataInterface import DataInterface
@@ -101,11 +101,11 @@ class SQL:
     #                       otherwise None.
     @staticmethod
     def connectToMySQLViaSSH(sql: SQLLogin, ssh: SSHLogin) -> Tuple[Union[sshtunnel.SSHTunnelForwarder,None], Union[connections.Connection,None]]:
+        tunnel : Union[sshtunnel.SSHTunnelForwarder, None] = None
+        db_conn   : Union[connections.Connection, None] = None
         MAX_TRIES : int = 5
         tries : int = 0
         connected_ssh : bool = False
-        tunnel : Union[sshtunnel.SSHTunnelForwarder, None] = None
-        conn   : Union[connections.Connection, None] = None
 
         # First, connect to SSH
         while connected_ssh == False and tries < MAX_TRIES:
@@ -193,26 +193,23 @@ class SQL:
         return SQL.SELECTfromQuery(cursor=cursor, query=query, fetch_results=fetch_results)
 
     @staticmethod
-    def SELECTfromQuery(cursor, query: str, fetch_results: bool = True) -> List[Tuple]:
-        Logger.toStdOut("Running query: " + query, logging.DEBUG)
-        # print(f"running query: {query}")
+    def SELECTfromQuery(cursor:cursors.Cursor, query: str, fetch_results: bool = True) -> Union[List[Tuple], None]:
+        result : Union[List[Tuple], None] = None
+        # first, we do the query.
+        Logger.toStdOut(f"Running query: {query}", logging.DEBUG)
         start = datetime.now()
         cursor.execute(query)
         time_delta = datetime.now()-start
         num_min = math.floor(time_delta.total_seconds()/60)
         num_sec = time_delta.total_seconds() % 60
         Logger.toStdOut(f"Query execution completed, time to execute: {num_min:d} min, {num_sec:.3f} sec", logging.DEBUG)
-        # print("Query execution completed, time to execute: {:d} min, {:.3f} sec".format( \
-        #     math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60 ) \
-        # )
-        result = cursor.fetchall() if fetch_results else None
+        # second, we get the results.
+        if fetch_results:
+            result = cursor.fetchall()
         time_delta = datetime.now()-start
         num_min = math.floor(time_delta.total_seconds()/60)
         num_sec = time_delta.total_seconds() % 60
         Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result):d} rows", logging.DEBUG)
-        # print("Query fetch completed, total query time:    {:d} min, {:.3f} sec to get {:d} rows".format( \
-        #     math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(result) ) \
-        # )
         return result
 
     @staticmethod
@@ -234,7 +231,7 @@ class SQL:
         return sel_clause + join_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
 
     @staticmethod
-    def Query(cursor, query: str, fetch_results: bool = True) -> List[Tuple]:
+    def Query(cursor, query: str, fetch_results: bool = True) -> Union[List[Tuple], None]:
         Logger.toStdOut("Running query: " + query, logging.DEBUG)
         start = datetime.now()
         cursor.execute(query)
