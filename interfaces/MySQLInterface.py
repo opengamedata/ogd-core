@@ -247,3 +247,50 @@ class SQL:
         phrase = http.HTTPStatus.INTERNAL_SERVER_ERROR.phrase
         Logger.toStdOut(f"HTTP Response: {val}{phrase}", logging.ERROR)
         Logger.toStdOut(f"Error Message: {err_msg}", logging.ERROR)
+
+class MySQLInterface(DataInterface):
+    def __init__(self, game_id:str, game_schema:Schema, settings):
+        super().__init__(game_name=game_id)
+        self._game_schema = game_schema
+        self._settings = settings
+        self._tunnel = None
+        self._db = None
+        self._db_cursor = None
+        self.Open()
+
+    def __del__(self):
+        SQL.disconnectMySQLViaSSH(tunnel=self._tunnel, db=self._db)
+        
+    @abc.abstractmethod
+    def Open(self) -> bool:
+        if not self._is_open:
+            self._tunnel, self._db = SQL.prepareDB(db_settings=self._settings["db_config"], ssh_settings=self._settings["ssh_config"])
+            self._db_cursor = self._db.cursor()
+
+    @abc.abstractmethod
+    def Close(self) -> bool:
+        pass
+
+    def _retrieveFromIDs(self, ids: List[int]) -> List:
+        # grab data for the given session range. Sort by event time, so
+        if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
+            ver_filter = f" AND app_version in ({','.join([str(x) for x in self._game_schema.schema()['config']['SUPPORTED_VERS']])}) "
+        else:
+            ver_filter = ''
+        id_string = ','.join([f"'{x}'" for x in id_list])
+        # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
+        filt = f"app_id='{self._game_id}' AND session_id  IN ({id_string}){ver_filter}"
+        query = SQL._prepareSelect(db_name=self._settings["db_config"]["DB_NAME_DATA"],
+                                         table=self._settings["db_config"]["TABLE"], columns=None, filter=filt, limit=-1,
+                                         sort_columns=["session_id", "session_n"], sort_direction="ASC",
+                                         grouping=None, distinct=False)
+        # self._select_queries.append(select_query) # this doesn't appear to be used???
+        return SQL.SELECTfromQuery(cursor=self._db_cursor, query=query, fetch_results=True)
+
+    @abc.abstractmethod
+    def _IDsFromDates(self, min, max):
+        pass
+
+    @abc.abstractmethod
+    def _datesFromIDs(self, ids:List[int]):
+        pass
