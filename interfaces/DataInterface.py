@@ -5,8 +5,8 @@ import typing
 import utils
 
 class DataInterface(abc.ABC):
-    def __init__(self, game_name):
-        self._game_id : str  = game_name
+    def __init__(self, game_id):
+        self._game_id : str  = game_id
         self._is_open : bool = False
 
     def RetrieveFromIDs(self, ids: typing.List[int]) -> typing.List:
