@@ -1,5 +1,6 @@
 import abc
 import pandas as pd
+from datetime import datetime
 from typing import Any, Dict, IO, List, Tuple, Union
 ## import local files
 from interfaces.DataInterface import DataInterface
@@ -25,17 +26,19 @@ class CSVInterface(DataInterface):
         self._is_open = False
         return True
 
-    @abc.abstractmethod
     def _retrieveFromIDs(self, id_list: List[int]) -> List:
-        if self.IsOpen():
+        if self.IsOpen() and self._data != None:
             return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
         else:
             return []
 
-    @abc.abstractmethod
-    def _IDsFromDates(self, min, max):
-        pass
+    def _IDsFromDates(self, min, max) -> List[int]:
+        if self._data != None:
+            return list(self._data.loc[self._data['server_time'] > min and self._data['server_time'] < max, ['session_id']])
+        else:
+            return []
 
-    @abc.abstractmethod
-    def _datesFromIDs(self, id_list:typing.List[int]):
-        pass
+    def _datesFromIDs(self, id_list:List[int]) -> Tuple[datetime, datetime]:
+        min_date = min(self._data.loc[self._data['session_id'] in id_list, ['server_time']])
+        max_date = max(self._data.loc[self._data['session_id'] in id_list, ['server_time']])
+        return (min, max)

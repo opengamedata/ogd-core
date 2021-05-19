@@ -145,7 +145,7 @@ class SQL:
             return (None, None)
 
     @staticmethod
-    def disconnectMySQLViaSSH(tunnel:sshtunnel.SSHTunnelForwarder, db:connections.Connection) -> None:
+    def disconnectMySQLViaSSH(tunnel:Union[sshtunnel.SSHTunnelForwarder,None], db:Union[connections.Connection,None]) -> None:
         if db is not None:
             db.close()
             # Logger.toStdOut("Closed database connection", logging.INFO)
@@ -250,12 +250,14 @@ class SQL:
 
 class MySQLInterface(DataInterface):
     def __init__(self, game_id:str, game_schema:Schema, settings):
-        super().__init__(game_name=game_id)
+        # set up data from params
+        super().__init__(game_id=game_id)
         self._game_schema = game_schema
         self._settings = settings
-        self._tunnel = None
-        self._db = None
-        self._db_cursor = None
+        # set up connection vars and try to make connection off the bat.
+        self._tunnel : Union[sshtunnel.SSHTunnelForwarder, None] = None
+        self._db : Union[connections.Connection, None] = None
+        self._db_cursor : Union[cursors.Cursor, None] = None
         self.Open()
         
     def Open(self, force_reopen:bool = False) -> bool:
@@ -264,11 +266,19 @@ class MySQLInterface(DataInterface):
             self.Open(force_reopen=False)
         if not self._is_open:
             self._tunnel, self._db = SQL.prepareDB(db_settings=self._settings["db_config"], ssh_settings=self._settings["ssh_config"])
-            self._db_cursor = self._db.cursor()
+            if self._tunnel != None and self._db != None:
+                self._db_cursor = self._db.cursor()
+                self._is_open = True
+                return True
+            else:
+                return False
+        else:
+            return True
 
-    @abc.abstractmethod
     def Close(self) -> bool:
-        pass
+        SQL.disconnectMySQLViaSSH(tunnel=self._tunnel, db=self._db)
+        self._is_open = False
+        return True
 
     def _retrieveFromIDs(self, id_list: List[int]) -> List:
         # grab data for the given session range. Sort by event time, so
@@ -286,10 +296,8 @@ class MySQLInterface(DataInterface):
         # self._select_queries.append(select_query) # this doesn't appear to be used???
         return SQL.SELECTfromQuery(cursor=self._db_cursor, query=query, fetch_results=True)
 
-    @abc.abstractmethod
-    def _IDsFromDates(self, min, max):
-        pass
+    def _IDsFromDates(self, min, max) -> List[int]:
+        return []
 
-    @abc.abstractmethod
-    def _datesFromIDs(self, ids:List[int]):
-        pass
+    def _datesFromIDs(self, ids:List[int]) -> List:
+        return []
