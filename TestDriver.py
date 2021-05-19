@@ -1,4 +1,3 @@
-from realtime.RTServer import RTServer
+from tests.t_interfaces.t_CSVInterface import t_CSVInterface
 
-result = RTServer.getPredictionsBySessID("20070105050890460", "LAKELAND", ["dummySequenceModel"])
-print(f"Got this row from dummySequenceModel:\n{result}")
+t_CSVInterface.RunTest()
