@@ -26,7 +26,7 @@ class CSVInterface(DataInterface):
         self._is_open = False
         return True
 
-    def _retrieveFromIDs(self, id_list: List[int]) -> List:
+    def _retrieveFromIDs(self, id_list: List[int]) -> List[Tuple]:
         if self.IsOpen() and self._data != None:
             return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
         else:
