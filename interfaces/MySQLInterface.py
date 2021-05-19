@@ -232,13 +232,30 @@ class SQL:
 
         return sel_clause + join_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
 
+    ## Function similar to SELECTfromQuery, but gets the first element per-col in cursor.fetchall().
+    #  Really, it's probably meant to be row, rather than col.
+    #  @param cursor        The MySQLdb cursor for accessing the database.
+    #  @param query         A string representing the query to execute.
+    #  @param fetch_results A bool to determine whether we should try to return the query results or not.
     @staticmethod
-    def Query(cursor, query: str, fetch_results: bool = True) -> Union[List[Tuple], None]:
+    def Query(cursor:cursors.Cursor, query: str, fetch_results: bool = True) -> Union[List[Tuple], None]:
+        result : Union[List[Tuple], None] = None
+        # first, we do the query.
         Logger.toStdOut("Running query: " + query, logging.DEBUG)
         start = datetime.now()
         cursor.execute(query)
-        Logger.toStdOut(f"Query execution completed, time to execute: {datetime.now()-start}", logging.DEBUG)
-        return [col[0] for col in cursor.fetchall()] if fetch_results else None
+        time_delta = datetime.now()-start
+        num_min = math.floor(time_delta.total_seconds()/60)
+        num_sec = time_delta.total_seconds() % 60
+        Logger.toStdOut(f"Query execution completed, time to execute: {num_min:d} min, {num_sec:.3f} sec", logging.DEBUG)
+        # second, we get the results.
+        if fetch_results:
+            result = [col[0] for col in cursor.fetchall()]
+        time_delta = datetime.now()-start
+        num_min = math.floor(time_delta.total_seconds()/60)
+        num_sec = time_delta.total_seconds() % 60
+        Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result):d} rows", logging.DEBUG)
+        return result
 
     ## Simple function to construct and log a nice server 500 error message.
     #  @param err_msg A more detailed error message with info to help debugging.
