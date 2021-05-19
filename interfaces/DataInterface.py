@@ -1,6 +1,8 @@
 ## import standard libraries
 import abc
 import typing
+from datetime import datetime
+from typing import List, Tuple, Union
 ## import locals
 import utils
 
@@ -13,22 +15,24 @@ class DataInterface(abc.ABC):
         if self.IsOpen():
             self.Close()
 
-    def RetrieveFromIDs(self, id_list: typing.List[int]) -> typing.List:
+    def RetrieveFromIDs(self, id_list: List[int]) -> List:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve data, the source interface is not open!")
             return []
         else:
             return self._retrieveFromIDs(id_list)
 
-    def IDsFromDates(self, min, max):
+    def IDsFromDates(self, min, max) -> List[int]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve IDs, the source interface is not open!")
+            return []
         else:
             return self._IDsFromDates(min=min, max=max)
 
-    def DatesFromIDs(self, id_list:typing.List[int]):
+    def DatesFromIDs(self, id_list:List[int]) -> Tuple[Union[datetime,None], Union[datetime,None]]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve dates, the source interface is not open!")
+            return (None, None)
         else:
             return self._datesFromIDs(id_list=id_list)
     
@@ -44,13 +48,13 @@ class DataInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _retrieveFromIDs(self, id_list: typing.List[int]) -> typing.List:
+    def _retrieveFromIDs(self, id_list: List[int]) -> List:
         pass
 
     @abc.abstractmethod
-    def _IDsFromDates(self, min, max):
+    def _IDsFromDates(self, min, max) -> List[int]:
         pass
 
     @abc.abstractmethod
-    def _datesFromIDs(self, id_list:typing.List[int]):
+    def _datesFromIDs(self, id_list:List[int]) -> Tuple[datetime, datetime]:
         pass
