@@ -167,8 +167,6 @@ class SQL:
     #  @param filter        A string giving the constraints for a WHERE clause.
     #                           (The "WHERE" term itself should not be part of the filter string)
     #                           Default: None
-    #  @param limit         The maximum number of rows to be selected. Use -1 for no limit.
-    #                           Default: -1
     #  @param sort_columns  A list of columns to sort results on. The order of columns
     #                           in the list is the order given to SQL
     #                           Default: None
@@ -179,7 +177,9 @@ class SQL:
     #  @param distinct      A bool to determine whether to select only rows with
     #                           distinct values in the column.
     #                           Default: False
-    #  @param distinct      A bool to determine whether all results should be fetched and returned.
+    #  @param limit         The maximum number of rows to be selected. Use -1 for no limit.
+    #                           Default: -1
+    #  @param fetch_results A bool to determine whether all results should be fetched and returned.
     #                           Default: True
     #  @return              A collection of all rows from the selection, if fetch_results is true,
     #                           otherwise None.
@@ -188,9 +188,9 @@ class SQL:
                columns     :List[str] = None,  join          :str = None,  filter        :str = None,
                sort_columns:List[str] = None,  sort_direction:str = "ASC", grouping      :str = None,
                distinct    :bool      = False, limit         :int = -1,    fetch_results :bool = True) -> Union[List[Tuple],None]:
-        query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, join=join, filter=filter, limit=limit,
+        query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, join=join, filter=filter,
                                    sort_columns=sort_columns, sort_direction=sort_direction, grouping=grouping,
-                                   distinct=distinct)
+                                   distinct=distinct, limit=limit)
         return SQL.SELECTfromQuery(cursor=cursor, query=query, fetch_results=fetch_results)
 
     @staticmethod
@@ -214,9 +214,10 @@ class SQL:
         return result
 
     @staticmethod
-    def _prepareSelect(db_name: str, table:str, columns: List[str] = None, join: str = None, filter: str = None, limit: int = -1,
-               sort_columns: List[str] = None, sort_direction = "ASC", grouping: str = None,
-               distinct: bool = False):
+    def _prepareSelect(db_name: str,                    table:str,
+                       columns: List[str]      = None,  join: str      = None,  filter: str = None,
+                       sort_columns: List[str] = None,  sort_direction = "ASC", grouping: str = None,
+                       distinct: bool          = False, limit: int     = -1):
         d = "DISTINCT " if distinct else ""
         cols      = ",".join(columns)      if columns is not None      and len(columns) > 0      else "*"
         sort_cols = ",".join(sort_columns) if sort_columns is not None and len(sort_columns) > 0 else None
@@ -277,6 +278,7 @@ class MySQLInterface(DataInterface):
 
     def Close(self) -> bool:
         SQL.disconnectMySQLViaSSH(tunnel=self._tunnel, db=self._db)
+        Logger.toStdOut("Closed connection to MySQL.", logging.DEBUG)
         self._is_open = False
         return True
 
@@ -290,14 +292,14 @@ class MySQLInterface(DataInterface):
         # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
         filt = f"app_id='{self._game_id}' AND session_id  IN ({id_string}){ver_filter}"
         query = SQL._prepareSelect(db_name=self._settings["db_config"]["DB_NAME_DATA"],
-                                         table=self._settings["db_config"]["TABLE"], columns=None, filter=filt, limit=-1,
-                                         sort_columns=["session_id", "session_n"], sort_direction="ASC",
-                                         grouping=None, distinct=False)
+                                   table=self._settings["db_config"]["TABLE"], columns=None, filter=filt,
+                                   sort_columns=["session_id", "session_n"], sort_direction="ASC",
+                                   grouping=None, distinct=False, limit=-1)
         # self._select_queries.append(select_query) # this doesn't appear to be used???
         return SQL.SELECTfromQuery(cursor=self._db_cursor, query=query, fetch_results=True)
 
     def _IDsFromDates(self, min, max) -> List[int]:
         return []
 
-    def _datesFromIDs(self, ids:List[int]) -> List:
+    def _datesFromIDs(self, ids:List[int]) -> Tuple[datetime, datetime]:
         return []
