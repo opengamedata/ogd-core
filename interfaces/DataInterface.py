@@ -15,17 +15,17 @@ class DataInterface(abc.ABC):
         if self.IsOpen():
             self.Close()
 
-    def RetrieveFromIDs(self, id_list: List[int]) -> List:
+    def RetrieveFromIDs(self, id_list: List[int]) -> Union[List, None]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve data, the source interface is not open!")
-            return []
+            return None
         else:
             return self._retrieveFromIDs(id_list)
 
-    def IDsFromDates(self, min, max) -> List[int]:
+    def IDsFromDates(self, min, max) -> Union[List[int], None]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve IDs, the source interface is not open!")
-            return []
+            return None
         else:
             return self._IDsFromDates(min=min, max=max)
 
@@ -48,7 +48,7 @@ class DataInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _retrieveFromIDs(self, id_list: List[int]) -> List:
+    def _retrieveFromIDs(self, id_list: List[int]) -> List[Tuple]:
         pass
 
     @abc.abstractmethod
