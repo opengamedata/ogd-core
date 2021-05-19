@@ -299,21 +299,27 @@ class MySQLInterface(DataInterface):
         self._is_open = False
         return True
 
-    def _retrieveFromIDs(self, id_list: List[int]) -> List:
+    def _retrieveFromIDs(self, id_list: List[int]) -> List[Tuple]:
         # grab data for the given session range. Sort by event time, so
-        if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
-            ver_filter = f" AND app_version in ({','.join([str(x) for x in self._game_schema.schema()['config']['SUPPORTED_VERS']])}) "
+        if not self._db_cursor == None:
+            if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
+                ver_filter = f" AND app_version in ({','.join([str(x) for x in self._game_schema.schema()['config']['SUPPORTED_VERS']])}) "
+            else:
+                ver_filter = ''
+            id_string = ','.join([f"'{x}'" for x in id_list])
+            # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
+            filt = f"app_id='{self._game_id}' AND session_id  IN ({id_string}){ver_filter}"
+            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            table_name = self._settings["db_config"]["TABLE"]
+            data = SQL.SELECT(cursor      =self._db_cursor,             db_name       =db_name, table=table_name,
+                              columns     =None,                        filter        =filt,
+                              sort_columns=["session_id", "session_n"], sort_direction="ASC",
+                              grouping    =None,                        distinct      =False,   limit=-1)
+            return data if data != None else []
+            # self._select_queries.append(select_query) # this doesn't appear to be used???
         else:
-            ver_filter = ''
-        id_string = ','.join([f"'{x}'" for x in id_list])
-        # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-        filt = f"app_id='{self._game_id}' AND session_id  IN ({id_string}){ver_filter}"
-        query = SQL._prepareSelect(db_name=self._settings["db_config"]["DB_NAME_DATA"],
-                                   table=self._settings["db_config"]["TABLE"], columns=None, filter=filt,
-                                   sort_columns=["session_id", "session_n"], sort_direction="ASC",
-                                   grouping=None, distinct=False, limit=-1)
-        # self._select_queries.append(select_query) # this doesn't appear to be used???
-        return SQL.SELECTfromQuery(cursor=self._db_cursor, query=query, fetch_results=True)
+            Logger.Log(f"Could not get data for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
+            return []
 
     def _IDsFromDates(self, min, max) -> List[int]:
         return []
