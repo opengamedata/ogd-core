@@ -217,7 +217,7 @@ class SQL:
     def _prepareSelect(db_name: str,                    table:str,
                        columns: List[str]      = None,  join: str      = None,  filter: str = None,
                        sort_columns: List[str] = None,  sort_direction = "ASC", grouping: str = None,
-                       distinct: bool          = False, limit: int     = -1):
+                       distinct: bool          = False, limit: int     = -1) -> str:
         d = "DISTINCT " if distinct else ""
         cols      = ",".join(columns)      if columns is not None      and len(columns) > 0      else "*"
         sort_cols = ",".join(sort_columns) if sort_columns is not None and len(sort_columns) > 0 else None
