@@ -4,7 +4,6 @@ from datetime import datetime
 from typing import Any, Dict, IO, List, Tuple, Union
 ## import local files
 from interfaces.DataInterface import DataInterface
-from GameTable import GameTable
 from schemas.Schema import Schema
 
 class CSVInterface(DataInterface):
