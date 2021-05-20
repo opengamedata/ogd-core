@@ -59,11 +59,13 @@ def GenerateReadme(game_name:str, schema, path:str = "./"):
             except FileNotFoundError as err:
                 readme.write("No changelog prepared")
                 Logger.toStdOut(f"Could not find changelog_src", logging.WARNING)
+    except FileNotFoundError as err:
+        Logger.Log(f"Could not open readme.md for writing.", logging.ERROR)
+        traceback.print_tb(err.__traceback__)
     except Exception as err:
         msg = f"{type(err)} {str(err)}"
-        Logger.toStdOut(msg, logging.ERROR)
+        Logger.Log(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
-        Logger.toFile(msg, logging.ERROR)
 
 ## Function to generate metadata for a given game.
 #  The "fields" are a sort of generalization of columns. Basically, columns which
