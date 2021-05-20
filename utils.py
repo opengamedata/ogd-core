@@ -18,17 +18,17 @@ def loadJSONFile(filename: str, path:str = "./") -> typing.Any:
     if not filename.lower().endswith(".json"):
         Logger.toStdOut(f"Got a filename that didn't end with .json: {filename}, appending .json", logging.DEBUG)
         filename = filename + ".json"
+    # TODO: try out os.path.join, see if it'll work properly. Had troubles on Windows in other cases.
     if not path.endswith("/"):
         path = path + "/"
+    # once we've validated inputs, try actual loading and reading.
     ret_val = None
     try:
-        json_file = open(path+filename, "r")
+        with open(path+filename, "r") as json_file:
+            ret_val = json.loads(json_file.read())
     except FileNotFoundError as err:
         Logger.toStdOut(f"File {path+filename} does not exist.", logging.WARNING)
         raise err
-    try:
-        ret_val = json.loads(json_file.read())
-        json_file.close()
     except Exception as err:
         Logger.toStdOut(f"Could not read file at {path+filename}\nFull error message: {type(err)} {str(err)}\nCurrent directory: {os.getcwd()}",
                         logging.ERROR)
