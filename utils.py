@@ -38,35 +38,32 @@ def loadJSONFile(filename: str, path:str = "./") -> typing.Any:
 def GenerateReadme(game_name:str, schema, path:str = "./"):
     try:
         os.makedirs(name=path, exist_ok=True)
-        readme = open(f"{path}/readme.md", "w")
-        # 1. Open files with game-specific readme data, and global db changelog.
-        try:
-            readme_src = open(f"./doc/readme_src/{game_name}_readme_src.md", "r")
-            readme.write(readme_src.read())
-            readme_src.close()
-        except FileNotFoundError as err:
-            readme.write("No readme prepared")
-            Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.WARNING)
-        finally:
-            readme.write("\n")
-        # 2. Use schema to write feature & column descriptions to the readme.
-        feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-        readme.write(GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
-                                                            sessions_field_list=feature_descriptions))
-        # 3. Append any important data from the data changelog.
-        try:
-            changelog_src = open("./doc/readme_src/changelog_src.md", "r")
-            readme.write(changelog_src.read())
-        except FileNotFoundError as err:
-            readme.write("No changelog prepared")
-            Logger.toStdOut(f"Could not find changelog_src", logging.WARNING)
+        with open(f"{path}/readme.md", "w") as readme:
+            # 1. Open files with game-specific readme data, and global db changelog.
+            try:
+                with open(f"./doc/readme_src/{game_name}_readme_src.md", "r") as readme_src:
+                    readme.write(readme_src.read())
+            except FileNotFoundError as err:
+                readme.write("No readme prepared")
+                Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.WARNING)
+            finally:
+                readme.write("\n")
+            # 2. Use schema to write feature & column descriptions to the readme.
+            feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
+            readme.write(GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
+                                                                sessions_field_list=feature_descriptions))
+            # 3. Append any important data from the data changelog.
+            try:
+                with open("./doc/readme_src/changelog_src.md", "r") as changelog_src:
+                    readme.write(changelog_src.read())
+            except FileNotFoundError as err:
+                readme.write("No changelog prepared")
+                Logger.toStdOut(f"Could not find changelog_src", logging.WARNING)
     except Exception as err:
         msg = f"{type(err)} {str(err)}"
         Logger.toStdOut(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
         Logger.toFile(msg, logging.ERROR)
-    finally:
-        readme.close()
 
 ## Function to generate metadata for a given game.
 #  The "fields" are a sort of generalization of columns. Basically, columns which
