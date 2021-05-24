@@ -67,7 +67,7 @@ class ExportManager:
             utils.Logger.Log(msg, logging.ERROR)
             SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             raise ConnectionError() # if we couldn't connect, we're DOA
-        # If that was successful, we set up data retrieval with a game table and SQLDataManager.
+        # If that was successful, we set up data retrieval with a game table and MySQLInterface.
         try:
             data_manager = SQLDataManager(game_id=request.game_id, game_schema=game_schema, settings=settings)
             date_range = (request.start_date, request.end_date)
