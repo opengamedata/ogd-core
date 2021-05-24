@@ -70,7 +70,7 @@ class Schema:
         return self["features"]["aggregate"]
 
     ## Function to retrieve the compiled list of all feature names.
-    def feature_list(self) -> List:
+    def feature_list(self) -> Union[List, None]:
         return self._feature_list
 
     ## Function to retrieve the dictionary of database columns.
