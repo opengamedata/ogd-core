@@ -1,11 +1,9 @@
 ## import standard libraries
-import logging
 import typing
 import pandas as pd
-from datetime import datetime
+from typing import List
 ## import local files
 import Request
-import utils
 from interfaces.MySQLInterface import SQL
 from schemas.Schema import Schema
 
@@ -24,10 +22,10 @@ class GameTable:
     #  @param settings  The dictionary of settings for the app
     #  @param request   A request object, with information about a date range
     #                   and other information on what data to retrieve.
-    def __init__(self, game_id, column_names: typing.List[str], session_ids, max_level, min_level):
+    def __init__(self, game_id, column_names: List[str], session_ids, max_level, min_level):
         # Define instance vars
         self.game_id:      str              = game_id
-        self.column_names: typing.List[str] = column_names
+        self.column_names: List[str] = column_names
         # Take note of specific indices which will be useful when using a GameTable
         # TODO: Honestly, should just make a reverse index dictionary.
         self.app_version_index:    int = self.column_names.index("app_version")
@@ -46,7 +44,7 @@ class GameTable:
         # lastly, get max and min levels, and get the session ids.
         self.max_level:            int = max_level
         self.min_level:            int = min_level
-        self.session_ids:          typing.List[int] = session_ids
+        self.session_ids:          List[int] = session_ids
         # utils.Logger.toStdOut("session_ids: " + str(session_ids), logging.DEBUG)
     
     @staticmethod
