@@ -68,9 +68,13 @@ class Request(abc.ABC):
         rng = self._range.GetDateRange()
         return f"{self._interface._game_id}: {rng['min'].strftime(fmt)}-{rng['max'].strftime(fmt)}"
 
+    def GetGameID(self):
+        # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
+        return str(self._interface._game_id)
+
     ## Method to retrieve the list of IDs for all sessions covered by
     #  the request.
-    def retrieveSessionIDs(self, cursor, db_settings) -> Union[List[int],None]:
-        supported_vers = Schema(schema_name=f"{self.game_id}.json")['config']['SUPPORTED_VERS']
+    def retrieveSessionIDs(self) -> Union[List[int],None]:
+        supported_vers = Schema(schema_name=f"{self._interface._game_id}.json")['config']['SUPPORTED_VERS']
         dates = self._range.GetDateRange()
         return self._interface.IDsFromDates(dates['min'], dates['max'], versions=supported_vers)
