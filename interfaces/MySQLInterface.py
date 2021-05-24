@@ -267,10 +267,9 @@ class SQL:
         Logger.toStdOut(f"Error Message: {err_msg}", logging.ERROR)
 
 class MySQLInterface(DataInterface):
-    def __init__(self, game_id:str, game_schema:Schema, settings):
+    def __init__(self, game_id:str, settings):
         # set up data from params
         super().__init__(game_id=game_id)
-        self._game_schema = game_schema
         self._settings = settings
         # set up connection vars and try to make connection off the bat.
         self._tunnel : Union[sshtunnel.SSHTunnelForwarder, None] = None
@@ -299,11 +298,11 @@ class MySQLInterface(DataInterface):
         self._is_open = False
         return True
 
-    def _retrieveFromIDs(self, id_list: List[int]) -> List[Tuple]:
+    def _retrieveFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         # grab data for the given session range. Sort by event time, so
         if not self._db_cursor == None:
-            if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
-                ver_filter = f" AND app_version in ({','.join([str(x) for x in self._game_schema.schema()['config']['SUPPORTED_VERS']])}) "
+            if versions is not None and versions is not []:
+                ver_filter = f" AND app_version in ({','.join([str(version) for version in versions])}) "
             else:
                 ver_filter = ''
             id_string = ','.join([f"'{x}'" for x in id_list])
@@ -321,8 +320,38 @@ class MySQLInterface(DataInterface):
             Logger.Log(f"Could not get data for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
             return []
 
-    def _IDsFromDates(self, min, max) -> List[int]:
-        return []
+    def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[int]:
+        if not self._db_cursor == None:
+            # alias long setting names.
+            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            table_name = self._settings["db_config"]["TABLE"]
+            start = min.isoformat()
+            end = max.isoformat()
+            # prep filter strings
+            ver_filter = f" AND `app_version` in ({','.join([str(x) for x in versions])}) " if versions else ''
+            filt = f"`app_id`=\"{self._game_id}\" AND `session_n`='0' AND (`server_time` BETWEEN '{start}' AND '{end}'){ver_filter}"
+            # run query
+            session_ids_raw = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
+                                    columns=["`session_id`"], filter=filt,
+                                    sort_columns=["`session_id`"], sort_direction="ASC", distinct=True)
+            return [sess[0] for sess in session_ids_raw]
+        else:
+            Logger.Log(f"Could not get session list for {min.isoformat()}-{max.isoformat()} range, MySQL connection is not open.", logging.WARN)
+            return []
 
-    def _datesFromIDs(self, ids:List[int]) -> Tuple[datetime, datetime]:
-        return []
+    def _datesFromIDs(self, id_list:List[int], versions: Union[List[int],None]=None) -> Dict[str, datetime]:
+        if not self._db_cursor == None:
+            # alias long setting names.
+            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            table_name = self._settings["db_config"]["TABLE"]
+            # prep filter strings
+            ids_string = ','.join([f"'{x}'" for x in id_list])
+            ver_filter = f" AND `app_version` in ({','.join([str(x) for x in versions])}) " if versions else ''
+            filt = f"`app_id`='{self._game_id}' AND `session_id` IN ({ids_string}){ver_filter}"
+            # run query
+            result = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
+                                columns=['MIN(server_time)', 'MAX(server_time)'], filter=filt)
+            return {'min':result[0][0], 'max':result[0][1]}
+        else:
+            Logger.Log(f"Could not get date range for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
+            return {'min':datetime.now(), 'max':datetime.now()}

@@ -2,7 +2,7 @@
 import abc
 import typing
 from datetime import datetime
-from typing import List, Tuple, Union
+from typing import Dict, List, Tuple, Union
 ## import locals
 import utils
 
@@ -15,26 +15,26 @@ class DataInterface(abc.ABC):
         if self.IsOpen():
             self.Close()
 
-    def RetrieveFromIDs(self, id_list: List[int]) -> Union[List, None]:
+    def RetrieveFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> Union[List, None]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve data, the source interface is not open!")
             return None
         else:
-            return self._retrieveFromIDs(id_list)
+            return self._retrieveFromIDs(id_list, versions=versions)
 
-    def IDsFromDates(self, min, max) -> Union[List[int], None]:
+    def IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> Union[List[int], None]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve IDs, the source interface is not open!")
             return None
         else:
-            return self._IDsFromDates(min=min, max=max)
+            return self._IDsFromDates(min=min, max=max, versions=versions)
 
-    def DatesFromIDs(self, id_list:List[int]) -> Tuple[Union[datetime,None], Union[datetime,None]]:
+    def DatesFromIDs(self, id_list:List[int], versions: Union[List[int],None]=None) -> Dict[str,Union[datetime,None]]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve dates, the source interface is not open!")
-            return (None, None)
+            return {'min':None, 'max':None}
         else:
-            return self._datesFromIDs(id_list=id_list)
+            return self._datesFromIDs(id_list=id_list, versions=versions)
     
     def IsOpen(self) -> bool:
         return True if self._is_open else False
@@ -48,13 +48,13 @@ class DataInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _retrieveFromIDs(self, id_list: List[int]) -> List[Tuple]:
+    def _retrieveFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         pass
 
     @abc.abstractmethod
-    def _IDsFromDates(self, min, max) -> List[int]:
+    def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[int]:
         pass
 
     @abc.abstractmethod
-    def _datesFromIDs(self, id_list:List[int]) -> Tuple[datetime, datetime]:
+    def _datesFromIDs(self, id_list:List[int], versions: Union[List[int],None]=None) -> Dict[str,datetime]:
         pass

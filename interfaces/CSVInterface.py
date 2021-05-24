@@ -1,4 +1,3 @@
-import abc
 import pandas as pd
 from datetime import datetime
 from typing import Any, Dict, IO, List, Tuple, Union
@@ -25,19 +24,24 @@ class CSVInterface(DataInterface):
         self._is_open = False
         return True
 
-    def _retrieveFromIDs(self, id_list: List[int]) -> List[Tuple]:
+    def _retrieveFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         if self.IsOpen() and self._data != None:
             return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
         else:
             return []
 
-    def _IDsFromDates(self, min:datetime, max:datetime) -> List[int]:
+    def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[int]:
         if not self._data.empty:
-            return list(self._data.loc[self._data['server_time'] > min and self._data['server_time'] < max, ['session_id']])
+            server_times = self._data['server_time']
+            if versions is not None and versions is not []:
+                mask = self._data.loc[(server_times >= min) & (server_times <= max) & (self._data['app_version'].isin(versions))]
+            else:
+                mask = self._data.loc[(server_times >= min) & (server_times <= max)]
+            return list(mask['session_id'])
         else:
             return []
 
-    def _datesFromIDs(self, id_list:List[int]) -> Dict[str, datetime]:
-        min_date = self._data.loc[self._data['session_id'] in id_list, ['server_time']].min
-        max_date = self._data.loc[self._data['session_id'] in id_list, ['server_time']].max
+    def _datesFromIDs(self, id_list:List[int], versions: Union[List[int],None]=None) -> Dict[str, datetime]:
+        min_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].min()
+        max_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].max()
         return {'min':pd.to_datetime(min_date), 'max':pd.to_datetime(max_date)}
