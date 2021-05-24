@@ -6,6 +6,8 @@ import logging
 import os
 import traceback
 import typing
+from typing import Dict
+# local imports
 from config import settings
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
@@ -76,7 +78,7 @@ def GenerateReadme(game_name:str, schema, path:str = "./"):
 #  @param raw_field_list    A mapping of raw csv "fields" to descriptions of the fields.
 #  @param sessions_field_list   A mapping of session csv features to descriptions of the features.
 #  @return                  A string containing metadata for the given game.
-def GenCSVMetadata(game_name: str, raw_field_list: typing.Dict[str,str], sessions_field_list: typing.Dict[str,str]) -> str:
+def GenCSVMetadata(game_name: str, raw_field_list: Dict[str,str], sessions_field_list: Dict[str,str]) -> str:
     raw_field_descriptions = [f"{key} - {raw_field_list[key]}" for key in raw_field_list.keys()]
     sessions_field_descriptions = [f"{key} - {sessions_field_list[key]}" for key in sessions_field_list.keys()]
     raw_field_string = "\n".join(raw_field_descriptions)

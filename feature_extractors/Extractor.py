@@ -4,6 +4,7 @@ import logging
 import typing
 import logging
 from datetime import datetime
+from typing import Dict, List, Tuple, Union
 ## import local files
 import utils
 from GameTable import GameTable
@@ -31,11 +32,11 @@ class Extractor(abc.ABC):
     #                     structured.
     def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema,
                  level_range: range = None):
-        self.session_id:   int               = session_id
-        self._level_range: range             = level_range if (level_range is not None) else range(game_table.min_level, game_table.max_level+1)
-        self.levels:       typing.List[int]  = []
-        self.last_adjust_type: str           = None
-        self.sequences:    typing.List       = []
+        self.session_id:   int         = session_id
+        self._level_range: range       = level_range if (level_range is not None) else range(game_table.min_level, game_table.max_level+1)
+        self.levels:       List[int]   = []
+        self.last_adjust_type: str     = None
+        self.sequences:    List        = []
         self.features:     Extractor.SessionFeatures = Extractor.SessionFeatures(self._level_range, game_schema)
 
     ## Static function to print column headers to a file.
@@ -55,7 +56,7 @@ class Extractor(abc.ABC):
         file.write("\n")
 
     @staticmethod
-    def getFeatureNames(game_table: GameTable, game_schema: Schema) -> typing.List[str]:
+    def getFeatureNames(game_table: GameTable, game_schema: Schema) -> List[str]:
         columns = []
         features = Extractor.SessionFeatures.generateFeatureDict(range(game_table.min_level, game_table.max_level+1), game_schema)
         for key in features.keys():
@@ -149,7 +150,7 @@ class Extractor(abc.ABC):
     #  to understand the structure of feature data.
     class SessionFeatures:
         def __init__(self, level_range: range, game_schema: Schema):
-            self.perlevels: typing.List = list(game_schema.perlevel_features().keys())
+            self.perlevels: List = list(game_schema.perlevel_features().keys())
             self.features = Extractor.SessionFeatures.generateFeatureDict(level_range, game_schema)
 
         ## Static function to generate a dictionary of game feature data from a given schema.
@@ -159,7 +160,7 @@ class Extractor(abc.ABC):
         #  @param level_range The range of all levels for the game associated with an extractor.
         #  @param game_schema A dictionary that defines how the game data is structured.
         @staticmethod
-        def generateFeatureDict(level_range: range, game_schema: Schema) -> typing.Dict:
+        def generateFeatureDict(level_range: range, game_schema: Schema) -> Dict:
             # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
             # which in turn maps each level to a value and prefix.
             perlevels = game_schema.perlevel_features()
@@ -258,7 +259,7 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to increment
         #  @param index        The count index of the specific value, e.g. the level
         #  @param increment    The size of the increment (default = 1)
-        def incValByIndex(self, feature_name: str, index: int, increment: typing.Union[int, float] = 1):
+        def incValByIndex(self, feature_name: str, index: int, increment: Union[int, float] = 1):
             if not self._verify_feature(feature_name):
                 return
             if self.features[feature_name][index]["val"] == 'null':
@@ -271,14 +272,14 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to increment
         #  @param index        The count index of the specific value, e.g. the level
         #  @param increment    The size of the increment (default = 1)
-        def incValByLevel(self, feature_name: str, level: int, increment: typing.Union[int, float] = 1):
+        def incValByLevel(self, feature_name: str, level: int, increment: Union[int, float] = 1):
             self.incValByIndex(feature_name=feature_name, index=level, increment=increment)
 
         ## Function to increment value of an aggregate feature
         #
         #  @param feature_name The name of the feature to increment
         #  @param increment    The size of the increment (default = 1)
-        def incAggregateVal(self, feature_name: str, increment: typing.Union[int, float] = 1):
+        def incAggregateVal(self, feature_name: str, increment: Union[int, float] = 1):
             if not self._verify_feature(feature_name):
                 return
             self.features[feature_name] += increment
@@ -294,7 +295,7 @@ class Extractor(abc.ABC):
 
     ## Simple helper class to track a sequence of events, based on move types.
     class Sequence:
-        def __init__(self, end_function: typing.Callable[[typing.List[typing.Tuple]], None], end_event_type, end_event_count:int=1):
+        def __init__(self, end_function: typing.Callable[[List[Tuple]], None], end_event_type, end_event_count:int=1):
             self._fnEnd          = end_function
             self._end_event_type  = end_event_type
             self._end_event_count = 0               # current count of end events

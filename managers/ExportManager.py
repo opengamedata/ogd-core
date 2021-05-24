@@ -13,6 +13,7 @@ import typing
 import zipfile
 import pandas as pd
 from datetime import datetime
+from typing import Tuple
 ## import local files
 import utils
 from config import settings
@@ -130,7 +131,7 @@ class ExportManager:
     #                    and export
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
-    def _runExport(self, data_manager: DataManager, date_range: typing.Tuple, game_table: GameTable, exporter_files: ExporterFiles) -> bool:
+    def _runExport(self, data_manager: DataManager, date_range: Tuple, game_table: GameTable, exporter_files: ExporterFiles) -> bool:
         # utils.Logger.toStdOut(f"complex_data_index: {complex_data_index}", logging.DEBUG)
         try:
             # 2a) Prepare schema and extractor, if game doesn't have an extractor, make sure we don't try to export it.
@@ -271,7 +272,7 @@ class ExportManager:
     #                    table assiciated with the given game is structured. 
     #  @raw_mgr          An instance of RawManager used to track raw data.
     #  @sess_processor         An instance of SessionProcessor used to extract and track feature data.
-    def _processRow(self, row: typing.Tuple, game_table: GameTable, raw_mgr: RawManager, sess_processor: SessionProcessor, evt_processor: EventProcessor):
+    def _processRow(self, row: Tuple, game_table: GameTable, raw_mgr: RawManager, sess_processor: SessionProcessor, evt_processor: EventProcessor):
         session_id = row[game_table.session_id_index]
 
         # parse out complex data from json

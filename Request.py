@@ -39,7 +39,7 @@ class ExporterRange:
         date_range = source.DatesFromIDs(ids)
         return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=ids)
 
-    def GetDateRange(self) -> typing.Dict:
+    def GetDateRange(self) -> Dict:
         return {'min':self._date_min, 'max':self._date_max}
 
     def GetIDs(self) -> Union[List[int],None]:

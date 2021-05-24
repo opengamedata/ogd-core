@@ -9,6 +9,7 @@ import sys
 import traceback
 import typing
 from datetime import datetime
+from typing import List
 # import local files
 import feature_extractors.Extractor
 import Request
@@ -76,7 +77,7 @@ def runExport(events: bool = False, features: bool = False):
         end_date: datetime
         # If we want to export all data for a given month, calculate a date range.
         if "--monthly" in opts.keys():
-            month_year: typing.List[int]
+            month_year: List[int]
             if num_args > 3:
                 month_year_str = args[3].split("/")
                 month_year = [int(month_year_str[0]), int(month_year_str[1])]

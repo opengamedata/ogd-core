@@ -2,9 +2,10 @@
 import json
 import logging
 import typing
+from typing import List, Tuple, Union
 ## import local files
 import utils
-import GameTable
+from GameTable import GameTable
 from schemas.Schema import Schema
 
 ## @class EventProcessor
@@ -22,16 +23,16 @@ class EventProcessor:
     def __init__(self, game_table: GameTable, game_schema: Schema,
                   events_csv_file: typing.IO.writable):
         # define instance vars
-        self._lines             : typing.List[typing.List] = []
+        self._lines             : List[List] = []
         self._game_table        : GameTable           = game_table
         self._events_file       : typing.IO.writable  = events_csv_file
-        self._db_columns        : typing.List[str]    = game_schema.db_columns()
+        self._db_columns        : List[str]    = game_schema.db_columns()
 
     ## Function to handle processing one row of data.
     #  @param row_with_complex_parsed A tuple of the row data. We assume the
     #                      event_data_complex has already been parsed from JSON.
-    def ProcessRow(self, row_with_complex_parsed: typing.Tuple):
-        line = [None] * len(self._db_columns)
+    def ProcessRow(self, row_with_complex_parsed: Tuple):
+        line : List[Union[str, None]] = [None] * len(self._db_columns)
         for i,col in enumerate(row_with_complex_parsed):
             # only set a value if this was not the remote address (IP) column.
             if i != self._game_table.remote_addr_index:
