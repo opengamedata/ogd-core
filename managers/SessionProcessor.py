@@ -5,7 +5,7 @@ import traceback
 import typing
 from typing import Dict, Tuple
 # import local files
-import GameTable
+from schemas.TableSchema import TableSchema
 import utils
 from feature_extractors.WaveExtractor import WaveExtractor
 from schemas.Schema import Schema
@@ -18,18 +18,18 @@ class SessionProcessor:
     #  use.
     #
     #  @param ExtractorClass The type of data extractor to use for input data.
-    #         This should correspond to whatever game_id is in the GameTable.
+    #         This should correspond to whatever game_id is in the TableSchema.
     #  @param game_table    A data structure containing information on how the db
     #                       table assiciated with the given game is structured. 
     #  @param game_schema   A dictionary that defines how the game data itself
     #                       is structured.
     #  @param sessions_csv_file The output file, to which we'll write the processed
     #                       feature data.
-    def __init__(self, ExtractorClass: type, game_table: GameTable, game_schema: Schema,
+    def __init__(self, ExtractorClass: type, game_table: TableSchema, game_schema: Schema,
                  sessions_csv_file: typing.IO.writable):
         ## Define instance vars
         self._ExtractorClass:     type                            = ExtractorClass
-        self._game_table:         GameTable                       = game_table
+        self._game_table:         TableSchema                       = game_table
         self._game_schema:        Schema                          = game_schema
         self._sessions_file:      typing.IO.writable              = sessions_csv_file
         self._session_extractors: Dict[str, self._ExtractorClass] = {}

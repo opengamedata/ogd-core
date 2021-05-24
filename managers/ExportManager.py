@@ -17,7 +17,7 @@ from typing import Tuple
 ## import local files
 import utils
 from config import settings
-from GameTable import GameTable
+from schemas.TableSchema import TableSchema
 from interfaces.MySQLInterface import SQL
 from interfaces.MySQLInterface import MySQLInterface
 from managers.FileManager import *
@@ -38,7 +38,7 @@ class ExportManager:
     ## Constructor for the ExportManager class.
     #  Fairly simple, just saves some data for later use during export.
     #  @param game_id Initial id of game to export
-    #                 (this can be changed, if a GameTable with a different id is
+    #                 (this can be changed, if a TableSchema with a different id is
     #                  given, but will generate a warning)
     #  @param db      An active database connection
     #  @param settings A dictionary of program settings, some of which are needed for export.
@@ -72,7 +72,7 @@ class ExportManager:
         try:
             data_manager = SQLDataManager(game_id=request.game_id, game_schema=game_schema, settings=settings)
             date_range = (request.start_date, request.end_date)
-            game_table: GameTable = GameTable.FromDB(db=db, settings=self._settings, request=request)
+            game_table: TableSchema = TableSchema.FromDB(db=db, settings=self._settings, request=request)
 
             #***
             time_delta = datetime.now() - start
@@ -110,7 +110,7 @@ class ExportManager:
         try:
             data_manager = CSVDataManager(game_id=data_frame['app_id'][0], data_frame=data_frame)
             date_range = (data_frame['server_time'].min(), data_frame['server_time'].max())
-            game_table: GameTable = GameTable.FromCSV(data_frame=data_frame)
+            game_table: TableSchema = TableSchema.FromCSV(data_frame=data_frame)
             # start = datetime.strptime(data_frame['server_time'].min().split(' ')[0], "%Y-%m-%d")
             # end = datetime.strptime(data_frame['server_time'].max().split(' ')[0], "%Y-%m-%d")
             # date_range = (start, end)
@@ -131,7 +131,7 @@ class ExportManager:
     #                    and export
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
-    def _runExport(self, data_manager: DataManager, date_range: Tuple, game_table: GameTable, exporter_files: ExporterFiles) -> bool:
+    def _runExport(self, data_manager: DataManager, date_range: Tuple, game_table: TableSchema, exporter_files: ExporterFiles) -> bool:
         # utils.Logger.toStdOut(f"complex_data_index: {complex_data_index}", logging.DEBUG)
         try:
             # 2a) Prepare schema and extractor, if game doesn't have an extractor, make sure we don't try to export it.
@@ -198,7 +198,7 @@ class ExportManager:
         return game_schema, game_extractor
 
     def _extractToCSVs(self, file_manager: FileManager, data_manager: DataManager,
-                       game_schema: Schema, game_table: GameTable, game_extractor: type, exporter_files: ExporterFiles):
+                       game_schema: Schema, game_table: TableSchema, game_extractor: type, exporter_files: ExporterFiles):
         try:
             sess_processor = raw_mgr = evt_processor = None
             if exporter_files.sessions:
@@ -272,7 +272,7 @@ class ExportManager:
     #                    table assiciated with the given game is structured. 
     #  @raw_mgr          An instance of RawManager used to track raw data.
     #  @sess_processor         An instance of SessionProcessor used to extract and track feature data.
-    def _processRow(self, row: Tuple, game_table: GameTable, raw_mgr: RawManager, sess_processor: SessionProcessor, evt_processor: EventProcessor):
+    def _processRow(self, row: Tuple, game_table: TableSchema, raw_mgr: RawManager, sess_processor: SessionProcessor, evt_processor: EventProcessor):
         session_id = row[game_table.session_id_index]
 
         # parse out complex data from json

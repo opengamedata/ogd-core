@@ -23,7 +23,7 @@ from math import sqrt
 ## import local files
 import utils
 from feature_extractors.Extractor import Extractor
-from GameTable import GameTable
+from schemas.TableSchema import TableSchema
 from schemas.Schema import Schema
 
 # temp comment
@@ -93,7 +93,7 @@ class LakelandExtractor(Extractor):
     #                    table associated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema, sessions_file: typing.IO.writable):
+    def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema, sessions_file: typing.IO.writable):
         # Set window and overlap size
         config = game_schema.schema()['config']
         self._NUM_SECONDS_PER_WINDOW = config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
@@ -118,7 +118,7 @@ class LakelandExtractor(Extractor):
         self.reset()
         self.setValByName('num_play', self._cur_gameplay)
     
-    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: TableSchema):
         try:
             self._extractFromRow(row_with_complex_parsed, game_table)
         except Exception as e:
@@ -140,7 +140,7 @@ class LakelandExtractor(Extractor):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def _extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def _extractFromRow(self, row_with_complex_parsed, game_table: TableSchema):
 
         # put some data in local vars, for readability later.
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]

@@ -14,7 +14,7 @@ import utils
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from feature_extractors.Extractor import Extractor
-from GameTable import GameTable
+from schemas.TableSchema import TableSchema
 from schemas.Schema import Schema
 from game_info.Jowilder import Jowilder_Enumerators as je
 
@@ -102,7 +102,7 @@ class JowilderExtractor(Extractor):
 
     _NULL_FEATURE_VALS = ['null', 0, None]
 
-    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
+    def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
         config = game_schema.schema()['config']
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
@@ -148,7 +148,7 @@ class JowilderExtractor(Extractor):
         self._last_quizstart = None
         self._quiztimes = [None]*16
 
-    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: TableSchema):
         try:
             self._extractFeaturesFromRow(row_with_complex_parsed, game_table)
         except Exception:
@@ -158,7 +158,7 @@ class JowilderExtractor(Extractor):
                 place('DEBUG STRINGS:', logging.ERROR)
                 place(self.get_debug_string(num_lines=20), logging.ERROR)
 
-    def _extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def _extractFeaturesFromRow(self, row_with_complex_parsed, game_table: TableSchema):
         # put some data in local vars, for readability later.
         if self.halt:
             return

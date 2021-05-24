@@ -9,7 +9,7 @@ import utils
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from feature_extractors.Extractor import Extractor
-from GameTable import GameTable
+from schemas.TableSchema import TableSchema
 from schemas.Schema import Schema
 
 # temp comment
@@ -29,7 +29,7 @@ class WaveExtractor(Extractor):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema):
+    def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
         self.start_times: typing.Dict       = {}
         self.end_times:   typing.Dict       = {}
@@ -58,7 +58,7 @@ class WaveExtractor(Extractor):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: TableSchema):
         # put some data in local vars, for readability later.
         level = row_with_complex_parsed[game_table.level_index]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]

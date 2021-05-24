@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Dict, List, Union
 # include local files
 import utils
-from GameTable import GameTable
+from schemas.TableSchema import TableSchema
 from interfaces.DataInterface import DataInterface
 from interfaces.MySQLInterface import SQL
 from schemas.Schema import Schema

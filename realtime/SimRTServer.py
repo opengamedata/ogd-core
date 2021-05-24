@@ -15,7 +15,7 @@ from feature_extractors.Extractor import Extractor
 from feature_extractors.CrystalExtractor import CrystalExtractor
 from feature_extractors.WaveExtractor import WaveExtractor
 from feature_extractors.LakelandExtractor import LakelandExtractor
-from GameTable import GameTable
+from schemas.TableSchema import TableSchema
 from interfaces.MySQLInterface import SQL
 from managers.SessionProcessor import SessionProcessor
 from models.Model import ModelInputType
@@ -343,7 +343,7 @@ class SimRTServer:
         if SimRTServer.rt_settings["data_source"] == "DB":
             try:
                 tunnel,db = SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
-                game_table = GameTable.FromDB(db=db, settings=settings, request=request)
+                game_table = TableSchema.FromDB(db=db, settings=settings, request=request)
                 utils.Logger.toFile(f"Getting all features for session {session_id}", logging.INFO)
                 cursor = db.cursor()
                 filt = f"`session_id`='{session_id}' AND `time_elapsed` < {sim_time}"

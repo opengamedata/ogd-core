@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Dict, List, Tuple, Union
 ## import local files
 import utils
-from GameTable import GameTable
+from schemas.TableSchema import TableSchema
 from schemas.Schema import Schema
 from collections import defaultdict
 from datetime import timedelta
@@ -30,7 +30,7 @@ class Extractor(abc.ABC):
     #                     table assiciated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: GameTable, game_schema: Schema,
+    def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema,
                  level_range: range = None):
         self.session_id:   int         = session_id
         self._level_range: range       = level_range if (level_range is not None) else range(game_table.min_level, game_table.max_level+1)
@@ -50,13 +50,13 @@ class Extractor(abc.ABC):
     #                     structured.
     #  @param file        An open csv file to which we will write column headers.
     @staticmethod
-    def writeCSVHeader(game_table: GameTable, game_schema: Schema, file: typing.IO.writable):
+    def writeCSVHeader(game_table: TableSchema, game_schema: Schema, file: typing.IO.writable):
         columns = Extractor.getFeatureNames(game_table=game_table, game_schema=game_schema)
         file.write(",".join(columns))
         file.write("\n")
 
     @staticmethod
-    def getFeatureNames(game_table: GameTable, game_schema: Schema) -> List[str]:
+    def getFeatureNames(game_table: TableSchema, game_schema: Schema) -> List[str]:
         columns = []
         features = Extractor.SessionFeatures.generateFeatureDict(range(game_table.min_level, game_table.max_level+1), game_schema)
         for key in features.keys():
@@ -109,11 +109,11 @@ class Extractor(abc.ABC):
                 column_vals.append(myformat(self.features.getValByName(key)))
         return column_vals
 
-    def extractFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def extractFromRow(self, row_with_complex_parsed, game_table: TableSchema):
         self.extractSequencesFromRow(row_data=row_with_complex_parsed, game_table=game_table)
         self.extractFeaturesFromRow(row_with_complex_parsed=row_with_complex_parsed, game_table=game_table)
 
-    def extractSequencesFromRow(self, row_data, game_table: GameTable):
+    def extractSequencesFromRow(self, row_data, game_table: TableSchema):
         for sequence in self.sequences:
             event_data = self.extractCustomSequenceEventDataFromRow(row_data=row_data, game_table=game_table)
             sequence.RegisterEvent(row_data[game_table.complex_data_index]["event_custom"], event_data=event_data)
@@ -124,7 +124,7 @@ class Extractor(abc.ABC):
     #  At the very least, the extractor could take the union of all data its various sequences may need.
     #  In general, however, if the extractor needs multiple kinds of sequences or sequence data,
     #  it is probably better to do dedicated sequence analysis.
-    def extractCustomSequenceEventDataFromRow(self, row_data, game_table: GameTable):
+    def extractCustomSequenceEventDataFromRow(self, row_data, game_table: TableSchema):
         return None
 
     ## Abstract declaration of a function to perform extraction of features from a row.
@@ -134,7 +134,7 @@ class Extractor(abc.ABC):
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
     @abc.abstractmethod
-    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: GameTable):
+    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: TableSchema):
         pass
 
     ## Abstract declaration of a function to perform calculation of aggregate features
