@@ -2,6 +2,7 @@
 import logging
 import os
 import typing
+from typing import Dict, List, Union
 # import local files
 import utils
 
@@ -23,8 +24,8 @@ class Schema:
     #                     (if the path does not end in "/", a "/" will be appended)
     def __init__(self, schema_name:str, schema_path:str = os.path.dirname(__file__) + "/JSON/"):
         # define instance vars
-        self._schema:       typing.Dict = {}
-        self._feature_list: typing.List = None
+        self._schema:       Dict = {}
+        self._feature_list: Union[List,None] = None
         # set instance vars
         if not schema_name.lower().endswith(".json"):
             schema_name += ".json"
@@ -32,8 +33,7 @@ class Schema:
             schema_path += "/"
         self._schema = utils.loadJSONFile(schema_name, schema_path)
         if self._schema is None:
-            utils.Logger.toFile(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
-            utils.Logger.toStdOut(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
+            utils.Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
         else:
             self._feature_list = list(self._schema["features"]["perlevel"].keys()) \
                                + list(self._schema["features"]["per_custom_count"].keys()) \
