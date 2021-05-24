@@ -1,9 +1,13 @@
 # include libraries
 import abc
+import enum
 import typing
-from datetime import date
+from datetime import datetime
+from typing import List, Union
 # include local files
 import utils
+from interfaces.DataInterface import DataInterface
+from interfaces.MySQLInterface import SQL
 from schemas.Schema import Schema
 
 
@@ -18,6 +22,28 @@ class ExporterFiles:
         self.raw = False
         self.sessions = sessions
 
+class ExporterRange:
+    def __init__(self, date_min:Union[datetime,None], date_max:Union[datetime,None], ids:Union[List[int],None]):
+        self._date_min : Union[datetime,None] = date_min
+        self._date_max : Union[datetime,None] = date_max
+        self._ids      : Union[List[int],None] = ids
+
+    @staticmethod
+    def FromDateRange(date_min:datetime, date_max:datetime, source:DataInterface):
+        ids = source.IDsFromDates(date_min, date_max)
+        return ExporterRange(date_min=date_min, date_max=date_max, ids=ids)
+
+    @staticmethod
+    def FromIDs(ids:List[int], source:DataInterface):
+        date_range = source.DatesFromIDs(ids)
+        return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=ids)
+
+    def GetDateRange(self) -> typing.Dict:
+        return {'min':self._date_min, 'max':self._date_max}
+
+    def GetIDs(self) -> Union[List[int],None]:
+        return self._ids
+
 ## @class Request
 #  Dumb struct to hold data related to requests for data export.
 #  This way, we've at least got a list of what is available in a request.
@@ -30,15 +56,32 @@ class Request(abc.ABC):
     #                 Should correspond to the app_id in the database.
     #  @param start_date   The starting date for our range of data to process.
     #  @param end_date     The ending date for our range of data to process.
-    def __init__(self, range_type: RangeType, exporter_files: ExporterFiles = ExporterFiles()):
-        self._range_type = range_type
+    def __init__(self, interface:DataInterface, range:ExporterRange, exporter_files:ExporterFiles = ExporterFiles()):
+        self._interface  = interface
+        self._range = range
         self._exporter_files = exporter_files
 
-    ## Abstract method to retrieve the list of IDs for all sessions covered by
+    ## String representation of a request. Just gives game id, and date range.
+    def __str__(self):
+        fmt = "%Y%m%d"
+        rng = self._range.GetDateRange()
+        return f"{self._game_id}: {self._range.GetDateRange()['min'].strftime(fmt)}-{self._range.GetDateRange()['max'].strftime(fmt)}"
+
+    ## Method to retrieve the list of IDs for all sessions covered by
     #  the request.
-    @abc.abstractmethod
-    def retrieveSessionIDs(self, db_cursor, db_settings) -> typing.List:
-        pass
+    def retrieveSessionIDs(self, cursor, db_settings) -> typing.List:
+        # We grab the ids for all sessions that have 0th move in the proper date range.
+        if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
+            ver_filter = f" AND app_version in ({','.join([str(x) for x in self._game_schema.schema()['config']['SUPPORTED_VERS']])}) "
+        start = self.start_date.isoformat()
+        end = self.end_date.isoformat()
+        supported_vers = Schema(schema_name=f"{self.game_id}.json")['config']['SUPPORTED_VERS']
+        ver_filter = f" AND `app_version` in ({','.join([str(x) for x in supported_vers])}) " if supported_vers else ''
+        filt = f"`app_id`=\"{self.game_id}\" AND `session_n`='0' AND (`server_time` BETWEEN '{start}' AND '{end}'){ver_filter}"
+        session_ids_raw = SQL.SELECT(cursor=cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["TABLE"],
+                                columns=["`session_id`"], filter=filt,
+                                sort_columns=["`session_id`"], sort_direction="ASC", distinct=True)
+        return [sess[0] for sess in session_ids_raw]
 
 ## Class representing a request that includes a range of dates to be retrieved
 #  for the given game.
@@ -60,10 +103,10 @@ class DateRangeRequest(Request):
         # We grab the ids for all sessions that have 0th move in the proper date range.
         start = self.start_date.isoformat()
         end = self.end_date.isoformat()
-        supported_vers = Schema(schema_name=f"{self.game_id}.json").schema()['config']['SUPPORTED_VERS']
+        supported_vers = Schema(schema_name=f"{self.game_id}.json")['config']['SUPPORTED_VERS']
         ver_filter = f" AND `app_version` in ({','.join([str(x) for x in supported_vers])}) " if supported_vers else ''
         filt = f"`app_id`=\"{self.game_id}\" AND `session_n`='0' AND (`server_time` BETWEEN '{start}' AND '{end}'){ver_filter}"
-        session_ids_raw = utils.SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["TABLE"],
+        session_ids_raw = SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["TABLE"],
                                 columns=["`session_id`"], filter=filt,
                                 sort_columns=["`session_id`"], sort_direction="ASC", distinct=True)
         return [sess[0] for sess in session_ids_raw]
