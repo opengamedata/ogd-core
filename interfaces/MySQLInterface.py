@@ -331,6 +331,7 @@ class MySQLInterface(DataInterface):
             ver_filter = f" AND `app_version` in ({','.join([str(x) for x in versions])}) " if versions else ''
             filt = f"`app_id`=\"{self._game_id}\" AND `session_n`='0' AND (`server_time` BETWEEN '{start}' AND '{end}'){ver_filter}"
             # run query
+            # We grab the ids for all sessions that have 0th move in the proper date range.
             session_ids_raw = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
                                     columns=["`session_id`"], filter=filt,
                                     sort_columns=["`session_id`"], sort_direction="ASC", distinct=True)
