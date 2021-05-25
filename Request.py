@@ -74,7 +74,7 @@ class Request(abc.ABC):
 
     ## Method to retrieve the list of IDs for all sessions covered by
     #  the request.
-    def retrieveSessionIDs(self) -> Union[List[int],None]:
+    def RetrieveSessionIDs(self) -> Union[List[int],None]:
         supported_vers = Schema(schema_name=f"{self._interface._game_id}.json")['config']['SUPPORTED_VERS']
         dates = self._range.GetDateRange()
         return self._interface.IDsFromDates(dates['min'], dates['max'], versions=supported_vers)
