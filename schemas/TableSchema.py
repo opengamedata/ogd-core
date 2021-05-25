@@ -64,7 +64,7 @@ class TableSchema:
                                      distinct=True)
             max_level = max_min_raw[0][0]
             min_level = max_min_raw[0][1]
-        sess_ids = request.retrieveSessionIDs()
+        sess_ids = request.RetrieveSessionIDs()
         return TableSchema(game_id=request.GetGameID(), column_names=[str(col) for col in col_names], session_ids=sess_ids, max_level=max_level, min_level=min_level)
 
     @staticmethod
