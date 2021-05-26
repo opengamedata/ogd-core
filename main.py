@@ -1,6 +1,6 @@
 # import standard libraries
 import cProfile
-import datetime
+#import datetime
 import getopt
 import logging
 import math
@@ -8,6 +8,7 @@ import os
 import sys
 import traceback
 import typing
+from calendar import monthrange
 from datetime import datetime
 from typing import List
 # import local files
@@ -15,9 +16,11 @@ import feature_extractors.Extractor
 import Request
 import utils
 from config import settings
+from interfaces.DataInterface import DataInterface
+from interfaces.CSVInterface import CSVInterface
+from interfaces.MySQLInterface import MySQLInterface
 from managers.ExportManager import ExportManager
-from feature_extractors.CrystalExtractor import CrystalExtractor
-from feature_extractors.WaveExtractor import WaveExtractor
+from Request import Request, ExporterFiles, ExporterRange
 from schemas.Schema import Schema
 
 ## Function to print a "help" listing for the export tool.
@@ -63,62 +66,62 @@ def showHelp():
 ## Function to handle execution of export code. This is the main intended use of
 #  the program.
 def runExport(events: bool = False, features: bool = False):
-    if "--file" in opts.keys():
-        _extractFromFile(file_path=opts["--file"], events=True, features=True)
+    game_id   : str
+    interface : DataInterface
+    range     : ExporterRange
+    exporter_files : ExporterFiles
+    req       : Request
+    # retrieve game id
+    if num_args > 2:
+        game_id = args[2]
     else:
-        # retrieve game id
-        if num_args > 2:
-            game_id = args[2]
-        else:
-            showHelp()
-            return
+        showHelp()
+        return
+    start = datetime.now()
+    if "--file" in opts.keys():
+        file_path=opts["--file"]
+        ext = file_path.split('.')[-1]
+        interface = CSVInterface(game_id=game_id, filepath_or_buffer=file_path, delim="\t" if ext is '.tsv' else ',')
+        ids = interface.AllIDs()
+        range = ExporterRange.FromIDs(ids=ids if ids is not None else [], source=interface)
+        exporter_files = Request.ExporterFiles(events=events, raw=False, sessions=features) 
+        # breakpoint()
+        export_manager = ExportManager(game_id=req.game_id, settings=settings)
+    else:
         # retrieve/calculate date range.
         start_date: datetime
-        end_date: datetime
+        end_date  : datetime
+        today     : datetime = datetime.now()
         # If we want to export all data for a given month, calculate a date range.
         if "--monthly" in opts.keys():
-            month_year: List[int]
+            month: int = today.month
+            year:  int = today.year
             if num_args > 3:
                 month_year_str = args[3].split("/")
-                month_year = [int(month_year_str[0]), int(month_year_str[1])]
-            else:
-                today   = datetime.now()
-                month_year = [today.month, today.year]
-            utils.Logger.toStdOut(f"Exporting {month_year[0]}/{month_year[1]} data for {game_id}...", logging.DEBUG)
-            _execMonthExport(game_id=game_id, month=month_year[0], year=month_year[1], events=events, features=features)
-            utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
+                month = int(month_year_str[0])
+                year  = int(month_year_str[1])
+            month_range = monthrange(year, month)
+            days_in_month = month_range[1]
+            start_date = datetime(year=year, month=month, day=1, hour=0, minute=0, second=0)
+            end_date   = datetime(year=year, month=month, day=days_in_month, hour=23, minute=59, second=59)
+            utils.Logger.toStdOut(f"Exporting {month}/{year} data for {game_id}...", logging.DEBUG)
         # Otherwise, create date range from given pair of dates.
         else:
-            today   = datetime.now()
-            start_date = datetime.strptime(args[3], "%m/%d/%Y") if num_args > 3 \
-                    else today
+            start_date = datetime.strptime(args[3], "%m/%d/%Y") if num_args > 3 else today
             start_date = start_date.replace(hour=0, minute=0, second=0)
-            end_date   = datetime.strptime(args[4], "%m/%d/%Y") if num_args > 4 \
-                    else today
+            end_date   = datetime.strptime(args[4], "%m/%d/%Y") if num_args > 4 else today
             end_date = end_date.replace(hour=23, minute=59, second=59)
             utils.Logger.Log(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.DEBUG)
-            _execExport(game_id, start_date, end_date, events=events, features=features)
-            utils.Logger.Log(f"Done with {game_id}.", logging.DEBUG)
-
-def _execMonthExport(game_id, month, year, events: bool, features: bool):
-    from calendar import monthrange
-    month_range = monthrange(year, month)
-    days_in_month = month_range[1]
-    start_date = datetime(year=year, month=month, day=1, hour=0, minute=0, second=0)
-    end_date   = datetime(year=year, month=month, day=days_in_month, hour=23, minute=59, second=59)
-    _execExport(game_id, start_date, end_date, events, features)
-
-def _execExport(game_id, start_date, end_date, events: bool, features: bool):
-    # Once we have the parameters parsed out, construct the request.
-    exporter_files = Request.ExporterFiles(events=events, raw=False, sessions=features)
-    req = Request.DateRangeRequest(game_id=game_id, start_date=start_date, end_date=end_date, \
-                exporter_files=exporter_files)
-    start = datetime.now()
+        interface = MySQLInterface(game_id=game_id, settings=settings)
+        # Once we have the parameters parsed out, construct the request.
+        range = ExporterRange.FromDateRange(date_min=start_date, date_max=end_date, source=interface)
+        exporter_files = ExporterFiles(events=events, raw=False, sessions=features)
+    req = Request(interface=interface, range=range, exporter_files=exporter_files)
     # breakpoint()
     try:
-        export_manager = ExportManager(game_id=req.game_id, settings=settings)
+        export_manager = ExportManager(game_id=req.GetGameID(), settings=settings)
         schema = Schema(game_id)
-        export_manager.ExportFromSQL(request=req, game_schema=schema)
+        export_manager.ExecuteRequest(request=req, game_schema=schema)
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
@@ -133,33 +136,9 @@ def _execExport(game_id, start_date, end_date, events: bool, features: bool):
         minutes = math.floor(time_delta.total_seconds()/60)
         seconds = time_delta.total_seconds() % 60
         print(f"Total time taken: {minutes} min, {seconds} sec")
+    utils.Logger.Log(f"Done with {game_id}.", logging.DEBUG)
 
-def _extractFromFile(file_path: str, events: bool = False, features: bool = False):
-    if num_args > 2:
-        game_id = args[2]
-    else:
-        showHelp()
-        return
-    start = datetime.now()
-    exporter_files = Request.ExporterFiles(events=events, raw=False, sessions=features) 
-    req = Request.FileRequest(file_path=file_path, game_id=game_id, exporter_files=exporter_files)
-    # breakpoint()
-    export_manager = ExportManager(game_id=req.game_id, settings=settings)
-    try:
-        export_manager.ExtractFromFile(request=req, delimiter='\t')
-        # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
-                        # {'req':req, 'feature_exporter':feature_exporter}, {})
-    except Exception as err:
-        msg = f"{type(err)} {str(err)}"
-        utils.Logger.toStdOut(msg, logging.ERROR)
-        traceback.print_tb(err.__traceback__)
-        utils.Logger.toFile(msg, logging.ERROR)
-    finally:
-        end = datetime.now()
-        time_delta = end - start
-        minutes = math.floor(time_delta.total_seconds()/60)
-        seconds = time_delta.total_seconds() % 60
-        print(f"Total time taken: {minutes} min, {seconds} sec")
+#def _execExport(game_id, start_date, end_date, events: bool, features: bool):
 
 ## Function to print out info on a game from the game's schema.
 #  This does a similar function to writeReadme, but is limited to the CSV
