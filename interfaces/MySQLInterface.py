@@ -251,10 +251,10 @@ class SQL:
         # second, we get the results.
         if fetch_results:
             result = [col[0] for col in cursor.fetchall()]
-        time_delta = datetime.now()-start
-        num_min = math.floor(time_delta.total_seconds()/60)
-        num_sec = time_delta.total_seconds() % 60
-        Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result):d} rows", logging.DEBUG)
+            time_delta = datetime.now()-start
+            num_min = math.floor(time_delta.total_seconds()/60)
+            num_sec = time_delta.total_seconds() % 60
+            Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result):d} rows", logging.DEBUG)
         return result
 
     ## Simple function to construct and log a nice server 500 error message.
