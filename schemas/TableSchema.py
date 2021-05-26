@@ -72,7 +72,7 @@ class TableSchema:
     def FromCSV(data_frame: pd.DataFrame):
         col_names = list(data_frame.columns)
         game_id = data_frame['app_id'][0]
-        sess_ids = list(data_frame['session_id'].unique())
+        sess_ids = data_frame['session_id'].unique().tolist()
         min_level = data_frame['level'].min()
         max_level = data_frame['level'].max()
         return TableSchema(game_id=game_id, column_names=col_names, session_ids=sess_ids, max_level=max_level, min_level=min_level)
