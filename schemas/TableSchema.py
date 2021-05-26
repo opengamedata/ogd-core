@@ -1,11 +1,12 @@
 ## import standard libraries
 import typing
 import pandas as pd
-from typing import List
+from typing import List, Tuple
 ## import local files
 from Request import Request
 from interfaces.MySQLInterface import SQL
 from schemas.Schema import Schema
+from schemas.Event import Event
 
 ## @class TableSchema
 #  Dumb struct to hold useful info about the structure of database data
@@ -75,6 +76,34 @@ class TableSchema:
         min_level = data_frame['level'].min()
         max_level = data_frame['level'].max()
         return TableSchema(game_id=game_id, column_names=col_names, session_ids=sess_ids, max_level=max_level, min_level=min_level)
+
+    def RowToEvent(self, row: Tuple):
+        row_dict = {self.column_names[i]: row[i] for i in range(len(self.column_names))}
+        id     = row_dict['id']
+        app_id = row_dict['app_id']
+        app_id_fast = row_dict['app_id_fast']
+        app_version = row_dict['app_version']
+        session_id  = row_dict['session_id']
+        persistent_session_id  = row_dict['persistent_session_id']
+        player_id  = row_dict['player_id']
+        level      = row_dict['level']
+        event      = row_dict['event']
+        event_custom       = row_dict['event_custom']
+        event_data_simple  = row_dict['event_data_simple']
+        event_data_complex = row_dict['event_data_complex']
+        client_time     = row_dict['client_time']
+        client_time_ms  = row_dict['client_time_ms']
+        server_time     = row_dict['server_time']
+        remote_addr     = row_dict['remote_addr']
+        req_id          = row_dict['req_id']
+        session_n       = row_dict['session_n']
+        http_user_agent = row_dict['http_user_agent']
+        return Event(id=id, app_id=app_id, app_id_fast=app_id_fast, app_version=app_version,
+                     session_id=session_id, persistent_session_id=persistent_session_id,
+                     player_id=player_id, level=level, event=event, event_custom=event_custom,
+                     event_data_simple=event_data_simple, event_data_complex=event_data_complex,
+                     client_time=client_time, client_time_ms=client_time_ms, server_time=server_time,
+                     remote_addr=remote_addr, req_id=req_id, session_n=session_n, http_user_agent=http_user_agent)
 
     ## Simple utility function to turn a raw row from the file/database into a dictionary,
     #  indexed with the column names retrieved from the file/database.
