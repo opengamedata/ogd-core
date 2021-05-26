@@ -15,6 +15,20 @@ class DataInterface(abc.ABC):
         if self.IsOpen():
             self.Close()
 
+    def AllIDs(self) -> Union[List[int],None]:
+        if not self._is_open:
+            utils.Logger.Log("Can't retrieve data, the source interface is not open!")
+            return None
+        else:
+            return self._allIDs()
+
+    def FullDateRange(self) -> Dict[str,Union[datetime,None]]:
+        if not self._is_open:
+            utils.Logger.Log("Can't retrieve data, the source interface is not open!")
+            return {'min':None, 'max':None}
+        else:
+            return self._fullDateRange()
+
     def RetrieveFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> Union[List, None]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve data, the source interface is not open!")
@@ -45,6 +59,14 @@ class DataInterface(abc.ABC):
 
     @abc.abstractmethod
     def Close(self) -> bool:
+        pass
+
+    @abc.abstractmethod
+    def _allIDs(self) -> List[int]:
+        pass
+
+    @abc.abstractmethod
+    def _fullDateRange(self) -> Dict[str,datetime]:
         pass
 
     @abc.abstractmethod

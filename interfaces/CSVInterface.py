@@ -24,6 +24,12 @@ class CSVInterface(DataInterface):
         self._is_open = False
         return True
 
+    def _allIDs(self) -> List[int]:
+        return self._data['session_id'].unique().tolist()
+
+    def _fullDateRange(self) -> Dict[str,datetime]:
+        return {'min':self._data['server_time'].min(), 'max':self._data['server_time'].max()}
+
     def _retrieveFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         if self.IsOpen() and self._data != None:
             return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
@@ -37,7 +43,7 @@ class CSVInterface(DataInterface):
                 mask = self._data.loc[(server_times >= min) & (server_times <= max) & (self._data['app_version'].isin(versions))]
             else:
                 mask = self._data.loc[(server_times >= min) & (server_times <= max)]
-            return list(mask['session_id'])
+            return mask['session_id'].unique().tolist()
         else:
             return []
 

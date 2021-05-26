@@ -312,13 +312,41 @@ class MySQLInterface(DataInterface):
             table_name = self._settings["db_config"]["TABLE"]
             data = SQL.SELECT(cursor      =self._db_cursor,             db_name       =db_name, table=table_name,
                               columns     =None,                        filter        =filt,
-                              sort_columns=["session_id", "session_n"], sort_direction="ASC",
-                              grouping    =None,                        distinct      =False,   limit=-1)
+                              sort_columns=["session_id", "session_n"], sort_direction="ASC",)
             return data if data != None else []
             # self._select_queries.append(select_query) # this doesn't appear to be used???
         else:
             Logger.Log(f"Could not get data for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
             return []
+
+    def _allIDs(self) -> List[int]:
+        if not self._db_cursor == None:
+            # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
+            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            table_name = self._settings["db_config"]["TABLE"]
+            filt = f"`app_id`='{self._game_id}'"
+            data = SQL.SELECT(cursor  =self._db_cursor, db_name =db_name, table   =table_name,
+                              columns =['session_id'],  filter  =filt,    distinct=True)
+            return [int(id[0]) for id in data] if data != None else []
+            # self._select_queries.append(select_query) # this doesn't appear to be used???
+        else:
+            Logger.Log(f"Could not get list of all session ids, MySQL connection is not open.", logging.WARN)
+            return []
+
+    def _fullDateRange(self) -> Dict[str,datetime]:
+        if not self._db_cursor == None:
+            # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
+            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            table_name = self._settings["db_config"]["TABLE"]
+            # prep filter strings
+            filt = f"`app_id`='{self._game_id}'"
+            # run query
+            result = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
+                                columns=['MIN(server_time)', 'MAX(server_time)'], filter=filt)
+            return {'min':result[0][0], 'max':result[0][1]}
+        else:
+            Logger.Log(f"Could not get full date range, MySQL connection is not open.", logging.WARN)
+            return {'min':datetime.now(), 'max':datetime.now()}
 
     def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[int]:
         if not self._db_cursor == None:
