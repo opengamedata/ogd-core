@@ -12,8 +12,22 @@ class DataInterface(abc.ABC):
         self._is_open : bool = False
 
     def __del__(self):
-        if self.IsOpen():
-            self.Close()
+        self.Close()
+
+    def Open(self, force_reopen:bool = False) -> bool:
+        if force_reopen or not self._is_open:
+            return self._open()
+        else:
+            return True
+    
+    def IsOpen(self) -> bool:
+        return True if self._is_open else False
+
+    def Close(self) -> bool:
+        if self._is_open:
+            return self._close()
+        else:
+            return True
 
     def AllIDs(self) -> Union[List[int],None]:
         if not self._is_open:
@@ -29,12 +43,12 @@ class DataInterface(abc.ABC):
         else:
             return self._fullDateRange()
 
-    def RetrieveFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> Union[List, None]:
+    def EventsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> Union[List, None]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve data, the source interface is not open!")
             return None
         else:
-            return self._retrieveFromIDs(id_list, versions=versions)
+            return self._eventsFromIDs(id_list, versions=versions)
 
     def IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> Union[List[int], None]:
         if not self._is_open:
@@ -49,16 +63,13 @@ class DataInterface(abc.ABC):
             return {'min':None, 'max':None}
         else:
             return self._datesFromIDs(id_list=id_list, versions=versions)
-    
-    def IsOpen(self) -> bool:
-        return True if self._is_open else False
 
     @abc.abstractmethod
-    def Open(self, force_reopen:bool = False) -> bool:
+    def _open(self) -> bool:
         pass
 
     @abc.abstractmethod
-    def Close(self) -> bool:
+    def _close(self) -> bool:
         pass
 
     @abc.abstractmethod
@@ -70,7 +81,7 @@ class DataInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _retrieveFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _eventsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         pass
 
     @abc.abstractmethod

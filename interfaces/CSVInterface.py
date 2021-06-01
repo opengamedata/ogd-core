@@ -1,3 +1,5 @@
+import logging
+from utils import Logger
 import pandas as pd
 from datetime import datetime
 from typing import Any, Dict, IO, List, Tuple, Union
@@ -14,11 +16,14 @@ class CSVInterface(DataInterface):
         # set up data from file
         self._data      : pd.DataFrame = pd.DataFrame()
 
-    def Open(self, force_reopen:bool = False) -> bool:
-        if force_reopen or not self.IsOpen():
+    def _open(self) -> bool:
+        try:
             self._data = pd.read_csv(filepath_or_buffer=self._file, delimiter=self._delimiter, parse_dates=['server_time', 'client_time'])
             self._is_open = True
-        return True
+            return True
+        except FileNotFoundError as err:
+            Logger.Log(f"Could not find file {self._file}.", logging.ERROR)
+            return False
 
     def Close(self) -> bool:
         self._is_open = False
