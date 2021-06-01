@@ -282,10 +282,15 @@ class MySQLInterface(DataInterface):
             self.Close()
             self.Open(force_reopen=False)
         if not self._is_open:
+            start = datetime.now()
             self._tunnel, self._db = SQL.prepareDB(db_settings=self._settings["db_config"], ssh_settings=self._settings["ssh_config"])
             if self._tunnel != None and self._db != None:
                 self._db_cursor = self._db.cursor()
                 self._is_open = True
+                time_delta = datetime.now() - start
+                num_min = math.floor(time_delta.total_seconds()/60)
+                num_sec = time_delta.total_seconds() % 60
+                Logger.Log(f"Database Connection Time: {num_min} min, {num_sec:.3f} sec", logging.INFO)
                 return True
             else:
                 SQL.disconnectMySQLViaSSH(tunnel=self._tunnel, db=self._db)
