@@ -277,7 +277,7 @@ class MySQLInterface(DataInterface):
         self._db_cursor : Union[cursors.Cursor, None] = None
         self.Open()
         
-    def Open(self, force_reopen:bool = False) -> bool:
+    def _open(self, force_reopen:bool = False) -> bool:
         if force_reopen:
             self.Close()
             self.Open(force_reopen=False)
@@ -292,13 +292,13 @@ class MySQLInterface(DataInterface):
         else:
             return True
 
-    def Close(self) -> bool:
+    def _close(self) -> bool:
         SQL.disconnectMySQLViaSSH(tunnel=self._tunnel, db=self._db)
         Logger.toStdOut("Closed connection to MySQL.", logging.DEBUG)
         self._is_open = False
         return True
 
-    def _retrieveFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _eventsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         # grab data for the given session range. Sort by event time, so
         if not self._db_cursor == None:
             if versions is not None and versions is not []:

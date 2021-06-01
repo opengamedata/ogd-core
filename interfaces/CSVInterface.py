@@ -25,7 +25,7 @@ class CSVInterface(DataInterface):
             Logger.Log(f"Could not find file {self._file}.", logging.ERROR)
             return False
 
-    def Close(self) -> bool:
+    def _close(self) -> bool:
         self._is_open = False
         return True
 
@@ -35,7 +35,7 @@ class CSVInterface(DataInterface):
     def _fullDateRange(self) -> Dict[str,datetime]:
         return {'min':self._data['server_time'].min(), 'max':self._data['server_time'].max()}
 
-    def _retrieveFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _eventsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         if self.IsOpen() and self._data != None:
             return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
         else:
