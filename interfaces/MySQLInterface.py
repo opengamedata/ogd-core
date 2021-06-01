@@ -288,6 +288,7 @@ class MySQLInterface(DataInterface):
                 self._is_open = True
                 return True
             else:
+                SQL.disconnectMySQLViaSSH(tunnel=self._tunnel, db=self._db)
                 return False
         else:
             return True
