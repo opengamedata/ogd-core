@@ -5,12 +5,15 @@ import getopt
 import logging
 import math
 import os
+from schemas.TableSchema import TableSchema
 import sys
 import traceback
 import typing
 from calendar import monthrange
 from datetime import datetime
 from typing import Dict, Tuple
+
+from pandas.io.pytables import Table
 # import local files
 import feature_extractors.Extractor
 import Request
@@ -95,6 +98,7 @@ def runExport(events: bool = False, features: bool = False):
     interface : DataInterface
     range     : ExporterRange
     exporter_files : ExporterFiles
+    game_table     : TableSchema
     req       : Request
     start = datetime.now()
     exporter_files = ExporterFiles(events=events, raw=False, sessions=features) 
@@ -106,19 +110,25 @@ def runExport(events: bool = False, features: bool = False):
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(ids=ids if ids is not None else [], source=interface, versions=supported_vers)
+
+        # TODO: bit of a hack, should generate game_table as part of interface.
+        game_table: TableSchema = TableSchema.FromCSV(data_frame=interface._data)
+        req = Request(interface=interface, range=range, exporter_files=exporter_files)
         # breakpoint()
     else:
         interface = MySQLInterface(game_id=game_name, settings=settings)
         # retrieve/calculate date range.
         start_date, end_date = getDateRange(args=args, game_id=game_name)
         range = ExporterRange.FromDateRange(date_min=start_date, date_max=end_date, source=interface, versions=supported_vers)
+
+        req = Request(interface=interface, range=range, exporter_files=exporter_files)
+        game_table: TableSchema = TableSchema.FromDB(db=interface._db, settings=settings, request=req)
     # Once we have the parameters parsed out, construct the request.
-    req = Request(interface=interface, range=range, exporter_files=exporter_files)
     # breakpoint()
     try:
         export_manager = ExportManager(game_id=game_name, settings=settings)
         schema = Schema(game_name)
-        export_manager.ExecuteRequest(request=req, game_schema=schema)
+        export_manager.ExecuteRequest(request=req, game_schema=schema, table_schema=game_table)
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
