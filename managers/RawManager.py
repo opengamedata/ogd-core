@@ -4,7 +4,7 @@ import logging
 import typing
 ## import local files
 import utils
-import TableSchema
+from schemas.TableSchema import TableSchema
 from schemas.Schema import Schema
 
 ## @class RawManager
