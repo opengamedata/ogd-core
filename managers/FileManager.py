@@ -13,7 +13,7 @@ import utils
 from Request import *
 
 class FileManager(abc.ABC):
-    def __init__(self, exporter_files: ExporterFiles, game_id, data_dir: str, date_range: Tuple):
+    def __init__(self, exporter_files: ExporterFiles, game_id, data_dir: str, date_range: Dict[str,datetime]):
         self._file_names : Dict = {"sessions_f":None, "raw_f":None, "events_f":None}
         self._zip_names  : Dict = {"sessions_f":None, "raw_f":None, "events_f":None}
         self._files      : Dict = {"sessions_f":None, "raw_f":None, "events_f":None}
@@ -24,8 +24,8 @@ class FileManager(abc.ABC):
         self._short_hash : str
         try:
             # figure out dataset ID.
-            start = date_range[0].strftime("%Y%m%d")
-            end = date_range[1].strftime("%Y%m%d")
+            start = date_range['min'].strftime("%Y%m%d")
+            end = date_range['max'].strftime("%Y%m%d")
             self._dataset_id = f"{self._game_id}_{start}_to_{end}"
             # get hash
             repo = git.Repo(search_parent_directories=True)
