@@ -9,7 +9,6 @@ import traceback
 import typing
 from datetime import datetime, timedelta
 # # import local files
-import Request
 import utils
 from config import settings
 from feature_extractors.Extractor import Extractor
@@ -22,6 +21,7 @@ from managers.SessionProcessor import SessionProcessor
 from models.Model import ModelInputType
 # from models.Model import *
 from realtime.ModelManager import ModelManager
+from Request import Request
 from schemas.Schema import Schema
 
 ## Class to handle API calls for the realtime page.
@@ -397,12 +397,12 @@ class RTServer:
         return active_sessions_raw
     
     @staticmethod
-    def _fetchSessionData(session_id, settings, request):
+    def _fetchSessionData(session_id, settings, request:Request):
         session_data = []
         if RTServer.rt_settings["data_source"] == "DB":
             try:
                 tunnel,db = SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
-                game_table = TableSchema.FromDB(db=db, settings=settings, request=request)
+                game_table = TableSchema.FromDB(db=db, settings=settings, game_id=request.GetGameID(), ids=[session_id])
                 utils.Logger.toStdOut(f"Getting all features for session {session_id}", logging.INFO)
                 cursor = db.cursor()
                 filt = f"`session_id`='{session_id}'"

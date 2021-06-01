@@ -122,7 +122,7 @@ def runExport(events: bool = False, features: bool = False):
         range = ExporterRange.FromDateRange(date_min=start_date, date_max=end_date, source=interface, versions=supported_vers)
 
         req = Request(interface=interface, range=range, exporter_files=exporter_files)
-        game_table: TableSchema = TableSchema.FromDB(db=interface._db, settings=settings, request=req)
+        game_table: TableSchema = TableSchema.FromDB(db=interface._db, settings=settings, game_id=game_name, ids=range.GetIDs())
     # Once we have the parameters parsed out, construct the request.
     # breakpoint()
     try:

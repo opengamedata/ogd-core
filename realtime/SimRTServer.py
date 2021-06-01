@@ -8,7 +8,6 @@ import traceback
 import typing
 from datetime import datetime, timedelta
 # # import local files
-import Request
 import utils
 from config import settings
 from feature_extractors.Extractor import Extractor
@@ -21,6 +20,7 @@ from managers.SessionProcessor import SessionProcessor
 from models.Model import ModelInputType
 # from models.Model import *
 from realtime.ModelManager import ModelManager
+from Request import Request
 from schemas.Schema import Schema
 
 ## Class to handle API calls for the realtime page.
@@ -338,12 +338,12 @@ class SimRTServer:
         return active_sessions_raw
     
     @staticmethod
-    def _fetchSessionData(session_id, settings, request, sim_time):
+    def _fetchSessionData(session_id, settings, request:Request, sim_time):
         session_data = []
         if SimRTServer.rt_settings["data_source"] == "DB":
             try:
                 tunnel,db = SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
-                game_table = TableSchema.FromDB(db=db, settings=settings, request=request)
+                game_table = TableSchema.FromDB(db=db, settings=settings, game_id=request.GetGameID(), ids=[session_id])
                 utils.Logger.toFile(f"Getting all features for session {session_id}", logging.INFO)
                 cursor = db.cursor()
                 filt = f"`session_id`='{session_id}' AND `time_elapsed` < {sim_time}"
