@@ -33,7 +33,9 @@ class CSVInterface(DataInterface):
         return self._data['session_id'].unique().tolist()
 
     def _fullDateRange(self) -> Dict[str,datetime]:
-        return {'min':self._data['server_time'].min(), 'max':self._data['server_time'].max()}
+        min_time = pd.to_datetime(self._data['server_time'].min())
+        max_time = pd.to_datetime(self._data['server_time'].max())
+        return {'min':min_time, 'max':max_time}
 
     def _eventsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         if self.IsOpen() and self._data != None:
@@ -43,7 +45,7 @@ class CSVInterface(DataInterface):
 
     def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[int]:
         if not self._data.empty:
-            server_times = self._data['server_time']
+            server_times = pd.to_datetime(self._data['server_time'])
             if versions is not None and versions is not []:
                 mask = self._data.loc[(server_times >= min) & (server_times <= max) & (self._data['app_version'].isin(versions))]
             else:
