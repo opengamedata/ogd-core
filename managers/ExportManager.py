@@ -51,76 +51,17 @@ class ExportManager:
         self._settings = settings
         # self._select_queries = []
 
-    ## Public function to use for feature extraction and csv export.
-    #  Just sets up SQL-specific stuff, then defers to runExport to handle the rest.
-    #  This call to runExport extracts features and exports raw and processed csv's based on the given request.
-    #  @param request A data structure carrying parameters for feature extraction
-    #                 and export.
-    def ExportFromSQL(self, request: Request, game_schema: Schema):
-        if request.game_id != self._game_id:
-            utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.game_id}", logging.WARNING)
-            self._game_id = request.game_id
-        # 1) we first get the source, which is a SQL connection.
-        start = datetime.now()
-        tunnel, db  = SQL.prepareDB(db_settings=settings["db_config"], ssh_settings=settings["ssh_config"])
-        if db is None:
-            msg = f"Could not complete request {str(request)}, database connection failed."
-            utils.Logger.Log(msg, logging.ERROR)
-            SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-            raise ConnectionError() # if we couldn't connect, we're DOA
-        # If that was successful, we set up data retrieval with a game table and MySQLInterface.
+    def ExecuteRequest(self, request:Request, game_schema:Schema, table_schema:TableSchema):
+        if request.GetGameID() != self._game_id:
+            utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.GetGameID()}", logging.WARNING)
+            self._game_id = request.GetGameID()
         try:
-            data_manager = SQLDataManager(game_id=request.game_id, game_schema=game_schema, settings=settings)
-            date_range = (request.start_date, request.end_date)
-            game_table: TableSchema = TableSchema.FromDB(db=db, settings=self._settings, request=request)
-
-            #***
-            time_delta = datetime.now() - start
-            num_min = math.floor(time_delta.total_seconds()/60)
-            num_sec = time_delta.total_seconds() % 60
-            utils.Logger.Log(f"Database Connection Time: {num_min} min, {num_sec:.3f} sec", logging.INFO)
-            # once we've set up DataManager and gotten a bit of data, we can run the Export.
-            if self._runExport(data_manager=data_manager, date_range=date_range, game_table=game_table, exporter_files=request.exporter_files):
+            if self._executeRequest(request=request, table_schema=table_schema):
                 utils.Logger.Log(f"Successfully completed request {str(request)}.", logging.INFO)
             else:
                 utils.Logger.Log(f"Could not complete request {str(request)}", logging.ERROR)
         except Exception as err:
-            msg = f"General error ExportFromSQL: {type(err)} {str(err)}"
-            SQL.server500Error(msg)
-            utils.Logger.toFile(msg, logging.ERROR)
-            traceback.print_tb(err.__traceback__)
-        finally:
-            SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
-
-    def ExtractFromFile(self, request: FileRequest, delimiter=','):
-        if request.game_id != self._game_id:
-            utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.game_id}", logging.WARNING)
-            self._game_id = request.game_id
-        # 1) We first get the source, which is a file.
-        try:
-            zipped_file = zipfile.ZipFile(request.file_path)
-            with zipped_file.open(zipped_file.namelist()[0]) as f:
-                data_frame = pd.read_csv(filepath_or_buffer=f, delimiter=delimiter, parse_dates=['server_time', 'client_time'])
-        except FileNotFoundError as err:
-            msg = f"Could not complete request {str(request)}, failed to open {request.file_path}. {str(err)}"
-            utils.Logger.toStdOut(msg, logging.ERROR)
-            utils.Logger.toFile(msg, logging.ERROR)
-            return
-        # If that was successful, we then set up data retrieval with a game table and CSVDataManager.
-        try:
-            data_manager = CSVDataManager(game_id=data_frame['app_id'][0], data_frame=data_frame)
-            date_range = (data_frame['server_time'].min(), data_frame['server_time'].max())
-            game_table: TableSchema = TableSchema.FromCSV(data_frame=data_frame)
-            # start = datetime.strptime(data_frame['server_time'].min().split(' ')[0], "%Y-%m-%d")
-            # end = datetime.strptime(data_frame['server_time'].max().split(' ')[0], "%Y-%m-%d")
-            # date_range = (start, end)
-            # once we've set up DataManager and gotten a bit of data, we can run the Export.
-            if self._runExport(data_manager=data_manager, date_range=date_range, game_table=game_table, exporter_files=request.exporter_files):
-                utils.Logger.toStdOut(f"Successfully completed extraction from {request.file_path}.", logging.INFO)
-            else:
-                utils.Logger.toFile(f"Could not complete extraction from {request.file_path}", logging.ERROR)
-        except Exception as err:
-            msg = f"General error ExtractFromFile: {type(err)} {str(err)}"
+            msg = f"General error in ExecuteRequest: {type(err)} {str(err)}"
             SQL.server500Error(msg)
             utils.Logger.toFile(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
@@ -131,24 +72,25 @@ class ExportManager:
     #                    and export
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
-    def _runExport(self, data_manager: DataManager, date_range: Tuple, game_table: TableSchema, exporter_files: ExporterFiles) -> bool:
+    def _executeRequest(self, request:Request, table_schema:TableSchema) -> bool:
         # utils.Logger.toStdOut(f"complex_data_index: {complex_data_index}", logging.DEBUG)
+        ret_val = False
         try:
             # 2a) Prepare schema and extractor, if game doesn't have an extractor, make sure we don't try to export it.
             game_schema, game_extractor = self._prepareSchema()
             if game_extractor is None:
-                exporter_files.sessions = False
+                request._files.sessions = False
             # 2b) Prepare files for export.
-            file_manager = FileManager(exporter_files=exporter_files, game_id=self._game_id, \
-                                       data_dir=self._settings["DATA_DIR"], date_range=date_range)
+            file_manager = FileManager(exporter_files=request._files, game_id=self._game_id, \
+                                       data_dir=self._settings["DATA_DIR"], date_range=request._range.GetDateRange())
             file_manager.OpenFiles()
             # If we have a schema, we can do feature extraction.
             if game_schema is not None:
                 # 4) Loop over data, running extractors.
                 start = datetime.now()
 
-                num_sess: int = self._extractToCSVs(file_manager=file_manager, data_manager=data_manager,\
-                                    game_schema=game_schema, game_table=game_table, game_extractor=game_extractor, exporter_files=exporter_files)
+                num_sess: int = self._extractToCSVs(request=request, file_manager=file_manager,\
+                                    game_schema=game_schema, game_table=table_schema, game_extractor=game_extractor)
 
                 time_delta = datetime.now() - start
                 num_min = math.floor(time_delta.total_seconds()/60)
@@ -163,22 +105,19 @@ class ExportManager:
                     utils.GenerateReadme(game_name=self._game_id, schema=game_schema, path=f"./data/{self._game_id}")
                 file_manager.ZipFiles()
                 # 6) Finally, update the list of csv files.
-                file_manager.WriteMetadataFile(date_range=date_range, num_sess=num_sess)
-                file_manager.UpdateFileExportList(date_range=date_range, num_sess=num_sess)
+                file_manager.WriteMetadataFile(date_range=request._range.GetDateRange(), num_sess=num_sess)
+                file_manager.UpdateFileExportList(date_range=request._range.GetDateRange(), num_sess=num_sess)
                 ret_val = True
-            else:
-                ret_val = False
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.toStdOut(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(msg, logging.ERROR)
-            ret_val = False
         finally:
             return ret_val
 
-    def _prepareSchema(self):
-        game_extractor: type = None
+    def _prepareSchema(self) -> Tuple[Schema, Union[type,None]]:
+        game_extractor: Union[type,None] = None
         game_schema: Schema  = Schema(schema_name=f"{self._game_id}.json")
         if self._game_id == "WAVES":
             game_extractor = WaveExtractor
@@ -197,19 +136,21 @@ class ExportManager:
             raise Exception(f"Got an invalid game ID ({self._game_id})!")
         return game_schema, game_extractor
 
-    def _extractToCSVs(self, file_manager: FileManager, data_manager: DataManager,
-                       game_schema: Schema, game_table: TableSchema, game_extractor: type, exporter_files: ExporterFiles):
+    def _extractToCSVs(self, request:Request, file_manager:FileManager, game_schema: Schema, game_table: TableSchema, game_extractor: Union[type,None]):
         try:
             sess_processor = raw_mgr = evt_processor = None
-            if exporter_files.sessions:
-                sess_processor = SessionProcessor(ExtractorClass=game_extractor, game_table=game_table,
-                                    game_schema=game_schema, sessions_csv_file=file_manager.GetSessionsFile())
-                sess_processor.WriteSessionCSVHeader()
-            if exporter_files.raw:
+            if request._files.sessions and game_extractor is not None:
+                if game_extractor is not None:
+                    sess_processor = SessionProcessor(ExtractorClass=game_extractor, game_table=game_table,
+                                        game_schema=game_schema, sessions_csv_file=file_manager.GetSessionsFile())
+                    sess_processor.WriteSessionCSVHeader()
+                else:
+                    utils.Logger.Log("Could not export sessions, no game extractor given!", logging.ERROR)
+            if request._files.raw:
                 raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
                                     raw_csv_file=file_manager.GetRawFile())
                 raw_mgr.WriteRawCSVHeader()
-            if exporter_files.events:
+            if request._files.events:
                 evt_processor = EventProcessor(game_table=game_table, game_schema=game_schema,
                                     events_csv_file=file_manager.GetEventsFile())
                 evt_processor.WriteEventsCSVHeader()
@@ -221,21 +162,21 @@ class ExportManager:
                             range( j*slice_size, min((j+1)*slice_size, num_sess) )] for j in
                             range( 0, math.ceil(num_sess / slice_size) )]
             for i, next_slice in enumerate(session_slices):
+                start = datetime.now()
+                next_data_set = request._interface.EventsFromIDs(next_slice)
                 try:
-                    start = datetime.now()
-                    next_data_set = data_manager.RetrieveSliceData(next_slice)
                     # now, we process each row.
                     for row in next_data_set:
                         self._processRow(row=row, game_table=game_table, raw_mgr=raw_mgr, sess_processor=sess_processor, evt_processor=evt_processor)
                     # after processing all rows for each slice, write out the session data and reset for next slice.
-                    if exporter_files.sessions:
+                    if request._files.sessions:
                         sess_processor.calculateAggregateFeatures()
                         sess_processor.WriteSessionCSVLines()
                         sess_processor.ClearLines()
-                    if exporter_files.raw:
+                    if request._files.raw:
                         raw_mgr.WriteRawCSVLines()
                         raw_mgr.ClearLines()
-                    if exporter_files.events:
+                    if request._files.events:
                         evt_processor.WriteEventsCSVLines()
                         evt_processor.ClearLines()
                 except Exception as err:
@@ -244,7 +185,7 @@ class ExportManager:
                     time_delta = datetime.now() - start
                     num_min = math.floor(time_delta.total_seconds()/60)
                     num_sec = time_delta.total_seconds() % 60
-                    num_events = len(next_data_set)
+                    num_events = len(next_data_set) if next_data_set is not None else 0
                     utils.Logger.Log(f"Processing time for slice [{i+1}/{len(session_slices)}]: {num_min} min, {num_sec:.3f} sec to handle {num_events} events", logging.INFO)
             ret_val = num_sess
         except Exception as err:
@@ -294,8 +235,9 @@ class ExportManager:
         elif "event_custom" not in complex_data_parsed.keys():
             complex_data_parsed["event_custom"] = row[game_table.event_index]
         # replace the json with parsed version.
-        row = list(row)
-        row[game_table.complex_data_index] = complex_data_parsed
+        m_row = list(row)
+        m_row[game_table.complex_data_index] = complex_data_parsed
+        row = tuple(m_row)
 
         if session_id in game_table.session_ids:
             # we check if there's an instance given, if not we obviously skip.
