@@ -7,7 +7,6 @@ from typing import Dict, Tuple
 # import local files
 from schemas.TableSchema import TableSchema
 import utils
-from feature_extractors.WaveExtractor import WaveExtractor
 from schemas.Schema import Schema
 
 ## @class SessionProcessor
@@ -29,7 +28,7 @@ class SessionProcessor:
                  sessions_csv_file: typing.IO.writable):
         ## Define instance vars
         self._ExtractorClass:     type                            = ExtractorClass
-        self._game_table:         TableSchema                       = game_table
+        self._game_table:         TableSchema                     = game_table
         self._game_schema:        Schema                          = game_schema
         self._sessions_file:      typing.IO.writable              = sessions_csv_file
         self._session_extractors: Dict[str, self._ExtractorClass] = {}
