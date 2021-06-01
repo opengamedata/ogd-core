@@ -141,8 +141,6 @@ def runExport(events: bool = False, features: bool = False):
         Logger.Log(f"Total time taken: {minutes} min, {seconds} sec")
     Logger.Log(f"Done with {game_id}.", logging.DEBUG)
 
-#def _execExport(game_id, start_date, end_date, events: bool, features: bool):
-
 ## Function to print out info on a game from the game's schema.
 #  This does a similar function to writeReadme, but is limited to the CSV
 #  metadata part (basically what was in the schema, at one time written into
