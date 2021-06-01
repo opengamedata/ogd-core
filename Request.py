@@ -24,20 +24,21 @@ class ExporterFiles:
         self.sessions = sessions
 
 class ExporterRange:
-    def __init__(self, date_min:Union[datetime,None], date_max:Union[datetime,None], ids:Union[List[int],None]):
+    def __init__(self, date_min:Union[datetime,None], date_max:Union[datetime,None], ids:Union[List[int],None], versions:Union[List[int],None]=None):
         self._date_min : Union[datetime,None] = date_min
         self._date_max : Union[datetime,None] = date_max
         self._ids      : Union[List[int],None] = ids
+        self._versions : Union[List[int],None] = versions
 
     @staticmethod
-    def FromDateRange(date_min:datetime, date_max:datetime, source:DataInterface):
-        ids = source.IDsFromDates(date_min, date_max)
-        return ExporterRange(date_min=date_min, date_max=date_max, ids=ids)
+    def FromDateRange(date_min:datetime, date_max:datetime, source:DataInterface, versions:Union[List[int],None]=None):
+        ids = source.IDsFromDates(date_min, date_max, versions=versions)
+        return ExporterRange(date_min=date_min, date_max=date_max, ids=ids, versions=versions)
 
     @staticmethod
-    def FromIDs(ids:List[int], source:DataInterface):
-        date_range = source.DatesFromIDs(ids)
-        return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=ids)
+    def FromIDs(ids:List[int], source:DataInterface, versions:Union[List[int],None]=None):
+        date_range = source.DatesFromIDs(ids, versions=versions)
+        return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=ids, versions=versions)
 
     def GetDateRange(self) -> Dict:
         return {'min':self._date_min, 'max':self._date_max}
@@ -72,9 +73,7 @@ class Request(abc.ABC):
         # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
         return str(self._interface._game_id)
 
-    ## Method to retrieve the list of IDs for all sessions covered by
-    #  the request.
+    ## Method to retrieve the list of IDs for all sessions covered by the request.
+    #  Note, this will use the 
     def RetrieveSessionIDs(self) -> Union[List[int],None]:
-        supported_vers = Schema(schema_name=f"{self._interface._game_id}.json")['config']['SUPPORTED_VERS']
-        dates = self._range.GetDateRange()
-        return self._interface.IDsFromDates(dates['min'], dates['max'], versions=supported_vers)
+        return self._range.GetIDs()
