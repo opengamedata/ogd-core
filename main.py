@@ -106,7 +106,7 @@ def runExport(events: bool = False, features: bool = False):
     if "--file" in opts.keys():
         file_path=opts["--file"]
         ext = file_path.split('.')[-1]
-        interface = CSVInterface(game_id=game_name, filepath_or_buffer=file_path, delim="\t" if ext is '.tsv' else ',')
+        interface = CSVInterface(game_id=game_name, filepath_or_buffer=file_path, delim="\t" if ext == '.tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(ids=ids if ids is not None else [], source=interface, versions=supported_vers)
