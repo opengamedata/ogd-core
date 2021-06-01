@@ -10,7 +10,7 @@ import traceback
 import typing
 from calendar import monthrange
 from datetime import datetime
-from typing import List
+from typing import List, Tuple
 # import local files
 import feature_extractors.Extractor
 import Request
@@ -22,6 +22,7 @@ from interfaces.MySQLInterface import MySQLInterface
 from managers.ExportManager import ExportManager
 from Request import Request, ExporterFiles, ExporterRange
 from schemas.Schema import Schema
+from utils import Logger
 
 ## Function to print a "help" listing for the export tool.
 #  Hopefully not needed too often, if at all.
@@ -62,6 +63,31 @@ def showHelp():
     print("         --monthly: with this flag, specify dates by mm/yyyy instead of mm/dd/yyyy.")
     print(width*"*")
 
+def getDateRange(args, game_id:str) -> Tuple[datetime, datetime]:
+    start_date: datetime
+    end_date  : datetime
+    today     : datetime = datetime.now()
+    # If we want to export all data for a given month, calculate a date range.
+    if "--monthly" in opts.keys():
+        month: int = today.month
+        year:  int = today.year
+        if num_args > 3:
+            month_year_str = args[3].split("/")
+            month = int(month_year_str[0])
+            year  = int(month_year_str[1])
+        month_range = monthrange(year, month)
+        days_in_month = month_range[1]
+        start_date = datetime(year=year, month=month, day=1, hour=0, minute=0, second=0)
+        end_date   = datetime(year=year, month=month, day=days_in_month, hour=23, minute=59, second=59)
+        Logger.toStdOut(f"Exporting {month}/{year} data for {game_id}...", logging.DEBUG)
+    # Otherwise, create date range from given pair of dates.
+    else:
+        start_date = datetime.strptime(args[3], "%m/%d/%Y") if num_args > 3 else today
+        start_date = start_date.replace(hour=0, minute=0, second=0)
+        end_date   = datetime.strptime(args[4], "%m/%d/%Y") if num_args > 4 else today
+        end_date = end_date.replace(hour=23, minute=59, second=59)
+        Logger.Log(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.DEBUG)
+    return (start_date, end_date)
 
 ## Function to handle execution of export code. This is the main intended use of
 #  the program.
@@ -71,72 +97,49 @@ def runExport(events: bool = False, features: bool = False):
     range     : ExporterRange
     exporter_files : ExporterFiles
     req       : Request
-    # retrieve game id
-    if num_args > 2:
-        game_id = args[2]
-    else:
+    # if we didn't get any additional args, nothing to be done.
+    if num_args <= 2:
         showHelp()
         return
+    # else, num_args > 2:
+    game_id = args[2]
     start = datetime.now()
+    exporter_files = ExporterFiles(events=events, raw=False, sessions=features) 
+    supported_vers = Schema(schema_name=f"{game_id}.json")['config']['SUPPORTED_VERS']
     if "--file" in opts.keys():
         file_path=opts["--file"]
         ext = file_path.split('.')[-1]
         interface = CSVInterface(game_id=game_id, filepath_or_buffer=file_path, delim="\t" if ext is '.tsv' else ',')
+        # retrieve/calculate id range.
         ids = interface.AllIDs()
-        range = ExporterRange.FromIDs(ids=ids if ids is not None else [], source=interface)
-        exporter_files = Request.ExporterFiles(events=events, raw=False, sessions=features) 
+        range = ExporterRange.FromIDs(ids=ids if ids is not None else [], source=interface, versions=supported_vers)
         # breakpoint()
-        export_manager = ExportManager(game_id=req.game_id, settings=settings)
     else:
-        # retrieve/calculate date range.
-        start_date: datetime
-        end_date  : datetime
-        today     : datetime = datetime.now()
-        # If we want to export all data for a given month, calculate a date range.
-        if "--monthly" in opts.keys():
-            month: int = today.month
-            year:  int = today.year
-            if num_args > 3:
-                month_year_str = args[3].split("/")
-                month = int(month_year_str[0])
-                year  = int(month_year_str[1])
-            month_range = monthrange(year, month)
-            days_in_month = month_range[1]
-            start_date = datetime(year=year, month=month, day=1, hour=0, minute=0, second=0)
-            end_date   = datetime(year=year, month=month, day=days_in_month, hour=23, minute=59, second=59)
-            utils.Logger.toStdOut(f"Exporting {month}/{year} data for {game_id}...", logging.DEBUG)
-        # Otherwise, create date range from given pair of dates.
-        else:
-            start_date = datetime.strptime(args[3], "%m/%d/%Y") if num_args > 3 else today
-            start_date = start_date.replace(hour=0, minute=0, second=0)
-            end_date   = datetime.strptime(args[4], "%m/%d/%Y") if num_args > 4 else today
-            end_date = end_date.replace(hour=23, minute=59, second=59)
-            utils.Logger.Log(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.DEBUG)
         interface = MySQLInterface(game_id=game_id, settings=settings)
-        # Once we have the parameters parsed out, construct the request.
-        range = ExporterRange.FromDateRange(date_min=start_date, date_max=end_date, source=interface)
-        exporter_files = ExporterFiles(events=events, raw=False, sessions=features)
+        # retrieve/calculate date range.
+        start_date, end_date = getDateRange(args=args, game_id=game_id)
+        range = ExporterRange.FromDateRange(date_min=start_date, date_max=end_date, source=interface, versions=supported_vers)
+    # Once we have the parameters parsed out, construct the request.
     req = Request(interface=interface, range=range, exporter_files=exporter_files)
     # breakpoint()
     try:
-        export_manager = ExportManager(game_id=req.GetGameID(), settings=settings)
+        export_manager = ExportManager(game_id=game_id, settings=settings)
         schema = Schema(game_id)
         export_manager.ExecuteRequest(request=req, game_schema=schema)
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
         msg = f"{type(err)} {str(err)}"
-        utils.Logger.toStdOut(msg, logging.ERROR)
+        Logger.toStdOut(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
-        utils.Logger.toFile(msg, logging.ERROR)
+        Logger.toFile(msg, logging.ERROR)
         sys.exit(1)
     finally:
-        end = datetime.now()
-        time_delta = end - start
-        minutes = math.floor(time_delta.total_seconds()/60)
-        seconds = time_delta.total_seconds() % 60
-        print(f"Total time taken: {minutes} min, {seconds} sec")
-    utils.Logger.Log(f"Done with {game_id}.", logging.DEBUG)
+        time_taken = datetime.now() - start
+        minutes = math.floor(time_taken.total_seconds()/60)
+        seconds = time_taken.total_seconds() % 60
+        Logger.Log(f"Total time taken: {minutes} min, {seconds} sec")
+    Logger.Log(f"Done with {game_id}.", logging.DEBUG)
 
 #def _execExport(game_id, start_date, end_date, events: bool, features: bool):
 
@@ -163,25 +166,25 @@ def showGameInfo():
 #  The readme is placed in the game's data folder.
 def writeReadme():
     if num_args > 2:
+        game_name = args[2]
+        path = f"./data/{game_name}"
         try:
-            game_name = args[2]
-            path = f"./data/{game_name}"
             schema = Schema(schema_name=f"{game_name}.json")
             utils.GenerateReadme(game_name=game_name, schema=schema, path=path)
-            utils.Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
+            Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
         except Exception as err:
             msg = f"Could not create a readme for {game_name}: {type(err)} {str(err)}"
-            utils.Logger.toStdOut(msg, logging.ERROR)
+            Logger.toStdOut(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
-            utils.Logger.toFile(msg, logging.ERROR)
+            Logger.toFile(msg, logging.ERROR)
     else:
         print("Error, no game name given!")
         showHelp()
 
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
-utils.Logger.toStdOut(f"Running {sys.argv[0]}...", logging.INFO)
-utils.Logger.toFile(f"Running {sys.argv[0]}...", logging.INFO)
+Logger.toStdOut(f"Running {sys.argv[0]}...", logging.INFO)
+Logger.toFile(f"Running {sys.argv[0]}...", logging.INFO)
 try:
     arg_options = ["file=", "help", "monthly"]
     optupi, args = getopt.gnu_getopt(sys.argv, shortopts="-h", longopts=arg_options)
@@ -194,7 +197,7 @@ except getopt.GetoptError as err:
     cmd = "help"
 if type(cmd) == str:
     # if we have a real command, load the config file.
-    # settings = utils.loadJSONFile("config.json")
+    # settings = loadJSONFile("config.json")
     db_settings = settings["db_config"]
     ssh_settings = settings["ssh_config"]
 
