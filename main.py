@@ -10,7 +10,7 @@ import traceback
 import typing
 from calendar import monthrange
 from datetime import datetime
-from typing import List, Tuple
+from typing import Dict, Tuple
 # import local files
 import feature_extractors.Extractor
 import Request
@@ -92,39 +92,32 @@ def getDateRange(args, game_id:str) -> Tuple[datetime, datetime]:
 ## Function to handle execution of export code. This is the main intended use of
 #  the program.
 def runExport(events: bool = False, features: bool = False):
-    game_id   : str
     interface : DataInterface
     range     : ExporterRange
     exporter_files : ExporterFiles
     req       : Request
-    # if we didn't get any additional args, nothing to be done.
-    if num_args <= 2:
-        showHelp()
-        return
-    # else, num_args > 2:
-    game_id = args[2]
     start = datetime.now()
     exporter_files = ExporterFiles(events=events, raw=False, sessions=features) 
-    supported_vers = Schema(schema_name=f"{game_id}.json")['config']['SUPPORTED_VERS']
+    supported_vers = Schema(schema_name=f"{game_name}.json")['config']['SUPPORTED_VERS']
     if "--file" in opts.keys():
         file_path=opts["--file"]
         ext = file_path.split('.')[-1]
-        interface = CSVInterface(game_id=game_id, filepath_or_buffer=file_path, delim="\t" if ext is '.tsv' else ',')
+        interface = CSVInterface(game_id=game_name, filepath_or_buffer=file_path, delim="\t" if ext is '.tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(ids=ids if ids is not None else [], source=interface, versions=supported_vers)
         # breakpoint()
     else:
-        interface = MySQLInterface(game_id=game_id, settings=settings)
+        interface = MySQLInterface(game_id=game_name, settings=settings)
         # retrieve/calculate date range.
-        start_date, end_date = getDateRange(args=args, game_id=game_id)
+        start_date, end_date = getDateRange(args=args, game_id=game_name)
         range = ExporterRange.FromDateRange(date_min=start_date, date_max=end_date, source=interface, versions=supported_vers)
     # Once we have the parameters parsed out, construct the request.
     req = Request(interface=interface, range=range, exporter_files=exporter_files)
     # breakpoint()
     try:
-        export_manager = ExportManager(game_id=game_id, settings=settings)
-        schema = Schema(game_id)
+        export_manager = ExportManager(game_id=game_name, settings=settings)
+        schema = Schema(game_name)
         export_manager.ExecuteRequest(request=req, game_schema=schema)
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
@@ -139,7 +132,7 @@ def runExport(events: bool = False, features: bool = False):
         minutes = math.floor(time_taken.total_seconds()/60)
         seconds = time_taken.total_seconds() % 60
         Logger.Log(f"Total time taken: {minutes} min, {seconds} sec")
-    Logger.Log(f"Done with {game_id}.", logging.DEBUG)
+    Logger.Log(f"Done with {game_name}.", logging.DEBUG)
 
 ## Function to print out info on a game from the game's schema.
 #  This does a similar function to writeReadme, but is limited to the CSV
@@ -147,49 +140,44 @@ def runExport(events: bool = False, features: bool = False):
 #  the csv's themselves). Further, the output is printed rather than written
 #  to file.
 def showGameInfo():
-    if num_args > 2:
-        game_name = args[2]
-        schema = Schema(schema_name=f"{game_name}.json")
+    schema = Schema(schema_name=f"{game_name}.json")
 
-        feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-        print(utils.GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),\
-                                                        sessions_field_list=feature_descriptions))
-    else:
-        print("Error, no game name given!")
-        showHelp()
+    feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
+    print(utils.GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),\
+                                                    sessions_field_list=feature_descriptions))
 
 ## Function to write out the readme file for a given game.
 #  This includes the CSV metadata (data from the schema, originally written into
 #  the CSV files themselves), custom readme source, and the global changelog.
 #  The readme is placed in the game's data folder.
 def writeReadme():
-    if num_args > 2:
-        game_name = args[2]
-        path = f"./data/{game_name}"
-        try:
-            schema = Schema(schema_name=f"{game_name}.json")
-            utils.GenerateReadme(game_name=game_name, schema=schema, path=path)
-            Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
-        except Exception as err:
-            msg = f"Could not create a readme for {game_name}: {type(err)} {str(err)}"
-            Logger.toStdOut(msg, logging.ERROR)
-            traceback.print_tb(err.__traceback__)
-            Logger.toFile(msg, logging.ERROR)
-    else:
-        print("Error, no game name given!")
-        showHelp()
+    path = f"./data/{game_name}"
+    try:
+        schema = Schema(schema_name=f"{game_name}.json")
+        utils.GenerateReadme(game_name=game_name, schema=schema, path=path)
+        Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
+    except Exception as err:
+        msg = f"Could not create a readme for {game_name}: {type(err)} {str(err)}"
+        Logger.toStdOut(msg, logging.ERROR)
+        traceback.print_tb(err.__traceback__)
+        Logger.toFile(msg, logging.ERROR)
 
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
-Logger.toStdOut(f"Running {sys.argv[0]}...", logging.INFO)
-Logger.toFile(f"Running {sys.argv[0]}...", logging.INFO)
+Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
+opts : Dict[str,str] = {}
 try:
-    arg_options = ["file=", "help", "monthly"]
-    optupi, args = getopt.gnu_getopt(sys.argv, shortopts="-h", longopts=arg_options)
+    optupi, args = getopt.gnu_getopt(sys.argv, shortopts="-h", longopts=["file=", "help", "monthly"])
 
     opts = {opt[0]: opt[1] for opt in optupi}
     num_args = len(args)
     cmd = args[1] if num_args > 1 else "help"
+    if num_args > 2:
+        game_name = args[2]
+    else:
+        game_name = ""
+        cmd = "help"
+        Logger.Log("No game name given!", logging.ERROR)
 except getopt.GetoptError as err:
     print(f"Error, invalid option given!\n{err}")
     cmd = "help"
