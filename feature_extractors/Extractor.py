@@ -4,7 +4,7 @@ import logging
 import typing
 import logging
 from datetime import datetime
-from typing import Dict, List, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 ## import local files
 import utils
 from schemas.TableSchema import TableSchema
@@ -32,12 +32,12 @@ class Extractor(abc.ABC):
     #                     structured.
     def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema,
                  level_range: range = None):
-        self.session_id:   int         = session_id
-        self._level_range: range       = level_range if (level_range is not None) else range(game_table.min_level, game_table.max_level+1)
-        self.levels:       List[int]   = []
-        self.last_adjust_type: str     = None
-        self.sequences:    List        = []
-        self.features:     Extractor.SessionFeatures = Extractor.SessionFeatures(self._level_range, game_schema)
+        self.session_id   : int         = session_id
+        self._level_range : range       = level_range if (level_range is not None) else range(game_table.min_level, game_table.max_level+1)
+        self.levels       : List[int]   = []
+        self.sequences    : List        = []
+        self.features     : Extractor.SessionFeatures = Extractor.SessionFeatures(self._level_range, game_schema)
+        self.last_adjust_type : Union[str,None] = None
 
     ## Static function to print column headers to a file.
     #  We first create a feature dictionary, then essentially write out each key,
@@ -50,7 +50,7 @@ class Extractor(abc.ABC):
     #                     structured.
     #  @param file        An open csv file to which we will write column headers.
     @staticmethod
-    def writeCSVHeader(game_table: TableSchema, game_schema: Schema, file: typing.IO.writable):
+    def writeCSVHeader(game_table: TableSchema, game_schema: Schema, file: typing.IO[str]) -> None:
         columns = Extractor.getFeatureNames(game_table=game_table, game_schema=game_schema)
         file.write(",".join(columns))
         file.write("\n")
@@ -72,7 +72,7 @@ class Extractor(abc.ABC):
     #  Simply prints out each value from the extractor's features dictionary.
     #
     #  @param file        An open csv file to which we will write column headers.
-    def writeCurrentFeatures(self, file: typing.IO.writable):
+    def writeCurrentFeatures(self, file: typing.IO[str]) -> None:
     # TODO: It looks like I might be assuming that dictionaries always have same order here.
     # May need to revisit that issue. I mean, it should be fine because Python won't just go
     # and change order for no reason, but still...
@@ -109,11 +109,11 @@ class Extractor(abc.ABC):
                 column_vals.append(myformat(self.features.getValByName(key)))
         return column_vals
 
-    def extractFromRow(self, row_with_complex_parsed, game_table: TableSchema):
+    def extractFromRow(self, row_with_complex_parsed, game_table: TableSchema) -> None:
         self.extractSequencesFromRow(row_data=row_with_complex_parsed, game_table=game_table)
         self.extractFeaturesFromRow(row_with_complex_parsed=row_with_complex_parsed, game_table=game_table)
 
-    def extractSequencesFromRow(self, row_data, game_table: TableSchema):
+    def extractSequencesFromRow(self, row_data, game_table: TableSchema) -> None:
         for sequence in self.sequences:
             event_data = self.extractCustomSequenceEventDataFromRow(row_data=row_data, game_table=game_table)
             sequence.RegisterEvent(row_data[game_table.complex_data_index]["event_custom"], event_data=event_data)
@@ -182,7 +182,7 @@ class Extractor(abc.ABC):
         #  This means we can have "None" values for unreached levels, and 0's for features that
         #  simply never got incremented.
         #  @param level The level for which we should initialize values.
-        def initLevel(self, level):
+        def initLevel(self, level) -> None:
             for f_name in self.perlevels:
                 if self.features[f_name][level]["val"] == None:
                     self.features[f_name][level]["val"] = 0
@@ -193,7 +193,7 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to retrieve
         #  @param index        The count index of the specific value, e.g. the level
         #  @return             The value stored for the given feature at given index.
-        def getValByIndex(self, feature_name: str, index: int):
+        def getValByIndex(self, feature_name: str, index: int) -> Any:
             if not self._verify_feature(feature_name):
                 return None
             return self.features[feature_name][index]["val"]
@@ -205,7 +205,7 @@ class Extractor(abc.ABC):
         #  @param index        The count index of the desired value, e.g. the level
         #  @return             The feature stored for the given feature at given index.
         #                      This feature is a dictionary with a "val" and "prefix"
-        def getFeatureByIndex(self, feature_name: str, index: int):
+        def getFeatureByIndex(self, feature_name: str, index: int) -> Any:
             if not self._verify_feature(feature_name):
                 return None
             return self.features[feature_name][index]
@@ -217,7 +217,7 @@ class Extractor(abc.ABC):
         #
         #  @param feature_name The name of the feature to retrieve
         #  @return             The value stored for the given feature.
-        def getValByName(self, feature_name: str):
+        def getValByName(self, feature_name: str) -> Any:
             if not self._verify_feature(feature_name):
                 return None
             return self.features[feature_name]
@@ -228,7 +228,7 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to set
         #  @param index        The count index of the desired value, e.g. the level
         #  @param new_value    The value to be stored for the given feature at given index.
-        def setValByIndex(self, feature_name: str, index: int, new_value):
+        def setValByIndex(self, feature_name: str, index: int, new_value) -> None:
             if not self._verify_feature(feature_name):
                 return
             self.features[feature_name][index]["val"] = new_value
@@ -239,7 +239,7 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to set
         #  @param index        The count index of the desired value, e.g. the level
         #  @param new_value    The value to be stored for the given feature at given index.
-        def setValByLevel(self, feature_name: str, level: int, new_value):
+        def setValByLevel(self, feature_name: str, level: int, new_value) -> None:
             self.setValByIndex(feature_name=feature_name, index=level, new_value=new_value)
 
         ## Function to set value of a full feature
@@ -248,7 +248,7 @@ class Extractor(abc.ABC):
         #
         #  @param feature_name The name of the feature to retrieve
         #  @param new_value    The value to be stored for the given feature.
-        def setValByName(self, feature_name: str, new_value):
+        def setValByName(self, feature_name: str, new_value) -> None:
             if not self._verify_feature(feature_name):
                 return
             self.features[feature_name] = new_value
@@ -259,7 +259,7 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to increment
         #  @param index        The count index of the specific value, e.g. the level
         #  @param increment    The size of the increment (default = 1)
-        def incValByIndex(self, feature_name: str, index: int, increment: Union[int, float] = 1):
+        def incValByIndex(self, feature_name: str, index: int, increment: Union[int, float] = 1) -> None:
             if not self._verify_feature(feature_name):
                 return
             if self.features[feature_name][index]["val"] == 'null':
@@ -272,19 +272,19 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to increment
         #  @param index        The count index of the specific value, e.g. the level
         #  @param increment    The size of the increment (default = 1)
-        def incValByLevel(self, feature_name: str, level: int, increment: Union[int, float] = 1):
+        def incValByLevel(self, feature_name: str, level: int, increment: Union[int, float] = 1) -> None:
             self.incValByIndex(feature_name=feature_name, index=level, increment=increment)
 
         ## Function to increment value of an aggregate feature
         #
         #  @param feature_name The name of the feature to increment
         #  @param increment    The size of the increment (default = 1)
-        def incAggregateVal(self, feature_name: str, increment: Union[int, float] = 1):
+        def incAggregateVal(self, feature_name: str, increment: Union[int, float] = 1) -> None:
             if not self._verify_feature(feature_name):
                 return
             self.features[feature_name] += increment
 
-        def _verify_feature(self, feature_name):
+        def _verify_feature(self, feature_name) -> bool:
             try:
                 _ = self.features[feature_name]
             except KeyError:
@@ -302,7 +302,7 @@ class Extractor(abc.ABC):
             self._end_at_count    = end_event_count # number of end events to count before ending the sequence.
             self._events          = []
 
-        def RegisterEvent(self, event_type, event_data):
+        def RegisterEvent(self, event_type, event_data) -> None:
             self._events.append((event_type, event_data))
             if event_type == self._end_event_type:
                 self._end_event_count += 1
