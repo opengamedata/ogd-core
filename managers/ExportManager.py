@@ -116,7 +116,7 @@ class ExportManager:
         finally:
             return ret_val
 
-    def _prepareSchema(self) -> Tuple[Schema, Union[type,None]]:
+    def _prepareSchema(self) -> Tuple[GameSchema, Union[type,None]]:
         game_extractor: Union[type,None] = None
         game_schema: GameSchema  = GameSchema(schema_name=f"{self._game_id}.json")
         if self._game_id == "WAVES":
