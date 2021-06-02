@@ -518,7 +518,7 @@ class JowilderExtractor(Extractor):
             self.setValByIndex("sa_time", index=index, new_value=time_taken)
         self.setValByIndex("sa_index", index=index, new_value=_response_index)
         self.setValByIndex("sa_text", index=index, new_value=_response)
-        self.feature_cc_inc("sa_num_answers", index=index)
+        self.feature_cc_inc("sa_num_answers", index=index, increment=1)
 
     def _extractFromQuizstart(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
