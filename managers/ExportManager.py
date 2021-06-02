@@ -51,7 +51,7 @@ class ExportManager:
         self._settings = settings
         # self._select_queries = []
 
-    def ExecuteRequest(self, request:Request, game_schema:Schema, table_schema:TableSchema):
+    def ExecuteRequest(self, request:Request, game_schema :GameSchema, table_schema:TableSchema):
         if request.GetGameID() != self._game_id:
             utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.GetGameID()}", logging.WARNING)
             self._game_id = request.GetGameID()

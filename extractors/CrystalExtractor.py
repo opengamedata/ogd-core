@@ -26,7 +26,7 @@ class CrystalExtractor(Extractor):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: TableSchema, game_schema: GameSchema):
+    def __init__(self, session_id:int, game_table:TableSchema, game_schema:GameSchema):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
         # Define custom private data.
         self.start_times: typing.Dict       = {}
@@ -46,7 +46,7 @@ class CrystalExtractor(Extractor):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: TableSchema):
+    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table:TableSchema):
         # put some data in local vars, for readability later.
         level = row_with_complex_parsed[game_table.level_index]
         event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
