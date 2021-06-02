@@ -25,12 +25,12 @@ class SessionProcessor:
     #  @param sessions_csv_file The output file, to which we'll write the processed
     #                       feature data.
     def __init__(self, ExtractorClass: type, game_table: TableSchema, game_schema: Schema,
-                 sessions_csv_file: typing.IO.writable):
+                 sessions_csv_file: typing.IO[str]):
         ## Define instance vars
         self._ExtractorClass:     type                            = ExtractorClass
         self._game_table:         TableSchema                     = game_table
         self._game_schema:        Schema                          = game_schema
-        self._sessions_file:      typing.IO.writable              = sessions_csv_file
+        self._sessions_file:      typing.IO[str]                  = sessions_csv_file
         self._session_extractors: Dict[str, self._ExtractorClass] = {}
 
     ## Function to handle processing of a single row of data.
