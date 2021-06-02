@@ -1,6 +1,7 @@
 import json
 import logging
 import math
+from MySQLdb.connections import Connection
 import pandas as pd
 import random
 import re
@@ -8,6 +9,9 @@ import sys
 import traceback
 import typing
 from datetime import datetime, timedelta
+from typing import Dict, List, Tuple, Union
+
+from sshtunnel import SSHTunnelForwarder
 # # import local files
 import utils
 from config import settings
@@ -16,12 +20,12 @@ from extractors.CrystalExtractor import CrystalExtractor
 from extractors.WaveExtractor import WaveExtractor
 from extractors.LakelandExtractor import LakelandExtractor
 from schemas.TableSchema import TableSchema
-from interfaces.MySQLInterface import SQL
+from interfaces.MySQLInterface import MySQLInterface, SQL
 from managers.SessionProcessor import SessionProcessor
 from models.Model import ModelInputType
 # from models.Model import *
 from realtime.ModelManager import ModelManager
-from Request import Request
+from Request import ExporterFiles, ExporterRange, Request
 from schemas.Schema import Schema
 
 ## Class to handle API calls for the realtime page.
@@ -45,7 +49,7 @@ class RTServer:
     #          Specifically, we get each session's max completed level, current
     #          level, and time since last move.
     @staticmethod
-    def getAllActiveSessions(game_id: str, require_player_id: bool) -> typing.Dict:
+    def getAllActiveSessions(game_id: str, require_player_id: bool) -> Dict:
         ret_val = {}
         start_time = datetime.now()
         active_sessions_raw = RTServer._fetchActiveSessions(game_id=game_id, require_player_id=require_player_id)
@@ -66,7 +70,7 @@ class RTServer:
         return ret_val
 
     @staticmethod
-    def getAllActiveSessionsByClassroom(game_id: str, class_id: bool) -> typing.Dict:
+    def getAllActiveSessionsByClassroom(game_id: str, class_id: bool) -> Dict:
         ret_val = {}
         start_time = datetime.now()
         active_sessions_raw = RTServer._fetchActiveSessions(game_id=game_id, require_player_id=True, class_id=class_id)
@@ -98,12 +102,16 @@ class RTServer:
     #  @return A dictionary mapping feature names to feature values.
     #          If a features argument was given, only returns the corresponding features.
     @staticmethod
-    def getSessionAndFeaturesBySessID(sess_id: str, game_id: str, features: typing.List = None) -> typing.Dict:
-        ret_val: typing.Dict = {}
+    def getSessionAndFeaturesBySessID(sess_id: str, game_id: str, features: Union[List[str],str,None] = None) -> Dict:
+        ret_val: Dict = {}
         # if we got a features list, it'll be a string that we must split.
         if features is not None and type(features) == str:
             features = features.split(",")
-        request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
+        interface = MySQLInterface(game_id=game_id, settings=settings)
+        range = ExporterRange.FromIDs(ids=[int(sess_id)], source=interface)
+        files = ExporterFiles(False, False, False)
+        request = Request(interface=interface, range=range, exporter_files=files)
+        #request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
         start_time = datetime.now()
         session_data, game_table = RTServer._fetchSessionData(sess_id, settings=settings, request=request)
         utils.Logger.toStdOut(f"Time to fetch session data: {datetime.now() - start_time}", logging.DEBUG)
@@ -113,11 +121,11 @@ class RTServer:
                 schema = Schema(schema_name=f"{game_id}.json")
                 extractor: Extractor
                 if game_id == "WAVES":
-                    extractor = WaveExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
+                    extractor = WaveExtractor(session_id=int(sess_id), game_table = game_table, game_schema=schema)
                 elif game_id == "CRYSTAL":
-                    extractor = CrystalExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
+                    extractor = CrystalExtractor(session_id=int(sess_id), game_table = game_table, game_schema=schema)
                 elif game_id == "LAKELAND":
-                    extractor = LakelandExtractor(session_id=sess_id, game_table=game_table, game_schema=schema, sessions_file=None)
+                    extractor = LakelandExtractor(session_id=int(sess_id), game_table=game_table, game_schema=schema, sessions_file=None)
                 else:
                     raise Exception("Got an invalid game ID!")
 
@@ -169,10 +177,10 @@ class RTServer:
     #  Specifically, the current level, max level, and current idle time.
     #  Other data could be added as needed.
     @staticmethod
-    def getGameProgress(sess_id: str, game_id: str) -> typing.Dict[str, object]:
-        max_level: int
-        cur_level: int
-        idle_time: int
+    def getGameProgress(sess_id: str, game_id: str) -> Dict[str, object]:
+        max_level: int = 1
+        cur_level: int = 1
+        idle_time: int = 5
     
         #+++
         start = datetime.now()
@@ -191,10 +199,7 @@ class RTServer:
                                              sort_columns=["client_time"], sort_direction="DESC", limit=1)
             # max_level = max_level_raw[0][0] if max_level_raw[0][0] != None else 0
             cur_level = cur_level_raw[0][0]
-            max_level = 1
-            # cur_level = 1
             idle_time = (datetime.now() - cur_level_raw[0][1]).seconds
-            # idle_time = 5
             #+++
             end = datetime.now()
             time_delta = end - start
@@ -216,8 +221,8 @@ class RTServer:
     #  @return A dictionary mapping "features" to a list of feature names,
     #          or None if an eror occurred when reading the game schema.
     # @staticmethod
-    # def getFeatureNamesByGame(game_id: str) -> typing.Dict[str, typing.List]:
-    #     ret_val: typing.Dict[str, typing.List]
+    # def getFeatureNamesByGame(game_id: str) -> Dict[str, List]:
+    #     ret_val: Dict[str, List]
     #     try:
     #         schema: Schema = Schema(schema_name=f"{game_id}.json")
     #         ret_val = {"features": schema.feature_list()}
@@ -236,8 +241,8 @@ class RTServer:
     #  @param  level   The level for which we want a list of models
     #  @return A list of all model names.
     # @staticmethod
-    # def getModelNamesByGameLevel(game_id: str, level: int) -> typing.List:
-    #     ret_val: typing.List
+    # def getModelNamesByGameLevel(game_id: str, level: int) -> List:
+    #     ret_val: List
 
     #     # models = utils.loadJSONFile(filename=f"{game_id}_models.json", path="./models/")
     #     model_mgr = ModelManager(game_id)
@@ -266,8 +271,12 @@ class RTServer:
             # print(f"***List of valid models***: {model_list}")
             # Retrieve data for the session, before we start looping over all sessions.
             start_time = datetime.now()
-            request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
-            sess_and_feats_ob = RTServer.getSessionAndFeaturesBySessID(sess_id, game_id)
+            interface = MySQLInterface(game_id=game_id, settings=settings)
+            range = ExporterRange.FromIDs(ids=[int(sess_id)], source=interface)
+            files = ExporterFiles(False, False, False)
+            request = Request(interface=interface, range=range, exporter_files=files)
+            #request = Request.IDListRequest(game_id=game_id, session_ids=[sess_id])
+            sess_and_feats_ob = RTServer.getSessionAndFeaturesBySessID(sess_id=sess_id, game_id=game_id)
             sess_and_feats = sess_and_feats_ob[sess_id]
             # TODO: streamline this process. Shouldn't need to call to get the table.
             features_raw = sess_and_feats["features"]
@@ -292,6 +301,7 @@ class RTServer:
                 if model_name in model_list:
                     model = model_mgr.LoadModel(model_name=model_name)
                     try:
+                        result_list = []
                         if model.GetInputType() == ModelInputType.FEATURE:
                             result_list = model.Eval([features_parsed])
                             result_list = result_list[0] # so, technically we get back a list of results for each session given, and we only give one session.
@@ -334,6 +344,9 @@ class RTServer:
 
     @staticmethod
     def _fetchActiveSessions(game_id, require_player_id, class_id=None):
+        db     : Union[Connection,              None] = None
+        tunnel : Union[SSHTunnelForwarder,      None] = None
+        active_sessions_raw : Union[List[Tuple],None] = None
         if RTServer.rt_settings["data_source"] == "DB":
             # if we're using DB, allow realtime settings to override base settings.
             RTServer.db_settings["DB_HOST"]   = RTServer.rt_settings["DB_HOST"]
@@ -355,9 +368,9 @@ class RTServer:
                     column_names   = [f"session_id", "player_id"]
                 filt = f"{RTServer.DB_TABLE}.app_id='{game_id}' AND {RTServer.DB_TABLE}.server_time > '{start_time.isoformat()}' {player_id_filter}"
                 active_sessions_raw = SQL.SELECT(cursor=cursor,
-                                                    db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
-                                                    columns=column_names, join=join_statement, filter=filt,\
-                                                    sort_columns=["session_id"], distinct=True)
+                                                 db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
+                                                 columns=column_names, join=join_statement, filter=filt,\
+                                                 sort_columns=["session_id"], distinct=True)
                 #+++
                 end = datetime.now()
                 time_delta = end - start
@@ -397,8 +410,11 @@ class RTServer:
         return active_sessions_raw
     
     @staticmethod
-    def _fetchSessionData(session_id, settings, request:Request):
-        session_data = []
+    def _fetchSessionData(session_id, settings, request:Request) -> Tuple[Union[List,None], TableSchema]:
+        db     : Union[Connection,        None] = None
+        tunnel : Union[SSHTunnelForwarder,None] = None
+        session_data : Union[List,        None] = None
+        game_table   : Union[TableSchema, None]
         if RTServer.rt_settings["data_source"] == "DB":
             try:
                 tunnel,db = SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
@@ -407,9 +423,8 @@ class RTServer:
                 cursor = db.cursor()
                 filt = f"`session_id`='{session_id}'"
                 session_data = SQL.SELECT(cursor=cursor,
-                                                db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
-                                                filter=filt,\
-                                                sort_columns=["session_n", "client_time"])
+                                          db_name=RTServer.DB_NAME_DATA, table=RTServer.DB_TABLE,\
+                                          filter=filt, sort_columns=["session_n", "client_time"])
             except Exception as err:
                 msg = f"{type(err)} {str(err)}"
                 print(f"Got an error in _fetchSessionData: {msg}", file=sys.stderr)
