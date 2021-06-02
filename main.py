@@ -15,7 +15,6 @@ from typing import Dict, Tuple
 
 from pandas.io.pytables import Table
 # import local files
-import extractors.Extractor
 import Request
 import utils
 from config import settings
@@ -94,7 +93,7 @@ def getDateRange(args, game_id:str) -> Tuple[datetime, datetime]:
 
 ## Function to handle execution of export code. This is the main intended use of
 #  the program.
-def runExport(events: bool = False, features: bool = False):
+def runExport(events:bool = False, features:bool = False):
     interface : DataInterface
     range     : ExporterRange
     exporter_files : ExporterFiles
