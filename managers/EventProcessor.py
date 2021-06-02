@@ -21,18 +21,18 @@ class EventProcessor:
     #                       is structured.
     #  @param events_csv_file The output file, to which we'll write the event game data.
     def __init__(self, game_table: TableSchema, game_schema: Schema,
-                  events_csv_file: typing.IO.writable):
+                  events_csv_file: typing.IO[str]):
         # define instance vars
-        self._lines             : List[List] = []
-        self._game_table        : TableSchema           = game_table
-        self._events_file       : typing.IO.writable  = events_csv_file
-        self._db_columns        : List[str]    = game_schema.db_columns()
+        self._lines             : List[str]      = []
+        self._game_table        : TableSchema    = game_table
+        self._events_file       : typing.IO[str] = events_csv_file
+        self._db_columns        : List[str]      = game_schema.db_columns()
 
     ## Function to handle processing one row of data.
     #  @param row_with_complex_parsed A tuple of the row data. We assume the
     #                      event_data_complex has already been parsed from JSON.
     def ProcessRow(self, row_with_complex_parsed: Tuple):
-        line : List[Union[str, None]] = [None] * len(self._db_columns)
+        line : List[typing.Any] = [None] * len(self._db_columns)
         for i,col in enumerate(row_with_complex_parsed):
             # only set a value if this was not the remote address (IP) column.
             if i != self._game_table.remote_addr_index:
