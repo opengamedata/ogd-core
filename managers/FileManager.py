@@ -7,24 +7,25 @@ import traceback
 import typing
 import zipfile
 from datetime import datetime
+from typing import Dict, Tuple
 ## import local files
 import utils
 from Request import *
 
 class FileManager(abc.ABC):
-    def __init__(self, export_files: ExportFiles, game_id, data_dir: str, date_range: typing.Tuple):
-        self._file_names : typing.Dict = {"sessions_f":None, "raw_f":None, "events_f":None}
-        self._zip_names  : typing.Dict = {"sessions_f":None, "raw_f":None, "events_f":None}
-        self._files      : typing.Dict = {"sessions_f":None, "raw_f":None, "events_f":None}
-        self._data_dir   : str         = data_dir
-        self._game_id    : str         = game_id
+    def __init__(self, exporter_files: ExporterFiles, game_id, data_dir: str, date_range: Dict[str,datetime]):
+        self._file_names : Dict = {"sessions_f":None, "raw_f":None, "events_f":None}
+        self._zip_names  : Dict = {"sessions_f":None, "raw_f":None, "events_f":None}
+        self._files      : Dict = {"sessions_f":None, "raw_f":None, "events_f":None}
+        self._data_dir   : str  = data_dir
+        self._game_id    : str  = game_id
         self._readme_path: str
         self._dataset_id : str
         self._short_hash : str
         try:
             # figure out dataset ID.
-            start = date_range[0].strftime("%Y%m%d")
-            end = date_range[1].strftime("%Y%m%d")
+            start = date_range['min'].strftime("%Y%m%d")
+            end = date_range['max'].strftime("%Y%m%d")
             self._dataset_id = f"{self._game_id}_{start}_to_{end}"
             # get hash
             repo = git.Repo(search_parent_directories=True)
@@ -34,12 +35,12 @@ class FileManager(abc.ABC):
             self._readme_path = f"{full_data_dir}/readme.md"
             base_path = f"{full_data_dir}/{self._dataset_id}_{self._short_hash}"
             # finally, generate file names.
-            self._file_names["sessions_f"] = base_path+"_session-features.csv" if export_files.sessions else None
-            self._file_names["raw_f"]  = base_path+"_raw.tsv"  if export_files.raw  else None
-            self._file_names["events_f"] = base_path+"_events.tsv" if export_files.events else None
-            self._zip_names["sessions_f"] = base_path+"_session-features.zip" if export_files.sessions else None
-            self._zip_names["raw_f"]  = base_path+"_raw.zip"  if export_files.raw  else None
-            self._zip_names["events_f"] = base_path+"_events.zip" if export_files.events else None
+            self._file_names["sessions_f"] = base_path+"_session-features.csv" if exporter_files.sessions else None
+            self._file_names["raw_f"]  = base_path+"_raw.tsv"  if exporter_files.raw  else None
+            self._file_names["events_f"] = base_path+"_events.tsv" if exporter_files.events else None
+            self._zip_names["sessions_f"] = base_path+"_session-features.zip" if exporter_files.sessions else None
+            self._zip_names["raw_f"]  = base_path+"_raw.zip"  if exporter_files.raw  else None
+            self._zip_names["events_f"] = base_path+"_events.zip" if exporter_files.events else None
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.Log(msg, logging.ERROR)
@@ -144,7 +145,7 @@ class FileManager(abc.ABC):
     #  deriving file metadata, this simply outputs a new file_name.meta file.
     #  @param date_range    The range of dates included in the exported data.
     #  @param num_sess      The number of sessions included in the recent export.
-    def WriteMetadataFile(self, date_range: typing.Tuple, num_sess: int):
+    def WriteMetadataFile(self, date_range: Dict[str,datetime], num_sess: int):
         # First, ensure we have a data directory.
         try:
             full_data_dir = self._data_dir + self._game_id
@@ -155,8 +156,8 @@ class FileManager(abc.ABC):
         else:
             # Second, remove old metas, if they exist.
             try:
-                start_range = date_range[0].strftime("%Y%m%d")
-                end_range = date_range[1].strftime("%Y%m%d")
+                start_range = date_range['min'].strftime("%Y%m%d")
+                end_range = date_range['max'].strftime("%Y%m%d")
                 match_string = f"{self._game_id}_{start_range}_to_{end_range}_\\w*\\.meta"
                 old_metas = [f for f in os.listdir(full_data_dir) if re.match(match_string, f)]
                 for old_meta in old_metas:
@@ -181,8 +182,8 @@ class FileManager(abc.ABC):
                     "sessions_f":self._zip_names["sessions_f"],
                     "raw_f" :self._zip_names["raw_f"],
                     "events_f":self._zip_names["events_f"],
-                    "start_date"   :date_range[0].strftime("%m/%d/%Y"),
-                    "end_date"     :date_range[1].strftime("%m/%d/%Y"),
+                    "start_date"   :date_range['min'].strftime("%m/%d/%Y"),
+                    "end_date"     :date_range['max'].strftime("%m/%d/%Y"),
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions":num_sess
                 }
@@ -195,7 +196,7 @@ class FileManager(abc.ABC):
     #  list of files.
     #  @param date_range    The range of dates included in the exported data.
     #  @param num_sess      The number of sessions included in the recent export.
-    def UpdateFileExportList(self, date_range: typing.Tuple, num_sess: int):
+    def UpdateFileExportList(self, date_range: Dict[str,datetime], num_sess: int):
         self._backupFileExportList()
         try:
             existing_csvs = utils.loadJSONFile("file_list.json", self._data_dir)
@@ -222,8 +223,8 @@ class FileManager(abc.ABC):
                     "sessions_f":sessions_path,
                     "raw_f" :raw_path,
                     "events_f":events_path,
-                    "start_date"   :date_range[0].strftime("%m/%d/%Y"),
-                    "end_date"     :date_range[1].strftime("%m/%d/%Y"),
+                    "start_date"   :date_range['min'].strftime("%m/%d/%Y"),
+                    "end_date"     :date_range['max'].strftime("%m/%d/%Y"),
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions":num_sess
                 }

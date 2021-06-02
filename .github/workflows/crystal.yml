@@ -3,7 +3,7 @@ name: Crystal Exporter CI Test
 on:
   push:
     paths:
-    - 'feature_extractors/CrystalExtractor.py'
+    - 'extractors/CrystalExtractor.py'
     - 'schemas/JSON/CRYSTAL.json'
     - '.github/workflows/crystal.yml'
     - '.github/actions/export_yesterday/**'

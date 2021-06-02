@@ -2,9 +2,10 @@
 import json
 import logging
 import typing
+from typing import Dict, List, Tuple, Union
 ## import local files
 import utils
-import GameTable
+from schemas.TableSchema import TableSchema
 from schemas.Schema import Schema
 
 ## @class RawManager
@@ -20,16 +21,16 @@ class RawManager:
     #  @param game_schema   A dictionary that defines how the game data itself
     #                       is structured.
     #  @param sessions_csv_file The output file, to which we'll write the raw game data.
-    def __init__(self, game_table: GameTable, game_schema: Schema,
-                 raw_csv_file: typing.IO.writable):
+    def __init__(self, game_table: TableSchema, game_schema: Schema,
+                 raw_csv_file: typing.IO[str]):
         # define instance vars
-        self._lines             : typing.List[typing.List] = []
-        self._game_table        : GameTable           = game_table
-        self._raw_file          : typing.IO.writable  = raw_csv_file
-        self._db_columns        : typing.List[str]    = game_schema.db_columns()
-        self._JSON_columns      : typing.List[str]
-        self._all_columns       : typing.List[str]
-        self._columns_to_indices: typing.Dict
+        self._lines             : List[str]      = []
+        self._game_table        : TableSchema    = game_table
+        self._raw_file          : typing.IO[str] = raw_csv_file
+        self._db_columns        : List[str]      = game_schema.db_columns()
+        self._JSON_columns      : List[str]
+        self._all_columns       : List[str]
+        self._columns_to_indices: Dict
         # set instance vars
         self._JSON_columns = RawManager._generateJSONColumns(game_schema)
         self._all_columns = game_table.column_names[:game_table.complex_data_index] \
@@ -44,7 +45,8 @@ class RawManager:
     #  data that goes after, and event_data_custom itself.
     #  @param row_with_complex_parsed A tuple of the row data. We assume the
     #                      event_data_complex has already been parsed from JSON.
-    def ProcessRow(self, row_with_complex_parsed: typing.Tuple):
+    def ProcessRow(self, row_with_complex_parsed: Tuple):
+        line : List[typing.Any]
         line = [None] * len(self._all_columns)
         for i,col in enumerate(row_with_complex_parsed):
             # So, I'm only using columns_to_indices for the JSON stuff,

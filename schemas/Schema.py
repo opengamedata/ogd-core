@@ -2,6 +2,7 @@
 import logging
 import os
 import typing
+from typing import Dict, List, Union
 # import local files
 import utils
 
@@ -23,8 +24,8 @@ class Schema:
     #                     (if the path does not end in "/", a "/" will be appended)
     def __init__(self, schema_name:str, schema_path:str = os.path.dirname(__file__) + "/JSON/"):
         # define instance vars
-        self._schema:       typing.Dict = {}
-        self._feature_list: typing.List = None
+        self._schema:       Dict = {}
+        self._feature_list: Union[List,None] = None
         # set instance vars
         if not schema_name.lower().endswith(".json"):
             schema_name += ".json"
@@ -32,8 +33,7 @@ class Schema:
             schema_path += "/"
         self._schema = utils.loadJSONFile(schema_name, schema_path)
         if self._schema is None:
-            utils.Logger.toFile(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
-            utils.Logger.toStdOut(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
+            utils.Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
         else:
             self._feature_list = list(self._schema["features"]["perlevel"].keys()) \
                                + list(self._schema["features"]["per_custom_count"].keys()) \
@@ -42,11 +42,11 @@ class Schema:
     def __getitem__(self, key):
         return self._schema[key]
 
-    def level_range(self) -> typing.Dict:
+    def level_range(self) -> Dict:
         return self["level_range"]
 
     ## Function to retrieve the dictionary of event types for the game.
-    def events(self) -> typing.Dict:
+    def events(self) -> Dict:
         return self["events"]
 
     ## Function to retrieve the names of all event types for the game.
@@ -54,27 +54,27 @@ class Schema:
         return self["events"].keys()
 
     ## Function to retrieve the dictionary of categorized features to extract.
-    def features(self) -> typing.Dict:
+    def features(self) -> Dict:
         return self["features"]
 
     ## Function to retrieve the dictionary of per-level features.
-    def perlevel_features(self) -> typing.Dict:
+    def perlevel_features(self) -> Dict:
         return self["features"]["perlevel"]
 
     ## Function to retrieve the dictionary of per-custom-count features.
-    def percount_features(self) -> typing.Dict:
+    def percount_features(self) -> Dict:
         return self["features"]["per_custom_count"]
 
     ## Function to retrieve the dictionary of aggregate features.
-    def aggregate_features(self) -> typing.Dict:
+    def aggregate_features(self) -> Dict:
         return self["features"]["aggregate"]
 
     ## Function to retrieve the compiled list of all feature names.
-    def feature_list(self) -> typing.List:
+    def feature_list(self) -> Union[List, None]:
         return self._feature_list
 
     ## Function to retrieve the dictionary of database columns.
-    def db_columns_with_types(self) -> typing.Dict:
+    def db_columns_with_types(self) -> Dict:
         return self["db_columns"]
 
     ## Function to retrieve the names of all database columns.

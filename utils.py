@@ -1,15 +1,13 @@
 ## @namespace utils
 #  A module of utility functions used in the feature_extraction_to_csv project
 import datetime
-import http
 import json
 import logging
-import math
-import MySQLdb
 import os
-import sshtunnel
 import traceback
 import typing
+from typing import Dict
+# local imports
 from config import settings
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
@@ -18,21 +16,21 @@ from config import settings
 #  @param path      The path (relative or absolute) to the folder containing the
 #                       JSON file. If path does not end in /, then "/" will be appended.
 #  @return          A python object parsed from the JSON.
-def loadJSONFile(filename: str, path:str = "./") -> object:
+def loadJSONFile(filename: str, path:str = "./") -> typing.Any:
     if not filename.lower().endswith(".json"):
         Logger.toStdOut(f"Got a filename that didn't end with .json: {filename}, appending .json", logging.DEBUG)
         filename = filename + ".json"
+    # TODO: try out os.path.join, see if it'll work properly. Had troubles on Windows in other cases.
     if not path.endswith("/"):
         path = path + "/"
+    # once we've validated inputs, try actual loading and reading.
     ret_val = None
     try:
-        json_file = open(path+filename, "r")
+        with open(path+filename, "r") as json_file:
+            ret_val = json.loads(json_file.read())
     except FileNotFoundError as err:
         Logger.toStdOut(f"File {path+filename} does not exist.", logging.WARNING)
         raise err
-    try:
-        ret_val = json.loads(json_file.read())
-        json_file.close()
     except Exception as err:
         Logger.toStdOut(f"Could not read file at {path+filename}\nFull error message: {type(err)} {str(err)}\nCurrent directory: {os.getcwd()}",
                         logging.ERROR)
@@ -42,35 +40,34 @@ def loadJSONFile(filename: str, path:str = "./") -> object:
 def GenerateReadme(game_name:str, schema, path:str = "./"):
     try:
         os.makedirs(name=path, exist_ok=True)
-        readme = open(f"{path}/readme.md", "w")
-        # 1. Open files with game-specific readme data, and global db changelog.
-        try:
-            readme_src = open(f"./doc/readme_src/{game_name}_readme_src.md", "r")
-            readme.write(readme_src.read())
-            readme_src.close()
-        except FileNotFoundError as err:
-            readme.write("No readme prepared")
-            Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.WARNING)
-        finally:
-            readme.write("\n")
-        # 2. Use schema to write feature & column descriptions to the readme.
-        feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-        readme.write(GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
-                                                            sessions_field_list=feature_descriptions))
-        # 3. Append any important data from the data changelog.
-        try:
-            changelog_src = open("./doc/readme_src/changelog_src.md", "r")
-            readme.write(changelog_src.read())
-        except FileNotFoundError as err:
-            readme.write("No changelog prepared")
-            Logger.toStdOut(f"Could not find changelog_src", logging.WARNING)
+        with open(f"{path}/readme.md", "w") as readme:
+            # 1. Open files with game-specific readme data, and global db changelog.
+            try:
+                with open(f"./doc/readme_src/{game_name}_readme_src.md", "r") as readme_src:
+                    readme.write(readme_src.read())
+            except FileNotFoundError as err:
+                readme.write("No readme prepared")
+                Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.WARNING)
+            finally:
+                readme.write("\n")
+            # 2. Use schema to write feature & column descriptions to the readme.
+            feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
+            readme.write(GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
+                                                                sessions_field_list=feature_descriptions))
+            # 3. Append any important data from the data changelog.
+            try:
+                with open("./doc/readme_src/changelog_src.md", "r") as changelog_src:
+                    readme.write(changelog_src.read())
+            except FileNotFoundError as err:
+                readme.write("No changelog prepared")
+                Logger.toStdOut(f"Could not find changelog_src", logging.WARNING)
+    except FileNotFoundError as err:
+        Logger.Log(f"Could not open readme.md for writing.", logging.ERROR)
+        traceback.print_tb(err.__traceback__)
     except Exception as err:
         msg = f"{type(err)} {str(err)}"
-        Logger.toStdOut(msg, logging.ERROR)
+        Logger.Log(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
-        Logger.toFile(msg, logging.ERROR)
-    finally:
-        readme.close()
 
 ## Function to generate metadata for a given game.
 #  The "fields" are a sort of generalization of columns. Basically, columns which
@@ -81,7 +78,7 @@ def GenerateReadme(game_name:str, schema, path:str = "./"):
 #  @param raw_field_list    A mapping of raw csv "fields" to descriptions of the fields.
 #  @param sessions_field_list   A mapping of session csv features to descriptions of the features.
 #  @return                  A string containing metadata for the given game.
-def GenCSVMetadata(game_name: str, raw_field_list: typing.Dict[str,str], sessions_field_list: typing.Dict[str,str]) -> str:
+def GenCSVMetadata(game_name: str, raw_field_list: Dict[str,str], sessions_field_list: Dict[str,str]) -> str:
     raw_field_descriptions = [f"{key} - {raw_field_list[key]}" for key in raw_field_list.keys()]
     sessions_field_descriptions = [f"{key} - {sessions_field_list[key]}" for key in sessions_field_list.keys()]
     raw_field_string = "\n".join(raw_field_descriptions)
@@ -114,241 +111,6 @@ f"## Field Day Open Game Data \n\
 def dateToFileSafeString(date: datetime.datetime):
     return f"{date.month}-{date.day}-{date.year}"
 
-## Dumb struct to collect data used to establish a connection to a SQL database.
-class SQLLogin:
-    def __init__(self, host: str, port: int, user: str, pword: str, db_name: str):
-        self.host    = host
-        self.port    = port
-        self.user    = user
-        self.pword   = pword
-        self.db_name = db_name
-
-## Dumb struct to collect data used to establish a connection over ssh.
-class SSHLogin:
-    def __init__(self, host: str, port: int, user: str, pword: str):
-        self.host    = host
-        self.port    = port
-        self.user    = user
-        self.pword   = pword
-
-## @class SQL
-#  A utility class containing some functions to assist in retrieving from a database.
-#  Specifically, helps to connect to a database, make selections, and provides
-#  a nicely formatted 500 error message.
-class SQL:
-    ## Function to set up a connection to a database, via an ssh tunnel if available.
-    #  @return A tuple consisting of the tunnel and database connection, respectively.
-    @staticmethod
-    def prepareDB(db_settings, ssh_settings) -> typing.Tuple[object, object]:
-        # Load settings, set up consts.
-        DB_NAME_DATA = db_settings["DB_NAME_DATA"]
-        DB_USER = db_settings['DB_USER']
-        DB_PW = db_settings['DB_PW']
-        DB_HOST = db_settings['DB_HOST']
-        DB_PORT = db_settings['DB_PORT']
-        SSH_USER = ssh_settings['SSH_USER']
-        SSH_PW = ssh_settings['SSH_PW']
-        SSH_HOST = ssh_settings['SSH_HOST']
-        SSH_PORT = ssh_settings['SSH_PORT']
-
-        # set up other global vars as needed:
-        sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
-        # Logger.toStdOut("We're preparing database.", logging.INFO)
-        if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
-            # Logger.toStdOut(f"Setting up ssh host connection.", logging.INFO)
-            ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
-            tunnel,db_cursor = SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
-        else:
-            # Logger.toStdOut("Skipping SSH part of login.", logging.INFO)
-            db_cursor = SQL.connectToMySQL(login=sql_login)
-            tunnel = None
-        return (tunnel, db_cursor)
-
-    ## Function to help connect to a mySQL server.
-    #  Simply tries to make a connection, and prints an error in case of failure.
-    #
-    #  @param host      The name of the database host server.
-    #  @param port      The database server port to which we want to connect.
-    #  @param user      Username for connecting to the database.
-    #  @param password  The given user's password.
-    #  @param database  The actual name of the database on the host.
-    #  @return          An open connection to the database if successful,
-    #                       otherwise None.
-    @staticmethod
-    def connectToMySQL(login: SQLLogin):
-        try:
-            conn = MySQLdb.connect(host = login.host, port = login.port,
-                                   user = login.user, password = login.pword,
-                                   database = login.db_name, charset='utf8')
-            Logger.toStdOut(f"Connected to SQL (no SSH) at {login.host}:{login.port}/{login.db_name}, {login.user}", logging.INFO)
-            return conn
-        #except MySQLdb.connections.Error as err:
-        except Exception as err:
-            msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
-            Logger.toStdOut(msg, logging.ERROR)
-            Logger.toPrint(msg, logging.ERROR)
-            traceback.print_tb(err.__traceback__)
-            return None
-
-    ## Function to help connect to a mySQL server over SSH.
-    #  Simply tries to make a connection, and prints an error in case of failure.
-    #
-    #  @param host      The name of the database host server.
-    #  @param port      The database server port to which we want to connect.
-    #  @param user      Username for connecting to the database.
-    #  @param password  The given user's password.
-    #  @param database  The actual name of the database on the host.
-    #  @return          An open connection to the database if successful,
-    #                       otherwise None.
-    @staticmethod
-    def connectToMySQLViaSSH(sql: SQLLogin, ssh: SSHLogin):
-        tries = 0
-        connected_ssh = False
-        while tries < 5 and connected_ssh == False:
-            if tries > 0:
-                Logger.toStdOut("Re-attempting to connect to SSH.", logging.INFO)
-            try:
-                # First, connect to SSH
-                tunnel = sshtunnel.SSHTunnelForwarder(
-                    (ssh.host, ssh.port), ssh_username=ssh.user, ssh_password=ssh.pword,
-                    remote_bind_address=(sql.host, sql.port), logger=Logger.std_logger
-                )
-                tunnel.start()
-                connected_ssh = True
-                Logger.toStdOut(f"Connected to SSH at {ssh.host}:{ssh.port}, {ssh.user}", logging.INFO)
-            except Exception as err:
-                msg = f"Could not connect to the SSH: {type(err)} {str(err)}"
-                Logger.Log(msg, logging.ERROR)
-                Logger.toPrint(msg, logging.ERROR)
-                traceback.print_tb(err.__traceback__)
-                tries = tries + 1
-        if connected_ssh:
-            # Then, connect to MySQL
-            try:
-                conn = MySQLdb.connect(host = sql.host, port = tunnel.local_bind_port,
-                                            user = sql.user, password = sql.pword,
-                                            database = sql.db_name, charset='utf8')
-                Logger.toStdOut(f"Connected to SQL (via SSH) at {sql.host}:{tunnel.local_bind_port}/{sql.db_name}, {sql.user}", logging.INFO)
-                return (tunnel, conn)
-            except Exception as err:
-                msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
-                Logger.Log(msg, logging.ERROR)
-                Logger.toPrint(msg, logging.ERROR)
-                traceback.print_tb(err.__traceback__)
-                if tunnel is not None:
-                    tunnel.stop()
-                return (None, None)
-        else:
-            return (None, None)
-
-    @staticmethod
-    def disconnectMySQLViaSSH(tunnel, db):
-        if db is not None:
-            db.close()
-            # Logger.toStdOut("Closed database connection", logging.INFO)
-        else:
-            Logger.toStdOut("No db to close.", logging.INFO)
-        if tunnel is not None:
-            tunnel.stop()
-            # Logger.toStdOut("Stopped tunnel connection", logging.INFO)
-        # else:
-            # Logger.toStdOut("No tunnel to stop", logging.INFO)
-
-
-
-    ## Function to build and execute SELECT statements on a database connection.
-    #  @param cursor        A database cursor, retrieved from the active connection.
-    #  @param db_name       The name of the database to which we are connected.
-    #  @param table         The name of the table from which we want to make a selection.
-    #  @param columns       A list of columns to be selected. If empty (or None),
-    #                           all columns will be used (SELECT * FROM ...).
-    #                           Default: None
-    #  @param filter        A string giving the constraints for a WHERE clause.
-    #                           (The "WHERE" term itself should not be part of the filter string)
-    #                           Default: None
-    #  @param limit         The maximum number of rows to be selected. Use -1 for no limit.
-    #                           Default: -1
-    #  @param sort_columns  A list of columns to sort results on. The order of columns
-    #                           in the list is the order given to SQL
-    #                           Default: None
-    #  @param sort_direction The "direction" of sorting, either ascending or descending.
-    #                           Default: "ASC"
-    #  @param grouping      A column name to group results on. Subject to SQL rules for grouping.
-    #                           Default: None
-    #  @param distinct      A bool to determine whether to select only rows with
-    #                           distinct values in the column.
-    #                           Default: False
-    #  @param distinct      A bool to determine whether all results should be fetched and returned.
-    #                           Default: True
-    #  @return              A collection of all rows from the selection, if fetch_results is true,
-    #                           otherwise None.
-    @staticmethod
-    def SELECT(cursor, db_name: str, table:str, columns: typing.List[str] = None, join: str = None, filter: str = None, limit: int = -1,
-               sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
-               distinct: bool = False, fetch_results: bool = True) -> typing.List[typing.Tuple]:
-        query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, join=join, filter=filter, limit=limit,
-                                   sort_columns=sort_columns, sort_direction=sort_direction, grouping=grouping,
-                                   distinct=distinct)
-        return SQL.SELECTfromQuery(cursor=cursor, query=query, fetch_results=fetch_results)
-
-    @staticmethod
-    def SELECTfromQuery(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
-        Logger.toStdOut("Running query: " + query, logging.DEBUG)
-        # print(f"running query: {query}")
-        start = datetime.datetime.now()
-        cursor.execute(query)
-        time_delta = datetime.datetime.now()-start
-        num_min = math.floor(time_delta.total_seconds()/60)
-        num_sec = time_delta.total_seconds() % 60
-        Logger.toStdOut(f"Query execution completed, time to execute: {num_min:d} min, {num_sec:.3f} sec", logging.DEBUG)
-        # print("Query execution completed, time to execute: {:d} min, {:.3f} sec".format( \
-        #     math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60 ) \
-        # )
-        result = cursor.fetchall() if fetch_results else None
-        time_delta = datetime.datetime.now()-start
-        num_min = math.floor(time_delta.total_seconds()/60)
-        num_sec = time_delta.total_seconds() % 60
-        Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result):d} rows", logging.DEBUG)
-        # print("Query fetch completed, total query time:    {:d} min, {:.3f} sec to get {:d} rows".format( \
-        #     math.floor(time_delta.total_seconds()/60), time_delta.total_seconds() % 60, len(result) ) \
-        # )
-        return result
-
-    @staticmethod
-    def _prepareSelect(db_name: str, table:str, columns: typing.List[str] = None, join: str = None, filter: str = None, limit: int = -1,
-               sort_columns: typing.List[str] = None, sort_direction = "ASC", grouping: str = None,
-               distinct: bool = False):
-        d = "DISTINCT " if distinct else ""
-        cols      = ",".join(columns)      if columns is not None      and len(columns) > 0      else "*"
-        sort_cols = ",".join(sort_columns) if sort_columns is not None and len(sort_columns) > 0 else None
-        table_path = db_name + "." + str(table)
-
-        sel_clause   = "SELECT " + d + cols + " FROM " + table_path
-        join_clause  = "" if join      is None else f" {join}"
-        where_clause = "" if filter    is None else f" WHERE {filter}"
-        group_clause = "" if grouping  is None else f" GROUP BY {grouping}"
-        sort_clause  = "" if sort_cols is None else f" ORDER BY {sort_cols} {sort_direction} "
-        lim_clause   = "" if limit < 0         else f" LIMIT {str(limit)}"
-
-        return sel_clause + join_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
-
-    @staticmethod
-    def Query(cursor, query: str, fetch_results: bool = True) -> typing.List[typing.Tuple]:
-        Logger.toStdOut("Running query: " + query, logging.DEBUG)
-        start = datetime.datetime.now()
-        cursor.execute(query)
-        Logger.toStdOut(f"Query execution completed, time to execute: {datetime.datetime.now()-start}", logging.DEBUG)
-        return [col[0] for col in cursor.fetchall()] if fetch_results else None
-
-    ## Simple function to construct and log a nice server 500 error message.
-    #  @param err_msg A more detailed error message with info to help debugging.
-    @staticmethod
-    def server500Error(err_msg: str):
-        val = http.HTTPStatus.INTERNAL_SERVER_ERROR.value
-        phrase = http.HTTPStatus.INTERNAL_SERVER_ERROR.phrase
-        Logger.toStdOut(f"HTTP Response: {val}{phrase}", logging.ERROR)
-        Logger.toStdOut(f"Error Message: {err_msg}", logging.ERROR)
-
 class Logger:
     # Set up loggers. First, the std out logger
     std_logger = logging.getLogger("std_logger")
@@ -378,10 +140,10 @@ class Logger:
         debug_handler.setLevel(level=logging.DEBUG)
         file_logger.addHandler(debug_handler)
     finally:
-        file_logger.debug("Testing error logger")
+        file_logger.debug("Testing file logger")
 
     @staticmethod
-    def toFile(message, level=logging.DEBUG):
+    def toFile(message:str, level=logging.DEBUG) -> None:
         now = datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
         if Logger.file_logger is not None:
             if level == logging.DEBUG:
@@ -394,7 +156,7 @@ class Logger:
                 Logger.file_logger.error(f"ERROR: {now} {message}")
 
     @staticmethod
-    def toStdOut(message, level=logging.DEBUG):
+    def toStdOut(message:str, level=logging.DEBUG) -> None:
         if Logger.std_logger is not None:
             if level == logging.DEBUG:
                 Logger.std_logger.debug(f"DEBUG: {message}")
@@ -408,12 +170,12 @@ class Logger:
     # Function to print a method to both the standard out and file logs.
     # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
     @staticmethod
-    def Log(message, level=logging.DEBUG):
+    def Log(message:str, level=logging.DEBUG) -> None:
         Logger.toFile(message, level)
         Logger.toStdOut(message, level)
 
     @staticmethod
-    def toPrint(message, level=logging.DEBUG):
+    def toPrint(message:str, level=logging.DEBUG) -> None:
         if level == logging.DEBUG:
             print(f"debug: {message}")
         elif level == logging.INFO:

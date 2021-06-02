@@ -8,18 +8,19 @@ import traceback
 import typing
 from datetime import datetime, timedelta
 # # import local files
-import Request
 import utils
 from config import settings
-from feature_extractors.Extractor import Extractor
-from feature_extractors.CrystalExtractor import CrystalExtractor
-from feature_extractors.WaveExtractor import WaveExtractor
-from feature_extractors.LakelandExtractor import LakelandExtractor
-from GameTable import GameTable
+from extractors.Extractor import Extractor
+from extractors.CrystalExtractor import CrystalExtractor
+from extractors.WaveExtractor import WaveExtractor
+from extractors.LakelandExtractor import LakelandExtractor
+from schemas.TableSchema import TableSchema
+from interfaces.MySQLInterface import SQL
 from managers.SessionProcessor import SessionProcessor
 from models.Model import ModelInputType
 # from models.Model import *
 from realtime.ModelManager import ModelManager
+from Request import Request
 from schemas.Schema import Schema
 
 ## Class to handle API calls for the realtime page.
@@ -170,18 +171,18 @@ class SimRTServer:
         cur_level: int
         idle_time: int
     
-        tunnel,db = utils.SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
+        tunnel,db = SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
         try:
             cursor = db.cursor()
             # filt = f"`session_id`='{sess_id}' AND `event`='COMPLETE' AND `time_elapsed` < {sim_time}"
-            # max_level_raw = utils.SQL.SELECT(cursor=cursor,
+            # max_level_raw = SQL.SELECT(cursor=cursor,
             #                                  db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
             #                                  columns=["MAX(level)"], filter=filt)
             filt = f"`session_id`='{sess_id}' AND `time_elapsed` < {sim_time}"
-            cur_level_raw = utils.SQL.SELECT(cursor=cursor,
+            cur_level_raw = SQL.SELECT(cursor=cursor,
                                              db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
-                                             columns=["level", "server_time"], filter=filt, limit=1,\
-                                             sort_columns=["client_time"], sort_direction="DESC")
+                                             columns=["level", "server_time"], filter=filt,\
+                                             sort_columns=["client_time"], sort_direction="DESC", limit=1)
             max_level = 0
             # max_level = max_level_raw[0][0] if max_level_raw[0][0] != None else 0
             cur_level = cur_level_raw[0][0]
@@ -191,7 +192,7 @@ class SimRTServer:
             utils.Logger.toFile(f"Got an error in getGameProgress: {str(err)}", logging.ERROR)
             raise err
         finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             return {"max_level": max_level, "cur_level": cur_level, "idle_time": idle_time}
 
     ## Handler to get a list of all feature names for a given game.
@@ -233,7 +234,7 @@ class SimRTServer:
     @staticmethod
     def getModelsBySessID(sess_id: str, game_id: str, sim_time: int, models):
         # start_time = datetime.now()
-        tunnel,db = utils.SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
+        tunnel,db = SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
         try:
             prog = SimRTServer.getGameProgress(sess_id=sess_id, game_id=game_id, sim_time=sim_time)
             max_level = prog["max_level"]
@@ -283,7 +284,7 @@ class SimRTServer:
             ret_val = {"NoModel": {"name":"No Model", "value":f"No models for {game_id}"}}
             raise err
         finally:
-            utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+            SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
             # print(f"returning from realtime, with session_models. Time spent was {(datetime.now()-start_time).seconds} seconds.")
             return {sess_id:ret_val}
 
@@ -305,7 +306,7 @@ class SimRTServer:
     def _fetchActiveSessions(game_id, require_player_id, class_id, sim_time):
         if SimRTServer.rt_settings["data_source"] == "DB":
             try:
-                tunnel,db = utils.SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
+                tunnel,db = SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
                 #+++
                 start = datetime.now()
                 #---
@@ -314,7 +315,7 @@ class SimRTServer:
                 player_id_filter = "AND `player_id` IS NOT NULL" if require_player_id else ""
                 join_statement   = "INNER JOIN players ON `player_id`" if class_id is not None else ""
                 filt = f"`app_id`='{game_id}' AND `time_elapsed` < {sim_time} AND `time_elapsed` >= {max(0, sim_time-active_window)} {player_id_filter} {join_statement}"
-                active_sessions_raw = utils.SQL.SELECT(cursor=cursor,
+                active_sessions_raw = SQL.SELECT(cursor=cursor,
                                                     db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
                                                     columns=["session_id", "player_id"], filter=filt,\
                                                     sort_columns=["session_id"], distinct=True)
@@ -331,22 +332,22 @@ class SimRTServer:
                 utils.Logger.toFile(f"Got an error in _fetchActiveSessions: {msg}", logging.ERROR)
                 raise err
             finally:
-                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+                SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
         elif SimRTServer.rt_settings["data_source"] == "FILE":
             raise Exception("not supported!") # TODO: remove this line after implementing the queries.
         return active_sessions_raw
     
     @staticmethod
-    def _fetchSessionData(session_id, settings, request, sim_time):
+    def _fetchSessionData(session_id, settings, request:Request, sim_time):
         session_data = []
         if SimRTServer.rt_settings["data_source"] == "DB":
             try:
-                tunnel,db = utils.SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
-                game_table = GameTable.FromDB(db=db, settings=settings, request=request)
+                tunnel,db = SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
+                game_table = TableSchema.FromDB(db=db, settings=settings, game_id=request.GetGameID(), ids=[session_id])
                 utils.Logger.toFile(f"Getting all features for session {session_id}", logging.INFO)
                 cursor = db.cursor()
                 filt = f"`session_id`='{session_id}' AND `time_elapsed` < {sim_time}"
-                session_data = utils.SQL.SELECT(cursor=cursor,
+                session_data = SQL.SELECT(cursor=cursor,
                                                 db_name=SimRTServer.DB_NAME_DATA, table=SimRTServer.DB_TABLE,\
                                                 filter=filt,\
                                                 sort_columns=["session_n", "client_time"])
@@ -357,7 +358,7 @@ class SimRTServer:
                 utils.Logger.toFile(f"Got an error in _fetchSessionData: {msg}", logging.ERROR)
                 raise err
             finally:
-                utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+                SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
         elif SimRTServer.rt_settings["data_source"] == "FILE":
             raise Exception("not supported!") # TODO: remove this line after implementing the queries.
 

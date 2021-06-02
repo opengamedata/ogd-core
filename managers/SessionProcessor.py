@@ -3,10 +3,10 @@ import json
 import logging
 import traceback
 import typing
+from typing import Dict, Tuple
 # import local files
-import GameTable
+from schemas.TableSchema import TableSchema
 import utils
-from feature_extractors.WaveExtractor import WaveExtractor
 from schemas.Schema import Schema
 
 ## @class SessionProcessor
@@ -17,21 +17,21 @@ class SessionProcessor:
     #  use.
     #
     #  @param ExtractorClass The type of data extractor to use for input data.
-    #         This should correspond to whatever game_id is in the GameTable.
+    #         This should correspond to whatever game_id is in the TableSchema.
     #  @param game_table    A data structure containing information on how the db
     #                       table assiciated with the given game is structured. 
     #  @param game_schema   A dictionary that defines how the game data itself
     #                       is structured.
     #  @param sessions_csv_file The output file, to which we'll write the processed
     #                       feature data.
-    def __init__(self, ExtractorClass: type, game_table: GameTable, game_schema: Schema,
-                 sessions_csv_file: typing.IO.writable):
+    def __init__(self, ExtractorClass: type, game_table: TableSchema, game_schema: Schema,
+                 sessions_csv_file: typing.IO[str]):
         ## Define instance vars
-        self._ExtractorClass:     type               = ExtractorClass
-        self._game_table:         GameTable          = game_table
-        self._game_schema:        Schema             = game_schema
-        self._sessions_file:          typing.IO.writable = sessions_csv_file
-        self._session_extractors: typing.Dict[str, self._ExtractorClass] = {}
+        self._ExtractorClass:     type                            = ExtractorClass
+        self._game_table:         TableSchema                     = game_table
+        self._game_schema:        Schema                          = game_schema
+        self._sessions_file:      typing.IO[str]                  = sessions_csv_file
+        self._session_extractors: Dict[str, self._ExtractorClass] = {}
 
     ## Function to handle processing of a single row of data.
     #  Basically just responsible for ensuring an extractor for the session
@@ -39,7 +39,7 @@ class SessionProcessor:
     #  to that extractor.
     #  @param row_with_complex_parsed A tuple of the row data. We assume the
     #                      event_data_complex has already been parsed from JSON.
-    def ProcessRow(self, row_with_complex_parsed: typing.Tuple):
+    def ProcessRow(self, row_with_complex_parsed: Tuple):
         session_id = row_with_complex_parsed[self._game_table.session_id_index]
         # ensure we have an extractor for the given session:
         if not session_id in self._session_extractors.keys():
