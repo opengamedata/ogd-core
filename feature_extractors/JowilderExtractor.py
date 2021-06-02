@@ -3,15 +3,16 @@ import bisect
 import json
 import logging
 import math
-import typing
 import datetime
+import numpy as np
 import sys
+import typing
 import traceback
 from collections import defaultdict, deque
 from config import settings
+from typing import Tuple, Union
 ## import local files
 import utils
-import numpy as np
 from sklearn.linear_model import LinearRegression
 from feature_extractors.Extractor import Extractor
 from schemas.TableSchema import TableSchema
@@ -115,11 +116,11 @@ class JowilderExtractor(Extractor):
         self._CLIENT_START_TIME = None
         self.game_started = False
         self.setValByName(feature_name="sessionID", new_value=session_id)
-        self.level = None
+        self.level : Union[int,None] = None
         self._cur_levels = []
         self.cur_question = 0
         self._VERSION = None
-        self.last_display_time_text = ()
+        self.last_display_time_text : Tuple = ()
         self.average_handler_level = defaultdict(lambda: {k: {'n': 0, 'total': 0} for k in self._level_range})
         self.average_handler_interaction = defaultdict(lambda: {k: {'n': 0, 'total': 0} for k in range(189)})
         self.average_handler_session = defaultdict(lambda: {'n': 0, 'total': 0})
@@ -823,7 +824,7 @@ class JowilderExtractor(Extractor):
             answer_char = je.interactive_entry_to_char(self.chosen_answer)
             if self.cur_question in [10,16] and incorrect and answer_char == je._answer_chars[self.cur_question]:
                 answer_char = '?'
-            prev_answers = self.getValByIndex('answers', self.cur_question)
+            prev_answers : str = self.getValByIndex('answers', self.cur_question)
             if prev_answers in JowilderExtractor._NULL_FEATURE_VALS:
                 self.setValByIndex('answers', self.cur_question, '')
                 prev_answers = ''
@@ -1201,7 +1202,7 @@ class JowilderExtractor(Extractor):
         if prev_val in JowilderExtractor._NULL_FEATURE_VALS or val < prev_val:
             self.setValByName(feature_name=feature_name, new_value=val)
 
-    def _get_default_val(self, feature_name):
+    def _get_default_val(self, feature_name) -> Union[float,datetime.timedelta,typing.Literal[0]]:
         startswith = lambda prefix: feature_name.startswith(JowilderExtractor._SESS_PREFIX+prefix) or \
             feature_name.startswith(JowilderExtractor._LEVEL_PREFIX+prefix)
         if startswith('min_'):
