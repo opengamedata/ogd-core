@@ -19,6 +19,7 @@ import typing
 from collections import defaultdict, Counter
 from copy import deepcopy
 from math import sqrt
+from typing import List, Union
 
 ## import local files
 import utils
@@ -93,7 +94,7 @@ class LakelandExtractor(Extractor):
     #                    table associated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema, sessions_file: typing.IO.writable):
+    def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema, sessions_file: typing.IO[str]):
         # Set window and overlap size
         config = game_schema['config']
         self._NUM_SECONDS_PER_WINDOW = config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
@@ -1497,8 +1498,8 @@ class LakelandExtractor(Extractor):
         self.debug_strs = []
         
     def reset(self):
-        self.levels:       typing.List[int]  = []
-        self.last_adjust_type: str           = None
+        self.levels:           List[int]       = []
+        self.last_adjust_type: Union[str,None] = None
         self.features:     Extractor.SessionFeatures = Extractor.SessionFeatures(self._level_range, self._GAME_SCHEMA)
         self.setValByName('sessID', new_value=self.session_id)
 
