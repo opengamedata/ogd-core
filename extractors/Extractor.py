@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Tuple, Union
 ## import local files
 import utils
 from schemas.TableSchema import TableSchema
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 from collections import defaultdict
 from datetime import timedelta
 
@@ -17,9 +17,9 @@ from datetime import timedelta
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
 class Extractor(abc.ABC):
-    ## @var Schema _schema
+    ## @var GameSchema _schema
     #  The schema specifying structure of data associated with an extractor.
-    _schema: Schema
+    _schema: GameSchema
 
     ## Base constructor for Extractor classes.
     #  The constructor sets an extractor's session id and range of levels,
@@ -30,7 +30,7 @@ class Extractor(abc.ABC):
     #                     table assiciated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema,
+    def __init__(self, session_id: int, game_table: TableSchema, game_schema: GameSchema,
                  level_range: range = None):
         self.session_id   : int         = session_id
         self._level_range : range       = level_range if (level_range is not None) else range(game_table.min_level, game_table.max_level+1)
@@ -50,13 +50,13 @@ class Extractor(abc.ABC):
     #                     structured.
     #  @param file        An open csv file to which we will write column headers.
     @staticmethod
-    def writeCSVHeader(game_table: TableSchema, game_schema: Schema, file: typing.IO[str]) -> None:
+    def writeCSVHeader(game_table: TableSchema, game_schema: GameSchema, file: typing.IO[str]) -> None:
         columns = Extractor.getFeatureNames(game_table=game_table, game_schema=game_schema)
         file.write(",".join(columns))
         file.write("\n")
 
     @staticmethod
-    def getFeatureNames(game_table: TableSchema, game_schema: Schema) -> List[str]:
+    def getFeatureNames(game_table: TableSchema, game_schema: GameSchema) -> List[str]:
         columns = []
         features = Extractor.SessionFeatures.generateFeatureDict(range(game_table.min_level, game_table.max_level+1), game_schema)
         for key in features.keys():
@@ -149,7 +149,7 @@ class Extractor(abc.ABC):
     #  the actual extractor code easier to read/write, since there is less need
     #  to understand the structure of feature data.
     class SessionFeatures:
-        def __init__(self, level_range: range, game_schema: Schema):
+        def __init__(self, level_range: range, game_schema: GameSchema):
             self.perlevels: List = list(game_schema.perlevel_features().keys())
             self.features = Extractor.SessionFeatures.generateFeatureDict(level_range, game_schema)
 
@@ -160,7 +160,7 @@ class Extractor(abc.ABC):
         #  @param level_range The range of all levels for the game associated with an extractor.
         #  @param game_schema A dictionary that defines how the game data is structured.
         @staticmethod
-        def generateFeatureDict(level_range: range, game_schema: Schema) -> Dict:
+        def generateFeatureDict(level_range: range, game_schema: GameSchema) -> Dict:
             # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
             # which in turn maps each level to a value and prefix.
             perlevels = game_schema.perlevel_features()

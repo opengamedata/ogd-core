@@ -5,7 +5,7 @@ import pandas as pd
 from schemas.TableSchema import TableSchema
 from extractors.LakelandExtractor import LakelandExtractor
 from realtime.ModelManager import ModelManager
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 
 dump = pd.read_csv(
     "tests/test_data/LAKELAND_20200828_to_20200828 2/LAKELAND_20200828_to_20200828_d45ae97_dump.tsv", sep='\t')
@@ -15,7 +15,7 @@ proc = pd.read_csv("tests/test_data/LAKELAND_20200828_to_20200828/LAKELAND_20200
 # print(df.columns)
 model_name = 'PopAchVelocityModel'
 file_version = 'v18'
-schema = Schema("LAKELAND", "schemas/JSON/")
+schema = GameSchema("LAKELAND", "schemas/JSON/")
 model_mgr = ModelManager(game_name="LAKELAND")
 table = TableSchema.FromCSV(dump)
 session_id_list = dump.session_id.unique()

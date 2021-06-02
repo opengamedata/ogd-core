@@ -6,14 +6,14 @@ from typing import Dict, List, Union
 # import local files
 import utils
 
-## @class Schema
+## @class GameSchema
 #  A fairly simple class that reads a JSON schema with information on how a given
 #  game's data is structured in the database, and the features we want to extract
 #  for that game.
 #  The class includes several functions for easy access to the various parts of
 #  this schema data.
-class Schema:
-    ## Constructor for the Schema class.
+class GameSchema:
+    ## Constructor for the GameSchema class.
     #  Given a path and filename, it loads the data from a JSON schema,
     #  storing the full schema into a private variable, and compiling a list of
     #  all features to be extracted.
