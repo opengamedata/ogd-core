@@ -1,7 +1,8 @@
 ## import standard libraries
 import typing
 import pandas as pd
-from typing import List, Tuple
+from typing import List, Tuple, Union
+from pandas.io.parsers import TextFileReader
 ## import local files
 from interfaces.MySQLInterface import SQL
 from schemas.Schema import Schema
@@ -67,7 +68,7 @@ class TableSchema:
         return TableSchema(game_id=game_id, column_names=[str(col) for col in col_names], session_ids=ids, max_level=max_level, min_level=min_level)
 
     @staticmethod
-    def FromCSV(data_frame: pd.DataFrame):
+    def FromCSV(data_frame: Union[pd.DataFrame, TextFileReader]):
         col_names = list(data_frame.columns)
         game_id = data_frame['app_id'][0]
         sess_ids = data_frame['session_id'].unique().tolist()
