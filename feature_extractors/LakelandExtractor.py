@@ -95,7 +95,7 @@ class LakelandExtractor(Extractor):
     #                     structured.
     def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema, sessions_file: typing.IO.writable):
         # Set window and overlap size
-        config = game_schema.schema()['config']
+        config = game_schema['config']
         self._NUM_SECONDS_PER_WINDOW = config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
         self._NUM_SECONDS_PER_WINDOW_OVERLAP = config["WINDOW_OVERLAP_SECONDS"]
         self._GAME_SCHEMA = game_schema

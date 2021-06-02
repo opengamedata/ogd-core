@@ -104,7 +104,7 @@ class JowilderExtractor(Extractor):
 
     def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
-        config = game_schema.schema()['config']
+        config = game_schema['config']
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
         self._IDLE_THRESH = datetime.timedelta(seconds=self._IDLE_THRESH_SECONDS)
 
