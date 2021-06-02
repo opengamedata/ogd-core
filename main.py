@@ -15,7 +15,6 @@ from typing import Dict, Tuple
 
 from pandas.io.pytables import Table
 # import local files
-import extractors.Extractor
 import Request
 import utils
 from config import settings
