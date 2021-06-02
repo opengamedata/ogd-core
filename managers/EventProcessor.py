@@ -6,7 +6,7 @@ from typing import List, Tuple, Union
 ## import local files
 import utils
 from schemas.TableSchema import TableSchema
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
@@ -20,7 +20,7 @@ class EventProcessor:
     #  @param game_schema   A dictionary that defines how the game data itself
     #                       is structured.
     #  @param events_csv_file The output file, to which we'll write the event game data.
-    def __init__(self, game_table: TableSchema, game_schema: Schema,
+    def __init__(self, game_table: TableSchema, game_schema: GameSchema,
                   events_csv_file: typing.IO[str]):
         # define instance vars
         self._lines             : List[str]      = []

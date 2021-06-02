@@ -21,7 +21,7 @@ from models.Model import ModelInputType
 # from models.Model import *
 from realtime.ModelManager import ModelManager
 from Request import Request
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 
 ## Class to handle API calls for the realtime page.
 #  Defines a bunch of static handler functions, one for each valid API call.
@@ -114,7 +114,7 @@ class SimRTServer:
             session_data, game_table = SimRTServer._fetchSessionData(sess_id, settings=settings, request=request, sim_time=sim_time)
             if len(session_data) > 0:
                 # return "Line 88: Killing features function in realtime.cgi."
-                schema = Schema(schema_name=f"{game_id}.json")
+                schema = GameSchema(schema_name=f"{game_id}.json")
                 extractor: Extractor
                 if game_id == "WAVES":
                     extractor = WaveExtractor(session_id=sess_id, game_table = game_table, game_schema=schema)
@@ -203,7 +203,7 @@ class SimRTServer:
     # def getFeatureNamesByGame(game_id: str) -> typing.Dict[str, typing.List]:
     #     ret_val: typing.Dict[str, typing.List]
     #     try:
-    #         schema: Schema = Schema(schema_name=f"{game_id}.json")
+    #         schema: GameSchema = GameSchema(schema_name=f"{game_id}.json")
     #         ret_val = {"features": schema.feature_list()}
     #     except Exception as err:
     #         utils.Logger.toFile(f"Got exception in getFeatureNamesByGame: {str(err)}", logging.ERROR)

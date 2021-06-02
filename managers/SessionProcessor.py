@@ -7,7 +7,7 @@ from typing import Dict, Tuple
 # import local files
 from schemas.TableSchema import TableSchema
 import utils
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.
@@ -24,12 +24,12 @@ class SessionProcessor:
     #                       is structured.
     #  @param sessions_csv_file The output file, to which we'll write the processed
     #                       feature data.
-    def __init__(self, ExtractorClass: type, game_table: TableSchema, game_schema: Schema,
+    def __init__(self, ExtractorClass: type, game_table: TableSchema, game_schema: GameSchema,
                  sessions_csv_file: typing.IO[str]):
         ## Define instance vars
         self._ExtractorClass:     type                            = ExtractorClass
         self._game_table:         TableSchema                     = game_table
-        self._game_schema:        Schema                          = game_schema
+        self._game_schema:        GameSchema                      = game_schema
         self._sessions_file:      typing.IO[str]                  = sessions_csv_file
         self._session_extractors: Dict[str, self._ExtractorClass] = {}
 

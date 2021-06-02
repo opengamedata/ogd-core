@@ -9,7 +9,7 @@ from MySQLdb import connect, connections, cursors
 from typing import Any, Dict, List, Tuple, Union
 # local imports
 from interfaces.DataInterface import DataInterface
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 from utils import Logger
 
 

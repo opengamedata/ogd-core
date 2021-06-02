@@ -12,7 +12,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from extractors.Extractor import Extractor
 from schemas.TableSchema import TableSchema
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 
 # temp comment
 
@@ -31,7 +31,7 @@ class WaveExtractor(Extractor):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema):
+    def __init__(self, session_id: int, game_table: TableSchema, game_schema: GameSchema):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
         self.start_times: Dict       = {}
         self.end_times:   Dict       = {}

@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any, Dict, IO, List, Tuple, Union
 ## import local files
 from interfaces.DataInterface import DataInterface
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 
 class CSVInterface(DataInterface):
     def __init__(self, game_id:str, filepath_or_buffer:Union[str, IO[bytes]], delim:str = ','):

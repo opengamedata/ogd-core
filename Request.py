@@ -9,7 +9,7 @@ import utils
 from schemas.TableSchema import TableSchema
 from interfaces.DataInterface import DataInterface
 from interfaces.MySQLInterface import SQL
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 
 
 ## @class ExporterFiles

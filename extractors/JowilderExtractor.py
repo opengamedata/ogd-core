@@ -16,7 +16,7 @@ import utils
 from sklearn.linear_model import LinearRegression
 from extractors.Extractor import Extractor
 from schemas.TableSchema import TableSchema
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 from game_info.Jowilder import Jowilder_Enumerators as je
 
 # temp comment
@@ -103,7 +103,7 @@ class JowilderExtractor(Extractor):
 
     _NULL_FEATURE_VALS = ['null', 0, None]
 
-    def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema):
+    def __init__(self, session_id: int, game_table: TableSchema, game_schema: GameSchema):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
         config = game_schema['config']
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']

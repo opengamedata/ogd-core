@@ -6,7 +6,7 @@ from typing import Dict, List, Tuple, Union
 ## import local files
 import utils
 from schemas.TableSchema import TableSchema
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 
 ## @class RawManager
 #  Class to manage data for a raw csv file.
@@ -21,7 +21,7 @@ class RawManager:
     #  @param game_schema   A dictionary that defines how the game data itself
     #                       is structured.
     #  @param sessions_csv_file The output file, to which we'll write the raw game data.
-    def __init__(self, game_table: TableSchema, game_schema: Schema,
+    def __init__(self, game_table: TableSchema, game_schema: GameSchema,
                  raw_csv_file: typing.IO[str]):
         # define instance vars
         self._lines             : List[str]      = []
@@ -96,7 +96,7 @@ class RawManager:
     #                     names of their member variables.
     # @return A list of all distinct column names from the game's event types.
     @staticmethod
-    def _generateJSONColumns(game_schema: Schema):
+    def _generateJSONColumns(game_schema: GameSchema):
         JSON_columns = []
         for event_type in game_schema.event_types():
             JSON_columns.extend([col for col in game_schema.events()[event_type].keys() if col not in JSON_columns])

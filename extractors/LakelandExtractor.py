@@ -25,7 +25,7 @@ from typing import List, Union
 import utils
 from extractors.Extractor import Extractor
 from schemas.TableSchema import TableSchema
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 
 # temp comment
 
@@ -94,7 +94,7 @@ class LakelandExtractor(Extractor):
     #                    table associated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema, sessions_file: typing.IO[str]):
+    def __init__(self, session_id: int, game_table: TableSchema, game_schema: GameSchema, sessions_file: typing.IO[str]):
         # Set window and overlap size
         config = game_schema['config']
         self._NUM_SECONDS_PER_WINDOW = config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']

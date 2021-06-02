@@ -5,7 +5,7 @@ from typing import List, Tuple, Union
 from pandas.io.parsers import TextFileReader
 ## import local files
 from interfaces.MySQLInterface import SQL
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 from schemas.Event import Event
 
 ## @class TableSchema
@@ -56,7 +56,7 @@ class TableSchema:
         db_cursor = db.cursor()
         col_names = SQL.Query(cursor=db_cursor, query=query)
         if game_id == 'LAKELAND':
-            lakeland_config = Schema('LAKELAND')['config']
+            lakeland_config = GameSchema('LAKELAND')['config']
             min_level = 0
             max_level = lakeland_config["MAX_SESSION_SECONDS"] // lakeland_config['WINDOW_SIZE_SECONDS']
         else:

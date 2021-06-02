@@ -25,7 +25,7 @@ from managers.SessionProcessor import SessionProcessor
 from managers.RawManager import RawManager
 from managers.EventProcessor import EventProcessor
 from Request import *
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 from extractors.WaveExtractor import WaveExtractor
 from extractors.CrystalExtractor import CrystalExtractor
 from extractors.LakelandExtractor import LakelandExtractor
@@ -118,7 +118,7 @@ class ExportManager:
 
     def _prepareSchema(self) -> Tuple[Schema, Union[type,None]]:
         game_extractor: Union[type,None] = None
-        game_schema: Schema  = Schema(schema_name=f"{self._game_id}.json")
+        game_schema: GameSchema  = GameSchema(schema_name=f"{self._game_id}.json")
         if self._game_id == "WAVES":
             game_extractor = WaveExtractor
         elif self._game_id == "CRYSTAL":
@@ -136,7 +136,7 @@ class ExportManager:
             raise Exception(f"Got an invalid game ID ({self._game_id})!")
         return game_schema, game_extractor
 
-    def _extractToCSVs(self, request:Request, file_manager:FileManager, game_schema: Schema, game_table: TableSchema, game_extractor: Union[type,None]):
+    def _extractToCSVs(self, request:Request, file_manager:FileManager, game_schema: GameSchema, game_table: TableSchema, game_extractor: Union[type,None]):
         try:
             sess_processor = raw_mgr = evt_processor = None
             if request._files.sessions and game_extractor is not None:

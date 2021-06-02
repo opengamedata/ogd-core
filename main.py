@@ -24,7 +24,7 @@ from interfaces.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface
 from managers.ExportManager import ExportManager
 from Request import Request, ExporterFiles, ExporterRange
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 from utils import Logger
 
 ## Function to print a "help" listing for the export tool.
@@ -102,7 +102,7 @@ def runExport(events: bool = False, features: bool = False):
     req       : Request
     start = datetime.now()
     exporter_files = ExporterFiles(events=events, raw=False, sessions=features) 
-    supported_vers = Schema(schema_name=f"{game_name}.json")['config']['SUPPORTED_VERS']
+    supported_vers = GameSchema(schema_name=f"{game_name}.json")['config']['SUPPORTED_VERS']
     if "--file" in opts.keys():
         file_path=opts["--file"]
         ext = file_path.split('.')[-1]
@@ -127,7 +127,7 @@ def runExport(events: bool = False, features: bool = False):
     # breakpoint()
     try:
         export_manager = ExportManager(game_id=game_name, settings=settings)
-        schema = Schema(game_name)
+        schema = GameSchema(game_name)
         export_manager.ExecuteRequest(request=req, game_schema=schema, table_schema=game_table)
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
@@ -150,7 +150,7 @@ def runExport(events: bool = False, features: bool = False):
 #  the csv's themselves). Further, the output is printed rather than written
 #  to file.
 def showGameInfo():
-    schema = Schema(schema_name=f"{game_name}.json")
+    schema = GameSchema(schema_name=f"{game_name}.json")
 
     feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
     print(utils.GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),\
@@ -163,7 +163,7 @@ def showGameInfo():
 def writeReadme():
     path = f"./data/{game_name}"
     try:
-        schema = Schema(schema_name=f"{game_name}.json")
+        schema = GameSchema(schema_name=f"{game_name}.json")
         utils.GenerateReadme(game_name=game_name, schema=schema, path=path)
         Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
     except Exception as err:
