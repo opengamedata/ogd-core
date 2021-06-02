@@ -4,6 +4,8 @@ import json
 import logging
 import math
 import typing
+import traceback
+from typing import Dict, List, Union
 ## import local files
 import utils
 import numpy as np
@@ -31,18 +33,18 @@ class WaveExtractor(Extractor):
     #                     structured.
     def __init__(self, session_id: int, game_table: TableSchema, game_schema: Schema):
         super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
-        self.start_times: typing.Dict       = {}
-        self.end_times:   typing.Dict       = {}
-        self.amp_move_counts:  typing.Dict   = {}
-        self.off_move_counts:  typing.Dict   = {}
-        self.wave_move_counts: typing.Dict   = {}
-        self.saw_first_move: typing.Dict[int, bool] = {}
+        self.start_times: Dict       = {}
+        self.end_times:   Dict       = {}
+        self.amp_move_counts:  Dict   = {}
+        self.off_move_counts:  Dict   = {}
+        self.wave_move_counts: Dict   = {}
+        self.saw_first_move: Dict[int, bool] = {}
         self.latest_complete_lvl8 = None
         self.latest_complete_lvl16 = None
         self.latest_answer_Q0 = None
         self.latest_answer_Q2 = None
         self.active_begin = None
-        self.move_closenesses_tx: typing.Dict = {}
+        self.move_closenesses_tx: Dict = {}
         self.features.setValByName(feature_name="sessionID", new_value=session_id)
         # we specifically want to set the default value for questionAnswered to None, for unanswered.
         for ans in self.features.getValByName(feature_name="questionAnswered").keys():
@@ -125,11 +127,11 @@ class WaveExtractor(Extractor):
                 try:
                     val   = self.amp_move_counts[lvl] / total_moves if total_moves > 0 else total_moves
                 except Exception as err:
+                    val = None
                     utils.Logger.toStdOut(f"Currently, total_moves = {total_moves}")
                     msg = f"{type(err)} {str(err)}"
-                    utils.Logger.toStdOut(msg, logging.ERROR)
+                    utils.Logger.Log(msg, logging.ERROR)
                     traceback.print_tb(err.__traceback__)
-                    utils.Logger.toFile(msg, logging.ERROR)
                 self.features.setValByIndex(feature_name="percentAmplitudeMoves", index=lvl, new_value=val)
                 val   = self.off_move_counts[lvl] / total_moves if total_moves > 0 else total_moves
                 self.features.setValByIndex(feature_name="percentOffsetMoves", index=lvl, new_value=val)
@@ -407,7 +409,7 @@ class WaveExtractor(Extractor):
     #
     #  @param key   The feature name for the type of move to calculate percentage on.
     #  @param level The level for which we want to calculate a percentage.
-    def _calcPercentMoves(self, key:str, level:int) -> int:
+    def _calcPercentMoves(self, key:str, level:int) -> float:
         all_vals = [elem["val"] for elem in self.features.getValByName(feature_name=key).values()]
         num = sum(all_vals)
         if num == 0:
@@ -433,8 +435,8 @@ class WaveExtractor(Extractor):
         else:
             return 0
         
-    def _calcAnswerTime(self, q_num:int, event_client_time) -> int:
-        millis: float
+    def _calcAnswerTime(self, q_num:int, event_client_time) -> Union[int,None]:
+        millis: Union[float,None]
         if q_num == 0:
             millis = 1000.0 * (event_client_time - self.latest_complete_lvl8).total_seconds()
         elif q_num == 1:
@@ -443,13 +445,15 @@ class WaveExtractor(Extractor):
             millis = 1000.0 * (event_client_time - self.latest_complete_lvl16).total_seconds()
         elif q_num == 3:
             millis = 1000.0 * (event_client_time - self.latest_answer_Q2).total_seconds()
-        return int(millis)
+        else:
+            millis = None
+        return int(millis) if millis is not None else None
 
     ## Private function to do feature calculation at the end of a level.
     #
     #  @param lvl      The level whose features should be calculated
     #  @return         (void)
-    def _calc_level_end(self, lvl:int):
+    def _calc_level_end(self, lvl:int) -> None:
         closenesses = self.move_closenesses_tx[lvl]['completeness']
         times = self.move_closenesses_tx[lvl]['t']
         ranges = self.move_closenesses_tx[lvl]['range']
@@ -489,7 +493,7 @@ class WaveExtractor(Extractor):
     #
     #  @param lvl      The level whose features should be calculated
     #  @return         (void)
-    def _2D_linear_regression(self, x_vals:typing.List[float], y_vals:typing.List[float]):
+    def _2D_linear_regression(self, x_vals:List[float], y_vals:List[float]):
         X, y = np.array(x_vals).reshape((-1,1)), np.array(y_vals)
         linreg = LinearRegression()
         linreg.fit(X, y)
