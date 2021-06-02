@@ -26,11 +26,11 @@ from managers.RawManager import RawManager
 from managers.EventProcessor import EventProcessor
 from Request import *
 from schemas.Schema import Schema
-from feature_extractors.WaveExtractor import WaveExtractor
-from feature_extractors.CrystalExtractor import CrystalExtractor
-from feature_extractors.LakelandExtractor import LakelandExtractor
-from feature_extractors.JowilderExtractor import JowilderExtractor
-from feature_extractors.MagnetExtractor import MagnetExtractor
+from extractors.WaveExtractor import WaveExtractor
+from extractors.CrystalExtractor import CrystalExtractor
+from extractors.LakelandExtractor import LakelandExtractor
+from extractors.JowilderExtractor import JowilderExtractor
+from extractors.MagnetExtractor import MagnetExtractor
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.

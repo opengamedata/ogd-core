@@ -3,7 +3,7 @@ from datetime import datetime as dt
 import math
 import pandas as pd
 from schemas.TableSchema import TableSchema
-from feature_extractors.LakelandExtractor import LakelandExtractor
+from extractors.LakelandExtractor import LakelandExtractor
 from realtime.ModelManager import ModelManager
 from schemas.Schema import Schema
 

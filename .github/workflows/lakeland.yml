@@ -3,7 +3,7 @@ name: Lakeland Exporter CI Test
 on:
   push:
     paths:
-    - 'feature_extractors/LakelandExtractor.py'
+    - 'extractors/LakelandExtractor.py'
     - 'schemas/JSON/LAKELAND.json'
     - '.github/workflows/lakeland.yml'
     - '.github/actions/export_yesterday/**'

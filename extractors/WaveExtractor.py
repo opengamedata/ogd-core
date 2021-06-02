@@ -8,7 +8,7 @@ import typing
 import utils
 import numpy as np
 from sklearn.linear_model import LinearRegression
-from feature_extractors.Extractor import Extractor
+from extractors.Extractor import Extractor
 from schemas.TableSchema import TableSchema
 from schemas.Schema import Schema
 

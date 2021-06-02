@@ -3,7 +3,7 @@ name: Jo Wilder Exporter CI Test
 on:
   push:
     paths:
-    - 'feature_extractors/JowilderExtractor.py'
+    - 'extractors/JowilderExtractor.py'
     - 'schemas/JSON/JOWILDER.json'
     - '.github/workflows/jowilder.yml'
     - '.github/actions/export_yesterday/**'

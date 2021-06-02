@@ -22,7 +22,7 @@ from math import sqrt
 
 ## import local files
 import utils
-from feature_extractors.Extractor import Extractor
+from extractors.Extractor import Extractor
 from schemas.TableSchema import TableSchema
 from schemas.Schema import Schema
 

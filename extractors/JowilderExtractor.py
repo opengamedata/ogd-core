@@ -14,7 +14,7 @@ from typing import Tuple, Union
 ## import local files
 import utils
 from sklearn.linear_model import LinearRegression
-from feature_extractors.Extractor import Extractor
+from extractors.Extractor import Extractor
 from schemas.TableSchema import TableSchema
 from schemas.Schema import Schema
 from game_info.Jowilder import Jowilder_Enumerators as je

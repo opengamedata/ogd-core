@@ -3,7 +3,7 @@ name: Waves Exporter CI Test
 on:
   push:
     paths:
-    - 'feature_extractors/WaveExtractor.py'
+    - 'extractors/WaveExtractor.py'
     - 'schemas/JSON/WAVES.json'
     - '.github/workflows/waves.yml'
     - '.github/actions/export_yesterday/**'

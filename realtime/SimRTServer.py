@@ -10,10 +10,10 @@ from datetime import datetime, timedelta
 # # import local files
 import utils
 from config import settings
-from feature_extractors.Extractor import Extractor
-from feature_extractors.CrystalExtractor import CrystalExtractor
-from feature_extractors.WaveExtractor import WaveExtractor
-from feature_extractors.LakelandExtractor import LakelandExtractor
+from extractors.Extractor import Extractor
+from extractors.CrystalExtractor import CrystalExtractor
+from extractors.WaveExtractor import WaveExtractor
+from extractors.LakelandExtractor import LakelandExtractor
 from schemas.TableSchema import TableSchema
 from interfaces.MySQLInterface import SQL
 from managers.SessionProcessor import SessionProcessor
