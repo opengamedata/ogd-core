@@ -393,4 +393,19 @@ class MySQLInterface(DataInterface):
             return {'min':datetime.now(), 'max':datetime.now()}
 
     def _genSchema(self) -> TableSchema:
-        return TableSchema.FromDB(self._db, self._settings, self._game_id)
+        db_settings = self._settings["db_config"]
+        # TODO: Currently, this is retrieved separately from the schema. We may just want to load in one place, and check for a match or something.
+        query = f"SHOW COLUMNS from {db_settings['DB_NAME_DATA']}.{db_settings['TABLE']}"
+        db_cursor = self._db.cursor()
+        col_names = SQL.Query(cursor=db_cursor, query=query)
+        if self._game_id == 'LAKELAND':
+            lakeland_config = GameSchema('LAKELAND')['config']
+            min_level = 0
+            max_level = lakeland_config["MAX_SESSION_SECONDS"] // lakeland_config['WINDOW_SIZE_SECONDS']
+        else:
+            max_min_raw = SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["TABLE"],
+                                     columns=["MAX(level)", "MIN(level)"], filter=f"`app_id`='{self._game_id}'",
+                                     distinct=True)
+            max_level = max_min_raw[0][0]
+            min_level = max_min_raw[0][1]
+        return TableSchema(game_id=self._game_id, column_names=[str(col) for col in col_names], max_level=max_level, min_level=min_level)
