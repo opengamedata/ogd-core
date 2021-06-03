@@ -61,4 +61,8 @@ class CSVInterface(DataInterface):
         return {'min':pd.to_datetime(min_date), 'max':pd.to_datetime(max_date)}
 
     def _genSchema(self) -> TableSchema:
-        return TableSchema.FromCSV(self._data)
+        col_names = list(self._data.columns)
+        game_id = self._data['app_id'][0]
+        min_level = self._data['level'].min()
+        max_level = self._data['level'].max()
+        return TableSchema(game_id=game_id, column_names=col_names, max_level=max_level, min_level=min_level)

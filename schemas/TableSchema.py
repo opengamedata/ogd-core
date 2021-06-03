@@ -47,14 +47,6 @@ class TableSchema:
         self.min_level:            int = min_level
         # utils.Logger.toStdOut("session_ids: " + str(session_ids), logging.DEBUG)
 
-    @staticmethod
-    def FromCSV(data_frame: Union[pd.DataFrame, TextFileReader]):
-        col_names = list(data_frame.columns)
-        game_id = data_frame['app_id'][0]
-        min_level = data_frame['level'].min()
-        max_level = data_frame['level'].max()
-        return TableSchema(game_id=game_id, column_names=col_names, max_level=max_level, min_level=min_level)
-
     def RowToEvent(self, row: Tuple):
         row_dict = {self.column_names[i]: row[i] for i in range(len(self.column_names))}
         id     = row_dict['id']
