@@ -155,10 +155,11 @@ class ExportManager:
                                     events_csv_file=file_manager.GetEventsFile())
                 evt_processor.WriteEventsCSVHeader()
 
-            num_sess = len(game_table.session_ids)
+            sess_ids = request.RetrieveSessionIDs()
+            num_sess = len(sess_ids)
             utils.Logger.toStdOut(f"Preparing to process {num_sess} sessions.", logging.INFO)
             slice_size = self._settings["BATCH_SIZE"]
-            session_slices = [[game_table.session_ids[i] for i in
+            session_slices = [[sess_ids[i] for i in
                             range( j*slice_size, min((j+1)*slice_size, num_sess) )] for j in
                             range( 0, math.ceil(num_sess / slice_size) )]
             for i, next_slice in enumerate(session_slices):
@@ -167,7 +168,7 @@ class ExportManager:
                 try:
                     # now, we process each row.
                     for row in next_data_set:
-                        self._processRow(row=row, game_table=game_table, raw_mgr=raw_mgr, sess_processor=sess_processor, evt_processor=evt_processor)
+                        self._processRow(row=row, sess_ids=sess_ids, game_table=game_table, raw_mgr=raw_mgr, sess_processor=sess_processor, evt_processor=evt_processor)
                     # after processing all rows for each slice, write out the session data and reset for next slice.
                     if request._files.sessions:
                         sess_processor.calculateAggregateFeatures()
@@ -213,9 +214,7 @@ class ExportManager:
     #                    table assiciated with the given game is structured. 
     #  @raw_mgr          An instance of RawManager used to track raw data.
     #  @sess_processor         An instance of SessionProcessor used to extract and track feature data.
-    def _processRow(self, row: Tuple, game_table: TableSchema, raw_mgr: RawManager, sess_processor: SessionProcessor, evt_processor: EventProcessor):
-        session_id = row[game_table.session_id_index]
-
+    def _processRow(self, row: Tuple, sess_ids:List[int], game_table: TableSchema, raw_mgr: RawManager, sess_processor: SessionProcessor, evt_processor: EventProcessor):
         # parse out complex data from json
         col = row[game_table.complex_data_index]
         try:
@@ -239,7 +238,8 @@ class ExportManager:
         m_row[game_table.complex_data_index] = complex_data_parsed
         row = tuple(m_row)
 
-        if session_id in game_table.session_ids:
+        session_id = row[game_table.session_id_index]
+        if session_id in sess_ids:
             # we check if there's an instance given, if not we obviously skip.
             if sess_processor is not None:
                 sess_processor.ProcessRow(row)

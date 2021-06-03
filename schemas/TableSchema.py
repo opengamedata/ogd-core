@@ -23,7 +23,7 @@ class TableSchema:
     #  @param settings  The dictionary of settings for the app
     #  @param request   A request object, with information about a date range
     #                   and other information on what data to retrieve.
-    def __init__(self, game_id, column_names: List[str], session_ids, max_level, min_level):
+    def __init__(self, game_id, column_names: List[str], max_level, min_level):
         # Define instance vars
         self.game_id:      str              = game_id
         self.column_names: List[str] = column_names
@@ -45,7 +45,6 @@ class TableSchema:
         # lastly, get max and min levels, and get the session ids.
         self.max_level:            int = max_level
         self.min_level:            int = min_level
-        self.session_ids:          List[int] = session_ids # TODO: decide if we really need session_ids here.
         # utils.Logger.toStdOut("session_ids: " + str(session_ids), logging.DEBUG)
     
     @staticmethod
@@ -65,16 +64,15 @@ class TableSchema:
                                      distinct=True)
             max_level = max_min_raw[0][0]
             min_level = max_min_raw[0][1]
-        return TableSchema(game_id=game_id, column_names=[str(col) for col in col_names], session_ids=ids, max_level=max_level, min_level=min_level)
+        return TableSchema(game_id=game_id, column_names=[str(col) for col in col_names], max_level=max_level, min_level=min_level)
 
     @staticmethod
     def FromCSV(data_frame: Union[pd.DataFrame, TextFileReader]):
         col_names = list(data_frame.columns)
         game_id = data_frame['app_id'][0]
-        sess_ids = data_frame['session_id'].unique().tolist()
         min_level = data_frame['level'].min()
         max_level = data_frame['level'].max()
-        return TableSchema(game_id=game_id, column_names=col_names, session_ids=sess_ids, max_level=max_level, min_level=min_level)
+        return TableSchema(game_id=game_id, column_names=col_names, max_level=max_level, min_level=min_level)
 
     def RowToEvent(self, row: Tuple):
         row_dict = {self.column_names[i]: row[i] for i in range(len(self.column_names))}
