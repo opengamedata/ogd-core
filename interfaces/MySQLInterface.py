@@ -393,4 +393,4 @@ class MySQLInterface(DataInterface):
             return {'min':datetime.now(), 'max':datetime.now()}
 
     def _genSchema(self) -> TableSchema:
-        TableSchema.FromDB(self._db, self._settings, self._game_id)
+        return TableSchema.FromDB(self._db, self._settings, self._game_id)
