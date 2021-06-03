@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Tuple, Union
 # local imports
 from interfaces.DataInterface import DataInterface
 from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
 from utils import Logger
 
 
@@ -390,3 +391,6 @@ class MySQLInterface(DataInterface):
         else:
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
             return {'min':datetime.now(), 'max':datetime.now()}
+
+    def _genSchema(self) -> TableSchema:
+        TableSchema.FromDB(self._db, self._settings, self._game_id)

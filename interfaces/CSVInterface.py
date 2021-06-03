@@ -6,6 +6,7 @@ from typing import Any, Dict, IO, List, Tuple, Union
 ## import local files
 from interfaces.DataInterface import DataInterface
 from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
 
 class CSVInterface(DataInterface):
     def __init__(self, game_id:str, filepath_or_buffer:Union[str, IO[bytes]], delim:str = ','):
@@ -58,3 +59,6 @@ class CSVInterface(DataInterface):
         min_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].min()
         max_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].max()
         return {'min':pd.to_datetime(min_date), 'max':pd.to_datetime(max_date)}
+
+    def _genSchema(self) -> TableSchema:
+        return TableSchema.FromCSV(self._data)

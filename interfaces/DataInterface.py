@@ -5,11 +5,13 @@ from datetime import datetime
 from typing import Dict, List, Tuple, Union
 ## import locals
 import utils
+from schemas.TableSchema import TableSchema
 
 class DataInterface(abc.ABC):
     def __init__(self, game_id):
         self._game_id : str  = game_id
         self._is_open : bool = False
+        self._table_schema : Union[TableSchema,None] = None
 
     def __del__(self):
         self.Close()
@@ -64,6 +66,12 @@ class DataInterface(abc.ABC):
         else:
             return self._datesFromIDs(id_list=id_list, versions=versions)
 
+    def GetTableSchema(self) -> TableSchema:
+        # use lazy creation of TableSchema; if someone creates an interface but doesn't need the schema, don't bother.
+        if self._table_schema is None:
+            self._table_schema = self._genSchema()
+        return self._table_schema
+
     @abc.abstractmethod
     def _open(self) -> bool:
         pass
@@ -90,4 +98,8 @@ class DataInterface(abc.ABC):
 
     @abc.abstractmethod
     def _datesFromIDs(self, id_list:List[int], versions: Union[List[int],None]=None) -> Dict[str,datetime]:
+        pass
+
+    @abc.abstractmethod
+    def _genSchema(self) -> TableSchema:
         pass
