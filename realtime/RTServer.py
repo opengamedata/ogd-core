@@ -414,11 +414,9 @@ class RTServer:
         db     : Union[Connection,        None] = None
         tunnel : Union[SSHTunnelForwarder,None] = None
         session_data : Union[List,        None] = None
-        game_table   : Union[TableSchema, None]
         if RTServer.rt_settings["data_source"] == "DB":
             try:
                 tunnel,db = SQL.prepareDB(db_settings=RTServer.db_settings, ssh_settings=RTServer.ssh_settings)
-                game_table = TableSchema.FromDB(db=db, settings=settings, game_id=request.GetGameID(), ids=[session_id])
                 utils.Logger.toStdOut(f"Getting all features for session {session_id}", logging.INFO)
                 cursor = db.cursor()
                 filt = f"`session_id`='{session_id}'"
@@ -438,7 +436,6 @@ class RTServer:
             raise Exception("not supported!") # TODO: remove this line after implementing the queries.
             path = RTServer.rt_settings["path"]
             data = pd.read_csv(path, sep="\t")
-            game_table = TableSchema.FromCSV(data)
             # TODO: Add pandas query to get all rows with given session_id, sorted in ascending order by session_n.
             # Results should be stored in session_data as a list of tuples.
             # Example line of code doing the conversion to list of tuples is here:
@@ -447,7 +444,7 @@ class RTServer:
             queried_data = data[(data['session_id'] == session_id)].sort_values("session_n", axis=0, ascending=True, inplace=True, na_position='last')
             session_data = list(queried_data.itertuples(index=False, name=None))
 
-        return session_data, game_table
+        return session_data, request._interface.GetTableSchema()
 
     # @staticmethod
     # def _ip_to_loc(ip):
