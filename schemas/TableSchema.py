@@ -48,7 +48,7 @@ class TableSchema:
         # utils.Logger.toStdOut("session_ids: " + str(session_ids), logging.DEBUG)
     
     @staticmethod
-    def FromDB(db, settings, game_id:str, ids:List[int]):
+    def FromDB(db, settings, game_id:str):
         db_settings = settings["db_config"]
         # TODO: Currently, this is retrieved separately from the schema. We may just want to load in one place, and check for a match or something.
         query = f"SHOW COLUMNS from {db_settings['DB_NAME_DATA']}.{db_settings['TABLE']}"
