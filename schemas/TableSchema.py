@@ -42,9 +42,6 @@ class TableSchema:
         self.event_custom_index:   int = self.column_names.index("event_custom")
         self.version_index:        int = self.column_names.index("app_version")
         self.player_id_index:      int = self.column_names.index("player_id")
-        # lastly, get max and min levels, and get the session ids.
-        self.max_level:            int = max_level
-        self.min_level:            int = min_level
         # utils.Logger.toStdOut("session_ids: " + str(session_ids), logging.DEBUG)
 
     def RowToEvent(self, row: Tuple):

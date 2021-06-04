@@ -37,6 +37,9 @@ class GameSchema:
             self._feature_list = list(self._schema["features"]["perlevel"].keys()) \
                                + list(self._schema["features"]["per_custom_count"].keys()) \
                                + list(self._schema["features"]["aggregate"].keys())
+        # lastly, get max and min levels, and get the session ids.
+        self.max_level: Union[int,None] = max_level
+        self.min_level: Union[int,None] = min_level
 
     def __getitem__(self, key):
         return self._schema[key]
