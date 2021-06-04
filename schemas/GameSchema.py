@@ -22,15 +22,14 @@ class GameSchema:
     #                     (if .json is not the file extension, .json will be appended)
     #  @param schema_path Path to the folder containing the JSON schema file
     #                     (if the path does not end in "/", a "/" will be appended)
-    def __init__(self, schema_name:str, schema_path:str = os.path.dirname(__file__) + "/JSON/"):
+    def __init__(self, schema_name:str, schema_path:str = os.path.dirname(__file__) + "/GAMES/",
+                 max_level:Union[int,None] = None, min_level:Union[int,None] = None):
         # define instance vars
         self._schema:       Dict = {}
         self._feature_list: Union[List,None] = None
         # set instance vars
         if not schema_name.lower().endswith(".json"):
             schema_name += ".json"
-        if not schema_path.endswith("/"):
-            schema_path += "/"
         self._schema = utils.loadJSONFile(schema_name, schema_path)
         if self._schema is None:
             utils.Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
