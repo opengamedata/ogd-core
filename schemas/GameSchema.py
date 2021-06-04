@@ -22,8 +22,7 @@ class GameSchema:
     #                     (if .json is not the file extension, .json will be appended)
     #  @param schema_path Path to the folder containing the JSON schema file
     #                     (if the path does not end in "/", a "/" will be appended)
-    def __init__(self, schema_name:str, schema_path:str = os.path.dirname(__file__) + "/GAMES/",
-                 max_level:Union[int,None] = None, min_level:Union[int,None] = None):
+    def __init__(self, schema_name:str, schema_path:str = os.path.dirname(__file__) + "/GAMES/"):
         # define instance vars
         self._schema:       Dict = {}
         self._feature_list: Union[List,None] = None
@@ -38,8 +37,8 @@ class GameSchema:
                                + list(self._schema["features"]["per_custom_count"].keys()) \
                                + list(self._schema["features"]["aggregate"].keys())
         # lastly, get max and min levels, and get the session ids.
-        self.max_level: Union[int,None] = max_level
-        self.min_level: Union[int,None] = min_level
+        self.max_level: Union[int,None] = self.level_range()['min']
+        self.min_level: Union[int,None] = self.level_range()['max']
 
     def __getitem__(self, key):
         return self._schema[key]
