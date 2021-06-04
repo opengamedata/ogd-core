@@ -2,7 +2,7 @@
 import logging
 import os
 import typing
-from typing import Dict, List, Union
+from typing import Any, Dict, List, Union
 # import local files
 import utils
 
@@ -40,22 +40,22 @@ class GameSchema:
         self.max_level: Union[int,None] = self.level_range()['min']
         self.min_level: Union[int,None] = self.level_range()['max']
 
-    def __getitem__(self, key):
+    def __getitem__(self, key) -> Any:
         return self._schema[key]
 
-    def level_range(self) -> Dict:
+    def level_range(self) -> Dict[str,int]:
         return self["level_range"]
 
     ## Function to retrieve the dictionary of event types for the game.
-    def events(self) -> Dict:
+    def events(self) -> Dict[str,Any]:
         return self["events"]
 
     ## Function to retrieve the names of all event types for the game.
-    def event_types(self):
-        return self["events"].keys()
+    def event_types(self) -> List[str]:
+        return list(self["events"].keys())
 
     ## Function to retrieve the dictionary of categorized features to extract.
-    def features(self) -> Dict:
+    def features(self) -> Dict[str, Dict[str,Any]]:
         return self["features"]
 
     ## Function to retrieve the compiled list of all feature names.
@@ -63,13 +63,13 @@ class GameSchema:
         return self._feature_list
 
     ## Function to retrieve the dictionary of per-level features.
-    def perlevel_features(self) -> Dict:
+    def perlevel_features(self) -> Dict[str,Any]:
         return self["features"]["perlevel"]
 
     ## Function to retrieve the dictionary of per-custom-count features.
-    def percount_features(self) -> Dict:
+    def percount_features(self) -> Dict[str,Any]:
         return self["features"]["per_custom_count"]
 
     ## Function to retrieve the dictionary of aggregate features.
-    def aggregate_features(self) -> Dict:
+    def aggregate_features(self) -> Dict[str,Any]:
         return self["features"]["aggregate"]
