@@ -74,11 +74,3 @@ class GameSchema:
     ## Function to retrieve the compiled list of all feature names.
     def feature_list(self) -> Union[List, None]:
         return self._feature_list
-
-    ## Function to retrieve the dictionary of database columns.
-    def db_columns_with_types(self) -> Dict:
-        return self["db_columns"]
-
-    ## Function to retrieve the names of all database columns.
-    def db_columns(self):
-        return self["db_columns"].keys()
