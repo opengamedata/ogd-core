@@ -58,6 +58,10 @@ class GameSchema:
     def features(self) -> Dict:
         return self["features"]
 
+    ## Function to retrieve the compiled list of all feature names.
+    def feature_names(self) -> Union[List[str], None]:
+        return self._feature_list
+
     ## Function to retrieve the dictionary of per-level features.
     def perlevel_features(self) -> Dict:
         return self["features"]["perlevel"]
@@ -69,7 +73,3 @@ class GameSchema:
     ## Function to retrieve the dictionary of aggregate features.
     def aggregate_features(self) -> Dict:
         return self["features"]["aggregate"]
-
-    ## Function to retrieve the compiled list of all feature names.
-    def feature_list(self) -> Union[List, None]:
-        return self._feature_list
