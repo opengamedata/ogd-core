@@ -104,13 +104,6 @@ f"## Field Day Open Game Data \n\
 \n"
     return template_str
 
-## Function that converts a datetime object into a filename-friendly format.
-#  Yes, there is undoubtedly a built-in way to do this, but this is what I've got.
-#  @param date  The datetime object to be formatted.
-#  @return      Formatted string representing a date.
-def dateToFileSafeString(date: datetime.datetime):
-    return f"{date.month}-{date.day}-{date.year}"
-
 class Logger:
     # Set up loggers. First, the std out logger
     std_logger = logging.getLogger("std_logger")
