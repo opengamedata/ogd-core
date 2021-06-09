@@ -1,23 +1,131 @@
 {
-    "db_columns": {
-        "id":"Unique identifier for a row",
-        "app_id":"A string identifying which game from which the event came",
-        "app_id_fast":"A second version of the app id, to be removed",
-        "app_version":"The version of the game from which the event came",
-        "session_id":"Unique identifier for the gameplay session",
-        "persistent_session_id":"Unique identifier across all gameplay sessions from a single computer",
-        "player_id":"A custom, per-player ID, only exists if player entered an ID on one of our custom portal pages, else null",
-        "level":"The game level in which the event was logged",
-        "event":"The type of event logged",
-        "event_custom":"A number corresponding to the game-specific event type for events labeled 'Custom'",
-        "event_data_simple":"Unused (always=0), to be deleted",
-        "event_data_complex":"Data specific to an event type, encoded as a JSON string",
-        "client_time":"The client machine time when the event was generated",
-        "client_time_ms":"Client time in milliseconds",
-        "server_time":"The server machine time when the event was logged",
-        "remote_addr":"The IP address for the player's computer",
-        "req_id":"Another ID of some kind, to be removed",
-        "session_n":"Counter of events in the session, from 0. A row with session_n = i is the (i+1)-th event of the session",
-        "http_user_agent":"Data on the type of web browser, OS, etc. in use by the player"
-    }
+    "column_map": {
+        "session_id": "session_id",
+        "app_id": "app_id",
+        "timestamp": ["client_time", "client_time_ms"],
+        "event_name": ["event", "event_custom"],
+        "event_data": ["event_data_complex", "server_time", "remote_addr", "http_user_agent"],
+        "user_id": "player_id",
+        "user_data": null,
+        "game_state": null,
+        "time_offset": null,
+        "event_sequence_index": "session_n"
+    },
+
+    "columns": [
+        {
+            "name": "id",
+            "readable": "Row ID",
+            "desc": "Unique identifier for a row",
+            "type": "int"
+        },
+        {
+            "name": "app_id",
+            "readable": "App Name",
+            "desc": "A string identifying which game from which the event came",
+            "type": "str"
+        },
+        {
+            "name": "app_id_fast",
+            "readable": "app_id_fast",
+            "desc": "A second version of the app id, to be removed",
+            "type": "enum('UNDEFINED','WAVES','CRYSTAL','JOWILDER','LAKELAND')"
+        },
+        {
+            "name": "app_version",
+            "readable": "App Version",
+            "desc": "The version of the game from which the event came",
+            "type": "int"
+        },
+        {
+            "name": "session_id",
+            "readable": "Session ID",
+            "desc": "Unique identifier for the gameplay session",
+            "type": "str"
+        },
+        {
+            "name": "persistent_session_id",
+            "readable": "Persistent Session ID",
+            "desc": "Unique identifier across all gameplay sessions from a single computer",
+            "type": "str"
+        },
+        {
+            "name": "player_id",
+            "readable": "Player ID",
+            "desc": "A custom, per-player ID, only exists if player entered an ID on one of our custom portal pages, else null",
+            "type": "str"
+        },
+        {
+            "name": "level",
+            "readable": "Level",
+            "desc": "The game level in which the event was logged",
+            "type": "int"
+        },
+        {
+            "name": "event",
+            "readable": "Event Type",
+            "desc": "The type of event logged",
+            "type": "enum('BEGIN','COMPLETE','SUCCEED','FAIL','CUSTOM','UNDEFINED')"
+        },
+        {
+            "name": "event_custom",
+            "readable": "Event Subtype",
+            "desc": "A number corresponding to the game-specific event type for events labeled 'Custom'",
+            "type": "str"
+        },
+        {
+            "name": "event_data_simple",
+            "readable": "event_data_simple",
+            "desc": "Unused (always=0), to be deleted",
+            "type": "str"
+        },
+        {
+            "name": "event_data_complex",
+            "readable": "Event Data",
+            "desc": "Data specific to an event type, encoded as a JSON string",
+            "type": "json"
+        },
+        {
+            "name": "client_time",
+            "readable": "Client Time",
+            "desc": "The client machine time when the event was generated",
+            "type": "datetime"
+        },
+        {
+            "name": "client_time_ms",
+            "readable": "Client Time Milliseconds",
+            "desc": "Number of milliseconds to append to client time",
+            "type": "int"
+        },
+        {
+            "name": "server_time",
+            "readable": "Server Time",
+            "desc": "The server machine time when the event was logged",
+            "type": "datetime"
+        },
+        {
+            "name": "remote_addr",
+            "readable": "IP Address",
+            "desc": "The IP address for the player's computer",
+            "type": "str"
+        },
+        {
+            "name": "req_id",
+            "readable": "req_id",
+            "desc": "Another ID of some kind, to be removed",
+            "type": "int"
+        },
+        {
+            "name": "session_n",
+            "readable": "Event-Sequence Index",
+            "desc": "Counter of events in the session, from 0. A row with session_n = i is the (i+1)-th event of the session",
+            "type": "int"
+        },
+        {
+            "name": "http_user_agent",
+            "readable": "User Agent",
+            "desc": "Data on the type of web browser, OS, etc. in use by the player",
+            "type": "str"
+        }
+    ]
 }
