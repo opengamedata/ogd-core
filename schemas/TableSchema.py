@@ -1,11 +1,10 @@
 ## import standard libraries
+import os
+import logging
 import typing
-import pandas as pd
-from typing import List, Tuple, Union
-from pandas.io.parsers import TextFileReader
+from typing import Dict, List, Tuple, Union
 ## import local files
-from interfaces.MySQLInterface import SQL
-from schemas.GameSchema import GameSchema
+import utils
 from schemas.Event import Event
 
 ## @class TableSchema

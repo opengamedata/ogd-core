@@ -3,6 +3,7 @@ from utils import Logger
 import pandas as pd
 from datetime import datetime
 from typing import Any, Dict, IO, List, Tuple, Union
+from pandas.io.parsers import TextFileReader
 ## import local files
 from interfaces.DataInterface import DataInterface
 from schemas.GameSchema import GameSchema
