@@ -35,7 +35,7 @@ class BigQueryInterface(DataInterface):
         Logger.toStdOut("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
-    def _eventsFromIDs(self, id_list: List[int]) -> List[Tuple]:
+    def _eventsFromIDs(self, id_list: List[int]) -> List[bigquery.Row]:
         if self._client != None:
             db_name = self._settings["db_config"]["DB_NAME_DATA"]
             table_name = self._settings["db_config"]["TABLE"]
@@ -47,7 +47,7 @@ class BigQueryInterface(DataInterface):
                 WHERE param.key = "ga_session_id"
                 AND param.value.int_value IN ({id_string})
             """
-            data = self._client.query(query)
+            data = list(self._client.query(query))
             return data if data != None else []
         else:
             Logger.Log(f"Could not get data for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
