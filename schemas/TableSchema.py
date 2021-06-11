@@ -34,7 +34,7 @@ class TableSchema:
         self._table_format_name : str                  = schema_name
         self._is_legacy         : bool                 = is_legacy
         self._columns           : List[Dict[str, str]] = []
-        self._map               : Dict[str, Any]       = {}
+        self._map               : Map                  = {}
 
         if not schema_name.lower().endswith(".json"):
             schema_name += ".json"
@@ -69,12 +69,12 @@ class TableSchema:
         app_id  : str
         time    : datetime
         ename   : str
-        edata   : Dict[str,Any]
+        edata   : Map
         app_ver : Union[int,None] = None
         offset  : Union[int,None] = None
         uid     : Union[int,None] = None
-        udata   : Union[Dict[str,Any],None] = None
-        state   : Union[Dict[str,Any],None] = None
+        udata   : Union[Map,None] = None
+        state   : Union[Map,None] = None
         index   : Union[int,None] = None
 
         # first, if anything in the map was a list, concatenate, and anything that wasn't, get val.

@@ -1,15 +1,16 @@
 from datetime import datetime
 from typing import Any, Dict, Union
+Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 
 ## @class Event
 #  Completely dumb struct that enforces a particular structure for the data we get from a source.
 #  Basically, whenever we fetch data, the TableSchema will be used to map columns to the required elements of an Event.
 #  Then the extractors etc. can just access columns in a direct manner.
 class Event:
-    def __init__(self, session_id:int, app_id:str, timestamp:datetime, event_name:str, event_data:Dict[str,Any],
+    def __init__(self, session_id:int, app_id:str, timestamp:datetime, event_name:str, event_data:Map,
                  app_version:Union[int,None] = None, time_offset:Union[int,None] = None,
-                 user_id:Union[int,None] = None,   user_data:Union[Dict[str,Any],None] = None,
-                 game_state:Union[Dict[str,Any],None] = None, event_sequence_index:Union[int,None] = None):
+                 user_id:Union[int,None] = None,   user_data:Union[Map,None] = None,
+                 game_state:Union[Map,None] = None, event_sequence_index:Union[int,None] = None):
         """Constructor for an Event object.
 
         :param session_id: An identifier for the session during which the event occurred.
@@ -39,10 +40,10 @@ class Event:
         self.app_id               : str             = app_id
         self.timestamp            : datetime        = timestamp
         self.event_name           : str             = event_name
-        self.event_data           : Dict[str,Any]   = event_data
+        self.event_data           : Map             = event_data
         self._app_version         : Union[int,None] = app_version
-        self.time_offset          : Union[int,None]           = time_offset
-        self.user_id              : Union[int,None]           = user_id
-        self.user_data            : Union[Dict[str,Any],None] = user_data
-        self.game_state           : Union[Dict[str,Any],None] = game_state
-        self.event_sequence_index : Union[int,None]           = event_sequence_index
+        self.time_offset          : Union[int,None] = time_offset
+        self.user_id              : Union[int,None] = user_id
+        self.user_data            : Union[Map,None] = user_data
+        self.game_state           : Union[Map,None] = game_state
+        self.event_sequence_index : Union[int,None] = event_sequence_index
