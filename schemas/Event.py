@@ -7,16 +7,42 @@ from typing import Any, Dict, Union
 #  Then the extractors etc. can just access columns in a direct manner.
 class Event:
     def __init__(self, session_id:int, app_id:str, timestamp:datetime, event_name:str, event_data:Dict[str,Any],
+                 app_version:Union[int,None] = None, time_offset:Union[int,None] = None,
                  user_id:Union[int,None] = None,   user_data:Union[Dict[str,Any],None] = None,
-                 game_state:Union[Dict[str,Any],None] = None, time_offset:Union[int,None] = None,
-                 event_sequence_index:Union[int,None] = None):
-        self.session_id = session_id
-        self.app_id = app_id
-        self.timestamp = timestamp
-        self.event_name = event_name
-        self.event_data = event_data
-        self.user_id = user_id
-        self.user_data = user_data
-        self.game_state = game_state
-        self.time_offset = time_offset
-        self.event_sequence_index = event_sequence_index
+                 game_state:Union[Dict[str,Any],None] = None, event_sequence_index:Union[int,None] = None):
+        """Constructor for an Event object.
+
+        :param session_id: An identifier for the session during which the event occurred.
+        :type  session_id: int
+        :param app_id: An identifier for the app that generated the event, typically the name of a game
+        :type  app_id: str
+        :param timestamp: The (local) time at which the event occurred.
+        :type  timestamp: datetime
+        :param event_name: The "type" of the event. e.g. begin game, end game, buy item, etc.
+        :type  event_name: str
+        :param event_data: A "blob" of all data specific to the event type, contents vary by game and event type.
+        :type  event_data: Dict[str,Any]
+        :param app_version: The version of the given game's logging code (may or may not correspond to game's versioning)
+        :type  app_version: Union[int,None], optional
+        :param time_offset: [description], defaults to None
+        :type  time_offset: Union[int,None], optional
+        :param user_id: Optional identifier for the specific user during whose session the event occurred. Defaults to None.
+        :type  user_id: Union[int,None], optional
+        :param user_data: [description], defaults to None
+        :type  user_data: Union[Dict[str,Any],None], optional
+        :param game_state: [description], defaults to None
+        :type  game_state: Union[Dict[str,Any],None], optional
+        :param event_sequence_index: [description], defaults to None
+        :type  event_sequence_index: Union[int,None], optional
+        """
+        self.session_id           : int             = session_id
+        self.app_id               : str             = app_id
+        self.timestamp            : datetime        = timestamp
+        self.event_name           : str             = event_name
+        self.event_data           : Dict[str,Any]   = event_data
+        self._app_version         : Union[int,None] = app_version
+        self.time_offset          : Union[int,None]           = time_offset
+        self.user_id              : Union[int,None]           = user_id
+        self.user_data            : Union[Dict[str,Any],None] = user_data
+        self.game_state           : Union[Dict[str,Any],None] = game_state
+        self.event_sequence_index : Union[int,None]           = event_sequence_index
