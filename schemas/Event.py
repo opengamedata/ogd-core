@@ -7,9 +7,9 @@ Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 #  Basically, whenever we fetch data, the TableSchema will be used to map columns to the required elements of an Event.
 #  Then the extractors etc. can just access columns in a direct manner.
 class Event:
-    def __init__(self, session_id:int, app_id:str, timestamp:datetime, event_name:str, event_data:Map,
-                 app_version:Union[int,None] = None, time_offset:Union[int,None] = None,
-                 user_id:Union[int,None] = None,   user_data:Union[Map,None] = None,
+    def __init__(self, session_id:str, app_id:str, timestamp:datetime, event_name:str, event_data:Map,
+                 app_version:Union[str,None] = None, time_offset:Union[int,None] = None,
+                 user_id:Union[str,None] = None,   user_data:Union[Map,None] = None,
                  game_state:Union[Map,None] = None, event_sequence_index:Union[int,None] = None):
         """Constructor for an Event object.
 
@@ -36,14 +36,14 @@ class Event:
         :param event_sequence_index: [description], defaults to None
         :type  event_sequence_index: Union[int,None], optional
         """
-        self.session_id           : int             = session_id
+        self.session_id           : str             = session_id
         self.app_id               : str             = app_id
         self.timestamp            : datetime        = timestamp
         self.event_name           : str             = event_name
         self.event_data           : Map             = event_data
-        self._app_version         : Union[int,None] = app_version
+        self._app_version         : Union[str,None] = app_version
         self.time_offset          : Union[int,None] = time_offset
-        self.user_id              : Union[int,None] = user_id
+        self.user_id              : Union[str,None] = user_id
         self.user_data            : Union[Map,None] = user_data
         self.game_state           : Union[Map,None] = game_state
         self.event_sequence_index : Union[int,None] = event_sequence_index
