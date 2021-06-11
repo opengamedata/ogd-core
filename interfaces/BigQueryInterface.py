@@ -79,12 +79,8 @@ class BigQueryInterface(DataInterface):
                 SELECT MIN(event_date), MAX(event_date)
                 FROM `{db_name}.{table_name}`
             """
-            data = self._client.query(query)
-            dates = {}
-            for row in data:
-                dates['min'] = row['f0_']
-                dates['max'] = row['f1_']
-            return dates
+            data = list(self._client.query(query))
+            return {'min':data[0][0], 'max':data[0][1]}
         else:
             Logger.Log(f"Could not get full date range, BigQuery connection is not open.", logging.WARN)
             return {"min":datetime.now(), "max":datetime.now()}
@@ -115,18 +111,18 @@ class BigQueryInterface(DataInterface):
             table_name = self._settings["db_config"]["TABLE"]
             id_string = ','.join([f"'{x}'" for x in id_list])
             query = f"""
-                SELECT MIN(event_date), MAX(event_date)
-                FROM `{db_name}.{table_name}`,
-                UNNEST(event_params) AS param
-                WHERE param.key = "ga_session_id"
-                AND param.value.int_value IN ({id_string})
+                WITH datetable AS
+                (
+                    SELECT event_date, event_timestamp,
+                    FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
+                    FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
+                    FROM `{db_name}.{table_name}`
+                )
+                SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
+                FROM datetable
             """
-            data = self._client.query(query)
-            dates = {}
-            for row in data:
-                dates['min'] = row['f0_']
-                dates['max'] = row['f1_']
-            return dates
+            data = list(self._client.query(query))
+            return {'min':data[0][0], 'max':data[0][1]}
         else:
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
             return {'min':datetime.now(), 'max':datetime.now()}
