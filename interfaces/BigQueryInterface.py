@@ -36,13 +36,13 @@ class BigQueryInterface(DataInterface):
         Logger.toStdOut("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
-    def _eventsFromIDs(self, id_list: List[int], versions: Union[List[int], None] = None) -> List[Tuple]:
+    def _eventsFromIDs(self, id_list: List[int]) -> List[Tuple]:
         if self._client != None:
             db_name = self._settings["db_config"]["DB_NAME_DATA"]
             table_name = self._settings["db_config"]["TABLE"]
             id_string = ','.join([f"'{x}'" for x in id_list])
             query = f"""
-                SELECT event_name, event_date, param.value.int_value AS id, event_params
+                SELECT event_name, event_date, param.value.int_value AS session_id, event_params
                 FROM `{db_name}.{table_name}`,
                 UNNEST(event_params) AS param
                 WHERE param.key = "ga_session_id"
@@ -58,14 +58,14 @@ class BigQueryInterface(DataInterface):
             db_name = self._settings["db_config"]["DB_NAME_DATA"]
             table_name = self._settings["db_config"]["TABLE"]
             query = f"""
-                SELECT event_name, event_date, param.value.int_value AS id
+                SELECT DISTINCT param.value.int_value AS session_id
                 FROM `{db_name}.{table_name}`,
                 UNNEST(event_params) AS param
                 WHERE param.key = "ga_session_id"
             """
             data = self._client.query(query)
             ids = []
-            [ids.append(int(row['id'])) for row in data if int(data['id']) not in ids]
+            [ids.append(int(row['session_id'])) for row in data]
             return ids if ids != None else []
         else:
             Logger.Log(f"Could not get list of all session ids, BigQuery connection is not open.", logging.WARN)
@@ -76,22 +76,26 @@ class BigQueryInterface(DataInterface):
             db_name = self._settings["db_config"]["DB_NAME_DATA"]
             table_name = self._settings["db_config"]["TABLE"]
             query = f"""
-                SELECT event_name, event_date, event_params
-                FROM `{db_name}.{table_name}`,
+                SELECT MIN(event_date), MAX(event_date)
+                FROM `{db_name}.{table_name}`
             """
             data = self._client.query(query)
-            return data
+            dates = {}
+            for row in data:
+                dates['min'] = row['f0_']
+                dates['max'] = row['f1_']
+            return dates
         else:
             Logger.Log(f"Could not get full date range, BigQuery connection is not open.", logging.WARN)
             return {"min":datetime.now(), "max":datetime.now()}
 
-    def _IDsFromDates(self, min: datetime, max: datetime, versions: Union[List[int], None] = None) -> List[int]:
+    def _IDsFromDates(self, min: datetime, max: datetime) -> List[int]:
         if self._client != None:
             db_name = self._settings["db_config"]["DB_NAME_DATA"]
             table_name = self._settings["db_config"]["TABLE"]
             min, max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
             query = f"""
-                SELECT event_name, event_date, event_params, param.value.int_value AS id
+                SELECT DISTINCT param.value.int_value AS session_id
                 FROM `{db_name}.{table_name}`,
                 UNNEST(event_params) AS param
                 WHERE param.key = "ga_session_id"
@@ -99,31 +103,29 @@ class BigQueryInterface(DataInterface):
             """
             data = self._client.query(query)
             ids = []
-            [ids.append(int(row['id'])) for row in data if int(data['id']) not in ids]
+            [ids.append(int(row['session_id'])) for row in data]
             return ids if ids != None else []
         else:
             Logger.Log(f"Could not get session list for {min}-{max} range, BigQuery connection is not open.", logging.WARN)
             return []
 
-    def _datesFromIDs(self, id_list: List[int], versions: Union[List[int], None] = None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list: List[int]) -> Dict[str, datetime]:
         if self._client != None:
             db_name = self._settings["db_config"]["DB_NAME_DATA"]
             table_name = self._settings["db_config"]["TABLE"]
             id_string = ','.join([f"'{x}'" for x in id_list])
             query = f"""
-                SELECT event_name, event_date, event_params, param.value.int_value AS id
+                SELECT MIN(event_date), MAX(event_date)
                 FROM `{db_name}.{table_name}`,
                 UNNEST(event_params) AS param
                 WHERE param.key = "ga_session_id"
                 AND param.value.int_value IN ({id_string})
             """
             data = self._client.query(query)
-            ids = []
-            [ids.append(int(row['id'])) for row in data if int(data['id']) not in ids]
             dates = {}
             for row in data:
-                if row['id'] in id_list:
-                    dates[row['id']] = row['event_date']
+                dates['min'] = row['f0_']
+                dates['max'] = row['f1_']
             return dates
         else:
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
