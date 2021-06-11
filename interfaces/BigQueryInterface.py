@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 from google.cloud import bigquery
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple
 
 from config import settings
 from interfaces.DataInterface import DataInterface
@@ -12,8 +12,7 @@ class BigQueryInterface(DataInterface):
     def __init__(self, game_id: str, settings):
         super().__init__(game_id=game_id)
         self._settings = settings
-        self._open()
-        self._test()
+        self.Open()
 
     def _open(self, force_reopen: bool = False) -> bool:
         if force_reopen:
@@ -76,8 +75,15 @@ class BigQueryInterface(DataInterface):
             db_name = self._settings["db_config"]["DB_NAME_DATA"]
             table_name = self._settings["db_config"]["TABLE"]
             query = f"""
-                SELECT MIN(event_date), MAX(event_date)
-                FROM `{db_name}.{table_name}`
+                WITH datetable AS
+                (
+                    SELECT event_date, event_timestamp,
+                    FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
+                    FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
+                    FROM `{db_name}.{table_name}`
+                )
+                SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
+                FROM datetable
             """
             data = list(self._client.query(query))
             return {'min':data[0][0], 'max':data[0][1]}
@@ -113,13 +119,16 @@ class BigQueryInterface(DataInterface):
             query = f"""
                 WITH datetable AS
                 (
-                    SELECT event_date, event_timestamp,
+                    SELECT event_date, event_timestamp, event_params
                     FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
                     FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
                     FROM `{db_name}.{table_name}`
                 )
                 SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
-                FROM datetable
+                FROM datetable,
+                UNNEST(event_params) AS param
+                WHERE param.key = "ga_session_id"
+                AND param.value.int_value IN ({id_string})
             """
             data = list(self._client.query(query))
             return {'min':data[0][0], 'max':data[0][1]}
