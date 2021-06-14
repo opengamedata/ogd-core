@@ -62,7 +62,29 @@ class TableSchema:
         else:
             utils.Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
 
-    def RowToEvent(self, row: Tuple[str]):
+    def ColumnNames(self) -> List[str]:
+        """Function to get the names of all columns in the schema.
+
+        :return: Names of each column in the schema.
+        :rtype: List[str]
+        """
+        return [col['name'] for col in self._columns]
+
+    def RowToEvent(self, row: Tuple[str], concatenator:str = '.'):
+        """Function to convert a row to an Event, based on the loaded schema.
+        In general, columns specified in the schema's column_map are mapped to corresponding elements of the Event.
+        If the column_map gave a list, rather than a single column name, the values from each column are concatenated in order with '.' character separators.
+        Finally, the concatenated values (or single value) are parsed according to the type required by Event.
+        One exception: For event_data, we expect to create a Dict object, so each column in the list will have its value parsed according to the type in 'columns',
+            and placed into a dict mapping the original column name to the parsed value (unless the parsed value is a dict, then it is merged into the top-level dict).
+
+        :param row: The raw row data for an event. Generally assumed to be a tuple, though in principle a list would be fine too.
+        :type  row: Tuple[str]
+        :param concatenator: A string to use as a separator when concatenating multiple columns into a single Event element.
+        :type  concatenator: str
+        :return: [description]
+        :rtype: [type]
+        """
         row_dict = self.RowToDict(row)
         # define vars to be passed as params
         sess_id : int
@@ -120,3 +142,33 @@ class TableSchema:
         """
         column_names = [col['name'] for col in self._columns]
         return {col_name : row[i] for i,col_name in enumerate(column_names)}
+
+    @staticmethod
+    def CompareVersions(a:str, b:str, version_separator='.'):
+        a_parts = [int(i) for i in a.split(version_separator)]
+        b_parts = [int(i) for i in b.split(version_separator)]
+        for i in range(0, min(len(a_parts), len(b_parts))):
+            if a_parts[i] < b_parts[i]:
+                return -1
+            elif a_parts[i] > b_parts[i]:
+                return 1
+        if len(a_parts) < len(b_parts):
+            return -1
+        elif len(a_parts) > len(b_parts):
+            return 1
+        else:
+            return 0
+
+    @staticmethod
+    def _parse(input:str, column_descriptor:Dict[str,str]) -> Any:
+        if column_descriptor['type'] == 'str':
+            return input
+        elif column_descriptor['type'] == 'int':
+            return int(input)
+        elif column_descriptor['type'] == 'float':
+            return float(input)
+        elif column_descriptor['type'] == 'json':
+            return json.loads(input)
+        elif column_descriptor['type'].startswith('enum'):
+            # if the column is supposed to be an enum, for now we just stick with the string.
+            return input
