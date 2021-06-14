@@ -6,8 +6,9 @@ import typing
 ## import local files
 import utils
 from extractors.Extractor import Extractor
-from schemas.TableSchema import TableSchema
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
 
 ## @class MagnetExtractor
 #  Extractor subclass for extracting features from Magnet game data.
@@ -25,9 +26,9 @@ class MagnetExtractor(Extractor):
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
     def __init__(self, session_id: int, game_table: TableSchema, game_schema: GameSchema):
-        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
+        super().__init__(session_id=session_id, table_schema=game_table, game_schema=game_schema)
         # Define custom private data.
-        self.features.setValByName(feature_name="sessionID", new_value=session_id)
+        self._features.setValByName(feature_name="sessionID", new_value=session_id)
 
     ## Function to perform extraction of features from a row.
     #
@@ -50,16 +51,16 @@ class MagnetExtractor(Extractor):
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
-            if self.features.getValByName(feature_name="persistentSessionID") == 0:
-                self.features.setValByName(feature_name="persistentSessionID",
+            if self._features.getValByName(feature_name="persistentSessionID") == 0:
+                self._features.setValByName(feature_name="persistentSessionID",
                                            new_value=row_with_complex_parsed[game_table.pers_session_id_index])
             # Ensure we have private data initialized for this level.
-            if not level in self.levels:
-                bisect.insort(self.levels, level)
-                self.features.initLevel(level)
+            if not level in self._levels:
+                bisect.insort(self._levels, level)
+                self._features.initLevel(level)
             # First, record that an event of any kind occurred, for the level & session
-            self.features.incValByIndex(feature_name="eventCount", index=level)
-            self.features.incAggregateVal(feature_name="sessionEventCount")
+            self._features.incValByIndex(feature_name="eventCount", index=level)
+            self._features.incAggregateVal(feature_name="sessionEventCount")
             # Then, handle cases for each type of event
             event_type = event_data_complex_parsed["event_custom"]
             if event_type == "COMPLETE":
@@ -81,16 +82,16 @@ class MagnetExtractor(Extractor):
         # Calculate per-level averages and percentages, since we can't calculate
         # them until we know how many total events occur.
         totalScore = 0
-        for level in self.levels:
-            southScore = self.features.getValByIndex(feature_name="southPoleScore", index=level)
-            northScore = self.features.getValByIndex(feature_name="northPoleScore", index=level)
+        for level in self._levels:
+            southScore = self._features.getValByIndex(feature_name="southPoleScore", index=level)
+            northScore = self._features.getValByIndex(feature_name="northPoleScore", index=level)
             totalScore = totalScore + southScore + northScore
-        numPlays = self.features.getValByName(feature_name="numberOfCompletePlays")
+        numPlays = self._features.getValByName(feature_name="numberOfCompletePlays")
         if numPlays != 0:
             avgScore = totalScore / numPlays
         else:
             avgScore = 0
-        self.features.setValByName(feature_name="averageScore", new_value=avgScore)
+        self._features.setValByName(feature_name="averageScore", new_value=avgScore)
 
 
     ## Private function to extract features from a "COMPLETE" event.
@@ -108,16 +109,16 @@ class MagnetExtractor(Extractor):
         magnetic_film = event_data["magneticFilmUsed"]
         times_poles_moved = event_data["numTimesPolesMoved"]
         time_spent = event_data["levelTime"]
-        self.features.setValByIndex(feature_name="southPoleScore", index=level, new_value=south_score)
-        self.features.setValByIndex(feature_name="northPoleScore", index=level, new_value=north_score)
-        self.features.setValByIndex(feature_name="northPoleToSouthGuess", index=level, new_value=south_score_if_switched)
-        self.features.setValByIndex(feature_name="southPoleToNorthGuess", index=level, new_value=north_score_if_switched)
-        self.features.setValByIndex(feature_name="numberOfCompassesUsed", index=level, new_value=num_compasses)
-        self.features.setValByIndex(feature_name="usedIronFilings", index=level, new_value=iron_filings)
-        self.features.setValByIndex(feature_name="usedMagneticFilm", index=level, new_value=magnetic_film)
-        self.features.setValByIndex(feature_name="numTimesPolesMoved", index=level, new_value=times_poles_moved)
-        self.features.setValByIndex(feature_name="levelTime", index=level, new_value=time_spent)
-        self.features.incAggregateVal(feature_name="sessionTime", increment=time_spent)
+        self._features.setValByIndex(feature_name="southPoleScore", index=level, new_value=south_score)
+        self._features.setValByIndex(feature_name="northPoleScore", index=level, new_value=north_score)
+        self._features.setValByIndex(feature_name="northPoleToSouthGuess", index=level, new_value=south_score_if_switched)
+        self._features.setValByIndex(feature_name="southPoleToNorthGuess", index=level, new_value=north_score_if_switched)
+        self._features.setValByIndex(feature_name="numberOfCompassesUsed", index=level, new_value=num_compasses)
+        self._features.setValByIndex(feature_name="usedIronFilings", index=level, new_value=iron_filings)
+        self._features.setValByIndex(feature_name="usedMagneticFilm", index=level, new_value=magnetic_film)
+        self._features.setValByIndex(feature_name="numTimesPolesMoved", index=level, new_value=times_poles_moved)
+        self._features.setValByIndex(feature_name="levelTime", index=level, new_value=time_spent)
+        self._features.incAggregateVal(feature_name="sessionTime", increment=time_spent)
 
     ## Private function to extract features from a "PLAYGROUND_EXIT" event.
     #
@@ -126,8 +127,8 @@ class MagnetExtractor(Extractor):
     #  @param event_data        Parsed JSON data from the row being processed.
     def _extractFromPlaygroundExit(self, level, event_client_time, event_data):
         time_spent = event_data["timeSpent"]
-        self.features.setValByIndex(feature_name="levelTime", index=level, new_value=time_spent)
-        self.features.incAggregateVal(feature_name="sessionTime", increment=time_spent)
+        self._features.setValByIndex(feature_name="levelTime", index=level, new_value=time_spent)
+        self._features.incAggregateVal(feature_name="sessionTime", increment=time_spent)
 
     ## Private function to extract features from a "TUTORIAL_EXIT" event.
     #
@@ -136,5 +137,5 @@ class MagnetExtractor(Extractor):
     #  @param event_data        Parsed JSON data from the row being processed.
     def _extractFromTutorialExit(self, level, event_client_time, event_data):
         time_spent = event_data["timeSpent"]
-        self.features.setValByIndex(feature_name="levelTime", index=level, new_value=time_spent)
-        self.features.incAggregateVal(feature_name="sessionTime", increment=time_spent)
+        self._features.setValByIndex(feature_name="levelTime", index=level, new_value=time_spent)
+        self._features.incAggregateVal(feature_name="sessionTime", increment=time_spent)

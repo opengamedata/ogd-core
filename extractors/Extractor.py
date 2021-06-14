@@ -7,8 +7,9 @@ from datetime import datetime
 from typing import Any, Dict, List, Tuple, Union
 ## import local files
 import utils
-from schemas.TableSchema import TableSchema
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
 from collections import defaultdict
 from datetime import timedelta
 
@@ -30,14 +31,13 @@ class Extractor(abc.ABC):
     #                     table assiciated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: TableSchema, game_schema: GameSchema,
-                 level_range: range = None):
-        self.session_id   : int         = session_id
-        self._level_range : range       = level_range if (level_range is not None) else range(game_table.min_level, game_table.max_level+1)
-        self.levels       : List[int]   = []
-        self.sequences    : List        = []
-        self.features     : Extractor.SessionFeatures = Extractor.SessionFeatures(self._level_range, game_schema)
-        self.last_adjust_type : Union[str,None] = None
+    def __init__(self, session_id: int, game_schema: GameSchema):
+        self._session_id  : int         = session_id
+        self._game_schema : GameSchema
+        self._levels      : List[int]   = []
+        self._sequences   : List        = []
+        self._features    : Extractor.SessionFeatures = Extractor.SessionFeatures(game_schema=game_schema)
+        self._last_adjust_type : Union[str,None] = None
 
     ## Static function to print column headers to a file.
     #  We first create a feature dictionary, then essentially write out each key,
@@ -50,15 +50,15 @@ class Extractor(abc.ABC):
     #                     structured.
     #  @param file        An open csv file to which we will write column headers.
     @staticmethod
-    def writeCSVHeader(game_table: TableSchema, game_schema: GameSchema, file: typing.IO[str]) -> None:
-        columns = Extractor.getFeatureNames(game_table=game_table, game_schema=game_schema)
+    def writeCSVHeader(game_schema: GameSchema, file: typing.IO[str]) -> None:
+        columns = Extractor.getFeatureNames(game_schema=game_schema)
         file.write(",".join(columns))
         file.write("\n")
 
     @staticmethod
-    def getFeatureNames(game_table: TableSchema, game_schema: GameSchema) -> List[str]:
+    def getFeatureNames(game_schema: GameSchema) -> List[str]:
         columns = []
-        features = Extractor.SessionFeatures.generateFeatureDict(range(game_table.min_level, game_table.max_level+1), game_schema)
+        features = Extractor.SessionFeatures.generateFeatureDict(game_schema)
         for key in features.keys():
             if type(features[key]) is type({}):
                 # if it's a dictionary, expand.
@@ -100,23 +100,23 @@ class Extractor(abc.ABC):
         # TODO: Should we do anything if the user accidentally adds a feature? For example I accidentally was adding 2
         # features that weren't in the schema (by misreferencing actual features), and they were appended to the end of
         # the feature list.
-        for key in self.features.featureList():
-            key_type = type(self.features.getValByName(key))
+        for key in self._features.featureList():
+            key_type = type(self._features.getValByName(key))
             if key_type is type({}) or key_type is type(defaultdict()):
                 # if it's a dictionary, expand.
-                column_vals.extend([myformat(self.features.getValByIndex(key, num)) for num in self.features.getValByName(feature_name=key).keys()])
+                column_vals.extend([myformat(self._features.getValByIndex(key, num)) for num in self._features.getValByName(feature_name=key).keys()])
             else:
-                column_vals.append(myformat(self.features.getValByName(key)))
+                column_vals.append(myformat(self._features.getValByName(key)))
         return column_vals
 
-    def extractFromRow(self, row_with_complex_parsed, game_table: TableSchema) -> None:
-        self.extractSequencesFromRow(row_data=row_with_complex_parsed, game_table=game_table)
-        self.extractFeaturesFromRow(row_with_complex_parsed=row_with_complex_parsed, game_table=game_table)
+    def extractFromRow(self, event:Event, table_schema:TableSchema) -> None:
+        self.extractSequencesFromRow(event=event, table_schema=table_schema)
+        self.extractFeaturesFromEvent(event:Event=event, table_schema=table_schema)
 
-    def extractSequencesFromRow(self, row_data, game_table: TableSchema) -> None:
-        for sequence in self.sequences:
-            event_data = self.extractCustomSequenceEventDataFromRow(row_data=row_data, game_table=game_table)
-            sequence.RegisterEvent(row_data[game_table.complex_data_index]["event_custom"], event_data=event_data)
+    def extractSequencesFromRow(self, event:Event, table_schema:TableSchema) -> None:
+        for sequence in self._sequences:
+            event_data = self.extractCustomSequenceEventDataFromRow(event=event, table_schema=table_schema)
+            sequence.RegisterEvent(event.event_data, event_data=event_data)
 
     ## Function to custom-extract event data for a sequence.
     #  *** This function MUST BE OVERRIDDEN if you want sequence data other than the event types. ***
@@ -124,7 +124,7 @@ class Extractor(abc.ABC):
     #  At the very least, the extractor could take the union of all data its various sequences may need.
     #  In general, however, if the extractor needs multiple kinds of sequences or sequence data,
     #  it is probably better to do dedicated sequence analysis.
-    def extractCustomSequenceEventDataFromRow(self, row_data, game_table: TableSchema):
+    def extractCustomSequenceEventDataFromRow(self, event:Event, table_schema:TableSchema):
         return None
 
     ## Abstract declaration of a function to perform extraction of features from a row.
@@ -134,7 +134,7 @@ class Extractor(abc.ABC):
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
     @abc.abstractmethod
-    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: TableSchema):
+    def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         pass
 
     ## Abstract declaration of a function to perform calculation of aggregate features
@@ -149,9 +149,9 @@ class Extractor(abc.ABC):
     #  the actual extractor code easier to read/write, since there is less need
     #  to understand the structure of feature data.
     class SessionFeatures:
-        def __init__(self, level_range: range, game_schema: GameSchema):
+        def __init__(self, game_schema: GameSchema):
             self.perlevels: List = list(game_schema.perlevel_features().keys())
-            self.features = Extractor.SessionFeatures.generateFeatureDict(level_range, game_schema)
+            self.features = Extractor.SessionFeatures.generateFeatureDict(game_schema)
 
         ## Static function to generate a dictionary of game feature data from a given schema.
         #  The dictionary has the following hierarchy:
@@ -160,16 +160,18 @@ class Extractor(abc.ABC):
         #  @param level_range The range of all levels for the game associated with an extractor.
         #  @param game_schema A dictionary that defines how the game data is structured.
         @staticmethod
-        def generateFeatureDict(level_range: range, game_schema: GameSchema) -> Dict:
+        def generateFeatureDict(game_schema: GameSchema) -> Dict[str,Union]:
             # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
             # which in turn maps each level to a value and prefix.
             perlevels = game_schema.perlevel_features()
-            features = {f:{lvl:{"val":None, "prefix":"lvl"} for lvl in level_range } for f in perlevels}
+            level_range = range(game_schema.min_level   if game_schema.min_level is not None else 0,
+                                game_schema.max_level+1 if game_schema.max_level is not None else 1)
+            features : Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]] = {f:{lvl:{"val":None, "prefix":"lvl"} for lvl in level_range } for f in perlevels.keys()}
             # next, do something similar for other per-custom-count features.
             percounts = game_schema.percount_features()
             features.update({f:{num:{"val":None, "prefix":percounts[f]["prefix"]} for num in range(0, percounts[f]["count"]) } for f in percounts})
             # finally, add in aggregate-only features.
-            features.update({f:0 for f in game_schema.aggregate_features()})
+            features.update({f:0 for f in game_schema.aggregate_features().keys()})
             return features
 
         ## Getter function to retrieve a list of all features in the SessionFeatures dictionary.
@@ -288,8 +290,7 @@ class Extractor(abc.ABC):
             try:
                 _ = self.features[feature_name]
             except KeyError:
-                utils.Logger.toStdOut(f'{feature_name} does not exist.', logging.ERROR)
-                utils.Logger.toFile(f'{feature_name} does not exist.', logging.ERROR)
+                utils.Logger.Log(f'{feature_name} does not exist.', logging.ERROR)
                 return False
             return True
 

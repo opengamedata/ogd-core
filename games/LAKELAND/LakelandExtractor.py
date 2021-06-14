@@ -24,8 +24,9 @@ from typing import List, Union
 ## import local files
 import utils
 from extractors.Extractor import Extractor
-from schemas.TableSchema import TableSchema
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
 
 # temp comment
 
@@ -114,7 +115,7 @@ class LakelandExtractor(Extractor):
 
         # set window range
         # Initialize superclass
-        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
+        super().__init__(session_id=session_id, table_schema=game_table, game_schema=game_schema)
         
         self.reset()
         self.setValByName('num_play', self._cur_gameplay)

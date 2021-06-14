@@ -15,8 +15,9 @@ from typing import Tuple, Union
 import utils
 from sklearn.linear_model import LinearRegression
 from extractors.Extractor import Extractor
-from schemas.TableSchema import TableSchema
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
 from game_info.Jowilder import Jowilder_Enumerators as je
 
 # temp comment
@@ -104,7 +105,7 @@ class JowilderExtractor(Extractor):
     _NULL_FEATURE_VALS = ['null', 0, None]
 
     def __init__(self, session_id: int, game_table: TableSchema, game_schema: GameSchema):
-        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
+        super().__init__(session_id=session_id, table_schema=game_table, game_schema=game_schema)
         config = game_schema['config']
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
         self._IDLE_THRESH = datetime.timedelta(seconds=self._IDLE_THRESH_SECONDS)
@@ -483,7 +484,7 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
         for i, response in enumerate(_questions):
-            self.features.setValByIndex(feature_name="quiz_response", index=i, new_value=response["response_index"])
+            self._features.setValByIndex(feature_name="quiz_response", index=i, new_value=response["response_index"])
 
     def _extractFromQuizquestion(self, event_client_time, event_data_complex_parsed):
         # assign event_data_complex_parsed variables
@@ -1128,7 +1129,7 @@ class JowilderExtractor(Extractor):
             return
         if self.getValByIndex(feature_name=feature_name, index=index) in JowilderExtractor._NULL_FEATURE_VALS:
             self.setValByIndex(feature_name, index=index, new_value=self._get_default_val(feature_name))
-        self.features.incValByIndex(feature_name=feature_name, index=index, increment=increment)
+        self._features.incValByIndex(feature_name=feature_name, index=index, increment=increment)
 
     def feature_time_since_start(self, feature_base, cur_client_time, interaction_num=None):
         """
@@ -1166,14 +1167,14 @@ class JowilderExtractor(Extractor):
         for lvl in self._cur_levels:
             if self.getValByIndex(feature_name=feature_name, index=lvl) in JowilderExtractor._NULL_FEATURE_VALS:
                 self.setValByIndex(feature_name, index=lvl, new_value=self._get_default_val(feature_name))
-            self.features.incValByIndex(feature_name=feature_name, index=lvl, increment=increment)
+            self._features.incValByIndex(feature_name=feature_name, index=lvl, increment=increment)
 
     def _increment_sess_feature(self, feature_name, increment=None):
         if increment is None:
             increment = 1
         if self.getValByName(feature_name) in JowilderExtractor._NULL_FEATURE_VALS:
             self.setValByName(feature_name, new_value=self._get_default_val(feature_name))
-        self.features.incAggregateVal(feature_name=feature_name, increment=increment)
+        self._features.incAggregateVal(feature_name=feature_name, increment=increment)
 
 
     def _set_value_in_cur_levels(self, feature_name, value):
@@ -1213,16 +1214,16 @@ class JowilderExtractor(Extractor):
             return 0
 
     def getValByName(self, feature_name):
-        return self.features.getValByName(feature_name)
+        return self._features.getValByName(feature_name)
 
     def setValByName(self, feature_name, new_value):
-        self.features.setValByName(feature_name, new_value)
+        self._features.setValByName(feature_name, new_value)
 
     def getValByIndex(self, feature_name, index):
-        return self.features.getValByIndex(feature_name, index)
+        return self._features.getValByIndex(feature_name, index)
 
     def setValByIndex(self, feature_name, index, new_value):
-        self.features.setValByIndex(feature_name, index, new_value)
+        self._features.setValByIndex(feature_name, index, new_value)
 
 
     def get_debug_string(self, num_lines=20):
