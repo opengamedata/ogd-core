@@ -34,8 +34,8 @@ class WaveExtractor(Extractor):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: TableSchema, game_schema: GameSchema):
-        super().__init__(session_id=session_id, table_schema=game_table, game_schema=game_schema)
+    def __init__(self, session_id: int, game_schema: GameSchema):
+        super().__init__(session_id=session_id, game_schema=game_schema)
         self.start_times: Dict       = {}
         self.end_times:   Dict       = {}
         self.amp_move_counts:  Dict   = {}
@@ -203,7 +203,7 @@ class WaveExtractor(Extractor):
     #
     #  @param level             The level being played when event occurred.
     #  @param event_client_time The time when this event occurred, according to game client.
-    def _extractFromBegin(self, level, event_client_time):
+    def _extractFromBegin(self, level:int, event_client_time:datetime):
         self._features.incValByIndex(feature_name="beginCount", index=level)
         if self.active_begin == None:
             self.start_times[level] = event_client_time
@@ -231,7 +231,7 @@ class WaveExtractor(Extractor):
     #
     #  @param level             The level being played when event occurred.
     #  @param event_client_time The time when this event occurred, according to game client.
-    def _extractFromComplete(self, level, event_client_time):
+    def _extractFromComplete(self, level:int, event_client_time:datetime):
         self._features.incValByIndex(feature_name="completeCount", index=level)
         # track latest completion of levels 8 & 16, for the timeToAnswerMS features.
         if (level == 8):
@@ -260,7 +260,7 @@ class WaveExtractor(Extractor):
     #  - succeedCount
     #
     #  @param level The level being played when succeed event occurred.
-    def _extractFromSucceed(self, level):
+    def _extractFromSucceed(self, level:int):
         self._features.incValByIndex(feature_name="succeedCount", index=level)
 
     ## Private function to extract features from a "MENU_BUTTON" event.
@@ -271,7 +271,7 @@ class WaveExtractor(Extractor):
     #
     #  @param level             The level being played when event occurred.
     #  @param event_client_time The time when this event occurred, according to game client.
-    def _extractFromMenuBtn(self, level, event_client_time):
+    def _extractFromMenuBtn(self, level:int, event_client_time:datetime):
         self._features.incValByIndex(feature_name="menuBtnCount", index=level)
         if self.active_begin == None:
             sess_id = self._features.getValByName(feature_name="sessionID")
@@ -293,7 +293,7 @@ class WaveExtractor(Extractor):
     #  - totalSkips
     #
     #  @param level The level being played when reset button was pressed.
-    def _extractFromSkipBtn(self, level):
+    def _extractFromSkipBtn(self, level:int):
         self._features.incValByIndex(feature_name="totalSkips", index=level)
         self.active_begin = None
 
@@ -302,7 +302,7 @@ class WaveExtractor(Extractor):
     #  - totalResets
     #
     #  @param level The level being played when reset button was pressed.
-    def _extractFromResetBtnPress(self, level):
+    def _extractFromResetBtnPress(self, level:int):
         self._features.incValByIndex(feature_name="totalResets", index=level)
 
     ## Private function to extract features from a "FAIL" event.
@@ -310,7 +310,7 @@ class WaveExtractor(Extractor):
     #  - totalFails
     #
     #  @param level The level being played when the event occurred.
-    def _extractFromFail(self, level):
+    def _extractFromFail(self, level:int):
         self._features.incValByIndex(feature_name="totalFails", index=level)
 
     ## Private function to extract features from a "SLIDER_MOVE_RELEASE" or 
@@ -324,7 +324,7 @@ class WaveExtractor(Extractor):
     #
     #  @param level      The level being played when event occurred.
     #  @param event_data Parsed JSON data from the row being processed.
-    def _extractFromMoveRelease(self, level, event_data, event_client_time):
+    def _extractFromMoveRelease(self, level:int, event_data:Dict[str,Any], event_client_time:datetime):
         def isGoodMove(event_data):
             end_distance   = abs(event_data["correct_val"] - event_data["end_val"])
             start_distance = abs(event_data["correct_val"] - event_data["begin_val"])
@@ -394,7 +394,7 @@ class WaveExtractor(Extractor):
     #  - questionCorrect
     #
     #  @param event_data Parsed JSON data from the row being processed.
-    def _extractFromQuestionAnswer(self, event_data, event_client_time):
+    def _extractFromQuestionAnswer(self, event_data:Dict[str,Any], event_client_time:datetime):
         q_num = event_data["question"]
         if (q_num == 0):
             self.latest_answer_Q0 = event_client_time
