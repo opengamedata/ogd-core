@@ -103,7 +103,7 @@ class WaveExtractor(Extractor):
                 self._extractFromMoveRelease(level=level, event_data=event.event_data, event_client_time=event.timestamp)
             elif event_type == "QUESTION_ANSWER":
                 self._extractFromQuestionAnswer(event_data=event.event_data, event_client_time=event.timestamp)
-                # print("Q+A: " + str(event_data_complex_parsed))
+                # print("Q+A: " + str(event_data))
             else:
                 raise Exception(f"Found an unrecognized event type: {event_type}")
                                                
