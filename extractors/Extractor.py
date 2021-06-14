@@ -111,7 +111,7 @@ class Extractor(abc.ABC):
 
     def extractFromRow(self, event:Event, table_schema:TableSchema) -> None:
         self.extractSequencesFromRow(event=event, table_schema=table_schema)
-        self.extractFeaturesFromEvent(event:Event=event, table_schema=table_schema)
+        self.extractFeaturesFromEvent(event=event, table_schema=table_schema)
 
     def extractSequencesFromRow(self, event:Event, table_schema:TableSchema) -> None:
         for sequence in self._sequences:
