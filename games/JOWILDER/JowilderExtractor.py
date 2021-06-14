@@ -19,7 +19,7 @@ from extractors.Extractor import Extractor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
-from game_info.Jowilder import Jowilder_Enumerators as je
+from games.JOWILDER import Jowilder_Enumerators as je
 
 # temp comment
 
