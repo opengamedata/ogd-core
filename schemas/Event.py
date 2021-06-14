@@ -8,9 +8,9 @@ Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 #  Then the extractors etc. can just access columns in a direct manner.
 class Event:
     def __init__(self, session_id:str, app_id:str, timestamp:datetime, event_name:str, event_data:Map,
-                 app_version:Union[str,None] = None, time_offset:Union[int,None] = None,
-                 user_id:Union[str,None] = None,   user_data:Union[Map,None] = None,
-                 game_state:Union[Map,None] = None, event_sequence_index:Union[int,None] = None):
+                 app_version:str = "0", time_offset:Union[int,None] = None,
+                 user_id:Union[str,None] = None,   user_data:Map = {},
+                 game_state:Map = {}, event_sequence_index:Union[int,None] = None):
         """Constructor for an Event object.
 
         :param session_id: An identifier for the session during which the event occurred.
@@ -41,9 +41,9 @@ class Event:
         self.timestamp            : datetime        = timestamp
         self.event_name           : str             = event_name
         self.event_data           : Map             = event_data
-        self.app_version          : Union[str,None] = app_version
+        self.app_version          : str             = app_version
         self.time_offset          : Union[int,None] = time_offset
         self.user_id              : Union[str,None] = user_id
-        self.user_data            : Union[Map,None] = user_data
-        self.game_state           : Union[Map,None] = game_state
+        self.user_data            : Map             = user_data
+        self.game_state           : Map             = game_state
         self.event_sequence_index : Union[int,None] = event_sequence_index
