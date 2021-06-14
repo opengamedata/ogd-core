@@ -3,6 +3,8 @@ import bisect
 import json
 import logging
 import typing
+from datetime import datetime
+from typing import Any, Dict
 ## import local files
 import utils
 from extractors.Extractor import Extractor
@@ -27,7 +29,7 @@ class CrystalExtractor(Extractor):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id:int, game_table:TableSchema, game_schema:GameSchema):
+    def __init__(self, session_id:int, game_schema:GameSchema):
         super().__init__(session_id=session_id, game_schema=game_schema)
         # Define custom private data.
         self._start_times: typing.Dict       = {}
@@ -106,7 +108,7 @@ class CrystalExtractor(Extractor):
     #
     #  @param level             The level being played when event occurred.
     #  @param event_client_time The time when this event occurred, according to game client.
-    def _extractFromBegin(self, level, event_client_time):
+    def _extractFromBegin(self, level, event_client_time:datetime):
         self._features.incValByIndex(feature_name="beginCount", index=level, increment=1)
         if self._active_begin == None:
             self._start_times[level] = event_client_time
@@ -224,7 +226,7 @@ class CrystalExtractor(Extractor):
     #  - questionCorrect
     #
     #  @param event_data_parsed Parsed JSON data from the row being processed.
-    def _extractFromQuestionAnswer(self, event_data):
+    def _extractFromQuestionAnswer(self, event_data:Dict['str',Any]):
         q_num = event_data["question"]
         self._features.setValByIndex(feature_name="questionAnswered", index=q_num, new_value=event_data["answered"])
         correctness = 1 if event_data["answered"] == event_data["answer"] else 0
