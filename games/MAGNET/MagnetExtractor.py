@@ -27,8 +27,8 @@ class MagnetExtractor(Extractor):
     #                    table assiciated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, game_table: TableSchema, game_schema: GameSchema):
-        super().__init__(session_id=session_id, table_schema=game_table, game_schema=game_schema)
+    def __init__(self, session_id:int, game_schema:GameSchema):
+        super().__init__(session_id=session_id, game_schema=game_schema)
         # Define custom private data.
         self._features.setValByName(feature_name="sessionID", new_value=session_id)
 
@@ -38,24 +38,18 @@ class MagnetExtractor(Extractor):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: TableSchema):
+    def extractFeaturesFromRow(self, event:Event, table_schema:TableSchema):
         # put some data in local vars, for readability later.
-        level = row_with_complex_parsed[game_table.level_index]
-        event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
-        event_client_time = row_with_complex_parsed[game_table.client_time_index]
+        level = event.event_data['level']
         # Check for invalid row.
-        row_sess_id = row_with_complex_parsed[game_table.session_id_index]
-        if row_sess_id != self.session_id:
-            utils.Logger.toFile(f"Got a row with incorrect session id! Expected {self.session_id}, got {row_sess_id}!",
+        if event.session_id != self._session_id:
+            utils.Logger.toFile(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!",
                                 logging.ERROR)
-        elif "event_custom" not in event_data_complex_parsed.keys():
-            utils.Logger.toFile("Invalid event_data_complex, does not contain event_custom field!", logging.ERROR)
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
             if self._features.getValByName(feature_name="persistentSessionID") == 0:
-                self._features.setValByName(feature_name="persistentSessionID",
-                                           new_value=row_with_complex_parsed[game_table.pers_session_id_index])
+                self._features.setValByName(feature_name="persistentSessionID", new_value=event.event_data['persistent_session_id'])
             # Ensure we have private data initialized for this level.
             if not level in self._levels:
                 bisect.insort(self._levels, level)
@@ -64,17 +58,17 @@ class MagnetExtractor(Extractor):
             self._features.incValByIndex(feature_name="eventCount", index=level)
             self._features.incAggregateVal(feature_name="sessionEventCount")
             # Then, handle cases for each type of event
-            event_type = event_data_complex_parsed["event_custom"]
+            event_type = event.event_data['event_custom']
             if event_type == "COMPLETE":
-                self._extractFromComplete(level, event_client_time, event_data_complex_parsed)
+                self._extractFromComplete(level=level, event_data=event.event_data)
             elif event_type == "DRAG_TOOL":
                 pass
             elif event_type == "DRAG_POLE":
                 pass
             elif event_type == "PLAYGROUND_EXIT":
-                self._extractFromPlaygroundExit(level, event_client_time, event_data_complex_parsed)
+                self._extractFromPlaygroundExit(level=level, event_data=event.event_data)
             elif event_type == "TUTORIAL_EXIT":
-                self._extractFromTutorialExit(level, event_client_time, event_data_complex_parsed)
+                self._extractFromTutorialExit(level=level, event_data=event.event_data)
             else:
                 raise Exception(f"Found an unrecognized event type: {event_type}")
 
@@ -101,7 +95,7 @@ class MagnetExtractor(Extractor):
     #  @param level             The level being played when event occurred.
     #  @param event_client_time The time when this event occurred, according to game client.
     #  @param event_data        Parsed JSON data from the row being processed.
-    def _extractFromComplete(self, level, event_client_time, event_data):
+    def _extractFromComplete(self, level:int, event_data:Dict[str,Any]):
         south_score = event_data["guessScore"]["southDist"]
         north_score = event_data["guessScore"]["northDist"]
         south_score_if_switched = event_data["guessScoreIfSwitched"]["northPoleToSouthGuess"]
@@ -127,7 +121,7 @@ class MagnetExtractor(Extractor):
     #  @param level             The level being played when event occurred.
     #  @param event_client_time The time when this event occurred, according to game client.
     #  @param event_data        Parsed JSON data from the row being processed.
-    def _extractFromPlaygroundExit(self, level, event_client_time, event_data):
+    def _extractFromPlaygroundExit(self, level:int, event_data:Dict[str,Any]):
         time_spent = event_data["timeSpent"]
         self._features.setValByIndex(feature_name="levelTime", index=level, new_value=time_spent)
         self._features.incAggregateVal(feature_name="sessionTime", increment=time_spent)
@@ -137,7 +131,7 @@ class MagnetExtractor(Extractor):
     #  @param level             The level being played when event occurred.
     #  @param event_client_time The time when this event occurred, according to game client.
     #  @param event_data        Parsed JSON data from the row being processed.
-    def _extractFromTutorialExit(self, level, event_client_time, event_data):
+    def _extractFromTutorialExit(self, level:int, event_data:Dict[str,Any]):
         time_spent = event_data["timeSpent"]
         self._features.setValByIndex(feature_name="levelTime", index=level, new_value=time_spent)
         self._features.incAggregateVal(feature_name="sessionTime", increment=time_spent)
