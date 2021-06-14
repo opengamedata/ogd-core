@@ -30,10 +30,10 @@ class CrystalExtractor(Extractor):
     def __init__(self, session_id:int, game_table:TableSchema, game_schema:GameSchema):
         super().__init__(session_id=session_id, game_schema=game_schema)
         # Define custom private data.
-        self.start_times: typing.Dict       = {}
-        self.end_times:   typing.Dict       = {}
-        self.totalMoleculeDragDuration      = {}
-        self.active_begin = None
+        self._start_times: typing.Dict       = {}
+        self._end_times:   typing.Dict       = {}
+        self._totalMoleculeDragDuration      = {}
+        self._active_begin = None
         self._features.setValByName(feature_name="sessionID", new_value=session_id)
         # we specifically want to set the default value for questionAnswered to -1, for unanswered.
         for ans in self._features.getValByName(feature_name="questionAnswered").keys():
@@ -49,49 +49,44 @@ class CrystalExtractor(Extractor):
     #                     table assiciated with this game is structured.
     def extractFeaturesFromEvent(self, event:Event, game_table:TableSchema):
         # put some data in local vars, for readability later.
-        level = row_with_complex_parsed[game_table.level_index]
-        event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
-        event_client_time = row_with_complex_parsed[game_table.client_time_index]
+        level = event.event_data['level']
+        event_client_time = event.timestamp
         # Check for invalid row.
-        row_sess_id = row_with_complex_parsed[game_table.session_id_index]
-        if row_sess_id != self.session_id:
-            utils.Logger.toFile(f"Got a row with incorrect session id! Expected {self.session_id}, got {row_sess_id}!", logging.ERROR)
-        elif "event_custom" not in event_data_complex_parsed.keys():
-            utils.Logger.toFile("Invalid event_data_complex, does not contain event_custom field!", logging.ERROR)
+        if event.session_id != self._session_id:
+            utils.Logger.toFile(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!", logging.ERROR)
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
             if self._features.getValByName(feature_name="persistentSessionID") == 0:
-                self._features.setValByName(feature_name="persistentSessionID",
-                                           new_value   = row_with_complex_parsed[game_table.pers_session_id_index])
+                self._features.setValByName(feature_name="persistentSessionID", new_value=event.event_data['persistent_session_id'])
             # Ensure we have private data initialized for this level.
             if not level in self._levels:
                 bisect.insort(self._levels, level)
                 self._features.initLevel(level)
-                self.totalMoleculeDragDuration[level] = 0
+                self._totalMoleculeDragDuration[level] = 0
                 # self.start_times[level] = None
                 # self.end_times[level] = None
             # First, record that an event of any kind occurred, for the level & session
             self._features.incValByIndex(feature_name="eventCount", index=level)
             self._features.incAggregateVal(feature_name="sessionEventCount")
             # Then, handle cases for each type of event
-            event_type = event_data_complex_parsed["event_custom"]
+            event_type = event.event_data["event_custom"]
             if event_type == "BEGIN":
                 self._extractFromBegin(level, event_client_time)
             elif event_type == "COMPLETE":
-                self._extractFromComplete(level, event_client_time, event_data_complex_parsed)
+                self._extractFromComplete(level, event_client_time, event.event_data)
             elif event_type == "MOLECULE_RELEASE":
-                self._extractFromMoleculeRelease(level, event_data_complex_parsed)
+                self._extractFromMoleculeRelease(level, event.event_data)
             elif event_type == "MOLECULE_ROTATE":
-                self._extractFromMoleculeRotate(level, event_data_complex_parsed)
+                self._extractFromMoleculeRotate(level, event.event_data)
             elif event_type == "BACK_TO_MENU":
                 self._extractFromMenuBtn(level, event_client_time)
             elif event_type == "CLEAR_BTN_PRESS":
                 self._extractFromClearBtnPress(level)
             elif event_type in "MUSEUM_CLOSE" :
-                self._extractFromMuseumClose(event_data_complex_parsed)
+                self._extractFromMuseumClose(event.event_data)
             elif event_type == "QUESTION_ANSWER":
-                self._extractFromQuestionAnswer(event_data_complex_parsed)
+                self._extractFromQuestionAnswer(event.event_data)
             else:
                 raise Exception(f"Found an unrecognized event type: {event_type}")
                                                
@@ -102,7 +97,7 @@ class CrystalExtractor(Extractor):
         # them until we know how many total events occur.
         for level in self._levels:
             count = self._features.getValByIndex(feature_name="moleculeMoveCount", index=level)
-            avg = self.totalMoleculeDragDuration[level] / count if count > 0 else count
+            avg = self._totalMoleculeDragDuration[level] / count if count > 0 else count
             self._features.setValByIndex(feature_name="avgMoleculeDragDurationInSecs", index=level, new_value=avg)
 
     ## Private function to extract features from a "BEGIN" event.
@@ -113,18 +108,18 @@ class CrystalExtractor(Extractor):
     #  @param event_client_time The time when this event occurred, according to game client.
     def _extractFromBegin(self, level, event_client_time):
         self._features.incValByIndex(feature_name="beginCount", index=level, increment=1)
-        if self.active_begin == None:
-            self.start_times[level] = event_client_time
-        elif self.active_begin == level:
+        if self._active_begin == None:
+            self._start_times[level] = event_client_time
+        elif self._active_begin == level:
             pass # in this case, just keep going.
         else:
-            self.end_times[self.active_begin] = event_client_time
-            time_taken = self._calcLevelTime(self.active_begin)
-            self._features.incValByIndex(feature_name="durationInSecs", index=self.active_begin, increment=time_taken)
+            self._end_times[self._active_begin] = event_client_time
+            time_taken = self._calcLevelTime(self._active_begin)
+            self._features.incValByIndex(feature_name="durationInSecs", index=self._active_begin, increment=time_taken)
             self._features.incAggregateVal(feature_name="sessionDurationInSecs", increment=time_taken)
-            self.start_times[level] = event_client_time
+            self._start_times[level] = event_client_time
         # in any case, current level now has active begin event.
-        self.active_begin = level
+        self._active_begin = level
 
     ## Private function to extract features from a "COMPLETE" event.
     #  The features affected are:
@@ -139,15 +134,15 @@ class CrystalExtractor(Extractor):
     #  @param event_data        Parsed JSON data from the row being processed.
     def _extractFromComplete(self, level, event_client_time, event_data):
         self._features.incValByIndex(feature_name="completesCount", index=level, increment=1)
-        if self.active_begin == None:
+        if self._active_begin == None:
             sess_id = self._features.getValByName(feature_name="sessionID")
             utils.Logger.toFile(f"Got a 'Complete' event when there was no active 'Begin' event! Level {level}, Sess ID: {sess_id}", logging.ERROR)
         else:
-            self.end_times[level] = event_client_time
+            self._end_times[level] = event_client_time
             time_taken = self._calcLevelTime(level)
             self._features.incValByIndex(feature_name="durationInSecs", index=level, increment=time_taken)
             self._features.incAggregateVal(feature_name="sessionDurationInSecs", increment=time_taken)
-            self.active_begin = None
+            self._active_begin = None
             score = event_data["stability"]["pack"] + event_data["stability"]["charge"]
             max_score = max(score, self._features.getValByIndex(feature_name="finalScore", index=level))
             self._features.setValByIndex(feature_name="finalScore", index=level, new_value=max_score)
@@ -163,15 +158,15 @@ class CrystalExtractor(Extractor):
     #  @param event_client_time The time when this event occurred, according to game client.
     def _extractFromMenuBtn(self, level, event_client_time):
         self._features.incValByIndex(feature_name="menuBtnCount", index=level)
-        if self.active_begin == None:
+        if self._active_begin == None:
             sess_id = self._features.getValByName(feature_name="sessionID")
             utils.Logger.toFile(f"Got a 'Back to Menu' event when there was no active 'Begin' event! Sess ID: {sess_id}", logging.ERROR)
         else:
-            self.end_times[level] = event_client_time
+            self._end_times[level] = event_client_time
             time_taken = self._calcLevelTime(level)
             self._features.incValByIndex(feature_name="durationInSecs", index=level, increment=time_taken)
             self._features.incAggregateVal(feature_name="sessionDurationInSecs", increment=time_taken)
-            self.active_begin = None
+            self._active_begin = None
 
     ## Private function to extract features from a "MOLECULE_RELEASE" event.
     #  The features affected are:
@@ -182,9 +177,9 @@ class CrystalExtractor(Extractor):
     #  @param level      The level being played when event occurred.
     #  @param event_data Parsed JSON data from the row being processed.
     def _extractFromMoleculeRelease(self, level, event_data):
-        if not level in self.totalMoleculeDragDuration.keys():
-            self.totalMoleculeDragDuration[level] = 0
-        self.totalMoleculeDragDuration[level] += event_data["time"]
+        if not level in self._totalMoleculeDragDuration.keys():
+            self._totalMoleculeDragDuration[level] = 0
+        self._totalMoleculeDragDuration[level] += event_data["time"]
         self._features.incValByIndex(feature_name="moleculeMoveCount", index=level)
         self._features.incAggregateVal(feature_name="sessionMoleculeMoveCount")
 
@@ -244,8 +239,8 @@ class CrystalExtractor(Extractor):
     def _calcLevelTime(self, lvl:int) -> int:
         # use 0 if not played, -1 if not completed
         if lvl in self._levels:
-            if lvl in self.start_times and lvl in self.end_times:
-                return (self.end_times[lvl] - self.start_times[lvl]).total_seconds()
+            if lvl in self._start_times and lvl in self._end_times:
+                return (self._end_times[lvl] - self._start_times[lvl]).total_seconds()
             else:
                 return -1
         else:
