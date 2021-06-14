@@ -41,7 +41,7 @@ class Event:
         self.timestamp            : datetime        = timestamp
         self.event_name           : str             = event_name
         self.event_data           : Map             = event_data
-        self._app_version         : Union[str,None] = app_version
+        self.app_version          : Union[str,None] = app_version
         self.time_offset          : Union[int,None] = time_offset
         self.user_id              : Union[str,None] = user_id
         self.user_data            : Union[Map,None] = user_data
