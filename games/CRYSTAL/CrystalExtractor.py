@@ -3,7 +3,7 @@ import bisect
 import json
 import logging
 import typing
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any, Dict
 ## import local files
 import utils
@@ -134,7 +134,7 @@ class CrystalExtractor(Extractor):
     #  @param level             The level being played when event occurred.
     #  @param event_client_time The time when this event occurred, according to game client.
     #  @param event_data        Parsed JSON data from the row being processed.
-    def _extractFromComplete(self, level, event_client_time, event_data):
+    def _extractFromComplete(self, level, event_client_time:datetime, event_data:Dict[str,Any]):
         self._features.incValByIndex(feature_name="completesCount", index=level, increment=1)
         if self._active_begin == None:
             sess_id = self._features.getValByName(feature_name="sessionID")
@@ -158,7 +158,7 @@ class CrystalExtractor(Extractor):
     #
     #  @param level             The level being played when event occurred.
     #  @param event_client_time The time when this event occurred, according to game client.
-    def _extractFromMenuBtn(self, level, event_client_time):
+    def _extractFromMenuBtn(self, level:int, event_client_time:datetime):
         self._features.incValByIndex(feature_name="menuBtnCount", index=level)
         if self._active_begin == None:
             sess_id = self._features.getValByName(feature_name="sessionID")
@@ -178,7 +178,7 @@ class CrystalExtractor(Extractor):
     #
     #  @param level      The level being played when event occurred.
     #  @param event_data Parsed JSON data from the row being processed.
-    def _extractFromMoleculeRelease(self, level, event_data):
+    def _extractFromMoleculeRelease(self, level:int, event_data:Dict[str,Any]):
         if not level in self._totalMoleculeDragDuration.keys():
             self._totalMoleculeDragDuration[level] = 0
         self._totalMoleculeDragDuration[level] += event_data["time"]
@@ -194,7 +194,7 @@ class CrystalExtractor(Extractor):
     #
     #  @param level      The level being played when event occurred.
     #  @param event_data Parsed JSON data from the row being processed.
-    def _extractFromMoleculeRotate(self, level, event_data):
+    def _extractFromMoleculeRotate(self, level:int, event_data:Dict[str,Any]):
         if event_data["isStamp"]:
             self._features.incValByIndex(feature_name="stampRotateCount", index=level)
             self._features.incAggregateVal(feature_name="sessionStampRotateCount")
@@ -208,7 +208,7 @@ class CrystalExtractor(Extractor):
     #  - sessionClearBtnPresses
     #
     #  @param level The level being played when clear button was pressed.
-    def _extractFromClearBtnPress(self, level):
+    def _extractFromClearBtnPress(self, level:int):
         self._features.incValByIndex(feature_name="clearBtnPresses", index=level)
         self._features.incAggregateVal(feature_name="sessionClearBtnPresses")
 
@@ -217,7 +217,7 @@ class CrystalExtractor(Extractor):
     #  - sessionMuseumDurationInSecs
     #
     #  @param event_data Parsed JSON data from the row being processed.
-    def _extractFromMuseumClose(self, event_data):
+    def _extractFromMuseumClose(self, event_data:Dict[str,Any]):
         self._features.incAggregateVal(feature_name="sessionMuseumDurationInSecs", increment=event_data["timeOpen"])
 
     ## Private function to extract features from a "QUESTION_ANSWER" event.
@@ -226,7 +226,7 @@ class CrystalExtractor(Extractor):
     #  - questionCorrect
     #
     #  @param event_data_parsed Parsed JSON data from the row being processed.
-    def _extractFromQuestionAnswer(self, event_data:Dict['str',Any]):
+    def _extractFromQuestionAnswer(self, event_data:Dict[str,Any]):
         q_num = event_data["question"]
         self._features.setValByIndex(feature_name="questionAnswered", index=q_num, new_value=event_data["answered"])
         correctness = 1 if event_data["answered"] == event_data["answer"] else 0
