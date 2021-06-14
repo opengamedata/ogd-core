@@ -63,24 +63,14 @@ class WaveExtractor(Extractor):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: TableSchema):
-        # put some data in local vars, for readability later.
-        level = row_with_complex_parsed[game_table.level_index]
-        event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
-        event_client_time = row_with_complex_parsed[game_table.client_time_index]
-        # Check for invalid row.
-        row_sess_id = row_with_complex_parsed[game_table.session_id_index]
-        if row_sess_id != self.session_id:
-            utils.Logger.toFile(f"Got a row with incorrect session id! Expected {self.session_id}, got {row_sess_id}!", logging.ERROR)
-            utils.Logger.toStdOut(f"Got a row with incorrect session id! Expected {self.session_id}, got {row_sess_id}!", logging.ERROR)
-        elif "event_custom" not in event_data_complex_parsed.keys():
-            utils.Logger.toStdOut("Invalid event_data_complex, does not contain event_custom field!", logging.ERROR)
-        # If row is valid, process it.
+    def extractFeaturesFromRow(self, event:Event, game_table:TableSchema):
+        if event.session_id != self._session_id:
+            utils.Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!", logging.ERROR)
         else:
+            level = event.event_data['level']
             # If we haven't set persistent id, set now.
             if self._features.getValByName(feature_name="persistentSessionID") == 0:
-                self._features.setValByName(feature_name="persistentSessionID", \
-                                           new_value=row_with_complex_parsed[game_table.pers_session_id_index])
+                self._features.setValByName(feature_name="persistentSessionID", new_value=event.event_data['persistent_session_id'])
             # Ensure we have private data initialized for the given level.
             if not level in self._levels:
                 bisect.insort(self._levels, level)
@@ -91,28 +81,28 @@ class WaveExtractor(Extractor):
             # Then, handle cases for each type of event
             # NOTE: for BEGIN and COMPLETE, we assume only one event of each type happens.
             # If there are somehow multiples, the previous times are overwritten by the newer ones.
-            event_type = event_data_complex_parsed["event_custom"]
+            event_type = event.event_data["event_custom"]
             if event_type == "BEGIN":
-                self._extractFromBegin(level, event_client_time)
+                self._extractFromBegin(level=level, event_client_time=event.timestamp)
             elif event_type == "COMPLETE":
-                self._extractFromComplete(level, event_client_time)
+                self._extractFromComplete(level=level, event_client_time=event.timestamp)
             elif event_type == "SUCCEED":
-                self._extractFromSucceed(level)
+                self._extractFromSucceed(level=level)
             elif event_type == "MENU_BUTTON":
-                self._extractFromMenuBtn(level, event_client_time)
+                self._extractFromMenuBtn(level=level, event_client_time=event.timestamp)
             elif event_type == "SKIP_BUTTON":
-                self._extractFromSkipBtn(level)
+                self._extractFromSkipBtn(level=level)
             elif event_type == "DISMISS_MENU_BUTTON":
                 pass
                 # print("Stub: Got a DISMISS_MENU_BUTTON event, nothing to do with it.")
             elif event_type == "RESET_BTN_PRESS":
-                self._extractFromResetBtnPress(level)
+                self._extractFromResetBtnPress(level=level)
             elif event_type == "FAIL":
-                self._extractFromFail(level)
+                self._extractFromFail(level=level)
             elif event_type in ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"] :
-                self._extractFromMoveRelease(level, event_data_complex_parsed, event_client_time)
+                self._extractFromMoveRelease(level=level, event_data=event.event_data, event_client_time=event.timestamp)
             elif event_type == "QUESTION_ANSWER":
-                self._extractFromQuestionAnswer(event_data_complex_parsed, event_client_time)
+                self._extractFromQuestionAnswer(event_data=event.event_data, event_client_time=event.timestamp)
                 # print("Q+A: " + str(event_data_complex_parsed))
             else:
                 raise Exception(f"Found an unrecognized event type: {event_type}")
