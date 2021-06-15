@@ -1,0 +1,35 @@
+{
+    "column_map": {
+        "event_date": "event_date",
+        "event_timestamp": "event_timestamp",
+        "event_name": "event_name",
+        "event_params": "event_params"
+    },
+
+    "columns": [
+        {
+            "name": "event_date",
+            "readable": "Event Date",
+            "desc": "Client date when the event was logged",
+            "type": "datetime"
+        },
+        {
+            "name": "event_timestamp",
+            "readable": "Event Timestamp",
+            "desc": "Client time when the event was logged",
+            "type": "int"
+        },
+        {
+            "name": "event_name",
+            "readable": "Event Name",
+            "desc": "Name of the event logged",
+            "type": "str"
+        },
+        {
+            "name": "event_params",
+            "readable": "Event Parameters",
+            "desc": "Parameters associated with the event",
+            "type": "list"
+        }
+    ]
+}
