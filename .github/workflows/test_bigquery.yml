@@ -12,6 +12,15 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
-
-    - name: Use gcloud CLI
-      run: gcloud info
+    - name: Get correct Python
+      run: |
+        sudo apt-get -q install python3.8
+        sudo apt-get -q install python3.8-dev
+    - uses: actions/checkout@v2
+    - name: Set up Python libraries
+      run: |
+        python3.8 -m pip install --upgrade pip
+        python3.8 -m pip install google-cloud-bigquery --quiet
+    - name: Test query
+      run: |
+        python3.8 interfaces/BigQueryInterface.py
