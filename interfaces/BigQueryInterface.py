@@ -3,15 +3,15 @@ from datetime import datetime
 from google.cloud import bigquery
 from typing import Dict, List, Tuple
 
-from config import settings
+#from config import settings
 from interfaces.DataInterface import DataInterface
 from utils import Logger
 
 class BigQueryInterface(DataInterface):
 
-    def __init__(self, game_id: str, settings):
+    def __init__(self, game_id: str):
         super().__init__(game_id=game_id)
-        self._settings = settings
+        #self._settings = settings
         self.Open()
         self._test()
 
@@ -148,4 +148,4 @@ class BigQueryInterface(DataInterface):
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
             return {'min':datetime.now(), 'max':datetime.now()}
 
-BigQueryInterface("test", settings)
+BigQueryInterface("test")
