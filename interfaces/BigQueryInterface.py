@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 from google.cloud import bigquery
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 #from config import settings
 from interfaces.DataInterface import DataInterface

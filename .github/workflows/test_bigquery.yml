@@ -3,6 +3,7 @@ on:
   push:
     paths:
     - 'interfaces/BigQueryInterface.py'
+    - 'interfaces/DataInterface.py'
   workflow_dispatch:
 jobs:
   test_connect:
