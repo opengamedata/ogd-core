@@ -1,6 +1,8 @@
 name: Test BigQuery
 on:
   push:
+    paths:
+    - 'interfaces/BigQueryInterface.py'
   workflow_dispatch:
 jobs:
   test_connect:
