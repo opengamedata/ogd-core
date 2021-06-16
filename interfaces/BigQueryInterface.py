@@ -3,13 +3,12 @@ from datetime import datetime
 from google.cloud import bigquery
 from typing import Dict, List
 
-from config import settings
 from interfaces.DataInterface import DataInterface
 from utils import Logger
 
 class BigQueryInterface(DataInterface):
 
-    def __init__(self, game_id: str):
+    def __init__(self, game_id: str, settings):
         super().__init__(game_id=game_id)
         self._settings = settings
         self.Open()
@@ -41,7 +40,7 @@ class BigQueryInterface(DataInterface):
             table_name = self._settings["db_config"]["TABLE"]
             id_string = ','.join([f"'{x}'" for x in id_list])
             query = f"""
-                SELECT event_name, event_date, param.value.int_value AS session_id, event_params
+                SELECT *, param.value.int_value AS session_id
                 FROM `{db_name}.{table_name}`,
                 UNNEST(event_params) AS param
                 WHERE param.key = "ga_session_id"
