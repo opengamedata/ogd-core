@@ -216,7 +216,8 @@ class ExportManager:
     #                    table assiciated with the given game is structured. 
     #  @raw_mgr          An instance of RawManager used to track raw data.
     #  @sess_processor         An instance of SessionProcessor used to extract and track feature data.
-    def _processRow(self, row:Tuple, sess_ids:List[int], game_table:TableSchema, raw_mgr:Union[RawManager,None], sess_processor:Union[SessionProcessor,None], evt_processor:EventProcessor):
+    def _processRow(self, row:Tuple, sess_ids:List[int], game_table:TableSchema,
+                    raw_mgr:Union[RawManager,None], sess_processor:Union[SessionProcessor,None], evt_processor:Union[EventProcessor,None]):
         # parse out complex data from json
         col = row[game_table.complex_data_index]
         try:
