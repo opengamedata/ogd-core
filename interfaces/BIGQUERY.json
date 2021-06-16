@@ -3,7 +3,15 @@
         "event_date": "event_date",
         "event_timestamp": "event_timestamp",
         "event_name": "event_name",
-        "event_params": "event_params"
+        "event_params": "event_params",
+        "event_server_timestamp_offset": "event_server_timestamp_offset",
+        "user_id": "user_id",
+        "user_pseudo_id": "user_pseudo_id",
+        "device": "device",
+        "geo": "geo",
+        "app_info": "app_info",
+        "traffic_source": "traffic_source",
+        "platform": "platform"
     },
 
     "columns": [
