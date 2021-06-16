@@ -86,59 +86,61 @@ class TableSchema:
         :rtype: [type]
         """
         row_dict = self.RowToDict(row)
+        col_names = [col['name'] for col in self._columns]
         # define vars to be passed as params
-        sess_id : int
+        sess_id : str
         app_id  : str
         time    : datetime
         ename   : str
         edata   : Map
-        app_ver : Union[int,None] = None
+        app_ver : Union[str,None] = None
         offset  : Union[int,None] = None
-        uid     : Union[int,None] = None
+        uid     : Union[str,None] = None
         udata   : Union[Map,None] = None
         state   : Union[Map,None] = None
         index   : Union[int,None] = None
 
         # first, if anything in the map was a list, concatenate, and anything that wasn't, get val.
-        params = {}
+        params : Map = {}
         for key in self._map.keys():
             if key != 'event_data': # event_data is special case, handle separately.
                 inner_keys = self._map[key]
                 if type(inner_keys) == list:
-                    params[key] = '.'.join(row_dict[inner_key] for inner_key in inner_keys)
+                    params[key] = concatenator.join(row_dict[inner_key] for inner_key in inner_keys)
                 else:
                     params[key] = row_dict[inner_keys]
-        # second, handle special case of event data, where we've got to parse the json and then fold in whatever other columns were desired.
+        # second, handle special case of event data, where we've got to parse the json,
+        # and then fold in whatever other columns were desired.
         if type(self._map['event_data']) == list:
             # if we had a list of event_data columns, we need a merger, not a concatenation
-            for inner_key in self._map['event_data']:
-                params['event_data'][inner_key] = row_dict[inner_key]
+            for i,col_name in enumerate(self._map['event_data']):
+                params['event_data'] = {}
+                val = TableSchema._parse(row_dict[col_name], self._columns[col_names.index(col_name)])
+                params['event_data'].update(val if type(val) == dict else {col_name:val})
         else:
-            params['event_data'] = row_dict[self._map['event_data']]
-            if type(params['event_data']) == str:
-                params['event_data'] = json.loads(params['event_data']) # we made sure to save this for last, because we need to parse 
-        # second, find out which of our params were in the map, and assign vals to our vars.
-        sess_id = int(params['session_id'])
+            col_name = self._map['event_data']
+            params['event_data'] = TableSchema._parse(row_dict[col_name], self._columns[col_names.index(col_name)])
+        # third, find out which of our params were in the map, and assign vals to our vars.
+        sess_id = params['session_id']
         app_id  = params['app_id']
         time    = datetime.fromisoformat(params['timestamp'])
         ename   = params['event_name']
-        edata   = 
+        edata   = params['event_data']
 
         return Event(session_id=sess_id, app_id=app_id, timestamp=time,
-                     event_name=params['event_name'], event_data=params['event_data'],
-                     app_version=params, time_offset=offset, user_id=uid, user_data=udata,
+                     event_name=ename, event_data=edata,
+                     app_version=app_ver, time_offset=offset, user_id=uid, user_data=udata,
                      game_state=state, event_sequence_index=index)
 
     ## Simple utility function to turn a raw row from the file/database into a dictionary,
     #  indexed with the column names retrieved from the file/database.
-    def RowToDict(self, row):
+    def RowToDict(self, row:Tuple[str]) -> Dict[str,str]:
         """Create Dict from a Row
 
-        Args:
-            row ([type]): [description]
-
-        Returns:
-            [type]: [description]
+        :param row: [description]
+        :type row: Tuple[str]
+        :return: [description]
+        :rtype: Dict[str,str]
         """
         column_names = [col['name'] for col in self._columns]
         return {col_name : row[i] for i,col_name in enumerate(column_names)}
