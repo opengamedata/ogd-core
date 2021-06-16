@@ -1,10 +1,44 @@
 {
     "level_range": { "min":0, "max":0 },
 
-    "events":{
-        "SELECTITEM":{
-        "item": "item_data_short(it) | See [Data Short](#DataShort).",
-        "mark": "it.mark | Item [mark index](#Mark)."
+    "events": {
+        "accept_job": {
+            "job_id": "ID for the accepted job"
+        },
+        "receive_fact": {
+            "fact_id": "Id for the fact received"
+        },
+        "complete_job": {
+            "job_id": "ID for the completed job"
+        },
+        "begin_experiment": {
+            "job_id": "ID for the current job",
+            "tank_type": "The type of tank selected for the experiment"
+        },
+        "begin_dive": {
+            "job_id": "ID for the current job",
+            "site_id": "ID for the site the player is diving to"
+        },
+        "begin_argument": {
+            "job_id": "ID for the current job"
+        },
+        "begin_model": {
+            "job_id": "ID for the current job"
+        },
+        "begin_simulation": {
+            "job_id": "ID for the current job"
+        },
+        "ask_for_help": {
+            "node_id": "ID for the node displayed when asking for help"
+        },
+        "talk_with_guide": {
+            "node_id": "ID for the node displayed when clicking the guide button"
+        },
+        "simulation_sync_achieved": {
+            "job_id": "ID for the current job"
+        },
+        "script_triggered": {
+            "node_id": "ID for the node displayed when guide script is triggered"
         }
     },
 
@@ -18,25 +52,28 @@
     },
 
     "db_columns": {
-        "id":"Unique identifier for a row",
-        "app_id":"A string identifying which game from which the event came",
-        "app_id_fast":"A second version of the app id, to be removed",
-        "app_version":"The version of the game from which the event came",
-        "session_id":"Unique identifier for the gameplay session",
-        "persistent_session_id":"Unique identifier across all gameplay sessions from a single computer",
-        "player_id":"A custom, per-player ID, only exists if player entered an ID on one of our custom portal pages, else null",
-        "level":"The game level in which the event was logged",
-        "event":"The type of event logged",
-        "event_custom":"A number corresponding to the game-specific event type for events labeled 'Custom'",
-        "event_data_simple":"Unused (always=0), to be deleted",
-        "event_data_complex":"Data specific to an event type, encoded as a JSON string",
-        "client_time":"The client machine time when the event was generated",
-        "client_time_ms":"Client time in milliseconds",
-        "server_time":"The server machine time when the event was logged",
-        "remote_addr":"The IP address for the player's computer",
-        "req_id":"Another ID of some kind, to be removed",
-        "session_n":"Counter of events in the session, from 0. A row with session_n = i is the (i+1)-th event of the session",
-        "http_user_agent":"Data on the type of web browser, OS, etc. in use by the player"
+        "event_date": "The date on which the event was logged",
+        "event_timestamp": "The time (in microseconds, UTC) at which the event was logged on the client",
+        "event_name": "The name of the event",
+        "event_params": "A repeated record of the parameters associated with this event",
+        "event_previous_timestamp": "The time (in microseconds, UTC) at which the event was previously logged on the client",
+        "event_value_in_usd": "The currency-converted value (in USD) of the event's value parameter",
+        "event_bundle_sequence_id": "The sequential ID of the bundle in which these events were uploaded",
+        "event_server_timestamp_offset": "Timestamp offset between collection time and upload time in micros",
+        "user_id": "The user ID set via the setUserId API",
+        "user_pseudo_id": "The pseudonymous id (e.g., app instance ID) for the user",
+        "user_properties": "A repeated record of user properties set with the setUserProperty API",
+        "user_first_touch_timestamp": "The time (in microseconds) at which the user first opened the app or visited the site",
+        "user_ltv": "A record of Lifetime Value information about the user",
+        "device": "A record of device information",
+        "geo": "A record of the user's geographic information",
+        "app_info": "A record of information on the app",
+        "traffic_source": "Name of the traffic source that first acquired the user",
+        "stream_id": "The numeric ID of the stream",
+        "platform": "The platform on which the app was built",
+        "event_dimensions": "Dimensions associated with the event",
+        "ecommerce": "A record of information about ecommerce",
+        "items": "A repeated record of items included in this event"
     },
     "config": {
     	"SUPPORTED_VERS": [1]
