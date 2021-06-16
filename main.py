@@ -147,9 +147,10 @@ def runExport(events:bool = False, features:bool = False):
 #  to file.
 def showGameInfo():
     schema = GameSchema(schema_name=f"{game_name}.json")
+    table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
 
     feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-    print(utils.GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),\
+    print(utils.GenCSVMetadata(game_name=game_name, raw_field_list=table_schema.db_columns_with_types(),\
                                                     sessions_field_list=feature_descriptions))
 
 ## Function to write out the readme file for a given game.
