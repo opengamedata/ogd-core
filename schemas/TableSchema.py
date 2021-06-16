@@ -144,22 +144,6 @@ class TableSchema:
         return {col_name : row[i] for i,col_name in enumerate(column_names)}
 
     @staticmethod
-    def CompareVersions(a:str, b:str, version_separator='.'):
-        a_parts = [int(i) for i in a.split(version_separator)]
-        b_parts = [int(i) for i in b.split(version_separator)]
-        for i in range(0, min(len(a_parts), len(b_parts))):
-            if a_parts[i] < b_parts[i]:
-                return -1
-            elif a_parts[i] > b_parts[i]:
-                return 1
-        if len(a_parts) < len(b_parts):
-            return -1
-        elif len(a_parts) > len(b_parts):
-            return 1
-        else:
-            return 0
-
-    @staticmethod
     def _parse(input:str, column_descriptor:Dict[str,str]) -> Any:
         if column_descriptor['type'] == 'str':
             return input

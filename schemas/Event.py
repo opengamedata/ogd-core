@@ -47,3 +47,20 @@ class Event:
         self.user_data            : Map             = user_data
         self.game_state           : Map             = game_state
         self.event_sequence_index : Union[int,None] = event_sequence_index
+
+
+    @staticmethod
+    def CompareVersions(a:str, b:str, version_separator='.'):
+        a_parts = [int(i) for i in a.split(version_separator)]
+        b_parts = [int(i) for i in b.split(version_separator)]
+        for i in range(0, min(len(a_parts), len(b_parts))):
+            if a_parts[i] < b_parts[i]:
+                return -1
+            elif a_parts[i] > b_parts[i]:
+                return 1
+        if len(a_parts) < len(b_parts):
+            return -1
+        elif len(a_parts) > len(b_parts):
+            return 1
+        else:
+            return 0
