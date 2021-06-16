@@ -26,11 +26,11 @@ from managers.RawManager import RawManager
 from managers.EventProcessor import EventProcessor
 from Request import *
 from schemas.GameSchema import GameSchema
-from extractors.WaveExtractor import WaveExtractor
-from extractors.CrystalExtractor import CrystalExtractor
-from extractors.LakelandExtractor import LakelandExtractor
-from extractors.JowilderExtractor import JowilderExtractor
-from extractors.MagnetExtractor import MagnetExtractor
+from games.WAVES.WaveExtractor import WaveExtractor
+from games.CRYSTAL.CrystalExtractor import CrystalExtractor
+from games.LAKELAND.LakelandExtractor import LakelandExtractor
+from games.JOWILDER.JowilderExtractor import JowilderExtractor
+from games.MAGNET.MagnetExtractor import MagnetExtractor
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.
@@ -151,11 +151,13 @@ class ExportManager:
                                     raw_csv_file=file_manager.GetRawFile())
                 raw_mgr.WriteRawCSVHeader()
             if request._files.events:
-                evt_processor = EventProcessor(game_table=game_table, game_schema=game_schema,
+                evt_processor = EventProcessor(table_schema=game_table, game_schema=game_schema,
                                     events_csv_file=file_manager.GetEventsFile())
                 evt_processor.WriteEventsCSVHeader()
 
             sess_ids = request.RetrieveSessionIDs()
+            if sess_ids is None:
+                sess_ids = []
             num_sess = len(sess_ids)
             utils.Logger.toStdOut(f"Preparing to process {num_sess} sessions.", logging.INFO)
             slice_size = self._settings["BATCH_SIZE"]
@@ -214,7 +216,7 @@ class ExportManager:
     #                    table assiciated with the given game is structured. 
     #  @raw_mgr          An instance of RawManager used to track raw data.
     #  @sess_processor         An instance of SessionProcessor used to extract and track feature data.
-    def _processRow(self, row: Tuple, sess_ids:List[int], game_table: TableSchema, raw_mgr: RawManager, sess_processor: SessionProcessor, evt_processor: EventProcessor):
+    def _processRow(self, row:Tuple, sess_ids:List[int], game_table:TableSchema, raw_mgr:Union[RawManager,None], sess_processor:Union[SessionProcessor,None], evt_processor:EventProcessor):
         # parse out complex data from json
         col = row[game_table.complex_data_index]
         try:
