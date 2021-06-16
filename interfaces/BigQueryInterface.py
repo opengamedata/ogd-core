@@ -3,7 +3,7 @@ from datetime import datetime
 from google.cloud import bigquery
 from typing import Dict, List
 
-#from config import settings
+from config import settings
 from interfaces.DataInterface import DataInterface
 from utils import Logger
 
@@ -11,9 +11,8 @@ class BigQueryInterface(DataInterface):
 
     def __init__(self, game_id: str):
         super().__init__(game_id=game_id)
-        #self._settings = settings
+        self._settings = settings
         self.Open()
-        self._test()
 
     def _open(self, force_reopen: bool = False) -> bool:
         if force_reopen:
@@ -35,17 +34,6 @@ class BigQueryInterface(DataInterface):
         self._is_open = False
         Logger.toStdOut("Closed connection to BigQuery.", logging.DEBUG)
         return True
-
-    def _test(self):
-        query = f"""
-                SELECT DISTINCT param.value.int_value AS session_id
-                FROM `aqualab-57f88.analytics_271167280.events_20210608`,
-                UNNEST(event_params) AS param
-                WHERE param.key = "ga_session_id"
-        """ 
-        data = self._client.query(query)
-        for row in data:
-            print(row)
 
     def _eventsFromIDs(self, id_list: List[int]) -> List[bigquery.Row]:
         if self._client != None:
@@ -147,5 +135,3 @@ class BigQueryInterface(DataInterface):
         else:
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
             return {'min':datetime.now(), 'max':datetime.now()}
-
-BigQueryInterface("test")
