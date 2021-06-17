@@ -1,6 +1,5 @@
 name: Aqualab BigQuery Test
 on:
-  push:
   workflow_dispatch:
 jobs:
   test_connect:
