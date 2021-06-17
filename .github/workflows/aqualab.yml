@@ -17,7 +17,13 @@ jobs:
         sudo apt-get -q install python3.8
         sudo apt-get -q install python3.8-dev
     - name: Use gcloud CLI
-      run: gcloud info
+      run: |
+        gcloud config set project aqualab-57f88
+        bq query --use_legacy_sql=false \
+        'SELECT
+          event_name
+        FROM
+          `aqualab-57f88.analytics_271167280.events_20210608`'
     #- uses: actions/checkout@v2
     #- name: Set up Python libraries
     #  run: |
