@@ -16,11 +16,20 @@ jobs:
       run: |
         sudo apt-get -q install python3.8
         sudo apt-get -q install python3.8-dev
-    - uses: actions/checkout@v2
-    - name: Set up Python libraries
-      run: |
-        python3.8 -m pip install --upgrade pip
-        python3.8 -m pip install google-cloud-bigquery --quiet
-    - name: Test query
-      run: |
-        python3.8 interfaces/BigQueryInterface.py
+    - name: Use gcloud CLI
+      run: gcloud info
+    #- uses: actions/checkout@v2
+    #- name: Set up Python libraries
+    #  run: |
+    #    python3.8 -m pip install --upgrade pip
+    #    python3.8 -m pip install setuptools --quiet
+    #    python3.8 -m pip install wheel --quiet
+    #    python3.8 -m pip install -r requirements.txt --quiet
+    #    python3.8 -m pip install google-cloud-bigquery --quiet
+    #  shell: bash
+    #- name: Set up code
+    #  run: cp config.py.template config.py 
+    #  shell: bash
+    #- name: Test query
+    #  run: |
+    #    python3.8 interfaces/BigQueryInterface.py
