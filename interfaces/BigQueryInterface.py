@@ -37,8 +37,8 @@ class BigQueryInterface(DataInterface):
 
     def _eventsFromIDs(self, id_list: List[int]) -> List[bigquery.Row]:
         if self._client != None:
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
-            table_name = self._settings["db_config"]["TABLE"]
+            db_name = self._settings["bq_config"]["DB_NAME"]
+            table_name = self._settings["bq_config"]["TABLE_NAME"]
             id_string = ','.join([f"'{x}'" for x in id_list])
             query = f"""
                 SELECT *, param.value.int_value AS session_id
@@ -54,8 +54,8 @@ class BigQueryInterface(DataInterface):
 
     def _allIDs(self) -> List[int]:
         if self._client != None:
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
-            table_name = self._settings["db_config"]["TABLE"]
+            db_name = self._settings["bq_config"]["DB_NAME"]
+            table_name = self._settings["bq_config"]["TABLE_NAME"]
             query = f"""
                 SELECT DISTINCT param.value.int_value AS session_id
                 FROM `{db_name}.{table_name}`,
@@ -71,8 +71,8 @@ class BigQueryInterface(DataInterface):
 
     def _fullDateRange(self) -> Dict[str, datetime]:
         if self._client != None:
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
-            table_name = self._settings["db_config"]["TABLE"]
+            db_name = self._settings["bq_config"]["DB_NAME"]
+            table_name = self._settings["bq_config"]["TABLE_NAME"]
             query = f"""
                 WITH datetable AS
                 (
@@ -92,8 +92,8 @@ class BigQueryInterface(DataInterface):
 
     def _IDsFromDates(self, min: datetime, max: datetime) -> List[int]:
         if self._client != None:
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
-            table_name = self._settings["db_config"]["TABLE"]
+            db_name = self._settings["bq_config"]["DB_NAME"]
+            table_name = self._settings["bq_config"]["TABLE_NAME"]
             min, max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
             query = f"""
                 SELECT DISTINCT param.value.int_value AS session_id
@@ -111,8 +111,8 @@ class BigQueryInterface(DataInterface):
 
     def _datesFromIDs(self, id_list: List[int]) -> Dict[str, datetime]:
         if self._client != None:
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
-            table_name = self._settings["db_config"]["TABLE"]
+            db_name = self._settings["bq_config"]["DB_NAME"]
+            table_name = self._settings["bq_config"]["TABLE_NAME"]
             id_string = ','.join([f"'{x}'" for x in id_list])
             query = f"""
                 WITH datetable AS
@@ -135,9 +135,10 @@ class BigQueryInterface(DataInterface):
             return {'min':datetime.now(), 'max':datetime.now()}
 
     def _genSchema(self) -> TableSchema:
-        query = """
+        db_name = self._settings["bq_config"]["DB_NAME"]
+        query = f"""
             SELECT DISTINCT column_name 
-            FROM `aqualab-57f88.analytics_271167280.INFORMATION_SCHEMA.COLUMNS`
+            FROM `{db_name}.INFORMATION_SCHEMA.COLUMNS`
         """
         data = self._client.query(query)
         column_names = [row['column_name'] for row in data]
