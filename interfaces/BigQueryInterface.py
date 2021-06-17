@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 from schemas.TableSchema import TableSchema
 from google.cloud import bigquery
-from typing import Dict, List
+from typing import Dict, List, Tuple, Union
 
 from interfaces.DataInterface import DataInterface
 from utils import Logger
@@ -35,7 +35,7 @@ class BigQueryInterface(DataInterface):
         Logger.toStdOut("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
-    def _eventsFromIDs(self, id_list: List[int]) -> List[bigquery.Row]:
+    def _eventsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         if self._client != None:
             db_name = self._settings["bq_config"]["DB_NAME"]
             table_name = self._settings["bq_config"]["TABLE_NAME"]
@@ -47,8 +47,9 @@ class BigQueryInterface(DataInterface):
                 WHERE param.key = "ga_session_id"
                 AND param.value.int_value IN ({id_string})
             """
-            data = list(self._client.query(query))
-            return data if data != None else []
+            data = self._client.query(query)
+            events = [tuple(row.items()) for row in data]
+            return events if events != None else []
         else:
             Logger.Log(f"Could not get data for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
 
@@ -90,7 +91,7 @@ class BigQueryInterface(DataInterface):
             Logger.Log(f"Could not get full date range, BigQuery connection is not open.", logging.WARN)
             return {"min":datetime.now(), "max":datetime.now()}
 
-    def _IDsFromDates(self, min: datetime, max: datetime) -> List[int]:
+    def _IDsFromDates(self, min: datetime, max: datetime, versions: Union[List[int],None]=None) -> List[int]:
         if self._client != None:
             db_name = self._settings["bq_config"]["DB_NAME"]
             table_name = self._settings["bq_config"]["TABLE_NAME"]
@@ -109,7 +110,7 @@ class BigQueryInterface(DataInterface):
             Logger.Log(f"Could not get session list for {min}-{max} range, BigQuery connection is not open.", logging.WARN)
             return []
 
-    def _datesFromIDs(self, id_list: List[int]) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> Dict[str, datetime]:
         if self._client != None:
             db_name = self._settings["bq_config"]["DB_NAME"]
             table_name = self._settings["bq_config"]["TABLE_NAME"]
