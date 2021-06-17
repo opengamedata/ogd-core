@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from schemas.TableSchema import TableSchema
 from google.cloud import bigquery
 from typing import Dict, List
 
@@ -62,8 +63,7 @@ class BigQueryInterface(DataInterface):
                 WHERE param.key = "ga_session_id"
             """
             data = self._client.query(query)
-            ids = []
-            [ids.append(int(row['session_id'])) for row in data]
+            ids = [int(row['session_id']) for row in data]
             return ids if ids != None else []
         else:
             Logger.Log(f"Could not get list of all session ids, BigQuery connection is not open.", logging.WARN)
@@ -103,8 +103,7 @@ class BigQueryInterface(DataInterface):
                 AND _TABLE_SUFFIX BETWEEN '{min}' AND '{max}'
             """
             data = self._client.query(query)
-            ids = []
-            [ids.append(int(row['session_id'])) for row in data]
+            ids = [int(row['session_id']) for row in data]
             return ids if ids != None else []
         else:
             Logger.Log(f"Could not get session list for {min}-{max} range, BigQuery connection is not open.", logging.WARN)
@@ -134,3 +133,12 @@ class BigQueryInterface(DataInterface):
         else:
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
             return {'min':datetime.now(), 'max':datetime.now()}
+
+    def _genSchema(self) -> TableSchema:
+        query = """
+            SELECT DISTINCT column_name 
+            FROM `aqualab-57f88.analytics_271167280.INFORMATION_SCHEMA.COLUMNS`
+        """
+        data = self._client.query(query)
+        column_names = [row['column_name'] for row in data]
+        return TableSchema(game_id=self.game_id, column_names=column_names, session_ids=None, max_level=0, min_level=0)
