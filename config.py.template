@@ -23,6 +23,11 @@ settings = {
         "SSH_HOST": "rt_hostname",
         "path": "path\\to\\events\\file.tsv"
     },
+    "bq_config":
+    {
+        "DB_NAME": "project_id.dataset_id",
+        "TABLE_NAME": "events_*"
+    },
     "BATCH_SIZE":1000,
     "DEBUG_LEVEL":"INFO"
 }
