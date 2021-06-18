@@ -70,6 +70,9 @@ class TableSchema:
         """
         return [col['name'] for col in self._columns]
 
+    def ColumnList(self) -> List[Dict[str,str]]:
+        return list(self._columns)
+
     def RowToEvent(self, row: Tuple, concatenator:str = '.'):
         """Function to convert a row to an Event, based on the loaded schema.
         In general, columns specified in the schema's column_map are mapped to corresponding elements of the Event.
