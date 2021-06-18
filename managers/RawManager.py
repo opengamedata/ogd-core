@@ -21,21 +21,21 @@ class RawManager:
     #  @param game_schema   A dictionary that defines how the game data itself
     #                       is structured.
     #  @param sessions_csv_file The output file, to which we'll write the raw game data.
-    def __init__(self, game_table: TableSchema, game_schema: GameSchema,
+    def __init__(self, table_schema: TableSchema, game_schema: GameSchema,
                  raw_csv_file: typing.IO[str]):
         # define instance vars
         self._lines             : List[str]      = []
-        self._game_table        : TableSchema    = game_table
+        self._game_table        : TableSchema    = table_schema
         self._raw_file          : typing.IO[str] = raw_csv_file
-        self._db_columns        : List[str]      = game_schema.db_columns()
+        self._columns           : List[str]      = table_schema.ColumnNames()
         self._JSON_columns      : List[str]
         self._all_columns       : List[str]
         self._columns_to_indices: Dict
         # set instance vars
         self._JSON_columns = RawManager._generateJSONColumns(game_schema)
-        self._all_columns = game_table.column_names[:game_table.complex_data_index] \
+        self._all_columns = table_schema.column_names[:table_schema.complex_data_index] \
                           + self._JSON_columns \
-                          + game_table.column_names[game_table.complex_data_index+1:]
+                          + table_schema.column_names[table_schema.complex_data_index+1:]
         # Not the nicest thing ever, but this function creates a dictionary that maps column names
         # to indices, so we can store each line for raw csv as a list with guaranteed consistent order.
         self._columns_to_indices = {name:index for index,name in enumerate(self._all_columns)}
