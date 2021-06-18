@@ -39,7 +39,7 @@ class CSVInterface(DataInterface):
         max_time = pd.to_datetime(self._data['server_time'].max())
         return {'min':min_time, 'max':max_time}
 
-    def _eventsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         if self.IsOpen() and self._data != None:
             return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
         else:
@@ -60,10 +60,3 @@ class CSVInterface(DataInterface):
         min_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].min()
         max_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].max()
         return {'min':pd.to_datetime(min_date), 'max':pd.to_datetime(max_date)}
-
-    def _genSchema(self) -> TableSchema:
-        col_names = list(self._data.columns)
-        game_id = self._data['app_id'][0]
-        min_level = self._data['level'].min()
-        max_level = self._data['level'].max()
-        return TableSchema(game_id=game_id, column_names=col_names, max_level=max_level, min_level=min_level)

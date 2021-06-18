@@ -211,7 +211,7 @@ class SQL:
             time_delta = datetime.now()-start
             num_min = math.floor(time_delta.total_seconds()/60)
             num_sec = time_delta.total_seconds() % 60
-            Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result):d} rows", logging.DEBUG)
+            Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result) if result is not None else 0:d} rows", logging.DEBUG)
         return result
 
     @staticmethod
@@ -305,7 +305,7 @@ class MySQLInterface(DataInterface):
         self._is_open = False
         return True
 
-    def _eventsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         # grab data for the given session range. Sort by event time, so
         if not self._db_cursor == None:
             if versions is not None and versions is not []:
@@ -391,21 +391,3 @@ class MySQLInterface(DataInterface):
         else:
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
             return {'min':datetime.now(), 'max':datetime.now()}
-
-    def _genSchema(self) -> TableSchema:
-        db_settings = self._settings["db_config"]
-        # TODO: Currently, this is retrieved separately from the schema. We may just want to load in one place, and check for a match or something.
-        query = f"SHOW COLUMNS from {db_settings['DB_NAME_DATA']}.{db_settings['TABLE']}"
-        db_cursor = self._db.cursor()
-        col_names = SQL.Query(cursor=db_cursor, query=query)
-        if self._game_id == 'LAKELAND':
-            lakeland_config = GameSchema('LAKELAND')['config']
-            min_level = 0
-            max_level = lakeland_config["MAX_SESSION_SECONDS"] // lakeland_config['WINDOW_SIZE_SECONDS']
-        else:
-            max_min_raw = SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["TABLE"],
-                                     columns=["MAX(level)", "MIN(level)"], filter=f"`app_id`='{self._game_id}'",
-                                     distinct=True)
-            max_level = max_min_raw[0][0]
-            min_level = max_min_raw[0][1]
-        return TableSchema(game_id=self._game_id, column_names=[str(col) for col in col_names], max_level=max_level, min_level=min_level)
