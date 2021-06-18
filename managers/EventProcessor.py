@@ -35,7 +35,7 @@ class EventProcessor:
         line : List[typing.Any] = [None] * len(self._columns)
         for i,col in enumerate(row_with_complex_parsed):
             # only set a value if this was not the remote address (IP) column.
-            if i != self._table_schema.remote_addr_index:
+            if self._columns[i] != "remote_addr":
                 if type(col) == str:
                     line[i] = f"\"{col}\""
                 elif type(col) == dict:
