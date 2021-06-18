@@ -78,9 +78,9 @@ class FileManager(abc.ABC):
             if (self._game_id in existing_csvs and self._dataset_id in existing_csvs[self._game_id]):
                 src_sessions_f = existing_csvs[self._game_id][self._dataset_id]['sessions_f']
                 src_events_f = existing_csvs[self._game_id][self._dataset_id]['events_f']
-                if src_sessions_f is not None:
+                if src_sessions_f is not None and self._zip_names["sessions_f"] is not None:
                     os.rename(src_sessions_f, self._zip_names["sessions_f"])
-                if src_events_f is not None:
+                if src_events_f is not None and self._zip_names["events_f"] is not None:
                     os.rename(src_events_f, self._zip_names["events_f"])
         except Exception as err:
             msg = f"Error while setting up zip files! {type(err)} : {err}"
@@ -88,7 +88,8 @@ class FileManager(abc.ABC):
             traceback.print_tb(err.__traceback__)
         # for each file, try to save out the csv/tsv to a file - if it's one that should be exported, that is.
         base_path = f"{self._dataset_id}/{self._dataset_id}_{self._short_hash}"
-        if self._files["sessions_f"] is not None:
+        if self._zip_names["sessions_f"] is not None:
+            # TODO: Come back and use with...as for the ###_zip_file vars here.
             try:
                 sessions_zip_file = zipfile.ZipFile(self._zip_names["sessions_f"], "w", compression=zipfile.ZIP_DEFLATED)
                 self._addToZip(path=self._file_names["sessions_f"], zip_file=sessions_zip_file, path_in_zip=f"{base_path}_session-features.csv")
@@ -99,7 +100,7 @@ class FileManager(abc.ABC):
                 traceback.print_tb(err.__traceback__)
             finally:
                 sessions_zip_file.close()
-        if self._files["events_f"] is not None:
+        if self._zip_names["events_f"] is not None:
             try:
                 events_zip_file = zipfile.ZipFile(self._zip_names["events_f"], "w", compression=zipfile.ZIP_DEFLATED)
                 self._addToZip(path=self._file_names["events_f"], zip_file=events_zip_file, path_in_zip=f"{base_path}_events.tsv")
@@ -125,25 +126,25 @@ class FileManager(abc.ABC):
     #  @param num_sess      The number of sessions included in the recent export.
     def WriteMetadataFile(self, date_range: Dict[str,datetime], num_sess: int):
         # First, ensure we have a data directory.
+        full_data_dir = self._data_dir + self._game_id
         try:
-            full_data_dir = self._data_dir + self._game_id
             os.makedirs(name=full_data_dir, exist_ok=True)
         except Exception as err:
             msg = f"Could not set up folder {full_data_dir}. {type(err)} {str(err)}"
             utils.Logger.toFile(msg, logging.WARNING)
         else:
             # Second, remove old metas, if they exist.
-            try:
-                start_range = date_range['min'].strftime("%Y%m%d")
-                end_range = date_range['max'].strftime("%Y%m%d")
-                match_string = f"{self._game_id}_{start_range}_to_{end_range}_\\w*\\.meta"
-                old_metas = [f for f in os.listdir(full_data_dir) if re.match(match_string, f)]
-                for old_meta in old_metas:
+            start_range = date_range['min'].strftime("%Y%m%d")
+            end_range = date_range['max'].strftime("%Y%m%d")
+            match_string = f"{self._game_id}_{start_range}_to_{end_range}_\\w*\\.meta"
+            old_metas = [f for f in os.listdir(full_data_dir) if re.match(match_string, f)]
+            for old_meta in old_metas:
+                try:
                     utils.Logger.Log(f"Removing old meta file, {old_meta}")
                     os.remove(f"{full_data_dir}/{old_meta}")
-            except Exception as err:
-                msg = f"Could not remove old meta file {old_meta}. {type(err)} {str(err)}"
-                utils.Logger.toFile(msg, logging.WARNING)
+                except Exception as err:
+                    msg = f"Could not remove old meta file {old_meta}. {type(err)} {str(err)}"
+                    utils.Logger.Log(msg, logging.WARNING)
             # Third, write the new meta file.
             try:
                 # calculate the path and name of the metadata file, and open/make it.
@@ -175,15 +176,14 @@ class FileManager(abc.ABC):
     #  @param num_sess      The number of sessions included in the recent export.
     def UpdateFileExportList(self, date_range: Dict[str,datetime], num_sess: int):
         self._backupFileExportList()
+        existing_csvs = {}
         try:
             existing_csvs = utils.loadJSONFile("file_list.json", self._data_dir)
         except FileNotFoundError as err:
             utils.Logger.toFile("file_list.json does not exist.", logging.WARNING)
-            existing_csvs = {}
         except Exception as err:
             msg = f"Could not load file list. {type(err)} {str(err)}"
             utils.Logger.toFile(msg, logging.ERROR)
-            existing_csvs = {}
         finally:
             with open(f"{self._data_dir}file_list.json", "w") as existing_csv_file:
                 utils.Logger.toStdOut(f"opened csv file at {existing_csv_file.name}", logging.INFO)
