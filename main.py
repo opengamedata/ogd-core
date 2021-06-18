@@ -99,7 +99,7 @@ def runExport(events:bool = False, features:bool = False):
     exporter_files : ExporterFiles
     req       : Request
     start = datetime.now()
-    exporter_files = ExporterFiles(events=events, raw=False, sessions=features) 
+    exporter_files = ExporterFiles(events=events, sessions=features) 
     supported_vers = GameSchema(schema_name=f"{game_name}.json")['config']['SUPPORTED_VERS']
     if "--file" in opts.keys():
         file_path=opts["--file"]
