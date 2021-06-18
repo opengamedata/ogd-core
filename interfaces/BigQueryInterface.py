@@ -52,6 +52,7 @@ class BigQueryInterface(DataInterface):
             return events if events != None else []
         else:
             Logger.Log(f"Could not get data for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
+            return []
 
     def _allIDs(self) -> List[int]:
         if self._client != None:
