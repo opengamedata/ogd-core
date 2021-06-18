@@ -216,40 +216,17 @@ class ExportManager:
     #                    table assiciated with the given game is structured. 
     #  @raw_mgr          An instance of RawManager used to track raw data.
     #  @sess_processor         An instance of SessionProcessor used to extract and track feature data.
-    def _processRow(self, row:Tuple, sess_ids:List[int], game_table:TableSchema,
+    def _processRow(self, event:Event, sess_ids:List[int], game_table:TableSchema,
                     raw_mgr:Union[RawManager,None], sess_processor:Union[SessionProcessor,None], evt_processor:Union[EventProcessor,None]):
-        # parse out complex data from json
-        col = row[game_table.complex_data_index]
-        try:
-            # complex_data_parsed = json.loads(col.replace("'", "\"")) if (col is not None) else {"event_custom":row[game_table.event_index]}
-            complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[game_table.event_index]}
-        except Exception as err:
-            msg = f"When trying to parse {col}, get error\n{type(err)} {str(err)}"
-            utils.Logger.toStdOut(msg, logging.ERROR)
-            raise err
 
-        # make sure we get *something* in the event_custom name
-        # TODO: Make a better solution for games without event_custom fields in the logs themselves
-        if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
-            if type(complex_data_parsed) is not type({}):
-                complex_data_parsed = {"item": complex_data_parsed}
-            complex_data_parsed["event_custom"] = row[game_table.event_custom_index]
-        elif "event_custom" not in complex_data_parsed.keys():
-            complex_data_parsed["event_custom"] = row[game_table.event_index]
-        # replace the json with parsed version.
-        m_row = list(row)
-        m_row[game_table.complex_data_index] = complex_data_parsed
-        row = tuple(m_row)
-
-        session_id = row[game_table.session_id_index]
-        if session_id in sess_ids:
+        if event.session_id in sess_ids:
             # we check if there's an instance given, if not we obviously skip.
             if sess_processor is not None:
-                sess_processor.ProcessRow(row)
+                sess_processor.ProcessRow(event)
             if raw_mgr is not None:
-                raw_mgr.ProcessRow(row)
+                raw_mgr.ProcessRow(event)
             if evt_processor is not None:
-                evt_processor.ProcessRow(row)
+                evt_processor.ProcessRow(event)
         # else:
             # in this case, we should have just found 
             # utils.Logger.toFile(f"Found a session ({session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
