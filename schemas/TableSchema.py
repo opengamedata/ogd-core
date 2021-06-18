@@ -105,7 +105,9 @@ class TableSchema:
         for key in self._map.keys():
             if key != 'event_data': # event_data is special case, handle separately.
                 inner_keys = self._map[key]
-                if type(inner_keys) == list:
+                if inner_keys == None:
+                    params[key] = None
+                elif type(inner_keys) == list:
                     params[key] = concatenator.join(row_dict[inner_key] for inner_key in inner_keys)
                 else:
                     params[key] = row_dict[inner_keys]
@@ -126,6 +128,12 @@ class TableSchema:
         time    = datetime.fromisoformat(params['timestamp'])
         ename   = params['event_name']
         edata   = params['event_data']
+        app_ver = params['app_version']
+        offset  = params['time_offset']
+        uid     = params['user_id']
+        udata   = params['user_data']
+        state   = params['game_state']
+        index   = params['event_sequence_index']
 
         return Event(session_id=sess_id, app_id=app_id, timestamp=time,
                      event_name=ename, event_data=edata,
