@@ -11,7 +11,6 @@ from pandas.io.pytables import Table
 # local imports
 from config import settings
 from schemas.GameSchema import GameSchema
-from schemas.TableSchema import TableSchema
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
 #  @param filename  The name of the JSON file. If the file extension is not .json,
@@ -40,7 +39,7 @@ def loadJSONFile(filename: str, path:str = "./") -> typing.Any:
         raise err
     return ret_val
 
-def GenerateReadme(game_name:str, game_schema:GameSchema, table_schema:TableSchema, path:str = "./"):
+def GenerateReadme(game_name:str, game_schema:GameSchema, column_list:List[Dict[str,str]], path:str = "./"):
     try:
         os.makedirs(name=path, exist_ok=True)
         with open(f"{path}/readme.md", "w") as readme:
@@ -55,7 +54,7 @@ def GenerateReadme(game_name:str, game_schema:GameSchema, table_schema:TableSche
                 readme.write("\n")
             # 2. Use schema to write feature & column descriptions to the readme.
             feature_descriptions = {**game_schema.perlevel_features(), **game_schema.aggregate_features()}
-            meta = GenCSVMetadata(game_name=game_name, column_list=table_schema.ColumnList(), feature_list=feature_descriptions)
+            meta = GenCSVMetadata(game_name=game_name, column_list=column_list, feature_list=feature_descriptions)
             readme.write(meta)
             # 3. Append any important data from the data changelog.
             try:

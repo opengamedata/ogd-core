@@ -161,7 +161,7 @@ def writeReadme():
     try:
         schema = GameSchema(schema_name=f"{game_name}.json")
         table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
-        utils.GenerateReadme(game_name=game_name, game_schema=schema, table_schema=table_schema, path=path)
+        utils.GenerateReadme(game_name=game_name, game_schema=schema, column_list=table_schema.ColumnList(), path=path)
         Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
     except Exception as err:
         msg = f"Could not create a readme for {game_name}: {type(err)} {str(err)}"
