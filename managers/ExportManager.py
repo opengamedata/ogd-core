@@ -21,7 +21,6 @@ from interfaces.MySQLInterface import SQL
 from interfaces.MySQLInterface import MySQLInterface
 from managers.FileManager import *
 from managers.SessionProcessor import SessionProcessor
-from managers.RawManager import RawManager
 from managers.EventProcessor import EventProcessor
 from Request import *
 from schemas.Event import Event
@@ -140,7 +139,7 @@ class ExportManager:
     def _extractToCSVs(self, request:Request, file_manager:FileManager, game_schema: GameSchema, game_table: TableSchema, game_extractor: Union[type,None]):
         ret_val = -1
         try:
-            sess_processor = raw_mgr = evt_processor = None
+            sess_processor = evt_processor = None
             if request._files.sessions and game_extractor is not None:
                 if game_extractor is not None:
                     sess_processor = SessionProcessor(ExtractorClass=game_extractor, game_table=game_table,
@@ -148,10 +147,6 @@ class ExportManager:
                     sess_processor.WriteSessionCSVHeader()
                 else:
                     utils.Logger.Log("Could not export sessions, no game extractor given!", logging.ERROR)
-            if request._files.raw:
-                raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
-                                    raw_csv_file=file_manager.GetRawFile())
-                raw_mgr.WriteRawCSVHeader()
             if request._files.events:
                 evt_processor = EventProcessor(table_schema=game_table, game_schema=game_schema,
                                     events_csv_file=file_manager.GetEventsFile())
@@ -173,15 +168,12 @@ class ExportManager:
                     # now, we process each row.
                     for row in next_data_set:
                         next_event = game_table.RowToEvent(row)
-                        self._processRow(event=next_event, sess_ids=sess_ids, game_table=game_table, raw_mgr=raw_mgr, sess_processor=sess_processor, evt_processor=evt_processor)
+                        self._processRow(event=next_event, sess_ids=sess_ids, game_table=game_table, sess_processor=sess_processor, evt_processor=evt_processor)
                     # after processing all rows for each slice, write out the session data and reset for next slice.
                     if request._files.sessions:
                         sess_processor.calculateAggregateFeatures()
                         sess_processor.WriteSessionCSVLines()
                         sess_processor.ClearLines()
-                    if request._files.raw:
-                        raw_mgr.WriteRawCSVLines()
-                        raw_mgr.ClearLines()
                     if request._files.events:
                         evt_processor.WriteEventsCSVLines()
                         evt_processor.ClearLines()
@@ -210,17 +202,14 @@ class ExportManager:
     #  @param row        The raw row data from a SQL query result.
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
-    #  @raw_mgr          An instance of RawManager used to track raw data.
     #  @sess_processor         An instance of SessionProcessor used to extract and track feature data.
     def _processRow(self, event:Event, sess_ids:List[int], game_table:TableSchema,
-                    raw_mgr:Union[RawManager,None], sess_processor:Union[SessionProcessor,None], evt_processor:Union[EventProcessor,None]):
+                    sess_processor:Union[SessionProcessor,None], evt_processor:Union[EventProcessor,None]):
 
         if event.session_id in sess_ids:
             # we check if there's an instance given, if not we obviously skip.
             if sess_processor is not None:
                 sess_processor.ProcessRow(event)
-            if raw_mgr is not None:
-                raw_mgr.ProcessRow(event)
             if evt_processor is not None:
                 evt_processor.ProcessRow(event)
         # else:
