@@ -145,12 +145,12 @@ def runExport(events:bool = False, features:bool = False):
 #  the csv's themselves). Further, the output is printed rather than written
 #  to file.
 def showGameInfo():
-    schema = GameSchema(schema_name=f"{game_name}.json")
+    game_schema = GameSchema(schema_name=f"{game_name}.json")
     table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
 
-    feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-    print(utils.GenCSVMetadata(game_name=game_name, raw_field_list=table_schema.db_columns_with_types(),\
-                                                    sessions_field_list=feature_descriptions))
+    feature_descriptions = {**game_schema.perlevel_features(), **game_schema.aggregate_features()}
+    print(utils.GenCSVMetadata(game_name=game_name, column_list=table_schema.ColumnList(),\
+                                                    feature_list=feature_descriptions))
 
 ## Function to write out the readme file for a given game.
 #  This includes the CSV metadata (data from the schema, originally written into
@@ -160,7 +160,8 @@ def writeReadme():
     path = f"./data/{game_name}"
     try:
         schema = GameSchema(schema_name=f"{game_name}.json")
-        utils.GenerateReadme(game_name=game_name, schema=schema, path=path)
+        table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
+        utils.GenerateReadme(game_name=game_name, game_schema=schema, table_schema=table_schema, path=path)
         Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
     except Exception as err:
         msg = f"Could not create a readme for {game_name}: {type(err)} {str(err)}"
