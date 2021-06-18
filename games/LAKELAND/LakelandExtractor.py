@@ -117,9 +117,9 @@ class LakelandExtractor(Extractor):
         self.reset()
         self.setValByName('num_play', self._cur_gameplay)
     
-    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: TableSchema):
+    def extractFeaturesFromRow(self, row_with_complex_parsed, table_schema:TableSchema):
         try:
-            self._extractFromRow(row_with_complex_parsed, game_table)
+            self._extractFromRow(row_with_complex_parsed, table_schema)
         except Exception as e:
             if len(self.debug_strs) > 10:
                 debug_strs = self.debug_strs[:5] + ['...'] + self.debug_strs[-5:]
@@ -137,9 +137,9 @@ class LakelandExtractor(Extractor):
     #
     #  @param row_with_complex_parsed A row of game data from the db, with the
     #                                 "complex data" already parsed from JSON.
-    #  @param game_table  A data structure containing information on how the db
-    #                     table assiciated with this game is structured.
-    def _extractFromRow(self, event:Event, game_table: TableSchema):
+    #  @param table_schema A data structure containing information on how the db
+    #                      table assiciated with this game is structured.
+    def _extractFromRow(self, event:Event, table_schema: TableSchema):
 
         # put some data in local vars, for readability later.
         self.event_client_time = event.timestamp
@@ -163,7 +163,7 @@ class LakelandExtractor(Extractor):
                 self.setValByName(feature_name="persistentSessionID", new_value=event.event_data['persistent_session_id'])
             # if self.getValByName(feature_name="player_id") == 0:
             #     self.setValByName(feature_name="player_id",
-            #                                new_value=row_with_complex_parsed[game_table.player_id_index])
+            #                                new_value=row_with_complex_parsed[table_schema.player_id_index])
 
             # if this is the first row
             if not self._CLIENT_START_TIME:

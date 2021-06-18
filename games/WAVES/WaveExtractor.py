@@ -63,7 +63,7 @@ class WaveExtractor(Extractor):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def extractFeaturesFromRow(self, event:Event, game_table:TableSchema):
+    def extractFeaturesFromRow(self, event:Event, table_schema:TableSchema):
         if event.session_id != self._session_id:
             utils.Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!", logging.ERROR)
         else:

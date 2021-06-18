@@ -27,8 +27,6 @@ class Extractor(abc.ABC):
     #  as well as initializing the features dictionary and list of played levels.
     #
     #  @param session_id  The id of the session from which we will extract features.
-    #  @param game_table  A data structure containing information on how the db
-    #                     table assiciated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
     def __init__(self, session_id: int, game_schema: GameSchema):
@@ -44,8 +42,6 @@ class Extractor(abc.ABC):
     #  with some formatting to add prefixes to features that repeat per-level
     #  (or repeat with a custom count).
     #
-    #  @param game_table  A data structure containing information on how the db
-    #                     table assiciated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
     #  @param file        An open csv file to which we will write column headers.
@@ -131,7 +127,7 @@ class Extractor(abc.ABC):
     #
     #  @param row_with_complex_parsed A row of game data from the db, with the
     #                                 "complex data" already parsed from JSON.
-    #  @param game_table  A data structure containing information on how the db
+    #  @param table_schema  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
     @abc.abstractmethod
     def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):

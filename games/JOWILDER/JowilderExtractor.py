@@ -151,9 +151,9 @@ class JowilderExtractor(Extractor):
         self._last_quizstart = None
         self._quiztimes = [None]*16
 
-    def extractFeaturesFromRow(self, event:Event, game_table: TableSchema):
+    def extractFeaturesFromRow(self, event:Event, table_schema:TableSchema):
         try:
-            self._extractFeaturesFromRow(event, game_table)
+            self._extractFeaturesFromRow(event, table_schema)
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             for place in [utils.Logger.toFile, utils.Logger.toStdOut]:

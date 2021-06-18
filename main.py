@@ -109,7 +109,6 @@ def runExport(events:bool = False, features:bool = False):
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(ids=ids if ids is not None else [], source=interface, versions=supported_vers)
 
-        # TODO: bit of a hack, should generate game_table as part of interface.
         req = Request(interface=interface, range=range, exporter_files=exporter_files)
         # breakpoint()
     else:

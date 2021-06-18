@@ -90,7 +90,7 @@ class ExportManager:
                 start = datetime.now()
 
                 num_sess: int = self._extractToCSVs(request=request, file_manager=file_manager,\
-                                    game_schema=game_schema, game_table=table_schema, game_extractor=game_extractor)
+                                    game_schema=game_schema, table_schema=table_schema, game_extractor=game_extractor)
 
                 time_delta = datetime.now() - start
                 num_min = math.floor(time_delta.total_seconds()/60)
@@ -136,19 +136,19 @@ class ExportManager:
             raise Exception(f"Got an invalid game ID ({self._game_id})!")
         return game_schema, game_extractor
 
-    def _extractToCSVs(self, request:Request, file_manager:FileManager, game_schema: GameSchema, game_table: TableSchema, game_extractor: Union[type,None]):
+    def _extractToCSVs(self, request:Request, file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema, game_extractor: Union[type,None]):
         ret_val = -1
         try:
             sess_processor = evt_processor = None
             if request._files.sessions and game_extractor is not None:
                 if game_extractor is not None:
-                    sess_processor = SessionProcessor(ExtractorClass=game_extractor, game_table=game_table,
+                    sess_processor = SessionProcessor(ExtractorClass=game_extractor, table_schema=table_schema,
                                         game_schema=game_schema, sessions_csv_file=file_manager.GetSessionsFile())
                     sess_processor.WriteSessionCSVHeader()
                 else:
                     utils.Logger.Log("Could not export sessions, no game extractor given!", logging.ERROR)
             if request._files.events:
-                evt_processor = EventProcessor(table_schema=game_table, game_schema=game_schema,
+                evt_processor = EventProcessor(table_schema=table_schema, game_schema=game_schema,
                                     events_csv_file=file_manager.GetEventsFile())
                 evt_processor.WriteEventsCSVHeader()
 
@@ -167,8 +167,8 @@ class ExportManager:
                 try:
                     # now, we process each row.
                     for row in next_data_set:
-                        next_event = game_table.RowToEvent(row)
-                        self._processRow(event=next_event, sess_ids=sess_ids, game_table=game_table, sess_processor=sess_processor, evt_processor=evt_processor)
+                        next_event = table_schema.RowToEvent(row)
+                        self._processRow(event=next_event, sess_ids=sess_ids, sess_processor=sess_processor, evt_processor=evt_processor)
                     # after processing all rows for each slice, write out the session data and reset for next slice.
                     if request._files.sessions:
                         sess_processor.calculateAggregateFeatures()
@@ -203,7 +203,7 @@ class ExportManager:
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
     #  @sess_processor         An instance of SessionProcessor used to extract and track feature data.
-    def _processRow(self, event:Event, sess_ids:List[int], game_table:TableSchema,
+    def _processRow(self, event:Event, sess_ids:List[int],
                     sess_processor:Union[SessionProcessor,None], evt_processor:Union[EventProcessor,None]):
 
         if event.session_id in sess_ids:
