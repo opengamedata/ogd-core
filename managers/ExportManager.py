@@ -168,7 +168,15 @@ class ExportManager:
                     # now, we process each row.
                     for row in next_data_set:
                         next_event = table_schema.RowToEvent(row)
-                        self._processRow(event=next_event, sess_ids=sess_ids, sess_processor=sess_processor, evt_processor=evt_processor)
+                        #self._processRow(event=next_event, sess_ids=sess_ids, sess_processor=sess_processor, evt_processor=evt_processor)
+                        if next_event.session_id in sess_ids:
+                            # we check if there's an instance given, if not we obviously skip.
+                            if sess_processor is not None:
+                                sess_processor.ProcessRow(next_event)
+                            if evt_processor is not None:
+                                evt_processor.ProcessRow(row)
+                        else:
+                            utils.Logger.toFile(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
                     # after processing all rows for each slice, write out the session data and reset for next slice.
                     if request._files.sessions:
                         sess_processor.calculateAggregateFeatures()
@@ -195,23 +203,3 @@ class ExportManager:
             # Save out all the files.
             file_manager.CloseFiles()
             return ret_val
-
-    ## Private helper function to process a single row of data.
-    #  Most of the processing is delegated to Events and Session Processors, but this
-    #  function does a bit of pre-processing to parse the event_data_custom.
-    #  @param row        The raw row data from a SQL query result.
-    #  @param game_table A data structure containing information on how the db
-    #                    table assiciated with the given game is structured. 
-    #  @sess_processor         An instance of SessionProcessor used to extract and track feature data.
-    def _processRow(self, event:Event, sess_ids:List[int],
-                    sess_processor:Union[SessionProcessor,None], evt_processor:Union[EventProcessor,None]):
-
-        if event.session_id in sess_ids:
-            # we check if there's an instance given, if not we obviously skip.
-            if sess_processor is not None:
-                sess_processor.ProcessRow(event)
-            if evt_processor is not None:
-                evt_processor.ProcessRow(event)
-        # else:
-            # in this case, we should have just found 
-            # utils.Logger.toFile(f"Found a session ({session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
