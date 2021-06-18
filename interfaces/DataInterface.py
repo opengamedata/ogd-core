@@ -12,7 +12,6 @@ class DataInterface(abc.ABC):
     def __init__(self, game_id):
         self._game_id : str  = game_id
         self._is_open : bool = False
-        self._table_schema : Union[TableSchema,None] = None
 
     def __del__(self):
         self.Close()
