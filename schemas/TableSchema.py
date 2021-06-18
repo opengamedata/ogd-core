@@ -93,12 +93,12 @@ class TableSchema:
         time    : datetime
         ename   : str
         edata   : Map
-        app_ver : Union[str,None] = None
-        offset  : Union[int,None] = None
-        uid     : Union[str,None] = None
-        udata   : Union[Map,None] = None
-        state   : Union[Map,None] = None
-        index   : Union[int,None] = None
+        app_ver : Union[str,None]
+        offset  : Union[int,None]
+        uid     : Union[str,None]
+        udata   : Union[Map,None]
+        state   : Union[Map,None]
+        index   : Union[int,None]
 
         # first, if anything in the map was a list, concatenate, and anything that wasn't, get val.
         params : Map = {}
