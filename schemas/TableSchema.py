@@ -70,7 +70,7 @@ class TableSchema:
         """
         return [col['name'] for col in self._columns]
 
-    def RowToEvent(self, row: Tuple[str], concatenator:str = '.'):
+    def RowToEvent(self, row: Tuple, concatenator:str = '.'):
         """Function to convert a row to an Event, based on the loaded schema.
         In general, columns specified in the schema's column_map are mapped to corresponding elements of the Event.
         If the column_map gave a list, rather than a single column name, the values from each column are concatenated in order with '.' character separators.
@@ -142,7 +142,7 @@ class TableSchema:
 
     ## Simple utility function to turn a raw row from the file/database into a dictionary,
     #  indexed with the column names retrieved from the file/database.
-    def RowToDict(self, row:Tuple[str]) -> Dict[str,str]:
+    def RowToDict(self, row:Tuple) -> Dict[str,str]:
         """Create Dict from a Row
 
         :param row: [description]
@@ -156,16 +156,16 @@ class TableSchema:
     @staticmethod
     def _parse(input:str, column_descriptor:Dict[str,str]) -> Any:
         if column_descriptor['type'] == 'str':
-            return input
+            return str(input)
         elif column_descriptor['type'] == 'int':
             return int(input)
         elif column_descriptor['type'] == 'float':
             return float(input)
         elif column_descriptor['type'] == 'json':
-            return json.loads(input)
+            return json.loads(str(input))
         elif column_descriptor['type'].startswith('enum'):
             # if the column is supposed to be an enum, for now we just stick with the string.
-            return input
+            return str(input)
     
 
     # # parse out complex data from json
