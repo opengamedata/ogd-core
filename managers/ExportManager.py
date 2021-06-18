@@ -17,7 +17,6 @@ from typing import Tuple
 ## import local files
 import utils
 from config import settings
-from schemas.TableSchema import TableSchema
 from interfaces.MySQLInterface import SQL
 from interfaces.MySQLInterface import MySQLInterface
 from managers.FileManager import *
@@ -25,7 +24,9 @@ from managers.SessionProcessor import SessionProcessor
 from managers.RawManager import RawManager
 from managers.EventProcessor import EventProcessor
 from Request import *
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
 from games.WAVES.WaveExtractor import WaveExtractor
 from games.CRYSTAL.CrystalExtractor import CrystalExtractor
 from games.LAKELAND.LakelandExtractor import LakelandExtractor
@@ -137,6 +138,7 @@ class ExportManager:
         return game_schema, game_extractor
 
     def _extractToCSVs(self, request:Request, file_manager:FileManager, game_schema: GameSchema, game_table: TableSchema, game_extractor: Union[type,None]):
+        ret_val = -1
         try:
             sess_processor = raw_mgr = evt_processor = None
             if request._files.sessions and game_extractor is not None:
@@ -170,7 +172,7 @@ class ExportManager:
                 try:
                     # now, we process each row.
                     for row in next_data_set:
-                        self._processRow(row=row, sess_ids=sess_ids, game_table=game_table, raw_mgr=raw_mgr, sess_processor=sess_processor, evt_processor=evt_processor)
+                        self._processRow(event=row, sess_ids=sess_ids, game_table=game_table, raw_mgr=raw_mgr, sess_processor=sess_processor, evt_processor=evt_processor)
                     # after processing all rows for each slice, write out the session data and reset for next slice.
                     if request._files.sessions:
                         sess_processor.calculateAggregateFeatures()
@@ -196,16 +198,9 @@ class ExportManager:
             utils.Logger.toStdOut(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
             utils.Logger.toFile(msg, logging.ERROR)
-            ret_val = -1
         finally:
             # Save out all the files.
             file_manager.CloseFiles()
-            # if exporter_files.sessions:
-            #     sessions_csv_file.close()
-            # if exporter_files.raw:
-            #     raw_csv_file.close()
-            # if exporter_files.events:
-            #     events_csv_file.close()
             return ret_val
 
     ## Private helper function to process a single row of data.
