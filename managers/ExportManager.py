@@ -168,11 +168,12 @@ class ExportManager:
                             range( 0, math.ceil(num_sess / slice_size) )]
             for i, next_slice in enumerate(session_slices):
                 start = datetime.now()
-                next_data_set = request._interface.EventsFromIDs(next_slice)
+                next_data_set = request._interface.RowsFromIDs(next_slice)
                 try:
                     # now, we process each row.
                     for row in next_data_set:
-                        self._processRow(event=row, sess_ids=sess_ids, game_table=game_table, raw_mgr=raw_mgr, sess_processor=sess_processor, evt_processor=evt_processor)
+                        next_event = game_table.RowToEvent(row)
+                        self._processRow(event=next_event, sess_ids=sess_ids, game_table=game_table, raw_mgr=raw_mgr, sess_processor=sess_processor, evt_processor=evt_processor)
                     # after processing all rows for each slice, write out the session data and reset for next slice.
                     if request._files.sessions:
                         sess_processor.calculateAggregateFeatures()
