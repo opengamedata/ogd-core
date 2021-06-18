@@ -6,10 +6,10 @@
         "event_name": ["event", "event_custom"],
         "event_data": ["event_data_complex", "server_time", "level", "persistent_session_id", "remote_addr", "http_user_agent"],
         "app_version": "app_version",
+        "time_offset": null,
         "user_id": "player_id",
         "user_data": null,
         "game_state": null,
-        "time_offset": null,
         "event_sequence_index": "session_n"
     },
 
