@@ -43,22 +43,7 @@ class TableSchema:
         # after loading the file, take the stuff we need and store.
         if schema is not None:
             self._columns = schema['columns']
-            self._map = schema['map']
-            # Take note of specific indices which will be useful when using a TableSchema
-            # self.app_version_index:    int = self.column_names.index("app_version")
-            # self.complex_data_index:   int = self.column_names.index("event_data_complex")
-            # self.remote_addr_index:    int = self.column_names.index("remote_addr")
-            # self.client_time_index:    int = self.column_names.index("client_time")
-            # self.session_id_index:     int = self.column_names.index("session_id")
-            # self.event_index:          int = self.column_names.index("event")
-            # self.level_index:          int = self.column_names.index("level")
-            # self.client_time_ms_index: int = self.column_names.index("client_time_ms")
-            # self.server_time_index:    int = self.column_names.index("server_time")
-            # self.pers_session_id_index:int = self.column_names.index("persistent_session_id")
-            # self.event_custom_index:   int = self.column_names.index("event_custom")
-            # self.version_index:        int = self.column_names.index("app_version")
-            # self.player_id_index:      int = self.column_names.index("player_id")
-            # utils.Logger.toStdOut("session_ids: " + str(session_ids), logging.DEBUG)
+            self._map = schema['column_map']
         else:
             utils.Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
 
