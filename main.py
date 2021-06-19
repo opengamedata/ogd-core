@@ -128,9 +128,8 @@ def runExport(events:bool = False, features:bool = False):
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
         msg = f"{type(err)} {str(err)}"
-        Logger.toStdOut(msg, logging.ERROR)
+        Logger.Log(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
-        Logger.toFile(msg, logging.ERROR)
         sys.exit(1)
     finally:
         time_taken = datetime.now() - start
