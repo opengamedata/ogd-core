@@ -55,12 +55,12 @@ class Extractor(abc.ABC):
     def getFeatureNames(game_schema: GameSchema) -> List[str]:
         columns = []
         features = Extractor.SessionFeatures.generateFeatureDict(game_schema)
-        for key,elem in features.items():
-            if type(elem) is dict:
+        for feature_name,feature_content in features.items():
+            if type(feature_content) is dict:
                 # if it's a dictionary, expand.
-                columns.extend([f"{elem[num]['prefix']}{num}_{key}" for num in elem.keys()])
+                columns.extend([f"{feature_content[num]['prefix']}{num}_{feature_name}" for num in feature_content.keys()])
             else:
-                columns.append(str(key))
+                columns.append(str(feature_name))
         return columns
 
     ## Function to print data from an extractor to file.
@@ -192,7 +192,7 @@ class Extractor(abc.ABC):
         #  @param index        The count index of the specific value, e.g. the level
         #  @return             The value stored for the given feature at given index.
         def getValByIndex(self, feature_name: str, index: int) -> Any:
-            if not self._verify_feature(feature_name):
+            if not self._has_feature(feature_name):
                 return None
             return self.features[feature_name][index]["val"]
 
@@ -204,7 +204,7 @@ class Extractor(abc.ABC):
         #  @return             The feature stored for the given feature at given index.
         #                      This feature is a dictionary with a "val" and "prefix"
         def getFeatureByIndex(self, feature_name: str, index: int) -> Any:
-            if not self._verify_feature(feature_name):
+            if not self._has_feature(feature_name):
                 return None
             return self.features[feature_name][index]
 
@@ -216,7 +216,7 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to retrieve
         #  @return             The value stored for the given feature.
         def getValByName(self, feature_name: str) -> Any:
-            if not self._verify_feature(feature_name):
+            if not self._has_feature(feature_name):
                 return None
             return self.features[feature_name]
 
@@ -227,7 +227,7 @@ class Extractor(abc.ABC):
         #  @param index        The count index of the desired value, e.g. the level
         #  @param new_value    The value to be stored for the given feature at given index.
         def setValByIndex(self, feature_name: str, index: int, new_value) -> None:
-            if not self._verify_feature(feature_name):
+            if not self._has_feature(feature_name):
                 return
             self.features[feature_name][index]["val"] = new_value
 
@@ -247,7 +247,7 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to retrieve
         #  @param new_value    The value to be stored for the given feature.
         def setValByName(self, feature_name: str, new_value) -> None:
-            if not self._verify_feature(feature_name):
+            if not self._has_feature(feature_name):
                 return
             self.features[feature_name] = new_value
 
@@ -258,7 +258,7 @@ class Extractor(abc.ABC):
         #  @param index        The count index of the specific value, e.g. the level
         #  @param increment    The size of the increment (default = 1)
         def incValByIndex(self, feature_name: str, index: int, increment: Union[int, float] = 1) -> None:
-            if not self._verify_feature(feature_name):
+            if not self._has_feature(feature_name):
                 return
             if self.features[feature_name][index]["val"] == 'null':
                 self.features[feature_name][index]["val"] = 0
@@ -278,11 +278,11 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to increment
         #  @param increment    The size of the increment (default = 1)
         def incAggregateVal(self, feature_name: str, increment: Union[int, float] = 1) -> None:
-            if not self._verify_feature(feature_name):
+            if not self._has_feature(feature_name):
                 return
             self.features[feature_name] += increment
 
-        def _verify_feature(self, feature_name) -> bool:
+        def _has_feature(self, feature_name) -> bool:
             try:
                 _ = self.features[feature_name]
             except KeyError:
