@@ -45,9 +45,9 @@ class SessionProcessor:
         # ensure we have an extractor for the given session:
         if not event.session_id in self._session_extractors.keys():
             if event.app_id == 'LAKELAND':
-                self._session_extractors[event.session_id] = self._ExtractorClass(event.session_id, self._table_schema, self._game_schema, self._sessions_file)
+                self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_id=self._game_schema, session_file=self._sessions_file)
             else:
-                self._session_extractors[event.session_id] = self._ExtractorClass(event.session_id, self._table_schema, self._game_schema)
+                self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_schema=self._game_schema)
         self._session_extractors[event.session_id].extractFromRow(event, self._table_schema)
 
     ##  Function to empty the list of lines stored by the SessionProcessor.
