@@ -55,10 +55,10 @@ class Extractor(abc.ABC):
     def getFeatureNames(game_schema: GameSchema) -> List[str]:
         columns = []
         features = Extractor.SessionFeatures.generateFeatureDict(game_schema)
-        for key in features.keys():
-            if type(features[key]) is type({}):
+        for key,elem in features.items():
+            if type(elem) is dict:
                 # if it's a dictionary, expand.
-                columns.extend([f"{features[key][num]['prefix']}{num}_{key}" for num in features[key].keys()])
+                columns.extend([f"{elem[num]['prefix']}{num}_{key}" for num in elem.keys()])
             else:
                 columns.append(str(key))
         return columns
@@ -156,7 +156,7 @@ class Extractor(abc.ABC):
         #  @param level_range The range of all levels for the game associated with an extractor.
         #  @param game_schema A dictionary that defines how the game data is structured.
         @staticmethod
-        def generateFeatureDict(game_schema: GameSchema) -> Dict[str,Union]:
+        def generateFeatureDict(game_schema: GameSchema) -> Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]]:
             # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
             # which in turn maps each level to a value and prefix.
             perlevels = game_schema.perlevel_features()
