@@ -96,7 +96,7 @@ class TableSchema:
                 if inner_keys == None:
                     params[key] = None
                 elif type(inner_keys) == list:
-                    params[key] = concatenator.join(row_dict[inner_key] for inner_key in inner_keys)
+                    params[key] = concatenator.join([row_dict[inner_key] for inner_key in inner_keys])
                 else:
                     params[key] = row_dict[inner_keys]
         # second, handle special case of event data, where we've got to parse the json,
@@ -130,7 +130,7 @@ class TableSchema:
 
     ## Simple utility function to turn a raw row from the file/database into a dictionary,
     #  indexed with the column names retrieved from the file/database.
-    def RowToDict(self, row:Tuple) -> Dict[str,str]:
+    def RowToDict(self, row:Tuple[Any]) -> Dict[str,str]:
         """Create Dict from a Row
 
         :param row: [description]
@@ -139,7 +139,7 @@ class TableSchema:
         :rtype: Dict[str,str]
         """
         column_names = [col['name'] for col in self._columns]
-        return {col_name : row[i] for i,col_name in enumerate(column_names)}
+        return {col_name : row[i].isoformat() if type(row[i]) == datetime else str(row[i]) for i,col_name in enumerate(column_names)}
 
     @staticmethod
     def _parse(input:str, column_descriptor:Dict[str,str]) -> Any:
