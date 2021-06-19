@@ -186,7 +186,8 @@ class ExportManager:
                         evt_processor.WriteEventsCSVLines()
                         evt_processor.ClearLines()
                 except Exception as err:
-                    raise Exception(f"Error while processing {next_data_set}, type={type(next_data_set)}")
+                    msg = f"Error while processing slice {i} of {len(session_slices)}"
+                    raise err
                 else:
                     time_delta = datetime.now() - start
                     num_min = math.floor(time_delta.total_seconds()/60)
