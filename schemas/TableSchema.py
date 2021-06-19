@@ -103,8 +103,8 @@ class TableSchema:
         # and then fold in whatever other columns were desired.
         if type(self._map['event_data']) == list:
             # if we had a list of event_data columns, we need a merger, not a concatenation
+            params['event_data'] = {}
             for i,col_name in enumerate(self._map['event_data']):
-                params['event_data'] = {}
                 val = TableSchema._parse(row_dict[col_name], self._columns[col_names.index(col_name)])
                 params['event_data'].update(val if type(val) == dict else {col_name:val})
         else:
