@@ -117,9 +117,9 @@ class LakelandExtractor(Extractor):
         self.reset()
         self.setValByName('num_play', self._cur_gameplay)
     
-    def extractFeaturesFromRow(self, row_with_complex_parsed, table_schema:TableSchema):
+    def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         try:
-            self._extractFromRow(row_with_complex_parsed, table_schema)
+            self._extractFromRow(event, table_schema)
         except Exception as e:
             if len(self.debug_strs) > 10:
                 debug_strs = self.debug_strs[:5] + ['...'] + self.debug_strs[-5:]
