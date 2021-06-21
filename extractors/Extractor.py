@@ -20,6 +20,7 @@ from datetime import timedelta
 class Extractor(abc.ABC):
     ## @var GameSchema _schema
     #  The schema specifying structure of data associated with an extractor.
+    #TODO: Set up class-level variable like this for each extractor, instead of using constructor param
     _schema: GameSchema
 
     ## Base constructor for Extractor classes.
@@ -31,7 +32,7 @@ class Extractor(abc.ABC):
     #                     structured.
     def __init__(self, session_id: int, game_schema: GameSchema):
         self._session_id  : int         = session_id
-        self._game_schema : GameSchema
+        self._game_schema : GameSchema  = game_schema
         self._levels      : List[int]   = []
         self._sequences   : List        = []
         self._features    : Extractor.SessionFeatures = Extractor.SessionFeatures(game_schema=game_schema)
