@@ -1,4 +1,5 @@
 import logging
+import os
 from datetime import datetime
 from schemas.TableSchema import TableSchema
 from google.cloud import bigquery
@@ -21,8 +22,10 @@ class BigQueryInterface(DataInterface):
             self.Open(force_reopen=False)
         if not self._is_open:
             credential_path = settings["game_source_map"][self._game_id]["credential"]
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
             self._client = bigquery.Client()
             if self._client != None:
+                self._is_open = True
                 Logger.Log("Connected to BigQuery database.", logging.DEBUG)
                 return True
             else:
