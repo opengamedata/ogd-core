@@ -197,9 +197,9 @@ class ExportManager:
             ret_val = num_sess
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
-            utils.Logger.toStdOut(msg, logging.ERROR)
-            traceback.print_tb(err.__traceback__)
-            utils.Logger.toFile(msg, logging.ERROR)
+            utils.Logger.Log(msg, logging.ERROR)
+            #traceback.print_tb(err.__traceback__)
+            raise err
         finally:
             # Save out all the files.
             file_manager.CloseFiles()
