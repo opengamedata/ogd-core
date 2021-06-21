@@ -2,43 +2,45 @@
     "level_range": { "min":0, "max":0 },
 
     "events": {
-        "accept_job": {
-            "job_id": "ID for the accepted job"
+        "start_mission": {
+            "mission_id": "ID for the current mission"
         },
-        "receive_fact": {
-            "fact_id": "ID for the fact received"
+        "open_map": {
+            "mission_id": "ID for the current mission"
         },
-        "complete_job": {
-            "job_id": "ID for the completed job"
+        "scanning": {
+            "mission_id": "ID for the current mission"
         },
-        "begin_experiment": {
-            "job_id": "ID for the current job",
-            "tank_type": "The type of tank selected for the experiment"
+        "scan_complete": {
+            "mission_id": "ID for the current mission"
         },
-        "begin_dive": {
-            "job_id": "ID for the current job",
-            "site_id": "ID for the site the player is diving to"
+        "dive_begin": {
+            "mission_id": "ID for the current mission"
         },
-        "begin_argument": {
-            "job_id": "ID for the current job"
+        "new_evidence": {
+            "mission_id": "ID for the current mission",
+            "type": "Type of evidence found",
+            "source": "Source where the evidence was gathered from",
+            "key": "Name/ID for the evidence found"
         },
-        "begin_model": {
-            "job_id": "ID for the current job"
+        "mission_complete": {
+            "mission_id": "ID for the current mission"
         },
-        "begin_simulation": {
-            "job_id": "ID for the current job"
+        "update_ship_overview": {
+            "mission_id": "ID for the current mission",
+            "field": "Field in ship overview that was updated",
+            "evidence": "Evidence placed in ship overview"
         },
-        "ask_for_help": {
-            "node_id": "ID for the node displayed when asking for help"
+        "view_desk": {
+            "mission_id": "ID for the current mission"
         },
-        "talk_with_guide": {
-            "node_id": "ID for the node displayed when clicking the guide button"
+        "view_tab": {
+            "mission_id": "ID for the current mission",
+            "tab_name": "Name of tab opened"
         },
-        "simulation_sync_achieved": {
-            "job_id": "ID for the current job"
-        },
-        "script_triggered": {
-            "node_id": "ID for the node displayed when guide script is triggered"
+        "view_chat": {
+            "mission_id": "ID for the current mission",
+            "name": "Name of NPC in the chat"
         }
     },
 
