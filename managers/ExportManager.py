@@ -129,7 +129,7 @@ class ExportManager:
             game_extractor = JowilderExtractor
         elif self._game_id == "MAGNET":
             game_extractor = MagnetExtractor
-        elif self._game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "WIND"]:
+        elif self._game_id in ["AQUALAB", "BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "STEMPORTS", "EARTHQUAKE", "WIND"]:
             # all games with data but no extractor.
             pass
         else:
