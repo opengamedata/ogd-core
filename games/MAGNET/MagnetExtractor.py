@@ -41,6 +41,8 @@ class MagnetExtractor(Extractor):
     def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         # put some data in local vars, for readability later.
         level = event.event_data['level']
+        if level > self._schema.max_level:
+            utils.Logger.toStdOut(f"Got an event with level too high, full data:\n{str(event)}")
         # Check for invalid row.
         if event.session_id != self._session_id:
             utils.Logger.toFile(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!",
