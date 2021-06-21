@@ -54,11 +54,14 @@ class MagnetExtractor(Extractor):
             if not level in self._levels:
                 bisect.insort(self._levels, level)
                 self._features.initLevel(level)
-            # First, record that an event of any kind occurred, for the level & session
+            # 1) record that an event of any kind occurred, for the level & session
             self._features.incValByIndex(feature_name="eventCount", index=level)
             self._features.incAggregateVal(feature_name="sessionEventCount")
-            # Then, handle cases for each type of event
-            event_type = event.event_data['event_custom']
+            # 2) figure out what type of event we had. If CUSTOM, we'll use the event_custom sub-item.
+            event_type = event.event_name.split('.')[0]
+            if event_type == "CUSTOM":
+                event_type = event.event_data['event_custom']
+            # 3) handle cases for each type of event
             if event_type == "COMPLETE":
                 self._extractFromComplete(level=level, event_data=event.event_data)
             elif event_type == "DRAG_TOOL":
