@@ -64,7 +64,7 @@ class Request(abc.ABC):
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
-        fmt = "%Y%m%d"
+        fmt = "%Y-%m-%d"
         rng = self._range.GetDateRange()
         return f"{self._interface._game_id}: {rng['min'].strftime(fmt)}-{rng['max'].strftime(fmt)}"
 

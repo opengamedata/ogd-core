@@ -1,9 +1,8 @@
 ## import standard libraries
 import bisect
-import json
 import logging
 import typing
-from datetime import date, datetime
+from datetime import datetime
 from typing import Any, Dict
 ## import local files
 import utils
@@ -68,11 +67,14 @@ class CrystalExtractor(Extractor):
                 self._totalMoleculeDragDuration[level] = 0
                 # self.start_times[level] = None
                 # self.end_times[level] = None
-            # First, record that an event of any kind occurred, for the level & session
+            # 1) record that an event of any kind occurred, for the level & session
             self._features.incValByIndex(feature_name="eventCount", index=level)
             self._features.incAggregateVal(feature_name="sessionEventCount")
-            # Then, handle cases for each type of event
-            event_type = event.event_data["event_custom"]
+            # 2) figure out what type of event we had. If CUSTOM, we'll use the event_custom sub-item.
+            event_type = event.event_name.split('.')[0]
+            if event_type == "CUSTOM":
+                event_type = event.event_data['event_custom']
+            # 3) handle cases for each type of event
             if event_type == "BEGIN":
                 self._extractFromBegin(level, event_client_time)
             elif event_type == "COMPLETE":

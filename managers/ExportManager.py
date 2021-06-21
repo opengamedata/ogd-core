@@ -129,7 +129,7 @@ class ExportManager:
             game_extractor = JowilderExtractor
         elif self._game_id == "MAGNET":
             game_extractor = MagnetExtractor
-        elif self._game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "WIND"]:
+        elif self._game_id in ["AQUALAB", "BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "STEMPORTS", "EARTHQUAKE", "WIND"]:
             # all games with data but no extractor.
             pass
         else:
@@ -186,7 +186,8 @@ class ExportManager:
                         evt_processor.WriteEventsCSVLines()
                         evt_processor.ClearLines()
                 except Exception as err:
-                    raise Exception(f"Error while processing {next_data_set}, type={type(next_data_set)}")
+                    msg = f"Error while processing slice {i} of {len(session_slices)}"
+                    raise err
                 else:
                     time_delta = datetime.now() - start
                     num_min = math.floor(time_delta.total_seconds()/60)

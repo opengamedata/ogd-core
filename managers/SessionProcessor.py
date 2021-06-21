@@ -45,9 +45,9 @@ class SessionProcessor:
         # ensure we have an extractor for the given session:
         if not event.session_id in self._session_extractors.keys():
             if event.app_id == 'LAKELAND':
-                self._session_extractors[event.session_id] = self._ExtractorClass(event.session_id, self._table_schema, self._game_schema, self._sessions_file)
+                self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_id=self._game_schema, session_file=self._sessions_file)
             else:
-                self._session_extractors[event.session_id] = self._ExtractorClass(event.session_id, self._table_schema, self._game_schema)
+                self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_schema=self._game_schema)
         self._session_extractors[event.session_id].extractFromRow(event, self._table_schema)
 
     ##  Function to empty the list of lines stored by the SessionProcessor.
@@ -66,7 +66,7 @@ class SessionProcessor:
     ## Function to write out the header for a processed csv file.
     #  Just runs the header writer for whichever Extractor subclass we were given.
     def WriteSessionCSVHeader(self):
-        self._ExtractorClass.writeCSVHeader(table_schema=self._table_schema, game_schema=self._game_schema, file=self._sessions_file)
+        self._ExtractorClass.writeCSVHeader(game_schema=self._game_schema, file=self._sessions_file)
 
     ## Function to write out all data for the extractors created by the
     #  SessionProcessor. Just calls the "write" function once for each extractor.

@@ -3,8 +3,7 @@ name: Jo Wilder Exporter CI Test
 on:
   push:
     paths:
-    - 'extractors/JowilderExtractor.py'
-    - 'schemas/JSON/JOWILDER.json'
+    - 'games/JOWILDER/**'
     - '.github/workflows/jowilder.yml'
     - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab

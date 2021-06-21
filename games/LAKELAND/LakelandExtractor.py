@@ -1,7 +1,7 @@
 """ Lakeland Feature Extractor
 Note that a separate file unique to the lakeland extractor is necessary to run this script.
 The file is Lakeland Enumerators.json, and is required for the line:
-_STR_TO_ENUM = utils.loadJSONFile("game_info/Lakeland/Lakeland Enumerators.json")
+_STR_TO_ENUM = utils.loadJSONFile("games/LAKELAND/Lakeland Enumerators.json")
 
 This json file is created from the fielddaylab/lakeland README on github via
 "produce_lakeland_enumerators.py". Please run that script with the appropriate inpath and outpath before running this
@@ -41,7 +41,7 @@ class LakelandExtractor(Extractor):
         "buy_fertilizer",
         "buy_livestock",
     ]
-    _STR_TO_ENUM = utils.loadJSONFile("game_info/Lakeland/Lakeland Enumerators.json")
+    _STR_TO_ENUM = utils.loadJSONFile("games/LAKELAND/Lakeland Enumerators.json")
     _ENUM_TO_STR = {cat: {y: x for x, y in ydict.items()} for cat, ydict in _STR_TO_ENUM.items()}
     _ITEM_MARK_COMBINATIONS = [('food', 'sell'), ('food', 'use'), ('food', 'eat'),
                                ('milk', 'sell'), ('milk', 'use'), ('poop', 'sell'), ('poop', 'use')
@@ -92,7 +92,7 @@ class LakelandExtractor(Extractor):
     #                    table associated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: int, table_schema: TableSchema, game_schema: GameSchema, sessions_file: typing.IO[str]):
+    def __init__(self, session_id: int, game_schema: GameSchema, sessions_file: typing.IO[str]):
         # Set window and overlap size
         config = game_schema['config']
         self._NUM_SECONDS_PER_WINDOW = config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
@@ -117,9 +117,9 @@ class LakelandExtractor(Extractor):
         self.reset()
         self.setValByName('num_play', self._cur_gameplay)
     
-    def extractFeaturesFromRow(self, row_with_complex_parsed, table_schema:TableSchema):
+    def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         try:
-            self._extractFromRow(row_with_complex_parsed, table_schema)
+            self._extractFromEvent(event, table_schema)
         except Exception as e:
             if len(self.debug_strs) > 10:
                 debug_strs = self.debug_strs[:5] + ['...'] + self.debug_strs[-5:]
@@ -139,7 +139,7 @@ class LakelandExtractor(Extractor):
     #                                 "complex data" already parsed from JSON.
     #  @param table_schema A data structure containing information on how the db
     #                      table assiciated with this game is structured.
-    def _extractFromRow(self, event:Event, table_schema: TableSchema):
+    def _extractFromEvent(self, event:Event, table_schema: TableSchema):
 
         # put some data in local vars, for readability later.
         self.event_client_time = event.timestamp

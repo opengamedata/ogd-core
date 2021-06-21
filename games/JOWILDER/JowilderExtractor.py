@@ -1,9 +1,6 @@
 ## import standard libraries
 import bisect
-import json
 import logging
-import math
-import numpy as np
 import sys
 import typing
 import traceback
@@ -13,12 +10,11 @@ from datetime import datetime, timedelta
 from typing import Any, Dict,Tuple, Union
 ## import local files
 import utils
-from sklearn.linear_model import LinearRegression
 from extractors.Extractor import Extractor
+from games.JOWILDER import Jowilder_Enumerators as je
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
-from games.JOWILDER import Jowilder_Enumerators as je
 
 # temp comment
 
@@ -151,7 +147,7 @@ class JowilderExtractor(Extractor):
         self._last_quizstart = None
         self._quiztimes = [None]*16
 
-    def extractFeaturesFromRow(self, event:Event, table_schema:TableSchema):
+    def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         try:
             self._extractFeaturesFromRow(event, table_schema)
         except Exception:

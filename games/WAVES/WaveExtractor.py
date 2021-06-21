@@ -1,17 +1,14 @@
 ## import standard libraries
 import bisect
-import json
 import logging
-import math
+import numpy as np
 import typing
 import traceback
 from datetime import datetime
-from typing import Any, Dict,Tuple, Union
-from typing import Dict, List, Union
+from sklearn.linear_model import LinearRegression
+from typing import Any, Dict, List, Union
 ## import local files
 import utils
-import numpy as np
-from sklearn.linear_model import LinearRegression
 from extractors.Extractor import Extractor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
@@ -63,7 +60,7 @@ class WaveExtractor(Extractor):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def extractFeaturesFromRow(self, event:Event, table_schema:TableSchema):
+    def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         if event.session_id != self._session_id:
             utils.Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!", logging.ERROR)
         else:
@@ -81,7 +78,11 @@ class WaveExtractor(Extractor):
             # Then, handle cases for each type of event
             # NOTE: for BEGIN and COMPLETE, we assume only one event of each type happens.
             # If there are somehow multiples, the previous times are overwritten by the newer ones.
-            event_type = event.event_data["event_custom"]
+            # 1) figure out what type of event we had. If CUSTOM, we'll use the event_custom sub-item.
+            event_type = event.event_name.split('.')[0]
+            if event_type == "CUSTOM":
+                event_type = event.event_data['event_custom']
+            # 2) handle cases for each type of event
             if event_type == "BEGIN":
                 self._extractFromBegin(level=level, event_client_time=event.timestamp)
             elif event_type == "COMPLETE":

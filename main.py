@@ -21,6 +21,7 @@ from config import settings
 from interfaces.DataInterface import DataInterface
 from interfaces.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface
+from interfaces.BigQueryInterface import BigQueryInterface
 from managers.ExportManager import ExportManager
 from Request import Request, ExporterFiles, ExporterRange
 from schemas.GameSchema import GameSchema
@@ -112,7 +113,13 @@ def runExport(events:bool = False, features:bool = False):
         req = Request(interface=interface, range=range, exporter_files=exporter_files)
         # breakpoint()
     else:
-        interface = MySQLInterface(game_id=game_name, settings=settings)
+        interface_type = settings["game_source_map"][game_name]['interface']
+        if interface_type == "BigQuery":
+            interface = BigQueryInterface(game_id=game_name, settings=settings)
+        elif interface_type == "MySQL":
+            interface = MySQLInterface(game_id=game_name, settings=settings)
+        else:
+            raise Exception(f"{interface_type} is not a valid DataInterface type!")
         # retrieve/calculate date range.
         start_date, end_date = getDateRange(args=args, game_id=game_name)
         range = ExporterRange.FromDateRange(date_min=start_date, date_max=end_date, source=interface, versions=supported_vers)
@@ -123,14 +130,14 @@ def runExport(events:bool = False, features:bool = False):
     try:
         export_manager = ExportManager(game_id=game_name, settings=settings)
         schema = GameSchema(game_name)
-        export_manager.ExecuteRequest(request=req, game_schema=schema, table_schema=TableSchema(schema_name=f"{game_name}.json"))
+        table_name = settings["game_source_map"][game_name]["table"]
+        export_manager.ExecuteRequest(request=req, game_schema=schema, table_schema=TableSchema(schema_name=f"{table_name}.json"))
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
         msg = f"{type(err)} {str(err)}"
-        Logger.toStdOut(msg, logging.ERROR)
+        Logger.Log(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
-        Logger.toFile(msg, logging.ERROR)
         sys.exit(1)
     finally:
         time_taken = datetime.now() - start
@@ -159,9 +166,9 @@ def showGameInfo():
 def writeReadme():
     path = f"./data/{game_name}"
     try:
-        schema = GameSchema(schema_name=f"{game_name}.json")
+        game_schema = GameSchema(schema_name=f"{game_name}.json")
         table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
-        utils.GenerateReadme(game_name=game_name, game_schema=schema, column_list=table_schema.ColumnList(), path=path)
+        utils.GenerateReadme(game_name=game_name, game_schema=game_schema, column_list=table_schema.ColumnList(), path=path)
         Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
     except Exception as err:
         msg = f"Could not create a readme for {game_name}: {type(err)} {str(err)}"

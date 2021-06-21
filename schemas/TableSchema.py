@@ -43,22 +43,7 @@ class TableSchema:
         # after loading the file, take the stuff we need and store.
         if schema is not None:
             self._columns = schema['columns']
-            self._map = schema['map']
-            # Take note of specific indices which will be useful when using a TableSchema
-            # self.app_version_index:    int = self.column_names.index("app_version")
-            # self.complex_data_index:   int = self.column_names.index("event_data_complex")
-            # self.remote_addr_index:    int = self.column_names.index("remote_addr")
-            # self.client_time_index:    int = self.column_names.index("client_time")
-            # self.session_id_index:     int = self.column_names.index("session_id")
-            # self.event_index:          int = self.column_names.index("event")
-            # self.level_index:          int = self.column_names.index("level")
-            # self.client_time_ms_index: int = self.column_names.index("client_time_ms")
-            # self.server_time_index:    int = self.column_names.index("server_time")
-            # self.pers_session_id_index:int = self.column_names.index("persistent_session_id")
-            # self.event_custom_index:   int = self.column_names.index("event_custom")
-            # self.version_index:        int = self.column_names.index("app_version")
-            # self.player_id_index:      int = self.column_names.index("player_id")
-            # utils.Logger.toStdOut("session_ids: " + str(session_ids), logging.DEBUG)
+            self._map = schema['column_map']
         else:
             utils.Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
 
@@ -111,15 +96,15 @@ class TableSchema:
                 if inner_keys == None:
                     params[key] = None
                 elif type(inner_keys) == list:
-                    params[key] = concatenator.join(row_dict[inner_key] for inner_key in inner_keys)
+                    params[key] = concatenator.join([row_dict[inner_key] for inner_key in inner_keys])
                 else:
                     params[key] = row_dict[inner_keys]
         # second, handle special case of event data, where we've got to parse the json,
         # and then fold in whatever other columns were desired.
         if type(self._map['event_data']) == list:
             # if we had a list of event_data columns, we need a merger, not a concatenation
+            params['event_data'] = {}
             for i,col_name in enumerate(self._map['event_data']):
-                params['event_data'] = {}
                 val = TableSchema._parse(row_dict[col_name], self._columns[col_names.index(col_name)])
                 params['event_data'].update(val if type(val) == dict else {col_name:val})
         else:
@@ -128,7 +113,8 @@ class TableSchema:
         # third, find out which of our params were in the map, and assign vals to our vars.
         sess_id = params['session_id']
         app_id  = params['app_id']
-        time    = datetime.fromisoformat(params['timestamp'])
+        # TODO: go bac to isostring function; need 0-padding on ms first, though
+        time    = datetime.strptime(params['timestamp'], "%Y-%m-%dT%H:%M:%S.%f")
         ename   = params['event_name']
         edata   = params['event_data']
         app_ver = params['app_version']
@@ -145,7 +131,7 @@ class TableSchema:
 
     ## Simple utility function to turn a raw row from the file/database into a dictionary,
     #  indexed with the column names retrieved from the file/database.
-    def RowToDict(self, row:Tuple) -> Dict[str,str]:
+    def RowToDict(self, row:Tuple[Any]) -> Dict[str,str]:
         """Create Dict from a Row
 
         :param row: [description]
@@ -154,7 +140,7 @@ class TableSchema:
         :rtype: Dict[str,str]
         """
         column_names = [col['name'] for col in self._columns]
-        return {col_name : row[i] for i,col_name in enumerate(column_names)}
+        return {col_name : row[i].isoformat() if type(row[i]) == datetime else str(row[i]) for i,col_name in enumerate(column_names)}
 
     @staticmethod
     def _parse(input:str, column_descriptor:Dict[str,str]) -> Any:

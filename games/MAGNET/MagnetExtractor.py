@@ -1,10 +1,9 @@
 ## import standard libraries
 import bisect
-import json
 import logging
 import typing
 from datetime import datetime
-from typing import Any, Dict,Tuple, Union
+from typing import Any, Dict
 ## import local files
 import utils
 from extractors.Extractor import Extractor
@@ -38,9 +37,11 @@ class MagnetExtractor(Extractor):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def extractFeaturesFromRow(self, event:Event, table_schema:TableSchema):
+    def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         # put some data in local vars, for readability later.
         level = event.event_data['level']
+        if level > self._game_schema.max_level:
+            utils.Logger.toStdOut(f"Got an event with level too high, full data:\n{str(event)}")
         # Check for invalid row.
         if event.session_id != self._session_id:
             utils.Logger.toFile(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!",
@@ -54,11 +55,14 @@ class MagnetExtractor(Extractor):
             if not level in self._levels:
                 bisect.insort(self._levels, level)
                 self._features.initLevel(level)
-            # First, record that an event of any kind occurred, for the level & session
+            # 1) record that an event of any kind occurred, for the level & session
             self._features.incValByIndex(feature_name="eventCount", index=level)
             self._features.incAggregateVal(feature_name="sessionEventCount")
-            # Then, handle cases for each type of event
-            event_type = event.event_data['event_custom']
+            # 2) figure out what type of event we had. If CUSTOM, we'll use the event_custom sub-item.
+            event_type = event.event_name.split('.')[0]
+            if event_type == "CUSTOM":
+                event_type = event.event_data['event_custom']
+            # 3) handle cases for each type of event
             if event_type == "COMPLETE":
                 self._extractFromComplete(level=level, event_data=event.event_data)
             elif event_type == "DRAG_TOOL":

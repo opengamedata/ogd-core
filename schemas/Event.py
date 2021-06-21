@@ -48,6 +48,18 @@ class Event:
         self.game_state           : Map             = game_state if game_state is not None else {}
         self.event_sequence_index : Union[int,None] = event_sequence_index
 
+    def __str__(self):
+        return f"session_id : {self.session_id}\n"\
+             + f"app_id     : {self.app_id}\n"\
+             + f"timestamp  : {self.timestamp}\n"\
+             + f"event_name : {self.event_name}\n"\
+             + f"event_data : {self.event_data}\n"\
+             + f"version    : {self.app_version}\n"\
+             + f"offset     : {self.time_offset}\n"\
+             + f"user_id    : {self.user_id}\n"\
+             + f"user_data  : {self.user_data}\n"\
+             + f"game_state : {self.game_state}\n"\
+             + f"index      : {self.event_sequence_index}\n"\
 
     @staticmethod
     def CompareVersions(a:str, b:str, version_separator='.'):

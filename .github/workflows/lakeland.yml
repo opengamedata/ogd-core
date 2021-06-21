@@ -3,8 +3,7 @@ name: Lakeland Exporter CI Test
 on:
   push:
     paths:
-    - 'extractors/LakelandExtractor.py'
-    - 'schemas/JSON/LAKELAND.json'
+    - 'games/JOWILDER/**'
     - '.github/workflows/lakeland.yml'
     - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
