@@ -17,7 +17,7 @@ from pandas.io.pytables import Table
 # import local files
 import Request
 import utils
-from config import settings
+from config.config import settings
 from interfaces.DataInterface import DataInterface
 from interfaces.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface
