@@ -182,8 +182,11 @@ class Extractor(abc.ABC):
         #  @param level The level for which we should initialize values.
         def initLevel(self, level) -> None:
             for f_name in self.perlevels:
-                if self.features[f_name][level]["val"] == None:
-                    self.features[f_name][level]["val"] = 0
+                if level in self.features[f_name].keys():
+                    if self.features[f_name][level]["val"] == None:
+                        self.features[f_name][level]["val"] = 0
+                else:
+                    utils.Logger.Log(f"Tried to intialize invalid level: {level}", logging.ERROR)
 
         ## Function to get value of a per-count feature (including per-level)
         #  For a per-level feature, index is the level.
@@ -192,9 +195,10 @@ class Extractor(abc.ABC):
         #  @param index        The count index of the specific value, e.g. the level
         #  @return             The value stored for the given feature at given index.
         def getValByIndex(self, feature_name: str, index: int) -> Any:
-            if not self._has_feature(feature_name):
+            if self._has_feature(feature_name):
+                return self.features[feature_name][index]["val"]
+            else:
                 return None
-            return self.features[feature_name][index]["val"]
 
         ## Function to get whole feature of a per-count feature (including per-level)
         #  For a per-level feature, index is the level.
@@ -205,8 +209,9 @@ class Extractor(abc.ABC):
         #                      This feature is a dictionary with a "val" and "prefix"
         def getFeatureByIndex(self, feature_name: str, index: int) -> Any:
             if not self._has_feature(feature_name):
+                return self.features[feature_name][index]
+            else:
                 return None
-            return self.features[feature_name][index]
 
         ## Function to get all data on a given feature.
         #  Generally, this is intended for getting the value of an aggregate feature.
@@ -216,9 +221,10 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to retrieve
         #  @return             The value stored for the given feature.
         def getValByName(self, feature_name: str) -> Any:
-            if not self._has_feature(feature_name):
+            if self._has_feature(feature_name):
+                return self.features[feature_name]
+            else:
                 return None
-            return self.features[feature_name]
 
         ## Function to set value of a per-count feature (including per-level)
         #  For a per-level feature, index is the level.
@@ -227,9 +233,11 @@ class Extractor(abc.ABC):
         #  @param index        The count index of the desired value, e.g. the level
         #  @param new_value    The value to be stored for the given feature at given index.
         def setValByIndex(self, feature_name: str, index: int, new_value) -> None:
-            if not self._has_feature(feature_name):
-                return
-            self.features[feature_name][index]["val"] = new_value
+            if self._has_feature(feature_name):
+                if index in self.features[feature_name].keys():
+                    self.features[feature_name][index]["val"] = new_value
+                else:
+                    utils.Logger.Log(f"Tried to set value on invalid index of {feature_name}: {index}", logging.ERROR)
 
         ## Function to set value of a per-level feature
         #  Pure syntax sugar, calls setValByIndex using level as the index.
@@ -247,9 +255,8 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to retrieve
         #  @param new_value    The value to be stored for the given feature.
         def setValByName(self, feature_name: str, new_value) -> None:
-            if not self._has_feature(feature_name):
-                return
-            self.features[feature_name] = new_value
+            if self._has_feature(feature_name):
+                self.features[feature_name] = new_value
 
         ## Function to increment the value of a per-count feature (including per-level)
         #  For a per-level feature, index is the level.
@@ -258,11 +265,13 @@ class Extractor(abc.ABC):
         #  @param index        The count index of the specific value, e.g. the level
         #  @param increment    The size of the increment (default = 1)
         def incValByIndex(self, feature_name: str, index: int, increment: Union[int, float] = 1) -> None:
-            if not self._has_feature(feature_name):
-                return
-            if self.features[feature_name][index]["val"] == 'null':
-                self.features[feature_name][index]["val"] = 0
-            self.features[feature_name][index]["val"] += increment
+            if self._has_feature(feature_name):
+                if index in self.features[feature_name].keys():
+                    if self.features[feature_name][index]["val"] == 'null':
+                        self.features[feature_name][index]["val"] = 0
+                    self.features[feature_name][index]["val"] += increment
+                else:
+                    utils.Logger.Log(f"Tried to increment value on invalid index of {feature_name}: {index}", logging.ERROR)
 
         ## Function to increment the value of a per-level feature
         #  Pure syntax sugar, calls incValByIndex using level as the index.
@@ -278,15 +287,14 @@ class Extractor(abc.ABC):
         #  @param feature_name The name of the feature to increment
         #  @param increment    The size of the increment (default = 1)
         def incAggregateVal(self, feature_name: str, increment: Union[int, float] = 1) -> None:
-            if not self._has_feature(feature_name):
-                return
-            self.features[feature_name] += increment
+            if self._has_feature(feature_name):
+                self.features[feature_name] += increment
 
         def _has_feature(self, feature_name) -> bool:
             try:
                 _ = self.features[feature_name]
             except KeyError:
-                utils.Logger.Log(f'{feature_name} does not exist.', logging.ERROR)
+                utils.Logger.Log(f'Feature {feature_name} does not exist.', logging.ERROR)
                 return False
             return True
 
