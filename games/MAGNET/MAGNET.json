@@ -1,5 +1,5 @@
 {
-    "level_range": { "min":0, "max":5 },
+    "level_range": { "min":0, "max":62 },
 
     "events":{
         "COMPLETE": {
