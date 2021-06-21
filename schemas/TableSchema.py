@@ -113,7 +113,8 @@ class TableSchema:
         # third, find out which of our params were in the map, and assign vals to our vars.
         sess_id = params['session_id']
         app_id  = params['app_id']
-        time    = datetime.fromisoformat(params['timestamp'])
+        # TODO: go bac to isostring function; need 0-padding on ms first, though
+        time    = datetime.strptime(params['timestamp'], "%Y-%m-%dT%H:%M:%S.%f")
         ename   = params['event_name']
         edata   = params['event_data']
         app_ver = params['app_version']
