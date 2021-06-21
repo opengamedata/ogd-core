@@ -4,6 +4,7 @@ from schemas.TableSchema import TableSchema
 from google.cloud import bigquery
 from typing import Dict, List, Tuple, Union
 
+from config.config import settings
 from interfaces.DataInterface import DataInterface
 from utils import Logger
 
@@ -19,6 +20,7 @@ class BigQueryInterface(DataInterface):
             self.Close()
             self.Open(force_reopen=False)
         if not self._is_open:
+            credential_path = settings["game_source_map"][self._game_id]["credential"]
             self._client = bigquery.Client()
             if self._client != None:
                 Logger.Log("Connected to BigQuery database.", logging.DEBUG)
