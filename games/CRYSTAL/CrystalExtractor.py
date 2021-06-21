@@ -1,9 +1,8 @@
 ## import standard libraries
 import bisect
-import json
 import logging
 import typing
-from datetime import date, datetime
+from datetime import datetime
 from typing import Any, Dict
 ## import local files
 import utils

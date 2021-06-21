@@ -7,7 +7,6 @@ import os
 import traceback
 import typing
 from typing import Dict, List
-from pandas.io.pytables import Table
 # local imports
 from config import settings
 from schemas.GameSchema import GameSchema

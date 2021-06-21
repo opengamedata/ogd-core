@@ -1,17 +1,14 @@
 ## import standard libraries
 import bisect
-import json
 import logging
-import math
+import numpy as np
 import typing
 import traceback
 from datetime import datetime
-from typing import Any, Dict,Tuple, Union
-from typing import Dict, List, Union
+from sklearn.linear_model import LinearRegression
+from typing import Any, Dict, List, Union
 ## import local files
 import utils
-import numpy as np
-from sklearn.linear_model import LinearRegression
 from extractors.Extractor import Extractor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
