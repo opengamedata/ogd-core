@@ -1,6 +1,5 @@
 import logging
 from datetime import datetime
-from schemas.TableSchema import TableSchema
 from google.cloud import bigquery
 from typing import Dict, List, Tuple, Union
 
@@ -21,6 +20,7 @@ class BigQueryInterface(DataInterface):
         if not self._is_open:
             self._client = bigquery.Client()
             if self._client != None:
+                self._is_open = True
                 Logger.Log("Connected to BigQuery database.", logging.DEBUG)
                 return True
             else:
@@ -39,7 +39,7 @@ class BigQueryInterface(DataInterface):
         if self._client != None:
             db_name = self._settings["bq_config"]["DB_NAME"]
             table_name = self._settings["bq_config"]["TABLE_NAME"]
-            id_string = ','.join([f"'{x}'" for x in id_list])
+            id_string = ','.join([f"{x}" for x in id_list])
             query = f"""
                 SELECT *, param.value.int_value AS session_id
                 FROM `{db_name}.{table_name}`,
@@ -48,7 +48,13 @@ class BigQueryInterface(DataInterface):
                 AND param.value.int_value IN ({id_string})
             """
             data = self._client.query(query)
-            events = [tuple(row.items()) for row in data]
+            events = []
+            for row in data:
+                items = tuple(row.items())
+                event = []
+                for item in items:
+                    event.append(item[1])
+                events.append(tuple(event))
             return events if events != None else []
         else:
             Logger.Log(f"Could not get data for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
