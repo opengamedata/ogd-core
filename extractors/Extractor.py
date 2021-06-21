@@ -196,7 +196,10 @@ class Extractor(abc.ABC):
         #  @return             The value stored for the given feature at given index.
         def getValByIndex(self, feature_name: str, index: int) -> Any:
             if self._has_feature(feature_name):
-                return self.features[feature_name][index]["val"]
+                if index in self.features[feature_name].keys():
+                    return self.features[feature_name][index]["val"]
+                else:
+                    utils.Logger.Log(f"Tried to get value on invalid index of {feature_name}: {index}", logging.ERROR)
             else:
                 return None
 
@@ -208,8 +211,11 @@ class Extractor(abc.ABC):
         #  @return             The feature stored for the given feature at given index.
         #                      This feature is a dictionary with a "val" and "prefix"
         def getFeatureByIndex(self, feature_name: str, index: int) -> Any:
-            if not self._has_feature(feature_name):
-                return self.features[feature_name][index]
+            if self._has_feature(feature_name):
+                if index in self.features[feature_name].keys():
+                    return self.features[feature_name][index]
+                else:
+                    utils.Logger.Log(f"Tried to get feature on invalid index of {feature_name}: {index}", logging.ERROR)
             else:
                 return None
 
