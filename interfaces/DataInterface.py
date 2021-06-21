@@ -5,6 +5,8 @@ from datetime import datetime
 from typing import Dict, List, Tuple, Union
 ## import locals
 import utils
+from schemas.Event import Event
+from schemas.TableSchema import TableSchema
 
 class DataInterface(abc.ABC):
     def __init__(self, game_id):
@@ -43,12 +45,12 @@ class DataInterface(abc.ABC):
         else:
             return self._fullDateRange()
 
-    def EventsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> Union[List, None]:
+    def RowsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> Union[List[Tuple], None]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve data, the source interface is not open!")
             return None
         else:
-            return self._eventsFromIDs(id_list, versions=versions)
+            return self._rowsFromIDs(id_list, versions=versions)
 
     def IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> Union[List[int], None]:
         if not self._is_open:
@@ -81,7 +83,7 @@ class DataInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _eventsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         pass
 
     @abc.abstractmethod

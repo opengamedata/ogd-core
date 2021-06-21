@@ -1,13 +1,15 @@
 # import standard libraries
+from extractors.Extractor import Extractor
 import json
 import logging
 import traceback
 import typing
 from typing import Dict, Tuple
 # import local files
-from schemas.TableSchema import TableSchema
 import utils
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.
@@ -24,14 +26,14 @@ class SessionProcessor:
     #                       is structured.
     #  @param sessions_csv_file The output file, to which we'll write the processed
     #                       feature data.
-    def __init__(self, ExtractorClass: type, game_table: TableSchema, game_schema: GameSchema,
+    def __init__(self, ExtractorClass: type, table_schema: TableSchema, game_schema: GameSchema,
                  sessions_csv_file: typing.IO[str]):
         ## Define instance vars
         self._ExtractorClass:     type                            = ExtractorClass
-        self._game_table:         TableSchema                     = game_table
+        self._table_schema:         TableSchema                     = table_schema
         self._game_schema:        GameSchema                      = game_schema
         self._sessions_file:      typing.IO[str]                  = sessions_csv_file
-        self._session_extractors: Dict[str, self._ExtractorClass] = {}
+        self._session_extractors: Dict[str, Extractor] = {}
 
     ## Function to handle processing of a single row of data.
     #  Basically just responsible for ensuring an extractor for the session
@@ -39,15 +41,14 @@ class SessionProcessor:
     #  to that extractor.
     #  @param row_with_complex_parsed A tuple of the row data. We assume the
     #                      event_data_complex has already been parsed from JSON.
-    def ProcessRow(self, row_with_complex_parsed: Tuple):
-        session_id = row_with_complex_parsed[self._game_table.session_id_index]
+    def ProcessRow(self, event: Event):
         # ensure we have an extractor for the given session:
-        if not session_id in self._session_extractors.keys():
-            if row_with_complex_parsed[2] == 'LAKELAND':
-                self._session_extractors[session_id] = self._ExtractorClass(session_id, self._game_table, self._game_schema, self._sessions_file)
+        if not event.session_id in self._session_extractors.keys():
+            if event.app_id == 'LAKELAND':
+                self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_id=self._game_schema, session_file=self._sessions_file)
             else:
-                self._session_extractors[session_id] = self._ExtractorClass(session_id, self._game_table, self._game_schema)
-        self._session_extractors[session_id].extractFromRow(row_with_complex_parsed, self._game_table)
+                self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_schema=self._game_schema)
+        self._session_extractors[event.session_id].extractFromRow(event, self._table_schema)
 
     ##  Function to empty the list of lines stored by the SessionProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid
@@ -65,7 +66,7 @@ class SessionProcessor:
     ## Function to write out the header for a processed csv file.
     #  Just runs the header writer for whichever Extractor subclass we were given.
     def WriteSessionCSVHeader(self):
-        self._ExtractorClass.writeCSVHeader(game_table=self._game_table, game_schema=self._game_schema, file=self._sessions_file)
+        self._ExtractorClass.writeCSVHeader(game_schema=self._game_schema, file=self._sessions_file)
 
     ## Function to write out all data for the extractors created by the
     #  SessionProcessor. Just calls the "write" function once for each extractor.

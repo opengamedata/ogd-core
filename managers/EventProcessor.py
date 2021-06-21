@@ -20,22 +20,22 @@ class EventProcessor:
     #  @param game_schema   A dictionary that defines how the game data itself
     #                       is structured.
     #  @param events_csv_file The output file, to which we'll write the event game data.
-    def __init__(self, game_table: TableSchema, game_schema: GameSchema,
+    def __init__(self, table_schema: TableSchema, game_schema: GameSchema,
                   events_csv_file: typing.IO[str]):
         # define instance vars
-        self._lines             : List[str]      = []
-        self._game_table        : TableSchema    = game_table
-        self._events_file       : typing.IO[str] = events_csv_file
-        self._db_columns        : List[str]      = game_schema.db_columns()
+        self._lines        : List[str]      = []
+        self._table_schema : TableSchema    = table_schema
+        self._events_file  : typing.IO[str] = events_csv_file
+        self._columns      : List[str]      = table_schema.ColumnNames()
 
     ## Function to handle processing one row of data.
     #  @param row_with_complex_parsed A tuple of the row data. We assume the
     #                      event_data_complex has already been parsed from JSON.
     def ProcessRow(self, row_with_complex_parsed: Tuple):
-        line : List[typing.Any] = [None] * len(self._db_columns)
+        line : List[typing.Any] = [None] * len(self._columns)
         for i,col in enumerate(row_with_complex_parsed):
             # only set a value if this was not the remote address (IP) column.
-            if i != self._game_table.remote_addr_index:
+            if self._columns[i] != "remote_addr":
                 if type(col) == str:
                     line[i] = f"\"{col}\""
                 elif type(col) == dict:
@@ -53,7 +53,7 @@ class EventProcessor:
 
     ## Function to write out the header for a events csv file.
     def WriteEventsCSVHeader(self):
-        self._events_file.write("\t".join(self._db_columns) + "\n")# changed , to \t
+        self._events_file.write("\t".join(self._columns) + "\n")# changed , to \t
 
     ## Function to write out all lines of event data that have been parsed so far.
     def WriteEventsCSVLines(self):

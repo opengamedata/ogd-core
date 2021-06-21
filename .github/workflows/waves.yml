@@ -3,8 +3,7 @@ name: Waves Exporter CI Test
 on:
   push:
     paths:
-    - 'extractors/WaveExtractor.py'
-    - 'schemas/JSON/WAVES.json'
+    - 'games/JOWILDER/**'
     - '.github/workflows/waves.yml'
     - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab

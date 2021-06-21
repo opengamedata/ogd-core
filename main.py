@@ -21,6 +21,7 @@ from config import settings
 from interfaces.DataInterface import DataInterface
 from interfaces.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface
+from interfaces.BigQueryInterface import BigQueryInterface
 from managers.ExportManager import ExportManager
 from Request import Request, ExporterFiles, ExporterRange
 from schemas.GameSchema import GameSchema
@@ -97,10 +98,9 @@ def runExport(events:bool = False, features:bool = False):
     interface : DataInterface
     range     : ExporterRange
     exporter_files : ExporterFiles
-    game_table     : TableSchema
     req       : Request
     start = datetime.now()
-    exporter_files = ExporterFiles(events=events, raw=False, sessions=features) 
+    exporter_files = ExporterFiles(events=events, sessions=features) 
     supported_vers = GameSchema(schema_name=f"{game_name}.json")['config']['SUPPORTED_VERS']
     if "--file" in opts.keys():
         file_path=opts["--file"]
@@ -110,31 +110,34 @@ def runExport(events:bool = False, features:bool = False):
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(ids=ids if ids is not None else [], source=interface, versions=supported_vers)
 
-        # TODO: bit of a hack, should generate game_table as part of interface.
-        game_table: TableSchema = TableSchema.FromCSV(data_frame=interface._data)
         req = Request(interface=interface, range=range, exporter_files=exporter_files)
         # breakpoint()
     else:
-        interface = MySQLInterface(game_id=game_name, settings=settings)
+        interface_type = settings["game_source_map"][game_name]['interface']
+        if interface_type == "BigQuery":
+            interface = BigQueryInterface(game_id=game_name, settings=settings)
+        elif interface_type == "MySQL":
+            interface = MySQLInterface(game_id=game_name, settings=settings)
+        else:
+            raise Exception(f"{interface_type} is not a valid DataInterface type!")
         # retrieve/calculate date range.
         start_date, end_date = getDateRange(args=args, game_id=game_name)
         range = ExporterRange.FromDateRange(date_min=start_date, date_max=end_date, source=interface, versions=supported_vers)
 
         req = Request(interface=interface, range=range, exporter_files=exporter_files)
-        game_table: TableSchema = TableSchema.FromDB(db=interface._db, settings=settings, game_id=game_name, ids=range.GetIDs())
     # Once we have the parameters parsed out, construct the request.
     # breakpoint()
     try:
         export_manager = ExportManager(game_id=game_name, settings=settings)
         schema = GameSchema(game_name)
-        export_manager.ExecuteRequest(request=req, game_schema=schema, table_schema=game_table)
+        table_name = settings["game_source_map"][game_name]["table"]
+        export_manager.ExecuteRequest(request=req, game_schema=schema, table_schema=TableSchema(schema_name=f"{table_name}.json"))
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
         msg = f"{type(err)} {str(err)}"
-        Logger.toStdOut(msg, logging.ERROR)
+        Logger.Log(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
-        Logger.toFile(msg, logging.ERROR)
         sys.exit(1)
     finally:
         time_taken = datetime.now() - start
@@ -149,11 +152,12 @@ def runExport(events:bool = False, features:bool = False):
 #  the csv's themselves). Further, the output is printed rather than written
 #  to file.
 def showGameInfo():
-    schema = GameSchema(schema_name=f"{game_name}.json")
+    game_schema = GameSchema(schema_name=f"{game_name}.json")
+    table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
 
-    feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-    print(utils.GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),\
-                                                    sessions_field_list=feature_descriptions))
+    feature_descriptions = {**game_schema.perlevel_features(), **game_schema.aggregate_features()}
+    print(utils.GenCSVMetadata(game_name=game_name, column_list=table_schema.ColumnList(),\
+                                                    feature_list=feature_descriptions))
 
 ## Function to write out the readme file for a given game.
 #  This includes the CSV metadata (data from the schema, originally written into
@@ -162,8 +166,9 @@ def showGameInfo():
 def writeReadme():
     path = f"./data/{game_name}"
     try:
-        schema = GameSchema(schema_name=f"{game_name}.json")
-        utils.GenerateReadme(game_name=game_name, schema=schema, path=path)
+        game_schema = GameSchema(schema_name=f"{game_name}.json")
+        table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
+        utils.GenerateReadme(game_name=game_name, game_schema=game_schema, column_list=table_schema.ColumnList(), path=path)
         Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
     except Exception as err:
         msg = f"Could not create a readme for {game_name}: {type(err)} {str(err)}"

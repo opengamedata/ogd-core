@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Tuple, Union
 # local imports
 from interfaces.DataInterface import DataInterface
 from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
 from utils import Logger
 
 
@@ -210,7 +211,7 @@ class SQL:
             time_delta = datetime.now()-start
             num_min = math.floor(time_delta.total_seconds()/60)
             num_sec = time_delta.total_seconds() % 60
-            Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result):d} rows", logging.DEBUG)
+            Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result) if result is not None else 0:d} rows", logging.DEBUG)
         return result
 
     @staticmethod
@@ -304,7 +305,7 @@ class MySQLInterface(DataInterface):
         self._is_open = False
         return True
 
-    def _eventsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         # grab data for the given session range. Sort by event time, so
         if not self._db_cursor == None:
             if versions is not None and versions is not []:

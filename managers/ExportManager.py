@@ -17,20 +17,20 @@ from typing import Tuple
 ## import local files
 import utils
 from config import settings
-from schemas.TableSchema import TableSchema
 from interfaces.MySQLInterface import SQL
 from interfaces.MySQLInterface import MySQLInterface
 from managers.FileManager import *
 from managers.SessionProcessor import SessionProcessor
-from managers.RawManager import RawManager
 from managers.EventProcessor import EventProcessor
 from Request import *
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
-from extractors.WaveExtractor import WaveExtractor
-from extractors.CrystalExtractor import CrystalExtractor
-from extractors.LakelandExtractor import LakelandExtractor
-from extractors.JowilderExtractor import JowilderExtractor
-from extractors.MagnetExtractor import MagnetExtractor
+from schemas.TableSchema import TableSchema
+from games.WAVES.WaveExtractor import WaveExtractor
+from games.CRYSTAL.CrystalExtractor import CrystalExtractor
+from games.LAKELAND.LakelandExtractor import LakelandExtractor
+from games.JOWILDER.JowilderExtractor import JowilderExtractor
+from games.MAGNET.MagnetExtractor import MagnetExtractor
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.
@@ -90,7 +90,7 @@ class ExportManager:
                 start = datetime.now()
 
                 num_sess: int = self._extractToCSVs(request=request, file_manager=file_manager,\
-                                    game_schema=game_schema, game_table=table_schema, game_extractor=game_extractor)
+                                    game_schema=game_schema, table_schema=table_schema, game_extractor=game_extractor)
 
                 time_delta = datetime.now() - start
                 num_min = math.floor(time_delta.total_seconds()/60)
@@ -102,7 +102,7 @@ class ExportManager:
                     readme = open(file_manager._readme_path, mode='r')
                 except FileNotFoundError:
                     utils.Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING)
-                    utils.GenerateReadme(game_name=self._game_id, schema=game_schema, path=f"./data/{self._game_id}")
+                    utils.GenerateReadme(game_name=self._game_id, game_schema=game_schema, column_list=table_schema.ColumnList(), path=f"./data/{self._game_id}")
                 file_manager.ZipFiles()
                 # 6) Finally, update the list of csv files.
                 file_manager.WriteMetadataFile(date_range=request._range.GetDateRange(), num_sess=num_sess)
@@ -129,58 +129,65 @@ class ExportManager:
             game_extractor = JowilderExtractor
         elif self._game_id == "MAGNET":
             game_extractor = MagnetExtractor
-        elif self._game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "WIND"]:
+        elif self._game_id in ["AQUALAB", "BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "STEMPORTS", "EARTHQUAKE", "WIND"]:
             # all games with data but no extractor.
             pass
         else:
             raise Exception(f"Got an invalid game ID ({self._game_id})!")
         return game_schema, game_extractor
 
-    def _extractToCSVs(self, request:Request, file_manager:FileManager, game_schema: GameSchema, game_table: TableSchema, game_extractor: Union[type,None]):
+    def _extractToCSVs(self, request:Request, file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema, game_extractor: Union[type,None]):
+        ret_val = -1
         try:
-            sess_processor = raw_mgr = evt_processor = None
+            sess_processor = evt_processor = None
             if request._files.sessions and game_extractor is not None:
                 if game_extractor is not None:
-                    sess_processor = SessionProcessor(ExtractorClass=game_extractor, game_table=game_table,
+                    sess_processor = SessionProcessor(ExtractorClass=game_extractor, table_schema=table_schema,
                                         game_schema=game_schema, sessions_csv_file=file_manager.GetSessionsFile())
                     sess_processor.WriteSessionCSVHeader()
                 else:
                     utils.Logger.Log("Could not export sessions, no game extractor given!", logging.ERROR)
-            if request._files.raw:
-                raw_mgr = RawManager(game_table=game_table, game_schema=game_schema,
-                                    raw_csv_file=file_manager.GetRawFile())
-                raw_mgr.WriteRawCSVHeader()
             if request._files.events:
-                evt_processor = EventProcessor(game_table=game_table, game_schema=game_schema,
+                evt_processor = EventProcessor(table_schema=table_schema, game_schema=game_schema,
                                     events_csv_file=file_manager.GetEventsFile())
                 evt_processor.WriteEventsCSVHeader()
 
-            num_sess = len(game_table.session_ids)
+            sess_ids = request.RetrieveSessionIDs()
+            if sess_ids is None:
+                sess_ids = []
+            num_sess = len(sess_ids)
             utils.Logger.toStdOut(f"Preparing to process {num_sess} sessions.", logging.INFO)
             slice_size = self._settings["BATCH_SIZE"]
-            session_slices = [[game_table.session_ids[i] for i in
+            session_slices = [[sess_ids[i] for i in
                             range( j*slice_size, min((j+1)*slice_size, num_sess) )] for j in
                             range( 0, math.ceil(num_sess / slice_size) )]
             for i, next_slice in enumerate(session_slices):
                 start = datetime.now()
-                next_data_set = request._interface.EventsFromIDs(next_slice)
+                next_data_set = request._interface.RowsFromIDs(next_slice)
                 try:
                     # now, we process each row.
                     for row in next_data_set:
-                        self._processRow(row=row, game_table=game_table, raw_mgr=raw_mgr, sess_processor=sess_processor, evt_processor=evt_processor)
+                        next_event = table_schema.RowToEvent(row)
+                        #self._processRow(event=next_event, sess_ids=sess_ids, sess_processor=sess_processor, evt_processor=evt_processor)
+                        if next_event.session_id in sess_ids:
+                            # we check if there's an instance given, if not we obviously skip.
+                            if sess_processor is not None:
+                                sess_processor.ProcessRow(next_event)
+                            if evt_processor is not None:
+                                evt_processor.ProcessRow(row)
+                        else:
+                            utils.Logger.toFile(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
                     # after processing all rows for each slice, write out the session data and reset for next slice.
                     if request._files.sessions:
                         sess_processor.calculateAggregateFeatures()
                         sess_processor.WriteSessionCSVLines()
                         sess_processor.ClearLines()
-                    if request._files.raw:
-                        raw_mgr.WriteRawCSVLines()
-                        raw_mgr.ClearLines()
                     if request._files.events:
                         evt_processor.WriteEventsCSVLines()
                         evt_processor.ClearLines()
                 except Exception as err:
-                    raise Exception(f"Error while processing {next_data_set}, type={type(next_data_set)}")
+                    msg = f"Error while processing slice {i} of {len(session_slices)}"
+                    raise err
                 else:
                     time_delta = datetime.now() - start
                     num_min = math.floor(time_delta.total_seconds()/60)
@@ -190,63 +197,10 @@ class ExportManager:
             ret_val = num_sess
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
-            utils.Logger.toStdOut(msg, logging.ERROR)
-            traceback.print_tb(err.__traceback__)
-            utils.Logger.toFile(msg, logging.ERROR)
-            ret_val = -1
+            utils.Logger.Log(msg, logging.ERROR)
+            #traceback.print_tb(err.__traceback__)
+            raise err
         finally:
             # Save out all the files.
             file_manager.CloseFiles()
-            # if exporter_files.sessions:
-            #     sessions_csv_file.close()
-            # if exporter_files.raw:
-            #     raw_csv_file.close()
-            # if exporter_files.events:
-            #     events_csv_file.close()
             return ret_val
-
-    ## Private helper function to process a single row of data.
-    #  Most of the processing is delegated to Events and Session Processors, but this
-    #  function does a bit of pre-processing to parse the event_data_custom.
-    #  @param row        The raw row data from a SQL query result.
-    #  @param game_table A data structure containing information on how the db
-    #                    table assiciated with the given game is structured. 
-    #  @raw_mgr          An instance of RawManager used to track raw data.
-    #  @sess_processor         An instance of SessionProcessor used to extract and track feature data.
-    def _processRow(self, row: Tuple, game_table: TableSchema, raw_mgr: RawManager, sess_processor: SessionProcessor, evt_processor: EventProcessor):
-        session_id = row[game_table.session_id_index]
-
-        # parse out complex data from json
-        col = row[game_table.complex_data_index]
-        try:
-            # complex_data_parsed = json.loads(col.replace("'", "\"")) if (col is not None) else {"event_custom":row[game_table.event_index]}
-            complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":row[game_table.event_index]}
-        except Exception as err:
-            msg = f"When trying to parse {col}, get error\n{type(err)} {str(err)}"
-            utils.Logger.toStdOut(msg, logging.ERROR)
-            raise err
-
-        # make sure we get *something* in the event_custom name
-        # TODO: Make a better solution for games without event_custom fields in the logs themselves
-        if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
-            if type(complex_data_parsed) is not type({}):
-                complex_data_parsed = {"item": complex_data_parsed}
-            complex_data_parsed["event_custom"] = row[game_table.event_custom_index]
-        elif "event_custom" not in complex_data_parsed.keys():
-            complex_data_parsed["event_custom"] = row[game_table.event_index]
-        # replace the json with parsed version.
-        m_row = list(row)
-        m_row[game_table.complex_data_index] = complex_data_parsed
-        row = tuple(m_row)
-
-        if session_id in game_table.session_ids:
-            # we check if there's an instance given, if not we obviously skip.
-            if sess_processor is not None:
-                sess_processor.ProcessRow(row)
-            if raw_mgr is not None:
-                raw_mgr.ProcessRow(row)
-            if evt_processor is not None:
-                evt_processor.ProcessRow(row)
-        # else:
-            # in this case, we should have just found 
-            # utils.Logger.toFile(f"Found a session ({session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)

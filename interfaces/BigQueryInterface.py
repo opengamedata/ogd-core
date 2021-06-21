@@ -35,7 +35,7 @@ class BigQueryInterface(DataInterface):
         Logger.toStdOut("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
-    def _eventsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         if self._client != None:
             db_name = self._settings["bq_config"]["DB_NAME"]
             table_name = self._settings["bq_config"]["TABLE_NAME"]
@@ -52,6 +52,7 @@ class BigQueryInterface(DataInterface):
             return events if events != None else []
         else:
             Logger.Log(f"Could not get data for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
+            return []
 
     def _allIDs(self) -> List[int]:
         if self._client != None:
@@ -92,22 +93,22 @@ class BigQueryInterface(DataInterface):
             return {"min":datetime.now(), "max":datetime.now()}
 
     def _IDsFromDates(self, min: datetime, max: datetime, versions: Union[List[int],None]=None) -> List[int]:
+        str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         if self._client != None:
             db_name = self._settings["bq_config"]["DB_NAME"]
             table_name = self._settings["bq_config"]["TABLE_NAME"]
-            min, max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
             query = f"""
                 SELECT DISTINCT param.value.int_value AS session_id
                 FROM `{db_name}.{table_name}`,
                 UNNEST(event_params) AS param
                 WHERE param.key = "ga_session_id"
-                AND _TABLE_SUFFIX BETWEEN '{min}' AND '{max}'
+                AND _TABLE_SUFFIX BETWEEN '{str_min}' AND '{str_max}'
             """
             data = self._client.query(query)
             ids = [int(row['session_id']) for row in data]
             return ids if ids != None else []
         else:
-            Logger.Log(f"Could not get session list for {min}-{max} range, BigQuery connection is not open.", logging.WARN)
+            Logger.Log(f"Could not get session list for {str_min}-{str_max} range, BigQuery connection is not open.", logging.WARN)
             return []
 
     def _datesFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> Dict[str, datetime]:
@@ -134,13 +135,3 @@ class BigQueryInterface(DataInterface):
         else:
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
             return {'min':datetime.now(), 'max':datetime.now()}
-
-    def _genSchema(self) -> TableSchema:
-        db_name = self._settings["bq_config"]["DB_NAME"]
-        query = f"""
-            SELECT DISTINCT column_name 
-            FROM `{db_name}.INFORMATION_SCHEMA.COLUMNS`
-        """
-        data = self._client.query(query)
-        column_names = [row['column_name'] for row in data]
-        return TableSchema(game_id=self.game_id, column_names=column_names, session_ids=None, max_level=0, min_level=0)

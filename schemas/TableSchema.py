@@ -1,11 +1,13 @@
 ## import standard libraries
+from datetime import datetime
+import json
+import os
+import logging
 import typing
-import pandas as pd
-from typing import List, Tuple, Union
-from pandas.io.parsers import TextFileReader
+from typing import Any, Dict, List, Tuple, Union
+Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 ## import local files
-from interfaces.MySQLInterface import SQL
-from schemas.GameSchema import GameSchema
+import utils
 from schemas.Event import Event
 
 ## @class TableSchema
@@ -15,96 +17,165 @@ from schemas.Event import Event
 #  of the database columns, the max and min levels in the game, and a list of
 #  IDs for the game sessions in the given requested date range.
 class TableSchema:
-    ## Constructor for the TableSchema class.
-    #  Given a database connection and a game data request,
-    #  this retrieves a bit of information from the database to fill in the
-    #  class variables.
-    #  @param db        A database connection to the table corresponding to this TableSchema.
-    #  @param settings  The dictionary of settings for the app
-    #  @param request   A request object, with information about a date range
-    #                   and other information on what data to retrieve.
-    def __init__(self, game_id, column_names: List[str], session_ids, max_level, min_level):
-        # Define instance vars
-        self.game_id:      str              = game_id
-        self.column_names: List[str] = column_names
-        # Take note of specific indices which will be useful when using a TableSchema
-        # TODO: Honestly, should just make a reverse index dictionary.
-        self.app_version_index:    int = self.column_names.index("app_version")
-        self.complex_data_index:   int = self.column_names.index("event_data_complex")
-        self.remote_addr_index:    int = self.column_names.index("remote_addr")
-        self.client_time_index:    int = self.column_names.index("client_time")
-        self.session_id_index:     int = self.column_names.index("session_id")
-        self.event_index:          int = self.column_names.index("event")
-        self.level_index:          int = self.column_names.index("level")
-        self.client_time_ms_index: int = self.column_names.index("client_time_ms")
-        self.server_time_index:    int = self.column_names.index("server_time")
-        self.pers_session_id_index:int = self.column_names.index("persistent_session_id")
-        self.event_custom_index:   int = self.column_names.index("event_custom")
-        self.version_index:        int = self.column_names.index("app_version")
-        self.player_id_index:      int = self.column_names.index("player_id")
-        # lastly, get max and min levels, and get the session ids.
-        self.max_level:            int = max_level
-        self.min_level:            int = min_level
-        self.session_ids:          List[int] = session_ids # TODO: decide if we really need session_ids here.
-        # utils.Logger.toStdOut("session_ids: " + str(session_ids), logging.DEBUG)
-    
-    @staticmethod
-    def FromDB(db, settings, game_id:str, ids:List[int]):
-        db_settings = settings["db_config"]
-        # TODO: Currently, this is retrieved separately from the schema. We may just want to load in one place, and check for a match or something.
-        query = f"SHOW COLUMNS from {db_settings['DB_NAME_DATA']}.{db_settings['TABLE']}"
-        db_cursor = db.cursor()
-        col_names = SQL.Query(cursor=db_cursor, query=query)
-        if game_id == 'LAKELAND':
-            lakeland_config = GameSchema('LAKELAND')['config']
-            min_level = 0
-            max_level = lakeland_config["MAX_SESSION_SECONDS"] // lakeland_config['WINDOW_SIZE_SECONDS']
+    def __init__(self, schema_name:str, schema_path:str = os.path.dirname(__file__) + "/TABLES/", is_legacy:bool = False):
+        """Constructor for the TableSchema class.
+        Given a database connection and a game data request,
+        this retrieves a bit of information from the database to fill in the
+        class variables.
+
+        :param schema_name: The filename for the table schema JSON.
+        :type schema_name: str
+        :param schema_path: Path to find the given table schema file, defaults to os.path.dirname(__file__)+"/TABLES/"
+        :type schema_path: str, optional
+        :param is_legacy: [description], defaults to False
+        :type is_legacy: bool, optional
+        """
+        # declare and initialize vars
+        self._table_format_name : str                  = schema_name
+        self._is_legacy         : bool                 = is_legacy
+        self._columns           : List[Dict[str, str]] = []
+        self._map               : Map                  = {}
+
+        if not schema_name.lower().endswith(".json"):
+            schema_name += ".json"
+        schema = utils.loadJSONFile(schema_name, schema_path)
+
+        # after loading the file, take the stuff we need and store.
+        if schema is not None:
+            self._columns = schema['columns']
+            self._map = schema['column_map']
         else:
-            max_min_raw = SQL.SELECT(cursor=db_cursor, db_name=db_settings["DB_NAME_DATA"], table=db_settings["TABLE"],
-                                     columns=["MAX(level)", "MIN(level)"], filter=f"`app_id`='{game_id}'",
-                                     distinct=True)
-            max_level = max_min_raw[0][0]
-            min_level = max_min_raw[0][1]
-        return TableSchema(game_id=game_id, column_names=[str(col) for col in col_names], session_ids=ids, max_level=max_level, min_level=min_level)
+            utils.Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
 
-    @staticmethod
-    def FromCSV(data_frame: Union[pd.DataFrame, TextFileReader]):
-        col_names = list(data_frame.columns)
-        game_id = data_frame['app_id'][0]
-        sess_ids = data_frame['session_id'].unique().tolist()
-        min_level = data_frame['level'].min()
-        max_level = data_frame['level'].max()
-        return TableSchema(game_id=game_id, column_names=col_names, session_ids=sess_ids, max_level=max_level, min_level=min_level)
+    def ColumnNames(self) -> List[str]:
+        """Function to get the names of all columns in the schema.
 
-    def RowToEvent(self, row: Tuple):
-        row_dict = {self.column_names[i]: row[i] for i in range(len(self.column_names))}
-        id     = row_dict['id']
-        app_id = row_dict['app_id']
-        app_id_fast = row_dict['app_id_fast']
-        app_version = row_dict['app_version']
-        session_id  = row_dict['session_id']
-        persistent_session_id  = row_dict['persistent_session_id']
-        player_id  = row_dict['player_id']
-        level      = row_dict['level']
-        event      = row_dict['event']
-        event_custom       = row_dict['event_custom']
-        event_data_simple  = row_dict['event_data_simple']
-        event_data_complex = row_dict['event_data_complex']
-        client_time     = row_dict['client_time']
-        client_time_ms  = row_dict['client_time_ms']
-        server_time     = row_dict['server_time']
-        remote_addr     = row_dict['remote_addr']
-        req_id          = row_dict['req_id']
-        session_n       = row_dict['session_n']
-        http_user_agent = row_dict['http_user_agent']
-        return Event(id=id, app_id=app_id, app_id_fast=app_id_fast, app_version=app_version,
-                     session_id=session_id, persistent_session_id=persistent_session_id,
-                     player_id=player_id, level=level, event=event, event_custom=event_custom,
-                     event_data_simple=event_data_simple, event_data_complex=event_data_complex,
-                     client_time=client_time, client_time_ms=client_time_ms, server_time=server_time,
-                     remote_addr=remote_addr, req_id=req_id, session_n=session_n, http_user_agent=http_user_agent)
+        :return: Names of each column in the schema.
+        :rtype: List[str]
+        """
+        return [col['name'] for col in self._columns]
+
+    def ColumnList(self) -> List[Dict[str,str]]:
+        return list(self._columns)
+
+    def RowToEvent(self, row: Tuple, concatenator:str = '.'):
+        """Function to convert a row to an Event, based on the loaded schema.
+        In general, columns specified in the schema's column_map are mapped to corresponding elements of the Event.
+        If the column_map gave a list, rather than a single column name, the values from each column are concatenated in order with '.' character separators.
+        Finally, the concatenated values (or single value) are parsed according to the type required by Event.
+        One exception: For event_data, we expect to create a Dict object, so each column in the list will have its value parsed according to the type in 'columns',
+            and placed into a dict mapping the original column name to the parsed value (unless the parsed value is a dict, then it is merged into the top-level dict).
+
+        :param row: The raw row data for an event. Generally assumed to be a tuple, though in principle a list would be fine too.
+        :type  row: Tuple[str]
+        :param concatenator: A string to use as a separator when concatenating multiple columns into a single Event element.
+        :type  concatenator: str
+        :return: [description]
+        :rtype: [type]
+        """
+        row_dict = self.RowToDict(row)
+        col_names = [col['name'] for col in self._columns]
+        # define vars to be passed as params
+        sess_id : str
+        app_id  : str
+        time    : datetime
+        ename   : str
+        edata   : Map
+        app_ver : Union[str,None]
+        offset  : Union[int,None]
+        uid     : Union[str,None]
+        udata   : Union[Map,None]
+        state   : Union[Map,None]
+        index   : Union[int,None]
+
+        # first, if anything in the map was a list, concatenate, and anything that wasn't, get val.
+        params : Map = {}
+        for key in self._map.keys():
+            if key != 'event_data': # event_data is special case, handle separately.
+                inner_keys = self._map[key]
+                if inner_keys == None:
+                    params[key] = None
+                elif type(inner_keys) == list:
+                    params[key] = concatenator.join([row_dict[inner_key] for inner_key in inner_keys])
+                else:
+                    params[key] = row_dict[inner_keys]
+        # second, handle special case of event data, where we've got to parse the json,
+        # and then fold in whatever other columns were desired.
+        if type(self._map['event_data']) == list:
+            # if we had a list of event_data columns, we need a merger, not a concatenation
+            params['event_data'] = {}
+            for i,col_name in enumerate(self._map['event_data']):
+                val = TableSchema._parse(row_dict[col_name], self._columns[col_names.index(col_name)])
+                params['event_data'].update(val if type(val) == dict else {col_name:val})
+        else:
+            col_name = self._map['event_data']
+            params['event_data'] = TableSchema._parse(row_dict[col_name], self._columns[col_names.index(col_name)])
+        # third, find out which of our params were in the map, and assign vals to our vars.
+        sess_id = params['session_id']
+        app_id  = params['app_id']
+        # TODO: go bac to isostring function; need 0-padding on ms first, though
+        time    = datetime.strptime(params['timestamp'], "%Y-%m-%dT%H:%M:%S.%f")
+        ename   = params['event_name']
+        edata   = params['event_data']
+        app_ver = params['app_version']
+        offset  = params['time_offset']
+        uid     = params['user_id']
+        udata   = params['user_data']
+        state   = params['game_state']
+        index   = params['event_sequence_index']
+
+        return Event(session_id=sess_id, app_id=app_id, timestamp=time,
+                     event_name=ename, event_data=edata,
+                     app_version=app_ver, time_offset=offset, user_id=uid, user_data=udata,
+                     game_state=state, event_sequence_index=index)
 
     ## Simple utility function to turn a raw row from the file/database into a dictionary,
     #  indexed with the column names retrieved from the file/database.
-    def RowToDict(self, row):
-        return {self.column_names[i]: row[i] for i in range(len(self.column_names))}
+    def RowToDict(self, row:Tuple[Any]) -> Dict[str,str]:
+        """Create Dict from a Row
+
+        :param row: [description]
+        :type row: Tuple[str]
+        :return: [description]
+        :rtype: Dict[str,str]
+        """
+        column_names = [col['name'] for col in self._columns]
+        return {col_name : row[i].isoformat() if type(row[i]) == datetime else str(row[i]) for i,col_name in enumerate(column_names)}
+
+    @staticmethod
+    def _parse(input:str, column_descriptor:Dict[str,str]) -> Any:
+        if column_descriptor['type'] == 'str':
+            return str(input)
+        elif column_descriptor['type'] == 'int':
+            return int(input)
+        elif column_descriptor['type'] == 'float':
+            return float(input)
+        elif column_descriptor['type'] == 'json':
+            return json.loads(str(input))
+        elif column_descriptor['type'].startswith('enum'):
+            # if the column is supposed to be an enum, for now we just stick with the string.
+            return str(input)
+    
+
+    # # parse out complex data from json
+    # col = event[game_table.complex_data_index]
+    # try:
+    #     # complex_data_parsed = json.loads(col.replace("'", "\"")) if (col is not None) else {"event_custom":row[game_table.event_index]}
+    #     complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":event[game_table.event_index]}
+    # except Exception as err:
+    #     msg = f"When trying to parse {col}, get error\n{type(err)} {str(err)}"
+    #     utils.Logger.toStdOut(msg, logging.ERROR)
+    #     raise err
+
+    # # make sure we get *something* in the event_custom name
+    # # TODO: Make a better solution for games without event_custom fields in the logs themselves
+    # if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
+    #     if type(complex_data_parsed) is not type({}):
+    #         complex_data_parsed = {"item": complex_data_parsed}
+    #     complex_data_parsed["event_custom"] = event[game_table.event_custom_index]
+    # elif "event_custom" not in complex_data_parsed.keys():
+    #     complex_data_parsed["event_custom"] = event[game_table.event_index]
+    # # replace the json with parsed version.
+    # m_row = list(event)
+    # m_row[game_table.complex_data_index] = complex_data_parsed
+    # event = tuple(m_row)
