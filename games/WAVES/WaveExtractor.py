@@ -78,7 +78,11 @@ class WaveExtractor(Extractor):
             # Then, handle cases for each type of event
             # NOTE: for BEGIN and COMPLETE, we assume only one event of each type happens.
             # If there are somehow multiples, the previous times are overwritten by the newer ones.
-            event_type = event.event_data["event_custom"]
+            # 1) figure out what type of event we had. If CUSTOM, we'll use the event_custom sub-item.
+            event_type = event.event_name.split('.')[0]
+            if event_type == "CUSTOM":
+                event_type = event.event_data['event_custom']
+            # 2) handle cases for each type of event
             if event_type == "BEGIN":
                 self._extractFromBegin(level=level, event_client_time=event.timestamp)
             elif event_type == "COMPLETE":
