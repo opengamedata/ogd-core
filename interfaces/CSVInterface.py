@@ -3,9 +3,11 @@ from utils import Logger
 import pandas as pd
 from datetime import datetime
 from typing import Any, Dict, IO, List, Tuple, Union
+from pandas.io.parsers import TextFileReader
 ## import local files
 from interfaces.DataInterface import DataInterface
 from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
 
 class CSVInterface(DataInterface):
     def __init__(self, game_id:str, filepath_or_buffer:Union[str, IO[bytes]], delim:str = ','):
@@ -37,7 +39,7 @@ class CSVInterface(DataInterface):
         max_time = pd.to_datetime(self._data['server_time'].max())
         return {'min':min_time, 'max':max_time}
 
-    def _eventsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
         if self.IsOpen() and self._data != None:
             return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
         else:

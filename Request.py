@@ -18,9 +18,8 @@ from schemas.GameSchema import GameSchema
 #  @param raw  Bool stating whether to output a raw file or not.
 #  @param sessions Bool stating whether to output a processed session feature file or not.
 class ExporterFiles:
-    def __init__(self, events:bool = True, raw:bool = True, sessions:bool = True):
+    def __init__(self, events:bool = True, sessions:bool = True):
         self.events = events
-        self.raw = False
         self.sessions = sessions
 
 class ExporterRange:
@@ -65,7 +64,7 @@ class Request(abc.ABC):
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
-        fmt = "%Y%m%d"
+        fmt = "%Y-%m-%d"
         rng = self._range.GetDateRange()
         return f"{self._interface._game_id}: {rng['min'].strftime(fmt)}-{rng['max'].strftime(fmt)}"
 

@@ -1,23 +1,20 @@
 ## import standard libraries
 import bisect
-import json
 import logging
-import math
-import datetime
-import numpy as np
 import sys
 import typing
 import traceback
 from collections import defaultdict, deque
 from config import settings
-from typing import Tuple, Union
+from datetime import datetime, timedelta
+from typing import Any, Dict,Tuple, Union
 ## import local files
 import utils
-from sklearn.linear_model import LinearRegression
 from extractors.Extractor import Extractor
-from schemas.TableSchema import TableSchema
+from games.JOWILDER import Jowilder_Enumerators as je
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
-from game_info.Jowilder import Jowilder_Enumerators as je
+from schemas.TableSchema import TableSchema
 
 # temp comment
 
@@ -103,14 +100,16 @@ class JowilderExtractor(Extractor):
 
     _NULL_FEATURE_VALS = ['null', 0, None]
 
-    def __init__(self, session_id: int, game_table: TableSchema, game_schema: GameSchema):
-        super().__init__(session_id=session_id, game_table=game_table, game_schema=game_schema)
+    def __init__(self, session_id: int, game_schema: GameSchema):
+        super().__init__(session_id=session_id, game_schema=game_schema)
         config = game_schema['config']
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
-        self._IDLE_THRESH = datetime.timedelta(seconds=self._IDLE_THRESH_SECONDS)
+        self._IDLE_THRESH = timedelta(seconds=self._IDLE_THRESH_SECONDS)
+        self._level_range = range(game_schema.min_level   if game_schema.min_level is not None else 0,
+                                  game_schema.max_level+1 if game_schema.max_level is not None else 1)
 
         self.cur_task = 1
-        self.time_since_start = datetime.timedelta(0)
+        self.time_since_start = timedelta(0)
         self._task_complete_helper = dict()
         self.level_start_timestamp = dict()
         self._CLIENT_START_TIME = None
@@ -119,7 +118,6 @@ class JowilderExtractor(Extractor):
         self.level : Union[int,None] = None
         self._cur_levels = []
         self.cur_question = 0
-        self._VERSION = None
         self.last_display_time_text : Tuple = ()
         self.average_handler_level = defaultdict(lambda: {k: {'n': 0, 'total': 0} for k in self._level_range})
         self.average_handler_interaction = defaultdict(lambda: {k: {'n': 0, 'total': 0} for k in range(189)})
@@ -149,54 +147,44 @@ class JowilderExtractor(Extractor):
         self._last_quizstart = None
         self._quiztimes = [None]*16
 
-    def extractFeaturesFromRow(self, row_with_complex_parsed, game_table: TableSchema):
+    def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         try:
-            self._extractFeaturesFromRow(row_with_complex_parsed, game_table)
+            self._extractFeaturesFromRow(event, table_schema)
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             for place in [utils.Logger.toFile, utils.Logger.toStdOut]:
                 place('\n'.join(traceback.format_exception(exc_type, exc_value, exc_traceback)), logging.ERROR)
                 place('DEBUG STRINGS:', logging.ERROR)
-                place(self.get_debug_string(num_lines=20), logging.ERROR)
+                place(self.get_debug_string(version=event.app_version, num_lines=20), logging.ERROR)
 
-    def _extractFeaturesFromRow(self, row_with_complex_parsed, game_table: TableSchema):
+    def _extractFeaturesFromRow(self, event:Event, table_schema: TableSchema):
         # put some data in local vars, for readability later.
         if self.halt:
             return
         old_level = self.level
         if self.game_started:
-            self.level = row_with_complex_parsed[game_table.level_index]
+            self.level = event.event_data['level']
         if self.level is not None:
             self._cur_levels = [self.level]
         if not old_level == self.level:
             self.new_level(old_level)
-        event_data_complex_parsed = row_with_complex_parsed[game_table.complex_data_index]
-        event_type = row_with_complex_parsed[game_table.event_custom_index]
-        event_client_time = row_with_complex_parsed[game_table.client_time_index].replace(microsecond=
-                                                    row_with_complex_parsed[game_table.client_time_ms_index]*1000)
-        server_time = row_with_complex_parsed[game_table.server_time_index]
-        event_type_str = JowilderExtractor._EVENT_CUSTOM_TO_STR[event_type].lower()
+        event_type_str = JowilderExtractor._EVENT_CUSTOM_TO_STR[int(event.event_name.split('.')[-1])].lower()
         # Check for invalid row.
-        row_sess_id = row_with_complex_parsed[game_table.session_id_index]
-        if row_sess_id != self.session_id:
+        if event.session_id != self._session_id:
             utils.Logger.toFile(
-                f"Got a row with incorrect session id! Expected {self.session_id}, got {row_sess_id}!",
+                f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!",
                 logging.ERROR)
-        elif "event_custom" not in event_data_complex_parsed.keys():
-            utils.Logger.toFile("Invalid event_data_complex, does not contain event_custom field!", logging.ERROR)
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
             if self.getValByName(feature_name="persistentSessionID") == 0:
-                self.setValByName(feature_name="persistentSessionID",
-                                           new_value=row_with_complex_parsed[game_table.pers_session_id_index])
+                self.setValByName(feature_name="persistentSessionID", new_value=event.event_data['persistent_session_id'])
             if not self._CLIENT_START_TIME:
                 # initialize this time as the start
-                self._CLIENT_START_TIME = event_client_time
-                self._VERSION = row_with_complex_parsed[game_table.version_index]
+                self._CLIENT_START_TIME = event.timestamp
                 self.last_click_time = self._CLIENT_START_TIME
                 self.last_click_hover_time = self._CLIENT_START_TIME
-                self.setValByName("version", self._VERSION)
+                self.setValByName("version", event.app_version)
                 self.setValByName("play_year", self._CLIENT_START_TIME.year)
                 self.setValByName("play_month",self._CLIENT_START_TIME.month)
                 self.setValByName("play_day", self._CLIENT_START_TIME.day)
@@ -204,126 +192,125 @@ class JowilderExtractor(Extractor):
                 self.setValByName("play_minute", self._CLIENT_START_TIME.minute)
                 self.setValByName("play_second", self._CLIENT_START_TIME.second)
                 if self.verbose:
-                    utils.Logger.toStdOut(f'{"*" * 10} {self.session_id} v{self._VERSION} @ {self._CLIENT_START_TIME} {"*" * 10}')
+                    utils.Logger.toStdOut(f'{"*" * 10} {self._session_id} v{event.app_version} @ {self._CLIENT_START_TIME} {"*" * 10}')
 
             if self.level is not None:
                 if self.level_start_timestamp.get(self.level) == None:
-                    self.level_start_timestamp[self.level] = event_client_time
-                self.setValByIndex('time_in_level', self.level, event_client_time - self.level_start_timestamp[self.level])
+                    self.level_start_timestamp[self.level] = event.timestamp
+                self.setValByIndex('time_in_level', self.level, event.timestamp - self.level_start_timestamp[self.level])
 
-            self.time_since_start = self.get_time_since_start(client_time=event_client_time)
+            self.time_since_start = self.get_time_since_start(client_time=event.timestamp)
             self.feature_count(feature_base="EventCount")
             self.setValByName(feature_name="sessDuration", new_value=self.time_since_start)
             debug_strs = []
-            if event_data_complex_parsed.get("save_code"):
-                debug_strs.append("Save code: "+event_data_complex_parsed.get("save_code"))
-            if event_data_complex_parsed.get("text"):
-                debug_strs.append("Text: "+event_data_complex_parsed.get("text"))
+            if event.event_data.get("save_code"):
+                debug_strs.append(f"Save code: {event.event_data.get('save_code')}")
+            if event.event_data.get("text"):
+                debug_strs.append(f"Text: {event.event_data.get('text')}")
             if event_type_str == "wildcard_click":
-                d = event_data_complex_parsed
-                if self._VERSION <= 4:
+                d = event.event_data
+                if Event.CompareVersions(event.app_version, "4") < 0:
                     debug_strs.append(f'ans: {d.get("answer")}')
                     debug_strs.append(f'corr: {d.get("correct")}')
             self.add_debug_str(f'{self.level} {self.cur_question} {self.time_since_start} {event_type_str} {"|".join(debug_strs)}')
             # Ensure we have private data initialized for this level.
             if "click" in event_type_str or "hover" in event_type_str:
-                self._extractFromClickOrHover(event_client_time, event_data_complex_parsed)
+                self._extractFromClickOrHover(timestamp=event.timestamp, event_data=event.event_data)
             if "click" in event_type_str:
-                self._extractFromClick(event_client_time, event_data_complex_parsed)
+                self._extractFromClick(timestamp=event.timestamp, event_data=event.event_data, version=event.app_version)
             elif "hover" in event_type_str:
-                self._extractFromHover(event_client_time, event_data_complex_parsed)
+                self._extractFromHover(timestamp=event.timestamp, event_data=event.event_data)
             if event_type_str == "checkpoint":
-                self._extractFromCheckpoint(event_client_time, event_data_complex_parsed)
+                self._extractFromCheckpoint(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "quiz":
-                self._extractFromQuiz(event_client_time, event_data_complex_parsed)
+                self._extractFromQuiz(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "quizquestion":
-               self._extractFromQuizquestion(event_client_time, event_data_complex_parsed)
+               self._extractFromQuizquestion(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "quizstart":
-                self._extractFromQuizstart(event_client_time, event_data_complex_parsed)
+                self._extractFromQuizstart(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "quizend":
-                self._extractFromQuizend(event_client_time, event_data_complex_parsed)
+                self._extractFromQuizend(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "startgame":
-                self._extractFromStartgame(event_client_time, event_data_complex_parsed)
+                self._extractFromStartgame(timestamp=event.timestamp, event_data=event.event_data, version=event.app_version)
             elif event_type_str == "endgame":
-                self._extractFromEndgame(event_client_time, event_data_complex_parsed)
+                self._extractFromEndgame(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "navigate_click":
-                self._extractFromNavigate_click(event_client_time, event_data_complex_parsed)
+                self._extractFromNavigate_click(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "notebook_click":
-                self._extractFromNotebook_click(event_client_time, event_data_complex_parsed)
+                self._extractFromNotebook_click(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "map_click":
-                self._extractFromMap_click(event_client_time, event_data_complex_parsed)
+                self._extractFromMap_click(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "notification_click":
-                self._extractFromNotification_click(event_client_time, event_data_complex_parsed)
+                self._extractFromNotification_click(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "object_click":
-                self._extractFromObject_click(event_client_time, event_data_complex_parsed)
+                self._extractFromObject_click(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "observation_click":
-                self._extractFromObservation_click(event_client_time, event_data_complex_parsed)
+                self._extractFromObservation_click(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "person_click":
-                self._extractFromPerson_click(event_client_time, event_data_complex_parsed)
+                self._extractFromPerson_click(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "cutscene_click":
-                self._extractFromCutscene_click(event_client_time, event_data_complex_parsed)
+                self._extractFromCutscene_click(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "wildcard_click":
-                self._extractFromWildcard_click(event_client_time, event_data_complex_parsed)
+                self._extractFromWildcard_click(timestamp=event.timestamp, event_data=event.event_data, version=event.app_version)
             elif event_type_str == "navigate_hover":
-                self._extractFromNavigate_hover(event_client_time, event_data_complex_parsed)
+                self._extractFromNavigate_hover(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "notebook_hover":
-                self._extractFromNotebook_hover(event_client_time, event_data_complex_parsed)
+                self._extractFromNotebook_hover(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "map_hover":
-                self._extractFromMap_hover(event_client_time, event_data_complex_parsed)
+                self._extractFromMap_hover(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "notification_hover":
-                self._extractFromNotification_hover(event_client_time, event_data_complex_parsed)
+                self._extractFromNotification_hover(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "object_hover":
-                self._extractFromObject_hover(event_client_time, event_data_complex_parsed)
+                self._extractFromObject_hover(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "observation_hover":
-                self._extractFromObservation_hover(event_client_time, event_data_complex_parsed)
+                self._extractFromObservation_hover(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "person_hover":
-                self._extractFromPerson_hover(event_client_time, event_data_complex_parsed)
+                self._extractFromPerson_hover(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "cutscene_hover":
-                self._extractFromCutscene_hover(event_client_time, event_data_complex_parsed)
+                self._extractFromCutscene_hover(timestamp=event.timestamp, event_data=event.event_data)
             elif event_type_str == "wildcard_hover":
-                self._extractFromWildcard_hover(event_client_time, event_data_complex_parsed)
+                self._extractFromWildcard_hover(timestamp=event.timestamp, event_data=event.event_data)
 
-    def _extractFromClickOrHover(self, event_client_time, event_data_complex_parsed):
-        time_between_click_hovers = event_client_time - self.last_click_hover_time
+    def _extractFromClickOrHover(self, timestamp, event_data):
+        time_between_click_hovers = timestamp - self.last_click_hover_time
 
         if time_between_click_hovers < self._IDLE_THRESH:
             active_time = time_between_click_hovers
-            idle_time = datetime.timedelta(0)
+            idle_time = timedelta(0)
         else:
             self.feature_count('count_idle')
-            active_time = datetime.timedelta(0)
+            active_time = timedelta(0)
             idle_time = time_between_click_hovers
         self.feature_inc('time_active', active_time)
         self.feature_inc('time_idle', idle_time)
 
 
-        self.last_click_hover_time = event_client_time
+        self.last_click_hover_time = timestamp
         pass
 
-    def _extractFromClick(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
-        _room_fqid = d["room_fqid"]
-        _type = d["type"]
-        _subtype = d["subtype"]
-        _fqid = d["fqid"]
-        _name = d["name"]
-        _event_custom = d["event_custom"]
-        _screen_coor = d["screen_coor"]
-        _room_coor = d["room_coor"]
-        _level = d["level"]
-        _text = d.get("text") if self._VERSION == 6 and d.get("text") != "undefined" else None
-        _text_fqid = d.get("text_fqid") or d.get("cur_cmd_fqid")
+    def _extractFromClick(self, timestamp, event_data, version):
+        # assign event_data variables
+        _room_fqid = event_data["room_fqid"]
+        _type = event_data["type"]
+        _subtype = event_data["subtype"]
+        _fqid = event_data["fqid"]
+        _name = event_data["name"]
+        _event_custom = event_data["event_custom"]
+        _screen_coor = event_data["screen_coor"]
+        _room_coor = event_data["room_coor"]
+        _level = event_data["level"]
+        _text = event_data.get("text") if Event.CompareVersions(version, "6") == 0 and event_data.get("text") != "undefined" else None
+        _text_fqid = event_data.get("text_fqid") or event_data.get("cur_cmd_fqid")
 
         # for all clicks, increment count clicks
 
 
         #
-        if _subtype == "wildcard" and d.get("cur_cmd_type") == 2: # what does this mean?
+        if _subtype == "wildcard" and event_data.get("cur_cmd_type") == 2: # what does this mean?
             return
 
         def finish_text(last_time, last_text, last_interaction):
-            time_diff_secs = (event_client_time - last_time).microseconds / 1000000
+            time_diff_secs = (timestamp - last_time).microseconds / 1000000
             # record unexpected behavior
             if time_diff_secs <= 0:
                 self.log_warning(f"The player read '{last_text}' in 0 seconds! (time_diff_secs = {time_diff_secs} <= 0)",3)
@@ -345,7 +332,7 @@ class JowilderExtractor(Extractor):
 
         def new_click():
             self.feature_count(feature_base="count_clicks", objective_num=self.cur_objective)
-            time_between_clicks = event_client_time - self.last_click_time
+            time_between_clicks = timestamp - self.last_click_time
 
 
 
@@ -365,7 +352,7 @@ class JowilderExtractor(Extractor):
 
 
 
-            self.last_click_time = event_client_time
+            self.last_click_time = timestamp
 
         def new_objective(new_obj):
             # set val to 0 if not already
@@ -384,7 +371,7 @@ class JowilderExtractor(Extractor):
             self.cur_objective = new_obj
 
         def new_interaction(new_int):
-            self.feature_time_since_start('time_to', cur_client_time=event_client_time,
+            self.feature_time_since_start('time_to', cur_client_time=timestamp,
                                           interaction_num=new_int)
             self.feature_count("num_enc", interaction_num=new_int, objective_num=self.cur_objective)
 
@@ -419,7 +406,7 @@ class JowilderExtractor(Extractor):
 
         if _text: # if the current log has text
             if (not self.last_display_time_text) or (self.last_display_time_text[1] != _text):
-                self.last_display_time_text = (event_client_time, _text)
+                self.last_display_time_text = (timestamp, _text)
         else:
             self.last_display_time_text = ()
 
@@ -432,9 +419,9 @@ class JowilderExtractor(Extractor):
                 if interaction_enum != self.cur_objective and not self.finished_encounters[interaction_enum]: # if its different from the current objective
                     new_objective(new_obj=interaction_enum)
 
-    def _extractFromHover(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromHover(self, timestamp:datetime, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -452,9 +439,9 @@ class JowilderExtractor(Extractor):
         # set features
         self.feature_count(feature_base="count_hovers")
 
-    def _extractFromCheckpoint(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromCheckpoint(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -467,9 +454,9 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
 
-    def _extractFromQuiz(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromQuiz(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -483,11 +470,11 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
         for i, response in enumerate(_questions):
-            self.features.setValByIndex(feature_name="quiz_response", index=i, new_value=response["response_index"])
+            self._features.setValByIndex(feature_name="quiz_response", index=i, new_value=response["response_index"])
 
-    def _extractFromQuizquestion(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromQuizquestion(self, timestamp:datetime, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -504,13 +491,13 @@ class JowilderExtractor(Extractor):
         # helpers
         index = je.quizn_answern_to_index(_quiz_number, _question_index)
         if index%4==0:
-            time_taken = event_client_time - self._last_quizstart
+            time_taken = timestamp - self._last_quizstart
         else:
-            time_taken = event_client_time - self._quiztimes[index - 1]
+            time_taken = timestamp - self._quiztimes[index - 1]
 
 
         # set class variables
-        self._quiztimes[index] = event_client_time
+        self._quiztimes[index] = timestamp
 
         # set features
 
@@ -520,9 +507,9 @@ class JowilderExtractor(Extractor):
         self.setValByIndex("sa_text", index=index, new_value=_response)
         self.feature_cc_inc("sa_num_answers", index=index, increment=1)
 
-    def _extractFromQuizstart(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromQuizstart(self, timestamp:datetime, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -534,13 +521,13 @@ class JowilderExtractor(Extractor):
 
         # helpers
         assert self._last_quizstart is None
-        self._last_quizstart = event_client_time
+        self._last_quizstart = timestamp
         # set class variables
         # set features
 
-    def _extractFromQuizend(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromQuizend(self, timestamp:datetime, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -556,7 +543,7 @@ class JowilderExtractor(Extractor):
         # helpers
 
         assert self._last_quizstart is not None
-        quiz_duration = event_client_time - self._last_quizstart
+        quiz_duration = timestamp - self._last_quizstart
         quiz_index = je.quizn_to_index(_quiz_number)
 
 
@@ -566,9 +553,9 @@ class JowilderExtractor(Extractor):
         # set features
         self.setValByIndex(feature_name='s_time', index=quiz_index, new_value=quiz_duration)
 
-    def _extractFromStartgame(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromStartgame(self, timestamp, event_data, version):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -586,7 +573,7 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
         if self.game_started:
-            self.log_warning('Player had a second startgame event!')
+            self.log_warning(message='Player had a second startgame event!', version=version)
             self.halt = True
             return
         self.setValByName('fullscreen', int(_fullscreen))
@@ -595,7 +582,7 @@ class JowilderExtractor(Extractor):
         self.setValByName('save_code', _save_code)
         self.setValByName("continue", 0)
 
-        if self._VERSION >= 7:
+        if Event.CompareVersions(version, "7") >= 0:
             _script_type = d["script_type"]
             _script_version = d["script_version"]
             self.setValByName("script_type", _script_type)
@@ -603,9 +590,9 @@ class JowilderExtractor(Extractor):
 
         self.game_started = True
 
-    def _extractFromEndgame(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromEndgame(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -618,9 +605,9 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
 
-    def _extractFromNavigate_click(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromNavigate_click(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -637,9 +624,9 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
 
-    def _extractFromNotebook_click(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromNotebook_click(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -657,9 +644,9 @@ class JowilderExtractor(Extractor):
         if d.get("name") == "open":
             self.feature_inc(feature_base="count_notebook_uses", increment=1, objective_num=self.cur_objective)
 
-    def _extractFromMap_click(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromMap_click(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -676,9 +663,9 @@ class JowilderExtractor(Extractor):
         if _fqid != 0:
             self.feature_count('meaningful_action_count')
 
-    def _extractFromNotification_click(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromNotification_click(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -693,9 +680,9 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
 
-    def _extractFromObject_click(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromObject_click(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -710,9 +697,9 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
 
-    def _extractFromObservation_click(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromObservation_click(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -727,9 +714,9 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
 
-    def _extractFromPerson_click(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromPerson_click(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -744,9 +731,9 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
 
-    def _extractFromCutscene_click(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromCutscene_click(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -761,9 +748,9 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
 
-    def _extractFromWildcard_click(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromWildcard_click(self, timestamp, event_data, version):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -789,7 +776,7 @@ class JowilderExtractor(Extractor):
         # answer = _cur_cmd_fqid if _cur_cmd_type==2 else _answer or None
         # correct = _interacted_fqid if _cur_cmd_type==2 else _answer or None
 
-        # if self._VERSION == 4:
+        # if event.app_version == 4:
         #
         #     # helpers
         #     click = bool(answer)
@@ -813,7 +800,7 @@ class JowilderExtractor(Extractor):
         #     if click and not wrong_guess:
         #         self.cur_question += 1
         #
-        # # elif self._VERSION == 6:
+        # # elif event.app_version == 6:
         # #     click = bool(_interacted_fqid)
         # #     wrong_guess = click and (_)
 
@@ -832,7 +819,7 @@ class JowilderExtractor(Extractor):
             answer_number = len(prev_answers) + 1
             if answer_number <= 3:
                 self.setValByIndex(f'A{answer_number}', self.cur_question, answer_char)
-                self.setValByIndex(f'A{answer_number}_time', self.cur_question, event_client_time - self.time_before_answer)
+                self.setValByIndex(f'A{answer_number}_time', self.cur_question, timestamp - self.time_before_answer)
 
 
             # got_correct_ans = _cur_cmd_fqid == self.chosen_answer
@@ -842,7 +829,7 @@ class JowilderExtractor(Extractor):
             #     self.feature_cc_inc('num_wrong_guesses', cur_question, 1)
 
 
-        if self._VERSION == 6:
+        if Event.CompareVersions(version, "6") == 0:
             if _cur_cmd_type == 2:
                 self.cur_question = je.answer_to_question(_cur_cmd_fqid,self.level)
                 self.chosen_answer = _interacted_fqid
@@ -850,16 +837,16 @@ class JowilderExtractor(Extractor):
                 if self.chosen_answer:
                     set_answer_features()
                     self.chosen_answer = None
-                self.time_before_answer = event_client_time
+                self.time_before_answer = timestamp
 
 
 
 
         # set features
 
-    def _extractFromNavigate_hover(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromNavigate_hover(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -876,18 +863,18 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
 
-    def _extractFromNotebook_hover(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromNotebook_hover(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         # no data - likely not a used event
 
         # helpers
         # set class variables
         # set features
 
-    def _extractFromMap_hover(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromMap_hover(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -902,18 +889,18 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
 
-    def _extractFromNotification_hover(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromNotification_hover(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         # no data - likely not a used event
 
         # helpers
         # set class variables
         # set features
 
-    def _extractFromObject_hover(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromObject_hover(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -928,36 +915,36 @@ class JowilderExtractor(Extractor):
         # set class variables
         # set features
 
-    def _extractFromObservation_hover(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromObservation_hover(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         # no data - likely not a used event
 
         # helpers
         # set class variables
         # set features
 
-    def _extractFromPerson_hover(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromPerson_hover(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         # no data - likely not a used event
 
         # helpers
         # set class variables
         # set features
 
-    def _extractFromCutscene_hover(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromCutscene_hover(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         # no data - likely not a used event
 
         # helpers
         # set class variables
         # set features
 
-    def _extractFromWildcard_hover(self, event_client_time, event_data_complex_parsed):
-        # assign event_data_complex_parsed variables
-        d = event_data_complex_parsed
+    def _extractFromWildcard_hover(self, timestamp, event_data):
+        # assign event_data variables
+        d = event_data
         _room_fqid = d["room_fqid"]
         _type = d["type"]
         _subtype = d["subtype"]
@@ -1128,7 +1115,7 @@ class JowilderExtractor(Extractor):
             return
         if self.getValByIndex(feature_name=feature_name, index=index) in JowilderExtractor._NULL_FEATURE_VALS:
             self.setValByIndex(feature_name, index=index, new_value=self._get_default_val(feature_name))
-        self.features.incValByIndex(feature_name=feature_name, index=index, increment=increment)
+        self._features.incValByIndex(feature_name=feature_name, index=index, increment=increment)
 
     def feature_time_since_start(self, feature_base, cur_client_time, interaction_num=None):
         """
@@ -1166,14 +1153,14 @@ class JowilderExtractor(Extractor):
         for lvl in self._cur_levels:
             if self.getValByIndex(feature_name=feature_name, index=lvl) in JowilderExtractor._NULL_FEATURE_VALS:
                 self.setValByIndex(feature_name, index=lvl, new_value=self._get_default_val(feature_name))
-            self.features.incValByIndex(feature_name=feature_name, index=lvl, increment=increment)
+            self._features.incValByIndex(feature_name=feature_name, index=lvl, increment=increment)
 
     def _increment_sess_feature(self, feature_name, increment=None):
         if increment is None:
             increment = 1
         if self.getValByName(feature_name) in JowilderExtractor._NULL_FEATURE_VALS:
             self.setValByName(feature_name, new_value=self._get_default_val(feature_name))
-        self.features.incAggregateVal(feature_name=feature_name, increment=increment)
+        self._features.incAggregateVal(feature_name=feature_name, increment=increment)
 
 
     def _set_value_in_cur_levels(self, feature_name, value):
@@ -1202,31 +1189,31 @@ class JowilderExtractor(Extractor):
         if prev_val in JowilderExtractor._NULL_FEATURE_VALS or val < prev_val:
             self.setValByName(feature_name=feature_name, new_value=val)
 
-    def _get_default_val(self, feature_name) -> Union[float,datetime.timedelta,typing.Literal[0]]:
+    def _get_default_val(self, feature_name) -> Union[float,timedelta,typing.Literal[0]]:
         startswith = lambda prefix: feature_name.startswith(JowilderExtractor._SESS_PREFIX+prefix) or \
             feature_name.startswith(JowilderExtractor._LEVEL_PREFIX+prefix)
         if startswith('min_'):
             return float('inf')
         if 'time' in feature_name.lower() or 'duration' in feature_name.lower():
-            return datetime.timedelta(0)
+            return timedelta(0)
         else:
             return 0
 
     def getValByName(self, feature_name):
-        return self.features.getValByName(feature_name)
+        return self._features.getValByName(feature_name)
 
     def setValByName(self, feature_name, new_value):
-        self.features.setValByName(feature_name, new_value)
+        self._features.setValByName(feature_name, new_value)
 
     def getValByIndex(self, feature_name, index):
-        return self.features.getValByIndex(feature_name, index)
+        return self._features.getValByIndex(feature_name, index)
 
     def setValByIndex(self, feature_name, index, new_value):
-        self.features.setValByIndex(feature_name, index, new_value)
+        self._features.setValByIndex(feature_name, index, new_value)
 
 
-    def get_debug_string(self, num_lines=20):
-        ret = [f'{"*" * 10} {self.session_id} v{self._VERSION} @ {self._CLIENT_START_TIME} {"*"*10}']
+    def get_debug_string(self, version:Union[str,None], num_lines=20):
+        ret = [f'{"*" * 10} {self._session_id} v{version} @ {self._CLIENT_START_TIME} {"*"*10}']
         ret.extend(deque(self.debug_strs, num_lines))
         return '\n'.join(ret)
 
@@ -1235,9 +1222,9 @@ class JowilderExtractor(Extractor):
         if self.verbose:
             utils.Logger.toStdOut(s)
     
-    def log_warning(self, message, num_lines=20):
+    def log_warning(self, message, version, num_lines=20):
         self.add_debug_str('WARNING: '+message)
-        debug_str = '\n\n'+self.get_debug_string(num_lines+1)
+        debug_str = '\n\n'+self.get_debug_string(version=version, num_lines=num_lines+1)
         utils.Logger.toFile(debug_str, logging.WARNING)
         self.debug_strs = []
         

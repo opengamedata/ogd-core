@@ -131,9 +131,9 @@ class SimRTServer:
                         complex_data_parsed["event_custom"] = row[game_table.event_index]
                     row = list(row)
                     row[game_table.complex_data_index] = complex_data_parsed
-                    extractor.extractFromRow(row_with_complex_parsed=row, game_table=game_table)
+                    extractor.extractFromRow(event=row, table_schema=game_table)
                 extractor.calculateAggregateFeatures()
-                all_features = dict(zip( extractor.getFeatureNames(game_table=game_table, game_schema=schema),
+                all_features = dict(zip( extractor.getFeatureNames(table_schema=game_table, game_schema=schema),
                                             extractor.getCurrentFeatures() ))
                 # print(f"all_features: {all_features}")
                 prog = SimRTServer.getGameProgress(sess_id=sess_id, game_id=game_id, sim_time=sim_time)
@@ -343,7 +343,6 @@ class SimRTServer:
         if SimRTServer.rt_settings["data_source"] == "DB":
             try:
                 tunnel,db = SQL.prepareDB(db_settings=SimRTServer.db_settings, ssh_settings=SimRTServer.ssh_settings)
-                game_table = TableSchema.FromDB(db=db, settings=settings, game_id=request.GetGameID(), ids=[session_id])
                 utils.Logger.toFile(f"Getting all features for session {session_id}", logging.INFO)
                 cursor = db.cursor()
                 filt = f"`session_id`='{session_id}' AND `time_elapsed` < {sim_time}"
@@ -362,4 +361,4 @@ class SimRTServer:
         elif SimRTServer.rt_settings["data_source"] == "FILE":
             raise Exception("not supported!") # TODO: remove this line after implementing the queries.
 
-        return session_data, game_table
+        return session_data, request._interface.GetTableSchema()

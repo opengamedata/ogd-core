@@ -23,6 +23,28 @@ settings = {
         "SSH_HOST": "rt_hostname",
         "path": "path\\to\\events\\file.tsv"
     },
+    "bq_config":
+    {
+        "DB_NAME": "project_id.dataset_id",
+        "TABLE_NAME": "events_*"
+    },
+    "game_source_map":
+    {
+        "AQUALAB":{"interface":"BigQuery", "table":"BIGQUERY"},
+        "BACTERIA":{"interface":"MySQL", "table":"FIELDDAY_MYSQL"},
+        "BALLOON":{"interface":"MySQL", "table":"FIELDDAY_MYSQL"},
+        "CRYSTAL":{"interface":"MySQL", "table":"FIELDDAY_MYSQL"},
+        "CYCLE_CARBON":{"interface":"MySQL", "table":"FIELDDAY_MYSQL"},
+        "CYCLE_NITROGEN":{"interface":"MySQL", "table":"FIELDDAY_MYSQL"},
+        "CYCLE_WATER":{"interface":"MySQL", "table":"FIELDDAY_MYSQL"},
+        "EARTHQUAKE":{"interface":"MySQL", "table":"FIELDDAY_MYSQL"},
+        "JOWILDER":{"interface":"MySQL", "table":"FIELDDAY_MYSQL"},
+        "LAKELAND":{"interface":"MySQL", "table":"FIELDDAY_MYSQL"},
+        "MAGNET":{"interface":"MySQL", "table":"FIELDDAY_MYSQL"},
+        "STEMPORTS":{"interface":"BigQuery", "table":"BIGQUERY"},
+        "WAVES":{"interface":"MySQL", "table":"FIELDDAY_MYSQL"},
+        "WIND":{"interface":"MySQL", "table":"FIELDDAY_MYSQL"},
+    },
     "BATCH_SIZE":1000,
     "DEBUG_LEVEL":"INFO"
 }

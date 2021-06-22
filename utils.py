@@ -6,9 +6,10 @@ import logging
 import os
 import traceback
 import typing
-from typing import Dict
+from typing import Dict, List
 # local imports
 from config import settings
+from schemas.GameSchema import GameSchema
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
 #  @param filename  The name of the JSON file. If the file extension is not .json,
@@ -37,7 +38,7 @@ def loadJSONFile(filename: str, path:str = "./") -> typing.Any:
         raise err
     return ret_val
 
-def GenerateReadme(game_name:str, schema, path:str = "./"):
+def GenerateReadme(game_name:str, game_schema:GameSchema, column_list:List[Dict[str,str]], path:str = "./"):
     try:
         os.makedirs(name=path, exist_ok=True)
         with open(f"{path}/readme.md", "w") as readme:
@@ -51,9 +52,9 @@ def GenerateReadme(game_name:str, schema, path:str = "./"):
             finally:
                 readme.write("\n")
             # 2. Use schema to write feature & column descriptions to the readme.
-            feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-            readme.write(GenCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
-                                                                sessions_field_list=feature_descriptions))
+            feature_descriptions = {**game_schema.perlevel_features(), **game_schema.aggregate_features()}
+            meta = GenCSVMetadata(game_name=game_name, column_list=column_list, feature_list=feature_descriptions)
+            readme.write(meta)
             # 3. Append any important data from the data changelog.
             try:
                 with open("./doc/readme_src/changelog_src.md", "r") as changelog_src:
@@ -69,47 +70,45 @@ def GenerateReadme(game_name:str, schema, path:str = "./"):
         Logger.Log(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
 
-## Function to generate metadata for a given game.
-#  The "fields" are a sort of generalization of columns. Basically, columns which
-#  are repeated (say, once per level) all fall under a single field.
-#  Columns which are completely unique correspond to individual fields.
-#
-#  @param game_name         The name of the game for which the csv metadata is being generated.
-#  @param raw_field_list    A mapping of raw csv "fields" to descriptions of the fields.
-#  @param sessions_field_list   A mapping of session csv features to descriptions of the features.
-#  @return                  A string containing metadata for the given game.
-def GenCSVMetadata(game_name: str, raw_field_list: Dict[str,str], sessions_field_list: Dict[str,str]) -> str:
-    raw_field_descriptions = [f"{key} - {raw_field_list[key]}" for key in raw_field_list.keys()]
-    sessions_field_descriptions = [f"{key} - {sessions_field_list[key]}" for key in sessions_field_list.keys()]
+def GenCSVMetadata(game_name: str, column_list: List[Dict[str,str]], feature_list: Dict[str,str]) -> str:
+    """Function to generate metadata for a given game.
+    The "fields" are a sort of generalization of columns. Basically, columns which
+    are repeated (say, once per level) all fall under a single field.
+    Columns which are completely unique correspond to individual fields.
+
+    :param game_name: The name of the game for which the csv metadata is being generated.
+    :type game_name: str
+    :param raw_field_list: A mapping of raw csv "fields" to descriptions of the fields.
+    :type raw_field_list: List[Dict[str,str]]
+    :param sessions_field_list: A mapping of session csv features to descriptions of the features.
+    :type sessions_field_list: Dict[str,str]
+    :return: A string containing metadata for the given game.
+    :rtype: str
+    """
+    raw_field_descriptions = [f"{col['readable']} ({col['name']}) : {col['type']} - {col['desc']}" for col in column_list]
+    sessions_field_descriptions = [f"{key} - {feature_list[key]}" for key in feature_list.keys()]
     raw_field_string = "\n".join(raw_field_descriptions)
     sessions_field_string = "\n".join(sessions_field_descriptions)
-    template_str = \
-f"## Field Day Open Game Data \n\
-### Retrieved from https://fielddaylab.wisc.edu/opengamedata \n\
-### These anonymous data are provided in service of future educational data mining research. \n\
-### They are made available under the Creative Commons CCO 1.0 Universal license. \n\
-### See https://creativecommons.org/publicdomain/zero/1.0/ \n\
-\n\
-## Suggested citation: \n\
-### Field Day. (2019). Open Educational Game Play Logs - [dataset ID]. Retrieved [today's date] from https://fielddaylab.wisc.edu/opengamedata \n\
-\n\
-## Game: {game_name} \n\
-\n\
-## Field Descriptions: \n\
-### Raw CSV Columns:\n\
-{raw_field_string}\n\
-\n\
-### Processed Session Features:\n\
-{sessions_field_string}\n\
-\n"
+    template_str =\
+    "\n".join(["## Field Day Open Game Data",
+    "### Retrieved from https://fielddaylab.wisc.edu/opengamedata",
+    "### These anonymous data are provided in service of future educational data mining research.",
+    "### They are made available under the Creative Commons CCO 1.0 Universal license.",
+    "### See https://creativecommons.org/publicdomain/zero/1.0/",
+    "",
+    "## Suggested citation:",
+    "### Field Day. (2019). Open Educational Game Play Logs - [dataset ID]. Retrieved [today's date] from https://fielddaylab.wisc.edu/opengamedata",
+    "",
+    f"## Game: {game_name}",
+    "",
+    "## Field Descriptions:",
+    "### Raw CSV Columns:",
+    f"{raw_field_string}",
+    "",
+    "### Processed Session Features:",
+    f"{sessions_field_string}",
+    ""])
     return template_str
-
-## Function that converts a datetime object into a filename-friendly format.
-#  Yes, there is undoubtedly a built-in way to do this, but this is what I've got.
-#  @param date  The datetime object to be formatted.
-#  @return      Formatted string representing a date.
-def dateToFileSafeString(date: datetime.datetime):
-    return f"{date.month}-{date.day}-{date.year}"
 
 class Logger:
     # Set up loggers. First, the std out logger

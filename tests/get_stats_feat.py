@@ -17,7 +17,12 @@ model_name = 'PopAchVelocityModel'
 file_version = 'v18'
 schema = GameSchema("LAKELAND", "schemas/JSON/")
 model_mgr = ModelManager(game_name="LAKELAND")
-table = TableSchema.FromCSV(dump)
+col_names = list(dump.columns)
+game_id = dump['app_id'][0]
+min_level = dump['level'].min()
+max_level = dump['level'].max()
+table = TableSchema(game_id=game_id, column_names=col_names, max_level=max_level, min_level=min_level)
+#table = TableSchema.FromCSV(dump)
 session_id_list = dump.session_id.unique()
 model = model_mgr.LoadModel(model_name)
 test_outfile = open('test_outfile.csv', 'w+')
