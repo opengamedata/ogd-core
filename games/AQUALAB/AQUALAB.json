@@ -44,36 +44,28 @@
 
     "features": {
         "perlevel":{
+            "job_completion_time": "time taken to complete a given job",
+            "sync_completion_time": "time taken to achieve 100% sync in a simulation"
         },
         "per_custom_count": {
+            "count_ask_for_help": "number of times player clicked the help button",
+            "count_guide_script_triggered": "number of times player talked with the guide"
         },
         "aggregate":{
+            "session_duration": "time spent playing in a given session",
+            "session_jobs_completed": "number of jobs completed in a given session"
         }
     },
 
     "db_columns": {
-        "event_date": "The date on which the event was logged",
-        "event_timestamp": "The time (in microseconds, UTC) at which the event was logged on the client",
         "event_name": "The name of the event",
         "event_params": "A repeated record of the parameters associated with this event",
-        "event_previous_timestamp": "The time (in microseconds, UTC) at which the event was previously logged on the client",
-        "event_value_in_usd": "The currency-converted value (in USD) of the event's value parameter",
-        "event_bundle_sequence_id": "The sequential ID of the bundle in which these events were uploaded",
-        "event_server_timestamp_offset": "Timestamp offset between collection time and upload time in micros",
         "user_id": "The user ID set via the setUserId API",
-        "user_pseudo_id": "The pseudonymous id (e.g., app instance ID) for the user",
-        "user_properties": "A repeated record of user properties set with the setUserProperty API",
-        "user_first_touch_timestamp": "The time (in microseconds) at which the user first opened the app or visited the site",
-        "user_ltv": "A record of Lifetime Value information about the user",
         "device": "A record of device information",
         "geo": "A record of the user's geographic information",
-        "app_info": "A record of information on the app",
-        "traffic_source": "Name of the traffic source that first acquired the user",
-        "stream_id": "The numeric ID of the stream",
         "platform": "The platform on which the app was built",
-        "event_dimensions": "Dimensions associated with the event",
-        "ecommerce": "A record of information about ecommerce",
-        "items": "A repeated record of items included in this event"
+        "session_id": "ID for the current play session",
+        "timestamp": "Datetime when the event was logged"
     },
     "config": {
     	"SUPPORTED_VERS": [1]
