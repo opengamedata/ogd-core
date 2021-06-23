@@ -5,7 +5,7 @@ import sys
 import typing
 import traceback
 from collections import defaultdict, deque
-from config import settings
+from config.config import settings
 from datetime import datetime, timedelta
 from typing import Any, Dict,Tuple, Union
 ## import local files

@@ -8,7 +8,7 @@ import traceback
 import typing
 from typing import Dict, List
 # local imports
-from config import settings
+from config.config import settings
 from schemas.GameSchema import GameSchema
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.

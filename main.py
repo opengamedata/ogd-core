@@ -15,15 +15,14 @@ from typing import Dict, Tuple
 
 from pandas.io.pytables import Table
 # import local files
-import Request
 import utils
-from config import settings
+from config.config import settings
 from interfaces.DataInterface import DataInterface
 from interfaces.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface
 from interfaces.BigQueryInterface import BigQueryInterface
 from managers.ExportManager import ExportManager
-from Request import Request, ExporterFiles, ExporterRange
+from managers.Request import Request, ExporterFiles, ExporterRange
 from schemas.GameSchema import GameSchema
 from utils import Logger
 

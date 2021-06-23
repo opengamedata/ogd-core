@@ -1,9 +1,11 @@
+import json
 import logging
+import os
 from datetime import datetime
-from schemas.TableSchema import TableSchema
 from google.cloud import bigquery
 from typing import Dict, List, Tuple, Union
 
+from config.config import settings
 from interfaces.DataInterface import DataInterface
 from utils import Logger
 
@@ -19,8 +21,11 @@ class BigQueryInterface(DataInterface):
             self.Close()
             self.Open(force_reopen=False)
         if not self._is_open:
+            credential_path = settings["game_source_map"][self._game_id]["credential"]
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
             self._client = bigquery.Client()
             if self._client != None:
+                self._is_open = True
                 Logger.Log("Connected to BigQuery database.", logging.DEBUG)
                 return True
             else:
@@ -39,16 +44,26 @@ class BigQueryInterface(DataInterface):
         if self._client != None:
             db_name = self._settings["bq_config"]["DB_NAME"]
             table_name = self._settings["bq_config"]["TABLE_NAME"]
-            id_string = ','.join([f"'{x}'" for x in id_list])
+            id_string = ','.join([f"{x}" for x in id_list])
             query = f"""
-                SELECT *, param.value.int_value AS session_id
+                SELECT event_name, event_params, user_id, device, geo, platform, param.value.int_value AS session_id,
+                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
                 FROM `{db_name}.{table_name}`,
                 UNNEST(event_params) AS param
                 WHERE param.key = "ga_session_id"
                 AND param.value.int_value IN ({id_string})
             """
             data = self._client.query(query)
-            events = [tuple(row.items()) for row in data]
+            events = []
+            for row in data:
+                items = tuple(row.items())
+                event = []
+                for item in items:
+                    if item[0] in ["event_params", "device", "geo"]:
+                        event.append(json.dumps(item[1]))
+                    else:
+                        event.append(item[1])
+                events.append(tuple(event))
             return events if events != None else []
         else:
             Logger.Log(f"Could not get data for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
@@ -65,7 +80,7 @@ class BigQueryInterface(DataInterface):
                 WHERE param.key = "ga_session_id"
             """
             data = self._client.query(query)
-            ids = [int(row['session_id']) for row in data]
+            ids = [row['session_id'] for row in data]
             return ids if ids != None else []
         else:
             Logger.Log(f"Could not get list of all session ids, BigQuery connection is not open.", logging.WARN)
@@ -105,7 +120,7 @@ class BigQueryInterface(DataInterface):
                 AND _TABLE_SUFFIX BETWEEN '{str_min}' AND '{str_max}'
             """
             data = self._client.query(query)
-            ids = [int(row['session_id']) for row in data]
+            ids = [row['session_id'] for row in data]
             return ids if ids != None else []
         else:
             Logger.Log(f"Could not get session list for {str_min}-{str_max} range, BigQuery connection is not open.", logging.WARN)
