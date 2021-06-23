@@ -16,7 +16,7 @@ from datetime import datetime
 from typing import Tuple
 ## import local files
 import utils
-from config import settings
+from config.config import settings
 from interfaces.MySQLInterface import SQL
 from interfaces.MySQLInterface import MySQLInterface
 from managers.FileManager import *

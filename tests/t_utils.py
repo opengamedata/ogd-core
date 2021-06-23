@@ -7,7 +7,7 @@ import typing
 import unittest
 from unittest import TestCase
 # local import(s)
-from config import settings
+from config.config import settings
 import utils
 
 class t_utils(TestCase):

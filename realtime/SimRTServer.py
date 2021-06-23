@@ -9,7 +9,7 @@ import typing
 from datetime import datetime, timedelta
 # # import local files
 import utils
-from config import settings
+from config.config import settings
 from extractors.Extractor import Extractor
 from extractors.CrystalExtractor import CrystalExtractor
 from extractors.WaveExtractor import WaveExtractor

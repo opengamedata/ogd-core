@@ -45,25 +45,25 @@ runs:
     # - name: Clone code
     #   uses: actions/checkout@v2
     - name: Set up code
-      run: cp config.py.template config.py 
+      run: cp config/config.py.template config/config.py 
       shell: bash
     # - name: Set table to the 2019-2020 one
     #   run: sed -i 's/logger/logger2020/g' config.py
     #   shell: bash
     - name: Set SSH hostname
-      run: sed -i 's/hostname/${{inputs.sql_host}}/g' config.py
+      run: sed -i 's/hostname/${{inputs.sql_host}}/g' config/config.py
       shell: bash
     - name: Set SSH username
-      run: sed -i 's/WCER AD User/${{inputs.vpn_user}}/g' config.py
+      run: sed -i 's/WCER AD User/${{inputs.vpn_user}}/g' config/config.py
       shell: bash
     - name: Set SSH password
-      run: sed -i 's/WCER AD Password/${{inputs.vpn_pass}}/g' config.py
+      run: sed -i 's/WCER AD Password/${{inputs.vpn_pass}}/g' config/config.py
       shell: bash
     - name: Set SQL username
-      run: sed -i 's/username/${{inputs.sql_user}}/g' config.py
+      run: sed -i 's/username/${{inputs.sql_user}}/g' config/config.py
       shell: bash
     - name: Set SQL password
-      run: sed -i 's/password/${{inputs.sql_pass}}/g' config.py
+      run: sed -i 's/password/${{inputs.sql_pass}}/g' config/config.py
       shell: bash
     - name: Execute data export
       run: python3.8 main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly

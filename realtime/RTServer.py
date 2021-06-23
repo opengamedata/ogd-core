@@ -14,7 +14,7 @@ from typing import Dict, List, Tuple, Union
 from sshtunnel import SSHTunnelForwarder
 # # import local files
 import utils
-from config import settings
+from config.config import settings
 from extractors.Extractor import Extractor
 from extractors.CrystalExtractor import CrystalExtractor
 from extractors.WaveExtractor import WaveExtractor
