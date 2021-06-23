@@ -19,8 +19,8 @@ from interfaces.MySQLInterface import SQL
 from managers.SessionProcessor import SessionProcessor
 from models.Model import ModelInputType
 # from models.Model import *
+from managers.Request import Request, ExporterFiles, ExporterRange
 from realtime.ModelManager import ModelManager
-from Request import Request
 from schemas.GameSchema import GameSchema
 
 ## Class to handle API calls for the realtime page.
