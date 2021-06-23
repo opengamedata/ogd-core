@@ -43,7 +43,7 @@ class Feature(abc.ABC):
         else:
             return True
 
-    def _validateEventType(self, event_type:str)
+    def _validateEventType(self, event_type:str) -> bool:
         if event_type in self.GetEventTypes():
             return True
         else:
