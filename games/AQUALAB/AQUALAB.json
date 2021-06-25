@@ -43,17 +43,50 @@
     },
 
     "features": {
-        "perlevel":{
-            "job_completion_time": "time taken to complete a given job",
-            "sync_completion_time": "time taken to achieve 100% sync in a simulation"
+        "perlevel": {
         },
         "per_custom_count": {
-            "count_ask_for_help": "number of times player clicked the help button",
-            "count_guide_script_triggered": "number of times player talked with the guide"
+            "jobCompletionTime": {
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "job",
+                "events": ["accept_job", "complete_job"],
+                "description": "Time taken to complete a given job"
+            },
+            "syncCompletionTime": {
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "job",
+                "events": ["begin_simulation, simulation_sync_achieved"],
+                "description": "Time taken to achieve 100% sync in a simulation"
+            }
         },
         "aggregate":{
-            "session_duration": "time spent playing in a given session",
-            "session_jobs_completed": "number of jobs completed in a given session"
+            "sessionDuration": {
+                "enabled": true,
+                "events": [],
+                "description":"Time spent playing in a given session"
+            },
+            "sessionGuideCount": {
+                "enabled": true,
+                "events": ["guide_triggered"],
+                "description":"Number of times player talked with the guide throughout the session"
+            },
+            "sessionHelpCount": {
+                "enabled": true,
+                "events": ["ask_for_help"],
+                "description":"Number of times player clicked the help button throughout the session"
+            },
+            "sessionID": {
+                "enabled": true,
+                "events": [],
+                "description":"The player's session ID number for this play session"
+            },
+            "sessionJobsCompleted": {
+                "enabled": true,
+                "events": ["complete_job"],
+                "description":"Number of jobs completed in a given session"
+            }
         }
     },
 
