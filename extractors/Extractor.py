@@ -3,15 +3,15 @@ import abc
 import logging
 import typing
 import logging
-from datetime import datetime
+from collections import defaultdict
+from datetime import datetime, timedelta
 from typing import Any, Dict, List, Tuple, Union
 ## import local files
 import utils
+from extractors.Feature import Feature
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
-from collections import defaultdict
-from datetime import timedelta
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
@@ -20,8 +20,6 @@ from datetime import timedelta
 class Extractor(abc.ABC):
     ## @var GameSchema _schema
     #  The schema specifying structure of data associated with an extractor.
-    #TODO: Set up class-level variable like this for each extractor, instead of using constructor param
-    _schema: GameSchema
 
     ## Base constructor for Extractor classes.
     #  The constructor sets an extractor's session id and range of levels,
@@ -36,7 +34,6 @@ class Extractor(abc.ABC):
         self._levels      : List[int]   = []
         self._sequences   : List        = []
         self._features    : Extractor.SessionFeatures = Extractor.SessionFeatures(game_schema=game_schema)
-        self._last_adjust_type : Union[str,None] = None
 
     ## Static function to print column headers to a file.
     #  We first create a feature dictionary, then essentially write out each key,
@@ -78,7 +75,7 @@ class Extractor(abc.ABC):
         file.write("\n")
 
     def getCurrentFeatures(self) -> typing.List[str]:
-        def myformat(obj):
+        def _format(obj):
             if obj == None:
                 return ""
             elif type(obj) is timedelta:
@@ -101,9 +98,9 @@ class Extractor(abc.ABC):
             key_type = type(self._features.getValByName(key))
             if key_type is type({}) or key_type is type(defaultdict()):
                 # if it's a dictionary, expand.
-                column_vals.extend([myformat(self._features.getValByIndex(key, num)) for num in self._features.getValByName(feature_name=key).keys()])
+                column_vals.extend([_format(self._features.getValByIndex(key, num)) for num in self._features.getValByName(feature_name=key).keys()])
             else:
-                column_vals.append(myformat(self._features.getValByName(key)))
+                column_vals.append(_format(self._features.getValByName(key)))
         return column_vals
 
     def extractFromRow(self, event:Event, table_schema:TableSchema) -> None:
@@ -124,14 +121,16 @@ class Extractor(abc.ABC):
     def extractCustomSequenceEventDataFromRow(self, event:Event, table_schema:TableSchema):
         return None
 
-    ## Abstract declaration of a function to perform extraction of features from a row.
-    #
-    #  @param row_with_complex_parsed A row of game data from the db, with the
-    #                                 "complex data" already parsed from JSON.
-    #  @param table_schema  A data structure containing information on how the db
-    #                     table assiciated with this game is structured.
     @abc.abstractmethod
     def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+        """Abstract declaration of a function to perform extraction of features from a row.
+
+        :param event: [description]
+        :type event: Event
+        :param table_schema: A data structure containing information on how the db
+                             table assiciated with this game is structured.
+        :type table_schema: TableSchema
+        """
         pass
 
     ## Abstract declaration of a function to perform calculation of aggregate features
@@ -142,22 +141,25 @@ class Extractor(abc.ABC):
 
     ## @class SessionFeatures
     #  Private Extractor class to track feature data.
-    #  This class provides several functions to managing data, which should make
+    #  This class provides several functions to manage data, which should make
     #  the actual extractor code easier to read/write, since there is less need
     #  to understand the structure of feature data.
     class SessionFeatures:
         def __init__(self, game_schema: GameSchema):
-            self.perlevels: List = list(game_schema.perlevel_features().keys())
+            self.perlevels: List[Feature] = list(game_schema.perlevel_features().keys())
             self.features = Extractor.SessionFeatures.generateFeatureDict(game_schema)
 
-        ## Static function to generate a dictionary of game feature data from a given schema.
-        #  The dictionary has the following hierarchy:
-        #  feature_dict -> [individual features] -> [individual levels] -> {value, prefix}
-        #
-        #  @param level_range The range of all levels for the game associated with an extractor.
-        #  @param game_schema A dictionary that defines how the game data is structured.
         @staticmethod
         def generateFeatureDict(game_schema: GameSchema) -> Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]]:
+            """Static function to generate a dictionary of game feature data from a given schema.
+            The dictionary has the following hierarchy:
+            feature_dict -> [individual features] -> [individual levels] -> {value, prefix}
+
+            :param game_schema: A dictionary that defines how the game data is structured.
+            :type game_schema: GameSchema
+            :return: [description]
+            :rtype: Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]]
+            """
             # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
             # which in turn maps each level to a value and prefix.
             perlevels = game_schema.perlevel_features()
