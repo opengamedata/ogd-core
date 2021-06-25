@@ -14,8 +14,6 @@ from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 
-# temp comment
-
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
 class WaveExtractor(Extractor):
@@ -33,6 +31,7 @@ class WaveExtractor(Extractor):
     #                     structured.
     def __init__(self, session_id: int, game_schema: GameSchema):
         super().__init__(session_id=session_id, game_schema=game_schema)
+        self._last_adjust_type : Union[str,None] = None
         self.start_times: Dict       = {}
         self.end_times:   Dict       = {}
         self.amp_move_counts:  Dict   = {}
