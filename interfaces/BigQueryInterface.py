@@ -2,6 +2,7 @@ import json
 import logging
 import os
 from datetime import datetime
+from google_auth_oauthlib import flow
 from google.cloud import bigquery
 from typing import Dict, List, Tuple, Union
 
@@ -21,9 +22,13 @@ class BigQueryInterface(DataInterface):
             self.Close()
             self.Open(force_reopen=False)
         if not self._is_open:
-            credential_path = settings["game_source_map"][self._game_id]["credential"]
-            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
-            self._client = bigquery.Client()
+            if "GITHUB_ACTIONS" in os.environ:
+                self._client = bigquery.Client()
+            else:
+                credential_path = settings["game_source_map"][self._game_id]["credential"]
+                appflow = flow.InstalledAppFlow.from_client_secrets_file(credential_path, scopes=["https://www.googleapis.com/auth/bigquery"])
+                appflow.run_local_server()
+                self._client = bigquery.Client(project="", credentials=appflow.credentials)
             if self._client != None:
                 self._is_open = True
                 Logger.Log("Connected to BigQuery database.", logging.DEBUG)
