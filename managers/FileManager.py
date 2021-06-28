@@ -1,3 +1,4 @@
+import abc
 import git
 import json
 import logging
@@ -7,7 +8,7 @@ import traceback
 import typing
 import zipfile
 from datetime import datetime
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Union
 ## import local files
 import utils
 from managers.Request import Request, ExporterFiles, ExporterRange
