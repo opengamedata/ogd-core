@@ -1,6 +1,16 @@
 name: Aqualab BigQuery Test
 on:
+  push:
   workflow_dispatch:
+inputs:
+  db_name:
+    description: "The database to query from."
+    required: true
+    default: 'placeholder'
+  table_name:
+    description: "The table to query from."
+    required: true
+    default: 'events_*'
 jobs:
   test_connect:
     runs-on: ubuntu-18.04
@@ -15,26 +25,26 @@ jobs:
       run: |
         sudo apt-get -q install python3.8
         sudo apt-get -q install python3.8-dev
-    - name: Use gcloud CLI
+    - uses: actions/checkout@v2
+    - name: Set up Python libraries
       run: |
-        gcloud config set project aqualab-57f88
-        bq query --use_legacy_sql=false \
-        'SELECT
-          event_name
-        FROM
-          `aqualab-57f88.analytics_271167280.events_20210608`'
-    #- uses: actions/checkout@v2
-    #- name: Set up Python libraries
-    #  run: |
-    #    python3.8 -m pip install --upgrade pip
-    #    python3.8 -m pip install setuptools --quiet
-    #    python3.8 -m pip install wheel --quiet
-    #    python3.8 -m pip install -r requirements.txt --quiet
-    #    python3.8 -m pip install google-cloud-bigquery --quiet
-    #  shell: bash
-    #- name: Set up code
-    #  run: cp config.py.template config.py 
-    #  shell: bash
-    #- name: Test query
-    #  run: |
-    #    python3.8 interfaces/BigQueryInterface.py
+        python3.8 -m pip install --upgrade pip
+        python3.8 -m pip install setuptools --quiet
+        python3.8 -m pip install wheel --quiet
+        python3.8 -m pip install -r requirements.txt --quiet
+      shell: bash
+    - name: Set up code
+      run: cp config.py.template config.py 
+      shell: bash
+    - name: Set database name
+      run: sed -i 's/project_id.dataset_id/${{secrets.AQUALAB_DB_NAME}}/g' config/config.py
+      shell: bash
+    - name: Set table name
+      run: sed -i 's/events_*/${{inputs.table_name}}/g' config/config.py
+      shell: bash
+    - name: Run export
+      run: python3.8 main.py export AQUALAB 6/8/2021 6/9/2021
+    - name: Upload zips as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./data/AQUALAB/*.zip
