@@ -177,10 +177,10 @@ class Logger:
     @staticmethod
     def toPrint(message:str, level=logging.DEBUG) -> None:
         if level == logging.DEBUG:
-            print(f"debug: {message}")
+            print(f"debug:   {message}")
         elif level == logging.INFO:
-            print(f"info: {message}")
+            print(f"info:    {message}")
         elif level == logging.WARNING:
             print(f"warning: {message}")
         elif level == logging.ERROR:
-            print(f"error: {message}")
+            print(f"error:   {message}")
