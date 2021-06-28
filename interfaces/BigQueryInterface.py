@@ -26,6 +26,7 @@ class BigQueryInterface(DataInterface):
                 print('Using actions')
                 print("GOOGLE_APPLICATION_CREDENTIALS" in os.environ)
                 print(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
+                os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.environ["GOOGLE_APPLICATION_CREDENTIALS"] + ".json"
                 self._client = bigquery.Client()
             else:
                 credential_path = settings["game_source_map"][self._game_id]["credential"]
