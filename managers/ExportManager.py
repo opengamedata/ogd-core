@@ -93,9 +93,7 @@ class ExportManager:
                                     game_schema=game_schema, table_schema=table_schema, game_extractor=game_extractor)
 
                 time_delta = datetime.now() - start
-                num_min = math.floor(time_delta.total_seconds()/60)
-                num_sec = time_delta.total_seconds() % 60
-                utils.Logger.Log(f"Total Data Extraction Time: {num_min} min, {num_sec:.3f} sec", logging.INFO)
+                utils.Logger.Log(f"Total Data Extraction Time: {time_delta}", logging.INFO)
                 # 5) Save and close files
                 # before we zip stuff up, let's ensure the readme is in place:
                 try:
@@ -190,9 +188,7 @@ class ExportManager:
                 raise err
             else:
                 time_delta = datetime.now() - start
-                num_min = math.floor(time_delta.total_seconds()/60)
-                num_sec = time_delta.total_seconds() % 60
                 num_events = len(next_data_set) if next_data_set is not None else 0
-                utils.Logger.Log(f"Processing time for slice [{i+1}/{len(session_slices)}]: {num_min} min, {num_sec:.3f} sec to handle {num_events} events", logging.INFO)
+                utils.Logger.Log(f"Processing time for slice [{i+1}/{len(session_slices)}]: {time_delta} to handle {num_events} events", logging.INFO)
         ret_val = num_sess
         return ret_val

@@ -242,16 +242,12 @@ class SQL:
         start = datetime.now()
         cursor.execute(query)
         time_delta = datetime.now()-start
-        num_min = math.floor(time_delta.total_seconds()/60)
-        num_sec = time_delta.total_seconds() % 60
-        Logger.toStdOut(f"Query execution completed, time to execute: {num_min:d} min, {num_sec:.3f} sec", logging.DEBUG)
+        Logger.toStdOut(f"Query execution completed, time to execute: {time_delta}", logging.DEBUG)
         # second, we get the results.
         if fetch_results:
             result = [col[0] for col in cursor.fetchall()]
             time_delta = datetime.now()-start
-            num_min = math.floor(time_delta.total_seconds()/60)
-            num_sec = time_delta.total_seconds() % 60
-            Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result):d} rows", logging.DEBUG)
+            Logger.toStdOut(f"Query fetch completed, total query time:    {time_delta} to get {len(result):d} rows", logging.DEBUG)
         return result
 
     ## Simple function to construct and log a nice server 500 error message.
@@ -285,9 +281,7 @@ class MySQLInterface(DataInterface):
                 self._db_cursor = self._db.cursor()
                 self._is_open = True
                 time_delta = datetime.now() - start
-                num_min = math.floor(time_delta.total_seconds()/60)
-                num_sec = time_delta.total_seconds() % 60
-                Logger.Log(f"Database Connection Time: {num_min} min, {num_sec:.3f} sec", logging.INFO)
+                Logger.Log(f"Database Connection Time: {time_delta}", logging.INFO)
                 return True
             else:
                 SQL.disconnectMySQLViaSSH(tunnel=self._tunnel, db=self._db)
