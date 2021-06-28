@@ -36,7 +36,7 @@ inputs:
   log_level:
     description: "Logging level to use for export process"
     required: true
-    default: "DEBUG"
+    default: "INFO"
 runs:
   using: "composite"
   steps:
@@ -47,7 +47,7 @@ runs:
       shell: bash
     # - name: Clone code
     #   uses: actions/checkout@v2
-    - name: Set up code
+    - name: Set up config
       run: cp config/config.py.template config/config.py 
       shell: bash
     - name: Set Logger level
