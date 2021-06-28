@@ -22,7 +22,7 @@ from interfaces.MySQLInterface import MySQLInterface
 from managers.FileManager import *
 from managers.SessionProcessor import SessionProcessor
 from managers.EventProcessor import EventProcessor
-from Request import *
+from managers.Request import Request, ExporterFiles, ExporterRange
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
