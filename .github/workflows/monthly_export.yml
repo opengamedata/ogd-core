@@ -51,6 +51,10 @@ jobs:
         echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./*.log
   
   trigger_reindex:
     name: Reindex OpenGameData Files

@@ -41,3 +41,7 @@ jobs:
     #- name: Test query
     #  run: |
     #    python3.8 interfaces/BigQueryInterface.py
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./*.log
