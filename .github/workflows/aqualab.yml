@@ -34,7 +34,7 @@ jobs:
         python3.8 -m pip install -r requirements.txt --quiet
       shell: bash
     - name: Set up code
-      run: cp config.py.template config.py 
+      run: cp config/config.py.template config/config.py 
       shell: bash
     - name: Set database name
       run: sed -i 's/project_id.dataset_id/${{secrets.AQUALAB_DB_NAME}}/g' config/config.py
