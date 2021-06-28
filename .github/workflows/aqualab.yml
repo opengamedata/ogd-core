@@ -2,15 +2,6 @@ name: Aqualab BigQuery Test
 on:
   push:
   workflow_dispatch:
-inputs:
-  db_name:
-    description: "The database to query from."
-    required: true
-    default: 'placeholder'
-  table_name:
-    description: "The table to query from."
-    required: true
-    default: 'events_*'
 jobs:
   test_connect:
     runs-on: ubuntu-18.04
@@ -38,9 +29,6 @@ jobs:
       shell: bash
     - name: Set database name
       run: sed -i 's/project_id.dataset_id/${{secrets.AQUALAB_DB_NAME}}/g' config/config.py
-      shell: bash
-    - name: Set table name
-      run: sed -i 's/events_*/${{inputs.table_name}}/g' config/config.py
       shell: bash
     - name: Run export
       run: python3.8 main.py export AQUALAB 6/8/2021 6/9/2021
