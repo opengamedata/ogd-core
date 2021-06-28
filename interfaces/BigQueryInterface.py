@@ -23,6 +23,8 @@ class BigQueryInterface(DataInterface):
             self.Open(force_reopen=False)
         if not self._is_open:
             if "GITHUB_ACTIONS" in os.environ:
+                print('Using actions')
+                print("GOOGLE_APPLICATION_CREDENTIALS" in os.environ)
                 self._client = bigquery.Client()
             else:
                 credential_path = settings["game_source_map"][self._game_id]["credential"]
