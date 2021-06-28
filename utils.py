@@ -127,6 +127,7 @@ class Logger:
 
     # Then, set up the file logger. Check for permissions errors.
     file_logger = logging.getLogger("file_logger")
+    file_logger.setLevel(level=logging.DEBUG)
     # file_logger.setLevel(level=logging.DEBUG)
     try:
         err_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
