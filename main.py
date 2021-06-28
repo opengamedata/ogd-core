@@ -140,9 +140,7 @@ def runExport(events:bool = False, features:bool = False):
         sys.exit(1)
     finally:
         time_taken = datetime.now() - start
-        minutes = math.floor(time_taken.total_seconds()/60)
-        seconds = time_taken.total_seconds() % 60
-        Logger.Log(f"Total time taken: {minutes} min, {seconds} sec")
+        Logger.Log(f"Total time taken: {time_taken}")
     Logger.Log(f"Done with {game_name}.", logging.INFO)
 
 ## Function to print out info on a game from the game's schema.

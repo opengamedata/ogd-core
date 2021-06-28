@@ -90,9 +90,7 @@ try:
     #+++
     end = datetime.now()
     time_delta = end - start
-    minutes = math.floor(time_delta.total_seconds()/60)
-    seconds = time_delta.total_seconds() % 60
-    utils.Logger.toStdOut(f"Total time taken to {method}: {minutes} min, {seconds} sec", logging.DEBUG)
+    utils.Logger.toStdOut(f"Total time taken to {method}: {time_delta}", logging.DEBUG)
     #---
 
     result: str = json.dumps(body, default=lambda ob: ob.isoformat() if type(ob) == datetime else json.dumps(ob))

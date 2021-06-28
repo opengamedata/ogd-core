@@ -203,9 +203,7 @@ class RTServer:
             #+++
             end = datetime.now()
             time_delta = end - start
-            minutes = math.floor(time_delta.total_seconds()/60)
-            seconds = time_delta.total_seconds() % 60
-            utils.Logger.toStdOut(f"Total time taken to get game progress: {minutes} min, {seconds} sec", logging.DEBUG)
+            utils.Logger.toStdOut(f"Total time taken to get game progress: {time_delta}", logging.DEBUG)
             #---
         except Exception as err:
             #print(f"got error in RTServer.py: {str(err)}")
@@ -374,9 +372,7 @@ class RTServer:
                 #+++
                 end = datetime.now()
                 time_delta = end - start
-                minutes = math.floor(time_delta.total_seconds()/60)
-                seconds = time_delta.total_seconds() % 60
-                utils.Logger.toStdOut(f"Time taken to fetch active sessions from database: {minutes} min, {seconds} sec", logging.DEBUG)
+                utils.Logger.toStdOut(f"Time taken to fetch active sessions from database: {time_delta}", logging.DEBUG)
                 #---
             except Exception as err:
                 msg = f"{type(err)} {str(err)}"
