@@ -7,17 +7,15 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - name: Set up Cloud SDK
-    - uses: google-github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@master
       with:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
-    - uses: actions/checkout@v2
     - name: Get correct Python
       run: |
         sudo apt-get -q install python3.8
         sudo apt-get -q install python3.8-dev
-    - uses: actions/checkout@v2
     - name: Set up Python libraries
       run: |
         python3.8 -m pip install --upgrade pip
