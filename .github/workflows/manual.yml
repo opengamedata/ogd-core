@@ -75,6 +75,7 @@ jobs:
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
+        log_level: "INFO"
     - name: Upload files to opengamedata via scp
       run: |
         mkdir -p ~/.ssh
