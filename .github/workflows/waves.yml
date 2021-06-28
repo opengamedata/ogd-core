@@ -3,7 +3,7 @@ name: Waves Exporter CI Test
 on:
   push:
     paths:
-    - 'games/JOWILDER/**'
+    - 'games/WAVES/**'
     - '.github/workflows/waves.yml'
     - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
@@ -31,7 +31,11 @@ jobs:
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "DEBUG"
+        log_level: "INFO"
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./*.log
     - name: Upload zips as artifacts
       uses: actions/upload-artifact@v2
       with:

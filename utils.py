@@ -127,6 +127,7 @@ class Logger:
 
     # Then, set up the file logger. Check for permissions errors.
     file_logger = logging.getLogger("file_logger")
+    file_logger.setLevel(level=logging.DEBUG)
     # file_logger.setLevel(level=logging.DEBUG)
     try:
         err_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
@@ -134,6 +135,7 @@ class Logger:
     except PermissionError as err:
         std_logger.exception(f"Failed permissions check for log files. No file logging on server.", stack_info=False)
     else:
+        std_logger.info("Successfully set up logging files.")
         err_handler.setLevel(level=logging.WARNING)
         file_logger.addHandler(err_handler)
         debug_handler.setLevel(level=logging.DEBUG)
@@ -146,25 +148,25 @@ class Logger:
         now = datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
         if Logger.file_logger is not None:
             if level == logging.DEBUG:
-                Logger.file_logger.debug(f"DEBUG: {now} {message}")
+                Logger.file_logger.debug(f"DEBUG:   {now} {message}")
             elif level == logging.INFO:
-                Logger.file_logger.info(f"INFO: {now} {message}")
+                Logger.file_logger.info( f"INFO:    {now} {message}")
             elif level == logging.WARNING:
-                Logger.file_logger.warning(f"WARNING: {now} {message}")
+                Logger.file_logger.warn( f"WARNING: {now} {message}")
             elif level == logging.ERROR:
-                Logger.file_logger.error(f"ERROR: {now} {message}")
+                Logger.file_logger.error(f"ERROR:   {now} {message}")
 
     @staticmethod
     def toStdOut(message:str, level=logging.DEBUG) -> None:
         if Logger.std_logger is not None:
             if level == logging.DEBUG:
-                Logger.std_logger.debug(f"DEBUG: {message}")
+                Logger.std_logger.debug(f"DEBUG:   {message}")
             elif level == logging.INFO:
-                Logger.std_logger.info(f"INFO: {message}")
+                Logger.std_logger.info( f"INFO:    {message}")
             elif level == logging.WARNING:
-                Logger.std_logger.warn(f"WARNING: {message}")
+                Logger.std_logger.warn( f"WARNING: {message}")
             elif level == logging.ERROR:
-                Logger.std_logger.error(f"ERROR: {message}")
+                Logger.std_logger.error(f"ERROR:   {message}")
     
     # Function to print a method to both the standard out and file logs.
     # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
@@ -176,10 +178,10 @@ class Logger:
     @staticmethod
     def toPrint(message:str, level=logging.DEBUG) -> None:
         if level == logging.DEBUG:
-            print(f"debug: {message}")
+            print(f"debug:   {message}")
         elif level == logging.INFO:
-            print(f"info: {message}")
+            print(f"info:    {message}")
         elif level == logging.WARNING:
             print(f"warning: {message}")
         elif level == logging.ERROR:
-            print(f"error: {message}")
+            print(f"error:   {message}")

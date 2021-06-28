@@ -154,8 +154,8 @@ class JowilderExtractor(Extractor):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             for place in [utils.Logger.toFile, utils.Logger.toStdOut]:
                 place('\n'.join(traceback.format_exception(exc_type, exc_value, exc_traceback)), logging.ERROR)
-                place('DEBUG STRINGS:', logging.ERROR)
-                place(self.get_debug_string(version=event.app_version, num_lines=20), logging.ERROR)
+                place('DEBUG STRINGS:', logging.DEBUG)
+                place(self.get_debug_string(version=event.app_version, num_lines=2), logging.DEBUG)
 
     def _extractFeaturesFromRow(self, event:Event, table_schema: TableSchema):
         # put some data in local vars, for readability later.
