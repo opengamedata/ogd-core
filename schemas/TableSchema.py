@@ -76,7 +76,7 @@ class TableSchema:
         row_dict = self.RowToDict(row)
         col_names = [col['name'] for col in self._columns]
         # define vars to be passed as params
-        sess_id : str
+        sess_id : int
         app_id  : str
         time    : datetime
         ename   : str
@@ -111,7 +111,7 @@ class TableSchema:
             col_name = self._map['event_data']
             params['event_data'] = TableSchema._parse(row_dict[col_name], self._columns[col_names.index(col_name)])
         # third, find out which of our params were in the map, and assign vals to our vars.
-        sess_id = params['session_id']
+        sess_id = int(params['session_id'])
         app_id  = params['app_id']
         # TODO: go bac to isostring function; need 0-padding on ms first, though
         time    = datetime.strptime(params['timestamp'], "%Y-%m-%dT%H:%M:%S.%f")
