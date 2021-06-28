@@ -3,7 +3,7 @@ name: Magnet Exporter CI Test
 on:
   push:
     paths:
-    - 'games/JOWILDER/**'
+    - 'games/MAGNET/**'
     - '.github/workflows/magnet.yml'
     - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
