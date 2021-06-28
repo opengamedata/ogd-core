@@ -26,6 +26,8 @@ class BigQueryInterface(DataInterface):
                 print('Using actions')
                 print("GOOGLE_APPLICATION_CREDENTIALS" in os.environ)
                 print(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
+                print(os.path.isfile(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]))
+                print(os.path.isfile(os.environ["GOOGLE_APPLICATION_CREDENTIALS"] + ".json"))
                 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.environ["GOOGLE_APPLICATION_CREDENTIALS"] + ".json"
                 self._client = bigquery.Client()
             else:
