@@ -202,16 +202,12 @@ class SQL:
         start = datetime.now()
         cursor.execute(query)
         time_delta = datetime.now()-start
-        num_min = math.floor(time_delta.total_seconds()/60)
-        num_sec = time_delta.total_seconds() % 60
-        Logger.toStdOut(f"Query execution completed, time to execute: {num_min:d} min, {num_sec:.3f} sec", logging.DEBUG)
+        Logger.toStdOut(f"Query execution completed, time to execute: {time_delta}", logging.DEBUG)
         # second, we get the results.
         if fetch_results:
             result = cursor.fetchall()
             time_delta = datetime.now()-start
-            num_min = math.floor(time_delta.total_seconds()/60)
-            num_sec = time_delta.total_seconds() % 60
-            Logger.toStdOut(f"Query fetch completed, total query time:    {num_min:d} min, {num_sec:.3f} sec to get {len(result) if result is not None else 0:d} rows", logging.DEBUG)
+            Logger.toStdOut(f"Query fetch completed, total query time:    {time_delta} to get {len(result) if result is not None else 0:d} rows", logging.DEBUG)
         return result
 
     @staticmethod
