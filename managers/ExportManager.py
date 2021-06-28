@@ -108,6 +108,7 @@ class ExportManager:
                 file_manager.WriteMetadataFile(date_range=request._range.GetDateRange(), num_sess=num_sess)
                 file_manager.UpdateFileExportList(date_range=request._range.GetDateRange(), num_sess=num_sess)
                 ret_val = True
+            file_manager.CloseFiles()
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.toStdOut(msg, logging.ERROR)
@@ -138,69 +139,60 @@ class ExportManager:
 
     def _extractToCSVs(self, request:Request, file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema, game_extractor: Union[type,None]):
         ret_val = -1
-        try:
-            sess_processor = evt_processor = None
-            if request._files.sessions and game_extractor is not None:
-                if game_extractor is not None:
-                    sess_processor = SessionProcessor(ExtractorClass=game_extractor, table_schema=table_schema,
-                                        game_schema=game_schema, sessions_csv_file=file_manager.GetSessionsFile())
-                    sess_processor.WriteSessionCSVHeader()
-                else:
-                    utils.Logger.Log("Could not export sessions, no game extractor given!", logging.ERROR)
-            if request._files.events:
-                evt_processor = EventProcessor(table_schema=table_schema, game_schema=game_schema,
-                                    events_csv_file=file_manager.GetEventsFile())
-                evt_processor.WriteEventsCSVHeader()
+        sess_processor = evt_processor = None
+        if request._files.sessions and game_extractor is not None:
+            if game_extractor is not None:
+                sess_processor = SessionProcessor(ExtractorClass=game_extractor, table_schema=table_schema,
+                                    game_schema=game_schema, sessions_csv_file=file_manager.GetSessionsFile())
+                sess_processor.WriteSessionCSVHeader()
+            else:
+                utils.Logger.Log("Could not export sessions, no game extractor given!", logging.ERROR)
+        if request._files.events:
+            evt_processor = EventProcessor(table_schema=table_schema, game_schema=game_schema,
+                                events_csv_file=file_manager.GetEventsFile())
+            evt_processor.WriteEventsCSVHeader()
 
-            sess_ids = request.RetrieveSessionIDs()
-            if sess_ids is None:
-                sess_ids = []
-            num_sess = len(sess_ids)
-            utils.Logger.toStdOut(f"Preparing to process {num_sess} sessions.", logging.INFO)
-            slice_size = self._settings["BATCH_SIZE"]
-            session_slices = [[sess_ids[i] for i in
-                            range( j*slice_size, min((j+1)*slice_size, num_sess) )] for j in
-                            range( 0, math.ceil(num_sess / slice_size) )]
-            for i, next_slice in enumerate(session_slices):
-                start = datetime.now()
-                next_data_set = request._interface.RowsFromIDs(next_slice)
-                try:
-                    # now, we process each row.
-                    for row in next_data_set:
-                        next_event = table_schema.RowToEvent(row)
-                        #self._processRow(event=next_event, sess_ids=sess_ids, sess_processor=sess_processor, evt_processor=evt_processor)
-                        if next_event.session_id in sess_ids:
-                            # we check if there's an instance given, if not we obviously skip.
-                            if sess_processor is not None:
-                                sess_processor.ProcessRow(next_event)
-                            if evt_processor is not None:
-                                evt_processor.ProcessRow(row)
-                        else:
-                            utils.Logger.toFile(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
-                    # after processing all rows for each slice, write out the session data and reset for next slice.
-                    if request._files.sessions:
-                        sess_processor.calculateAggregateFeatures()
-                        sess_processor.WriteSessionCSVLines()
-                        sess_processor.ClearLines()
-                    if request._files.events:
-                        evt_processor.WriteEventsCSVLines()
-                        evt_processor.ClearLines()
-                except Exception as err:
-                    msg = f"Error while processing slice {i} of {len(session_slices)}"
-                    raise err
-                else:
-                    time_delta = datetime.now() - start
-                    num_min = math.floor(time_delta.total_seconds()/60)
-                    num_sec = time_delta.total_seconds() % 60
-                    num_events = len(next_data_set) if next_data_set is not None else 0
-                    utils.Logger.Log(f"Processing time for slice [{i+1}/{len(session_slices)}]: {num_min} min, {num_sec:.3f} sec to handle {num_events} events", logging.INFO)
-            ret_val = num_sess
-        except Exception as err:
-            msg = f"{type(err)} {str(err)}"
-            utils.Logger.Log(msg, logging.ERROR)
-            #traceback.print_tb(err.__traceback__)
-            raise err
-        finally:
-            # Save out all the files.
-            file_manager.CloseFiles()
-            return ret_val
+        sess_ids = request.RetrieveSessionIDs()
+        if sess_ids is None:
+            sess_ids = []
+        num_sess = len(sess_ids)
+        utils.Logger.toStdOut(f"Preparing to process {num_sess} sessions.", logging.INFO)
+        slice_size = self._settings["BATCH_SIZE"]
+        session_slices = [[sess_ids[i] for i in
+                        range( j*slice_size, min((j+1)*slice_size, num_sess) )] for j in
+                        range( 0, math.ceil(num_sess / slice_size) )]
+        for i, next_slice in enumerate(session_slices):
+            start = datetime.now()
+            next_data_set = request._interface.RowsFromIDs(next_slice)
+            try:
+                # now, we process each row.
+                for row in next_data_set:
+                    next_event = table_schema.RowToEvent(row)
+                    #self._processRow(event=next_event, sess_ids=sess_ids, sess_processor=sess_processor, evt_processor=evt_processor)
+                    if next_event.session_id in sess_ids:
+                        # we check if there's an instance given, if not we obviously skip.
+                        if sess_processor is not None:
+                            sess_processor.ProcessRow(next_event)
+                        if evt_processor is not None:
+                            evt_processor.ProcessRow(row)
+                    else:
+                        utils.Logger.toFile(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
+                # after processing all rows for each slice, write out the session data and reset for next slice.
+                if request._files.sessions and sess_processor is not None:
+                    sess_processor.calculateAggregateFeatures()
+                    sess_processor.WriteSessionCSVLines()
+                    sess_processor.ClearLines()
+                if request._files.events and evt_processor is not None:
+                    evt_processor.WriteEventsCSVLines()
+                    evt_processor.ClearLines()
+            except Exception as err:
+                msg = f"Error while processing slice {i} of {len(session_slices)}"
+                raise err
+            else:
+                time_delta = datetime.now() - start
+                num_min = math.floor(time_delta.total_seconds()/60)
+                num_sec = time_delta.total_seconds() % 60
+                num_events = len(next_data_set) if next_data_set is not None else 0
+                utils.Logger.Log(f"Processing time for slice [{i+1}/{len(session_slices)}]: {num_min} min, {num_sec:.3f} sec to handle {num_events} events", logging.INFO)
+        ret_val = num_sess
+        return ret_val
