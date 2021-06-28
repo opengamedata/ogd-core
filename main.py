@@ -88,7 +88,7 @@ def getDateRange(args, game_id:str) -> Tuple[datetime, datetime]:
         start_date = start_date.replace(hour=0, minute=0, second=0)
         end_date   = datetime.strptime(args[4], "%m/%d/%Y") if num_args > 4 else today
         end_date = end_date.replace(hour=23, minute=59, second=59)
-        Logger.Log(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.DEBUG)
+        Logger.Log(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.INFO)
     return (start_date, end_date)
 
 ## Function to handle execution of export code. This is the main intended use of
@@ -143,7 +143,7 @@ def runExport(events:bool = False, features:bool = False):
         minutes = math.floor(time_taken.total_seconds()/60)
         seconds = time_taken.total_seconds() % 60
         Logger.Log(f"Total time taken: {minutes} min, {seconds} sec")
-    Logger.Log(f"Done with {game_name}.", logging.DEBUG)
+    Logger.Log(f"Done with {game_name}.", logging.INFO)
 
 ## Function to print out info on a game from the game's schema.
 #  This does a similar function to writeReadme, but is limited to the CSV
