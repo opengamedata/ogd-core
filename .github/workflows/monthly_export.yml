@@ -19,6 +19,7 @@ jobs:
 
     # Steps to set up for and execute an export
     steps:
+    - uses: actions/checkout@v2
     - name: Get OpenConnect
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
@@ -27,7 +28,8 @@ jobs:
       run: |
         sudo apt-get -q install python3.8
         sudo apt-get -q install python3.8-dev
-    - uses: actions/checkout@v2
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
     # - name: Fail the thing right now, if VPN conn is bad
     #   run: |
     #     mkdir -p ~/.ssh

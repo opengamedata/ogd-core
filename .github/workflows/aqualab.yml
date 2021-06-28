@@ -5,6 +5,7 @@ jobs:
   test_connect:
     runs-on: ubuntu-18.04
     steps:
+    - uses: actions/checkout@v2
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@master
       with:
@@ -15,6 +16,8 @@ jobs:
       run: |
         sudo apt-get -q install python3.8
         sudo apt-get -q install python3.8-dev
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
     - name: Use gcloud CLI
       run: |
         gcloud config set project aqualab-57f88

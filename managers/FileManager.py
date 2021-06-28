@@ -1,3 +1,4 @@
+import abc
 import git
 import json
 import logging
@@ -7,10 +8,10 @@ import traceback
 import typing
 import zipfile
 from datetime import datetime
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Union
 ## import local files
 import utils
-from Request import *
+from managers.Request import Request, ExporterFiles, ExporterRange
 
 class FileManager(abc.ABC):
     def __init__(self, exporter_files: ExporterFiles, game_id, data_dir: str, date_range: Dict[str,datetime]):

@@ -25,7 +25,7 @@ from managers.SessionProcessor import SessionProcessor
 from models.Model import ModelInputType
 # from models.Model import *
 from realtime.ModelManager import ModelManager
-from Request import ExporterFiles, ExporterRange, Request
+from managers.Request import Request, ExporterFiles, ExporterRange
 from schemas.GameSchema import GameSchema
 
 ## Class to handle API calls for the realtime page.
