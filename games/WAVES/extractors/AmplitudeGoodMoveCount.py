@@ -1,13 +1,22 @@
+from schemas import Event
 import typing
-from GameTable import GameTable
-from WaveFeature import WaveFeature
+from typing import Union
+# local imports
+from extractors.Feature import Feature
+from schemas.Event import Event
 
-class TotalSliderMoves(WaveFeature):
-    def __init__(self, game_table: GameTable, accepted_events: typing.List[str], min_data_version:int=-math.inf, max_data_version:int=math.inf):
-        WaveFeature.__init__(self, game_table, accepted_events, min_data_version, max_data_version)
+class AmplitudeGoodMoveCount(Feature):
+    def __init__(self):
+        min_data_version = None
+        max_data_version = None
+        Feature.__init__(self, min_data_version, max_data_version)
         self._count = 0
 
     def CalculateFinalValues(self) -> typing.Tuple:
-        return (None)
+        return (self._count)
 
-    def _extractFromRow(self, row: typing.List):
+    def _extractFromEvent(self, event:Event):
+        self._count += 1
+        if event.event_data['slider'] == 'Amplitude':
+            if event.event_data['closeness_end'] > event.event_data['closeness_start']:
+                self._count += 1
