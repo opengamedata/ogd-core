@@ -41,6 +41,7 @@ jobs:
 
     # Steps to set up for and execute an export
     steps:
+    - uses: actions/checkout@v2
     - name: Get OpenConnect
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
@@ -51,7 +52,6 @@ jobs:
         sudo apt-get -q install python3.8-dev
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
-    - uses: actions/checkout@v2
     - name: Do Export of Month
       if: github.event.inputs.monthly == 'true'
       uses: ./.github/actions/export_custom_month
