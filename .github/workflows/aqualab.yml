@@ -37,8 +37,8 @@ jobs:
     #  with:
     #    path: ./data/AQUALAB/*.zip
     - name: Upload files to opengamedata via scp
-        run: |
-          mkdir -p ~/.ssh
-          echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
-          chmod 600 ./key.txt
-          scp -o StrictHostKeyChecking=no -i ./key.txt ./data/AQUALAB/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/AQUALAB/
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
+        scp -o StrictHostKeyChecking=no -i ./key.txt ./data/AQUALAB/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/AQUALAB/
