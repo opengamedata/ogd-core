@@ -10,11 +10,11 @@ runs:
   if: contains(${{ inputs.game }}, "AQUALAB")
   steps:
     - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@master
-        with:
-          project_id: ${{ secrets.AQUALAB_GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: true
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        project_id: ${{ secrets.AQUALAB_GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
     - name: Set up Python libraries
       run: |
         python3.8 -m pip install --upgrade pip
