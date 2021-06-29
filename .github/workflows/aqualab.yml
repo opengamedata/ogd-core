@@ -45,5 +45,5 @@ jobs:
         mkdir -p ~/.ssh
         echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
-        ssh ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "mkdir /var/www/opengamedata/data/AQUALAB/"
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "mkdir /var/www/opengamedata/data/AQUALAB/"
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/AQUALAB/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/AQUALAB/
