@@ -27,7 +27,4 @@ runs:
       shell: bash
     - name: Run export
       run: python3.8 main.py export AQUALAB 5/6/2021 6/6/2021
-    - name: Upload zips as artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        path: ./data/AQUALAB/*.zip
+      shell: bash

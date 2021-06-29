@@ -22,6 +22,10 @@ jobs:
       with:
         game: "AQUALAB"
         db: ${{secrets.AQUALAB_DB_NAME}}
+    - name: Upload zips as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./data/AQUALAB/*.zip
     #- name: Get OpenConnect
     #  run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get -q update && sudo apt-get -q install openconnect
     #- name: Connect VPN
