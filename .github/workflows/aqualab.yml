@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        game: ${{ FromJson(github.events.inputs.game) }}
+        game: ${{ FromJson(github.event.inputs.game) }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up Cloud SDK
