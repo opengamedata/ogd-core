@@ -27,7 +27,7 @@ jobs:
       run: cp config/config.py.template config/config.py 
       shell: bash
     - name: Set database name
-      run: sed -i 's/project_id.dataset_id/${{inputs.db}}/g' config/config.py
+      run: sed -i 's/project_id.dataset_id/${{secrets.AQUALAB_DB_NAME}}/g' config/config.py
       shell: bash
     - name: Run export
       run: python3.8 main.py export AQUALAB 5/6/2021 6/6/2021
