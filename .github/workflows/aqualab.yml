@@ -1,13 +1,21 @@
 name: Aqualab BigQuery Test
 on:
-  push:
   workflow_dispatch:
+    inputs:
+      game:
+        description: ""
+        required: true
+        default: ""
 jobs:
   test_connect:
     runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        game: ${{ FromJson(github.events.inputs.game) }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up Cloud SDK
+      if: github.event.inputs.game == 'AQUALAB'
       uses: google-github-actions/setup-gcloud@master
       with:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
