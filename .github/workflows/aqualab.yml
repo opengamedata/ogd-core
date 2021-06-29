@@ -36,6 +36,10 @@ jobs:
     #  uses: actions/upload-artifact@v2
     #  with:
     #    path: ./data/AQUALAB/*.zip
+    - name: Get OpenConnect
+      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get -q update && sudo apt-get -q install openconnect
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Upload files to opengamedata via scp
       run: |
         mkdir -p ~/.ssh
