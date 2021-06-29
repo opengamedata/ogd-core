@@ -7,9 +7,9 @@ inputs:
    default: 'Crystal'
 runs:
   using: "composite"
-  if: contains(${{ inputs.game }}, "AQUALAB")
   steps:
     - name: Set up Cloud SDK
+      if: contains(${{ inputs.game }}, "AQUALAB")
       uses: google-github-actions/setup-gcloud@master
       with:
         project_id: ${{ secrets.AQUALAB_GCP_PROJECT_ID }}
