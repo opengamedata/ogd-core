@@ -5,13 +5,10 @@ on:
       game:
         description: "Game name"
         required: true
-        default: "AQUA"
+        default: "AQUALAB"
 jobs:
   test_connect:
     runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        game: ${{ github.event.inputs.game }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up Cloud SDK
