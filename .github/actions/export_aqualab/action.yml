@@ -5,16 +5,13 @@ inputs:
    description: "The game with data to export."
    required: true
    default: 'Crystal'
+  db:
+    description: "game database"
+    required: true
+    default: ""
 runs:
   using: "composite"
   steps:
-    - name: Set up Cloud SDK
-      if: contains(${{ inputs.game }}, "AQUALAB")
-      uses: google-github-actions/setup-gcloud@master
-      with:
-        project_id: ${{ secrets.AQUALAB_GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        export_default_credentials: true
     - name: Set up Python libraries
       run: |
         python3.8 -m pip install --upgrade pip
@@ -26,7 +23,7 @@ runs:
       run: cp config/config.py.template config/config.py 
       shell: bash
     - name: Set database name
-      run: sed -i 's/project_id.dataset_id/${{secrets.AQUALAB_DB_NAME}}/g' config/config.py
+      run: sed -i 's/project_id.dataset_id/${{inputs.db}}/g' config/config.py
       shell: bash
     - name: Run export
       run: python3.8 main.py export AQUALAB 5/6/2021 6/6/2021
