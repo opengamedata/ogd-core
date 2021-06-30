@@ -20,7 +20,7 @@ from math import sqrt
 from typing import Any, Dict, List, Union
 ## import local files
 import utils
-from extractors.Extractor import Extractor
+from extractors.LegacyExtractor import LegacyExtractor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
@@ -29,7 +29,7 @@ from schemas.TableSchema import TableSchema
 
 ## @class LakelandExtractor
 #  Extractor subclass for extracting features from Lakeland game data.
-class LakelandExtractor(Extractor):
+class LakelandExtractor(LegacyExtractor):
     _SESS_PREFIX = 'sess_'
     _WINDOW_PREFIX = ''
     _TUTORIAL_MODE = [

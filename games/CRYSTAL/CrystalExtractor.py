@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Any, Dict
 ## import local files
 import utils
-from extractors.Extractor import Extractor
+from extractors.LegacyExtractor import LegacyExtractor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
@@ -15,7 +15,7 @@ from schemas.TableSchema import TableSchema
 
 ## @class CrystalExtractor
 #  Extractor subclass for extracting features from Crystal game data.
-class CrystalExtractor(Extractor):
+class CrystalExtractor(LegacyExtractor):
     ## Constructor for the CrystalExtractor class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.

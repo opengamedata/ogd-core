@@ -6,14 +6,14 @@ from datetime import datetime
 from typing import Any, Dict
 ## import local files
 import utils
-from extractors.Extractor import Extractor
+from extractors.LegacyExtractor import LegacyExtractor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 
 ## @class MagnetExtractor
 #  Extractor subclass for extracting features from Magnet game data.
-class MagnetExtractor(Extractor):
+class MagnetExtractor(LegacyExtractor):
     ## Constructor for the MagnetExtractor class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.
