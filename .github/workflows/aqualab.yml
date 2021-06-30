@@ -29,9 +29,9 @@ jobs:
     - name: Set database name
       run: sed -i 's/project_id.dataset_id/${{secrets.AQUALAB_DB_NAME}}/g' config/config.py
       shell: bash
-    - name: Run export
-      run: python3.8 main.py export AQUALAB 5/6/2021 6/6/2021
-      shell: bash
+    #- name: Run export
+    #  run: python3.8 main.py export AQUALAB 5/6/2021 6/6/2021
+    #  shell: bash
     #- name: Upload zips as artifacts
     #  uses: actions/upload-artifact@v2
     #  with:
@@ -40,9 +40,16 @@ jobs:
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    - name: Upload files to opengamedata via scp
+    #- name: Upload files to opengamedata via scp
+    #  run: |
+    #    mkdir -p ~/.ssh
+    #    echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+    #    chmod 600 ./key.txt
+    #    scp -o StrictHostKeyChecking=no -i ./key.txt ./data/AQUALAB/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/AQUALAB/
+    - name: Trigger reindex via ssh
+      # run: echo "placeholder for reindexing!"
       run: |
         mkdir -p ~/.ssh
         echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
-        scp -o StrictHostKeyChecking=no -i ./key.txt ./data/AQUALAB/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/AQUALAB/
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata; pwd; ls; python3 reindexer.py;"
