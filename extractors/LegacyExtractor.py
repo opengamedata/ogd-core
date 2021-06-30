@@ -14,7 +14,7 @@ from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 
-## @class Extractor
+## @class LegacyExtractor
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
@@ -22,7 +22,7 @@ class LegacyExtractor(Extractor):
     ## @var GameSchema _schema
     #  The schema specifying structure of data associated with an extractor.
 
-    ## Base constructor for Extractor classes.
+    ## Base constructor for LegacyExtractor classes.
     #  The constructor sets an extractor's session id and range of levels,
     #  as well as initializing the features dictionary and list of played levels.
     #
@@ -32,8 +32,8 @@ class LegacyExtractor(Extractor):
     def __init__(self, session_id: int, game_schema: GameSchema):
         self._session_id  : int         = session_id
         self._game_schema : GameSchema  = game_schema
-        # self._levels      : List[int]   = []
-        # self._sequences   : List        = []
+        self._levels      : List[int]   = []
+        self._sequences   : List        = []
         self._features    : LegacyExtractor.LegacySessionFeatures = LegacyExtractor.LegacySessionFeatures(game_schema=game_schema)
 
     ## Static function to print column headers to a file.
@@ -46,7 +46,7 @@ class LegacyExtractor(Extractor):
     #  @param file        An open csv file to which we will write column headers.
     @staticmethod
     def writeCSVHeader(game_schema: GameSchema, file: typing.IO[str]) -> None:
-        columns = Extractor.getFeatureNames(game_schema=game_schema)
+        columns = LegacyExtractor.getFeatureNames(game_schema=game_schema)
         file.write(",".join(columns))
         file.write("\n")
 
@@ -63,7 +63,7 @@ class LegacyExtractor(Extractor):
         return columns
 
     ## Function to print data from an extractor to file.
-    #  This function should be the same across all Extractor subtypes.
+    #  This function should be the same across all LegacyExtractor subtypes.
     #  Simply prints out each value from the extractor's features dictionary.
     #
     #  @param file        An open csv file to which we will write column headers.
@@ -141,7 +141,7 @@ class LegacyExtractor(Extractor):
         pass
 
     ## @class LegacySessionFeatures
-    #  Private Extractor class to track feature data.
+    #  Private LegacyExtractor class to track feature data.
     #  This class provides several functions to manage data, which should make
     #  the actual extractor code easier to read/write, since there is less need
     #  to understand the structure of feature data.
@@ -174,9 +174,9 @@ class LegacyExtractor(Extractor):
             features.update({f:0 for f in game_schema.aggregate_features().keys()})
             return features
 
-        ## Getter function to retrieve a list of all features in the SessionFeatures dictionary.
+        ## Getter function to retrieve a list of all features in the LegacySessionFeatures dictionary.
         #
-        #  @return The keys in the SessionFeatures dictionary.
+        #  @return The keys in the LegacySessionFeatures dictionary.
         def featureList(self):
             return self.features.keys()
 
@@ -309,19 +309,19 @@ class LegacyExtractor(Extractor):
             return True
 
     ## Simple helper class to track a sequence of events, based on move types.
-    # class Sequence:
-    #     def __init__(self, end_function: typing.Callable[[List[Tuple]], None], end_event_type, end_event_count:int=1):
-    #         self._fnEnd          = end_function
-    #         self._end_event_type  = end_event_type
-    #         self._end_event_count = 0               # current count of end events
-    #         self._end_at_count    = end_event_count # number of end events to count before ending the sequence.
-    #         self._events          = []
+    class Sequence:
+        def __init__(self, end_function: typing.Callable[[List[Tuple]], None], end_event_type, end_event_count:int=1):
+            self._fnEnd          = end_function
+            self._end_event_type  = end_event_type
+            self._end_event_count = 0               # current count of end events
+            self._end_at_count    = end_event_count # number of end events to count before ending the sequence.
+            self._events          = []
 
-    #     def RegisterEvent(self, event_type, event_data) -> None:
-    #         self._events.append((event_type, event_data))
-    #         if event_type == self._end_event_type:
-    #             self._end_event_count += 1
-    #         if self._end_event_count == self._end_at_count:
-    #             self._fnEnd(self._events)
+        def RegisterEvent(self, event_type, event_data) -> None:
+            self._events.append((event_type, event_data))
+            if event_type == self._end_event_type:
+                self._end_event_count += 1
+            if self._end_event_count == self._end_at_count:
+                self._fnEnd(self._events)
 
 
