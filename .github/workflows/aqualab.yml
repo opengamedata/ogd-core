@@ -1,4 +1,4 @@
-name: Aqualab BigQuery Test
+name: Aqualab BigQuery Upload
 on:
   workflow_dispatch:
 jobs:
@@ -9,9 +9,17 @@ jobs:
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@master
       with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.AQUALAB_GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.AQUALAB_GCP_SA_KEY }}
         export_default_credentials: true
+    - name: Get export month
+      run: |
+        MONTH=$(date -d "$(date +%Y-%m-01) -1 month" +'%m')
+        YEAR=$(date -d "$(date +%Y-%m-01) -1 month" +'%Y')
+        MONTH_YEAR=$MONTH/$YEAR
+        echo "MONTH_YEAR=" $MONTH_YEAR >> $GITHUB_ENV
+        echo exporting $MONTH_YEAR
+      shell: bash
     - name: Get correct Python
       run: |
         sudo apt-get -q install python3.8
@@ -29,25 +37,31 @@ jobs:
     - name: Set database name
       run: sed -i 's/project_id.dataset_id/${{secrets.AQUALAB_DB_NAME}}/g' config/config.py
       shell: bash
-    #- name: Run export
-    #  run: python3.8 main.py export AQUALAB 5/6/2021 6/6/2021
-    #  shell: bash
-    #- name: Upload zips as artifacts
-    #  uses: actions/upload-artifact@v2
-    #  with:
-    #    path: ./data/AQUALAB/*.zip
+    - name: Run export
+      run: python3.8 main.py export AQUALAB ${{env.MONTH_YEAR}} --monthly
+      shell: bash
     - name: Get OpenConnect
       run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    #- name: Upload files to opengamedata via scp
-    #  run: |
-    #    mkdir -p ~/.ssh
-    #    echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
-    #    chmod 600 ./key.txt
-    #    scp -o StrictHostKeyChecking=no -i ./key.txt ./data/AQUALAB/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/AQUALAB/
+    - name: Upload files to opengamedata via scp
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
+        scp -o StrictHostKeyChecking=no -i ./key.txt ./data/AQUALAB/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/AQUALAB/
+
+  trigger_reindex:
+    name: Reindex OpenGameData Files
+    runs-on: ubuntu-18.04
+    if: always()
+    needs: export_data
+    steps:
+    - name: Get OpenConnect
+      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Trigger reindex via ssh
-      # run: echo "placeholder for reindexing!"
       run: |
         mkdir -p ~/.ssh
         echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
