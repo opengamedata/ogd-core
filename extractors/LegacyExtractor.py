@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Tuple, Union
 import utils
 from extractors.Extractor import Extractor
 from extractors.Feature import Feature
+from extractors.LegacyFeature import LegacyFeature
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
@@ -35,6 +36,9 @@ class LegacyExtractor(Extractor):
         self._levels      : List[int]   = []
         self._sequences   : List        = []
         self._features    : LegacyExtractor.LegacySessionFeatures = LegacyExtractor.LegacySessionFeatures(game_schema=game_schema)
+
+    def _loadFeature(self, feature_args: Dict[str, Any]) -> Feature:
+        return LegacyFeature()
 
     ## Static function to print column headers to a file.
     #  We first create a feature dictionary, then essentially write out each key,
@@ -147,7 +151,7 @@ class LegacyExtractor(Extractor):
     #  to understand the structure of feature data.
     class LegacySessionFeatures:
         def __init__(self, game_schema: GameSchema):
-            self.perlevels: List[Feature] = list(game_schema.perlevel_features().keys())
+            self.perlevels: List[str] = list(game_schema.perlevel_features().keys())
             self.features = LegacyExtractor.LegacySessionFeatures.generateFeatureDict(game_schema)
 
         @staticmethod
@@ -164,8 +168,8 @@ class LegacyExtractor(Extractor):
             # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
             # which in turn maps each level to a value and prefix.
             perlevels = game_schema.perlevel_features()
-            level_range = range(game_schema.min_level   if game_schema.min_level is not None else 0,
-                                game_schema.max_level+1 if game_schema.max_level is not None else 1)
+            level_range = range(game_schema._min_level   if game_schema._min_level is not None else 0,
+                                game_schema._max_level+1 if game_schema._max_level is not None else 1)
             features : Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]] = {f:{lvl:{"val":None, "prefix":"lvl"} for lvl in level_range } for f in perlevels.keys()}
             # next, do something similar for other per-custom-count features.
             percounts = game_schema.percount_features()
