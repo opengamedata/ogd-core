@@ -26,7 +26,9 @@ class GameSchema:
         """
         # define instance vars
         self._schema:       Dict = {}
-        self._feature_list: Union[List,None] = None
+        self._feature_list: Union[List[str],None] = None
+        self._min_level:    Union[str,int] = 0
+        self._max_level:    Union[str,int] = 1
         # set instance vars
         if not schema_name.lower().endswith(".json"):
             schema_name += ".json"
@@ -34,14 +36,22 @@ class GameSchema:
             schema_path = f"games/{schema_name.split('.')[0]}"
         self._schema = utils.loadJSONFile(schema_name, schema_path)
         if self._schema is None:
-            utils.Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
+            utils.Logger.Log(f"Could not find game schema at {schema_path}{schema_name}", logging.ERROR)
+        elif "features" in self._schema.keys():
+            self._feature_list = []
+            if "perlevel" in self._schema["features"]:
+                self._feature_list += self._schema["features"]["perlevel"].keys()
+            if "per_custom_count" in self._schema["features"]:
+                self._feature_list += self._schema["features"]["per_custom_count"].keys()
+            if "aggregate" in self._schema["features"]:
+                self._feature_list += self._schema["features"]["aggregate"].keys()
         else:
-            self._feature_list = list(self._schema["features"]["perlevel"].keys()) \
-                               + list(self._schema["features"]["per_custom_count"].keys()) \
-                               + list(self._schema["features"]["aggregate"].keys())
-        # lastly, get max and min levels, and get the session ids.
-        self.min_level: Union[int,None] = self.level_range()['min']
-        self.max_level: Union[int,None] = self.level_range()['max']
+            self._schema["features"] = {}
+            utils.Logger.Log(f"{schema_name} game schema does not define any features.", logging.WARN)
+        # lastly, get max and min levels.
+        if "level_range" in self._schema.keys():
+            self._min_level = self._schema["level_range"]['min']
+            self._max_level = self._schema["level_range"]['max']
 
     def __getitem__(self, key) -> Any:
         return self._schema[key]
@@ -67,12 +77,12 @@ class GameSchema:
 
     ## Function to retrieve the dictionary of per-level features.
     def perlevel_features(self) -> Dict[str,Any]:
-        return self["features"]["perlevel"]
+        return self["features"]["perlevel"] if "perlevel" in self["features"].keys() else {}
 
     ## Function to retrieve the dictionary of per-custom-count features.
     def percount_features(self) -> Dict[str,Any]:
-        return self["features"]["per_custom_count"]
+        return self["features"]["per_custom_count"] if "per_custom_count" in self["features"].keys() else {}
 
     ## Function to retrieve the dictionary of aggregate features.
     def aggregate_features(self) -> Dict[str,Any]:
-        return self["features"]["aggregate"]
+        return self["features"]["aggregate"] if "aggregate" in self["features"].keys() else {}
