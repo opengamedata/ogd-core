@@ -1,11 +1,11 @@
 # global imports
+from mysql.connector import connect, connection, cursor
 import http
 import logging
 import math
 import sshtunnel
 import traceback
 from datetime import datetime
-from mysql.connector import connect, connection, cursor
 from typing import Any, Dict, List, Tuple, Union
 # local imports
 from interfaces.DataInterface import DataInterface
