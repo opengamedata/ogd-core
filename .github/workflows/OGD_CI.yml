@@ -5,7 +5,10 @@ on:
   push:
     paths:
     - 'managers/**'
-    - 'schemas/Schema.py'
+    - 'interfaces/**'
+    - 'schemas/Event.py'
+    - 'schemas/GameSchema.py'
+    - 'schemas/TableSchema.py'
     - 'main.py'
     - 'GameTable.py'
     - 'Request.py'
