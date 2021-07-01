@@ -1,8 +1,7 @@
 ## import standard libraries
 import abc
-import math
 import typing
-from typing import List, Union
+from typing import Any, Dict, List, Union
 # Local imports
 from schemas.Event import Event
 
@@ -13,9 +12,14 @@ from schemas.Event import Event
 #  If the model works on features from session data, it should calculate one result for each row (each row being a session).
 #  If the model works on a raw list of recent events, it should calculate a single result (each row being an event).
 class Feature(abc.ABC):
-    def __init__(self, min_data_version:Union[str,None]=None, max_data_version:Union[str,None]=None):
-        self._min_data_version = min_data_version
-        self._max_data_version = max_data_version
+    def __init__(self, name:str, description:str, min_version:Union[str,None]=None, max_version:Union[str,None]=None):
+        self._name = name
+        self._desc = description
+        self._min_data_version = min_version
+        self._max_data_version = max_version
+
+    def __str__(self):
+        return f"{self._name} : {self._desc}"
 
     ## Abstract function to get a list of event types the Feature wants.
     @abc.abstractmethod

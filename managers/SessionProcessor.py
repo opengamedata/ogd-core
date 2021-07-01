@@ -48,7 +48,7 @@ class SessionProcessor:
                 self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_id=self._game_schema, session_file=self._sessions_file)
             else:
                 self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_schema=self._game_schema)
-        self._session_extractors[event.session_id].extractFromRow(event, self._table_schema)
+        self._session_extractors[event.session_id].ExtractFromRow(event, self._table_schema)
 
     ##  Function to empty the list of lines stored by the SessionProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid

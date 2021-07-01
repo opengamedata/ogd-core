@@ -37,7 +37,7 @@ class LegacyExtractor(Extractor):
         self._sequences   : List        = []
         self._features    : LegacyExtractor.LegacySessionFeatures = LegacyExtractor.LegacySessionFeatures(game_schema=game_schema)
 
-    def _loadFeature(self, feature_args: Dict[str, Any]) -> Feature:
+    def _loadFeature(self, name:str, feature_args:Dict[str,Any]) -> Feature:
         return LegacyFeature()
 
     ## Static function to print column headers to a file.
@@ -49,13 +49,13 @@ class LegacyExtractor(Extractor):
     #                     structured.
     #  @param file        An open csv file to which we will write column headers.
     @staticmethod
-    def writeCSVHeader(game_schema: GameSchema, file: typing.IO[str]) -> None:
-        columns = LegacyExtractor.getFeatureNames(game_schema=game_schema)
+    def WriteCSVHeader(game_schema: GameSchema, file: typing.IO[str]) -> None:
+        columns = LegacyExtractor.GetFeatureNames(game_schema=game_schema)
         file.write(",".join(columns))
         file.write("\n")
 
     @staticmethod
-    def getFeatureNames(game_schema: GameSchema) -> List[str]:
+    def GetFeatureNames(game_schema: GameSchema) -> List[str]:
         columns = []
         features = LegacyExtractor.LegacySessionFeatures.generateFeatureDict(game_schema)
         for feature_name,feature_content in features.items():
@@ -71,7 +71,7 @@ class LegacyExtractor(Extractor):
     #  Simply prints out each value from the extractor's features dictionary.
     #
     #  @param file        An open csv file to which we will write column headers.
-    def writeCurrentFeatures(self, file: typing.IO[str]) -> None:
+    def WriteCurrentFeatures(self, file: typing.IO[str]) -> None:
     # TODO: It looks like I might be assuming that dictionaries always have same order here.
     # May need to revisit that issue. I mean, it should be fine because Python won't just go
     # and change order for no reason, but still...
@@ -108,9 +108,9 @@ class LegacyExtractor(Extractor):
                 column_vals.append(_format(self._features.getValByName(key)))
         return column_vals
 
-    def extractFromRow(self, event:Event, table_schema:TableSchema) -> None:
+    def ExtractFromRow(self, event:Event, table_schema:TableSchema) -> None:
         self.extractSequencesFromRow(event=event, table_schema=table_schema)
-        self.extractFeaturesFromEvent(event=event, table_schema=table_schema)
+        self._extractFeaturesFromEvent(event=event, table_schema=table_schema)
 
     def extractSequencesFromRow(self, event:Event, table_schema:TableSchema) -> None:
         for sequence in self._sequences:
@@ -127,7 +127,7 @@ class LegacyExtractor(Extractor):
         return None
 
     @abc.abstractmethod
-    def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         """Abstract declaration of a function to perform extraction of features from a row.
 
         :param event: [description]
@@ -141,7 +141,7 @@ class LegacyExtractor(Extractor):
     ## Abstract declaration of a function to perform calculation of aggregate features
     #  from existing per-level/per-custom-count features.
     @abc.abstractmethod
-    def calculateAggregateFeatures(self):
+    def _calculateAggregateFeatures(self):
         pass
 
     ## @class LegacySessionFeatures

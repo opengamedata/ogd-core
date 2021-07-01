@@ -137,7 +137,7 @@ class RTServer:
                         complex_data_parsed["event_custom"] = row[game_table.event_index]
                     row = list(row)
                     row[game_table.complex_data_index] = complex_data_parsed
-                    extractor.extractFromRow(event=row, table_schema=game_table)
+                    extractor.ExtractFromRow(event=row, table_schema=game_table)
                 extractor.calculateAggregateFeatures()
                 utils.Logger.toStdOut(f"Time to process rows: {datetime.now() - start_time}", logging.DEBUG)
 

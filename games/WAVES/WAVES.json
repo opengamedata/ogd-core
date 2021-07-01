@@ -86,231 +86,231 @@
 
     "features": {
         "per_count": {
-            "totalSliderMoves": {
+            "TotalSliderMoves": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE"],
                 "description": "slider moves across a given level [count of 'SLIDER_MOVE_RELEASE' events]"
             },
-            "totalArrowMoves": {
+            "TotalArrowMoves": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["ARROW_MOVE_RELEASE"],
                 "description": "arrow moves across a given level [count of 'ARROW_MOVE_RELEASE' events]"
             },
-            "totalLevelTime": {
+            "TotalLevelTime": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["BEGIN", "COMPLETE"],
                 "description": "time spent on a level [sum of differences in time between 'BEGIN' and 'COMPLETE' event(s)]"
             },
-            "sliderAvgStdDevs": {
+            "SliderAvgStdDevs": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE"],
                 "description": "Average of stdev_val for all slider moves in a level"
             },
-            "totalMoveTypeChanges": {
+            "TotalMoveTypeChanges": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "number of times 'slider' changes across a level"
             },
-            "sliderAvgRange": {
+            "SliderAvgRange": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE"],
                 "description": "difference between max and min values of a slider move, averaged together across a level"
             },
-            "totalResets": {
+            "TotalResets": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["RESET_BTN_PRESS"],
                 "description": "number of times the user pressed the 'reset' button across a level"
             },
-            "totalFails": {
+            "TotalFails": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["FAIL"],
                 "description": "number of 'Fail' events across a level"
             },
-            "totalSkips": {
+            "TotalSkips": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SKIP_BUTTON"],
                 "description": "number of times the player chose to skip the level (only allowed if they already completed the level once)"
             },
-            "menuBtnCount": {
+            "MenuBtnCount": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["MENU_BUTTON"],
                 "description": "number of times the player returned to the main menu. [count of 'MENU_BUTTON' events]"
             },
-            "beginCount": {
+            "BeginCount": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["BEGIN"],
                 "description": "number of times a player 'began' the level. [count of 'BEGIN' events]"
             },
-            "succeedCount": {
+            "SucceedCount": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SUCCEED"],
                 "description": "number of times a 'SUCCEED' event occurs. [count of 'SUCCEED' events]"
             },
-            "completeCount": {
+            "CompleteCount": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["COMPLETE"],
                 "description": "number of times a player 'completed' the level. [count of 'COMPLETE' events]"
             },
-            "completed": {
+            "Completed": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["COMPLETE"],
                 "description": "whether the level was completed or not [bool whether 'COMPLETE' event was found]"
             },
-            "percentAmplitudeMoves": {
+            "PercentAmplitudeMoves": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": [],
                 "description": "percent of total moves that were amplitude adjustments in a level"
             },
-            "percentOffsetMoves": {
+            "PercentOffsetMoves": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "percent of total moves that were offset adjustments in a level"
             },
-            "percentWavelengthMoves": {
+            "PercentWavelengthMoves": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "percent of total moves that were wavelength adjustments in a level"
             },
-            "amplitudeGoodMoveCount": {
+            "AmplitudeGoodMoveCount": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "number of amplitude moves that brought amplitude closer to the correct value"
             },
-            "offsetGoodMoveCount": {
+            "OffsetGoodMoveCount": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "number of offset moves that brought offset closer to the correct value"
             },
-            "wavelengthGoodMoveCount": {
+            "WavelengthGoodMoveCount": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "number of wavelength moves that brought wavelength closer to the correct value"
             },
-            "percentAmplitudeGoodMoves": {
+            "PercentAmplitudeGoodMoves": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "percent of amplitude moves that brought amplitude closer to the correct value"
             },
-            "percentOffsetGoodMoves": {
+            "PercentOffsetGoodMoves": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "percent of wavelength moves that brought wavelength closer to the correct value"
             },
-            "percentWavelengthGoodMoves": {
+            "PercentWavelengthGoodMoves": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "percent of wavelength moves that brought wavelength closer to the correct value"
             },
-            "firstMoveType": {
+            "FirstMoveType": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "A character indicating what type of slider move a player made first. A = Amplitude, W = Wavelength, O = Offset, null = No moves"
             },
-            "closenessSlope": {
+            "ClosenessSlope": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": [],
                 "description": "The slope of the linear regression line of (closeness vs. time (seconds)) for the level"
             },
-            "closenessIntercept": {
+            "ClosenessIntercept": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": [],
                 "description": "The intercept of the linear regression line of (closeness vs. time (seconds)) for the level"
             },
-            "closenessR2": {
+            "ClosenessR2": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": [],
                 "description": "The R^2 of the linear regression line of (closeness vs. time (seconds)) for the level"
             },
-            "rangeSlope": {
+            "RangeSlope": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": [],
                 "description": "The slope of the linear regression line of (range vs. time (seconds)) for the level, where range is the total range of moves (max-min in the case of a slider, abs(begin-end) in case of an arrow)"
             },
-            "rangeIntercept": {
+            "RangeIntercept": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": [],
                 "description": "The intercept of the linear regression line of (range vs. time (seconds)) for the level, where range is the total range of moves (max-min in the case of a slider, abs(begin-end) in case of an arrow)"
             },
-            "rangeR2": {
+            "RangeR2": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": [],
                 "description": "The R^2 of the linear regression line of (range vs. time (seconds)) for the level, where range is the total range of moves (max-min in the case of a slider, abs(begin-end) in case of an arrow)"
             },
-            "questionAnswered" : {
+            "QuestionAnswered" : {
                 "enabled": true,
                 "count" : 4,
                 "prefix": "QA",
                 "events": [],
                 "description" : "The answer the user gave to a given question (or -1 if unanswered)"
             },
-            "questionCorrect"  : {
+            "QuestionCorrect"  : {
                 "enabled": true,
                 "count" : 4,
                 "prefix": "QA",
                 "events": [],
                 "description" : "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"
             },
-            "timeToAnswerMS"   : {
+            "TimeToAnswerMS"   : {
                 "enabled": true,
                 "count" : 4,
                 "prefix": "QA",
@@ -320,57 +320,57 @@
         },
 
         "aggregate":{
-            "sessionID": {
+            "SessionID": {
                 "enabled": true,
                 "events": [],
                 "description":"The player's session ID number for this play session"
             },
-            "persistentSessionID": {
+            "PersistentSessionID": {
                 "enabled": true,
                 "events": [],
                 "description":"The session ID for the player's device, persists across multiple players using the same device."
             },
-            "avgSliderMoves" :  {
+            "AverageSliderMoves" :  {
                 "enabled": true,
                 "events": [],
                 "description":"totalSliderMoves averaged over all levels"
             },
-            "avgLevelTime" :  {
+            "AverageLevelTime" :  {
                 "enabled": true,
                 "events": [],
                 "description":"totalLevelTime averaged over all levels"
             },
-            "avgMoveTypeChanges" : {
+            "AverageMoveTypeChanges" : {
                 "enabled": true,
                 "events": [],
                 "description": "totalMoveTypeChanges averaged over all levels"
             },
-            "overallSliderAvgStdDevs" : {
+            "OverallSliderAvgStandardDeviations" : {
                 "enabled": true,
                 "events": [],
                 "description": "Average standard deviation of slider moves over a whole sessioin"
             },
-            "overallSliderAvgRange" : {
+            "OverallSliderAvgRange" : {
                 "enabled": true,
                 "events": [],
                 "description": "Average range of slider moves over a whole session"
             },
-            "overallPercentAmplitudeMoves" : {
+            "OverallPercentAmplitudeMoves" : {
                 "enabled": true,
                 "events": [],
                 "description": "Percent of total moves that were amplitude adjustments over a whole session"
             },
-            "overallPercentOffsetMoves" :  {
+            "OverallPercentOffsetMoves" :  {
                 "enabled": true,
                 "events": [],
                 "description":"Percent of total moves that were offset adjustments over a whole session"
             },
-            "overallPercentWavelengthMoves" :  {
+            "OverallPercentWavelengthMoves" :  {
                 "enabled": true,
                 "events": [],
                 "description":"Percent of total moves that were wavelength adjustments over a whole session"
             },
-            "avgFails" : {
+            "AvgFails" : {
                 "enabled": true,
                 "events": [],
                 "description": "totalFails averaged over all levels"

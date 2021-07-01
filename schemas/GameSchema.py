@@ -26,9 +26,10 @@ class GameSchema:
         """
         # define instance vars
         self._schema:       Dict = {}
+        self._game_name:    str  = schema_name.split('.')[0]
         self._feature_list: Union[List[str],None] = None
-        self._min_level:    Union[str,int] = 0
-        self._max_level:    Union[str,int] = 1
+        self._min_level:    Union[int,None] = None
+        self._max_level:    Union[int,None] = None
         # set instance vars
         if not schema_name.lower().endswith(".json"):
             schema_name += ".json"
@@ -55,6 +56,9 @@ class GameSchema:
 
     def __getitem__(self, key) -> Any:
         return self._schema[key]
+    
+    def __str__(self) -> str:
+        return str(self._game_name)
 
     def level_range(self) -> Dict[str,int]:
         return self["level_range"]

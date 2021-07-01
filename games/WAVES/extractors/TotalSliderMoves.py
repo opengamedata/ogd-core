@@ -1,14 +1,23 @@
+from schemas import Event
 import typing
-from GameTable import GameTable
-from WaveFeature import WaveFeature
+from typing import Any, List
+# local imports
+from extractors.Feature import Feature
+from schemas.Event import Event
 
-class TotalSliderMoves(WaveFeature):
-    def __init__(self, game_table: GameTable, accepted_events: typing.List[str], min_data_version:int=-math.inf, max_data_version:int=math.inf):
-        WaveFeature.__init__(self, game_table, accepted_events, min_data_version, max_data_version)
-        # create one counter of slider moves for each level.
-        self._counts = [0 for i in range(game_table.min_level, game_table.max_level+1)]
+class TotalSliderMoves(Feature):
+    def __init__(self, name:str, description:str, sessionID:str):
+        min_version = None
+        max_version = None
+        Feature.__init__(self, name=name, description=description, min_version=min_version, max_version=max_version)
+        self._sessionID = sessionID
 
-    def CalculateFinalValues(self) -> typing.Tuple:
-        return (None)
+    def GetEventTypes(self) -> List[str]:
+        return []
 
-    def _extractFromRow(self, row: typing.List):
+    def CalculateFinalValues(self) -> Any:
+        return self._sessionID
+
+    def _extractFromEvent(self, event:Event) -> None:
+        return
+
