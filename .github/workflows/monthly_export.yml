@@ -18,6 +18,7 @@ jobs:
       max-parallel: 1
 
     # Steps to set up for and execute an export
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Get OpenConnect
