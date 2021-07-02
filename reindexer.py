@@ -118,6 +118,6 @@ elif args.level == 'DEBUG':
 data_dirs = os.walk("./data/")
 indexed_files = generate_index(data_dirs)
 # print(f"Final set of indexed files: {indexed_files}")
-indexed_zips_file = open(f"./data/file_list.json", "w")
-indexed_zips_file.write(json.dumps(indexed_files, indent=4, sort_keys=True))
-indexed_zips_file.close()
+with open(f"./data/file_list.json", "w+") as indexed_zips_file:
+    indexed_zips_file.write(json.dumps(indexed_files, indent=4, sort_keys=True))
+    indexed_zips_file.close()
