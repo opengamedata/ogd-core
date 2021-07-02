@@ -3,8 +3,8 @@ from typing import Any, List
 from extractors.Feature import Feature
 from schemas.Event import Event
 
-class SessionJobsCompleted(Feature):
-
+class JobTasksCompleted(Feature):
+    
     def __init__(self, name:str, description:str, sessionID:str):
         min_data_version = None
         max_data_version = None
@@ -19,4 +19,5 @@ class SessionJobsCompleted(Feature):
         return self._count
 
     def _extractFromEvent(self, event:Event) -> None:
-        self._count += 1
+        if event.event_name == "complete_task":
+            self._count += 1
