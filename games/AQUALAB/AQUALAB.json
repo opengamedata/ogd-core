@@ -5,11 +5,21 @@
         "accept_job": {
             "job_id": "ID for the accepted job"
         },
+        "switch_job": {
+            "job_id": "ID for the new selected job"
+        },
         "receive_fact": {
             "fact_id": "ID for the fact received"
         },
         "complete_job": {
             "job_id": "ID for the completed job"
+        },
+        "scene_changed": {
+            "scene_name": "Name of the current scene"
+        },
+        "room_changed":
+        {
+            "room_name": "Name of the current ship room"
         },
         "begin_experiment": {
             "job_id": "ID for the current job",
