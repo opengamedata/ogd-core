@@ -7,7 +7,7 @@ on:
 jobs:
   export_data:
     name: Export All Games
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         # don't use the first one until we've got STEMPORTS and AQUALAB
@@ -18,7 +18,6 @@ jobs:
       max-parallel: 1
 
     # Steps to set up for and execute an export
-    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Get OpenConnect
@@ -60,7 +59,7 @@ jobs:
   
   trigger_reindex:
     name: Reindex OpenGameData Files
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     if: always()
     needs: export_data
     steps:
