@@ -4,10 +4,12 @@ import json
 import logging
 import os
 import re
+import shutil
 import traceback
 import typing
 import zipfile
 from datetime import datetime
+from pathlib import Path
 from typing import Dict, Tuple, Union
 ## import local files
 import utils
@@ -56,8 +58,8 @@ class FileManager(abc.ABC):
 
     def OpenFiles(self):
         # Ensure we have a data directory.
-        full_data_dir = self._data_dir + self._game_id
-        os.makedirs(name=full_data_dir, exist_ok=True)
+        full_data_dir = Path(self._data_dir) / self._game_id
+        full_data_dir.mkdir(exist_ok=True)
         # Then open up the files themselves.
         self._files["sessions_f"] = open(self._file_names["sessions_f"], "w", encoding="utf-8") if (self._file_names["sessions_f"] is not None) else None
         self._files["events_f"] = open(self._file_names["events_f"], "w", encoding="utf-8") if (self._file_names["events_f"] is not None) else None
@@ -127,9 +129,9 @@ class FileManager(abc.ABC):
     #  @param num_sess      The number of sessions included in the recent export.
     def WriteMetadataFile(self, date_range: Dict[str,datetime], num_sess: int):
         # First, ensure we have a data directory.
-        full_data_dir = self._data_dir + self._game_id
+        full_data_dir = Path(self._data_dir) / self._game_id
         try:
-            os.makedirs(name=full_data_dir, exist_ok=True)
+            full_data_dir.mkdir(exist_ok=True)
         except Exception as err:
             msg = f"Could not set up folder {full_data_dir}. {type(err)} {str(err)}"
             utils.Logger.toFile(msg, logging.WARNING)
@@ -207,13 +209,13 @@ class FileManager(abc.ABC):
 
     def _backupFileExportList(self) -> bool:
         try:
-            existing_csvs = utils.loadJSONFile("file_list.json", self._data_dir) or {}
+            src = Path(self._data_dir) / "file_list.json"
+            dest = Path(self._data_dir) / "file_list.json.bak"
+            shutil.copyfile(src=src, dst=dest)
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
-            utils.Logger.toStdOut(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
-            utils.Logger.toFile(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
+            utils.Logger.Log(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
             return False
-        backup_csv_file = open(f"{self._data_dir}file_list.json.bak", "w")
-        backup_csv_file.write(json.dumps(existing_csvs, indent=4))
-        utils.Logger.toStdOut(f"Backed up file_list.json to {backup_csv_file.name}", logging.INFO)
-        return True
+        else:
+            utils.Logger.toStdOut(f"Backed up file_list.json to {dest}", logging.INFO)
+            return True
