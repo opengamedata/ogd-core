@@ -62,8 +62,8 @@ class FileManager(abc.ABC):
         full_data_dir : Path = self._data_dir / self._game_id
         full_data_dir.mkdir(exist_ok=True)
         # Then open up the files themselves.
-        self._files["sessions_f"] = open(self._file_names["sessions_f"], "w", encoding="utf-8") if (self._file_names["sessions_f"] is not None) else None
-        self._files["events_f"]   = open(self._file_names["events_f"],   "w", encoding="utf-8") if (self._file_names["events_f"] is not None) else None
+        self._files["sessions_f"] = open(self._file_names["sessions_f"], "w+", encoding="utf-8") if (self._file_names["sessions_f"] is not None) else None
+        self._files["events_f"]   = open(self._file_names["events_f"],   "w+", encoding="utf-8") if (self._file_names["events_f"] is not None) else None
 
     def CloseFiles(self):
         if self._files["sessions_f"] is not None:
