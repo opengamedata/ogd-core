@@ -31,7 +31,6 @@ on:
 jobs:
   export_data:
     name: Export Game
-    runs-on: ubuntu-18.04
     strategy:
       matrix:
         game: ${{ FromJson(github.event.inputs.game) }}
@@ -43,13 +42,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Get OpenConnect
-      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get -q update && sudo apt-get -q install openconnect
+      run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Get correct Python
       run: |
-        sudo apt-get -q install python3.8
-        sudo apt-get -q install python3.8-dev
+        sudo apt-get -q install python3.9
+        sudo apt-get -q install python3.9-dev
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
     - name: Do Export of Month
@@ -89,7 +88,6 @@ jobs:
   
   trigger_reindex:
     name: Reindex OpenGameData Files
-    runs-on: ubuntu-18.04
     if: always()
     needs: export_data
     steps:
