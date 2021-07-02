@@ -211,7 +211,10 @@ class FileManager(abc.ABC):
         try:
             src = Path(self._data_dir) / "file_list.json"
             dest = Path(self._data_dir) / "file_list.json.bak"
-            shutil.copyfile(src=src, dst=dest)
+            if src.exists():
+                shutil.copyfile(src=src, dst=dest)
+            else:
+                utils.Logger.Log(f"Could not back up file_list.json, because it does not exist!", logging.WARN)
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.Log(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
