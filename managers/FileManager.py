@@ -20,7 +20,7 @@ class FileManager(abc.ABC):
         self._file_names : Dict[str,Union[Path,None]] = {"sessions_f":None, "events_f":None}
         self._zip_names  : Dict[str,Union[Path,None]] = {"sessions_f":None, "events_f":None}
         self._files      : Dict = {"sessions_f":None, "events_f":None}
-        self._data_dir   : Path  = Path(data_dir)
+        self._data_dir   : Path = Path("./" + data_dir)
         self._game_id    : str  = game_id
         self._readme_path: Path
         self._dataset_id : str
