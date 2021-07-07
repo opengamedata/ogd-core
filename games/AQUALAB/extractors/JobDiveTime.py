@@ -12,17 +12,18 @@ class JobDiveTime(Feature):
         super().__init__(name, description, min_data_version, max_data_version)
         self._sessionID = sessionID
         self._dive_start_time = None
-        self._time = timedelta(0)
+        self._times = {}
 
     def GetEventTypes(self) -> List[str]:
         return []
 
     def CalculateFinalValues(self) -> Any:
-        return self._time
+        return self._times
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_name == "begin_dive":
             self._dive_start_time = event.timestamp
+            self._times[event.event_data["job_id"]] = timedelta(0)
         elif event.event_name == "scene_changed":
-            self._time += event.timestamp - self._dive_start_time
+            self._times[event.event_data["job_id"]] += event.timestamp - self._dive_start_time
             self._dive_start_time = None

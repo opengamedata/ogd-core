@@ -10,16 +10,13 @@ class JobDiveSitesCount(Feature):
         max_data_version = None
         super().__init__(name, description, min_data_version, max_data_version)
         self._sessionID = sessionID
-        self._count = 0
-        self._visited_sites = []
+        self._counts = {}
 
     def GetEventTypes(self) -> List[str]:
         return []
 
     def CalculateFinalValues(self) -> Any:
-        return self._count
+        return self._counts
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_data["site_id"] not in self._visited_sites:
-            self._count += 1
-            self._visited_sites.append(event.event_data["site_id"])
+        self._counts[event.event_data["job_id"]] += 1
