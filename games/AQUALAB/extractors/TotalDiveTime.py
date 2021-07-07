@@ -1,3 +1,4 @@
+from datetime import timedelta
 from typing import Any, List
 
 from extractors.Feature import Feature
@@ -11,7 +12,7 @@ class TotalDiveTime(Feature):
         super().__init__(name, description, min_data_version, max_data_version)
         self._sessionID = sessionID
         self._dive_start_time = None
-        self._time = None
+        self._time = timedelta(0)
 
     def GetEventTypes(self) -> List[str]:
         return []

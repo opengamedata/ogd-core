@@ -19,5 +19,4 @@ class JobTasksCompleted(Feature):
         return self._count
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_name == "complete_task":
-            self._count += 1
+        self._count += 1

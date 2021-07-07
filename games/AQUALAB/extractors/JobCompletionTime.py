@@ -11,17 +11,16 @@ class JobCompletionTime(Feature):
         super().__init__(name, description, min_data_version, max_data_version)
         self._sessionID = sessionID
         self._job_start_time = None
-        self._times = {}
+        self._time = None
 
     def GetEventTypes(self) -> List[str]:
         return []
 
     def CalculateFinalValues(self) -> Any:
-        return self._times
+        return self._time
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_name == "accept_job":
             self._job_start_time = event.timestamp
         elif event.event_name == "complete_job":
-            self._times[event.event_data["job_id"]] = event.timestamp - self._job_start_time
-            self._job_start_time = None
+            self._time = event.timestamp - self._job_start_time

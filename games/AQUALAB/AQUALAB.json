@@ -58,7 +58,7 @@
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
-                "events": ["accept_job", "complete_job", "begin_argument", "scene_changed"],
+                "events": ["begin_argument", "room_changed"],
                 "description": "Time spent in argumentation during a job"
             },
             "JobCompletionTime": {
@@ -68,25 +68,32 @@
                 "events": ["accept_job", "complete_job"],
                 "description": "Time taken to complete a given job"
             },
+            "JobDiveSitesCount": {
+                "enabled": true,
+                "count": "level_range",
+                "prefix": "job",
+                "events": ["begin_dive"],
+                "description": "Number of dive sites visited during a job"
+            },
             "JobDiveTime": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
-                "events": ["accept_job", "complete_job", "scene_changed"],
+                "events": ["begin_dive", "scene_changed"],
                 "description": "Time spent diving during a job"
             },
             "JobExperimentationTime": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
-                "events": ["accept_job", "complete_job", "begin_experiment", "scene_changed"],
+                "events": ["begin_experiment", "room_changed"],
                 "description": "Time spent in experimentation during a job"
             },
             "JobTasksCompleted": {
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
-                "events": ["accept_job", "complete_task"],
+                "events": ["complete_task"],
                 "description": "Number of tasks completed for a given job"
             },
             "SyncCompletionTime": {
@@ -98,7 +105,7 @@
             }
         },
         "aggregate":{
-            "DiveSitesCount": {
+            "SessionDiveSitesCount": {
                 "enabled": true,
                 "events": ["begin_dive"],
                 "description":"Time spent playing in a given session"
@@ -135,7 +142,7 @@
             },
             "TotalArgumentationTime": {
                 "enabled": true,
-                "events": ["begin_argument", "scene_changed"],
+                "events": ["begin_argument", "room_changed"],
                 "description":"Total time spent in argumentation"
             },
             "TotalDiveTime": {
@@ -145,7 +152,7 @@
             },
             "TotalExperimentationTime": {
                 "enabled": true,
-                "events": ["begin_experiment", "scene_changed"],
+                "events": ["begin_experiment", "room_changed"],
                 "description":"Total time spent in experimentation"
             }
         }
