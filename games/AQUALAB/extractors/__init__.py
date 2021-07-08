@@ -5,6 +5,8 @@ __all__ = [
     "JobDiveSitesCount"
     "JobDiveTime",
     "JobExperimentationTime",
+    "JobGuideCount",
+    "JobHelpCount",
     "JobModelingTime",
     "JobTasksCompleted",
     "SessionDiveSitesCount"
@@ -24,6 +26,8 @@ from . import JobCompletionTime
 from . import JobDiveSitesCount
 from . import JobDiveTime
 from . import JobExperimentationTime
+from . import JobGuideCount
+from . import JobHelpCount
 from . import JobModelingTime
 from . import JobTasksCompleted
 from . import SessionDiveSitesCount

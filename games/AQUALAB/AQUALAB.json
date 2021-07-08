@@ -89,6 +89,20 @@
                 "events": ["begin_experiment", "room_changed"],
                 "description": "Time spent in experimentation during a job"
             },
+            "JobGuideCount": {
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "job",
+                "events": ["guide_triggered"],
+                "description": "Number of times player talked with guide during a job"
+            },
+            "JobHelpCount": {
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "job",
+                "events": ["ask_for_help"],
+                "description": "Number of times player asked for help during a job"
+            },
             "JobTasksCompleted": {
                 "enabled": true,
                 "count": "level_range",
