@@ -32,19 +32,16 @@ class FileManager(abc.ABC):
             self._dataset_id = f"{self._game_id}_{start}_to_{end}"
             # get hash
             repo = git.Repo(search_parent_directories=True)
-            self._short_hash = repo.git.rev_parse(repo.head.object.hexsha, short=7)
+            self._short_hash = str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
             # then set up our paths, and ensure each exists.
             full_data_dir     : Path = self._data_dir / game_id
             self._readme_path : Path = full_data_dir / "readme.md"
-            base_path         : Path = full_data_dir / f"{self._dataset_id}_{self._short_hash}"
-            self._data_dir.mkdir(exist_ok=True)
-            full_data_dir.mkdir(exist_ok=True)
-            base_path.mkdir(exist_ok=True)
+            base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
             # finally, generate file names.
-            self._file_names["sessions_f"] = base_path / "_session-features.csv" if exporter_files.sessions else None
-            self._file_names["events_f"]   = base_path / "_events.tsv" if exporter_files.events else None
-            self._zip_names["sessions_f"]  = base_path / "_session-features.zip" if exporter_files.sessions else None
-            self._zip_names["events_f"]    = base_path / "_events.zip" if exporter_files.events else None
+            self._file_names["sessions_f"] = full_data_dir / f"{base_file_name}_session-features.csv" if exporter_files.sessions else None
+            self._file_names["events_f"]   = full_data_dir / f"{base_file_name}_events.tsv" if exporter_files.events else None
+            self._zip_names["sessions_f"]  = full_data_dir / f"{base_file_name}_session-features.zip" if exporter_files.sessions else None
+            self._zip_names["events_f"]    = full_data_dir / f"{base_file_name}_events.zip" if exporter_files.events else None
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.Log(msg, logging.ERROR)
@@ -60,6 +57,11 @@ class FileManager(abc.ABC):
         return self._files["events_f"]
 
     def OpenFiles(self):
+        full_data_dir     : Path = self._data_dir / self._game_id
+        base_path         : Path = full_data_dir / f"{self._dataset_id}_{self._short_hash}"
+        self._data_dir.mkdir(exist_ok=True)
+        full_data_dir.mkdir(exist_ok=True)
+        base_path.mkdir(exist_ok=True)
         self._files["sessions_f"] = open(self._file_names["sessions_f"], "w+", encoding="utf-8") if (self._file_names["sessions_f"] is not None) else None
         self._files["events_f"]   = open(self._file_names["events_f"],   "w+", encoding="utf-8") if (self._file_names["events_f"] is not None) else None
 
