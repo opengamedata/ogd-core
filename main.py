@@ -11,7 +11,7 @@ import traceback
 import typing
 from calendar import monthrange
 from datetime import datetime
-from typing import Dict, Tuple
+from typing import Dict, List, Tuple
 
 from pandas.io.pytables import Table
 # import local files
@@ -175,45 +175,41 @@ def writeReadme():
 
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
-Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
+# Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
 opts : Dict[str,str] = {}
+args : List[str] = []
 try:
     optupi, args = getopt.gnu_getopt(sys.argv, shortopts="-h", longopts=["file=", "help", "monthly"])
-
     opts = {opt[0]: opt[1] for opt in optupi}
-    num_args = len(args)
-    cmd = args[1] if num_args > 1 else "help"
-    if num_args > 2:
-        game_name = args[2]
-    else:
-        game_name = ""
-        cmd = "help"
-        Logger.Log("No game name given!", logging.ERROR)
 except getopt.GetoptError as err:
     print(f"Error, invalid option given!\n{err}")
-    cmd = "help"
-if type(cmd) == str:
-    # if we have a real command, load the config file.
-    # settings = loadJSONFile("config.json")
-    db_settings = settings["db_config"]
-    ssh_settings = settings["ssh_config"]
 
+num_args = len(args)
+cmd = args[1] if num_args > 1 else "help"
+
+if type(cmd) == str:
     cmd = cmd.lower()
 
-    if cmd == "export":
-        runExport(events=True, features=True)
-    elif cmd == "export-events":
-        runExport(events=True)
-    elif cmd == "export-session-features":
-        runExport(features=True)
-    elif cmd == "info":
-        showGameInfo()
-    elif cmd == "readme":
-        writeReadme()
-    elif cmd == "help" or "-h" in opts.keys() or "--help" in opts.keys():
+    if cmd == "help" or "-h" in opts.keys() or "--help" in opts.keys():
         showHelp()
     else:
-        print(f"Invalid Command {cmd}!")
+        if num_args > 2:
+            game_name = args[2]
+        else:
+            Logger.Log("No game name given!", logging.WARN)
+            showHelp()
+        if cmd == "export":
+            runExport(events=True, features=True)
+        elif cmd == "export-events":
+            runExport(events=True)
+        elif cmd == "export-session-features":
+            runExport(features=True)
+        elif cmd == "info":
+            showGameInfo()
+        elif cmd == "readme":
+            writeReadme()
+        else:
+            print(f"Invalid Command {cmd}!")
 else:
-    print("Command is not a string!")
+    Logger.Log("Command is not a string!", logging.ERROR)
     showHelp()
