@@ -128,9 +128,8 @@ def runExport(events:bool = False, features:bool = False):
     # breakpoint()
     try:
         export_manager = ExportManager(game_id=game_name, settings=settings)
-        schema = GameSchema(game_name)
         table_name = settings["game_source_map"][game_name]["table"]
-        export_manager.ExecuteRequest(request=req, game_schema=schema, table_schema=TableSchema(schema_name=f"{table_name}.json"))
+        export_manager.ExecuteRequest(request=req, game_schema=GameSchema(game_name), table_schema=TableSchema(schema_name=f"{table_name}.json"))
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
