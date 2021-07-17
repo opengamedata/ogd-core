@@ -2,6 +2,7 @@
 data
 config/*.json
 config/config.py
+fieldday-pyenv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
