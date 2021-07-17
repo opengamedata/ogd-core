@@ -51,12 +51,12 @@ class ExportManager:
         self._settings = settings
         # self._select_queries = []
 
-    def ExecuteRequest(self, request:Request, game_schema :GameSchema, table_schema:TableSchema):
+    def ExecuteRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema):
         if request.GetGameID() != self._game_id:
             utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.GetGameID()}", logging.WARNING)
             self._game_id = request.GetGameID()
         try:
-            if self._executeRequest(request=request, table_schema=table_schema):
+            if self._executeRequest(request=request, game_schema=game_schema, table_schema=table_schema):
                 utils.Logger.Log(f"Successfully completed request {str(request)}.", logging.INFO)
             else:
                 utils.Logger.Log(f"Could not complete request {str(request)}", logging.ERROR)
@@ -72,12 +72,12 @@ class ExportManager:
     #                    and export
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
-    def _executeRequest(self, request:Request, table_schema:TableSchema) -> bool:
+    def _executeRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema) -> bool:
         # utils.Logger.toStdOut(f"complex_data_index: {complex_data_index}", logging.DEBUG)
         ret_val = False
         try:
             # 2a) Prepare schema and extractor, if game doesn't have an extractor, make sure we don't try to export it.
-            game_schema, game_extractor = self._prepareSchema()
+            game_extractor = self._prepareExtractor()
             if game_extractor is None:
                 request._files.sessions = False
             # 2b) Prepare files for export.
@@ -115,9 +115,8 @@ class ExportManager:
         finally:
             return ret_val
 
-    def _prepareSchema(self) -> Tuple[GameSchema, Union[type,None]]:
+    def _prepareExtractor(self) -> Union[type,None]:
         game_extractor: Union[type,None] = None
-        game_schema: GameSchema  = GameSchema(schema_name=f"{self._game_id}.json")
         if self._game_id == "WAVES":
             game_extractor = WaveExtractor
         elif self._game_id == "CRYSTAL":
@@ -133,7 +132,7 @@ class ExportManager:
             pass
         else:
             raise Exception(f"Got an invalid game ID ({self._game_id})!")
-        return game_schema, game_extractor
+        return game_extractor
 
     def _extractToCSVs(self, request:Request, file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema, game_extractor: Union[type,None]):
         ret_val = -1
