@@ -94,29 +94,27 @@ class FileManager(abc.ABC):
         base_path = f"{self._dataset_id}/{self._dataset_id}_{self._short_hash}"
         if self._zip_names["sessions_f"] is not None:
             # TODO: Come back and use with...as for the ###_zip_file vars here.
-            try:
-                sessions_zip_file = zipfile.ZipFile(self._zip_names["sessions_f"], "w", compression=zipfile.ZIP_DEFLATED)
-                self._addToZip(path=self._file_names["sessions_f"], zip_file=sessions_zip_file, path_in_zip=f"{base_path}_session-features.csv")
-                self._addToZip(path=self._readme_path,        zip_file=sessions_zip_file, path_in_zip=f"{self._dataset_id}/readme.md")
-                if self._file_names["sessions_f"] is not None:
-                    os.remove(self._file_names["sessions_f"])
-            except FileNotFoundError as err:
-                utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                traceback.print_tb(err.__traceback__)
-            finally:
-                sessions_zip_file.close()
+            with zipfile.ZipFile(self._zip_names["sessions_f"], "w", compression=zipfile.ZIP_DEFLATED) as sessions_zip_file:
+                try:
+                    self._addToZip(path=self._file_names["sessions_f"], zip_file=sessions_zip_file, path_in_zip=f"{base_path}_session-features.csv")
+                    self._addToZip(path=self._readme_path,        zip_file=sessions_zip_file, path_in_zip=f"{self._dataset_id}/readme.md")
+                    sessions_zip_file.close()
+                    if self._file_names["sessions_f"] is not None:
+                        os.remove(self._file_names["sessions_f"])
+                except FileNotFoundError as err:
+                    utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    traceback.print_tb(err.__traceback__)
         if self._zip_names["events_f"] is not None:
-            try:
-                events_zip_file = zipfile.ZipFile(self._zip_names["events_f"], "w", compression=zipfile.ZIP_DEFLATED)
-                self._addToZip(path=self._file_names["events_f"], zip_file=events_zip_file, path_in_zip=f"{base_path}_events.tsv")
-                self._addToZip(path=self._readme_path,        zip_file=events_zip_file, path_in_zip=f"{self._dataset_id}/readme.md")
-                if self._file_names["events_f"] is not None:
-                    os.remove(self._file_names["events_f"])
-            except FileNotFoundError as err:
-                utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                traceback.print_tb(err.__traceback__)
-            finally:
-                events_zip_file.close()
+            with zipfile.ZipFile(self._zip_names["events_f"], "w", compression=zipfile.ZIP_DEFLATED) as events_zip_file:
+                try:
+                    self._addToZip(path=self._file_names["events_f"], zip_file=events_zip_file, path_in_zip=f"{base_path}_events.tsv")
+                    self._addToZip(path=self._readme_path,        zip_file=events_zip_file, path_in_zip=f"{self._dataset_id}/readme.md")
+                    events_zip_file.close()
+                    if self._file_names["events_f"] is not None:
+                        os.remove(self._file_names["events_f"])
+                except FileNotFoundError as err:
+                    utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    traceback.print_tb(err.__traceback__)
 
     def _addToZip(self, path, zip_file, path_in_zip):
         try:

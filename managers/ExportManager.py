@@ -101,12 +101,12 @@ class ExportManager:
                 except FileNotFoundError:
                     utils.Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING)
                     utils.GenerateReadme(game_name=self._game_id, game_schema=game_schema, column_list=table_schema.ColumnList(), path=f"./data/{self._game_id}")
+                file_manager.CloseFiles()
                 file_manager.ZipFiles()
                 # 6) Finally, update the list of csv files.
                 file_manager.WriteMetadataFile(date_range=request._range.GetDateRange(), num_sess=num_sess)
                 file_manager.UpdateFileExportList(date_range=request._range.GetDateRange(), num_sess=num_sess)
                 ret_val = True
-            file_manager.CloseFiles()
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.toStdOut(msg, logging.ERROR)
