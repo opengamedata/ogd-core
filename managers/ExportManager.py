@@ -162,18 +162,21 @@ class ExportManager:
             start = datetime.now()
             next_data_set = request._interface.RowsFromIDs(next_slice)
             try:
-                # now, we process each row.
-                for row in next_data_set:
-                    next_event = table_schema.RowToEvent(row)
-                    #self._processRow(event=next_event, sess_ids=sess_ids, sess_processor=sess_processor, evt_processor=evt_processor)
-                    if next_event.session_id in sess_ids:
-                        # we check if there's an instance given, if not we obviously skip.
-                        if sess_processor is not None:
-                            sess_processor.ProcessRow(next_event)
-                        if evt_processor is not None:
-                            evt_processor.ProcessRow(row)
-                    else:
-                        utils.Logger.toFile(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
+                if next_data_set is not None:
+                    # now, we process each row.
+                    for row in next_data_set:
+                        next_event = table_schema.RowToEvent(row)
+                        #self._processRow(event=next_event, sess_ids=sess_ids, sess_processor=sess_processor, evt_processor=evt_processor)
+                        if next_event.session_id in sess_ids:
+                            # we check if there's an instance given, if not we obviously skip.
+                            if sess_processor is not None:
+                                sess_processor.ProcessRow(next_event)
+                            if evt_processor is not None:
+                                evt_processor.ProcessRow(row)
+                        else:
+                            utils.Logger.toFile(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
+                else:
+                    utils.Logger.Log("Could not retrieve next data set.", logging.WARN)
                 # after processing all rows for each slice, write out the session data and reset for next slice.
                 if request._files.sessions and sess_processor is not None:
                     sess_processor.calculateAggregateFeatures()
