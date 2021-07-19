@@ -1,6 +1,7 @@
 ## import standard libraries
 from datetime import datetime
 import json
+from json.decoder import JSONDecodeError
 import os
 import logging
 import typing
@@ -32,18 +33,18 @@ class TableSchema:
         """
         # declare and initialize vars
         self._table_format_name : str                  = schema_name
-        self._is_legacy         : bool                 = is_legacy
+        # self._is_legacy         : bool                 = is_legacy
         self._columns           : List[Dict[str, str]] = []
-        self._map               : Map                  = {}
+        self._column_map        : Map                  = {}
 
-        if not schema_name.lower().endswith(".json"):
-            schema_name += ".json"
-        schema = utils.loadJSONFile(schema_name, schema_path)
+        if not self._table_format_name.lower().endswith(".json"):
+            self._table_format_name += ".json"
+        schema = utils.loadJSONFile(self._table_format_name, schema_path)
 
         # after loading the file, take the stuff we need and store.
         if schema is not None:
             self._columns = schema['columns']
-            self._map = schema['column_map']
+            self._column_map = schema['column_map']
         else:
             utils.Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
 
@@ -73,8 +74,6 @@ class TableSchema:
         :return: [description]
         :rtype: [type]
         """
-        row_dict = self.RowToDict(row)
-        col_names = [col['name'] for col in self._columns]
         # define vars to be passed as params
         sess_id : str
         app_id  : str
@@ -88,29 +87,32 @@ class TableSchema:
         state   : Union[Map,None]
         index   : Union[int,None]
 
-        # first, if anything in the map was a list, concatenate, and anything that wasn't, get val.
+        column_names = self.ColumnNames()
+        row_dict = {col_i_name : row[i].isoformat() if type(row[i]) == datetime else str(row[i]) for i,col_i_name in enumerate(column_names)}
+        # 1) Get values from row mapped to Event ctor params. Wait to do event_data.
+        #    If anything in the map was a list, concatenate vals from corresponding columns, and anything that wasn't, get val.
         params : Map = {}
-        for key in self._map.keys():
+        for key in self._column_map.keys():
             if key != 'event_data': # event_data is special case, handle separately.
-                inner_keys = self._map[key]
-                if inner_keys == None:
+                inner_vals = self._column_map[key]
+                if inner_vals == None:
                     params[key] = None
-                elif type(inner_keys) == list:
-                    params[key] = concatenator.join([row_dict[inner_key] for inner_key in inner_keys])
+                elif type(inner_vals) == list:
+                    params[key] = concatenator.join([row_dict[inner_key] for inner_key in inner_vals])
                 else:
-                    params[key] = row_dict[inner_keys]
-        # second, handle special case of event data, where we've got to parse the json,
-        # and then fold in whatever other columns were desired.
-        if type(self._map['event_data']) == list:
+                    params[key] = row_dict[inner_vals]
+        # 2) Handle event_data parameter, a special case.
+        #    For this case we've got to parse the json, and then fold in whatever other columns were desired.
+        if type(self._column_map['event_data']) == list:
             # if we had a list of event_data columns, we need a merger, not a concatenation
             params['event_data'] = {}
-            for i,col_name in enumerate(self._map['event_data']):
-                val = TableSchema._parse(row_dict[col_name], self._columns[col_names.index(col_name)])
+            for i,col_name in enumerate(self._column_map['event_data']):
+                val = TableSchema._parse(row_dict[col_name], self._columns[column_names.index(col_name)])
                 params['event_data'].update(val if type(val) == dict else {col_name:val})
         else:
-            col_name = self._map['event_data']
-            params['event_data'] = TableSchema._parse(row_dict[col_name], self._columns[col_names.index(col_name)])
-        # third, find out which of our params were in the map, and assign vals to our vars.
+            col_name = self._column_map['event_data']
+            params['event_data'] = TableSchema._parse(row_dict[col_name], self._columns[column_names.index(col_name)])
+        # 3) Assign vals to our arg vars and pass to Event ctor.
         sess_id = params['session_id']
         app_id  = params['app_id']
         # TODO: go bac to isostring function; need 0-padding on ms first, though
@@ -129,19 +131,6 @@ class TableSchema:
                      app_version=app_ver, time_offset=offset, user_id=uid, user_data=udata,
                      game_state=state, event_sequence_index=index)
 
-    ## Simple utility function to turn a raw row from the file/database into a dictionary,
-    #  indexed with the column names retrieved from the file/database.
-    def RowToDict(self, row:Tuple[Any]) -> Dict[str,str]:
-        """Create Dict from a Row
-
-        :param row: [description]
-        :type row: Tuple[str]
-        :return: [description]
-        :rtype: Dict[str,str]
-        """
-        column_names = [col['name'] for col in self._columns]
-        return {col_name : row[i].isoformat() if type(row[i]) == datetime else str(row[i]) for i,col_name in enumerate(column_names)}
-
     @staticmethod
     def _parse(input:str, column_descriptor:Dict[str,str]) -> Any:
         if column_descriptor['type'] == 'str':
@@ -151,7 +140,14 @@ class TableSchema:
         elif column_descriptor['type'] == 'float':
             return float(input)
         elif column_descriptor['type'] == 'json':
-            return json.loads(str(input))
+            if input != 'None': # watch out for nasty corner case.
+                try:
+                    return json.loads(str(input))
+                except JSONDecodeError as err:
+                    utils.Logger.Log(f"Could not parse input '{input}' of type {type(input)} from column {column_descriptor['name']}, got the following error:\n{str(err)}", logging.WARN)
+                    return {}
+            else:
+                return None
         elif column_descriptor['type'].startswith('enum'):
             # if the column is supposed to be an enum, for now we just stick with the string.
             return str(input)
