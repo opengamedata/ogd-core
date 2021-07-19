@@ -1,6 +1,7 @@
 ## import standard libraries
 from datetime import datetime
 import json
+from json.decoder import JSONDecodeError
 import os
 import logging
 import typing
@@ -73,8 +74,6 @@ class TableSchema:
         :return: [description]
         :rtype: [type]
         """
-        row_dict = self.RowToDict(row)
-        col_names = [col['name'] for col in self._columns]
         # define vars to be passed as params
         sess_id : str
         app_id  : str
@@ -88,6 +87,8 @@ class TableSchema:
         state   : Union[Map,None]
         index   : Union[int,None]
 
+        column_names = [col['name'] for col in self._columns]
+        row_dict = {col_name : row[i].isoformat() if type(row[i]) == datetime else str(row[i]) for i,col_name in enumerate(column_names)}
         # first, if anything in the map was a list, concatenate, and anything that wasn't, get val.
         params : Map = {}
         for key in self._map.keys():
@@ -129,19 +130,6 @@ class TableSchema:
                      app_version=app_ver, time_offset=offset, user_id=uid, user_data=udata,
                      game_state=state, event_sequence_index=index)
 
-    ## Simple utility function to turn a raw row from the file/database into a dictionary,
-    #  indexed with the column names retrieved from the file/database.
-    def RowToDict(self, row:Tuple[Any]) -> Dict[str,str]:
-        """Create Dict from a Row
-
-        :param row: [description]
-        :type row: Tuple[str]
-        :return: [description]
-        :rtype: Dict[str,str]
-        """
-        column_names = [col['name'] for col in self._columns]
-        return {col_name : row[i].isoformat() if type(row[i]) == datetime else str(row[i]) for i,col_name in enumerate(column_names)}
-
     @staticmethod
     def _parse(input:str, column_descriptor:Dict[str,str]) -> Any:
         if column_descriptor['type'] == 'str':
@@ -151,7 +139,11 @@ class TableSchema:
         elif column_descriptor['type'] == 'float':
             return float(input)
         elif column_descriptor['type'] == 'json':
-            return json.loads(str(input))
+            try:
+                return json.loads(str(input))
+            except JSONDecodeError as err:
+                utils.Logger.Log(f"Could not parse {input} from column {column_descriptor['name']}, got the following error:\n{str(err)}", logging.ERROR)
+                return None
         elif column_descriptor['type'].startswith('enum'):
             # if the column is supposed to be an enum, for now we just stick with the string.
             return str(input)
