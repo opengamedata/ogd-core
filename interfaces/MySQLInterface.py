@@ -1,11 +1,11 @@
 # global imports
+from mysql.connector import connect, connection, cursor
 import http
 import logging
 import math
 import sshtunnel
 import traceback
 from datetime import datetime
-from MySQLdb import connect, connections, cursors
 from typing import Any, Dict, List, Tuple, Union
 # local imports
 from interfaces.DataInterface import DataInterface
@@ -36,50 +36,58 @@ class SSHLogin:
 #  Specifically, helps to connect to a database, make selections, and provides
 #  a nicely formatted 500 error message.
 class SQL:
-    ## Function to set up a connection to a database, via an ssh tunnel if available.
-    #  @return A tuple consisting of the tunnel and database connection, respectively.
+    # Function to set up a connection to a database, via an ssh tunnel if available.
     @staticmethod
-    def prepareDB(db_settings:Dict[str,Any], ssh_settings:Dict[str,Any]) -> Tuple[Union[sshtunnel.SSHTunnelForwarder,None], Union[connections.Connection,None]]:
+    def prepareDB(db_settings:Dict[str,Any], ssh_settings:Union[Dict[str,Any],None]=None) -> Tuple[Union[sshtunnel.SSHTunnelForwarder,None], Union[connection.MySQLConnection,None]]:
+        """
+        Function to set up a connection to a database, via an ssh tunnel if available.
+
+        :param db_settings: A dictionary mapping names of database parameters to values.
+        :type db_settings: Dict[str,Any]
+        :param ssh_settings: A dictionary mapping names of ssh parameters to values, or None if no ssh connection is desired., defaults to None
+        :type ssh_settings: Union[Dict[str,Any],None], optional
+        :return: A tuple consisting of the tunnel and database connection, respectively.
+        :rtype: Tuple[Union[sshtunnel.SSHTunnelForwarder,None], Union[connection.MySQLConnection,None]]
+        """
+        tunnel  : Union[sshtunnel.SSHTunnelForwarder,None] = None
+        db_conn : Union[connection.MySQLConnection,None]   = None
         # Load settings, set up consts.
         DB_NAME_DATA = db_settings["DB_NAME_DATA"]
         DB_USER = db_settings['DB_USER']
         DB_PW = db_settings['DB_PW']
         DB_HOST = db_settings['DB_HOST']
         DB_PORT = db_settings['DB_PORT']
-        SSH_USER = ssh_settings['SSH_USER']
-        SSH_PW = ssh_settings['SSH_PW']
-        SSH_HOST = ssh_settings['SSH_HOST']
-        SSH_PORT = ssh_settings['SSH_PORT']
-
-        # set up other global vars as needed:
         sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
-        # Logger.toStdOut("We're preparing database.", logging.INFO)
-        if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
-            # Logger.toStdOut(f"Setting up ssh host connection.", logging.INFO)
-            ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
-            tunnel,db_conn = SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
+        Logger.toStdOut("Preparing database connection...", logging.INFO)
+        if ssh_settings is not None:
+            SSH_USER = ssh_settings['SSH_USER']
+            SSH_PW = ssh_settings['SSH_PW']
+            SSH_HOST = ssh_settings['SSH_HOST']
+            SSH_PORT = ssh_settings['SSH_PORT']
+            if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
+                ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
+                tunnel,db_conn = SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
         else:
-            # Logger.toStdOut("Skipping SSH part of login.", logging.INFO)
             db_conn = SQL.connectToMySQL(login=sql_login)
             tunnel = None
+        Logger.toStdOut("Done preparing database connection.", logging.INFO)
         return (tunnel, db_conn)
 
-    ## Function to help connect to a mySQL server.
-    #  Simply tries to make a connection, and prints an error in case of failure.
-    #
-    #  @param host      The name of the database host server.
-    #  @param port      The database server port to which we want to connect.
-    #  @param user      Username for connecting to the database.
-    #  @param password  The given user's password.
-    #  @param database  The actual name of the database on the host.
-    #  @return          An open connection to the database if successful,
-    #                       otherwise None.
+    # Function to help connect to a mySQL server.
     @staticmethod
-    def connectToMySQL(login: SQLLogin) -> Union[connections.Connection, None]:
+    def connectToMySQL(login: SQLLogin) -> Union[connection.MySQLConnection, None]:
+        """Function to help connect to a mySQL server.
+
+        Simply tries to make a connection, and prints an error in case of failure.
+        :param login: A SQLLogin object with the data needed to log into MySQL.
+        :type login: SQLLogin
+        :return: If successful, a MySQLConnection object, otherwise None.
+        :rtype: Union[connection.MySQLConnection, None]
+        """
         try:
-            db_conn = connect(host = login.host, port = login.port,
-                           user = login.user, password = login.pword,
-                       database = login.db_name, charset='utf8')
+            db_conn = connection.MySQLConnection(host     = login.host,    port    = login.port,
+                                                 user     = login.user,    password= login.pword,
+                                                 database = login.db_name, charset = 'utf8')
             Logger.toStdOut(f"Connected to SQL (no SSH) at {login.host}:{login.port}/{login.db_name}, {login.user}", logging.INFO)
             return db_conn
         #except MySQLdb.connections.Error as err:
@@ -91,19 +99,20 @@ class SQL:
             return None
 
     ## Function to help connect to a mySQL server over SSH.
-    #  Simply tries to make a connection, and prints an error in case of failure.
-    #
-    #  @param host      The name of the database host server.
-    #  @param port      The database server port to which we want to connect.
-    #  @param user      Username for connecting to the database.
-    #  @param password  The given user's password.
-    #  @param database  The actual name of the database on the host.
-    #  @return          An open connection to the database if successful,
-    #                       otherwise None.
     @staticmethod
-    def connectToMySQLViaSSH(sql: SQLLogin, ssh: SSHLogin) -> Tuple[Union[sshtunnel.SSHTunnelForwarder,None], Union[connections.Connection,None]]:
+    def connectToMySQLViaSSH(sql: SQLLogin, ssh: SSHLogin) -> Tuple[Union[sshtunnel.SSHTunnelForwarder,None], Union[connection.MySQLConnection,None]]:
+        """Function to help connect to a mySQL server over SSH.
+
+        Simply tries to make a connection, and prints an error in case of failure.
+        :param sql: A SQLLogin object with the data needed to log into MySQL.
+        :type sql: SQLLogin
+        :param ssh: An SSHLogin object with the data needed to log into MySQL.
+        :type ssh: SSHLogin
+        :return: An open connection to the database if successful, otherwise None.
+        :rtype: Tuple[Union[sshtunnel.SSHTunnelForwarder,None], Union[connection.MySQLConnection,None]]
+        """
         tunnel : Union[sshtunnel.SSHTunnelForwarder, None] = None
-        db_conn   : Union[connections.Connection, None] = None
+        db_conn   : Union[connection.MySQLConnection, None] = None
         MAX_TRIES : int = 5
         tries : int = 0
         connected_ssh : bool = False
@@ -126,12 +135,12 @@ class SQL:
                 Logger.toPrint(msg, logging.ERROR)
                 traceback.print_tb(err.__traceback__)
                 tries = tries + 1
-        if connected_ssh == True:
+        if connected_ssh == True and tunnel is not None:
             # Then, connect to MySQL
             try:
-                db_conn = connect(host = sql.host, port = tunnel.local_bind_port,
-                               user = sql.user, password = sql.pword,
-                           database = sql.db_name, charset='utf8')
+                db_conn = connection.MySQLConnection(host     = sql.host,    port    = tunnel.local_bind_port,
+                                                     user     = sql.user,    password= sql.pword,
+                                                     database = sql.db_name, charset ='utf8')
                 Logger.toStdOut(f"Connected to SQL (via SSH) at {sql.host}:{tunnel.local_bind_port}/{sql.db_name}, {sql.user}", logging.INFO)
                 return (tunnel, db_conn)
             except Exception as err:
@@ -146,56 +155,60 @@ class SQL:
             return (None, None)
 
     @staticmethod
-    def disconnectMySQLViaSSH(tunnel:Union[sshtunnel.SSHTunnelForwarder,None], db:Union[connections.Connection,None]) -> None:
+    def disconnectMySQLViaSSH(tunnel:Union[sshtunnel.SSHTunnelForwarder,None], db:Union[connection.MySQLConnection,None]) -> None:
         if db is not None:
             db.close()
-            # Logger.toStdOut("Closed database connection", logging.INFO)
-        else:
-            Logger.toStdOut("No db to close.", logging.INFO)
+            Logger.toStdOut("Closed database connection", logging.INFO)
+        # else:
+        #     Logger.toStdOut("No db to close.", logging.INFO)
         if tunnel is not None:
             tunnel.stop()
-            # Logger.toStdOut("Stopped tunnel connection", logging.INFO)
+            Logger.toStdOut("Stopped tunnel connection", logging.INFO)
         # else:
-            # Logger.toStdOut("No tunnel to stop", logging.INFO)
+        #     Logger.toStdOut("No tunnel to stop", logging.INFO)
 
-    ## Function to build and execute SELECT statements on a database connection.
-    #  @param cursor        A database cursor, retrieved from the active connection.
-    #  @param db_name       The name of the database to which we are connected.
-    #  @param table         The name of the table from which we want to make a selection.
-    #  @param columns       A list of columns to be selected. If empty (or None),
-    #                           all columns will be used (SELECT * FROM ...).
-    #                           Default: None
-    #  @param filter        A string giving the constraints for a WHERE clause.
-    #                           (The "WHERE" term itself should not be part of the filter string)
-    #                           Default: None
-    #  @param sort_columns  A list of columns to sort results on. The order of columns
-    #                           in the list is the order given to SQL
-    #                           Default: None
-    #  @param sort_direction The "direction" of sorting, either ascending or descending.
-    #                           Default: "ASC"
-    #  @param grouping      A column name to group results on. Subject to SQL rules for grouping.
-    #                           Default: None
-    #  @param distinct      A bool to determine whether to select only rows with
-    #                           distinct values in the column.
-    #                           Default: False
-    #  @param limit         The maximum number of rows to be selected. Use -1 for no limit.
-    #                           Default: -1
-    #  @param fetch_results A bool to determine whether all results should be fetched and returned.
-    #                           Default: True
-    #  @return              A collection of all rows from the selection, if fetch_results is true,
-    #                           otherwise None.
+    # Function to build and execute SELECT statements on a database connection.
     @staticmethod
-    def SELECT(cursor      :cursors.Cursor,    db_name       :str,         table         :str,
+    def SELECT(cursor      :cursor.MySQLCursor,    db_name       :str,         table         :str,
                columns     :List[str] = None,  join          :str = None,  filter        :str = None,
                sort_columns:List[str] = None,  sort_direction:str = "ASC", grouping      :str = None,
                distinct    :bool      = False, limit         :int = -1,    fetch_results :bool = True) -> Union[List[Tuple],None]:
+        """Function to build and execute SELECT statements on a database connection.
+
+        :param cursor: A database cursor, retrieved from the active connection.
+        :type cursor: cursor.MySQLCursor
+        :param db_name: The name of the database to which we are connected.
+        :type db_name: str
+        :param table: The name of the table from which we want to make a selection.
+        :type table: str
+        :param columns: A list of columns to be selected. If empty (or None), all columns will be used (SELECT * FROM ...). Defaults to None
+        :type columns: List[str], optional
+        :param join: [description], defaults to None
+        :type join: str, optional
+        :param filter: A string giving the constraints for a WHERE clause (The "WHERE" term itself should not be part of the filter string), defaults to None
+        :type filter: str, optional
+        :param sort_columns: A list of columns to sort results on. The order of columns in the list is the order given to SQL. Defaults to None
+        :type sort_columns: List[str], optional
+        :param sort_direction: The "direction" of sorting, either ascending or descending., defaults to "ASC"
+        :type sort_direction: str, optional
+        :param grouping: A column name to group results on. Subject to SQL rules for grouping, defaults to None
+        :type grouping: str, optional
+        :param distinct: A bool to determine whether to select only rows with distinct values in the column, defaults to False
+        :type distinct: bool, optional
+        :param limit: The maximum number of rows to be selected. Use -1 for no limit., defaults to -1
+        :type limit: int, optional
+        :param fetch_results: A bool to determine whether all results should be fetched and returned, defaults to True
+        :type fetch_results: bool, optional
+        :return: A collection of all rows from the selection, if fetch_results is true, otherwise None.
+        :rtype: Union[List[Tuple],None]
+        """
         query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, join=join, filter=filter,
                                    sort_columns=sort_columns, sort_direction=sort_direction, grouping=grouping,
                                    distinct=distinct, limit=limit)
         return SQL.SELECTfromQuery(cursor=cursor, query=query, fetch_results=fetch_results)
 
     @staticmethod
-    def SELECTfromQuery(cursor:cursors.Cursor, query: str, fetch_results: bool = True) -> Union[List[Tuple], None]:
+    def SELECTfromQuery(cursor:cursor.MySQLCursor, query: str, fetch_results: bool = True) -> Union[List[Tuple], None]:
         result : Union[List[Tuple], None] = None
         # first, we do the query.
         Logger.toStdOut(f"Running query: {query}", logging.DEBUG)
@@ -235,7 +248,7 @@ class SQL:
     #  @param query         A string representing the query to execute.
     #  @param fetch_results A bool to determine whether we should try to return the query results or not.
     @staticmethod
-    def Query(cursor:cursors.Cursor, query: str, fetch_results: bool = True) -> Union[List[Tuple], None]:
+    def Query(cursor:cursor.MySQLCursor, query: str, fetch_results: bool = True) -> Union[List[Tuple], None]:
         result : Union[List[Tuple], None] = None
         # first, we do the query.
         Logger.toStdOut("Running query: " + query, logging.DEBUG)
@@ -266,8 +279,8 @@ class MySQLInterface(DataInterface):
         self._settings = settings
         # set up connection vars and try to make connection off the bat.
         self._tunnel : Union[sshtunnel.SSHTunnelForwarder, None] = None
-        self._db : Union[connections.Connection, None] = None
-        self._db_cursor : Union[cursors.Cursor, None] = None
+        self._db : Union[connection.MySQLConnection, None] = None
+        self._db_cursor : Union[cursor.MySQLCursor, None] = None
         self.Open()
         
     def _open(self, force_reopen:bool = False) -> bool:

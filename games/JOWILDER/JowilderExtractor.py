@@ -1189,7 +1189,7 @@ class JowilderExtractor(LegacyExtractor):
         if prev_val in JowilderExtractor._NULL_FEATURE_VALS or val < prev_val:
             self.setValByName(feature_name=feature_name, new_value=val)
 
-    def _get_default_val(self, feature_name) -> Union[float,timedelta,typing.Literal[0]]:
+    def _get_default_val(self, feature_name) -> Union[float,timedelta,int]:
         startswith = lambda prefix: feature_name.startswith(JowilderExtractor._SESS_PREFIX+prefix) or \
             feature_name.startswith(JowilderExtractor._LEVEL_PREFIX+prefix)
         if startswith('min_'):

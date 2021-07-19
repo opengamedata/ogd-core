@@ -25,10 +25,9 @@ def loadJSONFile(filename: str, path:str = "./") -> typing.Any:
     if not path.endswith("/"):
         path = path + "/"
     # once we've validated inputs, try actual loading and reading.
-    ret_val = None
     try:
         with open(path+filename, "r") as json_file:
-            ret_val = json.loads(json_file.read())
+            return json.loads(json_file.read())
     except FileNotFoundError as err:
         Logger.toStdOut(f"File {path+filename} does not exist.", logging.WARNING)
         raise err
@@ -36,7 +35,6 @@ def loadJSONFile(filename: str, path:str = "./") -> typing.Any:
         Logger.toStdOut(f"Could not read file at {path+filename}\nFull error message: {type(err)} {str(err)}\nCurrent directory: {os.getcwd()}",
                         logging.ERROR)
         raise err
-    return ret_val
 
 def GenerateReadme(game_name:str, game_schema:GameSchema, column_list:List[Dict[str,str]], path:str = "./"):
     try:

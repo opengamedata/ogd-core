@@ -4,10 +4,12 @@ import json
 import logging
 import os
 import re
+import shutil
 import traceback
 import typing
 import zipfile
 from datetime import datetime
+from pathlib import Path
 from typing import Dict, Tuple, Union
 ## import local files
 import utils
@@ -15,12 +17,12 @@ from managers.Request import Request, ExporterFiles, ExporterRange
 
 class FileManager(abc.ABC):
     def __init__(self, exporter_files: ExporterFiles, game_id, data_dir: str, date_range: Dict[str,datetime]):
-        self._file_names : Dict[str,Union[str,None]] = {"sessions_f":None, "events_f":None}
-        self._zip_names  : Dict[str,Union[str,None]] = {"sessions_f":None, "events_f":None}
+        self._file_names : Dict[str,Union[Path,None]] = {"sessions_f":None, "events_f":None}
+        self._zip_names  : Dict[str,Union[Path,None]] = {"sessions_f":None, "events_f":None}
         self._files      : Dict = {"sessions_f":None, "events_f":None}
-        self._data_dir   : str  = data_dir
+        self._data_dir   : Path = Path("./" + data_dir)
         self._game_id    : str  = game_id
-        self._readme_path: str
+        self._readme_path: Path
         self._dataset_id : str
         self._short_hash : str
         try:
@@ -30,16 +32,16 @@ class FileManager(abc.ABC):
             self._dataset_id = f"{self._game_id}_{start}_to_{end}"
             # get hash
             repo = git.Repo(search_parent_directories=True)
-            self._short_hash = repo.git.rev_parse(repo.head.object.hexsha, short=7)
-            # then set up our paths.
-            full_data_dir = self._data_dir + game_id
-            self._readme_path = f"{full_data_dir}/readme.md"
-            base_path = f"{full_data_dir}/{self._dataset_id}_{self._short_hash}"
+            self._short_hash = str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
+            # then set up our paths, and ensure each exists.
+            full_data_dir     : Path = self._data_dir / game_id
+            self._readme_path : Path = full_data_dir / "readme.md"
+            base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
             # finally, generate file names.
-            self._file_names["sessions_f"] = base_path+"_session-features.csv" if exporter_files.sessions else None
-            self._file_names["events_f"] = base_path+"_events.tsv" if exporter_files.events else None
-            self._zip_names["sessions_f"] = base_path+"_session-features.zip" if exporter_files.sessions else None
-            self._zip_names["events_f"] = base_path+"_events.zip" if exporter_files.events else None
+            self._file_names["sessions_f"] = full_data_dir / f"{base_file_name}_session-features.csv" if exporter_files.sessions else None
+            self._file_names["events_f"]   = full_data_dir / f"{base_file_name}_events.tsv" if exporter_files.events else None
+            self._zip_names["sessions_f"]  = full_data_dir / f"{base_file_name}_session-features.zip" if exporter_files.sessions else None
+            self._zip_names["events_f"]    = full_data_dir / f"{base_file_name}_events.zip" if exporter_files.events else None
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.Log(msg, logging.ERROR)
@@ -55,12 +57,13 @@ class FileManager(abc.ABC):
         return self._files["events_f"]
 
     def OpenFiles(self):
-        # Ensure we have a data directory.
-        full_data_dir = self._data_dir + self._game_id
-        os.makedirs(name=full_data_dir, exist_ok=True)
-        # Then open up the files themselves.
-        self._files["sessions_f"] = open(self._file_names["sessions_f"], "w", encoding="utf-8") if (self._file_names["sessions_f"] is not None) else None
-        self._files["events_f"] = open(self._file_names["events_f"], "w", encoding="utf-8") if (self._file_names["events_f"] is not None) else None
+        full_data_dir     : Path = self._data_dir / self._game_id
+        base_path         : Path = full_data_dir / f"{self._dataset_id}_{self._short_hash}"
+        self._data_dir.mkdir(exist_ok=True)
+        full_data_dir.mkdir(exist_ok=True)
+        base_path.mkdir(exist_ok=True)
+        self._files["sessions_f"] = open(self._file_names["sessions_f"], "w+", encoding="utf-8") if (self._file_names["sessions_f"] is not None) else None
+        self._files["events_f"]   = open(self._file_names["events_f"],   "w+", encoding="utf-8") if (self._file_names["events_f"] is not None) else None
 
     def CloseFiles(self):
         if self._files["sessions_f"] is not None:
@@ -70,7 +73,7 @@ class FileManager(abc.ABC):
 
     def ZipFiles(self):
         try:
-            existing_csvs = utils.loadJSONFile("file_list.json", self._data_dir)
+            existing_csvs = utils.loadJSONFile("file_list.json", str(self._data_dir))
         except Exception as err:
             existing_csvs = {}
         # if we have already done this dataset before, rename old zip files
@@ -80,9 +83,9 @@ class FileManager(abc.ABC):
                 src_sessions_f = existing_csvs[self._game_id][self._dataset_id]['sessions_f']
                 src_events_f = existing_csvs[self._game_id][self._dataset_id]['events_f']
                 if src_sessions_f is not None and self._zip_names["sessions_f"] is not None:
-                    os.rename(src_sessions_f, self._zip_names["sessions_f"])
+                    os.rename(src_sessions_f, str(self._zip_names["sessions_f"]))
                 if src_events_f is not None and self._zip_names["events_f"] is not None:
-                    os.rename(src_events_f, self._zip_names["events_f"])
+                    os.rename(src_events_f, str(self._zip_names["events_f"]))
         except Exception as err:
             msg = f"Error while setting up zip files! {type(err)} : {err}"
             utils.Logger.Log(msg, logging.ERROR)
@@ -91,27 +94,27 @@ class FileManager(abc.ABC):
         base_path = f"{self._dataset_id}/{self._dataset_id}_{self._short_hash}"
         if self._zip_names["sessions_f"] is not None:
             # TODO: Come back and use with...as for the ###_zip_file vars here.
-            try:
-                sessions_zip_file = zipfile.ZipFile(self._zip_names["sessions_f"], "w", compression=zipfile.ZIP_DEFLATED)
-                self._addToZip(path=self._file_names["sessions_f"], zip_file=sessions_zip_file, path_in_zip=f"{base_path}_session-features.csv")
-                self._addToZip(path=self._readme_path,        zip_file=sessions_zip_file, path_in_zip=f"{self._dataset_id}/readme.md")
-                os.remove(self._file_names["sessions_f"])
-            except FileNotFoundError as err:
-                utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                traceback.print_tb(err.__traceback__)
-            finally:
-                sessions_zip_file.close()
+            with zipfile.ZipFile(self._zip_names["sessions_f"], "w", compression=zipfile.ZIP_DEFLATED) as sessions_zip_file:
+                try:
+                    self._addToZip(path=self._file_names["sessions_f"], zip_file=sessions_zip_file, path_in_zip=f"{base_path}_session-features.csv")
+                    self._addToZip(path=self._readme_path,        zip_file=sessions_zip_file, path_in_zip=f"{self._dataset_id}/readme.md")
+                    sessions_zip_file.close()
+                    if self._file_names["sessions_f"] is not None:
+                        os.remove(self._file_names["sessions_f"])
+                except FileNotFoundError as err:
+                    utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    traceback.print_tb(err.__traceback__)
         if self._zip_names["events_f"] is not None:
-            try:
-                events_zip_file = zipfile.ZipFile(self._zip_names["events_f"], "w", compression=zipfile.ZIP_DEFLATED)
-                self._addToZip(path=self._file_names["events_f"], zip_file=events_zip_file, path_in_zip=f"{base_path}_events.tsv")
-                self._addToZip(path=self._readme_path,        zip_file=events_zip_file, path_in_zip=f"{self._dataset_id}/readme.md")
-                os.remove(self._file_names["events_f"])
-            except FileNotFoundError as err:
-                utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
-                traceback.print_tb(err.__traceback__)
-            finally:
-                events_zip_file.close()
+            with zipfile.ZipFile(self._zip_names["events_f"], "w", compression=zipfile.ZIP_DEFLATED) as events_zip_file:
+                try:
+                    self._addToZip(path=self._file_names["events_f"], zip_file=events_zip_file, path_in_zip=f"{base_path}_events.tsv")
+                    self._addToZip(path=self._readme_path,        zip_file=events_zip_file, path_in_zip=f"{self._dataset_id}/readme.md")
+                    events_zip_file.close()
+                    if self._file_names["events_f"] is not None:
+                        os.remove(self._file_names["events_f"])
+                except FileNotFoundError as err:
+                    utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    traceback.print_tb(err.__traceback__)
 
     def _addToZip(self, path, zip_file, path_in_zip):
         try:
@@ -127,9 +130,9 @@ class FileManager(abc.ABC):
     #  @param num_sess      The number of sessions included in the recent export.
     def WriteMetadataFile(self, date_range: Dict[str,datetime], num_sess: int):
         # First, ensure we have a data directory.
-        full_data_dir = self._data_dir + self._game_id
+        full_data_dir : Path = self._data_dir / self._game_id
         try:
-            os.makedirs(name=full_data_dir, exist_ok=True)
+            full_data_dir.mkdir(exist_ok=True)
         except Exception as err:
             msg = f"Could not set up folder {full_data_dir}. {type(err)} {str(err)}"
             utils.Logger.toFile(msg, logging.WARNING)
@@ -157,14 +160,14 @@ class FileManager(abc.ABC):
             else:
                 metadata  = \
                 {
-                    "game_id":self._game_id,
+                    "game_id"      :self._game_id,
                     "dataset_id"   :self._dataset_id,
-                    "sessions_f":self._zip_names["sessions_f"],
-                    "events_f":self._zip_names["events_f"],
+                    "sessions_f"   :str(self._zip_names["sessions_f"]),
+                    "events_f"     :str(self._zip_names["events_f"]),
                     "start_date"   :date_range['min'].strftime("%m/%d/%Y"),
                     "end_date"     :date_range['max'].strftime("%m/%d/%Y"),
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
-                    "sessions":num_sess
+                    "sessions"     :num_sess
                 }
                 meta_file.write(json.dumps(metadata, indent=4))
                 meta_file.close()
@@ -179,41 +182,44 @@ class FileManager(abc.ABC):
         self._backupFileExportList()
         existing_csvs = {}
         try:
-            existing_csvs = utils.loadJSONFile("file_list.json", self._data_dir)
+            existing_csvs = utils.loadJSONFile("file_list.json", str(self._data_dir))
         except FileNotFoundError as err:
             utils.Logger.toFile("file_list.json does not exist.", logging.WARNING)
         except Exception as err:
             msg = f"Could not load file list. {type(err)} {str(err)}"
             utils.Logger.toFile(msg, logging.ERROR)
         finally:
-            with open(f"{self._data_dir}file_list.json", "w") as existing_csv_file:
+            with open(self._data_dir / "file_list.json", "w") as existing_csv_file:
                 utils.Logger.toStdOut(f"opened csv file at {existing_csv_file.name}", logging.INFO)
                 if not self._game_id in existing_csvs.keys():
                     existing_csvs[self._game_id] = {}
                 # sessions_stat = os.stat(sessions_csv_full_path)
                 prior_export = self._dataset_id in existing_csvs[self._game_id].keys()
-                sessions_path = self._zip_names["sessions_f"] if self._zip_names["sessions_f"] is not None else (existing_csvs[self._game_id][self._dataset_id]["sessions_f"] if prior_export else None)
-                events_path = self._zip_names["events_f"] if self._zip_names["events_f"] is not None else (existing_csvs[self._game_id][self._dataset_id]["events_f"] if prior_export else None)
+                sessions_path = str(self._zip_names["sessions_f"]) if self._zip_names["sessions_f"] is not None else (existing_csvs[self._game_id][self._dataset_id]["sessions_f"] if prior_export else None)
+                events_path   = str(self._zip_names["events_f"]) if self._zip_names["events_f"] is not None else (existing_csvs[self._game_id][self._dataset_id]["events_f"] if prior_export else None)
                 existing_csvs[self._game_id][self._dataset_id] = \
                 {
-                    "sessions_f":sessions_path,
-                    "events_f":events_path,
+                    "sessions_f"   :sessions_path,
+                    "events_f"     :events_path,
                     "start_date"   :date_range['min'].strftime("%m/%d/%Y"),
                     "end_date"     :date_range['max'].strftime("%m/%d/%Y"),
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
-                    "sessions":num_sess
+                    "sessions"     :num_sess
                 }
                 existing_csv_file.write(json.dumps(existing_csvs, indent=4))
 
     def _backupFileExportList(self) -> bool:
         try:
-            existing_csvs = utils.loadJSONFile("file_list.json", self._data_dir) or {}
+            src  : Path = self._data_dir / "file_list.json"
+            dest : Path = self._data_dir / "file_list.json.bak"
+            if src.exists():
+                shutil.copyfile(src=src, dst=dest)
+            else:
+                utils.Logger.Log(f"Could not back up file_list.json, because it does not exist!", logging.WARN)
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
-            utils.Logger.toStdOut(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
-            utils.Logger.toFile(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
+            utils.Logger.Log(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
             return False
-        backup_csv_file = open(f"{self._data_dir}file_list.json.bak", "w")
-        backup_csv_file.write(json.dumps(existing_csvs, indent=4))
-        utils.Logger.toStdOut(f"Backed up file_list.json to {backup_csv_file.name}", logging.INFO)
-        return True
+        else:
+            utils.Logger.toStdOut(f"Backed up file_list.json to {dest}", logging.INFO)
+            return True
