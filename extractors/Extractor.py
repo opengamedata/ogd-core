@@ -42,7 +42,7 @@ class Extractor(abc.ABC):
         self._game_schema : GameSchema  = game_schema
         # self._levels      : List[int]   = []
         # self._sequences   : List        = []
-        self._event_registry : Dict[str,List[Extractor.Listener]]
+        self._event_registry : Dict[str,List[Extractor.Listener]] = {}
         self._aggregates : Dict[str,Feature] = self._genAggregate()
         self._percounts  : Dict[str,List[Feature]] = self._genPerCounts()
 
@@ -153,7 +153,6 @@ class Extractor(abc.ABC):
     #  it is probably better to do dedicated sequence analysis.
     # def extractCustomSequenceEventDataFromRow(self, event:Event, table_schema:TableSchema):
     #     return None
-
     def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         """Abstract declaration of a function to perform extraction of features from a row.
 
@@ -163,14 +162,15 @@ class Extractor(abc.ABC):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
-        for listener in self._event_registry[event.event_name]:
-            if listener.kind == Extractor.Listener.Kinds.AGGREGATE:
-                self._aggregates[listener.name].ExtractFromEvent(event)
-            elif listener.kind == Extractor.Listener.Kinds.PERCOUNT:
-                for percount in self._percounts[listener.name]:
-                    percount.ExtractFromEvent(event)
-            else:
-                utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
+        if event.event_name in self._event_registry.keys():
+            for listener in self._event_registry[event.event_name]:
+                if listener.kind == Extractor.Listener.Kinds.AGGREGATE:
+                    self._aggregates[listener.name].ExtractFromEvent(event)
+                elif listener.kind == Extractor.Listener.Kinds.PERCOUNT:
+                    for percount in self._percounts[listener.name]:
+                        percount.ExtractFromEvent(event)
+                else:
+                    utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
 
     ## Abstract declaration of a function to perform calculation of aggregate features
     #  from existing per-level/per-custom-count features.
@@ -179,7 +179,7 @@ class Extractor(abc.ABC):
         pass
     
     @abc.abstractmethod
-    def _loadFeature(self, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+    def _loadFeature(self, feature:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         pass
 
     @staticmethod
@@ -196,7 +196,7 @@ class Extractor(abc.ABC):
         ret_val = {}
         for name,aggregate in self._game_schema.aggregate_features().items():
             if aggregate["enabled"] == True:
-                feature = self._loadFeature(name=name, feature_args=aggregate)
+                feature = self._loadFeature(feature=name, name=name, feature_args=aggregate)
                 self._register(feature, Extractor.Listener.Kinds.AGGREGATE)
                 ret_val[name] = feature
         return ret_val
@@ -211,7 +211,7 @@ class Extractor(abc.ABC):
                 else:
                     count_range = range(0,percount["count"])
                 for i in count_range:
-                    feature = self._loadFeature(name=f"{percount['prefix']}{i}_{name}", feature_args=percount, count_index=i)
+                    feature = self._loadFeature(feature=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount)
                     self._register(feature, Extractor.Listener.Kinds.PERCOUNT)
                     percount_instances.append(feature)
                 ret_val[name] = percount_instances
