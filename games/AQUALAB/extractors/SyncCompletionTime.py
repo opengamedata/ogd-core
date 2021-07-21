@@ -5,11 +5,10 @@ from schemas.Event import Event
 
 class SyncCompletionTime(Feature):
 
-    def __init__(self, name:str, description:str, sessionID:str):
+    def __init__(self, name:str, description:str):
         min_data_version = None
         max_data_version = None
-        super().__init__(name, description, min_data_version, max_data_version)
-        self._sessionID = sessionID
+        super().__init__(name=name, description=description, count_index=0, min_version=min_data_version, max_version=max_data_version)
         self._sim_start_time = None
         self._time = None
 

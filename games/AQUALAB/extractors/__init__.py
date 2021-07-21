@@ -1,15 +1,14 @@
 __all__ = [
-    "DiveSitesCount",
     "JobArgumentationTime",
     "JobCompletionTime",
-    "JobDiveSitesCount"
+    "JobDiveSitesCount",
     "JobDiveTime",
     "JobExperimentationTime",
     "JobGuideCount",
     "JobHelpCount",
     "JobModelingTime",
     "JobTasksCompleted",
-    "SessionDiveSitesCount"
+    "SessionDiveSitesCount",
     "SessionDuration",
     "SessionGuideCount",
     "SessionHelpCount",
