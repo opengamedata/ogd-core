@@ -63,7 +63,13 @@ class AqualabExtractor(Extractor):
                 raise TypeError("Got None for count_index, should have a value!")
             ret_val = JobCompletionTime.JobCompletionTime(name, feature_args["description"], job_num=count_index)
         elif feature == "JobDiveSitesCount":
-            ret_val = JobDiveSitesCount.JobDiveSitesCount(name=name, description=feature_args["description"], )
+            if count_index is None:
+                raise TypeError("Got None for count_index, should have a value!")
+            ret_val = JobDiveSitesCount.JobDiveSitesCount(name=name, description=feature_args["description"], job_num=count_index)
+        elif feature == "JobDiveTime":
+            if count_index is None:
+                raise TypeError("Got None for count_index, should have a value!")
+            ret_val = JobDiveTime.JobDiveTime(name=name, description=feature_args["description"], job_num=count_index)
         else:
             raise NotImplementedError(f"'{feature}' is not a valid feature for Aqualab.")
         return ret_val
