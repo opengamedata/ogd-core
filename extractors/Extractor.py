@@ -125,7 +125,7 @@ class Extractor(abc.ABC):
         file.write("\n")
 
     def getCurrentFeatures(self) -> typing.List[str]:
-        #  #DO: It looks like I might be assuming that dictionaries always have same order here.
+        # TODO: It looks like I might be assuming that dictionaries always have same order here.
         # May need to revisit that issue. I mean, it should be fine because Python won't just go
         # and change order for no reason, but still...
         column_vals = []
@@ -186,8 +186,8 @@ class Extractor(abc.ABC):
     def _getLevelRange(schema:GameSchema) -> range:
         ret_val = range(0)
         if schema._min_level is not None and schema._max_level is not None:
-            for i in range(schema._min_level, schema._max_level+1):
-                ret_val = range(schema._min_level, schema._max_level+1)
+            # for i in range(schema._min_level, schema._max_level+1):
+            ret_val = range(schema._min_level, schema._max_level+1)
         else:
             utils.Logger.Log(f"Could not generate per-level features, min_level={schema._min_level} and max_level={schema._max_level}", logging.ERROR)
         return ret_val
