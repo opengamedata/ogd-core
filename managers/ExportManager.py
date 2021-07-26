@@ -26,6 +26,7 @@ from managers.Request import Request, ExporterFiles, ExporterRange
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
+from games.AQUALAB.AqualabExtractor import AqualabExtractor
 from games.WAVES.WaveExtractor import WaveExtractor
 from games.CRYSTAL.CrystalExtractor import CrystalExtractor
 from games.LAKELAND.LakelandExtractor import LakelandExtractor
@@ -117,17 +118,19 @@ class ExportManager:
 
     def _prepareExtractor(self) -> Union[type,None]:
         game_extractor: Union[type,None] = None
-        if self._game_id == "WAVES":
-            game_extractor = WaveExtractor
+        if self._game_id == "AQUALAB":
+            game_extractor = AqualabExtractor
         elif self._game_id == "CRYSTAL":
             game_extractor = CrystalExtractor
-        elif self._game_id == "LAKELAND":
-            game_extractor = LakelandExtractor
         elif self._game_id == "JOWILDER":
             game_extractor = JowilderExtractor
+        elif self._game_id == "LAKELAND":
+            game_extractor = LakelandExtractor
         elif self._game_id == "MAGNET":
             game_extractor = MagnetExtractor
-        elif self._game_id in ["AQUALAB", "BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "STEMPORTS", "EARTHQUAKE", "WIND"]:
+        elif self._game_id == "WAVES":
+            game_extractor = WaveExtractor
+        elif self._game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "STEMPORTS", "EARTHQUAKE", "WIND"]:
             # all games with data but no extractor.
             pass
         else:
