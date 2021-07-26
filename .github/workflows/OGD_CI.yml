@@ -1,6 +1,6 @@
 # Workflow to run a test export of Crystal whenever we change the core OGD backend code.
 # Chose Crystal simply because it has an extractor, but not a particularly complex one.
-name: OpenGameData Backend Continuous Integration
+name: OpenGameData-Core CI Test
 on:
   push:
     paths:
