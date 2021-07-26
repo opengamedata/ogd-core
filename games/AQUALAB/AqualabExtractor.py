@@ -70,6 +70,48 @@ class AqualabExtractor(Extractor):
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
             ret_val = JobDiveTime.JobDiveTime(name=name, description=feature_args["description"], job_num=count_index)
+        elif feature == "JobExperimentationTime":
+            if count_index is None:
+                raise TypeError("Got None for count_index, should have a value!")
+            ret_val = JobExperimentationTime.JobExperimentationTime(name=name, description=feature_args["description"], job_num=count_index)
+        elif feature == "JobGuideCount":
+            if count_index is None:
+                raise TypeError("Got None for count_index, should have a value!")
+            ret_val = JobGuideCount.JobGuideCount(name=name, description=feature_args["description"], job_num=count_index)
+        elif feature == "JobHelpCount":
+            if count_index is None:
+                raise TypeError("Got None for count_index, should have a value!")
+            ret_val = JobHelpCount.JobHelpCount(name=name, description=feature_args["description"], job_num=count_index)
+        elif feature == "JobModelingTime":
+            if count_index is None:
+                raise TypeError("Got None for count_index, should have a value!")
+            ret_val = JobModelingTime.JobModelingTime(name=name, description=feature_args["description"], job_num=count_index)
+        elif feature == "JobTasksCompleted":
+            if count_index is None:
+                raise TypeError("Got None for count_index, should have a value!")
+            ret_val = JobTasksCompleted.JobTasksCompleted(name=name, description=feature_args["description"], job_num=count_index)
+        elif feature == "SessionDiveSitesCount":
+            ret_val = SessionDiveSitesCount.SessionDiveSitesCount(name=name, description=feature_args["description"])
+        elif feature == "SessionDuration":
+            ret_val = SessionDuration.SessionDuration(name=name, description=feature_args["description"])
+        elif feature == "SessionGuideCount":
+            ret_val = SessionGuideCount.SessionGuideCount(name=name, description=feature_args["description"])
+        elif feature == "SessionHelpCount":
+            ret_val = SessionHelpCount.SessionHelpCount(name=name, description=feature_args["description"])
+        elif feature == "SessionJobsCompleted":
+            ret_val = SessionJobsCompleted.SessionJobsCompleted(name=name, description=feature_args["description"])
+        elif feature == "SwitchJobsCount":
+            ret_val = SwitchJobsCount.SwitchJobsCount(name=name, description=feature_args["description"])
+        elif feature == "SyncCompletionTime":
+            if count_index is None:
+                raise TypeError("Got None for count_index, should have a value!")
+            ret_val = SyncCompletionTime.SyncCompletionTime(name=name, description=feature_args["description"])
+        elif feature == "TotalArgumentationTime":
+            ret_val = TotalArgumentationTime.TotalArgumentationTime(name=name, description=feature_args["description"])
+        elif feature == "TotalDiveTime":
+            ret_val = TotalDiveTime.TotalDiveTime(name=name, description=feature_args["description"])
+        elif feature == "TotalExperimentationTime":
+            ret_val = TotalExperimentationTime.TotalExperimentationTime(name=name, description=feature_args["description"])
         else:
             raise NotImplementedError(f"'{feature}' is not a valid feature for Aqualab.")
         return ret_val
