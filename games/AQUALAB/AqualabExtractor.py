@@ -30,28 +30,7 @@ class AqualabExtractor(Extractor):
     #                     structured.
     def __init__(self, session_id: str, game_schema: GameSchema):
         super().__init__(session_id=session_id, game_schema=game_schema)
-        # self._last_adjust_type : Union[str,None] = None
-        # self.start_times: Dict       = {}
-        # self.end_times:   Dict       = {}
-        # self.amp_move_counts:  Dict   = {}
-        # self.off_move_counts:  Dict   = {}
-        # self.wave_move_counts: Dict   = {}
-        # self.saw_first_move: Dict[int, bool] = {}
-        # self.latest_complete_lvl8 = None
-        # self.latest_complete_lvl16 = None
-        # self.latest_answer_Q0 = None
-        # self.latest_answer_Q2 = None
-        # self.active_begin = None
-        # self.move_closenesses_tx: Dict = {}
-        # self._features.setValByName(feature_name="sessionID", new_value=session_id)
-        # # we specifically want to set the default value for questionAnswered to None, for unanswered.
-        # for ans in self._features.getValByName(feature_name="questionAnswered").keys():
-        #     self._features.setValByIndex(feature_name="questionAnswered", index=ans, new_value=None)
-        # for q in self._features.getValByName(feature_name="questionCorrect"):
-        #     self._features.setValByIndex(feature_name="questionCorrect", index=q, new_value=None)
-        # for elem in self._features.getValByName(feature_name="firstMoveType"):
-        #     self._features.setValByIndex(feature_name="firstMoveType", index=elem, new_value=None)
-    
+
     def _loadFeature(self, feature:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         ret_val : Feature
         if feature == "JobArgumentationTime":
