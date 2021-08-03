@@ -36,39 +36,39 @@ class AqualabExtractor(Extractor):
         if feature == "JobArgumentationTime":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobArgumentationTime.JobArgumentationTime(name=name, description=feature_args["description"], job_num=count_index)
+            ret_val = JobArgumentationTime.JobArgumentationTime(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature == "JobCompletionTime":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobCompletionTime.JobCompletionTime(name, feature_args["description"], job_num=count_index)
+            ret_val = JobCompletionTime.JobCompletionTime(name, feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature == "JobDiveSitesCount":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobDiveSitesCount.JobDiveSitesCount(name=name, description=feature_args["description"], job_num=count_index)
+            ret_val = JobDiveSitesCount.JobDiveSitesCount(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature == "JobDiveTime":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobDiveTime.JobDiveTime(name=name, description=feature_args["description"], job_num=count_index)
+            ret_val = JobDiveTime.JobDiveTime(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature == "JobExperimentationTime":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobExperimentationTime.JobExperimentationTime(name=name, description=feature_args["description"], job_num=count_index)
+            ret_val = JobExperimentationTime.JobExperimentationTime(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature == "JobGuideCount":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobGuideCount.JobGuideCount(name=name, description=feature_args["description"], job_num=count_index)
+            ret_val = JobGuideCount.JobGuideCount(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature == "JobHelpCount":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobHelpCount.JobHelpCount(name=name, description=feature_args["description"], job_num=count_index)
+            ret_val = JobHelpCount.JobHelpCount(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature == "JobModelingTime":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobModelingTime.JobModelingTime(name=name, description=feature_args["description"], job_num=count_index)
+            ret_val = JobModelingTime.JobModelingTime(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature == "JobTasksCompleted":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobTasksCompleted.JobTasksCompleted(name=name, description=feature_args["description"], job_num=count_index)
+            ret_val = JobTasksCompleted.JobTasksCompleted(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature == "SessionDiveSitesCount":
             ret_val = SessionDiveSitesCount.SessionDiveSitesCount(name=name, description=feature_args["description"])
         elif feature == "SessionDuration":
@@ -94,3 +94,6 @@ class AqualabExtractor(Extractor):
         else:
             raise NotImplementedError(f"'{feature}' is not a valid feature for Aqualab.")
         return ret_val
+
+    def getJobMap(self) -> Dict:
+        return self._game_schema["job_map"]

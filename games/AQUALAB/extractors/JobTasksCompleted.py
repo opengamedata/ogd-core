@@ -5,11 +5,12 @@ from schemas.Event import Event
 
 class JobTasksCompleted(Feature):
     
-    def __init__(self, name:str, description:str, job_num:int):
+    def __init__(self, name:str, description:str, job_num:int, job_map:dict):
+        self._job_map = job_map
         min_data_version = None
         max_data_version = None
         super().__init__(name=name, description=description, count_index=job_num, min_version=min_data_version, max_version=max_data_version)
-        self._counts = {}
+        self._count = 0
 
     def GetEventTypes(self) -> List[str]:
         return []
@@ -18,7 +19,5 @@ class JobTasksCompleted(Feature):
         return self._counts
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_data["job_id"] not in self._counts:
-            self._counts[event.event_data["job_id"]] = 0
-
-        self._counts[event.event_data["job_id"]] += 1
+        if self._job_map[event.event_params["job_id"]] == self._count_index:
+            self._count += 1

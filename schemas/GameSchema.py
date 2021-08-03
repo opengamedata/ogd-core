@@ -30,6 +30,7 @@ class GameSchema:
         self._feature_list: Union[List[str],None] = None
         self._min_level:    Union[int,None] = None
         self._max_level:    Union[int,None] = None
+        self._job_map:      Dict = {}
         # set instance vars
         if not schema_name.lower().endswith(".json"):
             schema_name += ".json"
@@ -53,6 +54,8 @@ class GameSchema:
         if "level_range" in self._schema.keys():
             self._min_level = self._schema["level_range"]['min']
             self._max_level = self._schema["level_range"]['max']
+        if "job_map" in self._schema.keys():
+            self._job_map = self._schema["job_map"]
 
     def __getitem__(self, key) -> Any:
         return self._schema[key]
