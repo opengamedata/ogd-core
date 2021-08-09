@@ -184,5 +184,16 @@
     },
     "config": {
     	"SUPPORTED_VERS": [1]
-	}
+	},
+    "job_map": {
+        "kelp-welcome": 0,
+        "kelp-urchin-barren": 1,
+        "kelp-save-urchin-barren": 2,
+        "kelp-bull-kelp-forest": 3,
+        "coral-urchin-friends": 4,
+        "coral-remove-sarg": 5,
+        "coral-invade": 6,
+        "coral-fishy-bizz": 7,
+        "coral-clear-sarg": 8
+    }
 }
