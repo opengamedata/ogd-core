@@ -1,12 +1,14 @@
 # global imports
 from mysql.connector import connect, connection, cursor
 import http
+import json
 import logging
 import math
 import sshtunnel
 import traceback
 from datetime import datetime
-from typing import Any, Dict, List, Tuple, Union
+from itertools import chain
+from typing import Any, Dict, List, Set, Tuple, Union
 # local imports
 from interfaces.DataInterface import DataInterface
 from schemas.GameSchema import GameSchema
@@ -156,9 +158,7 @@ class SQL:
 
     @staticmethod
     def disconnectMySQLViaSSH(tunnel:Union[sshtunnel.SSHTunnelForwarder,None], db:Union[connection.MySQLConnection,None]) -> None:
-        if db is not None:
-            db.close()
-            Logger.toStdOut("Closed database connection", logging.INFO)
+        SQL.disconnectMySQL(db)
         # else:
         #     Logger.toStdOut("No db to close.", logging.INFO)
         if tunnel is not None:
@@ -242,25 +242,20 @@ class SQL:
 
         return sel_clause + join_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
 
-    ## Function similar to SELECTfromQuery, but gets the first element per-col in cursor.fetchall().
-    #  Really, it's probably meant to be row, rather than col.
-    #  @param cursor        The MySQLdb cursor for accessing the database.
-    #  @param query         A string representing the query to execute.
-    #  @param fetch_results A bool to determine whether we should try to return the query results or not.
     @staticmethod
-    def Query(cursor:cursor.MySQLCursor, query: str, fetch_results: bool = True) -> Union[List[Tuple], None]:
+    def Query(cursor:cursor.MySQLCursor, query:str, params:Union[Tuple,None], fetch_results: bool = True) -> Union[List[Tuple], None]:
         result : Union[List[Tuple], None] = None
         # first, we do the query.
-        Logger.toStdOut("Running query: " + query, logging.DEBUG)
+        Logger.toStdOut(f"Running query: {query}\nWith params: {params}", logging.DEBUG)
         start = datetime.now()
-        cursor.execute(query)
+        cursor.execute(query, params)
         time_delta = datetime.now()-start
         Logger.toStdOut(f"Query execution completed, time to execute: {time_delta}", logging.DEBUG)
         # second, we get the results.
         if fetch_results:
-            result = [col[0] for col in cursor.fetchall()]
+            result = cursor.fetchall()
             time_delta = datetime.now()-start
-            Logger.toStdOut(f"Query fetch completed, total query time:    {time_delta} to get {len(result):d} rows", logging.DEBUG)
+            Logger.toStdOut(f"Query fetch completed, total query time:    {time_delta} to get {len(result) if result is not None else 0:d} rows", logging.DEBUG)
         return result
 
     ## Simple function to construct and log a nice server 500 error message.
