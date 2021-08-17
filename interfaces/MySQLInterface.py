@@ -52,12 +52,12 @@ class SQL:
         tunnel  : Union[sshtunnel.SSHTunnelForwarder,None] = None
         db_conn : Union[connection.MySQLConnection,None]   = None
         # Load settings, set up consts.
-        DB_NAME_DATA = db_settings["DB_NAME_DATA"]
+        DB_NAME = db_settings["DB_NAME"]
         DB_USER = db_settings['DB_USER']
         DB_PW = db_settings['DB_PW']
         DB_HOST = db_settings['DB_HOST']
         DB_PORT = db_settings['DB_PORT']
-        sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
+        sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME)
         Logger.toStdOut("Preparing database connection...", logging.INFO)
         if ssh_settings is not None:
             SSH_USER = ssh_settings['SSH_USER']
@@ -332,7 +332,7 @@ class MySQLInterface(DataInterface):
     def _allIDs(self) -> List[int]:
         if not self._db_cursor == None:
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            db_name = self._settings["db_config"]["DB_NAME"]
             table_name = self._settings["db_config"]["TABLE"]
             filt = f"`app_id`='{self._game_id}'"
             data = SQL.SELECT(cursor  =self._db_cursor, db_name =db_name, table   =table_name,
@@ -346,7 +346,7 @@ class MySQLInterface(DataInterface):
     def _fullDateRange(self) -> Dict[str,datetime]:
         if not self._db_cursor == None:
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            db_name = self._settings["db_config"]["DB_NAME"]
             table_name = self._settings["db_config"]["TABLE"]
             # prep filter strings
             filt = f"`app_id`='{self._game_id}'"
@@ -361,7 +361,7 @@ class MySQLInterface(DataInterface):
     def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[int]:
         if not self._db_cursor == None:
             # alias long setting names.
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            db_name = self._settings["db_config"]["DB_NAME"]
             table_name = self._settings["db_config"]["TABLE"]
             start = min.isoformat()
             end = max.isoformat()
@@ -381,7 +381,7 @@ class MySQLInterface(DataInterface):
     def _datesFromIDs(self, id_list:List[int], versions: Union[List[int],None]=None) -> Dict[str, datetime]:
         if not self._db_cursor == None:
             # alias long setting names.
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            db_name = self._settings["db_config"]["DB_NAME"]
             table_name = self._settings["db_config"]["TABLE"]
             # prep filter strings
             ids_string = ','.join([f"'{x}'" for x in id_list])
