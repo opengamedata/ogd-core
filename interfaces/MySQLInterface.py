@@ -1,12 +1,14 @@
 # global imports
 from mysql.connector import connect, connection, cursor
 import http
+import json
 import logging
 import math
 import sshtunnel
 import traceback
 from datetime import datetime
-from typing import Any, Dict, List, Tuple, Union
+from itertools import chain
+from typing import Any, Dict, List, Set, Tuple, Union
 # local imports
 from interfaces.DataInterface import DataInterface
 from schemas.GameSchema import GameSchema
@@ -52,12 +54,12 @@ class SQL:
         tunnel  : Union[sshtunnel.SSHTunnelForwarder,None] = None
         db_conn : Union[connection.MySQLConnection,None]   = None
         # Load settings, set up consts.
-        DB_NAME_DATA = db_settings["DB_NAME_DATA"]
+        DB_NAME = db_settings["DB_NAME"]
         DB_USER = db_settings['DB_USER']
         DB_PW = db_settings['DB_PW']
         DB_HOST = db_settings['DB_HOST']
         DB_PORT = db_settings['DB_PORT']
-        sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME_DATA)
+        sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME)
         Logger.toStdOut("Preparing database connection...", logging.INFO)
         if ssh_settings is not None:
             SSH_USER = ssh_settings['SSH_USER']
@@ -156,9 +158,7 @@ class SQL:
 
     @staticmethod
     def disconnectMySQLViaSSH(tunnel:Union[sshtunnel.SSHTunnelForwarder,None], db:Union[connection.MySQLConnection,None]) -> None:
-        if db is not None:
-            db.close()
-            Logger.toStdOut("Closed database connection", logging.INFO)
+        SQL.disconnectMySQL(db)
         # else:
         #     Logger.toStdOut("No db to close.", logging.INFO)
         if tunnel is not None:
@@ -167,12 +167,56 @@ class SQL:
         # else:
         #     Logger.toStdOut("No tunnel to stop", logging.INFO)
 
+    @staticmethod
+    def disconnectMySQL(db:Union[connection.MySQLConnection,None]) -> None:
+        if db is not None:
+            db.close()
+            Logger.toStdOut("Closed database connection", logging.INFO)
+
+
+    # Function to build and execute SELECT statements on a database connection.
+    # @staticmethod
+    # def INSERT(cursor:cursor.MySQLCursor,    db_name:str,                  table:str,
+    #            columns:List[str],            items:List[Dict[str,object]], fetch_results:bool = False) -> Union[List[Tuple],None]:
+    #     """Function to build and execute INSERT statements on a database connection.
+    #     Assumes 
+
+    #     :param cursor: A database cursor, retrieved from the active connection.
+    #     :type cursor: cursor.MySQLCursor
+    #     :param db_name: The name of the database to which we are connected.
+    #     :type db_name: str
+    #     :param table: The name of the table from which we want to make a selection.
+    #     :type table: str
+    #     :param columns: A list of columns whose values should be included in the insert. Only columns in this list will be included from the items.
+    #     :type columns: List[str]
+    #     :param items: A list of items to be inserted.
+    #      Each item maps column names to values for insertion, and is converted to a "value" (SQL's term), a comma-separated list of values.
+    #     :type items: List[Dict[str,object]]
+    #     :param fetch_results: A bool to determine whether all results should be fetched and returned, defaults to True
+    #     :type fetch_results: bool, optional
+    #     :return: A collection of all rows from the selection, if fetch_results is true, otherwise None.
+    #     :rtype: Union[List[Tuple],None]
+    #     """
+    #     table_path: str      = db_name + "." + str(table)
+    #     values    : List[str] = []
+    #     for item in items:
+    #         val_list = ",".join([f"'{json.dumps(item[col])}'" for col in columns])
+    #         values.append(f"({val_list})")
+
+    #     ins_clause  = f"INSERT INTO {table_path}"
+    #     cols_clause = f"({','.join(columns)})"
+    #     vals_clause = f"VALUES {','.join(values)}"
+    #     query = f"{ins_clause} {cols_clause} {vals_clause};"
+    #     print(f"Insert query: {query}")
+    #     return SQL.Query(cursor=cursor, query=query, fetch_results=fetch_results)
+
     # Function to build and execute SELECT statements on a database connection.
     @staticmethod
-    def SELECT(cursor      :cursor.MySQLCursor,    db_name       :str,         table         :str,
-               columns     :List[str] = None,  join          :str = None,  filter        :str = None,
-               sort_columns:List[str] = None,  sort_direction:str = "ASC", grouping      :str = None,
-               distinct    :bool      = False, limit         :int = -1,    fetch_results :bool = True) -> Union[List[Tuple],None]:
+    def SELECT(cursor        :cursor.MySQLCursor, db_name       :str,         table         :str,
+               columns       :List[str] = None,   filter        :str = None,
+               sort_columns  :List[str] = None,   sort_direction:str = "ASC", grouping      :str = None,
+               distinct      :bool      = False,  offset        :int = 0,     limit         :int = -1,
+               fetch_results :bool      = True) -> Union[List[Tuple],None]:
         """Function to build and execute SELECT statements on a database connection.
 
         :param cursor: A database cursor, retrieved from the active connection.
@@ -183,8 +227,6 @@ class SQL:
         :type table: str
         :param columns: A list of columns to be selected. If empty (or None), all columns will be used (SELECT * FROM ...). Defaults to None
         :type columns: List[str], optional
-        :param join: [description], defaults to None
-        :type join: str, optional
         :param filter: A string giving the constraints for a WHERE clause (The "WHERE" term itself should not be part of the filter string), defaults to None
         :type filter: str, optional
         :param sort_columns: A list of columns to sort results on. The order of columns in the list is the order given to SQL. Defaults to None
@@ -202,18 +244,31 @@ class SQL:
         :return: A collection of all rows from the selection, if fetch_results is true, otherwise None.
         :rtype: Union[List[Tuple],None]
         """
-        query = SQL._prepareSelect(db_name=db_name, table=table, columns=columns, join=join, filter=filter,
-                                   sort_columns=sort_columns, sort_direction=sort_direction, grouping=grouping,
-                                   distinct=distinct, limit=limit)
-        return SQL.SELECTfromQuery(cursor=cursor, query=query, fetch_results=fetch_results)
+        d          = "DISTINCT" if distinct else ""
+        sort_cols  = ",".join(sort_columns) if sort_columns is not None and len(sort_columns) > 0 else None
+        table_path = db_name + "." + str(table)
+        params = []
+
+        if columns is not None:
+            cols       = ",".join(columns)
+            params.append(cols)
+            sel_clause = f"SELECT {d} (%s) FROM {table_path}"
+        else:
+            sel_clause   = f"SELECT {d} * FROM {table_path}"
+        where_clause = "" if filter    is None else f"WHERE {filter}"
+        group_clause = "" if grouping  is None else f"GROUP BY {grouping}"
+        sort_clause  = "" if sort_cols is None else f"ORDER BY {sort_cols} {sort_direction} "
+        lim_clause   = "" if limit < 0         else f"LIMIT {str(max(offset, 0))}, {str(limit)}" # don't use a negative for offset
+        query = f"{sel_clause} {where_clause} {group_clause} {sort_clause} {lim_clause};"
+        return SQL.Query(cursor=cursor, query=query, params=("",), fetch_results=fetch_results)
 
     @staticmethod
-    def SELECTfromQuery(cursor:cursor.MySQLCursor, query: str, fetch_results: bool = True) -> Union[List[Tuple], None]:
+    def Query(cursor:cursor.MySQLCursor, query:str, params:Union[Tuple,None], fetch_results: bool = True) -> Union[List[Tuple], None]:
         result : Union[List[Tuple], None] = None
         # first, we do the query.
-        Logger.toStdOut(f"Running query: {query}", logging.DEBUG)
+        Logger.toStdOut(f"Running query: {query}\nWith params: {params}", logging.DEBUG)
         start = datetime.now()
-        cursor.execute(query)
+        cursor.execute(query, params)
         time_delta = datetime.now()-start
         Logger.toStdOut(f"Query execution completed, time to execute: {time_delta}", logging.DEBUG)
         # second, we get the results.
@@ -221,46 +276,6 @@ class SQL:
             result = cursor.fetchall()
             time_delta = datetime.now()-start
             Logger.toStdOut(f"Query fetch completed, total query time:    {time_delta} to get {len(result) if result is not None else 0:d} rows", logging.DEBUG)
-        return result
-
-    @staticmethod
-    def _prepareSelect(db_name: str,                    table:str,
-                       columns: List[str]      = None,  join: str      = None,  filter: str = None,
-                       sort_columns: List[str] = None,  sort_direction = "ASC", grouping: str = None,
-                       distinct: bool          = False, limit: int     = -1) -> str:
-        d = "DISTINCT " if distinct else ""
-        cols      = ",".join(columns)      if columns is not None      and len(columns) > 0      else "*"
-        sort_cols = ",".join(sort_columns) if sort_columns is not None and len(sort_columns) > 0 else None
-        table_path = db_name + "." + str(table)
-
-        sel_clause   = "SELECT " + d + cols + " FROM " + table_path
-        join_clause  = "" if join      is None else f" {join}"
-        where_clause = "" if filter    is None else f" WHERE {filter}"
-        group_clause = "" if grouping  is None else f" GROUP BY {grouping}"
-        sort_clause  = "" if sort_cols is None else f" ORDER BY {sort_cols} {sort_direction} "
-        lim_clause   = "" if limit < 0         else f" LIMIT {str(limit)}"
-
-        return sel_clause + join_clause + where_clause + group_clause + sort_clause + lim_clause + ";"
-
-    ## Function similar to SELECTfromQuery, but gets the first element per-col in cursor.fetchall().
-    #  Really, it's probably meant to be row, rather than col.
-    #  @param cursor        The MySQLdb cursor for accessing the database.
-    #  @param query         A string representing the query to execute.
-    #  @param fetch_results A bool to determine whether we should try to return the query results or not.
-    @staticmethod
-    def Query(cursor:cursor.MySQLCursor, query: str, fetch_results: bool = True) -> Union[List[Tuple], None]:
-        result : Union[List[Tuple], None] = None
-        # first, we do the query.
-        Logger.toStdOut("Running query: " + query, logging.DEBUG)
-        start = datetime.now()
-        cursor.execute(query)
-        time_delta = datetime.now()-start
-        Logger.toStdOut(f"Query execution completed, time to execute: {time_delta}", logging.DEBUG)
-        # second, we get the results.
-        if fetch_results:
-            result = [col[0] for col in cursor.fetchall()]
-            time_delta = datetime.now()-start
-            Logger.toStdOut(f"Query fetch completed, total query time:    {time_delta} to get {len(result):d} rows", logging.DEBUG)
         return result
 
     ## Simple function to construct and log a nice server 500 error message.
@@ -315,14 +330,14 @@ class MySQLInterface(DataInterface):
                 ver_filter = f" AND app_version in ({','.join([str(version) for version in versions])}) "
             else:
                 ver_filter = ''
-            id_string = ','.join([f"'{x}'" for x in id_list])
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            filt = f"app_id='{self._game_id}' AND session_id  IN ({id_string}){ver_filter}"
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            params = [self._game_id] + [str(x) for x in id_list]
+            id_list_string = ",".join([f"'%s'" for i in range(len(id_list))])
+            filt = f"app_id='%s' AND session_id  IN ({id_list_string}){ver_filter}"
+            db_name = self._settings["db_config"]["DB_NAME"]
             table_name = self._settings["db_config"]["TABLE"]
-            data = SQL.SELECT(cursor      =self._db_cursor,             db_name       =db_name, table=table_name,
-                              columns     =None,                        filter        =filt,
-                              sort_columns=["session_id", "session_n"], sort_direction="ASC",)
+            query_string = f"SELECT * FROM {db_name}.{table_name} WHERE {filt} ORDER BY session_id, session_n ASC"
+            data = SQL.Query(cursor=self._db_cursor, query=query_string, params=None, fetch_results=True)
             return data if data != None else []
             # self._select_queries.append(select_query) # this doesn't appear to be used???
         else:
@@ -332,7 +347,7 @@ class MySQLInterface(DataInterface):
     def _allIDs(self) -> List[int]:
         if not self._db_cursor == None:
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            db_name = self._settings["db_config"]["DB_NAME"]
             table_name = self._settings["db_config"]["TABLE"]
             filt = f"`app_id`='{self._game_id}'"
             data = SQL.SELECT(cursor  =self._db_cursor, db_name =db_name, table   =table_name,
@@ -346,7 +361,7 @@ class MySQLInterface(DataInterface):
     def _fullDateRange(self) -> Dict[str,datetime]:
         if not self._db_cursor == None:
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            db_name = self._settings["db_config"]["DB_NAME"]
             table_name = self._settings["db_config"]["TABLE"]
             # prep filter strings
             filt = f"`app_id`='{self._game_id}'"
@@ -361,7 +376,7 @@ class MySQLInterface(DataInterface):
     def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[int]:
         if not self._db_cursor == None:
             # alias long setting names.
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            db_name = self._settings["db_config"]["DB_NAME"]
             table_name = self._settings["db_config"]["TABLE"]
             start = min.isoformat()
             end = max.isoformat()
@@ -381,7 +396,7 @@ class MySQLInterface(DataInterface):
     def _datesFromIDs(self, id_list:List[int], versions: Union[List[int],None]=None) -> Dict[str, datetime]:
         if not self._db_cursor == None:
             # alias long setting names.
-            db_name = self._settings["db_config"]["DB_NAME_DATA"]
+            db_name = self._settings["db_config"]["DB_NAME"]
             table_name = self._settings["db_config"]["TABLE"]
             # prep filter strings
             ids_string = ','.join([f"'{x}'" for x in id_list])

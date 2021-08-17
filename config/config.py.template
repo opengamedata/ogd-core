@@ -5,7 +5,7 @@ settings = {
         "DB_HOST" : "127.0.0.1",
         "DB_USER" : "username",
         "DB_PW" : "password",
-        "DB_NAME_DATA" : "logger",
+        "DB_NAME" : "logger",
         "TABLE" : "log",
         "DB_PORT" : 3306
     },
