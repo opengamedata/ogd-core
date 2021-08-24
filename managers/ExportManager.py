@@ -50,7 +50,6 @@ class ExportManager:
         else:
             self._game_id   = game_id
         self._settings = settings
-        # self._select_queries = []
 
     def ExecuteRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema):
         if request.GetGameID() != self._game_id:
@@ -68,10 +67,9 @@ class ExportManager:
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
     def _executeRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema) -> bool:
-        # utils.Logger.toStdOut(f"complex_data_index: {complex_data_index}", logging.DEBUG)
         ret_val = False
         try:
-            # 2a) Prepare schema and extractor, if game doesn't have an extractor, make sure we don't try to export it.
+            # 2a) Prepare extractor, if game doesn't have an extractor, make sure we don't try to export it.
             game_extractor = self._prepareExtractor()
             if game_extractor is None:
                 request._files.sessions = False
