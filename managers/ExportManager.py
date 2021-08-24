@@ -56,16 +56,10 @@ class ExportManager:
         if request.GetGameID() != self._game_id:
             utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.GetGameID()}", logging.WARNING)
             self._game_id = request.GetGameID()
-        try:
-            if self._executeRequest(request=request, game_schema=game_schema, table_schema=table_schema):
-                utils.Logger.Log(f"Successfully completed request {str(request)}.", logging.INFO)
-            else:
-                utils.Logger.Log(f"Could not complete request {str(request)}", logging.ERROR)
-        except Exception as err:
-            msg = f"General error in ExecuteRequest: {type(err)} {str(err)}"
-            SQL.server500Error(msg)
-            utils.Logger.toFile(msg, logging.ERROR)
-            traceback.print_tb(err.__traceback__)
+        if self._executeRequest(request=request, game_schema=game_schema, table_schema=table_schema):
+            utils.Logger.Log(f"Successfully completed request {str(request)}.", logging.INFO)
+        else:
+            utils.Logger.Log(f"Could not complete request {str(request)}", logging.ERROR)
 
     ## Private function containing most of the code to handle processing of db
     #  data, and export to files.
