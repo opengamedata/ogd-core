@@ -100,6 +100,8 @@ class ExportManager:
                 file_manager.WriteMetadataFile(date_range=request._range.GetDateRange(), num_sess=num_sess)
                 file_manager.UpdateFileExportList(date_range=request._range.GetDateRange(), num_sess=num_sess)
                 ret_val = True
+            else:
+                utils.Logger.Log(f"Missing schema for {request.GetGameID()}")
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.toStdOut(msg, logging.ERROR)
