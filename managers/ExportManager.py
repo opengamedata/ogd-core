@@ -82,7 +82,7 @@ class ExportManager:
                 # 4) Loop over data, running extractors.
                 start = datetime.now()
 
-                num_sess: int = self._extractToCSVs(request=request, file_manager=file_manager,\
+                num_sess: int = self._exportToFiles(request=request, file_manager=file_manager,\
                                     game_schema=game_schema, table_schema=table_schema, game_extractor=game_extractor)
 
                 time_delta = datetime.now() - start
@@ -129,7 +129,7 @@ class ExportManager:
             raise Exception(f"Got an invalid game ID ({self._game_id})!")
         return game_extractor
 
-    def _extractToCSVs(self, request:Request, file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema, game_extractor: Union[type,None]):
+    def _exportToFiles(self, request:Request, file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema, game_extractor: Union[type,None]):
         ret_val = -1
         sess_processor = evt_processor = None
         if request._files.sessions and game_extractor is not None:
