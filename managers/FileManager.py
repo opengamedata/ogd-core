@@ -10,7 +10,7 @@ import typing
 import zipfile
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Tuple, Union
+from typing import Any, Dict, IO, Union
 ## import local files
 import utils
 from managers.Request import Request, ExporterFiles, ExporterRange
@@ -19,12 +19,12 @@ class FileManager(abc.ABC):
     def __init__(self, exporter_files: ExporterFiles, game_id, data_dir: str, date_range: Dict[str,datetime]):
         self._file_names   : Dict[str,Union[Path,None]] = {"sessions_f":None, "events_f":None}
         self._zip_names    : Dict[str,Union[Path,None]] = {"sessions_f":None, "events_f":None}
-        self._files        : Dict = {"sessions_f":None, "events_f":None}
+        self._files        : Dict[str,Union[IO,None]]   = {"sessions_f":None, "events_f":None}
+        self._game_id      : str  = game_id
         self._data_dir     : Path = Path("./" + data_dir)
         self._game_data_dir: Path = self._data_dir / self._game_id
         # self._base_path    : Path = self._game_data_dir / f"{self._dataset_id}_{self._short_hash}"
-        self._game_id      : str  = game_id
-        self._readme_path  : Path
+        self._readme_path  : Path = self._game_data_dir/ "readme.md"
         self._dataset_id   : str
         self._short_hash   : str
         try:
@@ -36,13 +36,12 @@ class FileManager(abc.ABC):
             repo = git.Repo(search_parent_directories=True)
             self._short_hash = str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
             # then set up our paths, and ensure each exists.
-            self._readme_path : Path = self._game_data_dir/ "readme.md"
             base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
             # finally, generate file names.
-            self._file_names["sessions_f"] = self._game_data_dir / f"{base_file_name}_session-features.csv" if exporter_files.sessions else None
             self._file_names["events_f"]   = self._game_data_dir / f"{base_file_name}_events.tsv" if exporter_files.events else None
-            self._zip_names["sessions_f"]  = self._game_data_dir / f"{base_file_name}_session-features.zip" if exporter_files.sessions else None
             self._zip_names["events_f"]    = self._game_data_dir / f"{base_file_name}_events.zip" if exporter_files.events else None
+            self._file_names["sessions_f"] = self._game_data_dir / f"{base_file_name}_session-features.csv" if exporter_files.sessions else None
+            self._zip_names["sessions_f"]  = self._game_data_dir / f"{base_file_name}_session-features.zip" if exporter_files.sessions else None
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.Log(msg, logging.ERROR)
@@ -92,7 +91,6 @@ class FileManager(abc.ABC):
         # for each file, try to save out the csv/tsv to a file - if it's one that should be exported, that is.
         base_path = f"{self._dataset_id}/{self._dataset_id}_{self._short_hash}"
         if self._zip_names["sessions_f"] is not None:
-            # TODO: Come back and use with...as for the ###_zip_file vars here.
             with zipfile.ZipFile(self._zip_names["sessions_f"], "w", compression=zipfile.ZIP_DEFLATED) as sessions_zip_file:
                 try:
                     self._addToZip(path=self._file_names["sessions_f"], zip_file=sessions_zip_file, path_in_zip=f"{base_path}_session-features.csv")
