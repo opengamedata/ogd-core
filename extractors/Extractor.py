@@ -96,7 +96,7 @@ class Extractor(abc.ABC):
 
     # Static function to print column headers to a file.
     @staticmethod
-    def writeCSVHeader(game_schema: GameSchema, file: typing.IO[str]) -> None:
+    def WriteCSVHeader(game_schema: GameSchema, file: typing.IO[str]) -> None:
         """Static function to print column headers to a file.
 
         We first create a feature dictionary, then essentially write out each key,
@@ -112,7 +112,7 @@ class Extractor(abc.ABC):
         file.write("\n")
 
     ## Function to print data from an extractor to file.
-    def writeCurrentFeatures(self, file: typing.IO[str]) -> None:
+    def WriteCurrentFeatures(self, file: typing.IO[str]) -> None:
         """Function to print data from an extractor to file.
 
         This function should be the same across all Extractor subtypes.
