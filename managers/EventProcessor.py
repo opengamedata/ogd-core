@@ -20,12 +20,11 @@ class EventProcessor:
     #  @param game_schema   A dictionary that defines how the game data itself
     #                       is structured.
     #  @param events_csv_file The output file, to which we'll write the event game data.
-    def __init__(self, table_schema: TableSchema, game_schema: GameSchema,
-                  events_csv_file: typing.IO[str]):
+    def __init__(self, table_schema: TableSchema, events_file: typing.IO[str]):
         # define instance vars
         self._lines        : List[str]      = []
         self._table_schema : TableSchema    = table_schema
-        self._events_file  : typing.IO[str] = events_csv_file
+        self._events_file  : typing.IO[str] = events_file
         self._columns      : List[str]      = table_schema.ColumnNames()
 
     ## Function to handle processing one row of data.
