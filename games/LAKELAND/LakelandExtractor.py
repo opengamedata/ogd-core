@@ -117,7 +117,7 @@ class LakelandExtractor(LegacyExtractor):
         self.reset()
         self.setValByName('num_play', self._cur_gameplay)
     
-    def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    def ExtractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         try:
             self._extractFromEvent(event, table_schema)
         except Exception as e:
@@ -1183,7 +1183,7 @@ class LakelandExtractor(LegacyExtractor):
                 self.setValByIndex(f'max_num_{type}_in_play', w, prev_val)
 
 
-    def calculateAggregateFeatures(self):
+    def CalculateAggregateFeatures(self):
         for w in self._cur_windows:
             self.finish_window(w)
 

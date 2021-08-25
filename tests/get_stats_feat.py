@@ -84,9 +84,9 @@ for session in session_id_list:
             row[table.client_time_index] = dt.strptime(row[table.client_time_index], '%Y-%m-%d %H:%M:%S')
             row[table.complex_data_index] = complex_data_parsed
             extractor.extractFromRow(row_with_complex_parsed=row, game_table=table)
-        extractor.calculateAggregateFeatures()
+        extractor.CalculateAggregateFeatures()
         all_features = dict(zip(extractor.getFeatureNames(game_table=table, game_schema=schema),
-                                extractor.getCurrentFeatures()))
+                                extractor.GetCurrentFeatures()))
         all_features = parse_nums(all_features)
         result = model.Eval([all_features])[0]
         if result is None:

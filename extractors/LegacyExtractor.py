@@ -75,11 +75,11 @@ class LegacyExtractor(Extractor):
     # TODO: It looks like I might be assuming that dictionaries always have same order here.
     # May need to revisit that issue. I mean, it should be fine because Python won't just go
     # and change order for no reason, but still...
-        column_vals = self.getCurrentFeatures()
+        column_vals = self.GetCurrentFeatures()
         file.write(",".join(column_vals))
         file.write("\n")
 
-    def getCurrentFeatures(self) -> typing.List[str]:
+    def GetCurrentFeatures(self) -> typing.List[str]:
         def _format(obj):
             if obj == None:
                 return ""
@@ -110,7 +110,7 @@ class LegacyExtractor(Extractor):
 
     def ExtractFromRow(self, event:Event, table_schema:TableSchema) -> None:
         self.extractSequencesFromRow(event=event, table_schema=table_schema)
-        self._extractFeaturesFromEvent(event=event, table_schema=table_schema)
+        self._ExtractFeaturesFromEvent(event=event, table_schema=table_schema)
 
     def extractSequencesFromRow(self, event:Event, table_schema:TableSchema) -> None:
         for sequence in self._sequences:
@@ -127,7 +127,7 @@ class LegacyExtractor(Extractor):
         return None
 
     @abc.abstractmethod
-    def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    def _ExtractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         """Abstract declaration of a function to perform extraction of features from a row.
 
         :param event: [description]
@@ -141,7 +141,7 @@ class LegacyExtractor(Extractor):
     ## Abstract declaration of a function to perform calculation of aggregate features
     #  from existing per-level/per-custom-count features.
     @abc.abstractmethod
-    def _calculateAggregateFeatures(self):
+    def _CalculateAggregateFeatures(self):
         pass
 
     ## @class LegacySessionFeatures

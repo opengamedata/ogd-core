@@ -120,11 +120,11 @@ class Extractor(abc.ABC):
         :param file: An open csv file to which we will write column headers.
         :type file: typing.IO[str]
         """
-        column_vals = self.getCurrentFeatures()
+        column_vals = self.GetCurrentFeatures()
         file.write(",".join(column_vals))
         file.write("\n")
 
-    def getCurrentFeatures(self) -> typing.List[str]:
+    def GetCurrentFeatures(self) -> typing.List[str]:
         # TODO: It looks like I might be assuming that dictionaries always have same order here.
         # May need to revisit that issue. I mean, it should be fine because Python won't just go
         # and change order for no reason, but still...
@@ -138,7 +138,7 @@ class Extractor(abc.ABC):
 
     def ExtractFromRow(self, event:Event, table_schema:TableSchema) -> None:
         # self.extractSequencesFromRow(event=event, table_schema=table_schema)
-        self.extractFeaturesFromEvent(event=event, table_schema=table_schema)
+        self.ExtractFeaturesFromEvent(event=event, table_schema=table_schema)
 
     # def extractSequencesFromRow(self, event:Event, table_schema:TableSchema) -> None:
     #     for sequence in self._sequences:
@@ -153,7 +153,7 @@ class Extractor(abc.ABC):
     #  it is probably better to do dedicated sequence analysis.
     # def extractCustomSequenceEventDataFromRow(self, event:Event, table_schema:TableSchema):
     #     return None
-    def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    def ExtractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         """Abstract declaration of a function to perform extraction of features from a row.
 
         :param event: [description]
@@ -175,7 +175,7 @@ class Extractor(abc.ABC):
     ## Abstract declaration of a function to perform calculation of aggregate features
     #  from existing per-level/per-custom-count features.
     # @abc.abstractmethod
-    def calculateAggregateFeatures(self):
+    def CalculateAggregateFeatures(self):
         pass
     
     @abc.abstractmethod

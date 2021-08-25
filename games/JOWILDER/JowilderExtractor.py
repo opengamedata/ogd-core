@@ -147,7 +147,7 @@ class JowilderExtractor(LegacyExtractor):
         self._last_quizstart = None
         self._quiztimes = [None]*16
 
-    def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    def ExtractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         try:
             self._extractFeaturesFromRow(event, table_schema)
         except Exception:
@@ -986,7 +986,7 @@ class JowilderExtractor(LegacyExtractor):
         for obj in range(je.level_to_start_obj[self.level]):
             self.finished_encounters[obj] = True
 
-    def calculateAggregateFeatures(self):
+    def CalculateAggregateFeatures(self):
         pass
 
     # def feature_time_since_start(self, feature_name, cur_client_time):

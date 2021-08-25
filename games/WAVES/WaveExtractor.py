@@ -66,7 +66,7 @@ class WaveExtractor(Extractor):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    # def extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    # def ExtractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
     #     if event.session_id == self._session_id:
     #         level = event.event_data['level']
     #         # If we haven't set persistent id, set now.
@@ -116,7 +116,7 @@ class WaveExtractor(Extractor):
                                                
     ## Function to perform calculation of aggregate features from existing
     #  per-level/per-custom-count features.
-    # def calculateAggregateFeatures(self):
+    # def CalculateAggregateFeatures(self):
     #     if len(self._levels) > 0:
     #         # Calculate per-level averages and percentages, since we can't calculate
     #         # them until we know how many total events occur.
