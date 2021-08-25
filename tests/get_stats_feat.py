@@ -3,7 +3,7 @@ from datetime import datetime as dt
 import math
 import pandas as pd
 from schemas.TableSchema import TableSchema
-from extractors.LakelandExtractor import LakelandExtractor
+from games.LAKELAND.LakelandExtractor import LakelandExtractor
 from realtime.ModelManager import ModelManager
 from schemas.GameSchema import GameSchema
 
