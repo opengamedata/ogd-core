@@ -1,5 +1,5 @@
-from datetime import datetime
-from typing import Any, Dict, Union
+from datetime import date, datetime
+from typing import Any, Dict, List, Union
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 
 ## @class Event
@@ -76,3 +76,13 @@ class Event:
             return 1
         else:
             return 0
+
+    @staticmethod
+    def ColumnNames() -> List[str]:
+        return ["session_id", "app_id", "timestamp", "event_name", "event_data",
+                "version",    "offset", "user_id",   "user_data",  "game_state", "index"]
+
+    def ColumnValues(self) -> List[Union[str, datetime, Map, int, None]]:
+        return [self.session_id,  self.app_id,      self.timestamp,   self.event_name,
+                self.event_data,  self.app_version, self.time_offset, self.user_id,
+                self.user_data,   self.game_state,  self.event_sequence_index]
