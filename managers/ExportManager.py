@@ -9,11 +9,9 @@ import math
 import os
 import subprocess
 import traceback
-import typing
-import zipfile
 import pandas as pd
 from datetime import datetime
-from typing import Tuple
+from typing import List, Tuple
 ## import local files
 import utils
 from config.config import settings
@@ -158,11 +156,13 @@ class ExportManager:
                         range( j*slice_size, min((j+1)*slice_size, num_sess) )] for j in
                         range( 0, math.ceil(num_sess / slice_size) )]
         for i, next_slice in enumerate(session_slices):
-            start = datetime.now()
-            next_data_set = request._interface.RowsFromIDs(next_slice)
-            try:
-                if next_data_set is not None:
+            start         : datetime    = datetime.now()
+            num_events    : int         = 0
+            next_data_set : List[Tuple] = request._interface.RowsFromIDs(next_slice)
+            if next_data_set is not None:
+                num_events = len(next_data_set)
                     # now, we process each row.
+                try:
                     for row in next_data_set:
                         next_event = table_schema.RowToEvent(row)
                         #self._processRow(event=next_event, sess_ids=sess_ids, sess_processor=sess_processor, evt_processor=evt_processor)
@@ -174,22 +174,20 @@ class ExportManager:
                                 evt_processor.ProcessEvent(next_event)
                         else:
                             utils.Logger.toFile(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
-                else:
-                    utils.Logger.Log("Could not retrieve next data set.", logging.WARN)
-                # after processing all rows for each slice, write out the session data and reset for next slice.
-                if request._files.sessions and sess_processor is not None:
-                    sess_processor.CalculateAggregateFeatures()
-                    sess_processor.WriteSessionFileLines()
-                    sess_processor.ClearLines()
-                if request._files.events and evt_processor is not None:
-                    evt_processor.WriteEventsCSVLines()
-                    evt_processor.ClearLines()
-            except Exception as err:
-                msg = f"Error while processing slice {i} of {len(session_slices)}"
-                raise err
+                    # after processing all rows for each slice, write out the session data and reset for next slice.
+                    if request._files.sessions and sess_processor is not None:
+                        sess_processor.CalculateAggregateFeatures()
+                        sess_processor.WriteSessionFileLines()
+                        sess_processor.ClearLines()
+                    if request._files.events and evt_processor is not None:
+                        evt_processor.WriteEventsCSVLines()
+                        evt_processor.ClearLines()
+                except Exception as err:
+                    msg = f"Error while processing slice {i} of {len(session_slices)}"
+                    raise err
             else:
-                time_delta = datetime.now() - start
-                num_events = len(next_data_set) if next_data_set is not None else 0
-                utils.Logger.Log(f"Processing time for slice [{i+1}/{len(session_slices)}]: {time_delta} to handle {num_events} events", logging.INFO)
+                utils.Logger.Log("Could not retrieve next data set.", logging.WARN)
+            time_delta = datetime.now() - start
+            utils.Logger.Log(f"Processing time for slice [{i+1}/{len(session_slices)}]: {time_delta} to handle {num_events} events", logging.INFO)
         ret_val = num_sess
         return ret_val
