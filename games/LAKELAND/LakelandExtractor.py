@@ -117,7 +117,7 @@ class LakelandExtractor(LegacyExtractor):
         self.reset()
         self.setValByName('num_play', self._cur_gameplay)
     
-    def ExtractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         try:
             self._extractFromEvent(event, table_schema)
         except Exception as e:

@@ -139,7 +139,7 @@ class Extractor(abc.ABC):
 
     def ExtractFromEvent(self, event:Event, table_schema:TableSchema) -> None:
         # self.extractSequencesFromRow(event=event, table_schema=table_schema)
-        self.ExtractFeaturesFromEvent(event=event, table_schema=table_schema)
+        self._extractFeaturesFromEvent(event=event, table_schema=table_schema)
 
     # def extractSequencesFromRow(self, event:Event, table_schema:TableSchema) -> None:
     #     for sequence in self._sequences:
@@ -154,7 +154,7 @@ class Extractor(abc.ABC):
     #  it is probably better to do dedicated sequence analysis.
     # def extractCustomSequenceEventDataFromRow(self, event:Event, table_schema:TableSchema):
     #     return None
-    def ExtractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         """Abstract declaration of a function to perform extraction of features from a row.
 
         :param event: [description]

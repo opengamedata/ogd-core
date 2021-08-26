@@ -147,7 +147,7 @@ class JowilderExtractor(LegacyExtractor):
         self._last_quizstart = None
         self._quiztimes = [None]*16
 
-    def ExtractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         try:
             self._extractFeaturesFromRow(event, table_schema)
         except Exception:

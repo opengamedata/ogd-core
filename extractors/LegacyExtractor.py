@@ -110,10 +110,10 @@ class LegacyExtractor(Extractor):
         return column_vals
 
     def ExtractFromEvent(self, event:Event, table_schema:TableSchema) -> None:
-        self.extractSequencesFromRow(event=event, table_schema=table_schema)
-        self._ExtractFeaturesFromEvent(event=event, table_schema=table_schema)
+        self._extractSequencesFromEvent(event=event, table_schema=table_schema)
+        self._extractFeaturesFromEvent(event=event, table_schema=table_schema)
 
-    def extractSequencesFromRow(self, event:Event, table_schema:TableSchema) -> None:
+    def _extractSequencesFromEvent(self, event:Event, table_schema:TableSchema) -> None:
         for sequence in self._sequences:
             event_data = self.extractCustomSequenceEventDataFromRow(event=event, table_schema=table_schema)
             sequence.RegisterEvent(event.event_data, event_data=event_data)
@@ -128,7 +128,7 @@ class LegacyExtractor(Extractor):
         return None
 
     @abc.abstractmethod
-    def _ExtractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         """Abstract declaration of a function to perform extraction of features from a row.
 
         :param event: [description]
