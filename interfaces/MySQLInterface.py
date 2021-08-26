@@ -245,22 +245,18 @@ class SQL:
         :rtype: Union[List[Tuple],None]
         """
         d          = "DISTINCT" if distinct else ""
+        cols = ",".join(columns) if columns is not None and len(columns) > 0 else "*"
         sort_cols  = ",".join(sort_columns) if sort_columns is not None and len(sort_columns) > 0 else None
         table_path = db_name + "." + str(table)
         params = []
 
-        if columns is not None:
-            cols       = ",".join(columns)
-            params.append(cols)
-            sel_clause = f"SELECT {d} (%s) FROM {table_path}"
-        else:
-            sel_clause   = f"SELECT {d} * FROM {table_path}"
+        sel_clause = f"SELECT {d} {cols} FROM {table_path}"
         where_clause = "" if filter    is None else f"WHERE {filter}"
         group_clause = "" if grouping  is None else f"GROUP BY {grouping}"
         sort_clause  = "" if sort_cols is None else f"ORDER BY {sort_cols} {sort_direction} "
         lim_clause   = "" if limit < 0         else f"LIMIT {str(max(offset, 0))}, {str(limit)}" # don't use a negative for offset
         query = f"{sel_clause} {where_clause} {group_clause} {sort_clause} {lim_clause};"
-        return SQL.Query(cursor=cursor, query=query, params=("",), fetch_results=fetch_results)
+        return SQL.Query(cursor=cursor, query=query, params=None, fetch_results=fetch_results)
 
     @staticmethod
     def Query(cursor:cursor.MySQLCursor, query:str, params:Union[Tuple,None], fetch_results: bool = True) -> Union[List[Tuple], None]:
@@ -332,12 +328,12 @@ class MySQLInterface(DataInterface):
                 ver_filter = ''
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
             params = [self._game_id] + [str(x) for x in id_list]
-            id_list_string = ",".join([f"'%s'" for i in range(len(id_list))])
-            filt = f"app_id='%s' AND session_id  IN ({id_list_string}){ver_filter}"
+            id_list_string = ",".join([f"%s" for i in range(len(id_list))])
+            filt = f"app_id=%s AND session_id IN ({id_list_string}){ver_filter}"
             db_name = self._settings["db_config"]["DB_NAME"]
             table_name = self._settings["db_config"]["TABLE"]
             query_string = f"SELECT * FROM {db_name}.{table_name} WHERE {filt} ORDER BY session_id, session_n ASC"
-            data = SQL.Query(cursor=self._db_cursor, query=query_string, params=None, fetch_results=True)
+            data = SQL.Query(cursor=self._db_cursor, query=query_string, params=params, fetch_results=True)
             return data if data != None else []
             # self._select_queries.append(select_query) # this doesn't appear to be used???
         else:
