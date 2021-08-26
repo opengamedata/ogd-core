@@ -134,17 +134,19 @@ class ExportManager:
     def _exportToFiles(self, request:Request, file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema, game_extractor: Union[type,None]):
         ret_val = -1
         sess_processor = evt_processor = None
+        if request._files.events:
+            evt_file = file_manager.GetEventsFile()
+            if evt_file is not None:
+                evt_processor = EventProcessor(table_schema=table_schema, events_file=evt_file)
+                evt_processor.WriteEventsCSVHeader()
         if request._files.sessions and game_extractor is not None:
             if game_extractor is not None:
+                sess_file = file_manager.GetSessionsFile()
                 sess_processor = SessionProcessor(ExtractorClass=game_extractor, table_schema=table_schema,
-                                    game_schema=game_schema, sessions_csv_file=file_manager.GetSessionsFile())
+                                    game_schema=game_schema, sessions_file=sess_file)
                 sess_processor.WriteSessionCSVHeader()
             else:
                 utils.Logger.Log("Could not export sessions, no game extractor given!", logging.ERROR)
-        if request._files.events:
-            evt_processor = EventProcessor(table_schema=table_schema, game_schema=game_schema,
-                                events_csv_file=file_manager.GetEventsFile())
-            evt_processor.WriteEventsCSVHeader()
 
         sess_ids = request.RetrieveSessionIDs()
         if sess_ids is None:
@@ -169,7 +171,7 @@ class ExportManager:
                             if sess_processor is not None:
                                 sess_processor.ProcessEvent(next_event)
                             if evt_processor is not None:
-                                evt_processor.ProcessRow(row)
+                                evt_processor.ProcessEvent(next_event)
                         else:
                             utils.Logger.toFile(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
                 else:
