@@ -2,6 +2,7 @@
 import abc
 import enum
 import logging
+from os import sep
 import typing
 from collections import defaultdict
 from typing import Any, Dict, List, Literal, Union
@@ -96,7 +97,7 @@ class Extractor(abc.ABC):
 
     # Static function to print column headers to a file.
     @staticmethod
-    def WriteCSVHeader(game_schema: GameSchema, file: typing.IO[str]) -> None:
+    def WriteFileHeader(game_schema: GameSchema, file: typing.IO[str], separator:str="\t") -> None:
         """Static function to print column headers to a file.
 
         We first create a feature dictionary, then essentially write out each key,
@@ -108,11 +109,11 @@ class Extractor(abc.ABC):
         :type file: typing.IO[str]
         """
         columns = Extractor.GetFeatureNames(schema=game_schema)
-        file.write(",".join(columns))
+        file.write(separator.join(columns))
         file.write("\n")
 
     ## Function to print data from an extractor to file.
-    def WriteCurrentFeatures(self, file: typing.IO[str]) -> None:
+    def WriteCurrentFeatures(self, file: typing.IO[str], separator:str="\t") -> None:
         """Function to print data from an extractor to file.
 
         This function should be the same across all Extractor subtypes.
@@ -121,7 +122,7 @@ class Extractor(abc.ABC):
         :type file: typing.IO[str]
         """
         column_vals = self.GetCurrentFeatures()
-        file.write(",".join(column_vals))
+        file.write(separator.join(column_vals))
         file.write("\n")
 
     def GetCurrentFeatures(self) -> typing.List[str]:

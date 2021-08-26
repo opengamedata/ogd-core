@@ -1,6 +1,7 @@
 ## import standard libraries
 import abc
 import logging
+from os import sep
 import typing
 import logging
 from collections import defaultdict
@@ -49,9 +50,9 @@ class LegacyExtractor(Extractor):
     #                     structured.
     #  @param file        An open csv file to which we will write column headers.
     @staticmethod
-    def WriteCSVHeader(game_schema: GameSchema, file: typing.IO[str]) -> None:
+    def WriteFileHeader(game_schema: GameSchema, file: typing.IO[str], separator:str="\t") -> None:
         columns = LegacyExtractor.GetFeatureNames(game_schema=game_schema)
-        file.write(",".join(columns))
+        file.write(separator.join(columns))
         file.write("\n")
 
     @staticmethod
@@ -71,12 +72,12 @@ class LegacyExtractor(Extractor):
     #  Simply prints out each value from the extractor's features dictionary.
     #
     #  @param file        An open csv file to which we will write column headers.
-    def WriteCurrentFeatures(self, file: typing.IO[str]) -> None:
+    def WriteCurrentFeatures(self, file: typing.IO[str], separator:str="\t") -> None:
     # TODO: It looks like I might be assuming that dictionaries always have same order here.
     # May need to revisit that issue. I mean, it should be fine because Python won't just go
     # and change order for no reason, but still...
         column_vals = self.GetCurrentFeatures()
-        file.write(",".join(column_vals))
+        file.write(separator.join(column_vals))
         file.write("\n")
 
     def GetCurrentFeatures(self) -> typing.List[str]:
