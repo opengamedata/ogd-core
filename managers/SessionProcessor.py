@@ -65,11 +65,11 @@ class SessionProcessor:
 
     ## Function to write out the header for a processed csv file.
     #  Just runs the header writer for whichever Extractor subclass we were given.
-    def WriteSessionCSVHeader(self):
+    def WriteSessionFileHeader(self):
         self._ExtractorClass.WriteCSVHeader(game_schema=self._game_schema, file=self._sessions_file)
 
     ## Function to write out all data for the extractors created by the
     #  SessionProcessor. Just calls the "write" function once for each extractor.
-    def WriteSessionCSVLines(self):
+    def WriteSessionFileLines(self):
         for extractor in self._session_extractors.values():
             extractor.WriteCurrentFeatures(file=self._sessions_file)

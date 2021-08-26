@@ -144,7 +144,7 @@ class ExportManager:
                 sess_file = file_manager.GetSessionsFile()
                 sess_processor = SessionProcessor(ExtractorClass=game_extractor, table_schema=table_schema,
                                     game_schema=game_schema, sessions_file=sess_file)
-                sess_processor.WriteSessionCSVHeader()
+                sess_processor.WriteSessionFileHeader()
             else:
                 utils.Logger.Log("Could not export sessions, no game extractor given!", logging.ERROR)
 
@@ -179,7 +179,7 @@ class ExportManager:
                 # after processing all rows for each slice, write out the session data and reset for next slice.
                 if request._files.sessions and sess_processor is not None:
                     sess_processor.CalculateAggregateFeatures()
-                    sess_processor.WriteSessionCSVLines()
+                    sess_processor.WriteSessionFileLines()
                     sess_processor.ClearLines()
                 if request._files.events and evt_processor is not None:
                     evt_processor.WriteEventsCSVLines()
