@@ -167,7 +167,7 @@ class ExportManager:
                         if next_event.session_id in sess_ids:
                             # we check if there's an instance given, if not we obviously skip.
                             if sess_processor is not None:
-                                sess_processor.ProcessRow(next_event)
+                                sess_processor.ProcessEvent(next_event)
                             if evt_processor is not None:
                                 evt_processor.ProcessRow(row)
                         else:
@@ -176,7 +176,7 @@ class ExportManager:
                     utils.Logger.Log("Could not retrieve next data set.", logging.WARN)
                 # after processing all rows for each slice, write out the session data and reset for next slice.
                 if request._files.sessions and sess_processor is not None:
-                    sess_processor.calculateAggregateFeatures()
+                    sess_processor.CalculateAggregateFeatures()
                     sess_processor.WriteSessionCSVLines()
                     sess_processor.ClearLines()
                 if request._files.events and evt_processor is not None:
