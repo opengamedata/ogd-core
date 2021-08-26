@@ -109,7 +109,7 @@ class LegacyExtractor(Extractor):
                 column_vals.append(_format(self._features.getValByName(key)))
         return column_vals
 
-    def ExtractFromRow(self, event:Event, table_schema:TableSchema) -> None:
+    def ExtractFromEvent(self, event:Event, table_schema:TableSchema) -> None:
         self.extractSequencesFromRow(event=event, table_schema=table_schema)
         self._ExtractFeaturesFromEvent(event=event, table_schema=table_schema)
 

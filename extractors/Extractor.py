@@ -137,7 +137,7 @@ class Extractor(abc.ABC):
                 column_vals.append(percount.CalculateFinalValues())
         return column_vals
 
-    def ExtractFromRow(self, event:Event, table_schema:TableSchema) -> None:
+    def ExtractFromEvent(self, event:Event, table_schema:TableSchema) -> None:
         # self.extractSequencesFromRow(event=event, table_schema=table_schema)
         self.ExtractFeaturesFromEvent(event=event, table_schema=table_schema)
 
