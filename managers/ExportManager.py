@@ -11,7 +11,7 @@ import subprocess
 import traceback
 import pandas as pd
 from datetime import datetime
-from typing import List, Tuple
+from typing import List, Tuple, Union
 ## import local files
 import utils
 from config.config import settings
@@ -131,6 +131,7 @@ class ExportManager:
 
     def _exportToFiles(self, request:Request, file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema, game_extractor: Union[type,None]):
         ret_val = -1
+        # 1) Set up processors.
         sess_processor = evt_processor = None
         if request._files.events:
             evt_file = file_manager.GetEventsFile()
@@ -145,7 +146,7 @@ class ExportManager:
                 sess_processor.WriteSessionFileHeader()
             else:
                 utils.Logger.Log("Could not export sessions, no game extractor given!", logging.ERROR)
-
+        # 2) Get the data
         sess_ids = request.RetrieveSessionIDs()
         if sess_ids is None:
             sess_ids = []
@@ -155,39 +156,39 @@ class ExportManager:
         session_slices = [[sess_ids[i] for i in
                         range( j*slice_size, min((j+1)*slice_size, num_sess) )] for j in
                         range( 0, math.ceil(num_sess / slice_size) )]
+        # 3) Loop over and process the data, slice-by-slice (where each slice is a list of sessions).
         for i, next_slice in enumerate(session_slices):
-            start         : datetime    = datetime.now()
-            num_events    : int         = 0
-            next_data_set : List[Tuple] = request._interface.RowsFromIDs(next_slice)
+            start         : datetime                = datetime.now()
+            num_events    : int                     = 0
+            next_data_set : Union[List[Tuple],None] = request._interface.RowsFromIDs(next_slice)
             if next_data_set is not None:
                 num_events = len(next_data_set)
-                    # now, we process each row.
                 try:
+                    # 3a) If next slice yielded valid data from the interface, process row-by-row.
                     for row in next_data_set:
                         next_event = table_schema.RowToEvent(row)
-                        #self._processRow(event=next_event, sess_ids=sess_ids, sess_processor=sess_processor, evt_processor=evt_processor)
                         if next_event.session_id in sess_ids:
-                            # we check if there's an instance given, if not we obviously skip.
                             if sess_processor is not None:
                                 sess_processor.ProcessEvent(next_event)
                             if evt_processor is not None:
                                 evt_processor.ProcessEvent(next_event)
                         else:
                             utils.Logger.toFile(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
-                    # after processing all rows for each slice, write out the session data and reset for next slice.
+                    # 3b) After processing all rows for each slice, write out the session data and reset for next slice.
+                    if request._files.events and evt_processor is not None:
+                        evt_processor.WriteEventsCSVLines()
+                        evt_processor.ClearLines()
                     if request._files.sessions and sess_processor is not None:
                         sess_processor.CalculateAggregateFeatures()
                         sess_processor.WriteSessionFileLines()
                         sess_processor.ClearLines()
-                    if request._files.events and evt_processor is not None:
-                        evt_processor.WriteEventsCSVLines()
-                        evt_processor.ClearLines()
                 except Exception as err:
-                    msg = f"Error while processing slice {i} of {len(session_slices)}"
+                    msg = f"Error while processing slice [{i+1}/{len(session_slices)}]"
                     raise err
             else:
                 utils.Logger.Log("Could not retrieve next data set.", logging.WARN)
             time_delta = datetime.now() - start
             utils.Logger.Log(f"Processing time for slice [{i+1}/{len(session_slices)}]: {time_delta} to handle {num_events} events", logging.INFO)
+        # 4) If we made it all the way to the end, return the number of sessions processed.
         ret_val = num_sess
         return ret_val
