@@ -139,6 +139,8 @@ class TableSchema:
             return int(input)
         elif column_descriptor['type'] == 'float':
             return float(input)
+        elif column_descriptor['type'] == 'datetime':
+            return str(input)
         elif column_descriptor['type'] == 'json':
             if input != 'None': # watch out for nasty corner case.
                 try:
