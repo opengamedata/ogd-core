@@ -328,7 +328,7 @@
       "count_milk_produced": "Game feature - General: num of milk produced",
       "count_poop_produced": "Game feature - General: num of poop produced"
     },
-    "per_custom_count": {
+    "per_count": {
     },
     "aggregate": {
       "sess_count_achievements": "Player feature - Progress: count of achievements",

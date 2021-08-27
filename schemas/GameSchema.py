@@ -43,8 +43,8 @@ class GameSchema:
             self._feature_list = []
             if "perlevel" in self._schema["features"]:
                 self._feature_list += self._schema["features"]["perlevel"].keys()
-            if "per_custom_count" in self._schema["features"]:
-                self._feature_list += self._schema["features"]["per_custom_count"].keys()
+            if "per_count" in self._schema["features"]:
+                self._feature_list += self._schema["features"]["per_count"].keys()
             if "aggregate" in self._schema["features"]:
                 self._feature_list += self._schema["features"]["aggregate"].keys()
         else:

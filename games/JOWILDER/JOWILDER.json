@@ -264,7 +264,7 @@
 			"time_active": "Amount of time in gameplay spent actively playing (not going more than IDLE_THRESH_SECONDS without an clicks/hovers)",
 			"time_active_clicking": "time spent acitvely clicking in the game"
 		},
-		"per_custom_count": {
+		"per_count": {
 			"num_guesses": {
 				"count": 19,
 				"prefix": "Q",

@@ -72,7 +72,7 @@
             "numTimesPolesMoved": "The number of times the poles were moved before finalizing the guess",
             "levelTime": "The amount of time spent in the level"
         },
-        "per_custom_count": {
+        "per_count": {
         },
         "aggregate":{
             "sessionID":"The player's session ID number for this play session",

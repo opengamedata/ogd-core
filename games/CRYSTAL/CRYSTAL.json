@@ -118,7 +118,7 @@
             "menuBtnCount" : "The number of times a player pressed the 'return to menu' button during a level",
             "completesCount":"The number of time the player (pressed the submit button)/(completed the level) in the level"
         },
-        "per_custom_count": {
+        "per_count": {
             "questionAnswered" : {"count" : 3, "prefix": "QA", "desc" : "The answer the user gave to a given question (or -1 if unanswered)"},
             "questionCorrect"  : {"count" : 3, "prefix": "QA", "desc" : "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"}
         },
