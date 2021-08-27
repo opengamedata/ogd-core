@@ -7,6 +7,7 @@ import os
 import traceback
 import typing
 from typing import Dict, List
+from pathlib import Path
 # local imports
 from config.config import settings
 from schemas.GameSchema import GameSchema
@@ -17,32 +18,31 @@ from schemas.GameSchema import GameSchema
 #  @param path      The path (relative or absolute) to the folder containing the
 #                       JSON file. If path does not end in /, then "/" will be appended.
 #  @return          A python object parsed from the JSON.
-def loadJSONFile(filename: str, path:str = "./") -> typing.Any:
+def loadJSONFile(filename:str, path:Path = Path("./")) -> typing.Any:
     if not filename.lower().endswith(".json"):
         Logger.toStdOut(f"Got a filename that didn't end with .json: {filename}, appending .json", logging.DEBUG)
         filename = filename + ".json"
-    # TODO: try out os.path.join, see if it'll work properly. Had troubles on Windows in other cases.
-    if not path.endswith("/"):
-        path = path + "/"
     # once we've validated inputs, try actual loading and reading.
+    file_path = path / filename
     try:
-        with open(path+filename, "r") as json_file:
+        with open(file_path, "r") as json_file:
             return json.loads(json_file.read())
     except FileNotFoundError as err:
-        Logger.toStdOut(f"File {path+filename} does not exist.", logging.WARNING)
+        Logger.toStdOut(f"File {file_path} does not exist.", logging.WARNING)
         raise err
     except Exception as err:
-        Logger.toStdOut(f"Could not read file at {path+filename}\nFull error message: {type(err)} {str(err)}\nCurrent directory: {os.getcwd()}",
+        Logger.toStdOut(f"Could not read file at {file_path}\nFull error message: {type(err)} {str(err)}\nCurrent directory: {os.getcwd()}",
                         logging.ERROR)
         raise err
 
-def GenerateReadme(game_name:str, game_schema:GameSchema, column_list:List[Dict[str,str]], path:str = "./"):
+def GenerateReadme(game_name:str, game_schema:GameSchema, column_list:List[Dict[str,str]], path:Path = Path("./")):
     try:
         os.makedirs(name=path, exist_ok=True)
-        with open(f"{path}/readme.md", "w") as readme:
+        with open(path / "readme.md", "w") as readme:
             # 1. Open files with game-specific readme data, and global db changelog.
+            source_dir = Path("./doc/readme_src/")
             try:
-                with open(f"./doc/readme_src/{game_name}_readme_src.md", "r") as readme_src:
+                with open(source_dir / f"{game_name}_readme_src.md", "r") as readme_src:
                     readme.write(readme_src.read())
             except FileNotFoundError as err:
                 readme.write("No readme prepared")
@@ -55,7 +55,7 @@ def GenerateReadme(game_name:str, game_schema:GameSchema, column_list:List[Dict[
             readme.write(meta)
             # 3. Append any important data from the data changelog.
             try:
-                with open("./doc/readme_src/changelog_src.md", "r") as changelog_src:
+                with open(source_dir / "changelog_src.md", "r") as changelog_src:
                     readme.write(changelog_src.read())
             except FileNotFoundError as err:
                 readme.write("No changelog prepared")
