@@ -88,7 +88,7 @@ class GameSchema:
 
     ## Function to retrieve the dictionary of per-custom-count features.
     def percount_features(self) -> Dict[str,Any]:
-        return self["features"]["per_custom_count"] if "per_custom_count" in self["features"].keys() else {}
+        return self["features"]["per_count"] if "per_count" in self["features"].keys() else {}
 
     ## Function to retrieve the dictionary of aggregate features.
     def aggregate_features(self) -> Dict[str,Any]:
