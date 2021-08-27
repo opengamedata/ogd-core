@@ -141,8 +141,23 @@ class Extractor(abc.ABC):
         return column_vals
 
     def ExtractFromEvent(self, event:Event, table_schema:TableSchema) -> None:
-        # self._extractSequencesFromRow(event=event, table_schema=table_schema)
-        self._extractFeaturesFromEvent(event=event, table_schema=table_schema)
+        """Abstract declaration of a function to perform extraction of features from a row.
+
+        :param event: [description]
+        :type event: Event
+        :param table_schema: A data structure containing information on how the db
+                             table assiciated with this game is structured.
+        :type table_schema: TableSchema
+        """
+        if event.event_name in self._event_registry.keys():
+            for listener in self._event_registry[event.event_name]:
+                if listener.kind == Extractor.Listener.Kinds.AGGREGATE:
+                    self._aggregates[listener.name].ExtractFromEvent(event)
+                elif listener.kind == Extractor.Listener.Kinds.PERCOUNT:
+                    for percount in self._percounts[listener.name]:
+                        percount.ExtractFromEvent(event)
+                else:
+                    utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
 
     # *** PRIVATE STATICS ***
 
@@ -184,39 +199,6 @@ class Extractor(abc.ABC):
         return ret_val
 
     # *** PRIVATE METHODS ***
-
-    # def _extractSequencesFromRow(self, event:Event, table_schema:TableSchema) -> None:
-    #     for sequence in self._sequences:
-    #         event_data = self._extractCustomSequenceEventDataFromRow(event=event, table_schema=table_schema)
-    #         sequence.RegisterEvent(event.event_data, event_data=event_data)
-
-    ## Function to custom-extract event data for a sequence.
-    #  *** This function MUST BE OVERRIDDEN if you want sequence data other than the event types. ***
-    #  For now, it's assumed that all sequences an extractor might want to record have a common custom-data need.
-    #  At the very least, the extractor could take the union of all data its various sequences may need.
-    #  In general, however, if the extractor needs multiple kinds of sequences or sequence data,
-    #  it is probably better to do dedicated sequence analysis.
-    # def _extractCustomSequenceEventDataFromRow(self, event:Event, table_schema:TableSchema):
-    #     return None
-
-    def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
-        """Abstract declaration of a function to perform extraction of features from a row.
-
-        :param event: [description]
-        :type event: Event
-        :param table_schema: A data structure containing information on how the db
-                             table assiciated with this game is structured.
-        :type table_schema: TableSchema
-        """
-        if event.event_name in self._event_registry.keys():
-            for listener in self._event_registry[event.event_name]:
-                if listener.kind == Extractor.Listener.Kinds.AGGREGATE:
-                    self._aggregates[listener.name].ExtractFromEvent(event)
-                elif listener.kind == Extractor.Listener.Kinds.PERCOUNT:
-                    for percount in self._percounts[listener.name]:
-                        percount.ExtractFromEvent(event)
-                else:
-                    utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
 
     def _genAggregate(self, schema:GameSchema) -> Dict[str,Feature]:
         ret_val = {}
@@ -264,21 +246,3 @@ class Extractor(abc.ABC):
     #         return ''
     #     else:
     #         return str(obj)
-
-    ## Simple helper class to track a sequence of events, based on move types.
-    # class Sequence:
-    #     def __init__(self, end_function: typing.Callable[[List[Tuple]], None], end_event_type, end_event_count:int=1):
-    #         self._fnEnd          = end_function
-    #         self._end_event_type  = end_event_type
-    #         self._end_event_count = 0               # current count of end events
-    #         self._end_at_count    = end_event_count # number of end events to count before ending the sequence.
-    #         self._events          = []
-
-    #     def RegisterEvent(self, event_type, event_data) -> None:
-    #         self._events.append((event_type, event_data))
-    #         if event_type == self._end_event_type:
-    #             self._end_event_count += 1
-    #         if self._end_event_count == self._end_at_count:
-    #             self._fnEnd(self._events)
-
-
