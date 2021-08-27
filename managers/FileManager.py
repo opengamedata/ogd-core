@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, IO, Union
 ## import local files
 import utils
-from managers.Request import Request, ExporterFiles, ExporterRange
+from managers.Request import ExporterFiles, ExporterRange
 
 class FileManager(abc.ABC):
     def __init__(self, exporter_files: ExporterFiles, game_id, data_dir: str, date_range: Dict[str,datetime]):
@@ -25,8 +25,8 @@ class FileManager(abc.ABC):
         self._game_data_dir: Path = self._data_dir / self._game_id
         # self._base_path    : Path = self._game_data_dir / f"{self._dataset_id}_{self._short_hash}"
         self._readme_path  : Path = self._game_data_dir/ "readme.md"
-        self._dataset_id   : str
-        self._short_hash   : str
+        self._dataset_id   : str  = ""
+        self._short_hash   : str  = ""
         try:
             # figure out dataset ID.
             start = date_range['min'].strftime("%Y%m%d")
@@ -34,7 +34,8 @@ class FileManager(abc.ABC):
             self._dataset_id = f"{self._game_id}_{start}_to_{end}"
             # get hash
             repo = git.Repo(search_parent_directories=True)
-            self._short_hash = str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
+            if repo.git is not None:
+                str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
             # then set up our paths, and ensure each exists.
             base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
             # finally, generate file names.
