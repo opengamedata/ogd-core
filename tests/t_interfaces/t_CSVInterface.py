@@ -1,5 +1,6 @@
 # global imports
 from datetime import datetime
+from pathlib import Path
 from unittest import TestCase
 from zipfile import ZipFile
 # local imports
@@ -40,7 +41,7 @@ class t_CSVInterface(TestCase):
     21010110491046644, 21010109492007536, 21010110495384436, 21010106503171890, 21010110571666436, 21010109570078116, 21010109565541068, 21010115580704280, 
     21010109572227836, 21010109583032190, 21010109583716930, 21010109585054004, 21010109584882670, 21010110000842588, 21010109593906220, 21010109593501640, 
     21010109593889650]
-    zipped_file = ZipFile("tests/t_interfaces/BACTERIA_20210201_to_20210202_5c61198_events.zip")
+    zipped_file = ZipFile(Path("tests/t_interfaces/BACTERIA_20210201_to_20210202_5c61198_events.zip"))
 
     def RunAll(self):
         self.test_IDsFromDates()
@@ -53,8 +54,9 @@ class t_CSVInterface(TestCase):
             if CSVI.Open():
                 result_session_list = CSVI.IDsFromDates(self.TEST_MIN_DATE, self.TEST_MAX_DATE)
                 self.assertNotEqual(result_session_list, None)
-                diff = set(result_session_list).symmetric_difference(set(self.TEST_SESSION_LIST))
-                self.assertTrue(len(diff) > 0, f"Date range for missed items: {CSVI.DatesFromIDs(list(diff))}")
+                if result_session_list is not None:
+                    diff = set(result_session_list).symmetric_difference(set(self.TEST_SESSION_LIST))
+                    self.assertTrue(len(diff) > 0, f"Date range for missed items: {CSVI.DatesFromIDs(list(diff))}")
             else:
                 raise FileNotFoundError('Could not open the test data TSV!')
 
