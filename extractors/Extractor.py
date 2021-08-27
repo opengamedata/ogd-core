@@ -207,10 +207,10 @@ class Extractor(abc.ABC):
         for name,percount in self._game_schema.percount_features().items():
             if percount["enabled"] == True:
                 percount_instances:List[Feature] = []
-                if percount["count"] == "level_range":
+                if type(percount["count"]) == str and percount["count"].lower() == "level_range":
                     count_range = Extractor._getLevelRange(self._game_schema)
                 else:
-                    count_range = range(0,percount["count"])
+                    count_range = range(0,int(percount["count"]))
                 for i in count_range:
                     feature = self._loadFeature(feature=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount)
                     self._register(feature, Extractor.Listener.Kinds.PERCOUNT)
