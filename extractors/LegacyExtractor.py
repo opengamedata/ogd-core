@@ -56,7 +56,6 @@ class LegacyExtractor(Extractor):
         :type game_schema: GameSchema
         """
         self._session_id  : int         = session_id
-        self._game_schema : GameSchema  = game_schema
         self._levels      : List[int]   = []
         self._sequences   : List        = []
         self._features    : LegacyExtractor.LegacySessionFeatures = LegacyExtractor.LegacySessionFeatures(game_schema=game_schema)
