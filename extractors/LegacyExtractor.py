@@ -21,61 +21,85 @@ from schemas.TableSchema import TableSchema
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
 class LegacyExtractor(Extractor):
-    ## @var GameSchema _schema
-    #  The schema specifying structure of data associated with an extractor.
 
-    ## Base constructor for LegacyExtractor classes.
-    #  The constructor sets an extractor's session id and range of levels,
-    #  as well as initializing the features dictionary and list of played levels.
-    #
-    #  @param session_id  The id of the session from which we will extract features.
-    #  @param game_schema A dictionary that defines how the game data itself is
-    #                     structured.
+    # *** ABSTRACTS ***
+
+    @abc.abstractmethod
+    def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+        """Abstract declaration of a function to perform extraction of features from a row.
+
+        :param event: [description]
+        :type event: Event
+        :param table_schema: A data structure containing information on how the db
+                             table assiciated with this game is structured.
+        :type table_schema: TableSchema
+        """
+        pass
+
+    ## Abstract declaration of a function to perform calculation of aggregate features
+    #  from existing per-level/per-custom-count features.
+    # @abc.abstractmethod
+    # def CalculateAggregateFeatures(self):
+    #     pass
+
+    # *** PUBLIC BUILT-INS ***
+
+    # Base constructor for LegacyExtractor classes.
     def __init__(self, session_id: int, game_schema: GameSchema):
+        """Base constructor for LegacyExtractor classes.
+        The constructor sets an extractor's session id and range of levels,
+        as well as initializing the features dictionary and list of played levels.
+
+        :param session_id: The id of the session from which we will extract features.
+        :type session_id: int
+        :param game_schema: A dictionary that defines how the game data itself is structured
+        :type game_schema: GameSchema
+        """
         self._session_id  : int         = session_id
         self._game_schema : GameSchema  = game_schema
         self._levels      : List[int]   = []
         self._sequences   : List        = []
         self._features    : LegacyExtractor.LegacySessionFeatures = LegacyExtractor.LegacySessionFeatures(game_schema=game_schema)
 
-    def _loadFeature(self, name:str, feature_args:Dict[str,Any]) -> Feature:
-        return LegacyFeature()
+    # *** PUBLIC STATICS ***
 
-    ## Static function to print column headers to a file.
-    #  We first create a feature dictionary, then essentially write out each key,
-    #  with some formatting to add prefixes to features that repeat per-level
-    #  (or repeat with a custom count).
-    #
-    #  @param game_schema A dictionary that defines how the game data itself is
-    #                     structured.
-    #  @param file        An open csv file to which we will write column headers.
+    # Static function to print column headers to a file.
     @staticmethod
     def WriteFileHeader(game_schema: GameSchema, file: typing.IO[str], separator:str="\t") -> None:
-        columns = LegacyExtractor.GetFeatureNames(game_schema=game_schema)
+        """Static function to print column headers to a file.
+        We first create a feature dictionary, then essentially write out each key,
+        with some formatting to add prefixes to features that repeat per-level
+        (or repeat with a custom count).
+
+        :param game_schema: A dictionary that defines how the game data itself is structured.
+        :type game_schema: GameSchema
+        :param file: An open csv file to which we will write column headers.
+        :type file: typing.IO[str]
+        :param separator: [description], defaults to "\t"
+        :type separator: str, optional
+        """
+        columns = LegacyExtractor._genFeatureNames(game_schema=game_schema)
         file.write(separator.join(columns))
         file.write("\n")
 
-    @staticmethod
-    def GetFeatureNames(game_schema: GameSchema) -> List[str]:
-        columns = []
-        features = LegacyExtractor.LegacySessionFeatures.generateFeatureDict(game_schema)
-        for feature_name,feature_content in features.items():
-            if type(feature_content) is dict:
-                # if it's a dictionary, expand.
-                columns.extend([f"{feature_content[num]['prefix']}{num}_{feature_name}" for num in feature_content.keys()])
-            else:
-                columns.append(str(feature_name))
-        return columns
+    # *** PUBLIC METHODS ***
 
     ## Function to print data from an extractor to file.
-    #  This function should be the same across all LegacyExtractor subtypes.
-    #  Simply prints out each value from the extractor's features dictionary.
-    #
-    #  @param file        An open csv file to which we will write column headers.
     def WriteCurrentFeatures(self, file: typing.IO[str], separator:str="\t") -> None:
-    # TODO: It looks like I might be assuming that dictionaries always have same order here.
-    # May need to revisit that issue. I mean, it should be fine because Python won't just go
-    # and change order for no reason, but still...
+        """Function to print data from an extractor to file.
+        This function should be the same across all LegacyExtractor subtypes.
+        Simply prints out each value from the extractor's features dictionary.
+
+        :param file: An open csv file to which we will write column headers.
+        :type file: typing.IO[str]
+        :param separator: [description], defaults to "\t"
+        :type separator: str, optional
+        :return: [description]
+        :rtype: [type]
+        """
+        # TODO: It looks like I might be assuming that dictionaries always have same order here.
+        # May need to revisit that issue. I mean, it should be fine because Python won't just go
+        # and change order for no reason, but still...
         column_vals = self.GetCurrentFeatures()
         file.write(separator.join(column_vals))
         file.write("\n")
@@ -110,13 +134,32 @@ class LegacyExtractor(Extractor):
         return column_vals
 
     def ExtractFromEvent(self, event:Event, table_schema:TableSchema) -> None:
-        self._extractSequencesFromEvent(event=event, table_schema=table_schema)
+        # self._extractSequencesFromEvent(event=event, table_schema=table_schema)
         self._extractFeaturesFromEvent(event=event, table_schema=table_schema)
 
-    def _extractSequencesFromEvent(self, event:Event, table_schema:TableSchema) -> None:
-        for sequence in self._sequences:
-            event_data = self.extractCustomSequenceEventDataFromRow(event=event, table_schema=table_schema)
-            sequence.RegisterEvent(event.event_data, event_data=event_data)
+    # *** PRIVATE STATICS ***
+
+    @staticmethod
+    def _genFeatureNames(game_schema: GameSchema) -> List[str]:
+        columns = []
+        features = LegacyExtractor.LegacySessionFeatures.generateFeatureDict(game_schema)
+        for feature_name,feature_content in features.items():
+            if type(feature_content) is dict:
+                # if it's a dictionary, expand.
+                columns.extend([f"{feature_content[num]['prefix']}{num}_{feature_name}" for num in feature_content.keys()])
+            else:
+                columns.append(str(feature_name))
+        return columns
+
+    # *** PRIVATE METHODS ***
+
+    def _loadFeature(self, name:str, feature_args:Dict[str,Any]) -> Feature:
+        return LegacyFeature()
+
+    # def _extractSequencesFromEvent(self, event:Event, table_schema:TableSchema) -> None:
+    #     for sequence in self._sequences:
+    #         event_data = self.extractCustomSequenceEventDataFromRow(event=event, table_schema=table_schema)
+    #         sequence.RegisterEvent(event.event_data, event_data=event_data)
 
     ## Function to custom-extract event data for a sequence.
     #  *** This function MUST BE OVERRIDDEN if you want sequence data other than the event types. ***
@@ -124,26 +167,9 @@ class LegacyExtractor(Extractor):
     #  At the very least, the extractor could take the union of all data its various sequences may need.
     #  In general, however, if the extractor needs multiple kinds of sequences or sequence data,
     #  it is probably better to do dedicated sequence analysis.
-    def extractCustomSequenceEventDataFromRow(self, event:Event, table_schema:TableSchema):
-        return None
+    # def extractCustomSequenceEventDataFromRow(self, event:Event, table_schema:TableSchema):
+    #     return None
 
-    @abc.abstractmethod
-    def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
-        """Abstract declaration of a function to perform extraction of features from a row.
-
-        :param event: [description]
-        :type event: Event
-        :param table_schema: A data structure containing information on how the db
-                             table assiciated with this game is structured.
-        :type table_schema: TableSchema
-        """
-        pass
-
-    ## Abstract declaration of a function to perform calculation of aggregate features
-    #  from existing per-level/per-custom-count features.
-    @abc.abstractmethod
-    def _CalculateAggregateFeatures(self):
-        pass
 
     ## @class LegacySessionFeatures
     #  Private LegacyExtractor class to track feature data.

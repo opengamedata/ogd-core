@@ -28,24 +28,38 @@ class Extractor(abc.ABC):
             self.name = name
             self.kind = kind
 
-    ## @var GameSchema _schema
-    #  The schema specifying structure of data associated with an extractor.
+    # *** ABSTRACTS ***
 
-    ## Base constructor for Extractor classes.
-    #  The constructor sets an extractor's session id and range of levels,
-    #  as well as initializing the features dictionary and list of played levels.
-    #
-    #  @param session_id  The id of the session from which we will extract features.
-    #  @param game_schema A dictionary that defines how the game data itself is
-    #                     structured.
+    @abc.abstractmethod
+    def CalculateAggregateFeatures(self):
+        """Abstract declaration of a function to perform calculation of aggregate features
+        from existing per-level/per-custom-count features.
+        """
+        pass
+    
+    @abc.abstractmethod
+    def _loadFeature(self, feature:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+        pass
+
+    # *** PUBLIC BUILT-INS ***
+
+    # Base constructor for Extractor classes.
     def __init__(self, session_id: str, game_schema: GameSchema):
-        self._session_id  : str         = session_id
-        self._game_schema : GameSchema  = game_schema
-        # self._levels      : List[int]   = []
-        # self._sequences   : List        = []
+        """Base constructor for Extractor classes.
+        The constructor sets an extractor's session id and range of levels,
+        as well as initializing the features dictionary and list of played levels.
+
+        :param session_id: The id of the session from which we will extract features.
+        :type session_id: str
+        :param game_schema: A dictionary that defines how the game data itself is structured.
+        :type game_schema: GameSchema
+        """
+        self._session_id     : str                     = session_id
+        # self._game_schema    : GameSchema              = game_schema
+        # self._sequences    : List                    = []
+        self._percounts      : Dict[str,List[Feature]] = self._genPerCounts(schema=game_schema)
+        self._aggregates     : Dict[str,Feature]       = self._genAggregate(schema=game_schema)
         self._event_registry : Dict[str,List[Extractor.Listener]] = {}
-        self._aggregates : Dict[str,Feature] = self._genAggregate()
-        self._percounts  : Dict[str,List[Feature]] = self._genPerCounts()
 
     # string conversion for Extractors.
     def __str__(self) -> str:
@@ -66,8 +80,9 @@ class Extractor(abc.ABC):
 
         Creates a list of features in the extractor, separated by newlines.
         Optional num_lines param allows the function caller to limit number of lines in the string.
-        :param num_lines: [description], defaults to None
-        :type num_lines: Union[int,None], optional
+        :param num_lines: Max number of lines to include in the string.
+                            If None, then include all strings, defaults to None
+        :type num_lines:  Union[int,None], optional
         :return: A string with line-separated stringified features.
         :rtype: str
         """
@@ -79,21 +94,7 @@ class Extractor(abc.ABC):
         else:
             return '\n'.join(ret_val[:num_lines])
 
-    @staticmethod
-    def GetFeatureNames(schema:GameSchema) -> List[str]:
-        ret_val : List[str] = []
-        for name,aggregate in schema.aggregate_features().items():
-            if aggregate.get("enabled") == True:
-                ret_val.append(name)
-        for name,percount in schema.percount_features().items():
-            if percount.get("enabled") == True:
-                if percount["count"] == "level_range":
-                    count_range = Extractor._getLevelRange(schema=schema)
-                else:
-                    count_range = range(0,percount["count"])
-                for i in count_range:
-                    ret_val.append(f"{percount['prefix']}{i}_{name}")
-        return ret_val
+    # *** PUBLIC STATICS ***
 
     # Static function to print column headers to a file.
     @staticmethod
@@ -108,9 +109,11 @@ class Extractor(abc.ABC):
         :param file: An open csv file to which we will write column headers.
         :type file: typing.IO[str]
         """
-        columns = Extractor.GetFeatureNames(schema=game_schema)
+        columns = Extractor._genFeatureNames(schema=game_schema)
         file.write(separator.join(columns))
         file.write("\n")
+
+    # *** PUBLIC METHODS ***
 
     ## Function to print data from an extractor to file.
     def WriteCurrentFeatures(self, file: typing.IO[str], separator:str="\t") -> None:
@@ -138,12 +141,53 @@ class Extractor(abc.ABC):
         return column_vals
 
     def ExtractFromEvent(self, event:Event, table_schema:TableSchema) -> None:
-        # self.extractSequencesFromRow(event=event, table_schema=table_schema)
+        # self._extractSequencesFromRow(event=event, table_schema=table_schema)
         self._extractFeaturesFromEvent(event=event, table_schema=table_schema)
 
-    # def extractSequencesFromRow(self, event:Event, table_schema:TableSchema) -> None:
+    # *** PRIVATE STATICS ***
+
+    @staticmethod
+    def _genFeatureNames(schema:GameSchema) -> List[str]:
+        """Function to generate a list names of all enabled features, given a GameSchema
+        This is different from the feature_names() function of GameSchema,
+        which ignores the 'enabled' attribute and does not expand per-count features
+        (e.g. this function would include 'lvl0_someFeat', 'lvl1_someFeat', 'lvl2_someFeat', etc.
+        while feature_names() only would include 'someFeat').
+
+        :param schema: The schema from which feature names should be generated.
+        :type schema: GameSchema
+        :return: A list of feature names.
+        :rtype: List[str]
+        """
+        ret_val : List[str] = []
+        for name,aggregate in schema.aggregate_features().items():
+            if aggregate.get("enabled") == True:
+                ret_val.append(name)
+        for name,percount in schema.percount_features().items():
+            if percount.get("enabled") == True:
+                if percount["count"] == "level_range":
+                    count_range = Extractor._getLevelRange(schema=schema)
+                else:
+                    count_range = range(0,percount["count"])
+                for i in count_range:
+                    ret_val.append(f"{percount['prefix']}{i}_{name}")
+        return ret_val
+
+    @staticmethod
+    def _getLevelRange(schema:GameSchema) -> range:
+        ret_val = range(0)
+        if schema._min_level is not None and schema._max_level is not None:
+            # for i in range(schema._min_level, schema._max_level+1):
+            ret_val = range(schema._min_level, schema._max_level+1)
+        else:
+            utils.Logger.Log(f"Could not generate per-level features, min_level={schema._min_level} and max_level={schema._max_level}", logging.ERROR)
+        return ret_val
+
+    # *** PRIVATE METHODS ***
+
+    # def _extractSequencesFromRow(self, event:Event, table_schema:TableSchema) -> None:
     #     for sequence in self._sequences:
-    #         event_data = self.extractCustomSequenceEventDataFromRow(event=event, table_schema=table_schema)
+    #         event_data = self._extractCustomSequenceEventDataFromRow(event=event, table_schema=table_schema)
     #         sequence.RegisterEvent(event.event_data, event_data=event_data)
 
     ## Function to custom-extract event data for a sequence.
@@ -152,8 +196,9 @@ class Extractor(abc.ABC):
     #  At the very least, the extractor could take the union of all data its various sequences may need.
     #  In general, however, if the extractor needs multiple kinds of sequences or sequence data,
     #  it is probably better to do dedicated sequence analysis.
-    # def extractCustomSequenceEventDataFromRow(self, event:Event, table_schema:TableSchema):
+    # def _extractCustomSequenceEventDataFromRow(self, event:Event, table_schema:TableSchema):
     #     return None
+
     def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         """Abstract declaration of a function to perform extraction of features from a row.
 
@@ -173,42 +218,22 @@ class Extractor(abc.ABC):
                 else:
                     utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
 
-    ## Abstract declaration of a function to perform calculation of aggregate features
-    #  from existing per-level/per-custom-count features.
-    # @abc.abstractmethod
-    def CalculateAggregateFeatures(self):
-        pass
-    
-    @abc.abstractmethod
-    def _loadFeature(self, feature:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
-        pass
-
-    @staticmethod
-    def _getLevelRange(schema:GameSchema) -> range:
-        ret_val = range(0)
-        if schema._min_level is not None and schema._max_level is not None:
-            # for i in range(schema._min_level, schema._max_level+1):
-            ret_val = range(schema._min_level, schema._max_level+1)
-        else:
-            utils.Logger.Log(f"Could not generate per-level features, min_level={schema._min_level} and max_level={schema._max_level}", logging.ERROR)
-        return ret_val
-
-    def _genAggregate(self) -> Dict[str,Feature]:
+    def _genAggregate(self, schema:GameSchema) -> Dict[str,Feature]:
         ret_val = {}
-        for name,aggregate in self._game_schema.aggregate_features().items():
+        for name,aggregate in schema.aggregate_features().items():
             if aggregate["enabled"] == True:
                 feature = self._loadFeature(feature=name, name=name, feature_args=aggregate)
                 self._register(feature, Extractor.Listener.Kinds.AGGREGATE)
                 ret_val[name] = feature
         return ret_val
 
-    def _genPerCounts(self) -> Dict[str,List[Feature]]:
+    def _genPerCounts(self, schema:GameSchema) -> Dict[str,List[Feature]]:
         ret_val = {}
-        for name,percount in self._game_schema.percount_features().items():
+        for name,percount in schema.percount_features().items():
             if percount["enabled"] == True:
                 percount_instances:List[Feature] = []
                 if type(percount["count"]) == str and percount["count"].lower() == "level_range":
-                    count_range = Extractor._getLevelRange(self._game_schema)
+                    count_range = Extractor._getLevelRange(schema=schema)
                 else:
                     count_range = range(0,int(percount["count"]))
                 for i in count_range:
@@ -237,7 +262,6 @@ class Extractor(abc.ABC):
     #         return str(total_secs)
     #     if obj is None:
     #         return ''
-
     #     else:
     #         return str(obj)
 
