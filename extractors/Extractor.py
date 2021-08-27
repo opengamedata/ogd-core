@@ -55,8 +55,6 @@ class Extractor(abc.ABC):
         :type game_schema: GameSchema
         """
         self._session_id     : str                     = session_id
-        # self._game_schema    : GameSchema              = game_schema
-        # self._sequences    : List                    = []
         self._percounts      : Dict[str,List[Feature]] = self._genPerCounts(schema=game_schema)
         self._aggregates     : Dict[str,Feature]       = self._genAggregate(schema=game_schema)
         self._event_registry : Dict[str,List[Extractor.Listener]] = {}
