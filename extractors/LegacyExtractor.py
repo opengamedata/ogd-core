@@ -152,7 +152,7 @@ class LegacyExtractor(Extractor):
 
     # *** PRIVATE METHODS ***
 
-    def _registerFeature(self, name:str, feature_args:Dict[str,Any]) -> Feature:
+    def _loadFeature(self, name:str, feature_args:Dict[str,Any]) -> Feature:
         return LegacyFeature()
 
     # def _extractSequencesFromEvent(self, event:Event, table_schema:TableSchema) -> None:

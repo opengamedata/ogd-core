@@ -31,7 +31,7 @@ class AqualabExtractor(Extractor):
     def __init__(self, session_id: str, game_schema: GameSchema):
         super().__init__(session_id=session_id, game_schema=game_schema)
 
-    def _registerFeature(self, feature:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+    def _loadFeature(self, feature:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         ret_val : Feature
         if feature == "JobArgumentationTime":
             if count_index is None:

@@ -52,7 +52,7 @@ class WaveExtractor(Extractor):
         # for elem in self._features.getValByName(feature_name="firstMoveType"):
         #     self._features.setValByIndex(feature_name="firstMoveType", index=elem, new_value=None)
     
-    def _registerFeature(self, feature:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+    def _loadFeature(self, feature:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         ret_val : Feature
         if feature == "SessionID":
             ret_val = SessionID.SessionID(name, feature_args["description"], self._session_id)
