@@ -19,7 +19,7 @@ from schemas.Event import Event
 #  of the database columns, the max and min levels in the game, and a list of
 #  IDs for the game sessions in the given requested date range.
 class TableSchema:
-    def __init__(self, schema_name:str, schema_path:Path = Path(os.path.dirname(__file__)) / "/TABLES/", is_legacy:bool = False):
+    def __init__(self, schema_name:str, schema_path:Path = Path("./") / os.path.dirname(__file__) / "TABLES/", is_legacy:bool = False):
         """Constructor for the TableSchema class.
         Given a database connection and a game data request,
         this retrieves a bit of information from the database to fill in the
