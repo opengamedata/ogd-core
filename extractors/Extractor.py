@@ -31,14 +31,14 @@ class Extractor(abc.ABC):
     # *** ABSTRACTS ***
 
     @abc.abstractmethod
-    def CalculateAggregateFeatures(self):
+    def CalculateAggregateFeatures(self) -> None:
         """Abstract declaration of a function to perform calculation of aggregate features
         from existing per-level/per-custom-count features.
         """
         pass
     
     @abc.abstractmethod
-    def _registerFeature(self, feature:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+    def _loadFeature(self, feature:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         pass
 
     # *** PUBLIC BUILT-INS ***
@@ -202,7 +202,7 @@ class Extractor(abc.ABC):
         ret_val = {}
         for name,aggregate in schema.aggregate_features().items():
             if aggregate["enabled"] == True:
-                feature = self._registerFeature(feature=name, name=name, feature_args=aggregate)
+                feature = self._loadFeature(feature=name, name=name, feature_args=aggregate)
                 self._register(feature, Extractor.Listener.Kinds.AGGREGATE)
                 ret_val[name] = feature
         return ret_val
@@ -217,7 +217,7 @@ class Extractor(abc.ABC):
                 else:
                     count_range = range(0,int(percount["count"]))
                 for i in count_range:
-                    feature = self._registerFeature(feature=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount)
+                    feature = self._loadFeature(feature=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount)
                     self._register(feature, Extractor.Listener.Kinds.PERCOUNT)
                     percount_instances.append(feature)
                 ret_val[name] = percount_instances
