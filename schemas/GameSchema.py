@@ -1,7 +1,6 @@
 # import standard libraries
 import logging
-import os
-import typing
+from pathlib import Path
 from typing import Any, Dict, List, Union
 # import local files
 import utils
@@ -13,7 +12,7 @@ import utils
 #  The class includes several functions for easy access to the various parts of
 #  this schema data.
 class GameSchema:
-    def __init__(self, schema_name:str, schema_path:Union[str,None] = None):
+    def __init__(self, schema_name:str, schema_path:Union[Path,None] = None):
         """Constructor for the GameSchema class.
         Given a path and filename, it loads the data from a JSON schema,
         storing the full schema into a private variable, and compiling a list of
@@ -35,8 +34,8 @@ class GameSchema:
         if not schema_name.lower().endswith(".json"):
             schema_name += ".json"
         if schema_path == None:
-            schema_path = f"games/{schema_name.split('.')[0]}"
-        self._schema = utils.loadJSONFile(schema_name, schema_path)
+            schema_path = Path("./games") / f"{schema_name.split('.')[0]}"
+        self._schema = utils.loadJSONFile(filename=schema_name, path=schema_path)
         if self._schema is None:
             utils.Logger.Log(f"Could not find game schema at {schema_path}{schema_name}", logging.ERROR)
         elif "features" in self._schema.keys():

@@ -5,6 +5,7 @@ from json.decoder import JSONDecodeError
 import os
 import logging
 import typing
+from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 ## import local files
@@ -18,7 +19,7 @@ from schemas.Event import Event
 #  of the database columns, the max and min levels in the game, and a list of
 #  IDs for the game sessions in the given requested date range.
 class TableSchema:
-    def __init__(self, schema_name:str, schema_path:str = os.path.dirname(__file__) + "/TABLES/", is_legacy:bool = False):
+    def __init__(self, schema_name:str, schema_path:Path = Path(os.path.dirname(__file__)) / "/TABLES/", is_legacy:bool = False):
         """Constructor for the TableSchema class.
         Given a database connection and a game data request,
         this retrieves a bit of information from the database to fill in the
@@ -39,7 +40,7 @@ class TableSchema:
 
         if not self._table_format_name.lower().endswith(".json"):
             self._table_format_name += ".json"
-        schema = utils.loadJSONFile(self._table_format_name, schema_path)
+        schema = utils.loadJSONFile(filename=self._table_format_name, path=schema_path)
 
         # after loading the file, take the stuff we need and store.
         if schema is not None:

@@ -72,7 +72,7 @@ class FileManager(abc.ABC):
 
     def ZipFiles(self):
         try:
-            existing_csvs = utils.loadJSONFile("file_list.json", str(self._data_dir))
+            existing_csvs = utils.loadJSONFile(filename="file_list.json", path=self._data_dir)
         except Exception as err:
             existing_csvs = {}
         # if we have already done this dataset before, rename old zip files
@@ -174,7 +174,7 @@ class FileManager(abc.ABC):
         self._backupFileExportList()
         existing_csvs = {}
         try:
-            existing_csvs = utils.loadJSONFile("file_list.json", str(self._data_dir))
+            existing_csvs = utils.loadJSONFile(filename="file_list.json", path=self._data_dir)
         except FileNotFoundError as err:
             utils.Logger.toFile("file_list.json does not exist.", logging.WARNING)
         except Exception as err:

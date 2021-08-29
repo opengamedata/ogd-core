@@ -41,7 +41,7 @@ class LakelandExtractor(LegacyExtractor):
         "buy_fertilizer",
         "buy_livestock",
     ]
-    _STR_TO_ENUM = utils.loadJSONFile("games/LAKELAND/Lakeland Enumerators.json")
+    _STR_TO_ENUM = utils.loadJSONFile(filename="games/LAKELAND/Lakeland Enumerators.json")
     _ENUM_TO_STR = {cat: {y: x for x, y in ydict.items()} for cat, ydict in _STR_TO_ENUM.items()}
     _ITEM_MARK_COMBINATIONS = [('food', 'sell'), ('food', 'use'), ('food', 'eat'),
                                ('milk', 'sell'), ('milk', 'use'), ('poop', 'sell'), ('poop', 'use')
