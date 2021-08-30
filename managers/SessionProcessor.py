@@ -1,10 +1,11 @@
 # import standard libraries
+from games.LAKELAND.LakelandExtractor import LakelandExtractor
 from extractors.Extractor import Extractor
 import json
 import logging
 import traceback
 import typing
-from typing import Dict, Tuple
+from typing import Dict, Type
 # import local files
 import utils
 from schemas.Event import Event
@@ -26,10 +27,10 @@ class SessionProcessor:
     #                       is structured.
     #  @param sessions_csv_file The output file, to which we'll write the processed
     #                       feature data.
-    def __init__(self, ExtractorClass: type, table_schema: TableSchema, game_schema: GameSchema,
+    def __init__(self, ExtractorClass: Type[Extractor], table_schema: TableSchema, game_schema: GameSchema,
                  sessions_file: typing.IO[str], separator:str = "\t"):
         ## Define instance vars
-        self._ExtractorClass     :type                 = ExtractorClass
+        self._ExtractorClass     :Type[Extractor]      = ExtractorClass
         self._table_schema       :TableSchema          = table_schema
         self._game_schema        :GameSchema           = game_schema
         self._sessions_file      :typing.IO[str]       = sessions_file
@@ -45,8 +46,8 @@ class SessionProcessor:
     def ProcessEvent(self, event: Event):
         # ensure we have an extractor for the given session:
         if not event.session_id in self._session_extractors.keys():
-            if event.app_id == 'LAKELAND':
-                self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_id=self._game_schema, session_file=self._sessions_file)
+            if event.app_id == 'LAKELAND' and self._ExtractorClass is LakelandExtractor:
+                self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_schema=self._game_schema, sessions_file=self._sessions_file)
             else:
                 self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_schema=self._game_schema)
         self._session_extractors[event.session_id].ExtractFromEvent(event, self._table_schema)
