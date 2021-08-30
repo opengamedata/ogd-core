@@ -24,6 +24,7 @@ class FileManager(abc.ABC):
         self._data_dir     : Path = Path("./" + data_dir)
         self._game_data_dir: Path = self._data_dir / self._game_id
         self._readme_path  : Path = self._game_data_dir/ "readme.md"
+        self._extension    : str  = extension
         self._date_range   : Dict[str,Union[datetime,None]] = date_range
         self._dataset_id   : str  = ""
         self._short_hash   : str  = ""
@@ -39,9 +40,9 @@ class FileManager(abc.ABC):
             # then set up our paths, and ensure each exists.
             base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
             # finally, generate file names.
-            self._file_names["events_f"]   = self._game_data_dir / f"{base_file_name}_events.{extension}" if exporter_files.events else None
+            self._file_names["events_f"]   = self._game_data_dir / f"{base_file_name}_events.{self._extension}" if exporter_files.events else None
             self._zip_names["events_f"]    = self._game_data_dir / f"{base_file_name}_events.zip" if exporter_files.events else None
-            self._file_names["sessions_f"] = self._game_data_dir / f"{base_file_name}_session-features.{extension}" if exporter_files.sessions else None
+            self._file_names["sessions_f"] = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}" if exporter_files.sessions else None
             self._zip_names["sessions_f"]  = self._game_data_dir / f"{base_file_name}_session-features.zip" if exporter_files.sessions else None
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
@@ -90,12 +91,13 @@ class FileManager(abc.ABC):
                 utils.Logger.Log(msg, logging.ERROR)
                 traceback.print_tb(err.__traceback__)
         # for each file, try to save out the csv/tsv to a file - if it's one that should be exported, that is.
-        base_path = f"{self._dataset_id}/{self._dataset_id}_{self._short_hash}"
         if self._zip_names["sessions_f"] is not None:
             with zipfile.ZipFile(self._zip_names["sessions_f"], "w", compression=zipfile.ZIP_DEFLATED) as sessions_zip_file:
                 try:
-                    self._addToZip(path=self._file_names["sessions_f"], zip_file=sessions_zip_file, path_in_zip=f"{base_path}_session-features.csv")
-                    self._addToZip(path=self._readme_path,        zip_file=sessions_zip_file, path_in_zip=f"{self._dataset_id}/readme.md")
+                    session_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_session_features.{self._extension}"
+                    readme_file  = Path(self._dataset_id) / "readme.md"
+                    self._addToZip(path=self._file_names["sessions_f"], zip_file=sessions_zip_file, path_in_zip=session_file)
+                    self._addToZip(path=self._readme_path,        zip_file=sessions_zip_file, path_in_zip=readme_file)
                     sessions_zip_file.close()
                     if self._file_names["sessions_f"] is not None:
                         os.remove(self._file_names["sessions_f"])
@@ -105,8 +107,10 @@ class FileManager(abc.ABC):
         if self._zip_names["events_f"] is not None:
             with zipfile.ZipFile(self._zip_names["events_f"], "w", compression=zipfile.ZIP_DEFLATED) as events_zip_file:
                 try:
-                    self._addToZip(path=self._file_names["events_f"], zip_file=events_zip_file, path_in_zip=f"{base_path}_events.tsv")
-                    self._addToZip(path=self._readme_path,        zip_file=events_zip_file, path_in_zip=f"{self._dataset_id}/readme.md")
+                    events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_events.{self._extension}"
+                    readme_file = Path(self._dataset_id) / "readme.md"
+                    self._addToZip(path=self._file_names["events_f"], zip_file=events_zip_file, path_in_zip=events_file)
+                    self._addToZip(path=self._readme_path,        zip_file=events_zip_file, path_in_zip=readme_file)
                     events_zip_file.close()
                     if self._file_names["events_f"] is not None:
                         os.remove(self._file_names["events_f"])
