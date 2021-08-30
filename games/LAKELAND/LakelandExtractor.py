@@ -99,7 +99,7 @@ class LakelandExtractor(LegacyExtractor):
         self._NUM_SECONDS_PER_WINDOW_OVERLAP = config["WINDOW_OVERLAP_SECONDS"]
         self._GAME_SCHEMA = game_schema
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
-        self.WINDOW_RANGE = range(game_schema.max_level + 1)
+        self.WINDOW_RANGE = range(game_schema.level_range()['max'] + 1)
         self._WINDOW_RANGES = self._get_window_ranges()
         if sessions_file:
             self._WRITE_FEATURES = lambda: self.WriteCurrentFeatures(file=sessions_file)
@@ -1492,7 +1492,7 @@ class LakelandExtractor(LegacyExtractor):
     def reset(self):
         self.levels:           List[int]       = []
         self.last_adjust_type: Union[str,None] = None
-        self.features:     Extractor.SessionFeatures = Extractor.SessionFeatures(game_schema=self._GAME_SCHEMA)
+        self.features:         LegacyExtractor.LegacySessionFeatures = LegacyExtractor.LegacySessionFeatures(game_schema=self._GAME_SCHEMA)
         self.setValByName('sessID', new_value=self._session_id)
 
         # Initialize Lakeland Variables
