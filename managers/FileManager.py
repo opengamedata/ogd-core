@@ -154,6 +154,7 @@ class FileManager(abc.ABC):
                 {
                     "game_id"      :self._game_id,
                     "dataset_id"   :self._dataset_id,
+                    "ogd_revision" :self._short_hash,
                     "sessions_f"   :str(self._zip_names["sessions_f"]),
                     "events_f"     :str(self._zip_names["events_f"]),
                     "start_date"   :date_range['min'].strftime("%m/%d/%Y"),
@@ -191,6 +192,7 @@ class FileManager(abc.ABC):
                 events_path   = str(self._zip_names["events_f"]) if self._zip_names["events_f"] is not None else (existing_csvs[self._game_id][self._dataset_id]["events_f"] if prior_export else None)
                 existing_csvs[self._game_id][self._dataset_id] = \
                 {
+                    "ogd_revision" :self._short_hash,
                     "sessions_f"   :sessions_path,
                     "events_f"     :events_path,
                     "start_date"   :date_range['min'].strftime("%m/%d/%Y"),
