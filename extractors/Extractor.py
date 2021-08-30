@@ -106,6 +106,25 @@ class Extractor(abc.ABC):
 
     # *** PUBLIC METHODS ***
 
+    def ExtractFromEvent(self, event:Event, table_schema:TableSchema) -> None:
+        """Abstract declaration of a function to perform extraction of features from a row.
+
+        :param event: [description]
+        :type event: Event
+        :param table_schema: A data structure containing information on how the db
+                             table assiciated with this game is structured.
+        :type table_schema: TableSchema
+        """
+        if event.event_name in self._event_registry.keys():
+            for listener in self._event_registry[event.event_name]:
+                if listener.kind == Extractor.Listener.Kinds.AGGREGATE:
+                    self._aggregates[listener.name].ExtractFromEvent(event)
+                elif listener.kind == Extractor.Listener.Kinds.PERCOUNT:
+                    for percount in self._percounts[listener.name]:
+                        percount.ExtractFromEvent(event)
+                else:
+                    utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
+
     ## Function to print data from an extractor to file.
     def WriteCurrentFeatures(self, file: typing.IO[str], separator:str="\t") -> None:
         """Function to print data from an extractor to file.
@@ -130,25 +149,6 @@ class Extractor(abc.ABC):
             for percount in percounts:
                 column_vals.append(percount.CalculateFinalValues())
         return column_vals
-
-    def ExtractFromEvent(self, event:Event, table_schema:TableSchema) -> None:
-        """Abstract declaration of a function to perform extraction of features from a row.
-
-        :param event: [description]
-        :type event: Event
-        :param table_schema: A data structure containing information on how the db
-                             table assiciated with this game is structured.
-        :type table_schema: TableSchema
-        """
-        if event.event_name in self._event_registry.keys():
-            for listener in self._event_registry[event.event_name]:
-                if listener.kind == Extractor.Listener.Kinds.AGGREGATE:
-                    self._aggregates[listener.name].ExtractFromEvent(event)
-                elif listener.kind == Extractor.Listener.Kinds.PERCOUNT:
-                    for percount in self._percounts[listener.name]:
-                        percount.ExtractFromEvent(event)
-                else:
-                    utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
 
     def CalculateAggregateFeatures(self) -> None:
         """Abstract declaration of a function to perform calculation of aggregate features
