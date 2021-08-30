@@ -105,8 +105,8 @@ class JowilderExtractor(LegacyExtractor):
         config = game_schema['config']
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
         self._IDLE_THRESH = timedelta(seconds=self._IDLE_THRESH_SECONDS)
-        self._level_range = range(game_schema.min_level   if game_schema.min_level is not None else 0,
-                                  game_schema.max_level+1 if game_schema.max_level is not None else 1)
+        self._level_range = range(game_schema.level_range()['min']   if game_schema.level_range()['min'] is not None else 0,
+                                  game_schema.level_range()['max']+1 if game_schema.level_range()['max'] is not None else 1)
 
         self.cur_task = 1
         self.time_since_start = timedelta(0)
@@ -986,8 +986,8 @@ class JowilderExtractor(LegacyExtractor):
         for obj in range(je.level_to_start_obj[self.level]):
             self.finished_encounters[obj] = True
 
-    def CalculateAggregateFeatures(self):
-        pass
+    def _calculateAggregateFeatures(self):
+        return
 
     # def feature_time_since_start(self, feature_name, cur_client_time):
     #     """
