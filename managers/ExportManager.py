@@ -73,7 +73,8 @@ class ExportManager:
                 request._files.sessions = False
             # 2b) Prepare files for export.
             file_manager = FileManager(exporter_files=request._files, game_id=self._game_id, \
-                                       data_dir=self._settings["DATA_DIR"], date_range=request._range.GetDateRange())
+                                       data_dir=self._settings["DATA_DIR"], date_range=request._range.GetDateRange(),
+                                       extension="tsv")
             file_manager.OpenFiles()
             # If we have a schema, we can do feature extraction.
             if game_schema is not None:
@@ -137,13 +138,13 @@ class ExportManager:
         if request._files.events:
             evt_file = file_manager.GetEventsFile()
             if evt_file is not None:
-                evt_processor = EventProcessor(table_schema=table_schema, events_file=evt_file)
+                evt_processor = EventProcessor(table_schema=table_schema, events_file=evt_file, separator="\t")
                 evt_processor.WriteEventsCSVHeader()
         if request._files.sessions and game_extractor is not None:
-            if game_extractor is not None:
-                sess_file = file_manager.GetSessionsFile()
+            sess_file = file_manager.GetSessionsFile()
+            if game_extractor is not None and sess_file is not None:
                 sess_processor = SessionProcessor(ExtractorClass=game_extractor, table_schema=table_schema,
-                                    game_schema=game_schema, sessions_file=sess_file)
+                                    game_schema=game_schema, sessions_file=sess_file, separator="\t")
                 sess_processor.WriteSessionFileHeader()
             else:
                 utils.Logger.Log("Could not export sessions, no game extractor given!", logging.ERROR)

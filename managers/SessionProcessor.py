@@ -27,13 +27,14 @@ class SessionProcessor:
     #  @param sessions_csv_file The output file, to which we'll write the processed
     #                       feature data.
     def __init__(self, ExtractorClass: type, table_schema: TableSchema, game_schema: GameSchema,
-                 sessions_file: typing.IO[str]):
+                 sessions_file: typing.IO[str], separator:str = "\t"):
         ## Define instance vars
-        self._ExtractorClass:     type                            = ExtractorClass
-        self._table_schema:       TableSchema                     = table_schema
-        self._game_schema:        GameSchema                      = game_schema
-        self._sessions_file:      typing.IO[str]                  = sessions_file
-        self._session_extractors: Dict[str, Extractor] = {}
+        self._ExtractorClass     :type                 = ExtractorClass
+        self._table_schema       :TableSchema          = table_schema
+        self._game_schema        :GameSchema           = game_schema
+        self._sessions_file      :typing.IO[str]       = sessions_file
+        self._session_extractors :Dict[str, Extractor] = {}
+        self._separator          :str                  = separator
 
     ## Function to handle processing of a single row of data.
     #  Basically just responsible for ensuring an extractor for the session
@@ -66,7 +67,7 @@ class SessionProcessor:
     ## Function to write out the header for a processed csv file.
     #  Just runs the header writer for whichever Extractor subclass we were given.
     def WriteSessionFileHeader(self):
-        self._ExtractorClass.WriteFileHeader(game_schema=self._game_schema, file=self._sessions_file, separator="\t")
+        self._ExtractorClass.WriteFileHeader(game_schema=self._game_schema, file=self._sessions_file, separator=self._separator)
 
     ## Function to write out all data for the extractors created by the
     #  SessionProcessor. Just calls the "write" function once for each extractor.
