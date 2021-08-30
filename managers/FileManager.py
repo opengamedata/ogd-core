@@ -16,21 +16,21 @@ import utils
 from managers.Request import ExporterFiles, ExporterRange
 
 class FileManager(abc.ABC):
-    def __init__(self, exporter_files: ExporterFiles, game_id, data_dir: str, date_range: Dict[str,datetime]):
+    def __init__(self, exporter_files: ExporterFiles, game_id, data_dir: str, date_range: Dict[str,Union[datetime,None]], extension:str="tsv"):
         self._file_names   : Dict[str,Union[Path,None]] = {"sessions_f":None, "events_f":None}
         self._zip_names    : Dict[str,Union[Path,None]] = {"sessions_f":None, "events_f":None}
         self._files        : Dict[str,Union[IO,None]]   = {"sessions_f":None, "events_f":None}
         self._game_id      : str  = game_id
         self._data_dir     : Path = Path("./" + data_dir)
         self._game_data_dir: Path = self._data_dir / self._game_id
-        # self._base_path    : Path = self._game_data_dir / f"{self._dataset_id}_{self._short_hash}"
         self._readme_path  : Path = self._game_data_dir/ "readme.md"
+        self._date_range   : Dict[str,Union[datetime,None]] = date_range
         self._dataset_id   : str  = ""
         self._short_hash   : str  = ""
         try:
             # figure out dataset ID.
-            start = date_range['min'].strftime("%Y%m%d")
-            end = date_range['max'].strftime("%Y%m%d")
+            start = date_range['min'].strftime("%Y%m%d") if date_range['min'] is not None else "UNKNOWN"
+            end   = date_range['max'].strftime("%Y%m%d") if date_range['max'] is not None else "UNKNOWN"
             self._dataset_id = f"{self._game_id}_{start}_to_{end}"
             # get hash
             repo = git.Repo(search_parent_directories=True)
@@ -39,38 +39,38 @@ class FileManager(abc.ABC):
             # then set up our paths, and ensure each exists.
             base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
             # finally, generate file names.
-            self._file_names["events_f"]   = self._game_data_dir / f"{base_file_name}_events.tsv" if exporter_files.events else None
+            self._file_names["events_f"]   = self._game_data_dir / f"{base_file_name}_events.{extension}" if exporter_files.events else None
             self._zip_names["events_f"]    = self._game_data_dir / f"{base_file_name}_events.zip" if exporter_files.events else None
-            self._file_names["sessions_f"] = self._game_data_dir / f"{base_file_name}_session-features.csv" if exporter_files.sessions else None
+            self._file_names["sessions_f"] = self._game_data_dir / f"{base_file_name}_session-features.{extension}" if exporter_files.sessions else None
             self._zip_names["sessions_f"]  = self._game_data_dir / f"{base_file_name}_session-features.zip" if exporter_files.sessions else None
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.Log(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
 
-    def GetFiles(self):
+    def GetFiles(self) -> Dict[str,Union[IO,None]]:
         return self._files
 
-    def GetSessionsFile(self):
+    def GetSessionsFile(self) -> Union[IO,None]:
         return self._files["sessions_f"]
 
-    def GetEventsFile(self):
+    def GetEventsFile(self) -> Union[IO,None]:
         return self._files["events_f"]
 
-    def OpenFiles(self):
+    def OpenFiles(self) -> None:
         # self._data_dir.mkdir(exist_ok=True)
         self._game_data_dir.mkdir(exist_ok=True, parents=True)
         # self._base_path.mkdir(exist_ok=True)
         self._files["sessions_f"] = open(self._file_names["sessions_f"], "w+", encoding="utf-8") if (self._file_names["sessions_f"] is not None) else None
         self._files["events_f"]   = open(self._file_names["events_f"],   "w+", encoding="utf-8") if (self._file_names["events_f"] is not None) else None
 
-    def CloseFiles(self):
+    def CloseFiles(self) -> None:
         if self._files["sessions_f"] is not None:
             self._files["sessions_f"].close()
         if self._files["events_f"] is not None:
             self._files["events_f"].close()
 
-    def ZipFiles(self):
+    def ZipFiles(self) -> None:
         try:
             existing_csvs = utils.loadJSONFile(filename="file_list.json", path=self._data_dir)
         except Exception as err:
@@ -114,7 +114,7 @@ class FileManager(abc.ABC):
                     utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
                     traceback.print_tb(err.__traceback__)
 
-    def _addToZip(self, path, zip_file, path_in_zip):
+    def _addToZip(self, path, zip_file, path_in_zip) -> None:
         try:
             zip_file.write(path, path_in_zip)
         except FileNotFoundError as err:
@@ -126,7 +126,7 @@ class FileManager(abc.ABC):
     #  deriving file metadata, this simply outputs a new file_name.meta file.
     #  @param date_range    The range of dates included in the exported data.
     #  @param num_sess      The number of sessions included in the recent export.
-    def WriteMetadataFile(self, date_range:Dict[str,datetime], num_sess:int):
+    def WriteMetadataFile(self, num_sess:int) -> None:
         # First, ensure we have a data directory.
         try:
             self._game_data_dir.mkdir(exist_ok=True, parents=True)
@@ -135,8 +135,8 @@ class FileManager(abc.ABC):
             utils.Logger.toFile(msg, logging.WARNING)
         else:
             # Second, remove old metas, if they exist.
-            start_range = date_range['min'].strftime("%Y%m%d")
-            end_range = date_range['max'].strftime("%Y%m%d")
+            start_range = self._date_range['min'].strftime("%Y%m%d") if self._date_range['min'] is not None else "Unknown"
+            end_range   = self._date_range['max'].strftime("%Y%m%d") if self._date_range['max'] is not None else "Unknown"
             match_string = f"{self._game_id}_{start_range}_to_{end_range}_\\w*\\.meta"
             old_metas = [f for f in os.listdir(self._game_data_dir) if re.match(match_string, f)]
             for old_meta in old_metas:
@@ -157,8 +157,8 @@ class FileManager(abc.ABC):
                     "ogd_revision" :self._short_hash,
                     "sessions_f"   :str(self._zip_names["sessions_f"]),
                     "events_f"     :str(self._zip_names["events_f"]),
-                    "start_date"   :date_range['min'].strftime("%m/%d/%Y"),
-                    "end_date"     :date_range['max'].strftime("%m/%d/%Y"),
+                    "start_date"   :self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
+                    "end_date"     :self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions"     :num_sess
                 }
@@ -171,7 +171,7 @@ class FileManager(abc.ABC):
     #  list of files.
     #  @param date_range    The range of dates included in the exported data.
     #  @param num_sess      The number of sessions included in the recent export.
-    def UpdateFileExportList(self, date_range: Dict[str,datetime], num_sess: int):
+    def UpdateFileExportList(self, num_sess: int) -> None:
         self._backupFileExportList()
         existing_csvs = {}
         try:
@@ -195,8 +195,8 @@ class FileManager(abc.ABC):
                     "ogd_revision" :self._short_hash,
                     "sessions_f"   :sessions_path,
                     "events_f"     :events_path,
-                    "start_date"   :date_range['min'].strftime("%m/%d/%Y"),
-                    "end_date"     :date_range['max'].strftime("%m/%d/%Y"),
+                    "start_date"   :self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
+                    "end_date"     :self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions"     :num_sess
                 }
