@@ -1183,7 +1183,7 @@ class LakelandExtractor(LegacyExtractor):
                 self.setValByIndex(f'max_num_{type}_in_play', w, prev_val)
 
 
-    def CalculateAggregateFeatures(self):
+    def _calculateAggregateFeatures(self):
         for w in self._cur_windows:
             self.finish_window(w)
 

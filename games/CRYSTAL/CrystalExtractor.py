@@ -96,7 +96,7 @@ class CrystalExtractor(LegacyExtractor):
                                                
     ## Function to perform calculation of aggregate features from existing
     #  per-level/per-custom-count features.
-    def CalculateAggregateFeatures(self):
+    def _calculateAggregateFeatures(self):
         # Calculate per-level averages and percentages, since we can't calculate
         # them until we know how many total events occur.
         for level in self._levels:

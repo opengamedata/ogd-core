@@ -25,6 +25,13 @@ class LegacyExtractor(Extractor):
     # *** ABSTRACTS ***
 
     @abc.abstractmethod
+    def _calculateAggregateFeatures(self) -> None:
+        """Abstract declaration of a function to perform calculation of aggregate features
+        from existing per-level/per-custom-count features.
+        """
+        return
+
+    @abc.abstractmethod
     def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         """Abstract declaration of a function to perform extraction of features from a row.
 
@@ -35,12 +42,6 @@ class LegacyExtractor(Extractor):
         :type table_schema: TableSchema
         """
         pass
-
-    ## Abstract declaration of a function to perform calculation of aggregate features
-    #  from existing per-level/per-custom-count features.
-    # @abc.abstractmethod
-    # def CalculateAggregateFeatures(self):
-    #     pass
 
     # *** PUBLIC BUILT-INS ***
 
@@ -135,6 +136,12 @@ class LegacyExtractor(Extractor):
     def ExtractFromEvent(self, event:Event, table_schema:TableSchema) -> None:
         # self._extractSequencesFromEvent(event=event, table_schema=table_schema)
         self._extractFeaturesFromEvent(event=event, table_schema=table_schema)
+
+    def CalculateAggregateFeatures(self) -> None:
+        """Overridden version of a blank function from Extractor, purely for compatibility with old extractors.
+        Just call the abstract function that does actual work in all LegacyExtractors.
+        """
+        self._calculateAggregateFeatures()
 
     # *** PRIVATE STATICS ***
 

@@ -29,13 +29,6 @@ class Extractor(abc.ABC):
             self.kind = kind
 
     # *** ABSTRACTS ***
-
-    @abc.abstractmethod
-    def CalculateAggregateFeatures(self) -> None:
-        """Abstract declaration of a function to perform calculation of aggregate features
-        from existing per-level/per-custom-count features.
-        """
-        pass
     
     @abc.abstractmethod
     def _loadFeature(self, feature:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
@@ -156,6 +149,12 @@ class Extractor(abc.ABC):
                         percount.ExtractFromEvent(event)
                 else:
                     utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
+
+    def CalculateAggregateFeatures(self) -> None:
+        """Abstract declaration of a function to perform calculation of aggregate features
+        from existing per-level/per-custom-count features.
+        """
+        return
 
     # *** PRIVATE STATICS ***
 
