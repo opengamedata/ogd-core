@@ -35,7 +35,7 @@ class FileManager(abc.ABC):
             # get hash
             repo = git.Repo(search_parent_directories=True)
             if repo.git is not None:
-                str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
+                self._short_hash = str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
             # then set up our paths, and ensure each exists.
             base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
             # finally, generate file names.
