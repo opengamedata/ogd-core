@@ -117,7 +117,6 @@ class LegacyExtractor(Extractor):
                 return str(total_secs)
             if obj is None:
                 return ''
-
             else:
                 return str(obj)
         column_vals = []
@@ -159,7 +158,7 @@ class LegacyExtractor(Extractor):
 
     # *** PRIVATE METHODS ***
 
-    def _loadFeature(self, name:str, feature_args:Dict[str,Any]) -> Feature:
+    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         return LegacyFeature()
 
     # def _extractSequencesFromEvent(self, event:Event, table_schema:TableSchema) -> None:
