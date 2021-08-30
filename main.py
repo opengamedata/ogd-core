@@ -3,14 +3,11 @@ import cProfile
 #import datetime
 import getopt
 import logging
-import math
-import os
-from schemas.TableSchema import TableSchema
 import sys
 import traceback
-import typing
 from calendar import monthrange
 from datetime import datetime
+from pathlib import Path
 from typing import Dict, List, Tuple
 
 from pandas.io.pytables import Table
@@ -24,6 +21,7 @@ from interfaces.BigQueryInterface import BigQueryInterface
 from managers.ExportManager import ExportManager
 from managers.Request import Request, ExporterFiles, ExporterRange
 from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
 from utils import Logger
 
 ## Function to print a "help" listing for the export tool.
@@ -160,7 +158,7 @@ def showGameInfo():
 #  the CSV files themselves), custom readme source, and the global changelog.
 #  The readme is placed in the game's data folder.
 def writeReadme():
-    path = f"./data/{game_name}"
+    path = Path(f"./data") / game_name
     try:
         game_schema = GameSchema(schema_name=f"{game_name}.json")
         table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
