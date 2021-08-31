@@ -1,5 +1,5 @@
 import typing
-from typing import Any, List
+from typing import Any, List, Union
 # local imports
 from extractors.Feature import Feature
 from schemas.Event import Event
