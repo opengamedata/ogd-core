@@ -3,7 +3,7 @@ import abc
 import typing
 from typing import Any, Dict, List, Union
 # Local imports
-from schemas.Event import Event
+from ..schemas.Event import Event
 
 ## @class Model
 #  Abstract base class for session-level Wave features.
@@ -12,7 +12,7 @@ from schemas.Event import Event
 #  If the model works on features from session data, it should calculate one result for each row (each row being a session).
 #  If the model works on a raw list of recent events, it should calculate a single result (each row being an event).
 class Feature(abc.ABC):
-    def __init__(self, name:str, description:str, count_index:int=0):
+    def __init__(self, name:str, description:str, count_index:int):
         self._name = name
         self._desc = description
         self._count_index = count_index
