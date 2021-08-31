@@ -7,7 +7,7 @@ from schemas.Event import Event
 
 class OffsetGoodMoveCount(Feature):
     def __init__(self, name:str, description:str, count_index:int):
-        Feature.__init__(self, name=name, description=description)
+        Feature.__init__(self, name=name, description=description, count_index=count_index)
 
     def GetEventTypes(self) -> List[str]:
         return []

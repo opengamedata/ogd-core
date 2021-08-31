@@ -349,22 +349,18 @@
             },
             "OverallPercentAmplitudeMoves" : {
                 "enabled": true,
-                "events": [],
                 "description": "Percent of total moves that were amplitude adjustments over a whole session"
             },
             "OverallPercentOffsetMoves" :  {
                 "enabled": true,
-                "events": [],
                 "description":"Percent of total moves that were offset adjustments over a whole session"
             },
             "OverallPercentWavelengthMoves" :  {
                 "enabled": true,
-                "events": [],
                 "description":"Percent of total moves that were wavelength adjustments over a whole session"
             },
             "AverageFails" : {
                 "enabled": true,
-                "events": [],
                 "description": "totalFails averaged over all levels"
             }
         }
