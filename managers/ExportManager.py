@@ -3,6 +3,7 @@
 #  for export to CSV files.
 
 ## import standard libraries
+from extractors.Extractor import Extractor
 import json
 import logging
 import math
@@ -11,7 +12,7 @@ import subprocess
 import traceback
 import pandas as pd
 from datetime import datetime
-from typing import List, Tuple, Union
+from typing import List, Type, Tuple, Union
 ## import local files
 import utils
 from config.config import settings
@@ -110,7 +111,7 @@ class ExportManager:
         finally:
             return ret_val
 
-    def _prepareExtractor(self) -> Union[type,None]:
+    def _prepareExtractor(self) -> Union[Type[Extractor],None]:
         game_extractor: Union[type,None] = None
         if self._game_id == "AQUALAB":
             game_extractor = AqualabExtractor
@@ -131,7 +132,7 @@ class ExportManager:
             raise Exception(f"Got an invalid game ID ({self._game_id})!")
         return game_extractor
 
-    def _exportToFiles(self, request:Request, file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema, game_extractor: Union[type,None]):
+    def _exportToFiles(self, request:Request, file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema, game_extractor: Union[Type[Extractor],None]):
         ret_val = -1
         # 1) Set up processors.
         sess_processor = evt_processor = None
