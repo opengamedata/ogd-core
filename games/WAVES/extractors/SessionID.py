@@ -2,12 +2,12 @@ from schemas import Event
 import typing
 from typing import Any, List, Union
 # local imports
-from extractors.Feature import Feature
+from extractors.SessionFeature import SessionFeature
 from schemas.Event import Event
 
-class SessionID(Feature):
+class SessionID(SessionFeature):
     def __init__(self, name:str, description:str, sessionID:str):
-        Feature.__init__(self, name=name, description=description)
+        SessionFeature.__init__(self, name=name, description=description)
         self._sessionID = sessionID
 
     def GetEventTypes(self) -> List[str]:

@@ -209,7 +209,6 @@
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "number of amplitude moves that brought amplitude closer to the correct value"
             },
             "OffsetGoodMoveCount": {
@@ -322,37 +321,30 @@
         "aggregate":{
             "SessionID": {
                 "enabled": true,
-                "events": [],
                 "description":"The player's session ID number for this play session"
             },
             "PersistentSessionID": {
                 "enabled": true,
-                "events": [],
                 "description":"The session ID for the player's device, persists across multiple players using the same device."
             },
             "AverageSliderMoves" :  {
                 "enabled": true,
-                "events": [],
                 "description":"totalSliderMoves averaged over all levels"
             },
             "AverageLevelTime" :  {
                 "enabled": true,
-                "events": [],
                 "description":"totalLevelTime averaged over all levels"
             },
             "AverageMoveTypeChanges" : {
                 "enabled": true,
-                "events": [],
                 "description": "totalMoveTypeChanges averaged over all levels"
             },
             "OverallSliderAvgStandardDeviations" : {
                 "enabled": true,
-                "events": [],
                 "description": "Average standard deviation of slider moves over a whole sessioin"
             },
             "OverallSliderAvgRange" : {
                 "enabled": true,
-                "events": [],
                 "description": "Average range of slider moves over a whole session"
             },
             "OverallPercentAmplitudeMoves" : {
@@ -370,7 +362,7 @@
                 "events": [],
                 "description":"Percent of total moves that were wavelength adjustments over a whole session"
             },
-            "AvgFails" : {
+            "AverageFails" : {
                 "enabled": true,
                 "events": [],
                 "description": "totalFails averaged over all levels"

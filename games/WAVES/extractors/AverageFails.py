@@ -2,13 +2,12 @@ from schemas import Event
 import typing
 from typing import Any, List, Union
 # local imports
-from extractors.Feature import Feature
+from extractors.SessionFeature import SessionFeature
 from schemas.Event import Event
 
-class AverageFails(Feature):
-    def __init__(self, name:str, description:str, count_index:int):
-        Feature.__init__(self, name=name, description=description)
-        self._fail_count = 0
+class AverageFails(SessionFeature):
+    def __init__(self, name:str, description:str):
+        SessionFeature.__init__(self, name=name, description=description)
 
     def GetEventTypes(self) -> List[str]:
         return []
@@ -24,3 +23,5 @@ class AverageFails(Feature):
 
     def MaxVersion(self) -> Union[str,None]:
         return None
+
+

@@ -6,7 +6,7 @@ from extractors.Feature import Feature
 from schemas.Event import Event
 
 class AmplitudeGoodMoveCount(Feature):
-    def __init__(self, name:str, description:str, count_index:int=0):
+    def __init__(self, name:str, description:str, count_index:int):
         Feature.__init__(self, name=name, description=description, count_index=count_index)
         self._count = 0
 
