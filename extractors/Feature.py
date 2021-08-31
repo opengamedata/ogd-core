@@ -3,7 +3,7 @@ import abc
 import typing
 from typing import Any, Dict, List, Union
 # Local imports
-from ..schemas.Event import Event
+from schemas.Event import Event
 
 ## @class Model
 #  Abstract base class for session-level Wave features.
