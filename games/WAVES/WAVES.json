@@ -86,25 +86,22 @@
 
     "features": {
         "per_count": {
-            "TotalSliderMoves": {
-                "enabled": true,
-                "count":"level_range",
-                "prefix": "lvl",
-                "events": ["SLIDER_MOVE_RELEASE"],
-                "description": "slider moves across a given level [count of 'SLIDER_MOVE_RELEASE' events]"
-            },
             "TotalArrowMoves": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "events": ["ARROW_MOVE_RELEASE"],
                 "description": "arrow moves across a given level [count of 'ARROW_MOVE_RELEASE' events]"
+            },
+            "TotalSliderMoves": {
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "description": "slider moves across a given level [count of 'SLIDER_MOVE_RELEASE' events]"
             },
             "TotalLevelTime": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "events": ["BEGIN", "COMPLETE"],
                 "description": "time spent on a level [sum of differences in time between 'BEGIN' and 'COMPLETE' event(s)]"
             },
             "SliderAvgStdDevs": {
