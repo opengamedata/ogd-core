@@ -1,5 +1,5 @@
 # Local imports
-from Feature import Feature
+from extractors.Feature import Feature
 from schemas.Event import Event
 
 ## @class Model
