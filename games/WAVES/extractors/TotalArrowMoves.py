@@ -10,7 +10,8 @@ class TotalArrowMoves(Feature):
         self._arrow_move_count : int = 0
 
     def GetEventTypes(self) -> List[str]:
-        return ["ARROW_MOVE_RELEASE"]
+        return ["CUSTOM.2"]
+        # return ["ARROW_MOVE_RELEASE"]
 
     def CalculateFinalValues(self) -> Any:
         return self._arrow_move_count

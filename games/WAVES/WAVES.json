@@ -2,8 +2,8 @@
     "level_range": { "min":0, "max":34 },
 
     "events":{
-        "COMPLETE": {
-            "event_custom":"string",
+        "COMPLETE.0": {
+            "event_custom":{"enum":["COMPLETE"]},
             "amplitude_left":"float",
             "wavelength_left":"float",
             "offset_left":"float",
@@ -12,8 +12,8 @@
             "offset_right":"float",
             "closeness":"float"
         },
-        "SUCCEED": {
-            "event_custom":"string",
+        "SUCCEED.0": {
+            "event_custom":{"enum":["SUCCEED"]},
             "amplitude_left":"float",
             "wavelength_left":"float",
             "offset_left":"float",
@@ -22,8 +22,8 @@
             "offset_right":"float",
             "closeness":"float"
         },
-        "FAIL": {
-            "event_custom":"string",
+        "FAIL.0": {
+            "event_custom":{"enum":["FAIL"]},
             "amplitude_left":"float",
             "wavelength_left":"float",
             "offset_left":"float",
@@ -32,18 +32,8 @@
             "offset_right":"float",
             "closeness":"float"
         },
-        "RESET_BTN_PRESS": {
-            "event_custom":"string",
-            "amplitude_left":"float",
-            "wavelength_left":"float",
-            "offset_left":"float",
-            "amplitude_right":"float",
-            "wavelength_right":"float",
-            "offset_right":"float",
-            "closeness":"float"
-        },
-        "SLIDER_MOVE_RELEASE": {
-            "event_custom":"string",
+        "CUSTOM.1": {
+            "event_custom":{"enum":["SLIDER_MOVE_RELEASE"]},
             "slider":{"enum": ["AMPLITUDE", "OFFSET", "WAVELENGTH"]},
             "wave":"string",
             "begin_val":"float",
@@ -58,8 +48,8 @@
             "stdev_val":"float",
             "correct_val":"float"
         },
-        "ARROW_MOVE_RELEASE": {
-            "event_custom":"string",
+        "CUSTOM.2": {
+            "event_custom":{"enum":["ARROW_MOVE_RELEASE"]},
             "slider":"string",
             "wave":"string",
             "begin_val":"float",
@@ -67,20 +57,30 @@
             "closeness":"float",
             "correct_val":"float"
         },
-        "QUESTION_ANSWER": {
-            "event_custom":"string",
+        "CUSTOM.3": {
+            "event_custom":{"enum":["QUESTION_ANSWER"]},
             "answer":"int",
             "answered":"int",
             "question":"int"
         },
-        "MENU_BUTTON": {
-            "event_custom":"string"
+        "CUSTOM.4": {
+            "event_custom":{"enum":["RESET_BTN_PRESS"]},
+            "amplitude_left":"float",
+            "wavelength_left":"float",
+            "offset_left":"float",
+            "amplitude_right":"float",
+            "wavelength_right":"float",
+            "offset_right":"float",
+            "closeness":"float"
         },
-        "SKIP_BUTTON": {
-            "event_custom":"SKIP_BUTTON"
+        "CUSTOM.5": {
+            "event_custom":{"enum":["MENU_BUTTON"]}
         },
-        "DISMISS_MENU_BUTTON": {
-            "event_custom":"DISMISS_MENU_BUTTON"
+        "CUSTOM.6": {
+            "event_custom":{"enum":["SKIP_BUTTON"]}
+        },
+        "CUSTOM.7": {
+            "event_custom":{"enum":["DISMISS_MENU_BUTTON"]}
         }
     },
 
@@ -98,6 +98,12 @@
                 "prefix": "lvl",
                 "description": "slider moves across a given level [count of 'SLIDER_MOVE_RELEASE' events]"
             },
+            "TotalMoveTypeChanges": {
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "description": "number of times the player changes between 'Arrow' and 'Slider' move types across a level"
+            },
             "TotalLevelTime": {
                 "enabled": true,
                 "count":"level_range",
@@ -110,13 +116,6 @@
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE"],
                 "description": "Average of stdev_val for all slider moves in a level"
-            },
-            "TotalMoveTypeChanges": {
-                "enabled": true,
-                "count":"level_range",
-                "prefix": "lvl",
-                "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
-                "description": "number of times 'slider' changes across a level"
             },
             "SliderAvgRange": {
                 "enabled": true,

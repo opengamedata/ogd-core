@@ -13,7 +13,7 @@ class TotalLevelTime(Feature):
         self._complete_times = []
 
     def GetEventTypes(self) -> List[str]:
-        return ["BEGIN", "COMPLETE"]
+        return ["BEGIN.0", "COMPLETE.0"]
 
     def CalculateFinalValues(self) -> Any:
         if len(self._begin_times) != len(self._complete_times):
