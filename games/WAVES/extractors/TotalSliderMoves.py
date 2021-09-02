@@ -17,7 +17,7 @@ class TotalSliderMoves(Feature):
         return self._slider_move_count
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_data["level"] == self._count_index and event.event_name == "SLIDER_MOVE_RELEASE":
+        if event.event_data["level"] == self._count_index:
             self._slider_move_count += 1
 
     def MinVersion(self) -> Union[str,None]:
