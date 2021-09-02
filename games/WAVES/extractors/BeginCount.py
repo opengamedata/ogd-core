@@ -8,15 +8,17 @@ from schemas.Event import Event
 class BeginCount(Feature):
     def __init__(self, name:str, description:str, count_index:int):
         Feature.__init__(self, name=name, description=description, count_index=count_index)
+        self._num_begins = 0
 
     def GetEventTypes(self) -> List[str]:
-        return []
+        return ["BEGIN.0"]
+        # return ["BEGIN"]
 
     def CalculateFinalValues(self) -> Any:
-        return
+        return self._num_begins
 
     def _extractFromEvent(self, event:Event) -> None:
-        return
+        self._num_begins += 1
 
     def MinVersion(self) -> Union[str,None]:
         return None
