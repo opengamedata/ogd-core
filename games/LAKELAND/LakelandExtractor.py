@@ -99,7 +99,7 @@ class LakelandExtractor(LegacyExtractor):
         self._NUM_SECONDS_PER_WINDOW_OVERLAP = config["WINDOW_OVERLAP_SECONDS"]
         self._GAME_SCHEMA = game_schema
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
-        self.WINDOW_RANGE = range(game_schema.level_range()['max'] + 1)
+        self.WINDOW_RANGE = range(game_schema.level_range().stop)
         self._WINDOW_RANGES = self._get_window_ranges()
         if sessions_file:
             self._WRITE_FEATURES = lambda: self.WriteCurrentFeatures(file=sessions_file)

@@ -105,9 +105,7 @@ class JowilderExtractor(LegacyExtractor):
         config = game_schema['config']
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
         self._IDLE_THRESH = timedelta(seconds=self._IDLE_THRESH_SECONDS)
-        self._level_range = range(game_schema.level_range()['min']   if game_schema.level_range()['min'] is not None else 0,
-                                  game_schema.level_range()['max']+1 if game_schema.level_range()['max'] is not None else 1)
-
+        self._level_range = game_schema.level_range()
         self.cur_task = 1
         self.time_since_start = timedelta(0)
         self._task_complete_helper = dict()

@@ -2,7 +2,7 @@
 import abc
 import enum
 import logging
-from os import sep
+from os import sep, stat
 import typing
 from collections import defaultdict
 from typing import Any, Dict, List, Literal, Union
@@ -47,10 +47,10 @@ class Extractor(abc.ABC):
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema
         """
-        self._session_id     : str                     = session_id
+        self._session_id     : str                                = session_id
+        self._event_registry : Dict[str,List[Extractor.Listener]] = {}
         self._percounts      : Dict[str,List[Feature]] = self._genPerCounts(schema=game_schema)
         self._aggregates     : Dict[str,Feature]       = self._genAggregate(schema=game_schema)
-        self._event_registry : Dict[str,List[Extractor.Listener]] = {}
 
     # string conversion for Extractors.
     def __str__(self) -> str:
@@ -145,9 +145,8 @@ class Extractor(abc.ABC):
         column_vals = []
         for aggregate in self._aggregates.values():
             column_vals.append(aggregate.CalculateFinalValues())
-        for percounts in self._percounts.values():
-            for percount in percounts:
-                column_vals.append(percount.CalculateFinalValues())
+        for percount in self._percounts.values():
+            column_vals.append(percount.CalculateFinalValues())
         return column_vals
 
     def CalculateAggregateFeatures(self) -> None:
@@ -186,14 +185,12 @@ class Extractor(abc.ABC):
         return ret_val
 
     @staticmethod
-    def _getLevelRange(schema:GameSchema) -> range:
-        ret_val = range(0)
-        if schema._min_level is not None and schema._max_level is not None:
-            # for i in range(schema._min_level, schema._max_level+1):
-            ret_val = range(schema._min_level, schema._max_level+1)
+    def _genCountRange(count:Any, schema:GameSchema) -> range:
+        if type(count) == str and count.lower() == "level_range":
+            count_range = schema.level_range()
         else:
-            utils.Logger.Log(f"Could not generate per-level features, min_level={schema._min_level} and max_level={schema._max_level}", logging.ERROR)
-        return ret_val
+            count_range = range(0,int(count))
+        return count_range
 
     # *** PRIVATE METHODS ***
 
@@ -211,13 +208,10 @@ class Extractor(abc.ABC):
         for name,percount in schema.percount_features().items():
             if percount["enabled"] == True:
                 percount_instances:List[Feature] = []
-                if type(percount["count"]) == str and percount["count"].lower() == "level_range":
-                    count_range = Extractor._getLevelRange(schema=schema)
-                else:
-                    count_range = range(0,int(percount["count"]))
+                count_range = Extractor._genCountRange(count=percount["count"], schema=schema)
                 for i in count_range:
                     feature = self._loadFeature(feature_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, count_index=i)
-                    self._register(feature, Extractor.Listener.Kinds.PERCOUNT)
+                    self._register(feature=feature, kind=Extractor.Listener.Kinds.PERCOUNT)
                     percount_instances.append(feature)
                 ret_val[name] = percount_instances
         return ret_val

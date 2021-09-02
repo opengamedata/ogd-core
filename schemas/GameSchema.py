@@ -62,8 +62,14 @@ class GameSchema:
     def __str__(self) -> str:
         return str(self._game_name)
 
-    def level_range(self) -> Dict[str,int]:
-        return self["level_range"]
+    def level_range(self) -> range:
+        ret_val = range(0)
+        if self._min_level is not None and self._max_level is not None:
+            # for i in range(self._min_level, self._max_level+1):
+            ret_val = range(self._min_level, self._max_level+1)
+        else:
+            utils.Logger.Log(f"Could not generate per-level features, min_level={self._min_level} and max_level={self._max_level}", logging.ERROR)
+        return ret_val
 
     ## Function to retrieve the dictionary of event types for the game.
     def events(self) -> Dict[str,Any]:
