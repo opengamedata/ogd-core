@@ -87,10 +87,10 @@
     "features": {
         "per_count": {
             "BeginCount": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "events": ["BEGIN"],
+
                 "description": "number of times a player 'began' the level. [count of 'BEGIN' events]"
             },
             "SucceedCount": {

@@ -58,16 +58,22 @@ class WaveExtractor(Extractor):
         # Per-count features
         if feature_type == "AmplitudeGoodMoveCount":
             ret_val = AmplitudeGoodMoveCount.AmplitudeGoodMoveCount(name=name, description=feature_args["description"], count_index=_count_index)
-        if feature_type == "TotalArrowMoves":
+        elif feature_type == "BeginCount":
+            ret_val = BeginCount.BeginCount(name=name, description=feature_args["description"], count_index=_count_index)
+        elif feature_type == "SliderAverageRange":
+            ret_val = SliderAverageRange.SliderAverageRange(name=name, description=feature_args["description"], count_index=_count_index)
+        elif feature_type == "TotalArrowMoves":
             ret_val = TotalArrowMoves.TotalArrowMoves(name=name, description=feature_args["description"], count_index=_count_index)
-        if feature_type == "TotalSliderMoves":
+        elif feature_type == "TotalMoveTypeChanges":
+            ret_val = TotalMoveTypeChanges.TotalMoveTypeChanges(name=name, description=feature_args["description"], count_index=_count_index)
+        elif feature_type == "TotalSliderMoves":
             ret_val = TotalSliderMoves.TotalSliderMoves(name=name, description=feature_args["description"], count_index=_count_index)
-        if feature_type == "TotalLevelTime":
+        elif feature_type == "TotalLevelTime":
             ret_val = TotalLevelTime.TotalLevelTime(name=name, description=feature_args["description"], count_index=_count_index)
         # Session-level features.
-        if feature_type == "AverageFails":
+        elif feature_type == "AverageFails":
             ret_val = AverageFails.AverageFails(name=name, description=feature_args["description"])
-        if feature_type == "SessionID":
+        elif feature_type == "SessionID":
             ret_val = SessionID.SessionID(name=name, description=feature_args["description"], sessionID=self._session_id)
         else:
             ret_val = SessionID.SessionID(name, feature_args["description"], self._session_id)
