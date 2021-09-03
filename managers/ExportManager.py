@@ -51,6 +51,7 @@ class ExportManager:
         self._settings = settings
 
     def ExecuteRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema):
+        start = datetime.now()
         if request.GetGameID() != self._game_id:
             utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.GetGameID()}", logging.WARNING)
             self._game_id = request.GetGameID()
@@ -58,6 +59,8 @@ class ExportManager:
             utils.Logger.Log(f"Successfully completed request {str(request)}.", logging.INFO)
         else:
             utils.Logger.Log(f"Could not complete request {str(request)}", logging.ERROR)
+        time_delta = datetime.now() - start
+        utils.Logger.Log(f"Total Data Request Execution Time: {time_delta}", logging.INFO)
 
     ## Private function containing most of the code to handle processing of db
     #  data, and export to files.
@@ -80,13 +83,8 @@ class ExportManager:
             # If we have a schema, we can do feature extraction.
             if game_schema is not None:
                 # 4) Loop over data, running extractors.
-                start = datetime.now()
-
                 num_sess: int = self._exportToFiles(request=request, file_manager=file_manager,\
                                     game_schema=game_schema, table_schema=table_schema, game_extractor=game_extractor)
-
-                time_delta = datetime.now() - start
-                utils.Logger.Log(f"Total Data Extraction Time: {time_delta}", logging.INFO)
                 # 5) Save and close files
                 # before we zip stuff up, let's ensure the readme is in place:
                 try:
@@ -161,11 +159,11 @@ class ExportManager:
                         range( 0, math.ceil(num_sess / slice_size) )]
         # 3) Loop over and process the data, slice-by-slice (where each slice is a list of sessions).
         for i, next_slice in enumerate(session_slices):
-            start         : datetime                = datetime.now()
             num_events    : int                     = 0
             next_data_set : Union[List[Tuple],None] = request._interface.RowsFromIDs(next_slice)
             if next_data_set is not None:
-                num_events = len(next_data_set)
+                start      : datetime = datetime.now()
+                num_events : int      = len(next_data_set)
                 try:
                     # 3a) If next slice yielded valid data from the interface, process row-by-row.
                     for row in next_data_set:
@@ -188,10 +186,10 @@ class ExportManager:
                 except Exception as err:
                     msg = f"Error while processing slice [{i+1}/{len(session_slices)}]"
                     raise err
+                time_delta = datetime.now() - start
+                utils.Logger.Log(f"Processing time for slice [{i+1}/{len(session_slices)}]: {time_delta} to handle {num_events} events", logging.INFO)
             else:
-                utils.Logger.Log("Could not retrieve next data set.", logging.WARN)
-            time_delta = datetime.now() - start
-            utils.Logger.Log(f"Processing time for slice [{i+1}/{len(session_slices)}]: {time_delta} to handle {num_events} events", logging.INFO)
+                utils.Logger.Log(f"Could not retrieve data set for slice [{i+1}/{len(session_slices)}].", logging.WARN)
         # 4) If we made it all the way to the end, return the number of sessions processed.
         ret_val = num_sess
         return ret_val
