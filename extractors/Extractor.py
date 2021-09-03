@@ -27,6 +27,12 @@ class Extractor(abc.ABC):
         def __init__(self, name:str, kind:Kinds):
             self.name = name
             self.kind = kind
+        
+        def __str__(self) -> str:
+            return f"{self.name} ({'aggregate' if self.kind == Extractor.Listener.Kinds.AGGREGATE else 'percount'})"
+
+        def __repr__(self) -> str:
+            return str(self)
 
     # *** ABSTRACTS ***
     
