@@ -55,8 +55,8 @@ class Extractor(abc.ABC):
         """
         self._session_id     : str                                = session_id
         self._event_registry : Dict[str,List[Extractor.Listener]] = {}
-        self._percounts      : Dict[str,List[Feature]] = self._genPerCounts(schema=game_schema)
-        self._aggregates     : Dict[str,Feature]       = self._genAggregate(schema=game_schema)
+        self._percounts      : Dict[str,Feature] = self._genPerCounts(schema=game_schema)
+        self._aggregates     : Dict[str,Feature] = self._genAggregate(schema=game_schema)
 
     # string conversion for Extractors.
     def __str__(self) -> str:
@@ -66,9 +66,8 @@ class Extractor(abc.ABC):
         :return: A string with line-separated stringified features.
         :rtype: str
         """
-        ret_val = [str(feat) for feat in self._aggregates.values()]
-        for feat_list in self._percounts.values():
-            ret_val += [str(feat) for feat in feat_list]
+        ret_val  = [str(feat) for feat in self._aggregates.values()]
+        ret_val += [str(feat) for feat in self._percounts.values()]
         return '\n'.join(ret_val)
 
     # Alternate string conversion for Extractors, with limitable number of lines.
@@ -83,9 +82,8 @@ class Extractor(abc.ABC):
         :return: A string with line-separated stringified features.
         :rtype: str
         """
-        ret_val = [str(feat) for feat in self._aggregates.values()]
-        for feat_list in self._percounts.values():
-            ret_val += [str(feat) for feat in feat_list]
+        ret_val  = [str(feat) for feat in self._aggregates.values()]
+        ret_val += [str(feat) for feat in self._percounts.values()]
         if num_lines is None:
             return '\n'.join(ret_val)
         else:
@@ -126,8 +124,7 @@ class Extractor(abc.ABC):
                 if listener.kind == Extractor.Listener.Kinds.AGGREGATE:
                     self._aggregates[listener.name].ExtractFromEvent(event)
                 elif listener.kind == Extractor.Listener.Kinds.PERCOUNT:
-                    for percount in self._percounts[listener.name]:
-                        percount.ExtractFromEvent(event)
+                    self._percounts[listener.name].ExtractFromEvent(event)
                 else:
                     utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
 
