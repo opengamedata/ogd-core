@@ -138,7 +138,7 @@ class Extractor(abc.ABC):
         :type file: typing.IO[str]
         """
         column_vals = self.GetCurrentFeatures()
-        file.write(separator.join(column_vals))
+        file.write(separator.join([str(val) for val in column_vals]))
         file.write("\n")
 
     def GetCurrentFeatures(self) -> typing.List[str]:
@@ -203,10 +203,10 @@ class Extractor(abc.ABC):
             if aggregate["enabled"] == True:
                 feature = self._loadFeature(feature_type=name, name=name, feature_args=aggregate)
                 self._register(feature, Extractor.Listener.Kinds.AGGREGATE)
-                ret_val[name] = feature
+                ret_val[feature.Name()] = feature
         return ret_val
 
-    def _genPerCounts(self, schema:GameSchema) -> Dict[str,List[Feature]]:
+    def _genPerCounts(self, schema:GameSchema) -> Dict[str,Feature]:
         ret_val = {}
         for name,percount in schema.percount_features().items():
             if percount["enabled"] == True:
@@ -215,8 +215,7 @@ class Extractor(abc.ABC):
                 for i in count_range:
                     feature = self._loadFeature(feature_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, count_index=i)
                     self._register(feature=feature, kind=Extractor.Listener.Kinds.PERCOUNT)
-                    percount_instances.append(feature)
-                ret_val[name] = percount_instances
+                    ret_val[feature.Name()] = feature
         return ret_val
 
     def _register(self, feature:Feature, kind:Listener.Kinds):
