@@ -2,12 +2,12 @@ from schemas import Event
 import typing
 from typing import Any, List, Union
 # local imports
-from extractors.Feature import Feature
+from extractors.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
-class BeginCount(Feature):
+class BeginCount(PerLevelFeature):
     def __init__(self, name:str, description:str, count_index:int):
-        Feature.__init__(self, name=name, description=description, count_index=count_index)
+        PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._num_begins = 0
 
     def GetEventTypes(self) -> List[str]:

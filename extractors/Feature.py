@@ -20,6 +20,9 @@ class Feature(abc.ABC):
     def __str__(self):
         return f"{self._name} : {self._desc}"
 
+    def Name(self):
+        return self._name
+
     ## Abstract function to get a list of event types the Feature wants.
     @abc.abstractmethod
     def GetEventTypes(self) -> List[str]:
@@ -64,17 +67,22 @@ class Feature(abc.ABC):
     def CalculateFinalValues(self) -> typing.Tuple:
         pass
 
-    def ExtractFromEvent(self, event:Event):
-        event_type = event.event_name.split('.')[0]
-        if self._validateVersion(event.app_version) and self._validateEventType(event_type if event_type != "CUSTOM" else event.event_data["event_custom"]):
-            self._extractFromEvent(event)
-
     ## Abstract declaration of a function to perform update of a feature from a row.
     #
     #  @param row : A row, which will be used to update the feature's data.
     @abc.abstractmethod
     def _extractFromEvent(self, event:Event):
         pass
+
+    def ExtractFromEvent(self, event:Event):
+        if self._validateEvent(event):
+            self._extractFromEvent(event)
+
+    def _validateEvent(self, event:Event):
+        return (
+            self._validateVersion(event.app_version)
+        and self._validateEventType(event_type=event.event_name)
+        )
 
     ## Private function to check whether the given data version from a row is acceptable by this feature extractor.
     def _validateVersion(self, data_version:str) -> bool:
