@@ -179,11 +179,7 @@ class Extractor(abc.ABC):
                 ret_val.append(name)
         for name,percount in schema.percount_features().items():
             if percount.get("enabled") == True:
-                if percount["count"] == "level_range":
-                    count_range = Extractor._getLevelRange(schema=schema)
-                else:
-                    count_range = range(0,percount["count"])
-                for i in count_range:
+                for i in Extractor._genCountRange(count=percount["count"], schema=schema):
                     ret_val.append(f"{percount['prefix']}{i}_{name}")
         return ret_val
 
@@ -210,9 +206,7 @@ class Extractor(abc.ABC):
         ret_val = {}
         for name,percount in schema.percount_features().items():
             if percount["enabled"] == True:
-                percount_instances:List[Feature] = []
-                count_range = Extractor._genCountRange(count=percount["count"], schema=schema)
-                for i in count_range:
+                for i in Extractor._genCountRange(count=percount["count"], schema=schema):
                     feature = self._loadFeature(feature_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, count_index=i)
                     self._register(feature=feature, kind=Extractor.Listener.Kinds.PERCOUNT)
                     ret_val[feature.Name()] = feature
