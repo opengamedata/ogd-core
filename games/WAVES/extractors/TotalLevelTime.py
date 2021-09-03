@@ -3,12 +3,12 @@ import logging
 from typing import Any, List, Union
 # local imports
 import utils
-from extractors.Feature import Feature
+from extractors.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
-class TotalLevelTime(Feature):
+class TotalLevelTime(PerLevelFeature):
     def __init__(self, name:str, description:str, count_index:int):
-        Feature.__init__(self, name=name, description=description, count_index=count_index)
+        PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._begin_times = []
         self._complete_times = []
 
@@ -23,11 +23,10 @@ class TotalLevelTime(Feature):
         return sum(_diffs)
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_data["level"] == self._count_index:
-            if event.event_name == "BEGIN":
-                self._begin_times.append(event.timestamp)
-            if event.event_name == "COMPLETE":
-                self._complete_times.append(event.timestamp)
+        if event.event_name == "BEGIN":
+            self._begin_times.append(event.timestamp)
+        if event.event_name == "COMPLETE":
+            self._complete_times.append(event.timestamp)
 
     def MinVersion(self) -> Union[str,None]:
         return None
