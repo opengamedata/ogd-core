@@ -47,7 +47,7 @@ class SessionProcessor:
         # ensure we have an extractor for the given session:
         if not event.session_id in self._session_extractors.keys():
             if event.app_id == 'LAKELAND' and self._ExtractorClass is LakelandExtractor:
-                self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_schema=self._game_schema, sessions_file=self._sessions_file)
+                self._session_extractors[event.session_id] = LakelandExtractor(session_id=event.session_id, game_schema=self._game_schema, sessions_file=self._sessions_file)
             else:
                 self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_schema=self._game_schema)
         self._session_extractors[event.session_id].ExtractFromEvent(event, self._table_schema)
