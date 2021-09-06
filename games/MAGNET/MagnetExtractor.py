@@ -29,6 +29,7 @@ class MagnetExtractor(LegacyExtractor):
     def __init__(self, session_id:int, game_schema:GameSchema):
         super().__init__(session_id=session_id, game_schema=game_schema)
         # Define custom private data.
+        self._game_schema : GameSchema = game_schema
         self._features.setValByName(feature_name="sessionID", new_value=session_id)
 
     ## Function to perform extraction of features from a row.
@@ -40,7 +41,7 @@ class MagnetExtractor(LegacyExtractor):
     def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
         # put some data in local vars, for readability later.
         level = event.event_data['level']
-        if level > self._game_schema.max_level:
+        if level > self._game_schema._max_level:
             utils.Logger.toStdOut(f"Got an event with level too high, full data:\n{str(event)}")
         # Check for invalid row.
         if event.session_id != self._session_id:
@@ -78,7 +79,7 @@ class MagnetExtractor(LegacyExtractor):
 
     ## Function to perform calculation of aggregate features from existing
     #  per-level/per-custom-count features.
-    def CalculateAggregateFeatures(self):
+    def _calculateAggregateFeatures(self):
         # Calculate per-level averages and percentages, since we can't calculate
         # them until we know how many total events occur.
         totalScore = 0
