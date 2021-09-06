@@ -14,7 +14,7 @@ from schemas.Event import Event
 #  If the model works on a raw list of recent events, it should calculate a single result (each row being an event).
 class LegacyFeature(Feature):
     def __init__(self):
-        super().__init__(name="LegacyFeature", description="Dummy LegacyFeature so old extractors don't break the system.")
+        super().__init__(name="LegacyFeature", description="Dummy LegacyFeature so old extractors don't break the system.", count_index=0)
 
     def __str__(self):
         return f"{self._name} : {self._desc}"
@@ -28,6 +28,12 @@ class LegacyFeature(Feature):
 
     def ExtractFromEvent(self, event:Event):
         return
+
+    def MinVersion(self) -> Union[str,None]:
+        return None
+
+    def MaxVersion(self) -> Union[str,None]:
+        return None
 
     ## Abstract declaration of a function to perform update of a feature from a row.
     #
