@@ -34,34 +34,6 @@ class Feature(abc.ABC):
         :rtype: List[str]
         """
         pass
-
-    ## Abstract function to get the minimum game data version the feature can handle.
-    @abc.abstractmethod
-    def MinVersion(self) -> Union[str,None]:
-        """ Abstract function to get the minimum game data version the feature can handle.
-            A value of None will set no minimum, so all levels are accepted (unless a max is set).
-            Typically default to None, unless there is a required element of the event data that was not added until a certain version.        
-            The versions of data accepted by a feature are a responsibility of the Feature's developer,
-            so this is a required part of interface instead of a config item in the schema.
-
-        :return: [description]
-        :rtype: Union[str,None]
-        """
-        pass
-
-    ## Abstract function to get the maximum game data version the feature can handle.
-    @abc.abstractmethod
-    def MaxVersion(self) -> Union[str,None]:
-        """ Abstract function to get the maximum game data version the feature can handle.
-            A value of None will set no maximum, so all levels are accepted (unless a min is set).
-            Typically default to None, unless the feature is not compatible with new data and is only kept for legacy purposes.
-            The versions of data accepted by a feature are a responsibility of the Feature's developer,
-            so this is a required part of interface instead of a config item in the schema.
-
-        :return: [description]
-        :rtype: Union[str,None]
-        """
-        pass
     
     @abc.abstractmethod
     def CalculateFinalValues(self) -> typing.Tuple:
@@ -73,6 +45,32 @@ class Feature(abc.ABC):
     @abc.abstractmethod
     def _extractFromEvent(self, event:Event):
         pass
+
+    ## Abstract function to get the minimum game data version the feature can handle.
+    def MinVersion(self) -> Union[str,None]:
+        """ Abstract function to get the minimum game data version the feature can handle.
+            A value of None will set no minimum, so all levels are accepted (unless a max is set).
+            Typically default to None, unless there is a required element of the event data that was not added until a certain version.        
+            The versions of data accepted by a feature are a responsibility of the Feature's developer,
+            so this is a required part of interface instead of a config item in the schema.
+
+        :return: [description]
+        :rtype: Union[str,None]
+        """
+        return None
+
+    ## Abstract function to get the maximum game data version the feature can handle.
+    def MaxVersion(self) -> Union[str,None]:
+        """ Abstract function to get the maximum game data version the feature can handle.
+            A value of None will set no maximum, so all levels are accepted (unless a min is set).
+            Typically default to None, unless the feature is not compatible with new data and is only kept for legacy purposes.
+            The versions of data accepted by a feature are a responsibility of the Feature's developer,
+            so this is a required part of interface instead of a config item in the schema.
+
+        :return: [description]
+        :rtype: Union[str,None]
+        """
+        return None
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event):
