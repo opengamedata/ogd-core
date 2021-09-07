@@ -155,6 +155,7 @@ class Extractor(abc.ABC):
     def CalculateAggregateFeatures(self) -> None:
         """Abstract declaration of a function to perform calculation of aggregate features
         from existing per-level/per-custom-count features.
+        Really just exists for compatibility with LegacyExtractors.
         """
         return
 
