@@ -94,7 +94,7 @@ class WaveExtractor(Extractor):
         elif feature_type == "SessionID":
             ret_val = SessionID.SessionID(name=name, description=feature_args['description'], sessionID=self._session_id)
         else:
-            ret_val = SessionID.SessionID(name, feature_args['description'], self._session_id)
+            raise NotImplementedError(f"'{feature_type}' is not a valid feature for Waves.")
         return ret_val
 
     ## Function to perform extraction of features from a row.

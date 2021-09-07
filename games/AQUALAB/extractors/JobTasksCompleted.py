@@ -17,5 +17,5 @@ class JobTasksCompleted(Feature):
         return self._count
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self._job_map[event.event_data["job_id"]] == self._count_index:
+        if self._job_map[event.event_data["job_id"]['string_value']] == self._count_index:
             self._count += 1

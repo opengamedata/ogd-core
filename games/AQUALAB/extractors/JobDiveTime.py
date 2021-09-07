@@ -19,7 +19,7 @@ class JobDiveTime(Feature):
         return self._time
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self._job_map[event.event_data["job_id"]] == self._count_index:
+        if self._job_map[event.event_data["job_id"]['string_value']] == self._count_index:
             if event.event_name == "begin_dive":
                 self._dive_start_time = event.timestamp
             elif event.event_name == "scene_changed":

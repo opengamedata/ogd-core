@@ -29,8 +29,8 @@ class AqualabExtractor(Extractor):
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
     def __init__(self, session_id: str, game_schema: GameSchema):
-        super().__init__(session_id=session_id, game_schema=game_schema)
         self._game_schema = game_schema
+        super().__init__(session_id=session_id, game_schema=game_schema)
 
     def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         ret_val : Feature
@@ -78,6 +78,8 @@ class AqualabExtractor(Extractor):
             ret_val = SessionGuideCount.SessionGuideCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionHelpCount":
             ret_val = SessionHelpCount.SessionHelpCount(name=name, description=feature_args["description"])
+        elif feature_type == "SessionID":
+            ret_val = SessionID.SessionID(name=name, description=feature_args["description"], session_id=self._session_id)
         elif feature_type == "SessionJobsCompleted":
             ret_val = SessionJobsCompleted.SessionJobsCompleted(name=name, description=feature_args["description"])
         elif feature_type == "SwitchJobsCount":
