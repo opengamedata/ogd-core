@@ -39,13 +39,13 @@ class CSVInterface(DataInterface):
         max_time = pd.to_datetime(self._data['server_time'].max())
         return {'min':min_time, 'max':max_time}
 
-    def _rowsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list: List[str], versions: Union[List[int],None]=None) -> List[Tuple]:
         if self.IsOpen() and self._data != None:
             return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
         else:
             return []
 
-    def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[int]:
+    def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[str]:
         if not self._data.empty:
             server_times = pd.to_datetime(self._data['server_time'])
             if versions is not None and versions is not []:

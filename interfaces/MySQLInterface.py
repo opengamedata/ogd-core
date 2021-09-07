@@ -320,6 +320,7 @@ class MySQLInterface(DataInterface):
         return True
 
     def _rowsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+        ret_val = []
         # grab data for the given session range. Sort by event time, so
         if not self._db_cursor == None:
             if versions is not None and versions is not []:
@@ -333,14 +334,15 @@ class MySQLInterface(DataInterface):
             db_name = self._settings["db_config"]["DB_NAME"]
             table_name = self._settings["db_config"]["TABLE"]
             query_string = f"SELECT * FROM {db_name}.{table_name} WHERE {filt} ORDER BY session_id, session_n ASC"
-            data = SQL.Query(cursor=self._db_cursor, query=query_string, params=params, fetch_results=True)
-            return data if data != None else []
+            data = SQL.Query(cursor=self._db_cursor, query=query_string, params=tuple(params), fetch_results=True)
+            if data is not None:
+                ret_val = data
             # self._select_queries.append(select_query) # this doesn't appear to be used???
         else:
             Logger.Log(f"Could not get data for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
-            return []
+        return ret_val
 
-    def _allIDs(self) -> List[int]:
+    def _allIDs(self) -> List[str]:
         if not self._db_cursor == None:
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
             db_name = self._settings["db_config"]["DB_NAME"]
@@ -348,13 +350,14 @@ class MySQLInterface(DataInterface):
             filt = f"`app_id`='{self._game_id}'"
             data = SQL.SELECT(cursor  =self._db_cursor, db_name =db_name, table   =table_name,
                               columns =['session_id'],  filter  =filt,    distinct=True)
-            return [int(id[0]) for id in data] if data != None else []
+            return [str(id[0]) for id in data] if data != None else []
             # self._select_queries.append(select_query) # this doesn't appear to be used???
         else:
             Logger.Log(f"Could not get list of all session ids, MySQL connection is not open.", logging.WARN)
             return []
 
     def _fullDateRange(self) -> Dict[str,datetime]:
+        ret_val = {'min':datetime.now(), 'max':datetime.now()}
         if not self._db_cursor == None:
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
             db_name = self._settings["db_config"]["DB_NAME"]
@@ -364,12 +367,14 @@ class MySQLInterface(DataInterface):
             # run query
             result = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
                                 columns=['MIN(server_time)', 'MAX(server_time)'], filter=filt)
-            return {'min':result[0][0], 'max':result[0][1]}
+            if result is not None:
+                ret_val = {'min':result[0][0], 'max':result[0][1]}
         else:
             Logger.Log(f"Could not get full date range, MySQL connection is not open.", logging.WARN)
-            return {'min':datetime.now(), 'max':datetime.now()}
+        return ret_val
 
-    def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[int]:
+    def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[str]:
+        ret_val = []
         if not self._db_cursor == None:
             # alias long setting names.
             db_name = self._settings["db_config"]["DB_NAME"]
@@ -384,12 +389,14 @@ class MySQLInterface(DataInterface):
             session_ids_raw = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
                                     columns=["`session_id`"], filter=filt,
                                     sort_columns=["`session_id`"], sort_direction="ASC", distinct=True)
-            return [sess[0] for sess in session_ids_raw]
+            if session_ids_raw is not None:
+                ret_val = [str(sess[0]) for sess in session_ids_raw]
         else:
             Logger.Log(f"Could not get session list for {min.isoformat()}-{max.isoformat()} range, MySQL connection is not open.", logging.WARN)
-            return []
+        return ret_val
 
-    def _datesFromIDs(self, id_list:List[int], versions: Union[List[int],None]=None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], versions: Union[List[int],None]=None) -> Dict[str, datetime]:
+        ret_val = {'min':datetime.now(), 'max':datetime.now()}
         if not self._db_cursor == None:
             # alias long setting names.
             db_name = self._settings["db_config"]["DB_NAME"]
@@ -401,7 +408,8 @@ class MySQLInterface(DataInterface):
             # run query
             result = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
                                 columns=['MIN(server_time)', 'MAX(server_time)'], filter=filt)
-            return {'min':result[0][0], 'max':result[0][1]}
+            if result is not None:
+                ret_val = {'min':result[0][0], 'max':result[0][1]}
         else:
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
-            return {'min':datetime.now(), 'max':datetime.now()}
+        return ret_val

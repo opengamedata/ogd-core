@@ -107,7 +107,8 @@ class BigQueryInterface(DataInterface):
             Logger.Log(f"Could not get full date range, BigQuery connection is not open.", logging.WARN)
             return {"min":datetime.now(), "max":datetime.now()}
 
-    def _IDsFromDates(self, min: datetime, max: datetime, versions: Union[List[int],None]=None) -> List[int]:
+    def _IDsFromDates(self, min: datetime, max: datetime, versions: Union[List[int],None]=None) -> List[str]:
+        ret_val = []
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         if self._client != None:
             db_name = self._settings["bq_config"]["DB_NAME"]
@@ -120,13 +121,14 @@ class BigQueryInterface(DataInterface):
                 AND _TABLE_SUFFIX BETWEEN '{str_min}' AND '{str_max}'
             """
             data = self._client.query(query)
-            ids = [row['session_id'] for row in data]
-            return ids if ids != None else []
+            ids = [str(row['session_id']) for row in data]
+            if ids is not None:
+                ret_val = ids
         else:
             Logger.Log(f"Could not get session list for {str_min}-{str_max} range, BigQuery connection is not open.", logging.WARN)
-            return []
+        return ret_val
 
-    def _datesFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list: List[str], versions: Union[List[int],None]=None) -> Dict[str, datetime]:
         if self._client != None:
             db_name = self._settings["bq_config"]["DB_NAME"]
             table_name = self._settings["bq_config"]["TABLE_NAME"]

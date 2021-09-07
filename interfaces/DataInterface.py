@@ -52,14 +52,14 @@ class DataInterface(abc.ABC):
         else:
             return self._rowsFromIDs(id_list, versions=versions)
 
-    def IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> Union[List[int], None]:
+    def IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> Union[List[str], None]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve IDs, the source interface is not open!")
             return None
         else:
             return self._IDsFromDates(min=min, max=max, versions=versions)
 
-    def DatesFromIDs(self, id_list:List[int], versions: Union[List[int],None]=None) -> Union[Dict[str,datetime], Dict[str,None]]:
+    def DatesFromIDs(self, id_list:List[str], versions: Union[List[int],None]=None) -> Union[Dict[str,datetime], Dict[str,None]]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve dates, the source interface is not open!")
             return {'min':None, 'max':None}
@@ -87,9 +87,9 @@ class DataInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[int]:
+    def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[str]:
         pass
 
     @abc.abstractmethod
-    def _datesFromIDs(self, id_list:List[int], versions: Union[List[int],None]=None) -> Dict[str,datetime]:
+    def _datesFromIDs(self, id_list:List[str], versions: Union[List[int],None]=None) -> Dict[str,datetime]:
         pass
