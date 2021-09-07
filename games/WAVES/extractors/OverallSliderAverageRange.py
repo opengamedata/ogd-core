@@ -15,7 +15,10 @@ class OverallSliderAverageRange(SessionFeature):
         # return ["SLIDER_MOVE_RELEASE"]
 
     def CalculateFinalValues(self) -> Any:
-        return sum(self._ranges) / len(self._ranges)
+        if len(self._ranges) > 0:
+            return sum(self._ranges) / len(self._ranges)
+        else:
+            return None
 
     def _extractFromEvent(self, event:Event) -> None:
         self._ranges.append(event.event_data["max_val"] - event.event_data["min_val"])

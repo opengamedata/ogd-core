@@ -16,7 +16,10 @@ class OverallPercentAmplitudeMoves(SessionFeature):
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
     def CalculateFinalValues(self) -> Any:
-        return self._amplitude_count / self._move_count * 100
+        if self._move_count > 0:
+            return self._amplitude_count / self._move_count * 100
+        else:
+            return None
 
     def _extractFromEvent(self, event:Event) -> None:
         self._move_count += 1

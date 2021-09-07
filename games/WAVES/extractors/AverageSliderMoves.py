@@ -16,7 +16,10 @@ class AverageSliderMoves(SessionFeature):
         # return ["SLIDER_MOVE_RELEASE"]
 
     def CalculateFinalValues(self) -> Any:
-        return self._slider_count / len(self._levels_encountered)
+        if len(self._levels_encountered) > 0:
+            return self._slider_count / len(self._levels_encountered)
+        else:
+            return None
 
     def _extractFromEvent(self, event:Event) -> None:
         self._levels_encountered.add(event.event_data['level']) # set-add level to list, at end we will have set of all levels seen.
