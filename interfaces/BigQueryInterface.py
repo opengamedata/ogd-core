@@ -59,7 +59,10 @@ class BigQueryInterface(DataInterface):
                 items = tuple(row.items())
                 event = []
                 for item in items:
-                    if item[0] in ["event_params", "device", "geo"]:
+                    if item[0] == "event_params":
+                        _params = {param['key']:param['value'] for param in item[1]}
+                        event.append(json.dumps(_params))
+                    elif item[0] in ["device", "geo"]:
                         event.append(json.dumps(item[1]))
                     else:
                         event.append(item[1])
