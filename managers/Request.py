@@ -21,10 +21,10 @@ class ExporterFiles:
         self.sessions = sessions
 
 class ExporterRange:
-    def __init__(self, date_min:Union[datetime,None], date_max:Union[datetime,None], ids:Union[List[int],None], versions:Union[List[int],None]=None):
+    def __init__(self, date_min:Union[datetime,None], date_max:Union[datetime,None], ids:Union[List[str],None], versions:Union[List[int],None]=None):
         self._date_min : Union[datetime,None] = date_min
         self._date_max : Union[datetime,None] = date_max
-        self._ids      : Union[List[int],None] = ids
+        self._ids      : Union[List[str],None] = ids
         self._versions : Union[List[int],None] = versions
 
     @staticmethod
@@ -33,14 +33,14 @@ class ExporterRange:
         return ExporterRange(date_min=date_min, date_max=date_max, ids=ids, versions=versions)
 
     @staticmethod
-    def FromIDs(ids:List[int], source:DataInterface, versions:Union[List[int],None]=None):
+    def FromIDs(ids:List[str], source:DataInterface, versions:Union[List[int],None]=None):
         date_range = source.DatesFromIDs(ids, versions=versions)
         return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=ids, versions=versions)
 
     def GetDateRange(self) -> Dict[str,Union[datetime,None]]:
         return {'min':self._date_min, 'max':self._date_max}
 
-    def GetIDs(self) -> Union[List[int],None]:
+    def GetIDs(self) -> Union[List[str],None]:
         return self._ids
 
 ## @class Request
@@ -62,9 +62,11 @@ class Request(abc.ABC):
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
-        fmt = "%Y-%m-%d"
-        rng = self._range.GetDateRange()
-        return f"{self._interface._game_id}: {rng['min'].strftime(fmt)}-{rng['max'].strftime(fmt)}"
+        _fmt = "%Y-%m-%d"
+        _range = self._range.GetDateRange()
+        _min = _range['min'].strftime(_fmt) if _range['min'] is not None else "None"
+        _max = _range['max'].strftime(_fmt) if _range['max'] is not None else "None"
+        return f"{self._interface._game_id}: {_min}-{_max}"
 
     def GetGameID(self):
         # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
@@ -72,5 +74,5 @@ class Request(abc.ABC):
 
     ## Method to retrieve the list of IDs for all sessions covered by the request.
     #  Note, this will use the 
-    def RetrieveSessionIDs(self) -> Union[List[int],None]:
+    def RetrieveSessionIDs(self) -> Union[List[str],None]:
         return self._range.GetIDs()
