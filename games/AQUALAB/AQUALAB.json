@@ -58,115 +58,96 @@
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
-                "events": ["begin_argument", "room_changed"],
                 "description": "Time spent in argumentation during a job"
             },
             "JobCompletionTime": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
-                "events": ["accept_job", "complete_job"],
                 "description": "Time taken to complete a given job"
             },
             "JobDiveSitesCount": {
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
-                "events": ["begin_dive"],
                 "description": "Number of dive sites visited during a job"
             },
             "JobDiveTime": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
-                "events": ["begin_dive", "scene_changed"],
                 "description": "Time spent diving during a job"
             },
             "JobExperimentationTime": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
-                "events": ["begin_experiment", "room_changed"],
                 "description": "Time spent in experimentation during a job"
             },
             "JobGuideCount": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
-                "events": ["guide_triggered"],
                 "description": "Number of times player talked with guide during a job"
             },
             "JobHelpCount": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
-                "events": ["ask_for_help"],
                 "description": "Number of times player asked for help during a job"
             },
             "JobTasksCompleted": {
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
-                "events": ["complete_task"],
                 "description": "Number of tasks completed for a given job"
             },
             "SyncCompletionTime": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
-                "events": ["begin_simulation, simulation_sync_achieved"],
                 "description": "Time taken to achieve 100% sync in a simulation"
             }
         },
         "aggregate":{
             "SessionDiveSitesCount": {
                 "enabled": true,
-                "events": ["begin_dive"],
                 "description":"Time spent playing in a given session"
             },
             "SessionDuration": {
                 "enabled": true,
-                "events": [],
                 "description":"Time spent playing in a given session"
             },
             "SessionGuideCount": {
                 "enabled": true,
-                "events": ["guide_triggered"],
                 "description":"Number of times player talked with the guide throughout the session"
             },
             "SessionHelpCount": {
                 "enabled": true,
-                "events": ["ask_for_help"],
                 "description":"Number of times player clicked the help button throughout the session"
             },
             "SessionID": {
                 "enabled": true,
-                "events": [],
                 "description":"The player's session ID number for this play session"
             },
             "SessionJobsCompleted": {
                 "enabled": true,
-                "events": ["complete_job"],
                 "description":"Number of jobs completed in a given session"
             },
             "SwitchJobsCount": {
                 "enabled": true,
-                "events": ["switch_job"],
                 "description":"Number of times player switched jobs before completion"
             },
             "TotalArgumentationTime": {
                 "enabled": true,
-                "events": ["begin_argument", "room_changed"],
                 "description":"Total time spent in argumentation"
             },
             "TotalDiveTime": {
                 "enabled": true,
-                "events": ["begin_dive", "scene_changed"],
                 "description":"Total time spent in dive sites"
             },
             "TotalExperimentationTime": {
                 "enabled": true,
-                "events": ["begin_experiment", "room_changed"],
                 "description":"Total time spent in experimentation"
             }
         }

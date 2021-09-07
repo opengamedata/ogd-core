@@ -7,14 +7,12 @@ from schemas.Event import Event
 class TotalExperimentationTime(Feature):
 
     def __init__(self, name:str, description:str):
-        min_data_version = None
-        max_data_version = None
-        super().__init__(name=name, description=description, count_index=0, min_version=min_data_version, max_version=max_data_version)
+        super().__init__(name=name, description=description, count_index=0)
         self._experiment_start_time = None
         self._time = timedelta(0)
 
     def GetEventTypes(self) -> List[str]:
-        return []
+        return ["begin_experiment", "room_changed"]
 
     def CalculateFinalValues(self) -> Any:
         return self._time

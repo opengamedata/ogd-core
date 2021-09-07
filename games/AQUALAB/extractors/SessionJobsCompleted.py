@@ -6,13 +6,11 @@ from schemas.Event import Event
 class SessionJobsCompleted(Feature):
 
     def __init__(self, name:str, description:str):
-        min_data_version = None
-        max_data_version = None
-        super().__init__(name=name, description=description, count_index=0, min_version=min_data_version, max_version=max_data_version)
+        super().__init__(name=name, description=description, count_index=0)
         self._count = 0
 
     def GetEventTypes(self) -> List[str]:
-        return []
+        return ["complete_job"]
 
     def CalculateFinalValues(self) -> Any:
         return self._count

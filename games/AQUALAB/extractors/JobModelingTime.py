@@ -5,12 +5,10 @@ from extractors.Feature import Feature
 from schemas.Event import Event
 
 class JobModelingTime(Feature):
-
+    # TODO: add this to the AQUALAB schema
     def __init__(self, name:str, description:str, job_num:int, job_map:dict):
         self._job_map = job_map
-        min_data_version = None
-        max_data_version = None
-        super().__init__(name=name, description=description, count_index=job_num, min_version=min_data_version, max_version=max_data_version)
+        super().__init__(name=name, description=description, count_index=job_num)
         self._modeling_start_time = None
         self._time = timedelta(0)
 
