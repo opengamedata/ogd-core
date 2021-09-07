@@ -7,7 +7,7 @@ class JobHelpCount(Feature):
 
     def __init__(self, name:str, description:str, job_num:int, job_map:dict):
         self._job_map = job_map
-        super().__init__(name=name, description=description, count_index=job_numn)
+        super().__init__(name=name, description=description, count_index=job_num)
         self._count = 0
 
     def GetEventTypes(self) -> List[str]:
