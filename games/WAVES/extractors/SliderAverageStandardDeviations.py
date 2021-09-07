@@ -1,21 +1,23 @@
 import typing
 from typing import Any, List, Union
 # local imports
-from extractors.Feature import Feature
+from extractors.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
-class SliderAverageStandardDeviations(Feature):
+class SliderAverageStandardDeviations(PerLevelFeature):
     def __init__(self, name:str, description:str, count_index:int):
-        Feature.__init__(self, name=name, description=description, count_index=count_index)
+        PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
+        self._std_devs = []
 
     def GetEventTypes(self) -> List[str]:
-        return []
+        return ["CUSTOM.1"]
+        # return ["SLIDER_MOVE_RELEASE"]
 
     def CalculateFinalValues(self) -> Any:
-        return
+        return sum(self._std_devs) / len(self._std_devs)
 
     def _extractFromEvent(self, event:Event) -> None:
-        return
+        self._std_devs.append(event.event_data["stdev_val"])
 
     def MinVersion(self) -> Union[str,None]:
         return None

@@ -50,7 +50,7 @@
         },
         "CUSTOM.2": {
             "event_custom":{"enum":["ARROW_MOVE_RELEASE"]},
-            "slider":"string",
+            "slider":{"enum": ["AMPLITUDE", "OFFSET", "WAVELENGTH"]},
             "wave":"string",
             "begin_val":"float",
             "end_val":"float",
@@ -145,10 +145,9 @@
                 "description": "difference between max and min values of a slider move, averaged together across a level"
             },
             "SliderAvgStdDevs": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "events": ["SLIDER_MOVE_RELEASE"],
                 "description": "Average of stdev_val for all slider moves in a level"
             },
             "TotalResets": {
@@ -201,7 +200,7 @@
                 "description": "percent of total moves that were wavelength adjustments in a level"
             },
             "AmplitudeGoodMoveCount": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "description": "number of amplitude moves that brought amplitude closer to the correct value"
@@ -319,44 +318,44 @@
                 "description":"The player's session ID number for this play session"
             },
             "PersistentSessionID": {
-                "enabled": false,
+                "enabled": true,
                 "description":"The session ID for the player's device, persists across multiple players using the same device."
             },
-            "AverageSliderMoves" :  {
-                "enabled": false,
-                "description":"totalSliderMoves averaged over all levels"
+            "AverageFails" : {
+                "enabled": true,
+                "description": "totalFails averaged over all levels"
             },
             "AverageLevelTime" :  {
-                "enabled": false,
+                "enabled": true,
                 "description":"totalLevelTime averaged over all levels"
             },
             "AverageMoveTypeChanges" : {
-                "enabled": false,
+                "enabled": true,
                 "description": "totalMoveTypeChanges averaged over all levels"
             },
-            "OverallSliderAvgStandardDeviations" : {
-                "enabled": false,
-                "description": "Average standard deviation of slider moves over a whole sessioin"
-            },
-            "OverallSliderAvgRange" : {
-                "enabled": false,
-                "description": "Average range of slider moves over a whole session"
+            "AverageSliderMoves" :  {
+                "enabled": true,
+                "description":"totalSliderMoves averaged over all levels"
             },
             "OverallPercentAmplitudeMoves" : {
-                "enabled": false,
+                "enabled": true,
                 "description": "Percent of total moves that were amplitude adjustments over a whole session"
             },
             "OverallPercentOffsetMoves" :  {
-                "enabled": false,
+                "enabled": true,
                 "description":"Percent of total moves that were offset adjustments over a whole session"
             },
             "OverallPercentWavelengthMoves" :  {
-                "enabled": false,
+                "enabled": true,
                 "description":"Percent of total moves that were wavelength adjustments over a whole session"
             },
-            "AverageFails" : {
-                "enabled": false,
-                "description": "totalFails averaged over all levels"
+            "OverallSliderAverageRange" : {
+                "enabled": true,
+                "description": "Average range of slider moves over a whole session"
+            },
+            "OverallSliderAverageStandardDeviations" : {
+                "enabled": true,
+                "description": "Average standard deviation of slider moves over a whole sessioin"
             }
         }
     },

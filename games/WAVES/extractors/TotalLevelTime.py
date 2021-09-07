@@ -1,5 +1,7 @@
-from schemas import Event
+# global imports
 import logging
+from datetime import datetime
+from schemas import Event
 from typing import Any, List, Union
 # local imports
 import utils
@@ -9,8 +11,8 @@ from schemas.Event import Event
 class TotalLevelTime(PerLevelFeature):
     def __init__(self, name:str, description:str, count_index:int):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
-        self._begin_times = []
-        self._complete_times = []
+        self._begin_times    : List[datetime] = []
+        self._complete_times : List[datetime] = []
 
     def GetEventTypes(self) -> List[str]:
         return ["BEGIN.0", "COMPLETE.0"]

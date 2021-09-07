@@ -59,24 +59,42 @@ class WaveExtractor(Extractor):
         if feature_type == "AmplitudeGoodMoveCount":
             ret_val = AmplitudeGoodMoveCount.AmplitudeGoodMoveCount(name=name, description=feature_args["description"], count_index=_count_index)
         elif feature_type == "BeginCount":
-            ret_val = BeginCount.BeginCount(name=name, description=feature_args["description"], count_index=_count_index)
+            ret_val = BeginCount.BeginCount(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "SliderAverageRange":
-            ret_val = SliderAverageRange.SliderAverageRange(name=name, description=feature_args["description"], count_index=_count_index)
+            ret_val = SliderAverageRange.SliderAverageRange(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "SliderAverageStandardDeviations":
+            ret_val = SliderAverageStandardDeviations.SliderAverageStandardDeviations(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "TotalArrowMoves":
-            ret_val = TotalArrowMoves.TotalArrowMoves(name=name, description=feature_args["description"], count_index=_count_index)
+            ret_val = TotalArrowMoves.TotalArrowMoves(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "TotalMoveTypeChanges":
-            ret_val = TotalMoveTypeChanges.TotalMoveTypeChanges(name=name, description=feature_args["description"], count_index=_count_index)
+            ret_val = TotalMoveTypeChanges.TotalMoveTypeChanges(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "TotalSliderMoves":
-            ret_val = TotalSliderMoves.TotalSliderMoves(name=name, description=feature_args["description"], count_index=_count_index)
+            ret_val = TotalSliderMoves.TotalSliderMoves(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "TotalLevelTime":
-            ret_val = TotalLevelTime.TotalLevelTime(name=name, description=feature_args["description"], count_index=_count_index)
+            ret_val = TotalLevelTime.TotalLevelTime(name=name, description=feature_args['description'], count_index=_count_index)
         # Session-level features.
         elif feature_type == "AverageFails":
-            ret_val = AverageFails.AverageFails(name=name, description=feature_args["description"])
+            ret_val = AverageFails.AverageFails(name=name, description=feature_args['description'])
+        elif feature_type == "AverageLevelTime":
+            ret_val = AverageLevelTime.AverageLevelTime(name=name, description=feature_args['description'])
+        elif feature_type == "AverageMoveTypeChanges":
+            ret_val = AverageMoveTypeChanges.AverageMoveTypeChanges(name=name, description=feature_args['description'])
+        elif feature_type == "AverageSliderMoves":
+            ret_val = AverageSliderMoves.AverageSliderMoves(name=name, description=feature_args['description'])
+        elif feature_type == "OverallPercentAmplitudeMoves":
+            ret_val = OverallPercentAmplitudeMoves.OverallPercentAmplitudeMoves(name=name, description=feature_args['description'])
+        elif feature_type == "OverallPercentOffsetMoves":
+            ret_val = OverallPercentOffsetMoves.OverallPercentOffsetMoves(name=name, description=feature_args['description'])
+        elif feature_type == "OverallPercentWavelengthMoves":
+            ret_val = OverallPercentWavelengthMoves.OverallPercentWavelengthMoves(name=name, description=feature_args['description'])
+        elif feature_type == "OverallSliderAverageRange":
+            ret_val = OverallSliderAverageRange.OverallSliderAverageRange(name=name, description=feature_args['description'])
+        elif feature_type == "OverallSliderAverageStandardDeviations":
+            ret_val = OverallSliderAverageStandardDeviations.OverallSliderAverageStandardDeviations(name=name, description=feature_args['description'])
         elif feature_type == "SessionID":
-            ret_val = SessionID.SessionID(name=name, description=feature_args["description"], sessionID=self._session_id)
+            ret_val = SessionID.SessionID(name=name, description=feature_args['description'], sessionID=self._session_id)
         else:
-            ret_val = SessionID.SessionID(name, feature_args["description"], self._session_id)
+            ret_val = SessionID.SessionID(name, feature_args['description'], self._session_id)
         return ret_val
 
     ## Function to perform extraction of features from a row.

@@ -8,15 +8,17 @@ from schemas.Event import Event
 class PersistentSessionID(SessionFeature):
     def __init__(self, name:str, description:str):
         SessionFeature.__init__(self, name=name, description=description)
+        self._persistent_id : Union[int,None] = None
 
     def GetEventTypes(self) -> List[str]:
-        return []
+        return ["BEGIN.0"]
 
     def CalculateFinalValues(self) -> Any:
-        return
+        return self._persistent_id
 
     def _extractFromEvent(self, event:Event) -> None:
-        return
+        if self._persistent_id is None:
+            self._persistent_id = event.event_data['persistent_session_id']
 
     def MinVersion(self) -> Union[str,None]:
         return None
