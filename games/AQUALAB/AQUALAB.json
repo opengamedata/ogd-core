@@ -55,13 +55,13 @@
     "features": {
         "per_count": {
             "JobArgumentationTime": {
-                "enabled": true,
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time spent in argumentation during a job"
             },
             "JobCompletionTime": {
-                "enabled": true,
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time taken to complete a given job"
@@ -73,13 +73,13 @@
                 "description": "Number of dive sites visited during a job"
             },
             "JobDiveTime": {
-                "enabled": true,
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time spent diving during a job"
             },
             "JobExperimentationTime": {
-                "enabled": true,
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time spent in experimentation during a job"
@@ -91,7 +91,7 @@
                 "description": "Number of times player talked with guide during a job"
             },
             "JobHelpCount": {
-                "enabled": true,
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Number of times player asked for help during a job"
@@ -103,7 +103,7 @@
                 "description": "Number of tasks completed for a given job"
             },
             "SyncCompletionTime": {
-                "enabled": true,
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time taken to achieve 100% sync in a simulation"
@@ -139,15 +139,15 @@
                 "description":"Number of times player switched jobs before completion"
             },
             "TotalArgumentationTime": {
-                "enabled": true,
+                "enabled": false,
                 "description":"Total time spent in argumentation"
             },
             "TotalDiveTime": {
-                "enabled": true,
+                "enabled": false,
                 "description":"Total time spent in dive sites"
             },
             "TotalExperimentationTime": {
-                "enabled": true,
+                "enabled": false,
                 "description":"Total time spent in experimentation"
             }
         }
