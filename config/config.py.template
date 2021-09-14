@@ -42,6 +42,7 @@ settings = {
         "LAKELAND":{"interface":"MySQL", "table":"FIELDDAY_MYSQL", "credential":None},
         "MAGNET":{"interface":"MySQL", "table":"FIELDDAY_MYSQL", "credential":None},
         "SHIPWRECKS":{"interface":"BigQuery", "table":"BIGQUERY", "credential":"./config/shipwrecks.json"},
+        "SHADOWSPECT":{"interface":"BigQuery", "table":"BIGQUERY", "credential":"./config/shadowspect.json"},
         "STEMPORTS":{"interface":"MySQL", "table":"FIELDDAY_MYSQL", "credential":None},
         "WAVES":{"interface":"MySQL", "table":"FIELDDAY_MYSQL", "credential":None},
         "WIND":{"interface":"MySQL", "table":"FIELDDAY_MYSQL", "credential":None},
