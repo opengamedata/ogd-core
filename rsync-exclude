@@ -1,4 +1,5 @@
-*__pycache__/*
+*__pycache__*
+fieldday-pyenv*
 data/*
 .DS_Store
 .gitignore
