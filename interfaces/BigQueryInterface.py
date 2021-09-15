@@ -72,7 +72,7 @@ class BigQueryInterface(DataInterface):
             Logger.Log(f"Could not get data for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
             return []
 
-    def _allIDs(self) -> List[int]:
+    def _allIDs(self) -> List[str]:
         if self._client != None:
             db_name = self._settings["bq_config"]["DB_NAME"]
             table_name = self._settings["bq_config"]["TABLE_NAME"]
@@ -83,7 +83,7 @@ class BigQueryInterface(DataInterface):
                 WHERE param.key = "ga_session_id"
             """
             data = self._client.query(query)
-            ids = [row['session_id'] for row in data]
+            ids = [str(row['session_id']) for row in data]
             return ids if ids != None else []
         else:
             Logger.Log(f"Could not get list of all session ids, BigQuery connection is not open.", logging.WARN)

@@ -31,7 +31,7 @@ class CSVInterface(DataInterface):
         self._is_open = False
         return True
 
-    def _allIDs(self) -> List[int]:
+    def _allIDs(self) -> List[str]:
         return self._data['session_id'].unique().tolist()
 
     def _fullDateRange(self) -> Dict[str,datetime]:

@@ -31,7 +31,7 @@ class DataInterface(abc.ABC):
         else:
             return True
 
-    def AllIDs(self) -> Union[List[int],None]:
+    def AllIDs(self) -> Union[List[str],None]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve data, the source interface is not open!")
             return None
@@ -75,7 +75,7 @@ class DataInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _allIDs(self) -> List[int]:
+    def _allIDs(self) -> List[str]:
         pass
 
     @abc.abstractmethod
