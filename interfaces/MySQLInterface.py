@@ -348,8 +348,8 @@ class MySQLInterface(DataInterface):
             db_name = self._settings["db_config"]["DB_NAME"]
             table_name = self._settings["db_config"]["TABLE"]
             filt = f"`app_id`='{self._game_id}'"
-            data = SQL.SELECT(cursor  =self._db_cursor, db_name =db_name, table   =table_name,
-                              columns =['session_id'],  filter  =filt,    distinct=True)
+            data = SQL.SELECT(cursor =self._db_cursor, db_name=db_name, table   =table_name,
+                              columns=['session_id'],  filter =filt,    distinct=True)
             return [str(id[0]) for id in data] if data != None else []
             # self._select_queries.append(select_query) # this doesn't appear to be used???
         else:

@@ -29,7 +29,7 @@ class BigQueryInterface(DataInterface):
                 Logger.Log("Connected to BigQuery database.", logging.DEBUG)
                 return True
             else:
-                Logger.Log("Could not connect to BigQuery Databse.", logging.WARN)
+                Logger.Log("Could not connect to BigQuery Database.", logging.WARN)
                 return False
         else:
             return True
