@@ -139,6 +139,8 @@ class ExportManager:
             if evt_file is not None:
                 evt_processor = EventProcessor(table_schema=table_schema, events_file=evt_file, separator="\t")
                 evt_processor.WriteEventsCSVHeader()
+        else:
+            utils.Logger.Log("Event log not requested, skipping events file.", logging.INFO)
         if request._files.sessions and game_extractor is not None:
             sess_file = file_manager.GetSessionsFile()
             if game_extractor is not None and sess_file is not None:
@@ -147,6 +149,8 @@ class ExportManager:
                 sess_processor.WriteSessionFileHeader()
             else:
                 utils.Logger.Log("Could not export sessions, no game extractor given!", logging.ERROR)
+        else:
+            utils.Logger.Log("Session features not requested, skipping session_features file.", logging.INFO)
         # 2) Get the data
         sess_ids = request.RetrieveSessionIDs()
         if sess_ids is None:
@@ -174,7 +178,7 @@ class ExportManager:
                             if evt_processor is not None:
                                 evt_processor.ProcessEvent(next_event)
                         else:
-                            utils.Logger.toFile(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
+                            utils.Logger.Log(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
                     # 3b) After processing all rows for each slice, write out the session data and reset for next slice.
                     if request._files.events and evt_processor is not None:
                         evt_processor.WriteEventsCSVLines()
