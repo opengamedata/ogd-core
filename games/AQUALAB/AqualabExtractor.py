@@ -38,10 +38,14 @@ class AqualabExtractor(Extractor):
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
             ret_val = JobArgumentationTime.JobArgumentationTime(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
+        elif feature_type == "JobCompleted":
+            if count_index is None:
+                raise TypeError("Got None for count_index, should have a value!")
+            ret_val = JobCompleted.JobCompleted(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature_type == "JobCompletionTime":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobCompletionTime.JobCompletionTime(name, feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
+            ret_val = JobCompletionTime.JobCompletionTime(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature_type == "JobDiveSitesCount":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
@@ -66,6 +70,10 @@ class AqualabExtractor(Extractor):
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
             ret_val = JobModelingTime.JobModelingTime(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
+        elif feature_type == "JobStarted":
+            if count_index is None:
+                raise TypeError("Got None for count_index, should have a value!")
+            ret_val = JobStarted.JobStarted(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature_type == "JobTasksCompleted":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")

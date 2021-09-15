@@ -60,6 +60,12 @@
                 "prefix": "job",
                 "description": "Time spent in argumentation during a job"
             },
+            "JobCompleted": {
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "job",
+                "description": "Indicator of whether a given job was ever completed"
+            },
             "JobCompletionTime": {
                 "enabled": false,
                 "count":"level_range",
@@ -95,6 +101,12 @@
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Number of times player asked for help during a job"
+            },
+            "JobStarted": {
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "job",
+                "description": "Indicator of whether a given job was ever accepted"
             },
             "JobTasksCompleted": {
                 "enabled": true,
