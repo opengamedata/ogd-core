@@ -44,6 +44,7 @@ class EventProcessor:
                     line[i] = json.dumps(col)
                 else:
                     line[i] = col
+        # print(f"From EventProcessor, about to add event to lines: {[str(item) for item in line]}")
         self._lines.append("\t".join([str(item) for item in line]) + "\n") # changed , to \t
 
     def ProcessEvent(self, event:Event):
