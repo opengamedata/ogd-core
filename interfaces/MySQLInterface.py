@@ -300,7 +300,7 @@ class MySQLInterface(DataInterface):
             self.Open(force_reopen=False)
         if not self._is_open:
             start = datetime.now()
-            self._tunnel, self._db = SQL.prepareDB(db_settings=self._settings["db_config"], ssh_settings=self._settings["ssh_config"])
+            self._tunnel, self._db = SQL.prepareDB(db_settings=self._settings["MYSQL_CONFIG"], ssh_settings=self._settings["ssh_config"])
             if self._tunnel != None and self._db != None:
                 self._db_cursor = self._db.cursor()
                 self._is_open = True
@@ -331,8 +331,8 @@ class MySQLInterface(DataInterface):
             params = [self._game_id] + [str(x) for x in id_list]
             id_list_string = ",".join([f"%s" for i in range(len(id_list))])
             filt = f"app_id=%s AND session_id IN ({id_list_string}){ver_filter}"
-            db_name = self._settings["db_config"]["DB_NAME"]
-            table_name = self._settings["db_config"]["TABLE"]
+            db_name = self._settings["MYSQL_CONFIG"]["DB_NAME"]
+            table_name = self._settings["MYSQL_CONFIG"]["TABLE"]
             query_string = f"SELECT * FROM {db_name}.{table_name} WHERE {filt} ORDER BY session_id, session_n ASC"
             data = SQL.Query(cursor=self._db_cursor, query=query_string, params=tuple(params), fetch_results=True)
             if data is not None:
@@ -345,8 +345,8 @@ class MySQLInterface(DataInterface):
     def _allIDs(self) -> List[str]:
         if not self._db_cursor == None:
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            db_name = self._settings["db_config"]["DB_NAME"]
-            table_name = self._settings["db_config"]["TABLE"]
+            db_name = self._settings["MYSQL_CONFIG"]["DB_NAME"]
+            table_name = self._settings["MYSQL_CONFIG"]["TABLE"]
             filt = f"`app_id`='{self._game_id}'"
             data = SQL.SELECT(cursor =self._db_cursor, db_name=db_name, table   =table_name,
                               columns=['session_id'],  filter =filt,    distinct=True)
@@ -360,8 +360,8 @@ class MySQLInterface(DataInterface):
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
         if not self._db_cursor == None:
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            db_name = self._settings["db_config"]["DB_NAME"]
-            table_name = self._settings["db_config"]["TABLE"]
+            db_name = self._settings["MYSQL_CONFIG"]["DB_NAME"]
+            table_name = self._settings["MYSQL_CONFIG"]["TABLE"]
             # prep filter strings
             filt = f"`app_id`='{self._game_id}'"
             # run query
@@ -377,8 +377,8 @@ class MySQLInterface(DataInterface):
         ret_val = []
         if not self._db_cursor == None:
             # alias long setting names.
-            db_name = self._settings["db_config"]["DB_NAME"]
-            table_name = self._settings["db_config"]["TABLE"]
+            db_name = self._settings["MYSQL_CONFIG"]["DB_NAME"]
+            table_name = self._settings["MYSQL_CONFIG"]["TABLE"]
             start = min.isoformat()
             end = max.isoformat()
             # prep filter strings
@@ -399,8 +399,8 @@ class MySQLInterface(DataInterface):
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
         if not self._db_cursor == None:
             # alias long setting names.
-            db_name = self._settings["db_config"]["DB_NAME"]
-            table_name = self._settings["db_config"]["TABLE"]
+            db_name = self._settings["MYSQL_CONFIG"]["DB_NAME"]
+            table_name = self._settings["MYSQL_CONFIG"]["TABLE"]
             # prep filter strings
             ids_string = ','.join([f"'{x}'" for x in id_list])
             ver_filter = f" AND `app_version` in ({','.join([str(x) for x in versions])}) " if versions else ''
