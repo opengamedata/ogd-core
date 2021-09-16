@@ -25,7 +25,7 @@ jobs:
         'SELECT
           event_name
         FROM
-          `aqualab-57f88.analytics_271167280.events_20210608`'
+          `aqualab-57f88.analytics_271167280.events_`'
     #- uses: actions/checkout@v2
     #- name: Set up Python libraries
     #  run: |
