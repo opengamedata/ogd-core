@@ -9,26 +9,26 @@ settings = {
         "TABLE" : "log",
         "DB_PORT" : 3306
     },
-    "ssh_config":
+    "SSH_CONFIG":
     {
         "SSH_HOST" : "hostname",
         "SSH_USER" : "WCER AD User",
         "SSH_PW" : "WCER AD Password",
         "SSH_PORT" : 22
     },
-    "realtime_config":
+    "REALTIME_CONFIG":
     {
         "data_source": "DB",
         "DB_HOST" : "rt_hostname",
         "SSH_HOST": "rt_hostname",
         "path": "path\\to\\events\\file.tsv"
     },
-    "bq_config":
+    "BIGQUERY_CONFIG":
     {
         "DB_NAME": "project_id.dataset_id",
         "TABLE_NAME": "events_*"
     },
-    "game_source_map":
+    "GAME_SOURCE_MAP":
     {
         "AQUALAB":{"interface":"BigQuery", "table":"BIGQUERY", "credential":"./config/aqualab.json"},
         "BACTERIA":{"interface":"MySQL", "table":"FIELDDAY_MYSQL", "credential":None},

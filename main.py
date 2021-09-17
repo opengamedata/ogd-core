@@ -110,7 +110,7 @@ def runExport(events:bool = False, features:bool = False):
         req = Request(interface=interface, range=range, exporter_files=exporter_files)
         # breakpoint()
     else:
-        interface_type = settings["game_source_map"][game_name]['interface']
+        interface_type = settings["GAME_SOURCE_MAP"][game_name]['interface']
         if interface_type == "BigQuery":
             interface = BigQueryInterface(game_id=game_name, settings=settings)
         elif interface_type == "MySQL":
@@ -126,7 +126,7 @@ def runExport(events:bool = False, features:bool = False):
     # breakpoint()
     try:
         export_manager = ExportManager(game_id=game_name, settings=settings)
-        table_name = settings["game_source_map"][game_name]["table"]
+        table_name = settings["GAME_SOURCE_MAP"][game_name]["table"]
         export_manager.ExecuteRequest(request=req, game_schema=GameSchema(game_name), table_schema=TableSchema(schema_name=f"{table_name}.json"))
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
