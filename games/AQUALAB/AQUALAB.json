@@ -73,7 +73,7 @@
                 "description": "Time taken to complete a given job"
             },
             "JobDiveSitesCount": {
-                "enabled": true,
+                "enabled": false,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Number of dive sites visited during a job"
@@ -109,7 +109,7 @@
                 "description": "Indicator of whether a given job was ever accepted"
             },
             "JobTasksCompleted": {
-                "enabled": true,
+                "enabled": false,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Number of tasks completed for a given job"

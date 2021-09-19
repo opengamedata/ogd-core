@@ -18,5 +18,8 @@ class JobCompleted(Feature):
         return self._completed
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self._job_map[event.event_data["job_id"]['string_value']] == self._count_index:
-            self._completed = True
+        if "job_id" in event.event_data.keys():
+            if self._job_map[event.event_data["job_id"]['string_value']] == self._count_index:
+                self._completed = True
+        else:
+            raise ValueError(f"job_id not found in keys of event type {event.event_name}, the keys were:\n{event.event_data.keys()}")
