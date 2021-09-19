@@ -40,7 +40,7 @@ class SSHLogin:
 class SQL:
     # Function to set up a connection to a database, via an ssh tunnel if available.
     @staticmethod
-    def prepareDB(db_settings:Dict[str,Any], ssh_settings:Union[Dict[str,Any],None]=None) -> Tuple[Union[sshtunnel.SSHTunnelForwarder,None], Union[connection.MySQLConnection,None]]:
+    def ConnectDB(db_settings:Dict[str,Any], ssh_settings:Union[Dict[str,Any],None]=None) -> Tuple[Union[sshtunnel.SSHTunnelForwarder,None], Union[connection.MySQLConnection,None]]:
         """
         Function to set up a connection to a database, via an ssh tunnel if available.
 
@@ -58,7 +58,7 @@ class SQL:
         DB_USER = db_settings['DB_USER']
         DB_PW = db_settings['DB_PW']
         DB_HOST = db_settings['DB_HOST']
-        DB_PORT = db_settings['DB_PORT']
+        DB_PORT = int(db_settings['DB_PORT'])
         sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME)
         Logger.toStdOut("Preparing database connection...", logging.INFO)
         if ssh_settings is not None:
@@ -68,16 +68,16 @@ class SQL:
             SSH_PORT = ssh_settings['SSH_PORT']
             if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
                 ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
-                tunnel,db_conn = SQL.connectToMySQLViaSSH(sql=sql_login, ssh=ssh_login)
+                tunnel,db_conn = SQL._connectToMySQLviaSSH(sql=sql_login, ssh=ssh_login)
         else:
-            db_conn = SQL.connectToMySQL(login=sql_login)
+            db_conn = SQL._connectToMySQL(login=sql_login)
             tunnel = None
         Logger.toStdOut("Done preparing database connection.", logging.INFO)
         return (tunnel, db_conn)
 
     # Function to help connect to a mySQL server.
     @staticmethod
-    def connectToMySQL(login: SQLLogin) -> Union[connection.MySQLConnection, None]:
+    def _connectToMySQL(login: SQLLogin) -> Union[connection.MySQLConnection, None]:
         """Function to help connect to a mySQL server.
 
         Simply tries to make a connection, and prints an error in case of failure.
@@ -94,15 +94,16 @@ class SQL:
             return db_conn
         #except MySQLdb.connections.Error as err:
         except Exception as err:
-            msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
-            Logger.toStdOut(msg, logging.ERROR)
-            Logger.toPrint(msg, logging.ERROR)
+            msg = f"""Could not connect to the MySql database.
+            Login info: host={login.host}, port={login.port} w/type={type(login.port)}, db={login.db_name}, user={login.user}.
+            Full error: {type(err)} {str(err)}"""
+            Logger.Log(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
             return None
 
     ## Function to help connect to a mySQL server over SSH.
     @staticmethod
-    def connectToMySQLViaSSH(sql: SQLLogin, ssh: SSHLogin) -> Tuple[Union[sshtunnel.SSHTunnelForwarder,None], Union[connection.MySQLConnection,None]]:
+    def _connectToMySQLviaSSH(sql: SQLLogin, ssh: SSHLogin) -> Tuple[Union[sshtunnel.SSHTunnelForwarder,None], Union[connection.MySQLConnection,None]]:
         """Function to help connect to a mySQL server over SSH.
 
         Simply tries to make a connection, and prints an error in case of failure.
@@ -157,21 +158,17 @@ class SQL:
             return (None, None)
 
     @staticmethod
-    def disconnectMySQLViaSSH(tunnel:Union[sshtunnel.SSHTunnelForwarder,None], db:Union[connection.MySQLConnection,None]) -> None:
-        SQL.disconnectMySQL(db)
-        # else:
-        #     Logger.toStdOut("No db to close.", logging.INFO)
-        if tunnel is not None:
-            tunnel.stop()
-            Logger.toStdOut("Stopped tunnel connection", logging.INFO)
-        # else:
-        #     Logger.toStdOut("No tunnel to stop", logging.INFO)
-
-    @staticmethod
-    def disconnectMySQL(db:Union[connection.MySQLConnection,None]) -> None:
+    def disconnectMySQL(db:Union[connection.MySQLConnection,None], tunnel:Union[sshtunnel.SSHTunnelForwarder,None]=None) -> None:
         if db is not None:
             db.close()
             Logger.toStdOut("Closed database connection", logging.INFO)
+        else:
+            Logger.toStdOut("No db to close.", logging.DEBUG)
+        if tunnel is not None:
+            tunnel.stop()
+            Logger.toStdOut("Stopped tunnel connection", logging.INFO)
+        else:
+            Logger.toStdOut("No tunnel to stop", logging.DEBUG)
 
 
     # Function to build and execute SELECT statements on a database connection.
@@ -274,15 +271,6 @@ class SQL:
             Logger.toStdOut(f"Query fetch completed, total query time:    {time_delta} to get {len(result) if result is not None else 0:d} rows", logging.DEBUG)
         return result
 
-    ## Simple function to construct and log a nice server 500 error message.
-    #  @param err_msg A more detailed error message with info to help debugging.
-    @staticmethod
-    def server500Error(err_msg: str):
-        val = http.HTTPStatus.INTERNAL_SERVER_ERROR.value
-        phrase = http.HTTPStatus.INTERNAL_SERVER_ERROR.phrase
-        Logger.toStdOut(f"HTTP Response: {val}{phrase}", logging.ERROR)
-        Logger.toStdOut(f"Error Message: {err_msg}", logging.ERROR)
-
 class MySQLInterface(DataInterface):
     def __init__(self, game_id:str, settings):
         # set up data from params
@@ -300,7 +288,7 @@ class MySQLInterface(DataInterface):
             self.Open(force_reopen=False)
         if not self._is_open:
             start = datetime.now()
-            self._tunnel, self._db = SQL.prepareDB(db_settings=self._settings["MYSQL_CONFIG"], ssh_settings=self._settings["SSH_CONFIG"])
+            self._tunnel, self._db = SQL.ConnectDB(db_settings=self._settings["MYSQL_CONFIG"], ssh_settings=self._settings["SSH_CONFIG"])
             if self._tunnel != None and self._db != None:
                 self._db_cursor = self._db.cursor()
                 self._is_open = True
@@ -308,13 +296,13 @@ class MySQLInterface(DataInterface):
                 Logger.Log(f"Database Connection Time: {time_delta}", logging.INFO)
                 return True
             else:
-                SQL.disconnectMySQLViaSSH(tunnel=self._tunnel, db=self._db)
+                SQL.disconnectMySQL(tunnel=self._tunnel, db=self._db)
                 return False
         else:
             return True
 
     def _close(self) -> bool:
-        SQL.disconnectMySQLViaSSH(tunnel=self._tunnel, db=self._db)
+        SQL.disconnectMySQL(tunnel=self._tunnel, db=self._db)
         Logger.toStdOut("Closed connection to MySQL.", logging.DEBUG)
         self._is_open = False
         return True
@@ -328,12 +316,12 @@ class MySQLInterface(DataInterface):
             else:
                 ver_filter = ''
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            params = [self._game_id] + [str(x) for x in id_list]
             id_list_string = ",".join([f"%s" for i in range(len(id_list))])
-            filt = f"app_id=%s AND session_id IN ({id_list_string}){ver_filter}"
             db_name = self._settings["MYSQL_CONFIG"]["DB_NAME"]
             table_name = self._settings["MYSQL_CONFIG"]["TABLE"]
+            filt = f"app_id=%s AND session_id IN ({id_list_string}){ver_filter}"
             query_string = f"SELECT * FROM {db_name}.{table_name} WHERE {filt} ORDER BY session_id, session_n ASC"
+            params = [self._game_id] + [str(x) for x in id_list]
             data = SQL.Query(cursor=self._db_cursor, query=query_string, params=tuple(params), fetch_results=True)
             if data is not None:
                 ret_val = data
