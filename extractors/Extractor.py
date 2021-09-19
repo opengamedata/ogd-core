@@ -5,7 +5,7 @@ import logging
 from os import sep, stat
 import typing
 from collections import defaultdict
-from typing import Any, Dict, List, Literal, Union
+from typing import Any, Dict, List, Union
 ## import local files
 import utils
 from extractors.Feature import Feature
