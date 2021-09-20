@@ -65,10 +65,13 @@ class FileManager(abc.ABC):
         # self._data_dir.mkdir(exist_ok=True)
         self._game_data_dir.mkdir(exist_ok=True, parents=True)
         # self._base_path.mkdir(exist_ok=True)
+        self._files['population'] = open(self._file_names['population'], "w+", encoding="utf-8") if (self._file_names['population'] is not None) else None
         self._files['sessions'] = open(self._file_names['sessions'], "w+", encoding="utf-8") if (self._file_names['sessions'] is not None) else None
         self._files['events']   = open(self._file_names['events'],   "w+", encoding="utf-8") if (self._file_names['events'] is not None) else None
 
     def CloseFiles(self) -> None:
+        if self._files['population'] is not None:
+            self._files['population'].close()
         if self._files['sessions'] is not None:
             self._files['sessions'].close()
         if self._files['events'] is not None:
@@ -82,9 +85,13 @@ class FileManager(abc.ABC):
         # if we have already done this dataset before, rename old zip files
         # (of course, first check if we ever exported this game before).
         if (self._game_id in existing_csvs and self._dataset_id in existing_csvs[self._game_id]):
-            src_sessions_f = existing_csvs[self._game_id][self._dataset_id]['sessions']
-            src_events_f = existing_csvs[self._game_id][self._dataset_id]['events']
+            existing_data = existing_csvs[self._game_id][self._dataset_id]
+            src_population_f = existing_data['population'] if "population_f" in existing_data.keys() else None
+            src_sessions_f = existing_data['sessions'] if "sessions_f" in existing_data.keys() else None
+            src_events_f = existing_data['events'] if "events_f" in existing_data.keys() else None
             try:
+                if src_population_f is not None and self._zip_names['population'] is not None:
+                    os.rename(src_population_f, str(self._zip_names['population']))
                 if src_sessions_f is not None and self._zip_names['sessions'] is not None:
                     os.rename(src_sessions_f, str(self._zip_names['sessions']))
                 if src_events_f is not None and self._zip_names['events'] is not None:
@@ -94,6 +101,19 @@ class FileManager(abc.ABC):
                 utils.Logger.Log(msg, logging.ERROR)
                 traceback.print_tb(err.__traceback__)
         # for each file, try to save out the csv/tsv to a file - if it's one that should be exported, that is.
+        if self._zip_names['population'] is not None:
+            with zipfile.ZipFile(self._zip_names["population"], "w", compression=zipfile.ZIP_DEFLATED) as population_zip_file:
+                try:
+                    population_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_population_features.{self._extension}"
+                    readme_file  = Path(self._dataset_id) / "readme.md"
+                    self._addToZip(path=self._file_names["population"], zip_file=population_zip_file, path_in_zip=population_file)
+                    self._addToZip(path=self._readme_path,              zip_file=population_zip_file, path_in_zip=readme_file)
+                    population_zip_file.close()
+                    if self._file_names["population"] is not None:
+                        os.remove(self._file_names["population"])
+                except FileNotFoundError as err:
+                    utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    traceback.print_tb(err.__traceback__)
         if self._zip_names['sessions'] is not None:
             with zipfile.ZipFile(self._zip_names["sessions"], "w", compression=zipfile.ZIP_DEFLATED) as sessions_zip_file:
                 try:
@@ -162,6 +182,7 @@ class FileManager(abc.ABC):
                     "game_id"      :self._game_id,
                     "dataset_id"   :self._dataset_id,
                     "ogd_revision" :self._short_hash,
+                    "population_f" :str(self._zip_names["population"]),
                     "sessions_f"   :str(self._zip_names["sessions"]),
                     "events_f"     :str(self._zip_names["events"]),
                     "start_date"   :self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
@@ -193,13 +214,15 @@ class FileManager(abc.ABC):
                 utils.Logger.toStdOut(f"opened csv file at {existing_csv_file.name}", logging.INFO)
                 if not self._game_id in existing_csvs.keys():
                     existing_csvs[self._game_id] = {}
-                # sessions_stat = os.stat(sessions_csv_full_path)
                 prior_export = self._dataset_id in existing_csvs[self._game_id].keys()
-                sessions_path = str(self._zip_names["sessions"]) if self._zip_names["sessions"] is not None else (existing_csvs[self._game_id][self._dataset_id]["sessions"] if prior_export else None)
-                events_path   = str(self._zip_names["events"]) if self._zip_names["events"] is not None else (existing_csvs[self._game_id][self._dataset_id]["events"] if prior_export else None)
+                existing_data = existing_csvs[self._game_id][self._dataset_id]
+                population_path = str(self._zip_names["population"]) if self._zip_names["population"] is not None else (existing_data["population"] if (prior_export and "population" in existing_data.keys()) else None)
+                sessions_path = str(self._zip_names["sessions"]) if self._zip_names["sessions"] is not None else (existing_data["sessions"] if (prior_export and "sessions" in existing_data.keys()) else None)
+                events_path   = str(self._zip_names["events"]) if self._zip_names["events"] is not None else (existing_data["events"] if (prior_export and "events" in existing_data.keys()) else None)
                 existing_csvs[self._game_id][self._dataset_id] = \
                 {
                     "ogd_revision" :self._short_hash,
+                    "population_f" :population_path,
                     "sessions_f"   :sessions_path,
                     "events_f"     :events_path,
                     "start_date"   :self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
