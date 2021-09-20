@@ -27,11 +27,10 @@ class SessionProcessor:
     #                       is structured.
     #  @param sessions_csv_file The output file, to which we'll write the processed
     #                       feature data.
-    def __init__(self, ExtractorClass: Type[Extractor], table_schema: TableSchema, game_schema: GameSchema,
+    def __init__(self, ExtractorClass: Type[Extractor], game_schema: GameSchema,
                  sessions_file: typing.IO[str], separator:str = "\t"):
         ## Define instance vars
         self._ExtractorClass     :Type[Extractor]      = ExtractorClass
-        self._table_schema       :TableSchema          = table_schema
         self._game_schema        :GameSchema           = game_schema
         self._sessions_file      :typing.IO[str]       = sessions_file
         self._session_extractors :Dict[str, Extractor] = {}
@@ -50,7 +49,7 @@ class SessionProcessor:
                 self._session_extractors[event.session_id] = LakelandExtractor(session_id=event.session_id, game_schema=self._game_schema, sessions_file=self._sessions_file)
             else:
                 self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_schema=self._game_schema)
-        self._session_extractors[event.session_id].ExtractFromEvent(event, self._table_schema)
+        self._session_extractors[event.session_id].ExtractFromEvent(event)
 
     ##  Function to empty the list of lines stored by the SessionProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid

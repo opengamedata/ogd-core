@@ -137,14 +137,14 @@ class ExportManager:
         if request._files.events:
             evt_file = file_manager.GetEventsFile()
             if evt_file is not None:
-                evt_processor = EventProcessor(table_schema=table_schema, events_file=evt_file, separator="\t")
+                evt_processor = EventProcessor(events_file=evt_file, separator="\t")
                 evt_processor.WriteEventsCSVHeader()
         else:
             utils.Logger.Log("Event log not requested, skipping events file.", logging.INFO)
         if request._files.sessions and game_extractor is not None:
             sess_file = file_manager.GetSessionsFile()
             if game_extractor is not None and sess_file is not None:
-                sess_processor = SessionProcessor(ExtractorClass=game_extractor, table_schema=table_schema,
+                sess_processor = SessionProcessor(ExtractorClass=game_extractor,
                                     game_schema=game_schema, sessions_file=sess_file, separator="\t")
                 sess_processor.WriteSessionFileHeader()
             else:

@@ -110,7 +110,7 @@ class Extractor(abc.ABC):
 
     # *** PUBLIC METHODS ***
 
-    def ExtractFromEvent(self, event:Event, table_schema:TableSchema) -> None:
+    def ExtractFromEvent(self, event:Event) -> None:
         """Abstract declaration of a function to perform extraction of features from a row.
 
         :param event: [description]
