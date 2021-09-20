@@ -5,6 +5,7 @@ import logging
 import os
 import re
 import shutil
+import sys
 import traceback
 import typing
 import zipfile
@@ -52,14 +53,29 @@ class FileManager(abc.ABC):
     def GetFiles(self) -> Dict[str,Union[IO,None]]:
         return self._files
 
-    def GetPopulationFile(self) -> Union[IO,None]:
-        return self._files['population']
+    def GetPopulationFile(self) -> IO:
+        ret_val : IO = sys.stdout
+        if self._files['population'] is not None:
+            ret_val = self._files['population']
+        else:
+            utils.Logger.Log("No population file available, writing to standard output instead.", logging.WARN)
+        return ret_val
 
-    def GetSessionsFile(self) -> Union[IO,None]:
-        return self._files['sessions']
+    def GetSessionsFile(self) -> IO:
+        ret_val : IO = sys.stdout
+        if self._files['sessions'] is not None:
+            ret_val = self._files['sessions']
+        else:
+            utils.Logger.Log("No sessions file available, writing to standard output instead.", logging.WARN)
+        return ret_val
 
-    def GetEventsFile(self) -> Union[IO,None]:
-        return self._files['events']
+    def GetEventsFile(self) -> IO:
+        ret_val : IO = sys.stdout
+        if self._files['events'] is not None:
+            ret_val = self._files['events']
+        else:
+            utils.Logger.Log("No events file available, writing to standard output instead.", logging.WARN)
+        return ret_val
 
     def OpenFiles(self) -> None:
         # self._data_dir.mkdir(exist_ok=True)
@@ -86,9 +102,9 @@ class FileManager(abc.ABC):
         # (of course, first check if we ever exported this game before).
         if (self._game_id in existing_csvs and self._dataset_id in existing_csvs[self._game_id]):
             existing_data = existing_csvs[self._game_id][self._dataset_id]
-            src_population_f = existing_data['population'] if "population_f" in existing_data.keys() else None
-            src_sessions_f = existing_data['sessions'] if "sessions_f" in existing_data.keys() else None
-            src_events_f = existing_data['events'] if "events_f" in existing_data.keys() else None
+            src_population_f = existing_data['population_file'] if "population_file" in existing_data.keys() else None
+            src_sessions_f = existing_data['sessions_file'] if "sessions_file" in existing_data.keys() else None
+            src_events_f = existing_data['events_file'] if "events_file" in existing_data.keys() else None
             try:
                 if src_population_f is not None and self._zip_names['population'] is not None:
                     os.rename(src_population_f, str(self._zip_names['population']))
@@ -104,7 +120,7 @@ class FileManager(abc.ABC):
         if self._zip_names['population'] is not None:
             with zipfile.ZipFile(self._zip_names["population"], "w", compression=zipfile.ZIP_DEFLATED) as population_zip_file:
                 try:
-                    population_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_population_features.{self._extension}"
+                    population_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_population-features.{self._extension}"
                     readme_file  = Path(self._dataset_id) / "readme.md"
                     self._addToZip(path=self._file_names["population"], zip_file=population_zip_file, path_in_zip=population_file)
                     self._addToZip(path=self._readme_path,              zip_file=population_zip_file, path_in_zip=readme_file)
@@ -117,7 +133,7 @@ class FileManager(abc.ABC):
         if self._zip_names['sessions'] is not None:
             with zipfile.ZipFile(self._zip_names["sessions"], "w", compression=zipfile.ZIP_DEFLATED) as sessions_zip_file:
                 try:
-                    session_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_session_features.{self._extension}"
+                    session_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_session-features.{self._extension}"
                     readme_file  = Path(self._dataset_id) / "readme.md"
                     self._addToZip(path=self._file_names["sessions"], zip_file=sessions_zip_file, path_in_zip=session_file)
                     self._addToZip(path=self._readme_path,            zip_file=sessions_zip_file, path_in_zip=readme_file)
@@ -182,13 +198,13 @@ class FileManager(abc.ABC):
                     "game_id"      :self._game_id,
                     "dataset_id"   :self._dataset_id,
                     "ogd_revision" :self._short_hash,
-                    "population_f" :str(self._zip_names["population"]),
-                    "sessions_f"   :str(self._zip_names["sessions"]),
-                    "events_f"     :str(self._zip_names["events"]),
                     "start_date"   :self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
                     "end_date"     :self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
-                    "sessions"     :num_sess
+                    "sessions"     :num_sess,
+                    "population_file" :str(self._zip_names["population"]),
+                    "sessions_file"   :str(self._zip_names["sessions"]),
+                    "events_file"     :str(self._zip_names["events"])
                 }
                 meta_file.write(json.dumps(metadata, indent=4))
                 meta_file.close()
@@ -222,13 +238,13 @@ class FileManager(abc.ABC):
                 existing_csvs[self._game_id][self._dataset_id] = \
                 {
                     "ogd_revision" :self._short_hash,
-                    "population_f" :population_path,
-                    "sessions_f"   :sessions_path,
-                    "events_f"     :events_path,
                     "start_date"   :self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
                     "end_date"     :self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
-                    "sessions"     :num_sess
+                    "sessions"     :num_sess,
+                    "population_file" :population_path,
+                    "sessions_file"   :sessions_path,
+                    "events_file"     :events_path,
                 }
                 existing_csv_file.write(json.dumps(existing_csvs, indent=4))
 
