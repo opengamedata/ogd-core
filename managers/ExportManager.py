@@ -16,8 +16,6 @@ from typing import List, Type, Tuple, Union
 ## import local files
 import utils
 from config.config import settings
-from interfaces.MySQLInterface import SQL
-from interfaces.MySQLInterface import MySQLInterface
 from managers.FileManager import *
 from managers.SessionProcessor import SessionProcessor
 from managers.EventProcessor import EventProcessor
@@ -123,7 +121,7 @@ class ExportManager:
             game_extractor = MagnetExtractor
         elif self._game_id == "WAVES":
             game_extractor = WaveExtractor
-        elif self._game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "STEMPORTS", "EARTHQUAKE", "WIND"]:
+        elif self._game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "SHADOWSPECT", "STEMPORTS", "WIND"]:
             # all games with data but no extractor.
             pass
         else:
