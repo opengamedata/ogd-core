@@ -1,7 +1,6 @@
 # import standard libraries
 from games.LAKELAND.LakelandExtractor import LakelandExtractor
 from extractors.Extractor import Extractor
-import json
 import logging
 import traceback
 import typing
