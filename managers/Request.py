@@ -16,9 +16,10 @@ from schemas.GameSchema import GameSchema
 #  @param raw  Bool stating whether to output a raw file or not.
 #  @param sessions Bool stating whether to output a processed session feature file or not.
 class ExporterFiles:
-    def __init__(self, events:bool = True, sessions:bool = True):
+    def __init__(self, events:bool = True, sessions:bool = True, population:bool = True):
         self.events = events
         self.sessions = sessions
+        self.population = population
 
 class ExporterRange:
     def __init__(self, date_min:Union[datetime,None], date_max:Union[datetime,None], ids:Union[List[str],None], versions:Union[List[int],None]=None):

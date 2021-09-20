@@ -40,10 +40,10 @@ class FileManager(abc.ABC):
             # then set up our paths, and ensure each exists.
             base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
             # finally, generate file names.
-            self._file_names["events"]   = self._game_data_dir / f"{base_file_name}_events.{self._extension}" if exporter_files.events else None
-            self._zip_names["events"]    = self._game_data_dir / f"{base_file_name}_events.zip" if exporter_files.events else None
-            self._file_names["sessions"] = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}" if exporter_files.sessions else None
-            self._zip_names["sessions"]  = self._game_data_dir / f"{base_file_name}_session-features.zip" if exporter_files.sessions else None
+            self._file_names['events']   = self._game_data_dir / f"{base_file_name}_events.{self._extension}" if exporter_files.events else None
+            self._zip_names['events']    = self._game_data_dir / f"{base_file_name}_events.zip" if exporter_files.events else None
+            self._file_names['sessions'] = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}" if exporter_files.sessions else None
+            self._zip_names['sessions']  = self._game_data_dir / f"{base_file_name}_session-features.zip" if exporter_files.sessions else None
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.Log(msg, logging.ERROR)
@@ -53,26 +53,26 @@ class FileManager(abc.ABC):
         return self._files
 
     def GetPopulationFile(self) -> Union[IO,None]:
-        return self._files["population"]
+        return self._files['population']
 
     def GetSessionsFile(self) -> Union[IO,None]:
-        return self._files["sessions"]
+        return self._files['sessions']
 
     def GetEventsFile(self) -> Union[IO,None]:
-        return self._files["events"]
+        return self._files['events']
 
     def OpenFiles(self) -> None:
         # self._data_dir.mkdir(exist_ok=True)
         self._game_data_dir.mkdir(exist_ok=True, parents=True)
         # self._base_path.mkdir(exist_ok=True)
-        self._files["sessions"] = open(self._file_names["sessions"], "w+", encoding="utf-8") if (self._file_names["sessions"] is not None) else None
-        self._files["events"]   = open(self._file_names["events"],   "w+", encoding="utf-8") if (self._file_names["events"] is not None) else None
+        self._files['sessions'] = open(self._file_names['sessions'], "w+", encoding="utf-8") if (self._file_names['sessions'] is not None) else None
+        self._files['events']   = open(self._file_names['events'],   "w+", encoding="utf-8") if (self._file_names['events'] is not None) else None
 
     def CloseFiles(self) -> None:
-        if self._files["sessions"] is not None:
-            self._files["sessions"].close()
-        if self._files["events"] is not None:
-            self._files["events"].close()
+        if self._files['sessions'] is not None:
+            self._files['sessions'].close()
+        if self._files['events'] is not None:
+            self._files['events'].close()
 
     def ZipFiles(self) -> None:
         try:
@@ -85,16 +85,16 @@ class FileManager(abc.ABC):
             src_sessions_f = existing_csvs[self._game_id][self._dataset_id]['sessions']
             src_events_f = existing_csvs[self._game_id][self._dataset_id]['events']
             try:
-                if src_sessions_f is not None and self._zip_names["sessions"] is not None:
-                    os.rename(src_sessions_f, str(self._zip_names["sessions"]))
-                if src_events_f is not None and self._zip_names["events"] is not None:
-                    os.rename(src_events_f, str(self._zip_names["events"]))
+                if src_sessions_f is not None and self._zip_names['sessions'] is not None:
+                    os.rename(src_sessions_f, str(self._zip_names['sessions']))
+                if src_events_f is not None and self._zip_names['events'] is not None:
+                    os.rename(src_events_f, str(self._zip_names['events']))
             except Exception as err:
                 msg = f"Error while setting up zip files! {type(err)} : {err}"
                 utils.Logger.Log(msg, logging.ERROR)
                 traceback.print_tb(err.__traceback__)
         # for each file, try to save out the csv/tsv to a file - if it's one that should be exported, that is.
-        if self._zip_names["sessions"] is not None:
+        if self._zip_names['sessions'] is not None:
             with zipfile.ZipFile(self._zip_names["sessions"], "w", compression=zipfile.ZIP_DEFLATED) as sessions_zip_file:
                 try:
                     session_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_session_features.{self._extension}"
@@ -107,7 +107,7 @@ class FileManager(abc.ABC):
                 except FileNotFoundError as err:
                     utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
                     traceback.print_tb(err.__traceback__)
-        if self._zip_names["events"] is not None:
+        if self._zip_names['events'] is not None:
             with zipfile.ZipFile(self._zip_names["events"], "w", compression=zipfile.ZIP_DEFLATED) as events_zip_file:
                 try:
                     events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_events.{self._extension}"
