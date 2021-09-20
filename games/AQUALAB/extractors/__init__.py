@@ -1,6 +1,6 @@
 __all__ = [
     "JobArgumentationTime",
-    "JobCompleted",
+    "JobCompleteCount",
     "JobCompletionTime",
     "JobDiveSitesCount",
     "JobDiveTime",
@@ -24,7 +24,7 @@ __all__ = [
 ]
 
 from . import JobArgumentationTime
-from . import JobCompleted
+from . import JobCompleteCount
 from . import JobCompletionTime
 from . import JobDiveSitesCount
 from . import JobDiveTime

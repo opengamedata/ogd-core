@@ -38,10 +38,10 @@ class AqualabExtractor(Extractor):
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
             ret_val = JobArgumentationTime.JobArgumentationTime(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
-        elif feature_type == "JobCompleted":
+        elif feature_type == "JobCompleteCount":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobCompleted.JobCompleted(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
+            ret_val = JobCompleteCount.JobCompleteCount(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature_type == "JobCompletionTime":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
