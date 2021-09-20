@@ -45,7 +45,7 @@ class DataInterface(abc.ABC):
         else:
             return self._fullDateRange()
 
-    def RowsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> Union[List[Tuple], None]:
+    def RowsFromIDs(self, id_list:List[str], versions:Union[List[int],None]=None) -> Union[List[Tuple], None]:
         if not self._is_open:
             utils.Logger.Log("Can't retrieve data, the source interface is not open!")
             return None
@@ -83,13 +83,13 @@ class DataInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _rowsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list:List[str], versions:Union[List[int],None] = None) -> List[Tuple]:
         pass
 
     @abc.abstractmethod
-    def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[str]:
+    def _IDsFromDates(self, min:datetime, max:datetime, versions:Union[List[int],None] = None) -> List[str]:
         pass
 
     @abc.abstractmethod
-    def _datesFromIDs(self, id_list:List[str], versions: Union[List[int],None]=None) -> Dict[str,datetime]:
+    def _datesFromIDs(self, id_list:List[str], versions:Union[List[int],None] = None) -> Dict[str,datetime]:
         pass

@@ -307,7 +307,7 @@ class MySQLInterface(DataInterface):
         self._is_open = False
         return True
 
-    def _rowsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list: List[str], versions: Union[List[int],None]=None) -> List[Tuple]:
         ret_val = []
         # grab data for the given session range. Sort by event time, so
         if not self._db_cursor == None:

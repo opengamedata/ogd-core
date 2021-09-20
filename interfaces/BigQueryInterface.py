@@ -40,7 +40,7 @@ class BigQueryInterface(DataInterface):
         Logger.toStdOut("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
-    def _rowsFromIDs(self, id_list: List[int], versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list:List[str], versions:Union[List[int],None] = None) -> List[Tuple]:
         if self._client != None:
             db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
             table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
@@ -110,7 +110,7 @@ class BigQueryInterface(DataInterface):
             Logger.Log(f"Could not get full date range, BigQuery connection is not open.", logging.WARN)
             return {"min":datetime.now(), "max":datetime.now()}
 
-    def _IDsFromDates(self, min: datetime, max: datetime, versions: Union[List[int],None]=None) -> List[str]:
+    def _IDsFromDates(self, min:datetime, max:datetime, versions:Union[List[int],None] = None) -> List[str]:
         ret_val = []
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         if self._client != None:
@@ -131,7 +131,7 @@ class BigQueryInterface(DataInterface):
             Logger.Log(f"Could not get session list for {str_min}-{str_max} range, BigQuery connection is not open.", logging.WARN)
         return ret_val
 
-    def _datesFromIDs(self, id_list: List[str], versions: Union[List[int],None]=None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], versions:Union[List[int],None] = None) -> Dict[str, datetime]:
         if self._client != None:
             db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
             table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
