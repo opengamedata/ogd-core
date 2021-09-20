@@ -4,7 +4,7 @@ from typing import Any, List
 from extractors.Feature import Feature
 from schemas.Event import Event
 
-class JobCompleted(Feature):
+class JobCompleteCount(Feature):
 
     def __init__(self, name:str, description:str, job_num:int, job_map:dict):
         self._job_map = job_map
