@@ -8,7 +8,7 @@ __all__ = [
     "JobGuideCount",
     "JobHelpCount",
     "JobModelingTime",
-    "JobStarted",
+    "JobStartCount",
     "JobTasksCompleted",
     "SessionDiveSitesCount",
     "SessionDuration",
@@ -32,7 +32,7 @@ from . import JobExperimentationTime
 from . import JobGuideCount
 from . import JobHelpCount
 from . import JobModelingTime
-from . import JobStarted
+from . import JobStartCount
 from . import JobTasksCompleted
 from . import SessionDiveSitesCount
 from . import SessionDuration
