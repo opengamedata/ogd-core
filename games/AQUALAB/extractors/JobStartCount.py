@@ -9,17 +9,17 @@ class JobStartCount(Feature):
     def __init__(self, name:str, description:str, job_num:int, job_map:dict):
         self._job_map = job_map
         super().__init__(name=name, description=description, count_index=job_num)
-        self._started = False
+        self._start_count = 0
 
     def GetEventTypes(self) -> List[str]:
         return ["accept_job"]
 
     def CalculateFinalValues(self) -> Any:
-        return self._started
+        return self._start_count
 
     def _extractFromEvent(self, event:Event) -> None:
         if "job_id" in event.event_data.keys():
             if self._job_map[event.event_data["job_id"]['string_value']] == self._count_index:
-                self._started = True
+                self._start_count += 1
         else:
             raise ValueError(f"job_id not found in keys of event type {event.event_name}, the keys were:\n{event.event_data.keys()}")
