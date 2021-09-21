@@ -5,7 +5,6 @@ from datetime import datetime
 from google.cloud import bigquery
 from typing import Dict, List, Tuple, Union
 
-from config.config import settings
 from interfaces.src.DataInterface import DataInterface
 from utils import Logger
 
@@ -21,7 +20,7 @@ class BigQueryInterface(DataInterface):
             self.Close()
             self.Open(force_reopen=False)
         if not self._is_open:
-            credential_path = settings["GAME_SOURCE_MAP"][self._game_id]["credential"]
+            credential_path = self._settings["GAME_SOURCE_MAP"][self._game_id]["credential"]
             os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
             self._client = bigquery.Client()
             if self._client != None:

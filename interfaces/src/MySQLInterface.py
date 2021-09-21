@@ -1,9 +1,6 @@
 # global imports
 from mysql.connector import connect, connection, cursor
-import http
-import json
 import logging
-import math
 import sshtunnel
 import traceback
 from datetime import datetime
@@ -11,8 +8,6 @@ from itertools import chain
 from typing import Any, Dict, List, Set, Tuple, Union
 # local imports
 from interfaces.src.DataInterface import DataInterface
-from schemas.GameSchema import GameSchema
-from schemas.TableSchema import TableSchema
 from utils import Logger
 
 

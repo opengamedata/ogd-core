@@ -6,8 +6,6 @@ from typing import Any, Dict, IO, List, Tuple, Union
 from pandas.io.parsers import TextFileReader
 ## import local files
 from interfaces.src.DataInterface import DataInterface
-from schemas.GameSchema import GameSchema
-from schemas.TableSchema import TableSchema
 
 class CSVInterface(DataInterface):
     def __init__(self, game_id:str, filepath_or_buffer:Union[str, IO[bytes]], delim:str = ','):

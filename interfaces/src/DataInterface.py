@@ -1,12 +1,9 @@
 ## import standard libraries
 import abc
-import typing
 from datetime import datetime
 from typing import Dict, List, Tuple, Union
 ## import locals
 import utils
-from schemas.Event import Event
-from schemas.TableSchema import TableSchema
 
 class DataInterface(abc.ABC):
     def __init__(self, game_id):
