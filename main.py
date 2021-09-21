@@ -14,10 +14,10 @@ from pandas.io.pytables import Table
 # import local files
 import utils
 from config.config import settings
-from interfaces.DataInterface import DataInterface
-from interfaces.CSVInterface import CSVInterface
-from interfaces.MySQLInterface import MySQLInterface
-from interfaces.BigQueryInterface import BigQueryInterface
+from interfaces.src.DataInterface import DataInterface
+from interfaces.src.CSVInterface import CSVInterface
+from interfaces.src.MySQLInterface import MySQLInterface
+from interfaces.src.BigQueryInterface import BigQueryInterface
 from managers.ExportManager import ExportManager
 from managers.Request import Request, ExporterFiles, ExporterRange
 from schemas.GameSchema import GameSchema

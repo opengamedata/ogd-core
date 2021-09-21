@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any, Dict, IO, List, Tuple, Union
 from pandas.io.parsers import TextFileReader
 ## import local files
-from interfaces.DataInterface import DataInterface
+from interfaces.src.DataInterface import DataInterface
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 

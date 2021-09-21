@@ -6,7 +6,7 @@ from google.cloud import bigquery
 from typing import Dict, List, Tuple, Union
 
 from config.config import settings
-from interfaces.DataInterface import DataInterface
+from interfaces.src.DataInterface import DataInterface
 from utils import Logger
 
 class BigQueryInterface(DataInterface):
