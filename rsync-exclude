@@ -1,6 +1,9 @@
 *__pycache__*
 fieldday-pyenv*
-data/*
+data/
+tests/
+TestDriver.py
+config/config.py
 .DS_Store
 .gitignore
 .gitmodules
@@ -8,7 +11,6 @@ data/*
 Makefile
 README.md
 coffee_out.js
-config/config.py
 python_errors.log
 rsync-exclude
 *.log
