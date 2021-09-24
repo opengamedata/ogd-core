@@ -2,7 +2,6 @@ import json
 import logging
 import os
 from datetime import datetime
-from google_auth_oauthlib import flow
 from google.cloud import bigquery
 from typing import Dict, List, Tuple, Union
 

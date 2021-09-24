@@ -3,7 +3,6 @@ cffi==1.14.4
 cryptography==3.3.1
 gitdb==4.0.5
 GitPython==3.1.12
-google-auth-oauthlib==0.4.4
 google-cloud-bigquery==2.20.0
 joblib==1.0.0
 mysql-connector-python==8.0.25
