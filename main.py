@@ -97,7 +97,7 @@ def runExport(events:bool = False, features:bool = False):
     exporter_files : ExporterFiles
     req       : Request
     start = datetime.now()
-    exporter_files = ExporterFiles(events=events, sessions=features) 
+    exporter_files = ExporterFiles(events=events, sessions=features, population=features) 
     supported_vers = GameSchema(schema_name=f"{game_name}.json")['config']['SUPPORTED_VERS']
     if "--file" in opts.keys():
         file_path=opts["--file"]
@@ -106,8 +106,6 @@ def runExport(events:bool = False, features:bool = False):
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(ids=ids if ids is not None else [], source=interface, versions=supported_vers)
-
-        req = Request(interface=interface, range=range, exporter_files=exporter_files)
         # breakpoint()
     else:
         interface_type = settings["GAME_SOURCE_MAP"][game_name]['interface']
@@ -121,9 +119,8 @@ def runExport(events:bool = False, features:bool = False):
         start_date, end_date = getDateRange(args=args, game_id=game_name)
         range = ExporterRange.FromDateRange(date_min=start_date, date_max=end_date, source=interface, versions=supported_vers)
 
-        req = Request(interface=interface, range=range, exporter_files=exporter_files)
     # Once we have the parameters parsed out, construct the request.
-    # breakpoint()
+    req = Request(interface=interface, range=range, exporter_files=exporter_files)
     try:
         export_manager = ExportManager(game_id=game_name, settings=settings)
         table_name = settings["GAME_SOURCE_MAP"][game_name]["table"]
