@@ -1,40 +1,29 @@
-## Adding a new game data exporter/extractor:
+# Adding a new game data exporter/extractor:
 
 First, a bit of terminology:
-- **feature**: Some bit of *data* considered to be useful for analysis of game play. 
-    A feature can be thought of like a variable in a programming language.
-    It may be a single data point, or a composite structure (as in an array or C-struct).
-    It may obtain its values via simple, direct computation on input game event data, or through a more complex "model" (defined later, analogous to a function).
+- **feature**:
+    Some piece of *data*, useful for analysis, that we can observe from gameplay event logs, **and/or** the code that extracts the observation from event logs.
+    For example, a feature could be as simple as a boolean representing "player started level 1."
+    On the other hand, a feature could be very complex, such as a string encoding the entire sequence of a gameplay session.
+    In OpenGameData, we write implementations of an abstract `Feature` class, where each implementation calculates one feature given event logs as input.  
     Features may be calculated at varying levels, described in the following definitions:
-- **per-level feature**:
-    A feature that records data about what a player (technically, session) did over the course of a level in the game. 
 - **per-session feature**: 
-    A feature which records data across an entire gameplay session.
-- **per-game feature**:
-    A feature that records data across many sessions of gameplay.
+    A feature that records data across an entire gameplay session.
 - **per-custom-count feature**:
-    A feature that records data about some _thing_ that may have multiple instances over a gameplay session, but does not line up with the inherent segments of a game (level, session, whole-game).
-    A common example would be question-answer prompts. 
-- **model**:
-    A model is some abstract representation of an aspect of a game's data.
-    A model may be evaluated over some input data (or features) to produce a model output.
-    This output may be a prediction, classification, a visual representation, or a feature.  
-- **dump file**: A file (TSV) containing a direct dump of game event data from a database. Maintains the column structure of the original database, with JSON-encoded custom event data.
-- **raw file**: A file (typically TSV, older versions used CSV) containing raw game event data.
-    Similar to a dump file, but with JSON objects from custom event data split across columns (sub-objects are not split).
-    In practice, these are no longer produced or distributed, but some references may still remain in the documentation or OGD source code.
-- **processed csv**: A csv file primarily containing session feature data. 
-    This typically includes a great many per-level features (i.e. one instance of each feature per game level), a few per-custom-count features, and a moderate number of per-session features.
+    A feature that records data about something that may have multiple instances over a gameplay session.
+    This could include levels (i.e. a feature may be "clicks in the level", and there are 20 levels), survey prompts, in-game quizzes, etc.
+- **per-level feature**:
+    A per-custom-count feature that records data specifically about each level in a game.
+    This is a sort of "informal" feature in OpenGameData - there are special features available to make Feature development easier for games that include a notion of "level," but these features are optional. 
+- **population feature**:
+    A feature that records data across many sessions of gameplay.
 
 In order to add a new game to the feature extraction tool, complete the following steps:
 
-1. First, we must define some things about the data we are extracting. We do this in a JSON file, under the **schemas/JSON** folder.
-By convention, the name of the JSON file should be the same as the game ID used in the database.  
+1. First, we must define some things about the data we are extracting. We do this in a JSON file, under the **games/<GAME_ID>** folder.
+The name of the JSON file should be the same as the game ID used in the database, by convention in all-caps.  
 e.g. For the "Wave" game, the database uses an app_id of `WAVES`, so we name the JSON schema file as **WAVES.json**
 A JSON schema file has three elements:
-   - `db_columns`:
-        A description of the structure of the database table.
-        This element should be a dictionary mapping the names of each column in the database table to a string describing the column.
    - `events`:
         A description of the event-specific data encoded in each database row.
         This element should be a dictionary mapping names of event types to sub-dictionaries defining the data in the events.
@@ -42,15 +31,21 @@ A JSON schema file has three elements:
    - `features`:
         A description of what features OGD should produce, given the events described above.
         This element should in turn contain four sub-elements:
-    - `per_level`: This sub-element should be a dictionary mapping the names of per-level features to descriptions of how the features are calculated/used.
-    - `per_session`: This sub-element should be a dictionary mapping the names of features aggregated over a whole session to descriptions of how the features are calculated/used.
-    - `per_game`: This sub-element should be a dictionary mapping the names of per-game features to descriptions of how the features are calculated/used.
-    - `per_custom_count`: This sub-element should be a dictionary mapping the names of features which are repeated for some specific number of times to a subdictionary. This, again, has three elements:
-         - `count`: The number of times the feature is repeated
-         - `prefix`: A prefix to use to distinguish repeats of the feature in the output file
-         - `desc`: A description of how the feature is calculated
+        - `per_level`: This sub-element should be a dictionary mapping the names of per-level features to descriptions of how the features are calculated/used.
+        - `per_session`: This sub-element should be a dictionary mapping the names of features aggregated over a whole session to descriptions of how the features are calculated/used.
+        - `per_game`: This sub-element should be a dictionary mapping the names of per-game features to descriptions of how the features are calculated/used.
+        - `per_custom_count`: This sub-element should be a dictionary mapping the names of features which are repeated for some specific number of times to a subdictionary. This, again, has three elements:
+            - `count`: The number of times the feature is repeated
+            - `prefix`: A prefix to use to distinguish repeats of the feature in the output file
+            - `desc`: A description of how the feature is calculated
+    - `db_columns`:
+        A description of the structure of the database table.
+        This element should be a dictionary mapping the names of each column in the database table to a string describing the column.
         
-        Note, if you know a priori the number of levels in your game, you could enter all your `perlevel` features as `per_custom_count` features. The only difference between the two is that `perlevel` features have a hard-coded prefix ("lvl") and the number of levels is inferred from the max level in the database.
+    - `level_range` (optional):
+        You may optionally add the `level_range` element to your JSON schema, which must be a sub-dictionary with `min` and `max` as its elements.
+        If you do so, you can then use `level_range` as the `count` for a per-count feature (more information in the "Adding a Feature" doc).
+    
 `db_columns` is used to ensure the raw csv file metadata contains descriptions of each database column. `events` are used to get names for the members of each kind of event so we can extract features (and create columns in the raw csv). `features` are used to ensure the processed csv file metadata contains descriptions of each feature, and to help document the features for whoever writes the actual feature extraction code.
 Below is a sample of JSON schema formatting:
 ```javascript
