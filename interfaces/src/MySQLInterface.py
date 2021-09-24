@@ -19,7 +19,7 @@ class SQLLogin:
         self.user    = user
         self.pword   = pword
         self.db_name = db_name
-
+ 
 ## Dumb struct to collect data used to establish a connection over ssh.
 class SSHLogin:
     def __init__(self, host: str, port: int, user: str, pword: str):

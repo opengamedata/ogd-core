@@ -27,7 +27,7 @@ class BigQueryInterface(DataInterface):
                 credential_path = self._settings["GAME_SOURCE_MAP"][self._game_id]["credential"]
                 appflow = flow.InstalledAppFlow.from_client_secrets_file(credential_path, scopes=["https://www.googleapis.com/auth/bigquery"])
                 appflow.run_local_server()
-                self._client = bigquery.Client(project=self._settings["BIGQUERY_CONFIG"][self._game_id]["project_id"], credentials=appflow.credentials)
+                self._client = bigquery.Client(project=self._settings["BIGQUERY_CONFIG"][self._game_id]["PROJECT_ID"], credentials=appflow.credentials)
             if self._client != None:
                 self._is_open = True
                 Logger.Log("Connected to BigQuery database.", logging.DEBUG)
