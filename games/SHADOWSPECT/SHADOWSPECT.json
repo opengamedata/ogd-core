@@ -10,6 +10,14 @@
         "per_count": {
         },
         "aggregate":{
+            "MoveShapeCount": {
+                "enabled": true,
+                "description":"Total number of shape moves in a given session"
+            },
+            "SessionID": {
+                "enabled": true,
+                "description":"The player's session ID number for this play session"
+            }
         }
     },
 
