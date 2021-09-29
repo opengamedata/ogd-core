@@ -12,6 +12,8 @@ import zipfile
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, IO, Union
+
+from git.exc import InvalidGitRepositoryError, NoSuchPathError
 ## import local files
 import utils
 from managers.Request import ExporterFiles, ExporterRange
@@ -29,26 +31,33 @@ class FileManager(abc.ABC):
         self._date_range   : Dict[str,Union[datetime,None]] = date_range
         self._dataset_id   : str  = ""
         self._short_hash   : str  = ""
+        # figure out dataset ID.
+        start = date_range['min'].strftime("%Y%m%d") if date_range['min'] is not None else "UNKNOWN"
+        end   = date_range['max'].strftime("%Y%m%d") if date_range['max'] is not None else "UNKNOWN"
+        self._dataset_id = f"{self._game_id}_{start}_to_{end}"
+        # get hash
         try:
-            # figure out dataset ID.
-            start = date_range['min'].strftime("%Y%m%d") if date_range['min'] is not None else "UNKNOWN"
-            end   = date_range['max'].strftime("%Y%m%d") if date_range['max'] is not None else "UNKNOWN"
-            self._dataset_id = f"{self._game_id}_{start}_to_{end}"
-            # get hash
             repo = git.Repo(search_parent_directories=True)
             if repo.git is not None:
                 self._short_hash = str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
-            # then set up our paths, and ensure each exists.
-            base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
-            # finally, generate file names.
-            self._file_names['events']   = self._game_data_dir / f"{base_file_name}_events.{self._extension}" if exporter_files.events else None
-            self._zip_names['events']    = self._game_data_dir / f"{base_file_name}_events.zip" if exporter_files.events else None
-            self._file_names['sessions'] = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}" if exporter_files.sessions else None
-            self._zip_names['sessions']  = self._game_data_dir / f"{base_file_name}_session-features.zip" if exporter_files.sessions else None
-        except Exception as err:
-            msg = f"{type(err)} {str(err)}"
+        except InvalidGitRepositoryError as err:
+            msg = f"Code is not in a valid Git repository:\n{str(err)}"
             utils.Logger.Log(msg, logging.ERROR)
-            traceback.print_tb(err.__traceback__)
+        except NoSuchPathError as err:
+            msg = f"Unable to access proper file paths for Git repository:\n{str(err)}"
+            utils.Logger.Log(msg, logging.ERROR)
+        # then set up our paths, and ensure each exists.
+        base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
+        # finally, generate file names.
+        if exporter_files.events:
+            self._file_names['events']     = self._game_data_dir / f"{base_file_name}_events.{self._extension}"
+            self._zip_names['events']      = self._game_data_dir / f"{base_file_name}_events.zip"
+        if exporter_files.sessions:
+            self._file_names['sessions']   = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}"
+            self._zip_names['sessions']    = self._game_data_dir / f"{base_file_name}_session-features.zip"
+        if exporter_files.population:
+            self._file_names['population'] = self._game_data_dir / f"{base_file_name}_population-features.{self._extension}"
+            self._zip_names['population']  = self._game_data_dir / f"{base_file_name}_population-features.zip"
 
     def GetFiles(self) -> Dict[str,Union[IO,None]]:
         return self._files
@@ -230,11 +239,13 @@ class FileManager(abc.ABC):
                 utils.Logger.toStdOut(f"opened csv file at {existing_csv_file.name}", logging.INFO)
                 if not self._game_id in existing_csvs.keys():
                     existing_csvs[self._game_id] = {}
-                prior_export = self._dataset_id in existing_csvs[self._game_id].keys()
-                existing_data = existing_csvs[self._game_id][self._dataset_id]
-                population_path = str(self._zip_names["population"]) if self._zip_names["population"] is not None else (existing_data["population"] if (prior_export and "population" in existing_data.keys()) else None)
-                sessions_path = str(self._zip_names["sessions"]) if self._zip_names["sessions"] is not None else (existing_data["sessions"] if (prior_export and "sessions" in existing_data.keys()) else None)
-                events_path   = str(self._zip_names["events"]) if self._zip_names["events"] is not None else (existing_data["events"] if (prior_export and "events" in existing_data.keys()) else None)
+                existing_data = existing_csvs[self._game_id][self._dataset_id] if self._dataset_id in existing_csvs[self._game_id].keys() else None
+                population_path = str(self._zip_names["population"]) if self._zip_names["population"] is not None \
+                                  else (existing_data["population"] if (existing_data is not None and "population" in existing_data.keys()) else None)
+                sessions_path   = str(self._zip_names["sessions"]) if self._zip_names["sessions"] is not None \
+                                  else (existing_data["sessions"] if (existing_data is not None and "sessions" in existing_data.keys()) else None)
+                events_path     = str(self._zip_names["events"]) if self._zip_names["events"] is not None \
+                                  else (existing_data["events"] if (existing_data is not None and "events" in existing_data.keys()) else None)
                 existing_csvs[self._game_id][self._dataset_id] = \
                 {
                     "ogd_revision" :self._short_hash,
