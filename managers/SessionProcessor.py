@@ -1,13 +1,15 @@
 # import standard libraries
+from managers.FileManager import FileManager
 from games.LAKELAND.LakelandExtractor import LakelandExtractor
 from extractors.Extractor import Extractor
-import json
 import logging
 import traceback
+import sys
 import typing
-from typing import Dict, Type
+from typing import Dict, IO, Type, Union
 # import local files
 import utils
+from managers.FileManager import FileManager
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
@@ -27,14 +29,11 @@ class SessionProcessor:
     #                       is structured.
     #  @param sessions_csv_file The output file, to which we'll write the processed
     #                       feature data.
-    def __init__(self, ExtractorClass: Type[Extractor], game_schema: GameSchema,
-                 sessions_file: typing.IO[str], separator:str = "\t"):
+    def __init__(self, ExtractorClass: Type[Extractor], game_schema: GameSchema):
         ## Define instance vars
         self._ExtractorClass     :Type[Extractor]      = ExtractorClass
         self._game_schema        :GameSchema           = game_schema
-        self._sessions_file      :typing.IO[str]       = sessions_file
         self._session_extractors :Dict[str, Extractor] = {}
-        self._separator          :str                  = separator
 
     ## Function to handle processing of a single row of data.
     #  Basically just responsible for ensuring an extractor for the session
@@ -42,11 +41,11 @@ class SessionProcessor:
     #  to that extractor.
     #  @param row_with_complex_parsed A tuple of the row data. We assume the
     #                      event_data_complex has already been parsed from JSON.
-    def ProcessEvent(self, event: Event):
+    def ProcessEvent(self, event: Event, session_file:IO[str]=sys.stdout):
         # ensure we have an extractor for the given session:
         if not event.session_id in self._session_extractors.keys():
             if event.app_id == 'LAKELAND' and self._ExtractorClass is LakelandExtractor:
-                self._session_extractors[event.session_id] = LakelandExtractor(session_id=event.session_id, game_schema=self._game_schema, sessions_file=self._sessions_file)
+                self._session_extractors[event.session_id] = LakelandExtractor(session_id=event.session_id, game_schema=self._game_schema, sessions_file=session_file)
             else:
                 self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_schema=self._game_schema)
         self._session_extractors[event.session_id].ExtractFromEvent(event)
@@ -66,11 +65,11 @@ class SessionProcessor:
 
     ## Function to write out the header for a processed csv file.
     #  Just runs the header writer for whichever Extractor subclass we were given.
-    def WriteSessionFileHeader(self):
-        self._ExtractorClass.WriteFileHeader(game_schema=self._game_schema, file=self._sessions_file, separator=self._separator)
+    def WriteSessionFileHeader(self, file_mgr:FileManager, separator:str = "\t"):
+        self._ExtractorClass.WriteFileHeader(game_schema=self._game_schema, file=file_mgr.GetSessionsFile(), separator=separator)
 
     ## Function to write out all data for the extractors created by the
     #  SessionProcessor. Just calls the "write" function once for each extractor.
-    def WriteSessionFileLines(self):
+    def WriteSessionFileLines(self, file_mgr:FileManager, separator:str = "\t"):
         for extractor in self._session_extractors.values():
-            extractor.WriteCurrentFeatures(file=self._sessions_file)
+            extractor.WriteCurrentFeatures(file=file_mgr.GetSessionsFile(), separator=separator)
