@@ -48,7 +48,7 @@ class CrystalExtractor(LegacyExtractor):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    def _extractFeaturesFromEvent(self, event:Event):
         # put some data in local vars, for readability later.
         level = event.event_data['level']
         event_client_time = event.timestamp

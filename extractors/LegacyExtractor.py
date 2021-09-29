@@ -32,7 +32,7 @@ class LegacyExtractor(Extractor):
         return
 
     @abc.abstractmethod
-    def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    def _extractFeaturesFromEvent(self, event:Event):
         """Abstract declaration of a function to perform extraction of features from a row.
 
         :param event: [description]
@@ -132,9 +132,9 @@ class LegacyExtractor(Extractor):
                 column_vals.append(_format(self._features.getValByName(key)))
         return column_vals
 
-    def ExtractFromEvent(self, event:Event, table_schema:TableSchema) -> None:
+    def ExtractFromEvent(self, event:Event) -> None:
         # self._extractSequencesFromEvent(event=event, table_schema=table_schema)
-        self._extractFeaturesFromEvent(event=event, table_schema=table_schema)
+        self._extractFeaturesFromEvent(event=event)
 
     def CalculateAggregateFeatures(self) -> None:
         """Overridden version of a blank function from Extractor, purely for compatibility with old extractors.
