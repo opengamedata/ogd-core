@@ -26,7 +26,7 @@ settings = {
     "BIGQUERY_CONFIG":
     {
         "DB_NAME": "project_id.dataset_id",
-        "PROJECT_ID" : "project_id"
+        "PROJECT_ID" : "project_id",
         "TABLE_NAME": "events_*"
     },
     "GAME_SOURCE_MAP":
