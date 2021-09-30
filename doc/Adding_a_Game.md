@@ -20,40 +20,36 @@ First, a bit of terminology:
 
 In order to add a new game to the feature extraction tool, complete the following steps:
 
-1. First, we must define some things about the data we are extracting. We do this in a JSON file, under the **games/<GAME_ID>** folder.
+## 1. First, we must define some things about the data we are extracting.
+
+We do this in a JSON file, under the **games/<GAME_ID>** folder.
 The name of the JSON file should be the same as the game ID used in the database, by convention in all-caps.  
-e.g. For the "Wave" game, the database uses an app_id of `WAVES`, so we name the JSON schema file as **WAVES.json**
+e.g. For the "Wave" game, the database uses an app_id of `WAVES`, so we name the JSON schema file as **games/WAVES/WAVES.json**
 A JSON schema file has three elements:
-   - `events`:
-        A description of the event-specific data encoded in each database row.
-        This element should be a dictionary mapping names of event types to sub-dictionaries defining the data in the events.
-        - These sub-dictionaries are similar to the db_columns dictionary. They map each property name for a given event type to the type of that property.
-   - `features`:
-        A description of what features OGD should produce, given the events described above.
-        This element should in turn contain four sub-elements:
-        - `per_level`: This sub-element should be a dictionary mapping the names of per-level features to descriptions of how the features are calculated/used.
-        - `per_session`: This sub-element should be a dictionary mapping the names of features aggregated over a whole session to descriptions of how the features are calculated/used.
-        - `per_game`: This sub-element should be a dictionary mapping the names of per-game features to descriptions of how the features are calculated/used.
-        - `per_custom_count`: This sub-element should be a dictionary mapping the names of features which are repeated for some specific number of times to a subdictionary. This, again, has three elements:
-            - `count`: The number of times the feature is repeated
-            - `prefix`: A prefix to use to distinguish repeats of the feature in the output file
-            - `desc`: A description of how the feature is calculated
-    - `db_columns`:
-        A description of the structure of the database table.
-        This element should be a dictionary mapping the names of each column in the database table to a string describing the column.
-        
-    - `level_range` (optional):
-        You may optionally add the `level_range` element to your JSON schema, which must be a sub-dictionary with `min` and `max` as its elements.
-        If you do so, you can then use `level_range` as the `count` for a per-count feature (more information in the "Adding a Feature" doc).
-    
-`db_columns` is used to ensure the raw csv file metadata contains descriptions of each database column. `events` are used to get names for the members of each kind of event so we can extract features (and create columns in the raw csv). `features` are used to ensure the processed csv file metadata contains descriptions of each feature, and to help document the features for whoever writes the actual feature extraction code.
+
+- `events`:
+    A description of the event-specific data encoded in each database row.
+    This element should be a dictionary mapping names of events to sub-dictionaries defining the data in the events.
+
+- `features`:
+    A description of what features OGD should produce, given the events described above.
+    This element should in turn contain two sub-elements:
+    <!-- - `per_level`: This sub-element should be a dictionary mapping the names of per-level features to descriptions of how the features are calculated/used. -->
+    - `aggregate`: This sub-element should be a dictionary mapping the names of features aggregated over a whole session to descriptions of how the features are calculated/used.
+    <!-- - `per_game`: This sub-element should be a dictionary mapping the names of per-game features to descriptions of how the features are calculated/used. -->
+    - `per_custom_count`: This sub-element should be a dictionary mapping the names of features which are repeated for some specific number of times to a subdictionary. This, again, has three elements:
+        - `count`: The number of times the feature is repeated
+        - `prefix`: A prefix to use to distinguish repeats of the feature in the output file
+        - `desc`: A description of how the feature is calculated
+
+- `level_range` (optional):
+    You may optionally add the `level_range` element to your JSON schema, which must be a sub-dictionary with `min` and `max` as its elements.
+    If you do so, you can then use `level_range` as the `count` for a per-count feature (more information in the "Adding a Feature" doc).
+
 Below is a sample of JSON schema formatting:
+
 ```javascript
 {
-    "db_columns": {
-        "id":"Unique identifier for a row",
-    },
-
     "events": {
         "ARROW_MOVE_RELEASE": {
             "event_custom":"string",
@@ -63,49 +59,82 @@ Below is a sample of JSON schema formatting:
     },
 
     "features": {
-        "perlevel": {
-            "totalSliderMoves":"slider moves across a given level",
-        },
-        "per_custom_count": {
-            "questionAnswered" : {"count" : 4, "prefix": "QA", "desc" : "The answer the user gave to a given question (or -1 if unanswered)"},
+        "per_count": {
+            "totalArrowMoves": {
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "description": "arrow moves across a given level [count of 'ARROW_MOVE_RELEASE' events]"
+            },
+            "questionAnswered" : {
+                "enabled": false,
+                "count" : 4,
+                "prefix": "QA",
+                "events": [],
+                "description" : "The answer the user gave to a given question (or -1 if unanswered)"
+            },
         },
         "aggregate": {
-            "avgSliderMoves" : "totalSliderMoves averaged over all levels",
+            "AverageArrowMoves" :  {
+                "enabled": true,
+                "description":"totalArrowMoves averaged over all levels"
+            }
         }
-    }
+    },
+
+    "level_range": { "min":0, "max":34 },
 }
 ```
 
-2. Next, we need to create the feature extractor. This will be a Python class inheriting from the `Extractor` base class. By convention, the class should use the database app_id as a prefix for the class name, but use CamelCase even if the app_id is not formatted as such.
-e.g. For the "Wave" game, we would name the extractor `WaveExtractor` (as opposed to `app_id + "Extractor` => `WAVEExtractor`).
-The `Extractor` subclass *must* implement the following functions:
-   - `__init__(self, session_id, game_table, game_schema)`: At minimum, this function should call the super constructor. `session_id` has the id of the session we are extracting data from, `game_table` contains information about the database table, and `game_schema` contains the data from the schema we defined in step 1. The super constructor initializes all features to have values of 0. If a different default value is preferred for any features, it would be a good idea to set those values here, after calling the super constructor.
-   - `extractFromRow(self, row_with_complex_parsed, game_table)`: This function is responsible for extracting feature data from a single database entry. The `row_with_complex_parsed` should a row returned from the database, but with the item at `event_data_complex` already parsed into a Python dictionary from JSON. If step 1 was completed correctly, the `event_data_complex` ought to match one of the `event`s from the JSON schema.
-   The `game_table` holds information about the layout of the database table, as usual. It can be used to get items from the row at specific columns.
-   This function should contain code to handle extraction from each `event` type. By convention, the actual extraction code should be split into separate private functions for each `event` type, so that we can get a cleanly-formatted `extractFromRow` function, as below:
-     ```python
-        event_type = event_data_complex_parsed["event_custom"]
-        if event_type == "BEGIN":
-            self._extractFromBegin(level, event_client_time)
-        elif event_type == "COMPLETE":
-            self._extractFromComplete(level, event_client_time)
-        elif event_type == "SUCCEED":
-            # etc.
-     ```  
-     Each private function should then update feature values as needed:
-     ```python
-        def _extractFromComplete(self, level, event_client_time):
-            self.end_times[level] = event_client_time
-            self.features["completed"][level]["val"] = 1
-     ```
-     Also note that in general, we use `row_with_complex_parsed["event_data_complex]["event_custom"]` to distinguish event types. Even if the original database entry did not have `event_custom` as a part of the JSON, the `ProcManager` class will insert the value of the `event` database column as `event_custom` in the `row_with_complex_parsed["event_data_complex]` object, so there is at least _some_ way to tell what type of event is being processed.
-    - `calculateAggregateFeatures(self)`: This function should use the values in its per-level and per-custom-count features to calculate the aggregate (across whole session) features. The code for calculating individual aggregate features may be broken into separate private functions if desired, although in practice most aggregate features can be calculated with just a couple lines of code apiece, so this is not usually necessary. Also, note that while the function is intended for aggregate feature calculation, in practice you may also need to calculate certain final values of per-level/count features here as well. For example, a feature which gives an average over a level can't be calculated until we know all events for that level have been encountered. Hence, it would be recommended to accumulate a total in extractFromRow, and calculate the average in calculateAggregateFeatures. This function will generally be called just once during each extractor's lifetime, after all rows corresponding to that session have been processed. 
+## 2. Next, we need to create the feature extractor.
 
-3. Next, we need to ensure DataToCSV knows what the possible games are. In the section of code (presently around line 70) dealing with loading of the schema file, we need to add a case to the if-elif-else block. It should check if the request object has a game_id matching our new game, and if so, we must call the Schema constructor with the name of the schema file from step 1, and we must set `game_extractor` to the Extractor class we created for the game. For example:
+This will be a Python class inheriting from the `Extractor` base class.
+By convention, the class should use the database app_id as a prefix for the class name, but use CamelCase (even if the app_id is not formatted as such).  
+e.g. For the "Wave" game, we would name the extractor `WaveExtractor` (as opposed to `app_id + "Extractor` => `WAVEExtractor`).
+You should put your `Extractor` subclass in the **games/<GAME_ID>** folder alongside the schema.
+
+The `Extractor` subclass *must* implement the following functions:
+
+- `__init__(self, session_id, game_schema)`: At minimum, this function should call the super constructor.
+`session_id` has the id of the session from which we are extracting data, and `game_schema` contains the data from the schema we defined in step 1.
+If your Extractor base class needs to keep track of any extra data from the schema to pass to its individual Features, you should store that data into an instance variable here.
+
+- `_loadFeature(self, feature_type, name, feature_args, count_index)`:
+This function is responsible for creating instances of the individual features for the game.
+The system will automatically figure out which instances, and how many of each, should be created based on the schema in step 1.
+However, we still need some code to call the constructors for these Features.
+The `_loadFeature` function will effectively be one giant `if-elif-else` block, with one case for each type of Feature created for the game.  
+The `feature_type` parameter contains the "key" for a given feature in the schema.
+The `name` will be the `feature_type` with any prefix added, as in the case of "custom count" features.
+`feature_args` is the subdictionary for the feature in the schema (note, you do not need to check the "enabled" item here, that is done automatically).
+Lastly, `count_index` is used for "custom count" features, and says which number in the "count" the newly-constructed feature instance will have.
+For example, if your count was 3, then the first instance constructed will get a `count_index` of 0, the second will get 1, and the third will get 2.  
+A sample `_loadFeature` is shown below:
+
 ```python
-    if request.game_id == "WAVES":
-        game_schema = Schema(schema_name="WAVES.json")
+    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+        ret_val : Feature
+        if feature_type == "AverageArrowMoves":
+            ret_val = AverageArrowMoves.AverageArrowMoves(name, feature_args["description"])
+        elif feature_type == "TotalArrowMoves":
+            ret_val = TotalArrowMoves.TotalArrowMoves(name, feature_args["description"], count_index)
+        elif feature_type == "QuestionAnswered":
+            ret_val = QuestionAnswered.QuestionAnswered(name, feature_args["description"], count_index)
+        else:
+            raise NotImplementedError(f"'{feature_type}' is not a valid feature for Waves.")
+        return ret_val
+```
+
+## 3. Next, we need to ensure ExportManager knows what the possible games are.
+
+ExportManager is the class responsible for, well, managing exports.
+This is where we will register the existence of our new game's feature extractor.
+Go to the `_prepareExtractor` function in ExportManager.py, and add a case to the `if-elif-else` block, matching the game id to your new Extractor.
+
+```python
+    elif request.game_id == "WAVES":
         game_extractor = WaveExtractor
 ```
 
-4. Once those three steps are completed, the only thing left is to call DataToCSV with a request using the new game's app_id. This is usually done from main.py.
+## 4. Lastly, you need to ensure you've implemented all of your game Feature classes.
+For this, see Adding_a_Feature.md.
