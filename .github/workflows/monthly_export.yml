@@ -1,5 +1,5 @@
 # Workflow to run monthly exports of data.
-name: Automated Monthly Exports
+name: Monthly Automated Exports
 on:
   schedule:
     - cron: '1 0 2 * *'
