@@ -54,6 +54,7 @@ class BigQueryInterface(DataInterface):
                 UNNEST(event_params) AS param
                 WHERE param.key = "ga_session_id"
                 AND param.value.int_value IN ({id_string})
+                ORDER BY `session_id`, `timestamp` ASC
             """
             data = self._client.query(query)
             events = []
