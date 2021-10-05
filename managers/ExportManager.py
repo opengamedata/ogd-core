@@ -68,17 +68,21 @@ class ExportManager:
     def _executeRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema) -> bool:
         ret_val = False
         try:
-            # 1) Prepare files for export.
+            # 1) Prepare extractor, if game doesn't have an extractor, make sure we don't try to export it.
+            game_extractor : Union[Type[Extractor],None] = self._prepareExtractor()
+            if game_extractor is None:
+                request._files.sessions = False
+            # 2) Prepare files for export.
             file_manager = FileManager(exporter_files=request._files, game_id=self._game_id, \
                                        data_dir=self._settings["DATA_DIR"], date_range=request._range.GetDateRange(),
                                        extension="tsv")
-            file_manager.OpenFiles()
             # If we have a schema, we can do feature extraction.
             if game_schema is not None:
-                # 2) Loop over data, running extractors.
-                num_sess: int = self._exportToFiles(request=request, file_manager=file_manager,\
+                # 3) Loop over data, running extractors.
+                file_manager.OpenFiles()
+                num_sess: int = self._exportToFiles(request=request, game_extractor=game_extractor, file_manager=file_manager,\
                                     game_schema=game_schema, table_schema=table_schema)
-                # 3) Save and close files
+                # 4) Save and close files
                 try:
                     # before we zip stuff up, let's ensure the readme is in place:
                     readme = open(file_manager._readme_path, mode='r')
@@ -88,7 +92,7 @@ class ExportManager:
                     utils.GenerateReadme(game_name=self._game_id, game_schema=game_schema, column_list=table_schema.ColumnList(), path=readme_path)
                 file_manager.CloseFiles()
                 file_manager.ZipFiles()
-                # 4) Finally, update the list of csv files.
+                # 5) Finally, update the list of csv files.
                 file_manager.WriteMetadataFile(num_sess=num_sess)
                 file_manager.UpdateFileExportList(num_sess=num_sess)
                 ret_val = True
@@ -102,12 +106,8 @@ class ExportManager:
         finally:
             return ret_val
 
-    def _exportToFiles(self, request:Request, file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema):
+    def _exportToFiles(self, request:Request, game_extractor:Type[Extractor], file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema):
         ret_val = -1
-        # 1) Prepare extractor, if game doesn't have an extractor, make sure we don't try to export it.
-        game_extractor : Union[Type[Extractor],None] = self._prepareExtractor()
-        if game_extractor is None:
-            request._files.sessions = False
         # 2) Set up processors.
         pop_processor = sess_processor = evt_processor = None
         if request._files.events:
