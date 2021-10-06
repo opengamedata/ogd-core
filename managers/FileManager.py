@@ -211,9 +211,9 @@ class FileManager(abc.ABC):
                     "end_date"     :self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions"     :num_sess,
-                    "population_file" :str(self._zip_names["population"]),
-                    "sessions_file"   :str(self._zip_names["sessions"]),
-                    "events_file"     :str(self._zip_names["events"])
+                    "population_file" :str(self._zip_names['population']) if self._zip_names['population'] else None,
+                    "sessions_file"   :str(self._zip_names['sessions'])   if self._zip_names['sessions']   else None,
+                    "events_file"     :str(self._zip_names['events'])     if self._zip_names['events']     else None
                 }
                 meta_file.write(json.dumps(metadata, indent=4))
                 meta_file.close()
