@@ -72,6 +72,7 @@ class ExportManager:
             game_extractor : Union[Type[Extractor],None] = self._prepareExtractor()
             if game_extractor is None:
                 request._files.sessions = False
+                request._files.population = False
             # 2) Prepare files for export.
             file_manager = FileManager(exporter_files=request._files, game_id=self._game_id, \
                                        data_dir=self._settings["DATA_DIR"], date_range=request._range.GetDateRange(),
