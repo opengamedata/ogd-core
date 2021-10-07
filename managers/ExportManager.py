@@ -48,22 +48,24 @@ class ExportManager:
         self._settings = settings
 
     def ExecuteRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema) -> bool:
-        ret_val : bool
+        ret_val : bool = True
 
         start = datetime.now()
         if request.GetGameID() != self._game_id:
             utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.GetGameID()}", logging.WARNING)
             self._game_id = request.GetGameID()
-        if self._executeRequest(request=request, game_schema=game_schema, table_schema=table_schema):
+        try:
+            self._executeRequest(request=request, game_schema=game_schema, table_schema=table_schema)
             utils.Logger.Log(f"Successfully completed request {str(request)}.", logging.INFO)
-            ret_val = True
-        else:
-            utils.Logger.Log(f"Could not complete request {str(request)}", logging.ERROR)
+        except Exception as err:
             ret_val = False
-        time_delta = datetime.now() - start
-        utils.Logger.Log(f"Total Data Request Execution Time: {time_delta}", logging.INFO)
-
-        return ret_val
+            msg = f"{type(err)} {str(err)}"
+            utils.Logger.Log(f"Could not complete request {str(request)}, an error occurred:\n{msg}", logging.ERROR)
+            traceback.print_tb(err.__traceback__)
+        finally:
+            time_delta = datetime.now() - start
+            utils.Logger.Log(f"Total Data Request Execution Time: {time_delta}", logging.INFO)
+            return ret_val
 
     ## Private function containing most of the code to handle processing of db
     #  data, and export to files.
@@ -72,49 +74,42 @@ class ExportManager:
     #  @param game_table A data structure containing information on how the db
     #                    table assiciated with the given game is structured. 
     def _executeRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema) -> bool:
-        ret_val = False
-        try:
-            # 1) Prepare extractor, if game doesn't have an extractor, make sure we don't try to export it.
-            game_extractor : Union[Type[Extractor],None] = self._prepareExtractor()
-            if game_extractor is None:
-                request._files.sessions = False
-                request._files.population = False
-            # 2) Prepare files for export.
-            file_manager = FileManager(exporter_files=request._files, game_id=self._game_id, \
-                                       data_dir=self._settings["DATA_DIR"], date_range=request._range.GetDateRange(),
-                                       extension="tsv")
-            # If we have a schema, we can do feature extraction.
-            if game_schema is not None:
-                # 3) Loop over data, running extractors.
-                file_manager.OpenFiles()
-                num_sess: int = self._exportToFiles(request=request, game_extractor=game_extractor, file_manager=file_manager,\
-                                    game_schema=game_schema, table_schema=table_schema)
-                # 4) Save and close files
-                try:
-                    # before we zip stuff up, let's ensure the readme is in place:
-                    readme = open(file_manager._readme_path, mode='r')
-                except FileNotFoundError:
-                    utils.Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING)
-                    readme_path = Path("./data") / self._game_id
-                    utils.GenerateReadme(game_name=self._game_id, game_schema=game_schema, column_list=table_schema.ColumnList(), path=readme_path)
-                file_manager.CloseFiles()
-                file_manager.ZipFiles()
-                # 5) Finally, update the list of csv files.
-                file_manager.WriteMetadataFile(num_sess=num_sess)
-                file_manager.UpdateFileExportList(num_sess=num_sess)
-                ret_val = True
-            else:
-                utils.Logger.Log(f"Missing schema for {request.GetGameID()}")
-        except Exception as err:
-            msg = f"{type(err)} {str(err)}"
-            utils.Logger.toStdOut(msg, logging.ERROR)
-            traceback.print_tb(err.__traceback__)
-            utils.Logger.toFile(msg, logging.ERROR)
-        finally:
-            return ret_val
+        ret_val : bool = False
+        # 1) Prepare extractor, if game doesn't have an extractor, make sure we don't try to export it.
+        game_extractor : Union[Type[Extractor],None] = self._prepareExtractor()
+        if game_extractor is None:
+            request._files.sessions = False
+            request._files.population = False
+        # 2) Prepare files for export.
+        file_manager = FileManager(exporter_files=request._files, game_id=self._game_id, \
+                                    data_dir=self._settings["DATA_DIR"], date_range=request._range.GetDateRange(),
+                                    extension="tsv")
+        # If we have a schema, we can do feature extraction.
+        if game_schema is not None:
+            # 3) Loop over data, running extractors.
+            file_manager.OpenFiles()
+            num_sess: int = self._exportToFiles(request=request, game_extractor=game_extractor, file_manager=file_manager,\
+                                game_schema=game_schema, table_schema=table_schema)
+            # 4) Save and close files
+            try:
+                # before we zip stuff up, let's ensure the readme is in place:
+                readme = open(file_manager._readme_path, mode='r')
+            except FileNotFoundError:
+                utils.Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING)
+                readme_path = Path("./data") / self._game_id
+                utils.GenerateReadme(game_name=self._game_id, game_schema=game_schema, column_list=table_schema.ColumnList(), path=readme_path)
+            file_manager.CloseFiles()
+            file_manager.ZipFiles()
+            # 5) Finally, update the list of csv files.
+            file_manager.WriteMetadataFile(num_sess=num_sess)
+            file_manager.UpdateFileExportList(num_sess=num_sess)
+            ret_val = True
+        else:
+            utils.Logger.Log(f"Missing schema for {request.GetGameID()}")
+        return ret_val
 
-    def _exportToFiles(self, request:Request, game_extractor:Union[Type[Extractor],None], file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema):
-        ret_val = -1
+    def _exportToFiles(self, request:Request, game_extractor:Union[Type[Extractor],None], file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema) -> int:
+        ret_val : int = -1
         # 2) Set up processors.
         pop_processor = sess_processor = evt_processor = None
         if request._files.events:
