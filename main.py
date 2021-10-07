@@ -9,6 +9,7 @@ from calendar import monthrange
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Tuple
+from git.remote import FetchInfo
 
 from pandas.io.pytables import Table
 # import local files
@@ -27,7 +28,7 @@ from utils import Logger
 ## Function to print a "help" listing for the export tool.
 #  Hopefully not needed too often, if at all.
 #  Just nice to have on hand, in case we ever need it.
-def showHelp() -> bool:
+def ShowHelp() -> bool:
     width = 30
     print(width*"*")
     print("usage: <python> main.py <cmd> [<args>] [<opt-args>]")
@@ -69,7 +70,7 @@ def showHelp() -> bool:
 #  metadata part (basically what was in the schema, at one time written into
 #  the csv's themselves). Further, the output is printed rather than written
 #  to file.
-def showGameInfo() -> bool:
+def ShowGameInfo() -> bool:
     game_schema = GameSchema(schema_name=f"{game_name}.json")
     table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
 
@@ -82,7 +83,7 @@ def showGameInfo() -> bool:
 #  This includes the CSV metadata (data from the schema, originally written into
 #  the CSV files themselves), custom readme source, and the global changelog.
 #  The readme is placed in the game's data folder.
-def writeReadme() -> bool:
+def WriteReadme() -> bool:
     path = Path(f"./data") / game_name
     try:
         game_schema = GameSchema(schema_name=f"{game_name}.json")
@@ -96,6 +97,57 @@ def writeReadme() -> bool:
         traceback.print_tb(err.__traceback__)
         Logger.toFile(msg, logging.ERROR)
         return False
+
+## Function to handle execution of export code. This is the main intended use of
+#  the program.
+def RunExport(events:bool = False, features:bool = False) -> bool:
+    ret_val : bool = False
+
+    start = datetime.now()
+    req = genRequest(events=events, features=features)
+    try:
+        export_manager = ExportManager(game_id=game_name, settings=settings)
+        table_name = settings["GAME_SOURCE_MAP"][game_name]["table"]
+        ret_val = export_manager.ExecuteRequest(request=req, game_schema=GameSchema(game_name), table_schema=TableSchema(schema_name=f"{table_name}.json"))
+        # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
+                        # {'req':req, 'feature_exporter':feature_exporter}, {})
+    except Exception as err:
+        msg = f"{type(err)} {str(err)}"
+        Logger.Log(msg, logging.ERROR)
+        traceback.print_tb(err.__traceback__)
+    finally:
+        time_taken = datetime.now() - start
+        Logger.Log(f"Total time taken: {time_taken}")
+        Logger.Log(f"Done with {game_name}.", logging.INFO)
+        return ret_val
+
+def genRequest(events:bool, features:bool) -> Request:
+    interface : DataInterface
+    range     : ExporterRange
+    exporter_files : ExporterFiles
+    exporter_files = ExporterFiles(events=events, sessions=features, population=features) 
+    supported_vers = GameSchema(schema_name=f"{game_name}.json")['config']['SUPPORTED_VERS']
+    if "--file" in opts.keys():
+        file_path=opts["--file"]
+        ext = file_path.split('.')[-1]
+        interface = CSVInterface(game_id=game_name, filepath_or_buffer=file_path, delim="\t" if ext == '.tsv' else ',')
+        # retrieve/calculate id range.
+        ids = interface.AllIDs()
+        range = ExporterRange.FromIDs(ids=ids if ids is not None else [], source=interface, versions=supported_vers)
+        # breakpoint()
+    else:
+        interface_type = settings["GAME_SOURCE_MAP"][game_name]['interface']
+        if interface_type == "BigQuery":
+            interface = BigQueryInterface(game_id=game_name, settings=settings)
+        elif interface_type == "MySQL":
+            interface = MySQLInterface(game_id=game_name, settings=settings)
+        else:
+            raise Exception(f"{interface_type} is not a valid DataInterface type!")
+        # retrieve/calculate date range.
+        start_date, end_date = getDateRange(args=args, game_id=game_name)
+        range = ExporterRange.FromDateRange(date_min=start_date, date_max=end_date, source=interface, versions=supported_vers)
+    # Once we have the parameters parsed out, construct the request.
+    return Request(interface=interface, range=range, exporter_files=exporter_files)
 
 def getDateRange(args, game_id:str) -> Tuple[datetime, datetime]:
     start_date: datetime
@@ -123,57 +175,6 @@ def getDateRange(args, game_id:str) -> Tuple[datetime, datetime]:
         Logger.Log(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.INFO)
     return (start_date, end_date)
 
-## Function to handle execution of export code. This is the main intended use of
-#  the program.
-def runExport(events:bool = False, features:bool = False) -> bool:
-    ret_val : bool
-
-    interface : DataInterface
-    range     : ExporterRange
-    exporter_files : ExporterFiles
-    req       : Request
-    start = datetime.now()
-    exporter_files = ExporterFiles(events=events, sessions=features, population=features) 
-    supported_vers = GameSchema(schema_name=f"{game_name}.json")['config']['SUPPORTED_VERS']
-    if "--file" in opts.keys():
-        file_path=opts["--file"]
-        ext = file_path.split('.')[-1]
-        interface = CSVInterface(game_id=game_name, filepath_or_buffer=file_path, delim="\t" if ext == '.tsv' else ',')
-        # retrieve/calculate id range.
-        ids = interface.AllIDs()
-        range = ExporterRange.FromIDs(ids=ids if ids is not None else [], source=interface, versions=supported_vers)
-        # breakpoint()
-    else:
-        interface_type = settings["GAME_SOURCE_MAP"][game_name]['interface']
-        if interface_type == "BigQuery":
-            interface = BigQueryInterface(game_id=game_name, settings=settings)
-        elif interface_type == "MySQL":
-            interface = MySQLInterface(game_id=game_name, settings=settings)
-        else:
-            raise Exception(f"{interface_type} is not a valid DataInterface type!")
-        # retrieve/calculate date range.
-        start_date, end_date = getDateRange(args=args, game_id=game_name)
-        range = ExporterRange.FromDateRange(date_min=start_date, date_max=end_date, source=interface, versions=supported_vers)
-
-    # Once we have the parameters parsed out, construct the request.
-    req = Request(interface=interface, range=range, exporter_files=exporter_files)
-    try:
-        export_manager = ExportManager(game_id=game_name, settings=settings)
-        table_name = settings["GAME_SOURCE_MAP"][game_name]["table"]
-        ret_val = export_manager.ExecuteRequest(request=req, game_schema=GameSchema(game_name), table_schema=TableSchema(schema_name=f"{table_name}.json"))
-        # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
-                        # {'req':req, 'feature_exporter':feature_exporter}, {})
-    except Exception as err:
-        msg = f"{type(err)} {str(err)}"
-        Logger.Log(msg, logging.ERROR)
-        traceback.print_tb(err.__traceback__)
-        ret_val = False
-    finally:
-        time_taken = datetime.now() - start
-        Logger.Log(f"Total time taken: {time_taken}")
-        Logger.Log(f"Done with {game_name}.", logging.INFO)
-        return ret_val
-
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
 # Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
@@ -193,23 +194,23 @@ if type(cmd) == str:
 
     success : bool
     if cmd == "help" or "-h" in opts.keys() or "--help" in opts.keys():
-        success = showHelp()
+        success = ShowHelp()
     else:
         if num_args > 2:
             game_name = args[2]
         else:
             Logger.Log("No game name given!", logging.WARN)
-            success = showHelp()
+            success = ShowHelp()
         if cmd == "export":
-            success = runExport(events=True, features=True)
+            success = RunExport(events=True, features=True)
         elif cmd == "export-events":
-            success = runExport(events=True)
+            success = RunExport(events=True)
         elif cmd == "export-session-features":
-            success = runExport(features=True)
+            success = RunExport(features=True)
         elif cmd == "info":
-            success = showGameInfo()
+            success = ShowGameInfo()
         elif cmd == "readme":
-            success = writeReadme()
+            success = WriteReadme()
         else:
             print(f"Invalid Command {cmd}!")
             success = False
@@ -217,4 +218,4 @@ if type(cmd) == str:
         sys.exit(1)
 else:
     Logger.Log("Command is not a string!", logging.ERROR)
-    showHelp()
+    ShowHelp()
