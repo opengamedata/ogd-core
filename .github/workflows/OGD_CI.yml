@@ -4,14 +4,13 @@ name: OpenGameData-Core CI Test
 on:
   push:
     paths:
-    - 'managers/**'
+    - 'extractors/**'
     - 'interfaces/**'
+    - 'managers/**'
     - 'schemas/Event.py'
     - 'schemas/GameSchema.py'
     - 'schemas/TableSchema.py'
     - 'main.py'
-    - 'GameTable.py'
-    - 'Request.py'
     - 'utils.py'
     - '.github/workflows/OGD_CI.yml'
     - '.github/actions/**'
@@ -32,10 +31,20 @@ jobs:
         sudo apt-get -q install python3.9-dev
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
-    - name: Do Export
+    - name: Attempt Export with LegacyExtractor
       uses: ./.github/actions/export_yesterday
       with:
         game: CRYSTAL
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{secrets.SQL_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        log_level: "INFO"
+    - name: Attempt Export with Regular Extractor
+      uses: ./.github/actions/export_yesterday
+      with:
+        game: WAVES
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
         sql_host: ${{secrets.SQL_HOST}}
@@ -46,7 +55,11 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         path: ./*.log
-    - name: Upload zips as artifacts
+    - name: Upload Crystal zips as artifacts
       uses: actions/upload-artifact@v2
       with:
         path: ./data/CRYSTAL/*.zip
+    - name: Upload Wave zips as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./data/WAVES/*.zip
