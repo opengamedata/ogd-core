@@ -141,7 +141,7 @@ class Extractor(abc.ABC):
         file.write(separator.join([str(val) for val in column_vals]))
         file.write("\n")
 
-    def GetCurrentFeatures(self) -> typing.List[]:
+    def GetCurrentFeatures(self) -> typing.List:
         # TODO: It looks like I might be assuming that dictionaries always have same order here.
         # May need to revisit that issue. I mean, it should be fine because Python won't just go
         # and change order for no reason, but still...
