@@ -27,7 +27,7 @@ from utils import Logger
 ## Function to print a "help" listing for the export tool.
 #  Hopefully not needed too often, if at all.
 #  Just nice to have on hand, in case we ever need it.
-def showHelp():
+def showHelp() -> bool:
     width = 30
     print(width*"*")
     print("usage: <python> main.py <cmd> [<args>] [<opt-args>]")
@@ -62,6 +62,40 @@ def showHelp():
     print("         --file: specifies a file to export events or features")
     print("         --monthly: with this flag, specify dates by mm/yyyy instead of mm/dd/yyyy.")
     print(width*"*")
+    return True
+
+## Function to print out info on a game from the game's schema.
+#  This does a similar function to writeReadme, but is limited to the CSV
+#  metadata part (basically what was in the schema, at one time written into
+#  the csv's themselves). Further, the output is printed rather than written
+#  to file.
+def showGameInfo() -> bool:
+    game_schema = GameSchema(schema_name=f"{game_name}.json")
+    table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
+
+    feature_descriptions = {**game_schema.perlevel_features(), **game_schema.aggregate_features()}
+    print(utils.GenCSVMetadata(game_name=game_name, column_list=table_schema.ColumnList(),\
+                                                    feature_list=feature_descriptions))
+    return True
+
+## Function to write out the readme file for a given game.
+#  This includes the CSV metadata (data from the schema, originally written into
+#  the CSV files themselves), custom readme source, and the global changelog.
+#  The readme is placed in the game's data folder.
+def writeReadme() -> bool:
+    path = Path(f"./data") / game_name
+    try:
+        game_schema = GameSchema(schema_name=f"{game_name}.json")
+        table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
+        utils.GenerateReadme(game_name=game_name, game_schema=game_schema, column_list=table_schema.ColumnList(), path=path)
+        Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
+        return True
+    except Exception as err:
+        msg = f"Could not create a readme for {game_name}: {type(err)} {str(err)}"
+        Logger.toStdOut(msg, logging.ERROR)
+        traceback.print_tb(err.__traceback__)
+        Logger.toFile(msg, logging.ERROR)
+        return False
 
 def getDateRange(args, game_id:str) -> Tuple[datetime, datetime]:
     start_date: datetime
@@ -91,7 +125,9 @@ def getDateRange(args, game_id:str) -> Tuple[datetime, datetime]:
 
 ## Function to handle execution of export code. This is the main intended use of
 #  the program.
-def runExport(events:bool = False, features:bool = False):
+def runExport(events:bool = False, features:bool = False) -> bool:
+    ret_val : bool
+
     interface : DataInterface
     range     : ExporterRange
     exporter_files : ExporterFiles
@@ -124,48 +160,19 @@ def runExport(events:bool = False, features:bool = False):
     try:
         export_manager = ExportManager(game_id=game_name, settings=settings)
         table_name = settings["GAME_SOURCE_MAP"][game_name]["table"]
-        export_manager.ExecuteRequest(request=req, game_schema=GameSchema(game_name), table_schema=TableSchema(schema_name=f"{table_name}.json"))
+        ret_val = export_manager.ExecuteRequest(request=req, game_schema=GameSchema(game_name), table_schema=TableSchema(schema_name=f"{table_name}.json"))
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
         msg = f"{type(err)} {str(err)}"
         Logger.Log(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
-        sys.exit(1)
+        ret_val = False
     finally:
         time_taken = datetime.now() - start
         Logger.Log(f"Total time taken: {time_taken}")
-    Logger.Log(f"Done with {game_name}.", logging.INFO)
-
-## Function to print out info on a game from the game's schema.
-#  This does a similar function to writeReadme, but is limited to the CSV
-#  metadata part (basically what was in the schema, at one time written into
-#  the csv's themselves). Further, the output is printed rather than written
-#  to file.
-def showGameInfo():
-    game_schema = GameSchema(schema_name=f"{game_name}.json")
-    table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
-
-    feature_descriptions = {**game_schema.perlevel_features(), **game_schema.aggregate_features()}
-    print(utils.GenCSVMetadata(game_name=game_name, column_list=table_schema.ColumnList(),\
-                                                    feature_list=feature_descriptions))
-
-## Function to write out the readme file for a given game.
-#  This includes the CSV metadata (data from the schema, originally written into
-#  the CSV files themselves), custom readme source, and the global changelog.
-#  The readme is placed in the game's data folder.
-def writeReadme():
-    path = Path(f"./data") / game_name
-    try:
-        game_schema = GameSchema(schema_name=f"{game_name}.json")
-        table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
-        utils.GenerateReadme(game_name=game_name, game_schema=game_schema, column_list=table_schema.ColumnList(), path=path)
-        Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
-    except Exception as err:
-        msg = f"Could not create a readme for {game_name}: {type(err)} {str(err)}"
-        Logger.toStdOut(msg, logging.ERROR)
-        traceback.print_tb(err.__traceback__)
-        Logger.toFile(msg, logging.ERROR)
+        Logger.Log(f"Done with {game_name}.", logging.INFO)
+        return ret_val
 
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
@@ -184,26 +191,30 @@ cmd = args[1] if num_args > 1 else "help"
 if type(cmd) == str:
     cmd = cmd.lower()
 
+    success : bool
     if cmd == "help" or "-h" in opts.keys() or "--help" in opts.keys():
-        showHelp()
+        success = showHelp()
     else:
         if num_args > 2:
             game_name = args[2]
         else:
             Logger.Log("No game name given!", logging.WARN)
-            showHelp()
+            success = showHelp()
         if cmd == "export":
-            runExport(events=True, features=True)
+            success = runExport(events=True, features=True)
         elif cmd == "export-events":
-            runExport(events=True)
+            success = runExport(events=True)
         elif cmd == "export-session-features":
-            runExport(features=True)
+            success = runExport(features=True)
         elif cmd == "info":
-            showGameInfo()
+            success = showGameInfo()
         elif cmd == "readme":
-            writeReadme()
+            success = writeReadme()
         else:
             print(f"Invalid Command {cmd}!")
+            success = False
+    if not success:
+        sys.exit(1)
 else:
     Logger.Log("Command is not a string!", logging.ERROR)
     showHelp()

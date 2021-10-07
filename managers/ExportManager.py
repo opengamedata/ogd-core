@@ -47,17 +47,23 @@ class ExportManager:
             self._game_id   = game_id
         self._settings = settings
 
-    def ExecuteRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema):
+    def ExecuteRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema) -> bool:
+        ret_val : bool
+
         start = datetime.now()
         if request.GetGameID() != self._game_id:
             utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.GetGameID()}", logging.WARNING)
             self._game_id = request.GetGameID()
         if self._executeRequest(request=request, game_schema=game_schema, table_schema=table_schema):
             utils.Logger.Log(f"Successfully completed request {str(request)}.", logging.INFO)
+            ret_val = True
         else:
             utils.Logger.Log(f"Could not complete request {str(request)}", logging.ERROR)
+            ret_val = False
         time_delta = datetime.now() - start
         utils.Logger.Log(f"Total Data Request Execution Time: {time_delta}", logging.INFO)
+
+        return ret_val
 
     ## Private function containing most of the code to handle processing of db
     #  data, and export to files.
@@ -107,7 +113,7 @@ class ExportManager:
         finally:
             return ret_val
 
-    def _exportToFiles(self, request:Request, game_extractor:Type[Extractor], file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema):
+    def _exportToFiles(self, request:Request, game_extractor:Union[Type[Extractor],None], file_manager:FileManager, game_schema: GameSchema, table_schema: TableSchema):
         ret_val = -1
         # 2) Set up processors.
         pop_processor = sess_processor = evt_processor = None
