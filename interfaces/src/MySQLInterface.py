@@ -291,6 +291,7 @@ class MySQLInterface(DataInterface):
                 Logger.Log(f"Database Connection Time: {time_delta}", logging.INFO)
                 return True
             else:
+                Logger.Log(f"Unable to open MySQL interface.", logging.ERROR)
                 SQL.disconnectMySQL(tunnel=self._tunnel, db=self._db)
                 return False
         else:
