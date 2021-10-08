@@ -106,11 +106,12 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
     start = datetime.now()
     req = genRequest(events=events, features=features)
     try:
-        export_manager = ExportManager(game_id=game_name, settings=settings)
-        table_name = settings["GAME_SOURCE_MAP"][game_name]["table"]
-        ret_val = export_manager.ExecuteRequest(request=req, game_schema=GameSchema(game_name), table_schema=TableSchema(schema_name=f"{table_name}.json"))
-        # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
-                        # {'req':req, 'feature_exporter':feature_exporter}, {})
+        if req._interface.IsOpen():
+            export_manager = ExportManager(game_id=game_name, settings=settings)
+            table_name = settings["GAME_SOURCE_MAP"][game_name]["table"]
+            ret_val = export_manager.ExecuteRequest(request=req, game_schema=GameSchema(game_name), table_schema=TableSchema(schema_name=f"{table_name}.json"))
+            # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
+                            # {'req':req, 'feature_exporter':feature_exporter}, {})
     except Exception as err:
         msg = f"{type(err)} {str(err)}"
         Logger.Log(msg, logging.ERROR)
