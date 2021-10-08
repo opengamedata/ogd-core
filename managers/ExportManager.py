@@ -48,17 +48,16 @@ class ExportManager:
         self._settings = settings
 
     def ExecuteRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema) -> bool:
-        ret_val : bool = True
+        ret_val : bool = False
 
         start = datetime.now()
         if request.GetGameID() != self._game_id:
-            utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.GetGameID()}", logging.WARNING)
             self._game_id = request.GetGameID()
+            utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.GetGameID()}", logging.WARNING)
         try:
-            self._executeRequest(request=request, game_schema=game_schema, table_schema=table_schema)
+            ret_val = self._executeRequest(request=request, game_schema=game_schema, table_schema=table_schema)
             utils.Logger.Log(f"Successfully completed request {str(request)}.", logging.INFO)
         except Exception as err:
-            ret_val = False
             msg = f"{type(err)} {str(err)}"
             utils.Logger.Log(f"Could not complete request {str(request)}, an error occurred:\n{msg}", logging.ERROR)
             traceback.print_tb(err.__traceback__)
