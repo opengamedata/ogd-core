@@ -5,7 +5,7 @@ import logging
 import sys
 import traceback
 import typing
-from typing import IO, Type, Union
+from typing import Any, List, Type, Union
 # import local files
 import utils
 from managers.FileManager import FileManager
@@ -51,10 +51,10 @@ class PopulationProcessor:
         utils.Logger.toStdOut(f"Clearing population entries from PopulationProcessor.", logging.DEBUG)
         self._session_extractor = self._ExtractorClass(session_id="population", game_schema=self._game_schema)
 
-    def GetPopulationFeatures(self):
+    def GetPopulationFeatures(self) -> List[Any]:
         return self._session_extractor.GetCurrentFeatures()
 
-    def GetPopulationFeatureNames(self):
+    def GetPopulationFeatureNames(self) -> List[str]:
         return Extractor._genFeatureNames(self._game_schema)
 
     ## Function to calculate aggregate features of all extractors created by the
