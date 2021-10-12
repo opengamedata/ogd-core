@@ -54,6 +54,9 @@ class PopulationProcessor:
     def GetPopulationFeatures(self):
         return self._session_extractor.GetCurrentFeatures()
 
+    def GetPopulationFeatureNames(self):
+        return Extractor._genFeatureNames(self._game_schema)
+
     ## Function to calculate aggregate features of all extractors created by the
     #  PopulationProcessor. Just calls the function once on each extractor.
     def CalculateAggregateFeatures(self):
