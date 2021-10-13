@@ -93,6 +93,8 @@ class WaveExtractor(Extractor):
             ret_val = OverallSliderAverageStandardDeviations.OverallSliderAverageStandardDeviations(name=name, description=feature_args['description'])
         elif feature_type == "SessionID":
             ret_val = SessionID.SessionID(name=name, description=feature_args['description'], sessionID=self._session_id)
+        elif feature_type == "SequenceLevel":
+            ret_val = SequenceLevel.SequenceLevel(name=name, description=feature_args['description'], count_index=_count_index)
         else:
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Waves.")
         return ret_val
