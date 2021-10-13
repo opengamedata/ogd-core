@@ -309,6 +309,13 @@
                 "prefix": "QA",
                 "events": [],
                 "description" : "The time, in milliseconds, taken by the player before answering the question"
+            },
+            "SequenceLevel": {
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
+                "description": "Sequence of slider interactions (e.g. 'wow' for Wavelength, Offset, Wavelength)"
             }
         },
 

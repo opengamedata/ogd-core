@@ -42,7 +42,8 @@ __all__ = [
     "OverallPercentAmplitudeMoves",
     "OverallPercentOffsetMoves",
     "OverallPercentWavelengthMoves",
-    "AverageFails"
+    "AverageFails",
+    "SequenceLevel"
 ]
 
 from . import TotalSliderMoves
@@ -89,3 +90,4 @@ from . import OverallPercentAmplitudeMoves
 from . import OverallPercentOffsetMoves
 from . import OverallPercentWavelengthMoves
 from . import AverageFails
+from . import SequenceLevel
