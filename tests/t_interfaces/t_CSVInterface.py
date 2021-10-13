@@ -4,7 +4,7 @@ from pathlib import Path
 from unittest import TestCase
 from zipfile import ZipFile
 # local imports
-from interfaces.src.CSVInterface import CSVInterface
+from interfaces.CSVInterface import CSVInterface
 
 class t_CSVInterface(TestCase):
 

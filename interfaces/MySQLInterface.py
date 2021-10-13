@@ -7,7 +7,7 @@ from datetime import datetime
 from itertools import chain
 from typing import Any, Dict, List, Set, Tuple, Union
 # local imports
-from interfaces.src.DataInterface import DataInterface
+from interfaces.DataInterface import DataInterface
 from utils import Logger
 
 
