@@ -3,8 +3,6 @@ import abc
 import logging
 from datetime import datetime
 from typing import Dict, List, Tuple, Union
-## import locals
-import utils
 
 class DataInterface(abc.ABC):
     def __init__(self, game_id):
