@@ -5,7 +5,7 @@ from datetime import datetime
 from google.cloud import bigquery
 from typing import Dict, List, Tuple, Union
 
-from interfaces.DataInterface import DataInterface
+from DataInterface import DataInterface
 from utils import Logger
 
 class BigQueryInterface(DataInterface):
