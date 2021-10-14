@@ -1,5 +1,6 @@
 ## import standard libraries
 import abc
+import logging
 from datetime import datetime
 from typing import Dict, List, Tuple, Union
 ## import locals
@@ -30,35 +31,35 @@ class DataInterface(abc.ABC):
 
     def AllIDs(self) -> Union[List[str],None]:
         if not self._is_open:
-            utils.Logger.Log("Can't retrieve data, the source interface is not open!")
+            logging.warn("Can't retrieve data, the source interface is not open!")
             return None
         else:
             return self._allIDs()
 
     def FullDateRange(self) -> Union[Dict[str,datetime], Dict[str,None]]:
         if not self._is_open:
-            utils.Logger.Log("Can't retrieve data, the source interface is not open!")
+            logging.warn("Can't retrieve data, the source interface is not open!")
             return {'min':None, 'max':None}
         else:
             return self._fullDateRange()
 
     def RowsFromIDs(self, id_list:List[str], versions:Union[List[int],None]=None) -> Union[List[Tuple], None]:
         if not self._is_open:
-            utils.Logger.Log("Can't retrieve data, the source interface is not open!")
+            logging.warn("Can't retrieve data, the source interface is not open!")
             return None
         else:
             return self._rowsFromIDs(id_list, versions=versions)
 
     def IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> Union[List[str], None]:
         if not self._is_open:
-            utils.Logger.Log("Can't retrieve IDs, the source interface is not open!")
+            logging.warn("Can't retrieve IDs, the source interface is not open!")
             return None
         else:
             return self._IDsFromDates(min=min, max=max, versions=versions)
 
     def DatesFromIDs(self, id_list:List[str], versions: Union[List[int],None]=None) -> Union[Dict[str,datetime], Dict[str,None]]:
         if not self._is_open:
-            utils.Logger.Log("Can't retrieve dates, the source interface is not open!")
+            logging.warn("Can't retrieve dates, the source interface is not open!")
             return {'min':None, 'max':None}
         else:
             return self._datesFromIDs(id_list=id_list, versions=versions)
