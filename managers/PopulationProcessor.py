@@ -1,5 +1,4 @@
 # import standard libraries
-from games.LAKELAND.LakelandExtractor import LakelandExtractor
 from extractors.Extractor import Extractor
 import logging
 import sys
@@ -11,7 +10,6 @@ import utils
 from managers.FileManager import FileManager
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
-from schemas.TableSchema import TableSchema
 
 ## @class PopulationProcessor
 #  Class to extract and manage features for a processed csv file.

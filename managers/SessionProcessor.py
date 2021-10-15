@@ -12,7 +12,6 @@ import utils
 from managers.FileManager import FileManager
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
-from schemas.TableSchema import TableSchema
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.

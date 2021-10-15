@@ -1,14 +1,12 @@
 ## import standard libraries
 import json
 import logging
-import sys
-from typing import Any, IO, List, Tuple, Union
+from typing import Any, List, Tuple, Union
 ## import local files
 import utils
 from managers.FileManager import FileManager
 from schemas.Event import Event
 from schemas.TableSchema import TableSchema
-from schemas.GameSchema import GameSchema
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
