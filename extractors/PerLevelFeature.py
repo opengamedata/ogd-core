@@ -8,7 +8,7 @@ from schemas.Event import Event
 #  before attempting to extract from event.
 class PerLevelFeature(Feature):
     def __init__(self, name:str, description:str, count_index:int):
-        Feature.__init__(self, name=name, description=description, count_index=0)
+        Feature.__init__(self, name=name, description=description, count_index=count_index)
 
     def _validateEvent(self, event:Event):
         return (
