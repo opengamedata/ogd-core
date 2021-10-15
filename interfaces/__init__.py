@@ -5,7 +5,7 @@ __all__ = [
 		"MySQLInterface"
 ]
 
-from interfaces import DataInterface
-from interfaces import BigQueryInterface
-from interfaces import CSVInterface
-from interfaces import MySQLInterface
+from . import DataInterface
+from . import BigQueryInterface
+from . import CSVInterface
+from . import MySQLInterface
