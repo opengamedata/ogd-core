@@ -21,7 +21,7 @@ class TotalLevelTime(PerLevelFeature):
         if len(self._begin_times) != len(self._complete_times):
             utils.Logger.Log(f"Player began level {self._count_index} {len(self._begin_times)} times but only completed it {len(self._complete_times)}.", logging.WARN)
         _num_plays = min(len(self._begin_times), len(self._complete_times))
-        _diffs = [(self._begin_times[i] - self._complete_times[i]).total_seconds() for i in range(_num_plays)]
+        _diffs = [(self._complete_times[i] - self._begin_times[i]).total_seconds() for i in range(_num_plays)]
         return sum(_diffs)
 
     def _extractFromEvent(self, event:Event) -> None:
