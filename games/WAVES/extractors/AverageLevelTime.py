@@ -43,8 +43,12 @@ class AverageLevelTime(SessionFeature):
         _level = event.event_data['level']
         self._levels_encountered.add(_level) # set-add level to list, at end we will have set of all levels seen.
         if event.event_name == "BEGIN.0":
+            if not _level in self._begin_times.keys():
+                self._begin_times[_level] = []
             self._begin_times[_level].append(event.timestamp)
         elif event.event_name == "COMPLETE.0":
+            if not _level in self._complete_times.keys():
+                self._complete_times[_level] = []
             self._complete_times[_level].append(event.timestamp)
         else:
             utils.Logger.Log(f"AverageLevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
