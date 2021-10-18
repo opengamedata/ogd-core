@@ -21,10 +21,10 @@ class AverageLevelTime(SessionFeature):
     def CalculateFinalValues(self) -> Any:
         if len(self._begin_times) != len(self._complete_times):
             utils.Logger.Log(f"Player began level {self._count_index} {len(self._begin_times)} times but only completed it {len(self._complete_times)}.", logging.WARN)
-        _num_plays  = min(len(self._begin_times), len(self._complete_times))
         _diffs      = []
         for level in self._levels_encountered:
             if level in self._begin_times.keys() and level in self._complete_times.keys():
+                _num_plays  = min(len(self._begin_times[level]), len(self._complete_times[level]))
                 _diffs += [(self._begin_times[level][i] - self._complete_times[level][i]).total_seconds() for i in range(_num_plays)]
             else:
                 if level not in self._begin_times.keys() and level in self._complete_times.keys():
