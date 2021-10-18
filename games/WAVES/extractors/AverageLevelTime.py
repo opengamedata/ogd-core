@@ -27,7 +27,12 @@ class AverageLevelTime(SessionFeature):
             if level in self._begin_times.keys() and level in self._complete_times.keys():
                 _diffs += [(self._begin_times[level][i] - self._complete_times[level][i]).total_seconds() for i in range(_num_plays)]
             else:
-                utils.Logger.Log(f"Player began or completed level {level}, but did not begin *and* complete it.", logging.WARN)
+                if level not in self._begin_times.keys() and level in self._complete_times.keys():
+                    utils.Logger.Log(f"Player completed level {level}, but did not begin it!", logging.WARN)
+                elif level in self._begin_times.keys() and level not in self._complete_times.keys():
+                    utils.Logger.Log(f"Player began level {level}, but did not complete it.", logging.DEBUG)
+                elif level not in self._begin_times.keys() and level not in self._complete_times.keys():
+                    utils.Logger.Log(f"Player had level {level} listed as encountered, but did not begin *or* complete it.", logging.WARN)
         _total_time = sum(_diffs)
         if len(self._levels_encountered) > 0:
             return _total_time / len(self._levels_encountered)
