@@ -91,6 +91,8 @@ class WaveExtractor(Extractor):
             ret_val = OverallSliderAverageRange.OverallSliderAverageRange(name=name, description=feature_args['description'])
         elif feature_type == "OverallSliderAverageStandardDeviations":
             ret_val = OverallSliderAverageStandardDeviations.OverallSliderAverageStandardDeviations(name=name, description=feature_args['description'])
+        elif feature_type == "PersistentSessionID":
+            ret_val = PersistentSessionID.PersistentSessionID(name=name, description=feature_args['description'])
         elif feature_type == "SessionID":
             ret_val = SessionID.SessionID(name=name, description=feature_args['description'], sessionID=self._session_id)
         elif feature_type == "SequenceLevel":
