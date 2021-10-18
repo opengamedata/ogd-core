@@ -138,14 +138,14 @@
                 "prefix": "lvl",
                 "description": "time spent on a level [sum of differences in time between 'BEGIN' and 'COMPLETE' event(s)]"
             },
-            "SliderAvgRange": {
-                "enabled": true,
+            "SliderAverageRange": {
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "lvl",
                 "description": "difference between max and min values of a slider move, averaged together across a level"
             },
-            "SliderAvgStdDevs": {
-                "enabled": true,
+            "SliderAverageStandardDeviations": {
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "lvl",
                 "description": "Average of stdev_val for all slider moves in a level"
