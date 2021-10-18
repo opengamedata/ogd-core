@@ -25,10 +25,12 @@ class TotalLevelTime(PerLevelFeature):
         return sum(_diffs)
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_name == "BEGIN":
+        if event.event_name == "BEGIN.0":
             self._begin_times.append(event.timestamp)
-        if event.event_name == "COMPLETE":
+        elif event.event_name == "COMPLETE.0":
             self._complete_times.append(event.timestamp)
+        else:
+            utils.Logger.Log(f"AverageLevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
 
     def MinVersion(self) -> Union[str,None]:
         return None

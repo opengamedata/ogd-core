@@ -42,10 +42,12 @@ class AverageLevelTime(SessionFeature):
     def _extractFromEvent(self, event:Event) -> None:
         _level = event.event_data['level']
         self._levels_encountered.add(_level) # set-add level to list, at end we will have set of all levels seen.
-        if event.event_name == "BEGIN":
+        if event.event_name == "BEGIN.0":
             self._begin_times[_level].append(event.timestamp)
-        if event.event_name == "COMPLETE":
+        elif event.event_name == "COMPLETE.0":
             self._complete_times[_level].append(event.timestamp)
+        else:
+            utils.Logger.Log(f"AverageLevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
 
     def MinVersion(self) -> Union[str,None]:
         return None
