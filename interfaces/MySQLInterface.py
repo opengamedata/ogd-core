@@ -64,6 +64,9 @@ class SQL:
             if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
                 ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
                 tunnel,db_conn = SQL._connectToMySQLviaSSH(sql=sql_login, ssh=ssh_login)
+            else:
+                db_conn = SQL._connectToMySQL(login=sql_login)
+                tunnel = None
         else:
             db_conn = SQL._connectToMySQL(login=sql_login)
             tunnel = None
