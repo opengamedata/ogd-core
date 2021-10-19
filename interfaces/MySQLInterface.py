@@ -287,7 +287,7 @@ class MySQLInterface(DataInterface):
         if not self._is_open:
             start = datetime.now()
             self._tunnel, self._db = SQL.ConnectDB(db_settings=self._settings["MYSQL_CONFIG"], ssh_settings=self._settings["SSH_CONFIG"])
-            if self._tunnel != None and self._db != None:
+            if self._db != None:
                 self._db_cursor = self._db.cursor()
                 self._is_open = True
                 time_delta = datetime.now() - start
