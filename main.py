@@ -129,9 +129,9 @@ def genRequest(events:bool, features:bool) -> Request:
     exporter_files = ExporterFiles(events=events, sessions=features, population=features) 
     supported_vers = GameSchema(schema_name=f"{game_name}.json")['config']['SUPPORTED_VERS']
     if "--file" in opts.keys():
-        file_path=opts["--file"]
-        ext = file_path.split('.')[-1]
-        interface = CSVInterface(game_id=game_name, filepath_or_buffer=file_path, delim="\t" if ext == '.tsv' else ',')
+        file_path=Path(opts["--file"])
+        ext = opts["--file"].split('.')[-1]
+        interface = CSVInterface(game_id=game_name, filepath=file_path, delim="\t" if ext == '.tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(ids=ids if ids is not None else [], source=interface, versions=supported_vers)
