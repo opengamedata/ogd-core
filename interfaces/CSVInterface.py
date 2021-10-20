@@ -1,28 +1,29 @@
 import logging
-from utils import Logger
 import pandas as pd
 from datetime import datetime
-from typing import Any, Dict, IO, List, Tuple, Union
 from pandas.io.parsers import TextFileReader
+from pathlib import Path
+from typing import Any, Dict, IO, List, Tuple, Union
 ## import local files
 from interfaces.DataInterface import DataInterface
+from utils import Logger
 
 class CSVInterface(DataInterface):
-    def __init__(self, game_id:str, filepath_or_buffer:Union[str, IO[bytes]], delim:str = ','):
+    def __init__(self, game_id:str, filepath:Path, delim:str = ','):
         # set up data from params
         super().__init__(game_id=game_id)
-        self._file      : Union[str, IO[bytes]] = filepath_or_buffer
+        self._filepath  : Path = filepath
         self._delimiter : str = delim
         # set up data from file
         self._data      : pd.DataFrame = pd.DataFrame()
 
     def _open(self) -> bool:
         try:
-            self._data = pd.read_csv(filepath_or_buffer=self._file, delimiter=self._delimiter, parse_dates=['server_time', 'client_time'])
+            self._data = pd.read_csv(filepath=self._filepath, delimiter=self._delimiter, parse_dates=['server_time', 'client_time'])
             self._is_open = True
             return True
         except FileNotFoundError as err:
-            Logger.Log(f"Could not find file {self._file}.", logging.ERROR)
+            Logger.Log(f"Could not find file {self._filepath}.", logging.ERROR)
             return False
 
     def _close(self) -> bool:
