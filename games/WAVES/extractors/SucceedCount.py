@@ -1,21 +1,22 @@
 import typing
 from typing import Any, List, Union
 # local imports
-from extractors.Feature import Feature
+from extractors.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
-class SucceedCount(Feature):
+class SucceedCount(PerLevelFeature):
     def __init__(self, name:str, description:str, count_index:int):
-        Feature.__init__(self, name=name, description=description, count_index=count_index)
+        PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
+        self._succeed_count = 0
 
     def GetEventTypes(self) -> List[str]:
-        return []
+        return ["SUCCEED.0"]
 
     def CalculateFinalValues(self) -> Any:
-        return
+        return self._succeed_count
 
     def _extractFromEvent(self, event:Event) -> None:
-        return
+        self._succeed_count += 1
 
     def MinVersion(self) -> Union[str,None]:
         return None

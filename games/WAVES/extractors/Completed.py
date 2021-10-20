@@ -1,22 +1,24 @@
+from os import truncate
 from schemas import Event
 import typing
 from typing import Any, List, Union
 # local imports
-from extractors.Feature import Feature
+from extractors.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
-class Completed(Feature):
+class Completed(PerLevelFeature):
     def __init__(self, name:str, description:str, count_index:int):
-        Feature.__init__(self, name=name, description=description, count_index=count_index)
+        PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
+        self._completed = False
 
     def GetEventTypes(self) -> List[str]:
-        return []
+        return ["COMPLETE.0"]
 
     def CalculateFinalValues(self) -> Any:
-        return
+        return self._completed
 
     def _extractFromEvent(self, event:Event) -> None:
-        return
+        self._completed = True
 
     def MinVersion(self) -> Union[str,None]:
         return None

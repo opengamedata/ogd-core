@@ -8,15 +8,21 @@ from schemas.Event import Event
 class AverageFails(SessionFeature):
     def __init__(self, name:str, description:str):
         SessionFeature.__init__(self, name=name, description=description)
+        self._levels_encountered : set = set()
+        self._fail_count         : int = 0
 
     def GetEventTypes(self) -> List[str]:
-        return []
+        return ["FAIL.0"]
 
     def CalculateFinalValues(self) -> Any:
-        return
+        if len(self._levels_encountered) > 0:
+            return self._fail_count / len(self._levels_encountered)
+        else:
+            return None
 
     def _extractFromEvent(self, event:Event) -> None:
-        return
+        self._levels_encountered.add(event.event_data['level']) # set-add level to list, at end we will have set of all levels seen.
+        self._fail_count += 1
 
     def MinVersion(self) -> Union[str,None]:
         return None

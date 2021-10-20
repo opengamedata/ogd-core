@@ -2,21 +2,23 @@ from schemas import Event
 import typing
 from typing import Any, List, Union
 # local imports
-from extractors.Feature import Feature
+from extractors.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
-class MenuButtonCount(Feature):
+class MenuButtonCount(PerLevelFeature):
     def __init__(self, name:str, description:str, count_index:int):
-        Feature.__init__(self, name=name, description=description, count_index=count_index)
+        PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
+        self._menu_btn_count = 0
 
     def GetEventTypes(self) -> List[str]:
-        return []
+        return ["CUSTOM.5"]
+        # "events": ["MENU_BUTTON"],
 
     def CalculateFinalValues(self) -> Any:
-        return
+        return self._menu_btn_count
 
     def _extractFromEvent(self, event:Event) -> None:
-        return
+        self._menu_btn_count += 1
 
     def MinVersion(self) -> Union[str,None]:
         return None

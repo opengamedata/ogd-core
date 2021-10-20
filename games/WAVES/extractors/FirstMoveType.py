@@ -8,15 +8,17 @@ from schemas.Event import Event
 class FirstMoveType(Feature):
     def __init__(self, name:str, description:str, count_index:int):
         Feature.__init__(self, name=name, description=description, count_index=count_index)
+        self._first_move = None
 
     def GetEventTypes(self) -> List[str]:
-        return []
+        return ["CUSTOM.1", "CUSTOM.2"]
+        # "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
 
     def CalculateFinalValues(self) -> Any:
-        return
+        return self._first_move
 
     def _extractFromEvent(self, event:Event) -> None:
-        return
+        self._first_move = event.event_data['slider'][0]
 
     def MinVersion(self) -> Union[str,None]:
         return None
