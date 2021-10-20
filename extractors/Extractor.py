@@ -198,9 +198,13 @@ class Extractor(abc.ABC):
         ret_val = {}
         for name,aggregate in schema.aggregate_features().items():
             if aggregate["enabled"] == True:
-                feature = self._loadFeature(feature_type=name, name=name, feature_args=aggregate)
-                self._register(feature, Extractor.Listener.Kinds.AGGREGATE)
-                ret_val[feature.Name()] = feature
+                try:
+                    feature = self._loadFeature(feature_type=name, name=name, feature_args=aggregate)
+                except NotImplementedError as err:
+                    utils.Logger.Log(f"{name} is not a valid feature for Waves", logging.ERROR)
+                else:
+                    self._register(feature, Extractor.Listener.Kinds.AGGREGATE)
+                    ret_val[feature.Name()] = feature
         return ret_val
 
     def _genPerCounts(self, schema:GameSchema) -> Dict[str,Feature]:
@@ -208,9 +212,13 @@ class Extractor(abc.ABC):
         for name,percount in schema.percount_features().items():
             if percount["enabled"] == True:
                 for i in Extractor._genCountRange(count=percount["count"], schema=schema):
-                    feature = self._loadFeature(feature_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, count_index=i)
-                    self._register(feature=feature, kind=Extractor.Listener.Kinds.PERCOUNT)
-                    ret_val[feature.Name()] = feature
+                    try:
+                        feature = self._loadFeature(feature_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, count_index=i)
+                    except NotImplementedError as err:
+                        utils.Logger.Log(f"{name} is not a valid feature for Waves", logging.ERROR)
+                    else:
+                        self._register(feature=feature, kind=Extractor.Listener.Kinds.PERCOUNT)
+                        ret_val[feature.Name()] = feature
         return ret_val
 
     def _register(self, feature:Feature, kind:Listener.Kinds):
