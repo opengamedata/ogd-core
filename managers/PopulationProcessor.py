@@ -28,9 +28,10 @@ class PopulationProcessor:
     #                       feature data.
     def __init__(self, ExtractorClass: Type[Extractor], game_schema: GameSchema):
         ## Define instance vars
-        self._ExtractorClass     :Type[Extractor]      = ExtractorClass
-        self._game_schema        :GameSchema           = game_schema
-        self._session_extractor  :Extractor            = self._ExtractorClass(session_id="population", game_schema=self._game_schema)
+        self._ExtractorClass   : Type[Extractor] = ExtractorClass
+        self._game_schema      : GameSchema      = game_schema
+        self._extractor        : Extractor       = self._ExtractorClass(session_id="population", game_schema=self._game_schema)
+        self._sess_encountered : set             = set()
 
     ## Function to handle processing of a single row of data.
     #  Basically just responsible for ensuring an extractor for the session
@@ -40,25 +41,26 @@ class PopulationProcessor:
     #                      event_data_complex has already been parsed from JSON.
     def ProcessEvent(self, event: Event):
         # ensure we have an extractor for the given session:
-        self._session_extractor.ExtractFromEvent(event=event)
+        self._sess_encountered.add(event.session_id)
+        self._extractor.ExtractFromEvent(event=event)
 
     ##  Function to empty the list of lines stored by the PopulationProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid
     #   eating too much memory.
     def ClearLines(self):
         utils.Logger.toStdOut(f"Clearing population entries from PopulationProcessor.", logging.DEBUG)
-        self._session_extractor = self._ExtractorClass(session_id="population", game_schema=self._game_schema)
+        self._extractor = self._ExtractorClass(session_id="population", game_schema=self._game_schema)
 
     def GetPopulationFeatures(self) -> List[Any]:
-        return self._session_extractor.GetCurrentFeatures()
+        return self._extractor.GetCurrentFeatures() + [len(self._sess_encountered)]
 
     def GetPopulationFeatureNames(self) -> List[str]:
-        return Extractor._genFeatureNames(self._game_schema)
+        return Extractor._genFeatureNames(self._game_schema) + ["SessionCount"]
 
     ## Function to calculate aggregate features of all extractors created by the
     #  PopulationProcessor. Just calls the function once on each extractor.
     def CalculateAggregateFeatures(self):
-        self._session_extractor.CalculateAggregateFeatures()
+        self._extractor.CalculateAggregateFeatures()
 
     ## Function to write out the header for a processed csv file.
     #  Just runs the header writer for whichever Extractor subclass we were given.
@@ -68,4 +70,4 @@ class PopulationProcessor:
     ## Function to write out all data for the extractors created by the
     #  PopulationProcessor. Just calls the "write" function once for each extractor.
     def WritePopulationFileLines(self, file_mgr:FileManager, separator:str="\t"):
-        self._session_extractor.WriteCurrentFeatures(file=file_mgr.GetPopulationFile(), separator=separator)
+        self._extractor.WriteCurrentFeatures(file=file_mgr.GetPopulationFile(), separator=separator)
