@@ -8,15 +8,18 @@ from schemas.Event import Event
 class QuestionAnswered(Feature):
     def __init__(self, name:str, description:str, count_index:int):
         Feature.__init__(self, name=name, description=description, count_index=count_index)
+        self._answer = None
 
     def GetEventTypes(self) -> List[str]:
-        return []
+        return ["CUSTOM.3"]
+        # return ["QUESTION_ANSWER"]
 
     def CalculateFinalValues(self) -> Any:
-        return
+        return self._answer
 
     def _extractFromEvent(self, event:Event) -> None:
-        return
+        if event.event_data['question'] == self._count_index:
+            self._answer = event.event_data['answered']
 
     def MinVersion(self) -> Union[str,None]:
         return None

@@ -104,7 +104,7 @@
                 "prefix": "lvl",
                 "description": "whether the level was completed or not [bool whether 'COMPLETE' event was found]"
             },
-            "MenuBtnCount": {
+            "MenuButtonCount": {
                 "enabled": false,
                 "count":"level_range",
                 "prefix": "lvl",
@@ -227,17 +227,17 @@
                 "prefix": "lvl",
                 "description": "arrow moves across a given level [count of 'ARROW_MOVE_RELEASE' events]"
             },
-            "TotalSliderMoves": {
-                "enabled": true,
-                "count":"level_range",
-                "prefix": "lvl",
-                "description": "slider moves across a given level [count of 'SLIDER_MOVE_RELEASE' events]"
-            },
             "TotalMoveTypeChanges": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "description": "number of times the player changes between 'Arrow' and 'Slider' move types across a level"
+            },
+            "TotalSliderMoves": {
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "description": "slider moves across a given level [count of 'SLIDER_MOVE_RELEASE' events]"
             },
 
 
@@ -288,17 +288,15 @@
 
 
             "QuestionAnswered" : {
-                "enabled": false,
+                "enabled": true,
                 "count" : 4,
                 "prefix": "QA",
-                "events": [],
                 "description" : "The answer the user gave to a given question (or -1 if unanswered)"
             },
             "QuestionCorrect"  : {
-                "enabled": false,
+                "enabled": true,
                 "count" : 4,
                 "prefix": "QA",
-                "events": [],
                 "description" : "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"
             },
             "TimeToAnswerMS"   : {

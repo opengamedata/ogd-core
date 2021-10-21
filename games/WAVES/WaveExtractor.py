@@ -56,10 +56,48 @@ class WaveExtractor(Extractor):
         ret_val : Feature
         _count_index = count_index if count_index is not None else 0
         # Per-count features
+            # level attempt features
         if feature_type == "AmplitudeGoodMoveCount":
             ret_val = AmplitudeGoodMoveCount.AmplitudeGoodMoveCount(name=name, description=feature_args["description"], count_index=_count_index)
         elif feature_type == "BeginCount":
             ret_val = BeginCount.BeginCount(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "CompleteCount":
+            ret_val = CompleteCount.CompleteCount(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "Completed":
+            ret_val = Completed.Completed(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "MenuButtonCount":
+            ret_val = MenuButtonCount.MenuButtonCount(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "SucceedCount":
+            ret_val = SucceedCount.SucceedCount(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "TotalFails":
+            ret_val = TotalFails.TotalFails(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "TotalLevelTime":
+            ret_val = TotalLevelTime.TotalLevelTime(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "TotalResets":
+            ret_val = TotalResets.TotalResets(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "TotalSkips":
+            ret_val = TotalSkips.TotalSkips(name=name, description=feature_args['description'], count_index=_count_index)
+            # slider move features
+        elif feature_type == "AmplitudeGoodMoveCount":
+            ret_val = AmplitudeGoodMoveCount.AmplitudeGoodMoveCount(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "OffsetGoodMoveCount":
+            ret_val = OffsetGoodMoveCount.OffsetGoodMoveCount(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "WavelengthGoodMoveCount":
+            ret_val = WavelengthGoodMoveCount.WavelengthGoodMoveCount(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "FirstMoveType":
+            ret_val = FirstMoveType.FirstMoveType(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "PercentAmplitudeMoves":
+            ret_val = PercentAmplitudeMoves.PercentAmplitudeMoves(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "PercentOffsetMoves":
+            ret_val = PercentOffsetMoves.PercentOffsetMoves(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "PercentWavelengthMoves":
+            ret_val = PercentWavelengthMoves.PercentWavelengthMoves(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "PercentAmplitudeGoodMoves":
+            ret_val = PercentAmplitudeGoodMoves.PercentAmplitudeGoodMoves(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "PercentOffsetGoodMoves":
+            ret_val = PercentOffsetGoodMoves.PercentOffsetGoodMoves(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "PercentWavelengthGoodMoves":
+            ret_val = PercentWavelengthGoodMoves.PercentWavelengthGoodMoves(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "SliderAverageRange":
             ret_val = SliderAverageRange.SliderAverageRange(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "SliderAverageStandardDeviations":
@@ -70,8 +108,12 @@ class WaveExtractor(Extractor):
             ret_val = TotalMoveTypeChanges.TotalMoveTypeChanges(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "TotalSliderMoves":
             ret_val = TotalSliderMoves.TotalSliderMoves(name=name, description=feature_args['description'], count_index=_count_index)
-        elif feature_type == "TotalLevelTime":
-            ret_val = TotalLevelTime.TotalLevelTime(name=name, description=feature_args['description'], count_index=_count_index)
+            # level progress over time features
+            # quiz features
+        elif feature_type == "QuestionAnswered":
+            ret_val = QuestionAnswered.QuestionAnswered(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "QuestionCorrect":
+            ret_val = QuestionCorrect.QuestionCorrect(name=name, description=feature_args['description'], count_index=_count_index)
         # Session-level features.
         elif feature_type == "AverageFails":
             ret_val = AverageFails.AverageFails(name=name, description=feature_args['description'])
