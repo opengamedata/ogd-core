@@ -20,6 +20,11 @@ class ExporterTypes:
         self.sessions = sessions
         self.population = population
 
+class ExporterLocations:
+    def __init__(self, files:bool = True, dict:bool = False):
+        self.files = files
+        self.dict  = dict
+
 class ExporterRange:
     def __init__(self, date_min:Union[datetime,None], date_max:Union[datetime,None], ids:Union[List[str],None], versions:Union[List[int],None]=None):
         self._date_min : Union[datetime,None] = date_min
@@ -55,12 +60,14 @@ class Request(abc.ABC):
     #                 Should correspond to the app_id in the database.
     #  @param start_date   The starting date for our range of data to process.
     #  @param end_date     The ending date for our range of data to process.
-    def __init__(self, interface:DataInterface, range:ExporterRange, exporter_files:ExporterTypes = ExporterTypes()):
+    def __init__(self, interface:DataInterface, range:ExporterRange,
+                exporter_types:ExporterTypes = ExporterTypes(), exporter_locs:ExporterLocations = ExporterLocations()):
         # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
-        self._game_id   : str           = interface._game_id
-        self._interface : DataInterface = interface
-        self._range     : ExporterRange = range
-        self._files     : ExporterTypes = exporter_files
+        self._game_id   : str               = interface._game_id
+        self._interface : DataInterface     = interface
+        self._range     : ExporterRange     = range
+        self._exports   : ExporterTypes     = exporter_types
+        self._locs      : ExporterLocations = exporter_locs
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):

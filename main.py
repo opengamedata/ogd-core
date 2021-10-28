@@ -148,7 +148,7 @@ def genRequest(events:bool, features:bool) -> Request:
         start_date, end_date = getDateRange(args=args, game_id=game_name)
         range = ExporterRange.FromDateRange(date_min=start_date, date_max=end_date, source=interface, versions=supported_vers)
     # Once we have the parameters parsed out, construct the request.
-    return Request(interface=interface, range=range, exporter_files=exporter_files)
+    return Request(interface=interface, range=range, exporter_types=exporter_files)
 
 def getDateRange(args, game_id:str) -> Tuple[datetime, datetime]:
     start_date: datetime

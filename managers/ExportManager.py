@@ -70,10 +70,10 @@ class ExportManager:
         _game_id = request.GetGameID()
         game_extractor : Union[Type[Extractor],None] = self._prepareExtractor(_game_id)
         if game_extractor is None:
-            request._files.sessions = False
-            request._files.population = False
+            request._exports.sessions = False
+            request._exports.population = False
         # 2) Prepare files for export.
-        file_manager = FileManager(exporter_files=request._files, game_id=_game_id, \
+        file_manager = FileManager(exporter_files=request._exports, game_id=_game_id, \
                                     data_dir=self._settings["DATA_DIR"], date_range=request._range.GetDateRange(),
                                     extension="tsv")
         # If we have a schema, we can do feature extraction.
@@ -104,7 +104,7 @@ class ExportManager:
         ret_val : int = -1
         # 2) Set up processors.
         pop_processor = sess_processor = evt_processor = None
-        if request._files.events:
+        if request._exports.events:
             evt_file = file_manager.GetEventsFile()
             if evt_file is not None:
                 evt_processor = EventProcessor()
@@ -112,12 +112,12 @@ class ExportManager:
         else:
             utils.Logger.Log("Event log not requested, skipping events file.", logging.INFO)
         if game_extractor is not None:
-            if request._files.sessions:
+            if request._exports.sessions:
                 sess_processor = SessionProcessor(ExtractorClass=game_extractor, game_schema=game_schema)
                 sess_processor.WriteSessionFileHeader(file_mgr=file_manager, separator="\t")
             else:
                 utils.Logger.Log("Session features not requested, skipping session_features file.", logging.INFO)
-            if request._files.population:
+            if request._exports.population:
                 pop_processor = PopulationProcessor(ExtractorClass=game_extractor, game_schema=game_schema)
                 pop_processor.WritePopulationFileHeader(file_mgr=file_manager, separator="\t")
             else:
@@ -150,10 +150,10 @@ class ExportManager:
                         else:
                             utils.Logger.Log(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
                     # 3b) After processing all rows for each slice, write out the session data and reset for next slice.
-                    if request._files.events and evt_processor is not None:
+                    if request._exports.events and evt_processor is not None:
                         evt_processor.WriteEventsCSVLines(file_mgr=file_manager)
                         evt_processor.ClearLines()
-                    if request._files.sessions and sess_processor is not None:
+                    if request._exports.sessions and sess_processor is not None:
                         sess_processor.CalculateAggregateFeatures()
                         sess_processor.WriteSessionFileLines(file_mgr=file_manager, separator="\t")
                         sess_processor.ClearLines()
@@ -165,7 +165,7 @@ class ExportManager:
             else:
                 utils.Logger.Log(f"Could not retrieve data set for slice [{i+1}/{len(session_slices)}].", logging.WARN)
         # 4) If we made it all the way to the end, write population data and return the number of sessions processed.
-        if request._files.population and pop_processor is not None:
+        if request._exports.population and pop_processor is not None:
             pop_processor.WritePopulationFileLines(file_mgr=file_manager)
             pop_processor.ClearLines()
         return ret_val
