@@ -16,10 +16,10 @@ from typing import Any, Dict, IO, Union
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
 ## import local files
 import utils
-from managers.Request import ExporterFiles, ExporterRange
+from managers.Request import ExporterTypes, ExporterRange
 
 class FileManager(abc.ABC):
-    def __init__(self, exporter_files: ExporterFiles, game_id, data_dir: str, date_range: Dict[str,Union[datetime,None]], extension:str="tsv"):
+    def __init__(self, exporter_files: ExporterTypes, game_id, data_dir: str, date_range: Dict[str,Union[datetime,None]], extension:str="tsv"):
         self._file_names   : Dict[str,Union[Path,None]] = {"population":None, "sessions":None, "events":None}
         self._zip_names    : Dict[str,Union[Path,None]] = {"population":None, "sessions":None, "events":None}
         self._files        : Dict[str,Union[IO,None]]   = {"population":None, "sessions":None, "events":None}

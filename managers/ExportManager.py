@@ -39,21 +39,13 @@ class ExportManager:
     #                  given, but will generate a warning)
     #  @param db      An active database connection
     #  @param settings A dictionary of program settings, some of which are needed for export.
-    def __init__(self, game_id: str, settings):
-        self._game_id:    str
-        if game_id is None:
-            utils.Logger.toStdOut("Game ID was not given!", logging.ERROR)
-        else:
-            self._game_id   = game_id
+    def __init__(self, settings):
         self._settings = settings
 
     def ExecuteRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema) -> bool:
         ret_val : bool = False
 
         start = datetime.now()
-        if request.GetGameID() != self._game_id:
-            self._game_id = request.GetGameID()
-            utils.Logger.toFile(f"Changing ExportManager game from {self._game_id} to {request.GetGameID()}", logging.WARNING)
         try:
             ret_val = self._executeRequest(request=request, game_schema=game_schema, table_schema=table_schema)
             utils.Logger.Log(f"Successfully completed request {str(request)}.", logging.INFO)
@@ -75,12 +67,13 @@ class ExportManager:
     def _executeRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema) -> bool:
         ret_val : bool = False
         # 1) Prepare extractor, if game doesn't have an extractor, make sure we don't try to export it.
-        game_extractor : Union[Type[Extractor],None] = self._prepareExtractor()
+        _game_id = request.GetGameID()
+        game_extractor : Union[Type[Extractor],None] = self._prepareExtractor(_game_id)
         if game_extractor is None:
             request._files.sessions = False
             request._files.population = False
         # 2) Prepare files for export.
-        file_manager = FileManager(exporter_files=request._files, game_id=self._game_id, \
+        file_manager = FileManager(exporter_files=request._files, game_id=_game_id, \
                                     data_dir=self._settings["DATA_DIR"], date_range=request._range.GetDateRange(),
                                     extension="tsv")
         # If we have a schema, we can do feature extraction.
@@ -94,9 +87,9 @@ class ExportManager:
                 # before we zip stuff up, let's ensure the readme is in place:
                 readme = open(file_manager._readme_path, mode='r')
             except FileNotFoundError:
-                utils.Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING)
-                readme_path = Path("./data") / self._game_id
-                utils.GenerateReadme(game_name=self._game_id, game_schema=game_schema, column_list=table_schema.ColumnList(), path=readme_path)
+                utils.Logger.Log(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING)
+                readme_path = Path("./data") / _game_id
+                utils.GenerateReadme(game_name=_game_id, game_schema=game_schema, column_list=table_schema.ColumnList(), path=readme_path)
             file_manager.CloseFiles()
             file_manager.ZipFiles()
             # 5) Finally, update the list of csv files.
@@ -177,27 +170,27 @@ class ExportManager:
             pop_processor.ClearLines()
         return ret_val
 
-    def _prepareExtractor(self) -> Union[Type[Extractor],None]:
+    def _prepareExtractor(self, game_id) -> Union[Type[Extractor],None]:
         game_extractor: Union[type,None] = None
-        if self._game_id == "AQUALAB":
+        if game_id == "AQUALAB":
             game_extractor = AqualabExtractor
-        elif self._game_id == "CRYSTAL":
+        elif game_id == "CRYSTAL":
             game_extractor = CrystalExtractor
-        elif self._game_id == "JOWILDER":
+        elif game_id == "JOWILDER":
             game_extractor = JowilderExtractor
-        elif self._game_id == "LAKELAND":
+        elif game_id == "LAKELAND":
             game_extractor = LakelandExtractor
-        elif self._game_id == "MAGNET":
+        elif game_id == "MAGNET":
             game_extractor = MagnetExtractor
-        elif self._game_id == "SHADOWSPECT":
+        elif game_id == "SHADOWSPECT":
             game_extractor = ShadowspectExtractor
-        elif self._game_id == "WAVES":
+        elif game_id == "WAVES":
             game_extractor = WaveExtractor
-        elif self._game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "STEMPORTS", "WIND"]:
+        elif game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "STEMPORTS", "WIND"]:
             # all games with data but no extractor.
             pass
         else:
-            raise Exception(f"Got an invalid game ID ({self._game_id})!")
+            raise Exception(f"Got an invalid game ID ({game_id})!")
         return game_extractor
 
     def _genSlices(self, sess_ids):

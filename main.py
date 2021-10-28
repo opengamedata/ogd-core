@@ -20,7 +20,7 @@ from interfaces.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface
 from interfaces.BigQueryInterface import BigQueryInterface
 from managers.ExportManager import ExportManager
-from managers.Request import Request, ExporterFiles, ExporterRange
+from managers.Request import Request, ExporterTypes, ExporterRange
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 from utils import Logger
@@ -107,7 +107,7 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
     req = genRequest(events=events, features=features)
     try:
         if req._interface.IsOpen():
-            export_manager = ExportManager(game_id=game_name, settings=settings)
+            export_manager = ExportManager(settings=settings)
             table_name = settings["GAME_SOURCE_MAP"][game_name]["table"]
             ret_val = export_manager.ExecuteRequest(request=req, game_schema=GameSchema(game_name), table_schema=TableSchema(schema_name=f"{table_name}.json"))
             # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
@@ -125,8 +125,8 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
 def genRequest(events:bool, features:bool) -> Request:
     interface : DataInterface
     range     : ExporterRange
-    exporter_files : ExporterFiles
-    exporter_files = ExporterFiles(events=events, sessions=features, population=features) 
+    exporter_files : ExporterTypes
+    exporter_files = ExporterTypes(events=events, sessions=features, population=features) 
     supported_vers = GameSchema(schema_name=f"{game_name}.json")['config']['SUPPORTED_VERS']
     if "--file" in opts.keys():
         file_path=Path(opts["--file"])

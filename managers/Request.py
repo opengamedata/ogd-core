@@ -14,7 +14,7 @@ from schemas.GameSchema import GameSchema
 #  @param events Bool stating whether to output a events file or not.
 #  @param raw  Bool stating whether to output a raw file or not.
 #  @param sessions Bool stating whether to output a processed session feature file or not.
-class ExporterFiles:
+class ExporterTypes:
     def __init__(self, events:bool = True, sessions:bool = True, population:bool = True):
         self.events = events
         self.sessions = sessions
@@ -55,10 +55,12 @@ class Request(abc.ABC):
     #                 Should correspond to the app_id in the database.
     #  @param start_date   The starting date for our range of data to process.
     #  @param end_date     The ending date for our range of data to process.
-    def __init__(self, interface:DataInterface, range:ExporterRange, exporter_files:ExporterFiles = ExporterFiles()):
+    def __init__(self, interface:DataInterface, range:ExporterRange, exporter_files:ExporterTypes = ExporterTypes()):
+        # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
+        self._game_id   : str           = interface._game_id
         self._interface : DataInterface = interface
         self._range     : ExporterRange = range
-        self._files     : ExporterFiles = exporter_files
+        self._files     : ExporterTypes = exporter_files
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
@@ -69,8 +71,7 @@ class Request(abc.ABC):
         return f"{self._interface._game_id}: {_min}-{_max}"
 
     def GetGameID(self):
-        # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
-        return str(self._interface._game_id)
+        return str(self._game_id)
 
     ## Method to retrieve the list of IDs for all sessions covered by the request.
     #  Note, this will use the 
