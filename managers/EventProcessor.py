@@ -47,12 +47,11 @@ class EventProcessor:
         self._lines.append(separator.join([str(item) for item in event.ColumnValues()]) + "\n") # changed , to \t
         # utils.Logger.toStdOut(f"Got event: {str(event)}")
 
-    ## Function to empty the list of lines stored by the EventProcessor.
-    #  This is helpful if we're processing a lot of data and want to avoid
-    #  Eating too much memory.
-    def ClearLines(self):
-        utils.Logger.toStdOut(f"Clearing {len(self._lines)} entries from EventProcessor.", logging.DEBUG)
-        self._lines = []
+    def GetColumnNames(self) -> List[str]:
+        return self._columns
+
+    def GetLines(self) -> List[str]:
+        return self._lines
 
     ## Function to write out the header for a events csv file.
     def WriteEventsCSVHeader(self, file_mgr:FileManager, separator:str = "\t"):
@@ -61,3 +60,10 @@ class EventProcessor:
     ## Function to write out all lines of event data that have been parsed so far.
     def WriteEventsCSVLines(self, file_mgr:FileManager):
         file_mgr.GetEventsFile().writelines(self._lines)
+
+    ## Function to empty the list of lines stored by the EventProcessor.
+    #  This is helpful if we're processing a lot of data and want to avoid
+    #  Eating too much memory.
+    def ClearLines(self):
+        utils.Logger.toStdOut(f"Clearing {len(self._lines)} entries from EventProcessor.", logging.DEBUG)
+        self._lines = []

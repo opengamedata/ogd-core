@@ -49,24 +49,17 @@ class SessionProcessor:
                 self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_schema=self._game_schema)
         self._session_extractors[event.session_id].ExtractFromEvent(event)
 
-    ##  Function to empty the list of lines stored by the SessionProcessor.
-    #   This is helpful if we're processing a lot of data and want to avoid
-    #   eating too much memory.
-    def ClearLines(self):
-        utils.Logger.toStdOut(f"Clearing {len(self._session_extractors)} entries from SessionProcessor.", logging.DEBUG)
-        self._session_extractors = {}
-
     ## Function to calculate aggregate features of all extractors created by the
     #  SessionProcessor. Just calls the function once on each extractor.
     def CalculateAggregateFeatures(self):
         for extractor in self._session_extractors.values():
             extractor.CalculateAggregateFeatures()
 
-    def GetSessionFeatures(self) -> List[Any]:
-        return [extractor.GetCurrentFeatures() for extractor in self._session_extractors.values()]
-
     def GetSessionFeatureNames(self) -> List[str]:
         return Extractor.GetFeatureNames(self._game_schema)
+
+    def GetSessionFeatures(self) -> List[List[Any]]:
+        return [extractor.GetCurrentFeatures() for extractor in self._session_extractors.values()]
 
     ## Function to write out the header for a processed csv file.
     #  Just runs the header writer for whichever Extractor subclass we were given.
@@ -78,3 +71,10 @@ class SessionProcessor:
     def WriteSessionFileLines(self, file_mgr:FileManager, separator:str = "\t"):
         for extractor in self._session_extractors.values():
             extractor.WriteCurrentFeatures(file=file_mgr.GetSessionsFile(), separator=separator)
+
+    ##  Function to empty the list of lines stored by the SessionProcessor.
+    #   This is helpful if we're processing a lot of data and want to avoid
+    #   eating too much memory.
+    def ClearLines(self):
+        utils.Logger.toStdOut(f"Clearing {len(self._session_extractors)} entries from SessionProcessor.", logging.DEBUG)
+        self._session_extractors = {}

@@ -44,23 +44,16 @@ class PopulationProcessor:
         self._sess_encountered.add(event.session_id)
         self._extractor.ExtractFromEvent(event=event)
 
-    ##  Function to empty the list of lines stored by the PopulationProcessor.
-    #   This is helpful if we're processing a lot of data and want to avoid
-    #   eating too much memory.
-    def ClearLines(self):
-        utils.Logger.toStdOut(f"Clearing population entries from PopulationProcessor.", logging.DEBUG)
-        self._extractor = self._ExtractorClass(session_id="population", game_schema=self._game_schema)
-
-    def GetPopulationFeatures(self) -> List[Any]:
-        return self._extractor.GetCurrentFeatures() + [len(self._sess_encountered)]
-
-    def GetPopulationFeatureNames(self) -> List[str]:
-        return Extractor.GetFeatureNames(self._game_schema) + ["SessionCount"]
-
     ## Function to calculate aggregate features of all extractors created by the
     #  PopulationProcessor. Just calls the function once on each extractor.
     def CalculateAggregateFeatures(self):
         self._extractor.CalculateAggregateFeatures()
+
+    def GetPopulationFeatureNames(self) -> List[str]:
+        return Extractor.GetFeatureNames(self._game_schema) + ["SessionCount"]
+
+    def GetPopulationFeatures(self) -> List[Any]:
+        return self._extractor.GetCurrentFeatures() + [len(self._sess_encountered)]
 
     ## Function to write out the header for a processed csv file.
     #  Just runs the header writer for whichever Extractor subclass we were given.
@@ -71,3 +64,10 @@ class PopulationProcessor:
     #  PopulationProcessor. Just calls the "write" function once for each extractor.
     def WritePopulationFileLines(self, file_mgr:FileManager, separator:str="\t"):
         self._extractor.WriteCurrentFeatures(file=file_mgr.GetPopulationFile(), separator=separator)
+
+    ##  Function to empty the list of lines stored by the PopulationProcessor.
+    #   This is helpful if we're processing a lot of data and want to avoid
+    #   eating too much memory.
+    def ClearLines(self):
+        utils.Logger.toStdOut(f"Clearing population entries from PopulationProcessor.", logging.DEBUG)
+        self._extractor = self._ExtractorClass(session_id="population", game_schema=self._game_schema)
