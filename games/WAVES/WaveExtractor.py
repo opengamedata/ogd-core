@@ -124,6 +124,8 @@ class WaveExtractor(Extractor):
             ret_val = QuestionAnswered.QuestionAnswered(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "QuestionCorrect":
             ret_val = QuestionCorrect.QuestionCorrect(name=name, description=feature_args['description'], count_index=_count_index)
+        elif feature_type == "TimeToAnswerMS":
+            ret_val = TimeToAnswerMS.TimeToAnswerMS(name=name, description=feature_args['description'], count_index=_count_index)
         # Session-level features.
         elif feature_type == "AverageFails":
             ret_val = AverageFails.AverageFails(name=name, description=feature_args['description'])
@@ -147,6 +149,7 @@ class WaveExtractor(Extractor):
             ret_val = PersistentSessionID.PersistentSessionID(name=name, description=feature_args['description'])
         elif feature_type == "SessionID":
             ret_val = SessionID.SessionID(name=name, description=feature_args['description'], sessionID=self._session_id)
+            # sequence features
         elif feature_type == "SequenceLevel":
             ret_val = SequenceLevel.SequenceLevel(name=name, description=feature_args['description'], count_index=_count_index)
         else:

@@ -257,7 +257,7 @@
                 "description" : "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"
             },
             "TimeToAnswerMS"   : {
-                "enabled": false,
+                "enabled": true,
                 "count" : 4,
                 "prefix": "QA",
                 "events": [],
