@@ -57,9 +57,7 @@ class WaveExtractor(Extractor):
         _count_index = count_index if count_index is not None else 0
         # Per-count features
             # level attempt features
-        if feature_type == "AmplitudeGoodMoveCount":
-            ret_val = AmplitudeGoodMoveCount.AmplitudeGoodMoveCount(name=name, description=feature_args["description"], count_index=_count_index)
-        elif feature_type == "BeginCount":
+        if feature_type == "BeginCount":
             ret_val = BeginCount.BeginCount(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "CompleteCount":
             ret_val = CompleteCount.CompleteCount(name=name, description=feature_args['description'], count_index=_count_index)
