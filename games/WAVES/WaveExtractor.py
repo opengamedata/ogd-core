@@ -78,14 +78,14 @@ class WaveExtractor(Extractor):
         elif feature_type == "TotalSkips":
             ret_val = TotalSkips.TotalSkips(name=name, description=feature_args['description'], count_index=_count_index)
             # slider move features
+        elif feature_type == "FirstMoveType":
+            ret_val = FirstMoveType.FirstMoveType(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "AmplitudeGoodMoveCount":
             ret_val = AmplitudeGoodMoveCount.AmplitudeGoodMoveCount(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "OffsetGoodMoveCount":
             ret_val = OffsetGoodMoveCount.OffsetGoodMoveCount(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "WavelengthGoodMoveCount":
             ret_val = WavelengthGoodMoveCount.WavelengthGoodMoveCount(name=name, description=feature_args['description'], count_index=_count_index)
-        elif feature_type == "FirstMoveType":
-            ret_val = FirstMoveType.FirstMoveType(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "PercentAmplitudeMoves":
             ret_val = PercentAmplitudeMoves.PercentAmplitudeMoves(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "PercentOffsetMoves":

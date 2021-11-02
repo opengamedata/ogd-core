@@ -143,6 +143,12 @@
 
 
 
+            "FirstMoveType": {
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "description": "A character indicating what type of slider move a player made first. A = Amplitude, W = Wavelength, O = Offset, null = No moves"
+            },
             "AmplitudeGoodMoveCount": {
                 "enabled": true,
                 "count":"level_range",
@@ -161,49 +167,43 @@
                 "prefix": "lvl",
                 "description": "number of wavelength moves that brought wavelength closer to the correct value"
             },
-            "FirstMoveType": {
-                "enabled": true,
-                "count":"level_range",
-                "prefix": "lvl",
-                "description": "A character indicating what type of slider move a player made first. A = Amplitude, W = Wavelength, O = Offset, null = No moves"
-            },
             "PercentAmplitudeMoves": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": [],
                 "description": "percent of total moves that were amplitude adjustments in a level"
             },
             "PercentOffsetMoves": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "percent of total moves that were offset adjustments in a level"
             },
             "PercentWavelengthMoves": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "percent of total moves that were wavelength adjustments in a level"
             },
             "PercentAmplitudeGoodMoves": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "percent of amplitude moves that brought amplitude closer to the correct value"
             },
             "PercentOffsetGoodMoves": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
                 "description": "percent of wavelength moves that brought wavelength closer to the correct value"
             },
             "PercentWavelengthGoodMoves": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
