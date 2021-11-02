@@ -105,22 +105,16 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
 
     start = datetime.now()
     req = genRequest(events=events, features=features)
-    try:
-        if req._interface.IsOpen():
-            export_manager = ExportManager(settings=settings)
-            table_name = settings["GAME_SOURCE_MAP"][game_name]["table"]
-            ret_val = export_manager.ExecuteRequest(request=req, game_schema=GameSchema(game_name), table_schema=TableSchema(schema_name=f"{table_name}.json"))
-            # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
-                            # {'req':req, 'feature_exporter':feature_exporter}, {})
-    except Exception as err:
-        msg = f"{type(err)} {str(err)}"
-        Logger.Log(msg, logging.ERROR)
-        traceback.print_tb(err.__traceback__)
-    finally:
-        time_taken = datetime.now() - start
-        Logger.Log(f"Total time taken: {time_taken}")
-        Logger.Log(f"Done with {game_name}.", logging.INFO)
-        return ret_val
+    if req._interface.IsOpen():
+        export_manager = ExportManager(settings=settings)
+        result = export_manager.ExecuteRequest(request=req, game_id=game_name)
+        ret_val = result['success']
+        # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
+                        # {'req':req, 'feature_exporter':feature_exporter}, {})
+    time_taken = datetime.now() - start
+    Logger.Log(f"Total time taken: {time_taken}", logging.INFO)
+    Logger.Log(f"Done with {game_name}.", logging.INFO)
+    return ret_val
 
 def genRequest(events:bool, features:bool) -> Request:
     interface : DataInterface
