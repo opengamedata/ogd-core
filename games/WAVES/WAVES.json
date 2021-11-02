@@ -210,13 +210,13 @@
                 "description": "percent of wavelength moves that brought wavelength closer to the correct value"
             },
             "SliderAverageRange": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "description": "difference between max and min values of a slider move, averaged together across a level"
             },
             "SliderAverageStandardDeviations": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "description": "Average of stdev_val for all slider moves in a level"
