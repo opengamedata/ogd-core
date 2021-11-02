@@ -23,5 +23,5 @@ class JobArgumentationTime(Feature):
             if event.event_name == "begin_argument":
                 self._argument_start_time = event.timestamp
             elif event.event_name == "room_changed" and self._argument_start_time is not None:
-                self._time += event.time_offset - self._argument_start_time
+                self._time += event.timestamp - self._argument_start_time
                 self._argument_start_time = None
