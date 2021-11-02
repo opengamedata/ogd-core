@@ -34,6 +34,7 @@ class ClosenessIntercept(Feature):
     #         self._features.setValByIndex(feature_name='closenessIntercept', index=lvl, new_value=intercept)
     #         self._features.setValByIndex(feature_name='closenessSlope', index=lvl, new_value=slope)
     #         self._features.setValByIndex(feature_name='closenessR2', index=lvl, new_value=r_sq)
+        pass
 
     def MinVersion(self) -> Union[str,None]:
         return None
