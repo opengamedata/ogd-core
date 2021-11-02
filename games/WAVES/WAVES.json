@@ -242,49 +242,6 @@
 
 
 
-            "ClosenessSlope": {
-                "enabled": false,
-                "count":"level_range",
-                "prefix": "lvl",
-                "events": [],
-                "description": "The slope of the linear regression line of (closeness vs. time (seconds)) for the level"
-            },
-            "ClosenessIntercept": {
-                "enabled": false,
-                "count":"level_range",
-                "prefix": "lvl",
-                "events": [],
-                "description": "The intercept of the linear regression line of (closeness vs. time (seconds)) for the level"
-            },
-            "ClosenessR2": {
-                "enabled": false,
-                "count":"level_range",
-                "prefix": "lvl",
-                "events": [],
-                "description": "The R^2 of the linear regression line of (closeness vs. time (seconds)) for the level"
-            },
-            "RangeSlope": {
-                "enabled": false,
-                "count":"level_range",
-                "prefix": "lvl",
-                "events": [],
-                "description": "The slope of the linear regression line of (range vs. time (seconds)) for the level, where range is the total range of moves (max-min in the case of a slider, abs(begin-end) in case of an arrow)"
-            },
-            "RangeIntercept": {
-                "enabled": false,
-                "count":"level_range",
-                "prefix": "lvl",
-                "events": [],
-                "description": "The intercept of the linear regression line of (range vs. time (seconds)) for the level, where range is the total range of moves (max-min in the case of a slider, abs(begin-end) in case of an arrow)"
-            },
-            "RangeR2": {
-                "enabled": false,
-                "count":"level_range",
-                "prefix": "lvl",
-                "events": [],
-                "description": "The R^2 of the linear regression line of (range vs. time (seconds)) for the level, where range is the total range of moves (max-min in the case of a slider, abs(begin-end) in case of an arrow)"
-            },
-
 
 
             "QuestionAnswered" : {

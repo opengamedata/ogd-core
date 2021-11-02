@@ -109,6 +109,18 @@ class WaveExtractor(Extractor):
         elif feature_type == "TotalSliderMoves":
             ret_val = TotalSliderMoves.TotalSliderMoves(name=name, description=feature_args['description'], count_index=_count_index)
             # level progress over time features
+        # elif feature_type == "ClosenessIntercept":
+        #     ret_val = ClosenessIntercept.ClosenessIntercept(name=name, description=feature_args['description'], count_index=_count_index)
+        # elif feature_type == "ClosenessR2":
+        #     ret_val = ClosenessR2.ClosenessR2(name=name, description=feature_args['description'], count_index=_count_index)
+        # elif feature_type == "ClosenessSlope":
+        #     ret_val = ClosenessSlope.ClosenessSlope(name=name, description=feature_args['description'], count_index=_count_index)
+        # elif feature_type == "RangeIntercept":
+        #     ret_val = RangeIntercept.RangeIntercept(name=name, description=feature_args['description'], count_index=_count_index)
+        # elif feature_type == "RangeR2":
+        #     ret_val = RangeR2.RangeR2(name=name, description=feature_args['description'], count_index=_count_index)
+        # elif feature_type == "RangeSlope":
+        #     ret_val = RangeSlope.RangeSlope(name=name, description=feature_args['description'], count_index=_count_index)
             # quiz features
         elif feature_type == "QuestionAnswered":
             ret_val = QuestionAnswered.QuestionAnswered(name=name, description=feature_args['description'], count_index=_count_index)
