@@ -108,6 +108,29 @@ class Extractor(abc.ABC):
         file.write(separator.join(columns))
         file.write("\n")
 
+    @staticmethod
+    def GetFeatureNames(schema:GameSchema) -> List[str]:
+        """Function to generate a list names of all enabled features, given a GameSchema
+        This is different from the feature_names() function of GameSchema,
+        which ignores the 'enabled' attribute and does not expand per-count features
+        (e.g. this function would include 'lvl0_someFeat', 'lvl1_someFeat', 'lvl2_someFeat', etc.
+        while feature_names() only would include 'someFeat').
+
+        :param schema: The schema from which feature names should be generated.
+        :type schema: GameSchema
+        :return: A list of feature names.
+        :rtype: List[str]
+        """
+        ret_val : List[str] = []
+        for name,aggregate in schema.aggregate_features().items():
+            if aggregate.get("enabled") == True:
+                ret_val.append(name)
+        for name,percount in schema.percount_features().items():
+            if percount.get("enabled") == True:
+                for i in Extractor._genCountRange(count=percount["count"], schema=schema):
+                    ret_val.append(f"{percount['prefix']}{i}_{name}")
+        return ret_val
+
     # *** PUBLIC METHODS ***
 
     def ExtractFromEvent(self, event:Event) -> None:
@@ -141,7 +164,7 @@ class Extractor(abc.ABC):
         file.write(separator.join([str(val) for val in column_vals]))
         file.write("\n")
 
-    def GetCurrentFeatures(self) -> typing.List:
+    def GetCurrentFeatures(self) -> List[Any]:
         # TODO: It looks like I might be assuming that dictionaries always have same order here.
         # May need to revisit that issue. I mean, it should be fine because Python won't just go
         # and change order for no reason, but still...
@@ -160,29 +183,6 @@ class Extractor(abc.ABC):
         return
 
     # *** PRIVATE STATICS ***
-
-    @staticmethod
-    def GetFeatureNames(schema:GameSchema) -> List[str]:
-        """Function to generate a list names of all enabled features, given a GameSchema
-        This is different from the feature_names() function of GameSchema,
-        which ignores the 'enabled' attribute and does not expand per-count features
-        (e.g. this function would include 'lvl0_someFeat', 'lvl1_someFeat', 'lvl2_someFeat', etc.
-        while feature_names() only would include 'someFeat').
-
-        :param schema: The schema from which feature names should be generated.
-        :type schema: GameSchema
-        :return: A list of feature names.
-        :rtype: List[str]
-        """
-        ret_val : List[str] = []
-        for name,aggregate in schema.aggregate_features().items():
-            if aggregate.get("enabled") == True:
-                ret_val.append(name)
-        for name,percount in schema.percount_features().items():
-            if percount.get("enabled") == True:
-                for i in Extractor._genCountRange(count=percount["count"], schema=schema):
-                    ret_val.append(f"{percount['prefix']}{i}_{name}")
-        return ret_val
 
     @staticmethod
     def _genCountRange(count:Any, schema:GameSchema) -> range:
