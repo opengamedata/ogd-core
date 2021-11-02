@@ -23,7 +23,7 @@ class OverallPercentWavelengthMoves(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         self._move_count += 1
-        if event.event_data["slider"] == "WAVELENGTH":
+        if event.event_data["slider"].upper() == "WAVELENGTH":
             self._wavelength_count += 1
 
     def MinVersion(self) -> Union[str,None]:

@@ -20,7 +20,7 @@ class PercentWavelengthMoves(Feature):
 
     def _extractFromEvent(self, event:Event) -> None:
         self._count += 1
-        if event.event_data['slider'] == 'Wavelength':
+        if event.event_data['slider'].upper() == 'WAVELENGTH':
             self._wavelength_count += 1
 
     def MinVersion(self) -> Union[str,None]:

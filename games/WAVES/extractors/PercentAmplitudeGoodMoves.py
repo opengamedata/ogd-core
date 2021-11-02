@@ -19,7 +19,7 @@ class PercentAmplitudeGoodMoves(Feature):
         return self._good_count / self._amplitude_count
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_data['slider'] == 'Amplitude':
+        if event.event_data['slider'].upper() == 'AMPLITUDE':
             self._amplitude_count += 1
             if event.event_data['closeness_end'] > event.event_data['closeness_start']:
                 self._good_count += 1

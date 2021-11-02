@@ -17,7 +17,7 @@ class OffsetGoodMoveCount(PerLevelFeature):
         return self._count
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_data['slider'] == 'Offset':
+        if event.event_data['slider'].offset() == 'OFFSET':
             if event.event_data['closeness_end'] > event.event_data['closeness_start']:
                 self._count += 1
 

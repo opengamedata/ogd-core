@@ -19,7 +19,7 @@ class PercentWavelengthGoodMoves(Feature):
         return self._good_count / self._wavelength_count
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_data['slider'] == 'Wavelength':
+        if event.event_data['slider'].upper() == 'WAVELENGTH':
             self._wavelength_count += 1
             if event.event_data['closeness_end'] > event.event_data['closeness_start']:
                 self._good_count += 1

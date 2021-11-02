@@ -17,7 +17,7 @@ class AmplitudeGoodMoveCount(PerLevelFeature):
         return self._count
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_data['slider'] == 'Amplitude':
+        if event.event_data['slider'].upper() == 'AMPLITUDE':
             if event.event_data['closeness_end'] > event.event_data['closeness_start']:
                 self._count += 1
 

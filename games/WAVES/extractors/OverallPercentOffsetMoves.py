@@ -23,7 +23,7 @@ class OverallPercentOffsetMoves(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         self._move_count += 1
-        if event.event_data["slider"] == "OFFSET":
+        if event.event_data["slider"].upper() == "OFFSET":
             self._offset_count += 1
 
     def MinVersion(self) -> Union[str,None]:
