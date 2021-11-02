@@ -104,7 +104,7 @@ class Extractor(abc.ABC):
         :param file: An open csv file to which we will write column headers.
         :type file: typing.IO[str]
         """
-        columns = Extractor._genFeatureNames(schema=game_schema)
+        columns = Extractor.GetFeatureNames(schema=game_schema)
         file.write(separator.join(columns))
         file.write("\n")
 
@@ -162,7 +162,7 @@ class Extractor(abc.ABC):
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _genFeatureNames(schema:GameSchema) -> List[str]:
+    def GetFeatureNames(schema:GameSchema) -> List[str]:
         """Function to generate a list names of all enabled features, given a GameSchema
         This is different from the feature_names() function of GameSchema,
         which ignores the 'enabled' attribute and does not expand per-count features

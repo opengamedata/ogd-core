@@ -6,7 +6,7 @@ import logging
 import traceback
 import sys
 import typing
-from typing import Dict, IO, Type, Union
+from typing import Any, List, Dict, IO, Type
 # import local files
 import utils
 from managers.FileManager import FileManager
@@ -61,6 +61,12 @@ class SessionProcessor:
     def CalculateAggregateFeatures(self):
         for extractor in self._session_extractors.values():
             extractor.CalculateAggregateFeatures()
+
+    def GetSessionFeatures(self) -> List[Any]:
+        return [extractor.GetCurrentFeatures() for extractor in self._session_extractors.values()]
+
+    def GetSessionFeatureNames(self) -> List[str]:
+        return Extractor.GetFeatureNames(self._game_schema)
 
     ## Function to write out the header for a processed csv file.
     #  Just runs the header writer for whichever Extractor subclass we were given.

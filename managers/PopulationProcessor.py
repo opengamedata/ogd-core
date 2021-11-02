@@ -55,7 +55,7 @@ class PopulationProcessor:
         return self._extractor.GetCurrentFeatures() + [len(self._sess_encountered)]
 
     def GetPopulationFeatureNames(self) -> List[str]:
-        return Extractor._genFeatureNames(self._game_schema) + ["SessionCount"]
+        return Extractor.GetFeatureNames(self._game_schema) + ["SessionCount"]
 
     ## Function to calculate aggregate features of all extractors created by the
     #  PopulationProcessor. Just calls the function once on each extractor.
