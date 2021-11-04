@@ -43,7 +43,7 @@ class EventProcessor:
         # print(f"From EventProcessor, about to add event to lines: {[str(item) for item in line]}")
         self._lines.append("\t".join([str(item) for item in line]) + "\n") # changed , to \t
 
-    def ProcessEvent(self, event:Event, separator:str = "\t"):
+    def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
         self._lines.append(separator.join([str(item) for item in event.ColumnValues()]) + "\n") # changed , to \t
         # utils.Logger.toStdOut(f"Got event: {str(event)}")
 
