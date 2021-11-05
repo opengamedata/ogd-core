@@ -17,6 +17,7 @@ from collections import defaultdict, Counter
 from copy import deepcopy
 from datetime import datetime, timedelta
 from math import sqrt
+from pathlib import Path
 from typing import Any, Dict, List, Union
 ## import local files
 import utils
@@ -41,7 +42,12 @@ class LakelandExtractor(LegacyExtractor):
         "buy_fertilizer",
         "buy_livestock",
     ]
-    _STR_TO_ENUM = utils.loadJSONFile(filename="games/LAKELAND/Lakeland Enumerators.json")
+    try:
+        _STR_TO_ENUM = utils.loadJSONFile(filename="Lakeland Enumerators.json", path=Path("./games/LAKELAND/"))
+    except FileNotFoundError as err:
+        utils.Logger.toStdOut(message="Could not load Lakeland Enumerators", level=logging.ERROR)
+        print("Could not load Lakeland enumerators")
+        _STR_TO_ENUM = {}
     _ENUM_TO_STR = {cat: {y: x for x, y in ydict.items()} for cat, ydict in _STR_TO_ENUM.items()}
     _ITEM_MARK_COMBINATIONS = [('food', 'sell'), ('food', 'use'), ('food', 'eat'),
                                ('milk', 'sell'), ('milk', 'use'), ('poop', 'sell'), ('poop', 'use')

@@ -28,8 +28,8 @@ class WaveExtractor(Extractor):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: str, game_schema: GameSchema):
-        super().__init__(session_id=session_id, game_schema=game_schema)
+    def __init__(self, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]=None):
+        super().__init__(session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
         # self._last_adjust_type : Union[str,None] = None
         # self.start_times: Dict       = {}
         # self.end_times:   Dict       = {}

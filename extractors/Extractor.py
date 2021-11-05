@@ -43,7 +43,7 @@ class Extractor(abc.ABC):
     # *** PUBLIC BUILT-INS ***
 
     # Base constructor for Extractor classes.
-    def __init__(self, session_id: str, game_schema: GameSchema):
+    def __init__(self, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]):
         """Base constructor for Extractor classes.
         The constructor sets an extractor's session id and range of levels,
         as well as initializing the features dictionary and list of played levels.
@@ -55,8 +55,8 @@ class Extractor(abc.ABC):
         """
         self._session_id     : str                                = session_id
         self._event_registry : Dict[str,List[Extractor.Listener]] = {}
-        self._percounts      : Dict[str,Feature] = self._genPerCounts(schema=game_schema)
-        self._aggregates     : Dict[str,Feature] = self._genAggregate(schema=game_schema)
+        self._percounts      : Dict[str,Feature] = self._genPerCounts(schema=game_schema, overrides=feature_overrides)
+        self._aggregates     : Dict[str,Feature] = self._genAggregate(schema=game_schema, overrides=feature_overrides)
 
     # string conversion for Extractors.
     def __str__(self) -> str:
@@ -193,11 +193,19 @@ class Extractor(abc.ABC):
         return count_range
 
     # *** PRIVATE METHODS ***
+    def _validateFeature(self, name:str, base_setting:bool, overrides:Union[List[str],None]):
+        if overrides is not None:
+            if name in overrides:
+                return base_setting
+            else:
+                return False
+        else:
+            return base_setting
 
-    def _genAggregate(self, schema:GameSchema) -> Dict[str,Feature]:
+    def _genAggregate(self, schema:GameSchema, overrides:Union[List[str],None]) -> Dict[str,Feature]:
         ret_val = {}
         for name,aggregate in schema.aggregate_features().items():
-            if aggregate["enabled"] == True:
+            if self._validateFeature(name=name, base_setting=aggregate['enabled'], overrides=overrides):
                 try:
                     feature = self._loadFeature(feature_type=name, name=name, feature_args=aggregate)
                 except NotImplementedError as err:
@@ -207,10 +215,10 @@ class Extractor(abc.ABC):
                     ret_val[feature.Name()] = feature
         return ret_val
 
-    def _genPerCounts(self, schema:GameSchema) -> Dict[str,Feature]:
+    def _genPerCounts(self, schema:GameSchema, overrides:Union[List[str],None]) -> Dict[str,Feature]:
         ret_val = {}
         for name,percount in schema.percount_features().items():
-            if percount["enabled"] == True:
+            if self._validateFeature(name=name, base_setting=percount['enabled'], overrides=overrides):
                 for i in Extractor._genCountRange(count=percount["count"], schema=schema):
                     try:
                         feature = self._loadFeature(feature_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, count_index=i)

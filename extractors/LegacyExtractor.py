@@ -46,7 +46,7 @@ class LegacyExtractor(Extractor):
     # *** PUBLIC BUILT-INS ***
 
     # Base constructor for LegacyExtractor classes.
-    def __init__(self, session_id: str, game_schema: GameSchema):
+    def __init__(self, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]=None):
         """Base constructor for LegacyExtractor classes.
         The constructor sets an extractor's session id and range of levels,
         as well as initializing the features dictionary and list of played levels.
@@ -60,6 +60,7 @@ class LegacyExtractor(Extractor):
         self._levels      : List[int]   = []
         self._sequences   : List        = []
         self._features    : LegacyExtractor.LegacySessionFeatures = LegacyExtractor.LegacySessionFeatures(game_schema=game_schema)
+        super().__init__(session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
 
     # *** PUBLIC STATICS ***
 

@@ -19,9 +19,9 @@ class ShadowspectExtractor(Extractor):
     #                    by this extractor instance.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: str, game_schema: GameSchema):
+    def __init__(self, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]=None):
         self._game_schema = game_schema
-        super().__init__(session_id=session_id, game_schema=game_schema)
+        super().__init__(session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
 
     def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         ret_val : Feature
