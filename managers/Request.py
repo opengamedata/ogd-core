@@ -75,7 +75,7 @@ class Request(abc.ABC):
         _range = self._range.GetDateRange()
         _min = _range['min'].strftime(_fmt) if _range['min'] is not None else "None"
         _max = _range['max'].strftime(_fmt) if _range['max'] is not None else "None"
-        return f"{self._interface._game_id}: {_min}-{_max}"
+        return f"{self._game_id}: {_min}-{_max}"
 
     def GetGameID(self):
         return str(self._game_id)
