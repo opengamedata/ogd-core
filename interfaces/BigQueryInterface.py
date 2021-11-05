@@ -4,7 +4,8 @@ import os
 from datetime import datetime
 from google.cloud import bigquery
 from typing import Dict, List, Tuple, Union
-
+# local imports
+from config.config import settings as default_settings
 from interfaces.DataInterface import DataInterface
 from utils import Logger
 
@@ -23,7 +24,11 @@ class BigQueryInterface(DataInterface):
             if "GITHUB_ACTIONS" in os.environ:
                 self._client = bigquery.Client()
             else:
-                credential_path = self._settings["GAME_SOURCE_MAP"][self._game_id]["credential"]
+                credential_path : str
+                if "GAME_SOURCE_MAP" in self._settings:
+                    credential_path = self._settings["GAME_SOURCE_MAP"][self._game_id]["credential"]
+                else:
+                    credential_path = default_settings["GAME_SOURCE_MAP"][self._game_id]["credential"]
                 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
                 self._client = bigquery.Client()
             if self._client != None:
@@ -44,8 +49,14 @@ class BigQueryInterface(DataInterface):
 
     def _rowsFromIDs(self, id_list:List[str], versions:Union[List[int],None] = None) -> List[Tuple]:
         if self._client != None:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+            db_name    : str
+            table_name : str
+            if "BIGQUERY_CONFIG" in self._settings:
+                db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+                table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+            else:
+                db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+                table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
             id_string = ','.join([f"{x}" for x in id_list])
             query = f"""
                 SELECT event_name, event_params, user_id, device, geo, platform, param.value.int_value AS session_id,
@@ -77,8 +88,14 @@ class BigQueryInterface(DataInterface):
 
     def _allIDs(self) -> List[str]:
         if self._client != None:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+            db_name    : str
+            table_name : str
+            if "BIGQUERY_CONFIG" in self._settings:
+                db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+                table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+            else:
+                db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+                table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
             query = f"""
                 SELECT DISTINCT param.value.int_value AS session_id
                 FROM `{db_name}.{table_name}`,
@@ -94,8 +111,14 @@ class BigQueryInterface(DataInterface):
 
     def _fullDateRange(self) -> Dict[str, datetime]:
         if self._client != None:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+            db_name    : str
+            table_name : str
+            if "BIGQUERY_CONFIG" in self._settings:
+                db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+                table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+            else:
+                db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+                table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
             query = f"""
                 WITH datetable AS
                 (
@@ -117,8 +140,14 @@ class BigQueryInterface(DataInterface):
         ret_val = []
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         if self._client != None:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+            db_name    : str
+            table_name : str
+            if "BIGQUERY_CONFIG" in self._settings:
+                db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+                table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+            else:
+                db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+                table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
             query = f"""
                 SELECT DISTINCT param.value.int_value AS session_id
                 FROM `{db_name}.{table_name}`,
@@ -136,8 +165,14 @@ class BigQueryInterface(DataInterface):
 
     def _datesFromIDs(self, id_list:List[str], versions:Union[List[int],None] = None) -> Dict[str, datetime]:
         if self._client != None:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+            db_name    : str
+            table_name : str
+            if "BIGQUERY_CONFIG" in self._settings:
+                db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+                table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+            else:
+                db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+                table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
             id_string = ','.join([f"'{x}'" for x in id_list])
             query = f"""
                 WITH datetable AS
