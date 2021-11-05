@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import Dict, List, Type, Tuple, Union
 ## import local files
 import utils
-from config.config import settings
+from config.config import settings as default_settings
 from managers.FileManager import *
 from managers.PopulationProcessor import PopulationProcessor
 from managers.SessionProcessor import SessionProcessor
@@ -48,8 +48,12 @@ class ExportManager:
 
     def ExecuteRequest(self, request:Request, game_id:str) -> Dict[str,Any]:
         ret_val      : Dict[str,Any] = {"success":False}
-        game_schema  : GameSchema  = GameSchema(game_id)
-        table_name   : str = self._settings["GAME_SOURCE_MAP"][game_id]["table"]
+        game_schema  : GameSchema  = GameSchema(schema_name=game_id, schema_path=Path(f"./games/{game_id}"))
+        table_name   : str
+        if "GAME_SOURCE_MAP" in self._settings:
+            table_name = self._settings["GAME_SOURCE_MAP"][game_id]["table"]
+        else:
+            table_name = default_settings["GAME_SOURCE_MAP"][game_id]["table"]
         table_schema : TableSchema = TableSchema(schema_name=f"{table_name}.json")
 
         start = datetime.now()
@@ -120,8 +124,9 @@ class ExportManager:
         num_sess : int  = -1
         _game_id = request.GetGameID()
         # 2) Prepare files for export.
+        _data_dir : str = self._settings["DATA_DIR"] or default_settings["DATA_DIR"]
         file_manager = FileManager(exporter_files=request._exports, game_id=_game_id, \
-                                    data_dir=self._settings["DATA_DIR"], date_range=request._range.GetDateRange(),
+                                    data_dir=_data_dir, date_range=request._range.GetDateRange(),
                                     extension="tsv")
         file_manager.OpenFiles()
         # 3) Loop over data, running extractors.
@@ -247,6 +252,6 @@ class ExportManager:
 
     def _genSlices(self, sess_ids):
         _sess_ct = len(sess_ids)
-        _slice_size = self._settings["BATCH_SIZE"]
+        _slice_size = self._settings["BATCH_SIZE"] or default_settings["BATCH_SIZE"]
         return [[sess_ids[i] for i in range( j*_slice_size, min((j+1)*_slice_size, _sess_ct) )]
                                        for j in range( 0, math.ceil(_sess_ct / _slice_size) )]
