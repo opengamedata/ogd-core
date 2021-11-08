@@ -9,7 +9,7 @@ import typing
 from typing import Dict, List
 from pathlib import Path
 # local imports
-from config.config import core_settings
+from config.config import core_settings as settings
 from schemas.GameSchema import GameSchema
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
@@ -29,6 +29,7 @@ def loadJSONFile(filename:str, path:Path = Path("./")) -> typing.Any:
             return json.loads(json_file.read())
     except FileNotFoundError as err:
         Logger.toStdOut(f"File {file_path} does not exist.", logging.WARNING)
+        print(f"File {file_path} does not exist.")
         raise err
     except Exception as err:
         Logger.toStdOut(f"Could not read file at {file_path}\nFull error message: {type(err)} {str(err)}\nCurrent directory: {os.getcwd()}",
