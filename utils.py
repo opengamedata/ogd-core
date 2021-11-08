@@ -9,7 +9,7 @@ import typing
 from typing import Dict, List
 from pathlib import Path
 # local imports
-from config.config import settings
+from config.config import core_settings
 from schemas.GameSchema import GameSchema
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.

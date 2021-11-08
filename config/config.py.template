@@ -1,4 +1,4 @@
-settings = {
+core_settings = {
     "DATA_DIR": "./data/",
     "MYSQL_CONFIG":
     {
