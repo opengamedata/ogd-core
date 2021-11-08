@@ -9,7 +9,7 @@ from itertools import chain
 from typing import Any, Dict, List, Set, Tuple, Union
 # local imports
 from interfaces.DataInterface import DataInterface
-from config.config import core_settings as settings as default_settings
+from config.config import core_settings as default_settings
 from utils import Logger
 
 

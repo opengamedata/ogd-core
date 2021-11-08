@@ -5,7 +5,7 @@ from datetime import datetime
 from google.cloud import bigquery
 from typing import Dict, List, Tuple, Union
 # local imports
-from config.config import core_settings as settings as default_settings
+from config.config import core_settings as default_settings
 from interfaces.DataInterface import DataInterface
 from utils import Logger
 
