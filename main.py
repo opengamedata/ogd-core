@@ -14,7 +14,7 @@ from git.remote import FetchInfo
 from pandas.io.pytables import Table
 # import local files
 import utils
-from config.config import core_settings as settings
+from config.config import settings as settings
 from interfaces.DataInterface import DataInterface
 from interfaces.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface

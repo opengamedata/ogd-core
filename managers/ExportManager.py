@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import Dict, List, Type, Tuple, Union
 ## import local files
 import utils
-from config.config import core_settings as default_settings
+from config.config import settings as default_settings
 from managers.FileManager import *
 from managers.PopulationProcessor import PopulationProcessor
 from managers.SessionProcessor import SessionProcessor
