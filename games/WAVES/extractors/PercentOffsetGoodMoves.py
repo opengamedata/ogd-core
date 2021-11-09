@@ -16,7 +16,7 @@ class PercentOffsetGoodMoves(Feature):
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
     def CalculateFinalValues(self) -> Any:
-        return self._good_count / self._offset_count
+        return self._good_count / self._offset_count if self._offset_count is not 0 else 0
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_data['slider'].upper() == 'OFFSET':
