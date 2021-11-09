@@ -46,7 +46,7 @@ class ExportManager:
         self._sess_processor  : Union[SessionProcessor, None]    = None
         self._evt_processor   : Union[EventProcessor, None]      = None
 
-    def ExecuteRequest(self, request:Request, game_id:str) -> Dict[str,Any]:
+    def ExecuteRequest(self, request:Request, game_id:str, feature_overrides:Union[List[str],None]=None) -> Dict[str,Any]:
         ret_val      : Dict[str,Any] = {"success":False}
         game_schema  : GameSchema  = GameSchema(schema_name=game_id, schema_path=Path(f"./games/{game_id}"))
         table_name   : str
@@ -60,7 +60,7 @@ class ExportManager:
         try:
             _game_id = request.GetGameID()
             self._prepareExtractor(_game_id)
-            self._prepareProcessors(request=request, game_schema=game_schema)
+            self._prepareProcessors(request=request, game_schema=game_schema, feature_overrides=feature_overrides)
             if request._locs.files:
                 ret_val['success'] = self._executeFileRequest(request=request, game_schema=game_schema, table_schema=table_schema)
             if request._locs.dict:
@@ -229,7 +229,7 @@ class ExportManager:
             raise Exception(f"Got an invalid game ID ({game_id})!")
         self._extractor_class = game_extractor
 
-    def _prepareProcessors(self, request:Request, game_schema:GameSchema):
+    def _prepareProcessors(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
         if request._exports.events:
             self._evt_processor = EventProcessor()
             # evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
@@ -242,11 +242,11 @@ class ExportManager:
             utils.Logger.Log("Could not export population/session data, no game extractor given!", logging.WARN)
         else:
             if request._exports.sessions:
-                self._sess_processor = SessionProcessor(ExtractorClass=self._extractor_class, game_schema=game_schema)
+                self._sess_processor = SessionProcessor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
             else:
                 utils.Logger.Log("Session features not requested, skipping session_features file.", logging.INFO)
             if request._exports.population:
-                self._pop_processor = PopulationProcessor(ExtractorClass=self._extractor_class, game_schema=game_schema)
+                self._pop_processor = PopulationProcessor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
             else:
                 utils.Logger.Log("Population features not requested, skipping population_features file.", logging.INFO)
 

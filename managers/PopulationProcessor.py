@@ -26,11 +26,11 @@ class PopulationProcessor:
     #                       is structured.
     #  @param sessions_csv_file The output file, to which we'll write the processed
     #                       feature data.
-    def __init__(self, ExtractorClass: Type[Extractor], game_schema: GameSchema):
+    def __init__(self, ExtractorClass: Type[Extractor], game_schema: GameSchema, feature_overrides:Union[List[str],None]=None):
         ## Define instance vars
         self._ExtractorClass   : Type[Extractor] = ExtractorClass
         self._game_schema      : GameSchema      = game_schema
-        self._extractor        : Extractor       = self._ExtractorClass(session_id="population", game_schema=self._game_schema)
+        self._extractor        : Extractor       = self._ExtractorClass(session_id="population", game_schema=self._game_schema, feature_overrides=feature_overrides)
         self._sess_encountered : set             = set()
 
     ## Function to handle processing of a single row of data.

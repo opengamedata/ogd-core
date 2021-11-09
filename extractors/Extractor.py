@@ -43,7 +43,7 @@ class Extractor(abc.ABC):
     # *** PUBLIC BUILT-INS ***
 
     # Base constructor for Extractor classes.
-    def __init__(self, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]):
+    def __init__(self, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]=None):
         """Base constructor for Extractor classes.
         The constructor sets an extractor's session id and range of levels,
         as well as initializing the features dictionary and list of played levels.
