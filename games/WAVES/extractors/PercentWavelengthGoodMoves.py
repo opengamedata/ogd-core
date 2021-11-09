@@ -16,7 +16,7 @@ class PercentWavelengthGoodMoves(Feature):
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
     def CalculateFinalValues(self) -> Any:
-        return self._good_count / self._wavelength_count if self._wavelength_count != 0 else 0
+        return self._good_count / self._wavelength_count if self._wavelength_count != 0 else None
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_data['slider'].upper() == 'WAVELENGTH':
