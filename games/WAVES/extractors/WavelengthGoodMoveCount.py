@@ -19,8 +19,14 @@ class WavelengthGoodMoveCount(PerLevelFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_data['slider'].upper() == 'WAVELENGTH':
-            if event.event_data['end_closeness'] > event.event_data['begin_closeness']:
-                self._count += 1
+            if event.event_name == "CUSTOM.1":
+                if event.event_data['end_closeness'] > event.event_data['begin_closeness']:
+                    self._count += 1
+            elif event.event_name == "CUSTOM.2":
+                start_dist = event.event_data['correct_val'] - event.event_data['begin_val']
+                end_dist = event.event_data['correct_val'] - event.event_data['end_val']
+                if end_dist < start_dist:
+                    self._count += 1
 
     def MinVersion(self) -> Union[str,None]:
         return None

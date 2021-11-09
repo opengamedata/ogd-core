@@ -18,11 +18,14 @@ class OffsetGoodMoveCount(PerLevelFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_data['slider'].upper() == 'OFFSET':
-            if ('end_closeness' in event.event_data.keys() and 'begin_closeness' in event.event_data.keys()):
+            if event.event_name == "CUSTOM.1":
                 if event.event_data['end_closeness'] > event.event_data['begin_closeness']:
                     self._count += 1
-            else:
-                print(f"Weird feature extraction error - didn't find closeness in a supposed offset event. Data: event_name={event.event_name}, event_data keys={event.event_data.keys()}")
+            elif event.event_name == "CUSTOM.2":
+                start_dist = event.event_data['correct_val'] - event.event_data['begin_val']
+                end_dist = event.event_data['correct_val'] - event.event_data['end_val']
+                if end_dist < start_dist:
+                    self._count += 1
 
     def MinVersion(self) -> Union[str,None]:
         return None
