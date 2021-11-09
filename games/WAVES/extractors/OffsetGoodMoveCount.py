@@ -24,7 +24,7 @@ class OffsetGoodMoveCount(PerLevelFeature):
             elif event.event_name == "CUSTOM.2":
                 start_dist = event.event_data['correct_val'] - event.event_data['begin_val']
                 end_dist = event.event_data['correct_val'] - event.event_data['end_val']
-                if end_dist < start_dist:
+                if abs(end_dist) < abs(start_dist):
                     self._count += 1
 
     def MinVersion(self) -> Union[str,None]:
