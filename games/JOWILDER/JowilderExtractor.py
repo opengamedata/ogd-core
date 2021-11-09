@@ -5,7 +5,7 @@ import sys
 import typing
 import traceback
 from collections import defaultdict, deque
-from config.config import core_settings as settings
+from config.config import settings as settings
 from datetime import datetime, timedelta
 from typing import Any, Dict,Tuple, Union
 ## import local files
@@ -100,7 +100,7 @@ class JowilderExtractor(LegacyExtractor):
 
     _NULL_FEATURE_VALS = ['null', 0, None]
 
-    def __init__(self, session_id: int, game_schema: GameSchema):
+    def __init__(self, session_id:str, game_schema:GameSchema):
         super().__init__(session_id=session_id, game_schema=game_schema)
         config = game_schema['config']
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']

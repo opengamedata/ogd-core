@@ -28,7 +28,7 @@ class CrystalExtractor(LegacyExtractor):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id:int, game_schema:GameSchema):
+    def __init__(self, session_id:str, game_schema:GameSchema):
         super().__init__(session_id=session_id, game_schema=game_schema)
         # Define custom private data.
         self._start_times: typing.Dict       = {}
