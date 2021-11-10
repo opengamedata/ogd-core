@@ -240,6 +240,12 @@
                 "prefix": "job",
                 "description": "Number of times player asked for help during a job"
             },
+            "JobName": {
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "job",
+                "description": "The name of the Job with given index in the 'level_range'"
+            },
             "JobStartCount": {
                 "enabled": true,
                 "count":"level_range",
