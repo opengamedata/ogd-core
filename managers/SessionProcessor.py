@@ -34,7 +34,7 @@ class SessionProcessor:
         self._ExtractorClass     :Type[Extractor]       = ExtractorClass
         self._game_schema        :GameSchema            = game_schema
         self._session_extractors :Dict[str, Extractor]  = {}
-        self._feat_overrides     :Union[List[str],None] = feature_overrides
+        self._overrides          :Union[List[str],None] = feature_overrides
 
     ## Function to handle processing of a single row of data.
     #  Basically just responsible for ensuring an extractor for the session
@@ -46,9 +46,9 @@ class SessionProcessor:
         # ensure we have an extractor for the given session:
         if not event.session_id in self._session_extractors.keys():
             if event.app_id == 'LAKELAND' and self._ExtractorClass is LakelandExtractor:
-                self._session_extractors[event.session_id] = LakelandExtractor(session_id=event.session_id, game_schema=self._game_schema, sessions_file=session_file)
+                self._session_extractors[event.session_id] = LakelandExtractor(session_id=event.session_id, game_schema=self._game_schema, feature_overrides=self._overrides, sessions_file=session_file)
             else:
-                self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_schema=self._game_schema, feature_overrides=self._feat_overrides)
+                self._session_extractors[event.session_id] = self._ExtractorClass(session_id=event.session_id, game_schema=self._game_schema, feature_overrides=self._overrides)
         self._session_extractors[event.session_id].ExtractFromEvent(event)
 
     ## Function to calculate aggregate features of all extractors created by the
@@ -58,7 +58,7 @@ class SessionProcessor:
             extractor.CalculateAggregateFeatures()
 
     def GetSessionFeatureNames(self) -> List[str]:
-        return Extractor.GetFeatureNames(self._game_schema)
+        return Extractor.GetFeatureNames(self._game_schema, overrides=self._overrides)
 
     def GetSessionFeatures(self) -> List[List[Any]]:
         return [extractor.GetCurrentFeatures() for extractor in self._session_extractors.values()]

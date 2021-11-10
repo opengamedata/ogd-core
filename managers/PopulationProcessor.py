@@ -32,6 +32,7 @@ class PopulationProcessor:
         self._game_schema      : GameSchema      = game_schema
         self._extractor        : Extractor       = self._ExtractorClass(session_id="population", game_schema=self._game_schema, feature_overrides=feature_overrides)
         self._sess_encountered : set             = set()
+        self._overrides        : Union[List[str],None] = feature_overrides
 
     ## Function to handle processing of a single row of data.
     #  Basically just responsible for ensuring an extractor for the session
@@ -50,7 +51,7 @@ class PopulationProcessor:
         self._extractor.CalculateAggregateFeatures()
 
     def GetPopulationFeatureNames(self) -> List[str]:
-        return Extractor.GetFeatureNames(self._game_schema) + ["SessionCount"]
+        return Extractor.GetFeatureNames(self._game_schema, overrides=self._overrides) + ["SessionCount"]
 
     def GetPopulationFeatures(self) -> List[Any]:
         return self._extractor.GetCurrentFeatures() + [len(self._sess_encountered)]
@@ -70,4 +71,4 @@ class PopulationProcessor:
     #   eating too much memory.
     def ClearLines(self):
         utils.Logger.toStdOut(f"Clearing population entries from PopulationProcessor.", logging.DEBUG)
-        self._extractor = self._ExtractorClass(session_id="population", game_schema=self._game_schema)
+        self._extractor = self._ExtractorClass(session_id="population", game_schema=self._game_schema, feature_overrides=self._overrides)
