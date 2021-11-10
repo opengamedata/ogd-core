@@ -205,7 +205,7 @@
                 "description": "Indicator of whether a given job was ever completed"
             },
             "JobCompletionTime": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time taken to complete a given job"
@@ -247,7 +247,7 @@
                 "description": "Indicator of whether a given job was ever accepted"
             },
             "JobTasksCompleted": {
-                "enabled": false,
+                "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Number of tasks completed for a given job"
