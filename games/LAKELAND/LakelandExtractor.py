@@ -98,7 +98,7 @@ class LakelandExtractor(LegacyExtractor):
     #                    table associated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id:str, game_schema: GameSchema, sessions_file: typing.IO[str]):
+    def __init__(self, session_id:str, game_schema: GameSchema, sessions_file: typing.IO[str], feature_overrides:Union[List[str],None]=None):
         # Set window and overlap size
         config = game_schema['config']
         self._NUM_SECONDS_PER_WINDOW = config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
@@ -118,7 +118,7 @@ class LakelandExtractor(LegacyExtractor):
 
         # set window range
         # Initialize superclass
-        super().__init__(session_id=session_id, game_schema=game_schema)
+        super().__init__(session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
         
         self.reset()
         self.setValByName('num_play', self._cur_gameplay)

@@ -3,7 +3,7 @@ import bisect
 import logging
 import typing
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, List, Union
 ## import local files
 import utils
 from extractors.LegacyExtractor import LegacyExtractor
@@ -28,8 +28,8 @@ class CrystalExtractor(LegacyExtractor):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id:str, game_schema:GameSchema):
-        super().__init__(session_id=session_id, game_schema=game_schema)
+    def __init__(self, session_id:str, game_schema:GameSchema, feature_overrides:Union[List[str],None]=None):
+        super().__init__(session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
         # Define custom private data.
         self._start_times: typing.Dict       = {}
         self._end_times:   typing.Dict       = {}
