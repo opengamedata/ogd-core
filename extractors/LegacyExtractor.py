@@ -46,7 +46,7 @@ class LegacyExtractor(Extractor):
     # *** PUBLIC BUILT-INS ***
 
     # Base constructor for LegacyExtractor classes.
-    def __init__(self, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]=None):
+    def __init__(self, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]):
         """Base constructor for LegacyExtractor classes.
         The constructor sets an extractor's session id and range of levels,
         as well as initializing the features dictionary and list of played levels.
@@ -223,9 +223,10 @@ class LegacyExtractor(Extractor):
         #  @param level The level for which we should initialize values.
         def initLevel(self, level) -> None:
             for f_name in self.perlevels:
-                if level in self.features[f_name].keys():
-                    if self.features[f_name][level]["val"] == None:
-                        self.features[f_name][level]["val"] = 0
+                feature = self.features[f_name]
+                if type(feature) is dict and level in feature.keys():
+                    if feature[level]["val"] == None:
+                        feature[level]["val"] = 0
                 else:
                     utils.Logger.Log(f"Tried to intialize invalid level: {level}", logging.ERROR)
 
@@ -237,8 +238,9 @@ class LegacyExtractor(Extractor):
         #  @return             The value stored for the given feature at given index.
         def getValByIndex(self, feature_name: str, index: int) -> Any:
             if self._has_feature(feature_name):
-                if index in self.features[feature_name].keys():
-                    return self.features[feature_name][index]["val"]
+                feature = self.features[feature_name]
+                if type(feature) is dict and index in feature.keys():
+                    return feature[index]["val"]
                 else:
                     utils.Logger.Log(f"Tried to get value on invalid index of {feature_name}: {index}", logging.ERROR)
             else:
@@ -253,8 +255,9 @@ class LegacyExtractor(Extractor):
         #                      This feature is a dictionary with a "val" and "prefix"
         def getFeatureByIndex(self, feature_name: str, index: int) -> Any:
             if self._has_feature(feature_name):
-                if index in self.features[feature_name].keys():
-                    return self.features[feature_name][index]
+                feature = self.features[feature_name]
+                if type(feature) is dict and index in feature.keys():
+                    return feature[index]
                 else:
                     utils.Logger.Log(f"Tried to get feature on invalid index of {feature_name}: {index}", logging.ERROR)
             else:
@@ -281,8 +284,9 @@ class LegacyExtractor(Extractor):
         #  @param new_value    The value to be stored for the given feature at given index.
         def setValByIndex(self, feature_name: str, index: int, new_value) -> None:
             if self._has_feature(feature_name):
-                if index in self.features[feature_name].keys():
-                    self.features[feature_name][index]["val"] = new_value
+                feature = self.features[feature_name]
+                if type(feature) is dict and index in feature.keys():
+                    feature[index]["val"] = new_value
                 else:
                     utils.Logger.Log(f"Tried to set value on invalid index of {feature_name}: {index}", logging.ERROR)
 
@@ -313,10 +317,11 @@ class LegacyExtractor(Extractor):
         #  @param increment    The size of the increment (default = 1)
         def incValByIndex(self, feature_name: str, index: int, increment: Union[int, float] = 1) -> None:
             if self._has_feature(feature_name):
-                if index in self.features[feature_name].keys():
-                    if self.features[feature_name][index]["val"] == 'null':
-                        self.features[feature_name][index]["val"] = 0
-                    self.features[feature_name][index]["val"] += increment
+                feature = self.features[feature_name]
+                if type(feature) is dict and index in feature.keys():
+                    if feature[index]["val"] == 'null':
+                        feature[index]["val"] = 0
+                    feature[index]["val"] += increment
                 else:
                     utils.Logger.Log(f"Tried to increment value on invalid index of {feature_name}: {index}", logging.ERROR)
 
