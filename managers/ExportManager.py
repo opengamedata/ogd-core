@@ -170,13 +170,13 @@ class ExportManager:
                 # before we zip stuff up, let's ensure the readme is in place:
                 readme = open(file_manager._readme_path, mode='r')
             except FileNotFoundError:
-                utils.Logger.Log(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING)
+                utils.Logger.toStdOut(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING)
                 readme_path = Path("./data") / _game_id
                 utils.GenerateReadme(game_name=_game_id, game_schema=game_schema, column_list=table_schema.ColumnList(), path=readme_path)
             else:
                 readme.close()
         else:
-            utils.Logger.Log(f"Missing schema for {request.GetGameID()}")
+            utils.Logger.toStdOut(f"Missing schema for {request.GetGameID()}", logging.WARNING)
         file_manager.CloseFiles()
         file_manager.ZipFiles()
         # 5) Finally, update the list of csv files.
@@ -199,7 +199,7 @@ class ExportManager:
                     if self._evt_processor is not None:
                         self._evt_processor.ProcessEvent(next_event)
                 else:
-                    utils.Logger.Log(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
+                    utils.Logger.toStdOut(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
         except Exception as err:
             utils.Logger.Log(f"Error while processing slice [{slice_num}/{slice_count}]", logging.ERROR)
             raise err
@@ -234,21 +234,21 @@ class ExportManager:
             self._evt_processor = EventProcessor()
             # evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
         else:
-            utils.Logger.Log("Event log not requested, skipping events file.", logging.INFO)
+            utils.Logger.toStdOut("Event log not requested, skipping events file.", logging.INFO)
         # If game doesn't have an extractor, make sure we don't try to export it.
         if self._extractor_class is None:
             request._exports.sessions = False
             request._exports.population = False
-            utils.Logger.Log("Could not export population/session data, no game extractor given!", logging.WARN)
+            utils.Logger.toStdOut("Could not export population/session data, no game extractor given!", logging.WARN)
         else:
             if request._exports.sessions:
                 self._sess_processor = SessionProcessor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
             else:
-                utils.Logger.Log("Session features not requested, skipping session_features file.", logging.INFO)
+                utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
             if request._exports.population:
                 self._pop_processor = PopulationProcessor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
             else:
-                utils.Logger.Log("Population features not requested, skipping population_features file.", logging.INFO)
+                utils.Logger.toStdOut("Population features not requested, skipping population_features file.", logging.INFO)
 
     def _genSlices(self, sess_ids):
         _sess_ct = len(sess_ids)

@@ -67,7 +67,7 @@ class FileManager(abc.ABC):
         if self._files['population'] is not None:
             ret_val = self._files['population']
         else:
-            utils.Logger.Log("No population file available, writing to standard output instead.", logging.WARN)
+            utils.Logger.toStdOut("No population file available, writing to standard output instead.", logging.WARN)
         return ret_val
 
     def GetSessionsFile(self) -> IO:
@@ -75,7 +75,7 @@ class FileManager(abc.ABC):
         if self._files['sessions'] is not None:
             ret_val = self._files['sessions']
         else:
-            utils.Logger.Log("No sessions file available, writing to standard output instead.", logging.WARN)
+            utils.Logger.toStdOut("No sessions file available, writing to standard output instead.", logging.WARN)
         return ret_val
 
     def GetEventsFile(self) -> IO:
@@ -83,7 +83,7 @@ class FileManager(abc.ABC):
         if self._files['events'] is not None:
             ret_val = self._files['events']
         else:
-            utils.Logger.Log("No events file available, writing to standard output instead.", logging.WARN)
+            utils.Logger.toStdOut("No events file available, writing to standard output instead.", logging.WARN)
         return ret_val
 
     def OpenFiles(self) -> None:
@@ -193,11 +193,11 @@ class FileManager(abc.ABC):
             old_metas = [f for f in os.listdir(self._game_data_dir) if re.match(match_string, f)]
             for old_meta in old_metas:
                 try:
-                    utils.Logger.Log(f"Removing old meta file, {old_meta}")
+                    utils.Logger.toStdOut(f"Removing old meta file, {old_meta}")
                     os.remove(self._game_data_dir / old_meta)
                 except Exception as err:
                     msg = f"Could not remove old meta file {old_meta}. {type(err)} {str(err)}"
-                    utils.Logger.Log(msg, logging.WARNING)
+                    utils.Logger.toStdOut(msg, logging.WARNING)
             # Third, write the new meta file.
             # calculate the path and name of the metadata file, and open/make it.
             meta_file_path : Path = self._game_data_dir/ f"{self._dataset_id}_{self._short_hash}.meta"
