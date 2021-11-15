@@ -10,7 +10,6 @@ Please feel free to modify this code, add new features or games and share back t
 Setup:
 
 * Install python3 (could write a whole chapter on this)
-* Install mysql client for your os. See https://pypi.org/project/mysqlclient/
 * Install python dependencies: "pip3 install -r requirements.txt"
 * Copy `config.py.template` to `config.py` and set server/authentication data
 * Download any authentication keys needed for BigQuery game data projects
