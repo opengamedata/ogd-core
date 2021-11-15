@@ -4,7 +4,7 @@ import json
 from json.decoder import JSONDecodeError
 import os
 import logging
-import typing
+import traceback
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
@@ -147,7 +147,7 @@ class TableSchema:
                 try:
                     return json.loads(str(input))
                 except JSONDecodeError as err:
-                    utils.Logger.Log(f"Could not parse input '{input}' of type {type(input)} from column {column_descriptor['name']}, got the following error:\n{str(err)}", logging.WARN)
+                    utils.Logger.toStdOut(f"Could not parse input '{input}' of type {type(input)} from column {column_descriptor['name']}, got the following error:\n{str(err)}", logging.WARN)
                     return {}
             else:
                 return None
