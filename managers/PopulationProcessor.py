@@ -1,12 +1,13 @@
 # import standard libraries
-from extractors.Extractor import Extractor
 import logging
 import sys
 import traceback
 import typing
-from typing import Any, List, Type, Union
+from typing import Any, IO, List, Type, Union
 # import local files
 import utils
+from extractors.Extractor import Extractor
+from games.LAKELAND.LakelandExtractor import LakelandExtractor
 from managers.FileManager import FileManager
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
@@ -26,13 +27,17 @@ class PopulationProcessor:
     #                       is structured.
     #  @param sessions_csv_file The output file, to which we'll write the processed
     #                       feature data.
-    def __init__(self, ExtractorClass: Type[Extractor], game_schema: GameSchema, feature_overrides:Union[List[str],None]=None):
+    def __init__(self, ExtractorClass: Type[Extractor], game_schema: GameSchema, feature_overrides:Union[List[str],None]=None, pop_file:IO[str]=sys.stdout):
         ## Define instance vars
         self._ExtractorClass   : Type[Extractor] = ExtractorClass
         self._game_schema      : GameSchema      = game_schema
-        self._extractor        : Extractor       = self._ExtractorClass(session_id="population", game_schema=self._game_schema, feature_overrides=feature_overrides)
+        self._extractor        : Extractor
         self._sess_encountered : set             = set()
         self._overrides        : Union[List[str],None] = feature_overrides
+        if self._ExtractorClass is LakelandExtractor:
+            self._extractor = LakelandExtractor(session_id="population", game_schema=self._game_schema, feature_overrides=self._overrides, sessions_file=pop_file)
+        else:
+            self._extractor = self._ExtractorClass(session_id="population", game_schema=self._game_schema, feature_overrides=feature_overrides)
 
     ## Function to handle processing of a single row of data.
     #  Basically just responsible for ensuring an extractor for the session

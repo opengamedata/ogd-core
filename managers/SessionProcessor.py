@@ -1,8 +1,4 @@
 # import standard libraries
-from extractors.Feature import Feature
-from managers.FileManager import FileManager
-from games.LAKELAND.LakelandExtractor import LakelandExtractor
-from extractors.Extractor import Extractor
 import logging
 import traceback
 import sys
@@ -10,6 +6,8 @@ import typing
 from typing import Any, List, Dict, IO, Type, Union
 # import local files
 import utils
+from extractors.Extractor import Extractor
+from games.LAKELAND.LakelandExtractor import LakelandExtractor
 from managers.FileManager import FileManager
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
