@@ -188,21 +188,25 @@ class ExportManager:
     def _processSlice(self, next_data_set:List[Tuple], table_schema:TableSchema, sess_ids:List[str], slice_num:int, slice_count:int):
         start      : datetime = datetime.now()
         num_events : int      = len(next_data_set)
-        try:
-            for row in next_data_set:
+        for row in next_data_set:
+            try:
                 next_event = table_schema.RowToEvent(row)
+            except Exception as err:
+                utils.Logger.Log(f"Error while converting row to Event. This row will be skipped.\nFull error: {err}", logging.WARNING)
+            else:
                 if next_event.session_id in sess_ids:
-                    if self._pop_processor is not None:
-                        self._pop_processor.ProcessEvent(next_event)
-                    if self._sess_processor is not None:
-                        self._sess_processor.ProcessEvent(next_event)
-                    if self._evt_processor is not None:
-                        self._evt_processor.ProcessEvent(next_event)
+                    try:
+                        if self._pop_processor is not None:
+                            self._pop_processor.ProcessEvent(next_event)
+                        if self._sess_processor is not None:
+                            self._sess_processor.ProcessEvent(next_event)
+                        if self._evt_processor is not None:
+                            self._evt_processor.ProcessEvent(next_event)
+                    except Exception as err:
+                        utils.Logger.Log(f"Error while processing slice [{slice_num}/{slice_count}]", logging.ERROR)
+                        raise err
                 else:
                     utils.Logger.toStdOut(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
-        except Exception as err:
-            utils.Logger.Log(f"Error while processing slice [{slice_num}/{slice_count}]", logging.ERROR)
-            raise err
         time_delta = datetime.now() - start
         utils.Logger.Log(f"Processing time for slice [{slice_num}/{slice_count}]: {time_delta} to handle {num_events} events", logging.INFO)
 
