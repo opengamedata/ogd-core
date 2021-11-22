@@ -15,7 +15,7 @@ class JobExperimentationTime(Feature):
     def GetEventTypes(self) -> List[str]:
         return ["begin_experiment", "room_changed"]
 
-    def GetFeatureValues(self) -> List[Any]t[Any]:
+    def GetFeatureValues(self) -> List[Any]:
         return self._time
 
     def _extractFromEvent(self, event:Event) -> None:
