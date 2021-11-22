@@ -74,6 +74,9 @@ class PopulationProcessor:
     ##  Function to empty the list of lines stored by the PopulationProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid
     #   eating too much memory.
-    def ClearLines(self):
+    def ClearLines(self, pop_file:IO[str]=sys.stdout):
         utils.Logger.toStdOut(f"Clearing population entries from PopulationProcessor.", logging.DEBUG)
-        self._extractor = self._ExtractorClass(session_id="population", game_schema=self._game_schema, feature_overrides=self._overrides)
+        if self._ExtractorClass is LakelandExtractor:
+            self._extractor = LakelandExtractor(session_id="population", game_schema=self._game_schema, feature_overrides=self._overrides, sessions_file=pop_file)
+        else:
+            self._extractor = self._ExtractorClass(session_id="population", game_schema=self._game_schema, feature_overrides=self._overrides)
