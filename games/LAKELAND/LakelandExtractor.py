@@ -108,7 +108,7 @@ class LakelandExtractor(LegacyExtractor):
         self.WINDOW_RANGE = range(game_schema.level_range().stop)
         self._WINDOW_RANGES = self._get_window_ranges()
         if sessions_file:
-            self._WRITE_FEATURES = lambda: self.WriteCurrentFeatures(file=sessions_file)
+            self._WRITE_FEATURES = lambda: self.WriteFeatureValues(file=sessions_file)
         else:
             self._WRITE_FEATURES = lambda: utils.Logger.toStdOut("Dumping feature data, no writable file was given!")
         self._cur_gameplay = 1
