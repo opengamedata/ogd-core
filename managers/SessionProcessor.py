@@ -33,6 +33,7 @@ class SessionProcessor:
         self._game_schema        :GameSchema            = game_schema
         self._session_extractors :Dict[str, Extractor]  = {}
         self._overrides          :Union[List[str],None] = feature_overrides
+        self._template_extractor :Extractor             = self._ExtractorClass(session_id="",game_schema=self._game_schema, feature_overrides=self._overrides)
 
     ## Function to handle processing of a single row of data.
     #  Basically just responsible for ensuring an extractor for the session
@@ -56,7 +57,7 @@ class SessionProcessor:
             extractor.CalculateAggregateFeatures()
 
     def GetSessionFeatureNames(self) -> List[str]:
-        return list(self._session_extractors.values())[0].GetFeatureNames(self._game_schema, overrides=self._overrides)
+        return self._template_extractor.GetFeatureNames(self._game_schema, overrides=self._overrides)
 
     def GetSessionFeatures(self) -> List[List[Any]]:
         return [extractor.GetFeatureValues() for extractor in self._session_extractors.values()]
@@ -64,7 +65,7 @@ class SessionProcessor:
     ## Function to write out the header for a processed csv file.
     #  Just runs the header writer for whichever Extractor subclass we were given.
     def WriteSessionFileHeader(self, file_mgr:FileManager, separator:str = "\t"):
-        list(self._session_extractors.values())[0].WriteFileHeader(game_schema=self._game_schema, file=file_mgr.GetSessionsFile(), separator=separator)
+        self._template_extractor.WriteFileHeader(game_schema=self._game_schema, file=file_mgr.GetSessionsFile(), separator=separator)
 
     ## Function to write out all data for the extractors created by the
     #  SessionProcessor. Just calls the "write" function once for each extractor.
