@@ -1,4 +1,5 @@
 __all__ = [
+		"config",
     "extractors",
     "games",
 		"interfaces",
@@ -7,6 +8,7 @@ __all__ = [
 		"utils"
 ]
 
+from . import config
 from . import extractors
 from . import games
 from . import interfaces
