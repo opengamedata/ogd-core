@@ -91,9 +91,10 @@ class Extractor(abc.ABC):
 
     # *** PUBLIC STATICS ***
 
+    # *** PUBLIC METHODS ***
+
     # Static function to print column headers to a file.
-    @staticmethod
-    def WriteFileHeader(game_schema: GameSchema, file: typing.IO[str], separator:str="\t", overrides:Union[List[str],None]=None) -> None:
+    def WriteFileHeader(self, game_schema: GameSchema, file: typing.IO[str], separator:str="\t", overrides:Union[List[str],None]=None) -> None:
         """Static function to print column headers to a file.
 
         We first create a feature dictionary, then essentially write out each key,
@@ -104,12 +105,11 @@ class Extractor(abc.ABC):
         :param file: An open csv file to which we will write column headers.
         :type file: typing.IO[str]
         """
-        columns = Extractor.GetFeatureNames(schema=game_schema, overrides=overrides)
+        columns = self.GetFeatureNames(schema=game_schema, overrides=overrides)
         file.write(separator.join(columns))
         file.write("\n")
 
-    @staticmethod
-    def GetFeatureNames(schema:GameSchema, overrides:Union[List[str],None]=None) -> List[str]:
+    def GetFeatureNames(self, schema:GameSchema, overrides:Union[List[str],None]=None) -> List[str]:
         """Function to generate a list names of all enabled features, given a GameSchema
         This is different from the feature_names() function of GameSchema,
         which ignores the 'enabled' attribute and does not expand per-count features
@@ -122,16 +122,11 @@ class Extractor(abc.ABC):
         :rtype: List[str]
         """
         ret_val : List[str] = []
-        for name,aggregate in schema.aggregate_features().items():
-            if Extractor._validateFeature(name=name, base_setting=aggregate.get("enabled", False), overrides=overrides) == True:
-                ret_val.append(name)
-        for name,percount in schema.percount_features().items():
-            if Extractor._validateFeature(name=name, base_setting=percount.get("enabled", False), overrides=overrides) == True:
-                for i in Extractor._genCountRange(count=percount["count"], schema=schema):
-                    ret_val.append(f"{percount['prefix']}{i}_{name}")
+        for name in self._aggregates.keys():
+            ret_val += self._aggregates[name].GetFeatureNames()
+        for name in self._percounts.keys():
+            ret_val += self._percounts[name].GetFeatureNames()
         return ret_val
-
-    # *** PUBLIC METHODS ***
 
     def ExtractFromEvent(self, event:Event) -> None:
         """Abstract declaration of a function to perform extraction of features from a row.
@@ -169,18 +164,10 @@ class Extractor(abc.ABC):
         # May need to revisit that issue. I mean, it should be fine because Python won't just go
         # and change order for no reason, but still...
         column_vals = []
-        for aggregate in self._aggregates.values():
-            _finalvals = aggregate.GetFeatureValues()
-            if isinstance(_finalvals, list):
-                column_vals += _finalvals
-            else:
-                column_vals.append(_finalvals)
-        for percount in self._percounts.values():
-            _finalvals = percount.GetFeatureValues()
-            if isinstance(_finalvals, list):
-                column_vals += _finalvals
-            else:
-                column_vals.append(_finalvals)
+        for name in self._aggregates.keys():
+            column_vals += self._aggregates[name].GetFeatureValues()
+        for name in self._percounts.keys():
+            column_vals += self._percounts[name].GetFeatureValues()
         return column_vals
 
     def CalculateAggregateFeatures(self) -> None:
