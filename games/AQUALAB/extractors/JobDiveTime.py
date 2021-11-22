@@ -1,6 +1,9 @@
+# Global imports
+import logging
 from datetime import timedelta
 from typing import Any, List
-
+# Local imports
+import utils
 from extractors.Feature import Feature
 from schemas.Event import Event
 
@@ -16,15 +19,18 @@ class JobDiveTime(Feature):
         return ["begin_dive", "scene_changed"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._time
+        return [self._time]
 
     def _extractFromEvent(self, event:Event) -> None:
         if self._validate_job(event.event_data['job_id']):
             if event.event_name == "begin_dive":
                 self._dive_start_time = event.timestamp
             elif event.event_name == "scene_changed":
-                self._time += event.timestamp - self._dive_start_time
-                self._dive_start_time = None
+                if self._dive_start_time is not None:
+                    self._time += event.timestamp - self._dive_start_time
+                    self._dive_start_time = None
+                else:
+                    utils.Logger.toStdOut("Scene changed when we had no active start time!", logging.WARNING)
 
     def _validate_job(self, job_data):
         ret_val : bool = False
@@ -35,5 +41,5 @@ class JobDiveTime(Feature):
             if self._job_map[job_data['string_value']] == self._count_index:
                 ret_val = True
         else:
-            print(f"Got invalid job_id data in JobStartCount")
+            utils.Logger.toStdOut(f"Got invalid job_id data in JobStartCount", logging.WARNING)
         return ret_val

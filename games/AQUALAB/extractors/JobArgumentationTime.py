@@ -1,6 +1,9 @@
+# Global imports
+import logging
 from datetime import datetime, timedelta
 from typing import Any, List, Union
-
+# Local imports
+import utils
 from extractors.Feature import Feature
 from schemas.Event import Event
 
@@ -16,7 +19,7 @@ class JobArgumentationTime(Feature):
         return ["begin_argument", "room_changed"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._time
+        return [self._time]
 
     def _extractFromEvent(self, event:Event) -> None:
         if self._validate_job(event.event_data["job_id"]):
@@ -35,5 +38,5 @@ class JobArgumentationTime(Feature):
             if self._job_map[job_data['string_value']] == self._count_index:
                 ret_val = True
         else:
-            print(f"Got invalid job_id data in JobStartCount")
+            utils.Logger.toStdOut(f"Got invalid job_id data in JobArgumentationTime", logging.WARNING)
         return ret_val

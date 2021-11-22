@@ -14,7 +14,7 @@ class SessionDiveSitesCount(Feature):
         return ["begin_dive"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._count
+        return [self._count]
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_data["site_id"]['string_value'] not in self._visited_sites:

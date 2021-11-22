@@ -15,7 +15,7 @@ class SessionDuration(Feature):
         return ["begin_dive"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._session_duration
+        return [self._session_duration]
 
     def _extractFromEvent(self, event:Event) -> None:
         if not self._client_start_time:

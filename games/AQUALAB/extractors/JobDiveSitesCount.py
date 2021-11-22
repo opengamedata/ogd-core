@@ -1,5 +1,8 @@
+# Global imports
+import logging
 from typing import Any, List
-
+# Local imports
+import utils
 from extractors.Feature import Feature
 from schemas.Event import Event
 
@@ -14,7 +17,7 @@ class JobDiveSitesCount(Feature):
         return ["begin_dive"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._count
+        return [self._count]
 
     def _extractFromEvent(self, event:Event) -> None:
         if self._validate_job(event.event_data['job_id']):
@@ -29,5 +32,5 @@ class JobDiveSitesCount(Feature):
             if self._job_map[job_data['string_value']] == self._count_index:
                 ret_val = True
         else:
-            print(f"Got invalid job_id data in JobStartCount")
+            utils.Logger.toStdOut(f"Got invalid job_id data in JobDiveSitesCount", logging.WARNING)
         return ret_val

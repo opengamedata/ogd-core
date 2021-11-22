@@ -13,7 +13,7 @@ class SwitchJobsCount(Feature):
         return ["switch_job"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._count
+        return [self._count]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._count += 1
