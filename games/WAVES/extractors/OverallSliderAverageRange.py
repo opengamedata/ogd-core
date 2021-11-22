@@ -14,7 +14,7 @@ class OverallSliderAverageRange(SessionFeature):
         return ["CUSTOM.1"]
         # return ["SLIDER_MOVE_RELEASE"]
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         if len(self._ranges) > 0:
             return sum(self._ranges) / len(self._ranges)
         else:

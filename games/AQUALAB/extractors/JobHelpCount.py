@@ -13,7 +13,7 @@ class JobHelpCount(Feature):
     def GetEventTypes(self) -> List[str]:
         return ["ask_for_help"]
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         return self._count
 
     def _extractFromEvent(self, event:Event) -> None:

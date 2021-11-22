@@ -14,7 +14,7 @@ class JobCompleteCount(Feature):
     def GetEventTypes(self) -> List[str]:
         return ["complete_job"]
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         return self._completed
 
     def _extractFromEvent(self, event:Event) -> None:

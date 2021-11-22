@@ -14,7 +14,7 @@ class TotalDiveTime(Feature):
     def GetEventTypes(self) -> List[str]:
         return ["begin_dive", "scene_changed"]
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         return self._time
 
     def _extractFromEvent(self, event:Event) -> None:

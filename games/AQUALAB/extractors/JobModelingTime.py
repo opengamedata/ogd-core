@@ -15,7 +15,7 @@ class JobModelingTime(Feature):
     def GetEventTypes(self) -> List[str]:
         return []
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         return self._time
 
     def _extractFromEvent(self, event:Event) -> None:

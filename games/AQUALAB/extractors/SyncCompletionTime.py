@@ -13,7 +13,7 @@ class SyncCompletionTime(Feature):
     def GetEventTypes(self) -> List[str]:
         return ["begin_simulation, simulation_sync_achieved"]
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         return self._time
 
     def _extractFromEvent(self, event:Event) -> None:

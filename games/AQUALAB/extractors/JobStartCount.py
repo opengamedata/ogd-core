@@ -14,7 +14,7 @@ class JobStartCount(Feature):
     def GetEventTypes(self) -> List[str]:
         return ["accept_job"]
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         return self._start_count
 
     def _extractFromEvent(self, event:Event) -> None:

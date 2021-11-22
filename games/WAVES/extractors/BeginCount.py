@@ -14,7 +14,7 @@ class BeginCount(PerLevelFeature):
         return ["BEGIN.0"]
         # return ["BEGIN"]
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         return self._num_begins
 
     def _extractFromEvent(self, event:Event) -> None:

@@ -15,7 +15,7 @@ class PercentOffsetMoves(Feature):
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         return self._offset_count / self._count if self._count != 0 else None
 
     def _extractFromEvent(self, event:Event) -> None:

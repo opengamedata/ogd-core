@@ -13,7 +13,7 @@ class TotalFails(PerLevelFeature):
     def GetEventTypes(self) -> List[str]:
         return ["FAIL.0"]
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         return self._fail_count
 
     def _extractFromEvent(self, event:Event) -> None:

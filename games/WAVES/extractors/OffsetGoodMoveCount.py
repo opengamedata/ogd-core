@@ -13,7 +13,7 @@ class OffsetGoodMoveCount(PerLevelFeature):
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         return self._count
 
     def _extractFromEvent(self, event:Event) -> None:

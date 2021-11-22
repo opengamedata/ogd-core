@@ -13,7 +13,7 @@ class SliderAverageStandardDeviations(PerLevelFeature):
         return ["CUSTOM.1"]
         # return ["SLIDER_MOVE_RELEASE"]
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         if len(self._std_devs) > 0:
             return sum(self._std_devs) / len(self._std_devs)
         else:

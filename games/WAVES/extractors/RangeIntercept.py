@@ -12,7 +12,7 @@ class RangeIntercept(Feature):
     def GetEventTypes(self) -> List[str]:
         return []
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         return
 
     def _extractFromEvent(self, event:Event) -> None:

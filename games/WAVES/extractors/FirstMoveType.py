@@ -14,7 +14,7 @@ class FirstMoveType(Feature):
         return ["CUSTOM.1", "CUSTOM.2"]
         # "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
 
-    def GetFeatureValues(self) -> Any:
+    def GetFeatureValues(self) -> List[Any]:
         return self._first_move
 
     def _extractFromEvent(self, event:Event) -> None:
