@@ -4,7 +4,7 @@ import enum
 import logging
 from os import sep, stat
 import typing
-from collections import defaultdict
+from collections import OrderedDict
 from typing import Any, Dict, List, Union
 ## import local files
 import utils
@@ -55,8 +55,8 @@ class Extractor(abc.ABC):
         self._session_id     : str                                = session_id
         self._event_registry : Dict[str,List[Extractor.Listener]] = {}
         self._overrides      : Union[List[str],None]              = feature_overrides
-        self._percounts      : Dict[str,Feature] = self._genPerCounts(schema=game_schema, overrides=feature_overrides)
-        self._aggregates     : Dict[str,Feature] = self._genAggregate(schema=game_schema, overrides=feature_overrides)
+        self._percounts      : OrderedDict[str,Feature]           = self._genPerCounts(schema=game_schema, overrides=feature_overrides)
+        self._aggregates     : OrderedDict[str,Feature]           = self._genAggregate(schema=game_schema, overrides=feature_overrides)
 
     # string conversion for Extractors.
     def __str__(self) -> str:
@@ -170,9 +170,17 @@ class Extractor(abc.ABC):
         # and change order for no reason, but still...
         column_vals = []
         for aggregate in self._aggregates.values():
-            column_vals.append(aggregate.CalculateFinalValues())
+            _finalvals = aggregate.GetFeatureValues()
+            if isinstance(_finalvals, list):
+                column_vals += _finalvals
+            else:
+                column_vals.append(_finalvals)
         for percount in self._percounts.values():
-            column_vals.append(percount.CalculateFinalValues())
+            _finalvals = percount.GetFeatureValues()
+            if isinstance(_finalvals, list):
+                column_vals += _finalvals
+            else:
+                column_vals.append(_finalvals)
         return column_vals
 
     def CalculateAggregateFeatures(self) -> None:
@@ -204,8 +212,8 @@ class Extractor(abc.ABC):
 
     # *** PRIVATE METHODS ***
 
-    def _genAggregate(self, schema:GameSchema, overrides:Union[List[str],None]) -> Dict[str,Feature]:
-        ret_val = {}
+    def _genAggregate(self, schema:GameSchema, overrides:Union[List[str],None]) -> 'OrderedDict[str,Feature]':
+        ret_val = OrderedDict()
         for name,aggregate in schema.aggregate_features().items():
             if Extractor._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=overrides):
                 try:
@@ -217,8 +225,8 @@ class Extractor(abc.ABC):
                     ret_val[feature.Name()] = feature
         return ret_val
 
-    def _genPerCounts(self, schema:GameSchema, overrides:Union[List[str],None]) -> Dict[str,Feature]:
-        ret_val = {}
+    def _genPerCounts(self, schema:GameSchema, overrides:Union[List[str],None]) -> 'OrderedDict[str,Feature]':
+        ret_val = OrderedDict()
         for name,percount in schema.percount_features().items():
             if Extractor._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=overrides):
                 for i in Extractor._genCountRange(count=percount["count"], schema=schema):
@@ -232,8 +240,7 @@ class Extractor(abc.ABC):
         return ret_val
 
     def _register(self, feature:Feature, kind:Listener.Kinds):
-        events = feature.GetEventTypes()
-        for event in events:
+        for event in feature.GetEventTypes():
             if event not in self._event_registry.keys():
                 self._event_registry[event] = []
             self._event_registry[event].append(Extractor.Listener(name=feature._name, kind=kind))
