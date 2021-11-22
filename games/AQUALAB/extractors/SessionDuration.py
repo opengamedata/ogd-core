@@ -14,7 +14,7 @@ class SessionDuration(Feature):
     def GetEventTypes(self) -> List[str]:
         return ["begin_dive"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._session_duration
 
     def _extractFromEvent(self, event:Event) -> None:

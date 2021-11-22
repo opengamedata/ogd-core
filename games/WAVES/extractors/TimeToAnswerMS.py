@@ -18,7 +18,7 @@ class TimeToAnswerMS(Feature):
         return ["CUSTOM.3", "COMPLETE.0"]
         # return ["QUESTION_ANSWER"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return
 
     def _extractFromEvent(self, event:Event) -> None:

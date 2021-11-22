@@ -14,7 +14,7 @@ class FirstMoveType(Feature):
         return ["CUSTOM.1", "CUSTOM.2"]
         # "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._first_move
 
     def _extractFromEvent(self, event:Event) -> None:

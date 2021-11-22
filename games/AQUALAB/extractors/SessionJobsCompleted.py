@@ -12,7 +12,7 @@ class SessionJobsCompleted(Feature):
     def GetEventTypes(self) -> List[str]:
         return ["complete_job"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._count
 
     def _extractFromEvent(self, event:Event) -> None:

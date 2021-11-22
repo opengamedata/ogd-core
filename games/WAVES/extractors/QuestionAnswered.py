@@ -14,7 +14,7 @@ class QuestionAnswered(Feature):
         return ["CUSTOM.3"]
         # return ["QUESTION_ANSWER"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._answer
 
     def _extractFromEvent(self, event:Event) -> None:

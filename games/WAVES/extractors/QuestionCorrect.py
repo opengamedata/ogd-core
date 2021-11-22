@@ -14,7 +14,7 @@ class QuestionCorrect(Feature):
         return ["CUSTOM.3"]
         # return ["QUESTION_ANSWER"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._correct
 
     def _extractFromEvent(self, event:Event) -> None:

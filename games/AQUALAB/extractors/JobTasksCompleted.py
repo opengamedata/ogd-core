@@ -13,7 +13,7 @@ class JobTasksCompleted(Feature):
     def GetEventTypes(self) -> List[str]:
         return ["complete_task"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._count
 
     def _extractFromEvent(self, event:Event) -> None:

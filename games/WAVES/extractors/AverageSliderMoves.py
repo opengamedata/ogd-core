@@ -15,7 +15,7 @@ class AverageSliderMoves(SessionFeature):
         return ["CUSTOM.1"]
         # return ["SLIDER_MOVE_RELEASE"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         if len(self._levels_encountered) > 0:
             return self._slider_count / len(self._levels_encountered)
         else:

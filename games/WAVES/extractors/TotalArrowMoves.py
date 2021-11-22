@@ -13,7 +13,7 @@ class TotalArrowMoves(PerLevelFeature):
         return ["CUSTOM.2"]
         # return ["ARROW_MOVE_RELEASE"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._arrow_move_count
 
     def _extractFromEvent(self, event:Event) -> None:

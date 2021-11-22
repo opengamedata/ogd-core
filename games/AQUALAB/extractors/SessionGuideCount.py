@@ -12,7 +12,7 @@ class SessionGuideCount(Feature):
     def GetEventTypes(self) -> List[str]:
         return ["guide_triggered"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._count
 
     def _extractFromEvent(self, event:Event) -> None:

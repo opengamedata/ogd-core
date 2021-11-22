@@ -13,7 +13,7 @@ class JobName(Feature):
     def GetEventTypes(self) -> List[str]:
         return []
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         for key in self._job_map.keys():
             if self._job_map[key] == self._count_index:
                 return key

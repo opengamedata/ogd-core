@@ -23,7 +23,7 @@ class LegacyFeature(Feature):
     def GetEventTypes(self) -> List[str]:
         return []
     
-    def CalculateFinalValues(self) -> typing.Tuple:
+    def GetFeatureValues(self) -> typing.Tuple:
         return ()
 
     def ExtractFromEvent(self, event:Event):

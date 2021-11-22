@@ -14,7 +14,7 @@ class Completed(PerLevelFeature):
     def GetEventTypes(self) -> List[str]:
         return ["COMPLETE.0"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._completed
 
     def _extractFromEvent(self, event:Event) -> None:

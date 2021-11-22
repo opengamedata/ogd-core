@@ -16,7 +16,7 @@ class AverageMoveTypeChanges(SessionFeature):
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         _counts = [count for count in self._change_count.values()]
         if len(self._levels_encountered) > 0:
             return sum(_counts) / len(self._levels_encountered)

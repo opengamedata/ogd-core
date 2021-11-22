@@ -13,7 +13,7 @@ class SessionID(SessionFeature):
     def GetEventTypes(self) -> List[str]:
         return []
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._sessionID
 
     def _extractFromEvent(self, event:Event) -> None:

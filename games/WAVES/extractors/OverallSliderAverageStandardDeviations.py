@@ -14,7 +14,7 @@ class OverallSliderAverageStandardDeviations(SessionFeature):
         return ["CUSTOM.1"]
         # return ["SLIDER_MOVE_RELEASE"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         if len(self._std_devs) > 0:
             return sum(self._std_devs) / len(self._std_devs)
         else:

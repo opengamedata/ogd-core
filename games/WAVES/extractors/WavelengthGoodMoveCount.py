@@ -14,7 +14,7 @@ class WavelengthGoodMoveCount(PerLevelFeature):
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._count
 
     def _extractFromEvent(self, event:Event) -> None:

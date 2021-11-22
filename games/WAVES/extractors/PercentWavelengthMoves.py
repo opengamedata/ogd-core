@@ -15,7 +15,7 @@ class PercentWavelengthMoves(Feature):
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._wavelength_count / self._count if self._count != 0 else None
 
     def _extractFromEvent(self, event:Event) -> None:

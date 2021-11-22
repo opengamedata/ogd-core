@@ -14,7 +14,7 @@ class MenuButtonCount(PerLevelFeature):
         return ["CUSTOM.5"]
         # "events": ["MENU_BUTTON"],
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._menu_btn_count
 
     def _extractFromEvent(self, event:Event) -> None:

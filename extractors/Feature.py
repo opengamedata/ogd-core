@@ -29,7 +29,7 @@ class Feature(abc.ABC):
 
     ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
     @abc.abstractmethod
-    def CalculateFinalValues(self) -> List[Any]:
+    def GetFeatureValues(self) -> List[Any]:
         """Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
 
         :return: Returns the values of all columns for the Feature, based on data the feature has seen so far.
@@ -68,7 +68,7 @@ class Feature(abc.ABC):
         """Base function to get a list of names of the feature(s) a given Feature class outputs.
         By default, a Feature class just generates one value, and uses its own name (defined in the schema.json file).
         However, if a Feature class is written to output multiple values, it will need to override this function.
-        Note, CalculateFinalValues **must** match the ordering from the override of this GetFeatureNames, if returning a list of length > 1.
+        Note, GetFeatureValues **must** match the ordering from the override of this GetFeatureNames, if returning a list of length > 1.
 
         :return: [description]
         :rtype: Tuple[str]

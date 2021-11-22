@@ -15,7 +15,7 @@ class JobCompletionTime(Feature):
     def GetEventTypes(self) -> List[str]:
         return ["accept_job", "complete_job"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._time
 
     def _extractFromEvent(self, event:Event) -> None:

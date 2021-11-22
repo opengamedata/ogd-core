@@ -15,7 +15,7 @@ class JobDiveTime(Feature):
     def GetEventTypes(self) -> List[str]:
         return ["begin_dive", "scene_changed"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._time
 
     def _extractFromEvent(self, event:Event) -> None:

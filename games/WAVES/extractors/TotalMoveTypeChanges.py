@@ -15,7 +15,7 @@ class TotalMoveTypeChanges(PerLevelFeature):
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._change_count
 
     def _extractFromEvent(self, event:Event) -> None:

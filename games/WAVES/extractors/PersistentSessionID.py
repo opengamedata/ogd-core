@@ -13,7 +13,7 @@ class PersistentSessionID(SessionFeature):
     def GetEventTypes(self) -> List[str]:
         return ["BEGIN.0"]
 
-    def CalculateFinalValues(self) -> Any:
+    def GetFeatureValues(self) -> Any:
         return self._persistent_id
 
     def _extractFromEvent(self, event:Event) -> None:
