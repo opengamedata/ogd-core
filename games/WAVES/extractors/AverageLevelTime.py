@@ -35,9 +35,9 @@ class AverageLevelTime(SessionFeature):
                     utils.Logger.Log(f"Player had level {level} listed as encountered, but did not begin *or* complete it.", logging.WARN)
         _total_time = sum(_diffs)
         if len(self._levels_encountered) > 0:
-            return _total_time / len(self._levels_encountered)
+            return [_total_time / len(self._levels_encountered)]
         else:
-            return None
+            return [None]
 
     def _extractFromEvent(self, event:Event) -> None:
         _level = event.event_data['level']

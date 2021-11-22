@@ -1,5 +1,4 @@
 from schemas import Event
-import typing
 from typing import Any, List, Union
 # local imports
 from extractors.SessionFeature import SessionFeature
@@ -14,7 +13,7 @@ class SessionID(SessionFeature):
         return []
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._sessionID
+        return [self._sessionID]
 
     def _extractFromEvent(self, event:Event) -> None:
         return

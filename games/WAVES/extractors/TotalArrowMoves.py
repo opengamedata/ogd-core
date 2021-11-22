@@ -14,7 +14,7 @@ class TotalArrowMoves(PerLevelFeature):
         # return ["ARROW_MOVE_RELEASE"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._arrow_move_count
+        return [self._arrow_move_count]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._arrow_move_count += 1

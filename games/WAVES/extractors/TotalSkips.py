@@ -15,7 +15,7 @@ class TotalSkips(PerLevelFeature):
         # "events": ["SKIP_BUTTON"],
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._skip_count
+        return [self._skip_count]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._skip_count += 1

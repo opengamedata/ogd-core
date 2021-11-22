@@ -1,5 +1,4 @@
 from schemas import Event
-import typing
 from typing import Any, List, Union
 # local imports
 from extractors.PerLevelFeature import PerLevelFeature
@@ -16,7 +15,7 @@ class SequenceLevel(PerLevelFeature):
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._seq
+        return [self._seq]
 
     def _extractFromEvent(self, event:Event) -> None:
         currentSliderType = event.event_data["slider"]

@@ -15,7 +15,7 @@ class TotalResets(PerLevelFeature):
         # "events": ["RESET_BTN_PRESS"],
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._reset_count
+        return [self._reset_count]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._reset_count += 1

@@ -13,7 +13,7 @@ class SucceedCount(PerLevelFeature):
         return ["SUCCEED.0"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._succeed_count
+        return [self._succeed_count]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._succeed_count += 1

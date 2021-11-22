@@ -1,5 +1,4 @@
 from schemas import Event
-import typing
 from typing import Any, List, Union
 # local imports
 from extractors.Feature import Feature
@@ -15,7 +14,7 @@ class QuestionAnswered(Feature):
         # return ["QUESTION_ANSWER"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._answer
+        return [self._answer]
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_data['question'] == self._count_index:

@@ -16,7 +16,7 @@ class TotalMoveTypeChanges(PerLevelFeature):
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._change_count
+        return [self._change_count]
 
     def _extractFromEvent(self, event:Event) -> None:
         if self._last_move != event.event_name:

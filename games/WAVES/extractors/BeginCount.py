@@ -1,5 +1,4 @@
 from schemas import Event
-import typing
 from typing import Any, List, Union
 # local imports
 from extractors.PerLevelFeature import PerLevelFeature
@@ -15,7 +14,7 @@ class BeginCount(PerLevelFeature):
         # return ["BEGIN"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._num_begins
+        return [self._num_begins]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._num_begins += 1

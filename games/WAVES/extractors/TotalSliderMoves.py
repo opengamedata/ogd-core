@@ -14,7 +14,7 @@ class TotalSliderMoves(PerLevelFeature):
         # return ["SLIDER_MOVE_RELEASE"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._slider_move_count
+        return [self._slider_move_count]
 
     def _extractFromEvent(self, event:Event) -> None:
             self._slider_move_count += 1

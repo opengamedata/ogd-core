@@ -1,5 +1,4 @@
 from schemas import Event
-import typing
 from typing import Any, List, Union
 # local imports
 from extractors.SessionFeature import SessionFeature
@@ -17,9 +16,9 @@ class OverallPercentWavelengthMoves(SessionFeature):
 
     def GetFeatureValues(self) -> List[Any]:
         if self._move_count > 0:
-            return self._wavelength_count / self._move_count * 100
+            return [self._wavelength_count / self._move_count * 100]
         else:
-            return None
+            return [None]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._move_count += 1

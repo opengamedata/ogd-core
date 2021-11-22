@@ -1,6 +1,5 @@
 from os import truncate
 from schemas import Event
-import typing
 from typing import Any, List, Union
 # local imports
 from extractors.PerLevelFeature import PerLevelFeature
@@ -15,7 +14,7 @@ class Completed(PerLevelFeature):
         return ["COMPLETE.0"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._completed
+        return [self._completed]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._completed = True

@@ -1,5 +1,4 @@
 from schemas import Event
-import typing
 from typing import Any, List, Union
 # local imports
 from extractors.Feature import Feature
@@ -13,7 +12,7 @@ class RangeIntercept(Feature):
         return []
 
     def GetFeatureValues(self) -> List[Any]:
-        return
+        return []
 
     def _extractFromEvent(self, event:Event) -> None:
         return

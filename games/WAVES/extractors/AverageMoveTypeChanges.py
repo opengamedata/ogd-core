@@ -1,5 +1,4 @@
 from schemas import Event
-import typing
 from typing import Any, List, Union
 # local imports
 from extractors.SessionFeature import SessionFeature
@@ -19,9 +18,9 @@ class AverageMoveTypeChanges(SessionFeature):
     def GetFeatureValues(self) -> List[Any]:
         _counts = [count for count in self._change_count.values()]
         if len(self._levels_encountered) > 0:
-            return sum(_counts) / len(self._levels_encountered)
+            return [sum(_counts) / len(self._levels_encountered)]
         else:
-            return None
+            return [None]
 
     def _extractFromEvent(self, event:Event) -> None:
         _level = event.event_data['level']

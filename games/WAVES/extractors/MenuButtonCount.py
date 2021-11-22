@@ -1,5 +1,4 @@
 from schemas import Event
-import typing
 from typing import Any, List, Union
 # local imports
 from extractors.PerLevelFeature import PerLevelFeature
@@ -15,7 +14,7 @@ class MenuButtonCount(PerLevelFeature):
         # "events": ["MENU_BUTTON"],
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._menu_btn_count
+        return [self._menu_btn_count]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._menu_btn_count += 1

@@ -1,5 +1,4 @@
 from schemas import Event
-import typing
 from typing import Any, List, Union
 # local imports
 from extractors.Feature import Feature
@@ -16,7 +15,7 @@ class PercentAmplitudeMoves(Feature):
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._amplitude_count / self._count if self._count != 0 else None
+        return [self._amplitude_count / self._count if self._count != 0 else None]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._count += 1

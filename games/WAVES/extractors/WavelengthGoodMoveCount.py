@@ -15,7 +15,7 @@ class WavelengthGoodMoveCount(PerLevelFeature):
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._count
+        return [self._count]
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_data['slider'].upper() == 'WAVELENGTH':

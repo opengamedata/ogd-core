@@ -1,5 +1,4 @@
 from schemas import Event
-import typing
 from typing import Any, List, Union
 # local imports
 from extractors.SessionFeature import SessionFeature
@@ -16,9 +15,9 @@ class AverageFails(SessionFeature):
 
     def GetFeatureValues(self) -> List[Any]:
         if len(self._levels_encountered) > 0:
-            return self._fail_count / len(self._levels_encountered)
+            return [self._fail_count / len(self._levels_encountered)]
         else:
-            return None
+            return [None]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._levels_encountered.add(event.event_data['level']) # set-add level to list, at end we will have set of all levels seen.

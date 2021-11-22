@@ -1,5 +1,4 @@
 from schemas import Event
-import typing
 from typing import Any, List, Union
 # local imports
 from extractors.SessionFeature import SessionFeature
@@ -16,9 +15,9 @@ class OverallSliderAverageRange(SessionFeature):
 
     def GetFeatureValues(self) -> List[Any]:
         if len(self._ranges) > 0:
-            return sum(self._ranges) / len(self._ranges)
+            return [sum(self._ranges) / len(self._ranges)]
         else:
-            return None
+            return [None]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._ranges.append(event.event_data["max_val"] - event.event_data["min_val"])

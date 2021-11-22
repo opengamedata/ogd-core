@@ -1,5 +1,4 @@
 from schemas import Event
-import typing
 from typing import Any, List, Union
 # local imports
 from extractors.PerLevelFeature import PerLevelFeature
@@ -14,7 +13,7 @@ class CompleteCount(PerLevelFeature):
         return ["COMPLETE.0"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._num_completes
+        return [self._num_completes]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._num_completes += 1

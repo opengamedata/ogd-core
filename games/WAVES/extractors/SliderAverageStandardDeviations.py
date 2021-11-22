@@ -15,9 +15,9 @@ class SliderAverageStandardDeviations(PerLevelFeature):
 
     def GetFeatureValues(self) -> List[Any]:
         if len(self._std_devs) > 0:
-            return sum(self._std_devs) / len(self._std_devs)
+            return [sum(self._std_devs) / len(self._std_devs)]
         else:
-            return None
+            return [None]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._std_devs.append(event.event_data["stdev_val"])
