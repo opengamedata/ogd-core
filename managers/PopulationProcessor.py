@@ -59,7 +59,7 @@ class PopulationProcessor:
         return Extractor.GetFeatureNames(self._game_schema, overrides=self._overrides) + ["SessionCount"]
 
     def GetPopulationFeatures(self) -> List[Any]:
-        return self._extractor.GetCurrentFeatures() + [len(self._sess_encountered)]
+        return self._extractor.GetFeatureValues() + [len(self._sess_encountered)]
 
     ## Function to write out the header for a processed csv file.
     #  Just runs the header writer for whichever Extractor subclass we were given.
@@ -69,7 +69,7 @@ class PopulationProcessor:
     ## Function to write out all data for the extractors created by the
     #  PopulationProcessor. Just calls the "write" function once for each extractor.
     def WritePopulationFileLines(self, file_mgr:FileManager, separator:str="\t"):
-        self._extractor.WriteCurrentFeatures(file=file_mgr.GetPopulationFile(), separator=separator)
+        self._extractor.WriteFeatureValues(file=file_mgr.GetPopulationFile(), separator=separator)
 
     ##  Function to empty the list of lines stored by the PopulationProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid

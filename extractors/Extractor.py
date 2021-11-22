@@ -152,7 +152,7 @@ class Extractor(abc.ABC):
                     utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
 
     ## Function to print data from an extractor to file.
-    def WriteCurrentFeatures(self, file: typing.IO[str], separator:str="\t") -> None:
+    def WriteFeatureValues(self, file: typing.IO[str], separator:str="\t") -> None:
         """Function to print data from an extractor to file.
 
         This function should be the same across all Extractor subtypes.
@@ -160,11 +160,11 @@ class Extractor(abc.ABC):
         :param file: An open csv file to which we will write column headers.
         :type file: typing.IO[str]
         """
-        column_vals = self.GetCurrentFeatures()
+        column_vals = self.GetFeatureValues()
         file.write(separator.join([str(val) for val in column_vals]))
         file.write("\n")
 
-    def GetCurrentFeatures(self) -> List[Any]:
+    def GetFeatureValues(self) -> List[Any]:
         # TODO: It looks like I might be assuming that dictionaries always have same order here.
         # May need to revisit that issue. I mean, it should be fine because Python won't just go
         # and change order for no reason, but still...

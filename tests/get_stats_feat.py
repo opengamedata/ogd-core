@@ -86,7 +86,7 @@ for session in session_id_list:
             extractor.extractFromRow(row_with_complex_parsed=row, game_table=table)
         extractor.CalculateAggregateFeatures()
         all_features = dict(zip(extractor.getFeatureNames(game_table=table, game_schema=schema),
-                                extractor.GetCurrentFeatures()))
+                                extractor.GetFeatureValues()))
         all_features = parse_nums(all_features)
         result = model.Eval([all_features])[0]
         if result is None:

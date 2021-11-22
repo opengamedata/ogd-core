@@ -86,7 +86,7 @@ class LegacyExtractor(Extractor):
     # *** PUBLIC METHODS ***
 
     ## Function to print data from an extractor to file.
-    def WriteCurrentFeatures(self, file: typing.IO[str], separator:str="\t") -> None:
+    def WriteFeatureValues(self, file: typing.IO[str], separator:str="\t") -> None:
         """Function to print data from an extractor to file.
         This function should be the same across all LegacyExtractor subtypes.
         Simply prints out each value from the extractor's features dictionary.
@@ -101,11 +101,11 @@ class LegacyExtractor(Extractor):
         # TODO: It looks like I might be assuming that dictionaries always have same order here.
         # May need to revisit that issue. I mean, it should be fine because Python won't just go
         # and change order for no reason, but still...
-        column_vals = self.GetCurrentFeatures()
+        column_vals = self.GetFeatureValues()
         file.write(separator.join(column_vals))
         file.write("\n")
 
-    def GetCurrentFeatures(self) -> typing.List[str]:
+    def GetFeatureValues(self) -> typing.List[str]:
         def _format(obj):
             if obj == None:
                 return ""
