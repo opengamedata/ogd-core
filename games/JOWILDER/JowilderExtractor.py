@@ -145,9 +145,9 @@ class JowilderExtractor(LegacyExtractor):
         self._last_quizstart = None
         self._quiztimes = [None]*16
 
-    def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    def _extractFeaturesFromEvent(self, event:Event):
         try:
-            self._extractFeaturesFromRow(event, table_schema)
+            self._extractFeaturesFromRow(event)
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             for place in [utils.Logger.toFile, utils.Logger.toStdOut]:
@@ -155,7 +155,7 @@ class JowilderExtractor(LegacyExtractor):
                 place('DEBUG STRINGS:', logging.DEBUG)
                 place(self.get_debug_string(version=event.app_version, num_lines=2), logging.DEBUG)
 
-    def _extractFeaturesFromRow(self, event:Event, table_schema: TableSchema):
+    def _extractFeaturesFromRow(self, event:Event):
         # put some data in local vars, for readability later.
         if self.halt:
             return
