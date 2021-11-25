@@ -33,7 +33,11 @@ class SessionProcessor:
         self._game_schema        :GameSchema            = game_schema
         self._session_extractors :Dict[str, Extractor]  = {}
         self._overrides          :Union[List[str],None] = feature_overrides
-        self._template_extractor :Extractor             = self._ExtractorClass(session_id="",game_schema=self._game_schema, feature_overrides=self._overrides)
+        self._template_extractor :Extractor
+        if self._ExtractorClass is LakelandExtractor:
+            self._template_extractor = LakelandExtractor(session_id="", game_schema=self._game_schema, feature_overrides=self._overrides, sessions_file=sys.stdout)
+        else:
+            self._template_extractor = self._ExtractorClass(session_id="",game_schema=self._game_schema, feature_overrides=self._overrides)
 
     ## Function to handle processing of a single row of data.
     #  Basically just responsible for ensuring an extractor for the session
