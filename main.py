@@ -71,13 +71,18 @@ def ShowHelp() -> bool:
 #  the csv's themselves). Further, the output is printed rather than written
 #  to file.
 def ShowGameInfo() -> bool:
-    game_schema = GameSchema(schema_name=f"{game_name}.json")
-    table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
-
-    feature_descriptions = {**game_schema.perlevel_features(), **game_schema.aggregate_features()}
-    print(utils.GenCSVMetadata(game_name=game_name, column_list=table_schema.ColumnList(),\
-                                                    feature_list=feature_descriptions))
-    return True
+    try:
+        game_schema = GameSchema(schema_name=f"{game_name}.json")
+        table_schema = TableSchema(schema_name=f"{settings['GAME_SOURCE_MAP'][game_name]['table']}.json")
+        print(utils.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema))
+    except Exception as err:
+        msg = f"Could not print information for {game_name}: {type(err)} {str(err)}"
+        Logger.toStdOut(msg, logging.ERROR)
+        traceback.print_tb(err.__traceback__)
+        Logger.toFile(msg, logging.ERROR)
+        return False
+    else:
+        return True
 
 ## Function to write out the readme file for a given game.
 #  This includes the CSV metadata (data from the schema, originally written into
@@ -88,15 +93,16 @@ def WriteReadme() -> bool:
     try:
         game_schema = GameSchema(schema_name=f"{game_name}.json")
         table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
-        utils.GenerateReadme(game_name=game_name, game_schema=game_schema, column_list=table_schema.ColumnList(), path=path)
-        Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
-        return True
+        utils.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=path)
     except Exception as err:
         msg = f"Could not create a readme for {game_name}: {type(err)} {str(err)}"
         Logger.toStdOut(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
         Logger.toFile(msg, logging.ERROR)
         return False
+    else:
+        Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
+        return True
 
 ## Function to handle execution of export code. This is the main intended use of
 #  the program.
