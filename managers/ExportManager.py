@@ -96,7 +96,7 @@ class ExportManager:
             next_data_set : Union[List[Tuple],None] = request._interface.RowsFromIDs(next_slice)
             if next_data_set is not None:
                 time_delta = datetime.now() - start
-                utils.Logger.Log(f"Retrieval time for slice [{i}/{len(session_slices)}]: {time_delta} to get {len(next_data_set)} events", logging.INFO)
+                utils.Logger.Log(f"Retrieval time for slice [{i+1}/{len(session_slices)}]: {time_delta} to get {len(next_data_set)} events", logging.INFO)
                 # 3a) If next slice yielded valid data from the interface, process row-by-row.
                 self._processSlice(next_data_set=next_data_set, table_schema=table_schema, sess_ids=sess_ids, slice_num=i+1, slice_count=len(session_slices))
                 # 3b) After processing all rows for each slice, write out the session data and reset for next slice.
@@ -151,7 +151,7 @@ class ExportManager:
             next_data_set : Union[List[Tuple],None] = request._interface.RowsFromIDs(next_slice)
             if next_data_set is not None:
                 time_delta = datetime.now() - start
-                utils.Logger.Log(f"Retrieval time for slice [{i}/{len(session_slices)}]: {time_delta} to get {len(next_data_set)} events", logging.INFO)
+                utils.Logger.Log(f"Retrieval time for slice [{i+1}/{len(session_slices)}]: {time_delta} to get {len(next_data_set)} events", logging.INFO)
                 # 3a) If next slice yielded valid data from the interface, process row-by-row.
                 self._processSlice(next_data_set=next_data_set, table_schema=table_schema, sess_ids=sess_ids, slice_num=i+1, slice_count=len(session_slices))
                 # 3b) After processing all rows for each slice, write out the session data and reset for next slice.
