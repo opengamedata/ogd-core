@@ -61,13 +61,13 @@ class TableSchema:
         return list(self._columns)
 
     def Markdown(self) -> str:
-        ret_val = "## Database Columns:  \n\n"
+        ret_val = "## Database Columns  \n\n"
         ret_val += "The individual columns recorded in the database for this game.  \n\n"
         # set up list of database columns
         column_list = [f"**{item['name']}** : *{item['type']}* - {item['readable']}, {item['desc']}  " for item in self._columns]
         ret_val += "\n".join(column_list)
         # set up info on what is mapped to each event entry
-        ret_val += "\n\n## Event Object Elements:  \n\n"
+        ret_val += "\n\n## Event Object Elements  \n\n"
         ret_val += "The elements (member variables) of each Event object, available to programmers when writing feature extractors. The right-hand side shows which database column(s) are mapped to a given element.  \n\n"
         event_column_list = []
         for evt_col,row_col in self._column_map.items():
