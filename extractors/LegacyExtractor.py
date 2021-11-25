@@ -79,31 +79,23 @@ class LegacyExtractor(Extractor):
         :param separator: [description], defaults to "\t"
         :type separator: str, optional
         """
-        columns = LegacyExtractor._genFeatureNames(game_schema=game_schema)
+        columns = LegacyExtractor.GetFeatureNames(game_schema=game_schema)
         file.write(separator.join(columns))
         file.write("\n")
 
+    @staticmethod
+    def GetFeatureNames(game_schema: GameSchema) -> List[str]:
+        columns = []
+        features = LegacyExtractor.LegacySessionFeatures.generateFeatureDict(game_schema)
+        for feature_name,feature_content in features.items():
+            if type(feature_content) is dict:
+                # if it's a dictionary, expand.
+                columns.extend([f"{feature_content[num]['prefix']}{num}_{feature_name}" for num in feature_content.keys()])
+            else:
+                columns.append(str(feature_name))
+        return columns
+
     # *** PUBLIC METHODS ***
-
-    ## Function to print data from an extractor to file.
-    def WriteFeatureValues(self, file: typing.IO[str], separator:str="\t") -> None:
-        """Function to print data from an extractor to file.
-        This function should be the same across all LegacyExtractor subtypes.
-        Simply prints out each value from the extractor's features dictionary.
-
-        :param file: An open csv file to which we will write column headers.
-        :type file: typing.IO[str]
-        :param separator: [description], defaults to "\t"
-        :type separator: str, optional
-        :return: [description]
-        :rtype: [type]
-        """
-        # TODO: It looks like I might be assuming that dictionaries always have same order here.
-        # May need to revisit that issue. I mean, it should be fine because Python won't just go
-        # and change order for no reason, but still...
-        column_vals = self.GetFeatureValues()
-        file.write(separator.join(column_vals))
-        file.write("\n")
 
     def GetFeatureValues(self) -> typing.List[str]:
         def _format(obj):
@@ -144,18 +136,6 @@ class LegacyExtractor(Extractor):
         self._calculateAggregateFeatures()
 
     # *** PRIVATE STATICS ***
-
-    @staticmethod
-    def _genFeatureNames(game_schema: GameSchema) -> List[str]:
-        columns = []
-        features = LegacyExtractor.LegacySessionFeatures.generateFeatureDict(game_schema)
-        for feature_name,feature_content in features.items():
-            if type(feature_content) is dict:
-                # if it's a dictionary, expand.
-                columns.extend([f"{feature_content[num]['prefix']}{num}_{feature_name}" for num in feature_content.keys()])
-            else:
-                columns.append(str(feature_name))
-        return columns
 
     # *** PRIVATE METHODS ***
 
