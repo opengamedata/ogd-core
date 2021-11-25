@@ -11,6 +11,7 @@ from pathlib import Path
 # local imports
 from config.config import settings as settings
 from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
 #  @param filename  The name of the JSON file. If the file extension is not .json,
@@ -36,23 +37,22 @@ def loadJSONFile(filename:str, path:Path = Path("./")) -> typing.Any:
                         logging.ERROR)
         raise err
 
-def GenerateReadme(game_name:str, game_schema:GameSchema, column_list:List[Dict[str,str]], path:Path = Path("./")):
+def GenerateReadme(game_schema:GameSchema, table_schema:TableSchema, path:Path = Path("./")):
     try:
         os.makedirs(name=path, exist_ok=True)
         with open(path / "readme.md", "w") as readme:
             # 1. Open files with game-specific readme data, and global db changelog.
             source_dir = Path("./doc/readme_src/")
             try:
-                with open(source_dir / f"{game_name}_readme_src.md", "r") as readme_src:
+                with open(source_dir / f"{game_schema._game_name}_readme_src.md", "r") as readme_src:
                     readme.write(readme_src.read())
             except FileNotFoundError as err:
-                readme.write("No readme prepared")
-                Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.WARNING)
+                readme.write("No game readme prepared")
+                Logger.toStdOut(f"Could not find {game_schema._game_name}_readme_src", logging.WARNING)
             finally:
-                readme.write("\n")
+                readme.write("\n\n")
             # 2. Use schema to write feature & column descriptions to the readme.
-            feature_descriptions = {**game_schema.perlevel_features(), **game_schema.aggregate_features()}
-            meta = GenCSVMetadata(game_name=game_name, column_list=column_list, feature_list=feature_descriptions)
+            meta = GenCSVMetadata(game_schema=game_schema, table_schema=table_schema)
             readme.write(meta)
             # 3. Append any important data from the data changelog.
             try:
@@ -64,30 +64,19 @@ def GenerateReadme(game_name:str, game_schema:GameSchema, column_list:List[Dict[
     except FileNotFoundError as err:
         Logger.Log(f"Could not open readme.md for writing.", logging.ERROR)
         traceback.print_tb(err.__traceback__)
-    except Exception as err:
-        msg = f"{type(err)} {str(err)}"
-        Logger.Log(msg, logging.ERROR)
-        traceback.print_tb(err.__traceback__)
 
-def GenCSVMetadata(game_name: str, column_list: List[Dict[str,str]], feature_list: Dict[str,str]) -> str:
-    """Function to generate metadata for a given game.
-    The "fields" are a sort of generalization of columns. Basically, columns which
-    are repeated (say, once per level) all fall under a single field.
-    Columns which are completely unique correspond to individual fields.
+def GenCSVMetadata(game_schema: GameSchema, table_schema: TableSchema) -> str:
+    """Function to generate markdown-formatted metadata for a given game.
+    Gives a summary of the data licensing and suggested citation,
+    then adds the markdown-formatted information from game and table schemas.
 
-    :param game_name: The name of the game for which the csv metadata is being generated.
-    :type game_name: str
-    :param raw_field_list: A mapping of raw csv "fields" to descriptions of the fields.
-    :type raw_field_list: List[Dict[str,str]]
-    :param sessions_field_list: A mapping of session csv features to descriptions of the features.
-    :type sessions_field_list: Dict[str,str]
+    :param game_schema: [description]
+    :type game_schema: GameSchema
+    :param table_schema: [description]
+    :type table_schema: TableSchema
     :return: A string containing metadata for the given game.
     :rtype: str
     """
-    raw_field_descriptions = [f"{col['readable']} ({col['name']}) : {col['type']} - {col['desc']}" for col in column_list]
-    sessions_field_descriptions = [f"{key} - {feature_list[key]}" for key in feature_list.keys()]
-    raw_field_string = "\n".join(raw_field_descriptions)
-    sessions_field_string = "\n".join(sessions_field_descriptions)
     template_str =\
     "\n".join(["## Field Day Open Game Data",
     "### Retrieved from https://fielddaylab.wisc.edu/opengamedata",
@@ -98,14 +87,12 @@ def GenCSVMetadata(game_name: str, column_list: List[Dict[str,str]], feature_lis
     "## Suggested citation:",
     "### Field Day. (2019). Open Educational Game Play Logs - [dataset ID]. Retrieved [today's date] from https://fielddaylab.wisc.edu/opengamedata",
     "",
-    f"## Game: {game_name}",
+    f"# Game: {game_schema._game_name}",
     "",
-    "## Field Descriptions:",
-    "### Raw CSV Columns:",
-    f"{raw_field_string}",
+    "## Field Descriptions:\n",
+    f"{table_schema.Markdown()}",
     "",
-    "### Processed Session Features:",
-    f"{sessions_field_string}",
+    f"{game_schema.Markdown()}",
     ""])
     return template_str
 
