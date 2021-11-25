@@ -63,6 +63,27 @@ class GameSchema:
     def __str__(self) -> str:
         return str(self._game_name)
 
+    # *** PUBLIC METHODS ***
+
+    def Markdown(self) -> str:
+        ret_val = "## Event Types:  \n\n"
+        ret_val += "The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  \n\n"
+        # Set up list of events
+        event_list = ['\n'.join([f"**{evt_name}**: "]
+                              + [f"- **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in evt_items.items()])
+                     for evt_name,evt_items in self.events().items()]
+        ret_val += "\n\n".join(event_list)
+        # Set up list of features
+        ret_val += "\n\n## Processed Features:  \n\n"
+        ret_val += "The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run.  \n\n"
+        feature_list = []
+        for feat_kind in ["perlevel", "per_count", "aggregate"]:
+            if feat_kind in self['features']:
+                feature_list += [f"**{feat_name}**: *{feat_kind} feature*{' (disabled)' if feat_items['enabled'] == False else ''} - {feat_items['description']}  "
+                                for feat_name,feat_items in self['features'][feat_kind].items()]
+        ret_val += "\n".join(feature_list)
+        return ret_val
+
     def level_range(self) -> range:
         ret_val = range(0)
         if self._min_level is not None and self._max_level is not None:
