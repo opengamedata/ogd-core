@@ -39,7 +39,7 @@ class Extractor(abc.ABC):
     def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         pass
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     # Base constructor for Extractor classes.
     def __init__(self, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]):
@@ -154,6 +154,8 @@ class Extractor(abc.ABC):
         Simply prints out each value from the extractor's features dictionary.
         :param file: An open csv file to which we will write column headers.
         :type file: typing.IO[str]
+        :param separator: [description], defaults to "\t"
+        :type separator: str, optional
         """
         column_vals = self.GetFeatureValues()
         file.write(separator.join([str(val) for val in column_vals]))
