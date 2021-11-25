@@ -12,6 +12,9 @@ import utils
 #  The class includes several functions for easy access to the various parts of
 #  this schema data.
 class GameSchema:
+
+    # *** BUILT-INS ***
+
     def __init__(self, schema_name:str, schema_path:Union[Path,None] = None):
         """Constructor for the GameSchema class.
         Given a path and filename, it loads the data from a JSON schema,
@@ -36,19 +39,17 @@ class GameSchema:
         if schema_path == None:
             schema_path = Path("./games") / f"{schema_name.split('.')[0]}"
         self._schema = utils.loadJSONFile(filename=schema_name, path=schema_path)
-        if self._schema is None:
-            utils.Logger.Log(f"Could not find game schema at {schema_path}{schema_name}", logging.ERROR)
-        elif "features" in self._schema.keys():
-            self._feature_list = []
-            if "perlevel" in self._schema["features"]:
-                self._feature_list += self._schema["features"]["perlevel"].keys()
-            if "per_count" in self._schema["features"]:
-                self._feature_list += self._schema["features"]["per_count"].keys()
-            if "aggregate" in self._schema["features"]:
-                self._feature_list += self._schema["features"]["aggregate"].keys()
+        if self._schema is not None:
+            if "features" in self._schema.keys():
+                self._feature_list = []
+                for feat_kind in ["perlevel", "per_count", "aggregate"]:
+                    if feat_kind in self._schema['features']:
+                        self._feature_list += self._schema['features'][feat_kind].keys()
+            else:
+                self._schema["features"] = {}
+                utils.Logger.Log(f"{schema_name} game schema does not define any features.", logging.WARN)
         else:
-            self._schema["features"] = {}
-            utils.Logger.Log(f"{schema_name} game schema does not define any features.", logging.WARN)
+            utils.Logger.Log(f"Could not find game schema at {schema_path}{schema_name}", logging.ERROR)
         # lastly, get max and min levels.
         if "level_range" in self._schema.keys():
             self._min_level = self._schema["level_range"]['min']
@@ -98,3 +99,5 @@ class GameSchema:
     ## Function to retrieve the dictionary of aggregate features.
     def aggregate_features(self) -> Dict[str,Any]:
         return self["features"]["aggregate"] if "aggregate" in self["features"].keys() else {}
+
+    # *** PRIVATE METHODS ***
