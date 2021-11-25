@@ -178,7 +178,7 @@ class ExportManager:
             except FileNotFoundError:
                 utils.Logger.toStdOut(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING)
                 readme_path = Path("./data") / _game_id
-                utils.GenerateReadme(game_name=_game_id, game_schema=game_schema, column_list=table_schema.ColumnList(), path=readme_path)
+                utils.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=readme_path)
             else:
                 readme.close()
         else:
