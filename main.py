@@ -101,7 +101,7 @@ def WriteReadme() -> bool:
         Logger.toFile(msg, logging.ERROR)
         return False
     else:
-        Logger.toStdOut(f"Successfully generated a readme for {game_name}.")
+        Logger.toStdOut(f"Successfully generated a readme for {game_name}.", logging.INFO)
         return True
 
 ## Function to handle execution of export code. This is the main intended use of
