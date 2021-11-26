@@ -198,7 +198,11 @@ class ExportManager:
             try:
                 next_event = table_schema.RowToEvent(row)
             except Exception as err:
-                utils.Logger.Log(f"Error while converting row to Event. This row will be skipped.\nFull error: {err}", logging.WARNING)
+                if default_settings.get("FAIL_FAST", None):
+                    utils.Logger.Log(f"Error while converting row {row} to Event\nFull error: {err}", logging.ERROR)
+                    raise err
+                else:
+                    utils.Logger.Log(f"Error while converting row to Event. This row will be skipped.\nFull error: {err}", logging.WARNING)
             else:
                 if next_event.session_id in sess_ids:
                     try:
@@ -209,9 +213,11 @@ class ExportManager:
                         if self._evt_processor is not None:
                             self._evt_processor.ProcessEvent(next_event)
                     except Exception as err:
-                        utils.Logger.Log(f"Error while processing event {next_event} in slice [{slice_num}/{slice_count}]", logging.ERROR)
                         if default_settings.get("FAIL_FAST", None):
+                            utils.Logger.Log(f"Error while processing event {next_event}.", logging.ERROR)
                             raise err
+                        else:
+                            utils.Logger.Log(f"Error while processing event {next_event}. This event will be skipped", logging.WARNING)
                 else:
                     utils.Logger.toStdOut(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
         time_delta = datetime.now() - start
