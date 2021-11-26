@@ -49,5 +49,6 @@ settings = {
         "WIND":{"interface":"MySQL", "table":"FIELDDAY_MYSQL", "credential":None},
     },
     "BATCH_SIZE":1000,
-    "DEBUG_LEVEL":"INFO"
+    "DEBUG_LEVEL":"INFO",
+    "FAIL_FAST":False
 }

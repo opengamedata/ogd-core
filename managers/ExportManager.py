@@ -209,8 +209,9 @@ class ExportManager:
                         if self._evt_processor is not None:
                             self._evt_processor.ProcessEvent(next_event)
                     except Exception as err:
-                        utils.Logger.Log(f"Error while processing slice [{slice_num}/{slice_count}]", logging.ERROR)
-                        raise err
+                        utils.Logger.Log(f"Error while processing event {next_event} in slice [{slice_num}/{slice_count}]", logging.ERROR)
+                        if default_settings.get("FAIL_FAST", None):
+                            raise err
                 else:
                     utils.Logger.toStdOut(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
         time_delta = datetime.now() - start
