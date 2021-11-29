@@ -20,7 +20,7 @@ jobs:
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
     - name: For calibration purposes, Export with slice size 1000
-      uses: ./.github/actions/export_yesterday
+      uses: ./.github/actions/export_last_month
       with:
         game: WAVES
         vpn_user: ${{secrets.VPN_USER}}
@@ -33,7 +33,7 @@ jobs:
       run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":100/g' config/config.py
       shell: bash
     - name: Attempt Export with slice size 100
-      uses: ./.github/actions/export_yesterday
+      uses: ./.github/actions/export_last_month
       with:
         game: WAVES
         vpn_user: ${{secrets.VPN_USER}}
@@ -46,7 +46,7 @@ jobs:
       run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":500/g' config/config.py
       shell: bash
     - name: Attempt Export with slice size 500
-      uses: ./.github/actions/export_yesterday
+      uses: ./.github/actions/export_last_month
       with:
         game: WAVES
         vpn_user: ${{secrets.VPN_USER}}
@@ -56,7 +56,7 @@ jobs:
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "INFO"
     - name: Attempt Export with slice size 1000
-      uses: ./.github/actions/export_yesterday
+      uses: ./.github/actions/export_last_month
       with:
         game: WAVES
         vpn_user: ${{secrets.VPN_USER}}
@@ -69,7 +69,7 @@ jobs:
       run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":2000/g' config/config.py
       shell: bash
     - name: Attempt Export with slice size 2000
-      uses: ./.github/actions/export_yesterday
+      uses: ./.github/actions/export_last_month
       with:
         game: WAVES
         vpn_user: ${{secrets.VPN_USER}}
