@@ -12,8 +12,11 @@ class CompleteCount(PerLevelFeature):
     def GetEventTypes(self) -> List[str]:
         return ["COMPLETE.0"]
 
+    def Subfeatures(self) -> List[str]:
+        return ["Completed2"]
+
     def GetFeatureValues(self) -> List[Any]:
-        return [self._num_completes]
+        return [self._num_completes, self._num_completes > 0]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._num_completes += 1
