@@ -1,0 +1,74 @@
+# Workflow to run a test export of Crystal whenever we change the core OGD backend code.
+# Chose Crystal simply because it has an extractor, but not a particularly complex one.
+name: Varied Slice Sizes Test
+on:
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+
+jobs:
+  test_export:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get OpenConnect
+      run: sudo apt-get -q update && sudo apt-get -q install openconnect
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - name: Get correct Python
+      run: |
+        sudo apt-get -q install python3.9
+        sudo apt-get -q install python3.9-dev
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+    - name: Set Slice Size to 100
+      run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":100/g' config/config.py
+      shell: bash
+    - name: Attempt Export with slice size 100
+      uses: ./.github/actions/export_yesterday
+      with:
+        game: WAVES
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{secrets.SQL_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        log_level: "INFO"
+    - name: Set Slice Size to 500
+      run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":500/g' config/config.py
+      shell: bash
+    - name: Attempt Export with slice size 500
+      uses: ./.github/actions/export_yesterday
+      with:
+        game: WAVES
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{secrets.SQL_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        log_level: "INFO"
+    - name: Attempt Export with slice size 1000
+      uses: ./.github/actions/export_yesterday
+      with:
+        game: WAVES
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{secrets.SQL_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        log_level: "INFO"
+    - name: Set Slice Size to 2000
+      run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":2000/g' config/config.py
+      shell: bash
+    - name: Attempt Export with slice size 2000
+      uses: ./.github/actions/export_yesterday
+      with:
+        game: WAVES
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{secrets.SQL_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        log_level: "INFO"
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./*.log
