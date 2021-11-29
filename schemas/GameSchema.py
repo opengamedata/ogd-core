@@ -79,7 +79,7 @@ class GameSchema:
         feature_list = []
         for feat_kind in ["perlevel", "per_count", "aggregate"]:
             if feat_kind in self['features']:
-                feature_list += [f"**{feat_name}**: *{feat_kind} feature*{' (disabled)' if feat_items['enabled'] == False else ''} - {feat_items['description']}  "
+                feature_list += [GameSchema._makeFeatureMarkdown(feat_name=feat_name, feat_kind=feat_kind, feat_items=feat_items)
                                 for feat_name,feat_items in self['features'][feat_kind].items()]
         ret_val += "\n".join(feature_list)
         return ret_val
@@ -122,3 +122,16 @@ class GameSchema:
         return self["features"]["aggregate"] if "aggregate" in self["features"].keys() else {}
 
     # *** PRIVATE METHODS ***
+
+    @staticmethod
+    def _makeFeatureMarkdown(feat_name:str, feat_kind:str, feat_items) -> str:
+        ret_val   : str                     = ""
+        _subfeats : Dict[str,Dict[str,str]] = feat_items.get("subfeatures", {})
+
+        ret_val += f"**{feat_name}** : *{feat_items.get('type', 'Unknown')}*, *{feat_kind} feature* {' (disabled)' if not feat_items.get('enabled', True) else ''}  \n"
+        ret_val += f"{feat_items.get('description', 'No description.')}  \n"
+        if len(_subfeats.keys()) > 0:
+            ret_val += "*Sub-features*:  \n\n"
+            for subfeat_name, subfeat_items in _subfeats.items():
+                ret_val += f"- **{subfeat_name}** : *{subfeat_items.get('type', 'Unknown')}*, {subfeat_items.get('description', 'No description.')}  \n"
+        return ret_val

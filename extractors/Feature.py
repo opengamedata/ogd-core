@@ -64,16 +64,27 @@ class Feature(abc.ABC):
     def Name(self):
         return self._name
 
+    def Subfeatures(self) -> List[str]:
+        """Base function to get a list of names of the sub-feature(s) a given Feature class outputs.
+        By default, a Feature class has no subfeatures.
+        However, if a Feature class is written to output multiple values, it will need to override this function to return an appropriate list.
+        Note, Subfeatures **must** match the ordering from the override of GetFeatureNames, if returning a list of length > 0.
+
+        :return: A list of names of subfeatures for the Feature sub-class.
+        :rtype: Tuple[str]
+        """
+        return []
+
     def GetFeatureNames(self) -> List[str]:
         """Base function to get a list of names of the feature(s) a given Feature class outputs.
         By default, a Feature class just generates one value, and uses its own name (defined in the schema.json file).
-        However, if a Feature class is written to output multiple values, it will need to override this function.
-        Note, GetFeatureValues **must** match the ordering from the override of this GetFeatureNames, if returning a list of length > 1.
+        If Subfeatures was overridden, and returns a non-empty list, there will be additional feature names in the list this function returns.
+        Each subfeature will have the base feature's name as a prefix.
 
         :return: [description]
-        :rtype: Tuple[str]
+        :rtype: List[str]
         """
-        return [self.Name()]
+        return [self.Name()] + [f"{self.Name()}_{subfeature}" for subfeature in self.Subfeatures()]
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event):
