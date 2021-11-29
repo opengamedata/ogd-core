@@ -270,5 +270,6 @@ class ExportManager:
     def _genSlices(self, sess_ids):
         _sess_ct = len(sess_ids)
         _slice_size = self._settings["BATCH_SIZE"] or default_settings["BATCH_SIZE"]
+        utils.Logger.toStdOut(f"Using slice size = {_slice_size}, should result in {math.ceil(_sess_ct / _slice_size)} slices", logging.INFO)
         return [[sess_ids[i] for i in range( j*_slice_size, min((j+1)*_slice_size, _sess_ct) )]
                                        for j in range( 0, math.ceil(_sess_ct / _slice_size) )]
