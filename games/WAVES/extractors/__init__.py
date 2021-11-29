@@ -11,7 +11,6 @@ __all__ = [
     "MenuButtonCount",
     "BeginCount",
     "SucceedCount",
-    "CompleteCount",
     "Completed",
     "PercentAmplitudeMoves",
     "PercentOffsetMoves",
@@ -58,7 +57,6 @@ from . import TotalSkips
 from . import MenuButtonCount
 from . import BeginCount
 from . import SucceedCount
-from . import CompleteCount
 from . import Completed
 from . import PercentAmplitudeMoves
 from . import PercentOffsetMoves

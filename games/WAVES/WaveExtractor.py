@@ -59,8 +59,6 @@ class WaveExtractor(Extractor):
             # level attempt features
         if feature_type == "BeginCount":
             ret_val = BeginCount.BeginCount(name=name, description=feature_args['description'], count_index=_count_index)
-        elif feature_type == "CompleteCount":
-            ret_val = CompleteCount.CompleteCount(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "Completed":
             ret_val = Completed.Completed(name=name, description=feature_args['description'], count_index=_count_index)
         elif feature_type == "MenuButtonCount":
