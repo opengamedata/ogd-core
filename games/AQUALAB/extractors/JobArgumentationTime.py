@@ -21,6 +21,9 @@ class JobArgumentationTime(Feature):
     def GetFeatureValues(self) -> List[Any]:
         return [self._time]
 
+    def MinVersion(self) -> Union[str,None]:
+        return "2"
+
     def _extractFromEvent(self, event:Event) -> None:
         if self._validate_job(event.event_data["job_id"]):
             if event.event_name == "begin_argument":

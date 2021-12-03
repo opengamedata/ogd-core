@@ -10,6 +10,7 @@ import os
 import subprocess
 import traceback
 from datetime import datetime
+from pprint import pformat
 from typing import Dict, List, Type, Tuple, Union
 ## import local files
 import utils
@@ -199,7 +200,7 @@ class ExportManager:
                 next_event = table_schema.RowToEvent(row)
             except Exception as err:
                 if default_settings.get("FAIL_FAST", None):
-                    utils.Logger.Log(f"Error while converting row {row} to Event\nFull error: {err}", logging.ERROR)
+                    utils.Logger.Log(f"Error while converting row to Event\nFull error: {err}\nRow data: {pformat(row)}", logging.ERROR)
                     raise err
                 else:
                     utils.Logger.Log(f"Error while converting row to Event. This row will be skipped.\nFull error: {err}", logging.WARNING)

@@ -1,7 +1,7 @@
 # Global imports
 import logging
 from datetime import timedelta
-from typing import Any, List
+from typing import Any, List, Union
 # Local imports
 import utils
 from extractors.Feature import Feature
@@ -19,6 +19,9 @@ class JobCompleteCount(Feature):
 
     def GetFeatureValues(self) -> List[Any]:
         return [self._completed]
+
+    def MinVersion(self) -> Union[str,None]:
+        return "2"
 
     def _extractFromEvent(self, event:Event) -> None:
         if "job_id" in event.event_data.keys():

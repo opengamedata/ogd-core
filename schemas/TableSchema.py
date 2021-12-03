@@ -149,6 +149,11 @@ class TableSchema:
         state   = params['game_state']
         index   = params['event_sequence_index']
 
+        if self._columns[0]['name'] == "event_name" and app_ver is None:
+            if "app_version" in params['event_data']:
+                app_ver = str(params['event_data']['app_version']['int_value'])
+            else:
+                app_ver = "0"
         return Event(session_id=sess_id, app_id=app_id, timestamp=time,
                      event_name=ename, event_data=edata,
                      app_version=app_ver, time_offset=offset, user_id=uid, user_data=udata,

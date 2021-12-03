@@ -1,7 +1,7 @@
 # Global imports
 import logging
 from datetime import timedelta
-from typing import Any, List
+from typing import Any, List, Union
 # Local imports
 import utils
 from extractors.Feature import Feature
@@ -20,6 +20,9 @@ class JobDiveTime(Feature):
 
     def GetFeatureValues(self) -> List[Any]:
         return [self._time]
+
+    def MinVersion(self) -> Union[str,None]:
+        return "2"
 
     def _extractFromEvent(self, event:Event) -> None:
         if self._validate_job(event.event_data['job_id']):
