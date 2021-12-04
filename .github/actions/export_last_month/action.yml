@@ -29,6 +29,10 @@ inputs:
     description: "Logging level to use for export process"
     required: true
     default: "INFO"
+  slice_size:
+    description: "Number of sessions to process at a time"
+    required: true
+    defaulr: 1000
 runs:
   using: "composite"
   steps:
@@ -51,6 +55,9 @@ runs:
       shell: bash
     - name: Set Logger level
       run: sed -i 's/INFO/${{inputs.log_level}}/g' config/config.py
+      shell: bash
+    - name: Set Slice Size
+      run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":${{inputs.slice_size}}/g' config/config.py
       shell: bash
     - name: Set SSH hostname
       run: sed -i 's/hostname/${{inputs.sql_host}}/g' config/config.py
