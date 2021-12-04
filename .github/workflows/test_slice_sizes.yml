@@ -19,16 +19,16 @@ jobs:
         sudo apt-get -q install python3.9-dev
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
-    - name: For calibration purposes, Export with slice size 1000
-      uses: ./.github/actions/export_last_month
-      with:
-        game: WAVES
-        vpn_user: ${{secrets.VPN_USER}}
-        vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{secrets.SQL_HOST}}
-        sql_user: ${{secrets.SQL_USER}}
-        sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "INFO"
+#    - name: For calibration purposes, Export with slice size 1000
+#      uses: ./.github/actions/export_last_month
+#      with:
+#        game: WAVES
+#        vpn_user: ${{secrets.VPN_USER}}
+#        vpn_pass: ${{secrets.VPN_PASS}}
+#        sql_host: ${{secrets.SQL_HOST}}
+#        sql_user: ${{secrets.SQL_USER}}
+#        sql_pass: ${{secrets.SQL_PASS}}
+#        log_level: "INFO"
     - name: Set Slice Size to 100
       run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":100/g' config/config.py
       shell: bash
@@ -42,42 +42,42 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "INFO"
-    - name: Set Slice Size to 500
-      run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":500/g' config/config.py
-      shell: bash
-    - name: Attempt Export with slice size 500
-      uses: ./.github/actions/export_last_month
-      with:
-        game: WAVES
-        vpn_user: ${{secrets.VPN_USER}}
-        vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{secrets.SQL_HOST}}
-        sql_user: ${{secrets.SQL_USER}}
-        sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "INFO"
-    - name: Attempt Export with slice size 1000
-      uses: ./.github/actions/export_last_month
-      with:
-        game: WAVES
-        vpn_user: ${{secrets.VPN_USER}}
-        vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{secrets.SQL_HOST}}
-        sql_user: ${{secrets.SQL_USER}}
-        sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "INFO"
-    - name: Set Slice Size to 2000
-      run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":2000/g' config/config.py
-      shell: bash
-    - name: Attempt Export with slice size 2000
-      uses: ./.github/actions/export_last_month
-      with:
-        game: WAVES
-        vpn_user: ${{secrets.VPN_USER}}
-        vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{secrets.SQL_HOST}}
-        sql_user: ${{secrets.SQL_USER}}
-        sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "INFO"
+#    - name: Set Slice Size to 500
+#      run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":500/g' config/config.py
+#      shell: bash
+#    - name: Attempt Export with slice size 500
+#      uses: ./.github/actions/export_last_month
+#      with:
+#        game: WAVES
+#        vpn_user: ${{secrets.VPN_USER}}
+#        vpn_pass: ${{secrets.VPN_PASS}}
+#        sql_host: ${{secrets.SQL_HOST}}
+#        sql_user: ${{secrets.SQL_USER}}
+#        sql_pass: ${{secrets.SQL_PASS}}
+#        log_level: "INFO"
+#    - name: Attempt Export with slice size 1000
+#      uses: ./.github/actions/export_last_month
+#      with:
+#        game: WAVES
+#        vpn_user: ${{secrets.VPN_USER}}
+#        vpn_pass: ${{secrets.VPN_PASS}}
+#        sql_host: ${{secrets.SQL_HOST}}
+#        sql_user: ${{secrets.SQL_USER}}
+#        sql_pass: ${{secrets.SQL_PASS}}
+#        log_level: "INFO"
+#    - name: Set Slice Size to 2000
+#      run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":2000/g' config/config.py
+#      shell: bash
+#    - name: Attempt Export with slice size 2000
+#      uses: ./.github/actions/export_last_month
+#      with:
+#        game: WAVES
+#        vpn_user: ${{secrets.VPN_USER}}
+#        vpn_pass: ${{secrets.VPN_PASS}}
+#        sql_host: ${{secrets.SQL_HOST}}
+#        sql_user: ${{secrets.SQL_USER}}
+#        sql_pass: ${{secrets.SQL_PASS}}
+#        log_level: "INFO"
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v2
       with:
