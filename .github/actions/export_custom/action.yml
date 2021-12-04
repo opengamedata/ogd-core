@@ -40,7 +40,7 @@ inputs:
   slice_size:
     description: "Number of sessions to process at a time"
     required: true
-    defaulr: 1000
+    default: 1000
 runs:
   using: "composite"
   steps:
