@@ -22,7 +22,7 @@ jobs:
         sudo apt-get -q install python3.9-dev
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
-    - name: Do Export
+    - name: Do Export of yesterday's data
       uses: ./.github/actions/export_yesterday
       with:
         game: WAVES

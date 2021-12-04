@@ -35,7 +35,7 @@ jobs:
     #     echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
     #     chmod 600 ./key.txt
     #     ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata; pwd;"
-    - name: Do Export
+    - name: Do Export of last month
       uses: ./.github/actions/export_last_month
       with:
         game: ${{matrix.game}}
