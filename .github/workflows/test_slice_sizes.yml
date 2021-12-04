@@ -29,9 +29,6 @@ jobs:
 #        sql_user: ${{secrets.SQL_USER}}
 #        sql_pass: ${{secrets.SQL_PASS}}
 #        log_level: "INFO"
-    - name: Set Slice Size to 100
-      run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":100/g' config/config.py
-      shell: bash
     - name: Attempt Export with slice size 100
       uses: ./.github/actions/export_last_month
       with:
@@ -41,6 +38,7 @@ jobs:
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
+        slice_size: 100
         log_level: "INFO"
 #    - name: Set Slice Size to 500
 #      run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":500/g' config/config.py
