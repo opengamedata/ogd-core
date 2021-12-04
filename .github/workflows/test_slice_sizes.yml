@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        size: [100, 250, 500, 1000, 2000]
+        size: [1000, 100, 250, 500, 1000, 2000]
       fail-fast: false # we don't want to cancel just because one game fails.
       max-parallel: 1
 
