@@ -11,6 +11,10 @@ on:
         description: "The game(s) to be exported, comma-separated"
         required: true
         default: "['BACTERIA']"
+      slice_size:
+        description: "The size of slices to use"
+        required: false
+        default: 1000
       monthly:
         description: "If true, use month/year. Else, use start and end dates"
         required: true
@@ -63,6 +67,8 @@ jobs:
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
+        slice_size: ${{ github.event.inputs.slice_size }}
+        log_level: "INFO"
     - name: Do Export of Range
       if: github.event.inputs.monthly == 'false'
       uses: ./.github/actions/export_custom
@@ -75,6 +81,7 @@ jobs:
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
+        slice_size: ${{ github.event.inputs.slice_size }}
         log_level: "INFO"
     - name: Upload files to opengamedata via scp
       run: |
