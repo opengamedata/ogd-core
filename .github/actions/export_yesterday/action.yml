@@ -1,4 +1,5 @@
 name: "Export Range of Data"
+author: Luke Swanson
 description: "Given a game and a date range, this action will export the range's data for that game."
 inputs:
   start_date: # month and year
@@ -75,11 +76,11 @@ runs:
     - name: Set SQL password
       run: sed -i 's/password/${{inputs.sql_pass}}/g' config/config.py
       shell: bash
-    - if: contains(['AQUALAB'], inputs.game)
+    - if: ${{ inputs.game == 'AQUALAB' }}
       name: Copy in Aqualab key if we are doing Aqualab.
       run: echo ${{ secrets.AQUALAB_BQ_AUTH }} > config/aqualab.json
       shell: bash
-    - if: contains(['SHADOWSPECT'], inputs.game)
+    - if: ${{ inputs.game == 'SHADOWSPECT' }}
       name: Copy in Aqualab key if we are doing Aqualab.
       run: echo ${{ secrets.SHADOWSPECT_BQ_AUTH }} > config/shadowspect.json
       shell: bash

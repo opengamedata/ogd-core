@@ -1,4 +1,5 @@
 name: "Set up OGD dependencies"
+author: Luke Swanson
 description: "Given a game and a date range, this action will export the range's data for that game."
 runs:
   using: "composite"
