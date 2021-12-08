@@ -78,14 +78,6 @@ runs:
     - name: Set SQL password
       run: sed -i 's/password/${{inputs.sql_pass}}/g' config/config.py
       shell: bash
-    - if: ${{ inputs.game == 'AQUALAB' }}
-      name: Copy in Aqualab key if we are doing Aqualab.
-      run: echo ${{ secrets.AQUALAB_BQ_AUTH }} > config/aqualab.json
-      shell: bash
-    - if: ${{ inputs.game == 'SHADOWSPECT' }}
-      name: Copy in Aqualab key if we are doing Aqualab.
-      run: echo ${{ secrets.SHADOWSPECT_BQ_AUTH }} > config/shadowspect.json
-      shell: bash
     - name: Execute data export
       run: python3.8 main.py export ${{ inputs.game }} ${{env.MONTH_YEAR}} --monthly
       shell: bash
