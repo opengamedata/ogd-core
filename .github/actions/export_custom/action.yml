@@ -1,6 +1,9 @@
-name: "Export Monthly Data"
+name: "Export Custom Data Range"
 author: Luke Swanson
 description: "Given a game, this action will export last month's data for that game."
+branding:
+  icon: 'arrow-right'
+  color: 'purple'
 inputs:
   game:
    description: "The game with data to export."

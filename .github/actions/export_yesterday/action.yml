@@ -1,6 +1,9 @@
 name: "Export Range of Data"
 author: Luke Swanson
 description: "Given a game and a date range, this action will export the range's data for that game."
+branding:
+  icon: 'arrow-left'
+  color: 'orange'
 inputs:
   start_date: # month and year
     description: "The month, day, and year to start export range."

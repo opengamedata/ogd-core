@@ -1,6 +1,9 @@
 name: "Export Monthly Data"
 author: Luke Swanson
 description: "Given a game, this action will export last month's data for that game."
+branding:
+  icon: 'calendar'
+  color: 'purple'
 inputs:
   game:
    description: "The game with data to export."
