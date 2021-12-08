@@ -58,11 +58,11 @@ jobs:
       uses: ./.github/actions/OGD_dependencies
     - if: ${{ matrix.game == 'AQUALAB' }}
       name: Copy in Aqualab key if we are doing Aqualab.
-      run: echo ${{ secrets.AQUALAB_BQ_AUTH }} > config/aqualab.json
+      run: echo ${{ secrets.AQUALAB_BQ_AUTH }} >> ./config/aqualab.json
       shell: bash
     - if: ${{ matrix.game == 'SHADOWSPECT' }}
       name: Copy in Shadowspect key if we are doing Shadowspect.
-      run: echo ${{ secrets.SHADOWSPECT_BQ_AUTH }} > config/shadowspect.json
+      run: echo ${{ secrets.SHADOWSPECT_BQ_AUTH }} >> ./config/shadowspect.json
       shell: bash
     - name: Do Export of Month
       if: github.event.inputs.monthly == 'true'
