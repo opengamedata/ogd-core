@@ -57,13 +57,28 @@ jobs:
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
     - if: ${{ matrix.game == 'AQUALAB' }}
-      name: Copy in Aqualab key if we are doing Aqualab.
-      run: echo "${{ secrets.AQUALAB_BQ_AUTH }}" >> ./config/aqualab.json
-      shell: bash
-    - if: ${{ matrix.game == 'SHADOWSPECT' }}
-      name: Copy in Shadowspect key if we are doing Shadowspect.
-      run: echo "${{ secrets.SHADOWSPECT_BQ_AUTH }}" >> ./config/shadowspect.json
-      shell: bash
+      name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+    - if: ${{ matrix.game == 'AQUALAB' }}
+      name: Use gcloud CLI
+      run: |
+        gcloud config set project aqualab-57f88
+        bq query --use_legacy_sql=false \
+        'SELECT
+          event_name
+        FROM
+          `aqualab-57f88.analytics_271167280.events_20210915`'
+    #   name: Copy in Aqualab key if we are doing Aqualab.
+    #   run: echo "${{ secrets.AQUALAB_BQ_AUTH }}" >> ./config/aqualab.json
+    #   shell: bash
+    # - if: ${{ matrix.game == 'SHADOWSPECT' }}
+    #   name: Copy in Shadowspect key if we are doing Shadowspect.
+    #   run: echo "${{ secrets.SHADOWSPECT_BQ_AUTH }}" >> ./config/shadowspect.json
+    #   shell: bash
     - name: Do Export of Month
       if: github.event.inputs.monthly == 'true'
       uses: ./.github/actions/export_custom_month
