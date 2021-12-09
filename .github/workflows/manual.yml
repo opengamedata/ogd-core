@@ -65,13 +65,8 @@ jobs:
         export_default_credentials: true
     - if: ${{ matrix.game == 'AQUALAB' }}
       name: Use gcloud CLI
-      run: |
+      run:
         gcloud config set project aqualab-57f88
-        bq query --use_legacy_sql=false \
-        'SELECT
-          event_name
-        FROM
-          `aqualab-57f88.analytics_271167280.events_20210915`'
     #   name: Copy in Aqualab key if we are doing Aqualab.
     #   run: echo "${{ secrets.AQUALAB_BQ_AUTH }}" >> ./config/aqualab.json
     #   shell: bash
