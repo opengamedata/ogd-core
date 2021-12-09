@@ -26,15 +26,15 @@ settings = {
     "BIGQUERY_CONFIG":
     {
         "AQUALAB": {
-            "DB_NAME": "project_id.dataset_id",
+            "DB_NAME": "aqualab_project_id.dataset_id",
             "PROJECT_ID" : "project_id"
         },
         "SHADOWSPECT": {
-            "DB_NAME": "project_id.dataset_id",
+            "DB_NAME": "shadowspect_project_id.dataset_id",
             "PROJECT_ID" : "project_id"
         },
         "SHIPWRECKS": {
-            "DB_NAME": "project_id.dataset_id",
+            "DB_NAME": "shipwrecks_project_id.dataset_id",
             "PROJECT_ID" : "project_id"
         },
         "TABLE_NAME": "events_*"
