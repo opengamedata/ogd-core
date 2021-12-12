@@ -67,6 +67,8 @@ jobs:
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
+        sql_db: ${{github.events.inputs.database}}
+        log_level: "INFO"
     - name: Do Export of Range
       if: github.event.inputs.monthly == 'false'
       uses: ./.github/actions/export_custom
