@@ -33,6 +33,10 @@ inputs:
     description: "Password for logging in to the SQL database."
     required: true
     default: 'password placeholder'
+  sql_db:
+    description: "Which SQL database to use"
+    required: true
+    default: "logger"
   slice_size:
     description: "Number of sessions to process at a time"
     required: true
@@ -74,6 +78,9 @@ runs:
       shell: bash
     - name: Set SQL password
       run: sed -i 's/password/${{inputs.sql_pass}}/g' config/config.py
+      shell: bash
+    - name: Set SQL database
+      run: sed -i 's/logger/${{inputs.sql_db}}/g' config/config.py
       shell: bash
     - name: Execute data export
       run: python3.8 main.py export ${{ inputs.game }} ${{env.YESTERDAY}} ${{env.YESTERDAY}}
