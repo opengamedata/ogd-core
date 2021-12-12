@@ -11,6 +11,10 @@ on:
         description: "The game(s) to be exported, comma-separated"
         required: true
         default: "['BACTERIA']"
+      slice_size:
+        description: "The size of slices to use"
+        required: false
+        default: 1000
       monthly:
         description: "If true, use month/year. Else, use start and end dates"
         required: true
@@ -56,6 +60,24 @@ jobs:
         sudo apt-get -q install python3.9-dev
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
+    - if: ${{ matrix.game == 'AQUALAB' }}
+      name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+    # - if: ${{ matrix.game == 'AQUALAB' }}
+    #   name: Use gcloud CLI
+    #   run:
+    #     gcloud config set project aqualab-57f88
+      # name: Copy in Aqualab key if we are doing Aqualab.
+      # run: echo "${{ secrets.AQUALAB_BQ_AUTH }}" >> ./config/aqualab.json
+      # shell: bash
+    # - if: ${{ matrix.game == 'SHADOWSPECT' }}
+    #   name: Copy in Shadowspect key if we are doing Shadowspect.
+    #   run: echo "${{ secrets.SHADOWSPECT_BQ_AUTH }}" >> ./config/shadowspect.json
+    #   shell: bash
     - name: Do Export of Month
       if: github.event.inputs.monthly == 'true'
       uses: ./.github/actions/export_custom_month
@@ -68,6 +90,7 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         sql_db: ${{github.events.inputs.database}}
+        slice_size: ${{ github.event.inputs.slice_size }}
         log_level: "INFO"
     - name: Do Export of Range
       if: github.event.inputs.monthly == 'false'
@@ -82,6 +105,7 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         sql_db: ${{github.events.inputs.database}}
+        slice_size: ${{ github.event.inputs.slice_size }}
         log_level: "INFO"
     - name: Upload files to opengamedata via scp
       run: |

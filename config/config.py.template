@@ -25,8 +25,18 @@ settings = {
     },
     "BIGQUERY_CONFIG":
     {
-        "DB_NAME": "project_id.dataset_id",
-        "PROJECT_ID" : "project_id",
+        "AQUALAB": {
+            "DB_NAME": "aqualab_project_id.dataset_id",
+            "PROJECT_ID" : "project_id"
+        },
+        "SHADOWSPECT": {
+            "DB_NAME": "shadowspect_project_id.dataset_id",
+            "PROJECT_ID" : "project_id"
+        },
+        "SHIPWRECKS": {
+            "DB_NAME": "shipwrecks_project_id.dataset_id",
+            "PROJECT_ID" : "project_id"
+        },
         "TABLE_NAME": "events_*"
     },
     "GAME_SOURCE_MAP":

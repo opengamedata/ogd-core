@@ -1,5 +1,9 @@
 name: "Export Monthly Data"
+author: Luke Swanson
 description: "Given a game, this action will export last month's data for that game."
+branding:
+  icon: 'calendar'
+  color: 'orange'
 inputs:
   game:
    description: "The game with data to export."
@@ -80,6 +84,9 @@ runs:
       shell: bash
     - name: Set SQL database
       run: sed -i 's/logger/${{inputs.sql_db}}/g' config/config.py
+    - name: Set Aqualab config
+      if: ${{ inputs.game == 'AQUALAB' }}
+      run: sed -i 's/aqualab_project_id.dataset_id/aqualab-57f88.analytics_271167280/g' config/config.py
       shell: bash
     - name: Execute data export
       run: python3.8 main.py export ${{ inputs.game }} ${{env.MONTH_YEAR}} --monthly
