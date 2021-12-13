@@ -89,7 +89,7 @@ jobs:
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        sql_db: ${{github.events.inputs.database}}
+        sql_db: ${{github.event.inputs.database}}
         slice_size: ${{ github.event.inputs.slice_size }}
         log_level: "INFO"
     - name: Do Export of Range
