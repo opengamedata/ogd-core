@@ -29,6 +29,12 @@ class ShadowspectExtractor(Extractor):
             ret_val = MoveShapeCount.MoveShapeCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionID":
             ret_val = SessionID.SessionID(name=name, description=feature_args["description"], session_id=self._session_id)
+        elif feature_type == "FunnelByUser":
+            ret_val = FunnelByUser.FunnelByUser(name=name, description=feature_args["description"])
+        elif feature_type == "LevelsOfDifficulty":
+            ret_val = LevelsOfDifficulty.LevelsOfDifficulty(name=name, description=feature_args["description"])
+        elif feature_type == "SequenceBetweenPuzzles":
+            ret_val = SequenceBetweenPuzzles.SequenceBetweenPuzzles(name=name, description=feature_args["description"])
         else:
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shadowspect.")
         return ret_val
