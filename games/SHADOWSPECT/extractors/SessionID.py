@@ -12,7 +12,7 @@ class SessionID(SessionFeature):
         return []
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._session_id
+        return [self._session_id]
 
     def _extractFromEvent(self, event:Event) -> None:
         return
