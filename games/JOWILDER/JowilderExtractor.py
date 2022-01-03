@@ -143,7 +143,7 @@ class JowilderExtractor(LegacyExtractor):
         self.halt = False
         self._active = True
         self._last_quizstart = None
-        self._quiztimes = [None]*16
+        self._quiztimes = [None]*18
 
     def _extractFeaturesFromEvent(self, event:Event):
         try:
@@ -487,11 +487,14 @@ class JowilderExtractor(LegacyExtractor):
         _level = d["level"]
 
         # helpers
-        index = je.quizn_answern_to_index(_quiz_number, _question_index)
-        if index%4==0:
+        index = je.quiz_question_to_index(_quiz_number, _question_index)
+        time_taken = None
+        if index%4==0 and self._last_quizstart is not None:
             time_taken = timestamp - self._last_quizstart
-        else:
+        elif self._quiztimes[index - 1] is not None:
             time_taken = timestamp - self._quiztimes[index - 1]
+        else:
+            time_taken = None
 
 
         # set class variables
