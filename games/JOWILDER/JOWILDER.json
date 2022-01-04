@@ -378,25 +378,25 @@
 			},
 			"sa_index": {
 				"enabled": true,
-				"count": 16,
+				"count": 18,
 				"prefix": "SA",
 				"description": "Survey answer index for the given question"
 			},
 			"sa_text": {
 				"enabled": true,
-				"count": 16,
+				"count": 18,
 				"prefix": "SA",
 				"description": "Survey answer text for the given question"
 			},
 			"sa_time": {
 				"enabled": true,
-				"count": 16,
+				"count": 18,
 				"prefix": "SA",
 				"description": "Time to the initial survey answer for the given question"
 			},
 			"sa_num_answers": {
 				"enabled": true,
-				"count": 16,
+				"count": 18,
 				"prefix": "SA",
 				"description": "Players may select an answer multiple times or change answers. This counts the number of times the player answered a given question"
 			},
