@@ -44,8 +44,14 @@ class EventProcessor:
         self._lines.append("\t".join([str(item) for item in line]) + "\n") # changed , to \t
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
-        event.event_data = json.dumps(event.event_data)
-        self._lines.append(separator.join([str(item) for item in event.ColumnValues()]) + "\n") # changed , to \t
+        col_values = event.ColumnValues()
+        for i,col in enumerate(col_values):
+            if type(col) == str:
+                col_values[i] = f"\"{col}\""
+            elif type(col) == dict:
+                col_values[i] = json.dumps(col)
+        # event.event_data = json.dumps(event.event_data)
+        self._lines.append(separator.join([str(item) for item in col_values]) + "\n") # changed , to \t
         # utils.Logger.toStdOut(f"Got event: {str(event)}")
 
     def GetColumnNames(self) -> List[str]:
