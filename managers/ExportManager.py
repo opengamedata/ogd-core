@@ -3,7 +3,6 @@
 #  for export to CSV files.
 
 ## import standard libraries
-from extractors.Extractor import Extractor
 import logging
 import math
 import os
@@ -16,19 +15,20 @@ from typing import Dict, List, Type, Tuple, Union
 import utils
 from config.config import settings as default_settings
 from managers.FileManager import *
-from managers.PopulationProcessor import PopulationProcessor
-from managers.SessionProcessor import SessionProcessor
-from managers.EventProcessor import EventProcessor
+from extractors.FeatureLoader import FeatureLoader
+from extractors.PopulationExtractor import PopulationExtractor
+from extractors.SessionExtractor import SessionExtractor
+from managers.EventManager import EventManager
 from managers.Request import Request
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
-from games.AQUALAB.AqualabExtractor import AqualabExtractor
+from games.AQUALAB.AqualabLoader import AqualabLoader
 from games.CRYSTAL.CrystalExtractor import CrystalExtractor
 from games.JOWILDER.JowilderExtractor import JowilderExtractor
 from games.LAKELAND.LakelandExtractor import LakelandExtractor
 from games.MAGNET.MagnetExtractor import MagnetExtractor
-from games.SHADOWSPECT.ShadowspectExtractor import ShadowspectExtractor
-from games.WAVES.WaveExtractor import WaveExtractor
+from games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
+from games.WAVES.WaveLoader import WaveLoader
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.
@@ -42,10 +42,10 @@ class ExportManager:
     #  @param settings A dictionary of program settings, some of which are needed for export.
     def __init__(self, settings):
         self._settings = settings
-        self._extractor_class : Union[Type[Extractor],None]      = None
-        self._pop_processor   : Union[PopulationProcessor, None] = None
-        self._sess_processor  : Union[SessionProcessor, None]    = None
-        self._evt_processor   : Union[EventProcessor, None]      = None
+        self._extractor_class : Union[Type[FeatureLoader],None]      = None
+        self._pop_processor   : Union[PopulationExtractor, None] = None
+        self._sess_processor  : Union[SessionExtractor, None]    = None
+        self._evt_processor   : Union[EventManager, None]      = None
 
     def ExecuteRequest(self, request:Request, game_id:str, feature_overrides:Union[List[str],None]=None) -> Dict[str,Any]:
         ret_val      : Dict[str,Any] = {"success":False}
@@ -227,7 +227,7 @@ class ExportManager:
     def _prepareExtractor(self, game_id) -> None:
         game_extractor: Union[type,None] = None
         if game_id == "AQUALAB":
-            game_extractor = AqualabExtractor
+            game_extractor = AqualabLoader
         elif game_id == "CRYSTAL":
             game_extractor = CrystalExtractor
         elif game_id == "JOWILDER":
@@ -237,9 +237,9 @@ class ExportManager:
         elif game_id == "MAGNET":
             game_extractor = MagnetExtractor
         elif game_id == "SHADOWSPECT":
-            game_extractor = ShadowspectExtractor
+            game_extractor = ShadowspectLoader
         elif game_id == "WAVES":
-            game_extractor = WaveExtractor
+            game_extractor = WaveLoader
         elif game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "SHIPWRECKS", "STEMPORTS", "WIND"]:
             # all games with data but no extractor.
             pass
@@ -249,7 +249,7 @@ class ExportManager:
 
     def _prepareProcessors(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
         if request._exports.events:
-            self._evt_processor = EventProcessor()
+            self._evt_processor = EventManager()
             # evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
         else:
             utils.Logger.toStdOut("Event log not requested, skipping events file.", logging.INFO)
@@ -260,11 +260,11 @@ class ExportManager:
             utils.Logger.toStdOut("Could not export population/session data, no game extractor given!", logging.WARN)
         else:
             if request._exports.sessions:
-                self._sess_processor = SessionProcessor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
+                self._sess_processor = SessionExtractor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
             else:
                 utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
             if request._exports.population:
-                self._pop_processor = PopulationProcessor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
+                self._pop_processor = PopulationExtractor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
             else:
                 utils.Logger.toStdOut("Population features not requested, skipping population_features file.", logging.INFO)
 
