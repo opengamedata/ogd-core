@@ -13,7 +13,7 @@
             "user": "string",
             "group": "string"
         },
-        "disconnect"{
+        "disconnect": {
         
         },
         "exit_to_menu": {
