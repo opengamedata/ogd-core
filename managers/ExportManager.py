@@ -11,24 +11,15 @@ import traceback
 from datetime import datetime
 from pprint import pformat
 from typing import Dict, List, Type, Tuple, Union
+from managers.ExtractorManager import ExtractorManager
 ## import local files
 import utils
 from config.config import settings as default_settings
 from managers.FileManager import *
-from extractors.FeatureLoader import FeatureLoader
-from extractors.PopulationExtractor import PopulationExtractor
-from extractors.SessionExtractor import SessionExtractor
 from managers.EventManager import EventManager
 from managers.Request import Request
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
-from games.AQUALAB.AqualabLoader import AqualabLoader
-from games.CRYSTAL.CrystalExtractor import CrystalExtractor
-from games.JOWILDER.JowilderExtractor import JowilderExtractor
-from games.LAKELAND.LakelandExtractor import LakelandExtractor
-from games.MAGNET.MagnetExtractor import MagnetExtractor
-from games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
-from games.WAVES.WaveLoader import WaveLoader
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.
@@ -42,10 +33,8 @@ class ExportManager:
     #  @param settings A dictionary of program settings, some of which are needed for export.
     def __init__(self, settings):
         self._settings = settings
-        self._extractor_class : Union[Type[FeatureLoader],None]      = None
-        self._pop_processor   : Union[PopulationExtractor, None] = None
-        self._sess_processor  : Union[SessionExtractor, None]    = None
-        self._evt_processor   : Union[EventManager, None]      = None
+        self._event_processor   : Union[EventManager, None]     = None
+        self._extract_processor : Union[ExtractorManager, None] = None
 
     def ExecuteRequest(self, request:Request, game_id:str, feature_overrides:Union[List[str],None]=None) -> Dict[str,Any]:
         ret_val      : Dict[str,Any] = {"success":False}
@@ -60,7 +49,6 @@ class ExportManager:
         start = datetime.now()
         try:
             _game_id = request.GetGameID()
-            self._prepareExtractor(_game_id)
             self._prepareProcessors(request=request, game_schema=game_schema, feature_overrides=feature_overrides)
             if request._locs.files:
                 ret_val['success'] = self._executeFileRequest(request=request, game_schema=game_schema, table_schema=table_schema)
@@ -80,12 +68,14 @@ class ExportManager:
     def _executeDataRequest(self, request:Request, table_schema:TableSchema) -> Dict[str,Any]:
         ret_val : Dict[str,Any] = {"events":None, "sessions":None, "population":None}
         # If we have a schema, we can do feature extraction.
-        if request._exports.events and self._evt_processor is not None:
-            ret_val['events'] = {"cols":self._evt_processor.GetColumnNames(), "vals":[]}
-        if request._exports.sessions and self._sess_processor is not None:
-            ret_val['sessions'] = {"cols":self._sess_processor.GetSessionFeatureNames(), "vals":[]}
-        if request._exports.population and self._pop_processor is not None:
-            ret_val['population'] = {"cols":self._pop_processor.GetPopulationFeatureNames(), "vals":[]}
+        if request._exports.events and self._event_processor is not None:
+            ret_val['events'] = {"cols":self._event_processor.GetColumnNames(), "vals":[]}
+        if request._exports.sessions and self._extract_processor is not None:
+            ret_val['sessions'] = {"cols":self._extract_processor.GetSessionFeatureNames(), "vals":[]}
+        if request._exports.players and self._extract_processor is not None:
+            ret_val['players'] = {"cols":self._extract_processor.GetPlayerFeatureNames(), "vals":[]}
+        if request._exports.population and self._extract_processor is not None:
+            ret_val['population'] = {"cols":self._extract_processor.GetPopulationFeatureNames(), "vals":[]}
         # 4) Get the IDs of sessions to process
         _dummy = request.RetrieveSessionIDs()
         sess_ids = _dummy if _dummy is not None else []
@@ -101,20 +91,21 @@ class ExportManager:
                 # 3a) If next slice yielded valid data from the interface, process row-by-row.
                 self._processSlice(next_data_set=next_data_set, table_schema=table_schema, sess_ids=sess_ids, slice_num=i+1, slice_count=len(session_slices))
                 # 3b) After processing all rows for each slice, write out the session data and reset for next slice.
-                if request._exports.events and self._evt_processor is not None:
-                    ret_val['events']['vals'] += self._evt_processor.GetLines()
-                    self._evt_processor.ClearLines()
-                if request._exports.sessions and self._sess_processor is not None:
-                    self._sess_processor.CalculateAggregateFeatures()
-                    ret_val['sessions']['vals'] += self._sess_processor.GetSessionFeatures()
-                    self._sess_processor.ClearLines()
+                if request._exports.events and self._event_processor is not None:
+                    ret_val['events']['vals'] += self._event_processor.GetLines()
+                    self._event_processor.ClearLines()
+                if request._exports.sessions and self._extract_processor is not None:
+                    self._extract_processor.CalculateAggregateSessionFeatures()
+                    ret_val['sessions']['vals'] += self._extract_processor.GetSessionFeatures()
+                    self._extract_processor.ClearLines()
             else:
                 utils.Logger.Log(f"Could not retrieve data set for slice [{i+1}/{len(session_slices)}].", logging.WARN)
         # 4) If we made it all the way to the end, write population data and return the number of sessions processed.
-        if request._exports.population and self._pop_processor is not None:
-            self._pop_processor.CalculateAggregateFeatures()
-            ret_val['population']['vals'] = self._pop_processor.GetPopulationFeatures()
-            self._pop_processor.ClearLines()
+        if request._exports.population and self._extract_processor is not None:
+            ret_val['players']['vals'] = self._extract_processor.GetPlayerFeatures()
+            self._extract_processor.CalculateAggregatePopulationFeatures()
+            ret_val['population']['vals'] = self._extract_processor.GetPopulationFeatures()
+            self._extract_processor.ClearLines()
         return ret_val
 
     ## Private function containing most of the code to handle processing of db
@@ -134,8 +125,8 @@ class ExportManager:
                                     extension="tsv")
         file_manager.OpenFiles()
         # 3) Loop over data, running extractors.
-        if request._exports.events and self._evt_processor is not None:
-            self._evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
+        if request._exports.events and self._event_processor is not None:
+            self._event_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
         if request._exports.sessions and self._sess_processor is not None:
             self._sess_processor.WriteSessionFileHeader(file_mgr=file_manager, separator="\t")
         if request._exports.population and self._pop_processor is not None:
@@ -156,9 +147,9 @@ class ExportManager:
                 # 3a) If next slice yielded valid data from the interface, process row-by-row.
                 self._processSlice(next_data_set=next_data_set, table_schema=table_schema, sess_ids=sess_ids, slice_num=i+1, slice_count=len(session_slices))
                 # 3b) After processing all rows for each slice, write out the session data and reset for next slice.
-                if request._exports.events and self._evt_processor is not None:
-                    self._evt_processor.WriteEventsCSVLines(file_mgr=file_manager)
-                    self._evt_processor.ClearLines()
+                if request._exports.events and self._event_processor is not None:
+                    self._event_processor.WriteEventsCSVLines(file_mgr=file_manager)
+                    self._event_processor.ClearLines()
                 if request._exports.sessions and self._sess_processor is not None:
                     self._sess_processor.CalculateAggregateFeatures()
                     self._sess_processor.WriteSessionFileLines(file_mgr=file_manager, separator="\t")
@@ -207,12 +198,10 @@ class ExportManager:
             else:
                 if next_event.session_id in sess_ids:
                     try:
-                        if self._pop_processor is not None:
-                            self._pop_processor.ProcessEvent(next_event)
-                        if self._sess_processor is not None:
-                            self._sess_processor.ProcessEvent(next_event)
-                        if self._evt_processor is not None:
-                            self._evt_processor.ProcessEvent(next_event)
+                        if self._extract_processor is not None:
+                            self._extract_processor.ProcessEvent(event=next_event)
+                        if self._event_processor is not None:
+                            self._event_processor.ProcessEvent(event=next_event)
                     except Exception as err:
                         if default_settings.get("FAIL_FAST", None):
                             utils.Logger.Log(f"Error while processing event {next_event}.", logging.ERROR)
@@ -224,49 +213,19 @@ class ExportManager:
         time_delta = datetime.now() - start
         utils.Logger.Log(f"Processing time for slice [{slice_num}/{slice_count}]: {time_delta} to handle {num_events} events", logging.INFO)
 
-    def _prepareExtractor(self, game_id) -> None:
-        game_extractor: Union[type,None] = None
-        if game_id == "AQUALAB":
-            game_extractor = AqualabLoader
-        elif game_id == "CRYSTAL":
-            game_extractor = CrystalExtractor
-        elif game_id == "JOWILDER":
-            game_extractor = JowilderExtractor
-        elif game_id == "LAKELAND":
-            game_extractor = LakelandExtractor
-        elif game_id == "MAGNET":
-            game_extractor = MagnetExtractor
-        elif game_id == "SHADOWSPECT":
-            game_extractor = ShadowspectLoader
-        elif game_id == "WAVES":
-            game_extractor = WaveLoader
-        elif game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "SHIPWRECKS", "STEMPORTS", "WIND"]:
-            # all games with data but no extractor.
-            pass
-        else:
-            raise Exception(f"Got an invalid game ID ({game_id})!")
-        self._extractor_class = game_extractor
-
     def _prepareProcessors(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
         if request._exports.events:
-            self._evt_processor = EventManager()
+            self._event_processor = EventManager()
             # evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
         else:
             utils.Logger.toStdOut("Event log not requested, skipping events file.", logging.INFO)
         # If game doesn't have an extractor, make sure we don't try to export it.
-        if self._extractor_class is None:
+        if not self._extract_processor.HasExtractor():
             request._exports.sessions = False
             request._exports.population = False
             utils.Logger.toStdOut("Could not export population/session data, no game extractor given!", logging.WARN)
         else:
-            if request._exports.sessions:
-                self._sess_processor = SessionExtractor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
-            else:
-                utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
-            if request._exports.population:
-                self._pop_processor = PopulationExtractor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
-            else:
-                utils.Logger.toStdOut("Population features not requested, skipping population_features file.", logging.INFO)
+            self._extract_processor._
 
     def _genSlices(self, sess_ids):
         _sess_ct = len(sess_ids)

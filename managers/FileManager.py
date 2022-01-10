@@ -20,9 +20,9 @@ from managers.Request import ExporterTypes, ExporterRange
 
 class FileManager(abc.ABC):
     def __init__(self, exporter_files: ExporterTypes, game_id, data_dir: str, date_range: Dict[str,Union[datetime,None]], extension:str="tsv"):
-        self._file_names   : Dict[str,Union[Path,None]] = {"population":None, "sessions":None, "events":None}
-        self._zip_names    : Dict[str,Union[Path,None]] = {"population":None, "sessions":None, "events":None}
-        self._files        : Dict[str,Union[IO,None]]   = {"population":None, "sessions":None, "events":None}
+        self._file_names   : Dict[str,Union[Path,None]] = {"population":None, "players":None, "sessions":None, "events":None}
+        self._zip_names    : Dict[str,Union[Path,None]] = {"population":None, "players":None, "sessions":None, "events":None}
+        self._files        : Dict[str,Union[IO,None]]   = {"population":None, "players":None, "sessions":None, "events":None}
         self._game_id      : str  = game_id
         self._data_dir     : Path = Path("./" + data_dir)
         self._game_data_dir: Path = self._data_dir / self._game_id
@@ -55,6 +55,9 @@ class FileManager(abc.ABC):
         if exporter_files.sessions:
             self._file_names['sessions']   = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}"
             self._zip_names['sessions']    = self._game_data_dir / f"{base_file_name}_session-features.zip"
+        if exporter_files.players:
+            self._file_names['players']   = self._game_data_dir / f"{base_file_name}_player-features.{self._extension}"
+            self._zip_names['players']    = self._game_data_dir / f"{base_file_name}_player-features.zip"
         if exporter_files.population:
             self._file_names['population'] = self._game_data_dir / f"{base_file_name}_population-features.{self._extension}"
             self._zip_names['population']  = self._game_data_dir / f"{base_file_name}_population-features.zip"
@@ -68,6 +71,14 @@ class FileManager(abc.ABC):
             ret_val = self._files['population']
         else:
             utils.Logger.toStdOut("No population file available, writing to standard output instead.", logging.WARN)
+        return ret_val
+
+    def GetPlayersFile(self) -> IO:
+        ret_val : IO = sys.stdout
+        if self._files['players'] is not None:
+            ret_val = self._files['players']
+        else:
+            utils.Logger.toStdOut("No player file available, writing to standard output instead.", logging.WARN)
         return ret_val
 
     def GetSessionsFile(self) -> IO:
@@ -91,12 +102,15 @@ class FileManager(abc.ABC):
         self._game_data_dir.mkdir(exist_ok=True, parents=True)
         # self._base_path.mkdir(exist_ok=True)
         self._files['population'] = open(self._file_names['population'], "w+", encoding="utf-8") if (self._file_names['population'] is not None) else None
+        self._files['players']  = open(self._file_names['players'],  "w+", encoding="utf-8") if (self._file_names['players'] is not None) else None
         self._files['sessions'] = open(self._file_names['sessions'], "w+", encoding="utf-8") if (self._file_names['sessions'] is not None) else None
         self._files['events']   = open(self._file_names['events'],   "w+", encoding="utf-8") if (self._file_names['events'] is not None) else None
 
     def CloseFiles(self) -> None:
         if self._files['population'] is not None:
             self._files['population'].close()
+        if self._files['players'] is not None:
+            self._files['players'].close()
         if self._files['sessions'] is not None:
             self._files['sessions'].close()
         if self._files['events'] is not None:
@@ -112,11 +126,14 @@ class FileManager(abc.ABC):
         if (self._game_id in existing_csvs and self._dataset_id in existing_csvs[self._game_id]):
             existing_data = existing_csvs[self._game_id][self._dataset_id]
             src_population_f = existing_data['population_file'] if "population_file" in existing_data.keys() else None
+            src_players_f = existing_data['players_file'] if "players_file" in existing_data.keys() else None
             src_sessions_f = existing_data['sessions_file'] if "sessions_file" in existing_data.keys() else None
             src_events_f = existing_data['events_file'] if "events_file" in existing_data.keys() else None
             try:
                 if src_population_f is not None and self._zip_names['population'] is not None:
                     os.rename(src_population_f, str(self._zip_names['population']))
+                if src_players_f is not None and self._zip_names['players'] is not None:
+                    os.rename(src_players_f, str(self._zip_names['players']))
                 if src_sessions_f is not None and self._zip_names['sessions'] is not None:
                     os.rename(src_sessions_f, str(self._zip_names['sessions']))
                 if src_events_f is not None and self._zip_names['events'] is not None:
@@ -136,6 +153,19 @@ class FileManager(abc.ABC):
                     population_zip_file.close()
                     if self._file_names["population"] is not None:
                         os.remove(self._file_names["population"])
+                except FileNotFoundError as err:
+                    utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    traceback.print_tb(err.__traceback__)
+        if self._zip_names['players'] is not None:
+            with zipfile.ZipFile(self._zip_names["players"], "w", compression=zipfile.ZIP_DEFLATED) as players_zip_file:
+                try:
+                    player_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_player-features.{self._extension}"
+                    readme_file  = Path(self._dataset_id) / "readme.md"
+                    self._addToZip(path=self._file_names["players"], zip_file=players_zip_file, path_in_zip=player_file)
+                    self._addToZip(path=self._readme_path,            zip_file=players_zip_file, path_in_zip=readme_file)
+                    players_zip_file.close()
+                    if self._file_names["players"] is not None:
+                        os.remove(self._file_names["players"])
                 except FileNotFoundError as err:
                     utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
                     traceback.print_tb(err.__traceback__)
@@ -212,6 +242,7 @@ class FileManager(abc.ABC):
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions"     :num_sess,
                     "population_file" :str(self._zip_names['population']) if self._zip_names['population'] else None,
+                    "players_file"    :str(self._zip_names['players'])   if self._zip_names['players']   else None,
                     "sessions_file"   :str(self._zip_names['sessions'])   if self._zip_names['sessions']   else None,
                     "events_file"     :str(self._zip_names['events'])     if self._zip_names['events']     else None
                 }
@@ -242,6 +273,8 @@ class FileManager(abc.ABC):
                 existing_data = existing_csvs[self._game_id][self._dataset_id] if self._dataset_id in existing_csvs[self._game_id].keys() else None
                 population_path = str(self._zip_names["population"]) if self._zip_names["population"] is not None \
                                   else (existing_data["population"] if (existing_data is not None and "population" in existing_data.keys()) else None)
+                players_path    = str(self._zip_names["players"]) if self._zip_names["players"] is not None \
+                                  else (existing_data["players"] if (existing_data is not None and "players" in existing_data.keys()) else None)
                 sessions_path   = str(self._zip_names["sessions"]) if self._zip_names["sessions"] is not None \
                                   else (existing_data["sessions"] if (existing_data is not None and "sessions" in existing_data.keys()) else None)
                 events_path     = str(self._zip_names["events"]) if self._zip_names["events"] is not None \
@@ -254,6 +287,7 @@ class FileManager(abc.ABC):
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions"     :num_sess,
                     "population_file" :population_path,
+                    "players_file"    :players_path,
                     "sessions_file"   :sessions_path,
                     "events_file"     :events_path,
                 }
