@@ -6,7 +6,7 @@ import typing
 from typing import Any, List, Dict, IO, Type, Union
 # import local files
 import utils
-from extractors.Extractor import Extractor
+from extractors.FeatureLoader import FeatureLoader
 from games.LAKELAND.LakelandExtractor import LakelandExtractor
 from managers.FileManager import FileManager
 from schemas.Event import Event
@@ -14,7 +14,7 @@ from schemas.GameSchema import GameSchema
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.
-class SessionProcessor:
+class SessionExtractor:
     ## Constructor for the SessionProcessor class.
     #  Simply stores some data for use later, including the type of extractor to
     #  use.
@@ -27,17 +27,17 @@ class SessionProcessor:
     #                       is structured.
     #  @param sessions_csv_file The output file, to which we'll write the processed
     #                       feature data.
-    def __init__(self, ExtractorClass: Type[Extractor], game_schema: GameSchema, feature_overrides:Union[List[str],None]=None):
+    def __init__(self, ExtractorClass: Type[FeatureLoader], game_schema: GameSchema, feature_overrides:Union[List[str],None]=None):
         ## Define instance vars
-        self._ExtractorClass     :Type[Extractor]       = ExtractorClass
-        self._game_schema        :GameSchema            = game_schema
-        self._session_extractors :Dict[str, Extractor]  = {}
-        self._overrides          :Union[List[str],None] = feature_overrides
-        self._template_extractor :Extractor
+        self._ExtractorClass     : Type[FeatureLoader]      = ExtractorClass
+        self._game_schema        : GameSchema               = game_schema
+        self._session_extractors : Dict[str, FeatureLoader] = {}
+        self._overrides          : Union[List[str],None]    = feature_overrides
+        self._template_loader    :FeatureLoader
         if self._ExtractorClass is LakelandExtractor:
-            self._template_extractor = LakelandExtractor(session_id="", game_schema=self._game_schema, feature_overrides=self._overrides, sessions_file=sys.stdout)
+            self._template_loader = LakelandExtractor(session_id="", game_schema=self._game_schema, feature_overrides=self._overrides, sessions_file=sys.stdout)
         else:
-            self._template_extractor = self._ExtractorClass(session_id="",game_schema=self._game_schema, feature_overrides=self._overrides)
+            self._template_loader = self._ExtractorClass(session_id="",game_schema=self._game_schema, feature_overrides=self._overrides)
 
     ## Function to handle processing of a single row of data.
     #  Basically just responsible for ensuring an extractor for the session
@@ -61,7 +61,7 @@ class SessionProcessor:
             extractor.CalculateAggregateFeatures()
 
     def GetSessionFeatureNames(self) -> List[str]:
-        return self._template_extractor.GetFeatureNames(self._game_schema, overrides=self._overrides)
+        return self._template_loader.GetFeatureNames(self._game_schema, overrides=self._overrides)
 
     def GetSessionFeatures(self) -> List[List[Any]]:
         return [extractor.GetFeatureValues() for extractor in self._session_extractors.values()]
@@ -69,7 +69,7 @@ class SessionProcessor:
     ## Function to write out the header for a processed csv file.
     #  Just runs the header writer for whichever Extractor subclass we were given.
     def WriteSessionFileHeader(self, file_mgr:FileManager, separator:str = "\t"):
-        self._template_extractor.WriteFileHeader(game_schema=self._game_schema, file=file_mgr.GetSessionsFile(), separator=separator)
+        self._template_loader.WriteFileHeader(game_schema=self._game_schema, file=file_mgr.GetSessionsFile(), separator=separator)
 
     ## Function to write out all data for the extractors created by the
     #  SessionProcessor. Just calls the "write" function once for each extractor.

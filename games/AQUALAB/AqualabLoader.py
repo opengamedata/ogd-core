@@ -9,13 +9,13 @@ from typing import Any, Dict, List, Union
 ## import local files
 from games.AQUALAB.extractors import *
 import utils
-from extractors.Extractor import Extractor
+from extractors.FeatureLoader import FeatureLoader
 from extractors.Feature import Feature
 from schemas.GameSchema import GameSchema
 
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
-class AqualabExtractor(Extractor):
+class AqualabLoader(FeatureLoader):
     ## Constructor for the WaveExtractor class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.

@@ -5,13 +5,13 @@ from typing import Any, Dict, List, Union
 ## import local files
 from games.SHADOWSPECT.extractors import *
 import utils
-from extractors.Extractor import Extractor
+from extractors.FeatureLoader import FeatureLoader
 from extractors.Feature import Feature
 from schemas.GameSchema import GameSchema
 
 ## @class ShadowspectExtractor
 #  Extractor subclass for extracting features from Shadowspects game data.
-class ShadowspectExtractor(Extractor):
+class ShadowspectLoader(FeatureLoader):
     ## Constructor for the ShadowspectExtractor class.
     #  Sets a game schema.
     #

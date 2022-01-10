@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Tuple, Union
 ## import local files
 import utils
-from extractors.Extractor import Extractor
+from extractors.FeatureLoader import FeatureLoader
 from extractors.Feature import Feature
 from extractors.LegacyFeature import LegacyFeature
 from schemas.Event import Event
@@ -20,7 +20,7 @@ from schemas.TableSchema import TableSchema
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class LegacyExtractor(Extractor):
+class LegacyExtractor(FeatureLoader):
 
     # *** ABSTRACTS ***
 
