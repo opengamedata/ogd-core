@@ -16,7 +16,7 @@ from schemas.GameSchema import GameSchema
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class Extractor(abc.ABC):
+class FeatureLoader(abc.ABC):
     class Listener:
         @enum.unique
         class Kinds(enum.Enum):
@@ -28,7 +28,7 @@ class Extractor(abc.ABC):
             self.kind = kind
         
         def __str__(self) -> str:
-            return f"{self.name} ({'aggregate' if self.kind == Extractor.Listener.Kinds.AGGREGATE else 'percount'})"
+            return f"{self.name} ({'aggregate' if self.kind == FeatureLoader.Listener.Kinds.AGGREGATE else 'percount'})"
 
         def __repr__(self) -> str:
             return str(self)
@@ -53,7 +53,7 @@ class Extractor(abc.ABC):
         :type game_schema: GameSchema
         """
         self._session_id     : str                                = session_id
-        self._event_registry : Dict[str,List[Extractor.Listener]] = {}
+        self._event_registry : Dict[str,List[FeatureLoader.Listener]] = {}
         self._overrides      : Union[List[str],None]              = feature_overrides
         self._percounts      : OrderedDict[str,Feature]           = self._genPerCounts(schema=game_schema, overrides=feature_overrides)
         self._aggregates     : OrderedDict[str,Feature]           = self._genAggregate(schema=game_schema, overrides=feature_overrides)
@@ -139,9 +139,9 @@ class Extractor(abc.ABC):
         """
         if event.event_name in self._event_registry.keys():
             for listener in self._event_registry[event.event_name]:
-                if listener.kind == Extractor.Listener.Kinds.AGGREGATE:
+                if listener.kind == FeatureLoader.Listener.Kinds.AGGREGATE:
                     self._aggregates[listener.name].ExtractFromEvent(event)
-                elif listener.kind == Extractor.Listener.Kinds.PERCOUNT:
+                elif listener.kind == FeatureLoader.Listener.Kinds.PERCOUNT:
                     self._percounts[listener.name].ExtractFromEvent(event)
                 else:
                     utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
@@ -204,27 +204,27 @@ class Extractor(abc.ABC):
     def _genAggregate(self, schema:GameSchema, overrides:Union[List[str],None]) -> 'OrderedDict[str,Feature]':
         ret_val = OrderedDict()
         for name,aggregate in schema.aggregate_features().items():
-            if Extractor._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=overrides):
+            if FeatureLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=overrides):
                 try:
                     feature = self._loadFeature(feature_type=name, name=name, feature_args=aggregate)
                 except NotImplementedError as err:
                     utils.Logger.Log(f"{name} is not a valid feature for Waves", logging.ERROR)
                 else:
-                    self._register(feature, Extractor.Listener.Kinds.AGGREGATE)
+                    self._register(feature, FeatureLoader.Listener.Kinds.AGGREGATE)
                     ret_val[feature.Name()] = feature
         return ret_val
 
     def _genPerCounts(self, schema:GameSchema, overrides:Union[List[str],None]) -> 'OrderedDict[str,Feature]':
         ret_val = OrderedDict()
         for name,percount in schema.percount_features().items():
-            if Extractor._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=overrides):
-                for i in Extractor._genCountRange(count=percount["count"], schema=schema):
+            if FeatureLoader._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=overrides):
+                for i in FeatureLoader._genCountRange(count=percount["count"], schema=schema):
                     try:
                         feature = self._loadFeature(feature_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, count_index=i)
                     except NotImplementedError as err:
                         utils.Logger.Log(f"{name} is not a valid feature for Waves", logging.ERROR)
                     else:
-                        self._register(feature=feature, kind=Extractor.Listener.Kinds.PERCOUNT)
+                        self._register(feature=feature, kind=FeatureLoader.Listener.Kinds.PERCOUNT)
                         ret_val[feature.Name()] = feature
         return ret_val
 
@@ -232,7 +232,7 @@ class Extractor(abc.ABC):
         for event in feature.GetEventTypes():
             if event not in self._event_registry.keys():
                 self._event_registry[event] = []
-            self._event_registry[event].append(Extractor.Listener(name=feature._name, kind=kind))
+            self._event_registry[event].append(FeatureLoader.Listener(name=feature._name, kind=kind))
 
     # def _format(obj):
     #     if obj == None:
