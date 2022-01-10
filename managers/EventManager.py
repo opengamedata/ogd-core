@@ -10,7 +10,7 @@ from schemas.TableSchema import TableSchema
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
-class EventProcessor:
+class EventManager:
     ## Constructor for the EventProcessor class.
     #  Stores some of the passed data, and generates some other members.
     #  In particular, generates a mapping from column names back to indices of columns in the
