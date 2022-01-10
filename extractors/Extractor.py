@@ -6,13 +6,8 @@ from typing import Any, Dict, List, Tuple, Union
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
 
-## @class Model
-#  Abstract base class for session-level Wave features.
-#  Models only have one public function, called Eval.
-#  The Eval function takes a list of row data, computes some statistic, and returns a list of results.
-#  If the model works on features from session data, it should calculate one result for each row (each row being a session).
-#  If the model works on a raw list of recent events, it should calculate a single result (each row being an event).
-class ExtractionManager(abc.ABC):
+## @class Extractor
+class Extractor(abc.ABC):
 
     # *** ABSTRACTS ***
 
