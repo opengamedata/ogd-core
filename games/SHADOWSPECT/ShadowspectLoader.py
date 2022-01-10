@@ -11,7 +11,7 @@ from schemas.GameSchema import GameSchema
 
 ## @class ShadowspectExtractor
 #  Extractor subclass for extracting features from Shadowspects game data.
-class ShadowspectExtractor(FeatureLoader):
+class ShadowspectLoader(FeatureLoader):
     ## Constructor for the ShadowspectExtractor class.
     #  Sets a game schema.
     #

@@ -15,7 +15,7 @@ from schemas.GameSchema import GameSchema
 
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
-class WaveExtractor(FeatureLoader):
+class WaveLoader(FeatureLoader):
     ## Constructor for the WaveExtractor class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.
