@@ -14,7 +14,7 @@ from schemas.GameSchema import GameSchema
 
 ## @class PopulationProcessor
 #  Class to extract and manage features for a processed csv file.
-class PopulationProcessor:
+class PopulationExtractor:
     ## Constructor for the PopulationProcessor class.
     #  Simply stores some data for use later, including the type of extractor to
     #  use.

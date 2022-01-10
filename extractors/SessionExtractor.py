@@ -14,7 +14,7 @@ from schemas.GameSchema import GameSchema
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.
-class SessionProcessor:
+class SessionExtractor:
     ## Constructor for the SessionProcessor class.
     #  Simply stores some data for use later, including the type of extractor to
     #  use.
