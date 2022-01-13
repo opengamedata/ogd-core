@@ -18,30 +18,29 @@ jobs:
         sudo apt-get -q install python3.9-dev
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
-    - name: Use gcloud CLI
-      run: |
-        gcloud config set project aqualab-57f88
-        bq query --use_legacy_sql=false \
-        'SELECT
-          event_name
-        FROM
-          `aqualab-57f88.analytics_271167280.events_20210915`'
-    #- uses: actions/checkout@v2
-    #- name: Set up Python libraries
-    #  run: |
-    #    python3.8 -m pip install --upgrade pip
-    #    python3.8 -m pip install setuptools --quiet
-    #    python3.8 -m pip install wheel --quiet
-    #    python3.8 -m pip install -r requirements.txt --quiet
-    #    python3.8 -m pip install google-cloud-bigquery --quiet
-    #  shell: bash
-    #- name: Set up code
-    #  run: cp config.py.template config.py 
-    #  shell: bash
-    #- name: Test query
-    #  run: |
-    #    python3.8 interfaces/BigQueryInterface.py
+    # - name: Use gcloud CLI
+    #   run: |
+    #     gcloud config set project aqualab-57f88
+    #     bq query --use_legacy_sql=false \
+    #     'SELECT
+    #       event_name
+    #     FROM
+    #       `aqualab-57f88.analytics_271167280.events_20210915`'
+    - name: Do Export of yesterday's data
+      uses: ./.github/actions/export_yesterday
+      with:
+        game: AQUALAB
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{secrets.SQL_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        log_level: "INFO"
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v2
       with:
         path: ./*.log
+    - name: Upload zips as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./data/CRYSTAL/*.zip
