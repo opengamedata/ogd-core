@@ -17,16 +17,19 @@ jobs:
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
-    - name: Do Export of yesterday's data
-      uses: ./.github/actions/export_yesterday
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
       with:
-        game: JOWILDER
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "INFO"
+    - name: Do Export of yesterday's data
+      uses: ./.github/actions/export_yesterday
+      with:
+        game: JOWILDER
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v2
       with:

@@ -78,27 +78,9 @@ jobs:
     #   name: Copy in Shadowspect key if we are doing Shadowspect.
     #   run: echo "${{ secrets.SHADOWSPECT_BQ_AUTH }}" >> ./config/shadowspect.json
     #   shell: bash
-    - name: Do Export of Month
-      if: github.event.inputs.monthly == 'true'
-      uses: ./.github/actions/export_custom_month
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
       with:
-        game: ${{matrix.game}}
-        month_year: ${{matrix.month_year}}
-        vpn_user: ${{secrets.VPN_USER}}
-        vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{secrets.SQL_HOST}}
-        sql_user: ${{secrets.SQL_USER}}
-        sql_pass: ${{secrets.SQL_PASS}}
-        sql_db: ${{github.event.inputs.database}}
-        slice_size: ${{ github.event.inputs.slice_size }}
-        log_level: ${{ github.event.inputs.log_level }}
-    - name: Do Export of Range
-      if: github.event.inputs.monthly == 'false'
-      uses: ./.github/actions/export_custom
-      with:
-        game: ${{matrix.game}}
-        start_date: ${{github.event.inputs.start_date}}
-        end_date: ${{github.event.inputs.end_date}}
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
         sql_host: ${{secrets.SQL_HOST}}
@@ -107,6 +89,19 @@ jobs:
         sql_db: ${{github.events.inputs.database}}
         slice_size: ${{ github.event.inputs.slice_size }}
         log_level: ${{ github.event.inputs.log_level }}
+    - name: Do Export of Month
+      if: github.event.inputs.monthly == 'true'
+      uses: ./.github/actions/export_custom_month
+      with:
+        game: ${{matrix.game}}
+        month_year: ${{matrix.month_year}}
+    - name: Do Export of Range
+      if: github.event.inputs.monthly == 'false'
+      uses: ./.github/actions/export_custom
+      with:
+        game: ${{matrix.game}}
+        start_date: ${{github.event.inputs.start_date}}
+        end_date: ${{github.event.inputs.end_date}}
     - name: Upload files to opengamedata via scp
       run: |
         mkdir -p ~/.ssh

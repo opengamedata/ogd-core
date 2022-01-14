@@ -26,16 +26,19 @@ jobs:
     #       event_name
     #     FROM
     #       `aqualab-57f88.analytics_271167280.events_20210915`'
-    - name: Do Export of last month's data
-      uses: ./.github/actions/export_last_month
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
       with:
-        game: AQUALAB
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "INFO"
+    - name: Do Export of last month's data
+      uses: ./.github/actions/export_last_month
+      with:
+        game: AQUALAB
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v2
       with:

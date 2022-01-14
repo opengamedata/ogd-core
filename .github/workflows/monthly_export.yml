@@ -31,16 +31,19 @@ jobs:
     #     echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
     #     chmod 600 ./key.txt
     #     ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata; pwd;"
-    - name: Do Export of last month
-      uses: ./.github/actions/export_last_month
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
       with:
-        game: ${{matrix.game}}
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "INFO"
+    - name: Do Export of last month
+      uses: ./.github/actions/export_last_month
+      with:
+        game: ${{matrix.game}}
     - name: Upload files to opengamedata via scp
       run: |
         mkdir -p ~/.ssh
