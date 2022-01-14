@@ -1,5 +1,9 @@
 name: Aqualab BigQuery Test
 on:
+  push:
+    paths:
+    - 'games/AQUALAB/**'
+    - '.github/workflows/aqualab.yml'
   workflow_dispatch:
 jobs:
   test_connect:
