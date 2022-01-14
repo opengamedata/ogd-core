@@ -71,3 +71,7 @@ runs:
       if: ${{ inputs.game == 'AQUALAB' }}
       run: sed -i 's/aqualab_project_id.dataset_id/aqualab-57f88.analytics_271167280/g' config/config.py
       shell: bash
+    - name: Set Shadowspect config
+      if: ${{ inputs.game == 'SHADOWSPECT' }}
+      run: sed -i 's/shadowspect_project_id.dataset_id/shadowspect-b8e63.analytics_284091572/g' config/config.py
+      shell: bash
