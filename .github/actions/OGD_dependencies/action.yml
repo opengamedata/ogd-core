@@ -14,6 +14,7 @@ runs:
       run: |
         sudo apt-get -q install python3.8
         sudo apt-get -q install python3.8-dev
+      shell: bash
     - name: Set up pip
       run: |
         python3.8 -m pip install --upgrade pip
