@@ -10,6 +10,10 @@ runs:
     - name: Set up local bin in path # there is a warning about this in pip output, so we'll do this and see if that makes things better.
       run: export PATH=/home/runner/.local/bin:$PATH
       shell: bash
+    - name: Get correct Python
+      run: |
+        sudo apt-get -q install python3.8
+        sudo apt-get -q install python3.8-dev
     - name: Set up pip
       run: |
         python3.8 -m pip install --upgrade pip
