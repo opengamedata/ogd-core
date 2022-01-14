@@ -31,7 +31,7 @@ jobs:
     #     FROM
     #       `aqualab-57f88.analytics_271167280.events_20210915`'
     - name: Do Export of yesterday's data
-      uses: ./.github/actions/export_yesterday
+      uses: ./.github/actions/export_last_month
       with:
         game: AQUALAB
         vpn_user: ${{secrets.VPN_USER}}
