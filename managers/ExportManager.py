@@ -127,10 +127,15 @@ class ExportManager:
         # 3) Loop over data, running extractors.
         if request._exports.events and self._event_processor is not None:
             self._event_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
-        if request._exports.sessions and self._sess_processor is not None:
-            self._sess_processor.WriteSessionFileHeader(file_mgr=file_manager, separator="\t")
-        if request._exports.population and self._pop_processor is not None:
-            self._pop_processor.WritePopulationFileHeader(file_mgr=file_manager, separator="\t")
+        if request._exports.sessions and self._extract_processor is not None:
+            cols = self._extract_processor.GetSessionFeatureNames()
+            file_manager.WriteSessionsFile("\t".join(cols) + "\n")
+        if request._exports.players and self._extract_processor is not None:
+            cols = self._extract_processor.GetPlayerFeatureNames()
+            file_manager.WritePlayersFile("\t".join(cols) + "\n")
+        if request._exports.population and self._extract_processor is not None:
+            cols = self._extract_processor.GetPopulationFeatureNames()
+            file_manager.WritePopulationFile("\t".join(cols) + "\n")
         # 2) Get the IDs of sessions to process
         _dummy = request.RetrieveSessionIDs()
         sess_ids = _dummy if _dummy is not None else []
@@ -150,17 +155,26 @@ class ExportManager:
                 if request._exports.events and self._event_processor is not None:
                     self._event_processor.WriteEventsCSVLines(file_mgr=file_manager)
                     self._event_processor.ClearLines()
-                if request._exports.sessions and self._sess_processor is not None:
-                    self._sess_processor.CalculateAggregateFeatures()
-                    self._sess_processor.WriteSessionFileLines(file_mgr=file_manager, separator="\t")
-                    self._sess_processor.ClearLines()
+                if request._exports.sessions and self._extract_processor is not None:
+                    self._extract_processor.CalculateAggregateSessionFeatures()
+                    _sess_feats = self._extract_processor.GetSessionFeatures()
+                    for sess in _sess_feats:
+                        file_manager.WriteSessionsFile("\t".join(sess) + "\n")
+                    self._extract_processor.ClearSessionLines()
+                if request._exports.players and self._extract_processor is not None:
+                    self._extract_processor.CalculateAggregatePlayerFeatures()
+                    _player_feats = self._extract_processor.GetPlayerFeatures()
+                    for player in _player_feats:
+                        file_manager.WritePlayersFile("\t".join(player) + "\n")
+                    self._extract_processor.ClearPlayerLines()
             else:
                 utils.Logger.Log(f"Could not retrieve data set for slice [{i+1}/{len(session_slices)}].", logging.WARN)
         # 4) If we made it all the way to the end, write population data and return the number of sessions processed.
-        if request._exports.population and self._pop_processor is not None:
-            self._pop_processor.CalculateAggregateFeatures()
-            self._pop_processor.WritePopulationFileLines(file_mgr=file_manager)
-            self._pop_processor.ClearLines()
+        if request._exports.population and self._extract_processor is not None:
+            self._extract_processor.CalculateAggregatePopulationFeatures()
+            _pop_feats = self._extract_processor.GetPopulationFeatures()
+            file_manager.WritePopulationFile("\t".join(_pop_feats))
+            self._extract_processor.ClearPopulationLines()
         # 4) Save and close files
         # If we have a schema, we can do feature extraction.
         if game_schema is not None:
@@ -220,7 +234,7 @@ class ExportManager:
         else:
             utils.Logger.toStdOut("Event log not requested, skipping events file.", logging.INFO)
         # If game doesn't have an extractor, make sure we don't try to export it.
-        if not self._extract_processor.HasExtractor():
+        if (self._extract_processor is None) or (not self._extract_processor.HasExtractor()):
             request._exports.sessions = False
             request._exports.population = False
             utils.Logger.toStdOut("Could not export population/session data, no game extractor given!", logging.WARN)
@@ -228,6 +242,7 @@ class ExportManager:
             self._extract_processor._
 
     def _genSlices(self, sess_ids):
+        #TODO: rewrite this to slice across players, instead of sessions.
         _sess_ct = len(sess_ids)
         _slice_size = self._settings["BATCH_SIZE"] or default_settings["BATCH_SIZE"]
         utils.Logger.toStdOut(f"Using slice size = {_slice_size}, should result in {math.ceil(_sess_ct / _slice_size)} slices", logging.INFO)
