@@ -70,7 +70,7 @@ class FileManager(abc.ABC):
         if self._files['population'] is not None:
             ret_val = self._files['population']
         else:
-            utils.Logger.toStdOut("No population file available, writing to standard output instead.", logging.WARN)
+            utils.Logger.toStdOut("No population file available, returning standard output instead.", logging.WARN)
         return ret_val
 
     def GetPlayersFile(self) -> IO:
@@ -78,7 +78,7 @@ class FileManager(abc.ABC):
         if self._files['players'] is not None:
             ret_val = self._files['players']
         else:
-            utils.Logger.toStdOut("No player file available, writing to standard output instead.", logging.WARN)
+            utils.Logger.toStdOut("No player file available, returning standard output instead.", logging.WARN)
         return ret_val
 
     def GetSessionsFile(self) -> IO:
@@ -86,7 +86,7 @@ class FileManager(abc.ABC):
         if self._files['sessions'] is not None:
             ret_val = self._files['sessions']
         else:
-            utils.Logger.toStdOut("No sessions file available, writing to standard output instead.", logging.WARN)
+            utils.Logger.toStdOut("No sessions file available, returning standard output instead.", logging.WARN)
         return ret_val
 
     def GetEventsFile(self) -> IO:
@@ -94,8 +94,36 @@ class FileManager(abc.ABC):
         if self._files['events'] is not None:
             ret_val = self._files['events']
         else:
-            utils.Logger.toStdOut("No events file available, writing to standard output instead.", logging.WARN)
+            utils.Logger.toStdOut("No events file available, returning standard output instead.", logging.WARN)
         return ret_val
+
+    def WritePopulationFile(self, data:str) -> None:
+        if self._files['population'] is not None:
+            self._files['population'].write(data)
+        else:
+            utils.Logger.toStdOut("No population file available, writing to standard output instead.", logging.WARN)
+            sys.stdout.write(data)
+
+    def WritePlayersFile(self, data:str) -> None:
+        if self._files['players'] is not None:
+            self._files['players'].write(data)
+        else:
+            utils.Logger.toStdOut("No player file available, writing to standard output instead.", logging.WARN)
+            sys.stdout.write(data)
+
+    def WriteSessionsFile(self, data:str) -> None:
+        if self._files['sessions'] is not None:
+            self._files['sessions'].write(data)
+        else:
+            utils.Logger.toStdOut("No sessions file available, writing to standard output instead.", logging.WARN)
+            sys.stdout.write(data)
+
+    def WriteEventsFile(self, data:str) -> None:
+        if self._files['events'] is not None:
+            self._files['events'].write(data)
+        else:
+            utils.Logger.toStdOut("No events file available, writing to standard output instead.", logging.WARN)
+            sys.stdout.write(data)
 
     def OpenFiles(self) -> None:
         # self._data_dir.mkdir(exist_ok=True)
