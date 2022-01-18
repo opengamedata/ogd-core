@@ -68,14 +68,14 @@ class SessionExtractor:
 
     ## Function to write out the header for a processed csv file.
     #  Just runs the header writer for whichever Extractor subclass we were given.
-    def WriteSessionFileHeader(self, file_mgr:FileManager, separator:str = "\t"):
-        self._template_loader.WriteFileHeader(game_schema=self._game_schema, file=file_mgr.GetSessionsFile(), separator=separator)
+    # def WriteSessionFileHeader(self, file_mgr:FileManager, separator:str = "\t"):
+    #     self._template_loader.WriteFileHeader(game_schema=self._game_schema, file=file_mgr.GetSessionsFile(), separator=separator)
 
     ## Function to write out all data for the extractors created by the
     #  SessionProcessor. Just calls the "write" function once for each extractor.
-    def WriteSessionFileLines(self, file_mgr:FileManager, separator:str = "\t"):
-        for extractor in self._session_extractors.values():
-            extractor.WriteFeatureValues(file=file_mgr.GetSessionsFile(), separator=separator)
+    # def WriteSessionFileLines(self, file_mgr:FileManager, separator:str = "\t"):
+    #     for extractor in self._session_extractors.values():
+    #         extractor.WriteFeatureValues(file=file_mgr.GetSessionsFile(), separator=separator)
 
     ##  Function to empty the list of lines stored by the SessionProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid

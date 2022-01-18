@@ -94,20 +94,20 @@ class FeatureLoader(abc.ABC):
     # *** PUBLIC METHODS ***
 
     # Static function to print column headers to a file.
-    def WriteFileHeader(self, game_schema: GameSchema, file: typing.IO[str], separator:str="\t", overrides:Union[List[str],None]=None) -> None:
-        """Static function to print column headers to a file.
+    # def WriteFileHeader(self, game_schema: GameSchema, file: typing.IO[str], separator:str="\t", overrides:Union[List[str],None]=None) -> None:
+    #     """Static function to print column headers to a file.
 
-        We first create a feature dictionary, then essentially write out each key,
-        with some formatting to add prefixes to features that repeat per-level
-        (or repeat with a custom count).
-        :param game_schema: An object that defines how the game data itself is structured
-        :type game_schema: GameSchema
-        :param file: An open csv file to which we will write column headers.
-        :type file: typing.IO[str]
-        """
-        columns = self.GetFeatureNames(schema=game_schema, overrides=overrides)
-        file.write(separator.join(columns))
-        file.write("\n")
+    #     We first create a feature dictionary, then essentially write out each key,
+    #     with some formatting to add prefixes to features that repeat per-level
+    #     (or repeat with a custom count).
+    #     :param game_schema: An object that defines how the game data itself is structured
+    #     :type game_schema: GameSchema
+    #     :param file: An open csv file to which we will write column headers.
+    #     :type file: typing.IO[str]
+    #     """
+    #     columns = self.GetFeatureNames(schema=game_schema, overrides=overrides)
+    #     file.write(separator.join(columns))
+    #     file.write("\n")
 
     def GetFeatureNames(self, schema:GameSchema, overrides:Union[List[str],None]=None) -> List[str]:
         """Function to generate a list names of all enabled features, given a GameSchema
@@ -147,19 +147,19 @@ class FeatureLoader(abc.ABC):
                     utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
 
     ## Function to print data from an extractor to file.
-    def WriteFeatureValues(self, file: typing.IO[str], separator:str="\t") -> None:
-        """Function to print data from an extractor to file.
+    # def WriteFeatureValues(self, file: typing.IO[str], separator:str="\t") -> None:
+    #     """Function to print data from an extractor to file.
 
-        This function should be the same across all Extractor subtypes.
-        Simply prints out each value from the extractor's features dictionary.
-        :param file: An open csv file to which we will write column headers.
-        :type file: typing.IO[str]
-        :param separator: [description], defaults to "\t"
-        :type separator: str, optional
-        """
-        column_vals = self.GetFeatureValues()
-        file.write(separator.join([str(val) for val in column_vals]))
-        file.write("\n")
+    #     This function should be the same across all Extractor subtypes.
+    #     Simply prints out each value from the extractor's features dictionary.
+    #     :param file: An open csv file to which we will write column headers.
+    #     :type file: typing.IO[str]
+    #     :param separator: [description], defaults to "\t"
+    #     :type separator: str, optional
+    #     """
+    #     column_vals = self.GetFeatureValues()
+    #     file.write(separator.join([str(val) for val in column_vals]))
+    #     file.write("\n")
 
     def GetFeatureValues(self) -> List[Any]:
         # TODO: It looks like I might be assuming that dictionaries always have same order here.
