@@ -54,17 +54,29 @@ class ExtractorManager:
     def GetPopulationFeatures(self) -> List[Any]:
         return self._pop_processor.GetPopulationFeatures() if self._pop_processor is not None else []
 
-    def ClearLines(self) -> None:
-        if self._sess_processor is not None:
-            self._sess_processor.ClearLines()
-
     def CalculateAggregateSessionFeatures(self) -> None:
         if self._sess_processor is not None:
             self._sess_processor.CalculateAggregateFeatures()
+
+    def CalculateAggregatePlayerFeatures(self) -> None:
+        if self._play_processor is not None:
+            self._play_processor.CalculateAggregateFeatures()
     
     def CalculateAggregatePopulationFeatures(self) -> None:
         if self._pop_processor is not None:
             self._pop_processor.CalculateAggregateFeatures()
+
+    def ClearSessionLines(self) -> None:
+        if self._sess_processor is not None:
+            self._sess_processor.ClearLines()
+
+    def ClearPlayerLines(self) -> None:
+        if self._play_processor is not None:
+            self._play_processor.ClearLines()
+
+    def ClearPopulationLines(self) -> None:
+        if self._pop_processor is not None:
+            self._pop_processor.ClearLines()
 
     def _prepareExtractor(self, game_id:str) -> None:
         game_extractor: Union[type,None] = None
