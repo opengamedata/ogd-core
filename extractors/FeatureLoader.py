@@ -53,10 +53,10 @@ class FeatureLoader(abc.ABC):
         :type game_schema: GameSchema
         """
         self._session_id     : str                                = session_id
-        self._event_registry : Dict[str,List[FeatureLoader.Listener]] = {}
         self._overrides      : Union[List[str],None]              = feature_overrides
         self._percounts      : OrderedDict[str,Feature]           = self._genPerCounts(schema=game_schema, overrides=feature_overrides)
         self._aggregates     : OrderedDict[str,Feature]           = self._genAggregate(schema=game_schema, overrides=feature_overrides)
+        self._event_registry : Dict[str,List[FeatureLoader.Listener]] = {}
 
     # string conversion for Extractors.
     def __str__(self) -> str:
