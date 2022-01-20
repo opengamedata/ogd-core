@@ -16,24 +16,24 @@ from typing import Any, Dict, IO, Union
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
 ## import local files
 import utils
-from managers.Request import ExporterTypes, ExporterRange
+from managers.Request import Request, ExporterTypes, ExporterRange
 
 class FileManager(abc.ABC):
-    def __init__(self, exporter_files: ExporterTypes, game_id, data_dir: str, date_range: Dict[str,Union[datetime,None]], extension:str="tsv"):
+    def __init__(self, request:Request, data_dir: str, extension:str="tsv"):
         self._file_names   : Dict[str,Union[Path,None]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._zip_names    : Dict[str,Union[Path,None]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._files        : Dict[str,Union[IO,None]]   = {"population":None, "players":None, "sessions":None, "events":None}
-        self._game_id      : str  = game_id
+        self._game_id      : str  = request.GetGameID()
         self._data_dir     : Path = Path("./" + data_dir)
         self._game_data_dir: Path = self._data_dir / self._game_id
         self._readme_path  : Path = self._game_data_dir/ "readme.md"
         self._extension    : str  = extension
-        self._date_range   : Dict[str,Union[datetime,None]] = date_range
+        self._date_range   : Dict[str,Union[datetime,None]] = request.GetRange().GetDateRange()
         self._dataset_id   : str  = ""
         self._short_hash   : str  = ""
         # figure out dataset ID.
-        start = date_range['min'].strftime("%Y%m%d") if date_range['min'] is not None else "UNKNOWN"
-        end   = date_range['max'].strftime("%Y%m%d") if date_range['max'] is not None else "UNKNOWN"
+        start = self._date_range['min'].strftime("%Y%m%d") if self._date_range['min'] is not None else "UNKNOWN"
+        end   = self._date_range['max'].strftime("%Y%m%d") if self._date_range['max'] is not None else "UNKNOWN"
         self._dataset_id = f"{self._game_id}_{start}_to_{end}"
         # get hash
         try:
@@ -49,16 +49,16 @@ class FileManager(abc.ABC):
         # then set up our paths, and ensure each exists.
         base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
         # finally, generate file names.
-        if exporter_files.events:
+        if request.ExportEvents():
             self._file_names['events']     = self._game_data_dir / f"{base_file_name}_events.{self._extension}"
             self._zip_names['events']      = self._game_data_dir / f"{base_file_name}_events.zip"
-        if exporter_files.sessions:
+        if request.ExportSessions():
             self._file_names['sessions']   = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}"
             self._zip_names['sessions']    = self._game_data_dir / f"{base_file_name}_session-features.zip"
-        if exporter_files.players:
+        if request.ExportPlayers():
             self._file_names['players']   = self._game_data_dir / f"{base_file_name}_player-features.{self._extension}"
             self._zip_names['players']    = self._game_data_dir / f"{base_file_name}_player-features.zip"
-        if exporter_files.population:
+        if request.ExportPopulation():
             self._file_names['population'] = self._game_data_dir / f"{base_file_name}_population-features.{self._extension}"
             self._zip_names['population']  = self._game_data_dir / f"{base_file_name}_population-features.zip"
 
