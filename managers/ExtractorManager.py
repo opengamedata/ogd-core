@@ -14,18 +14,19 @@ from games.LAKELAND.LakelandExtractor import LakelandExtractor
 from games.MAGNET.MagnetExtractor import MagnetExtractor
 from games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
 from games.WAVES.WaveLoader import WaveLoader
-from managers.Request import Request
+from managers.Request import ExporterTypes, Request
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
 
 class ExtractorManager:
-    def __init__(self, game_id:str, settings):
+    def __init__(self, game_id:str, exp_types:ExporterTypes, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
         # self._settings = settings
-        self._extractor_class : Union[Type[FeatureLoader],None]  = None
-        self._pop_processor   : Union[PopulationExtractor, None] = None
-        self._play_processor  : Union[PlayerExtractor, None]    = None
-        self._sess_processor  : Union[SessionExtractor, None]    = None
+        self._feat_loader_class : Union[Type[FeatureLoader],None]  = None
+        self._pop_processor     : Union[PopulationExtractor, None] = None
+        self._play_processor    : Union[PlayerExtractor, None]     = None
+        self._sess_processor    : Union[SessionExtractor, None]    = None
         self._prepareExtractor(game_id=game_id)
+        self._prepareProcessors(exp_types=exp_types, game_schema=game_schema, feature_overrides=feature_overrides)
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
         if self._pop_processor is not None:
@@ -34,7 +35,7 @@ class ExtractorManager:
             self._sess_processor.ProcessEvent(event=event)
 
     def HasExtractor(self) -> bool:
-        return self._extractor_class is not None
+        return self._feat_loader_class is not None
 
     def GetSessionFeatureNames(self) -> List[str]:
         return self._sess_processor.GetSessionFeatureNames() if self._sess_processor is not None else []
@@ -99,17 +100,21 @@ class ExtractorManager:
             pass
         else:
             raise Exception(f"Got an invalid game ID ({game_id})!")
-        self._extractor_class = game_extractor
+        self._feat_loader_class = game_extractor
 
-    def _prepareProcessors(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
-        if self._extractor_class is None:
+    def _prepareProcessors(self, exp_types:ExporterTypes, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
+        if self._feat_loader_class is None:
             utils.Logger.toStdOut("Could not export population/session data, no game extractor given!", logging.WARN)
         else:
-            if request._exports.sessions:
-                self._sess_processor = SessionExtractor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
+            if exp_types.sessions:
+                self._sess_processor = SessionExtractor(ExtractorClass=self._feat_loader_class, game_schema=game_schema, feature_overrides=feature_overrides)
             else:
                 utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
-            if request._exports.population:
-                self._pop_processor = PopulationExtractor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
+            if exp_types.players:
+                self._play_processor = PlayerExtractor(ExtractorClass=self._feat_loader_class, game_schema=game_schema, feature_overrides=feature_overrides)
+            else:
+                utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
+            if exp_types.population:
+                self._pop_processor = PopulationExtractor(ExtractorClass=self._feat_loader_class, game_schema=game_schema, feature_overrides=feature_overrides)
             else:
                 utils.Logger.toStdOut("Population features not requested, skipping population_features file.", logging.INFO)

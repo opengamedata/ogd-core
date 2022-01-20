@@ -28,7 +28,7 @@ class EventManager:
     ## Function to handle processing one row of data.
     #  @param row_with_complex_parsed A tuple of the row data. We assume the
     #                      event_data_complex has already been parsed from JSON.
-    def ProcessRow(self, row_with_complex_parsed: Tuple, schema:TableSchema):
+    def ProcessRow(self, row_with_complex_parsed: Tuple, schema:TableSchema, separator:str = "\t"):
         row_columns = schema.ColumnNames()
         line : List[Any] = [None] * len(row_columns)
         for i,col in enumerate(row_with_complex_parsed):
@@ -41,7 +41,7 @@ class EventManager:
                 else:
                     line[i] = col
         # print(f"From EventProcessor, about to add event to lines: {[str(item) for item in line]}")
-        self._lines.append("\t".join([str(item) for item in line]) + "\n") # changed , to \t
+        self._lines.append(separator.join([str(item) for item in line]) + "\n") # changed , to \t
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
         col_values = event.ColumnValues()
@@ -61,12 +61,12 @@ class EventManager:
         return self._lines
 
     ## Function to write out the header for a events csv file.
-    def WriteEventsCSVHeader(self, file_mgr:FileManager, separator:str = "\t"):
-        file_mgr.GetEventsFile().write(separator.join(self._columns) + "\n")
+    # def WriteEventsCSVHeader(self, file_mgr:FileManager, separator:str = "\t"):
+    #     file_mgr.GetEventsFile().write(separator.join(self._columns) + "\n")
 
     ## Function to write out all lines of event data that have been parsed so far.
-    def WriteEventsCSVLines(self, file_mgr:FileManager):
-        file_mgr.GetEventsFile().writelines(self._lines)
+    # def WriteEventsCSVLines(self, file_mgr:FileManager):
+    #     file_mgr.GetEventsFile().writelines(self._lines)
 
     ## Function to empty the list of lines stored by the EventProcessor.
     #  This is helpful if we're processing a lot of data and want to avoid
