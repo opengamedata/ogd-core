@@ -6,7 +6,7 @@ import logging
 import os
 import traceback
 import typing
-from typing import Dict, List
+from typing import Any, Dict, List, Union
 from pathlib import Path
 # local imports
 from config.config import settings as settings
@@ -19,7 +19,7 @@ from schemas.TableSchema import TableSchema
 #  @param path      The path (relative or absolute) to the folder containing the
 #                       JSON file. If path does not end in /, then "/" will be appended.
 #  @return          A python object parsed from the JSON.
-def loadJSONFile(filename:str, path:Path = Path("./")) -> typing.Any:
+def loadJSONFile(filename:str, path:Path = Path("./")) -> Dict[Any, Any]:
     if not filename.lower().endswith(".json"):
         Logger.toStdOut(f"Got a filename that didn't end with .json: {filename}, appending .json", logging.DEBUG)
         filename = filename + ".json"
