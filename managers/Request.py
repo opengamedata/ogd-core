@@ -62,13 +62,15 @@ class Request(abc.ABC):
     #  @param start_date   The starting date for our range of data to process.
     #  @param end_date     The ending date for our range of data to process.
     def __init__(self, interface:DataInterface, range:ExporterRange,
-                exporter_types:ExporterTypes = ExporterTypes(), exporter_locs:ExporterLocations = ExporterLocations()):
+                exporter_types:ExporterTypes = ExporterTypes(), exporter_locs:ExporterLocations = ExporterLocations(),
+                feature_overrides:List[str]=[]):
         # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
-        self._game_id   : str               = interface._game_id
+        self._game_id   : str               = str(interface._game_id)
         self._interface : DataInterface     = interface
         self._range     : ExporterRange     = range
         self._exports   : ExporterTypes     = exporter_types
         self._locs      : ExporterLocations = exporter_locs
+        self._feat_overrides : List[str]    = feature_overrides
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
@@ -79,7 +81,27 @@ class Request(abc.ABC):
         return f"{self._game_id}: {_min}-{_max}"
 
     def GetGameID(self):
-        return str(self._game_id)
+        return self._game_id
+
+    def GetInterface(self) -> DataInterface:
+        return self._interface
+
+    def GetRange(self) -> ExporterRange:
+        return self._range
+
+    def ExportEvents(self) -> bool:
+        return self._exports.events
+    def ExportSessions(self) -> bool:
+        return self._exports.sessions
+    def ExportPlayers(self) -> bool:
+        return self._exports.players
+    def ExportPopulation(self) -> bool:
+        return self._exports.population
+
+    def ToFile(self) -> bool:
+        return self._locs.files
+    def ToDict(self) -> bool:
+        return self._locs.dict
 
     ## Method to retrieve the list of IDs for all sessions covered by the request.
     #  Note, this will use the 

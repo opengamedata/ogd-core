@@ -91,18 +91,21 @@ class ExportManager:
                 # 3a) If next slice yielded valid data from the interface, process row-by-row.
                 self._processSlice(next_data_set=next_data_set, table_schema=table_schema, sess_ids=sess_ids, slice_num=i+1, slice_count=len(session_slices))
                 # 3b) After processing all rows for each slice, write out the session data and reset for next slice.
-                if request._exports.events and self._event_processor is not None:
+                if request.ExportEvents() and self._event_processor is not None:
                     ret_val['events']['vals'] += self._event_processor.GetLines()
                     self._event_processor.ClearLines()
-                if request._exports.sessions and self._extract_processor is not None:
+                if request.ExportSessions() and self._extract_processor is not None:
                     self._extract_processor.CalculateAggregateSessionFeatures()
                     ret_val['sessions']['vals'] += self._extract_processor.GetSessionFeatures()
-                    self._extract_processor.ClearLines()
+                    self._extract_processor.ClearSessionLines()
+                if request.ExportPlayers() and self._extract_processor is not None:
+                    self._extract_processor.CalculateAggregatePlayerFeatures()
+                    ret_val['players']['vals'] += self._extract_processor.GetPlayerFeatures()
+                    self._extract_processor.ClearPlayerLines()
             else:
                 utils.Logger.Log(f"Could not retrieve data set for slice [{i+1}/{len(session_slices)}].", logging.WARN)
         # 4) If we made it all the way to the end, write population data and return the number of sessions processed.
-        if request._exports.population and self._extract_processor is not None:
-            ret_val['players']['vals'] = self._extract_processor.GetPlayerFeatures()
+        if request.ExportPopulation() and self._extract_processor is not None:
             self._extract_processor.CalculateAggregatePopulationFeatures()
             ret_val['population']['vals'] = self._extract_processor.GetPopulationFeatures()
             self._extract_processor.ClearLines()
