@@ -27,7 +27,7 @@ class GameSchema:
         :type schema_path: str, optional
         """
         # define instance vars
-        self._schema:       Dict = {}
+        self._schema:       Union[Dict, None] = {}
         self._game_name:    str  = schema_name.split('.')[0]
         self._feature_list: Union[List[str],None] = None
         self._min_level:    Union[int,None] = None
@@ -48,17 +48,17 @@ class GameSchema:
             else:
                 self._schema["features"] = {}
                 utils.Logger.Log(f"{schema_name} game schema does not define any features.", logging.WARN)
+            # lastly, get max and min levels.
+            if "level_range" in self._schema.keys():
+                self._min_level = self._schema["level_range"]['min']
+                self._max_level = self._schema["level_range"]['max']
+            if "job_map" in self._schema.keys():
+                self._job_map = self._schema["job_map"]
         else:
-            utils.Logger.Log(f"Could not find game schema at {schema_path}{schema_name}", logging.ERROR)
-        # lastly, get max and min levels.
-        if "level_range" in self._schema.keys():
-            self._min_level = self._schema["level_range"]['min']
-            self._max_level = self._schema["level_range"]['max']
-        if "job_map" in self._schema.keys():
-            self._job_map = self._schema["job_map"]
+            utils.Logger.Log(f"Could not find game schema at {schema_path / schema_name}", logging.ERROR)
 
     def __getitem__(self, key) -> Any:
-        return self._schema[key]
+        return self._schema[key] if self._schema is not None else None
     
     def __str__(self) -> str:
         return str(self._game_name)
