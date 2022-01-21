@@ -52,7 +52,7 @@ class WaveLoader(FeatureLoader):
         # for elem in self._features.getValByName(feature_name="firstMoveType"):
         #     self._features.setValByIndex(feature_name="firstMoveType", index=elem, new_value=None)
     
-    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+    def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         ret_val : Feature
         _count_index = count_index if count_index is not None else 0
         # Per-count features

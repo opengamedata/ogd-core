@@ -23,7 +23,7 @@ class ShadowspectLoader(FeatureLoader):
         self._game_schema = game_schema
         super().__init__(session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
 
-    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+    def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         ret_val : Feature
         if feature_type == "MoveShapeCount":
             ret_val = MoveShapeCount.MoveShapeCount(name=name, description=feature_args["description"])
