@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Tuple, Union
 ## import local files
 import utils
-from extractors.FeatureLoader import FeatureLoader
+from extractors.FeatureManager import FeatureManager
 from extractors.Feature import Feature
 from extractors.LegacyFeature import LegacyFeature
 from schemas.Event import Event
@@ -20,7 +20,7 @@ from schemas.TableSchema import TableSchema
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class LegacyExtractor(FeatureLoader):
+class LegacyExtractor(FeatureManager):
 
     # *** ABSTRACTS ***
 
@@ -46,7 +46,7 @@ class LegacyExtractor(FeatureLoader):
     # *** PUBLIC BUILT-INS ***
 
     # Base constructor for LegacyExtractor classes.
-    def __init__(self, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]):
+    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema):
         """Base constructor for LegacyExtractor classes.
         The constructor sets an extractor's session id and range of levels,
         as well as initializing the features dictionary and list of played levels.
@@ -56,7 +56,7 @@ class LegacyExtractor(FeatureLoader):
         :param game_schema: A dictionary that defines how the game data itself is structured
         :type game_schema: GameSchema
         """
-        super().__init__(session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
+        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema)
         self._session_id  : str         = session_id
         self._levels      : List[int]   = []
         self._sequences   : List        = []
@@ -125,6 +125,21 @@ class LegacyExtractor(FeatureLoader):
                 column_vals.append(_format(self._features.getValByName(key)))
         return column_vals
 
+    ## Function to print data from an extractor to file.
+    def WriteFeatureValues(self, file: typing.IO[str], separator:str="\t") -> None:
+        """Function to print data from an extractor to file.
+
+        This function should be the same across all Extractor subtypes.
+        Simply prints out each value from the extractor's features dictionary.
+        :param file: An open csv file to which we will write column headers.
+        :type file: typing.IO[str]
+        :param separator: [description], defaults to "\t"
+        :type separator: str, optional
+        """
+        column_vals = self.GetFeatureValues()
+        file.write(separator.join([str(val) for val in column_vals]))
+        file.write("\n")
+
     def ExtractFromEvent(self, event:Event) -> None:
         # self._extractSequencesFromEvent(event=event, table_schema=table_schema)
         self._extractFeaturesFromEvent(event=event)
@@ -138,9 +153,6 @@ class LegacyExtractor(FeatureLoader):
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
-
-    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
-        return LegacyFeature()
 
     def _genAggregate(self, schema:GameSchema, overrides:Union[List[str],None]) -> Dict[str,Feature]:
         ret_val = {}
