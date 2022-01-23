@@ -4,7 +4,6 @@ import logging
 from typing import Any, List, Tuple, Union
 ## import local files
 import utils
-from managers.FileManager import FileManager
 from schemas.Event import Event
 from schemas.TableSchema import TableSchema
 
@@ -59,14 +58,6 @@ class EventManager:
 
     def GetLines(self) -> List[str]:
         return self._lines
-
-    ## Function to write out the header for a events csv file.
-    # def WriteEventsCSVHeader(self, file_mgr:FileManager, separator:str = "\t"):
-    #     file_mgr.GetEventsFile().write(separator.join(self._columns) + "\n")
-
-    ## Function to write out all lines of event data that have been parsed so far.
-    # def WriteEventsCSVLines(self, file_mgr:FileManager):
-    #     file_mgr.GetEventsFile().writelines(self._lines)
 
     ## Function to empty the list of lines stored by the EventProcessor.
     #  This is helpful if we're processing a lot of data and want to avoid
