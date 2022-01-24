@@ -19,17 +19,15 @@ from schemas.Event import Event
 class ExtractorManager:
     def __init__(self, game_id:str, exp_types:ExporterTypes, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
         # self._settings = settings
-        self._LoaderClass   : Union[Type[FeatureLoader],None]  = None
         self._exp_types     : ExporterTypes = exp_types
+        self._LoaderClass   : Union[Type[FeatureLoader],None]  = None
         self._pop_processor : Union[PopulationExtractor, None] = None
-        # self._play_processor    : Union[PlayerExtractor, None]     = None
-        # self._sess_processor    : Union[SessionExtractor, None]    = None
         self._prepareExtractor(game_id=game_id)
         self._prepareProcessors(exp_types=exp_types, game_schema=game_schema, feature_overrides=feature_overrides)
         self._latest_results   : Dict[str,List[Any]] = {}
         self._up_to_date       : bool                = True
 
-    def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
+    def ProcessEvent(self, event:Event) -> None:
         if self._pop_processor is not None:
             self._pop_processor.ProcessEvent(event=event)
         self._up_to_date = False
