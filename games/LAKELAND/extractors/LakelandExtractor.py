@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Union
 ## import local files
 import utils
-from extractors.LegacyFeature import LegacyFeature
+from extractors.legacy.LegacyFeature import LegacyFeature
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
@@ -43,7 +43,7 @@ class LakelandExtractor(LegacyFeature):
         "buy_livestock",
     ]
     try:
-        _STR_TO_ENUM = utils.loadJSONFile(filename="Lakeland Enumerators.json", path=Path("./games/LAKELAND/"))
+        _STR_TO_ENUM = utils.loadJSONFile(filename="LakelandEnumerators.json", path=Path("./games/LAKELAND/"))
     except FileNotFoundError as err:
         utils.Logger.toStdOut(message="Could not load Lakeland Enumerators", level=logging.ERROR)
         print("Could not load Lakeland enumerators")
