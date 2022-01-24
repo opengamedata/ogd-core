@@ -1,10 +1,8 @@
 ## import standard libraries
 import logging
-import numpy as np
 import typing
 import traceback
 from datetime import datetime
-from sklearn.linear_model import LinearRegression
 from typing import Any, Dict, List, Union
 ## import local files
 from games.AQUALAB.extractors import *
@@ -28,9 +26,8 @@ class AqualabLoader(FeatureLoader):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]=None):
-        self._game_schema = game_schema
-        super().__init__(session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
+    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema):
+        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema)
 
     def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         ret_val : Feature
