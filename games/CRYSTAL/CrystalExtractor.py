@@ -28,8 +28,8 @@ class CrystalExtractor(LegacyExtractor):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id:str, game_schema:GameSchema, feature_overrides:Union[List[str],None]=None):
-        super().__init__(session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
+    def __init__(self, name:str, description:str, count_index:int, game_schema:GameSchema, session_id:str):
+        super().__init__(name=name, description=description, count_index=count_index, game_schema=game_schema, session_id=session_id)
         # Define custom private data.
         self._start_times: typing.Dict       = {}
         self._end_times:   typing.Dict       = {}
@@ -48,7 +48,7 @@ class CrystalExtractor(LegacyExtractor):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def _extractFeaturesFromEvent(self, event:Event):
+    def _extractFromEvent(self, event:Event):
         # put some data in local vars, for readability later.
         level = event.event_data['level']
         event_client_time = event.timestamp

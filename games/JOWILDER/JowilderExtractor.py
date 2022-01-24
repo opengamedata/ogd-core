@@ -100,8 +100,8 @@ class JowilderExtractor(LegacyExtractor):
 
     _NULL_FEATURE_VALS = ['null', 0, None]
 
-    def __init__(self, session_id:str, game_schema:GameSchema, feature_overrides:Union[List[str],None]=None):
-        super().__init__(session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
+    def __init__(self, name:str, description:str, count_index:int, game_schema:GameSchema, session_id:str):
+        super().__init__(name=name, description=description, count_index=count_index, session_id=session_id, game_schema=game_schema)
         config = game_schema['config']
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
         self._IDLE_THRESH = timedelta(seconds=self._IDLE_THRESH_SECONDS)
@@ -145,7 +145,7 @@ class JowilderExtractor(LegacyExtractor):
         self._last_quizstart = None
         self._quiztimes = [None]*18
 
-    def _extractFeaturesFromEvent(self, event:Event):
+    def _extractFromEvent(self, event:Event):
         try:
             self._extractFeaturesFromRow(event)
         except Exception:

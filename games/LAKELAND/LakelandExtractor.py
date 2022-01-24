@@ -98,7 +98,7 @@ class LakelandExtractor(LegacyExtractor):
     #                    table associated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, sessions_file: typing.IO[str]):
+    def __init__(self, name:str, description:str, count_index:int, game_schema:GameSchema, session_id:str, sessions_file: typing.IO[str]):
         # Set window and overlap size
         config = game_schema['config']
         self._NUM_SECONDS_PER_WINDOW = config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
@@ -117,11 +117,26 @@ class LakelandExtractor(LegacyExtractor):
 
         # set window range
         # Initialize superclass
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema)
+        super().__init__(name=name, description=description, count_index=count_index, game_schema=game_schema, session_id=session_id)
         
         self.reset()
         self.setValByName('num_play', self._cur_gameplay)
     
+    ## Function to print data from an extractor to file.
+    def WriteFeatureValues(self, file: typing.IO[str], separator:str="\t") -> None:
+        """Function to print data from an extractor to file.
+
+        This function should be the same across all Extractor subtypes.
+        Simply prints out each value from the extractor's features dictionary.
+        :param file: An open csv file to which we will write column headers.
+        :type file: typing.IO[str]
+        :param separator: [description], defaults to "\t"
+        :type separator: str, optional
+        """
+        column_vals = self.GetFeatureValues()
+        file.write(separator.join([str(val) for val in column_vals]))
+        file.write("\n")
+
     def _extractFeaturesFromEvent(self, event:Event):
         try:
             self._extractFromEvent(event)

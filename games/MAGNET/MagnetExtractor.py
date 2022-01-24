@@ -25,8 +25,8 @@ class MagnetExtractor(LegacyExtractor):
     #                    table assiciated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, session_id:str, game_schema:GameSchema, feature_overrides:Union[List[str],None]=None):
-        super().__init__(session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
+    def __init__(self, name:str, description:str, count_index:int, game_schema:GameSchema, session_id:str):
+        super().__init__(name=name, description=description, count_index=count_index, game_schema=game_schema, session_id=session_id)
         # Define custom private data.
         self._game_schema : GameSchema = game_schema
         self._features.setValByName(feature_name="sessionID", new_value=session_id)
