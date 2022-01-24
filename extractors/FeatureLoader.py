@@ -31,7 +31,7 @@ class FeatureLoader(abc.ABC):
         self._game_schema : GameSchema = game_schema
         self._overrides   : Union[List[str],None]    = feature_overrides
 
-    def LoadToRegistry(self, registry:FeatureRegistry):
+    def LoadToRegistry(self, registry:FeatureRegistry) -> None:
         # first, liad aggregate features
         for name,aggregate in self._game_schema.aggregate_features().items():
             if FeatureLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=self._overrides):
