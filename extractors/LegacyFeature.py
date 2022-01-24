@@ -13,11 +13,11 @@ from extractors.Feature import Feature
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 
-## @class LegacyExtractor
+## @class LegacyFeature
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class LegacyExtractor(Feature):
+class LegacyFeature(Feature):
 
     # *** ABSTRACTS ***
 
@@ -43,9 +43,9 @@ class LegacyExtractor(Feature):
 
     # *** PUBLIC BUILT-INS ***
 
-    # Base constructor for LegacyExtractor classes.
+    # Base constructor for LegacyFeature classes.
     def __init__(self, name:str, description:str, count_index:int, game_schema:GameSchema, session_id:str):
-        """Base constructor for LegacyExtractor classes.
+        """Base constructor for LegacyFeature classes.
         The constructor sets an extractor's session id and range of levels,
         as well as initializing the features dictionary and list of played levels.
 
@@ -58,7 +58,7 @@ class LegacyExtractor(Feature):
         self._session_id  : str         = session_id
         self._levels      : List[int]   = []
         self._sequences   : List        = []
-        self._features    : LegacyExtractor.LegacySessionFeatures = LegacyExtractor.LegacySessionFeatures(game_schema=game_schema)
+        self._features    : LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=game_schema)
 
     # *** PUBLIC STATICS ***
 
@@ -77,7 +77,7 @@ class LegacyExtractor(Feature):
     #     :param separator: [description], defaults to "\t"
     #     :type separator: str, optional
     #     """
-    #     columns = LegacyExtractor.GetFeatureNames(game_schema=game_schema)
+    #     columns = LegacyFeature.GetFeatureNames(game_schema=game_schema)
     #     file.write(separator.join(columns))
     #     file.write("\n")
 
@@ -85,7 +85,7 @@ class LegacyExtractor(Feature):
 
     def GetFeatureNames(self, game_schema:GameSchema) -> List[str]:
         columns = []
-        features = LegacyExtractor.LegacySessionFeatures.generateFeatureDict(game_schema)
+        features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(game_schema)
         for feature_name,feature_content in features.items():
             if type(feature_content) is dict:
                 # if it's a dictionary, expand.
@@ -129,7 +129,7 @@ class LegacyExtractor(Feature):
 
     # def CalculateAggregateFeatures(self) -> None:
     #     """Overridden version of a blank function from Extractor, purely for compatibility with old extractors.
-    #     Just call the abstract function that does actual work in all LegacyExtractors.
+    #     Just call the abstract function that does actual work in all LegacyFeatures.
     #     """
     #     self._calculateAggregateFeatures()
 
@@ -153,14 +153,14 @@ class LegacyExtractor(Feature):
 
 
     ## @class LegacySessionFeatures
-    #  Private LegacyExtractor class to track feature data.
+    #  Private LegacyFeature class to track feature data.
     #  This class provides several functions to manage data, which should make
     #  the actual extractor code easier to read/write, since there is less need
     #  to understand the structure of feature data.
     class LegacySessionFeatures:
         def __init__(self, game_schema: GameSchema):
             self.perlevels: List[str] = list(game_schema.perlevel_features().keys())
-            self.features = LegacyExtractor.LegacySessionFeatures.generateFeatureDict(game_schema)
+            self.features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(game_schema)
 
         @staticmethod
         def generateFeatureDict(game_schema: GameSchema) -> Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]]:

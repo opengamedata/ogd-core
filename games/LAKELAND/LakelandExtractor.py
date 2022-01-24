@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Union
 ## import local files
 import utils
-from extractors.LegacyExtractor import LegacyExtractor
+from extractors.LegacyFeature import LegacyFeature
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
@@ -30,7 +30,7 @@ from schemas.TableSchema import TableSchema
 
 ## @class LakelandExtractor
 #  Extractor subclass for extracting features from Lakeland game data.
-class LakelandExtractor(LegacyExtractor):
+class LakelandExtractor(LegacyFeature):
     _SESS_PREFIX = 'sess_'
     _WINDOW_PREFIX = ''
     _TUTORIAL_MODE = [
@@ -1512,7 +1512,7 @@ class LakelandExtractor(LegacyExtractor):
     def reset(self):
         self.levels:           List[int]       = []
         self.last_adjust_type: Union[str,None] = None
-        self.features:         LegacyExtractor.LegacySessionFeatures = LegacyExtractor.LegacySessionFeatures(game_schema=self._GAME_SCHEMA)
+        self.features:         LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=self._GAME_SCHEMA)
         self.setValByName('sessID', new_value=self._session_id)
 
         # Initialize Lakeland Variables

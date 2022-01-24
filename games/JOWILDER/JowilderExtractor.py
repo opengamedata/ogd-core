@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Tuple, Union
 ## import local files
 import utils
-from extractors.LegacyExtractor import LegacyExtractor
+from extractors.LegacyFeature import LegacyFeature
 from games.JOWILDER import Jowilder_Enumerators as je
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
@@ -21,7 +21,7 @@ from schemas.TableSchema import TableSchema
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
 # TODO: Some FQIDs are called HACKME and are placeholders
-class JowilderExtractor(LegacyExtractor):
+class JowilderExtractor(LegacyFeature):
     ## Constructor for the WaveExtractor class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.
