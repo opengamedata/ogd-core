@@ -72,6 +72,8 @@ class PlayerExtractor(Extractor):
 
     def GetFeatureNames(self) -> List[str]:
         return self._registry.GetFeatureNames() + ["SessionCount"]
+    def GetSessionFeatureNames(self) -> List[str]:
+        return self._session_extractors["null"].GetFeatureNames()
 
     def GetFeatureValues(self, export_types:ExporterTypes) -> Dict[str, List[Any]]:
         ret_val = {}
@@ -91,3 +93,7 @@ class PlayerExtractor(Extractor):
     def ClearLines(self):
         utils.Logger.toStdOut(f"Clearing {len(self._player_loaders)} entries from PlayerProcessor.", logging.DEBUG)
         self._player_loaders = {}
+
+    def ClearSessionsLines(self):
+        for session in self._session_extractors.values():
+            session.ClearLines()

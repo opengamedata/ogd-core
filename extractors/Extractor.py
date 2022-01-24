@@ -50,13 +50,6 @@ class Extractor(abc.ABC):
 
     # *** PUBLIC METHODS ***
 
-    ##  Function to empty the list of lines stored by the PopulationProcessor.
-    #   This is helpful if we're processing a lot of data and want to avoid
-    #   eating too much memory.
-    def ClearLines(self):
-        utils.Logger.toStdOut(f"Clearing population entries from PopulationProcessor.", logging.DEBUG)
-        self._registry = FeatureRegistry()
-
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***

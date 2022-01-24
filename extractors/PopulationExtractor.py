@@ -76,6 +76,8 @@ class PopulationExtractor(Extractor):
         return self.GetPopulationFeatureNames()
     def GetPlayerFeatureNames(self) -> List[str]:
         return self._player_extractors["null"].GetFeatureNames()
+    def GetSessionFeatureNames(self) -> List[str]:
+        return self._player_extractors["null"].GetSessionFeatureNames()
 
     def GetFeatureValues(self, export_types:ExporterTypes) -> Dict[str, List[Any]]:
         ret_val = {}
@@ -96,3 +98,18 @@ class PopulationExtractor(Extractor):
                 for player in _results:
                     ret_val["sessions"] += player["sessions"] # here, sessions should already be list of lists, so use +=
         return ret_val
+
+    ##  Function to empty the list of lines stored by the PopulationProcessor.
+    #   This is helpful if we're processing a lot of data and want to avoid
+    #   eating too much memory.
+    def ClearLines(self):
+        utils.Logger.toStdOut(f"Clearing population entries from PopulationProcessor.", logging.DEBUG)
+        self._registry = FeatureRegistry()
+
+    def ClearPlayersLines(self):
+        for player in self._player_extractors.values():
+            player.ClearLines()
+
+    def ClearSessionsLines(self):
+        for player in self._player_extractors.values():
+            player.ClearSessionsLines()
