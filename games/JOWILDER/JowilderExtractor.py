@@ -100,8 +100,9 @@ class JowilderExtractor(LegacyFeature):
 
     _NULL_FEATURE_VALS = ['null', 0, None]
 
-    def __init__(self, name:str, description:str, count_index:int, game_schema:GameSchema, session_id:str):
-        super().__init__(name=name, description=description, count_index=count_index, session_id=session_id, game_schema=game_schema)
+    def __init__(self, game_schema:GameSchema, session_id:str):
+        super().__init__(name="JowilderExtractor", description="Extractor for JoWilder game data",
+                         count_index=0, session_id=session_id, game_schema=game_schema)
         config = game_schema['config']
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
         self._IDLE_THRESH = timedelta(seconds=self._IDLE_THRESH_SECONDS)

@@ -5,13 +5,11 @@ from typing import Any, List, Type, Union
 import utils
 from extractors.FeatureLoader import FeatureLoader
 from extractors.PopulationExtractor import PopulationExtractor
-from extractors.PlayerExtractor import PlayerExtractor
-from extractors.SessionExtractor import SessionExtractor
 from games.AQUALAB.AqualabLoader import AqualabLoader
-from games.CRYSTAL.CrystalExtractor import CrystalExtractor
-from games.JOWILDER.JowilderExtractor import JowilderExtractor
-from games.LAKELAND.LakelandExtractor import LakelandExtractor
-from games.MAGNET.MagnetExtractor import MagnetExtractor
+from games.CRYSTAL.CrystalLoader import CrystalLoader
+from games.JOWILDER.JowilderLoader import JowilderLoader
+from games.LAKELAND.LakelandLoader import LakelandLoader
+from games.MAGNET.MagnetLoader import MagnetLoader
 from games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
 from games.WAVES.WaveLoader import WaveLoader
 from managers.Request import ExporterTypes, Request
@@ -22,23 +20,27 @@ class ExtractorManager:
     def __init__(self, game_id:str, exp_types:ExporterTypes, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
         # self._settings = settings
         self._feat_loader_class : Union[Type[FeatureLoader],None]  = None
+        self._exp_types         : ExporterTypes = exp_types
         self._pop_processor     : Union[PopulationExtractor, None] = None
-        self._play_processor    : Union[PlayerExtractor, None]     = None
-        self._sess_processor    : Union[SessionExtractor, None]    = None
+        # self._play_processor    : Union[PlayerExtractor, None]     = None
+        # self._sess_processor    : Union[SessionExtractor, None]    = None
         self._prepareExtractor(game_id=game_id)
         self._prepareProcessors(exp_types=exp_types, game_schema=game_schema, feature_overrides=feature_overrides)
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
         if self._pop_processor is not None:
             self._pop_processor.ProcessEvent(event=event)
-        if self._sess_processor is not None:
-            self._sess_processor.ProcessEvent(event=event)
+        # if self._sess_processor is not None:
+        #     self._sess_processor.ProcessEvent(event=event)
 
     def HasExtractor(self) -> bool:
         return self._feat_loader_class is not None
 
     def GetSessionFeatureNames(self) -> List[str]:
         return self._sess_processor.GetSessionFeatureNames() if self._sess_processor is not None else []
+
+    def GetFeatureValues(self, export_types:ExporterTypes):
+        return self._pop_processor.GetFeatureValues(self._exp_types)
 
     def GetSessionFeatures(self) -> List[List[Any]]:
         return self._sess_processor.GetSessionFeatures() if self._sess_processor is not None else []
@@ -80,17 +82,17 @@ class ExtractorManager:
             self._pop_processor.ClearLines()
 
     def _prepareExtractor(self, game_id:str) -> None:
-        game_extractor: Union[type,None] = None
+        game_extractor: Union[Type[FeatureLoader],None] = None
         if game_id == "AQUALAB":
             game_extractor = AqualabLoader
         elif game_id == "CRYSTAL":
-            game_extractor = CrystalExtractor
+            game_extractor = CrystalLoader
         elif game_id == "JOWILDER":
-            game_extractor = JowilderExtractor
+            game_extractor = JowilderLoader
         elif game_id == "LAKELAND":
-            game_extractor = LakelandExtractor
+            game_extractor = LakelandLoader
         elif game_id == "MAGNET":
-            game_extractor = MagnetExtractor
+            game_extractor = MagnetLoader
         elif game_id == "SHADOWSPECT":
             game_extractor = ShadowspectLoader
         elif game_id == "WAVES":
@@ -115,6 +117,6 @@ class ExtractorManager:
             else:
                 utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
             if exp_types.population:
-                self._pop_processor = PopulationExtractor(ExtractorClass=self._feat_loader_class, game_schema=game_schema, feature_overrides=feature_overrides)
+                self._pop_processor = PopulationExtractor(LoaderClass=self._feat_loader_class, game_schema=game_schema, feature_overrides=feature_overrides)
             else:
                 utils.Logger.toStdOut("Population features not requested, skipping population_features file.", logging.INFO)

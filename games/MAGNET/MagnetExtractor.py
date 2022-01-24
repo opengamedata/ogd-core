@@ -25,8 +25,9 @@ class MagnetExtractor(LegacyFeature):
     #                    table assiciated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, name:str, description:str, count_index:int, game_schema:GameSchema, session_id:str):
-        super().__init__(name=name, description=description, count_index=count_index, game_schema=game_schema, session_id=session_id)
+    def __init__(self, game_schema:GameSchema, session_id:str):
+        super().__init__(name="MagnetExtractor", description="Extractor for Magnet game data",
+                         count_index=0, game_schema=game_schema, session_id=session_id)
         # Define custom private data.
         self._game_schema : GameSchema = game_schema
         self._features.setValByName(feature_name="sessionID", new_value=session_id)
@@ -37,7 +38,7 @@ class MagnetExtractor(LegacyFeature):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def _extractFeaturesFromEvent(self, event:Event):
+    def _extractFromEvent(self, event:Event):
         # put some data in local vars, for readability later.
         level = event.event_data['level']
         if level > self._game_schema._max_level:
