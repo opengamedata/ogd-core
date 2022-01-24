@@ -46,9 +46,9 @@ class PlayerExtractor(Extractor):
     def _prepareLoader(self) -> FeatureLoader:
         ret_val : FeatureLoader
         if self._LoaderClass is LakelandLoader:
-            ret_val = LakelandLoader(player_id=self._player_id, session_id="player", game_schema=self._game_schema, output_file=self._player_file)
+            ret_val = LakelandLoader(player_id=self._player_id, session_id="player", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=self._player_file)
         else:
-            ret_val = self._LoaderClass(player_id=self._player_id, session_id="player", game_schema=self._game_schema)
+            ret_val = self._LoaderClass(player_id=self._player_id, session_id="player", game_schema=self._game_schema, feature_overrides=self._overrides)
         return ret_val
 
     ## Function to handle processing of a single row of data.
@@ -84,17 +84,6 @@ class PlayerExtractor(Extractor):
             for session in _results:
                 ret_val["sessions"].append(session["session"])
         return ret_val
-
-    ## Function to write out the header for a processed csv file.
-    #  Just runs the header writer for whichever Extractor subclass we were given.
-    # def WritePlayerFileHeader(self, file_mgr:FileManager, separator:str = "\t"):
-    #     self._template_loader.WriteFileHeader(game_schema=self._game_schema, file=file_mgr.GetPlayersFile(), separator=separator)
-
-    ## Function to write out all data for the extractors created by the
-    #  PlayerProcessor. Just calls the "write" function once for each extractor.
-    # def WritePlayerFileLines(self, file_mgr:FileManager, separator:str = "\t"):
-    #     for extractor in self._session_extractors.values():
-    #         extractor.WriteFeatureValues(file=file_mgr.GetPlayersFile(), separator=separator)
 
     ##  Function to empty the list of lines stored by the PlayerProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid

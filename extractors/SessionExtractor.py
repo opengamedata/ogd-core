@@ -40,9 +40,9 @@ class SessionExtractor(Extractor):
     def _prepareLoader(self) -> FeatureLoader:
         ret_val : FeatureLoader
         if self._LoaderClass is LakelandLoader:
-            ret_val = LakelandLoader(player_id=self._player_id, session_id=self._session_id, game_schema=self._game_schema, output_file=self._session_file)
+            ret_val = LakelandLoader(player_id=self._player_id, session_id=self._session_id, game_schema=self._game_schema, feature_overrides=self._overrides, output_file=self._session_file)
         else:
-            ret_val = self._LoaderClass(player_id=self._player_id, session_id=self._session_id, game_schema=self._game_schema)
+            ret_val = self._LoaderClass(player_id=self._player_id, session_id=self._session_id, game_schema=self._game_schema, feature_overrides=self._overrides)
         return ret_val
 
     ## Function to handle processing of a single row of data.
@@ -53,12 +53,6 @@ class SessionExtractor(Extractor):
     #                      event_data_complex has already been parsed from JSON.
     def ProcessEvent(self, event: Event, session_file:IO[str]=sys.stdout):
         self._registry.ExtractFromEvent(event)
-
-    ## Function to calculate aggregate features of all extractors created by the
-    #  SessionProcessor. Just calls the function once on each extractor.
-    def CalculateAggregateFeatures(self):
-        for extractor in self._session_extractors.values():
-            extractor.CalculateAggregateFeatures()
 
     def GetFeatureNames(self) -> List[str]:
         return self._registry.GetFeatureNames()

@@ -42,7 +42,7 @@ class Extractor(abc.ABC):
         self._overrides   : Union[List[str],None] = feature_overrides
         self._LoaderClass : Type[FeatureLoader]   = LoaderClass
         self._loader      : FeatureLoader         = self._prepareLoader()
-        self._registry    : FeatureRegistry       = self._prepareRegistry()
+        self._registry    : FeatureRegistry       = FeatureRegistry()
     def __str__(self):
         return f""
 
@@ -55,10 +55,8 @@ class Extractor(abc.ABC):
     #   eating too much memory.
     def ClearLines(self):
         utils.Logger.toStdOut(f"Clearing population entries from PopulationProcessor.", logging.DEBUG)
-        self._registry = self._prepareRegistry()
+        self._registry = FeatureRegistry()
 
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
-    def _prepareRegistry(self):
-        return FeatureRegistry(loader=self._loader, game_schema=self._game_schema, feature_overrides=self._overrides)
