@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Union
 ## import local files
 import utils
-from extractors.LegacyFeature import LegacyFeature
+from extractors.legacy.LegacyFeature import LegacyFeature
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema

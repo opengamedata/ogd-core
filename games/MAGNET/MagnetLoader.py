@@ -6,12 +6,12 @@ import traceback
 from datetime import datetime
 from typing import Any, Dict, List, Union
 ## import local files
-from extractors.FeatureLoader import FeatureLoader
 from extractors.Feature import Feature
-from games.MAGNET.MagnetExtractor import MagnetExtractor
+from extractors.legacy.LegacyLoader import LegacyLoader
+from games.MAGNET.extractors.MagnetExtractor import MagnetExtractor
 from schemas.GameSchema import GameSchema
 
-class MagnetLoader(FeatureLoader):
+class MagnetLoader(LegacyLoader):
     ## Constructor for the WaveExtractor class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.
