@@ -1,7 +1,7 @@
 from typing import Any, List
 import json
 import pandas as pd
-from extractors.SessionFeature import SessionFeature
+from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
 orderMapping = {'1. One Box': 1, '2. Separated Boxes': 2, '3. Rotate a Pyramid': 3, '4. Match Silhouettes': 4, '5. Removing Objects': 5, '6. Stretch a Ramp': 6, '7. Max 2 Boxes': 7, '8. Combine 2 Ramps': 8, '9. Scaling Round Objects': 9,

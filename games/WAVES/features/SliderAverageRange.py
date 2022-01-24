@@ -2,7 +2,7 @@ from schemas import Event
 import typing
 from typing import Any, List, Union
 # local imports
-from extractors.PerLevelFeature import PerLevelFeature
+from features.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
 class SliderAverageRange(PerLevelFeature):

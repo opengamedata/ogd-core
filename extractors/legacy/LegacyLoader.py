@@ -1,4 +1,4 @@
-from extractors.Feature import Feature
+from features.Feature import Feature
 # global imports
 import abc
 import logging

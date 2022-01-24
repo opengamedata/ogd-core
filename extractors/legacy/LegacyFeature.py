@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Tuple, Union
 ## import local files
 import utils
-from extractors.Feature import Feature
+from features.Feature import Feature
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 

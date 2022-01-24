@@ -1,7 +1,7 @@
 from schemas import Event
 from typing import Any, List, Union
 # local imports
-from extractors.SessionFeature import SessionFeature
+from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
 class AverageFails(SessionFeature):

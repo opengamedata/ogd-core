@@ -7,7 +7,7 @@ import hashlib
 from datetime import datetime
 from datetime import timedelta
 from collections import OrderedDict
-from extractors.SessionFeature import SessionFeature
+from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
 pd.options.mode.chained_assignment = None  # default='warn'

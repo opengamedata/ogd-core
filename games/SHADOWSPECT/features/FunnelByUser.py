@@ -1,7 +1,7 @@
 from typing import Any, List
 import json
 import pandas as pd
-from extractors.SessionFeature import SessionFeature
+from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
 class FunnelByUser(SessionFeature):

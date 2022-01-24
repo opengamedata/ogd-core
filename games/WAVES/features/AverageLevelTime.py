@@ -5,7 +5,7 @@ from schemas import Event
 from typing import Any, Dict, List, Union
 # local imports
 import utils
-from extractors.SessionFeature import SessionFeature
+from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
 class AverageLevelTime(SessionFeature):

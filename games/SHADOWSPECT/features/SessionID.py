@@ -1,6 +1,6 @@
 from typing import Any, List
 
-from extractors.SessionFeature import SessionFeature
+from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
 class SessionID(SessionFeature):
