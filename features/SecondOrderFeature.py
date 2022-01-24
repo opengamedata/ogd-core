@@ -4,7 +4,7 @@ import typing
 from typing import Any, Dict, List, Tuple, Union
 # Local imports
 from schemas.Event import Event
-from extractors.Feature import Feature
+from features.Feature import Feature
 
 ## @class Model
 #  Abstract base class for session-level Wave features.

@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Union
 from games.WAVES.extractors import *
 import utils
 from extractors.FeatureLoader import FeatureLoader
-from extractors.Feature import Feature
+from features.Feature import Feature
 from schemas.GameSchema import GameSchema
 
 ## @class WaveExtractor

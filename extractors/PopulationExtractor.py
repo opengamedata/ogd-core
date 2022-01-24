@@ -4,7 +4,7 @@ import logging
 import sys
 import traceback
 from typing import Any, Dict, IO, List, Type, Union
-from extractors.Feature import Feature
+from features.Feature import Feature
 # import local files
 import utils
 from extractors.Extractor import Extractor

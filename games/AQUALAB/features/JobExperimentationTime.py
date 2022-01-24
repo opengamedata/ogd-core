@@ -4,7 +4,7 @@ from datetime import timedelta
 from typing import Any, List, Union
 # Local imports
 import utils
-from extractors.Feature import Feature
+from features.Feature import Feature
 from schemas.Event import Event
 
 class JobExperimentationTime(Feature):

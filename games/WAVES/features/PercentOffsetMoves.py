@@ -1,7 +1,7 @@
 from schemas import Event
 from typing import Any, List, Union
 # local imports
-from extractors.Feature import Feature
+from features.Feature import Feature
 from schemas.Event import Event
 
 class PercentOffsetMoves(Feature):

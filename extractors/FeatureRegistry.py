@@ -7,7 +7,7 @@ from collections import OrderedDict
 from typing import Any, Dict, List, Union
 ## import local files
 import utils
-from extractors.Feature import Feature
+from features.Feature import Feature
 from extractors.FeatureLoader import FeatureLoader
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema

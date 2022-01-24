@@ -6,7 +6,7 @@ from typing import Any, Dict, IO, List, Union
 ## import local files
 import utils
 from extractors.FeatureLoader import FeatureLoader
-from extractors.Feature import Feature
+from features.Feature import Feature
 from games.LAKELAND.extractors.LakelandExtractor import LakelandExtractor
 from schemas.GameSchema import GameSchema
 

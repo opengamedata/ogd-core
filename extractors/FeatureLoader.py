@@ -4,7 +4,7 @@ import logging
 from typing import Any, Dict, List, Union
 # local imports
 import utils
-from extractors.Feature import Feature
+from features.Feature import Feature
 from extractors.FeatureRegistry import FeatureRegistry
 from schemas.GameSchema import GameSchema
 

@@ -6,7 +6,6 @@ import sys
 from typing import Any, List, Dict, IO, Type, Union
 from extractors.Extractor import Extractor
 from extractors.FeatureLoader import FeatureLoader
-from extractors.FeatureRegistry import FeatureRegistry
 from extractors.SessionExtractor import SessionExtractor
 from managers.Request import ExporterTypes
 # import local files

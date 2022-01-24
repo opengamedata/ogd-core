@@ -9,7 +9,6 @@ from managers.Request import ExporterTypes
 import utils
 from extractors.Extractor import Extractor
 from extractors.FeatureLoader import FeatureLoader
-from extractors.FeatureRegistry import FeatureRegistry
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema

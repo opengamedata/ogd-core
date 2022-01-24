@@ -6,7 +6,7 @@ import traceback
 from datetime import datetime
 from typing import Any, Dict, List, Union
 ## import local files
-from extractors.Feature import Feature
+from features.Feature import Feature
 from extractors.legacy.LegacyLoader import LegacyLoader
 from games.CRYSTAL.extractors.CrystalExtractor import CrystalExtractor
 from schemas.GameSchema import GameSchema
