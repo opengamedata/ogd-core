@@ -37,7 +37,7 @@ class FeatureRegistry:
     # *** BUILT-INS ***
 
     # Base constructor for Extractor classes.
-    def __init__(self, loader:FeatureLoader, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
+    def __init__(self):
         """Base constructor for Extractor classes.
         The constructor sets an extractor's session id and range of levels,
         as well as initializing the feature
@@ -48,10 +48,9 @@ class FeatureRegistry:
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema
         """
-        self._overrides      : Union[List[str],None]    = feature_overrides
-        self._percounts      : OrderedDict[str,Feature] = self._genPerCounts(schema=game_schema, overrides=feature_overrides)
-        self._aggregates     : OrderedDict[str,Feature] = self._genAggregate(schema=game_schema, overrides=feature_overrides)
-        self._loader         : FeatureLoader            = loader
+        self._percounts      : OrderedDict[str,Feature] = OrderedDict()
+        self._aggregates     : OrderedDict[str,Feature] = OrderedDict()
+        # self._loader         : FeatureLoader            = loader
         self._event_registry : Dict[str,List[FeatureRegistry.Listener]] = {"all_events":[]}
 
     # string conversion for Extractors.
@@ -144,54 +143,9 @@ class FeatureRegistry:
 
     # *** PRIVATE STATICS ***
 
-    @staticmethod
-    def _genCountRange(count:Any, schema:GameSchema) -> range:
-        if type(count) == str and count.lower() == "level_range":
-            count_range = schema.level_range()
-        else:
-            count_range = range(0,int(count))
-        return count_range
-
-    @staticmethod
-    def _validateFeature(name:str, base_setting:bool, overrides:Union[List[str],None]):
-        if overrides is not None:
-            if name in overrides:
-                return base_setting
-            else:
-                return False
-        else:
-            return base_setting
-
     # *** PRIVATE METHODS ***
 
-    def _genAggregate(self, schema:GameSchema, overrides:Union[List[str],None]) -> 'OrderedDict[str,Feature]':
-        ret_val = OrderedDict()
-        for name,aggregate in schema.aggregate_features().items():
-            if FeatureRegistry._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=overrides):
-                try:
-                    feature = self._loader.LoadFeature(feature_type=name, name=name, feature_args=aggregate)
-                except NotImplementedError as err:
-                    utils.Logger.Log(f"{name} is not a valid feature for Waves", logging.ERROR)
-                else:
-                    self._register(feature, FeatureRegistry.Listener.Kinds.AGGREGATE)
-                    ret_val[feature.Name()] = feature
-        return ret_val
-
-    def _genPerCounts(self, schema:GameSchema, overrides:Union[List[str],None]) -> 'OrderedDict[str,Feature]':
-        ret_val = OrderedDict()
-        for name,percount in schema.percount_features().items():
-            if FeatureRegistry._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=overrides):
-                for i in FeatureRegistry._genCountRange(count=percount["count"], schema=schema):
-                    try:
-                        feature = self._loader.LoadFeature(feature_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, count_index=i)
-                    except NotImplementedError as err:
-                        utils.Logger.Log(f"{name} is not a valid feature for Waves", logging.ERROR)
-                    else:
-                        self._register(feature=feature, kind=FeatureRegistry.Listener.Kinds.PERCOUNT)
-                        ret_val[feature.Name()] = feature
-        return ret_val
-
-    def _register(self, feature:Feature, kind:Listener.Kinds):
+    def Register(self, feature:Feature, kind:Listener.Kinds):
         _listener = FeatureRegistry.Listener(name=feature._name, kind=kind)
         _event_types = feature.GetEventTypes()
         if "all_events" in _event_types:
@@ -201,6 +155,10 @@ class FeatureRegistry:
                 if event not in self._event_registry.keys():
                     self._event_registry[event] = []
                 self._event_registry[event].append(_listener)
+        if kind == FeatureRegistry.Listener.Kinds.AGGREGATE:
+            self._aggregates[feature.Name()] = feature
+        elif kind == FeatureRegistry.Listener.Kinds.PERCOUNT:
+            self._percounts[feature.Name()] = feature
 
     # def _format(obj):
     #     if obj == None:

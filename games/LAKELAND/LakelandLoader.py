@@ -2,7 +2,7 @@
 import sys
 import logging
 from datetime import datetime
-from typing import Any, Dict, IO, Union
+from typing import Any, Dict, IO, List, Union
 ## import local files
 import utils
 from extractors.FeatureLoader import FeatureLoader
@@ -23,8 +23,8 @@ class LakelandLoader(FeatureLoader):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, output_file:Union[IO[str], None]):
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema)
+    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, output_file:Union[IO[str], None], feature_overrides:Union[List[str],None]):
+        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
         if output_file is not None:
             self._out_file = output_file
         else:
