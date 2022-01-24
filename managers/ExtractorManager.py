@@ -1,6 +1,6 @@
 ## import standard libraries
 import logging
-from typing import Any, List, Type, Union
+from typing import Any, Dict, List, Type, Union
 ## import local files
 import utils
 from extractors.FeatureLoader import FeatureLoader
@@ -19,67 +19,63 @@ from schemas.Event import Event
 class ExtractorManager:
     def __init__(self, game_id:str, exp_types:ExporterTypes, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
         # self._settings = settings
-        self._feat_loader_class : Union[Type[FeatureLoader],None]  = None
-        self._exp_types         : ExporterTypes = exp_types
-        self._pop_processor     : Union[PopulationExtractor, None] = None
+        self._LoaderClass   : Union[Type[FeatureLoader],None]  = None
+        self._exp_types     : ExporterTypes = exp_types
+        self._pop_processor : Union[PopulationExtractor, None] = None
         # self._play_processor    : Union[PlayerExtractor, None]     = None
         # self._sess_processor    : Union[SessionExtractor, None]    = None
         self._prepareExtractor(game_id=game_id)
         self._prepareProcessors(exp_types=exp_types, game_schema=game_schema, feature_overrides=feature_overrides)
+        self._latest_results   : Dict[str,List[Any]] = {}
+        self._up_to_date       : bool                = True
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
         if self._pop_processor is not None:
             self._pop_processor.ProcessEvent(event=event)
-        # if self._sess_processor is not None:
-        #     self._sess_processor.ProcessEvent(event=event)
+        self._up_to_date = False
 
     def HasExtractor(self) -> bool:
-        return self._feat_loader_class is not None
+        return self._LoaderClass is not None
 
-    def GetSessionFeatureNames(self) -> List[str]:
-        return self._sess_processor.GetSessionFeatureNames() if self._sess_processor is not None else []
+    def _try_update(self):
+        if not self._up_to_date:
+            if self._pop_processor is not None:
+                self._latest_results = self._pop_processor.GetFeatureValues(export_types=self._exp_types)
+            self._up_to_date = True
 
     def GetFeatureValues(self, export_types:ExporterTypes):
-        return self._pop_processor.GetFeatureValues(self._exp_types)
-
-    def GetSessionFeatures(self) -> List[List[Any]]:
-        return self._sess_processor.GetSessionFeatures() if self._sess_processor is not None else []
-
-    def GetPlayerFeatureNames(self) -> List[str]:
-        return self._play_processor.GetPlayerFeatureNames() if self._play_processor is not None else []
-
-    def GetPlayerFeatures(self) -> List[List[Any]]:
-        return self._play_processor.GetPlayerFeatures() if self._play_processor is not None else []
+        self._try_update()
+        return self._latest_results
 
     def GetPopulationFeatureNames(self) -> List[str]:
         return self._pop_processor.GetPopulationFeatureNames() if self._pop_processor is not None else []
-
     def GetPopulationFeatures(self) -> List[Any]:
-        return self._pop_processor.GetPopulationFeatures() if self._pop_processor is not None else []
+        self._try_update()
+        return self._latest_results['population']
 
-    def CalculateAggregateSessionFeatures(self) -> None:
-        if self._sess_processor is not None:
-            self._sess_processor.CalculateAggregateFeatures()
+    def GetPlayerFeatureNames(self) -> List[str]:
+        return self._pop_processor.GetPlayerFeatureNames() if self._pop_processor is not None else []
+    def GetPlayerFeatures(self) -> List[List[Any]]:
+        self._try_update()
+        return self._latest_results['players']
 
-    def CalculateAggregatePlayerFeatures(self) -> None:
-        if self._play_processor is not None:
-            self._play_processor.CalculateAggregateFeatures()
-    
-    def CalculateAggregatePopulationFeatures(self) -> None:
-        if self._pop_processor is not None:
-            self._pop_processor.CalculateAggregateFeatures()
-
-    def ClearSessionLines(self) -> None:
-        if self._sess_processor is not None:
-            self._sess_processor.ClearLines()
-
-    def ClearPlayerLines(self) -> None:
-        if self._play_processor is not None:
-            self._play_processor.ClearLines()
+    def GetSessionFeatureNames(self) -> List[str]:
+        return self._pop_processor.GetSessionFeatureNames() if self._pop_processor is not None else []
+    def GetSessionFeatures(self) -> List[List[Any]]:
+        self._try_update()
+        return self._latest_results['sessions']
 
     def ClearPopulationLines(self) -> None:
         if self._pop_processor is not None:
             self._pop_processor.ClearLines()
+
+    def ClearPlayerLines(self) -> None:
+        if self._pop_processor is not None:
+            self._pop_processor.ClearPlayersLines()
+
+    def ClearSessionLines(self) -> None:
+        if self._pop_processor is not None:
+            self._pop_processor.ClearSessionsLines()
 
     def _prepareExtractor(self, game_id:str) -> None:
         game_extractor: Union[Type[FeatureLoader],None] = None
@@ -102,21 +98,23 @@ class ExtractorManager:
             pass
         else:
             raise Exception(f"Got an invalid game ID ({game_id})!")
-        self._feat_loader_class = game_extractor
+        self._LoaderClass = game_extractor
 
     def _prepareProcessors(self, exp_types:ExporterTypes, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
-        if self._feat_loader_class is None:
+        if self._LoaderClass is None:
             utils.Logger.toStdOut("Could not export population/session data, no game extractor given!", logging.WARN)
         else:
-            if exp_types.sessions:
-                self._sess_processor = SessionExtractor(ExtractorClass=self._feat_loader_class, game_schema=game_schema, feature_overrides=feature_overrides)
-            else:
-                utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
-            if exp_types.players:
-                self._play_processor = PlayerExtractor(ExtractorClass=self._feat_loader_class, game_schema=game_schema, feature_overrides=feature_overrides)
-            else:
-                utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
             if exp_types.population:
-                self._pop_processor = PopulationExtractor(LoaderClass=self._feat_loader_class, game_schema=game_schema, feature_overrides=feature_overrides)
+                self._pop_processor = PopulationExtractor(LoaderClass=self._LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
             else:
                 utils.Logger.toStdOut("Population features not requested, skipping population_features file.", logging.INFO)
+            if exp_types.players:
+                # self._play_processor = PlayerExtractor(ExtractorClass=self._LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+                pass
+            else:
+                utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
+            if exp_types.sessions:
+                # self._sess_processor = SessionExtractor(ExtractorClass=self._LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+                pass
+            else:
+                utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
