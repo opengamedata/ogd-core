@@ -6,12 +6,12 @@ import traceback
 from datetime import datetime
 from typing import Any, Dict, List, Union
 ## import local files
-from extractors.FeatureLoader import FeatureLoader
 from extractors.Feature import Feature
-from games.JOWILDER.JowilderExtractor import JowilderExtractor
+from extractors.legacy.LegacyLoader import LegacyLoader
+from games.JOWILDER.extractors.JowilderExtractor import JowilderExtractor
 from schemas.GameSchema import GameSchema
 
-class JowilderLoader(FeatureLoader):
+class JowilderLoader(LegacyLoader):
     ## Constructor for the WaveExtractor class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.
