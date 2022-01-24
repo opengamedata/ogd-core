@@ -1,11 +1,10 @@
 ## import standard libraries
-import logging
 import sys
-import typing
-import traceback
+import logging
 from datetime import datetime
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, IO, Union
 ## import local files
+import utils
 from extractors.FeatureLoader import FeatureLoader
 from extractors.Feature import Feature
 from games.LAKELAND.LakelandExtractor import LakelandExtractor
@@ -24,9 +23,13 @@ class LakelandLoader(FeatureLoader):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema):
+    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, output_file:Union[IO[str], None]):
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema)
+        if output_file is not None:
+            self._out_file = output_file
+        else:
+            utils.Logger.toStdOut(f"No output file given for Lakeland Extractor, defaulting to sys.stdout.", logging.WARN)
+            self._out_file = sys.stdout
 
-    def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None,
-                    sessions_file: typing.IO[str]=sys.stdout) -> Feature:
-        return LakelandExtractor(game_schema=self._game_schema, session_id=self._session_id, sessions_file=sessions_file)
+    def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+        return LakelandExtractor(game_schema=self._game_schema, session_id=self._session_id, output_file=self._out_file)
