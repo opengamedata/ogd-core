@@ -6,12 +6,12 @@ import traceback
 from datetime import datetime
 from typing import Any, Dict, List, Union
 ## import local files
-from extractors.FeatureLoader import FeatureLoader
 from extractors.Feature import Feature
-from games.CRYSTAL.CrystalExtractor import CrystalExtractor
+from extractors.legacy.LegacyLoader import LegacyLoader
+from games.CRYSTAL.extractors.CrystalExtractor import CrystalExtractor
 from schemas.GameSchema import GameSchema
 
-class CrystalLoader(FeatureLoader):
+class CrystalLoader(LegacyLoader):
     ## Constructor for the WaveExtractor class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.
