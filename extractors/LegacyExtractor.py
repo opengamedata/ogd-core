@@ -9,12 +9,9 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Tuple, Union
 ## import local files
 import utils
-from extractors.FeatureRegistry import FeatureRegistry
 from extractors.Feature import Feature
-from extractors.LegacyFeature import LegacyFeature
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
-from schemas.TableSchema import TableSchema
 
 ## @class LegacyExtractor
 #  Abstract base class for game feature extractors.
@@ -139,18 +136,6 @@ class LegacyExtractor(Feature):
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
-
-    # def _genAggregate(self, schema:GameSchema, overrides:Union[List[str],None]) -> Dict[str,Feature]:
-    #     ret_val = {}
-    #     for name,aggregate in schema.aggregate_features().items():
-    #         ret_val[name] = LegacyFeature()
-    #     return ret_val
-
-    # def _genPerCounts(self, schema:GameSchema, overrides:Union[List[str],None]) -> Dict[str,Feature]:
-    #     ret_val = {}
-    #     for name,percount in schema.percount_features().items():
-    #         ret_val[name] = LegacyFeature()
-    #     return ret_val
 
     # def _extractSequencesFromEvent(self, event:Event, table_schema:TableSchema) -> None:
     #     for sequence in self._sequences:
