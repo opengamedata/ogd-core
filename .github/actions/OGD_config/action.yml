@@ -37,6 +37,10 @@ inputs:
     description: "Logging level to use for export process"
     required: true
     default: "INFO"
+  game:
+    description: "Game selected for data export"
+    required: false
+    default: "game"
 runs:
   using: "composite"
   steps:
