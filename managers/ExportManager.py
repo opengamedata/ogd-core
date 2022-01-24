@@ -131,7 +131,6 @@ class ExportManager:
                         file_manager.GetEventsFile().writelines(_events)
                     self._event_processor.ClearLines()
                 if request.ExportSessions() and self._extract_processor is not None:
-                    self._extract_processor.CalculateAggregateSessionFeatures()
                     _sess_feats = self._extract_processor.GetSessionFeatures()
                     if request.ToDict():
                         ret_val['sessions']['vals'] += _sess_feats
@@ -139,7 +138,6 @@ class ExportManager:
                         file_manager.GetSessionsFile.writelines(["\t".join(sess) + "\n" for sess in _sess_feats])
                     self._extract_processor.ClearSessionLines()
                 if request.ExportPlayers() and self._extract_processor is not None:
-                    self._extract_processor.CalculateAggregatePlayerFeatures()
                     _player_feats = self._extract_processor.GetPlayerFeatures()
                     if request.ToDict():
                         ret_val['players']['vals'] += _player_feats
@@ -150,7 +148,6 @@ class ExportManager:
                 utils.Logger.Log(f"Could not retrieve data set for slice [{i+1}/{len(_session_slices)}].", logging.WARN)
         # 4) If we made it all the way to the end, write population data and return the number of sessions processed.
         if request.ExportPopulation() and self._extract_processor is not None:
-            self._extract_processor.CalculateAggregatePopulationFeatures()
             _pop_feats = self._extract_processor.GetPopulationFeatures()
             if request.ToDict():
                 ret_val['population']['vals'] = _pop_feats
