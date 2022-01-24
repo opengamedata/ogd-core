@@ -83,6 +83,9 @@ class LegacyFeature(Feature):
 
     # *** PUBLIC METHODS ***
 
+    def GetEventTypes(self) -> List[str]:
+        return ["all_events"]
+
     def GetFeatureNames(self, game_schema:GameSchema) -> List[str]:
         columns = []
         features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(game_schema)

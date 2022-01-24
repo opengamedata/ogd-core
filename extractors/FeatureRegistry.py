@@ -1,5 +1,4 @@
 ## import standard libraries
-import abc
 import enum
 import logging
 from os import sep, stat
@@ -9,6 +8,7 @@ from typing import Any, Dict, List, Union
 ## import local files
 import utils
 from extractors.Feature import Feature
+from extractors.FeatureLoader import FeatureLoader
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 
@@ -16,7 +16,7 @@ from schemas.GameSchema import GameSchema
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class FeatureLoader(abc.ABC):
+class FeatureRegistry:
     class Listener:
         @enum.unique
         class Kinds(enum.Enum):
@@ -28,35 +28,31 @@ class FeatureLoader(abc.ABC):
             self.kind = kind
         
         def __str__(self) -> str:
-            return f"{self.name} ({'aggregate' if self.kind == FeatureLoader.Listener.Kinds.AGGREGATE else 'percount'})"
+            return f"{self.name} ({'aggregate' if self.kind == FeatureRegistry.Listener.Kinds.AGGREGATE else 'percount'})"
 
         def __repr__(self) -> str:
             return str(self)
 
-    # *** ABSTRACTS ***
-    
-    @abc.abstractmethod
-    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
-        pass
 
     # *** BUILT-INS ***
 
     # Base constructor for Extractor classes.
-    def __init__(self, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]):
+    def __init__(self, loader:FeatureLoader, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
         """Base constructor for Extractor classes.
         The constructor sets an extractor's session id and range of levels,
-        as well as initializing the features dictionary and list of played levels.
+        as well as initializing the feature
+        es dictionary and list of played levels.
 
         :param session_id: The id of the session from which we will extract features.
         :type session_id: str
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema
         """
-        self._session_id     : str                                = session_id
-        self._overrides      : Union[List[str],None]              = feature_overrides
-        self._percounts      : OrderedDict[str,Feature]           = self._genPerCounts(schema=game_schema, overrides=feature_overrides)
-        self._aggregates     : OrderedDict[str,Feature]           = self._genAggregate(schema=game_schema, overrides=feature_overrides)
-        self._event_registry : Dict[str,List[FeatureLoader.Listener]] = {}
+        self._overrides      : Union[List[str],None]    = feature_overrides
+        self._percounts      : OrderedDict[str,Feature] = self._genPerCounts(schema=game_schema, overrides=feature_overrides)
+        self._aggregates     : OrderedDict[str,Feature] = self._genAggregate(schema=game_schema, overrides=feature_overrides)
+        self._loader         : FeatureLoader            = loader
+        self._event_registry : Dict[str,List[FeatureRegistry.Listener]] = {"all_events":[]}
 
     # string conversion for Extractors.
     def __str__(self) -> str:
@@ -93,23 +89,33 @@ class FeatureLoader(abc.ABC):
 
     # *** PUBLIC METHODS ***
 
-    # Static function to print column headers to a file.
-    # def WriteFileHeader(self, game_schema: GameSchema, file: typing.IO[str], separator:str="\t", overrides:Union[List[str],None]=None) -> None:
-    #     """Static function to print column headers to a file.
+    def ExtractFromEvent(self, event:Event) -> None:
+        """Abstract declaration of a function to perform extraction of features from a row.
 
-    #     We first create a feature dictionary, then essentially write out each key,
-    #     with some formatting to add prefixes to features that repeat per-level
-    #     (or repeat with a custom count).
-    #     :param game_schema: An object that defines how the game data itself is structured
-    #     :type game_schema: GameSchema
-    #     :param file: An open csv file to which we will write column headers.
-    #     :type file: typing.IO[str]
-    #     """
-    #     columns = self.GetFeatureNames(schema=game_schema, overrides=overrides)
-    #     file.write(separator.join(columns))
-    #     file.write("\n")
+        :param event: [description]
+        :type event: Event
+        :param table_schema: A data structure containing information on how the db
+                             table assiciated with this game is structured.
+        :type table_schema: TableSchema
+        """
+        # first, send to all listening for "all" events
+        for listener in self._event_registry["all_events"]:
+            if listener.kind == FeatureRegistry.Listener.Kinds.AGGREGATE:
+                self._aggregates[listener.name].ExtractFromEvent(event)
+            elif listener.kind == FeatureRegistry.Listener.Kinds.PERCOUNT:
+                self._percounts[listener.name].ExtractFromEvent(event)
+            else:
+                utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
+        if event.event_name in self._event_registry.keys():
+            for listener in self._event_registry[event.event_name]:
+                if listener.kind == FeatureRegistry.Listener.Kinds.AGGREGATE:
+                    self._aggregates[listener.name].ExtractFromEvent(event)
+                elif listener.kind == FeatureRegistry.Listener.Kinds.PERCOUNT:
+                    self._percounts[listener.name].ExtractFromEvent(event)
+                else:
+                    utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
 
-    def GetFeatureNames(self, schema:GameSchema, overrides:Union[List[str],None]=None) -> List[str]:
+    def GetFeatureNames(self) -> List[str]:
         """Function to generate a list names of all enabled features, given a GameSchema
         This is different from the feature_names() function of GameSchema,
         which ignores the 'enabled' attribute and does not expand per-count features
@@ -128,56 +134,13 @@ class FeatureLoader(abc.ABC):
             ret_val += self._percounts[name].GetFeatureNames()
         return ret_val
 
-    def ExtractFromEvent(self, event:Event) -> None:
-        """Abstract declaration of a function to perform extraction of features from a row.
-
-        :param event: [description]
-        :type event: Event
-        :param table_schema: A data structure containing information on how the db
-                             table assiciated with this game is structured.
-        :type table_schema: TableSchema
-        """
-        if event.event_name in self._event_registry.keys():
-            for listener in self._event_registry[event.event_name]:
-                if listener.kind == FeatureLoader.Listener.Kinds.AGGREGATE:
-                    self._aggregates[listener.name].ExtractFromEvent(event)
-                elif listener.kind == FeatureLoader.Listener.Kinds.PERCOUNT:
-                    self._percounts[listener.name].ExtractFromEvent(event)
-                else:
-                    utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
-
-    ## Function to print data from an extractor to file.
-    # def WriteFeatureValues(self, file: typing.IO[str], separator:str="\t") -> None:
-    #     """Function to print data from an extractor to file.
-
-    #     This function should be the same across all Extractor subtypes.
-    #     Simply prints out each value from the extractor's features dictionary.
-    #     :param file: An open csv file to which we will write column headers.
-    #     :type file: typing.IO[str]
-    #     :param separator: [description], defaults to "\t"
-    #     :type separator: str, optional
-    #     """
-    #     column_vals = self.GetFeatureValues()
-    #     file.write(separator.join([str(val) for val in column_vals]))
-    #     file.write("\n")
-
     def GetFeatureValues(self) -> List[Any]:
-        # TODO: It looks like I might be assuming that dictionaries always have same order here.
-        # May need to revisit that issue. I mean, it should be fine because Python won't just go
-        # and change order for no reason, but still...
         column_vals = []
         for name in self._aggregates.keys():
             column_vals += self._aggregates[name].GetFeatureValues()
         for name in self._percounts.keys():
             column_vals += self._percounts[name].GetFeatureValues()
         return column_vals
-
-    def CalculateAggregateFeatures(self) -> None:
-        """Abstract declaration of a function to perform calculation of aggregate features
-        from existing per-level/per-custom-count features.
-        Really just exists for compatibility with LegacyExtractors.
-        """
-        return
 
     # *** PRIVATE STATICS ***
 
@@ -204,35 +167,40 @@ class FeatureLoader(abc.ABC):
     def _genAggregate(self, schema:GameSchema, overrides:Union[List[str],None]) -> 'OrderedDict[str,Feature]':
         ret_val = OrderedDict()
         for name,aggregate in schema.aggregate_features().items():
-            if FeatureLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=overrides):
+            if FeatureRegistry._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=overrides):
                 try:
-                    feature = self._loadFeature(feature_type=name, name=name, feature_args=aggregate)
+                    feature = self._loader.LoadFeature(feature_type=name, name=name, feature_args=aggregate)
                 except NotImplementedError as err:
                     utils.Logger.Log(f"{name} is not a valid feature for Waves", logging.ERROR)
                 else:
-                    self._register(feature, FeatureLoader.Listener.Kinds.AGGREGATE)
+                    self._register(feature, FeatureRegistry.Listener.Kinds.AGGREGATE)
                     ret_val[feature.Name()] = feature
         return ret_val
 
     def _genPerCounts(self, schema:GameSchema, overrides:Union[List[str],None]) -> 'OrderedDict[str,Feature]':
         ret_val = OrderedDict()
         for name,percount in schema.percount_features().items():
-            if FeatureLoader._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=overrides):
-                for i in FeatureLoader._genCountRange(count=percount["count"], schema=schema):
+            if FeatureRegistry._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=overrides):
+                for i in FeatureRegistry._genCountRange(count=percount["count"], schema=schema):
                     try:
-                        feature = self._loadFeature(feature_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, count_index=i)
+                        feature = self._loader.LoadFeature(feature_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, count_index=i)
                     except NotImplementedError as err:
                         utils.Logger.Log(f"{name} is not a valid feature for Waves", logging.ERROR)
                     else:
-                        self._register(feature=feature, kind=FeatureLoader.Listener.Kinds.PERCOUNT)
+                        self._register(feature=feature, kind=FeatureRegistry.Listener.Kinds.PERCOUNT)
                         ret_val[feature.Name()] = feature
         return ret_val
 
     def _register(self, feature:Feature, kind:Listener.Kinds):
-        for event in feature.GetEventTypes():
-            if event not in self._event_registry.keys():
-                self._event_registry[event] = []
-            self._event_registry[event].append(FeatureLoader.Listener(name=feature._name, kind=kind))
+        _listener = FeatureRegistry.Listener(name=feature._name, kind=kind)
+        _event_types = feature.GetEventTypes()
+        if "all_events" in _event_types:
+            self._event_registry["all_events"].append(_listener)
+        else:
+            for event in _event_types:
+                if event not in self._event_registry.keys():
+                    self._event_registry[event] = []
+                self._event_registry[event].append(_listener)
 
     # def _format(obj):
     #     if obj == None:
