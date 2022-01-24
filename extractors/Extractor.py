@@ -41,8 +41,8 @@ class Extractor(abc.ABC):
         self._game_schema : GameSchema            = game_schema
         self._overrides   : Union[List[str],None] = feature_overrides
         self._LoaderClass : Type[FeatureLoader]   = LoaderClass
-        self._loader      : FeatureLoader         = self._prepareLoader()
         self._registry    : FeatureRegistry       = FeatureRegistry()
+        self._loader      : FeatureLoader         = self._prepareLoader()
     def __str__(self):
         return f""
 
