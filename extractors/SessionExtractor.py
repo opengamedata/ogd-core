@@ -30,9 +30,9 @@ class SessionExtractor(Extractor):
                  feature_overrides:Union[List[str],None]=None, session_file:Union[IO[str],None]=None):
         ## Define instance vars
         self._session_file : Union[IO[str],None] = session_file
+        self._session_id   : str = session_id
+        self._player_id    : str = player_id
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
-        self._player_id  : str = player_id
-        self._session_id : str = session_id
 
     def _prepareLoader(self) -> FeatureLoader:
         ret_val : FeatureLoader

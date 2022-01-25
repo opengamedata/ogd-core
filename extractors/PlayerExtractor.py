@@ -31,9 +31,9 @@ class PlayerExtractor(Extractor):
     def __init__(self, LoaderClass: Type[FeatureLoader], game_schema: GameSchema, player_id:str,
                  feature_overrides:Union[List[str],None]=None, player_file:Union[IO[str],None]=None):
         self._player_file : Union[IO[str],None] = player_file
+        self._player_id   : str                 = player_id
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         ## Define instance vars
-        self._player_id          : str                        = player_id
         self._session_extractors : Dict[str,SessionExtractor] = {
             "null" : SessionExtractor(LoaderClass=LoaderClass, game_schema=game_schema,
                                       player_id=self._player_id, session_id="null",
