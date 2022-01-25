@@ -26,8 +26,8 @@ settings = {
     "BIGQUERY_CONFIG":
     {
         "AQUALAB": {
-            "DB_NAME": "aqualab_project_id.dataset_id",
-            "PROJECT_ID" : "project_id"
+            "DB_NAME": "aqualab-57f88.analytics_271167280",
+            "PROJECT_ID" : "aqualab-57f88"
         },
         "SHADOWSPECT": {
             "DB_NAME": "shadowspect_project_id.dataset_id",
