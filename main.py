@@ -119,7 +119,7 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
     req = genRequest(events=events, features=features)
     if req._interface.IsOpen():
         export_manager = ExportManager(settings=settings)
-        result = export_manager.ExecuteRequest(request=req, game_id=args.game)
+        result = export_manager.ExecuteRequest(request=req)
         ret_val = result['success']
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
