@@ -119,6 +119,8 @@ venv.bak/
 .vscode
 /JohnsLogs/
 
+# pylint
+.pylintrc
 
 OGD_venv/
 john_temp/
