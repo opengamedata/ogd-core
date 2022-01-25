@@ -8,9 +8,7 @@ from typing import Any, Dict, List, Union
 ## import local files
 import utils
 from features.Feature import Feature
-from extractors.FeatureLoader import FeatureLoader
 from schemas.Event import Event
-from schemas.GameSchema import GameSchema
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
