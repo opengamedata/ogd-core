@@ -1,17 +1,15 @@
 __all__ = [
     "Extractor",
-    "Feature",
     "FeatureLoader",
-    "LegacyFeature",
-    "PerLevelFeature",
-    "SessionExtractor",
-    "SessionFeature"
+    "FeatureRegistry",
+    "PlayerExtractor",
+    "PopulationExtractor",
+    "SessionExtractor"
 ]
 
 from . import Extractor
-from . import Feature
 from . import FeatureLoader
-from . import LegacyFeature
-from . import PerLevelFeature
+from . import FeatureRegistry
+from . import PlayerExtractor
+from . import PopulationExtractor
 from . import SessionExtractor
-from . import SessionFeature
