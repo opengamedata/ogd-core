@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Union
 ## import local files
 from features.Feature import Feature
 from extractors.legacy.LegacyLoader import LegacyLoader
-from games.JOWILDER.extractors.JowilderExtractor import JowilderExtractor
+from games.JOWILDER.features.JowilderExtractor import JowilderExtractor
 from schemas.GameSchema import GameSchema
 
 class JowilderLoader(LegacyLoader):

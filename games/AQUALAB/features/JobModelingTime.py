@@ -8,7 +8,6 @@ from features.Feature import Feature
 from schemas.Event import Event
 
 class JobModelingTime(Feature):
-    # TODO: add this to the AQUALAB schema
     def __init__(self, name:str, description:str, job_num:int, job_map:dict):
         self._job_map = job_map
         super().__init__(name=name, description=description, count_index=job_num)

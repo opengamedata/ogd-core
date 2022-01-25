@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Union
 ## import local files
 from features.Feature import Feature
 from extractors.legacy.LegacyLoader import LegacyLoader
-from games.MAGNET.extractors.MagnetExtractor import MagnetExtractor
+from games.MAGNET.features.MagnetExtractor import MagnetExtractor
 from schemas.GameSchema import GameSchema
 
 class MagnetLoader(LegacyLoader):

@@ -5,7 +5,7 @@ import traceback
 from datetime import datetime
 from typing import Any, Dict, List, Union
 ## import local files
-from games.AQUALAB.extractors import *
+from games.AQUALAB.features import *
 import utils
 from extractors.FeatureLoader import FeatureLoader
 from features.Feature import Feature

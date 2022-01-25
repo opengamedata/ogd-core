@@ -7,7 +7,7 @@ from datetime import datetime
 from sklearn.linear_model import LinearRegression
 from typing import Any, Dict, List, Union
 ## import local files
-from games.WAVES.extractors import *
+from games.WAVES.features import *
 import utils
 from extractors.FeatureLoader import FeatureLoader
 from features.Feature import Feature

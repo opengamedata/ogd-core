@@ -3,7 +3,7 @@ import logging
 import traceback
 from typing import Any, Dict, List, Union
 ## import local files
-from games.SHADOWSPECT.extractors import *
+from games.SHADOWSPECT.features import *
 import utils
 from extractors.FeatureLoader import FeatureLoader
 from features.Feature import Feature

@@ -228,6 +228,12 @@
                 "prefix": "job",
                 "description": "Time spent in experimentation during a job"
             },
+            "JobModelingTime": {
+                "enabled": true,
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Time spent in modeling during a job"
+            },
             "JobGuideCount": {
                 "enabled": true,
                 "count":"level_range",
