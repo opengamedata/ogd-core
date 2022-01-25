@@ -7,7 +7,6 @@ import re
 import shutil
 import sys
 import traceback
-import typing
 import zipfile
 from datetime import datetime
 from pathlib import Path
@@ -16,7 +15,7 @@ from typing import Any, Dict, IO, Union
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
 ## import local files
 import utils
-from managers.Request import Request, ExporterTypes, ExporterRange
+from managers.Request import Request
 
 class FileManager(abc.ABC):
     def __init__(self, request:Request, data_dir: str, extension:str="tsv"):

@@ -8,13 +8,14 @@ import math
 import subprocess
 import traceback
 from datetime import datetime
+from pathlib import Path
 from pprint import pformat
-from typing import Dict, List, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 from managers.ExtractorManager import ExtractorManager
 ## import local files
 import utils
 from config.config import settings as default_settings
-from managers.FileManager import *
+from managers.FileManager import FileManager
 from managers.EventManager import EventManager
 from managers.Request import Request
 from schemas.GameSchema import GameSchema
