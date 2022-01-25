@@ -36,7 +36,7 @@ class ExtractorManager:
             self._pop_extractor.ProcessEvent(event=event)
         self._up_to_date = False
 
-    def HasExtractor(self) -> bool:
+    def HasLoader(self) -> bool:
         return self._LoaderClass is not None
 
     def _try_update(self):
