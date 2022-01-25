@@ -90,7 +90,7 @@ class ExportManager:
         if request.ExportSessions() or request.ExportPlayers() or request.ExportPopulation():
             self._extract_processor = ExtractorManager(game_id=request.GetGameID(), exp_types=request._exports,
                                                        game_schema=game_schema, feature_overrides=feature_overrides)
-            if not self._extract_processor.HasExtractor():
+            if not self._extract_processor.HasLoader():
                 request._exports.sessions   = False
                 request._exports.players    = False
                 request._exports.population = False
@@ -213,7 +213,7 @@ class ExportManager:
                 cols = self._extract_processor.GetPlayerFeatureNames()
                 file_manager.WritePlayersFile("\t".join(cols) + "\n")
             else:
-                utils.Logger.toStdOut("Player features not requested, skipping session_features file.", logging.INFO)
+                utils.Logger.toStdOut("Player features not requested, skipping player_features file.", logging.INFO)
             if request.ExportSessions():
                 cols = self._extract_processor.GetSessionFeatureNames()
                 file_manager.WriteSessionsFile("\t".join(cols) + "\n")
