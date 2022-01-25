@@ -130,12 +130,6 @@ class LegacyFeature(Feature):
         # self._extractSequencesFromEvent(event=event, table_schema=table_schema)
         # self._extractFeaturesFromEvent(event=event)
 
-    # def CalculateAggregateFeatures(self) -> None:
-    #     """Overridden version of a blank function from Extractor, purely for compatibility with old extractors.
-    #     Just call the abstract function that does actual work in all LegacyFeatures.
-    #     """
-    #     self._calculateAggregateFeatures()
-
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
