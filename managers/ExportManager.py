@@ -138,14 +138,14 @@ class ExportManager:
                         if request.ToDict():
                             ret_val['sessions']['vals'] += _sess_feats
                         if request.ToFile() and file_manager is not None:
-                            file_manager.GetSessionsFile.writelines(["\t".join(sess) + "\n" for sess in _sess_feats])
+                            file_manager.GetSessionsFile().writelines(["\t".join(sess) + "\n" for sess in _sess_feats])
                         self._extract_processor.ClearSessionLines()
                     if request.ExportPlayers():
                         _player_feats = self._extract_processor.GetPlayerFeatures()
                         if request.ToDict():
                             ret_val['players']['vals'] += _player_feats
                         if request.ToFile() and file_manager is not None:
-                            file_manager.GetPlayersFile.writelines(["\t".join(player) + "\n" for player in _player_feats])
+                            file_manager.GetPlayersFile().writelines(["\t".join(player) + "\n" for player in _player_feats])
                         self._extract_processor.ClearPlayerLines()
             else:
                 utils.Logger.Log(f"Could not retrieve data set for slice [{i+1}/{len(_session_slices)}].", logging.WARN)
