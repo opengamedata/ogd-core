@@ -187,6 +187,88 @@
             "app_version": "Analytics version",
             "job_id": "Int ID for the current job",
             "job_name": "Name of the current job"
+        },
+        "model_phase_changed": {
+            "user_code": "Generated user code for the current player",
+            "app_version": "Analytics version",
+            "job_id": "Int ID for the current job",
+            "job_name": "Name of the current job",
+            "phase": "The selected modeling phase"
+        },
+        "model_ecosystem_selected": {
+            "user_code": "Generated user code for the current player",
+            "app_version": "Analytics version",
+            "job_id": "Int ID for the current job",
+            "job_name": "Name of the current job",
+            "ecosystem": "Ecosystem selected for modeling"
+        },
+        "model_concept_started": {
+            "user_code": "Generated user code for the current player",
+            "app_version": "Analytics version",
+            "job_id": "Int ID for the current job",
+            "job_name": "Name of the current job",
+            "ecosystem": "Ecosystem selected for modeling"
+        },
+        "model_concept_updated": {
+            "user_code": "Generated user code for the current player",
+            "app_version": "Analytics version",
+            "job_id": "Int ID for the current job",
+            "job_name": "Name of the current job",
+            "ecosystem": "Ecosystem selected for modeling",
+            "status": "Updated status of the concept model"
+        },
+        "model_concept_exported": {
+            "user_code": "Generated user code for the current player",
+            "app_version": "Analytics version",
+            "job_id": "Int ID for the current job",
+            "job_name": "Name of the current job",
+            "ecosystem": "Ecosystem selected for modeling"
+        },
+        "model_sync_error": {
+            "user_code": "Generated user code for the current player",
+            "app_version": "Analytics version",
+            "job_id": "Int ID for the current job",
+            "job_name": "Name of the current job",
+            "ecosystem": "Ecosystem selected for modeling",
+            "sync": "Sync % achieved with the current model"
+        },
+        "model_predict_completed": {
+            "user_code": "Generated user code for the current player",
+            "app_version": "Analytics version",
+            "job_id": "Int ID for the current job",
+            "job_name": "Name of the current job",
+            "ecosystem": "Ecosystem selected for modeling"
+        },
+        "model_intervene_update": {
+            "user_code": "Generated user code for the current player",
+            "app_version": "Analytics version",
+            "job_id": "Int ID for the current job",
+            "job_name": "Name of the current job",
+            "ecosystem": "Ecosystem selected for modeling",
+            "organism": "The organism having its population modified by the player",
+            "difference_value": "The population change for the selected organism"
+        },
+        "model_intervene_error": {
+            "user_code": "Generated user code for the current player",
+            "app_version": "Analytics version",
+            "job_id": "Int ID for the current job",
+            "job_name": "Name of the current job",
+            "ecosystem": "Ecosystem selected for modeling"
+        },
+        "model_intervene_completed": {
+            "user_code": "Generated user code for the current player",
+            "app_version": "Analytics version",
+            "job_id": "Int ID for the current job",
+            "job_name": "Name of the current job",
+            "ecosystem": "Ecosystem selected for modeling"
+        },
+        "end_model": {
+            "user_code": "Generated user code for the current player",
+            "app_version": "Analytics version",
+            "job_id": "Int ID for the current job",
+            "job_name": "Name of the current job",
+            "phase": "The selected modeling phase upon leaving",
+            "ecosystem": "The selected ecosystem upon leaving"
         }
     },
 
