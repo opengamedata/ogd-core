@@ -1,6 +1,5 @@
 # import standard libraries
 import logging
-from tkinter import W
 import traceback
 import sys
 from typing import Any, List, Dict, IO, Type, Union
