@@ -1,8 +1,6 @@
 ## import standard libraries
 import enum
 import logging
-from os import sep, stat
-import typing
 from collections import OrderedDict
 from typing import Any, Dict, List, Union
 ## import local files

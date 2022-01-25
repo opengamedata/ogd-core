@@ -1,10 +1,7 @@
 # import standard libraries
-from cmath import exp
 import logging
-import sys
 import traceback
 from typing import Any, Dict, IO, List, Type, Union
-from features.Feature import Feature
 # import local files
 import utils
 from extractors.Extractor import Extractor
@@ -60,12 +57,12 @@ class PopulationExtractor(Extractor):
         # ensure we have an extractor for the given session:
         self._registry.ExtractFromEvent(event=event)
         if event.user_id is None:
-            self._player_extractors["null"].ProcessEvent(event)
+            self._player_extractors["null"].ProcessEvent(event=event)
         else:
             if event.user_id not in self._player_extractors.keys():
                 self._player_extractors[event.user_id] = PlayerExtractor(self._LoaderClass, game_schema=self._game_schema,
                                                                          player_id=event.user_id, feature_overrides=self._overrides)
-            self._player_extractors[event.user_id].ProcessEvent(event)
+            self._player_extractors[event.user_id].ProcessEvent(event=event)
 
     def PlayerCount(self):
         return len(self._player_extractors.keys()) - 1 # don't count null player

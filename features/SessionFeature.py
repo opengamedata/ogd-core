@@ -1,6 +1,5 @@
 # Local imports
 from features.Feature import Feature
-from schemas.Event import Event
 
 ## @class Model
 #  Abstract base class for session-level Wave features.

@@ -1,7 +1,6 @@
 # import standard libraries
 import logging
 import traceback
-import sys
 from typing import Any, List, Dict, IO, Type, Union
 from extractors.Extractor import Extractor
 from extractors.FeatureLoader import FeatureLoader
@@ -63,7 +62,7 @@ class PlayerExtractor(Extractor):
                                                                           player_id=self._player_id, session_id=event.session_id,
                                                                           feature_overrides=self._overrides, session_file=self._player_file)
 
-        self._session_extractors[event.session_id].ProcessEvent(event)
+        self._session_extractors[event.session_id].ProcessEvent(event=event)
 
     def SessionCount(self):
         return len(self._session_extractors.keys()) - 1 # don't count null player

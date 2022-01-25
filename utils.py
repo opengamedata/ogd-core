@@ -5,8 +5,7 @@ import json
 import logging
 import os
 import traceback
-import typing
-from typing import Any, Dict, List, Union
+from typing import Any, Dict
 from pathlib import Path
 # local imports
 from config.config import settings as settings

@@ -1,8 +1,6 @@
 # import standard libraries
 import logging
 import traceback
-import sys
-import typing
 from typing import Any, List, Dict, IO, Type, Union
 from managers.Request import ExporterTypes
 # import local files
@@ -50,7 +48,7 @@ class SessionExtractor(Extractor):
     #  to that extractor.
     #  @param row_with_complex_parsed A tuple of the row data. We assume the
     #                      event_data_complex has already been parsed from JSON.
-    def ProcessEvent(self, event: Event, session_file:IO[str]=sys.stdout):
+    def ProcessEvent(self, event: Event):
         self._registry.ExtractFromEvent(event)
 
     def GetFeatureNames(self) -> List[str]:

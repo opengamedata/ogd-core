@@ -1,8 +1,6 @@
 from features.Feature import Feature
 # global imports
-import abc
-import logging
-from typing import Any, Dict, List, Union
+from typing import List, Union
 # local imports
 from extractors.FeatureLoader import FeatureLoader
 from extractors.FeatureRegistry import FeatureRegistry

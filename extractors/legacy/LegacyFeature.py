@@ -10,7 +10,6 @@ from typing import Any, Dict, List, Tuple, Type, Union
 ## import local files
 import utils
 from features.Feature import Feature
-from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 
 ## @class LegacyFeature

@@ -2,7 +2,6 @@
 import cProfile
 #import datetime
 import argparse
-import getopt
 import logging
 import os
 import sys
@@ -11,7 +10,7 @@ from argparse import Namespace
 from calendar import monthrange
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Tuple
 from git.remote import FetchInfo
 
 # import local files

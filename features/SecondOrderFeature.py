@@ -1,7 +1,6 @@
 ## import standard libraries
 import abc
-import typing
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Union
 # Local imports
 from schemas.Event import Event
 from features.Feature import Feature

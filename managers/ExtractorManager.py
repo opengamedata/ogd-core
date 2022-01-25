@@ -12,7 +12,7 @@ from games.LAKELAND.LakelandLoader import LakelandLoader
 from games.MAGNET.MagnetLoader import MagnetLoader
 from games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
 from games.WAVES.WaveLoader import WaveLoader
-from managers.Request import ExporterTypes, Request
+from managers.Request import ExporterTypes
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
 

@@ -1,12 +1,10 @@
 # global imports
-from collections import defaultdict
-from mysql.connector import connect, connection, cursor
+from mysql.connector import connection, cursor
 import logging
 import sshtunnel
 import traceback
 from datetime import datetime
-from itertools import chain
-from typing import Any, Dict, List, Set, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 # local imports
 from interfaces.DataInterface import DataInterface
 from config.config import settings as default_settings
