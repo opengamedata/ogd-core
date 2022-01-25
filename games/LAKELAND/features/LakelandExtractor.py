@@ -43,7 +43,7 @@ class LakelandExtractor(LegacyFeature):
         "buy_livestock",
     ]
     try:
-        _STR_TO_ENUM = utils.loadJSONFile(filename="LakelandEnumerators.json", path=Path("./games/LAKELAND/"))
+        _STR_TO_ENUM = utils.loadJSONFile(filename="LakelandEnumerators.json", path=Path("./games/LAKELAND/features/"))
     except FileNotFoundError as err:
         utils.Logger.toStdOut(message="Could not load Lakeland Enumerators", level=logging.ERROR)
         print("Could not load Lakeland enumerators")
