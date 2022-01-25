@@ -314,6 +314,8 @@ class LegacyFeature(Feature):
             _feat_type : Type[Union[int, float, Dict[str,Any]]] = type(self.features[feature_name])
             if self._has_feature(feature_name) and (_feat_type == int or _feat_type == float):
                 self.features[feature_name] += increment
+            else:
+                utils.Logger.toStdOut("Attempted to increment a non-numeric value!", logging.WARN)
 
         def _has_feature(self, feature_name) -> bool:
             try:
