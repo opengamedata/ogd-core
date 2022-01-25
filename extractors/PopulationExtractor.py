@@ -70,7 +70,7 @@ class PopulationExtractor(Extractor):
     def GetFeatureNames(self) -> List[str]:
         return self._registry.GetFeatureNames() + ["PlayerCount", "SessionCount"]
     def GetPopulationFeatureNames(self) -> List[str]:
-        return self.GetPopulationFeatureNames()
+        return self.GetFeatureNames()
     def GetPlayerFeatureNames(self) -> List[str]:
         return self._player_extractors["null"].GetFeatureNames()
     def GetSessionFeatureNames(self) -> List[str]:

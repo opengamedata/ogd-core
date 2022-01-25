@@ -53,8 +53,6 @@ class SessionExtractor(Extractor):
 
     def GetFeatureNames(self) -> List[str]:
         return self._registry.GetFeatureNames()
-    def GetSessionFeatureNames(self) -> List[str]:
-        return self.GetFeatureNames()
 
     def GetFeatureValues(self, export_types:ExporterTypes) -> Dict[str,List[Any]]:
         if export_types.sessions:
