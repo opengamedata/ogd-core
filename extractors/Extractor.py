@@ -1,11 +1,9 @@
 ## import standard libraries
 import abc
-import logging
 from typing import Any, Dict, List, Type, Union
 from extractors.FeatureLoader import FeatureLoader
 from extractors.FeatureRegistry import FeatureRegistry
 # Local imports
-import utils
 from managers.Request import ExporterTypes
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
