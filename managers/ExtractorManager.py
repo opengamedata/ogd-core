@@ -25,7 +25,11 @@ class ExtractorManager:
         self._pop_extractor  : Union[PopulationExtractor, None]
 
         self._LoaderClass   = self._prepareLoader(game_id=game_id)
-        self._pop_extractor = self._prepareExtractor(exp_types=exp_types, game_schema=game_schema, feature_overrides=feature_overrides)
+        if self._LoaderClass is not None:
+            if exp_types.population:
+                self._pop_extractor = PopulationExtractor(LoaderClass=self._LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        else:
+            utils.Logger.toStdOut("Could not export population/session data, no game extractor given!", logging.WARN)
 
     def ProcessEvent(self, event:Event) -> None:
         if self._pop_extractor is not None:
@@ -97,25 +101,3 @@ class ExtractorManager:
         else:
             raise Exception(f"Got an invalid game ID ({game_id})!")
         return game_extractor
-
-    def _prepareExtractor(self, exp_types:ExporterTypes, game_schema:GameSchema, feature_overrides:Union[List[str],None]) -> Union[PopulationExtractor,None]:
-        #TODO: probably should put these prints somewhere else, somewhere more actionable.
-        ret_val = None
-        if self._LoaderClass is None:
-            utils.Logger.toStdOut("Could not export population/session data, no game extractor given!", logging.WARN)
-        else:
-            if exp_types.population:
-                ret_val = PopulationExtractor(LoaderClass=self._LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
-            else:
-                utils.Logger.toStdOut("Population features not requested, skipping population_features file.", logging.INFO)
-            if exp_types.players:
-                # self._play_processor = PlayerExtractor(ExtractorClass=self._LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
-                pass
-            else:
-                utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
-            if exp_types.sessions:
-                # self._sess_processor = SessionExtractor(ExtractorClass=self._LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
-                pass
-            else:
-                utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
-        return ret_val

@@ -103,12 +103,13 @@ class ExportManager:
         if request.ToDict():
             if request.ExportEvents() and self._event_processor is not None:
                 ret_val['events'] = {"cols":self._event_processor.GetColumnNames(), "vals":[]}
-            if request.ExportSessions() and self._extract_processor is not None:
-                ret_val['sessions'] = {"cols":self._extract_processor.GetSessionFeatureNames(), "vals":[]}
-            if request.ExportPlayers() and self._extract_processor is not None:
-                ret_val['players'] = {"cols":self._extract_processor.GetPlayerFeatureNames(), "vals":[]}
-            if request.ExportPopulation() and self._extract_processor is not None:
-                ret_val['population'] = {"cols":self._extract_processor.GetPopulationFeatureNames(), "vals":[]}
+            if self._extract_processor is not None:
+                if request.ExportSessions():
+                    ret_val['sessions'] = {"cols":self._extract_processor.GetSessionFeatureNames(), "vals":[]}
+                if request.ExportPlayers():
+                    ret_val['players'] = {"cols":self._extract_processor.GetPlayerFeatureNames(), "vals":[]}
+                if request.ExportPopulation():
+                    ret_val['population'] = {"cols":self._extract_processor.GetPopulationFeatureNames(), "vals":[]}
         # 4) Get the IDs of sessions to process
         sess_ids = request.RetrieveSessionIDs() or []
         ret_val["sessions_ct"] = len(sess_ids)
@@ -131,29 +132,31 @@ class ExportManager:
                     if request.ToFile() and file_manager is not None:
                         file_manager.GetEventsFile().writelines(_events)
                     self._event_processor.ClearLines()
-                if request.ExportSessions() and self._extract_processor is not None:
-                    _sess_feats = self._extract_processor.GetSessionFeatures()
-                    if request.ToDict():
-                        ret_val['sessions']['vals'] += _sess_feats
-                    if request.ToFile() and file_manager is not None:
-                        file_manager.GetSessionsFile.writelines(["\t".join(sess) + "\n" for sess in _sess_feats])
-                    self._extract_processor.ClearSessionLines()
-                if request.ExportPlayers() and self._extract_processor is not None:
-                    _player_feats = self._extract_processor.GetPlayerFeatures()
-                    if request.ToDict():
-                        ret_val['players']['vals'] += _player_feats
-                    if request.ToFile() and file_manager is not None:
-                        file_manager.GetPlayersFile.writelines(["\t".join(player) + "\n" for player in _player_feats])
-                    self._extract_processor.ClearPlayerLines()
+                if self._extract_processor is not None:
+                    if request.ExportSessions():
+                        _sess_feats = self._extract_processor.GetSessionFeatures()
+                        if request.ToDict():
+                            ret_val['sessions']['vals'] += _sess_feats
+                        if request.ToFile() and file_manager is not None:
+                            file_manager.GetSessionsFile.writelines(["\t".join(sess) + "\n" for sess in _sess_feats])
+                        self._extract_processor.ClearSessionLines()
+                    if request.ExportPlayers():
+                        _player_feats = self._extract_processor.GetPlayerFeatures()
+                        if request.ToDict():
+                            ret_val['players']['vals'] += _player_feats
+                        if request.ToFile() and file_manager is not None:
+                            file_manager.GetPlayersFile.writelines(["\t".join(player) + "\n" for player in _player_feats])
+                        self._extract_processor.ClearPlayerLines()
             else:
                 utils.Logger.Log(f"Could not retrieve data set for slice [{i+1}/{len(_session_slices)}].", logging.WARN)
         # 4) If we made it all the way to the end, write population data and return the number of sessions processed.
-        if request.ExportPopulation() and self._extract_processor is not None:
-            _pop_feats = self._extract_processor.GetPopulationFeatures()
-            if request.ToDict():
-                ret_val['population']['vals'] = _pop_feats
-            if request.ToFile() and file_manager is not None:
-                file_manager.WritePopulationFile("\t".join(_pop_feats) + "\n")
+        if self._extract_processor is not None:
+            if request.ExportPopulation():
+                _pop_feats = self._extract_processor.GetPopulationFeatures()
+                if request.ToDict():
+                    ret_val['population']['vals'] = _pop_feats
+                if request.ToFile() and file_manager is not None:
+                    file_manager.WritePopulationFile("\t".join(_pop_feats) + "\n")
             self._extract_processor.ClearPopulationLines()
         return ret_val
 
@@ -200,15 +203,22 @@ class ExportManager:
         if request.ExportEvents() and self._event_processor is not None:
             cols = self._event_processor.GetColumnNames()
             file_manager.WriteEventsFile("\t".join(cols) + "\n")
-        if request.ExportSessions() and self._extract_processor is not None:
-            cols = self._extract_processor.GetSessionFeatureNames()
-            file_manager.WriteSessionsFile("\t".join(cols) + "\n")
-        if request.ExportPlayers() and self._extract_processor is not None:
-            cols = self._extract_processor.GetPlayerFeatureNames()
-            file_manager.WritePlayersFile("\t".join(cols) + "\n")
-        if request.ExportPopulation() and self._extract_processor is not None:
-            cols = self._extract_processor.GetPopulationFeatureNames()
-            file_manager.WritePopulationFile("\t".join(cols) + "\n")
+        if self._extract_processor is not None:
+            if request.ExportPopulation():
+                cols = self._extract_processor.GetPopulationFeatureNames()
+                file_manager.WritePopulationFile("\t".join(cols) + "\n")
+            else:
+                utils.Logger.toStdOut("Population features not requested, skipping population_features file.", logging.INFO)
+            if request.ExportPlayers():
+                cols = self._extract_processor.GetPlayerFeatureNames()
+                file_manager.WritePlayersFile("\t".join(cols) + "\n")
+            else:
+                utils.Logger.toStdOut("Player features not requested, skipping session_features file.", logging.INFO)
+            if request.ExportSessions():
+                cols = self._extract_processor.GetSessionFeatureNames()
+                file_manager.WriteSessionsFile("\t".join(cols) + "\n")
+            else:
+                utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
 
     def _setupReadme(self, file_manager:FileManager, game_schema:GameSchema, table_schema:TableSchema):
         _game_id = game_schema._game_name
