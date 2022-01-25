@@ -6,7 +6,7 @@ import typing
 import logging
 from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Tuple, Type, Union
 ## import local files
 import utils
 from features.Feature import Feature
@@ -311,7 +311,8 @@ class LegacyFeature(Feature):
         #  @param feature_name The name of the feature to increment
         #  @param increment    The size of the increment (default = 1)
         def incAggregateVal(self, feature_name: str, increment: Union[int, float] = 1) -> None:
-            if self._has_feature(feature_name):
+            _feat_type : Type[Union[int, float, Dict[str,Any]]] = type(self.features[feature_name])
+            if self._has_feature(feature_name) and (_feat_type == int or _feat_type == float):
                 self.features[feature_name] += increment
 
         def _has_feature(self, feature_name) -> bool:
