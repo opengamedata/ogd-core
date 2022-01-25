@@ -1,17 +1,17 @@
 __all__ = [
     "AqualabLoader",
-    "CrystalExtractor",
-    "JowilderExtractor",
-    "LakelandExtractor",
-    "MagnetExtractor",
+    "CrystalLoader",
+    "JowilderLoader",
+    "LakelandLoader",
+    "MagnetLoader",
     "ShadowspectLoader",
     "WaveLoader"
 ]
 
 from .AQUALAB import AqualabLoader
-from .CRYSTAL import CrystalExtractor
-from .JOWILDER import JowilderExtractor
-from .LAKELAND import LakelandExtractor
-from .MAGNET import MagnetExtractor
+from .CRYSTAL import CrystalLoader
+from .JOWILDER import JowilderLoader
+from .LAKELAND import LakelandLoader
+from .MAGNET import MagnetLoader
 from .SHADOWSPECT import ShadowspectLoader
 from .WAVES import WaveLoader
