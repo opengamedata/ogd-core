@@ -77,9 +77,11 @@ jobs:
         service_account_key: ${{ secrets.SHIPWRECKS_BQ_KEY }}
         export_default_credentials: true
       # Back to normal setup stuff.
-    - name: Get OpenConnect
+    - if: ${{ github.event.inputs.database != 'bigquery'}}
+      name: Get OpenConnect
       run: sudo apt-get -q update && sudo apt-get -q install openconnect
-    - name: Connect VPN
+    - if: ${{ github.event.inputs.database != 'bigquery'}}
+      name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
