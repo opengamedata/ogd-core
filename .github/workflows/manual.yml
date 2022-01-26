@@ -54,12 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Get OpenConnect
-      run: sudo apt-get -q update && sudo apt-get -q install openconnect
-    - name: Connect VPN
-      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    - name: Get Dependencies
-      uses: ./.github/actions/OGD_dependencies
+      # A bunch of copy-paste crap to set up google cloud for any given game.
     - if: ${{ matrix.game == 'AQUALAB' }}
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@master
@@ -67,17 +62,27 @@ jobs:
         project_id: ${{ secrets.AQUALAB_BQ_PROJECT_ID }}
         service_account_key: ${{ secrets.AQUALAB_BQ_KEY }}
         export_default_credentials: true
-    # - if: ${{ matrix.game == 'AQUALAB' }}
-    #   name: Use gcloud CLI
-    #   run:
-    #     gcloud config set project aqualab-57f88
-      # name: Copy in Aqualab key if we are doing Aqualab.
-      # run: echo "${{ secrets.AQUALAB_BQ_AUTH }}" >> ./config/aqualab.json
-      # shell: bash
-    # - if: ${{ matrix.game == 'SHADOWSPECT' }}
-    #   name: Copy in Shadowspect key if we are doing Shadowspect.
-    #   run: echo "${{ secrets.SHADOWSPECT_BQ_AUTH }}" >> ./config/shadowspect.json
-    #   shell: bash
+    - if: ${{ matrix.game == 'SHADOWSPECT' }}
+      name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        project_id: ${{ secrets.SHADOWSPECT_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.SHADOWSPECT_BQ_KEY }}
+        export_default_credentials: true
+    - if: ${{ matrix.game == 'SHIPWRECKS' }}
+      name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        project_id: ${{ secrets.SHIPWRECKS_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.SHIPWRECKS_BQ_KEY }}
+        export_default_credentials: true
+      # Back to normal setup stuff.
+    - name: Get OpenConnect
+      run: sudo apt-get -q update && sudo apt-get -q install openconnect
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
@@ -107,6 +112,7 @@ jobs:
         mkdir -p ~/.ssh
         echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v2

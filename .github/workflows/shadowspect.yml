@@ -1,9 +1,9 @@
-name: Aqualab BigQuery Test
+name: Shadowspect Exporter CI Test
 on:
   push:
     paths:
-    - 'games/AQUALAB/**'
-    - '.github/workflows/aqualab.yml'
+    - 'games/SHADOWSPECT/**'
+    - '.github/workflows/shadowspect.yml'
   workflow_dispatch:
 jobs:
   test_connect:
@@ -13,8 +13,8 @@ jobs:
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.AQUALAB_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.AQUALAB_BQ_KEY }}
+        project_id: ${{ secrets.SHADOWSPECT_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.SHADOWSPECT_BQ_KEY }}
         export_default_credentials: true
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
@@ -27,11 +27,11 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "DEBUG"
-        game: "AQUALAB"
+        game: "SHADOWSPECT"
     - name: Do Export of last month's data
       uses: ./.github/actions/export_last_month
       with:
-        game: AQUALAB
+        game: SHADOWSPECT
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v2
       with:
@@ -39,4 +39,4 @@ jobs:
     - name: Upload zips as artifacts
       uses: actions/upload-artifact@v2
       with:
-        path: ./data/AQUALAB/*.zip
+        path: ./data/SHADOWSPECT/*.zip
