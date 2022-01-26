@@ -152,19 +152,20 @@ class FileManager(abc.ABC):
         # (of course, first check if we ever exported this game before).
         if (self._game_id in existing_csvs and self._dataset_id in existing_csvs[self._game_id]):
             existing_data = existing_csvs[self._game_id][self._dataset_id]
-            src_population_f = existing_data['population_file'] if "population_file" in existing_data.keys() else None
-            src_players_f = existing_data['players_file'] if "players_file" in existing_data.keys() else None
-            src_sessions_f = existing_data['sessions_file'] if "sessions_file" in existing_data.keys() else None
-            src_events_f = existing_data['events_file'] if "events_file" in existing_data.keys() else None
+            _existing_pop_file     = existing_data.get('population_file', None)
+            _existing_players_file = existing_data.get('players_file', None)
+            _existing_sess_file    = existing_data.get('sessions_file', None)
+            _existing_events_file  = existing_data.get('events_file', None)
             try:
-                if src_population_f is not None and self._zip_names['population'] is not None:
-                    os.rename(src_population_f, str(self._zip_names['population']))
-                if src_players_f is not None and self._zip_names['players'] is not None:
-                    os.rename(src_players_f, str(self._zip_names['players']))
-                if src_sessions_f is not None and self._zip_names['sessions'] is not None:
-                    os.rename(src_sessions_f, str(self._zip_names['sessions']))
-                if src_events_f is not None and self._zip_names['events'] is not None:
-                    os.rename(src_events_f, str(self._zip_names['events']))
+                if _existing_pop_file is not None and self._zip_names['population'] is not None:
+                    utils.Logger.Log(f"Renaming {str(_existing_pop_file)} -> {self._zip_names['population']}", logging.DEBUG)
+                    os.rename(_existing_pop_file, str(self._zip_names['population']))
+                if _existing_players_file is not None and self._zip_names['players'] is not None:
+                    os.rename(_existing_players_file, str(self._zip_names['players']))
+                if _existing_sess_file is not None and self._zip_names['sessions'] is not None:
+                    os.rename(_existing_sess_file, str(self._zip_names['sessions']))
+                if _existing_events_file is not None and self._zip_names['events'] is not None:
+                    os.rename(_existing_events_file, str(self._zip_names['events']))
             except Exception as err:
                 msg = f"Error while setting up zip files! {type(err)} : {err}"
                 utils.Logger.Log(msg, logging.ERROR)
