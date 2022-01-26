@@ -26,7 +26,7 @@ jobs:
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "INFO"
+        log_level: "DEBUG"
         game: "SHADOWSPECT"
     - name: Do Export of last month's data
       uses: ./.github/actions/export_last_month
