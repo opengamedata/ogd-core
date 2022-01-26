@@ -1,12 +1,12 @@
 ## @namespace utils
 #  A module of utility functions used in the feature_extraction_to_csv project
-import datetime
 import json
 import logging
 import os
 import traceback
-from typing import Any, Dict
+from datetime import datetime
 from pathlib import Path
+from typing import Any, Dict
 # local imports
 from config.config import settings as settings
 from schemas.GameSchema import GameSchema
@@ -130,7 +130,7 @@ class Logger:
 
     @staticmethod
     def toFile(message:str, level=logging.DEBUG) -> None:
-        now = datetime.datetime.now().strftime("%y-%m-%d %H:%M:%S")
+        now = datetime.now().strftime("%y-%m-%d %H:%M:%S")
         if Logger.file_logger is not None:
             if level == logging.DEBUG:
                 Logger.file_logger.debug(f"DEBUG:   {now} {message}")
