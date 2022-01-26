@@ -35,7 +35,7 @@ jobs:
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "INFO"
+        log_level: "DEBUG"
     - name: Attempt Export of yesterday's data with LegacyExtractor
       uses: ./.github/actions/export_yesterday
       with:
