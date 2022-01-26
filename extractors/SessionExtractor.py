@@ -7,6 +7,7 @@ from managers.Request import ExporterTypes
 import utils
 from extractors.Extractor import Extractor
 from extractors.FeatureLoader import FeatureLoader
+from extractors.FeatureRegistry import FeatureRegistry
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
@@ -60,9 +61,6 @@ class SessionExtractor(Extractor):
         else:
             return {}
 
-    ##  Function to empty the list of lines stored by the SessionProcessor.
-    #   This is helpful if we're processing a lot of data and want to avoid
-    #   eating too much memory.
     def ClearLines(self):
-        utils.Logger.toStdOut(f"Clearing {len(self._session_extractors)} entries from SessionProcessor.", logging.DEBUG)
-        self._session_extractors = {}
+        utils.Logger.toStdOut(f"Clearing features from SessionExtractor.", logging.DEBUG)
+        self._registry = FeatureRegistry()

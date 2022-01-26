@@ -9,6 +9,7 @@ from managers.Request import ExporterTypes
 # import local files
 import utils
 from extractors.FeatureLoader import FeatureLoader
+from extractors.FeatureRegistry import FeatureRegistry
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
@@ -88,9 +89,9 @@ class PlayerExtractor(Extractor):
     #   This is helpful if we're processing a lot of data and want to avoid
     #   eating too much memory.
     def ClearLines(self):
-        utils.Logger.toStdOut(f"Clearing {len(self._player_loaders)} entries from PlayerProcessor.", logging.DEBUG)
-        self._player_loaders = {}
+        utils.Logger.toStdOut(f"Clearing features from PlayerExtractor.", logging.DEBUG)
+        self._registry = FeatureRegistry()
 
     def ClearSessionsLines(self):
-        for session in self._session_extractors.values():
-            session.ClearLines()
+        utils.Logger.toStdOut(f"Clearing {len(self._session_extractors)} sessions from PlayerProcessor.", logging.DEBUG)
+        self._session_extractors = {}
