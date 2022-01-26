@@ -33,8 +33,8 @@ class ExportManager:
     #  @param settings A dictionary of program settings, some of which are needed for export.
     def __init__(self, settings):
         self._settings = settings
-        self._event_processor   : Union[EventManager, None]     = None
-        self._extract_processor : Union[ExtractorManager, None] = None
+        self._event_mgr   : Union[EventManager, None]     = None
+        self._extract_mgr : Union[ExtractorManager, None] = None
 
     def ExecuteRequest(self, request:Request, feature_overrides:Union[List[str],None]=None) -> Dict[str,Any]:
         ret_val       : Dict[str,Any] = {"success":False}
@@ -82,15 +82,15 @@ class ExportManager:
 
     def _prepareProcessors(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
         if request.ExportEvents():
-            self._event_processor = EventManager()
+            self._event_mgr = EventManager()
             # evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
         else:
             utils.Logger.toStdOut("Event log not requested, skipping events file.", logging.INFO)
         # If game doesn't have an extractor, make sure we don't try to export it.
         if request.ExportSessions() or request.ExportPlayers() or request.ExportPopulation():
-            self._extract_processor = ExtractorManager(game_id=request.GetGameID(), exp_types=request._exports,
+            self._extract_mgr = ExtractorManager(game_id=request.GetGameID(), exp_types=request._exports,
                                                        game_schema=game_schema, feature_overrides=feature_overrides)
-            if not self._extract_processor.HasLoader():
+            if not self._extract_mgr.HasLoader():
                 request._exports.sessions   = False
                 request._exports.players    = False
                 request._exports.population = False
@@ -101,15 +101,15 @@ class ExportManager:
         next_data_set : Union[List[Tuple],None] = None
 
         if request.ToDict():
-            if request.ExportEvents() and self._event_processor is not None:
-                ret_val['events'] = {"cols":self._event_processor.GetColumnNames(), "vals":[]}
-            if self._extract_processor is not None:
+            if request.ExportEvents() and self._event_mgr is not None:
+                ret_val['events'] = {"cols":self._event_mgr.GetColumnNames(), "vals":[]}
+            if self._extract_mgr is not None:
                 if request.ExportSessions():
-                    ret_val['sessions'] = {"cols":self._extract_processor.GetSessionFeatureNames(), "vals":[]}
+                    ret_val['sessions'] = {"cols":self._extract_mgr.GetSessionFeatureNames(), "vals":[]}
                 if request.ExportPlayers():
-                    ret_val['players'] = {"cols":self._extract_processor.GetPlayerFeatureNames(), "vals":[]}
+                    ret_val['players'] = {"cols":self._extract_mgr.GetPlayerFeatureNames(), "vals":[]}
                 if request.ExportPopulation():
-                    ret_val['population'] = {"cols":self._extract_processor.GetPopulationFeatureNames(), "vals":[]}
+                    ret_val['population'] = {"cols":self._extract_mgr.GetPopulationFeatureNames(), "vals":[]}
         # 4) Get the IDs of sessions to process
         sess_ids = request.RetrieveSessionIDs() or []
         ret_val["sessions_ct"] = len(sess_ids)
@@ -125,39 +125,39 @@ class ExportManager:
                 
                 self._processSlice(next_data_set=next_data_set, table_schema=table_schema, sess_ids=sess_ids, slice_num=i+1, slice_count=len(_session_slices))
                 # 3b) After processing all rows for each slice, write out the session data and reset for next slice.
-                if request.ExportEvents() and self._event_processor is not None:
-                    _events = self._event_processor.GetLines()
+                if request.ExportEvents() and self._event_mgr is not None:
+                    _events = self._event_mgr.GetLines()
                     if request.ToDict():
                         ret_val['events']['vals'] += _events
                     if request.ToFile() and file_manager is not None:
                         file_manager.GetEventsFile().writelines(_events)
-                    self._event_processor.ClearLines()
-                if self._extract_processor is not None:
+                    self._event_mgr.ClearLines()
+                if self._extract_mgr is not None:
                     if request.ExportSessions():
-                        _sess_feats = self._extract_processor.GetSessionFeatures()
+                        _sess_feats = self._extract_mgr.GetSessionFeatures(as_str=True)
                         if request.ToDict():
                             ret_val['sessions']['vals'] += _sess_feats
                         if request.ToFile() and file_manager is not None:
                             file_manager.GetSessionsFile().writelines(["\t".join(sess) + "\n" for sess in _sess_feats])
-                        self._extract_processor.ClearSessionLines()
+                        self._extract_mgr.ClearSessionLines()
                     if request.ExportPlayers():
-                        _player_feats = self._extract_processor.GetPlayerFeatures()
+                        _player_feats = self._extract_mgr.GetPlayerFeatures(as_str=True)
                         if request.ToDict():
                             ret_val['players']['vals'] += _player_feats
                         if request.ToFile() and file_manager is not None:
                             file_manager.GetPlayersFile().writelines(["\t".join(player) + "\n" for player in _player_feats])
-                        self._extract_processor.ClearPlayerLines()
+                        self._extract_mgr.ClearPlayerLines()
             else:
                 utils.Logger.Log(f"Could not retrieve data set for slice [{i+1}/{len(_session_slices)}].", logging.WARN)
         # 4) If we made it all the way to the end, write population data and return the number of sessions processed.
-        if self._extract_processor is not None:
+        if self._extract_mgr is not None:
             if request.ExportPopulation():
-                _pop_feats = self._extract_processor.GetPopulationFeatures()
+                _pop_feats = self._extract_mgr.GetPopulationFeatures(as_str=True)
                 if request.ToDict():
                     ret_val['population']['vals'] = _pop_feats
                 if request.ToFile() and file_manager is not None:
                     file_manager.WritePopulationFile("\t".join(_pop_feats) + "\n")
-            self._extract_processor.ClearPopulationLines()
+            self._extract_mgr.ClearPopulationLines()
         return ret_val
 
     def _prepareSlices(self, sess_ids:List[str]):
@@ -184,10 +184,10 @@ class ExportManager:
             else:
                 if next_event.session_id in sess_ids:
                     try:
-                        if self._event_processor is not None:
-                            self._event_processor.ProcessEvent(event=next_event)
-                        if self._extract_processor is not None:
-                            self._extract_processor.ProcessEvent(event=next_event)
+                        if self._event_mgr is not None:
+                            self._event_mgr.ProcessEvent(event=next_event)
+                        if self._extract_mgr is not None:
+                            self._extract_mgr.ProcessEvent(event=next_event)
                     except Exception as err:
                         if default_settings.get("FAIL_FAST", None):
                             utils.Logger.Log(f"Error while processing event {next_event}.", logging.ERROR)
@@ -200,22 +200,22 @@ class ExportManager:
         utils.Logger.Log(f"Processing time for slice [{slice_num}/{slice_count}]: {time_delta} to handle {num_events} events", logging.INFO)
 
     def _setupFileHeaders(self, request:Request, file_manager:FileManager):
-        if request.ExportEvents() and self._event_processor is not None:
-            cols = self._event_processor.GetColumnNames()
+        if request.ExportEvents() and self._event_mgr is not None:
+            cols = self._event_mgr.GetColumnNames()
             file_manager.WriteEventsFile("\t".join(cols) + "\n")
-        if self._extract_processor is not None:
+        if self._extract_mgr is not None:
             if request.ExportPopulation():
-                cols = self._extract_processor.GetPopulationFeatureNames()
+                cols = self._extract_mgr.GetPopulationFeatureNames()
                 file_manager.WritePopulationFile("\t".join(cols) + "\n")
             else:
                 utils.Logger.toStdOut("Population features not requested, skipping population_features file.", logging.INFO)
             if request.ExportPlayers():
-                cols = self._extract_processor.GetPlayerFeatureNames()
+                cols = self._extract_mgr.GetPlayerFeatureNames()
                 file_manager.WritePlayersFile("\t".join(cols) + "\n")
             else:
                 utils.Logger.toStdOut("Player features not requested, skipping player_features file.", logging.INFO)
             if request.ExportSessions():
-                cols = self._extract_processor.GetSessionFeatureNames()
+                cols = self._extract_mgr.GetSessionFeatureNames()
                 file_manager.WriteSessionsFile("\t".join(cols) + "\n")
             else:
                 utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)

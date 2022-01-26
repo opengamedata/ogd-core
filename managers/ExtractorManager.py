@@ -39,32 +39,32 @@ class ExtractorManager:
     def HasLoader(self) -> bool:
         return self._LoaderClass is not None
 
-    def _try_update(self):
+    def _try_update(self, as_str:bool = False):
         if not self._up_to_date:
             if self._pop_extractor is not None:
-                self._latest_results = self._pop_extractor.GetFeatureValues(export_types=self._exp_types)
+                self._latest_results = self._pop_extractor.GetFeatureValues(export_types=self._exp_types, as_str=as_str)
             self._up_to_date = True
 
-    def GetFeatureValues(self, export_types:ExporterTypes):
-        self._try_update()
+    def GetFeatureValues(self, as_str:bool = False):
+        self._try_update(as_str=as_str)
         return self._latest_results
 
     def GetPopulationFeatureNames(self) -> List[str]:
         return self._pop_extractor.GetPopulationFeatureNames() if self._pop_extractor is not None else []
-    def GetPopulationFeatures(self) -> List[Any]:
-        self._try_update()
+    def GetPopulationFeatures(self, as_str:bool = False) -> List[Any]:
+        self._try_update(as_str=as_str)
         return self._latest_results['population']
 
     def GetPlayerFeatureNames(self) -> List[str]:
         return self._pop_extractor.GetPlayerFeatureNames() if self._pop_extractor is not None else []
-    def GetPlayerFeatures(self) -> List[List[Any]]:
-        self._try_update()
+    def GetPlayerFeatures(self, as_str:bool = False) -> List[List[Any]]:
+        self._try_update(as_str=as_str)
         return self._latest_results['players']
 
     def GetSessionFeatureNames(self) -> List[str]:
         return self._pop_extractor.GetSessionFeatureNames() if self._pop_extractor is not None else []
-    def GetSessionFeatures(self) -> List[List[Any]]:
-        self._try_update()
+    def GetSessionFeatures(self, as_str:bool = False) -> List[List[Any]]:
+        self._try_update(as_str=as_str)
         return self._latest_results['sessions']
 
     def ClearPopulationLines(self) -> None:
