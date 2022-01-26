@@ -76,15 +76,18 @@ class PopulationExtractor(Extractor):
     def GetSessionFeatureNames(self) -> List[str]:
         return self._player_extractors["null"].GetSessionFeatureNames()
 
-    def GetFeatureValues(self, export_types:ExporterTypes) -> Dict[str, List[Any]]:
+    def GetFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[Any]]:
         ret_val = {}
         if export_types.population:
             _player_ct = self.PlayerCount()
             _sess_ct = sum([self._player_extractors[player_id].SessionCount() for player_id in self._player_extractors.keys()])
-            ret_val["population"] = self._registry.GetFeatureValues() + [_player_ct, _sess_ct]
+            if as_str:
+                ret_val["population"] = self._registry.GetFeatureStringValues() + [str(_player_ct), str(_sess_ct)]
+            else:
+                ret_val["population"] = self._registry.GetFeatureValues() + [_player_ct, _sess_ct]
         if export_types.players or export_types.sessions:
             # first, get list of results
-            _results = [player_extractor.GetFeatureValues(export_types=export_types) for player_extractor in self._player_extractors.values()]
+            _results = [player_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for player_extractor in self._player_extractors.values()]
             # then, each result will have players or sessions or both, need to loop over and append to a list in ret_val.
             if export_types.players:
                 ret_val["players"] = []

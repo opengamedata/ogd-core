@@ -73,16 +73,22 @@ class PlayerExtractor(Extractor):
     def GetSessionFeatureNames(self) -> List[str]:
         return self._session_extractors["null"].GetFeatureNames()
 
-    def GetFeatureValues(self, export_types:ExporterTypes) -> Dict[str, List[Any]]:
-        ret_val = {}
+    def GetFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[Any]]:
+        ret_val : Dict[str, List[Any]] = {}
         if export_types.players:
             _sess_ct = self.SessionCount()
-            ret_val["player"] = self._registry.GetFeatureValues() + [_sess_ct]
+            if as_str:
+                ret_val["player"] = self._registry.GetFeatureStringValues() + [str(_sess_ct)]
+            else:
+                ret_val["player"] = self._registry.GetFeatureValues() + [_sess_ct]
         if export_types.sessions:
-            _results = [sess_extractor.GetFeatureValues(export_types=export_types) for sess_extractor in self._session_extractors.values()]
+            # _results gives us a list of dicts, each with a "session" element
+            _results = [sess_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for sess_extractor in self._session_extractors.values()]
             ret_val["sessions"] = []
+            # so we loop over list, and pull each "session" element into a master list of all sessions.
             for session in _results:
                 ret_val["sessions"].append(session["session"])
+            # finally, what we return is a dict with a "sessions" element, containing list of lists.
         return ret_val
 
     ##  Function to empty the list of lines stored by the PlayerProcessor.
