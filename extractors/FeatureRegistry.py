@@ -1,7 +1,9 @@
 ## import standard libraries
 import enum
+import json
 import logging
 from collections import OrderedDict
+from datetime import datetime
 from typing import Any, Dict, List, Union
 ## import local files
 import utils
@@ -136,6 +138,21 @@ class FeatureRegistry:
         for name in self._percounts.keys():
             column_vals += self._percounts[name].GetFeatureValues()
         return column_vals
+
+    def GetFeatureStringValues(self) -> List[str]:
+        ret_val : List[str] = []
+        _vals   : List[Any] = self.GetFeatureValues()
+
+        for val in _vals:
+            str_val : str
+            if type(val) == dict:
+                str_val = json.dumps(val)
+            elif type(val) == datetime:
+                str_val = val.isoformat()
+            else:
+                str_val = str(val)
+            ret_val.append(str_val)
+        return ret_val
 
     # *** PRIVATE STATICS ***
 
