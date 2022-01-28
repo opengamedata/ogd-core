@@ -54,12 +54,12 @@ class ExportManager:
             _result = self._executeDataRequest(request=request, table_schema=_table_schema, file_manager=_file_manager)
             num_sess : int = _result.get("sessions_ct", 0)
             if request.ToFile() and _file_manager is not None:
-                _file_manager.WriteMetadataFile(num_sess=num_sess)
-                _file_manager.UpdateFileExportList(num_sess=num_sess)
-                self._setupReadme(file_manager=_file_manager, game_schema=_game_schema, table_schema=_table_schema)
                 # 4) Save and close files
+                self._setupReadme(file_manager=_file_manager, game_schema=_game_schema, table_schema=_table_schema)
                 _file_manager.CloseFiles()
                 _file_manager.ZipFiles()
+                _file_manager.WriteMetadataFile(num_sess=num_sess)
+                _file_manager.UpdateFileExportList(num_sess=num_sess)
             if request.ToDict():
                 ret_val['events']['vals']
                 ret_val.update(_result) # merge event, session, player, and population data into the return value.
