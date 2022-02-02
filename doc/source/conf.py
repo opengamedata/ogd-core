@@ -10,14 +10,16 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
 import sys
-sys.path.insert(0, os.path.abspath('../../extractors'))
-sys.path.insert(0, os.path.abspath('../../features'))
-sys.path.insert(0, os.path.abspath('../../games'))
-sys.path.insert(0, os.path.abspath('../../interfaces'))
-sys.path.insert(0, os.path.abspath('../../managers'))
-sys.path.insert(0, os.path.abspath('../../schemas'))
+from pathlib import Path
+sys.path.insert(0, str(Path("../../")))
+sys.path.insert(0, str(Path("../../config")))
+sys.path.insert(0, str(Path("../../extractors")))
+sys.path.insert(0, str(Path("../../features")))
+sys.path.insert(0, str(Path("../../games")))
+sys.path.insert(0, str(Path("../../interfaces")))
+sys.path.insert(0, str(Path("../../managers")))
+sys.path.insert(0, str(Path("../../schemas")))
 
 
 # -- Project information -----------------------------------------------------
@@ -36,6 +38,7 @@ release = '1.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx.ext.autodoc"
 ]
 
 # Add any paths that contain templates here, relative to this directory.

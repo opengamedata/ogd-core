@@ -5,25 +5,25 @@ Submodules
 ----------
 
 extractors.ClassroomDetector module
------------------------------------
+***********************************
 
-.. automodule:: extractors.ClassroomDetector
+.. autoclass:: extractors.ClassroomDetector
    :members:
    :undoc-members:
    :show-inheritance:
 
-extractors.Extractor module
----------------------------
+extractors.Extractor class
+***************************
 
-.. automodule:: extractors.Extractor
+.. autoclass:: extractors.Extractor
    :members:
    :undoc-members:
    :show-inheritance:
 
-extractors.Feature module
--------------------------
+extractors.Feature class
+*************************
 
-.. automodule:: extractors.Feature
+.. autoclass:: extractors.Feature
    :members:
    :undoc-members:
    :show-inheritance:
