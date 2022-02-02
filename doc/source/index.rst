@@ -10,13 +10,14 @@ Welcome to opengamedata-core's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-modules
-opengamedata-core
-opengamedata-core.extractors
-opengamedata-core.games
-opengamedata-core.interfaces
-opengamedata-core.managers
-opengamedata-core.schemas
+   modules
+   extractors
+   games
+   interfaces
+   managers
+   schemas
+
+   Adding_a_Database.md
 
 Indices and tables
 ==================
