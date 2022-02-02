@@ -2,6 +2,7 @@
 fieldday-pyenv*
 data/
 tests/
+config/
 TestDriver.py
 config/config.py
 .DS_Store

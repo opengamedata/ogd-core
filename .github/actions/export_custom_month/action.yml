@@ -18,9 +18,9 @@ runs:
   steps:
     # - name: Clone code
     #   uses: actions/checkout@v2
-    - name: Set up config
-      run: cp config/config.py.template config/config.py 
-      shell: bash
+    # - name: Set up config
+    #   run: cp config/config.py.template config/config.py 
+    #   shell: bash
     # - name: Set table to the 2019-2020 one
     #   run: sed -i 's/logger/logger2020/g' config.py
     #   shell: bash

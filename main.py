@@ -22,6 +22,7 @@ from interfaces.MySQLInterface import MySQLInterface
 from interfaces.BigQueryInterface import BigQueryInterface
 from managers.ExportManager import ExportManager
 from managers.Request import Request, ExporterTypes, ExporterRange
+from managers.FileManager import FileManager
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 from utils import Logger
@@ -79,7 +80,7 @@ def ShowGameInfo() -> bool:
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
         table_schema = TableSchema(schema_name=f"{settings['GAME_SOURCE_MAP'][args.game]['table']}.json")
-        print(utils.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema))
+        print(FileManager.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema))
     except Exception as err:
         msg = f"Could not print information for {args.game}: {type(err)} {str(err)}"
         Logger.toStdOut(msg, logging.ERROR)
@@ -98,7 +99,7 @@ def WriteReadme() -> bool:
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
         table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
-        utils.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=path)
+        FileManager.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=path)
     except Exception as err:
         msg = f"Could not create a readme for {args.game}: {type(err)} {str(err)}"
         Logger.toStdOut(msg, logging.ERROR)

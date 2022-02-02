@@ -1,3 +1,4 @@
+# global imports
 import abc
 import git
 import json
@@ -9,15 +10,78 @@ import sys
 import traceback
 import zipfile
 from datetime import datetime
+from git.exc import InvalidGitRepositoryError, NoSuchPathError
 from pathlib import Path
 from typing import Any, Dict, IO, Union
 
-from git.exc import InvalidGitRepositoryError, NoSuchPathError
-## import local files
+## local imports
 import utils
 from managers.Request import Request
+from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
 
 class FileManager(abc.ABC):
+    @staticmethod
+    def GenerateReadme(game_schema:GameSchema, table_schema:TableSchema, path:Path = Path("./")):
+        try:
+            os.makedirs(name=path, exist_ok=True)
+            with open(path / "readme.md", "w") as readme:
+                # 1. Open files with game-specific readme data, and global db changelog.
+                source_dir = Path("./doc/readme_src/")
+                try:
+                    with open(source_dir / f"{game_schema._game_name}_readme_src.md", "r") as readme_src:
+                        readme.write(readme_src.read())
+                except FileNotFoundError as err:
+                    readme.write("No game readme prepared")
+                    utils.Logger.toStdOut(f"Could not find {game_schema._game_name}_readme_src", logging.WARNING)
+                finally:
+                    readme.write("\n\n")
+                # 2. Use schema to write feature & column descriptions to the readme.
+                meta = FileManager.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema)
+                readme.write(meta)
+                # 3. Append any important data from the data changelog.
+                try:
+                    with open(source_dir / "changelog_src.md", "r") as changelog_src:
+                        readme.write(changelog_src.read())
+                except FileNotFoundError as err:
+                    readme.write("No changelog prepared")
+                    utils.Logger.toStdOut(f"Could not find changelog_src", logging.WARNING)
+        except FileNotFoundError as err:
+            utils.Logger.Log(f"Could not open readme.md for writing.", logging.ERROR)
+            traceback.print_tb(err.__traceback__)
+
+    @staticmethod
+    def GenCSVMetadata(game_schema: GameSchema, table_schema: TableSchema) -> str:
+        """Function to generate markdown-formatted metadata for a given game.
+        Gives a summary of the data licensing and suggested citation,
+        then adds the markdown-formatted information from game and table schemas.
+
+        :param game_schema: [description]
+        :type game_schema: GameSchema
+        :param table_schema: [description]
+        :type table_schema: TableSchema
+        :return: A string containing metadata for the given game.
+        :rtype: str
+        """
+        template_str =\
+        "\n".join(["## Field Day Open Game Data  ",
+        "### Retrieved from https://fielddaylab.wisc.edu/opengamedata  ",
+        "### These anonymous data are provided in service of future educational data mining research.  ",
+        "### They are made available under the Creative Commons CCO 1.0 Universal license.  ",
+        "### See https://creativecommons.org/publicdomain/zero/1.0/  ",
+        "",
+        "## Suggested citation:  ",
+        "### Field Day. (2019). Open Educational Game Play Logs - [dataset ID]. Retrieved [today's date] from https://fielddaylab.wisc.edu/opengamedata  ",
+        "",
+        f"# Game: {game_schema._game_name}  ",
+        "",
+        "## Field Descriptions:  \n",
+        f"{table_schema.Markdown()}",
+        "",
+        f"{game_schema.Markdown()}",
+        ""])
+        return template_str
+
     def __init__(self, request:Request, data_dir: str, extension:str="tsv"):
         self._file_names   : Dict[str,Union[Path,None]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._zip_names    : Dict[str,Union[Path,None]] = {"population":None, "players":None, "sessions":None, "events":None}

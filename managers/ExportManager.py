@@ -160,6 +160,7 @@ class ExportManager:
             self._extract_mgr.ClearPopulationLines()
         return ret_val
 
+<<<<<<< HEAD
     def _prepareSlices(self, sess_ids:List[str]):
         _num_sess = len(sess_ids)
         #TODO: rewrite this to slice across players, instead of sessions.
@@ -167,6 +168,82 @@ class ExportManager:
         utils.Logger.toStdOut(f"Using slice size = {_slice_size}, should result in {math.ceil(_num_sess / _slice_size)} slices", logging.INFO)
         return [[sess_ids[i] for i in range( j*_slice_size, min((j+1)*_slice_size, _num_sess) )]
                                        for j in range( 0, math.ceil(_num_sess / _slice_size) )]
+=======
+    ## Private function containing most of the code to handle processing of db
+    #  data, and export to files.
+    #  @param request    A data structure carrying parameters for feature extraction
+    #                    and export
+    #  @param game_table A data structure containing information on how the db
+    #                    table assiciated with the given game is structured. 
+    def _executeFileRequest(self, request:Request, game_schema:GameSchema, table_schema:TableSchema) -> bool:
+        ret_val  : bool = False
+        num_sess : int  = -1
+        _game_id = request.GetGameID()
+        # 2) Prepare files for export.
+        _data_dir : str = self._settings["DATA_DIR"] or default_settings["DATA_DIR"]
+        file_manager = FileManager(exporter_files=request._exports, game_id=_game_id, \
+                                    data_dir=_data_dir, date_range=request._range.GetDateRange(),
+                                    extension="tsv")
+        file_manager.OpenFiles()
+        # 3) Loop over data, running extractors.
+        if request._exports.events and self._evt_processor is not None:
+            self._evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
+        if request._exports.sessions and self._sess_processor is not None:
+            self._sess_processor.WriteSessionFileHeader(file_mgr=file_manager, separator="\t")
+        if request._exports.population and self._pop_processor is not None:
+            self._pop_processor.WritePopulationFileHeader(file_mgr=file_manager, separator="\t")
+        # 2) Get the IDs of sessions to process
+        _dummy = request.RetrieveSessionIDs()
+        sess_ids = _dummy if _dummy is not None else []
+        num_sess = len(sess_ids)
+        utils.Logger.toStdOut(f"Preparing to process {len(sess_ids)} sessions.", logging.INFO)
+        # 3) Loop over and process the sessions, slice-by-slice (where each slice is a list of sessions).
+        session_slices = self._genSlices(sess_ids)
+        for i, next_slice in enumerate(session_slices):
+            start      : datetime = datetime.now()
+            next_data_set : Union[List[Tuple],None] = request._interface.RowsFromIDs(next_slice)
+            if next_data_set is not None:
+                time_delta = datetime.now() - start
+                utils.Logger.Log(f"Retrieval time for slice [{i+1}/{len(session_slices)}]: {time_delta} to get {len(next_data_set)} events", logging.INFO)
+                # 3a) If next slice yielded valid data from the interface, process row-by-row.
+                self._processSlice(next_data_set=next_data_set, table_schema=table_schema, sess_ids=sess_ids, slice_num=i+1, slice_count=len(session_slices))
+                # 3b) After processing all rows for each slice, write out the session data and reset for next slice.
+                if request._exports.events and self._evt_processor is not None:
+                    self._evt_processor.WriteEventsCSVLines(file_mgr=file_manager)
+                    self._evt_processor.ClearLines()
+                if request._exports.sessions and self._sess_processor is not None:
+                    self._sess_processor.CalculateAggregateFeatures()
+                    self._sess_processor.WriteSessionFileLines(file_mgr=file_manager, separator="\t")
+                    self._sess_processor.ClearLines()
+            else:
+                utils.Logger.Log(f"Could not retrieve data set for slice [{i+1}/{len(session_slices)}].", logging.WARN)
+        # 4) If we made it all the way to the end, write population data and return the number of sessions processed.
+        if request._exports.population and self._pop_processor is not None:
+            self._pop_processor.CalculateAggregateFeatures()
+            self._pop_processor.WritePopulationFileLines(file_mgr=file_manager)
+            self._pop_processor.ClearLines()
+        # 4) Save and close files
+        # If we have a schema, we can do feature extraction.
+        if game_schema is not None:
+            try:
+                # before we zip stuff up, let's ensure the readme is in place:
+                readme = open(file_manager._readme_path, mode='r')
+            except FileNotFoundError:
+                utils.Logger.toStdOut(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING)
+                readme_path = Path("./data") / _game_id
+                FileManager.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=readme_path)
+            else:
+                readme.close()
+        else:
+            utils.Logger.toStdOut(f"Missing schema for {request.GetGameID()}", logging.WARNING)
+        file_manager.CloseFiles()
+        file_manager.ZipFiles()
+        # 5) Finally, update the list of csv files.
+        file_manager.WriteMetadataFile(num_sess=num_sess)
+        file_manager.UpdateFileExportList(num_sess=num_sess)
+        ret_val = True
+        return ret_val
+>>>>>>> master
 
     def _processSlice(self, next_data_set:List[Tuple], table_schema:TableSchema, sess_ids:List[str], slice_num:int, slice_count:int):
         start      : datetime = datetime.now()
