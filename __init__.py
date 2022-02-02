@@ -1,11 +1,11 @@
 __all__ = [
-		"config",
+	"config",
     "extractors",
     "games",
-		"interfaces",
-		"managers",
-		"schemas",
-		"utils"
+	"interfaces",
+	"managers",
+	"schemas",
+	"utils"
 ]
 
 from . import config
