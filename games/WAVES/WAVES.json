@@ -267,7 +267,7 @@
                 "description" : "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"
             },
             "TimeToAnswerMS"   : {
-                "enabled": true,
+                "enabled": false,
                 "count" : 4,
                 "prefix": "QA",
                 "description" : "The time, in milliseconds, taken by the player before answering the question"
