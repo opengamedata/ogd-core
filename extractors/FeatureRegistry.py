@@ -15,6 +15,11 @@ from schemas.Event import Event
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
 class FeatureRegistry:
+    """Class for registering features to listen for events.
+
+    :return: [description]
+    :rtype: [type]
+    """
     class Listener:
         @enum.unique
         class Kinds(enum.Enum):
@@ -70,7 +75,7 @@ class FeatureRegistry:
         Creates a list of features in the extractor, separated by newlines.
         Optional num_lines param allows the function caller to limit number of lines in the string.
         :param num_lines: Max number of lines to include in the string.
-                            If None, then include all strings, defaults to None
+        If None, then include all strings, defaults to None
         :type num_lines:  Union[int,None], optional
         :return: A string with line-separated stringified features.
         :rtype: str

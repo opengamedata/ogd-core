@@ -24,28 +24,41 @@ from schemas.TableSchema import TableSchema
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.
 class ExportManager:
-    ## Constructor for the ExportManager class.
-    #  Fairly simple, just saves some data for later use during export.
-    #  @param game_id Initial id of game to export
-    #                 (this can be changed, if a TableSchema with a different id is
-    #                  given, but will generate a warning)
-    #  @param db      An active database connection
-    #  @param settings A dictionary of program settings, some of which are needed for export.
+    """ExportManager class.
+    Use this class to carry out a request for a data export, by passing along an instance of the `Request` class to the ExecuteRequest function.
+    """
     def __init__(self, settings):
+        """Constructor for an ExportManager object.
+        Simply sets the settings for the manager. All other data comes from a request given to the manager.
+
+        :param settings: [description]
+        :type settings: [type]
+        """
         self._settings = settings
         self._event_mgr   : Union[EventManager, None]     = None
         self._extract_mgr : Union[ExtractorManager, None] = None
 
-    def ExecuteRequest(self, request:Request, feature_overrides:Union[List[str],None]=None) -> Dict[str,Any]:
-        ret_val       : Dict[str,Any] = {"success":False}
+    def ExecuteRequest(self, request:Request) -> Dict[str,Any]:
+        """Carry out the export given by a request.
+        Each request has a game id, an interface for getting the data, a data range, the output type(s),
+        the locations for output (to file or return value),
+        and an optional list of features to override the configured features for a game.
+
+        :param request: [description]
+        :type request: Request
+        :return: [description]
+        :rtype: Dict[str,Any]
+        """
+        ret_val : Dict[str,Any] = {"success":False}
+
         _game_id      : str         = request.GetGameID()
         _game_schema  : GameSchema  = GameSchema(schema_name=_game_id, schema_path=Path(f"./games/{_game_id}"))
         _table_schema : TableSchema = self._prepareTableSchema(_game_id)
-        _file_manager : Union[FileManager, None] = None
+        _file_manager : Union[FileManager, None] = None # stays None if not requested for file exports.
 
         start = datetime.now()
         try:
-            self._prepareProcessors(request=request, game_schema=_game_schema, feature_overrides=feature_overrides)
+            self._prepareProcessors(request=request, game_schema=_game_schema, feature_overrides=request._feat_overrides)
             if request.ToFile():
                 _data_dir : str = self._settings["DATA_DIR"] or default_settings["DATA_DIR"]
                 _file_manager = FileManager(request=request, data_dir=_data_dir, extension="tsv")
