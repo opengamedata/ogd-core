@@ -7,9 +7,9 @@ __all__ = [
     "SessionExtractor"
 ]
 
-from . import Extractor
-from . import FeatureLoader
 from . import FeatureRegistry
+from . import FeatureLoader
+from . import Extractor
+from . import SessionExtractor
 from . import PlayerExtractor
 from . import PopulationExtractor
-from . import SessionExtractor

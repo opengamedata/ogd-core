@@ -1,4 +1,3 @@
-from features.Feature import Feature
 # global imports
 from typing import List, Union
 # local imports
