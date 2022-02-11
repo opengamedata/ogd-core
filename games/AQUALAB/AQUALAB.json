@@ -345,6 +345,12 @@
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time taken to achieve 100% sync in a simulation"
+            },
+            "TopJobDestinations": {
+                "enabled": true,
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Top five most accepted jobs after previously completing a given job"
             }
         },
         "aggregate":{
