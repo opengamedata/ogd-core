@@ -100,6 +100,8 @@ class AqualabLoader(FeatureLoader):
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
             ret_val = SyncCompletionTime.SyncCompletionTime(name=name, description=feature_args["description"])
+        elif feature_type == "TopJobDestinations":
+            ret_val = TopJobDestinations.TopJobDestinations(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature_type == "TotalArgumentationTime":
             ret_val = TotalArgumentationTime.TotalArgumentationTime(name=name, description=feature_args["description"])
         elif feature_type == "TotalDiveTime":

@@ -19,6 +19,7 @@ __all__ = [
     "SessionJobsCompleted",
     "SwitchJobsCount",
     "SyncCompletionTime",
+    "TopJobDestinations",
     "TotalArgumentationTime",
     "TotalDiveTime",
     "TotalExperimentationTime"
@@ -44,6 +45,7 @@ from . import SessionID
 from . import SessionJobsCompleted
 from . import SwitchJobsCount
 from . import SyncCompletionTime
+from . import TopJobDestinations
 from . import TotalArgumentationTime
 from . import TotalDiveTime
 from . import TotalExperimentationTime
