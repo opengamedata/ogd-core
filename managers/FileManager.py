@@ -82,7 +82,7 @@ class FileManager(abc.ABC):
         ""])
         return template_str
 
-    def __init__(self, request:Request, data_dir: str, extension:str="tsv"):
+    def __init__(self, request:Request, data_dir:str, extension:str="tsv"):
         self._file_names   : Dict[str,Union[Path,None]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._zip_names    : Dict[str,Union[Path,None]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._files        : Dict[str,Union[IO,None]]   = {"population":None, "players":None, "sessions":None, "events":None}
@@ -254,7 +254,7 @@ class FileManager(abc.ABC):
                     player_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_player-features.{self._extension}"
                     readme_file  = Path(self._dataset_id) / "readme.md"
                     self._addToZip(path=self._file_names["players"], zip_file=players_zip_file, path_in_zip=player_file)
-                    self._addToZip(path=self._readme_path,            zip_file=players_zip_file, path_in_zip=readme_file)
+                    self._addToZip(path=self._readme_path,           zip_file=players_zip_file, path_in_zip=readme_file)
                     players_zip_file.close()
                     if self._file_names["players"] is not None:
                         os.remove(self._file_names["players"])
@@ -280,7 +280,7 @@ class FileManager(abc.ABC):
                     events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_events.{self._extension}"
                     readme_file = Path(self._dataset_id) / "readme.md"
                     self._addToZip(path=self._file_names["events"], zip_file=events_zip_file, path_in_zip=events_file)
-                    self._addToZip(path=self._readme_path,        zip_file=events_zip_file, path_in_zip=readme_file)
+                    self._addToZip(path=self._readme_path,          zip_file=events_zip_file, path_in_zip=readme_file)
                     events_zip_file.close()
                     if self._file_names["events"] is not None:
                         os.remove(self._file_names["events"])
