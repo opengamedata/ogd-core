@@ -359,12 +359,6 @@
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time taken to achieve 100% sync in a simulation"
-            },
-            "TopJobDestinations": {
-                "enabled": false,
-                "count": "level_range",
-                "prefix": "job",
-                "description": "Top five most accepted jobs after previously completing a given job"
             }
         },
         "aggregate":{
@@ -395,6 +389,10 @@
             "SwitchJobsCount": {
                 "enabled": true,
                 "description":"Number of times player switched jobs before completion"
+            },
+            "TopJobDestinations": {
+                "enabled": true,
+                "description": "Top five most accepted jobs after previously completing a given job"
             },
             "TotalArgumentationTime": {
                 "enabled": false,
