@@ -82,6 +82,10 @@ class AqualabLoader(FeatureLoader):
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
             ret_val = JobTasksCompleted.JobTasksCompleted(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
+        elif feature_type == "JobsAttempted":
+            if count_index is None:
+                raise TypeError("Got None for count_index, should have a value!")
+            ret_val = JobsAttempted.JobsAttempted(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
         elif feature_type == "SessionDiveSitesCount":
             ret_val = SessionDiveSitesCount.SessionDiveSitesCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionDuration":
