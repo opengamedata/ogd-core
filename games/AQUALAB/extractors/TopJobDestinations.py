@@ -26,7 +26,7 @@ class TopJobDestinations(Feature):
         for key in self._job_pairs.keys():
             self._top_destinations[key] = Counter(self._job_pairs[key]).most_common(5)
 
-        return self._top_destinations
+        return [self._top_destinations]
 
     def MinVersion(self) -> Union[str,None]:
         return "2"
