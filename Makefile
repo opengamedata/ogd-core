@@ -8,6 +8,7 @@ deploy-extractors:
 
 deploy-aqualab:
 	rsync -vrc ./games/AQUALAB/* fieldday-web.ad.education.wisc.edu:/var/www/opengamedata/games/AQUALAB --exclude-from rsync-exclude
+	ssh -t fieldday-web.ad.education.wisc.edu sudo /sbin/service httpd restart
 deploy-lakeland:
 	rsync -vrc ./games/LAKELAND/* fieldday-web.ad.education.wisc.edu:/var/www/opengamedata/games/LAKELAND --exclude-from rsync-exclude
 deploy-shadowspect:
