@@ -1,5 +1,5 @@
 {
-    "level_range": { "min":0, "max":20 },
+    "level_range": { "min":0, "max":24 },
 
     "events": {
         "accept_job": {
@@ -423,26 +423,30 @@
     	"SUPPORTED_VERS": [1]
 	},
     "job_map": {
-        "kelp-urchin-barren": 0,
-        "kelp-save-urchin-barren": 1,
-        "kelp-bull-kelp-forest": 2,
-        "kelp-start-refuge": 3,
-        "kelp-energy": 4,
-        "kelp-welcome": 5,
-        "kelp-refuge-failure": 6,
-        "kelp-mussel-fest": 7,
-        "coral-urchin-friends": 8,
-        "coral-turtle-stability": 9,
-        "coral-invade": 10,
-        "coral-fishy-bizz": 11,
-        "coral-eat-seaweed": 12,
-        "coral-casting-shade": 13,
-        "coral-turtle-population": 14,
-        "bayou-oxygen-tracking": 15,
-        "bayou-shrimp-tastrophe": 16,
-        "bayou-save-our-shrimp": 17,
-        "arctic-time-of-death": 18,
-        "arctic-missing-whale": 19,
-        "arctic-whale-csi": 20 
+        "kelp-urchin-barren-predict": 0,
+        "kelp-refuge-failure-simulation": 1,
+        "kelp-urchin-farm": 2,
+        "kelp-save-urchin-barren": 3,
+        "kelp-bull-kelp-forest": 4,
+        "kelp-start-refuge": 5,
+        "kelp-urchin-barren-viz": 6,
+        "kelp-energy": 7,
+        "kelp-welcome": 8,
+        "kelp-refuge-failure": 9,
+        "kelp-mussel-fest": 10,
+        "coral-urchin-friends": 11,
+        "coral-turtle-stability": 12,
+        "coral-stressed": 13,
+        "coral-fishy-bizz": 14,
+        "coral-eat-seaweed": 15,
+        "coral-ocean-plastics": 16,
+        "coral-casting-shade": 17,
+        "coral-turtle-population": 18,
+        "bayou-oxygen-tracking": 19,
+        "bayou-shrimp-tastrophe": 20,
+        "bayou-save-our-shrimp": 21,
+        "arctic-time-of-death": 22,
+        "arctic-missing-whale": 23,
+        "arctic-whale-csi": 24
     }
 }
