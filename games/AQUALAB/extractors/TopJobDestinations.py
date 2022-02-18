@@ -39,5 +39,6 @@ class TopJobDestinations(Feature):
             self._current_user_code = user_code
             self._last_completed_id = event.event_data["job_id"]["int_value"]
         elif event.event_name == "accept_job" and user_code == self._current_user_code:
-            self._job_pairs[self._last_completed_id].append(job_id)
-            self._last_completed_id = None
+            if self._last_completed_id and self._last_completed_id != -1:
+                self._job_pairs[self._last_completed_id].append(job_id)
+                self._last_completed_id = None
