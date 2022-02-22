@@ -1,4 +1,4 @@
-name: MASHOPOLIS Exporter CI Test
+name: Mashopolis Exporter CI Test
 on:
   push:
     paths:
