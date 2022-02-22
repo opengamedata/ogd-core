@@ -11,6 +11,7 @@ __all__ = [
     "JobName",
     "JobStartCount",
     "JobTasksCompleted",
+    "JobsAttempted",
     "SessionDiveSitesCount",
     "SessionDuration",
     "SessionGuideCount",
@@ -19,6 +20,7 @@ __all__ = [
     "SessionJobsCompleted",
     "SwitchJobsCount",
     "SyncCompletionTime",
+    "TopJobDestinations",
     "TotalArgumentationTime",
     "TotalDiveTime",
     "TotalExperimentationTime"
@@ -36,6 +38,7 @@ from . import JobModelingTime
 from . import JobName
 from . import JobStartCount
 from . import JobTasksCompleted
+from . import JobsAttempted
 from . import SessionDiveSitesCount
 from . import SessionDuration
 from . import SessionGuideCount
@@ -44,6 +47,7 @@ from . import SessionID
 from . import SessionJobsCompleted
 from . import SwitchJobsCount
 from . import SyncCompletionTime
+from . import TopJobDestinations
 from . import TotalArgumentationTime
 from . import TotalDiveTime
 from . import TotalExperimentationTime

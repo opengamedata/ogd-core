@@ -139,9 +139,11 @@ class FeatureRegistry:
     def GetFeatureValues(self) -> List[Any]:
         column_vals = []
         for name in self._aggregates.keys():
-            column_vals += self._aggregates[name].GetFeatureValues()
+            next_vals = self._aggregates[name].GetFeatureValues()
+            column_vals += next_vals if next_vals != [] else [None]
         for name in self._percounts.keys():
-            column_vals += self._percounts[name].GetFeatureValues()
+            next_vals = self._percounts[name].GetFeatureValues()
+            column_vals += next_vals if next_vals != [] else [None]
         return column_vals
 
     def GetFeatureStringValues(self) -> List[str]:

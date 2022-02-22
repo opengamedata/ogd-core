@@ -19,7 +19,7 @@ class TimeToAnswerMS(Feature):
         # return ["QUESTION_ANSWER"]
 
     def GetFeatureValues(self) -> List[Any]:
-        return []
+        return ["Not Implemented"]
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_name == "COMPLETE.0":

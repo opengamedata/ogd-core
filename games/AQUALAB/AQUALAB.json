@@ -1,5 +1,5 @@
 {
-    "level_range": { "min":0, "max":14 },
+    "level_range": { "min":0, "max":24 },
 
     "events": {
         "accept_job": {
@@ -346,6 +346,20 @@
                 "prefix": "job",
                 "description": "Number of tasks completed for a given job"
             },
+            "JobsAttempted": {
+                "enabled": true,
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Subfeatures for number of job starts and completes, percent complete, and avg/std time to complete",
+                "subfeatures": {
+                    "_job_name":{"type":"string", "description":"String name for a job"},
+                    "_num_starts":{"type":"int", "description":"Number of accept_job events for a given job id"},
+                    "_num_completes":{"type":"int", "description":"Number of complete_job events for a given job id"},
+                    "_percent_complete":{"type":"float", "description":"Percent of jobs which were accepted and completed"},
+                    "_avg_time_complete":{"type":"float", "description":"Average time taken from accepting to completing a job"},
+                    "_std_dev_complete":{"type":"float", "description":"Standard deviation of time taken to complete"}
+                }
+            },
             "SyncCompletionTime": {
                 "enabled": false,
                 "count":"level_range",
@@ -382,6 +396,10 @@
                 "enabled": true,
                 "description":"Number of times player switched jobs before completion"
             },
+            "TopJobDestinations": {
+                "enabled": true,
+                "description": "Top five most accepted jobs after previously completing a given job"
+            },
             "TotalArgumentationTime": {
                 "enabled": false,
                 "description":"Total time spent in argumentation"
@@ -411,20 +429,30 @@
     	"SUPPORTED_VERS": [1]
 	},
     "job_map": {
-        "kelp-welcome": 0,
-        "kelp-urchin-barren": 1,
-        "kelp-save-urchin-barren": 2,
-        "kelp-bull-kelp-forest": 3,
-        "coral-urchin-friends": 4,
-        "coral-remove-sarg": 5,
-        "coral-invade": 6,
-        "coral-fishy-bizz": 7,
-        "coral-clear-sarg": 8,
-        "bayou-oxygen-tracking": 9,
-        "bayou-save-our-shrimp": 10,
-        "bayou-shrip-tastrophe": 11,
-        "arctic-missing-whale": 12,
-        "arctic-time-of-death": 13,
-        "arctic-whale-csi": 14    
+        "kelp-urchin-barren-predict": 0,
+        "kelp-refuge-failure-simulation": 1,
+        "kelp-urchin-farm": 2,
+        "kelp-save-urchin-barren": 3,
+        "kelp-bull-kelp-forest": 4,
+        "kelp-start-refuge": 5,
+        "kelp-urchin-barren-viz": 6,
+        "kelp-energy": 7,
+        "kelp-welcome": 8,
+        "kelp-refuge-failure": 9,
+        "kelp-mussel-fest": 10,
+        "coral-urchin-friends": 11,
+        "coral-turtle-stability": 12,
+        "coral-stressed": 13,
+        "coral-fishy-bizz": 14,
+        "coral-eat-seaweed": 15,
+        "coral-ocean-plastics": 16,
+        "coral-casting-shade": 17,
+        "coral-turtle-population": 18,
+        "bayou-oxygen-tracking": 19,
+        "bayou-shrimp-tastrophe": 20,
+        "bayou-save-our-shrimp": 21,
+        "arctic-time-of-death": 22,
+        "arctic-missing-whale": 23,
+        "arctic-whale-csi": 24
     }
 }

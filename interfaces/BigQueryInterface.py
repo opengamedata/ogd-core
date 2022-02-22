@@ -58,15 +58,27 @@ class BigQueryInterface(DataInterface):
                 db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
                 table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
             id_string = ','.join([f"{x}" for x in id_list])
-            query = f"""
-                SELECT event_name, event_params, user_id, device, geo, platform, param.value.int_value AS session_id,
-                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
-                FROM `{db_name}.{table_name}`,
-                UNNEST(event_params) AS param
-                WHERE param.key = "ga_session_id"
-                AND param.value.int_value IN ({id_string})
-                ORDER BY `session_id`, `timestamp` ASC
-            """
+            if self._game_id == "AQUALAB":
+                # TODO: Temporary fix for 6.1 playtest
+                query = f"""
+                    SELECT event_name, event_params, user_id, device, geo, platform,
+                        (SELECT value.int_value FROM UNNEST(event_params) WHERE (key = "ga_session_id" AND value.int_value IN ({id_string}))) AS session_id,
+                    concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
+                    FROM `{db_name}.{table_name}`,
+                    UNNEST(event_params) AS param
+                    WHERE (param.key = "page_location" AND param.value.string_value = "https://fielddaylab.wisc.edu/play/aqualab/ci/milestone6.1/")
+                    ORDER BY `session_id`, `timestamp` ASC
+                """
+            else:
+                query = f"""
+                    SELECT event_name, event_params, user_id, device, geo, platform, param.value.int_value AS session_id,
+                    concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
+                    FROM `{db_name}.{table_name}`,
+                    UNNEST(event_params) AS param
+                    WHERE param.key = "ga_session_id"
+                    AND param.value.int_value IN ({id_string})
+                    ORDER BY `session_id`, `timestamp` ASC
+                """
             data = self._client.query(query)
             events = []
             for row in data:
