@@ -167,9 +167,11 @@ class FeatureLoader(abc.ABC):
         # and change order for no reason, but still...
         column_vals = []
         for name in self._aggregates.keys():
-            column_vals += self._aggregates[name].GetFeatureValues()
+            next_vals = self._aggregates[name].GetFeatureValues()
+            column_vals += next_vals if next_vals != [] else [None]
         for name in self._percounts.keys():
-            column_vals += self._percounts[name].GetFeatureValues()
+            next_vals = self._percounts[name].GetFeatureValues()
+            column_vals += next_vals if next_vals != [] else [None]
         return column_vals
 
     def CalculateAggregateFeatures(self) -> None:
