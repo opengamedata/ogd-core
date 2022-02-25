@@ -185,7 +185,7 @@ class BigQueryInterface(DataInterface):
             else:
                 db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
                 table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-            id_string = ','.join([f"'{x}'" for x in id_list])
+            id_string = ','.join([f"{x}" for x in id_list])
             query = f"""
                 WITH datetable AS
                 (
