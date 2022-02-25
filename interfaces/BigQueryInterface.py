@@ -189,7 +189,7 @@ class BigQueryInterface(DataInterface):
             query = f"""
                 WITH datetable AS
                 (
-                    SELECT event_date, event_timestamp, event_params
+                    SELECT event_date, event_timestamp, event_params,
                     FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
                     FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
                     FROM `{db_name}.{table_name}`
