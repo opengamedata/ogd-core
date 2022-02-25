@@ -30,7 +30,7 @@ class JobsAttempted(Feature):
         return ["accept_job", "complete_job"]
 
     def Subfeatures(self) -> List[str]:
-        return ["_job_name", "_num_starts", "_num_completes", "_percent_complete", "_avg_time_complete", "_std_dev_complete"]
+        return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-complete", "std-dev-complete"]
 
     def GetFeatureValues(self) -> List[Any]:
         return [self._job_id, self._job_name, self._num_starts, self._num_completes, self._percent_complete, self._avg_time_complete, self._std_dev_complete]

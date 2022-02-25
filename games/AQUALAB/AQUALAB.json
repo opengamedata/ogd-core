@@ -346,12 +346,12 @@
                 "prefix": "job",
                 "description": "Subfeatures for number of job starts and completes, percent complete, and avg/std time to complete",
                 "subfeatures": {
-                    "_job_name":{"type":"string", "description":"String name for a job"},
-                    "_num_starts":{"type":"int", "description":"Number of accept_job events for a given job id"},
-                    "_num_completes":{"type":"int", "description":"Number of complete_job events for a given job id"},
-                    "_percent_complete":{"type":"float", "description":"Percent of jobs which were accepted and completed"},
-                    "_avg_time_complete":{"type":"float", "description":"Average time taken from accepting to completing a job"},
-                    "_std_dev_complete":{"type":"float", "description":"Standard deviation of time taken to complete"}
+                    "job-name":{"type":"string", "description":"String name for a job"},
+                    "num-starts":{"type":"int", "description":"Number of accept_job events for a given job id"},
+                    "num-completes":{"type":"int", "description":"Number of complete_job events for a given job id"},
+                    "percent-complete":{"type":"float", "description":"Percent of jobs which were accepted and completed"},
+                    "avg-time-complete":{"type":"float", "description":"Average time taken from accepting to completing a job"},
+                    "std-dev-complete":{"type":"float", "description":"Standard deviation of time taken to complete"}
                 }
             },
             "SyncCompletionTime": {

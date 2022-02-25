@@ -240,7 +240,7 @@ class ExportManager:
             game_extractor = ShadowspectLoader
         elif game_id == "WAVES":
             game_extractor = WaveLoader
-        elif game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "SHIPWRECKS", "STEMPORTS", "WIND"]:
+        elif game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "SHIPWRECKS", "STEMPORTS", "WIND"]:
             # all games with data but no extractor.
             pass
         else:
