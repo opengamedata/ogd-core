@@ -83,7 +83,7 @@ class Feature(abc.ABC):
         :return: [description]
         :rtype: List[str]
         """
-        return [self.Name()] + [f"{self.Name()}_{subfeature}" for subfeature in self.Subfeatures()]
+        return [self.Name()] + [f"{self.Name()}-{subfeature}" for subfeature in self.Subfeatures()]
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event):

@@ -29,6 +29,10 @@ settings = {
             "DB_NAME": "aqualab-57f88.analytics_271167280",
             "PROJECT_ID" : "aqualab-57f88"
         },
+        "MASHOPOLIS": {
+            "DB_NAME": "mashopolis-36754.analytics_302498821",
+            "PROJECT_ID": "mashopolis-36754"
+        },
         "SHADOWSPECT": {
             "DB_NAME": "shadowspect-b8e63.analytics_284091572",
             "PROJECT_ID" : "shadowspect-b8e63"
@@ -52,6 +56,7 @@ settings = {
         "JOWILDER":{"interface":"MySQL", "table":"FIELDDAY_MYSQL", "credential":None},
         "LAKELAND":{"interface":"MySQL", "table":"FIELDDAY_MYSQL", "credential":None},
         "MAGNET":{"interface":"MySQL", "table":"FIELDDAY_MYSQL", "credential":None},
+        "MASHOPOLIS":{"interface":"BigQuery", "table":"BIGQUERY", "credential":"./config/mashopolis.json"},
         "SHIPWRECKS":{"interface":"BigQuery", "table":"BIGQUERY", "credential":"./config/shipwrecks.json"},
         "SHADOWSPECT":{"interface":"BigQuery", "table":"BIGQUERY", "credential":"./config/shadowspect.json"},
         "STEMPORTS":{"interface":"MySQL", "table":"FIELDDAY_MYSQL", "credential":None},

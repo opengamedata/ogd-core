@@ -212,6 +212,7 @@ class ExportManager:
         time_delta = datetime.now() - start
         utils.Logger.Log(f"Processing time for slice [{slice_num}/{slice_count}]: {time_delta} to handle {num_events} events", logging.INFO)
 
+<<<<<<< HEAD
     def _setupFileHeaders(self, request:Request, file_manager:FileManager):
         if request.ExportEvents() and self._event_mgr is not None:
             cols = self._event_mgr.GetColumnNames()
@@ -220,6 +221,49 @@ class ExportManager:
             if request.ExportPopulation():
                 cols = self._extract_mgr.GetPopulationFeatureNames()
                 file_manager.WritePopulationFile("\t".join(cols) + "\n")
+=======
+    def _prepareExtractor(self, game_id) -> None:
+        game_extractor: Union[type,None] = None
+        if game_id == "AQUALAB":
+            game_extractor = AqualabLoader
+        elif game_id == "CRYSTAL":
+            game_extractor = CrystalExtractor
+        elif game_id == "JOWILDER":
+            game_extractor = JowilderExtractor
+        elif game_id == "LAKELAND":
+            game_extractor = LakelandExtractor
+        elif game_id == "MAGNET":
+            game_extractor = MagnetExtractor
+        elif game_id == "SHADOWSPECT":
+            game_extractor = ShadowspectLoader
+        elif game_id == "WAVES":
+            game_extractor = WaveLoader
+        elif game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "SHIPWRECKS", "STEMPORTS", "WIND"]:
+            # all games with data but no extractor.
+            pass
+        else:
+            raise Exception(f"Got an invalid game ID ({game_id})!")
+        self._extractor_class = game_extractor
+
+    def _prepareProcessors(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
+        if request._exports.events:
+            self._evt_processor = EventManager()
+            # evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
+        else:
+            utils.Logger.toStdOut("Event log not requested, skipping events file.", logging.INFO)
+        # If game doesn't have an extractor, make sure we don't try to export it.
+        if self._extractor_class is None:
+            request._exports.sessions = False
+            request._exports.population = False
+            utils.Logger.toStdOut("Could not export population/session data, no game extractor given!", logging.WARN)
+        else:
+            if request._exports.sessions:
+                self._sess_processor = SessionExtractor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
+            else:
+                utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
+            if request._exports.population:
+                self._pop_processor = PopulationExtractor(ExtractorClass=self._extractor_class, game_schema=game_schema, feature_overrides=feature_overrides)
+>>>>>>> master
             else:
                 utils.Logger.toStdOut("Population features not requested, skipping population_features file.", logging.INFO)
             if request.ExportPlayers():
