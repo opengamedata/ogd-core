@@ -2,6 +2,7 @@
 
 deploy:
 	rsync -vrc * fieldday-web.ad.education.wisc.edu:/var/www/opengamedata --exclude-from rsync-exclude
+	ssh -t fieldday-web.ad.education.wisc.edu sudo /sbin/service httpd restart
 
 deploy-extractors:
 	rsync -vrc ./games/* fieldday-web.ad.education.wisc.edu:/var/www/opengamedata/games --exclude-from rsync-exclude
