@@ -184,6 +184,7 @@ class ExportManager:
     def _processSlice(self, next_data_set:List[Tuple], table_schema:TableSchema, sess_ids:List[str], slice_num:int, slice_count:int):
         start      : datetime = datetime.now()
         num_events : int      = len(next_data_set)
+        _unsessioned_event_count : int = 0
         # 3a) If next slice yielded valid data from the interface, process row-by-row.
         for row in next_data_set:
             try:
@@ -207,8 +208,12 @@ class ExportManager:
                             raise err
                         else:
                             utils.Logger.Log(f"Error while processing event {next_event}. This event will be skipped", logging.WARNING)
+                elif next_event.session_id is None:
+                        _unsessioned_event_count += 1
                 else:
                     utils.Logger.toStdOut(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
+        if _unsessioned_event_count > 0:
+            utils.Logger.toStdOut(f"Found {_unsessioned_event_count} events with no session IDs.", logging.WARNING)
         time_delta = datetime.now() - start
         utils.Logger.Log(f"Processing time for slice [{slice_num}/{slice_count}]: {time_delta} to handle {num_events} events", logging.INFO)
 
