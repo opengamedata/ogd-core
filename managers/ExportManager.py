@@ -208,10 +208,12 @@ class ExportManager:
                             raise err
                         else:
                             utils.Logger.Log(f"Error while processing event {next_event}. This event will be skipped", logging.WARNING)
-                elif next_event.session_id is None:
-                        _unsessioned_event_count += 1
-                else:
+                elif next_event.session_id is not None and next_event.session_id.upper() != "NONE":
                     utils.Logger.toStdOut(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
+                else:
+                    _unsessioned_event_count += 1
+                    if _unsessioned_event_count < 10:
+                        utils.Logger.toStdOut(f"Original data for an 'unsessioned' row: {row}", logging.WARNING)
         if _unsessioned_event_count > 0:
             utils.Logger.toStdOut(f"Found {_unsessioned_event_count} events with no session IDs.", logging.WARNING)
         time_delta = datetime.now() - start
