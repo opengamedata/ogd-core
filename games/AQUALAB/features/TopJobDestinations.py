@@ -18,7 +18,7 @@ class TopJobDestinations(Feature):
         for job_id in job_map.values():
             self._top_destinations[str(job_id)] = []
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["accept_job", "complete_job"]
 
     def GetFeatureValues(self) -> List[Any]:

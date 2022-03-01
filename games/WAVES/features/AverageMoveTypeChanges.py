@@ -11,7 +11,7 @@ class AverageMoveTypeChanges(SessionFeature):
         self._last_move = {}
         self._change_count = {}
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 

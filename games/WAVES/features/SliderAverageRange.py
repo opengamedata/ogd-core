@@ -10,7 +10,7 @@ class SliderAverageRange(PerLevelFeature):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._ranges = []
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["CUSTOM.1"]
         # return ["SLIDER_MOVE_RELEASE"]
 

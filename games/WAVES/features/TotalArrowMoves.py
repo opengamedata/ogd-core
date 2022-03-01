@@ -9,7 +9,7 @@ class TotalArrowMoves(PerLevelFeature):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._arrow_move_count : int = 0
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["CUSTOM.2"]
         # return ["ARROW_MOVE_RELEASE"]
 

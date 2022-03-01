@@ -9,7 +9,7 @@ class SessionGuideCount(Feature):
         super().__init__(name=name, description=description, count_index=0)
         self._count = 0
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["guide_triggered"]
 
     def GetFeatureValues(self) -> List[Any]:

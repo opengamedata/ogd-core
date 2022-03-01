@@ -8,7 +8,7 @@ class ClosenessIntercept(Feature):
     def __init__(self, name:str, description:str, count_index:int):
         Feature.__init__(self, name=name, description=description, count_index=count_index)
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return []
 
     def GetFeatureValues(self) -> List[Any]:

@@ -39,7 +39,7 @@ class LevelsOfDifficulty(SessionFeature):
         self._previousEvent = None
         self._userPuzzleDict = dict()
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ['move_shape', 'rotate_shape', 'scale_shape',
                 'check_solution', 'undo_action', 'redo_action',
                 'rotate_view', 'snapshot', 'mode_change',

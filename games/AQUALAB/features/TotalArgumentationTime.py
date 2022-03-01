@@ -14,7 +14,7 @@ class TotalArgumentationTime(Feature):
         self._argue_start_time = None
         self._time = timedelta(0)
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["begin_argument", "room_changed"]
 
     def GetFeatureValues(self) -> List[Any]:

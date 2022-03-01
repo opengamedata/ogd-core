@@ -14,7 +14,7 @@ class JobCompleteCount(Feature):
         super().__init__(name=name, description=description, count_index=job_num)
         self._completed = 0
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["complete_job"]
 
     def GetFeatureValues(self) -> List[Any]:

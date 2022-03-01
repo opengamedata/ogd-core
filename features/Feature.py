@@ -16,7 +16,7 @@ class Feature(abc.ABC):
 
     ## Abstract function to get a list of event types the Feature wants.
     @abc.abstractmethod
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         """ Abstract function to get a list of event types the Feature wants.
             The types of event accepted by a feature are a responsibility of the Feature's developer,
             so this is a required part of interface instead of a config item in the schema.
@@ -71,6 +71,16 @@ class Feature(abc.ABC):
 
         :return: A list of names of subfeatures for the Feature sub-class.
         :rtype: Tuple[str]
+        """
+        return []
+
+    def GetFeatureDependencies(self) -> List[str]:
+        """Base function for getting any features a second-order feature depends upon.
+        By default, no dependencies.
+        Any feature intented to be second-order should override this function.
+
+        :return: _description_
+        :rtype: List[str]
         """
         return []
 
@@ -159,7 +169,7 @@ class Feature(abc.ABC):
         :return: True if the given event type is in this feature's list, otherwise false.
         :rtype: bool
         """
-        if event_type in self.GetEventTypes():
+        if event_type in self.GetEventDependencies():
             return True
         else:
             return False

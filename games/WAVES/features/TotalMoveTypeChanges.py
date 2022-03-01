@@ -11,7 +11,7 @@ class TotalMoveTypeChanges(PerLevelFeature):
         self._last_move = None
         self._change_count = 0
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 

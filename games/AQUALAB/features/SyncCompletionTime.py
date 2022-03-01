@@ -13,7 +13,7 @@ class SyncCompletionTime(Feature):
         self._sim_start_time = None
         self._time = None
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["begin_simulation, simulation_sync_achieved"]
 
     def GetFeatureValues(self) -> List[Any]:

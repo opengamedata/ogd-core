@@ -14,7 +14,7 @@ class TotalLevelTime(PerLevelFeature):
         self._begin_times    : List[datetime] = []
         self._complete_times : List[datetime] = []
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["BEGIN.0", "COMPLETE.0"]
 
     def GetFeatureValues(self) -> List[Any]:

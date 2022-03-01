@@ -11,7 +11,7 @@ class SessionDuration(Feature):
         self._client_start_time = None
         self._session_duration = timedelta(0)
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["begin_dive"]
 
     def GetFeatureValues(self) -> List[Any]:

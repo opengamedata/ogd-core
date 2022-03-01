@@ -9,7 +9,7 @@ class QuestionCorrect(Feature):
         Feature.__init__(self, name=name, description=description, count_index=count_index)
         self._correct = None
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["CUSTOM.3"]
         # return ["QUESTION_ANSWER"]
 

@@ -31,7 +31,7 @@ class FeatureRegistry:
             self.kind = kind
         
         def __str__(self) -> str:
-            return f"{self.name} ({'aggregate' if self.kind == FeatureRegistry.Listener.Kinds.AGGREGATE else 'percount'})"
+            return f"{self.name} ({'aggregate' if self.kind == FeatureRegistry.Listener.Kinds.AGGREGATE else 'per-count'})"
 
         def __repr__(self) -> str:
             return str(self)
@@ -51,10 +51,12 @@ class FeatureRegistry:
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema
         """
-        self._percounts      : OrderedDict[str,Feature] = OrderedDict()
-        self._aggregates     : OrderedDict[str,Feature] = OrderedDict()
-        # self._loader         : FeatureLoader            = loader
+        self._features : Dict[str, OrderedDict[str, Feature]] = {
+            "first_order" : OrderedDict(),
+            "second_order" : OrderedDict()
+        }
         self._event_registry : Dict[str,List[FeatureRegistry.Listener]] = {"all_events":[]}
+        self._feature_registry: Dict[str,List[FeatureRegistry.Listener]] = {}
 
     # string conversion for Extractors.
     def __str__(self) -> str:
@@ -64,8 +66,9 @@ class FeatureRegistry:
         :return: A string with line-separated stringified features.
         :rtype: str
         """
-        ret_val  = [str(feat) for feat in self._aggregates.values()]
-        ret_val += [str(feat) for feat in self._percounts.values()]
+        ret_val : List[str] = []
+        for order in self._features.values():
+            ret_val += [str(feat) for feat in order.values()]
         return '\n'.join(ret_val)
 
     # Alternate string conversion for Extractors, with limitable number of lines.
@@ -80,8 +83,9 @@ class FeatureRegistry:
         :return: A string with line-separated stringified features.
         :rtype: str
         """
-        ret_val  = [str(feat) for feat in self._aggregates.values()]
-        ret_val += [str(feat) for feat in self._percounts.values()]
+        ret_val : List[str] = []
+        for order in self._features.values():
+            ret_val += [str(feat) for feat in order.values()]
         if num_lines is None:
             return '\n'.join(ret_val)
         else:
@@ -92,7 +96,7 @@ class FeatureRegistry:
     # *** PUBLIC METHODS ***
 
     def ExtractFromEvent(self, event:Event) -> None:
-        """Abstract declaration of a function to perform extraction of features from a row.
+        """Perform extraction of features from a row.
 
         :param event: [description]
         :type event: Event
@@ -100,22 +104,17 @@ class FeatureRegistry:
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
-        # first, send to all listening for "all" events
-        for listener in self._event_registry["all_events"]:
-            if listener.kind == FeatureRegistry.Listener.Kinds.AGGREGATE:
-                self._aggregates[listener.name].ExtractFromEvent(event)
-            elif listener.kind == FeatureRegistry.Listener.Kinds.PERCOUNT:
-                self._percounts[listener.name].ExtractFromEvent(event)
-            else:
-                utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
         if event.event_name in self._event_registry.keys():
+            # send event to every listener for the given event name.
             for listener in self._event_registry[event.event_name]:
-                if listener.kind == FeatureRegistry.Listener.Kinds.AGGREGATE:
-                    self._aggregates[listener.name].ExtractFromEvent(event)
-                elif listener.kind == FeatureRegistry.Listener.Kinds.PERCOUNT:
-                    self._percounts[listener.name].ExtractFromEvent(event)
-                else:
-                    utils.Logger.Log(f"Got invalid listener kind {listener.kind}", logging.ERROR)
+                for order_key in self._features.keys():
+                    if listener.name in self._features[order_key].keys():
+                        self._features[order_key][listener.name].ExtractFromEvent(event)
+        # don't forget to send to any features listening for "all" events
+        for listener in self._event_registry["all_events"]:
+            for order_key in self._features.keys():
+                if listener.name in self._features[order_key].keys():
+                    self._features[order_key][listener.name].ExtractFromEvent(event)
 
     def GetFeatureNames(self) -> List[str]:
         """Function to generate a list names of all enabled features, given a GameSchema
@@ -130,21 +129,18 @@ class FeatureRegistry:
         :rtype: List[str]
         """
         ret_val : List[str] = []
-        for name in self._aggregates.keys():
-            ret_val += self._aggregates[name].GetFeatureNames()
-        for name in self._percounts.keys():
-            ret_val += self._percounts[name].GetFeatureNames()
+        for order in self._features.values():
+            for feature in order.values():
+                ret_val += feature.GetFeatureNames()
         return ret_val
 
     def GetFeatureValues(self) -> List[Any]:
-        column_vals = []
-        for name in self._aggregates.keys():
-            next_vals = self._aggregates[name].GetFeatureValues()
-            column_vals += next_vals if next_vals != [] else [None]
-        for name in self._percounts.keys():
-            next_vals = self._percounts[name].GetFeatureValues()
-            column_vals += next_vals if next_vals != [] else [None]
-        return column_vals
+        ret_val : List[Any] = []
+        for order_key in self._features.keys():
+            for name in self._features[order_key].keys():
+                next_vals = self._features[order_key][name].GetFeatureNames()
+                ret_val += next_vals if next_vals != [] else [None]
+        return ret_val
 
     def GetFeatureStringValues(self) -> List[str]:
         ret_val : List[str] = []
@@ -166,8 +162,15 @@ class FeatureRegistry:
     # *** PRIVATE METHODS ***
 
     def Register(self, feature:Feature, kind:Listener.Kinds):
-        _listener = FeatureRegistry.Listener(name=feature._name, kind=kind)
-        _event_types = feature.GetEventTypes()
+        _listener = FeatureRegistry.Listener(name=feature.Name(), kind=kind)
+        _event_types = feature.GetEventDependencies()
+        _feature_types = feature.GetFeatureDependencies()
+        # First, add feature to the _features dict.
+        if len(_feature_types) > 0:
+            self._features['second_order'][feature.Name()] = feature
+        else:
+            self._features['first_order'][feature.Name()] = feature
+        # then, register feature's requested events.
         if "all_events" in _event_types:
             self._event_registry["all_events"].append(_listener)
         else:
@@ -175,10 +178,9 @@ class FeatureRegistry:
                 if event not in self._event_registry.keys():
                     self._event_registry[event] = []
                 self._event_registry[event].append(_listener)
-        if kind == FeatureRegistry.Listener.Kinds.AGGREGATE:
-            self._aggregates[feature.Name()] = feature
-        elif kind == FeatureRegistry.Listener.Kinds.PERCOUNT:
-            self._percounts[feature.Name()] = feature
+        for _feature in _feature_types:
+            if _feature not in self._feature_registry.keys():
+                self._feature_registry[_feature].append(_listener)
 
     # def _format(obj):
     #     if obj == None:

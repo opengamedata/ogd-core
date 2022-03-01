@@ -10,7 +10,7 @@ class SessionDiveSitesCount(Feature):
         self._count = 0
         self._visited_sites = []
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["begin_dive"]
 
     def GetFeatureValues(self) -> List[Any]:

@@ -26,7 +26,7 @@ class JobsAttempted(Feature):
         self._times = []
         self._job_start_time = None
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["accept_job", "complete_job"]
 
     def Subfeatures(self) -> List[str]:

@@ -81,7 +81,7 @@ class LegacyFeature(Feature):
 
     # *** PUBLIC METHODS ***
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["all_events"]
 
     def GetFeatureNames(self, game_schema:GameSchema) -> List[str]:

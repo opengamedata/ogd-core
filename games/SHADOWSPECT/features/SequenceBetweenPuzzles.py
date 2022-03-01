@@ -17,7 +17,7 @@ class SequenceBetweenPuzzles(SessionFeature):
         self._activePuzzle = None
         self._userPuzzleDict = dict()
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["start_level", "puzzle_started", "create_shape", "check_solution", "puzzle_complete", "disconnect", "login_user", "exit_to_menu"]
 
     def GetFeatureValues(self) -> List[Any]:

@@ -10,7 +10,7 @@ class TotalFails(PerLevelFeature):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._fail_count = 0
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["FAIL.0"]
 
     def GetFeatureValues(self) -> List[Any]:

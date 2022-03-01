@@ -10,7 +10,7 @@ class TotalResets(PerLevelFeature):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._reset_count = 0
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["CUSTOM.4"]
         # "events": ["RESET_BTN_PRESS"],
 

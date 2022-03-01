@@ -11,7 +11,7 @@ class PercentOffsetGoodMoves(PerLevelFeature):
         self._offset_count = 0
         self._good_count = 0
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 

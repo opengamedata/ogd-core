@@ -11,7 +11,7 @@ class FunnelByUser(SessionFeature):
         self._level = None
         self._userFunnelDict = dict()
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["start_level", "puzzle_started", "create_shape", "check_solution", "puzzle_complete"]
 
     def GetFeatureValues(self) -> List[Any]:

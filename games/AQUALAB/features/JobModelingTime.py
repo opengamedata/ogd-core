@@ -14,7 +14,7 @@ class JobModelingTime(Feature):
         self._modeling_start_time = None
         self._time = timedelta(0)
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return []
 
     def GetFeatureValues(self) -> List[Any]:

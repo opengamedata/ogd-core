@@ -17,7 +17,7 @@ class SecondOrderFeature(Feature):
 
     ## Abstract function to get a list of event types the Feature wants.
     @abc.abstractmethod
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         """ Abstract function to get a list of event types the Feature wants.
             The types of event accepted by a feature are a responsibility of the Feature's developer,
             so this is a required part of interface instead of a config item in the schema.
@@ -25,19 +25,6 @@ class SecondOrderFeature(Feature):
         :return: [description]
         :rtype: List[str]
         """
-        pass
-
-    ## Abstract function to get a list of first-order Features the SecondOrderFeature wants.
-    @abc.abstractmethod
-    def GetFOFeatureTypes(self) -> List[str]:
-        """ Abstract function to get a list of event types the Feature wants.
-            The types of event accepted by a feature are a responsibility of the Feature's developer,
-            so this is a required part of interface instead of a config item in the schema.
-
-        :return: [description]
-        :rtype: List[str]
-        """
-        # TODO: Figure out how to generate names properly for per-count features
         pass
 
     ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
@@ -89,6 +76,16 @@ class SecondOrderFeature(Feature):
         :rtype: Tuple[str]
         """
         return []
+
+    def GetFeatureDependencies(self) -> List[str]:
+        """Base function for getting any features a second-order feature depends upon.
+        By default, no dependencies.
+        Any feature intented to be second-order should override this function.
+
+        :return: _description_
+        :rtype: List[str]
+        """
+        raise NotImplementedError(f"SecondOrderFeature {self.Name()} did not implement the GetFeatureDependencies function!")
 
     def GetFeatureNames(self) -> List[str]:
         """Base function to get a list of names of the feature(s) a given Feature class outputs.
@@ -175,7 +172,7 @@ class SecondOrderFeature(Feature):
         :return: True if the given event type is in this feature's list, otherwise false.
         :rtype: bool
         """
-        if event_type in self.GetEventTypes():
+        if event_type in self.GetEventDependencies():
             return True
         else:
             return False

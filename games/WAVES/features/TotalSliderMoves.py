@@ -9,7 +9,7 @@ class TotalSliderMoves(PerLevelFeature):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._slider_move_count : int = 0
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["CUSTOM.1"]
         # return ["SLIDER_MOVE_RELEASE"]
 

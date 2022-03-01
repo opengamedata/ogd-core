@@ -10,7 +10,7 @@ class Completed(PerLevelFeature):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._num_completes = 0
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["COMPLETE.0"]
 
     def Subfeatures(self) -> List[str]:

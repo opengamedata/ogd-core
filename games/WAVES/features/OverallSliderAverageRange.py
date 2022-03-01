@@ -9,7 +9,7 @@ class OverallSliderAverageRange(SessionFeature):
         SessionFeature.__init__(self, name=name, description=description)
         self._ranges = []
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["CUSTOM.1"]
         # return ["SLIDER_MOVE_RELEASE"]
 

@@ -10,7 +10,7 @@ class JobName(Feature):
         self._job_map = job_map
         super().__init__(name=name, description=description, count_index=job_num)
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return []
 
     def GetFeatureValues(self) -> List[Any]:

@@ -9,7 +9,7 @@ class SessionID(SessionFeature):
         SessionFeature.__init__(self, name=name, description=description)
         self._sessionID = sessionID
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return []
 
     def GetFeatureValues(self) -> List[Any]:

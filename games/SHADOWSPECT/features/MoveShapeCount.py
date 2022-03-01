@@ -8,7 +8,7 @@ class MoveShapeCount(Feature):
         super().__init__(name=name, description=description, count_index=0)
         self._count = 0
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["move_shape"]
 
     def GetFeatureValues(self) -> List[Any]:

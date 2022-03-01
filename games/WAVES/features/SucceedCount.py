@@ -9,7 +9,7 @@ class SucceedCount(PerLevelFeature):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._succeed_count = 0
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["SUCCEED.0"]
 
     def GetFeatureValues(self) -> List[Any]:

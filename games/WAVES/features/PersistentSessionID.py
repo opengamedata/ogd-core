@@ -9,7 +9,7 @@ class PersistentSessionID(SessionFeature):
         SessionFeature.__init__(self, name=name, description=description)
         self._persistent_id : Union[int,None] = None
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["BEGIN.0"]
 
     def GetFeatureValues(self) -> List[Any]:

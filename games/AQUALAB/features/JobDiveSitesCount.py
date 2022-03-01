@@ -13,7 +13,7 @@ class JobDiveSitesCount(Feature):
         super().__init__(name=name, description=description, count_index=job_num)
         self._count = 0
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["begin_dive"]
 
     def GetFeatureValues(self) -> List[Any]:

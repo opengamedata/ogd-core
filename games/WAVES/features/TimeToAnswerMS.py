@@ -14,7 +14,7 @@ class TimeToAnswerMS(Feature):
         self._latest_answer_Q2 = None
         self._answer_time = None
 
-    def GetEventTypes(self) -> List[str]:
+    def GetEventDependencies(self) -> List[str]:
         return ["CUSTOM.3", "COMPLETE.0"]
         # return ["QUESTION_ANSWER"]
 
