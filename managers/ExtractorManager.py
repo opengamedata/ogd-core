@@ -80,24 +80,24 @@ class ExtractorManager:
             self._pop_extractor.ClearSessionsLines()
 
     def _prepareLoaderClass(self, game_id:str) -> Union[Type[FeatureLoader],None]:
-        game_extractor: Union[Type[FeatureLoader],None] = None
+        _loader_class: Union[Type[FeatureLoader],None] = None
         if game_id == "AQUALAB":
-            game_extractor = AqualabLoader
+            _loader_class = AqualabLoader
         elif game_id == "CRYSTAL":
-            game_extractor = CrystalLoader
+            _loader_class = CrystalLoader
         elif game_id == "JOWILDER":
-            game_extractor = JowilderLoader
+            _loader_class = JowilderLoader
         elif game_id == "LAKELAND":
-            game_extractor = LakelandLoader
+            _loader_class = LakelandLoader
         elif game_id == "MAGNET":
-            game_extractor = MagnetLoader
+            _loader_class = MagnetLoader
         elif game_id == "SHADOWSPECT":
-            game_extractor = ShadowspectLoader
+            _loader_class = ShadowspectLoader
         elif game_id == "WAVES":
-            game_extractor = WaveLoader
+            _loader_class = WaveLoader
         elif game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "SHIPWRECKS", "STEMPORTS", "WIND"]:
             # all games with data but no extractor.
             pass
         else:
             raise Exception(f"Got an invalid game ID ({game_id})!")
-        return game_extractor
+        return _loader_class
