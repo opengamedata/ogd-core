@@ -77,6 +77,7 @@ class ExportManager:
                 ret_val['events']['vals']
                 ret_val.update(_result) # merge event, session, player, and population data into the return value.
             utils.Logger.Log(f"Successfully executed data request {str(request)}.", logging.INFO)
+            ret_val['success'] = True # if we made it to end, we were successful.
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             utils.Logger.Log(f"Failed to execute data request {str(request)}, an error occurred:\n{msg}", logging.ERROR)
