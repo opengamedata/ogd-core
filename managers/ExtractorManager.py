@@ -24,7 +24,7 @@ class ExtractorManager:
         self._LoaderClass    : Union[Type[FeatureLoader],None]
         self._pop_extractor  : Union[PopulationExtractor, None]
 
-        self._LoaderClass   = self._prepareLoader(game_id=game_id)
+        self._LoaderClass   = self._prepareLoaderClass(game_id=game_id)
         if self._LoaderClass is not None:
             if exp_types.population:
                 self._pop_extractor = PopulationExtractor(LoaderClass=self._LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
@@ -79,7 +79,7 @@ class ExtractorManager:
         if self._pop_extractor is not None:
             self._pop_extractor.ClearSessionsLines()
 
-    def _prepareLoader(self, game_id:str) -> Union[Type[FeatureLoader],None]:
+    def _prepareLoaderClass(self, game_id:str) -> Union[Type[FeatureLoader],None]:
         game_extractor: Union[Type[FeatureLoader],None] = None
         if game_id == "AQUALAB":
             game_extractor = AqualabLoader
