@@ -2,9 +2,10 @@ from schemas import Event
 from typing import Any, List, Union
 # local imports
 from features.Feature import Feature
+from features.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
-class PercentAmplitudeMoves(Feature):
+class PercentAmplitudeMoves(PerLevelFeature):
     def __init__(self, name:str, description:str, count_index:int):
         Feature.__init__(self, name=name, description=description, count_index=count_index)
         self._amplitude_count = 0
