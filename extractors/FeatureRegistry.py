@@ -39,17 +39,11 @@ class FeatureRegistry:
 
     # *** BUILT-INS ***
 
-    # Base constructor for Extractor classes.
+    # Base constructor for Registry.
     def __init__(self):
-        """Base constructor for Extractor classes.
-        The constructor sets an extractor's session id and range of levels,
-        as well as initializing the feature
-        es dictionary and list of played levels.
+        """Base constructor for Registry
 
-        :param session_id: The id of the session from which we will extract features.
-        :type session_id: str
-        :param game_schema: A dictionary that defines how the game data itself is structured.
-        :type game_schema: GameSchema
+        Just sets up mostly-empty dictionaries for use by the registry.
         """
         self._features : Dict[str, OrderedDict[str, Feature]] = {
             "first_order" : OrderedDict(),
@@ -163,14 +157,19 @@ class FeatureRegistry:
 
     def Register(self, feature:Feature, kind:Listener.Kinds):
         _listener = FeatureRegistry.Listener(name=feature.Name(), kind=kind)
-        _event_types = feature.GetEventDependencies()
         _feature_types = feature.GetFeatureDependencies()
+        _event_types   = feature.GetEventDependencies()
         # First, add feature to the _features dict.
         if len(_feature_types) > 0:
             self._features['second_order'][feature.Name()] = feature
         else:
             self._features['first_order'][feature.Name()] = feature
-        # then, register feature's requested events.
+        # Register feature to listen for any requested first-order features.
+        for _feature in _feature_types:
+            if _feature not in self._feature_registry.keys():
+                self._feature_registry[_feature] = []
+            self._feature_registry[_feature].append(_listener)
+        # Finally, register feature's requested events.
         if "all_events" in _event_types:
             self._event_registry["all_events"].append(_listener)
         else:
@@ -178,9 +177,6 @@ class FeatureRegistry:
                 if event not in self._event_registry.keys():
                     self._event_registry[event] = []
                 self._event_registry[event].append(_listener)
-        for _feature in _feature_types:
-            if _feature not in self._feature_registry.keys():
-                self._feature_registry[_feature].append(_listener)
 
     # def _format(obj):
     #     if obj == None:
