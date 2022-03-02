@@ -62,11 +62,13 @@ class BigQueryInterface(DataInterface):
                 # TODO: Temporary fix for 6.1 playtest
                 query = f"""
                     SELECT event_name, event_params, user_id, device, geo, platform,
-                        (SELECT value.int_value FROM UNNEST(event_params) WHERE (key = "ga_session_id" AND value.int_value IN ({id_string}))) AS session_id,
+                        ( SELECT value.int_value FROM UNNEST(event_params) WHERE key = "ga_session_id" ) AS session_id,
                     concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
-                    FROM `{db_name}.{table_name}`,
-                    UNNEST(event_params) AS param
-                    WHERE (param.key = "page_location" AND param.value.string_value = "https://fielddaylab.wisc.edu/play/aqualab/ci/milestone6.1/")
+                    FROM `{db_name}.{table_name}`
+                    CROSS JOIN UNNEST(event_params) AS params_session
+                    CROSS JOIN UNNEST(event_params) AS params_url
+                    WHERE params_session.key = 'ga_session_id' and params_session.value.int_value IN ({id_string})
+                    AND   params_url.key     = 'page_location' AND params_url.value.string_value  = "https://fielddaylab.wisc.edu/play/aqualab/ci/milestone6.1/"
                     ORDER BY `session_id`, `timestamp` ASC
                 """
             else:
