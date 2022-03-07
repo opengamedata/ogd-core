@@ -1,4 +1,5 @@
 __all__ = [
+    "EchoSessionID",
     "JobArgumentationTime",
     "JobCompleteCount",
     "JobCompletionTime",
@@ -22,11 +23,11 @@ __all__ = [
     "SyncCompletionTime",
     "TopJobDestinations",
     "TotalArgumentationTime",
-    "TotalDiveAndArgTime",
     "TotalDiveTime",
     "TotalExperimentationTime"
 ]
 
+from . import EchoSessionID
 from . import JobArgumentationTime
 from . import JobCompleteCount
 from . import JobCompletionTime
@@ -50,6 +51,5 @@ from . import SwitchJobsCount
 from . import SyncCompletionTime
 from . import TopJobDestinations
 from . import TotalArgumentationTime
-from . import TotalDiveAndArgTime
 from . import TotalDiveTime
 from . import TotalExperimentationTime

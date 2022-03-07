@@ -31,7 +31,9 @@ class AqualabLoader(FeatureLoader):
 
     def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         ret_val : Feature
-        if feature_type == "JobArgumentationTime":
+        if feature_type == "EchoSessionID":
+            ret_val = EchoSessionID.EchoSessionID(name=name, description=feature_args["description"])
+        elif feature_type == "JobArgumentationTime":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
             ret_val = JobArgumentationTime.JobArgumentationTime(name=name, description=feature_args["description"], job_num=count_index, job_map=self._game_schema["job_map"])
@@ -109,8 +111,6 @@ class AqualabLoader(FeatureLoader):
             ret_val = TotalDiveTime.TotalDiveTime(name=name, description=feature_args["description"])
         elif feature_type == "TotalExperimentationTime":
             ret_val = TotalExperimentationTime.TotalExperimentationTime(name=name, description=feature_args["description"])
-        elif feature_type == "TotalDiveAndArgTime":
-            ret_val = TotalDiveAndArgTime.TotalDiveAndArgTime(name=name, description=feature_args["description"])
         else:
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Aqualab.")
         return ret_val
