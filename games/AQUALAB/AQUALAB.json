@@ -401,11 +401,15 @@
                 "description": "Top five most accepted jobs after previously completing a given job"
             },
             "TotalArgumentationTime": {
-                "enabled": false,
+                "enabled": true,
                 "description":"Total time spent in argumentation"
             },
+            "TotalDiveAndArgTime": {
+                "enabled": true,
+                "description":"Total time spent in dive sites"
+            },
             "TotalDiveTime": {
-                "enabled": false,
+                "enabled": true,
                 "description":"Total time spent in dive sites"
             },
             "TotalExperimentationTime": {
