@@ -2,6 +2,7 @@
 import abc
 from typing import Any, Dict, List, Union
 # Local imports
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 ## @class Model
@@ -11,6 +12,7 @@ from schemas.Event import Event
 #  If the model works on features from session data, it should calculate one result for each row (each row being a session).
 #  If the model works on a raw list of recent events, it should calculate a single result (each row being an event).
 class Feature(abc.ABC):
+#TODO: use a dirty bit so we only run the GetValue function if we've received an event or feature since last calculation
 
     # *** ABSTRACTS ***
 
@@ -26,6 +28,17 @@ class Feature(abc.ABC):
         """
         pass
 
+    @abc.abstractmethod
+    def GetFeatureDependencies(self) -> List[str]:
+        """Base function for getting any features a second-order feature depends upon.
+        By default, no dependencies.
+        Any feature intented to be second-order should override this function.
+
+        :return: _description_
+        :rtype: List[str]
+        """
+        return []
+
     ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
     @abc.abstractmethod
     def GetFeatureValues(self) -> List[Any]:
@@ -33,6 +46,16 @@ class Feature(abc.ABC):
 
         :return: Returns the values of all columns for the Feature, based on data the feature has seen so far.
         :rtype: typing.Tuple
+        """
+        pass
+
+    ## Abstract declaration of a function to perform update of a feature from a row.
+    @abc.abstractmethod
+    def _extractFromFeatureData(self, feature:FeatureData):
+        """Abstract declaration of a function to perform update of a feature from a row.
+
+        :param event: An event, used to update the feature's data.
+        :type event: Event
         """
         pass
 
@@ -74,16 +97,6 @@ class Feature(abc.ABC):
         """
         return []
 
-    def GetFeatureDependencies(self) -> List[str]:
-        """Base function for getting any features a second-order feature depends upon.
-        By default, no dependencies.
-        Any feature intented to be second-order should override this function.
-
-        :return: _description_
-        :rtype: List[str]
-        """
-        return []
-
     def GetFeatureNames(self) -> List[str]:
         """Base function to get a list of names of the feature(s) a given Feature class outputs.
         By default, a Feature class just generates one value, and uses its own name (defined in the schema.json file).
@@ -95,9 +108,22 @@ class Feature(abc.ABC):
         """
         return [self.Name()] + [f"{self.Name()}-{subfeature}" for subfeature in self.Subfeatures()]
 
+    def ExtractFromFeatureData(self, feature:FeatureData):
+        self._extractFromFeatureData(feature=feature)
+
     def ExtractFromEvent(self, event:Event):
-        if self._validateEvent(event):
-            self._extractFromEvent(event)
+        if self._validateEvent(event=event):
+            self._extractFromEvent(event=event)
+
+    def ToFeatureData(self, player_id:Union[str, None]=None, sess_id:Union[str, None]=None) -> FeatureData:
+        return FeatureData(
+            name=self.Name(),
+            count_index=self._count_index,
+            cols=self.GetFeatureNames(),
+            vals=self.GetFeatureValues(),
+            player_id=player_id,
+            sess_id=sess_id
+        )
 
     ## Base function to get the minimum game data version the feature can handle.
     def MinVersion(self) -> Union[str,None]:
