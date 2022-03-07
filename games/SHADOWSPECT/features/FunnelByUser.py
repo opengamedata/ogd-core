@@ -1,6 +1,7 @@
 from typing import Any, List
 import json
 import pandas as pd
+from features.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
@@ -13,6 +14,9 @@ class FunnelByUser(SessionFeature):
 
     def GetEventDependencies(self) -> List[str]:
         return ["start_level", "puzzle_started", "create_shape", "check_solution", "puzzle_complete"]
+
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
 
     def GetFeatureValues(self) -> List[Any]:
         count = 0
@@ -51,3 +55,5 @@ class FunnelByUser(SessionFeature):
         elif event.event_name == "puzzle_complete":
             self._userFunnelDict[self._level]["completed"] = 1
 
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return

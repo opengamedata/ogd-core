@@ -1,3 +1,4 @@
+# global imports
 from typing import Any, List
 import json
 import pandas as pd
@@ -7,6 +8,8 @@ import hashlib
 from datetime import datetime
 from datetime import timedelta
 from collections import OrderedDict
+# local imports
+from features.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
@@ -48,6 +51,9 @@ class LevelsOfDifficulty(SessionFeature):
                 'puzzle_started', 'puzzle_complete', 'restart_puzzle',
                 'click_nothing', 'toggle_paint_display', 'palette_change',
                 'paint', 'toggle_snapshot_display']
+
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
 
     def GetFeatureValues(self) -> List[Any]:
         listReturn = []
@@ -125,7 +131,5 @@ class LevelsOfDifficulty(SessionFeature):
                     self._numberAttempts = 0
                     self._numberActions = 0
             
-       
-
-        
-
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return

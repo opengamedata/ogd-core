@@ -2,6 +2,7 @@ from typing import Any, List
 import json
 import pandas as pd
 from features.SessionFeature import SessionFeature
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 orderMapping = {'1. One Box': 1, '2. Separated Boxes': 2, '3. Rotate a Pyramid': 3, '4. Match Silhouettes': 4, '5. Removing Objects': 5, '6. Stretch a Ramp': 6, '7. Max 2 Boxes': 7, '8. Combine 2 Ramps': 8, '9. Scaling Round Objects': 9,
@@ -19,6 +20,9 @@ class SequenceBetweenPuzzles(SessionFeature):
 
     def GetEventDependencies(self) -> List[str]:
         return ["start_level", "puzzle_started", "create_shape", "check_solution", "puzzle_complete", "disconnect", "login_user", "exit_to_menu"]
+
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
 
     def GetFeatureValues(self) -> List[Any]:
         listReturn = []
@@ -73,3 +77,5 @@ class SequenceBetweenPuzzles(SessionFeature):
                 self._currentPuzzle = {}
                 self._numPuzzles += 1
 
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
