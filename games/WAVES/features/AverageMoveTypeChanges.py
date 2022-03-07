@@ -1,6 +1,7 @@
 from schemas import Event
 from typing import Any, List, Union
 # local imports
+from features.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
@@ -14,6 +15,9 @@ class AverageMoveTypeChanges(SessionFeature):
     def GetEventDependencies(self) -> List[str]:
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
+
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
 
     def GetFeatureValues(self) -> List[Any]:
         _counts = [count for count in self._change_count.values()]
@@ -31,6 +35,9 @@ class AverageMoveTypeChanges(SessionFeature):
         if self._last_move[_level] != event.event_name:
             self._change_count[_level] += 1
         self._last_move[_level] = event.event_name
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None

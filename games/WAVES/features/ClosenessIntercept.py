@@ -2,6 +2,7 @@ from schemas import Event
 from typing import Any, List, Union
 # local imports
 from features.Feature import Feature
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class ClosenessIntercept(Feature):
@@ -11,8 +12,11 @@ class ClosenessIntercept(Feature):
     def GetEventDependencies(self) -> List[str]:
         return []
 
-    def GetFeatureValues(self) -> List[Any]:
+    def GetFeatureDependencies(self) -> List[str]:
         return []
+
+    def GetFeatureValues(self) -> List[Any]:
+        return ["Not Implemented"]
 
     def _extractFromEvent(self, event:Event) -> None:
     #     closenesses = self.move_closenesses_tx[lvl]['completeness']
@@ -34,6 +38,9 @@ class ClosenessIntercept(Feature):
     #         self._features.setValByIndex(feature_name='closenessSlope', index=lvl, new_value=slope)
     #         self._features.setValByIndex(feature_name='closenessR2', index=lvl, new_value=r_sq)
         pass
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None

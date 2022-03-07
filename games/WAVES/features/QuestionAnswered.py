@@ -2,6 +2,7 @@ from schemas import Event
 from typing import Any, List, Union
 # local imports
 from features.Feature import Feature
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class QuestionAnswered(Feature):
@@ -13,12 +14,18 @@ class QuestionAnswered(Feature):
         return ["CUSTOM.3"]
         # return ["QUESTION_ANSWER"]
 
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
+
     def GetFeatureValues(self) -> List[Any]:
         return [self._answer]
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_data['question'] == self._count_index:
             self._answer = event.event_data['answered']
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None

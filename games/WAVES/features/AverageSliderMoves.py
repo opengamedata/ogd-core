@@ -1,6 +1,7 @@
 from schemas import Event
 from typing import Any, List, Union
 # local imports
+from features.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
@@ -14,6 +15,9 @@ class AverageSliderMoves(SessionFeature):
         return ["CUSTOM.1"]
         # return ["SLIDER_MOVE_RELEASE"]
 
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
+
     def GetFeatureValues(self) -> List[Any]:
         if len(self._levels_encountered) > 0:
             return [self._slider_count / len(self._levels_encountered)]
@@ -23,6 +27,9 @@ class AverageSliderMoves(SessionFeature):
     def _extractFromEvent(self, event:Event) -> None:
         self._levels_encountered.add(event.event_data['level']) # set-add level to list, at end we will have set of all levels seen.
         self._slider_count += 1
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None

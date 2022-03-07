@@ -1,6 +1,7 @@
 from schemas import Event
 from typing import Any, List, Union
 # local imports
+from features.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
@@ -12,12 +13,18 @@ class PersistentSessionID(SessionFeature):
     def GetEventDependencies(self) -> List[str]:
         return ["BEGIN.0"]
 
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
+
     def GetFeatureValues(self) -> List[Any]:
         return [self._persistent_id]
 
     def _extractFromEvent(self, event:Event) -> None:
         if self._persistent_id is None:
             self._persistent_id = event.event_data['persistent_session_id']
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None

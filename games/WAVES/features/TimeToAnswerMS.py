@@ -2,6 +2,7 @@ from schemas import Event
 import typing
 from typing import Any, List, Union
 # local imports
+from features.FeatureData import FeatureData
 from features.Feature import Feature
 from schemas.Event import Event
 
@@ -17,6 +18,9 @@ class TimeToAnswerMS(Feature):
     def GetEventDependencies(self) -> List[str]:
         return ["CUSTOM.3", "COMPLETE.0"]
         # return ["QUESTION_ANSWER"]
+
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
 
     def GetFeatureValues(self) -> List[Any]:
         return ["Not Implemented"]
@@ -35,6 +39,9 @@ class TimeToAnswerMS(Feature):
                 self._latest_answer_Q2 = event.timestamp
             if self._count_index == q_num:
                 self._answer_time = self._calcAnswerTime(timestamp=event.timestamp)
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None

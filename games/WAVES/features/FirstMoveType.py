@@ -2,6 +2,7 @@ from schemas import Event
 from typing import Any, List, Union
 # local imports
 from features.Feature import Feature
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class FirstMoveType(Feature):
@@ -13,11 +14,17 @@ class FirstMoveType(Feature):
         return ["CUSTOM.1", "CUSTOM.2"]
         # "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
 
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
+
     def GetFeatureValues(self) -> List[Any]:
         return [self._first_move]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._first_move = event.event_data['slider'][0]
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None

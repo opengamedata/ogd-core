@@ -2,6 +2,7 @@ from schemas import Event
 from typing import Any, List, Union
 # local imports
 from features.Feature import Feature
+from features.FeatureData import FeatureData
 from features.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
@@ -15,6 +16,9 @@ class PercentAmplitudeMoves(PerLevelFeature):
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
+
     def GetFeatureValues(self) -> List[Any]:
         return [self._amplitude_count / self._count if self._count != 0 else None]
 
@@ -22,6 +26,9 @@ class PercentAmplitudeMoves(PerLevelFeature):
         self._count += 1
         if event.event_data['slider'].upper() == 'AMPLITUDE':
             self._amplitude_count += 1
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None

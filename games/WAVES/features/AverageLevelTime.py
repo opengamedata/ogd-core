@@ -5,6 +5,7 @@ from schemas import Event
 from typing import Any, Dict, List, Union
 # local imports
 import utils
+from features.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
@@ -17,6 +18,9 @@ class AverageLevelTime(SessionFeature):
 
     def GetEventDependencies(self) -> List[str]:
         return ["BEGIN.0", "COMPLETE.0"]
+
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
 
     def GetFeatureValues(self) -> List[Any]:
         if len(self._begin_times) < len(self._complete_times):
@@ -52,6 +56,9 @@ class AverageLevelTime(SessionFeature):
             self._complete_times[_level].append(event.timestamp)
         else:
             utils.Logger.Log(f"AverageLevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None

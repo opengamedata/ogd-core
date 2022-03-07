@@ -1,6 +1,7 @@
 from schemas import Event
 from typing import Any, List, Union
 # local imports
+from features.FeatureData import FeatureData
 from features.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
@@ -13,11 +14,17 @@ class BeginCount(PerLevelFeature):
         return ["BEGIN.0"]
         # return ["BEGIN"]
 
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
+
     def GetFeatureValues(self) -> List[Any]:
         return [self._num_begins]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._num_begins += 1
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None

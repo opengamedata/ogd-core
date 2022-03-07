@@ -2,6 +2,7 @@ from os import truncate
 from schemas import Event
 from typing import Any, List, Union
 # local imports
+from features.FeatureData import FeatureData
 from features.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
@@ -13,6 +14,9 @@ class Completed(PerLevelFeature):
     def GetEventDependencies(self) -> List[str]:
         return ["COMPLETE.0"]
 
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
+
     def Subfeatures(self) -> List[str]:
         return ["Count"]
 
@@ -21,6 +25,9 @@ class Completed(PerLevelFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         self._num_completes += 1
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None

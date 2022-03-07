@@ -2,6 +2,7 @@ from schemas import Event
 import typing
 from typing import Any, List, Union
 # local imports
+from features.FeatureData import FeatureData
 from features.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
@@ -18,10 +19,16 @@ class TotalMoveTypeChanges(PerLevelFeature):
     def GetFeatureValues(self) -> List[Any]:
         return [self._change_count]
 
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
+
     def _extractFromEvent(self, event:Event) -> None:
         if self._last_move != event.event_name:
             self._change_count += 1
         self._last_move = event.event_name
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None

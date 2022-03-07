@@ -1,6 +1,7 @@
 from schemas import Event
 from typing import Any, List, Union
 # local imports
+from features.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
@@ -14,6 +15,9 @@ class OverallPercentAmplitudeMoves(SessionFeature):
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
+
     def GetFeatureValues(self) -> List[Any]:
         if self._move_count > 0:
             return [self._amplitude_count / self._move_count * 100]
@@ -24,6 +28,9 @@ class OverallPercentAmplitudeMoves(SessionFeature):
         self._move_count += 1
         if event.event_data["slider"].upper() == "AMPLITUDE":
             self._amplitude_count += 1
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None

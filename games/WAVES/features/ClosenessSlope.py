@@ -2,6 +2,7 @@ from schemas import Event
 from typing import Any, List, Union
 # local imports
 from features.Feature import Feature
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class ClosenessSlope(Feature):
@@ -11,10 +12,16 @@ class ClosenessSlope(Feature):
     def GetEventDependencies(self) -> List[str]:
         return []
 
-    def GetFeatureValues(self) -> List[Any]:
+    def GetFeatureDependencies(self) -> List[str]:
         return []
 
+    def GetFeatureValues(self) -> List[Any]:
+        return ["Not Implemented"]
+
     def _extractFromEvent(self, event:Event) -> None:
+        return
+
+    def _extractFromFeatureData(self, feature: FeatureData):
         return
 
     def MinVersion(self) -> Union[str,None]:

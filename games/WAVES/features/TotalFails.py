@@ -2,6 +2,7 @@ from schemas import Event
 import typing
 from typing import Any, List, Union
 # local imports
+from features.FeatureData import FeatureData
 from features.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
@@ -13,11 +14,17 @@ class TotalFails(PerLevelFeature):
     def GetEventDependencies(self) -> List[str]:
         return ["FAIL.0"]
 
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
+
     def GetFeatureValues(self) -> List[Any]:
         return [self._fail_count]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._fail_count += 1
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def MinVersion(self) -> Union[str,None]:
         return None
