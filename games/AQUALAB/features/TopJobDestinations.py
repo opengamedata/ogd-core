@@ -12,11 +12,7 @@ class TopJobDestinations(Feature):
         self._current_user_code = None
         self._last_completed_id = None
         self._job_pairs = defaultdict(list)
-        self._top_destinations = {}
-
-        # Populate dict with an empty list for each possible job id
-        for job_id in job_map.values():
-            self._top_destinations[str(job_id)] = []
+        self._top_destinations = defaultdict(list)
 
     def GetEventDependencies(self) -> List[str]:
         return ["accept_job", "complete_job"]
@@ -26,7 +22,7 @@ class TopJobDestinations(Feature):
         for key in self._job_pairs.keys():
             self._top_destinations[str(key)] = Counter(self._job_pairs[key]).most_common(5)
 
-        return [self._top_destinations]
+        return [dict(self._top_destinations)]
 
     def MinVersion(self) -> Union[str,None]:
         return "2"

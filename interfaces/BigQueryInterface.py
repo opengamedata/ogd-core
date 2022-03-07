@@ -62,11 +62,13 @@ class BigQueryInterface(DataInterface):
                 # TODO: Temporary fix for 6.1 playtest
                 query = f"""
                     SELECT event_name, event_params, user_id, device, geo, platform,
-                        (SELECT value.int_value FROM UNNEST(event_params) WHERE (key = "ga_session_id" AND value.int_value IN ({id_string}))) AS session_id,
+                    param_session.value.int_value as session_id,
                     concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
-                    FROM `{db_name}.{table_name}`,
-                    UNNEST(event_params) AS param
-                    WHERE (param.key = "page_location" AND param.value.string_value = "https://fielddaylab.wisc.edu/play/aqualab/ci/milestone6.1/")
+                    FROM `{db_name}.{table_name}`
+                    CROSS JOIN UNNEST(event_params) AS param_session
+                    CROSS JOIN UNNEST(event_params) AS param_url
+                    WHERE param_session.key = 'ga_session_id' and param_session.value.int_value IN ({id_string})
+                    AND   param_url.key     = 'page_location' AND param_url.value.string_value  = "https://fielddaylab.wisc.edu/play/aqualab/ci/milestone6.1/"
                     ORDER BY `session_id`, `timestamp` ASC
                 """
             else:
@@ -74,9 +76,8 @@ class BigQueryInterface(DataInterface):
                     SELECT event_name, event_params, user_id, device, geo, platform, param.value.int_value AS session_id,
                     concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
                     FROM `{db_name}.{table_name}`,
-                    UNNEST(event_params) AS param
-                    WHERE param.key = "ga_session_id"
-                    AND param.value.int_value IN ({id_string})
+                    CROSS JOIN UNNEST(event_params) AS param_session
+                    WHERE param_session.key = 'ga_session_id' AND param.value.int_value IN ({id_string})
                     ORDER BY `session_id`, `timestamp` ASC
                 """
             data = self._client.query(query)
@@ -185,7 +186,7 @@ class BigQueryInterface(DataInterface):
             else:
                 db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
                 table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-            id_string = ','.join([f"'{x}'" for x in id_list])
+            id_string = ','.join([f"{x}" for x in id_list])
             query = f"""
                 WITH datetable AS
                 (
