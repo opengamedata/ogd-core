@@ -9,6 +9,7 @@ from extractors.FeatureLoader import FeatureLoader
 from extractors.FeatureLoader import FeatureLoader
 from extractors.FeatureRegistry import FeatureRegistry
 from extractors.SessionExtractor import SessionExtractor
+from features.FeatureData import FeatureData
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from managers.Request import ExporterTypes
 from schemas.Event import Event
@@ -65,6 +66,12 @@ class PlayerExtractor(Extractor):
 
         self._session_extractors[event.session_id].ProcessEvent(event=event)
 
+    def ProcessFeatureData(self, feature: FeatureData):
+        self._registry.ExtractFromFeatureData(feature=feature)
+        # Down-propogate values to player (and, by extension, session) features:
+        for session in self._session_extractors.values():
+            session.ProcessFeatureData(feature=feature)
+
     def SessionCount(self):
         return len(self._session_extractors.keys()) - 1 # don't count null player
 
@@ -89,6 +96,15 @@ class PlayerExtractor(Extractor):
             for session in _results:
                 ret_val["sessions"].append(session["session"])
             # finally, what we return is a dict with a "sessions" element, containing list of lists.
+        return ret_val
+
+    def GetFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
+        ret_val : Dict[str, List[FeatureData]] = {}
+        ret_val["player"] = self._registry.GetFeatureData(order=order)
+        _result = [session_extractor.GetFeatureData(order=order) for session_extractor in self._session_extractors.values()]
+        ret_val["sessions"] = []
+        for session in _result:
+            ret_val["sessions"] += session['session']
         return ret_val
 
     ##  Function to empty the list of lines stored by the PlayerProcessor.

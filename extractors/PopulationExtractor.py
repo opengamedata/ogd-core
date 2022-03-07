@@ -8,6 +8,7 @@ from extractors.Extractor import Extractor
 from extractors.FeatureLoader import FeatureLoader
 from extractors.FeatureRegistry import FeatureRegistry
 from extractors.PlayerExtractor import PlayerExtractor
+from features.FeatureData import FeatureData
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from managers.Request import ExporterTypes
 from schemas.Event import Event
@@ -64,8 +65,16 @@ class PopulationExtractor(Extractor):
                                                                          player_id=event.user_id, feature_overrides=self._overrides)
             self._player_extractors[event.user_id].ProcessEvent(event=event)
 
+    def ProcessFeatureData(self, feature: FeatureData):
+        self._registry.ExtractFromFeatureData(feature=feature)
+        # Down-propogate values to player (and, by extension, session) features:
+        for player in self._player_extractors.values():
+            player.ProcessFeatureData(feature=feature)
+
     def PlayerCount(self):
         return len(self._player_extractors.keys()) - 1 # don't count null player
+    def SessionCount(self):
+        sum([player.SessionCount() for player in self._player_extractors.values()])
 
     def GetFeatureNames(self) -> List[str]:
         return self._registry.GetFeatureNames() + ["PlayerCount", "SessionCount"]
@@ -78,13 +87,25 @@ class PopulationExtractor(Extractor):
 
     def GetFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[Any]]:
         ret_val = {}
+        # 1a) First, we get Population's first-order feature data:
+        _player_ct = self.PlayerCount()
+        _sess_ct = self.SessionCount()
+        _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
+        # 1b) Then we can side-propogate the values to second-order features, and down-propogate to other extractors:
+        for feature in _first_order_data['population']:
+            self.ProcessFeatureData(feature=feature)
+        # 2) Second, we side-propogate feature data from players/sessions.
+        for feature in _first_order_data['players']:
+            self.ProcessFeatureData(feature=feature)
+        for feature in _first_order_data['sessions']:
+            self.ProcessFeatureData(feature=feature)
+        # 3) Now, Population features have all been exposed to all first-order feature values, so we can collect all values desired for export.
         if export_types.population:
-            _player_ct = self.PlayerCount()
-            _sess_ct = sum([self._player_extractors[player_id].SessionCount() for player_id in self._player_extractors.keys()])
             if as_str:
                 ret_val["population"] = self._registry.GetFeatureStringValues() + [str(_player_ct), str(_sess_ct)]
             else:
                 ret_val["population"] = self._registry.GetFeatureValues() + [_player_ct, _sess_ct]
+        # 4) Finally, all Player/Session features have been exposed to all first-order feature values, so we can collect all values desired for export.
         if export_types.players or export_types.sessions:
             # first, get list of results
             _results = [player_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for player_extractor in self._player_extractors.values()]
@@ -97,6 +118,17 @@ class PopulationExtractor(Extractor):
                 ret_val["sessions"] = []
                 for player in _results:
                     ret_val["sessions"] += player["sessions"] # here, sessions should already be list of lists, so use +=
+        return ret_val
+
+    def GetFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
+        ret_val : Dict[str, List[FeatureData]] = {}
+        ret_val["population"] = self._registry.GetFeatureData(order=order)
+        _result = [player_extractor.GetFeatureData(order=order) for player_extractor in self._player_extractors.values()]
+        ret_val["players"] = []
+        ret_val["sessions"] = []
+        for player in _result:
+            ret_val["players"] += player['player']
+            ret_val["sessions"] += player['sessions']
         return ret_val
 
     ##  Function to empty the list of lines stored by the PopulationProcessor.

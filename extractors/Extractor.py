@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Type, Union
 # Local imports
 from extractors.FeatureLoader import FeatureLoader
 from extractors.FeatureRegistry import FeatureRegistry
+from features.FeatureData import FeatureData
 from managers.Request import ExporterTypes
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
@@ -23,9 +24,17 @@ class Extractor(abc.ABC):
     def GetFeatureValues(self, export_types:ExporterTypes) -> Dict[str,List[Any]]:
         pass
 
+    @abc.abstractmethod
+    def GetFeatureData(self, order:int) -> Dict[str,List[FeatureData]]:
+        pass
+
     ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
     @abc.abstractmethod
-    def ProcessEvent(self, event: Event):
+    def ProcessEvent(self, event:Event):
+        pass
+
+    @abc.abstractmethod
+    def ProcessFeatureData(self, feature:FeatureData):
         pass
 
     @abc.abstractmethod

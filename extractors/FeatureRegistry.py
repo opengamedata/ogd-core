@@ -5,6 +5,7 @@ import logging
 from collections import OrderedDict
 from datetime import datetime
 from typing import Any, Dict, List, Union
+from features.FeatureData import FeatureData
 ## import local files
 import utils
 from features.Feature import Feature
@@ -36,19 +37,24 @@ class FeatureRegistry:
         def __repr__(self) -> str:
             return str(self)
 
+    @enum.unique
+    class FeatureOrders(enum.Enum):
+        FIRST_ORDER = 0
+        SECOND_ORDER = 1
 
     # *** BUILT-INS ***
 
     # Base constructor for Registry.
-    def __init__(self):
+    def __init__(self, order:int=len(FeatureOrders)):
         """Base constructor for Registry
 
         Just sets up mostly-empty dictionaries for use by the registry.
         """
-        self._features : Dict[str, OrderedDict[str, Feature]] = {
-            "first_order" : OrderedDict(),
-            "second_order" : OrderedDict()
-        }
+        self._features : List[OrderedDict[str, Feature]] = [OrderedDict() for i in range(order)]
+        # self._features : Dict[str, OrderedDict[str, Feature]] = {
+        #     "first_order" : OrderedDict(),
+        #     "second_order" : OrderedDict()
+        # }
         self._event_registry : Dict[str,List[FeatureRegistry.Listener]] = {"all_events":[]}
         self._feature_registry: Dict[str,List[FeatureRegistry.Listener]] = {}
 
@@ -61,7 +67,7 @@ class FeatureRegistry:
         :rtype: str
         """
         ret_val : List[str] = []
-        for order in self._features.values():
+        for order in self._features:
             ret_val += [str(feat) for feat in order.values()]
         return '\n'.join(ret_val)
 
@@ -78,7 +84,7 @@ class FeatureRegistry:
         :rtype: str
         """
         ret_val : List[str] = []
-        for order in self._features.values():
+        for order in self._features:
             ret_val += [str(feat) for feat in order.values()]
         if num_lines is None:
             return '\n'.join(ret_val)
@@ -88,6 +94,14 @@ class FeatureRegistry:
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
+    def OrderCount(self) -> int:
+        """Gets the number of "orders" of features stored in the FeatureRegistry.
+        For now, there's just two of them.
+
+        :return: _description_
+        :rtype: int
+        """
+        return len(self._features)
 
     def ExtractFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.
@@ -101,14 +115,30 @@ class FeatureRegistry:
         if event.event_name in self._event_registry.keys():
             # send event to every listener for the given event name.
             for listener in self._event_registry[event.event_name]:
-                for order_key in self._features.keys():
+                for order_key in range(len(self._features)):
                     if listener.name in self._features[order_key].keys():
                         self._features[order_key][listener.name].ExtractFromEvent(event)
         # don't forget to send to any features listening for "all" events
         for listener in self._event_registry["all_events"]:
-            for order_key in self._features.keys():
+            for order_key in range(len(self._features)):
                 if listener.name in self._features[order_key].keys():
                     self._features[order_key][listener.name].ExtractFromEvent(event)
+
+    def ExtractFromFeatureData(self, feature:FeatureData) -> None:
+        """Perform extraction of features from a row.
+
+        :param event: [description]
+        :type event: Event
+        :param table_schema: A data structure containing information on how the db
+                             table assiciated with this game is structured.
+        :type table_schema: TableSchema
+        """
+        if feature.Name() in self._feature_registry.keys():
+            # send event to every listener for the given feature name.
+            for listener in self._feature_registry[feature.Name()]:
+                for order_key in range(len(self._features)):
+                    if listener.name in self._features[order_key].keys():
+                        self._features[order_key][listener.name].ExtractFromFeatureData(feature)
 
     def GetFeatureNames(self) -> List[str]:
         """Function to generate a list names of all enabled features, given a GameSchema
@@ -123,16 +153,22 @@ class FeatureRegistry:
         :rtype: List[str]
         """
         ret_val : List[str] = []
-        for order in self._features.values():
+        for order in self._features:
             for feature in order.values():
                 ret_val += feature.GetFeatureNames()
         return ret_val
 
+    def GetFeatureData(self, order:int, player_id:Union[str, None]=None, sess_id:Union[str, None]=None) -> List[FeatureData]:
+        ret_val : List[FeatureData] = []
+        for feature in self._features[order].values():
+            ret_val.append(feature.ToFeatureData(player_id=player_id, sess_id=sess_id))
+        return ret_val
+
     def GetFeatureValues(self) -> List[Any]:
         ret_val : List[Any] = []
-        for order_key in self._features.keys():
-            for name in self._features[order_key].keys():
-                next_vals = self._features[order_key][name].GetFeatureNames()
+        for order in self._features:
+            for feature in order.values():
+                next_vals = feature.GetFeatureValues()
                 ret_val += next_vals if next_vals != [] else [None]
         return ret_val
 
@@ -161,9 +197,9 @@ class FeatureRegistry:
         _event_types   = feature.GetEventDependencies()
         # First, add feature to the _features dict.
         if len(_feature_types) > 0:
-            self._features['second_order'][feature.Name()] = feature
+            self._features[FeatureRegistry.FeatureOrders.SECOND_ORDER.value][feature.Name()] = feature
         else:
-            self._features['first_order'][feature.Name()] = feature
+            self._features[FeatureRegistry.FeatureOrders.FIRST_ORDER.value][feature.Name()] = feature
         # Register feature to listen for any requested first-order features.
         for _feature in _feature_types:
             if _feature not in self._feature_registry.keys():

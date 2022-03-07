@@ -7,6 +7,7 @@ import utils
 from extractors.Extractor import Extractor
 from extractors.FeatureLoader import FeatureLoader
 from extractors.FeatureRegistry import FeatureRegistry
+from features.FeatureData import FeatureData
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from managers.Request import ExporterTypes
 from schemas.Event import Event
@@ -52,10 +53,19 @@ class SessionExtractor(Extractor):
     def ProcessEvent(self, event: Event):
         self._registry.ExtractFromEvent(event)
 
+    def ProcessFeatureData(self, feature: FeatureData):
+        self._registry.ExtractFromFeatureData(feature=feature)
+
     def GetFeatureNames(self) -> List[str]:
         return self._registry.GetFeatureNames()
 
     def GetFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str,List[Any]]:
+        # 1) First, we get Session's first-order feature data:
+        _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
+        # 2) Then we can side-propogate the values to second-order features, and down-propogate to other extractors:
+        for feature in _first_order_data['session']:
+            self.ProcessFeatureData(feature=feature)
+        # 3) Finally, we assume higher-ups have already sent down their first-order features, so we are ready to return all feature values.
         if export_types.sessions:
             if as_str:
                 return {"session" : self._registry.GetFeatureStringValues()}
@@ -63,6 +73,11 @@ class SessionExtractor(Extractor):
                 return {"session" : self._registry.GetFeatureValues()}
         else:
             return {}
+
+    def GetFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
+        ret_val : Dict[str, List[FeatureData]] = {}
+        ret_val["session"] = self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)
+        return ret_val
 
     def ClearLines(self):
         utils.Logger.toStdOut(f"Clearing features from SessionExtractor.", logging.DEBUG)
