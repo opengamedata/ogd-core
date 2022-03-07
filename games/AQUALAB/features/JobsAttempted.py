@@ -5,6 +5,8 @@ from statistics import stdev
 # Local imports
 import utils
 from features.Feature import Feature
+
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class JobsAttempted(Feature):
@@ -30,6 +32,9 @@ class JobsAttempted(Feature):
 
     def GetEventDependencies(self) -> List[str]:
         return ["accept_job", "complete_job"]
+
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
 
     def Subfeatures(self) -> List[str]:
         return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-complete", "std-dev-complete"]
@@ -76,3 +81,6 @@ class JobsAttempted(Feature):
         else:
             utils.Logger.toStdOut(f"Got invalid job_id data in JobsAttempted", logging.WARNING)
         return ret_val
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return

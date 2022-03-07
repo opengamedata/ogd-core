@@ -4,6 +4,8 @@ from typing import Any, List, Union
 # Local imports
 import utils
 from features.Feature import Feature
+
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class JobGuideCount(Feature):
@@ -15,6 +17,9 @@ class JobGuideCount(Feature):
 
     def GetEventDependencies(self) -> List[str]:
         return ["guide_triggered"]
+
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
 
     def GetFeatureValues(self) -> List[Any]:
         return [self._count]
@@ -37,3 +42,6 @@ class JobGuideCount(Feature):
         else:
             utils.Logger.toStdOut(f"Got invalid job_id data in JobStartCount", logging.WARNING)
         return ret_val
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return

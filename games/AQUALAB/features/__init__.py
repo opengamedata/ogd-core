@@ -22,6 +22,7 @@ __all__ = [
     "SyncCompletionTime",
     "TopJobDestinations",
     "TotalArgumentationTime",
+    "TotalDiveAndArgTime",
     "TotalDiveTime",
     "TotalExperimentationTime"
 ]
@@ -49,5 +50,6 @@ from . import SwitchJobsCount
 from . import SyncCompletionTime
 from . import TopJobDestinations
 from . import TotalArgumentationTime
+from . import TotalDiveAndArgTime
 from . import TotalDiveTime
 from . import TotalExperimentationTime

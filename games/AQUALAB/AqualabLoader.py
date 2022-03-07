@@ -109,6 +109,8 @@ class AqualabLoader(FeatureLoader):
             ret_val = TotalDiveTime.TotalDiveTime(name=name, description=feature_args["description"])
         elif feature_type == "TotalExperimentationTime":
             ret_val = TotalExperimentationTime.TotalExperimentationTime(name=name, description=feature_args["description"])
+        elif feature_type == "TotalDiveAndArgTime":
+            ret_val = TotalDiveAndArgTime.TotalDiveAndArgTime(name=name, description=feature_args["description"])
         else:
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Aqualab.")
         return ret_val

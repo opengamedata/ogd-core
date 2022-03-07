@@ -5,6 +5,8 @@ from typing import Any, List, Union
 # Local imports
 import utils
 from features.Feature import Feature
+
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class JobExperimentationTime(Feature):
@@ -17,6 +19,9 @@ class JobExperimentationTime(Feature):
 
     def GetEventDependencies(self) -> List[str]:
         return ["begin_experiment", "room_changed"]
+
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
 
     def GetFeatureValues(self) -> List[Any]:
         return [self._time]
@@ -46,3 +51,6 @@ class JobExperimentationTime(Feature):
         else:
             utils.Logger.toStdOut(f"Got invalid job_id data in JobStartCount", logging.WARNING)
         return ret_val
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return

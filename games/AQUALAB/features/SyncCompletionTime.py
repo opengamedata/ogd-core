@@ -4,6 +4,7 @@ from typing import Any, List
 # Local imports
 import utils
 from features.Feature import Feature
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class SyncCompletionTime(Feature):
@@ -16,6 +17,9 @@ class SyncCompletionTime(Feature):
     def GetEventDependencies(self) -> List[str]:
         return ["begin_simulation, simulation_sync_achieved"]
 
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
+
     def GetFeatureValues(self) -> List[Any]:
         return [self._time]
 
@@ -27,3 +31,6 @@ class SyncCompletionTime(Feature):
                 self._time = event.timestamp - self._sim_start_time
             else:
                 utils.Logger.toStdOut("Simulation synced when we had no active start time!", logging.WARNING)
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return

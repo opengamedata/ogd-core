@@ -8,7 +8,7 @@ from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
 
-class TotalDiveTime(Feature):
+class TotalDiveAndArgTime(Feature):
     
     def __init__(self, name:str, description:str):
         super().__init__(name=name, description=description, count_index=0)

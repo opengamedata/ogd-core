@@ -5,6 +5,7 @@ from typing import Any, List
 # Local imports
 import utils
 from features.Feature import Feature
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class TotalDiveTime(Feature):
@@ -17,8 +18,8 @@ class TotalDiveTime(Feature):
     def GetEventDependencies(self) -> List[str]:
         return ["begin_dive", "scene_changed"]
 
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._time]
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_name == "begin_dive":
@@ -29,3 +30,9 @@ class TotalDiveTime(Feature):
                 self._dive_start_time = None
             else:
                 utils.Logger.toStdOut("Scene changed when we had no active start time!", logging.WARNING)
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
+
+    def GetFeatureValues(self) -> List[Any]:
+        return [self._time]

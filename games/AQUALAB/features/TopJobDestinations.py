@@ -3,6 +3,7 @@ from collections import Counter, defaultdict
 from typing import Any, List, Union
 # Local imports
 from features.Feature import Feature
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class TopJobDestinations(Feature):
@@ -16,6 +17,9 @@ class TopJobDestinations(Feature):
 
     def GetEventDependencies(self) -> List[str]:
         return ["accept_job", "complete_job"]
+
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
 
     def GetFeatureValues(self) -> List[Any]:
         # Count the top five accepted job ids for each completed job id
@@ -38,3 +42,6 @@ class TopJobDestinations(Feature):
             if self._last_completed_id and self._last_completed_id != -1:
                 self._job_pairs[self._last_completed_id].append(job_id)
                 self._last_completed_id = None
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return

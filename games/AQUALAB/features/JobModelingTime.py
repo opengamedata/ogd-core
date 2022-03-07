@@ -5,6 +5,8 @@ from typing import Any, List, Union
 # Local imports
 import utils
 from features.Feature import Feature
+
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class JobModelingTime(Feature):
@@ -15,6 +17,9 @@ class JobModelingTime(Feature):
         self._time = timedelta(0)
 
     def GetEventDependencies(self) -> List[str]:
+        return []
+
+    def GetFeatureDependencies(self) -> List[str]:
         return []
 
     def GetFeatureValues(self) -> List[Any]:
@@ -29,3 +34,6 @@ class JobModelingTime(Feature):
                 self._modeling_start_time = None
             else:
                 utils.Logger.toStdOut("Room changed when we had no active start time!", logging.WARNING)
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return

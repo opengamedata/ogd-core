@@ -4,6 +4,7 @@ from typing import Any, List
 # Local imports
 import utils
 from features.Feature import Feature
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class TotalExperimentationTime(Feature):
@@ -15,6 +16,9 @@ class TotalExperimentationTime(Feature):
 
     def GetEventDependencies(self) -> List[str]:
         return ["begin_experiment", "room_changed"]
+
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
 
     def GetFeatureValues(self) -> List[Any]:
         return [self._time]
@@ -28,3 +32,6 @@ class TotalExperimentationTime(Feature):
                 self._experiment_start_time = None
             else:
                 utils.Logger.toStdOut("Room changed when we had no active start time!", logging.WARNING)
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return

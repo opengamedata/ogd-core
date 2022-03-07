@@ -2,6 +2,7 @@ from datetime import timedelta
 from typing import Any, List
 
 from features.Feature import Feature
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class SessionDuration(Feature):
@@ -14,6 +15,9 @@ class SessionDuration(Feature):
     def GetEventDependencies(self) -> List[str]:
         return ["begin_dive"]
 
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
+
     def GetFeatureValues(self) -> List[Any]:
         return [self._session_duration]
 
@@ -22,3 +26,6 @@ class SessionDuration(Feature):
             self._client_start_time = event.timestamp
 
         self._session_duration = event.timestamp - self._client_start_time
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return

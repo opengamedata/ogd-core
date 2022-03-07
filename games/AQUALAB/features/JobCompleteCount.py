@@ -5,6 +5,7 @@ from typing import Any, List, Union
 # Local imports
 import utils
 from features.Feature import Feature
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 class JobCompleteCount(Feature):
@@ -16,6 +17,9 @@ class JobCompleteCount(Feature):
 
     def GetEventDependencies(self) -> List[str]:
         return ["complete_job"]
+
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
 
     def GetFeatureValues(self) -> List[Any]:
         return [self._completed]
@@ -41,3 +45,6 @@ class JobCompleteCount(Feature):
         else:
             utils.Logger.toStdOut(f"Got invalid job_id data in JobCompleteCount", logging.WARNING)
         return ret_val
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
