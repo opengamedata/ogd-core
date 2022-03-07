@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Tuple, Type, Union
 ## import local files
 import utils
 from features.Feature import Feature
+from features.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 
 ## @class LegacyFeature
@@ -84,6 +85,9 @@ class LegacyFeature(Feature):
     def GetEventDependencies(self) -> List[str]:
         return ["all_events"]
 
+    def GetFeatureDependencies(self) -> List[str]:
+        return []
+
     def GetFeatureNames(self, game_schema:GameSchema) -> List[str]:
         columns = []
         features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(game_schema)
@@ -94,6 +98,9 @@ class LegacyFeature(Feature):
             else:
                 columns.append(str(feature_name))
         return columns
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
 
     def GetFeatureValues(self) -> List[Any]:
         self._calculateAggregateFeatures()
