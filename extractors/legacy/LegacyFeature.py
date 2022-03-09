@@ -55,6 +55,7 @@ class LegacyFeature(Feature):
         """
         super().__init__(name=name, description=description, count_index=count_index)
         self._session_id  : str         = session_id
+        self._game_schema : GameSchema  = game_schema
         self._levels      : List[int]   = []
         self._sequences   : List        = []
         self._features    : LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=game_schema)
@@ -88,9 +89,9 @@ class LegacyFeature(Feature):
     def GetFeatureDependencies(self) -> List[str]:
         return []
 
-    def GetFeatureNames(self, game_schema:GameSchema) -> List[str]:
+    def GetFeatureNames(self) -> List[str]:
         columns = []
-        features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(game_schema)
+        features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(self._game_schema)
         for feature_name,feature_content in features.items():
             if type(feature_content) is dict:
                 # if it's a dictionary, expand.
@@ -138,21 +139,6 @@ class LegacyFeature(Feature):
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
-
-    # def _extractSequencesFromEvent(self, event:Event, table_schema:TableSchema) -> None:
-    #     for sequence in self._sequences:
-    #         event_data = self.extractCustomSequenceEventDataFromRow(event=event, table_schema=table_schema)
-    #         sequence.RegisterEvent(event.event_data, event_data=event_data)
-
-    ## Function to custom-extract event data for a sequence.
-    #  *** This function MUST BE OVERRIDDEN if you want sequence data other than the event types. ***
-    #  For now, it's assumed that all sequences an extractor might want to record have a common custom-data need.
-    #  At the very least, the extractor could take the union of all data its various sequences may need.
-    #  In general, however, if the extractor needs multiple kinds of sequences or sequence data,
-    #  it is probably better to do dedicated sequence analysis.
-    # def extractCustomSequenceEventDataFromRow(self, event:Event, table_schema:TableSchema):
-    #     return None
-
 
     ## @class LegacySessionFeatures
     #  Private LegacyFeature class to track feature data.
@@ -329,21 +315,3 @@ class LegacyFeature(Feature):
                 utils.Logger.Log(f'Feature {feature_name} does not exist.', logging.ERROR)
                 return False
             return True
-
-    ## Simple helper class to track a sequence of events, based on move types.
-    class Sequence:
-        def __init__(self, end_function: typing.Callable[[List[Tuple]], None], end_event_type, end_event_count:int=1):
-            self._fnEnd          = end_function
-            self._end_event_type  = end_event_type
-            self._end_event_count = 0               # current count of end events
-            self._end_at_count    = end_event_count # number of end events to count before ending the sequence.
-            self._events          = []
-
-        def RegisterEvent(self, event_type, event_data) -> None:
-            self._events.append((event_type, event_data))
-            if event_type == self._end_event_type:
-                self._end_event_count += 1
-            if self._end_event_count == self._end_at_count:
-                self._fnEnd(self._events)
-
-
