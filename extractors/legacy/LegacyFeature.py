@@ -302,11 +302,13 @@ class LegacyFeature(Feature):
         #  @param feature_name The name of the feature to increment
         #  @param increment    The size of the increment (default = 1)
         def incAggregateVal(self, feature_name: str, increment: Union[int, float] = 1) -> None:
-            _feat_type : Type[Union[int, float, Dict[str,Any]]] = type(self.features[feature_name])
-            if self._has_feature(feature_name) and (_feat_type == int or _feat_type == float):
-                self.features[feature_name] += increment
+            if self._has_feature(feature_name):
+                if (type(self.features[feature_name]) == int or type(self.features[feature_name]) == float):
+                    self.features[feature_name] += increment
+                else:
+                    utils.Logger.toStdOut("Attempted to increment a non-numeric value!", logging.WARN)
             else:
-                utils.Logger.toStdOut("Attempted to increment a non-numeric value!", logging.WARN)
+                utils.Logger.toStdOut("Attempted to increment a feature that doesn't exist!", logging.WARN)
 
         def _has_feature(self, feature_name) -> bool:
             try:
