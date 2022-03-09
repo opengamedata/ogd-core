@@ -275,55 +275,55 @@
     "features": {
         "per_count": {
             "JobArgumentationTime": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time spent in argumentation during a job"
             },
             "JobCompleteCount": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Indicator of whether a given job was ever completed"
             },
             "JobCompletionTime": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time taken to complete a given job"
             },
             "JobDiveSitesCount": {
-                "enabled": false,
+                "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Number of dive sites visited during a job"
             },
             "JobDiveTime": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time spent diving during a job"
             },
             "JobExperimentationTime": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time spent in experimentation during a job"
             },
             "JobModelingTime": {
-                "enabled": false,
+                "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Time spent in modeling during a job"
             },
             "JobGuideCount": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Number of times player talked with guide during a job"
             },
             "JobHelpCount": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Number of times player asked for help during a job"
@@ -335,19 +335,19 @@
                 "description": "The name of the Job with given index in the 'level_range'"
             },
             "JobStartCount": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Indicator of whether a given job was ever accepted"
             },
             "JobTasksCompleted": {
-                "enabled": false,
+                "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Number of tasks completed for a given job"
             },
             "JobsAttempted": {
-                "enabled": false,
+                "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Subfeatures for number of job starts and completes, percent complete, and avg/std time to complete",
@@ -361,7 +361,7 @@
                 }
             },
             "SyncCompletionTime": {
-                "enabled": false,
+                "enabled": true,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time taken to achieve 100% sync in a simulation"
@@ -404,16 +404,16 @@
                 "enabled": true,
                 "description":"Total time spent in argumentation"
             },
-            "TotalDiveAndArgTime": {
+            "EchoSessionID": {
                 "enabled": true,
-                "description":"Total time spent in dive sites"
+                "description":"Test of second-order features."
             },
             "TotalDiveTime": {
                 "enabled": true,
                 "description":"Total time spent in dive sites"
             },
             "TotalExperimentationTime": {
-                "enabled": false,
+                "enabled": true,
                 "description":"Total time spent in experimentation"
             }
         }
