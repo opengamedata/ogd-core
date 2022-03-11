@@ -35,17 +35,13 @@ class TopJobSwitchDestinations(Feature):
         user_code = event.event_data["user_code"]["string_value"]
         job_id = event.event_data["job_id"]["int_value"]
 
-        # first time we see an event, make it the current user.
-        if self._current_user_code is None:
-            self._current_user_code = user_code
-        # in either case, handle event.
-        if event.event_name == "accept_job" and user_code == self._current_user_code:
+        if event.event_name == "accept_job":
             self._last_started_id = job_id
-        elif event.event_name == "switch_job" and user_code == self._current_user_code:
-            if self._last_started_id is not None:
+        elif event.event_name == "switch_job":
+            if user_code == self._current_user_code and self._last_started_id is not None:
                 self._job_switch_pairs[job_id].append(self._last_started_id) # here, we take what we switched to, and append where we switched from
             self._last_started_id = job_id
-        # finally, once we process the event, we know we're looking at data for this event's user.
+        # once we process the event, we know we're looking at data for this event's user next time.
         self._current_user_code = user_code
 
     def _extractFromFeatureData(self, feature: FeatureData):

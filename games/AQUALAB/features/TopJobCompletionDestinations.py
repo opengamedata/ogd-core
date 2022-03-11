@@ -35,14 +35,11 @@ class TopJobCompletionDestinations(Feature):
         user_code = event.event_data["user_code"]["string_value"]
         job_id = event.event_data["job_id"]["int_value"]
 
-        # first time we see an event, make it the current user.
-        if self._current_user_code is None:
-            self._current_user_code = user_code
         # in either case, handle event.
-        if event.event_name == "complete_job" and user_code == self._current_user_code:
+        if event.event_name == "complete_job":
             self._last_completed_id = event.event_data["job_id"]["int_value"] # here, we take what we last completed, and append where we switched to.
-        elif event.event_name == "accept_job" and user_code == self._current_user_code:
-            if self._last_completed_id is not None:
+        elif event.event_name == "accept_job":
+            if user_code == self._current_user_code and self._last_completed_id is not None:
                 self._job_complete_pairs[self._last_completed_id].append(job_id)
                 self._last_completed_id = None
         # finally, once we process the event, we know we're looking at data for this event's user.
