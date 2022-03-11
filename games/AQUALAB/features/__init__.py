@@ -1,4 +1,5 @@
 __all__ = [
+    "ActiveJobs",
     "EchoSessionID",
     "JobArgumentationTime",
     "JobCompleteCount",
@@ -28,6 +29,7 @@ __all__ = [
     "TotalExperimentationTime"
 ]
 
+from . import ActiveJobs
 from . import EchoSessionID
 from . import JobArgumentationTime
 from . import JobCompleteCount

@@ -368,6 +368,10 @@
             }
         },
         "aggregate":{
+            "ActiveJobs": {
+                "enabled": true,
+                "description":"Count of players who left off on each job."
+            },
             "SessionDiveSitesCount": {
                 "enabled": true,
                 "description":"Time spent playing in a given session"

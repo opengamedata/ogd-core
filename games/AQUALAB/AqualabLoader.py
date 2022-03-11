@@ -1,5 +1,6 @@
 ## import standard libraries
 import logging
+from pydoc import describe
 import typing
 import traceback
 from datetime import datetime
@@ -31,7 +32,9 @@ class AqualabLoader(FeatureLoader):
 
     def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         ret_val : Feature
-        if feature_type == "EchoSessionID":
+        if feature_type == "ActiveJobs":
+            ret_val = ActiveJobs.ActiveJobs(name=name, description=feature_args["description"], job_map=self._game_schema["job_map"])
+        elif feature_type == "EchoSessionID":
             ret_val = EchoSessionID.EchoSessionID(name=name, description=feature_args["description"])
         elif feature_type == "JobArgumentationTime":
             if count_index is None:
