@@ -6,7 +6,7 @@ from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
 
-class TopJobDestinations(Feature):
+class TopJobCompletionDestinations(Feature):
 
     def __init__(self, name:str, description:str, job_map:dict):
         super().__init__(name=name, description=description, count_index=0)

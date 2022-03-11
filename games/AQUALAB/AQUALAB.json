@@ -396,9 +396,13 @@
                 "enabled": true,
                 "description":"Number of times player switched jobs before completion"
             },
-            "TopJobDestinations": {
+            "TopJobCompletionDestinations": {
                 "enabled": true,
                 "description": "Top five most accepted jobs after previously completing a given job"
+            },
+            "TopJobSwitchDestinations": {
+                "enabled": true,
+                "description": "Top five most accepted jobs after switching away from a given job"
             },
             "TotalArgumentationTime": {
                 "enabled": true,
