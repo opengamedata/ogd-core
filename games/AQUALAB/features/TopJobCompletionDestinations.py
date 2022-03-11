@@ -12,13 +12,11 @@ class TopJobDestinations(Feature):
         super().__init__(name=name, description=description, count_index=0)
         self._current_user_code = None
         self._last_completed_id = None
-        self._last_started_id = None
         self._job_complete_pairs = defaultdict(list)
-        self._job_switch_pairs = defaultdict(list)
         self._top_destinations = defaultdict(list)
 
     def GetEventDependencies(self) -> List[str]:
-        return ["accept_job", "switch_job", "complete_job"]
+        return ["accept_job", "complete_job"]
 
     def GetFeatureDependencies(self) -> List[str]:
         return []
@@ -37,17 +35,13 @@ class TopJobDestinations(Feature):
         user_code = event.event_data["user_code"]["string_value"]
         job_id = event.event_data["job_id"]["int_value"]
 
-        if event.event_name == "accept_job" and user_code == self._current_user_code:
+        if event.event_name == "complete_job":
+            self._current_user_code = user_code
+            self._last_completed_id = event.event_data["job_id"]["int_value"] # here, we take what we last completed, and append where we switched to.
+        elif event.event_name == "accept_job" and user_code == self._current_user_code:
             if self._last_completed_id is not None:
                 self._job_complete_pairs[self._last_completed_id].append(job_id)
                 self._last_completed_id = None
-            self._last_started_id = job_id
-        elif event.event_name == "switch_job":
-            if self._last_started_id is not None:
-                self._job_switch_pairs[job_id].append(self._last_started_id) # here, we take what we switched to, and append where we switched from
-        elif event.event_name == "complete_job":
-            self._current_user_code = user_code
-            self._last_completed_id = event.event_data["job_id"]["int_value"] # here, we take what we last completed, and append where we switched to.
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
