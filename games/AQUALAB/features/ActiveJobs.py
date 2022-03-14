@@ -23,7 +23,10 @@ class ActiveJobs(Feature):
     def GetFeatureValues(self) -> List[Any]:
         # Count the top five accepted job ids for each completed job id
         ret_val = dict(self._active_jobs)
-        ret_val[self._last_started_id] += 1 # whatever last event was, assume player left off there.
+        if self._last_started_id is not None:
+            if not self._last_started_id in ret_val:
+                ret_val[self._last_started_id] = 0
+            ret_val[self._last_started_id] += 1 # whatever last event was, assume player left off there.
         return [ret_val]
 
     def MinVersion(self) -> Union[str,None]:
