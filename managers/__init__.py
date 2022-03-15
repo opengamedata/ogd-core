@@ -7,8 +7,8 @@ __all__ = [
     "Request"
 ]
 
+from . import Request
+from . import FileManager
 from . import EventManager
 from . import ExportManager
 from . import ExtractorManager
-from . import FileManager
-from . import Request
