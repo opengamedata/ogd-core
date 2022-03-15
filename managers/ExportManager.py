@@ -17,9 +17,9 @@ import utils
 from config.config import settings as default_settings
 from managers.FileManager import FileManager
 from managers.EventManager import EventManager
-from managers.Request import Request
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
+from schemas.Request import Request
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.

@@ -5,9 +5,9 @@ from typing import Any, Dict, List, Type, Union
 from extractors.FeatureLoader import FeatureLoader
 from extractors.FeatureRegistry import FeatureRegistry
 from features.FeatureData import FeatureData
-from managers.Request import ExporterTypes
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
+from schemas.Request import ExporterTypes
 
 ## @class Extractor
 class Extractor(abc.ABC):

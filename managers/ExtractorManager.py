@@ -12,9 +12,9 @@ from games.LAKELAND.LakelandLoader import LakelandLoader
 from games.MAGNET.MagnetLoader import MagnetLoader
 from games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
 from games.WAVES.WaveLoader import WaveLoader
-from managers.Request import ExporterTypes
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
+from schemas.Request import ExporterTypes
 
 class ExtractorManager:
     def __init__(self, game_id:str, exp_types:ExporterTypes, game_schema:GameSchema, feature_overrides:Union[List[str],None]):

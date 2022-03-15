@@ -21,10 +21,10 @@ from interfaces.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface
 from interfaces.BigQueryInterface import BigQueryInterface
 from managers.ExportManager import ExportManager
-from managers.Request import Request, ExporterTypes, ExporterRange
 from managers.FileManager import FileManager
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
+from schemas.Request import Request, ExporterTypes, ExporterRange
 from utils import Logger
 
 ## Function to print a "help" listing for the export tool.

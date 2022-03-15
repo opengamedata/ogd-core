@@ -9,9 +9,9 @@ from extractors.FeatureLoader import FeatureLoader
 from extractors.FeatureRegistry import FeatureRegistry
 from features.FeatureData import FeatureData
 from games.LAKELAND.LakelandLoader import LakelandLoader
-from managers.Request import ExporterTypes
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
+from schemas.Request import ExporterTypes
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.

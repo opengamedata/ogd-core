@@ -16,9 +16,9 @@ from typing import Any, Dict, IO, Union
 
 ## local imports
 import utils
-from managers.Request import Request
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
+from schemas.Request import Request
 
 class FileManager(abc.ABC):
     @staticmethod
