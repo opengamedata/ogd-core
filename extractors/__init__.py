@@ -1,10 +1,10 @@
 __all__ = [
-    "Extractor",
-    "FeatureLoader",
     "FeatureRegistry",
+    "FeatureLoader",
+    "Extractor",
+    "SessionExtractor",
     "PlayerExtractor",
-    "PopulationExtractor",
-    "SessionExtractor"
+    "PopulationExtractor"
 ]
 
 from . import FeatureRegistry
