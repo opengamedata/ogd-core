@@ -41,7 +41,7 @@ class JobsAttempted(Feature):
 
     def GetFeatureValues(self) -> List[Any]:
         if self._num_starts > 0:
-            self._percent_complete = (self._num_completes / (self._num_completes + self._num_starts)) * 100
+            self._percent_complete = (self._num_completes / self._num_starts) * 100
         
         if len(self._times) > 0:
             self._avg_time_complete = sum(self._times) / len(self._times)
