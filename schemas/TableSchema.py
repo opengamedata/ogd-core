@@ -141,7 +141,7 @@ class TableSchema:
         # TODO: go bac to isostring function; need 0-padding on ms first, though
         time    = datetime.strptime(params['timestamp'], "%Y-%m-%dT%H:%M:%S.%f")
         ename   = params['event_name']
-        edata   = params['event_data']
+        edata   = dict(sorted(params['event_data'].items())) # Sort keys alphabetically
         app_ver = params['app_version']
         offset  = params['time_offset']
         uid     = params['user_id']

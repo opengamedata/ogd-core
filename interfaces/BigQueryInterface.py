@@ -9,6 +9,8 @@ from config.config import settings as default_settings
 from interfaces.DataInterface import DataInterface
 from utils import Logger
 
+AQUALAB_MIN_VERSION = 6.2
+
 class BigQueryInterface(DataInterface):
 
     def __init__(self, game_id: str, settings):
@@ -59,16 +61,15 @@ class BigQueryInterface(DataInterface):
                 table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
             id_string = ','.join([f"{x}" for x in id_list])
             if self._game_id == "AQUALAB":
-                # TODO: Temporary fix for 6.1 playtest
                 query = f"""
                     SELECT event_name, event_params, user_id, device, geo, platform,
                     param_session.value.int_value as session_id,
                     concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
                     FROM `{db_name}.{table_name}`
                     CROSS JOIN UNNEST(event_params) AS param_session
-                    CROSS JOIN UNNEST(event_params) AS param_url
+                    CROSS JOIN UNNEST(event_params) AS param_version
                     WHERE param_session.key = 'ga_session_id' and param_session.value.int_value IN ({id_string})
-                    AND   param_url.key     = 'page_location' AND param_url.value.string_value  = "https://fielddaylab.wisc.edu/play/aqualab/ci/milestone6.1/"
+                    AND   param_version.key = 'app_version' AND param_version.value.double_value >= {AQUALAB_MIN_VERSION}
                     ORDER BY `session_id`, `timestamp` ASC
                 """
             else:
