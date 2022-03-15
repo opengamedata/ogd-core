@@ -177,15 +177,18 @@ class Feature(abc.ABC):
         :return: True if the given version is valid for this feature, otherwise false.
         :rtype: bool
         """
-        min = self.MinVersion()
-        if min is not None:
-            if Event.CompareVersions(data_version, min) < 0:
-                return False # too old, not valid.
-        max = self.MaxVersion()
-        if max is not None:
-            if Event.CompareVersions(data_version, max) > 0:
-                return False # too new, not valid
-        return True # passed both cases, valid.
+        if data_version != 'None':
+            min = self.MinVersion()
+            if min is not None:
+                if Event.CompareVersions(data_version, min) < 0:
+                    return False # too old, not valid.
+            max = self.MaxVersion()
+            if max is not None:
+                if Event.CompareVersions(data_version, max) > 0:
+                    return False # too new, not valid
+            return True # passed both cases, valid.
+        else:
+            return False # data_version of None is invalid.
 
     def _validateEventType(self, event_type:str) -> bool:
         """Private function to check whether a given event type is accepted by this Feature.
