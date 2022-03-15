@@ -3,11 +3,9 @@ __all__ = [
     "EventManager",
     "ExportManager",
     "ExtractorManager",
-    "FileManager",
-    "Request"
+    "FileManager"
 ]
 
-from . import Request
 from . import FileManager
 from . import EventManager
 from . import ExportManager
