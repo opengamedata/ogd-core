@@ -16,13 +16,6 @@ settings = {
         "SSH_PW" : "WCER AD Password",
         "SSH_PORT" : 22
     },
-    "REALTIME_CONFIG":
-    {
-        "data_source": "DB",
-        "DB_HOST" : "rt_hostname",
-        "SSH_HOST": "rt_hostname",
-        "path": "path\\to\\events\\file.tsv"
-    },
     "BIGQUERY_CONFIG":
     {
         "AQUALAB": {
