@@ -12,7 +12,7 @@ class ActiveJobs(Feature):
         super().__init__(name=name, description=description, count_index=0)
         self._current_user_code = None
         self._last_started_id = None
-        self._active_jobs = { val : 0 for val in job_map.values() }
+        self._active_jobs = { val : [] for val in job_map.values() }
 
     def GetEventDependencies(self) -> List[str]:
         return ["accept_job", "switch_job"]
@@ -25,8 +25,8 @@ class ActiveJobs(Feature):
         ret_val = dict(self._active_jobs)
         if self._last_started_id is not None:
             if not self._last_started_id in ret_val:
-                ret_val[self._last_started_id] = 0
-            ret_val[self._last_started_id] += 1 # whatever last event was, assume player left off there.
+                ret_val[self._last_started_id] = []
+            ret_val[self._last_started_id].append(self._current_user_code) # whatever last event was, assume player left off there.
         return [ret_val]
 
     def MinVersion(self) -> Union[str,None]:
@@ -40,7 +40,7 @@ class ActiveJobs(Feature):
             self._current_user_code = user_code
         elif self._current_user_code != user_code:
             # if we found a new user, then previous user must have left off on whatever their active job id was.
-            self._active_jobs[job_id] += 1
+            self._active_jobs[job_id].append(self._current_user_code)
             # and don't forget to make new user active.
             self._current_user_code = user_code
         self._last_started_id = job_id # for either kind of event, that's the last job we started.
