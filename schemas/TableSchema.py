@@ -150,7 +150,10 @@ class TableSchema:
         index   = params['event_sequence_index']
 
         if self._columns[0]['name'] == "event_name" and app_ver is None:
-            if "app_version" in params['event_data']:
+            # Check log_version for Aqualab, app_version for other games
+            if "log_version" in params['event_data']:
+                app_ver = str(params['event_data']['log_version']['int_value'])
+            elif "app_version" in params['event_data'] and params['event_data']['app_version']['int_value'] is not None:
                 app_ver = str(params['event_data']['app_version']['int_value'])
             else:
                 app_ver = "0"
