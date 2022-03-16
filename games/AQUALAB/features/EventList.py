@@ -26,6 +26,8 @@ class EventList(Feature):
         return "2"
 
     def _extractFromEvent(self, event:Event) -> None:
+        if "user_id" not in event.event_data.keys():
+            return
         next_event = {
             "name":event.event_name,
             "user_id":event.event_data["user_code"]["string_value"],
