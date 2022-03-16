@@ -111,9 +111,9 @@ class PlayerExtractor(Extractor):
     #   This is helpful if we're processing a lot of data and want to avoid
     #   eating too much memory.
     def ClearLines(self):
-        utils.Logger.toStdOut(f"Clearing features from PlayerExtractor.", logging.DEBUG)
+        utils.Logger.Log(f"Clearing features from PlayerExtractor.", logging.DEBUG)
         self._registry = FeatureRegistry()
 
     def ClearSessionsLines(self):
-        utils.Logger.toStdOut(f"Clearing {len(self._session_extractors)} sessions from PlayerProcessor.", logging.DEBUG)
+        utils.Logger.Log(f"Clearing {len(self._session_extractors)} sessions from PlayerProcessor.", logging.DEBUG)
         self._session_extractors = {}

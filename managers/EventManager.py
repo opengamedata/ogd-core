@@ -51,7 +51,7 @@ class EventManager:
                 col_values[i] = json.dumps(col)
         # event.event_data = json.dumps(event.event_data)
         self._lines.append(separator.join([str(item) for item in col_values]) + "\n") # changed , to \t
-        # utils.Logger.toStdOut(f"Got event: {str(event)}")
+        # utils.Logger.Log(f"Got event: {str(event)}")
 
     def GetColumnNames(self) -> List[str]:
         return self._columns
@@ -63,5 +63,5 @@ class EventManager:
     #  This is helpful if we're processing a lot of data and want to avoid
     #  Eating too much memory.
     def ClearLines(self):
-        utils.Logger.toStdOut(f"Clearing {len(self._lines)} entries from EventProcessor.", logging.DEBUG)
+        utils.Logger.Log(f"Clearing {len(self._lines)} entries from EventProcessor.", logging.DEBUG)
         self._lines = []

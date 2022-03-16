@@ -151,10 +151,9 @@ class JowilderExtractor(LegacyFeature):
             self._extractFeaturesFromRow(event)
         except Exception:
             exc_type, exc_value, exc_traceback = sys.exc_info()
-            for place in [utils.Logger.toFile, utils.Logger.toStdOut]:
-                place('\n'.join(traceback.format_exception(exc_type, exc_value, exc_traceback)), logging.ERROR)
-                place('DEBUG STRINGS:', logging.DEBUG)
-                place(self.get_debug_string(version=event.app_version, num_lines=2), logging.DEBUG)
+            utils.Logger.Log('\n'.join(traceback.format_exception(exc_type, exc_value, exc_traceback)), logging.ERROR)
+            utils.Logger.Log('DEBUG STRINGS:', logging.DEBUG)
+            utils.Logger.Log(self.get_debug_string(version=event.app_version, num_lines=2), logging.DEBUG)
 
     def _extractFeaturesFromRow(self, event:Event):
         # put some data in local vars, for readability later.
@@ -170,7 +169,7 @@ class JowilderExtractor(LegacyFeature):
         event_type_str = JowilderExtractor._EVENT_CUSTOM_TO_STR[int(event.event_name.split('.')[-1])].lower()
         # Check for invalid row.
         if event.session_id != self._session_id:
-            utils.Logger.toFile(
+            utils.Logger.Log(
                 f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!",
                 logging.ERROR)
         # If row is valid, process it.
@@ -191,7 +190,7 @@ class JowilderExtractor(LegacyFeature):
                 self.setValByName("play_minute", self._CLIENT_START_TIME.minute)
                 self.setValByName("play_second", self._CLIENT_START_TIME.second)
                 if self.verbose:
-                    utils.Logger.toStdOut(f'{"*" * 10} {self._session_id} v{event.app_version} @ {self._CLIENT_START_TIME} {"*" * 10}')
+                    utils.Logger.Log(f'{"*" * 10} {self._session_id} v{event.app_version} @ {self._CLIENT_START_TIME} {"*" * 10}')
 
             if self.level is not None:
                 if self.level_start_timestamp.get(self.level) == None:
@@ -399,7 +398,7 @@ class JowilderExtractor(LegacyFeature):
         if self.last_display_time_text: # if the previous log had text
             last_time, last_text = self.last_display_time_text
             if _text == last_text:
-                utils.Logger.toFile(f"The player read {last_text} twice in a row!", logging.WARNING)
+                utils.Logger.Log(f"The player read {last_text} twice in a row!", logging.WARNING)
             else:
                 finish_text(last_time, last_text, last_interaction=self.cur_interaction)
 
@@ -966,7 +965,7 @@ class JowilderExtractor(LegacyFeature):
         _interacted_fqid = d.get("interacted_fqid")  # v6+ only
 
         if self.cur_question in [10,16] and self.chosen_answer and _interacted_fqid:
-            utils.Logger.toFile(f'During Jowilder Q{self.cur_question}, player chose {self.chosen_answer} '
+            utils.Logger.Log(f'During Jowilder Q{self.cur_question}, player chose {self.chosen_answer} '
                                 f'but accidentally hovered over {_interacted_fqid}, choosing that on accident.', logging.WARNING)
             self.chosen_answer = _interacted_fqid
 
@@ -1222,12 +1221,12 @@ class JowilderExtractor(LegacyFeature):
     def add_debug_str(self, s):
         self.debug_strs.append(s)
         if self.verbose:
-            utils.Logger.toStdOut(s)
+            utils.Logger.Log(s)
     
     def log_warning(self, message, version, num_lines=20):
         self.add_debug_str('WARNING: '+message)
         debug_str = '\n\n'+self.get_debug_string(version=version, num_lines=num_lines+1)
-        utils.Logger.toFile(debug_str, logging.WARNING)
+        utils.Logger.Log(debug_str, logging.WARNING)
         self.debug_strs = []
         
         

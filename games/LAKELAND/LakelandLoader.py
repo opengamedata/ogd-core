@@ -28,7 +28,7 @@ class LakelandLoader(FeatureLoader):
         if output_file is not None:
             self._out_file = output_file
         else:
-            utils.Logger.toStdOut(f"No output file given for Lakeland Extractor, defaulting to sys.stdout.", logging.WARN)
+            utils.Logger.Log(f"No output file given for Lakeland Extractor, defaulting to sys.stdout.", logging.WARN)
             self._out_file = sys.stdout
 
     def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:

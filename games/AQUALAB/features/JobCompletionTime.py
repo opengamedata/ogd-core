@@ -37,7 +37,7 @@ class JobCompletionTime(Feature):
                 if self._job_start_time is not None:
                     self._time = event.timestamp - self._job_start_time
                 else:
-                    utils.Logger.toStdOut("Completed job when we had no active start time!", logging.WARNING)
+                    utils.Logger.Log("Completed job when we had no active start time!", logging.WARNING)
 
     def _validate_job(self, job_data):
         ret_val : bool = False
@@ -48,7 +48,7 @@ class JobCompletionTime(Feature):
             if self._job_map[job_data['string_value']] == self._count_index:
                 ret_val = True
         else:
-            utils.Logger.toStdOut(f"Got invalid job_id data in JobCompletionTime", logging.WARNING)
+            utils.Logger.Log(f"Got invalid job_id data in JobCompletionTime", logging.WARNING)
         return ret_val
 
     def _extractFromFeatureData(self, feature: FeatureData):

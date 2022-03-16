@@ -29,7 +29,7 @@ class ExtractorManager:
             if exp_types.population:
                 self._pop_extractor = PopulationExtractor(LoaderClass=self._LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         else:
-            utils.Logger.toStdOut("Could not export population/session data, no game extractor given!", logging.WARN)
+            utils.Logger.Log("Could not export population/session data, no game extractor given!", logging.WARN)
 
     def ProcessEvent(self, event:Event) -> None:
         if self._pop_extractor is not None:

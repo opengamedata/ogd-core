@@ -83,9 +83,8 @@ def ShowGameInfo() -> bool:
         print(FileManager.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema))
     except Exception as err:
         msg = f"Could not print information for {args.game}: {type(err)} {str(err)}"
-        Logger.toStdOut(msg, logging.ERROR)
+        Logger.Log(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
-        Logger.toFile(msg, logging.ERROR)
         return False
     else:
         return True
@@ -102,12 +101,11 @@ def WriteReadme() -> bool:
         FileManager.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=path)
     except Exception as err:
         msg = f"Could not create a readme for {args.game}: {type(err)} {str(err)}"
-        Logger.toStdOut(msg, logging.ERROR)
+        Logger.Log(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
-        Logger.toFile(msg, logging.ERROR)
         return False
     else:
-        Logger.toStdOut(f"Successfully generated a readme for {args.game}.", logging.INFO)
+        Logger.Log(f"Successfully generated a readme for {args.game}.", logging.INFO)
         return True
 
 ## Function to handle execution of export code. This is the main intended use of
@@ -171,7 +169,7 @@ def getDateRange() -> Tuple[datetime, datetime]:
         days_in_month = month_range[1]
         start_date = datetime(year=year, month=month, day=1, hour=0, minute=0, second=0)
         end_date   = datetime(year=year, month=month, day=days_in_month, hour=23, minute=59, second=59)
-        Logger.toStdOut(f"Exporting {month}/{year} data for {args.game}...", logging.DEBUG)
+        Logger.Log(f"Exporting {month}/{year} data for {args.game}...", logging.DEBUG)
     # Otherwise, create date range from given pair of dates.
     else:
         start_date = datetime.strptime(args.start_date, "%m/%d/%Y") if args.start_date is not None else today

@@ -174,7 +174,7 @@ class TableSchema:
                 try:
                     return json.loads(str(input))
                 except JSONDecodeError as err:
-                    utils.Logger.toStdOut(f"Could not parse input '{input}' of type {type(input)} from column {column_descriptor['name']}, got the following error:\n{str(err)}", logging.WARN)
+                    utils.Logger.Log(f"Could not parse input '{input}' of type {type(input)} from column {column_descriptor['name']}, got the following error:\n{str(err)}", logging.WARN)
                     return {}
             else:
                 return None
@@ -190,7 +190,7 @@ class TableSchema:
     #     complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":event[game_table.event_index]}
     # except Exception as err:
     #     msg = f"When trying to parse {col}, get error\n{type(err)} {str(err)}"
-    #     utils.Logger.toStdOut(msg, logging.ERROR)
+    #     utils.Logger.Log(msg, logging.ERROR)
     #     raise err
 
     # # make sure we get *something* in the event_custom name

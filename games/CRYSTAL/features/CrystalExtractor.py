@@ -55,7 +55,7 @@ class CrystalExtractor(LegacyFeature):
         event_client_time = event.timestamp
         # Check for invalid row.
         if event.session_id != self._session_id:
-            utils.Logger.toFile(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!", logging.ERROR)
+            utils.Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!", logging.ERROR)
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
@@ -141,7 +141,7 @@ class CrystalExtractor(LegacyFeature):
         self._features.incValByIndex(feature_name="completesCount", index=level, increment=1)
         if self._active_begin == None:
             sess_id = self._features.getValByName(feature_name="sessionID")
-            utils.Logger.toFile(f"Got a 'Complete' event when there was no active 'Begin' event! Level {level}, Sess ID: {sess_id}", logging.ERROR)
+            utils.Logger.Log(f"Got a 'Complete' event when there was no active 'Begin' event! Level {level}, Sess ID: {sess_id}", logging.ERROR)
         else:
             self._end_times[level] = event_client_time
             time_taken = self._calcLevelTime(level)
@@ -165,7 +165,7 @@ class CrystalExtractor(LegacyFeature):
         self._features.incValByIndex(feature_name="menuBtnCount", index=level)
         if self._active_begin == None:
             sess_id = self._features.getValByName(feature_name="sessionID")
-            utils.Logger.toFile(f"Got a 'Back to Menu' event when there was no active 'Begin' event! Sess ID: {sess_id}", logging.ERROR)
+            utils.Logger.Log(f"Got a 'Back to Menu' event when there was no active 'Begin' event! Sess ID: {sess_id}", logging.ERROR)
         else:
             self._end_times[level] = event_client_time
             time_taken = self._calcLevelTime(level)

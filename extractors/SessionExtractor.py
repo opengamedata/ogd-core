@@ -80,5 +80,5 @@ class SessionExtractor(Extractor):
         return ret_val
 
     def ClearLines(self):
-        utils.Logger.toStdOut(f"Clearing features from SessionExtractor.", logging.DEBUG)
+        utils.Logger.Log(f"Clearing features from SessionExtractor.", logging.DEBUG)
         self._registry = FeatureRegistry()

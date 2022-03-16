@@ -30,7 +30,7 @@ class SyncCompletionTime(Feature):
             if self._sim_start_time is not None:
                 self._time = event.timestamp - self._sim_start_time
             else:
-                utils.Logger.toStdOut("Simulation synced when we had no active start time!", logging.WARNING)
+                utils.Logger.Log("Simulation synced when we had no active start time!", logging.WARNING)
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

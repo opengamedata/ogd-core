@@ -306,9 +306,9 @@ class LegacyFeature(Feature):
                 if (type(self.features[feature_name]) == int or type(self.features[feature_name]) == float):
                     self.features[feature_name] += increment
                 else:
-                    utils.Logger.toStdOut("Attempted to increment a non-numeric value!", logging.WARN)
+                    utils.Logger.Log("Attempted to increment a non-numeric value!", logging.WARN)
             else:
-                utils.Logger.toStdOut("Attempted to increment a feature that doesn't exist!", logging.WARN)
+                utils.Logger.Log("Attempted to increment a feature that doesn't exist!", logging.WARN)
 
         def _has_feature(self, feature_name) -> bool:
             try:

@@ -38,7 +38,7 @@ class JobDiveTime(Feature):
                     self._time += event.timestamp - self._dive_start_time
                     self._dive_start_time = None
                 else:
-                    utils.Logger.toStdOut("Scene changed when we had no active start time!", logging.WARNING)
+                    utils.Logger.Log("Scene changed when we had no active start time!", logging.WARNING)
 
     def _validate_job(self, job_data):
         ret_val : bool = False
@@ -49,7 +49,7 @@ class JobDiveTime(Feature):
             if self._job_map[job_data['string_value']] == self._count_index:
                 ret_val = True
         else:
-            utils.Logger.toStdOut(f"Got invalid job_id data in JobStartCount", logging.WARNING)
+            utils.Logger.Log(f"Got invalid job_id data in JobStartCount", logging.WARNING)
         return ret_val
 
     def _extractFromFeatureData(self, feature: FeatureData):

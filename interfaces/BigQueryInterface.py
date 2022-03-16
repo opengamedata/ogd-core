@@ -46,7 +46,7 @@ class BigQueryInterface(DataInterface):
     def _close(self) -> bool:
         self._client.close()
         self._is_open = False
-        Logger.toStdOut("Closed connection to BigQuery.", logging.DEBUG)
+        Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
     def _rowsFromIDs(self, id_list:List[str], versions:Union[List[int],None] = None) -> List[Tuple]:

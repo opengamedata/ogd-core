@@ -18,7 +18,7 @@ from config.config import settings as settings
 #  @return          A python object parsed from the JSON.
 def loadJSONFile(filename:str, path:Path = Path("./")) -> Dict[Any, Any]:
     if not filename.lower().endswith(".json"):
-        Logger.toStdOut(f"Got a filename that didn't end with .json: {filename}, appending .json", logging.DEBUG)
+        Logger.Log(f"Got a filename that didn't end with .json: {filename}, appending .json", logging.DEBUG)
         filename = filename + ".json"
     # once we've validated inputs, try actual loading and reading.
     file_path = path / filename
@@ -26,11 +26,11 @@ def loadJSONFile(filename:str, path:Path = Path("./")) -> Dict[Any, Any]:
         with open(file_path, "r") as json_file:
             return json.loads(json_file.read())
     except FileNotFoundError as err:
-        Logger.toStdOut(f"File {file_path} does not exist.", logging.WARNING)
+        Logger.Log(f"File {file_path} does not exist.", logging.WARNING)
         print(f"File {file_path} does not exist.")
         raise err
     except Exception as err:
-        Logger.toStdOut(f"Could not read file at {file_path}\nFull error message: {type(err)} {str(err)}\nCurrent directory: {os.getcwd()}",
+        Logger.Log(f"Could not read file at {file_path}\nFull error message: {type(err)} {str(err)}\nCurrent directory: {os.getcwd()}",
                         logging.ERROR)
         raise err
 
@@ -57,7 +57,7 @@ class Logger:
         err_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
         debug_handler = logging.FileHandler("ExportDebugReport.log", encoding="utf-8")
     except PermissionError as err:
-        std_logger.exception(f"Failed permissions check for log files. No file logging on server.", stack_info=False)
+        std_logger.exception(f"Failed permissions check for log files. No file logging on server.")
     else:
         std_logger.info("Successfully set up logging files.")
         err_handler.setLevel(level=logging.WARNING)
@@ -66,9 +66,11 @@ class Logger:
         file_logger.addHandler(debug_handler)
     finally:
         file_logger.debug("Testing file logger")
-
+    
+    # Function to print a method to both the standard out and file logs.
+    # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
     @staticmethod
-    def toFile(message:str, level=logging.DEBUG) -> None:
+    def Log(message:str, level=logging.DEBUG) -> None:
         now = datetime.now().strftime("%y-%m-%d %H:%M:%S")
         if Logger.file_logger is not None:
             if level == logging.DEBUG:
@@ -79,9 +81,6 @@ class Logger:
                 Logger.file_logger.warn( f"WARNING: {now} {message}")
             elif level == logging.ERROR:
                 Logger.file_logger.error(f"ERROR:   {now} {message}")
-
-    @staticmethod
-    def toStdOut(message:str, level=logging.DEBUG) -> None:
         if Logger.std_logger is not None:
             if level == logging.DEBUG:
                 Logger.std_logger.debug(f"DEBUG:   {message}")
@@ -91,16 +90,9 @@ class Logger:
                 Logger.std_logger.warn( f"WARNING: {message}")
             elif level == logging.ERROR:
                 Logger.std_logger.error(f"ERROR:   {message}")
-    
-    # Function to print a method to both the standard out and file logs.
-    # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
-    @staticmethod
-    def Log(message:str, level=logging.DEBUG) -> None:
-        Logger.toFile(message, level)
-        Logger.toStdOut(message, level)
 
     @staticmethod
-    def toPrint(message:str, level=logging.DEBUG) -> None:
+    def Print(message:str, level=logging.DEBUG) -> None:
         if level == logging.DEBUG:
             print(f"debug:   {message}")
         elif level == logging.INFO:

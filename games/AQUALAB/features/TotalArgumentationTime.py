@@ -32,7 +32,7 @@ class TotalArgumentationTime(Feature):
                 self._time += event.timestamp - self._argue_start_time
                 self._argue_start_time = None
             else:
-                utils.Logger.toStdOut("Room changed when we had no active start time!", logging.WARNING)
+                utils.Logger.Log("Room changed when we had no active start time!", logging.WARNING)
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

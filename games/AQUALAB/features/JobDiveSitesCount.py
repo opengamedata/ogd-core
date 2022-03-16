@@ -40,7 +40,7 @@ class JobDiveSitesCount(Feature):
             if self._job_map[job_data['string_value']] == self._count_index:
                 ret_val = True
         else:
-            utils.Logger.toStdOut(f"Got invalid job_id data in JobDiveSitesCount", logging.WARNING)
+            utils.Logger.Log(f"Got invalid job_id data in JobDiveSitesCount", logging.WARNING)
         return ret_val
 
     def _extractFromFeatureData(self, feature: FeatureData):

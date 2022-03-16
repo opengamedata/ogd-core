@@ -98,7 +98,7 @@ class ExportManager:
             self._event_mgr = EventManager()
             # evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
         else:
-            utils.Logger.toStdOut("Event log not requested, skipping events file.", logging.INFO)
+            utils.Logger.Log("Event log not requested, skipping events file.", logging.INFO)
         # If game doesn't have an extractor, make sure we don't try to export it.
         if request.ExportSessions() or request.ExportPlayers() or request.ExportPopulation():
             self._extract_mgr = ExtractorManager(game_id=request.GetGameID(), exp_types=request._exports,
@@ -107,7 +107,7 @@ class ExportManager:
                 request._exports.sessions   = False
                 request._exports.players    = False
                 request._exports.population = False
-                utils.Logger.toStdOut("Could not extract feature data, no game extractor given!", logging.WARN)
+                utils.Logger.Log("Could not extract feature data, no game extractor given!", logging.WARN)
 
     def _executeDataRequest(self, request:Request, table_schema:TableSchema, file_manager:Union[FileManager, None]=None) -> Dict[str,Any]:
         ret_val       : Dict[str,Any]           = {"events":None, "sessions":None, "players":None, "population":None, "sessions_ct":0}
@@ -126,7 +126,7 @@ class ExportManager:
         # 4) Get the IDs of sessions to process
         sess_ids = request.RetrieveSessionIDs() or []
         ret_val["sessions_ct"] = len(sess_ids)
-        utils.Logger.toStdOut(f"Preparing to process {len(sess_ids)} sessions.", logging.INFO)
+        utils.Logger.Log(f"Preparing to process {len(sess_ids)} sessions.", logging.INFO)
         # 5) Loop over and process the sessions, slice-by-slice (where each slice is a list of sessions).
         _session_slices = self._prepareSlices(sess_ids=sess_ids)
         for i, next_slice in enumerate(_session_slices):
@@ -177,7 +177,7 @@ class ExportManager:
         _num_sess = len(sess_ids)
         #TODO: rewrite this to slice across players, instead of sessions.
         _slice_size = self._settings["BATCH_SIZE"] or default_settings["BATCH_SIZE"]
-        utils.Logger.toStdOut(f"Using slice size = {_slice_size}, should result in {math.ceil(_num_sess / _slice_size)} slices", logging.INFO)
+        utils.Logger.Log(f"Using slice size = {_slice_size}, should result in {math.ceil(_num_sess / _slice_size)} slices", logging.INFO)
         return [[sess_ids[i] for i in range( j*_slice_size, min((j+1)*_slice_size, _num_sess) )]
                                        for j in range( 0, math.ceil(_num_sess / _slice_size) )]
 
@@ -209,13 +209,13 @@ class ExportManager:
                         else:
                             utils.Logger.Log(f"Error while processing event {next_event}. This event will be skipped", logging.WARNING)
                 elif next_event.session_id is not None and next_event.session_id.upper() != "NONE":
-                    utils.Logger.toStdOut(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
+                    utils.Logger.Log(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
                 else:
                     _unsessioned_event_count += 1
                     if _unsessioned_event_count < 10:
-                        utils.Logger.toStdOut(f"Original data for an 'unsessioned' row: {row}", logging.WARNING)
+                        utils.Logger.Log(f"Original data for an 'unsessioned' row: {row}", logging.WARNING)
         if _unsessioned_event_count > 0:
-            utils.Logger.toStdOut(f"Found {_unsessioned_event_count} events with no session IDs.", logging.WARNING)
+            utils.Logger.Log(f"Found {_unsessioned_event_count} events with no session IDs.", logging.WARNING)
         time_delta = datetime.now() - start
         utils.Logger.Log(f"Processing time for slice [{slice_num}/{slice_count}]: {time_delta} to handle {num_events} events", logging.INFO)
 
@@ -228,17 +228,17 @@ class ExportManager:
                 cols = self._extract_mgr.GetPopulationFeatureNames()
                 file_manager.WritePopulationFile("\t".join(cols) + "\n")
             else:
-                utils.Logger.toStdOut("Population features not requested, skipping population_features file.", logging.INFO)
+                utils.Logger.Log("Population features not requested, skipping population_features file.", logging.INFO)
             if request.ExportPlayers():
                 cols = self._extract_mgr.GetPlayerFeatureNames()
                 file_manager.WritePlayersFile("\t".join(cols) + "\n")
             else:
-                utils.Logger.toStdOut("Player features not requested, skipping player_features file.", logging.INFO)
+                utils.Logger.Log("Player features not requested, skipping player_features file.", logging.INFO)
             if request.ExportSessions():
                 cols = self._extract_mgr.GetSessionFeatureNames()
                 file_manager.WriteSessionsFile("\t".join(cols) + "\n")
             else:
-                utils.Logger.toStdOut("Session features not requested, skipping session_features file.", logging.INFO)
+                utils.Logger.Log("Session features not requested, skipping session_features file.", logging.INFO)
 
     def _setupReadme(self, file_manager:FileManager, game_schema:GameSchema, table_schema:TableSchema):
         _game_id = game_schema._game_name
@@ -246,7 +246,7 @@ class ExportManager:
             # before we zip stuff up, let's ensure the readme is in place:
             readme = open(file_manager._readme_path, mode='r')
         except FileNotFoundError:
-            utils.Logger.toStdOut(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING)
+            utils.Logger.Log(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING)
             readme_path = Path("./data") / _game_id
             FileManager.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=readme_path)
         else:

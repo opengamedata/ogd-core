@@ -222,7 +222,7 @@ class WaveLoader(FeatureLoader):
     #                 val   = self.amp_move_counts[lvl] / total_moves if total_moves > 0 else total_moves
     #             except Exception as err:
     #                 val = None
-    #                 utils.Logger.toStdOut(f"Currently, total_moves = {total_moves}")
+    #                 utils.Logger.Log(f"Currently, total_moves = {total_moves}")
     #                 msg = f"{type(err)} {str(err)}"
     #                 utils.Logger.Log(msg, logging.ERROR)
     #                 traceback.print_tb(err.__traceback__)
@@ -332,10 +332,10 @@ class WaveLoader(FeatureLoader):
     #     # Handle tracking of level play times.
     #     if self.active_begin == None:
     #         sess_id = self._features.getValByName(feature_name="sessionID")
-    #         utils.Logger.toFile(f"Got a 'Complete' event when there was no active 'Begin' event! Sess ID: {sess_id}, level: {level}", logging.ERROR)
+    #         utils.Logger.Log(f"Got a 'Complete' event when there was no active 'Begin' event! Sess ID: {sess_id}, level: {level}", logging.ERROR)
     #     elif self.active_begin != level:
     #         sess_id = self._features.getValByName(feature_name="sessionID")
-    #         utils.Logger.toFile(f"Got a 'Complete' event when the active 'Begin' was for a different level ({self.active_begin})! Sess ID: {sess_id}, level: {level}", logging.ERROR)
+    #         utils.Logger.Log(f"Got a 'Complete' event when the active 'Begin' was for a different level ({self.active_begin})! Sess ID: {sess_id}, level: {level}", logging.ERROR)
     #     else:
     #         self.end_times[level] = event_client_time
     #         self._calc_level_end(level)
@@ -366,10 +366,10 @@ class WaveLoader(FeatureLoader):
     #     self._features.incValByIndex(feature_name="menuBtnCount", index=level)
     #     if self.active_begin == None:
     #         sess_id = self._features.getValByName(feature_name="sessionID")
-    #         utils.Logger.toFile(f"Got a 'Menu Button' event when there was no active 'Begin' event! Sess ID: {sess_id}, level: {level}", logging.ERROR)
+    #         utils.Logger.Log(f"Got a 'Menu Button' event when there was no active 'Begin' event! Sess ID: {sess_id}, level: {level}", logging.ERROR)
     #     elif self.active_begin != level:
     #         sess_id = self._features.getValByName(feature_name="sessionID")
-    #         utils.Logger.toFile(f"Got a 'Menu Button' event when the active 'Begin' was for a different level ({self.active_begin})! Sess ID: {sess_id}, level: {level}", logging.ERROR)
+    #         utils.Logger.Log(f"Got a 'Menu Button' event when the active 'Begin' was for a different level ({self.active_begin})! Sess ID: {sess_id}, level: {level}", logging.ERROR)
     #     else:
     #         self.end_times[level] = event_client_time
     #         self._calc_level_end(level)
@@ -555,7 +555,7 @@ class WaveLoader(FeatureLoader):
     #         try:
     #             X = [(times[i]-times[0]).seconds for i in range(len(times))]
     #         except Exception as err:
-    #             utils.Logger.toStdOut(times[0])
+    #             utils.Logger.Log(times[0])
     #             raise err
     #         y = closenesses
     #         if len(X) > 1:
