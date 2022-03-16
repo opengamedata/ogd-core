@@ -1,7 +1,6 @@
-# Global imports
 from collections import Counter, defaultdict
 from typing import Any, List, Union
-# Local imports
+
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -10,6 +9,7 @@ import utils
 class TopJobCompletionDestinations(Feature):
 
     def __init__(self, name:str, description:str, job_map:dict):
+        self._job_map = job_map
         super().__init__(name=name, description=description, count_index=0)
         self._current_user_code = None
         self._last_completed_id = None
@@ -36,15 +36,16 @@ class TopJobCompletionDestinations(Feature):
         return [ret_val]
 
     def MinVersion(self) -> Union[str,None]:
-        return "2"
+        return "1"
 
     def _extractFromEvent(self, event:Event) -> None:
-        user_code = event.event_data["user_code"]["string_value"]
-        job_id = event.event_data["job_id"]["int_value"]
+        user_code = event.user_id
+        job_name = event.event_data["job_name"]["string_value"]
+        job_id = self._job_map[job_name]
 
         # in either case, handle event.
         if event.event_name == "complete_job":
-            self._last_completed_id = event.event_data["job_id"]["int_value"] # here, we take what we last completed, and append where we switched to.
+            self._last_completed_id = job_id # here, we take what we last completed, and append where we switched to.
         elif event.event_name == "accept_job":
             if user_code == self._current_user_code and self._last_completed_id is not None:
                 if not job_id in self._job_complete_pairs[self._last_completed_id].keys():

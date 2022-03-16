@@ -1,11 +1,9 @@
-# Global imports
 import logging
 from datetime import timedelta
-from typing import Any, List, Union
-# Local imports
+from typing import Any, List
+
 import utils
 from features.Feature import Feature
-
 from features.FeatureData import FeatureData
 from schemas.Event import Event
 

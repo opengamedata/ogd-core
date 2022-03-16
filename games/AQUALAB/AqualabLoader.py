@@ -1,24 +1,17 @@
-## import standard libraries
 import json
-import logging
-from pydoc import describe
-import typing
-import traceback
-from datetime import datetime
 from typing import Any, Dict, List, Union
-## import local files
-from games.AQUALAB.features import *
-import utils
+
 from extractors.FeatureLoader import FeatureLoader
 from features.Feature import Feature
+from games.AQUALAB.features import *
 from schemas.GameSchema import GameSchema
 
 EXPORT_PATH = "games/AQUALAB/DBExport.json"
 
-## @class WaveExtractor
-#  Extractor subclass for extracting features from Waves game data.
+## @class AqualabLoader
+#  Extractor subclass for extracting features from Aqualab game data.
 class AqualabLoader(FeatureLoader):
-    ## Constructor for the WaveExtractor class.
+    ## Constructor for the AqualabLoader class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.
     #  Sets the sessionID feature.
@@ -32,13 +25,13 @@ class AqualabLoader(FeatureLoader):
     #                     structured.
     def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, feature_overrides:Union[List[str],None]):
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
-        self._job_map = {}
+        self._job_map = {"no-active-job": 0}
 
         # Load Aqualab jobs export and map job names to integer values
         with open(EXPORT_PATH) as file:
             export = json.load(file)
 
-            for i, job in enumerate(export["jobs"]):
+            for i, job in enumerate(export["jobs"], start=1):
                 self._job_map[job["id"]] = i
 
     def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:

@@ -1,5 +1,5 @@
 {
-    "level_range": { "min":0, "max":34 },
+    "level_range": { "min":0, "max":35 },
 
     "events": {
         "accept_job": {
@@ -571,19 +571,19 @@
             },
             "TotalArgumentationTime": {
                 "enabled": true,
-                "description":"Total time spent in argumentation"
+                "description": "Total time spent in argumentation"
             },
             "EchoSessionID": {
                 "enabled": true,
-                "description":"Test of second-order features."
+                "description": "Test of second-order features."
             },
             "TotalDiveTime": {
                 "enabled": true,
-                "description":"Total time spent in dive sites"
+                "description": "Total time spent in dive sites"
             },
             "TotalExperimentationTime": {
                 "enabled": true,
-                "description":"Total time spent in experimentation"
+                "description": "Total time spent in experimentation"
             }
         }
     },

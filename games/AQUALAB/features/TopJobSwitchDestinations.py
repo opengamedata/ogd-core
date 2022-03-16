@@ -1,7 +1,6 @@
-# Global imports
 from collections import Counter, defaultdict
 from typing import Any, List, Union
-# Local imports
+
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -9,6 +8,7 @@ from schemas.Event import Event
 class TopJobSwitchDestinations(Feature):
 
     def __init__(self, name:str, description:str, job_map:dict):
+        self._job_map = job_map
         super().__init__(name=name, description=description, count_index=0)
         self._current_user_code = None
         self._last_started_id = None
@@ -29,11 +29,12 @@ class TopJobSwitchDestinations(Feature):
         return [dict(self._top_destinations)]
 
     def MinVersion(self) -> Union[str,None]:
-        return "2"
+        return "1"
 
     def _extractFromEvent(self, event:Event) -> None:
-        user_code = event.event_data["user_code"]["string_value"]
-        job_id = event.event_data["job_id"]["int_value"]
+        user_code = event.user_id
+        job_name = event.event_data["job_name"]["string_value"]
+        job_id = self._job_map[job_name]
 
         if event.event_name == "accept_job":
             self._last_started_id = job_id

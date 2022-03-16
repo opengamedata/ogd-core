@@ -207,7 +207,7 @@ class ExportManager:
                             utils.Logger.Log(f"Error while processing event {next_event}.", logging.ERROR)
                             raise err
                         else:
-                            utils.Logger.Log(f"Error while processing event {next_event}. This event will be skipped", logging.WARNING)
+                            utils.Logger.Log(f"Error while processing event {next_event}. This event will be skipped. \nFull error: {err}", logging.WARNING)
                 elif next_event.session_id is not None and next_event.session_id.upper() != "NONE":
                     utils.Logger.Log(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
                 else:

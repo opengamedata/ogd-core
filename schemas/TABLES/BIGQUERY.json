@@ -7,7 +7,7 @@
         "event_data": "event_params",
         "app_version": null,
         "time_offset": null,
-        "user_id": "user_id",
+        "user_id": "fd_user_id",
         "user_data": null,
         "game_state": null,
         "event_sequence_index": null
@@ -26,12 +26,6 @@
             "desc": "A repeated record of the parameters associated with this event",
             "type": "json"
         },
-        {
-            "name": "user_id",
-            "readable": "User ID",
-            "desc": "The user ID set via the setUserId API",
-            "type": "str"
-        },        
         {
             "name": "device",
             "readable": "Device",
@@ -61,6 +55,12 @@
             "readable": "Timestamp",
             "desc": "Datetime when event was logged",
             "type": "datetime"
+        },
+        {
+            "name": "fd_user_id",
+            "readable": "Field Day User ID",
+            "desc": "The player's generated user code",
+            "type": "str"
         }
     ]
 }
