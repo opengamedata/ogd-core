@@ -37,8 +37,6 @@ class JobExperimentationTime(Feature):
                 if self._experiment_start_time is not None:
                     self._time += event.timestamp - self._experiment_start_time
                     self._experiment_start_time = None
-                else:
-                    utils.Logger.Log("Room changed when we had no active start time!", logging.WARNING)
 
     def _validate_job(self, job_data):
         ret_val : bool = False

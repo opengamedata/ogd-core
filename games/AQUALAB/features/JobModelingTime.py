@@ -32,8 +32,6 @@ class JobModelingTime(Feature):
             if self._modeling_start_time is not None:
                 self._time += event.timestamp - self._modeling_start_time
                 self._modeling_start_time = None
-            else:
-                utils.Logger.Log("Room changed when we had no active start time!", logging.WARNING)
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
