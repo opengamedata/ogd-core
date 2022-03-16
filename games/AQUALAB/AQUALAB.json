@@ -372,6 +372,10 @@
                 "enabled": true,
                 "description":"Count of players who left off on each job."
             },
+            "EventList":{
+                "enabled": true,
+                "description": "List of key events that happened in a player's session(s)"
+            },
             "SessionDiveSitesCount": {
                 "enabled": true,
                 "description":"Time spent playing in a given session"

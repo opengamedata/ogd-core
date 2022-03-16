@@ -39,6 +39,8 @@ class AqualabLoader(FeatureLoader):
             ret_val = ActiveJobs.ActiveJobs(name=name, description=feature_args["description"], job_map=self._game_schema["job_map"])
         elif feature_type == "EchoSessionID":
             ret_val = EchoSessionID.EchoSessionID(name=name, description=feature_args["description"])
+        elif feature_type == "EventList":
+            ret_val = EventList.EventList(name=name, description=feature_args["description"])
         elif feature_type == "JobArgumentationTime":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
