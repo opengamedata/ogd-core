@@ -53,19 +53,19 @@ class ExtractorManager:
         return self._pop_extractor.GetPopulationFeatureNames() if self._pop_extractor is not None else []
     def GetPopulationFeatures(self, as_str:bool = False) -> List[Any]:
         self._try_update(as_str=as_str)
-        return self._latest_results['population']
+        return self._latest_results.get('population', [])
 
     def GetPlayerFeatureNames(self) -> List[str]:
         return self._pop_extractor.GetPlayerFeatureNames() if self._pop_extractor is not None else []
     def GetPlayerFeatures(self, as_str:bool = False) -> List[List[Any]]:
         self._try_update(as_str=as_str)
-        return self._latest_results['players']
+        return self._latest_results.get('players', [])
 
     def GetSessionFeatureNames(self) -> List[str]:
         return self._pop_extractor.GetSessionFeatureNames() if self._pop_extractor is not None else []
     def GetSessionFeatures(self, as_str:bool = False) -> List[List[Any]]:
         self._try_update(as_str=as_str)
-        return self._latest_results['sessions']
+        return self._latest_results.get('sessions', [])
 
     def ClearPopulationLines(self) -> None:
         if self._pop_extractor is not None:
