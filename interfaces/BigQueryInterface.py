@@ -67,9 +67,9 @@ class BigQueryInterface(DataInterface):
                     concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
                     FROM `{db_name}.{table_name}`
                     CROSS JOIN UNNEST(event_params) AS param_session
-                    CROSS JOIN UNNEST(event_params) AS param_version
+                    CROSS JOIN UNNEST(event_params) AS param_url
                     WHERE param_session.key = 'ga_session_id' and param_session.value.int_value IN ({id_string})
-                    AND   param_version.key = 'app_version' AND param_version.value.double_value >= {AQUALAB_MIN_VERSION}
+                    AND   param_url.key     = 'page_location' AND param_url.value.string_value  = "https://fielddaylab.wisc.edu/play/aqualab/ci/milestone6.1/"
                     ORDER BY `session_id`, `timestamp` ASC
                 """
             else:
