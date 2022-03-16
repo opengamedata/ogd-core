@@ -37,8 +37,6 @@ class JobDiveTime(Feature):
                 if self._dive_start_time is not None:
                     self._time += event.timestamp - self._dive_start_time
                     self._dive_start_time = None
-                else:
-                    utils.Logger.Log("Scene changed when we had no active start time!", logging.WARNING)
 
     def _validate_job(self, job_data):
         ret_val : bool = False
