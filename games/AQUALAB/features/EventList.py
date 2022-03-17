@@ -1,3 +1,4 @@
+import json
 from typing import Any, List, Union
 
 from features.Feature import Feature
@@ -17,8 +18,7 @@ class EventList(Feature):
         return []
 
     def GetFeatureValues(self) -> List[Any]:
-        # Count the top five accepted job ids for each completed job id
-        return [self._event_list]
+        return [json.dumps(self._event_list)]
 
     def MinVersion(self) -> Union[str,None]:
         return "1"
@@ -29,7 +29,7 @@ class EventList(Feature):
                 "name":event.event_name,
                 "user_id":event.user_id,
                 "session_id":event.session_id,
-                "timestamp":event.timestamp,
+                "timestamp":event.timestamp.isoformat(),
                 "job_name":event.event_data["job_name"]["string_value"]
             }
             if event.event_name == "scene_changed":
