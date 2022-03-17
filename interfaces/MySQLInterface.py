@@ -159,14 +159,14 @@ class SQL:
     def disconnectMySQL(db:Union[connection.MySQLConnection,None], tunnel:Union[sshtunnel.SSHTunnelForwarder,None]=None) -> None:
         if db is not None:
             db.close()
-            Logger.Log("Closed database connection", logging.INFO)
+            Logger.Log("Closed MySQL database connection", logging.INFO)
         else:
-            Logger.Log("No db to close.", logging.DEBUG)
+            Logger.Log("No MySQL database to close.", logging.DEBUG)
         if tunnel is not None:
             tunnel.stop()
-            Logger.Log("Stopped tunnel connection", logging.INFO)
+            Logger.Log("Stopped MySQL tunnel connection", logging.INFO)
         else:
-            Logger.Log("No tunnel to stop", logging.DEBUG)
+            Logger.Log("No MySQL tunnel to stop", logging.DEBUG)
 
 
     # Function to build and execute SELECT statements on a database connection.
