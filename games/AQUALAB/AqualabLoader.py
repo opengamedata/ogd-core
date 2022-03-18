@@ -85,7 +85,7 @@ class AqualabLoader(FeatureLoader):
         elif feature_type == "SessionDiveSitesCount":
             ret_val = SessionDiveSitesCount.SessionDiveSitesCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionDuration":
-            ret_val = SessionDuration.SessionDuration(name=name, description=feature_args["description"])
+            ret_val = SessionDuration.SessionDuration(name=name, description=feature_args["description"], session_id=self._session_id)
         elif feature_type == "SessionGuideCount":
             ret_val = SessionGuideCount.SessionGuideCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionHelpCount":
