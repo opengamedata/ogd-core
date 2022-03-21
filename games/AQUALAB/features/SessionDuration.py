@@ -15,25 +15,19 @@ class SessionDuration(SessionFeature):
         self._session_duration = 0
 
     def GetEventDependencies(self) -> List[str]:
-        return []
+        return ["all_events"]
 
     def GetFeatureDependencies(self) -> List[str]:
-        return ["EventList"]
+        return []
 
     def GetFeatureValues(self) -> List[Any]:
         return [self._session_duration]
 
     def _extractFromEvent(self, event:Event) -> None:
-        return
+        if not self._client_start_time:
+            self._client_start_time = event.timestamp
+        else:
+            self._session_duration = (event.timestamp - self._client_start_time).total_seconds()
 
     def _extractFromFeatureData(self, feature: FeatureData):
-        events = json.loads(feature.FeatureValues()[0])
-
-        for event in events:
-            if event["session_id"] == self._session_id:
-                time = datetime.strptime(event["timestamp"], "%Y-%m-%dT%H:%M:%S")
-
-                if not self._client_start_time:
-                    self._client_start_time = time
-                else:
-                    self._session_duration = (time - self._client_start_time).total_seconds()
+        return
