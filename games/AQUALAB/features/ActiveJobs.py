@@ -36,15 +36,12 @@ class ActiveJobs(Feature):
         user_code = event.user_id
         job_name = event.event_data["job_name"]["string_value"]
 
-        if self._current_user_code is None:
-            self._current_user_code = user_code
-        elif self._current_user_code != user_code:
-            # if we found a new user, then previous user must have left off on whatever their active job id was.
-            self._active_jobs[job_name].append(self._current_user_code)
-            # and don't forget to make new user active.
-            self._current_user_code = user_code
-
-        self._last_started_id = job_name # for either kind of event, that's the last job we started.
+        if (self._current_user_code is not None) and (self._current_user_code != user_code):
+            # if we found a new user, then previous user must have left off on whatever their active job was.
+            # so, add the user to the list for that job
+            self._active_jobs[self._last_started_id].append(self._current_user_code)
+        self._current_user_code = user_code # in either case, set latest user as "current"
+        self._last_started_id = job_name # In either case, set latest job name as "current".
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
