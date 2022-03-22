@@ -566,6 +566,18 @@
             "TotalExperimentationTime": {
                 "enabled": true,
                 "description": "Total time spent in experimentation"
+            },
+            "UserAvgSessionDuration": {
+                "enabled": false,
+                "description": "Average session duration for a user."
+            },
+            "UserSessionCount": {
+                "enabled": false,
+                "description": "Count of sessions played for a user."
+            },
+            "UserTotalSessionDuration": {
+                "enabled": false,
+                "description": "Total duration of all sessions for a user."
             }
         }
     },

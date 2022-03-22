@@ -85,7 +85,7 @@ class AqualabLoader(FeatureLoader):
         elif feature_type == "SessionDiveSitesCount":
             ret_val = SessionDiveSitesCount.SessionDiveSitesCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionDuration":
-            ret_val = SessionDuration.SessionDuration(name=name, description=feature_args["description"])
+            ret_val = SessionDuration.SessionDuration(name=name, description=feature_args["description"], session_id=self._session_id)
         elif feature_type == "SessionGuideCount":
             ret_val = SessionGuideCount.SessionGuideCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionHelpCount":
@@ -110,6 +110,12 @@ class AqualabLoader(FeatureLoader):
             ret_val = TotalDiveTime.TotalDiveTime(name=name, description=feature_args["description"])
         elif feature_type == "TotalExperimentationTime":
             ret_val = TotalExperimentationTime.TotalExperimentationTime(name=name, description=feature_args["description"])
+        elif feature_type == "UserAvgSessionDuration":
+            ret_val = UserAvgSessionDuration.UserAvgSessionDuration(name=name, description=feature_args["description"], session_id=self._player_id)
+        elif feature_type == "UserSessionCount":
+            ret_val = UserSessionCount.UserSessionCount(name=name, description=feature_args["description"], session_id=self._player_id)
+        elif feature_type == "UserTotalSessionDuration":
+            ret_val = UserTotalSessionDuration.UserTotalSessionDuration(name=name, description=feature_args["description"], session_id=self._player_id)
         else:
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Aqualab.")
         return ret_val

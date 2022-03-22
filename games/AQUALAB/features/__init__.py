@@ -24,7 +24,10 @@ __all__ = [
     "TopJobSwitchDestinations",
     "TotalArgumentationTime",
     "TotalDiveTime",
-    "TotalExperimentationTime"
+    "TotalExperimentationTime",
+    "UserAvgSessionDuration",
+    "UserSessionCount",
+    "UserTotalSessionDuration"
 ]
 
 from . import ActiveJobs
@@ -53,3 +56,6 @@ from . import TopJobSwitchDestinations
 from . import TotalArgumentationTime
 from . import TotalDiveTime
 from . import TotalExperimentationTime
+from . import UserAvgSessionDuration
+from . import UserSessionCount
+from . import UserTotalSessionDuration
