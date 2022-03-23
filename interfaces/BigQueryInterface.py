@@ -79,9 +79,12 @@ class BigQueryInterface(DataInterface):
                 query = f"""
                     SELECT event_name, event_params, device, geo, platform, param_session.value.int_value AS session_id,
                     concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
+                    param_user.value.string_value as fd_user_id,
                     FROM `{db_name}.{table_name}`
                     CROSS JOIN UNNEST(event_params) AS param_session
+                    CROSS JOIN UNNEST(event_params) AS param_user
                     WHERE param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})
+                    AND   param_user.key = 'page_location'
                     ORDER BY `session_id`, `timestamp` ASC
                 """
             data = self._client.query(query)

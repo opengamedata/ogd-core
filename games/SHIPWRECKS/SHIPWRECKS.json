@@ -1,9 +1,13 @@
 {
-    "level_range": { "min":0, "max":0 },
+    "level_range": { "min":0, "max":3 },
 
     "events": {
         "start_mission": {
             "mission_id": "ID for the current mission"
+        },
+        "checkpoint": {
+            "mission_id": "ID for the current mission",
+            "status": "Checkpoint status"
         },
         "open_map": {
             "mission_id": "ID for the current mission"
@@ -49,18 +53,18 @@
         },
         "per_count": {
             "MissionDiveTime": {
-                "enabled": true,
+                "enabled": false,
                 "count": "level_range",
                 "prefix": "mission",
                 "description": "Time spent diving for a given mission"
             },
             "MissionSonarTimeToComplete": {
-                "enabled": true,
+                "enabled": false,
                 "count": "level_range",
                 "prefix": "mission",
                 "description": "Time taken to complete sonar scan for a given mission"
             },
-            "MissionsAttempted": {
+            "JobsAttempted": {
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "mission",
@@ -77,15 +81,19 @@
         },
         "aggregate":{
             "EvidenceBoardCompleteCount": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Evidence board completes in a session"
             },
             "SessionID": {
                 "enabled": true,
                 "description":"The player's session ID number for this play session"
             },
-            "TotalDiveTime": {
+            "TopJobCompletionDestinations": {
                 "enabled": true,
+                "description": "Top five most accepted jobs after previously completing a given job"
+            },
+            "TotalDiveTime": {
+                "enabled": false,
                 "description": "Total time spent diving in a session"
             }
         }
@@ -117,5 +125,11 @@
     },
     "config": {
     	"SUPPORTED_VERS": [1]
-	}
+	},
+    "mission_map": {
+        "Level1": 0,
+        "Level2": 1,
+        "Level3": 2,
+        "Level4": 3
+    }
 }

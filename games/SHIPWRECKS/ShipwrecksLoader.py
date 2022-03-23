@@ -29,6 +29,10 @@ class ShipwrecksLoader(FeatureLoader):
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
             ret_val = MissionDiveTime.MissionDiveTime(name=name, description=feature_args["description"], job_num=count_index)
+        if feature_type == "JobsAttempted":
+            if count_index is None:
+                raise TypeError("Got None for count_index, should have a value!")
+            ret_val = JobsAttempted.JobsAttempted(name=name, description=feature_args["description"], mission_num=count_index, mission_map=self._game_schema["mission_map"])
         elif feature_type == "MissionSonarTimeToComplete":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
@@ -37,6 +41,8 @@ class ShipwrecksLoader(FeatureLoader):
             ret_val = EvidenceBoardCompleteCount.EvidenceBoardCompleteCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionID":
             ret_val = SessionID.SessionID(name=name, description=feature_args["description"], session_id=self._session_id)
+        elif feature_type == "TopJobCompletionDestinations":
+            ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(name=name, description=feature_args["description"], mission_map=self._game_schema["mission_map"])
         elif feature_type == "TotalDiveTime":
             ret_val = TotalDiveTime.TotalDiveTime(name=name, description=feature_args["description"])
         else:

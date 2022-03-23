@@ -11,6 +11,7 @@ from games.JOWILDER.JowilderLoader import JowilderLoader
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from games.MAGNET.MagnetLoader import MagnetLoader
 from games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
+from games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
 from games.WAVES.WaveLoader import WaveLoader
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
@@ -93,9 +94,11 @@ class ExtractorManager:
             _loader_class = MagnetLoader
         elif game_id == "SHADOWSPECT":
             _loader_class = ShadowspectLoader
+        elif game_id == "SHIPWRECKS":
+            _loader_class = ShipwrecksLoader
         elif game_id == "WAVES":
             _loader_class = WaveLoader
-        elif game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "SHIPWRECKS", "STEMPORTS", "WIND"]:
+        elif game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "STEMPORTS", "WIND"]:
             # all games with data but no extractor.
             pass
         else:
