@@ -1,7 +1,8 @@
 # include libraries
 import abc
 from datetime import datetime
-from typing import Dict, List, Union
+from enum import Enum
+from typing import Any, Dict, List, Union
 # include local files
 from interfaces.DataInterface import DataInterface
 
@@ -45,6 +46,18 @@ class ExporterRange:
 
     def GetIDs(self) -> Union[List[str],None]:
         return self._ids
+
+class ResultStatus(Enum):
+    NONE = 1
+    SUCCESS = 2
+    FAILURE = 3
+
+class RequestResult:
+
+    def __init__(self, status:ResultStatus, msg:str,
+                 events:Union[List[Any], None] = None, sessions:Union[List[Any], None] = None,
+                 players:Union[List[Any], None] = None, population:Union[List[Any], None] = None,):
+                 self._status = status
 
 ## @class Request
 #  Dumb struct to hold data related to requests for data export.
