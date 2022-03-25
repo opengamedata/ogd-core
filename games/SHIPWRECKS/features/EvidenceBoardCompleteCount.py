@@ -19,9 +19,6 @@ class EvidenceBoardCompleteCount(Feature):
     def GetFeatureValues(self) -> List[Any]:
         return [self._count]
 
-    def MinVersion(self) -> Union[str,None]:
-        return "1"
-
     def _extractFromEvent(self, event:Event) -> None:
         self._count += 1
 

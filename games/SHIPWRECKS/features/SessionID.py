@@ -19,9 +19,6 @@ class SessionID(SessionFeature):
     def GetFeatureValues(self) -> List[Any]:
         return [self._session_id]
 
-    def MinVersion(self) -> Union[str,None]:
-        return "1"
-
     def _extractFromEvent(self, event:Event) -> None:
         return
 
