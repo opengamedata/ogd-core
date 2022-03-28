@@ -18,9 +18,6 @@ class TotalDiveTime(SessionFeature):
     def GetFeatureValues(self) -> List[Any]:
         return [self._time]
 
-    def MinVersion(self) -> Union[str,None]:
-        return "1"
-
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_name == "dive_start":
             self._dive_start_time = event.timestamp

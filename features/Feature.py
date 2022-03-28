@@ -41,7 +41,7 @@ class Feature(abc.ABC):
 
     ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
     @abc.abstractmethod
-    def GetFeatureValues(self) -> List[Any]:
+    def _getFeatureValues(self) -> List[Any]:
         """Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
 
         :return: Returns the values of all columns for the Feature, based on data the feature has seen so far.
@@ -107,6 +107,9 @@ class Feature(abc.ABC):
         :rtype: List[str]
         """
         return [self.Name()] + [f"{self.Name()}-{subfeature}" for subfeature in self.Subfeatures()]
+
+    def GetFeatureValues(self) -> List[Any]:
+        return self._getFeatureValues()
 
     def ExtractFromFeatureData(self, feature:FeatureData):
         self._extractFromFeatureData(feature=feature)

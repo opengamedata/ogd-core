@@ -21,9 +21,6 @@ class MissionSonarTimeToComplete(Feature):
     def GetFeatureValues(self) -> List[Any]:
         return [self._time]
 
-    def MinVersion(self) -> Union[str,None]:
-        return "1"
-
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_name == "sonar_start":
             self._sonar_start_time = event.timestamp

@@ -53,11 +53,33 @@ class ResultStatus(Enum):
     FAILURE = 3
 
 class RequestResult:
-
-    def __init__(self, status:ResultStatus, msg:str,
+    def __init__(self, msg:str, status:ResultStatus=ResultStatus.NONE,
                  events:Union[List[Any], None] = None, sessions:Union[List[Any], None] = None,
                  players:Union[List[Any], None] = None, population:Union[List[Any], None] = None,):
-                 self._status = status
+        self._message    = msg
+        self._status     = status
+        self._events     = events
+        self._sessions   = sessions
+        self._players    = players
+        self._population = population
+
+    def Status(self) -> ResultStatus:
+        return self._status
+
+    def Message(self) -> str:
+        return self._message
+    
+    def Events(self) -> Union[List[Any], None]:
+        return self._events
+    
+    def Sessions(self) -> Union[List[Any], None]:
+        return self._sessions
+    
+    def Players(self) -> Union[List[Any], None]:
+        return self._players
+    
+    def Population(self) -> Union[List[Any], None]:
+        return self._population
 
 ## @class Request
 #  Dumb struct to hold data related to requests for data export.

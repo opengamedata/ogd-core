@@ -80,6 +80,10 @@
             }
         },
         "aggregate":{
+            "ActiveJobs": {
+                "enabled": true,
+                "description":"Count of players who left off on each mission."
+            },
             "EvidenceBoardCompleteCount": {
                 "enabled": false,
                 "description": "Evidence board completes in a session"
@@ -90,7 +94,11 @@
             },
             "TopJobCompletionDestinations": {
                 "enabled": true,
-                "description": "Top five most accepted jobs after previously completing a given job"
+                "description": "Top accepted missions after previously completing a given mission"
+            },
+            "TopJobSwitchDestinations": {
+                "enabled": true,
+                "description": "Top accepted missions after leaving a given mission"
             },
             "TotalDiveTime": {
                 "enabled": false,

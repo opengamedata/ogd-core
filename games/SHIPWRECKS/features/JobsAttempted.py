@@ -1,5 +1,5 @@
 from statistics import stdev
-from typing import Any, List, Union
+from typing import Any, List
 
 from features.Feature import Feature
 from features.FeatureData import FeatureData
@@ -11,7 +11,7 @@ class JobsAttempted(Feature):
         self._mission_map = mission_map
         super().__init__(name=name, description=description, count_index=mission_num)
         self._session_id = None
-        print(":LKJWERGL:KEJRG:LKJERG")
+
         # Subfeatures
         self._mission_id = mission_num
         self._mission_name = list(mission_map.keys())[mission_num]
@@ -51,16 +51,13 @@ class JobsAttempted(Feature):
         checkpoint = event.event_data["status"]["string_value"]
         mission_name = event.event_data["mission_id"]["string_value"]
         mission_id = self._mission_map[mission_name]
-        print(f"start {checkpoint}")
 
         if checkpoint == "Begin Mission" and mission_id == self._mission_id:
-            print("begin")
             self._num_starts += 1
             self._session_id = session_id
             self._mission_start_time = event.timestamp
 
         elif checkpoint == "Case Closed" and mission_id == self._mission_id and session_id == self._session_id:
-            print("complete")
             self._num_completes += 1
 
             if self._mission_start_time:
