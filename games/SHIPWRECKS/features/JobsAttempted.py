@@ -1,6 +1,7 @@
+# global imports
 from statistics import stdev
 from typing import Any, List
-
+# local imports
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -25,26 +26,12 @@ class JobsAttempted(Feature):
         self._times = []
         self._mission_start_time = None
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["checkpoint"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def Subfeatures(self) -> List[str]:
-        return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-complete", "std-dev-complete"]
-
-    def GetFeatureValues(self) -> List[Any]:
-        if self._num_starts > 0:
-            self._percent_complete = (self._num_completes / self._num_starts) * 100
-        
-        if len(self._times) > 0:
-            self._avg_time_complete = sum(self._times) / len(self._times)
-
-        if len(self._times) > 1:
-            self._std_dev_complete = stdev(self._times)
-
-        return [self._mission_id, self._mission_name, self._num_starts, self._num_completes, self._percent_complete, self._avg_time_complete, self._std_dev_complete]
 
     def _extractFromEvent(self, event:Event) -> None:
         session_id = event.session_id
@@ -66,3 +53,19 @@ class JobsAttempted(Feature):
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
+
+    def _getFeatureValues(self) -> List[Any]:
+        if self._num_starts > 0:
+            self._percent_complete = (self._num_completes / self._num_starts) * 100
+        
+        if len(self._times) > 0:
+            self._avg_time_complete = sum(self._times) / len(self._times)
+
+        if len(self._times) > 1:
+            self._std_dev_complete = stdev(self._times)
+
+        return [self._mission_id, self._mission_name, self._num_starts, self._num_completes, self._percent_complete, self._avg_time_complete, self._std_dev_complete]
+
+    # *** Optionally override public functions. ***
+    def Subfeatures(self) -> List[str]:
+        return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-complete", "std-dev-complete"]

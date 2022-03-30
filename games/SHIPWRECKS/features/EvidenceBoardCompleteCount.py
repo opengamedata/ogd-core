@@ -1,5 +1,6 @@
+# global imports
 from typing import Any, List, Union
-
+# local imports
 from features.FeatureData import FeatureData
 from features.Feature import Feature
 from schemas.Event import Event
@@ -10,17 +11,20 @@ class EvidenceBoardCompleteCount(Feature):
         super().__init__(name=name, description=description)
         self._count = 0
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["evidence_board_complete"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._count]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._count += 1
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
+
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._count]
+
+    # *** Optionally override public functions. ***

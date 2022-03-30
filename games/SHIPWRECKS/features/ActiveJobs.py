@@ -1,7 +1,8 @@
+# global imports
 import json
 from collections import defaultdict
 from typing import Any, List, Union
-
+# local imports
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -14,19 +15,12 @@ class ActiveJobs(Feature):
         self._last_started_id = None
         self._active_jobs = defaultdict(list)
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["checkpoint"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        ret_val = self._active_jobs
-
-        if self._last_started_id is not None:
-            ret_val[self._last_started_id].append(self._current_session_id) # whatever last event was, assume player left off there.
-
-        return [json.dumps(ret_val)]
 
     def _extractFromEvent(self, event:Event) -> None:
         session_id = event.session_id
@@ -41,3 +35,13 @@ class ActiveJobs(Feature):
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
+
+    def _getFeatureValues(self) -> List[Any]:
+        ret_val = self._active_jobs
+
+        if self._last_started_id is not None:
+            ret_val[self._last_started_id].append(self._current_session_id) # whatever last event was, assume player left off there.
+
+        return [json.dumps(ret_val)]
+
+    # *** Optionally override public functions. ***
