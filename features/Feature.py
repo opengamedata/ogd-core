@@ -39,16 +39,6 @@ class Feature(abc.ABC):
         """
         return []
 
-    ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
-    @abc.abstractmethod
-    def _getFeatureValues(self) -> List[Any]:
-        """Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
-
-        :return: Returns the values of all columns for the Feature, based on data the feature has seen so far.
-        :rtype: typing.Tuple
-        """
-        pass
-
     ## Abstract declaration of a function to perform update of a feature from a row.
     @abc.abstractmethod
     def _extractFromEvent(self, event:Event):
@@ -66,6 +56,16 @@ class Feature(abc.ABC):
 
         :param event: An event, used to update the feature's data.
         :type event: Event
+        """
+        pass
+
+    ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
+    @abc.abstractmethod
+    def _getFeatureValues(self) -> List[Any]:
+        """Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
+
+        :return: Returns the values of all columns for the Feature, based on data the feature has seen so far.
+        :rtype: typing.Tuple
         """
         pass
 
@@ -124,9 +124,6 @@ class Feature(abc.ABC):
     def GetFeatureDependencies(self) -> List[str]:
         return self._getFeatureDependencies()
 
-    def GetFeatureValues(self) -> List[Any]:
-        return self._getFeatureValues()
-
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event=event):
             self._extractFromEvent(event=event)
@@ -134,6 +131,9 @@ class Feature(abc.ABC):
     def ExtractFromFeatureData(self, feature:FeatureData):
         # TODO: add validation for FeatureData, if applicable/possible.
         self._extractFromFeatureData(feature=feature)
+
+    def GetFeatureValues(self) -> List[Any]:
+        return self._getFeatureValues()
 
     ## Base function to get the minimum game data version the feature can handle.
     def MinVersion(self) -> Union[str,None]:

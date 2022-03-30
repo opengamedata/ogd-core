@@ -35,28 +35,6 @@ class CustomFeaature(Feature):
         """
         return [] # >>> fill in names of first-order features this Feature should use for extraction. <<<
 
-    def _getFeatureValues(self) -> List[Any]:
-        """_summary_
-
-        :return: _description_
-        :rtype: List[Any]
-        """
-        ret_val : List[Any] = ["template"]
-        # >>> use state variables to calculate the return value(s) of the base Feature and any Subfeatures. <<<
-        # >>> put the calculated value(s) into a list as the function return value. <<<
-        # >>> definitely don't return ["template"], unless you really find that useful... <<<
-        #
-        # e.g. use the self._found_click, which was created/initialized in __init__(...), and updated in _extractFromEvent(...):
-        # if self._found_click:
-        #     ret_val = [True]
-        # else:
-        #     ret_val = [False]
-        # return ret_val
-        #
-        # note the code above is redundant, we could just return [self._found_click] to get the same result;
-        # the more-verbose code is here for illustrative purposes.
-        return ret_val
-
     def _extractFromEvent(self, event:Event) -> None:
         """_summary_
 
@@ -81,6 +59,28 @@ class CustomFeaature(Feature):
         # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
         return
+
+    def _getFeatureValues(self) -> List[Any]:
+        """_summary_
+
+        :return: _description_
+        :rtype: List[Any]
+        """
+        ret_val : List[Any] = ["template"]
+        # >>> use state variables to calculate the return value(s) of the base Feature and any Subfeatures. <<<
+        # >>> put the calculated value(s) into a list as the function return value. <<<
+        # >>> definitely don't return ["template"], unless you really find that useful... <<<
+        #
+        # e.g. use the self._found_click, which was created/initialized in __init__(...), and updated in _extractFromEvent(...):
+        # if self._found_click:
+        #     ret_val = [True]
+        # else:
+        #     ret_val = [False]
+        # return ret_val
+        #
+        # note the code above is redundant, we could just return [self._found_click] to get the same result;
+        # the more-verbose code is here for illustrative purposes.
+        return ret_val
 
     # Optionally override public functions.
     def Subfeatures(self) -> List[str]:
