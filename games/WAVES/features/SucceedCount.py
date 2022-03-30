@@ -1,3 +1,4 @@
+# global imports
 import typing
 from typing import Any, List, Union
 # local imports
@@ -10,14 +11,12 @@ class SucceedCount(PerLevelFeature):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._succeed_count = 0
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["SUCCEED.0"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._succeed_count]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._succeed_count += 1
@@ -25,8 +24,7 @@ class SucceedCount(PerLevelFeature):
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
-    def MinVersion(self) -> Union[str,None]:
-        return None
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._succeed_count]
 
-    def MaxVersion(self) -> Union[str,None]:
-        return None
+    # *** Optionally override public functions. ***

@@ -15,18 +15,12 @@ class TotalLevelTime(PerLevelFeature):
         self._begin_times    : List[datetime] = []
         self._complete_times : List[datetime] = []
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["BEGIN.0", "COMPLETE.0"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        if len(self._begin_times) < len(self._complete_times):
-            utils.Logger.Log(f"Player began level {self._count_index} {len(self._begin_times)} times but completed it {len(self._complete_times)}.", logging.DEBUG)
-        _num_plays = min(len(self._begin_times), len(self._complete_times))
-        _diffs = [(self._complete_times[i] - self._begin_times[i]).total_seconds() for i in range(_num_plays)]
-        return [sum(_diffs)]
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_name == "BEGIN.0":
@@ -39,8 +33,11 @@ class TotalLevelTime(PerLevelFeature):
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
-    def MinVersion(self) -> Union[str,None]:
-        return None
+    def _getFeatureValues(self) -> List[Any]:
+        if len(self._begin_times) < len(self._complete_times):
+            utils.Logger.Log(f"Player began level {self._count_index} {len(self._begin_times)} times but completed it {len(self._complete_times)}.", logging.DEBUG)
+        _num_plays = min(len(self._begin_times), len(self._complete_times))
+        _diffs = [(self._complete_times[i] - self._begin_times[i]).total_seconds() for i in range(_num_plays)]
+        return [sum(_diffs)]
 
-    def MaxVersion(self) -> Union[str,None]:
-        return None
+    # *** Optionally override public functions. ***

@@ -1,3 +1,4 @@
+# global imports
 from schemas import Event
 import typing
 from typing import Any, List, Union
@@ -15,15 +16,12 @@ class TimeToAnswerMS(Feature):
         self._latest_answer_Q2 = None
         self._answer_time = None
 
-    def GetEventDependencies(self) -> List[str]:
+    def _getEventDependencies(self) -> List[str]:
         return ["CUSTOM.3", "COMPLETE.0"]
         # return ["QUESTION_ANSWER"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return ["Not Implemented"]
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_name == "COMPLETE.0":
@@ -43,12 +41,12 @@ class TimeToAnswerMS(Feature):
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
-    def MinVersion(self) -> Union[str,None]:
-        return None
+    def _getFeatureValues(self) -> List[Any]:
+        return ["Not Implemented"]
 
-    def MaxVersion(self) -> Union[str,None]:
-        return None
+    # *** Optionally override public functions. ***
 
+    # *** Other local functions
     def _calcAnswerTime(self, timestamp) -> Union[int,None]:
         millis: Union[float,None]
         if self._count_index == 0:

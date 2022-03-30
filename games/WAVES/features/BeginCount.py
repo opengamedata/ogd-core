@@ -1,3 +1,4 @@
+# global imports
 from schemas import Event
 from typing import Any, List, Union
 # local imports
@@ -10,15 +11,13 @@ class BeginCount(PerLevelFeature):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._num_begins = 0
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["BEGIN.0"]
         # return ["BEGIN"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._num_begins]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._num_begins += 1
@@ -26,8 +25,7 @@ class BeginCount(PerLevelFeature):
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
-    def MinVersion(self) -> Union[str,None]:
-        return None
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._num_begins]
 
-    def MaxVersion(self) -> Union[str,None]:
-        return None
+    # *** Optionally override public functions. ***

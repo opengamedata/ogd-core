@@ -1,3 +1,4 @@
+# global imports
 from schemas import Event
 import typing
 from typing import Any, List, Union
@@ -11,15 +12,13 @@ class TotalSkips(PerLevelFeature):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._skip_count = 0
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["CUSTOM.6"]
         # "events": ["SKIP_BUTTON"],
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._skip_count]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._skip_count += 1
@@ -27,8 +26,7 @@ class TotalSkips(PerLevelFeature):
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
-    def MinVersion(self) -> Union[str,None]:
-        return None
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._skip_count]
 
-    def MaxVersion(self) -> Union[str,None]:
-        return None
+    # *** Optionally override public functions. ***

@@ -1,3 +1,4 @@
+# global imports
 from schemas import Event
 from typing import Any, List, Union
 # local imports
@@ -11,15 +12,13 @@ class PercentWavelengthGoodMoves(Feature):
         self._wavelength_count = 0
         self._good_count = 0
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._good_count / self._wavelength_count if self._wavelength_count != 0 else None]
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_data['slider'].upper() == 'WAVELENGTH':
@@ -36,8 +35,7 @@ class PercentWavelengthGoodMoves(Feature):
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
-    def MinVersion(self) -> Union[str,None]:
-        return None
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._good_count / self._wavelength_count if self._wavelength_count != 0 else None]
 
-    def MaxVersion(self) -> Union[str,None]:
-        return None
+    # *** Optionally override public functions. ***

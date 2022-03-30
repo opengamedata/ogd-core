@@ -1,3 +1,4 @@
+# global imports
 from schemas import Event
 from typing import Any, List, Union
 # local imports
@@ -9,14 +10,12 @@ class ClosenessSlope(Feature):
     def __init__(self, name:str, description:str, count_index:int):
         Feature.__init__(self, name=name, description=description, count_index=count_index)
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return []
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return ["Not Implemented"]
 
     def _extractFromEvent(self, event:Event) -> None:
         return
@@ -24,8 +23,7 @@ class ClosenessSlope(Feature):
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
-    def MinVersion(self) -> Union[str,None]:
-        return None
+    def _getFeatureValues(self) -> List[Any]:
+        return ["Not Implemented"]
 
-    def MaxVersion(self) -> Union[str,None]:
-        return None
+    # *** Optionally override public functions. ***

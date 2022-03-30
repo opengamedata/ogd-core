@@ -1,3 +1,4 @@
+# global imports
 from schemas import Event
 from typing import Any, List, Union
 # local imports
@@ -11,18 +12,13 @@ class AverageSliderMoves(SessionFeature):
         self._levels_encountered : set = set()
         self._slider_count       : int = 0
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["CUSTOM.1"]
         # return ["SLIDER_MOVE_RELEASE"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        if len(self._levels_encountered) > 0:
-            return [self._slider_count / len(self._levels_encountered)]
-        else:
-            return [None]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._levels_encountered.add(event.event_data['level']) # set-add level to list, at end we will have set of all levels seen.
@@ -31,10 +27,10 @@ class AverageSliderMoves(SessionFeature):
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
-    def MinVersion(self) -> Union[str,None]:
-        return None
+    def _getFeatureValues(self) -> List[Any]:
+        if len(self._levels_encountered) > 0:
+            return [self._slider_count / len(self._levels_encountered)]
+        else:
+            return [None]
 
-    def MaxVersion(self) -> Union[str,None]:
-        return None
-
-
+    # *** Optionally override public functions. ***

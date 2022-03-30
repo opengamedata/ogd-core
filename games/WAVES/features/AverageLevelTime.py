@@ -16,13 +16,31 @@ class AverageLevelTime(SessionFeature):
         self._begin_times        : Dict[int,List[datetime]] = {}
         self._complete_times     : Dict[int,List[datetime]] = {}
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["BEGIN.0", "COMPLETE.0"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
 
-    def GetFeatureValues(self) -> List[Any]:
+    def _extractFromEvent(self, event:Event) -> None:
+        _level = event.event_data['level']
+        self._levels_encountered.add(_level) # set-add level to list, at end we will have set of all levels seen.
+        if event.event_name == "BEGIN.0":
+            if not _level in self._begin_times.keys():
+                self._begin_times[_level] = []
+            self._begin_times[_level].append(event.timestamp)
+        elif event.event_name == "COMPLETE.0":
+            if not _level in self._complete_times.keys():
+                self._complete_times[_level] = []
+            self._complete_times[_level].append(event.timestamp)
+        else:
+            utils.Logger.Log(f"AverageLevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
+
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
+
+    def _getFeatureValues(self) -> List[Any]:
         if len(self._begin_times) < len(self._complete_times):
             utils.Logger.Log(f"Player began level {self._count_index} {len(self._begin_times)} times but completed it {len(self._complete_times)}.", logging.WARNING)
         _diffs      = []
@@ -43,27 +61,4 @@ class AverageLevelTime(SessionFeature):
         else:
             return [None]
 
-    def _extractFromEvent(self, event:Event) -> None:
-        _level = event.event_data['level']
-        self._levels_encountered.add(_level) # set-add level to list, at end we will have set of all levels seen.
-        if event.event_name == "BEGIN.0":
-            if not _level in self._begin_times.keys():
-                self._begin_times[_level] = []
-            self._begin_times[_level].append(event.timestamp)
-        elif event.event_name == "COMPLETE.0":
-            if not _level in self._complete_times.keys():
-                self._complete_times[_level] = []
-            self._complete_times[_level].append(event.timestamp)
-        else:
-            utils.Logger.Log(f"AverageLevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
-
-    def _extractFromFeatureData(self, feature: FeatureData):
-        return
-
-    def MinVersion(self) -> Union[str,None]:
-        return None
-
-    def MaxVersion(self) -> Union[str,None]:
-        return None
-
-
+    # *** Optionally override public functions. ***

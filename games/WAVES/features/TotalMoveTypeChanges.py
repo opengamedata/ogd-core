@@ -1,3 +1,4 @@
+# global imports
 from schemas import Event
 import typing
 from typing import Any, List, Union
@@ -12,14 +13,12 @@ class TotalMoveTypeChanges(PerLevelFeature):
         self._last_move = None
         self._change_count = 0
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._change_count]
-
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -30,8 +29,7 @@ class TotalMoveTypeChanges(PerLevelFeature):
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
-    def MinVersion(self) -> Union[str,None]:
-        return None
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._change_count]
 
-    def MaxVersion(self) -> Union[str,None]:
-        return None
+    # *** Optionally override public functions. ***

@@ -1,3 +1,4 @@
+# global imports
 from schemas import Event
 import typing
 from typing import Any, List, Union
@@ -11,15 +12,13 @@ class TotalResets(PerLevelFeature):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._reset_count = 0
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["CUSTOM.4"]
         # "events": ["RESET_BTN_PRESS"],
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._reset_count]
 
     def _extractFromEvent(self, event:Event) -> None:
         self._reset_count += 1
@@ -27,8 +26,7 @@ class TotalResets(PerLevelFeature):
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
-    def MinVersion(self) -> Union[str,None]:
-        return None
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._reset_count]
 
-    def MaxVersion(self) -> Union[str,None]:
-        return None
+    # *** Optionally override public functions. ***

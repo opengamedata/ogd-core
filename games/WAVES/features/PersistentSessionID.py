@@ -1,3 +1,4 @@
+# global imports
 from schemas import Event
 from typing import Any, List, Union
 # local imports
@@ -10,14 +11,12 @@ class PersistentSessionID(SessionFeature):
         SessionFeature.__init__(self, name=name, description=description)
         self._persistent_id : Union[int,None] = None
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["BEGIN.0"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._persistent_id]
 
     def _extractFromEvent(self, event:Event) -> None:
         if self._persistent_id is None:
@@ -26,10 +25,9 @@ class PersistentSessionID(SessionFeature):
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
-    def MinVersion(self) -> Union[str,None]:
-        return None
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._persistent_id]
 
-    def MaxVersion(self) -> Union[str,None]:
-        return None
+    # *** Optionally override public functions. ***
 
 
