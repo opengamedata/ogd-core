@@ -5,9 +5,9 @@ from typing import Any, List, Dict, IO, Type, Union
 # import local files
 import utils
 from extractors.Extractor import Extractor
-from extractors.FeatureLoader import FeatureLoader
-from extractors.FeatureRegistry import FeatureRegistry
 from features.FeatureData import FeatureData
+from features.FeatureLoader import FeatureLoader
+from features.FeatureRegistry import FeatureRegistry
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema

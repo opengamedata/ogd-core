@@ -1,7 +1,7 @@
 import json
 from typing import Any, Dict, List, Union
 
-from extractors.FeatureLoader import FeatureLoader
+from features.FeatureLoader import FeatureLoader
 from features.Feature import Feature
 from games.AQUALAB.features import *
 from schemas.GameSchema import GameSchema

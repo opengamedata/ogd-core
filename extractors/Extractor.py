@@ -2,8 +2,8 @@
 import abc
 from typing import Any, Dict, List, Type, Union
 # Local imports
-from extractors.FeatureLoader import FeatureLoader
-from extractors.FeatureRegistry import FeatureRegistry
+from features.FeatureLoader import FeatureLoader
+from features.FeatureRegistry import FeatureRegistry
 from features.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event

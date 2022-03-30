@@ -3,7 +3,7 @@ import logging
 from typing import Any, Dict, List, Type, Union
 ## import local files
 import utils
-from extractors.FeatureLoader import FeatureLoader
+from features.FeatureLoader import FeatureLoader
 from extractors.PopulationExtractor import PopulationExtractor
 from games.AQUALAB.AqualabLoader import AqualabLoader
 from games.CRYSTAL.CrystalLoader import CrystalLoader

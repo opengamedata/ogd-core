@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Union
 
 from games.SHIPWRECKS.features import *
-from extractors.FeatureLoader import FeatureLoader
+from features.FeatureLoader import FeatureLoader
 from features.Feature import Feature
 from schemas.GameSchema import GameSchema
 

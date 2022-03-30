@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any, Dict, IO, List, Union
 ## import local files
 import utils
-from extractors.FeatureLoader import FeatureLoader
+from features.FeatureLoader import FeatureLoader
 from features.Feature import Feature
 from games.LAKELAND.features.LakelandExtractor import LakelandExtractor
 from schemas.GameSchema import GameSchema

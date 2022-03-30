@@ -1,8 +1,8 @@
 # global imports
 from typing import List, Union
 # local imports
-from extractors.FeatureLoader import FeatureLoader
-from extractors.FeatureRegistry import FeatureRegistry
+from features.FeatureLoader import FeatureLoader
+from features.FeatureRegistry import FeatureRegistry
 from schemas.GameSchema import GameSchema
 
 class LegacyLoader(FeatureLoader):
