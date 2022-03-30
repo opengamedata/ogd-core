@@ -82,7 +82,7 @@ class CustomFeaature(Feature):
         # the more-verbose code is here for illustrative purposes.
         return ret_val
 
-    # Optionally override public functions.
+    # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
         return [] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
