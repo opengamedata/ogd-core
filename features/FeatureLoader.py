@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Union
 # local imports
 import utils
 from features.Feature import Feature
-from extractors.FeatureRegistry import FeatureRegistry
+from features.FeatureRegistry import FeatureRegistry
 from schemas.GameSchema import GameSchema
 
 class FeatureLoader(abc.ABC):

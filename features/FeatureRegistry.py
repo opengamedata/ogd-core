@@ -5,10 +5,10 @@ import logging
 from collections import OrderedDict
 from datetime import datetime
 from typing import Any, Dict, List, Union
-from features.FeatureData import FeatureData
 ## import local files
 import utils
 from features.Feature import Feature
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 ## @class Extractor
