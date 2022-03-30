@@ -1,6 +1,7 @@
+# global imports
 from typing import Any, List
 import json
-import pandas as pd
+# local imports
 from features.SessionFeature import SessionFeature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -18,25 +19,12 @@ class SequenceBetweenPuzzles(SessionFeature):
         self._activePuzzle = None
         self._userPuzzleDict = dict()
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["start_level", "puzzle_started", "create_shape", "check_solution", "puzzle_complete", "disconnect", "login_user", "exit_to_menu"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        listReturn = []
-        listReturn.append(self._numPuzzles - 1)
-        emptyList = []
-        for puzzle in listPuzzles:
-            if puzzle in self._userPuzzleDict.keys():
-                listReturn.append(self._userPuzzleDict[puzzle])
-            else:
-                listReturn.append(emptyList)
-        return listReturn
-        
-    def Subfeatures(self) -> List[str]:
-        return listPuzzles
 
     def _extractFromEvent(self, event:Event) -> None:
         ignoreEvent = False
@@ -79,3 +67,18 @@ class SequenceBetweenPuzzles(SessionFeature):
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
+
+    def _getFeatureValues(self) -> List[Any]:
+        listReturn = []
+        listReturn.append(self._numPuzzles - 1)
+        emptyList = []
+        for puzzle in listPuzzles:
+            if puzzle in self._userPuzzleDict.keys():
+                listReturn.append(self._userPuzzleDict[puzzle])
+            else:
+                listReturn.append(emptyList)
+        return listReturn
+        
+    # *** Optionally override public functions. ***
+    def Subfeatures(self) -> List[str]:
+        return listPuzzles

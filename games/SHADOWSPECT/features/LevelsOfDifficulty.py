@@ -42,7 +42,8 @@ class LevelsOfDifficulty(SessionFeature):
         self._previousEvent = None
         self._userPuzzleDict = dict()
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ['move_shape', 'rotate_shape', 'scale_shape',
                 'check_solution', 'undo_action', 'redo_action',
                 'rotate_view', 'snapshot', 'mode_change',
@@ -52,39 +53,8 @@ class LevelsOfDifficulty(SessionFeature):
                 'click_nothing', 'toggle_paint_display', 'palette_change',
                 'paint', 'toggle_snapshot_display']
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        listReturn = []
-        listAttempts = {}
-        listActions = {}
-        listActiveTime = {}
-        listCompleted = {}
-        listIncorrect = {}
-        listAbandoned = {}
-        for puzzle in self._userPuzzleDict.keys():
-            listAttempts[puzzle] = self._userPuzzleDict[puzzle]['n_attempts']
-            listActions[puzzle] = self._userPuzzleDict[puzzle]['n_actions']
-            listActiveTime[puzzle] = self._userPuzzleDict[puzzle]['active_time']
-            listCompleted[puzzle] = self._userPuzzleDict[puzzle]['completed']
-            if self._userPuzzleDict[puzzle]['n_attempts'] > 0:
-                listIncorrect[puzzle] = 100-100*(self._userPuzzleDict[puzzle]['completed']/self._userPuzzleDict[puzzle]['n_attempts'])
-            else:
-                listIncorrect[puzzle] = 100
-            listAbandoned[puzzle] = 1 - self._userPuzzleDict[puzzle]['completed']
-        listReturn.append("WorkInProgress")
-        listReturn.append(json.dumps(listAttempts))
-        listReturn.append(json.dumps(listActions))
-        listReturn.append(json.dumps(listActiveTime))
-        listReturn.append(json.dumps(listCompleted))
-        listReturn.append(json.dumps(listIncorrect))
-        listReturn.append(json.dumps(listAbandoned))
-        
-        return listReturn
-        
-    def Subfeatures(self) -> List[str]:
-        return ["n_attempts", "n_actions", "active_time", "completed", "p_incorrect", "n_abandoned"]
 
     def _extractFromEvent(self, event:Event) -> None:
         ignoreEvent = False
@@ -133,3 +103,35 @@ class LevelsOfDifficulty(SessionFeature):
             
     def _extractFromFeatureData(self, feature: FeatureData):
         return
+
+    def _getFeatureValues(self) -> List[Any]:
+        listReturn = []
+        listAttempts = {}
+        listActions = {}
+        listActiveTime = {}
+        listCompleted = {}
+        listIncorrect = {}
+        listAbandoned = {}
+        for puzzle in self._userPuzzleDict.keys():
+            listAttempts[puzzle] = self._userPuzzleDict[puzzle]['n_attempts']
+            listActions[puzzle] = self._userPuzzleDict[puzzle]['n_actions']
+            listActiveTime[puzzle] = self._userPuzzleDict[puzzle]['active_time']
+            listCompleted[puzzle] = self._userPuzzleDict[puzzle]['completed']
+            if self._userPuzzleDict[puzzle]['n_attempts'] > 0:
+                listIncorrect[puzzle] = 100-100*(self._userPuzzleDict[puzzle]['completed']/self._userPuzzleDict[puzzle]['n_attempts'])
+            else:
+                listIncorrect[puzzle] = 100
+            listAbandoned[puzzle] = 1 - self._userPuzzleDict[puzzle]['completed']
+        listReturn.append("WorkInProgress")
+        listReturn.append(json.dumps(listAttempts))
+        listReturn.append(json.dumps(listActions))
+        listReturn.append(json.dumps(listActiveTime))
+        listReturn.append(json.dumps(listCompleted))
+        listReturn.append(json.dumps(listIncorrect))
+        listReturn.append(json.dumps(listAbandoned))
+        
+        return listReturn
+        
+    # *** Optionally override public functions. ***
+    def Subfeatures(self) -> List[str]:
+        return ["n_attempts", "n_actions", "active_time", "completed", "p_incorrect", "n_abandoned"]
