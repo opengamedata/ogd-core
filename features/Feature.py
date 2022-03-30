@@ -18,7 +18,7 @@ class Feature(abc.ABC):
 
     ## Abstract function to get a list of event types the Feature wants.
     @abc.abstractmethod
-    def GetEventDependencies(self) -> List[str]:
+    def _getEventDependencies(self) -> List[str]:
         """ Abstract function to get a list of event types the Feature wants.
             The types of event accepted by a feature are a responsibility of the Feature's developer,
             so this is a required part of interface instead of a config item in the schema.
@@ -29,7 +29,7 @@ class Feature(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
         Any feature intented to be second-order should override this function.
@@ -51,7 +51,7 @@ class Feature(abc.ABC):
 
     ## Abstract declaration of a function to perform update of a feature from a row.
     @abc.abstractmethod
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _extractFromEvent(self, event:Event):
         """Abstract declaration of a function to perform update of a feature from a row.
 
         :param event: An event, used to update the feature's data.
@@ -61,7 +61,7 @@ class Feature(abc.ABC):
 
     ## Abstract declaration of a function to perform update of a feature from a row.
     @abc.abstractmethod
-    def _extractFromEvent(self, event:Event):
+    def _extractFromFeatureData(self, feature:FeatureData):
         """Abstract declaration of a function to perform update of a feature from a row.
 
         :param event: An event, used to update the feature's data.
@@ -69,7 +69,7 @@ class Feature(abc.ABC):
         """
         pass
 
-    # *** PUBLIC BUILT-INS ***
+    # *** PUBLIC BUILT-INS and FORMATTERS ***
 
     def __init__(self, name:str, description:str, count_index:int):
         self._name = name
@@ -78,6 +78,16 @@ class Feature(abc.ABC):
 
     def __str__(self):
         return f"{self._name} : {self._desc}"
+
+    def ToFeatureData(self, player_id:Union[str, None]=None, sess_id:Union[str, None]=None) -> FeatureData:
+        return FeatureData(
+            name=self.Name(),
+            count_index=self._count_index,
+            cols=self.GetFeatureNames(),
+            vals=self.GetFeatureValues(),
+            player_id=player_id,
+            sess_id=sess_id
+        )
 
     # *** PUBLIC STATICS ***
 
@@ -108,25 +118,22 @@ class Feature(abc.ABC):
         """
         return [self.Name()] + [f"{self.Name()}-{subfeature}" for subfeature in self.Subfeatures()]
 
+    def GetEventDependencies(self) -> List[str]:
+        return self._getEventDependencies()
+
+    def GetFeatureDependencies(self) -> List[str]:
+        return self._getFeatureDependencies()
+
     def GetFeatureValues(self) -> List[Any]:
         return self._getFeatureValues()
-
-    def ExtractFromFeatureData(self, feature:FeatureData):
-        self._extractFromFeatureData(feature=feature)
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event=event):
             self._extractFromEvent(event=event)
 
-    def ToFeatureData(self, player_id:Union[str, None]=None, sess_id:Union[str, None]=None) -> FeatureData:
-        return FeatureData(
-            name=self.Name(),
-            count_index=self._count_index,
-            cols=self.GetFeatureNames(),
-            vals=self.GetFeatureValues(),
-            player_id=player_id,
-            sess_id=sess_id
-        )
+    def ExtractFromFeatureData(self, feature:FeatureData):
+        # TODO: add validation for FeatureData, if applicable/possible.
+        self._extractFromFeatureData(feature=feature)
 
     ## Base function to get the minimum game data version the feature can handle.
     def MinVersion(self) -> Union[str,None]:
