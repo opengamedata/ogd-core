@@ -1,6 +1,7 @@
+# global imports
 import logging
 from typing import Any, List
-
+# local imports
 import utils
 from features.Feature import Feature
 from features.FeatureData import FeatureData
@@ -13,15 +14,12 @@ class SyncCompletionTime(Feature):
         self._sim_start_time = None
         self._time = None
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["begin_simulation, simulation_sync_achieved"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._time]
-
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_name == "begin_simulation":
             self._sim_start_time = event.timestamp
@@ -33,3 +31,8 @@ class SyncCompletionTime(Feature):
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
+
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._time]
+
+    # *** Optionally override public functions. ***

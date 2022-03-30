@@ -1,7 +1,8 @@
+# global imports
 import json
 from collections import defaultdict
 from typing import Any, List, Union
-
+# local imports
 import utils
 from features.Feature import Feature
 from features.FeatureData import FeatureData
@@ -16,30 +17,12 @@ class TopJobSwitchDestinations(Feature):
         self._last_started_id = None
         self._job_switch_pairs = defaultdict(dict)
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["accept_job", "switch_job"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        ret_val = {}
-
-        for src in self._job_switch_pairs.keys():
-            dests = sorted(
-                self._job_switch_pairs[src].items(),
-                key=lambda item: len(item[1]), # sort by length of list of ids.
-                reverse=True # sort largest to smallest
-            )
-            ret_val[src] = {
-                item[0]:item[1] for item in dests[0:5]
-            }
-            utils.Logger.Log(f"For TopJobSwitchDestinations, sorted dests as: {json.dumps(dests)}")
-
-        return [json.dumps(ret_val)]
-
-    def MinVersion(self) -> Union[str,None]:
-        return "1"
 
     def _extractFromEvent(self, event:Event) -> None:
         user_code = event.user_id
@@ -61,3 +44,23 @@ class TopJobSwitchDestinations(Feature):
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
+
+    def _getFeatureValues(self) -> List[Any]:
+        ret_val = {}
+
+        for src in self._job_switch_pairs.keys():
+            dests = sorted(
+                self._job_switch_pairs[src].items(),
+                key=lambda item: len(item[1]), # sort by length of list of ids.
+                reverse=True # sort largest to smallest
+            )
+            ret_val[src] = {
+                item[0]:item[1] for item in dests[0:5]
+            }
+            utils.Logger.Log(f"For TopJobSwitchDestinations, sorted dests as: {json.dumps(dests)}")
+
+        return [json.dumps(ret_val)]
+
+    # *** Optionally override public functions. ***
+    def MinVersion(self) -> Union[str,None]:
+        return "1"

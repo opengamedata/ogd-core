@@ -1,7 +1,8 @@
+# global imports
 import logging
 from datetime import timedelta
 from typing import Any, List, Union
-
+# local imports
 import utils
 from features.Feature import Feature
 from features.FeatureData import FeatureData
@@ -15,17 +16,12 @@ class JobCompletionTime(Feature):
         self._job_start_time = None
         self._time = timedelta(0)
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["accept_job", "complete_job"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._time]
-
-    def MinVersion(self) -> Union[str,None]:
-        return "1"
 
     def _extractFromEvent(self, event:Event) -> None:
         if self._validate_job(event.event_data['job_name']):
@@ -37,6 +33,17 @@ class JobCompletionTime(Feature):
                 else:
                     utils.Logger.Log("Completed job when we had no active start time!", logging.WARNING)
 
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
+
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._time]
+
+    # *** Optionally override public functions. ***
+    def MinVersion(self) -> Union[str,None]:
+        return "1"
+
+    # *** Other local functions
     def _validate_job(self, job_data):
         ret_val : bool = False
         if job_data['string_value'] is not None:
@@ -45,6 +52,3 @@ class JobCompletionTime(Feature):
         else:
             utils.Logger.Log(f"Got invalid job_name data in JobCompletionTime", logging.WARNING)
         return ret_val
-
-    def _extractFromFeatureData(self, feature: FeatureData):
-        return

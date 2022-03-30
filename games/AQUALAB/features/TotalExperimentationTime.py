@@ -1,6 +1,7 @@
+# global imports
 from datetime import timedelta
 from typing import Any, List
-
+# local imports
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -12,14 +13,12 @@ class TotalExperimentationTime(Feature):
         self._experiment_start_time = None
         self._time = timedelta(0)
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["begin_experiment", "room_changed"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._time]
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_name == "begin_experiment":
@@ -31,3 +30,8 @@ class TotalExperimentationTime(Feature):
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
+
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._time]
+
+    # *** Optionally override public functions. ***

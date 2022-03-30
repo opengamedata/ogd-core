@@ -1,5 +1,6 @@
+# global imports
 from typing import Any, List
-
+# local imports
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -11,14 +12,12 @@ class SessionDiveSitesCount(Feature):
         self._count = 0
         self._visited_sites = []
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["begin_dive"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._count]
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.event_data["site_id"]['string_value'] not in self._visited_sites:
@@ -27,3 +26,8 @@ class SessionDiveSitesCount(Feature):
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
+
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._count]
+
+    # *** Optionally override public functions. ***

@@ -1,7 +1,8 @@
+# global imports
 import json
 from datetime import datetime
 from typing import Any, List
-
+# local imports
 from features.SessionFeature import SessionFeature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -14,14 +15,12 @@ class SessionDuration(SessionFeature):
         self._client_start_time = None
         self._session_duration = 0
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["all_events"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return [self._session_duration]
 
     def _extractFromEvent(self, event:Event) -> None:
         if not self._client_start_time:
@@ -31,3 +30,8 @@ class SessionDuration(SessionFeature):
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
+
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._session_duration]
+
+    # *** Optionally override public functions. ***

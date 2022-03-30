@@ -1,6 +1,7 @@
+# global imports
 import json
 from typing import Any, List, Union
-
+# local imports
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -11,17 +12,12 @@ class EventList(Feature):
         super().__init__(name=name, description=description, count_index=0)
         self._event_list = []
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["scene_changed", "accept_job", "switch_job", "complete_job"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureValues(self) -> List[Any]:
-        return [json.dumps(self._event_list)]
-
-    def MinVersion(self) -> Union[str,None]:
-        return "1"
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.user_id:
@@ -38,3 +34,10 @@ class EventList(Feature):
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
+
+    def _getFeatureValues(self) -> List[Any]:
+        return [json.dumps(self._event_list)]
+
+    # *** Optionally override public functions. ***
+    def MinVersion(self) -> Union[str,None]:
+        return "1"

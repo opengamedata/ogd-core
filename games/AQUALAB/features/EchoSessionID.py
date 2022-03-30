@@ -1,5 +1,6 @@
+# global imports
 from typing import Any, List
-
+# local imports
 from features.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
 from schemas.Event import Event
@@ -9,10 +10,11 @@ class EchoSessionID(SessionFeature):
     def __init__(self, name:str, description:str):
         super().__init__(name=name, description=description)
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return []
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return ["SessionID"]
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -21,5 +23,7 @@ class EchoSessionID(SessionFeature):
     def _extractFromFeatureData(self, feature: FeatureData):
         self._session_id = feature.FeatureValues()[0]
 
-    def GetFeatureValues(self) -> List[Any]:
+    def _getFeatureValues(self) -> List[Any]:
         return [f"The sess ID is: {self._session_id}"]
+
+    # *** Optionally override public functions. ***

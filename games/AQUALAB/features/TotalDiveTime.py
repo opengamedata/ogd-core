@@ -1,6 +1,7 @@
+# global imports
 from datetime import timedelta
 from typing import Any, List
-
+# local imports
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -12,10 +13,11 @@ class TotalDiveTime(Feature):
         self._dive_start_time = None
         self._time = timedelta(0)
 
-    def GetEventDependencies(self) -> List[str]:
+    # *** Implement abstract functions ***
+    def _getEventDependencies(self) -> List[str]:
         return ["begin_dive", "scene_changed"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -29,5 +31,7 @@ class TotalDiveTime(Feature):
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
-    def GetFeatureValues(self) -> List[Any]:
+    def _getFeatureValues(self) -> List[Any]:
         return [self._time]
+
+    # *** Optionally override public functions. ***
