@@ -50,13 +50,12 @@ class FeatureRegistry:
 
         Just sets up mostly-empty dictionaries for use by the registry.
         """
-        self._features : List[OrderedDict[str, Feature]] = [OrderedDict() for i in range(order)]
+        self._detectors : OrderedDict[str, Detector] = OrderedDict()
         # self._features : Dict[str, OrderedDict[str, Feature]] = {
         #     "first_order" : OrderedDict(),
         #     "second_order" : OrderedDict()
         # }
         self._event_registry : Dict[str,List[FeatureRegistry.Listener]] = {"all_events":[]}
-        self._feature_registry: Dict[str,List[FeatureRegistry.Listener]] = {}
 
     # string conversion for Extractors.
     def __str__(self) -> str:
@@ -67,8 +66,7 @@ class FeatureRegistry:
         :rtype: str
         """
         ret_val : List[str] = []
-        for order in self._features:
-            ret_val += [str(feat) for feat in order.values()]
+        ret_val = [str(feat) for feat in self._detectors.values()]
         return '\n'.join(ret_val)
 
     # Alternate string conversion for Extractors, with limitable number of lines.
@@ -84,8 +82,7 @@ class FeatureRegistry:
         :rtype: str
         """
         ret_val : List[str] = []
-        for order in self._features:
-            ret_val += [str(feat) for feat in order.values()]
+        ret_val = [str(feat) for feat in self._detectors.values()]
         if num_lines is None:
             return '\n'.join(ret_val)
         else:
@@ -94,15 +91,6 @@ class FeatureRegistry:
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
-    def OrderCount(self) -> int:
-        """Gets the number of "orders" of features stored in the FeatureRegistry.
-        For now, there's just two of them.
-
-        :return: _description_
-        :rtype: int
-        """
-        return len(self._features)
-
     def ExtractFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.
 
@@ -115,32 +103,14 @@ class FeatureRegistry:
         if event.event_name in self._event_registry.keys():
             # send event to every listener for the given event name.
             for listener in self._event_registry[event.event_name]:
-                for order_key in range(len(self._features)):
-                    if listener.name in self._features[order_key].keys():
-                        self._features[order_key][listener.name].ExtractFromEvent(event)
+                if listener.name in self._detectors.keys():
+                    self._detectors[listener.name].ExtractFromEvent(event)
         # don't forget to send to any features listening for "all" events
         for listener in self._event_registry["all_events"]:
-            for order_key in range(len(self._features)):
-                if listener.name in self._features[order_key].keys():
-                    self._features[order_key][listener.name].ExtractFromEvent(event)
+            if listener.name in self._detectors.keys():
+                self._detectors[listener.name].ExtractFromEvent(event)
 
-    def ExtractFromFeatureData(self, feature:FeatureData) -> None:
-        """Perform extraction of features from a row.
-
-        :param event: [description]
-        :type event: Event
-        :param table_schema: A data structure containing information on how the db
-                             table assiciated with this game is structured.
-        :type table_schema: TableSchema
-        """
-        if feature.Name() in self._feature_registry.keys():
-            # send event to every listener for the given feature name.
-            for listener in self._feature_registry[feature.Name()]:
-                for order_key in range(len(self._features)):
-                    if listener.name in self._features[order_key].keys():
-                        self._features[order_key][listener.name].ExtractFromFeatureData(feature)
-
-    def GetFeatureNames(self) -> List[str]:
+    def GetDetectorNames(self) -> List[str]:
         """Function to generate a list names of all enabled features, given a GameSchema
         This is different from the feature_names() function of GameSchema,
         which ignores the 'enabled' attribute and does not expand per-count features
@@ -152,60 +122,19 @@ class FeatureRegistry:
         :return: A list of feature names.
         :rtype: List[str]
         """
-        ret_val : List[str] = []
-        for order in self._features:
-            for feature in order.values():
-                ret_val += feature.GetFeatureNames()
-        return ret_val
-
-    def GetFeatureData(self, order:int, player_id:Union[str, None]=None, sess_id:Union[str, None]=None) -> List[FeatureData]:
-        ret_val : List[FeatureData] = []
-        for feature in self._features[order].values():
-            ret_val.append(feature.ToFeatureData(player_id=player_id, sess_id=sess_id))
-        return ret_val
-
-    def GetFeatureValues(self) -> List[Any]:
-        ret_val : List[Any] = []
-        for order in self._features:
-            for feature in order.values():
-                next_vals = feature.GetFeatureValues()
-                ret_val += next_vals if next_vals != [] else [None]
-        return ret_val
-
-    def GetFeatureStringValues(self) -> List[str]:
-        ret_val : List[str] = []
-        _vals   : List[Any] = self.GetFeatureValues()
-
-        for val in _vals:
-            str_val : str
-            if type(val) == dict:
-                str_val = json.dumps(val)
-            elif type(val) == datetime:
-                str_val = val.isoformat()
-            else:
-                str_val = str(val)
-            ret_val.append(str_val)
+        ret_val : List[str] = [feature.Name() for feature in self._detectors.values()]
         return ret_val
 
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
 
-    def Register(self, feature:Feature, kind:Listener.Kinds):
-        _listener = FeatureRegistry.Listener(name=feature.Name(), kind=kind)
-        _feature_types = feature.GetFeatureDependencies()
-        _event_types   = feature.GetEventDependencies()
-        # First, add feature to the _features dict.
-        if len(_feature_types) > 0:
-            self._features[FeatureRegistry.FeatureOrders.SECOND_ORDER.value][feature.Name()] = feature
-        else:
-            self._features[FeatureRegistry.FeatureOrders.FIRST_ORDER.value][feature.Name()] = feature
-        # Register feature to listen for any requested first-order features.
-        for _feature in _feature_types:
-            if _feature not in self._feature_registry.keys():
-                self._feature_registry[_feature] = []
-            self._feature_registry[_feature].append(_listener)
-        # Finally, register feature's requested events.
+    def Register(self, detector:Detector, kind:Listener.Kinds):
+        _listener = FeatureRegistry.Listener(name=detector.Name(), kind=kind)
+        _event_types   = detector.GetEventDependencies()
+        # First, add detector to the _features dict.
+        self._detectors[detector.Name()] = detector
+        # Register detector's requested events.
         if "all_events" in _event_types:
             self._event_registry["all_events"].append(_listener)
         else:
