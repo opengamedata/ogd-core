@@ -1,9 +1,9 @@
-# global imports
+# import libraries
 import logging
 from datetime import datetime
 from schemas import Event
 from typing import Any, Dict, List, Union
-# local imports
+# import locals
 import utils
 from features.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature

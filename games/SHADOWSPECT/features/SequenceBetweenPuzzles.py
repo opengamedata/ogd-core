@@ -1,7 +1,7 @@
-# global imports
+# import libraries
 from typing import Any, List
 import json
-# local imports
+# import locals
 from features.SessionFeature import SessionFeature
 from features.FeatureData import FeatureData
 from schemas.Event import Event

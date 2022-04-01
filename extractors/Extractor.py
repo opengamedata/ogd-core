@@ -1,7 +1,7 @@
 ## import standard libraries
 import abc
 from typing import Any, Dict, List, Type, Union
-# Local imports
+# import locals
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry
 from features.FeatureData import FeatureData

@@ -1,4 +1,4 @@
-# global imports
+# import libraries
 from typing import Any, List
 import json
 import pandas as pd
@@ -8,7 +8,7 @@ import hashlib
 from datetime import datetime
 from datetime import timedelta
 from collections import OrderedDict
-# local imports
+# import locals
 from features.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
 from schemas.Event import Event

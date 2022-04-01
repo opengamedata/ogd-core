@@ -7,7 +7,7 @@ import traceback
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict
-# local imports
+# import locals
 from config.config import settings as settings
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.

@@ -1,4 +1,4 @@
-# Local imports
+# import locals
 from features.Feature import Feature
 from schemas.Event import Event
 

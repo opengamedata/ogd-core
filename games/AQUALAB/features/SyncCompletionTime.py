@@ -1,7 +1,7 @@
-# global imports
+# import libraries
 import logging
 from typing import Any, List
-# local imports
+# import locals
 import utils
 from features.Feature import Feature
 from features.FeatureData import FeatureData

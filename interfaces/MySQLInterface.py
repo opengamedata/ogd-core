@@ -1,11 +1,11 @@
-# global imports
+# import libraries
 from mysql.connector import connection, cursor
 import logging
 import sshtunnel
 import traceback
 from datetime import datetime
 from typing import Any, Dict, List, Tuple, Union
-# local imports
+# import locals
 from interfaces.DataInterface import DataInterface
 from config.config import settings as default_settings
 from utils import Logger

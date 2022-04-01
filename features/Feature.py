@@ -1,7 +1,7 @@
 ## import standard libraries
 import abc
 from typing import Any, Dict, List, Union
-# Local imports
+# import locals
 from features.FeatureData import FeatureData
 from schemas.Event import Event
 

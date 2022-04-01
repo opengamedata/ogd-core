@@ -1,9 +1,9 @@
-# global imports
+# import libraries
 from datetime import datetime
 from pathlib import Path
 from unittest import TestCase
 from zipfile import ZipFile
-# local imports
+# import locals
 from interfaces.CSVInterface import CSVInterface
 
 class t_CSVInterface(TestCase):

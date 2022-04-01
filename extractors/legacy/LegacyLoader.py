@@ -1,6 +1,6 @@
-# global imports
+# import libraries
 from typing import List, Union
-# local imports
+# import locals
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry
 from schemas.GameSchema import GameSchema

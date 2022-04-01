@@ -1,4 +1,4 @@
-# global imports
+# import libraries
 import abc
 import git
 import json
@@ -14,7 +14,7 @@ from git.exc import InvalidGitRepositoryError, NoSuchPathError
 from pathlib import Path
 from typing import Any, Dict, IO, Union
 
-## local imports
+## import locals
 import utils
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema

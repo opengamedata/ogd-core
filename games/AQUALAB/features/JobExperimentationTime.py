@@ -1,9 +1,9 @@
-# global imports
+# import libraries
 import logging
 from datetime import timedelta
 from typing import Any, List, Union
 
-# local imports
+# import locals
 import utils
 from features.Feature import Feature
 from features.FeatureData import FeatureData

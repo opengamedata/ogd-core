@@ -1,7 +1,7 @@
-# global imports
+# import libraries
 import typing
 from typing import Any, List, Union
-# local imports
+# import locals
 from features.FeatureData import FeatureData
 from features.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
