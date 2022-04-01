@@ -28,82 +28,18 @@ class LegacyFeature(Feature):
         """
         return
 
-    # @abc.abstractmethod
-    # def _extractFromEvent(self, event:Event):
-    #     """Abstract declaration of a function to perform extraction of features from a row.
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    #     :param event: [description]
-    #     :type event: Event
-    #     :param table_schema: A data structure containing information on how the db
-    #                          table assiciated with this game is structured.
-    #     :type table_schema: TableSchema
-    #     """
-    #     pass
-
-    # *** PUBLIC BUILT-INS ***
-
-    # Base constructor for LegacyFeature classes.
-    def __init__(self, name:str, description:str, count_index:int, game_schema:GameSchema, session_id:str):
-        """Base constructor for LegacyFeature classes.
-        The constructor sets an extractor's session id and range of levels,
-        as well as initializing the features dictionary and list of played levels.
-
-        :param session_id: The id of the session from which we will extract features.
-        :type session_id: int
-        :param game_schema: A dictionary that defines how the game data itself is structured
-        :type game_schema: GameSchema
-        """
-        super().__init__(name=name, description=description, count_index=count_index)
-        self._session_id  : str         = session_id
-        self._game_schema : GameSchema  = game_schema
-        self._levels      : List[int]   = []
-        self._sequences   : List        = []
-        self._features    : LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=game_schema)
-
-    # *** PUBLIC STATICS ***
-
-    # Static function to print column headers to a file.
-    # @staticmethod
-    # def WriteFileHeader(game_schema: GameSchema, file: typing.IO[str], separator:str="\t") -> None:
-    #     """Static function to print column headers to a file.
-    #     We first create a feature dictionary, then essentially write out each key,
-    #     with some formatting to add prefixes to features that repeat per-level
-    #     (or repeat with a custom count).
-
-    #     :param game_schema: A dictionary that defines how the game data itself is structured.
-    #     :type game_schema: GameSchema
-    #     :param file: An open csv file to which we will write column headers.
-    #     :type file: typing.IO[str]
-    #     :param separator: [description], defaults to "\t"
-    #     :type separator: str, optional
-    #     """
-    #     columns = LegacyFeature.GetFeatureNames(game_schema=game_schema)
-    #     file.write(separator.join(columns))
-    #     file.write("\n")
-
-    # *** PUBLIC METHODS ***
-
-    def GetEventDependencies(self) -> List[str]:
+    def _getEventDependencies(self) -> List[str]:
         return ["all_events"]
 
-    def GetFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
-
-    def GetFeatureNames(self) -> List[str]:
-        columns = []
-        features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(self._game_schema)
-        for feature_name,feature_content in features.items():
-            if type(feature_content) is dict:
-                # if it's a dictionary, expand.
-                columns.extend([f"{feature_content[num]['prefix']}{num}_{feature_name}" for num in feature_content.keys()])
-            else:
-                columns.append(str(feature_name))
-        return columns
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
-    def GetFeatureValues(self) -> List[Any]:
+    def _getFeatureValues(self) -> List[Any]:
         self._calculateAggregateFeatures()
         def _format(obj):
             if obj == None:
@@ -132,9 +68,42 @@ class LegacyFeature(Feature):
                 column_vals.append(_format(self._features.getValByName(key)))
         return column_vals
 
-    # def ExtractFromEvent(self, event:Event) -> None:
-        # self._extractSequencesFromEvent(event=event, table_schema=table_schema)
-        # self._extractFeaturesFromEvent(event=event)
+    # *** PUBLIC BUILT-INS ***
+
+    # Base constructor for LegacyFeature classes.
+    def __init__(self, name:str, description:str, count_index:int, game_schema:GameSchema, session_id:str):
+        """Base constructor for LegacyFeature classes.
+        The constructor sets an extractor's session id and range of levels,
+        as well as initializing the features dictionary and list of played levels.
+
+        :param session_id: The id of the session from which we will extract features.
+        :type session_id: int
+        :param game_schema: A dictionary that defines how the game data itself is structured
+        :type game_schema: GameSchema
+        """
+        super().__init__(name=name, description=description, count_index=count_index)
+        self._session_id  : str         = session_id
+        self._game_schema : GameSchema  = game_schema
+        self._levels      : List[int]   = []
+        self._sequences   : List        = []
+        self._features    : LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=game_schema)
+
+    # *** PUBLIC STATICS ***
+
+    # *** PUBLIC METHODS ***
+
+
+    def GetFeatureNames(self) -> List[str]:
+        columns = []
+        features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(self._game_schema)
+        for feature_name,feature_content in features.items():
+            if type(feature_content) is dict:
+                # if it's a dictionary, expand.
+                columns.extend([f"{feature_content[num]['prefix']}{num}_{feature_name}" for num in feature_content.keys()])
+            else:
+                columns.append(str(feature_name))
+        return columns
+
 
     # *** PRIVATE STATICS ***
 
