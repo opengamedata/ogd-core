@@ -32,7 +32,7 @@ class EventExtractor(Extractor):
     def _prepareLoader(self) -> FeatureLoader:
         ret_val : FeatureLoader
         if self._LoaderClass is LakelandLoader:
-            ret_val = LakelandLoader(player_id="events", session_id="events", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=self._session_file)
+            ret_val = LakelandLoader(player_id="events", session_id="events", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=None)
         else:
             ret_val = self._LoaderClass(player_id="events", session_id="events", game_schema=self._game_schema, feature_overrides=self._overrides)
         return ret_val
@@ -41,7 +41,7 @@ class EventExtractor(Extractor):
 
     def __init__(self, LoaderClass: Type[FeatureLoader], game_schema: GameSchema):
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=None)
-        self._registry = DetectorRegistry
+        self._registry = DetectorRegistry()
 
     # *** PUBLIC STATICS ***
 
