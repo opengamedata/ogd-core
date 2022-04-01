@@ -37,7 +37,7 @@ class Feature(abc.ABC):
         :return: _description_
         :rtype: List[str]
         """
-        return []
+        pass
 
     ## Abstract declaration of a function to perform update of a feature from a row.
     @abc.abstractmethod
