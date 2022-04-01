@@ -16,25 +16,25 @@ class Extractor(abc.ABC):
 
     ## Abstract declaration of a function to get the names of all features.
     @abc.abstractmethod
-    def GetFeatureNames(self) -> List[str]:
+    def _getFeatureNames(self) -> List[str]:
         pass
 
     ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
     @abc.abstractmethod
-    def GetFeatureValues(self, export_types:ExporterTypes) -> Dict[str,List[Any]]:
+    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str,List[Any]]:
         pass
 
     @abc.abstractmethod
-    def GetFeatureData(self, order:int) -> Dict[str,List[FeatureData]]:
+    def _getFeatureData(self, order:int) -> Dict[str,List[FeatureData]]:
         pass
 
     ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
     @abc.abstractmethod
-    def ProcessEvent(self, event:Event):
+    def _processEvent(self, event:Event) -> None:
         pass
 
     @abc.abstractmethod
-    def ProcessFeatureData(self, feature:FeatureData):
+    def _processFeatureData(self, feature:FeatureData) -> None:
         pass
 
     @abc.abstractmethod
@@ -57,6 +57,26 @@ class Extractor(abc.ABC):
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
+
+    def GetFeatureNames(self) -> List[str]:
+        # TODO: add error handling code, if applicable.
+        return self._getFeatureNames()
+
+    def GetFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str,List[Any]]:
+        # TODO: add error handling code, if applicable.
+        return self._getFeatureValues(export_types=export_types, as_str=as_str)
+
+    def GetFeatureData(self, order:int) -> Dict[str,List[FeatureData]]:
+        # TODO: add error handling code, if applicable.
+        return self._getFeatureData(order=order)
+
+    def ProcessEvent(self, event:Event) -> None:
+        # TODO: add error handling code, if applicable.
+        self._processEvent(event=event)
+
+    def ProcessFeatureData(self, feature:FeatureData) -> None:
+        # TODO: add error handling code, if applicable.
+        self._processFeatureData(feature=feature)
 
     # *** PRIVATE STATICS ***
 

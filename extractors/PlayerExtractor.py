@@ -17,69 +17,12 @@ from schemas.Request import ExporterTypes
 ## @class PlayerProcessor
 #  Class to extract and manage features for a processed csv file.
 class PlayerExtractor(Extractor):
-    ## Constructor for the PlayerProcessor class.
-    #  Simply stores some data for use later, including the type of extractor to
-    #  use.
-    #
-    #  @param ExtractorClass The type of data extractor to use for input data.
-    #         This should correspond to whatever game_id is in the TableSchema.
-    #  @param game_table    A data structure containing information on how the db
-    #                       table assiciated with the given game is structured. 
-    #  @param game_schema   A dictionary that defines how the game data itself
-    #                       is structured.
-    #  @param sessions_csv_file The output file, to which we'll write the processed
-    #                       feature data.
-    def __init__(self, LoaderClass: Type[FeatureLoader], game_schema: GameSchema, player_id:str,
-                 feature_overrides:Union[List[str],None]=None, player_file:Union[IO[str],None]=None):
-        self._player_file : Union[IO[str],None] = player_file
-        self._player_id   : str                 = player_id
-        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
-        ## Define instance vars
-        self._session_extractors : Dict[str,SessionExtractor] = {
-            "null" : SessionExtractor(LoaderClass=LoaderClass, game_schema=game_schema,
-                                      player_id=self._player_id, session_id="null",
-                                      feature_overrides=feature_overrides, session_file=player_file)
-        }
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _prepareLoader(self) -> FeatureLoader:
-        ret_val : FeatureLoader
-        if self._LoaderClass is LakelandLoader:
-            ret_val = LakelandLoader(player_id=self._player_id, session_id="player", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=self._player_file)
-        else:
-            ret_val = self._LoaderClass(player_id=self._player_id, session_id="player", game_schema=self._game_schema, feature_overrides=self._overrides)
-        return ret_val
-
-    ## Function to handle processing of a single row of data.
-    #  Basically just responsible for ensuring an extractor for the session
-    #  corresponding to the row already exists, then delegating the processing
-    #  to that extractor.
-    #  @param row_with_complex_parsed A tuple of the row data. We assume the
-    #                      event_data_complex has already been parsed from JSON.
-    def ProcessEvent(self, event:Event):
-        self._registry.ExtractFromEvent(event=event)
-        # ensure we have an extractor for the given session:
-        if event.session_id not in self._session_extractors.keys():
-            self._session_extractors[event.session_id] = SessionExtractor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
-                                                                          player_id=self._player_id, session_id=event.session_id,
-                                                                          feature_overrides=self._overrides, session_file=self._player_file)
-
-        self._session_extractors[event.session_id].ProcessEvent(event=event)
-
-    def ProcessFeatureData(self, feature: FeatureData):
-        self._registry.ExtractFromFeatureData(feature=feature)
-        # Down-propogate values to player (and, by extension, session) features:
-        for session in self._session_extractors.values():
-            session.ProcessFeatureData(feature=feature)
-
-    def SessionCount(self):
-        return len(self._session_extractors.keys()) - 1 # don't count null player
-
-    def GetFeatureNames(self) -> List[str]:
+    def _getFeatureNames(self) -> List[str]:
         return self._registry.GetFeatureNames() + ["SessionCount"]
-    def GetSessionFeatureNames(self) -> List[str]:
-        return self._session_extractors["null"].GetFeatureNames()
 
-    def GetFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[Any]]:
+    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[Any]]:
         ret_val : Dict[str, List[Any]] = {}
         if export_types.players:
             _sess_ct = self.SessionCount()
@@ -97,7 +40,7 @@ class PlayerExtractor(Extractor):
             # finally, what we return is a dict with a "sessions" element, containing list of lists.
         return ret_val
 
-    def GetFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
+    def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
         ret_val : Dict[str, List[FeatureData]] = {}
         ret_val["player"] = self._registry.GetFeatureData(order=order)
         _result = [session_extractor.GetFeatureData(order=order) for session_extractor in self._session_extractors.values()]
@@ -106,13 +49,89 @@ class PlayerExtractor(Extractor):
             ret_val["sessions"] += session['session']
         return ret_val
 
+    ## Function to handle processing of a single row of data.
+    def _processEvent(self, event:Event):
+        """Function to handle processing of a single row of data.
+        Basically just responsible for ensuring an extractor for the session corresponding
+        to the row already exists, then delegating the processing to that extractor.
+        :param event: An object with the data for the event to be processed.
+        :type event: Event
+        """
+        self._registry.ExtractFromEvent(event=event)
+        # ensure we have an extractor for the given session:
+        if event.session_id not in self._session_extractors.keys():
+            self._session_extractors[event.session_id] = SessionExtractor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+                                                                          player_id=self._player_id, session_id=event.session_id,
+                                                                          feature_overrides=self._overrides, session_file=self._player_file)
+
+        self._session_extractors[event.session_id].ProcessEvent(event=event)
+
+    def _processFeatureData(self, feature: FeatureData):
+        self._registry.ExtractFromFeatureData(feature=feature)
+        # Down-propogate values to player (and, by extension, session) features:
+        for session in self._session_extractors.values():
+            session.ProcessFeatureData(feature=feature)
+
+    def _prepareLoader(self) -> FeatureLoader:
+        ret_val : FeatureLoader
+        if self._LoaderClass is LakelandLoader:
+            ret_val = LakelandLoader(player_id=self._player_id, session_id="player", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=self._player_file)
+        else:
+            ret_val = self._LoaderClass(player_id=self._player_id, session_id="player", game_schema=self._game_schema, feature_overrides=self._overrides)
+        return ret_val
+
+    # *** PUBLIC BUILT-INS ***
+
+    ## Constructor for the PlayerProcessor class.
+    def __init__(self, LoaderClass: Type[FeatureLoader], game_schema: GameSchema, player_id:str,
+                 feature_overrides:Union[List[str],None]=None, player_file:Union[IO[str],None]=None):
+        """Constructor for the PlayerProcessor class.
+           Simply stores some data for use later, including the type of extractor to use.
+
+        :param LoaderClass: The type of data extractor to use for input data.
+                            This should correspond to whatever game_id is in the TableSchema.
+        :type LoaderClass: Type[FeatureLoader]
+        :param game_schema: A dictionary that defines how the game data itself is structured.
+        :type game_schema: GameSchema
+        :param player_id: _description_
+        :type player_id: str
+        :param feature_overrides: _description_, defaults to None
+        :type feature_overrides: Union[List[str],None], optional
+        :param player_file: _description_, defaults to None
+        :type player_file: Union[IO[str],None], optional
+        """
+        self._player_file : Union[IO[str],None] = player_file
+        self._player_id   : str                 = player_id
+        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        ## Define instance vars
+        self._session_extractors : Dict[str,SessionExtractor] = {
+            "null" : SessionExtractor(LoaderClass=LoaderClass, game_schema=game_schema,
+                                      player_id=self._player_id, session_id="null",
+                                      feature_overrides=feature_overrides, session_file=player_file)
+        }
+
+    # *** PUBLIC STATICS ***
+
+    # *** PUBLIC METHODS ***
+
+    def SessionCount(self):
+        return len(self._session_extractors.keys()) - 1 # don't count null player
+
+    def GetSessionFeatureNames(self) -> List[str]:
+        return self._session_extractors["null"].GetFeatureNames()
+
     ##  Function to empty the list of lines stored by the PlayerProcessor.
-    #   This is helpful if we're processing a lot of data and want to avoid
-    #   eating too much memory.
     def ClearLines(self):
+        """Function to empty the list of lines stored by the PlayerProcessor.
+        This is helpful if we're processing a lot of data and want to avoid eating too much memory.
+        """
         utils.Logger.Log(f"Clearing features from PlayerExtractor.", logging.DEBUG)
         self._registry = FeatureRegistry()
 
     def ClearSessionsLines(self):
         utils.Logger.Log(f"Clearing {len(self._session_extractors)} sessions from PlayerProcessor.", logging.DEBUG)
         self._session_extractors = {}
+
+    # *** PRIVATE STATICS ***
+
+    # *** PRIVATE METHODS ***
