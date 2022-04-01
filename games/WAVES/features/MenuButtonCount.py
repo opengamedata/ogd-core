@@ -11,7 +11,7 @@ class MenuButtonCount(PerLevelFeature):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._menu_btn_count = 0
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["CUSTOM.5"]
         # "events": ["MENU_BUTTON"],

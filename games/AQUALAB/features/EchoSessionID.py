@@ -10,7 +10,7 @@ class EchoSessionID(SessionFeature):
     def __init__(self, name:str, description:str):
         super().__init__(name=name, description=description)
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return []
 

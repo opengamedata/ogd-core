@@ -12,7 +12,7 @@ class UserAvgSessionDuration(SessionFeature):
         super().__init__(name=name, description=description)
         self._times = []
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return []
 

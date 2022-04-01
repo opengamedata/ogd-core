@@ -12,7 +12,7 @@ class TotalSkips(PerLevelFeature):
         PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
         self._skip_count = 0
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["CUSTOM.6"]
         # "events": ["SKIP_BUTTON"],

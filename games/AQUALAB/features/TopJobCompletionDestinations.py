@@ -17,7 +17,7 @@ class TopJobCompletionDestinations(Feature):
         self._last_completed_id = None
         self._job_complete_pairs = defaultdict(dict)
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["accept_job", "complete_job"]
 

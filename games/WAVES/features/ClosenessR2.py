@@ -10,7 +10,7 @@ class ClosenessR2(Feature):
     def __init__(self, name:str, description:str, count_index:int):
         Feature.__init__(self, name=name, description=description, count_index=count_index)
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return []
 

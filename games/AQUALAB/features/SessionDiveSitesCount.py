@@ -12,7 +12,7 @@ class SessionDiveSitesCount(Feature):
         self._count = 0
         self._visited_sites = []
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["begin_dive"]
 

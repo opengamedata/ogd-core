@@ -12,7 +12,7 @@ class EventList(Feature):
         super().__init__(name=name, description=description, count_index=0)
         self._event_list = []
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["scene_changed", "accept_job", "switch_job", "complete_job"]
 

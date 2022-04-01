@@ -11,7 +11,7 @@ class QuestionAnswered(Feature):
         Feature.__init__(self, name=name, description=description, count_index=count_index)
         self._answer = None
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["CUSTOM.3"]
         # return ["QUESTION_ANSWER"]

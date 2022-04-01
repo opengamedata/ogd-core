@@ -19,7 +19,7 @@ class SequenceBetweenPuzzles(SessionFeature):
         self._activePuzzle = None
         self._userPuzzleDict = dict()
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["start_level", "puzzle_started", "create_shape", "check_solution", "puzzle_complete", "disconnect", "login_user", "exit_to_menu"]
 

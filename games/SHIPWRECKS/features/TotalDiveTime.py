@@ -12,7 +12,7 @@ class TotalDiveTime(SessionFeature):
         super().__init__(name=name, description=description)
         self._time = 0
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["dive_start", "dive_exit"]
 

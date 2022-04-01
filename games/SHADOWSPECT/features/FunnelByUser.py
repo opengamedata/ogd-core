@@ -14,7 +14,7 @@ class FunnelByUser(SessionFeature):
         self._level = None
         self._userFunnelDict = dict()
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["start_level", "puzzle_started", "create_shape", "check_solution", "puzzle_complete"]
 

@@ -14,7 +14,7 @@ class SyncCompletionTime(Feature):
         self._sim_start_time = None
         self._time = None
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["begin_simulation, simulation_sync_achieved"]
 

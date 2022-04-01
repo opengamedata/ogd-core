@@ -11,7 +11,7 @@ class PersistentSessionID(SessionFeature):
         SessionFeature.__init__(self, name=name, description=description)
         self._persistent_id : Union[int,None] = None
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["BEGIN.0"]
 

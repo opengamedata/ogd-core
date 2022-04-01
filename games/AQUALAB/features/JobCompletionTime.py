@@ -16,7 +16,7 @@ class JobCompletionTime(Feature):
         self._job_start_time = None
         self._time = timedelta(0)
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["accept_job", "complete_job"]
 

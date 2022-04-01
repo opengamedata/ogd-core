@@ -12,7 +12,7 @@ class AverageSliderMoves(SessionFeature):
         self._levels_encountered : set = set()
         self._slider_count       : int = 0
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["CUSTOM.1"]
         # return ["SLIDER_MOVE_RELEASE"]

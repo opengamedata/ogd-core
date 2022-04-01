@@ -15,7 +15,7 @@ class SessionDuration(SessionFeature):
         self._client_start_time = None
         self._session_duration = 0
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["all_events"]
 

@@ -8,7 +8,7 @@ from schemas.Event import Event
 
 class MissionSonarTimeToComplete(Feature):
     
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def __init__(self, name:str, description:str, job_num:int, job_map:dict):
         super().__init__(name=name, description=description, count_index=job_num)
         self._sonar_start_time = None

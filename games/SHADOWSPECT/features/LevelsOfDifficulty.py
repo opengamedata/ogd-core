@@ -42,7 +42,7 @@ class LevelsOfDifficulty(SessionFeature):
         self._previousEvent = None
         self._userPuzzleDict = dict()
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ['move_shape', 'rotate_shape', 'scale_shape',
                 'check_solution', 'undo_action', 'redo_action',

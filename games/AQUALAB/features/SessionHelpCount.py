@@ -14,7 +14,7 @@ class SessionHelpCount(Feature):
         super().__init__(name=name, description=description, count_index=0)
         self._count = 0
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["ask_for_help"]
 

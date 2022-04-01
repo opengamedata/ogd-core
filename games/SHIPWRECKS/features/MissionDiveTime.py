@@ -13,7 +13,7 @@ class MissionDiveTime(Feature):
         self._dive_start_time = None
         self._time = timedelta(0)
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["dive_start", "dive_exit"]
 

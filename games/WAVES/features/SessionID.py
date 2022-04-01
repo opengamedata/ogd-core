@@ -11,7 +11,7 @@ class SessionID(SessionFeature):
         SessionFeature.__init__(self, name=name, description=description)
         self._sessionID = sessionID
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return []
 

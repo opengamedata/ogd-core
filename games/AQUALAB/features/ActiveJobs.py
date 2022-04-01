@@ -15,7 +15,7 @@ class ActiveJobs(Feature):
         self._last_started_id = None
         self._active_jobs = defaultdict(list)
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["accept_job", "switch_job"]
 

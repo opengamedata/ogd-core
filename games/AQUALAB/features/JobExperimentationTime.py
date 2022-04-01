@@ -17,7 +17,7 @@ class JobExperimentationTime(Feature):
         self._experiment_start_time = None
         self._time = timedelta(0)
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["begin_experiment", "room_changed"]
 

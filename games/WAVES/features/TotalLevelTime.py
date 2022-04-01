@@ -15,7 +15,7 @@ class TotalLevelTime(PerLevelFeature):
         self._begin_times    : List[datetime] = []
         self._complete_times : List[datetime] = []
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["BEGIN.0", "COMPLETE.0"]
 

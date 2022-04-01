@@ -10,7 +10,7 @@ class SessionID(SessionFeature):
         self._session_id = session_id
         super().__init__(name=name, description=description)
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return []
 

@@ -15,7 +15,7 @@ class UserTotalSessionDuration(SessionFeature):
         self._player_id = player_id
         self._time = 0
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return []
 

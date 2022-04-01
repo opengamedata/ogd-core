@@ -16,7 +16,7 @@ class JobArgumentationTime(Feature):
         self._argument_start_time : Union[datetime, None] = None
         self._time = timedelta(0)
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["begin_argument", "room_changed"]
 

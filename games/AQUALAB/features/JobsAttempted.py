@@ -28,7 +28,7 @@ class JobsAttempted(Feature):
         self._times = []
         self._job_start_time = None
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["accept_job", "complete_job"]
 

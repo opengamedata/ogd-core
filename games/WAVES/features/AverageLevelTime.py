@@ -16,7 +16,7 @@ class AverageLevelTime(SessionFeature):
         self._begin_times        : Dict[int,List[datetime]] = {}
         self._complete_times     : Dict[int,List[datetime]] = {}
 
-    # *** Implement abstract functions ***
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["BEGIN.0", "COMPLETE.0"]
 
