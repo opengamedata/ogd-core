@@ -1,8 +1,8 @@
-# global imports
+# import libraries
 import abc
 from datetime import datetime
 from typing import Any, Dict, List, Union
-# local imports
+# import locals
 from schemas.Event import Event
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 
