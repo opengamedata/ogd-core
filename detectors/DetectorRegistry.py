@@ -15,7 +15,7 @@ from schemas.Event import Event
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class FeatureRegistry:
+class DetectorRegistry:
     """Class for registering features to listen for events.
 
     :return: [description]
@@ -32,7 +32,7 @@ class FeatureRegistry:
             self.kind = kind
         
         def __str__(self) -> str:
-            return f"{self.name} ({'aggregate' if self.kind == FeatureRegistry.Listener.Kinds.AGGREGATE else 'per-count'})"
+            return f"{self.name} ({'aggregate' if self.kind == DetectorRegistry.Listener.Kinds.AGGREGATE else 'per-count'})"
 
         def __repr__(self) -> str:
             return str(self)
@@ -55,7 +55,7 @@ class FeatureRegistry:
         #     "first_order" : OrderedDict(),
         #     "second_order" : OrderedDict()
         # }
-        self._event_registry : Dict[str,List[FeatureRegistry.Listener]] = {"all_events":[]}
+        self._event_registry : Dict[str,List[DetectorRegistry.Listener]] = {"all_events":[]}
 
     # string conversion for Extractors.
     def __str__(self) -> str:
@@ -130,7 +130,7 @@ class FeatureRegistry:
     # *** PRIVATE METHODS ***
 
     def Register(self, detector:Detector, kind:Listener.Kinds):
-        _listener = FeatureRegistry.Listener(name=detector.Name(), kind=kind)
+        _listener = DetectorRegistry.Listener(name=detector.Name(), kind=kind)
         _event_types   = detector.GetEventDependencies()
         # First, add detector to the _features dict.
         self._detectors[detector.Name()] = detector

@@ -2,6 +2,8 @@
 import abc
 from typing import Any, Dict, List, Union
 # import locals
+from features.Feature import Feature
+from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 ## @class Model
@@ -10,36 +12,41 @@ from schemas.Event import Event
 #  The Eval function takes a list of row data, computes some statistic, and returns a list of results.
 #  If the model works on Detectors from session data, it should calculate one result for each row (each row being a session).
 #  If the model works on a raw list of recent events, it should calculate a single result (each row being an event).
-class Detector(abc.ABC):
+class Detector(Feature):
 #TODO: use a dirty bit so we only run the GetValue function if we've received an event or Detector since last calculation
 
     # *** ABSTRACTS ***
 
-    ## Abstract function to get a list of event types the Detector wants.
-    @abc.abstractmethod
-    def _getEventDependencies(self) -> List[str]:
-        """ Abstract function to get a list of event types the Detector wants.
-            The types of event accepted by a Detector are a responsibility of the Detector's developer,
-            so this is a required part of interface instead of a config item in the schema.
-
-        :return: [description]
-        :rtype: List[str]
-        """
-        pass
-
-    ## Abstract declaration of a function to perform update of a Detector from a row.
-    @abc.abstractmethod
-    def _extractFromEvent(self, event:Event):
-        """Abstract declaration of a function to perform update of a Detector from a row.
-
-        :param event: An event, used to update the Detector's data.
-        :type event: Event
-        """
-        pass
-
     @abc.abstractmethod
     def _trigger(self) -> Union[Event, None]:
         pass
+
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+    def _getFeatureDependencies(self) -> List[str]:
+        """Base function for getting any features a second-order feature depends upon.
+        By default, no dependencies.
+        Any feature intented to be second-order should override this function.
+
+        :return: _description_
+        :rtype: List[str]
+        """
+        return []
+
+    def _extractFromFeatureData(self, feature:FeatureData):
+        """Abstract declaration of a function to perform update of a feature from a row.
+
+        :param event: An event, used to update the feature's data.
+        :type event: Event
+        """
+        return
+
+    def _getFeatureValues(self) -> List[Any]:
+        """Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
+
+        :return: Returns the values of all columns for the Feature, based on data the feature has seen so far.
+        :rtype: typing.Tuple
+        """
+        return []
 
     # *** PUBLIC BUILT-INS ***
 
