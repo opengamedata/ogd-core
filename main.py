@@ -138,7 +138,7 @@ def genRequest(events:bool, features:bool) -> Request:
         interface = CSVInterface(game_id=args.game, filepath=args.file, delim="\t" if ext == '.tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()
-        range = ExporterRange.FromIDs(ids=ids if ids is not None else [], source=interface, versions=supported_vers)
+        range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [], versions=supported_vers)
         # breakpoint()
     else:
         interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
@@ -150,7 +150,7 @@ def genRequest(events:bool, features:bool) -> Request:
             raise Exception(f"{interface_type} is not a valid DataInterface type!")
         # retrieve/calculate date range.
         start_date, end_date = getDateRange()
-        range = ExporterRange.FromDateRange(date_min=start_date, date_max=end_date, source=interface, versions=supported_vers)
+        range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date, versions=supported_vers)
     # Once we have the parameters parsed out, construct the request.
     return Request(interface=interface, range=range, exporter_types=exporter_files)
 
