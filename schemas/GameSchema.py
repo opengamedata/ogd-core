@@ -29,6 +29,7 @@ class GameSchema:
         # define instance vars
         self._schema:       Union[Dict, None] = {}
         self._game_name:    str  = schema_name.split('.')[0]
+        self._detector_list: Union[List[str],None] = None
         self._feature_list: Union[List[str],None] = None
         self._min_level:    Union[int,None] = None
         self._max_level:    Union[int,None] = None
@@ -40,6 +41,14 @@ class GameSchema:
             schema_path = Path("./games") / f"{schema_name.split('.')[0]}"
         self._schema = utils.loadJSONFile(filename=schema_name, path=schema_path)
         if self._schema is not None:
+            if "detectors" in self._schema.keys():
+                self._detector_list = []
+                for feat_kind in ["perlevel", "per_count", "aggregate"]:
+                    if feat_kind in self._schema['detectors']:
+                        self._detector_list += self._schema['detectors'][feat_kind].keys()
+            else:
+                self._schema["detectors"] = {}
+                utils.Logger.Log(f"{schema_name} game schema does not define any detectors.", logging.WARN)
             if "features" in self._schema.keys():
                 self._feature_list = []
                 for feat_kind in ["perlevel", "per_count", "aggregate"]:
@@ -100,6 +109,26 @@ class GameSchema:
     ## Function to retrieve the names of all event types for the game.
     def event_types(self) -> List[str]:
         return list(self["events"].keys())
+
+    ## Function to retrieve the dictionary of categorized detectors to extract.
+    def detectors(self) -> Dict[str, Dict[str,Any]]:
+        return self["detectors"]
+
+    ## Function to retrieve the compiled list of all detector names.
+    def detector_names(self) -> Union[List[str], None]:
+        return self._detector_list
+
+    ## Function to retrieve the dictionary of per-level detectors.
+    def perlevel_detectors(self) -> Dict[str,Any]:
+        return self["detectors"]["perlevel"] if "perlevel" in self["detectors"].keys() else {}
+
+    ## Function to retrieve the dictionary of per-custom-count detectors.
+    def percount_detectors(self) -> Dict[str,Any]:
+        return self["detectors"]["per_count"] if "per_count" in self["detectors"].keys() else {}
+
+    ## Function to retrieve the dictionary of aggregate detectors.
+    def aggregate_detectors(self) -> Dict[str,Any]:
+        return self["detectors"]["aggregate"] if "aggregate" in self["detectors"].keys() else {}
 
     ## Function to retrieve the dictionary of categorized features to extract.
     def features(self) -> Dict[str, Dict[str,Any]]:
