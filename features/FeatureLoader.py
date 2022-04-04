@@ -14,6 +14,10 @@ class FeatureLoader(abc.ABC):
     @abc.abstractmethod
     def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         pass
+    
+    @abc.abstractmethod
+    def LoadDetector(self, detector_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+        pass
 
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
         """Base constructor for Extractor classes.
