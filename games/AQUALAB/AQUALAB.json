@@ -429,6 +429,18 @@
         }
     },
 
+    "detectors" : {
+        "per_count" : {
+
+        },
+        "aggregate" : {
+            "CollectFactNoJob" : {
+                "enabled" : true,
+                "description" : "Triggers an event when a player collects a fact while not actively working on a job"
+            }
+        }
+    },
+
     "features": {
         "per_count": {
             "JobArgumentationTime": {
