@@ -7,6 +7,7 @@ from typing import Dict, List, Tuple, Union
 # import locals
 from config.config import settings as default_settings
 from interfaces.DataInterface import DataInterface
+from schemas.IDMode import IDMode
 from utils import Logger
 
 AQUALAB_MIN_VERSION = 6.2
@@ -180,7 +181,7 @@ class BigQueryInterface(DataInterface):
             Logger.Log(f"Could not get session list for {str_min}-{str_max} range, BigQuery connection is not open.", logging.WARN)
         return ret_val
 
-    def _datesFromIDs(self, id_list:List[str], versions:Union[List[int],None] = None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None] = None) -> Dict[str, datetime]:
         if self._client != None:
             db_name    : str
             table_name : str

@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 from typing import Dict, List, Tuple, Union
 
-from schemas.Request import IDMode
+from schemas.IDMode import IDMode
 # import local files
 
 class DataInterface(abc.ABC):
