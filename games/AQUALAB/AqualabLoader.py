@@ -123,10 +123,10 @@ class AqualabLoader(FeatureLoader):
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Aqualab.")
         return ret_val
 
-    def LoadDetector(self, detector_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Detector:
+    def LoadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], count_index:Union[int,None] = None) -> Detector:
         ret_val : Detector
         if detector_type == "CollectFactNoJob":
-            ret_val = CollectFactNoJob.CollectFactNoJob(name=name, description=feature_args["description"])
+            ret_val = CollectFactNoJob.CollectFactNoJob(name=name, description=detector_args["description"])
         else:
             raise NotImplementedError(f"'{detector_type}' is not a valid detector for Aqualab.")
         return ret_val

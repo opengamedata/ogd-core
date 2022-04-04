@@ -52,3 +52,6 @@ class ShipwrecksLoader(FeatureLoader):
         else:
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shipwrecks.")
         return ret_val
+
+    def LoadDetector(self, detector_type: str, name: str, detector_args: Dict[str, Any], count_index: Union[int, None] = None) -> Feature:
+        raise NotImplementedError(f"'{detector_type}' is not a valid feature for Shipwrecks.")

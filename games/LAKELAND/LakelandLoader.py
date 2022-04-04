@@ -33,3 +33,6 @@ class LakelandLoader(FeatureLoader):
 
     def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         return LakelandExtractor(game_schema=self._game_schema, session_id=self._session_id, output_file=self._out_file)
+
+    def LoadDetector(self, detector_type: str, name: str, detector_args: Dict[str, Any], count_index: Union[int, None] = None) -> Feature:
+        raise NotImplementedError(f"'{detector_type}' is not a valid feature for Lakeland.")

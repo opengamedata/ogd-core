@@ -154,6 +154,9 @@ class WaveLoader(FeatureLoader):
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Waves.")
         return ret_val
 
+    def LoadDetector(self, detector_type: str, name: str, detector_args: Dict[str, Any], count_index: Union[int, None] = None) -> Feature:
+        raise NotImplementedError(f"'{detector_type}' is not a valid feature for Waves.")
+
     ## Function to perform extraction of features from a row.
     #
     #  @param row_with_complex_parsed A row of game data from the db, with the
