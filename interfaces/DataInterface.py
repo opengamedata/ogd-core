@@ -4,6 +4,9 @@ import logging
 from datetime import datetime
 from typing import Dict, List, Tuple, Union
 
+from schemas.Request import IDMode
+# import local files
+
 class DataInterface(abc.ABC):
 
     # *** ABSTRACTS ***
@@ -33,7 +36,7 @@ class DataInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _datesFromIDs(self, id_list:List[str], versions:Union[List[int],None] = None) -> Dict[str,datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None] = None) -> Dict[str,datetime]:
         pass
 
     # *** PUBLIC BUILT-INS ***
@@ -92,12 +95,12 @@ class DataInterface(abc.ABC):
         else:
             return self._IDsFromDates(min=min, max=max, versions=versions)
 
-    def DatesFromIDs(self, id_list:List[str], versions: Union[List[int],None]=None) -> Union[Dict[str,datetime], Dict[str,None]]:
+    def DatesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None]=None) -> Union[Dict[str,datetime], Dict[str,None]]:
         if not self._is_open:
             logging.warn("Can't retrieve dates, the source interface is not open!")
             return {'min':None, 'max':None}
         else:
-            return self._datesFromIDs(id_list=id_list, versions=versions)
+            return self._datesFromIDs(id_list=id_list, id_mode=id_mode, versions=versions)
 
     # *** PRIVATE STATICS ***
 
