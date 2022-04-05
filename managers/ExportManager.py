@@ -124,14 +124,14 @@ class ExportManager:
                 if request.ExportPopulation():
                     ret_val['population'] = {"cols":self._extract_mgr.GetPopulationFeatureNames(), "vals":[]}
         # 4) Get the IDs of sessions to process
-        sess_ids = request.RetrieveSessionIDs() or []
+        sess_ids = request.RetrieveIDs() or []
         ret_val["sessions_ct"] = len(sess_ids)
         utils.Logger.Log(f"Preparing to process {len(sess_ids)} sessions.", logging.INFO)
         # 5) Loop over and process the sessions, slice-by-slice (where each slice is a list of sessions).
         _session_slices = self._prepareSlices(sess_ids=sess_ids)
         for i, next_slice in enumerate(_session_slices):
             start         : datetime = datetime.now()
-            next_data_set = request._interface.RowsFromIDs(next_slice)
+            next_data_set = request.GetInterface().RowsFromIDs(id_list=next_slice, id_mode=request.GetRange().GetIDMode())
             if next_data_set is not None:
                 time_delta = datetime.now() - start
                 utils.Logger.Log(f"Retrieval time for slice [{i+1}/{len(_session_slices)}]: {time_delta} to get {len(next_data_set)} events", logging.INFO)
