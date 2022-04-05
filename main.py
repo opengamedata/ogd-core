@@ -115,7 +115,7 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
 
     start = datetime.now()
     req = genRequest(events=events, features=features)
-    if req._interface.IsOpen():
+    if req.GetInterface().IsOpen():
         export_manager = ExportManager(settings=settings)
         result = export_manager.ExecuteRequest(request=req)
         ret_val = result['success']

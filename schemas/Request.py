@@ -18,18 +18,22 @@ class ExporterRange:
     @staticmethod
     def FromDateRange(source:DataInterface, date_min:datetime, date_max:datetime, versions:Union[List[int],None]=None):
         ids = source.IDsFromDates(date_min, date_max, versions=versions)
-        return ExporterRange(date_min=date_min, date_max=date_max, ids=ids, versions=versions)
+        return ExporterRange(date_min=date_min, date_max=date_max, ids=ids, id_mode=IDMode.SESSION, versions=versions)
 
     @staticmethod
     def FromIDs(source:DataInterface, ids:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None]=None):
         date_range = source.DatesFromIDs(id_list=ids, id_mode=id_mode, versions=versions)
-        return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=ids, versions=versions)
+        return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=ids, id_mode=id_mode, versions=versions)
 
     def GetDateRange(self) -> Dict[str,Union[datetime,None]]:
         return {'min':self._date_min, 'max':self._date_max}
 
     def GetIDs(self) -> Union[List[str],None]:
         return self._ids
+
+    def GetIDMode(self):
+        return self._id_mode
+
 class ExporterTypes:
     """Completely dumb struct that just enforces the names of the four kinds of file we can output.
     """
@@ -134,5 +138,5 @@ class Request(abc.ABC):
 
     ## Method to retrieve the list of IDs for all sessions covered by the request.
     #  Note, this will use the 
-    def RetrieveSessionIDs(self) -> Union[List[str],None]:
+    def RetrieveIDs(self) -> Union[List[str],None]:
         return self._range.GetIDs()
