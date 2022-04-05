@@ -97,7 +97,7 @@ class BigQueryInterface(DataInterface):
             Logger.Log(f"Could not get full date range, BigQuery connection is not open.", logging.WARN)
             return {"min":datetime.now(), "max":datetime.now()}
 
-    def _rowsFromIDs(self, id_list:List[str], versions:Union[List[int],None] = None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None] = None) -> List[Tuple]:
         if self._client != None:
             db_name    : str
             table_name : str
@@ -108,6 +108,19 @@ class BigQueryInterface(DataInterface):
                 db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
                 table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
             id_string = ','.join([f"{x}" for x in id_list])
+            if id_mode == IDMode.SESSION:
+                where_clause = f"""
+                    WHERE param_session.key = 'ga_session_id' and param_session.value.int_value IN ({id_string})
+                    AND   param_version.key = 'app_version' AND param_version.value.double_value >= {AQUALAB_MIN_VERSION}
+                    AND   param_user.key = 'user_code'
+                """
+            elif id_mode == IDMode.PLAYER:
+                where_clause = f"""
+                    WHERE param_session.key = 'ga_session_id'
+                    AND   param_version.key = 'app_version' AND param_version.value.double_value >= {AQUALAB_MIN_VERSION}
+                    AND   param_user.key = 'user_code' and param_user.value.string_value IN ({id_string})
+                """
+                           
             if self._game_id == "AQUALAB":
                 query = f"""
                     SELECT event_name, event_params, device, geo, platform,
@@ -118,9 +131,7 @@ class BigQueryInterface(DataInterface):
                     CROSS JOIN UNNEST(event_params) AS param_session
                     CROSS JOIN UNNEST(event_params) AS param_version
                     CROSS JOIN UNNEST(event_params) AS param_user
-                    WHERE param_session.key = 'ga_session_id' and param_session.value.int_value IN ({id_string})
-                    AND   param_version.key = 'app_version' AND param_version.value.double_value >= {AQUALAB_MIN_VERSION}
-                    AND   param_user.key = 'user_code'
+                    {where_clause}
                     ORDER BY `session_id`, `timestamp` ASC
                 """
             else:
@@ -192,6 +203,16 @@ class BigQueryInterface(DataInterface):
                 db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
                 table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
             id_string = ','.join([f"{x}" for x in id_list])
+            if id_mode==IDMode.SESSION:
+                where_clause = f"""
+                    WHERE param.key = "ga_session_id"
+                    AND param.value.int_value IN ({id_string})
+                """
+            elif id_mode==IDMode.PLAYER:
+                where_clause = f"""
+                    WHERE param.key = "user_code"
+                    AND param.value.string_value IN ({id_string})
+                """
             query = f"""
                 WITH datetable AS
                 (
@@ -203,8 +224,7 @@ class BigQueryInterface(DataInterface):
                 SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
                 FROM datetable,
                 UNNEST(event_params) AS param
-                WHERE param.key = "ga_session_id"
-                AND param.value.int_value IN ({id_string})
+                {where_clause}
             """
             data = list(self._client.query(query))
             return {'min':data[0][0], 'max':data[0][1]}
