@@ -22,6 +22,7 @@ class Detector(Feature):
         pass
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
     def _getFeatureDependencies(self) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
