@@ -231,6 +231,7 @@ class BigQueryInterface(DataInterface):
         else:
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
             return {'min':datetime.now(), 'max':datetime.now()}
+
     # *** PUBLIC BUILT-INS ***
 
     def __init__(self, game_id: str, settings):

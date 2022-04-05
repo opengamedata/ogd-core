@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Tuple, Union
 # import locals
 from interfaces.DataInterface import DataInterface
 from config.config import settings as default_settings
+from schemas.IDMode import IDMode
 from utils import Logger
 
 
@@ -207,9 +208,9 @@ class SQL:
 
     # Function to build and execute SELECT statements on a database connection.
     @staticmethod
-    def SELECT(cursor        :cursor.MySQLCursor, db_name       :str,         table         :str,
-               columns       :List[str] = None,   filter        :str = None,
-               sort_columns  :List[str] = None,   sort_direction:str = "ASC", grouping      :str = None,
+    def SELECT(cursor        :cursor.MySQLCursor, db_name       :str,                      table:str,
+               columns       :List[str] = [],     filter        :Union[str, None] = None,
+               sort_columns  :Union[List[str], None] = None,   sort_direction:str              = "ASC", grouping:Union[str, None] = None,
                distinct      :bool      = False,  offset        :int = 0,     limit         :int = -1,
                fetch_results :bool      = True) -> Union[List[Tuple],None]:
         """Function to build and execute SELECT statements on a database connection.
@@ -270,16 +271,9 @@ class SQL:
         return result
 
 class MySQLInterface(DataInterface):
-    def __init__(self, game_id:str, settings):
-        # set up data from params
-        super().__init__(game_id=game_id)
-        self._settings = settings
-        # set up connection vars and try to make connection off the bat.
-        self._tunnel : Union[sshtunnel.SSHTunnelForwarder, None] = None
-        self._db : Union[connection.MySQLConnection, None] = None
-        self._db_cursor : Union[cursor.MySQLCursor, None] = None
-        self.Open()
-        
+
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
     def _open(self, force_reopen:bool = False) -> bool:
         if force_reopen:
             self.Close()
@@ -307,35 +301,6 @@ class MySQLInterface(DataInterface):
         Logger.Log("Closed connection to MySQL.", logging.DEBUG)
         self._is_open = False
         return True
-
-    def _rowsFromIDs(self, id_list: List[str], versions: Union[List[int],None]=None) -> List[Tuple]:
-        ret_val = []
-        # grab data for the given session range. Sort by event time, so
-        if not self._db_cursor == None:
-            if versions is not None and versions is not []:
-                ver_filter = f" AND app_version in ({','.join([str(version) for version in versions])}) "
-            else:
-                ver_filter = ''
-            # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            id_list_string = ",".join([f"%s" for i in range(len(id_list))])
-            db_name    : str
-            table_name : str
-            if "MYSQL_CONFIG" in self._settings:
-                db_name = self._settings["MYSQL_CONFIG"]["DB_NAME"]
-                table_name = self._settings["MYSQL_CONFIG"]["TABLE"]
-            else:
-                db_name = default_settings["MYSQL_CONFIG"]["DB_NAME"]
-                table_name = default_settings["MYSQL_CONFIG"]["TABLE"]
-            filt = f"app_id=%s AND session_id IN ({id_list_string}){ver_filter}"
-            query_string = f"SELECT * FROM {db_name}.{table_name} WHERE {filt} ORDER BY session_id, session_n ASC"
-            params = [self._game_id] + [str(x) for x in id_list]
-            data = SQL.Query(cursor=self._db_cursor, query=query_string, params=tuple(params), fetch_results=True)
-            if data is not None:
-                ret_val = data
-            # self._select_queries.append(select_query) # this doesn't appear to be used???
-        else:
-            Logger.Log(f"Could not get data for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
-        return ret_val
 
     def _allIDs(self) -> List[str]:
         if not self._db_cursor == None:
@@ -380,6 +345,40 @@ class MySQLInterface(DataInterface):
             Logger.Log(f"Could not get full date range, MySQL connection is not open.", logging.WARN)
         return ret_val
 
+    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None]=None) -> List[Tuple]:
+        ret_val = []
+        # grab data for the given session range. Sort by event time, so
+        if not self._db_cursor == None:
+            if versions is not None and versions is not []:
+                ver_filter = f" AND app_version in ({','.join([str(version) for version in versions])}) "
+            else:
+                ver_filter = ''
+            # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
+            db_name    : str
+            table_name : str
+            if "MYSQL_CONFIG" in self._settings:
+                db_name = self._settings["MYSQL_CONFIG"]["DB_NAME"]
+                table_name = self._settings["MYSQL_CONFIG"]["TABLE"]
+            else:
+                db_name = default_settings["MYSQL_CONFIG"]["DB_NAME"]
+                table_name = default_settings["MYSQL_CONFIG"]["TABLE"]
+            id_list_string = ",".join([f"%s" for i in range(len(id_list))])
+            if id_mode == IDMode.SESSION:
+                filt = f"`app_id`=%s AND `session_id` IN ({id_list_string}){ver_filter}"
+            elif id_mode == IDMode.PLAYER:
+                filt = f"`app_id`=%s AND `player_id` IN ({id_list_string}){ver_filter}"
+            else:
+                raise ValueError("Invalid IDMode in MySQLInterface!")
+            query_string = f"SELECT * FROM {db_name}.{table_name} WHERE {filt} ORDER BY session_id, session_n ASC"
+            params = [self._game_id] + [str(x) for x in id_list]
+            data = SQL.Query(cursor=self._db_cursor, query=query_string, params=tuple(params), fetch_results=True)
+            if data is not None:
+                ret_val = data
+            # self._select_queries.append(select_query) # this doesn't appear to be used???
+        else:
+            Logger.Log(f"Could not get data for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
+        return ret_val
+
     def _IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> List[str]:
         ret_val = []
         if not self._db_cursor == None:
@@ -408,7 +407,7 @@ class MySQLInterface(DataInterface):
             Logger.Log(f"Could not get session list for {min.isoformat()}-{max.isoformat()} range, MySQL connection is not open.", logging.WARN)
         return ret_val
 
-    def _datesFromIDs(self, id_list:List[str], versions: Union[List[int],None]=None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions: Union[List[int],None]=None) -> Dict[str, datetime]:
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
         if not self._db_cursor == None:
             # alias long setting names.
@@ -423,7 +422,12 @@ class MySQLInterface(DataInterface):
             # prep filter strings
             ids_string = ','.join([f"'{x}'" for x in id_list])
             ver_filter = f" AND `app_version` in ({','.join([str(x) for x in versions])}) " if versions else ''
-            filt = f"`app_id`='{self._game_id}' AND `session_id` IN ({ids_string}){ver_filter}"
+            if id_mode == IDMode.SESSION:
+                filt = f"`app_id`='{self._game_id}' AND `session_id` IN ({ids_string}){ver_filter}"
+            elif id_mode == IDMode.PLAYER:
+                filt = f"`app_id`='{self._game_id}' AND `player_id` IN ({ids_string}){ver_filter}"
+            else:
+                raise ValueError("Invalid IDMode in MySQLInterface!")
             # run query
             result = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
                                 columns=['MIN(server_time)', 'MAX(server_time)'], filter=filt)
@@ -432,3 +436,15 @@ class MySQLInterface(DataInterface):
         else:
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
         return ret_val
+    # *** PUBLIC BUILT-INS ***
+
+    def __init__(self, game_id:str, settings):
+        # set up data from params
+        super().__init__(game_id=game_id)
+        self._settings = settings
+        # set up connection vars and try to make connection off the bat.
+        self._tunnel : Union[sshtunnel.SSHTunnelForwarder, None] = None
+        self._db : Union[connection.MySQLConnection, None] = None
+        self._db_cursor : Union[cursor.MySQLCursor, None] = None
+        self.Open()
+        
