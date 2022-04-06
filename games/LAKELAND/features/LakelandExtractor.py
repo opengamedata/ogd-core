@@ -46,8 +46,7 @@ class LakelandExtractor(LegacyFeature):
     try:
         _STR_TO_ENUM = utils.loadJSONFile(filename="LakelandEnumerators.json", path=Path("../opengamedata-core/games/LAKELAND/features/"))
     except FileNotFoundError as err:
-        Logger.Log(message="Could not load Lakeland Enumerators", level=logging.ERROR)
-        print("Could not load Lakeland enumerators")
+        Logger.Log(message="Could not load Lakeland Enumerators", level=logging.WARNING)
         _STR_TO_ENUM = {}
     _ENUM_TO_STR = {cat: {y: x for x, y in ydict.items()} for cat, ydict in _STR_TO_ENUM.items()}
     _ITEM_MARK_COMBINATIONS = [('food', 'sell'), ('food', 'use'), ('food', 'eat'),
