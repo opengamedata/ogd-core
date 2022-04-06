@@ -15,10 +15,11 @@ from pathlib import Path
 from typing import Any, Dict, IO, Union
 
 ## import locals
-from utils import Logger, loadJSONFile
+import utils
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 from schemas.Request import Request
+from utils import Logger
 
 class FileManager(abc.ABC):
     @staticmethod

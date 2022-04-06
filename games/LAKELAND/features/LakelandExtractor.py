@@ -20,11 +20,12 @@ from math import sqrt
 from pathlib import Path
 from typing import Any, Dict, List, Union
 ## import local files
-from utils import Logger, loadJSONFile
+import utils
 from extractors.legacy.LegacyFeature import LegacyFeature
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
+from utils import Logger
 
 # temp comment
 
