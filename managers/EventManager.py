@@ -1,7 +1,7 @@
 ## import standard libraries
 import json
 import logging
-from typing import Any, List, Tuple, Union
+from typing import Any, List
 ## import local files
 from detectors.DetectorRegistry import DetectorRegistry
 from schemas.Event import Event
@@ -22,11 +22,15 @@ class EventManager:
     #  @param events_csv_file The output file, to which we'll write the event game data.
     def __init__(self):
         # define instance vars
-        self._lines        : List[str]    = []
-        self._columns      : List[str]    = Event.ColumnNames()
+        self._lines       : List[str]     = []
+        self._columns     : List[str]     = Event.ColumnNames()
         self._registry : DetectorRegistry = DetectorRegistry()
+        self._debug_count : int           = 0
 
     def ReceiveEventTrigger(self, event:Event):
+        if self._debug_count < 20:
+            Logger.Log("EventManager received an event trigger.", logging.DEBUG)
+            self._debug_count += 1
         self.ProcessEvent(event=event, separator='\t')
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
@@ -51,5 +55,5 @@ class EventManager:
     #  This is helpful if we're processing a lot of data and want to avoid
     #  Eating too much memory.
     def ClearLines(self):
-        Logger.Log(f"Clearing {len(self._lines)} entries from EventProcessor.", logging.DEBUG)
+        Logger.Log(f"Clearing {len(self._lines)} entries from EventManager.", logging.DEBUG)
         self._lines = []
