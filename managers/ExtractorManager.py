@@ -23,7 +23,7 @@ class ExtractorManager:
         self._latest_results : Dict[str,List[Any]] = {}
         self._up_to_date     : bool                = True
         self._LoaderClass    : Union[Type[FeatureLoader],None]
-        self._pop_extractor  : Union[PopulationExtractor, None]
+        self._pop_extractor  : Union[PopulationExtractor, None] = None
 
         self._LoaderClass   = self._prepareLoaderClass(game_id=game_id)
         if self._LoaderClass is not None:
