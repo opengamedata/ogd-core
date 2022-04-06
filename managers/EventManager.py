@@ -29,24 +29,6 @@ class EventManager:
     def ReceiveEventTrigger(self, event:Event):
         self.ProcessEvent(event=event, separator='\t')
 
-    ## Function to handle processing one row of data.
-    #  @param row_with_complex_parsed A tuple of the row data. We assume the
-    #                      event_data_complex has already been parsed from JSON.
-    def ProcessRow(self, row_with_complex_parsed: Tuple, schema:TableSchema, separator:str = "\t"):
-        row_columns = schema.ColumnNames()
-        line : List[Any] = [None] * len(row_columns)
-        for i,col in enumerate(row_with_complex_parsed):
-            # only set a value if this was not the remote address (IP) column.
-            if row_columns[i] != "remote_addr":
-                if type(col) == str:
-                    line[i] = f"\"{col}\""
-                elif type(col) == dict:
-                    line[i] = json.dumps(col)
-                else:
-                    line[i] = col
-        # print(f"From EventProcessor, about to add event to lines: {[str(item) for item in line]}")
-        self._lines.append(separator.join([str(item) for item in line]) + "\n") # changed , to \t
-
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
         self._registry.ExtractFromEvent(event=event)
         col_values = event.ColumnValues()
