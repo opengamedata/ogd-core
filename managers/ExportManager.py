@@ -13,7 +13,7 @@ from pprint import pformat
 from typing import Any, Dict, List, Tuple, Union
 from managers.ExtractorManager import ExtractorManager
 ## import local files
-import utils
+from utils import Logger
 from config.config import settings as default_settings
 from managers.FileManager import FileManager
 from managers.EventManager import EventManager
@@ -66,7 +66,7 @@ class ExportManager:
                 self._setupFileHeaders(request=request, file_manager=_file_manager)
             _result = self._executeDataRequest(request=request, table_schema=_table_schema, file_manager=_file_manager)
             num_sess : int = _result.get("sessions_ct", 0)
-            utils.Logger.Log(f"Fucking print some bullshit just after result.get-ting to see if it logs", logging.INFO)
+            Logger.Log(f"Fucking print some bullshit just after result.get-ting to see if it logs", logging.INFO)
             if request.ToFile() and _file_manager is not None:
                 # 4) Save and close files
                 self._setupReadme(file_manager=_file_manager, game_schema=_game_schema, table_schema=_table_schema)
@@ -76,15 +76,15 @@ class ExportManager:
                 _file_manager.UpdateFileExportList(num_sess=num_sess)
             if request.ToDict():
                 ret_val.update(_result) # merge event, session, player, and population data into the return value.
-            utils.Logger.Log(f"Successfully executed data request {str(request)}.", logging.INFO)
+            Logger.Log(f"Successfully executed data request {str(request)}.", logging.INFO)
             ret_val['success'] = True # if we made it to end, we were successful.
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
-            utils.Logger.Log(f"Failed to execute data request {str(request)}, an error occurred:\n{msg}", logging.ERROR)
+            Logger.Log(f"Failed to execute data request {str(request)}, an error occurred:\n{msg}", logging.ERROR)
             traceback.print_tb(err.__traceback__)
         finally:
             time_delta = datetime.now() - start
-            utils.Logger.Log(f"Total data request execution time: {time_delta}", logging.INFO)
+            Logger.Log(f"Total data request execution time: {time_delta}", logging.INFO)
             return ret_val
 
     def _prepareTableSchema(self, _game_id:str):
@@ -99,7 +99,7 @@ class ExportManager:
             self._event_mgr = EventManager()
             # evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
         else:
-            utils.Logger.Log("Event log not requested, skipping events file.", logging.INFO)
+            Logger.Log("Event log not requested, skipping events file.", logging.INFO)
         # If game doesn't have an extractor, make sure we don't try to export it.
         if request.ExportSessions() or request.ExportPlayers() or request.ExportPopulation():
             self._extract_mgr = ExtractorManager(game_id=request.GetGameID(), exp_types=request._exports,
@@ -108,7 +108,7 @@ class ExportManager:
                 request._exports.sessions   = False
                 request._exports.players    = False
                 request._exports.population = False
-                utils.Logger.Log("Could not extract feature data, no game extractor given!", logging.WARN)
+                Logger.Log("Could not extract feature data, no game extractor given!", logging.WARN)
 
     def _executeDataRequest(self, request:Request, table_schema:TableSchema, file_manager:Union[FileManager, None]=None) -> Dict[str,Any]:
         ret_val       : Dict[str,Any]           = {"events":None, "sessions":None, "players":None, "population":None, "sessions_ct":0}
@@ -127,7 +127,7 @@ class ExportManager:
         # 4) Get the IDs of sessions to process
         sess_ids = request.RetrieveIDs() or []
         ret_val["sessions_ct"] = len(sess_ids)
-        utils.Logger.Log(f"Preparing to process {len(sess_ids)} sessions.", logging.INFO)
+        Logger.Log(f"Preparing to process {len(sess_ids)} sessions.", logging.INFO)
         # 5) Loop over and process the sessions, slice-by-slice (where each slice is a list of sessions).
         _session_slices = self._prepareSlices(sess_ids=sess_ids)
         for i, next_slice in enumerate(_session_slices):
@@ -135,7 +135,7 @@ class ExportManager:
             next_data_set = request.GetInterface().RowsFromIDs(id_list=next_slice, id_mode=request.GetRange().GetIDMode())
             if next_data_set is not None:
                 time_delta = datetime.now() - start
-                utils.Logger.Log(f"Retrieval time for slice [{i+1}/{len(_session_slices)}]: {time_delta} to get {len(next_data_set)} events", logging.INFO)
+                Logger.Log(f"Retrieval time for slice [{i+1}/{len(_session_slices)}]: {time_delta} to get {len(next_data_set)} events", logging.INFO)
                 
                 self._processSlice(next_data_set=next_data_set, table_schema=table_schema, sess_ids=sess_ids, slice_num=i+1, slice_count=len(_session_slices))
                 # 3b) After processing all rows for each slice, write out the session data and reset for next slice.
@@ -162,7 +162,7 @@ class ExportManager:
                             file_manager.GetPlayersFile().writelines(["\t".join(player) + "\n" for player in _player_feats])
                         self._extract_mgr.ClearPlayerLines()
             else:
-                utils.Logger.Log(f"Could not retrieve data set for slice [{i+1}/{len(_session_slices)}].", logging.WARN)
+                Logger.Log(f"Could not retrieve data set for slice [{i+1}/{len(_session_slices)}].", logging.WARN)
         # 4) If we made it all the way to the end, write population data and return the number of sessions processed.
         if self._extract_mgr is not None:
             if request.ExportPopulation():
@@ -178,7 +178,7 @@ class ExportManager:
         _num_sess = len(sess_ids)
         #TODO: rewrite this to slice across players, instead of sessions.
         _slice_size = self._settings["BATCH_SIZE"] or default_settings["BATCH_SIZE"]
-        utils.Logger.Log(f"Using slice size = {_slice_size}, should result in {math.ceil(_num_sess / _slice_size)} slices", logging.INFO)
+        Logger.Log(f"Using slice size = {_slice_size}, should result in {math.ceil(_num_sess / _slice_size)} slices", logging.INFO)
         return [[sess_ids[i] for i in range( j*_slice_size, min((j+1)*_slice_size, _num_sess) )]
                                        for j in range( 0, math.ceil(_num_sess / _slice_size) )]
 
@@ -192,10 +192,10 @@ class ExportManager:
                 next_event = table_schema.RowToEvent(row)
             except Exception as err:
                 if default_settings.get("FAIL_FAST", None):
-                    utils.Logger.Log(f"Error while converting row to Event\nFull error: {err}\nRow data: {pformat(row)}", logging.ERROR)
+                    Logger.Log(f"Error while converting row to Event\nFull error: {err}\nRow data: {pformat(row)}", logging.ERROR)
                     raise err
                 else:
-                    utils.Logger.Log(f"Error while converting row to Event. This row will be skipped.\nFull error: {err}", logging.WARNING)
+                    Logger.Log(f"Error while converting row to Event. This row will be skipped.\nFull error: {err}", logging.WARNING)
             else:
                 if next_event.session_id in sess_ids:
                     try:
@@ -205,20 +205,20 @@ class ExportManager:
                             self._extract_mgr.ProcessEvent(event=next_event)
                     except Exception as err:
                         if default_settings.get("FAIL_FAST", None):
-                            utils.Logger.Log(f"Error while processing event {next_event}.", logging.ERROR)
+                            Logger.Log(f"Error while processing event {next_event}.", logging.ERROR)
                             raise err
                         else:
-                            utils.Logger.Log(f"Error while processing event {next_event}. This event will be skipped. \nFull error: {err}", logging.WARNING)
+                            Logger.Log(f"Error while processing event {next_event}. This event will be skipped. \nFull error: {err}", logging.WARNING)
                 elif next_event.session_id is not None and next_event.session_id.upper() != "NONE":
-                    utils.Logger.Log(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
+                    Logger.Log(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING)
                 else:
                     _unsessioned_event_count += 1
                     if _unsessioned_event_count < 10:
-                        utils.Logger.Log(f"Original data for an 'unsessioned' row: {row}", logging.WARNING)
+                        Logger.Log(f"Original data for an 'unsessioned' row: {row}", logging.WARNING)
         if _unsessioned_event_count > 0:
-            utils.Logger.Log(f"Found {_unsessioned_event_count} events with no session IDs.", logging.WARNING)
+            Logger.Log(f"Found {_unsessioned_event_count} events with no session IDs.", logging.WARNING)
         time_delta = datetime.now() - start
-        utils.Logger.Log(f"Processing time for slice [{slice_num}/{slice_count}]: {time_delta} to handle {num_events} events", logging.INFO)
+        Logger.Log(f"Processing time for slice [{slice_num}/{slice_count}]: {time_delta} to handle {num_events} events", logging.INFO)
 
     def _setupFileHeaders(self, request:Request, file_manager:FileManager):
         if request.ExportEvents() and self._event_mgr is not None:
@@ -229,17 +229,17 @@ class ExportManager:
                 cols = self._extract_mgr.GetPopulationFeatureNames()
                 file_manager.WritePopulationFile("\t".join(cols) + "\n")
             else:
-                utils.Logger.Log("Population features not requested, skipping population_features file.", logging.INFO)
+                Logger.Log("Population features not requested, skipping population_features file.", logging.INFO)
             if request.ExportPlayers():
                 cols = self._extract_mgr.GetPlayerFeatureNames()
                 file_manager.WritePlayersFile("\t".join(cols) + "\n")
             else:
-                utils.Logger.Log("Player features not requested, skipping player_features file.", logging.INFO)
+                Logger.Log("Player features not requested, skipping player_features file.", logging.INFO)
             if request.ExportSessions():
                 cols = self._extract_mgr.GetSessionFeatureNames()
                 file_manager.WriteSessionsFile("\t".join(cols) + "\n")
             else:
-                utils.Logger.Log("Session features not requested, skipping session_features file.", logging.INFO)
+                Logger.Log("Session features not requested, skipping session_features file.", logging.INFO)
 
     def _setupReadme(self, file_manager:FileManager, game_schema:GameSchema, table_schema:TableSchema):
         _game_id = game_schema._game_name
@@ -247,7 +247,7 @@ class ExportManager:
             # before we zip stuff up, let's ensure the readme is in place:
             readme = open(file_manager._readme_path, mode='r')
         except FileNotFoundError:
-            utils.Logger.Log(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING)
+            Logger.Log(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING)
             readme_path = Path("./data") / _game_id
             FileManager.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=readme_path)
         else:

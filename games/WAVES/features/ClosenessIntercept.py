@@ -25,7 +25,7 @@ class ClosenessIntercept(Feature):
     #         try:
     #             X = [(times[i]-times[0]).seconds for i in range(len(times))]
     #         except Exception as err:
-    #             utils.Logger.Log(times[0])
+    #             Logger.Log(times[0])
     #             raise err
     #         y = closenesses
     #         if len(X) > 1:

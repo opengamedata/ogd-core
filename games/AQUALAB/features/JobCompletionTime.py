@@ -3,7 +3,7 @@ import logging
 from datetime import timedelta
 from typing import Any, List, Union
 # import locals
-import utils
+from utils import Logger
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -31,7 +31,7 @@ class JobCompletionTime(Feature):
                 if self._job_start_time is not None:
                     self._time = event.timestamp - self._job_start_time
                 else:
-                    utils.Logger.Log("Completed job when we had no active start time!", logging.WARNING)
+                    Logger.Log("Completed job when we had no active start time!", logging.WARNING)
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
@@ -50,5 +50,5 @@ class JobCompletionTime(Feature):
             if self._job_map[job_data['string_value']] == self._count_index:
                 ret_val = True
         else:
-            utils.Logger.Log(f"Got invalid job_name data in JobCompletionTime", logging.WARNING)
+            Logger.Log(f"Got invalid job_name data in JobCompletionTime", logging.WARNING)
         return ret_val

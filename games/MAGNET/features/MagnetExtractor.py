@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 from typing import Any, Dict, List, Union
 ## import local files
-import utils
+from utils import Logger
 from extractors.legacy.LegacyFeature import LegacyFeature
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
@@ -42,10 +42,10 @@ class MagnetExtractor(LegacyFeature):
         # put some data in local vars, for readability later.
         level = event.event_data['level']
         if level > self._game_schema._max_level:
-            utils.Logger.Log(f"Got an event with level too high, full data:\n{str(event)}")
+            Logger.Log(f"Got an event with level too high, full data:\n{str(event)}")
         # Check for invalid row.
         if event.session_id != self._session_id:
-            utils.Logger.Log(f"Got an event with incorrect session id! Expected {self._session_id}, got {event.session_id}!",
+            Logger.Log(f"Got an event with incorrect session id! Expected {self._session_id}, got {event.session_id}!",
                                 logging.ERROR)
         # If row is valid, process it.
         else:

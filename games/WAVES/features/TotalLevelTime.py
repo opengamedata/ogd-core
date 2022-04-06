@@ -4,7 +4,7 @@ from datetime import datetime
 from schemas import Event
 from typing import Any, List, Union
 # import locals
-import utils
+from utils import Logger
 from features.FeatureData import FeatureData
 from features.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
@@ -28,14 +28,14 @@ class TotalLevelTime(PerLevelFeature):
         elif event.event_name == "COMPLETE.0":
             self._complete_times.append(event.timestamp)
         else:
-            utils.Logger.Log(f"AverageLevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
+            Logger.Log(f"AverageLevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
         if len(self._begin_times) < len(self._complete_times):
-            utils.Logger.Log(f"Player began level {self._count_index} {len(self._begin_times)} times but completed it {len(self._complete_times)}.", logging.DEBUG)
+            Logger.Log(f"Player began level {self._count_index} {len(self._begin_times)} times but completed it {len(self._complete_times)}.", logging.DEBUG)
         _num_plays = min(len(self._begin_times), len(self._complete_times))
         _diffs = [(self._complete_times[i] - self._begin_times[i]).total_seconds() for i in range(_num_plays)]
         return [sum(_diffs)]

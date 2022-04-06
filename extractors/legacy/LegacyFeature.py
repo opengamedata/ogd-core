@@ -7,7 +7,7 @@ from collections import defaultdict
 from datetime import timedelta
 from typing import Any, Dict, List, Tuple, Type, Union
 ## import local files
-import utils
+from utils import Logger
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
@@ -160,7 +160,7 @@ class LegacyFeature(Feature):
                     if feature[level]["val"] == None:
                         feature[level]["val"] = 0
                 else:
-                    utils.Logger.Log(f"Tried to intialize invalid level: {level}", logging.ERROR)
+                    Logger.Log(f"Tried to intialize invalid level: {level}", logging.ERROR)
 
         ## Function to get value of a per-count feature (including per-level)
         #  For a per-level feature, index is the level.
@@ -174,7 +174,7 @@ class LegacyFeature(Feature):
                 if type(feature) is dict and index in feature.keys():
                     return feature[index]["val"]
                 else:
-                    utils.Logger.Log(f"Tried to get value on invalid index of {feature_name}: {index}", logging.ERROR)
+                    Logger.Log(f"Tried to get value on invalid index of {feature_name}: {index}", logging.ERROR)
             else:
                 return None
 
@@ -191,7 +191,7 @@ class LegacyFeature(Feature):
                 if type(feature) is dict and index in feature.keys():
                     return feature[index]
                 else:
-                    utils.Logger.Log(f"Tried to get feature on invalid index of {feature_name}: {index}", logging.ERROR)
+                    Logger.Log(f"Tried to get feature on invalid index of {feature_name}: {index}", logging.ERROR)
             else:
                 return None
 
@@ -220,7 +220,7 @@ class LegacyFeature(Feature):
                 if type(feature) is dict and index in feature.keys():
                     feature[index]["val"] = new_value
                 else:
-                    utils.Logger.Log(f"Tried to set value on invalid index of {feature_name}: {index}", logging.ERROR)
+                    Logger.Log(f"Tried to set value on invalid index of {feature_name}: {index}", logging.ERROR)
 
         ## Function to set value of a per-level feature
         #  Pure syntax sugar, calls setValByIndex using level as the index.
@@ -255,7 +255,7 @@ class LegacyFeature(Feature):
                         feature[index]["val"] = 0
                     feature[index]["val"] += increment
                 else:
-                    utils.Logger.Log(f"Tried to increment value on invalid index of {feature_name}: {index}", logging.ERROR)
+                    Logger.Log(f"Tried to increment value on invalid index of {feature_name}: {index}", logging.ERROR)
 
         ## Function to increment the value of a per-level feature
         #  Pure syntax sugar, calls incValByIndex using level as the index.
@@ -275,14 +275,14 @@ class LegacyFeature(Feature):
                 if (type(self.features[feature_name]) == int or type(self.features[feature_name]) == float):
                     self.features[feature_name] += increment
                 else:
-                    utils.Logger.Log("Attempted to increment a non-numeric value!", logging.WARN)
+                    Logger.Log("Attempted to increment a non-numeric value!", logging.WARN)
             else:
-                utils.Logger.Log("Attempted to increment a feature that doesn't exist!", logging.WARN)
+                Logger.Log("Attempted to increment a feature that doesn't exist!", logging.WARN)
 
         def _has_feature(self, feature_name) -> bool:
             try:
                 _ = self.features[feature_name]
             except KeyError:
-                utils.Logger.Log(f'Feature {feature_name} does not exist.', logging.ERROR)
+                Logger.Log(f'Feature {feature_name} does not exist.', logging.ERROR)
                 return False
             return True

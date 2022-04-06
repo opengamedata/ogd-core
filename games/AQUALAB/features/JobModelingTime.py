@@ -3,7 +3,7 @@ import logging
 from datetime import timedelta
 from typing import Any, List
 # import locals
-import utils
+from utils import Logger
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event

@@ -3,7 +3,7 @@ import logging
 import traceback
 from typing import Any, Dict, IO, List, Type, Union
 # import local files
-import utils
+from utils import Logger
 from extractors.Extractor import Extractor
 from extractors.PlayerExtractor import PlayerExtractor
 from features.FeatureData import FeatureData
@@ -148,7 +148,7 @@ class PopulationExtractor(Extractor):
     #   This is helpful if we're processing a lot of data and want to avoid
     #   eating too much memory.
     def ClearLines(self):
-        utils.Logger.Log(f"Clearing features from PopulationExtractor.", logging.DEBUG)
+        Logger.Log(f"Clearing features from PopulationExtractor.", logging.DEBUG)
         self._registry = FeatureRegistry()
 
     def ClearPlayersLines(self):

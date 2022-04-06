@@ -20,7 +20,7 @@ from math import sqrt
 from pathlib import Path
 from typing import Any, Dict, List, Union
 ## import local files
-import utils
+from utils import Logger
 from extractors.legacy.LegacyFeature import LegacyFeature
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
@@ -45,7 +45,7 @@ class LakelandExtractor(LegacyFeature):
     try:
         _STR_TO_ENUM = utils.loadJSONFile(filename="LakelandEnumerators.json", path=Path("../opengamedata-core/games/LAKELAND/features/"))
     except FileNotFoundError as err:
-        utils.Logger.Log(message="Could not load Lakeland Enumerators", level=logging.ERROR)
+        Logger.Log(message="Could not load Lakeland Enumerators", level=logging.ERROR)
         print("Could not load Lakeland enumerators")
         _STR_TO_ENUM = {}
     _ENUM_TO_STR = {cat: {y: x for x, y in ydict.items()} for cat, ydict in _STR_TO_ENUM.items()}
@@ -113,7 +113,7 @@ class LakelandExtractor(LegacyFeature):
         if output_file:
             self._WRITE_FEATURES = lambda: self.WriteFeatureValues(file=output_file)
         else:
-            self._WRITE_FEATURES = lambda: utils.Logger.Log("Dumping feature data, no writable file was given!")
+            self._WRITE_FEATURES = lambda: Logger.Log("Dumping feature data, no writable file was given!")
         self._cur_gameplay = 1
         self._startgame_count = 0
         self.debug_strs = []
@@ -147,8 +147,8 @@ class LakelandExtractor(LegacyFeature):
             else:
                 debug_strs = self.debug_strs
             exc_type, exc_value, exc_traceback = sys.exc_info()
-            utils.Logger.Log('\n'.join(debug_strs), logging.DEBUG)
-            utils.Logger.Log('\n'.join(traceback.format_exception(exc_type, exc_value, exc_traceback)), logging.ERROR)
+            Logger.Log('\n'.join(debug_strs), logging.DEBUG)
+            Logger.Log('\n'.join(traceback.format_exception(exc_type, exc_value, exc_traceback)), logging.ERROR)
             if True:
                 pass
 
@@ -175,7 +175,7 @@ class LakelandExtractor(LegacyFeature):
             self.setValByName("version", self._VERSION)
         # Check for invalid row.
         if event.session_id != self._session_id:
-            utils.Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!", logging.ERROR)
+            Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!", logging.ERROR)
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
@@ -977,7 +977,7 @@ class LakelandExtractor(LegacyFeature):
         is_neutral = affect == 0
         is_negative = affect == -1
         if(self._num_farmbits) < 1:
-            # utils.Logger.Log(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.", logging.WARNING)
+            # Logger.Log(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.", logging.WARNING)
             self.log_warning(f"Num farmbits < 1 @ {self._num_farmbits}!! Setting to 1.")
             self._num_farmbits = 1
 
@@ -1506,7 +1506,7 @@ class LakelandExtractor(LegacyFeature):
     def log_warning(self, message):
         self.add_debug_str('WARNING: '+message)
         debug_str = '\n'.join(self.debug_strs)
-        utils.Logger.Log(debug_str, logging.WARNING)
+        Logger.Log(debug_str, logging.WARNING)
         self.debug_strs = []
         
     def reset(self):

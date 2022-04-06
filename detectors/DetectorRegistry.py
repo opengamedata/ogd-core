@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Union
 from features.FeatureData import FeatureData
 ## import local files
-import utils
+from utils import Logger
 from Detector import Detector
 from schemas.Event import Event
 

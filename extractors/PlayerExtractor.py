@@ -3,7 +3,7 @@ import logging
 import traceback
 from typing import Any, List, Dict, IO, Type, Union
 # import local files
-import utils
+from utils import Logger
 from extractors.Extractor import Extractor
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry
@@ -125,11 +125,11 @@ class PlayerExtractor(Extractor):
         """Function to empty the list of lines stored by the PlayerProcessor.
         This is helpful if we're processing a lot of data and want to avoid eating too much memory.
         """
-        utils.Logger.Log(f"Clearing features from PlayerExtractor.", logging.DEBUG)
+        Logger.Log(f"Clearing features from PlayerExtractor.", logging.DEBUG)
         self._registry = FeatureRegistry()
 
     def ClearSessionsLines(self):
-        utils.Logger.Log(f"Clearing {len(self._session_extractors)} sessions from PlayerProcessor.", logging.DEBUG)
+        Logger.Log(f"Clearing {len(self._session_extractors)} sessions from PlayerProcessor.", logging.DEBUG)
         self._session_extractors = {}
 
     # *** PRIVATE STATICS ***

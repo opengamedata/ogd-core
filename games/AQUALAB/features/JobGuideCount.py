@@ -2,7 +2,7 @@
 import logging
 from typing import Any, List, Union
 # import locals
-import utils
+from utils import Logger
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -42,5 +42,5 @@ class JobGuideCount(Feature):
             if self._job_map[job_data['string_value']] == self._count_index:
                 ret_val = True
         else:
-            utils.Logger.Log(f"Got invalid job_name data in JobGuideCount", logging.WARNING)
+            Logger.Log(f"Got invalid job_name data in JobGuideCount", logging.WARNING)
         return ret_val

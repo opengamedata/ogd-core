@@ -2,7 +2,7 @@
 import logging
 from typing import Any, Dict, List, Type, Union
 ## import local files
-import utils
+from utils import Logger
 from features.FeatureLoader import FeatureLoader
 from extractors.PopulationExtractor import PopulationExtractor
 from games.AQUALAB.AqualabLoader import AqualabLoader
@@ -30,7 +30,7 @@ class ExtractorManager:
             if exp_types.population:
                 self._pop_extractor = PopulationExtractor(LoaderClass=self._LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         else:
-            utils.Logger.Log("Could not export population/session data, no game extractor given!", logging.WARN)
+            Logger.Log("Could not export population/session data, no game extractor given!", logging.WARN)
 
     def ProcessEvent(self, event:Event) -> None:
         if self._pop_extractor is not None:

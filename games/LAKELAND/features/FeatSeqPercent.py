@@ -24,7 +24,7 @@ import numpy as np
 import json
 from datetime import timedelta
 from models.FeatureModel import FeatureModel
-import utils
+from utils import Logger
 
 _POP_ACHS = "exist group town city".split()
 _FARM_ACHS = "farmer farmers farmtown megafarm".split()
@@ -97,7 +97,7 @@ class _FeatureQuantiles(object):
             quant_low_str = f'{quantile + low_quant_offset}%={low_quant}'
             quant_high_str = f'{quantile}%={high_quant}'
             quant_str = f"{quant_low_str} and {quant_high_str}" if lo_to_hi else f"{quant_high_str} and {quant_low_str}"
-            utils.Logger.Log(
+            Logger.Log(
                 f'A {feat} of {value} units is {compare_str} than {quantile}% (between {quant_str}) of sessions.')
         return quantile
 

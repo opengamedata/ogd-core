@@ -4,7 +4,7 @@ from datetime import datetime
 from schemas import Event
 from typing import Any, Dict, List, Union
 # import locals
-import utils
+from utils import Logger
 from features.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
 from schemas.Event import Event
@@ -35,14 +35,14 @@ class AverageLevelTime(SessionFeature):
                 self._complete_times[_level] = []
             self._complete_times[_level].append(event.timestamp)
         else:
-            utils.Logger.Log(f"AverageLevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
+            Logger.Log(f"AverageLevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
         if len(self._begin_times) < len(self._complete_times):
-            utils.Logger.Log(f"Player began level {self._count_index} {len(self._begin_times)} times but completed it {len(self._complete_times)}.", logging.WARNING)
+            Logger.Log(f"Player began level {self._count_index} {len(self._begin_times)} times but completed it {len(self._complete_times)}.", logging.WARNING)
         _diffs      = []
         for level in self._levels_encountered:
             if level in self._begin_times.keys() and level in self._complete_times.keys():
@@ -50,11 +50,11 @@ class AverageLevelTime(SessionFeature):
                 _diffs += [(self._complete_times[level][i] - self._begin_times[level][i]).total_seconds() for i in range(_num_plays)]
             else:
                 if level not in self._begin_times.keys() and level in self._complete_times.keys():
-                    utils.Logger.Log(f"Player completed level {level}, but did not begin it!", logging.WARN)
+                    Logger.Log(f"Player completed level {level}, but did not begin it!", logging.WARN)
                 elif level in self._begin_times.keys() and level not in self._complete_times.keys():
-                    utils.Logger.Log(f"Player began level {level}, but did not complete it.", logging.DEBUG)
+                    Logger.Log(f"Player began level {level}, but did not complete it.", logging.DEBUG)
                 elif level not in self._begin_times.keys() and level not in self._complete_times.keys():
-                    utils.Logger.Log(f"Player had level {level} listed as encountered, but did not begin *or* complete it.", logging.WARN)
+                    Logger.Log(f"Player had level {level} listed as encountered, but did not begin *or* complete it.", logging.WARN)
         _total_time = sum(_diffs)
         if len(self._levels_encountered) > 0:
             return [_total_time / len(self._levels_encountered)]

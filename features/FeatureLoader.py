@@ -3,7 +3,7 @@ import abc
 import logging
 from typing import Any, Dict, List, Union
 # import locals
-import utils
+from utils import Logger
 from features.Feature import Feature
 from features.FeatureRegistry import FeatureRegistry
 from schemas.GameSchema import GameSchema
@@ -42,7 +42,7 @@ class FeatureLoader(abc.ABC):
                 try:
                     feature = self.LoadFeature(feature_type=name, name=name, feature_args=aggregate)
                 except NotImplementedError as err:
-                    utils.Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
+                    Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
                 else:
                     registry.Register(feature, FeatureRegistry.Listener.Kinds.AGGREGATE)
         for name,percount in self._game_schema.percount_features().items():
@@ -51,7 +51,7 @@ class FeatureLoader(abc.ABC):
                     try:
                         feature = self.LoadFeature(feature_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, count_index=i)
                     except NotImplementedError as err:
-                        utils.Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
+                        Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
                     else:
                         registry.Register(feature=feature, kind=FeatureRegistry.Listener.Kinds.PERCOUNT)
 

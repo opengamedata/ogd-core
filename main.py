@@ -14,7 +14,7 @@ from typing import Tuple
 from git.remote import FetchInfo
 
 # import local files
-import utils
+from utils import Logger
 from config.config import settings as settings
 from interfaces.DataInterface import DataInterface
 from interfaces.CSVInterface import CSVInterface

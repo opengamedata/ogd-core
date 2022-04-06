@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any, Dict, IO, Union
 
 ## import locals
-import utils
+from utils import Logger
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 from schemas.Request import Request
@@ -33,7 +33,7 @@ class FileManager(abc.ABC):
                         readme.write(readme_src.read())
                 except FileNotFoundError as err:
                     readme.write("No game readme prepared")
-                    utils.Logger.Log(f"Could not find {game_schema._game_name}_readme_src", logging.WARNING)
+                    Logger.Log(f"Could not find {game_schema._game_name}_readme_src", logging.WARNING)
                 finally:
                     readme.write("\n\n")
                 # 2. Use schema to write feature & column descriptions to the readme.
@@ -45,9 +45,9 @@ class FileManager(abc.ABC):
                         readme.write(changelog_src.read())
                 except FileNotFoundError as err:
                     readme.write("No changelog prepared")
-                    utils.Logger.Log(f"Could not find changelog_src", logging.WARNING)
+                    Logger.Log(f"Could not find changelog_src", logging.WARNING)
         except FileNotFoundError as err:
-            utils.Logger.Log(f"Could not open readme.md for writing.", logging.ERROR)
+            Logger.Log(f"Could not open readme.md for writing.", logging.ERROR)
             traceback.print_tb(err.__traceback__)
 
     @staticmethod
@@ -105,10 +105,10 @@ class FileManager(abc.ABC):
                 self._short_hash = str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
         except InvalidGitRepositoryError as err:
             msg = f"Code is not in a valid Git repository:\n{str(err)}"
-            utils.Logger.Log(msg, logging.ERROR)
+            Logger.Log(msg, logging.ERROR)
         except NoSuchPathError as err:
             msg = f"Unable to access proper file paths for Git repository:\n{str(err)}"
-            utils.Logger.Log(msg, logging.ERROR)
+            Logger.Log(msg, logging.ERROR)
         # then set up our paths, and ensure each exists.
         base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
         # finally, generate file names.
@@ -133,7 +133,7 @@ class FileManager(abc.ABC):
         if self._files['population'] is not None:
             ret_val = self._files['population']
         else:
-            utils.Logger.Log("No population file available, returning standard output instead.", logging.WARN)
+            Logger.Log("No population file available, returning standard output instead.", logging.WARN)
         return ret_val
 
     def GetPlayersFile(self) -> IO:
@@ -141,7 +141,7 @@ class FileManager(abc.ABC):
         if self._files['players'] is not None:
             ret_val = self._files['players']
         else:
-            utils.Logger.Log("No player file available, returning standard output instead.", logging.WARN)
+            Logger.Log("No player file available, returning standard output instead.", logging.WARN)
         return ret_val
 
     def GetSessionsFile(self) -> IO:
@@ -149,7 +149,7 @@ class FileManager(abc.ABC):
         if self._files['sessions'] is not None:
             ret_val = self._files['sessions']
         else:
-            utils.Logger.Log("No sessions file available, returning standard output instead.", logging.WARN)
+            Logger.Log("No sessions file available, returning standard output instead.", logging.WARN)
         return ret_val
 
     def GetEventsFile(self) -> IO:
@@ -157,35 +157,35 @@ class FileManager(abc.ABC):
         if self._files['events'] is not None:
             ret_val = self._files['events']
         else:
-            utils.Logger.Log("No events file available, returning standard output instead.", logging.WARN)
+            Logger.Log("No events file available, returning standard output instead.", logging.WARN)
         return ret_val
 
     def WritePopulationFile(self, data:str) -> None:
         if self._files['population'] is not None:
             self._files['population'].write(data)
         else:
-            utils.Logger.Log("No population file available, writing to standard output instead.", logging.WARN)
+            Logger.Log("No population file available, writing to standard output instead.", logging.WARN)
             sys.stdout.write(data)
 
     def WritePlayersFile(self, data:str) -> None:
         if self._files['players'] is not None:
             self._files['players'].write(data)
         else:
-            utils.Logger.Log("No player file available, writing to standard output instead.", logging.WARN)
+            Logger.Log("No player file available, writing to standard output instead.", logging.WARN)
             sys.stdout.write(data)
 
     def WriteSessionsFile(self, data:str) -> None:
         if self._files['sessions'] is not None:
             self._files['sessions'].write(data)
         else:
-            utils.Logger.Log("No sessions file available, writing to standard output instead.", logging.WARN)
+            Logger.Log("No sessions file available, writing to standard output instead.", logging.WARN)
             sys.stdout.write(data)
 
     def WriteEventsFile(self, data:str) -> None:
         if self._files['events'] is not None:
             self._files['events'].write(data)
         else:
-            utils.Logger.Log("No events file available, writing to standard output instead.", logging.WARN)
+            Logger.Log("No events file available, writing to standard output instead.", logging.WARN)
             sys.stdout.write(data)
 
     def OpenFiles(self) -> None:
@@ -222,7 +222,7 @@ class FileManager(abc.ABC):
             _existing_events_file  = existing_data.get('events_file', None)
             try:
                 if _existing_pop_file is not None and self._zip_names['population'] is not None:
-                    utils.Logger.Log(f"Renaming {str(_existing_pop_file)} -> {self._zip_names['population']}", logging.DEBUG)
+                    Logger.Log(f"Renaming {str(_existing_pop_file)} -> {self._zip_names['population']}", logging.DEBUG)
                     os.rename(_existing_pop_file, str(self._zip_names['population']))
                 if _existing_players_file is not None and self._zip_names['players'] is not None:
                     os.rename(_existing_players_file, str(self._zip_names['players']))
@@ -232,7 +232,7 @@ class FileManager(abc.ABC):
                     os.rename(_existing_events_file, str(self._zip_names['events']))
             except Exception as err:
                 msg = f"Error while setting up zip files! {type(err)} : {err}"
-                utils.Logger.Log(msg, logging.ERROR)
+                Logger.Log(msg, logging.ERROR)
                 traceback.print_tb(err.__traceback__)
         # for each file, try to save out the csv/tsv to a file - if it's one that should be exported, that is.
         if self._zip_names['population'] is not None:
@@ -246,7 +246,7 @@ class FileManager(abc.ABC):
                     if self._file_names["population"] is not None:
                         os.remove(self._file_names["population"])
                 except FileNotFoundError as err:
-                    utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
                     traceback.print_tb(err.__traceback__)
         if self._zip_names['players'] is not None:
             with zipfile.ZipFile(self._zip_names["players"], "w", compression=zipfile.ZIP_DEFLATED) as players_zip_file:
@@ -259,7 +259,7 @@ class FileManager(abc.ABC):
                     if self._file_names["players"] is not None:
                         os.remove(self._file_names["players"])
                 except FileNotFoundError as err:
-                    utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
                     traceback.print_tb(err.__traceback__)
         if self._zip_names['sessions'] is not None:
             with zipfile.ZipFile(self._zip_names["sessions"], "w", compression=zipfile.ZIP_DEFLATED) as sessions_zip_file:
@@ -272,7 +272,7 @@ class FileManager(abc.ABC):
                     if self._file_names["sessions"] is not None:
                         os.remove(self._file_names["sessions"])
                 except FileNotFoundError as err:
-                    utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
                     traceback.print_tb(err.__traceback__)
         if self._zip_names['events'] is not None:
             with zipfile.ZipFile(self._zip_names["events"], "w", compression=zipfile.ZIP_DEFLATED) as events_zip_file:
@@ -285,14 +285,14 @@ class FileManager(abc.ABC):
                     if self._file_names["events"] is not None:
                         os.remove(self._file_names["events"])
                 except FileNotFoundError as err:
-                    utils.Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
+                    Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
                     traceback.print_tb(err.__traceback__)
 
     def _addToZip(self, path, zip_file, path_in_zip) -> None:
         try:
             zip_file.write(path, path_in_zip)
         except FileNotFoundError as err:
-            utils.Logger.Log(str(err), logging.ERROR)
+            Logger.Log(str(err), logging.ERROR)
             traceback.print_tb(err.__traceback__)
 
     ## Public function to write out a tiny metadata file for indexing OGD data files.
@@ -306,7 +306,7 @@ class FileManager(abc.ABC):
             self._game_data_dir.mkdir(exist_ok=True, parents=True)
         except Exception as err:
             msg = f"Could not set up folder {self._game_data_dir}. {type(err)} {str(err)}"
-            utils.Logger.Log(msg, logging.WARNING)
+            Logger.Log(msg, logging.WARNING)
         else:
             # Second, remove old metas, if they exist.
             start_range = self._date_range['min'].strftime("%Y%m%d") if self._date_range['min'] is not None else "Unknown"
@@ -315,11 +315,11 @@ class FileManager(abc.ABC):
             old_metas = [f for f in os.listdir(self._game_data_dir) if re.match(match_string, f)]
             for old_meta in old_metas:
                 try:
-                    utils.Logger.Log(f"Removing old meta file, {old_meta}")
+                    Logger.Log(f"Removing old meta file, {old_meta}")
                     os.remove(self._game_data_dir / old_meta)
                 except Exception as err:
                     msg = f"Could not remove old meta file {old_meta}. {type(err)} {str(err)}"
-                    utils.Logger.Log(msg, logging.WARNING)
+                    Logger.Log(msg, logging.WARNING)
             # Third, write the new meta file.
             # calculate the path and name of the metadata file, and open/make it.
             meta_file_path : Path = self._game_data_dir/ f"{self._dataset_id}_{self._short_hash}.meta"
@@ -353,13 +353,13 @@ class FileManager(abc.ABC):
         try:
             existing_csvs = utils.loadJSONFile(filename="file_list.json", path=self._data_dir)
         except FileNotFoundError as err:
-            utils.Logger.Log("file_list.json does not exist.", logging.WARNING)
+            Logger.Log("file_list.json does not exist.", logging.WARNING)
         except Exception as err:
             msg = f"Could not load file list. {type(err)} {str(err)}"
-            utils.Logger.Log(msg, logging.ERROR)
+            Logger.Log(msg, logging.ERROR)
         finally:
             with open(self._data_dir / "file_list.json", "w") as existing_csv_file:
-                utils.Logger.Log(f"opened csv file at {existing_csv_file.name}", logging.INFO)
+                Logger.Log(f"opened csv file at {existing_csv_file.name}", logging.INFO)
                 if not self._game_id in existing_csvs.keys():
                     existing_csvs[self._game_id] = {}
                 existing_data = existing_csvs[self._game_id][self._dataset_id] if self._dataset_id in existing_csvs[self._game_id].keys() else None
@@ -392,11 +392,11 @@ class FileManager(abc.ABC):
             if src.exists():
                 shutil.copyfile(src=src, dst=dest)
             else:
-                utils.Logger.Log(f"Could not back up file_list.json, because it does not exist!", logging.WARN)
+                Logger.Log(f"Could not back up file_list.json, because it does not exist!", logging.WARN)
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
-            utils.Logger.Log(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
+            Logger.Log(f"Could not back up file_list.json. Got the following error: {msg}", logging.ERROR)
             return False
         else:
-            utils.Logger.Log(f"Backed up file_list.json to {dest}", logging.INFO)
+            Logger.Log(f"Backed up file_list.json to {dest}", logging.INFO)
             return True

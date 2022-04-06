@@ -3,7 +3,7 @@ import json
 from collections import defaultdict
 from typing import Any, List, Union
 # import locals
-import utils
+from utils import Logger
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -58,7 +58,7 @@ class TopJobCompletionDestinations(Feature):
                 item[0]:item[1] for item in dests[0:5]
             }
 
-            utils.Logger.Log(f"For TopJobCompletionDestinations, sorted dests as: {json.dumps(dests)}")
+            Logger.Log(f"For TopJobCompletionDestinations, sorted dests as: {json.dumps(dests)}")
 
         return [json.dumps(ret_val)]
 

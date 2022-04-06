@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Union
 # import local files
-import utils
+from utils import Logger
 
 ## @class GameSchema
 #  A fairly simple class that reads a JSON schema with information on how a given
@@ -48,7 +48,7 @@ class GameSchema:
                         self._detector_list += self._schema['detectors'][feat_kind].keys()
             else:
                 self._schema["detectors"] = {}
-                utils.Logger.Log(f"{schema_name} game schema does not define any detectors.", logging.WARN)
+                Logger.Log(f"{schema_name} game schema does not define any detectors.", logging.WARN)
             if "features" in self._schema.keys():
                 self._feature_list = []
                 for feat_kind in ["perlevel", "per_count", "aggregate"]:
@@ -56,7 +56,7 @@ class GameSchema:
                         self._feature_list += self._schema['features'][feat_kind].keys()
             else:
                 self._schema["features"] = {}
-                utils.Logger.Log(f"{schema_name} game schema does not define any features.", logging.WARN)
+                Logger.Log(f"{schema_name} game schema does not define any features.", logging.WARN)
             # lastly, get max and min levels.
             if "level_range" in self._schema.keys():
                 self._min_level = self._schema["level_range"]['min']
@@ -64,7 +64,7 @@ class GameSchema:
             if "job_map" in self._schema.keys():
                 self._job_map = self._schema["job_map"]
         else:
-            utils.Logger.Log(f"Could not find game schema at {schema_path / schema_name}", logging.ERROR)
+            Logger.Log(f"Could not find game schema at {schema_path / schema_name}", logging.ERROR)
 
     def __getitem__(self, key) -> Any:
         return self._schema[key] if self._schema is not None else None
@@ -99,7 +99,7 @@ class GameSchema:
             # for i in range(self._min_level, self._max_level+1):
             ret_val = range(self._min_level, self._max_level+1)
         else:
-            utils.Logger.Log(f"Could not generate per-level features, min_level={self._min_level} and max_level={self._max_level}", logging.ERROR)
+            Logger.Log(f"Could not generate per-level features, min_level={self._min_level} and max_level={self._max_level}", logging.ERROR)
         return ret_val
 
     ## Function to retrieve the dictionary of event types for the game.

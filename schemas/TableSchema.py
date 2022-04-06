@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 ## import local files
-import utils
+from utils import Logger
 from schemas.Event import Event
 
 ## @class TableSchema
@@ -47,7 +47,7 @@ class TableSchema:
             self._columns = schema['columns']
             self._column_map = schema['column_map']
         else:
-            utils.Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
+            Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
 
     def ColumnNames(self) -> List[str]:
         """Function to get the names of all columns in the schema.
@@ -177,7 +177,7 @@ class TableSchema:
                 try:
                     return json.loads(str(input))
                 except JSONDecodeError as err:
-                    utils.Logger.Log(f"Could not parse input '{input}' of type {type(input)} from column {column_descriptor['name']}, got the following error:\n{str(err)}", logging.WARN)
+                    Logger.Log(f"Could not parse input '{input}' of type {type(input)} from column {column_descriptor['name']}, got the following error:\n{str(err)}", logging.WARN)
                     return {}
             else:
                 return None
@@ -193,7 +193,7 @@ class TableSchema:
     #     complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":event[game_table.event_index]}
     # except Exception as err:
     #     msg = f"When trying to parse {col}, get error\n{type(err)} {str(err)}"
-    #     utils.Logger.Log(msg, logging.ERROR)
+    #     Logger.Log(msg, logging.ERROR)
     #     raise err
 
     # # make sure we get *something* in the event_custom name

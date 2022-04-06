@@ -6,7 +6,7 @@ from collections import OrderedDict
 from datetime import datetime
 from typing import Any, Dict, List, Union
 ## import local files
-import utils
+from utils import Logger
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event

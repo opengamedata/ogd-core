@@ -3,7 +3,7 @@ import logging
 import traceback
 from typing import Any, List, Dict, IO, Type, Union
 # import local files
-import utils
+from utils import Logger
 from extractors.Extractor import Extractor
 from features.FeatureData import FeatureData
 from features.FeatureLoader import FeatureLoader
@@ -97,7 +97,7 @@ class SessionExtractor(Extractor):
     # *** PUBLIC METHODS ***
 
     def ClearLines(self):
-        utils.Logger.Log(f"Clearing features from SessionExtractor.", logging.DEBUG)
+        Logger.Log(f"Clearing features from SessionExtractor.", logging.DEBUG)
         self._registry = FeatureRegistry()
 
     # *** PRIVATE STATICS ***

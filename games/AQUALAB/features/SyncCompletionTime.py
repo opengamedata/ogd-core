@@ -2,7 +2,7 @@
 import logging
 from typing import Any, List
 # import locals
-import utils
+from utils import Logger
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -27,7 +27,7 @@ class SyncCompletionTime(Feature):
             if self._sim_start_time is not None:
                 self._time = event.timestamp - self._sim_start_time
             else:
-                utils.Logger.Log("Simulation synced when we had no active start time!", logging.WARNING)
+                Logger.Log("Simulation synced when we had no active start time!", logging.WARNING)
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

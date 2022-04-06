@@ -3,7 +3,7 @@ import json
 import logging
 from typing import Any, List, Tuple, Union
 ## import local files
-import utils
+from utils import Logger
 from schemas.Event import Event
 from schemas.TableSchema import TableSchema
 
@@ -51,7 +51,7 @@ class EventManager:
                 col_values[i] = json.dumps(col)
         # event.event_data = json.dumps(event.event_data)
         self._lines.append(separator.join([str(item) for item in col_values]) + "\n") # changed , to \t
-        # utils.Logger.Log(f"Got event: {str(event)}")
+        # Logger.Log(f"Got event: {str(event)}")
 
     def GetColumnNames(self) -> List[str]:
         return self._columns
@@ -63,5 +63,5 @@ class EventManager:
     #  This is helpful if we're processing a lot of data and want to avoid
     #  Eating too much memory.
     def ClearLines(self):
-        utils.Logger.Log(f"Clearing {len(self._lines)} entries from EventProcessor.", logging.DEBUG)
+        Logger.Log(f"Clearing {len(self._lines)} entries from EventProcessor.", logging.DEBUG)
         self._lines = []
