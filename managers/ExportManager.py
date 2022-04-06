@@ -27,6 +27,9 @@ class ExportManager:
     """ExportManager class.
     Use this class to carry out a request for a data export, by passing along an instance of the `Request` class to the ExecuteRequest function.
     """
+
+    # *** PUBLIC BUILT-INS ***
+
     def __init__(self, settings):
         """Constructor for an ExportManager object.
         Simply sets the settings for the manager. All other data comes from a request given to the manager.
@@ -37,6 +40,10 @@ class ExportManager:
         self._settings = settings
         self._event_mgr   : Union[EventManager, None]     = None
         self._extract_mgr : Union[ExtractorManager, None] = None
+
+    # *** PUBLIC STATICS ***
+
+    # *** PUBLIC METHODS ***
 
     def ExecuteRequest(self, request:Request) -> Dict[str,Any]:
         """Carry out the export given by a request.
@@ -56,17 +63,21 @@ class ExportManager:
         _table_schema : TableSchema = self._prepareTableSchema(_game_id)
         _file_manager : Union[FileManager, None] = None # stays None if not requested for file exports.
 
+        Logger.Log(f"Executing request: {str(request)}", logging.INFO)
         start = datetime.now()
         try:
+            Logger.Log(f"Preparing processors...", logging.DEBUG)
             self._prepareProcessors(request=request, game_schema=_game_schema, feature_overrides=request._feat_overrides)
+            Logger.Log(f"Done", logging.DEBUG)
             if request.ToFile():
+                Logger.Log(f"File output requested, setting up file manager...", logging.DEBUG)
                 _data_dir : str = self._settings["DATA_DIR"] or default_settings["DATA_DIR"]
                 _file_manager = FileManager(request=request, data_dir=_data_dir, extension="tsv")
                 _file_manager.OpenFiles()
                 self._setupFileHeaders(request=request, file_manager=_file_manager)
+                Logger.Log(f"Done", logging.DEBUG)
             _result = self._executeDataRequest(request=request, table_schema=_table_schema, file_manager=_file_manager)
             num_sess : int = _result.get("sessions_ct", 0)
-            Logger.Log(f"Fucking print some bullshit just after result.get-ting to see if it logs", logging.INFO)
             if request.ToFile() and _file_manager is not None:
                 # 4) Save and close files
                 self._setupReadme(file_manager=_file_manager, game_schema=_game_schema, table_schema=_table_schema)
@@ -80,12 +91,16 @@ class ExportManager:
             ret_val['success'] = True # if we made it to end, we were successful.
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
-            Logger.Log(f"Failed to execute data request {str(request)}, an error occurred:\n{msg}", logging.ERROR)
+            Logger.Log(f"Failed to execute data request {str(request)}, an error occurred:\n{msg}", logging.INFO)
             traceback.print_tb(err.__traceback__)
         finally:
             time_delta = datetime.now() - start
             Logger.Log(f"Total data request execution time: {time_delta}", logging.INFO)
             return ret_val
+
+    # *** PRIVATE STATICS ***
+
+    # *** PRIVATE METHODS ***
 
     def _prepareTableSchema(self, _game_id:str):
         if "GAME_SOURCE_MAP" in self._settings:
