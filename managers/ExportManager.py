@@ -66,8 +66,8 @@ class ExportManager:
         Logger.Log(f"Executing request: {str(request)}", logging.INFO)
         start = datetime.now()
         try:
-            Logger.Log(f"Preparing processors...", logging.DEBUG)
-            self._prepareProcessors(request=request, game_schema=_game_schema, feature_overrides=request._feat_overrides)
+            Logger.Log(f"Preparing managers...", logging.DEBUG)
+            self._prepareManagers(request=request, game_schema=_game_schema, feature_overrides=request._feat_overrides)
             Logger.Log(f"Done", logging.DEBUG)
             if request.ToFile():
                 Logger.Log(f"File output requested, setting up file manager...", logging.DEBUG)
@@ -109,7 +109,7 @@ class ExportManager:
             _table_name = default_settings["GAME_SOURCE_MAP"][_game_id]["table"]
         return TableSchema(schema_name=f"{_table_name}.json")
 
-    def _prepareProcessors(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
+    def _prepareManagers(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
         if request.ExportEvents():
             self._event_mgr = EventManager()
             # evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
