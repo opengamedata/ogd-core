@@ -113,7 +113,6 @@ def WriteReadme() -> bool:
 def RunExport(events:bool = False, features:bool = False) -> bool:
     ret_val : bool = False
 
-    start = datetime.now()
     req = genRequest(events=events, features=features)
     if req.GetInterface().IsOpen():
         export_manager = ExportManager(settings=settings)
@@ -121,9 +120,6 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
         ret_val = result['success']
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
-    time_taken = datetime.now() - start
-    Logger.Log(f"Total time taken: {time_taken}", logging.INFO)
-    Logger.Log(f"Done with {args.game}.", logging.INFO)
     return ret_val
 
 def genRequest(events:bool, features:bool) -> Request:
