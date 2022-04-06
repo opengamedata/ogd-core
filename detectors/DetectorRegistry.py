@@ -45,7 +45,7 @@ class DetectorRegistry:
     # *** BUILT-INS ***
 
     # Base constructor for Registry.
-    def __init__(self, order:int=len(FeatureOrders)):
+    def __init__(self):
         """Base constructor for Registry
 
         Just sets up mostly-empty dictionaries for use by the registry.
