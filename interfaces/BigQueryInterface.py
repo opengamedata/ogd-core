@@ -107,20 +107,30 @@ class BigQueryInterface(DataInterface):
             else:
                 db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
                 table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-            id_string = ','.join([f"{x}" for x in id_list])
             if id_mode == IDMode.SESSION:
+                Logger.Log(f"Using session ID mode.", logging.DEBUG)
+                id_string = ','.join([f"{x}" for x in id_list])
                 where_clause = f"""
                     WHERE param_session.key = 'ga_session_id' and param_session.value.int_value IN ({id_string})
                     AND   param_version.key = 'app_version' AND param_version.value.double_value >= {AQUALAB_MIN_VERSION}
                     AND   param_user.key = 'user_code'
                 """
             elif id_mode == IDMode.PLAYER:
+                Logger.Log(f"Using player ID mode.", logging.DEBUG)
+                id_string = ','.join([f"'{x}'" for x in id_list])
                 where_clause = f"""
                     WHERE param_session.key = 'ga_session_id'
                     AND   param_version.key = 'app_version' AND param_version.value.double_value >= {AQUALAB_MIN_VERSION}
                     AND   param_user.key = 'user_code' and param_user.value.string_value IN ({id_string})
                 """
-                           
+            else:
+                Logger.Log(f"Invalid ID mode given (val={id_mode}), defaulting to session mode.", logging.DEBUG)
+                id_string = ','.join([f"{x}" for x in id_list])
+                where_clause = f"""
+                    WHERE param_session.key = 'ga_session_id' and param_session.value.int_value IN ({id_string})
+                    AND   param_version.key = 'app_version' AND param_version.value.double_value >= {AQUALAB_MIN_VERSION}
+                    AND   param_user.key = 'user_code'
+                """
             if self._game_id == "AQUALAB":
                 query = f"""
                     SELECT event_name, event_params, device, geo, platform,
@@ -202,16 +212,26 @@ class BigQueryInterface(DataInterface):
             else:
                 db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
                 table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-            id_string = ','.join([f"{x}" for x in id_list])
             if id_mode==IDMode.SESSION:
+                Logger.Log(f"Using session ID mode.", logging.DEBUG)
+                id_string = ','.join([f"{x}" for x in id_list])
                 where_clause = f"""
                     WHERE param.key = "ga_session_id"
                     AND param.value.int_value IN ({id_string})
                 """
             elif id_mode==IDMode.PLAYER:
+                Logger.Log(f"Using player ID mode.", logging.DEBUG)
+                id_string = ','.join([f"'{x}'" for x in id_list])
                 where_clause = f"""
                     WHERE param.key = "user_code"
                     AND param.value.string_value IN ({id_string})
+                """
+            else:
+                Logger.Log(f"Invalid ID mode given (val={id_mode}), defaulting to session mode.", logging.DEBUG)
+                id_string = ','.join([f"{x}" for x in id_list])
+                where_clause = f"""
+                    WHERE param.key = "ga_session_id"
+                    AND param.value.int_value IN ({id_string})
                 """
             query = f"""
                 WITH datetable AS
