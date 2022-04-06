@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any, Dict, IO, Union
 
 ## import locals
-from utils import Logger
+from utils import Logger, loadJSONFile
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 from schemas.Request import Request

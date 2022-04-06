@@ -9,7 +9,7 @@ from pathlib import Path
 from unittest import TestCase
 # local import(s)
 from config.config import settings
-from utils import Logger
+import utils
 
 class t_utils(TestCase):
     def RunAll(self):

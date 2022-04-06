@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 ## import local files
-from utils import Logger
+from utils import Logger, loadJSONFile
 from schemas.Event import Event
 
 ## @class TableSchema

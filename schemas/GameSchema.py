@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Union
 # import local files
-from utils import Logger
+from utils import Logger, loadJSONFile
 
 ## @class GameSchema
 #  A fairly simple class that reads a JSON schema with information on how a given
