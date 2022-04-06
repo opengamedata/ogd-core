@@ -53,19 +53,20 @@ class Logger:
     file_logger = logging.getLogger("file_logger")
     file_logger.setLevel(level=logging.DEBUG)
     # file_logger.setLevel(level=logging.DEBUG)
-    try:
-        err_handler = logging.FileHandler("ExportErrorReport.log", encoding="utf-8")
-        debug_handler = logging.FileHandler("ExportDebugReport.log", encoding="utf-8")
-    except PermissionError as err:
-        std_logger.exception(f"Failed permissions check for log files. No file logging on server.")
-    else:
-        std_logger.info("Successfully set up logging files.")
-        err_handler.setLevel(level=logging.WARNING)
-        file_logger.addHandler(err_handler)
-        debug_handler.setLevel(level=logging.DEBUG)
-        file_logger.addHandler(debug_handler)
-    finally:
-        file_logger.debug("Testing file logger")
+    if settings.get('LOG_FILE', False):
+        try:
+            err_handler = logging.FileHandler("./ExportErrorReport.log", encoding="utf-8")
+            debug_handler = logging.FileHandler("./ExportDebugReport.log", encoding="utf-8")
+        except PermissionError as err:
+            std_logger.exception(f"Failed permissions check for log files. No file logging on server.")
+        else:
+            std_logger.info("Successfully set up logging files.")
+            err_handler.setLevel(level=logging.WARNING)
+            file_logger.addHandler(err_handler)
+            debug_handler.setLevel(level=logging.DEBUG)
+            file_logger.addHandler(debug_handler)
+        finally:
+            file_logger.debug("Testing file logger")
     
     # Function to print a method to both the standard out and file logs.
     # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.

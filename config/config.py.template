@@ -1,5 +1,6 @@
 settings = {
     "DATA_DIR": "./data/",
+    "LOG_FILE": False,
     "MYSQL_CONFIG":
     {
         "DB_HOST" : "127.0.0.1",
