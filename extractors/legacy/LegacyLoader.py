@@ -1,6 +1,7 @@
 # import libraries
-from typing import List, Union
+from typing import Any, Dict, List, Union
 # import locals
+from features.Feature import Feature
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry
 from schemas.GameSchema import GameSchema
@@ -13,3 +14,6 @@ class LegacyLoader(FeatureLoader):
         feat = self.LoadFeature(feature_type="", name="", feature_args={}, count_index=0)
         # treat the monolithic LegacyFeature extractor as a single aggregate.
         registry.Register(feat, FeatureRegistry.Listener.Kinds.AGGREGATE)
+
+    def LoadDetector(self, detector_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+        return None
