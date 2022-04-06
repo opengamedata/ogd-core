@@ -1,6 +1,6 @@
 ## import standard libraries
 import abc
-from typing import Any, Dict, List, Union
+from typing import Any, Callable, List, Union
 # import locals
 from features.Feature import Feature
 from features.FeatureData import FeatureData
@@ -18,7 +18,11 @@ class Detector(Feature):
     # *** ABSTRACTS ***
 
     @abc.abstractmethod
-    def _trigger(self) -> Union[Event, None]:
+    def _trigger_condition(self) -> bool:
+        pass
+
+    @abc.abstractmethod
+    def _trigger_event(self) -> Event:
         pass
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -51,10 +55,11 @@ class Detector(Feature):
 
     # *** PUBLIC BUILT-INS ***
 
-    def __init__(self, name:str, description:str, count_index:int):
-        self._name = name
-        self._desc = description
+    def __init__(self, name:str, description:str, count_index:int, trigger_callback:Callable[[Event], None]):
+        self._name        = name
+        self._desc        = description
         self._count_index = count_index
+        self._callback    = trigger_callback
 
     def __str__(self):
         return f"{self._name} : {self._desc}"
@@ -72,10 +77,10 @@ class Detector(Feature):
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event=event):
             self._extractFromEvent(event=event)
-    
-    def Trigger(self) -> Union[Event, None]:
-        # TODO: add some logic to fill in empty values of Event with reasonable defaults, where applicable.
-        return self._trigger()
+            if self._trigger_condition():
+                _event = self._trigger_event()
+                # TODO: add some logic to fill in empty values of Event with reasonable defaults, where applicable.
+                self._callback(_event)
 
     ## Base function to get the minimum game data version the Detector can handle.
     def MinVersion(self) -> Union[str,None]:

@@ -1,11 +1,9 @@
 ## import standard libraries
 import enum
-import json
 import logging
 from collections import OrderedDict
 from datetime import datetime
-from typing import Any, Dict, List, Union
-from features.FeatureData import FeatureData
+from typing import Any, Callable, Dict, List, Union
 ## import local files
 from utils import Logger
 from Detector import Detector
@@ -45,16 +43,13 @@ class DetectorRegistry:
     # *** BUILT-INS ***
 
     # Base constructor for Registry.
-    def __init__(self):
+    def __init__(self, trigger_callback:Callable[[Event], None]):
         """Base constructor for Registry
 
         Just sets up mostly-empty dictionaries for use by the registry.
         """
-        self._detectors : OrderedDict[str, Detector] = OrderedDict()
-        # self._features : Dict[str, OrderedDict[str, Feature]] = {
-        #     "first_order" : OrderedDict(),
-        #     "second_order" : OrderedDict()
-        # }
+        self._trigger_callback = trigger_callback
+        self._detectors      : OrderedDict[str, Detector]                = OrderedDict()
         self._event_registry : Dict[str,List[DetectorRegistry.Listener]] = {"all_events":[]}
 
     # string conversion for Extractors.
