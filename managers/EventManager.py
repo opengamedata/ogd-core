@@ -3,9 +3,10 @@ import json
 import logging
 from typing import Any, List, Tuple, Union
 ## import local files
-from utils import Logger
+from detectors.DetectorRegistry import DetectorRegistry
 from schemas.Event import Event
 from schemas.TableSchema import TableSchema
+from utils import Logger
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
@@ -21,8 +22,12 @@ class EventManager:
     #  @param events_csv_file The output file, to which we'll write the event game data.
     def __init__(self):
         # define instance vars
-        self._lines        : List[str]      = []
-        self._columns      : List[str]      = Event.ColumnNames()
+        self._lines        : List[str]    = []
+        self._columns      : List[str]    = Event.ColumnNames()
+        self._registry : DetectorRegistry = DetectorRegistry()
+
+    def ReceiveEventTrigger(self, event:Event):
+        self.ProcessEvent(event=event, separator='\t')
 
     ## Function to handle processing one row of data.
     #  @param row_with_complex_parsed A tuple of the row data. We assume the
@@ -43,6 +48,7 @@ class EventManager:
         self._lines.append(separator.join([str(item) for item in line]) + "\n") # changed , to \t
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
+        self._registry.ExtractFromEvent(event=event)
         col_values = event.ColumnValues()
         for i,col in enumerate(col_values):
             if type(col) == str:
