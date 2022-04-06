@@ -1,6 +1,6 @@
 # import standard libraries
 from datetime import datetime
-from typing import Any, List, Union
+from typing import Callable, List
 
 from chardet import detect
 # import local files
@@ -13,8 +13,9 @@ class CollectFactNoJob(Detector):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description, count_index=0)
+    def __init__(self, name:str, description:str, trigger_callback:Callable[[Event], None]):
+        super().__init__(name=name, description=description, count_index=0, trigger_callback=trigger_callback)
+        self._found_jobless_fact = False
         self._sess_id = "Unknown"
         self._time = datetime.now()
 
@@ -36,10 +37,17 @@ class CollectFactNoJob(Detector):
         if event.event_data['job_name'] == "no-active-job":
             self._sess_id = event.session_id
             self._time = event.timestamp
-            self.Trigger()
+            self._found_jobless_fact = True
         return
 
-    def _trigger(self) -> Union[Event, None]:
+    def _trigger_condition(self) -> bool:
+        if self._found_jobless_fact:
+            self._found_jobless_fact = False
+            return True
+        else:
+            return False
+
+    def _trigger_event(self) -> Event:
         """_summary_
 
         :return: _description_
