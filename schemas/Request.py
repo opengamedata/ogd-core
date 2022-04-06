@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Union
 # import local files
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
+from utils import Logger
 
 class ExporterRange:
     def __init__(self, date_min:Union[datetime,None], date_max:Union[datetime,None], ids:Union[List[str],None], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None]=None):
@@ -108,10 +109,16 @@ class Request(abc.ABC):
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
         _fmt = "%Y-%m-%d"
-        _range = self._range.GetDateRange()
-        _min = _range['min'].strftime(_fmt) if _range['min'] is not None else "None"
-        _max = _range['max'].strftime(_fmt) if _range['max'] is not None else "None"
-        return f"{self._game_id}: {_min}-{_max}"
+        _min = "Unkown"
+        _max = "Unkown"
+        try:
+            _range = self._range.GetDateRange()
+            _min = _range['min'].strftime(_fmt) if _range['min'] is not None else "None"
+            _max = _range['max'].strftime(_fmt) if _range['max'] is not None else "None"
+        except Exception as err:
+            Logger.Log(f"Got an error when trying to stringify a Request: {type(err)} {str(err)}")
+        finally:
+            return f"{self._game_id}: {_min}-{_max}"
 
     def GetGameID(self):
         return self._game_id
