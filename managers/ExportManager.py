@@ -66,6 +66,7 @@ class ExportManager:
                 self._setupFileHeaders(request=request, file_manager=_file_manager)
             _result = self._executeDataRequest(request=request, table_schema=_table_schema, file_manager=_file_manager)
             num_sess : int = _result.get("sessions_ct", 0)
+            utils.Logger.Log(f"Fucking print some bullshit just after result.get-ting to see if it logs", logging.INFO)
             if request.ToFile() and _file_manager is not None:
                 # 4) Save and close files
                 self._setupReadme(file_manager=_file_manager, game_schema=_game_schema, table_schema=_table_schema)
