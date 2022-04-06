@@ -1,6 +1,6 @@
 # import standard libraries
-from enum import Enum
+from enum import IntEnum
 
-class IDMode(Enum):
+class IDMode(IntEnum):
     SESSION = 1
     PLAYER = 2
