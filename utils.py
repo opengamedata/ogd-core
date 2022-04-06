@@ -71,26 +71,27 @@ class Logger:
     # Function to print a method to both the standard out and file logs.
     # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
     @staticmethod
-    def Log(message:str, level=logging.DEBUG) -> None:
+    def Log(message:str, level=logging.DEBUG, depth:int=0) -> None:
         now = datetime.now().strftime("%y-%m-%d %H:%M:%S")
+        indent = ''.join(['  '*depth])
         if Logger.file_logger is not None:
             if level == logging.DEBUG:
-                Logger.file_logger.debug(f"DEBUG:   {now} {message}")
+                Logger.file_logger.debug(f"DEBUG:   {now} {indent}{message}")
             elif level == logging.INFO:
-                Logger.file_logger.info( f"INFO:    {now} {message}")
+                Logger.file_logger.info( f"INFO:    {now} {indent}{message}")
             elif level == logging.WARNING:
-                Logger.file_logger.warn( f"WARNING: {now} {message}")
+                Logger.file_logger.warn( f"WARNING: {now} {indent}{message}")
             elif level == logging.ERROR:
-                Logger.file_logger.error(f"ERROR:   {now} {message}")
+                Logger.file_logger.error(f"ERROR:   {now} {indent}{message}")
         if Logger.std_logger is not None:
             if level == logging.DEBUG:
-                Logger.std_logger.debug(f"DEBUG:   {message}")
+                Logger.std_logger.debug(f"DEBUG:   {indent}{message}")
             elif level == logging.INFO:
-                Logger.std_logger.info( f"INFO:    {message}")
+                Logger.std_logger.info( f"INFO:    {indent}{message}")
             elif level == logging.WARNING:
-                Logger.std_logger.warn( f"WARNING: {message}")
+                Logger.std_logger.warn( f"WARNING: {indent}{message}")
             elif level == logging.ERROR:
-                Logger.std_logger.error(f"ERROR:   {message}")
+                Logger.std_logger.error(f"ERROR:   {indent}{message}")
 
     @staticmethod
     def Print(message:str, level=logging.DEBUG) -> None:
