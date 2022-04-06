@@ -247,6 +247,7 @@ class BigQueryInterface(DataInterface):
                 {where_clause}
             """
             data = list(self._client.query(query))
+            # TODO: figure out what format to use to parse times from here.
             return {'min':data[0][0], 'max':data[0][1]}
         else:
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, BigQuery connection is not open.", logging.WARN)
