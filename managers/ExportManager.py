@@ -10,11 +10,20 @@ import traceback
 from datetime import datetime
 from pathlib import Path
 from pprint import pformat
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Tuple, Type, Union
 from managers.ExtractorManager import ExtractorManager
 ## import local files
 from utils import Logger
 from config.config import settings as default_settings
+from features.FeatureLoader import FeatureLoader
+from games.AQUALAB.AqualabLoader import AqualabLoader
+from games.CRYSTAL.CrystalLoader import CrystalLoader
+from games.JOWILDER.JowilderLoader import JowilderLoader
+from games.LAKELAND.LakelandLoader import LakelandLoader
+from games.MAGNET.MagnetLoader import MagnetLoader
+from games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
+from games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
+from games.WAVES.WaveLoader import WaveLoader
 from managers.FileManager import FileManager
 from managers.EventManager import EventManager
 from schemas.GameSchema import GameSchema
@@ -111,7 +120,9 @@ class ExportManager:
 
     def _prepareManagers(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
         if request.ExportEvents():
-            self._event_mgr = EventManager()
+            load_class = self._prepareLoaderClass(game_schema._game_name)
+            if load_class is not None:
+                self._event_mgr = EventManager(LoaderClass=load_class, game_schema=game_schema, feature_overrides=feature_overrides)
             # evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
         else:
             Logger.Log("Event log not requested, skipping events file.", logging.INFO)
@@ -124,6 +135,31 @@ class ExportManager:
                 request._exports.players    = False
                 request._exports.population = False
                 Logger.Log("Could not extract feature data, no game extractor given!", logging.WARN)
+
+    def _prepareLoaderClass(self, game_id:str) -> Union[Type[FeatureLoader],None]:
+        _loader_class: Union[Type[FeatureLoader],None] = None
+        if game_id == "AQUALAB":
+            _loader_class = AqualabLoader
+        elif game_id == "CRYSTAL":
+            _loader_class = CrystalLoader
+        elif game_id == "JOWILDER":
+            _loader_class = JowilderLoader
+        elif game_id == "LAKELAND":
+            _loader_class = LakelandLoader
+        elif game_id == "MAGNET":
+            _loader_class = MagnetLoader
+        elif game_id == "SHADOWSPECT":
+            _loader_class = ShadowspectLoader
+        elif game_id == "SHIPWRECKS":
+            _loader_class = ShipwrecksLoader
+        elif game_id == "WAVES":
+            _loader_class = WaveLoader
+        elif game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "STEMPORTS", "WIND"]:
+            # all games with data but no extractor.
+            pass
+        else:
+            raise Exception(f"Got an invalid game ID ({game_id})!")
+        return _loader_class
 
     def _executeDataRequest(self, request:Request, table_schema:TableSchema, file_manager:Union[FileManager, None]=None) -> Dict[str,Any]:
         ret_val       : Dict[str,Any]           = {"events":None, "sessions":None, "players":None, "population":None, "sessions_ct":0}

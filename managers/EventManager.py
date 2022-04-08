@@ -1,11 +1,13 @@
 ## import standard libraries
 import json
 import logging
-from typing import Any, List
+from typing import Any, List, Type, Union
 ## import local files
 from detectors.DetectorRegistry import DetectorRegistry
+from features.FeatureLoader import FeatureLoader
+from games.LAKELAND.LakelandLoader import LakelandLoader
 from schemas.Event import Event
-from schemas.TableSchema import TableSchema
+from schemas.GameSchema import GameSchema
 from utils import Logger
 
 ## @class EventProcessor
@@ -20,14 +22,21 @@ class EventManager:
     #  @param game_schema   A dictionary that defines how the game data itself
     #                       is structured.
     #  @param events_csv_file The output file, to which we'll write the event game data.
-    def __init__(self):
+    def __init__(self, LoaderClass:Type[FeatureLoader], game_schema: GameSchema,
+                 feature_overrides:Union[List[str],None]=None):
         # define instance vars
-        self._lines       : List[str]     = []
-        self._columns     : List[str]     = Event.ColumnNames()
-        self._registry : DetectorRegistry = DetectorRegistry()
-        self._debug_count : int           = 0
+        self._lines       : List[str]        = []
+        self._columns     : List[str]        = Event.ColumnNames()
+        self._registry    : DetectorRegistry = DetectorRegistry()
 
-    def ReceiveEventTrigger(self, event:Event):
+        self._game_schema : GameSchema            = game_schema
+        self._overrides   : Union[List[str],None] = feature_overrides
+        self._LoaderClass : Type[FeatureLoader]   = LoaderClass
+        self._loader      : FeatureLoader         = self._prepareLoader()
+        self._loader.LoadToDetectorRegistry(registry=self._registry, trigger_callback=self.ReceiveEventTrigger)
+        self._debug_count : int                   = 0
+
+    def ReceiveEventTrigger(self, event:Event) -> None:
         if self._debug_count < 20:
             Logger.Log("EventManager received an event trigger.", logging.DEBUG)
             self._debug_count += 1
@@ -57,3 +66,11 @@ class EventManager:
     def ClearLines(self):
         Logger.Log(f"Clearing {len(self._lines)} entries from EventManager.", logging.DEBUG)
         self._lines = []
+
+    def _prepareLoader(self) -> FeatureLoader:
+        ret_val : FeatureLoader
+        if self._LoaderClass is LakelandLoader:
+            ret_val = LakelandLoader(player_id="EventManager", session_id="EventManager", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=None)
+        else:
+            ret_val = self._LoaderClass(player_id="EventManager", session_id="EventManager", game_schema=self._game_schema, feature_overrides=self._overrides)
+        return ret_val

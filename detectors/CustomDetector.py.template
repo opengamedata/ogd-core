@@ -1,6 +1,6 @@
 # import standard libraries
 from datetime import datetime
-from typing import Any, List, Union
+from typing import Any, Callable, List, Union
 # import local files
 from features.Feature import Feature
 from schemas.Event import Event
@@ -11,7 +11,7 @@ class CustomDetector(Feature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, name:str, description:str, count_index:int, trigger_callback:Callable[[Event], None], job_map:dict):
+    def __init__(self, name:str, description:str, count_index:int, trigger_callback:Callable[[Event], None]):
         super().__init__(name=name, description=description, count_index=count_index, trigger_callback=trigger_callback)
         # >>> create/initialize any variables to track detector state <<<
         #

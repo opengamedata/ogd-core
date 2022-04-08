@@ -43,12 +43,11 @@ class DetectorRegistry:
     # *** BUILT-INS ***
 
     # Base constructor for Registry.
-    def __init__(self, trigger_callback:Callable[[Event], None]):
+    def __init__(self):
         """Base constructor for Registry
 
         Just sets up mostly-empty dictionaries for use by the registry.
         """
-        self._trigger_callback = trigger_callback
         self._detectors      : OrderedDict[str, Detector]                = OrderedDict()
         self._event_registry : Dict[str,List[DetectorRegistry.Listener]] = {"all_events":[]}
 
