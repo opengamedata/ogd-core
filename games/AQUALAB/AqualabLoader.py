@@ -1,12 +1,13 @@
 # import standard libraries
 import json
-from typing import Any, Dict, List, Union
+from typing import Any, Callable, Dict, List, Union
 # import local files
 from detectors.Detector import Detector
 from features.FeatureLoader import FeatureLoader
 from features.Feature import Feature
 from games.AQUALAB.detectors import *
 from games.AQUALAB.features import *
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 
 EXPORT_PATH = "games/AQUALAB/DBExport.json"
@@ -123,10 +124,10 @@ class AqualabLoader(FeatureLoader):
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Aqualab.")
         return ret_val
 
-    def LoadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], count_index:Union[int,None] = None) -> Detector:
+    def LoadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Union[int,None] = None) -> Detector:
         ret_val : Detector
         if detector_type == "CollectFactNoJob":
-            ret_val = CollectFactNoJob.CollectFactNoJob(name=name, description=detector_args["description"])
+            ret_val = CollectFactNoJob.CollectFactNoJob(name=name, description=detector_args["description"], trigger_callback=trigger_callback)
         else:
             raise NotImplementedError(f"'{detector_type}' is not a valid detector for Aqualab.")
         return ret_val
