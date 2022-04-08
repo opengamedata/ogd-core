@@ -1,6 +1,8 @@
 # import libraries
 from typing import Any, Dict, List, Union
 # import locals
+from detectors.Detector import Detector
+from extractors.legacy.LegacyDetector import LegacyDetector
 from features.Feature import Feature
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry
@@ -15,5 +17,5 @@ class LegacyLoader(FeatureLoader):
         # treat the monolithic LegacyFeature extractor as a single aggregate.
         registry.Register(feat, FeatureRegistry.Listener.Kinds.AGGREGATE)
 
-    def LoadDetector(self, detector_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
-        return None
+    def LoadDetector(self, detector_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Detector:
+        return LegacyDetector(name=name, description=feature_args["description"])
