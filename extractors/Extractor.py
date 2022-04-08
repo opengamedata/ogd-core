@@ -50,7 +50,7 @@ class Extractor(abc.ABC):
         self._LoaderClass : Type[FeatureLoader]   = LoaderClass
         self._registry    : FeatureRegistry       = FeatureRegistry()
         self._loader      : FeatureLoader         = self._prepareLoader()
-        self._loader.LoadToRegistry(registry=self._registry)
+        self._loader.LoadToFeatureRegistry(registry=self._registry)
     def __str__(self):
         return f""
 

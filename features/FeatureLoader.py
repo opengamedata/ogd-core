@@ -1,12 +1,15 @@
 # import libraries
 import abc
 import logging
-from typing import Any, Dict, List, Union
+from typing import Any, Callable, Dict, List, Union
+from detectors.Detector import Detector
 # import locals
-from utils import Logger
+from detectors.DetectorRegistry import DetectorRegistry
 from features.Feature import Feature
 from features.FeatureRegistry import FeatureRegistry
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
+from utils import Logger
 
 class FeatureLoader(abc.ABC):
     # *** ABSTRACTS ***
@@ -16,7 +19,7 @@ class FeatureLoader(abc.ABC):
         pass
     
     @abc.abstractmethod
-    def LoadDetector(self, detector_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+    def LoadDetector(self, detector_type:str, name:str, feature_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Union[int,None] = None) -> Detector:
         pass
 
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
@@ -35,7 +38,7 @@ class FeatureLoader(abc.ABC):
         self._game_schema : GameSchema = game_schema
         self._overrides   : Union[List[str],None]    = feature_overrides
 
-    def LoadToRegistry(self, registry:FeatureRegistry) -> None:
+    def LoadToFeatureRegistry(self, registry:FeatureRegistry) -> None:
         # first, liad aggregate features
         for name,aggregate in self._game_schema.aggregate_features().items():
             if FeatureLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=self._overrides):
@@ -54,6 +57,26 @@ class FeatureLoader(abc.ABC):
                         Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
                     else:
                         registry.Register(feature=feature, kind=FeatureRegistry.Listener.Kinds.PERCOUNT)
+
+    def LoadToDetectorRegistry(self, registry:DetectorRegistry, trigger_callback:Callable[[Event], None]) -> None:
+        # first, liad aggregate features
+        for name,aggregate in self._game_schema.aggregate_detectors().items():
+            if FeatureLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=self._overrides):
+                try:
+                    detector = self.LoadDetector(detector_type=name, name=name, feature_args=aggregate, trigger_callback=trigger_callback)
+                except NotImplementedError as err:
+                    Logger.Log(f"{name} is not a valid detector for {self._game_schema._game_name}", logging.ERROR)
+                else:
+                    registry.Register(detector, DetectorRegistry.Listener.Kinds.AGGREGATE)
+        for name,percount in self._game_schema.percount_features().items():
+            if FeatureLoader._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=self._overrides):
+                for i in FeatureLoader._genCountRange(count=percount["count"], schema=self._game_schema):
+                    try:
+                        detector = self.LoadDetector(detector_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, trigger_callback=trigger_callback, count_index=i)
+                    except NotImplementedError as err:
+                        Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
+                    else:
+                        registry.Register(detector=detector, kind=DetectorRegistry.Listener.Kinds.PERCOUNT)
 
     # *** PRIVATE STATICS ***
 
