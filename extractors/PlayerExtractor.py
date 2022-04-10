@@ -125,11 +125,11 @@ class PlayerExtractor(Extractor):
         """Function to empty the list of lines stored by the PlayerProcessor.
         This is helpful if we're processing a lot of data and want to avoid eating too much memory.
         """
-        Logger.Log(f"Clearing features from PlayerExtractor.", logging.DEBUG)
+        Logger.Log(f"Clearing features from PlayerExtractor.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
 
     def ClearSessionsLines(self):
-        Logger.Log(f"Clearing {len(self._session_extractors)} sessions from PlayerProcessor.", logging.DEBUG)
+        Logger.Log(f"Clearing {len(self._session_extractors)} sessions from PlayerProcessor for {self._player_id}.", logging.DEBUG, depth=2)
         self._session_extractors = {}
 
     # *** PRIVATE STATICS ***

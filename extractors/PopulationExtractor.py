@@ -148,7 +148,7 @@ class PopulationExtractor(Extractor):
     #   This is helpful if we're processing a lot of data and want to avoid
     #   eating too much memory.
     def ClearLines(self):
-        Logger.Log(f"Clearing features from PopulationExtractor.", logging.DEBUG)
+        Logger.Log(f"Clearing features from PopulationExtractor.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
 
     def ClearPlayersLines(self):

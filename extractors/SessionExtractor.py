@@ -97,7 +97,7 @@ class SessionExtractor(Extractor):
     # *** PUBLIC METHODS ***
 
     def ClearLines(self):
-        Logger.Log(f"Clearing features from SessionExtractor.", logging.DEBUG)
+        Logger.Log(f"Clearing features from SessionExtractor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
 
     # *** PRIVATE STATICS ***
