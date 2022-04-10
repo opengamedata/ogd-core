@@ -31,7 +31,7 @@ class ExtractorManager:
             if exp_types.population:
                 self._pop_extractor = PopulationExtractor(LoaderClass=self._LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         else:
-            Logger.Log("Could not export population/session data, no game extractor given!", logging.WARN)
+            Logger.Log("Could not export population/session data, no feature loader given!", logging.WARNING, depth=1)
 
     def ProcessEvent(self, event:Event) -> None:
         if self._pop_extractor is not None:
@@ -68,7 +68,7 @@ class ExtractorManager:
         self._try_update(as_str=as_str)
         ret_val = self._latest_results.get('players', [])
         time_delta = datetime.now() - start
-        Logger.Log(f"Time to retrieve Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        Logger.Log(f"Time to retrieve Player lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
 
     def GetSessionFeatureNames(self) -> List[str]:
@@ -78,7 +78,7 @@ class ExtractorManager:
         self._try_update(as_str=as_str)
         ret_val = self._latest_results.get('sessions', [])
         time_delta = datetime.now() - start
-        Logger.Log(f"Time to retrieve Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        Logger.Log(f"Time to retrieve Session lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
 
     def ClearPopulationLines(self) -> None:
