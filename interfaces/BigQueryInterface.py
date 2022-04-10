@@ -33,10 +33,10 @@ class BigQueryInterface(DataInterface):
                 self._client = bigquery.Client()
             if self._client != None:
                 self._is_open = True
-                Logger.Log("Connected to BigQuery database.", logging.DEBUG)
+                Logger.Log("Connected to BigQuery database.", logging.DEBUG, depth=3)
                 return True
             else:
-                Logger.Log("Could not connect to BigQuery Database.", logging.WARN)
+                Logger.Log("Could not connect to BigQuery Database.", logging.WARN, depth=3)
                 return False
         else:
             return True
@@ -44,58 +44,50 @@ class BigQueryInterface(DataInterface):
     def _close(self) -> bool:
         self._client.close()
         self._is_open = False
-        Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
+        Logger.Log("Closed connection to BigQuery.", logging.DEBUG, depth=3)
         return True
 
     def _allIDs(self) -> List[str]:
-        if self._client != None:
-            db_name    : str
-            table_name : str
-            if "BIGQUERY_CONFIG" in self._settings:
-                db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-                table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-            else:
-                db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-                table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-            query = f"""
-                SELECT DISTINCT param.value.int_value AS session_id
-                FROM `{db_name}.{table_name}`,
-                UNNEST(event_params) AS param
-                WHERE param.key = "ga_session_id"
-            """
-            data = self._client.query(query)
-            ids = [str(row['session_id']) for row in data]
-            return ids if ids != None else []
+        db_name    : str
+        table_name : str
+        if "BIGQUERY_CONFIG" in self._settings:
+            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
         else:
-            Logger.Log(f"Could not get list of all session ids, BigQuery connection is not open.", logging.WARN)
-            return []
+            db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+            table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+        query = f"""
+            SELECT DISTINCT param.value.int_value AS session_id
+            FROM `{db_name}.{table_name}`,
+            UNNEST(event_params) AS param
+            WHERE param.key = "ga_session_id"
+        """
+        data = self._client.query(query)
+        ids = [str(row['session_id']) for row in data]
+        return ids if ids != None else []
 
     def _fullDateRange(self) -> Dict[str, datetime]:
-        if self._client != None:
-            db_name    : str
-            table_name : str
-            if "BIGQUERY_CONFIG" in self._settings:
-                db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-                table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-            else:
-                db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-                table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-            query = f"""
-                WITH datetable AS
-                (
-                    SELECT event_date, event_timestamp,
-                    FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
-                    FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
-                    FROM `{db_name}.{table_name}`
-                )
-                SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
-                FROM datetable
-            """
-            data = list(self._client.query(query))
-            return {'min':data[0][0], 'max':data[0][1]}
+        db_name    : str
+        table_name : str
+        if "BIGQUERY_CONFIG" in self._settings:
+            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
         else:
-            Logger.Log(f"Could not get full date range, BigQuery connection is not open.", logging.WARN)
-            return {"min":datetime.now(), "max":datetime.now()}
+            db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+            table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+        query = f"""
+            WITH datetable AS
+            (
+                SELECT event_date, event_timestamp,
+                FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
+                FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
+                FROM `{db_name}.{table_name}`
+            )
+            SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
+            FROM datetable
+        """
+        data = list(self._client.query(query))
+        return {'min':data[0][0], 'max':data[0][1]}
 
     def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None] = None) -> List[Tuple]:
         if self._client != None:
@@ -259,3 +251,13 @@ class BigQueryInterface(DataInterface):
         super().__init__(game_id=game_id)
         self._settings = settings
         self.Open()
+
+    # *** PUBLIC METHODS ***
+    def IsOpen(self) -> bool:
+        """Overridden version of IsOpen function, checks that BigQueryInterface client has been initialized.
+
+        :return: True if the interface is open, else False
+        :rtype: bool
+        """
+        Logger.Log("Using overridden IsOpen in BigQueryInterface", logging.DEBUG, depth=0)
+        return True if (super().IsOpen() and self._client is not None) else False

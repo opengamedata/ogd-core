@@ -4,8 +4,9 @@ import logging
 from datetime import datetime
 from typing import Dict, List, Tuple, Union
 
-from schemas.IDMode import IDMode
 # import local files
+from schemas.IDMode import IDMode
+from utils import Logger
 
 class DataInterface(abc.ABC):
 
@@ -62,45 +63,51 @@ class DataInterface(abc.ABC):
         return True if self._is_open else False
 
     def Close(self) -> bool:
-        if self._is_open:
+        if self.IsOpen():
             return self._close()
         else:
             return True
 
     def AllIDs(self) -> Union[List[str],None]:
-        if not self._is_open:
-            logging.warn("Can't retrieve data, the source interface is not open!")
-            return None
+        ret_val = None
+        if self.IsOpen():
+            ret_val = self._allIDs()
         else:
-            return self._allIDs()
+            Logger.Log("Can't retrieve list of all session IDs, the source interface is not open!", logging.WARNING, depth=3)
+        return ret_val
 
     def FullDateRange(self) -> Union[Dict[str,datetime], Dict[str,None]]:
-        if not self._is_open:
-            logging.warn("Can't retrieve data, the source interface is not open!")
-            return {'min':None, 'max':None}
+        ret_val = {'min':None, 'max':None}
+        if self.IsOpen():
+            ret_val = self._fullDateRange()
         else:
-            return self._fullDateRange()
+            Logger.Log(f"Could not get full date range, the source interface is not open!", logging.WARNING, depth=3)
+        return ret_val
 
     def RowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None]=None) -> Union[List[Tuple], None]:
-        if not self._is_open:
-            logging.warn("Can't retrieve data, the source interface is not open!")
-            return None
+        ret_val = None
+        if self.IsOpen():
+            ret_val = self._rowsFromIDs(id_list=id_list, id_mode=id_mode, versions=versions)
         else:
-            return self._rowsFromIDs(id_list=id_list, id_mode=id_mode, versions=versions)
+            Logger.Log(f"Could not retrieve rows for {len(id_list)} session IDs, the source interface is not open!", logging.WARNING, depth=3)
+        return ret_val
 
     def IDsFromDates(self, min:datetime, max:datetime, versions: Union[List[int],None]=None) -> Union[List[str], None]:
-        if not self._is_open:
-            logging.warn("Can't retrieve IDs, the source interface is not open!")
-            return None
+        ret_val = None
+        if not self.IsOpen():
+            str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
+            Logger.Log(f"Could not retrieve IDs for {str_min}-{str_max}, the source interface is not open!", logging.WARNING, depth=3)
         else:
-            return self._IDsFromDates(min=min, max=max, versions=versions)
+            ret_val = self._IDsFromDates(min=min, max=max, versions=versions)
+        return ret_val
 
     def DatesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None]=None) -> Union[Dict[str,datetime], Dict[str,None]]:
-        if not self._is_open:
-            logging.warn("Can't retrieve dates, the source interface is not open!")
-            return {'min':None, 'max':None}
+        ret_val = {'min':None, 'max':None}
+        if not self.IsOpen():
+            Logger.Log(f"Could not retrieve date range {len(id_list)} session IDs, the source interface is not open!", logging.WARNING, depth=3)
         else:
-            return self._datesFromIDs(id_list=id_list, id_mode=id_mode, versions=versions)
+            ret_val = self._datesFromIDs(id_list=id_list, id_mode=id_mode, versions=versions)
+        return ret_val
 
     # *** PRIVATE STATICS ***
 
