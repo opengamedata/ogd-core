@@ -1,5 +1,6 @@
 ## import standard libraries
 import logging
+from datetime import datetime
 from typing import Any, Dict, List, Type, Union
 ## import local files
 from utils import Logger
@@ -53,20 +54,32 @@ class ExtractorManager:
     def GetPopulationFeatureNames(self) -> List[str]:
         return self._pop_extractor.GetPopulationFeatureNames() if self._pop_extractor is not None else []
     def GetPopulationFeatures(self, as_str:bool = False) -> List[Any]:
+        start   : datetime = datetime.now()
         self._try_update(as_str=as_str)
-        return self._latest_results.get('population', [])
+        ret_val = self._latest_results.get('population', [])
+        time_delta = datetime.now() - start
+        Logger.Log(f"Time to retrieve Population lines: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        return ret_val
 
     def GetPlayerFeatureNames(self) -> List[str]:
         return self._pop_extractor.GetPlayerFeatureNames() if self._pop_extractor is not None else []
-    def GetPlayerFeatures(self, as_str:bool = False) -> List[List[Any]]:
+    def GetPlayerFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[List[Any]]:
+        start   : datetime = datetime.now()
         self._try_update(as_str=as_str)
-        return self._latest_results.get('players', [])
+        ret_val = self._latest_results.get('players', [])
+        time_delta = datetime.now() - start
+        Logger.Log(f"Time to retrieve Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        return ret_val
 
     def GetSessionFeatureNames(self) -> List[str]:
         return self._pop_extractor.GetSessionFeatureNames() if self._pop_extractor is not None else []
-    def GetSessionFeatures(self, as_str:bool = False) -> List[List[Any]]:
+    def GetSessionFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[List[Any]]:
+        start   : datetime = datetime.now()
         self._try_update(as_str=as_str)
-        return self._latest_results.get('sessions', [])
+        ret_val = self._latest_results.get('sessions', [])
+        time_delta = datetime.now() - start
+        Logger.Log(f"Time to retrieve Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        return ret_val
 
     def ClearPopulationLines(self) -> None:
         if self._pop_extractor is not None:

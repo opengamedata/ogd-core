@@ -69,7 +69,7 @@ class ExportManager:
         Logger.Log(f"Executing request: {str(request)}", logging.INFO)
         start = datetime.now()
         try:
-            Logger.Log(f"Preparing managers...", logging.DEBUG)
+            Logger.Log(f"Setting up event/extract managers...", logging.DEBUG)
             self._setupManagers(request=request, game_schema=_game_schema, feature_overrides=request._feat_overrides)
             Logger.Log(f"Done", logging.DEBUG)
 
@@ -173,12 +173,12 @@ class ExportManager:
         # 2) Loop over and process the sessions, slice-by-slice (where each slice is a list of sessions).
         Logger.Log(f"Preparing to process {len(sess_ids)} sessions...", logging.INFO, depth=1)
         for i, next_slice_ids in enumerate(_session_slices):
-            next_slice_data = self._getSlice(request=request, next_slice_ids=next_slice_ids, slice_num=i+1, slice_count=len(_session_slices))
+            next_slice_data = self._loadSlice(request=request, next_slice_ids=next_slice_ids, slice_num=i+1, slice_count=len(_session_slices))
             if next_slice_data is not None:
                 self._processSlice(next_slice_data=next_slice_data, table_schema=table_schema, sess_ids=sess_ids, slice_num=i+1, slice_count=len(_session_slices))
                 # 2b) After processing all rows for each slice, write out the session data and reset for next slice.
                 if request.ExportEvents() and self._event_mgr is not None:
-                    _events = self._event_mgr.GetLines()
+                    _events = self._event_mgr.GetLines(slice_num=i+1, slice_count=len(_session_slices))
                     if request.ToDict():
                         ret_val['events']['vals'] += _events
                     if request.ToFile() and file_manager is not None:
@@ -186,14 +186,14 @@ class ExportManager:
                     self._event_mgr.ClearLines()
                 if self._extract_mgr is not None:
                     if request.ExportSessions():
-                        _sess_feats = self._extract_mgr.GetSessionFeatures(as_str=True)
+                        _sess_feats = self._extract_mgr.GetSessionFeatures(slice_num=i+1, slice_count=len(_session_slices), as_str=True)
                         if request.ToDict():
                             ret_val['sessions']['vals'] += _sess_feats
                         if request.ToFile() and file_manager is not None:
                             file_manager.GetSessionsFile().writelines(["\t".join(sess) + "\n" for sess in _sess_feats])
                         self._extract_mgr.ClearSessionLines()
                     if request.ExportPlayers():
-                        _player_feats = self._extract_mgr.GetPlayerFeatures(as_str=True)
+                        _player_feats = self._extract_mgr.GetPlayerFeatures(slice_num=i+1, slice_count=len(_session_slices), as_str=True)
                         if request.ToDict():
                             ret_val['players']['vals'] += _player_feats
                         if request.ToFile() and file_manager is not None:
@@ -219,13 +219,14 @@ class ExportManager:
         return [[sess_ids[i] for i in range( j*_slice_size, min((j+1)*_slice_size, _num_sess) )]
                              for j in range( 0, math.ceil(_num_sess / _slice_size) )]
 
-    def _getSlice(self, request:Request, next_slice_ids:List[str], slice_num:int, slice_count:int) -> Union[List[Tuple], None]:
+    def _loadSlice(self, request:Request, next_slice_ids:List[str], slice_num:int, slice_count:int) -> Union[List[Tuple], None]:
         start : datetime = datetime.now()
 
         ret_val = request.GetInterface().RowsFromIDs(id_list=next_slice_ids, id_mode=request.GetRange().GetIDMode())
         time_delta = datetime.now() - start
         if ret_val is not None:
-            Logger.Log(f"Retrieval time for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} events", logging.INFO, depth=2)
+            # extra space below so output aligns nicely with "Processing time for slice..."
+            Logger.Log(f"Retrieval  time for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} events", logging.INFO, depth=2)
         else:
             Logger.Log(f"Could not retrieve data set for slice [{slice_num}/{slice_count}].", logging.WARN, depth=2)
         return ret_val
@@ -277,7 +278,7 @@ class ExportManager:
             # before we zip stuff up, let's ensure the readme is in place:
             readme = open(self._file_manager._readme_path, mode='r')
         except FileNotFoundError:
-            Logger.Log(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING)
+            Logger.Log(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING, depth=1)
             readme_path = Path("./data") / _game_id
             FileManager.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=readme_path)
         else:

@@ -1,6 +1,7 @@
 ## import standard libraries
 import json
 import logging
+from datetime import datetime
 from typing import Any, List, Tuple, Union
 ## import local files
 from utils import Logger
@@ -33,12 +34,16 @@ class EventManager:
     def GetColumnNames(self) -> List[str]:
         return self._columns
 
-    def GetLines(self) -> List[str]:
-        return self._lines
+    def GetLines(self, slice_num:int, slice_count:int) -> List[str]:
+        start   : datetime = datetime.now()
+        ret_val : List[str] = self._lines
+        time_delta = datetime.now() - start
+        Logger.Log(f"Time to retrieve Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        return ret_val
 
     ## Function to empty the list of lines stored by the EventProcessor.
     #  This is helpful if we're processing a lot of data and want to avoid
     #  Eating too much memory.
     def ClearLines(self):
-        Logger.Log(f"Clearing {len(self._lines)} entries from EventProcessor.", logging.DEBUG)
+        Logger.Log(f"Clearing {len(self._lines)} entries from EventProcessor.", logging.DEBUG, depth=2)
         self._lines = []
