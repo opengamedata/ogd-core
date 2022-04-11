@@ -118,7 +118,7 @@ class Request(abc.ABC):
         except Exception as err:
             Logger.Log(f"Got an error when trying to stringify a Request: {type(err)} {str(err)}")
         finally:
-            return f"{self._game_id}: {_min}-{_max}"
+            return f"{self._game_id}: {_min}<->{_max}"
 
     def GetGameID(self):
         return self._game_id
