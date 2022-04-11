@@ -12,13 +12,12 @@ from pathlib import Path
 from pprint import pformat
 from typing import Any, Dict, List, Tuple, Union
 
-from matplotlib.pyplot import table
-from managers.ExtractorManager import ExtractorManager
 ## import local files
 from utils import Logger
 from config.config import settings as default_settings
 from managers.FileManager import FileManager
 from managers.EventManager import EventManager
+from managers.ExtractorManager import ExtractorManager
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
