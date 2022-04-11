@@ -39,5 +39,5 @@ class EventList(Feature):
         return [json.dumps(self._event_list)]
 
     # *** Optionally override public functions. ***
-    def MinVersion(self) -> Union[str,None]:
-        return "1"
+    # def MinVersion(self) -> Union[str,None]:
+        # return "0"
