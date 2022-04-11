@@ -29,10 +29,12 @@ class TopJobCompletionDestinations(Feature):
         checkpoint = event.event_data["status"]["string_value"]
         mission_id = event.event_data["mission_id"]["string_value"]
 
-        if checkpoint == "Case Closed" and mission_id != self._last_completed_id:
+        if session_id != self._current_session_id:
+            self._last_completed_id = None
+        elif checkpoint == "Case Closed" and mission_id != self._last_completed_id:
             if not self._last_completed_id:
                 self._last_completed_id = mission_id
-            elif session_id == self._current_session_id:
+            else:
                 if mission_id not in self._mission_complete_pairs[self._last_completed_id].keys():
                     self._mission_complete_pairs[self._last_completed_id][mission_id] = []
 
