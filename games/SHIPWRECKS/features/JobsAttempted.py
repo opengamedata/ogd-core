@@ -1,4 +1,5 @@
 # import libraries
+from collections import defaultdict
 from statistics import stdev
 from typing import Any, List
 # import locals
@@ -12,6 +13,7 @@ class JobsAttempted(Feature):
         self._mission_map = mission_map
         super().__init__(name=name, description=description, count_index=mission_num)
         self._session_id = None
+        self._start_map = defaultdict(list)
 
         # Subfeatures
         self._mission_id = mission_num
@@ -39,10 +41,11 @@ class JobsAttempted(Feature):
         mission_name = event.event_data["mission_id"]["string_value"]
         mission_id = self._mission_map[mission_name]
 
-        if checkpoint == "Begin Mission" and mission_id == self._mission_id:
+        if checkpoint == "Begin Mission" and mission_id == self._mission_id and session_id not in self._start_map[mission_id]:
             self._num_starts += 1
             self._session_id = session_id
             self._mission_start_time = event.timestamp
+            self._start_map[mission_id].append(session_id)
 
         elif checkpoint == "Case Closed" and mission_id == self._mission_id and session_id == self._session_id:
             self._num_completes += 1
