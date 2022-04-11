@@ -102,6 +102,7 @@ class PlayerExtractor(Extractor):
         :param player_file: _description_, defaults to None
         :type player_file: Union[IO[str],None], optional
         """
+        Logger.Log(f"Setting up PlayerExtractor for {player_id}...", logging.DEBUG, depth=2)
         self._player_file : Union[IO[str],None] = player_file
         self._player_id   : str                 = player_id
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
@@ -111,6 +112,7 @@ class PlayerExtractor(Extractor):
                                       player_id=self._player_id, session_id="null",
                                       feature_overrides=feature_overrides, session_file=player_file)
         }
+        Logger.Log(f"Done", logging.DEBUG, depth=2)
 
     # *** PUBLIC STATICS ***
 
