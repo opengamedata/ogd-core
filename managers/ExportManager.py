@@ -78,11 +78,11 @@ class ExportManager:
                 Logger.Log(f"Done", logging.DEBUG)
 
             Logger.Log(f"Executing...", logging.DEBUG)
-            _result = self._executeDataRequest(request=request, table_schema=_table_schema, file_manager=self._file_manager)
+            _result = self._executeDataRequest(request=request, table_schema=_table_schema, file_manager=self._file_mgr)
             Logger.Log(f"Done", logging.DEBUG)
 
             Logger.Log(f"Saving output...", logging.DEBUG)
-            if request.ToFile() and self._file_manager is not None:
+            if request.ToFile() and self._file_mgr is not None:
                 # 4) Save and close files
                 num_sess : int = _result.get("sessions_ct", 0)
                 self._teardownFileManager(game_schema=_game_schema, table_schema=_table_schema, num_sess=num_sess)
@@ -126,28 +126,28 @@ class ExportManager:
 
     def _setupFileManager(self, request:Request):
         _data_dir : str = self._settings["DATA_DIR"] or default_settings["DATA_DIR"]
-        self._file_manager = FileManager(request=request, data_dir=_data_dir, extension="tsv")
-        self._file_manager.OpenFiles()
+        self._file_mgr = FileManager(request=request, data_dir=_data_dir, extension="tsv")
+        self._file_mgr.OpenFiles()
         if self._event_mgr is not None:
             if request.ExportEvents():
                 cols = self._event_mgr.GetColumnNames()
-                self._file_manager.WriteEventsFile("\t".join(cols) + "\n")
+                self._file_mgr.WriteEventsFile("\t".join(cols) + "\n")
             else:
                 Logger.Log("Event log not requested, skipping events file.", logging.INFO, depth=1)
         if self._extract_mgr is not None:
             if request.ExportPopulation():
                 cols = self._extract_mgr.GetPopulationFeatureNames()
-                self._file_manager.WritePopulationFile("\t".join(cols) + "\n")
+                self._file_mgr.WritePopulationFile("\t".join(cols) + "\n")
             else:
                 Logger.Log("Population features not requested, skipping population_features file.", logging.INFO, depth=1)
             if request.ExportPlayers():
                 cols = self._extract_mgr.GetPlayerFeatureNames()
-                self._file_manager.WritePlayersFile("\t".join(cols) + "\n")
+                self._file_mgr.WritePlayersFile("\t".join(cols) + "\n")
             else:
                 Logger.Log("Player features not requested, skipping player_features file.", logging.INFO, depth=1)
             if request.ExportSessions():
                 cols = self._extract_mgr.GetSessionFeatureNames()
-                self._file_manager.WriteSessionsFile("\t".join(cols) + "\n")
+                self._file_mgr.WriteSessionsFile("\t".join(cols) + "\n")
             else:
                 Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
 
@@ -272,17 +272,18 @@ class ExportManager:
                 Logger.Log(f"Error while processing event {next_event}. This event will be skipped. \nFull error: {err}", logging.WARNING, depth=2)
 
     def _teardownFileManager(self, game_schema:GameSchema, table_schema:TableSchema, num_sess:int):
-        _game_id = game_schema._game_name
-        try:
-            # before we zip stuff up, let's ensure the readme is in place:
-            readme = open(self._file_manager._readme_path, mode='r')
-        except FileNotFoundError:
-            Logger.Log(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING, depth=1)
-            readme_path = Path("./data") / _game_id
-            FileManager.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=readme_path)
-        else:
-            readme.close()
-        self._file_manager.CloseFiles()
-        self._file_manager.ZipFiles()
-        self._file_manager.WriteMetadataFile(num_sess=num_sess)
-        self._file_manager.UpdateFileExportList(num_sess=num_sess)
+        if self._file_mgr is not None:
+            _game_id = game_schema._game_name
+            try:
+                # before we zip stuff up, let's ensure the readme is in place:
+                readme = open(self._file_mgr._readme_path, mode='r')
+            except FileNotFoundError:
+                Logger.Log(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING, depth=1)
+                readme_path = Path("./data") / _game_id
+                FileManager.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=readme_path)
+            else:
+                readme.close()
+            self._file_mgr.CloseFiles()
+            self._file_mgr.ZipFiles()
+            self._file_mgr.WriteMetadataFile(num_sess=num_sess)
+            self._file_mgr.UpdateFileExportList(num_sess=num_sess)
