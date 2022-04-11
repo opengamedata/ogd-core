@@ -44,7 +44,7 @@ class ShipwrecksLoader(FeatureLoader):
         elif feature_type == "SessionID":
             ret_val = SessionID.SessionID(name=name, description=feature_args["description"], session_id=self._session_id)
         elif feature_type == "TopJobCompletionDestinations":
-            ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(name=name, description=feature_args["description"], session_id=self._session_id)
+            ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(name=name, description=feature_args["description"])
         elif feature_type == "TopJobSwitchDestinations":
             ret_val = TopJobSwitchDestinations.TopJobSwitchDestinations(name=name, description=feature_args["description"])
         elif feature_type == "TotalDiveTime":

@@ -4,15 +4,15 @@ from collections import defaultdict
 from typing import Any, List
 # import locals
 from utils import Logger
-from features.SessionFeature import SessionFeature
+from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
 
-class TopJobCompletionDestinations(SessionFeature):
+class TopJobCompletionDestinations(Feature):
 
-    def __init__(self, name:str, description:str, session_id:str):
-        super().__init__(name=name, description=description)
-        self._session_id = session_id
+    def __init__(self, name:str, description:str):
+        super().__init__(name=name, description=description, count_index=0)
+        self._current_session_id = None
         self._current_mission_id = None
         self._last_completed_id = None
         self._mission_complete_pairs = defaultdict(dict)
@@ -29,15 +29,17 @@ class TopJobCompletionDestinations(SessionFeature):
         checkpoint = event.event_data["status"]["string_value"]
         mission_id = event.event_data["mission_id"]["string_value"]
 
-        if checkpoint == "Case Closed" and session_id == self._session_id and mission_id != self._last_completed_id:
+        if checkpoint == "Case Closed" and mission_id != self._last_completed_id:
             if not self._last_completed_id:
                 self._last_completed_id = mission_id
-            else:
+            elif session_id == self._current_session_id:
                 if mission_id not in self._mission_complete_pairs[self._last_completed_id].keys():
                     self._mission_complete_pairs[self._last_completed_id][mission_id] = []
 
                 self._mission_complete_pairs[self._last_completed_id][mission_id].append(session_id)
                 self._last_completed_id = mission_id
+
+        self._current_session_id = session_id
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
