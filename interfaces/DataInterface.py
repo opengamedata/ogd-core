@@ -87,6 +87,7 @@ class DataInterface(abc.ABC):
     def RowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None]=None) -> Union[List[Tuple], None]:
         ret_val = None
         if self.IsOpen():
+            Logger.Log(f"Retrieving rows from IDs with {id_mode} ID mode.", logging.DEBUG, depth=3)
             ret_val = self._rowsFromIDs(id_list=id_list, id_mode=id_mode, versions=versions)
         else:
             Logger.Log(f"Could not retrieve rows for {len(id_list)} session IDs, the source interface is not open!", logging.WARNING, depth=3)
@@ -106,6 +107,7 @@ class DataInterface(abc.ABC):
         if not self.IsOpen():
             Logger.Log(f"Could not retrieve date range {len(id_list)} session IDs, the source interface is not open!", logging.WARNING, depth=3)
         else:
+            Logger.Log(f"Retrieving date range from IDs with {id_mode} ID mode.", logging.DEBUG, depth=3)
             ret_val = self._datesFromIDs(id_list=id_list, id_mode=id_mode, versions=versions)
         return ret_val
 
