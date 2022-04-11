@@ -11,6 +11,7 @@ from datetime import datetime
 from pathlib import Path
 from pprint import pformat
 from typing import Any, Dict, List, Tuple, Union
+from schemas.IDMode import IDMode
 
 ## import local files
 from utils import Logger
@@ -19,6 +20,7 @@ from managers.FileManager import FileManager
 from managers.EventManager import EventManager
 from managers.ExtractorManager import ExtractorManager
 from schemas.Event import Event
+from schemas.IDMode import IDMode
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 from schemas.Request import Request
@@ -174,7 +176,7 @@ class ExportManager:
         for i, next_slice_ids in enumerate(_session_slices):
             next_slice_data = self._loadSlice(request=request, next_slice_ids=next_slice_ids, slice_num=i+1, slice_count=len(_session_slices))
             if next_slice_data is not None:
-                self._processSlice(next_slice_data=next_slice_data, table_schema=table_schema, sess_ids=sess_ids, slice_num=i+1, slice_count=len(_session_slices))
+                self._processSlice(next_slice_data=next_slice_data, table_schema=table_schema, ids=sess_ids, id_mode=request._range._id_mode, slice_num=i+1, slice_count=len(_session_slices))
                 # 2b) After processing all rows for each slice, write out the session data and reset for next slice.
                 if request.ExportEvents() and self._event_mgr is not None:
                     _events = self._event_mgr.GetLines(slice_num=i+1, slice_count=len(_session_slices))
@@ -230,7 +232,7 @@ class ExportManager:
             Logger.Log(f"Could not retrieve data set for slice [{slice_num}/{slice_count}].", logging.WARN, depth=2)
         return ret_val
 
-    def _processSlice(self, next_slice_data:List[Tuple], table_schema:TableSchema, sess_ids:List[str], slice_num:int, slice_count:int):
+    def _processSlice(self, next_slice_data:List[Tuple], table_schema:TableSchema, ids:List[str], id_mode:IDMode, slice_num:int, slice_count:int):
         start      : datetime = datetime.now()
         num_events : int      = len(next_slice_data)
         _unsessioned_event_count : int = 0
@@ -245,7 +247,7 @@ class ExportManager:
                 else:
                     Logger.Log(f"Error while converting row to Event. This row will be skipped.\nFull error: {err}", logging.WARNING, depth=2)
             else:
-                if next_event.session_id in sess_ids:
+                if (id_mode==IDMode.SESSION and next_event.session_id in ids) or (id_mode==IDMode.PLAYER and next_event.user_id in ids):
                     self._processEvent(next_event=next_event)
                 elif next_event.session_id is not None and next_event.session_id.upper() != "NONE":
                     Logger.Log(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
