@@ -75,9 +75,11 @@ class PlayerExtractor(Extractor):
     def _prepareLoader(self) -> FeatureLoader:
         ret_val : FeatureLoader
         if self._LoaderClass is LakelandLoader:
-            ret_val = LakelandLoader(player_id=self._player_id, session_id="player", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=self._player_file)
+            ret_val = LakelandLoader(player_id=self._player_id, session_id="player", game_schema=self._game_schema,
+                                    feature_overrides=self._overrides, output_file=self._player_file)
         else:
-            ret_val = self._LoaderClass(player_id=self._player_id, session_id="player", game_schema=self._game_schema, feature_overrides=self._overrides)
+            ret_val = self._LoaderClass(player_id=self._player_id, session_id="player", game_schema=self._game_schema,
+                                        feature_overrides=self._overrides)
         return ret_val
 
     # *** PUBLIC BUILT-INS ***
@@ -125,7 +127,7 @@ class PlayerExtractor(Extractor):
         """Function to empty the list of lines stored by the PlayerProcessor.
         This is helpful if we're processing a lot of data and want to avoid eating too much memory.
         """
-        Logger.Log(f"Clearing features from PlayerExtractor for {self._player_file}.", logging.DEBUG, depth=2)
+        Logger.Log(f"Clearing features from PlayerExtractor for {self._player_id}.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
 
     def ClearSessionsLines(self):
