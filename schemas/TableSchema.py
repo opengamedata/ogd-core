@@ -83,7 +83,7 @@ class TableSchema:
         ret_val += "\n".join(event_column_list)
         return ret_val
 
-    def RowToEvent(self, row: Tuple, concatenator:str = '.'):
+    def RowToEvent(self, row:Tuple, concatenator:str = '.'):
         """Function to convert a row to an Event, based on the loaded schema.
         In general, columns specified in the schema's column_map are mapped to corresponding elements of the Event.
         If the column_map gave a list, rather than a single column name, the values from each column are concatenated in order with '.' character separators.
@@ -104,7 +104,8 @@ class TableSchema:
         time    : datetime
         ename   : str
         edata   : Map
-        app_ver : Union[str,None]
+        app_ver : str
+        log_ver : str
         offset  : Union[int,None]
         uid     : Union[str,None]
         udata   : Union[Map,None]
@@ -112,7 +113,7 @@ class TableSchema:
         index   : Union[int,None]
 
         column_names = self.ColumnNames()
-        row_dict = {col_i_name : row[i].isoformat() if type(row[i]) == datetime else str(row[i]) for i,col_i_name in enumerate(column_names)}
+        row_dict = {col_i : row[i].isoformat() if type(row[i]) == datetime else str(row[i]) for i,col_i in enumerate(column_names)}
         # 1) Get values from row mapped to Event ctor params. Wait to do event_data.
         #    If anything in the map was a list, concatenate vals from corresponding columns, and anything that wasn't, get val.
         params : Map = {}
@@ -144,6 +145,7 @@ class TableSchema:
         ename   = params['event_name']
         edata   = dict(sorted(params['event_data'].items())) # Sort keys alphabetically
         app_ver = params['app_version']
+        log_ver = params['log_version']
         offset  = params['time_offset']
         uid     = params['user_id']
         udata   = params['user_data']
@@ -160,7 +162,8 @@ class TableSchema:
                 app_ver = "0"
         return Event(session_id=sess_id, app_id=app_id, timestamp=time,
                      event_name=ename, event_data=edata,
-                     app_version=app_ver, time_offset=offset, user_id=uid, user_data=udata,
+                     app_version=app_ver, log_version=log_ver,
+                     time_offset=offset, user_id=uid, user_data=udata,
                      game_state=state, event_sequence_index=index)
 
     @staticmethod

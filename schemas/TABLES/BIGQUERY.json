@@ -5,7 +5,8 @@
         "timestamp": "timestamp",
         "event_name": "event_name",
         "event_data": "event_params",
-        "app_version": null,
+        "app_version": "app_version",
+        "log_version": "log_version",
         "time_offset": null,
         "user_id": "fd_user_id",
         "user_data": null,
@@ -45,16 +46,28 @@
             "type": "str"
         },
         {
-            "name": "session_id",
-            "readable": "Session ID",
-            "desc": "ID for the play session",
-            "type": "int"
-        },
-        {
             "name": "timestamp",
             "readable": "Timestamp",
             "desc": "Datetime when event was logged",
             "type": "datetime"
+        },
+        {
+            "name": "app_version",
+            "readable": "Application/Game Version",
+            "desc": "The version of the application (game) that generated the data",
+            "type": "float"
+        },
+        {
+            "name": "log_version",
+            "readable": "Logging Version",
+            "desc": "The version of the logging code that generated the data",
+            "type": "int"
+        },
+        {
+            "name": "session_id",
+            "readable": "Session ID",
+            "desc": "ID for the play session",
+            "type": "int"
         },
         {
             "name": "fd_user_id",
