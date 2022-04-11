@@ -227,8 +227,7 @@ class BigQueryInterface(DataInterface):
             {where_clause}
         """
         data = list(self._client.query(query))
-        # TODO: figure out what format to use to parse times from here.
-        return {'min':data[0][0], 'max':data[0][1]}
+        return {'min':datetime.strptime(data[0][0], "%m-%d-%Y %H:%M:%S"), 'max':datetime.strptime(data[0][1], "%m-%d-%Y %H:%M:%S")}
 
     # *** PUBLIC BUILT-INS ***
 
