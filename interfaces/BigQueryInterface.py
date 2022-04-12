@@ -92,59 +92,60 @@ class BigQueryInterface(DataInterface):
     def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None] = None) -> List[Tuple]:
         db_name    : str
         table_name : str
+        # 1) Get db and table names
         if "BIGQUERY_CONFIG" in self._settings:
             db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
             table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
         else:
             db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
             table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+        # 2) Set up clauses to select based on Session ID or Player ID.
+        session_clause : str = ""
+        player_clause  : str = ""
         if id_mode == IDMode.SESSION:
             id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"""
-                WHERE param_session.key = 'ga_session_id' and param_session.value.int_value IN ({id_string})
-                AND   param_version.key = 'app_version' AND param_version.value.double_value >= {AQUALAB_MIN_VERSION}
-                AND   param_user.key = 'user_code'
-            """
+            session_clause = f"AND   param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
+            player_clause  = f"AND   param_user.key    = 'user_code'"
         elif id_mode == IDMode.PLAYER:
             id_string = ','.join([f"'{x}'" for x in id_list])
-            where_clause = f"""
-                WHERE param_session.key = 'ga_session_id'
-                AND   param_version.key = 'app_version' AND param_version.value.double_value >= {AQUALAB_MIN_VERSION}
-                AND   param_user.key = 'user_code' and param_user.value.string_value IN ({id_string})
-            """
+            session_clause = f"AND   param_session.key = 'ga_session_id'"
+            player_clause  = f"AND   param_user.key    = 'user_code' AND param_user.value.string_value IN ({id_string})"
         else:
             Logger.Log(f"Invalid ID mode given (val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
             id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"""
-                WHERE param_session.key = 'ga_session_id' and param_session.value.int_value IN ({id_string})
-                AND   param_version.key = 'app_version' AND param_version.value.double_value >= {AQUALAB_MIN_VERSION}
-                AND   param_user.key = 'user_code'
-            """
+            session_clause = f"AND   param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
+            player_clause  = f"AND   param_user.key    = 'user_code'"
+        # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
         if self._game_id == "AQUALAB":
-            query = f"""
-                SELECT event_name, event_params, device, geo, platform,
-                param_session.value.int_value as session_id,
-                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
-                param_user.value.string_value as fd_user_id,
-                FROM `{db_name}.{table_name}`
-                CROSS JOIN UNNEST(event_params) AS param_session
-                CROSS JOIN UNNEST(event_params) AS param_version
-                CROSS JOIN UNNEST(event_params) AS param_user
-                {where_clause}
-                ORDER BY `session_id`, `timestamp` ASC
+            where_clause = f"""
+                WHERE param_app_version.key = 'app_version' AND param_version.value.double_value >= {AQUALAB_MIN_VERSION}
+                AND   param_log_version.key = 'log_version'
+                {session_clause}
+                {player_clause}
             """
         else:
-            query = f"""
-                SELECT event_name, event_params, device, geo, platform, param_session.value.int_value AS session_id,
-                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
-                param_user.value.string_value as fd_user_id,
-                FROM `{db_name}.{table_name}`
-                CROSS JOIN UNNEST(event_params) AS param_session
-                CROSS JOIN UNNEST(event_params) AS param_user
-                WHERE param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})
-                AND   param_user.key = 'page_location'
-                ORDER BY `session_id`, `timestamp` ASC
+            where_clause = f"""
+                WHERE param_app_version.key = 'app_version'
+                AND   param_log_version.key = 'log_version'
+                {session_clause}
+                {player_clause}
             """
+        # 4) Set up actual query
+        query = f"""
+            SELECT event_name, event_params, device, geo, platform,
+            concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
+            param_app_version.value.double_value as app_version
+            param_log_version.value.int_value as log_version
+            param_session.value.int_value as session_id,
+            param_user.value.string_value as fd_user_id,
+            FROM `{db_name}.{table_name}`
+            CROSS JOIN UNNEST(event_params) AS param_app_version
+            CROSS JOIN UNNEST(event_params) AS param_log_version
+            CROSS JOIN UNNEST(event_params) AS param_session
+            CROSS JOIN UNNEST(event_params) AS param_user
+            {where_clause}
+            ORDER BY `session_id`, `timestamp` ASC
+        """
         data = self._client.query(query)
         events = []
         for row in data:
