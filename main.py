@@ -22,6 +22,7 @@ from interfaces.MySQLInterface import MySQLInterface
 from interfaces.BigQueryInterface import BigQueryInterface
 from managers.ExportManager import ExportManager
 from managers.FileManager import FileManager
+from schemas.IDMode import IDMode
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 from schemas.Request import Request, ExporterTypes, ExporterRange
@@ -136,6 +137,16 @@ def genRequest(events:bool, features:bool) -> Request:
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [], versions=supported_vers)
         # breakpoint()
+    elif args.player is not None and args.player != "":
+        interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
+        if interface_type == "BigQuery":
+            interface = BigQueryInterface(game_id=args.game, settings=settings)
+        elif interface_type == "MySQL":
+            interface = MySQLInterface(game_id=args.game, settings=settings)
+        else:
+            raise Exception(f"{interface_type} is not a valid DataInterface type!")
+        # retrieve/calculate date range.
+        range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.PLAYER, versions=supported_vers)
     else:
         interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
         if interface_type == "BigQuery":
@@ -191,6 +202,8 @@ export_parser.add_argument("end_date", nargs="?", default=None,
                     help="The ending date of an export range in MM/DD/YYYY format (defaults to today).")
 export_parser.add_argument("-m", "--monthly", default=False, action="store_true",
                     help="Set the program to export a month's-worth of data, instead of using a date range. Replace the start_date argument with a month in MM/YYYY format.")
+export_parser.add_argument("-p", "--player", default="",
+                    help="Tell the program to output data for a player with given ID, instead of using a date range.")
 export_parser.add_argument("-f", "--file", default="",
                     help="Tell the program to use a file as input, instead of looking up a database.")
 # set up main parser, with one sub-parser per-command.
