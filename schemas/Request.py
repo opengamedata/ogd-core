@@ -9,6 +9,9 @@ from schemas.IDMode import IDMode
 from utils import Logger
 
 class ExporterRange:
+    """
+    Simple class to define a range of data for export.
+    """
     def __init__(self, date_min:Union[datetime,None], date_max:Union[datetime,None], ids:Union[List[str],None], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None]=None):
         self._date_min : Union[datetime,None] = date_min
         self._date_max : Union[datetime,None] = date_max
@@ -26,13 +29,16 @@ class ExporterRange:
         date_range = source.DatesFromIDs(id_list=ids, id_mode=id_mode, versions=versions)
         return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=ids, id_mode=id_mode, versions=versions)
 
-    def GetDateRange(self) -> Dict[str,Union[datetime,None]]:
+    @property
+    def DateRange(self) -> Dict[str,Union[datetime,None]]:
         return {'min':self._date_min, 'max':self._date_max}
 
-    def GetIDs(self) -> Union[List[str],None]:
+    @property
+    def IDs(self) -> Union[List[str],None]:
         return self._ids
 
-    def GetIDMode(self):
+    @property
+    def IDMode(self):
         return self._id_mode
 
 class ExporterTypes:
@@ -112,7 +118,7 @@ class Request(abc.ABC):
         _min = "Unkown"
         _max = "Unkown"
         try:
-            _range = self._range.GetDateRange()
+            _range = self.Range.DateRange
             _min = _range['min'].strftime(_fmt) if _range['min'] is not None else "None"
             _max = _range['max'].strftime(_fmt) if _range['max'] is not None else "None"
         except Exception as err:
@@ -120,13 +126,16 @@ class Request(abc.ABC):
         finally:
             return f"{self._game_id}: {_min}<->{_max}"
 
-    def GetGameID(self):
+    @property
+    def GameID(self):
         return self._game_id
 
-    def GetInterface(self) -> DataInterface:
+    @property
+    def Interface(self) -> DataInterface:
         return self._interface
 
-    def GetRange(self) -> ExporterRange:
+    @property
+    def Range(self) -> ExporterRange:
         return self._range
 
     def ExportEvents(self) -> bool:
@@ -146,4 +155,4 @@ class Request(abc.ABC):
     ## Method to retrieve the list of IDs for all sessions covered by the request.
     #  Note, this will use the 
     def RetrieveIDs(self) -> Union[List[str],None]:
-        return self._range.GetIDs()
+        return self.Range.IDs

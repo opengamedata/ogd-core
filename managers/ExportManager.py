@@ -63,7 +63,7 @@ class ExportManager:
         """
         ret_val : Dict[str,Any] = {"success":False}
 
-        _game_id      : str         = request.GetGameID()
+        _game_id      : str         = request.GameID
         _game_schema  : GameSchema  = GameSchema(schema_name=_game_id, schema_path=Path(f"./games/{_game_id}"))
         _table_schema : TableSchema = self._loadTableSchema(_game_id)
 
@@ -118,7 +118,7 @@ class ExportManager:
             self._event_mgr = EventManager()
         # If game doesn't have an extractor, make sure we don't try to export it.
         if request.ExportSessions() or request.ExportPlayers() or request.ExportPopulation():
-            self._extract_mgr = ExtractorManager(game_id=request.GetGameID(), exp_types=request._exports,
+            self._extract_mgr = ExtractorManager(game_id=request.GameID, exp_types=request._exports,
                                                        game_schema=game_schema, feature_overrides=feature_overrides)
             if not self._extract_mgr.HasLoader():
                 request._exports.sessions   = False
@@ -223,7 +223,7 @@ class ExportManager:
     def _loadSlice(self, request:Request, next_slice_ids:List[str], slice_num:int, slice_count:int) -> Union[List[Tuple], None]:
         start : datetime = datetime.now()
 
-        ret_val = request.GetInterface().RowsFromIDs(id_list=next_slice_ids, id_mode=request.GetRange().GetIDMode())
+        ret_val = request.Interface.RowsFromIDs(id_list=next_slice_ids, id_mode=request.Range.IDMode)
         time_delta = datetime.now() - start
         if ret_val is not None:
             # extra space below so output aligns nicely with "Processing time for slice..."
