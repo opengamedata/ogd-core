@@ -50,7 +50,7 @@ class PopulationExtractor(Extractor):
             if export_types.players:
                 ret_val["players"] = []
                 for player in _results:
-                    ret_val["players"].append(player["player"]) # here, append list of features as new line.
+                    ret_val["players"].append(player["players"]) # here, append list of features as new line.
             if export_types.sessions:
                 ret_val["sessions"] = []
                 for player in _results:
@@ -64,7 +64,7 @@ class PopulationExtractor(Extractor):
         ret_val["players"] = []
         ret_val["sessions"] = []
         for player in _result:
-            ret_val["players"] += player['player']
+            ret_val["players"] += player['players']
             ret_val["sessions"] += player['sessions']
         return ret_val
 

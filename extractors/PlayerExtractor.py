@@ -27,9 +27,9 @@ class PlayerExtractor(Extractor):
         if export_types.players:
             _sess_ct = self.SessionCount()
             if as_str:
-                ret_val["player"] = self._registry.GetFeatureStringValues() + [str(_sess_ct)]
+                ret_val["players"] = self._registry.GetFeatureStringValues() + [str(_sess_ct)]
             else:
-                ret_val["player"] = self._registry.GetFeatureValues() + [_sess_ct]
+                ret_val["players"] = self._registry.GetFeatureValues() + [_sess_ct]
         if export_types.sessions:
             # _results gives us a list of dicts, each with a "session" element
             _results = [sess_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for sess_extractor in self._session_extractors.values()]
@@ -42,11 +42,11 @@ class PlayerExtractor(Extractor):
 
     def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
         ret_val : Dict[str, List[FeatureData]] = {}
-        ret_val["player"] = self._registry.GetFeatureData(order=order)
+        ret_val["players"] = self._registry.GetFeatureData(order=order)
         _result = [session_extractor.GetFeatureData(order=order) for session_extractor in self._session_extractors.values()]
         ret_val["sessions"] = []
         for session in _result:
-            ret_val["sessions"] += session['session']
+            ret_val["sessions"] += session['sessions']
         return ret_val
 
     ## Function to handle processing of a single row of data.
