@@ -36,7 +36,7 @@ class PlayerExtractor(Extractor):
             ret_val["sessions"] = []
             # so we loop over list, and pull each "session" element into a master list of all sessions.
             for session in _results:
-                ret_val["sessions"].append(session["session"])
+                ret_val["sessions"].append(session["sessions"])
             # finally, what we return is a dict with a "sessions" element, containing list of lists.
         return ret_val
 

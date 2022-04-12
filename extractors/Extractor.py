@@ -53,8 +53,6 @@ class Extractor(abc.ABC):
         self._registry    : FeatureRegistry       = FeatureRegistry()
         self._loader      : FeatureLoader         = self._prepareLoader()
         self._loader.LoadToRegistry(registry=self._registry)
-        Logger.Log(f"Done", logging.DEBUG, depth=3)
-        Logger.Log(f"Done", logging.DEBUG, depth=2)
     def __str__(self):
         return f""
 
