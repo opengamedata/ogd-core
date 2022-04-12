@@ -118,7 +118,7 @@ class BigQueryInterface(DataInterface):
         # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
         if self._game_id == "AQUALAB":
             where_clause = f"""
-                WHERE param_app_version.key = 'app_version' AND param_version.value.double_value >= {AQUALAB_MIN_VERSION}
+                WHERE param_app_version.key = 'app_version' AND param_app_version.value.double_value >= {AQUALAB_MIN_VERSION}
                 AND   param_log_version.key = 'log_version'
                 {session_clause}
                 {player_clause}
@@ -134,10 +134,10 @@ class BigQueryInterface(DataInterface):
         query = f"""
             SELECT event_name, event_params, device, geo, platform,
             concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
-            param_app_version.value.double_value as app_version
-            param_log_version.value.int_value as log_version
+            param_app_version.value.double_value as app_version,
+            param_log_version.value.int_value as log_version,
             param_session.value.int_value as session_id,
-            param_user.value.string_value as fd_user_id,
+            param_user.value.string_value as fd_user_id
             FROM `{db_name}.{table_name}`
             CROSS JOIN UNNEST(event_params) AS param_app_version
             CROSS JOIN UNNEST(event_params) AS param_log_version
