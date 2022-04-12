@@ -47,13 +47,11 @@ class Extractor(abc.ABC):
 
     def __init__(self, LoaderClass:Type[FeatureLoader], game_schema: GameSchema,
                  feature_overrides:Union[List[str],None]=None):
-        Logger.Log(f"In base Extractor class, starting constructor...", logging.DEBUG, depth=2)
         self._game_schema : GameSchema            = game_schema
         self._overrides   : Union[List[str],None] = feature_overrides
         self._LoaderClass : Type[FeatureLoader]   = LoaderClass
         self._registry    : FeatureRegistry       = FeatureRegistry()
         self._loader      : FeatureLoader         = self._prepareLoader()
-        Logger.Log(f"In base Extractor class, calling LoadToRegistry...", logging.DEBUG, depth=3)
         self._loader.LoadToRegistry(registry=self._registry)
         Logger.Log(f"Done", logging.DEBUG, depth=3)
         Logger.Log(f"Done", logging.DEBUG, depth=2)

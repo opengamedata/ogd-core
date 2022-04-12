@@ -36,13 +36,12 @@ class FeatureLoader(abc.ABC):
         self._overrides   : Union[List[str],None]    = feature_overrides
 
     def LoadToRegistry(self, registry:FeatureRegistry) -> None:
-        Logger.Log(f"Preparing to load features to registry, overrides={self._overrides}...", logging.DEBUG, depth=3)
+        Logger.Log(f"Loading features to registry, overrides={self._overrides}...", logging.DEBUG, depth=3)
         # first, liad aggregate features
         for name,aggregate in self._game_schema.aggregate_features().items():
             if FeatureLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=self._overrides):
                 try:
                     feature = self.LoadFeature(feature_type=name, name=name, feature_args=aggregate)
-                    Logger.Log(f"Loaded feature {name} to registry.", logging.DEBUG, depth=4)
                 except NotImplementedError as err:
                     Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
                 else:
@@ -53,7 +52,6 @@ class FeatureLoader(abc.ABC):
                     try:
                         feat_name = f"{percount['prefix']}{i}_{name}"
                         feature = self.LoadFeature(feature_type=name, name=feat_name, feature_args=percount, count_index=i)
-                        Logger.Log(f"Loaded feature {feat_name} to registry.", logging.DEBUG, depth=4)
                     except NotImplementedError as err:
                         Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
                     else:
