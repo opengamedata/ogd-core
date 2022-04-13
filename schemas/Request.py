@@ -71,21 +71,27 @@ class RequestResult:
         self._players    = players
         self._population = population
 
+    @property
     def Status(self) -> ResultStatus:
         return self._status
 
+    @property
     def Message(self) -> str:
         return self._message
     
+    @property
     def Events(self) -> Union[List[Any], None]:
         return self._events
     
+    @property
     def Sessions(self) -> Union[List[Any], None]:
         return self._sessions
     
+    @property
     def Players(self) -> Union[List[Any], None]:
         return self._players
     
+    @property
     def Population(self) -> Union[List[Any], None]:
         return self._population
 
