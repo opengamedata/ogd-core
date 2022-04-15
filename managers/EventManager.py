@@ -1,6 +1,7 @@
 ## import standard libraries
 import json
 import logging
+from datetime import datetime
 from typing import Any, List, Type, Union
 ## import local files
 from detectors.DetectorRegistry import DetectorRegistry
@@ -13,22 +14,15 @@ from utils import Logger
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
 class EventManager:
-    ## Constructor for the EventProcessor class.
-    #  Stores some of the passed data, and generates some other members.
-    #  In particular, generates a mapping from column names back to indices of columns in the
-    #  events csv.
-    #  @param game_table    A data structure containing information on how the db
-    #                       table assiciated with the given game is structured. 
-    #  @param game_schema   A dictionary that defines how the game data itself
-    #                       is structured.
-    #  @param events_csv_file The output file, to which we'll write the event game data.
     def __init__(self, LoaderClass:Type[FeatureLoader], game_schema: GameSchema,
                  feature_overrides:Union[List[str],None]=None):
+        """Constructor for EventManager.
+        Just creates empty list of lines and generates list of column names.
+        """
         # define instance vars
         self._lines       : List[str]        = []
         self._columns     : List[str]        = Event.ColumnNames()
         self._registry    : DetectorRegistry = DetectorRegistry()
-
         self._game_schema : GameSchema            = game_schema
         self._overrides   : Union[List[str],None] = feature_overrides
         self._LoaderClass : Type[FeatureLoader]   = LoaderClass
@@ -46,19 +40,24 @@ class EventManager:
         self._registry.ExtractFromEvent(event=event)
         col_values = event.ColumnValues()
         for i,col in enumerate(col_values):
+            # TODO: double-check if the remote_addr is there to be dropped/ignored.
+            # if row_columns[i] != "remote_addr":
             if type(col) == str:
                 col_values[i] = f"\"{col}\""
             elif type(col) == dict:
                 col_values[i] = json.dumps(col)
         # event.event_data = json.dumps(event.event_data)
         self._lines.append(separator.join([str(item) for item in col_values]) + "\n") # changed , to \t
-        # Logger.Log(f"Got event: {str(event)}")
 
     def GetColumnNames(self) -> List[str]:
         return self._columns
 
-    def GetLines(self) -> List[str]:
-        return self._lines
+    def GetLines(self, slice_num:int, slice_count:int) -> List[str]:
+        start   : datetime = datetime.now()
+        ret_val : List[str] = self._lines
+        time_delta = datetime.now() - start
+        Logger.Log(f"Time to retrieve Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        return ret_val
 
     ## Function to empty the list of lines stored by the EventProcessor.
     #  This is helpful if we're processing a lot of data and want to avoid

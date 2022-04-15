@@ -25,20 +25,20 @@ class SessionExtractor(Extractor):
         # 1) First, we get Session's first-order feature data:
         _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
         # 2) Then we can side-propogate the values to second-order features, and down-propogate to other extractors:
-        for feature in _first_order_data['session']:
+        for feature in _first_order_data['sessions']:
             self.ProcessFeatureData(feature=feature)
         # 3) Finally, we assume higher-ups have already sent down their first-order features, so we are ready to return all feature values.
         if export_types.sessions:
             if as_str:
-                return {"session" : self._registry.GetFeatureStringValues()}
+                return {"sessions" : self._registry.GetFeatureStringValues()}
             else:
-                return {"session" : self._registry.GetFeatureValues()}
+                return {"sessions" : self._registry.GetFeatureValues()}
         else:
             return {}
 
     def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
         ret_val : Dict[str, List[FeatureData]] = {}
-        ret_val["session"] = self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)
+        ret_val["sessions"] = self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)
         return ret_val
 
     ## Function to handle processing of a single row of data.
@@ -97,7 +97,7 @@ class SessionExtractor(Extractor):
     # *** PUBLIC METHODS ***
 
     def ClearLines(self):
-        Logger.Log(f"Clearing features from SessionExtractor.", logging.DEBUG)
+        Logger.Log(f"Clearing features from SessionExtractor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
 
     # *** PRIVATE STATICS ***

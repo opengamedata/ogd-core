@@ -52,7 +52,8 @@ class FeatureLoader(abc.ABC):
             if FeatureLoader._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=self._overrides):
                 for i in FeatureLoader._genCountRange(count=percount["count"], schema=self._game_schema):
                     try:
-                        feature = self.LoadFeature(feature_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, count_index=i)
+                        feat_name = f"{percount['prefix']}{i}_{name}"
+                        feature = self.LoadFeature(feature_type=name, name=feat_name, feature_args=percount, count_index=i)
                     except NotImplementedError as err:
                         Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
                     else:

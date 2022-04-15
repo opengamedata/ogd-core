@@ -50,7 +50,7 @@ class PopulationExtractor(Extractor):
             if export_types.players:
                 ret_val["players"] = []
                 for player in _results:
-                    ret_val["players"].append(player["player"]) # here, append list of features as new line.
+                    ret_val["players"].append(player["players"]) # here, append list of features as new line.
             if export_types.sessions:
                 ret_val["sessions"] = []
                 for player in _results:
@@ -64,7 +64,7 @@ class PopulationExtractor(Extractor):
         ret_val["players"] = []
         ret_val["sessions"] = []
         for player in _result:
-            ret_val["players"] += player['player']
+            ret_val["players"] += player['players']
             ret_val["sessions"] += player['sessions']
         return ret_val
 
@@ -148,7 +148,7 @@ class PopulationExtractor(Extractor):
     #   This is helpful if we're processing a lot of data and want to avoid
     #   eating too much memory.
     def ClearLines(self):
-        Logger.Log(f"Clearing features from PopulationExtractor.", logging.DEBUG)
+        Logger.Log(f"Clearing features from PopulationExtractor.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
 
     def ClearPlayersLines(self):

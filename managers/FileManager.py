@@ -87,12 +87,12 @@ class FileManager(abc.ABC):
         self._file_names   : Dict[str,Union[Path,None]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._zip_names    : Dict[str,Union[Path,None]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._files        : Dict[str,Union[IO,None]]   = {"population":None, "players":None, "sessions":None, "events":None}
-        self._game_id      : str  = request.GetGameID()
+        self._game_id      : str  = request.GameID
         self._data_dir     : Path = Path("./" + data_dir)
         self._game_data_dir: Path = self._data_dir / self._game_id
         self._readme_path  : Path = self._game_data_dir/ "readme.md"
         self._extension    : str  = extension
-        self._date_range   : Dict[str,Union[datetime,None]] = request.GetRange().GetDateRange()
+        self._date_range   : Dict[str,Union[datetime,None]] = request.Range.DateRange
         self._dataset_id   : str  = ""
         self._short_hash   : str  = ""
         # figure out dataset ID.

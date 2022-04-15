@@ -5,8 +5,9 @@ import logging
 import os
 import traceback
 from datetime import datetime
+from logging import Logger
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Union
 # import locals
 from config.config import settings as settings
 
@@ -35,8 +36,10 @@ def loadJSONFile(filename:str, path:Path = Path("./")) -> Dict[Any, Any]:
         raise err
 
 class Logger:
+    std_logger  : Logger              = logging.getLogger("std_logger")
+    file_logger : Union[Logger, None] = None
+
     # Set up loggers. First, the std out logger
-    std_logger = logging.getLogger("std_logger")
     stdout_handler = logging.StreamHandler()
     std_logger.addHandler(stdout_handler)
     if settings['DEBUG_LEVEL'] == "ERROR":
@@ -50,10 +53,10 @@ class Logger:
     std_logger.debug("Testing standard out logger")
 
     # Then, set up the file logger. Check for permissions errors.
-    file_logger = logging.getLogger("file_logger")
-    file_logger.setLevel(level=logging.DEBUG)
-    # file_logger.setLevel(level=logging.DEBUG)
     if settings.get('LOG_FILE', False):
+        file_logger = logging.getLogger("file_logger")
+        file_logger.setLevel(level=logging.DEBUG)
+        # file_logger.setLevel(level=logging.DEBUG)
         try:
             err_handler = logging.FileHandler("./ExportErrorReport.log", encoding="utf-8")
             debug_handler = logging.FileHandler("./ExportDebugReport.log", encoding="utf-8")

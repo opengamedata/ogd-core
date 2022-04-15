@@ -27,26 +27,26 @@ class PlayerExtractor(Extractor):
         if export_types.players:
             _sess_ct = self.SessionCount()
             if as_str:
-                ret_val["player"] = self._registry.GetFeatureStringValues() + [str(_sess_ct)]
+                ret_val["players"] = self._registry.GetFeatureStringValues() + [str(_sess_ct)]
             else:
-                ret_val["player"] = self._registry.GetFeatureValues() + [_sess_ct]
+                ret_val["players"] = self._registry.GetFeatureValues() + [_sess_ct]
         if export_types.sessions:
             # _results gives us a list of dicts, each with a "session" element
             _results = [sess_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for sess_extractor in self._session_extractors.values()]
             ret_val["sessions"] = []
             # so we loop over list, and pull each "session" element into a master list of all sessions.
             for session in _results:
-                ret_val["sessions"].append(session["session"])
+                ret_val["sessions"].append(session["sessions"])
             # finally, what we return is a dict with a "sessions" element, containing list of lists.
         return ret_val
 
     def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
         ret_val : Dict[str, List[FeatureData]] = {}
-        ret_val["player"] = self._registry.GetFeatureData(order=order)
+        ret_val["players"] = self._registry.GetFeatureData(order=order)
         _result = [session_extractor.GetFeatureData(order=order) for session_extractor in self._session_extractors.values()]
         ret_val["sessions"] = []
         for session in _result:
-            ret_val["sessions"] += session['session']
+            ret_val["sessions"] += session['sessions']
         return ret_val
 
     ## Function to handle processing of a single row of data.
@@ -75,9 +75,11 @@ class PlayerExtractor(Extractor):
     def _prepareLoader(self) -> FeatureLoader:
         ret_val : FeatureLoader
         if self._LoaderClass is LakelandLoader:
-            ret_val = LakelandLoader(player_id=self._player_id, session_id="player", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=self._player_file)
+            ret_val = LakelandLoader(player_id=self._player_id, session_id="player", game_schema=self._game_schema,
+                                    feature_overrides=self._overrides, output_file=self._player_file)
         else:
-            ret_val = self._LoaderClass(player_id=self._player_id, session_id="player", game_schema=self._game_schema, feature_overrides=self._overrides)
+            ret_val = self._LoaderClass(player_id=self._player_id, session_id="player", game_schema=self._game_schema,
+                                        feature_overrides=self._overrides)
         return ret_val
 
     # *** PUBLIC BUILT-INS ***
@@ -100,6 +102,7 @@ class PlayerExtractor(Extractor):
         :param player_file: _description_, defaults to None
         :type player_file: Union[IO[str],None], optional
         """
+        Logger.Log(f"Setting up PlayerExtractor for {player_id}...", logging.DEBUG, depth=2)
         self._player_file : Union[IO[str],None] = player_file
         self._player_id   : str                 = player_id
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
@@ -109,6 +112,7 @@ class PlayerExtractor(Extractor):
                                       player_id=self._player_id, session_id="null",
                                       feature_overrides=feature_overrides, session_file=player_file)
         }
+        Logger.Log(f"Done", logging.DEBUG, depth=2)
 
     # *** PUBLIC STATICS ***
 
@@ -125,11 +129,11 @@ class PlayerExtractor(Extractor):
         """Function to empty the list of lines stored by the PlayerProcessor.
         This is helpful if we're processing a lot of data and want to avoid eating too much memory.
         """
-        Logger.Log(f"Clearing features from PlayerExtractor.", logging.DEBUG)
+        Logger.Log(f"Clearing features from PlayerExtractor for {self._player_id}.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
 
     def ClearSessionsLines(self):
-        Logger.Log(f"Clearing {len(self._session_extractors)} sessions from PlayerProcessor.", logging.DEBUG)
+        Logger.Log(f"Clearing {len(self._session_extractors)} sessions from PlayerExtractor for {self._player_id}.", logging.DEBUG, depth=2)
         self._session_extractors = {}
 
     # *** PRIVATE STATICS ***
