@@ -124,7 +124,7 @@ class ExportManager:
 
     def _setupManagers(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
         if request.ExportEvents():
-            load_class = self._prepareLoaderClass(game_schema._game_name)
+            load_class = self._loadLoaderClass(game_schema._game_name)
             if load_class is not None:
                 self._event_mgr = EventManager(LoaderClass=load_class, game_schema=game_schema, feature_overrides=feature_overrides)
             # evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
@@ -165,7 +165,7 @@ class ExportManager:
             else:
                 Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
 
-    def _prepareLoaderClass(self, game_id:str) -> Union[Type[FeatureLoader],None]:
+    def _loadLoaderClass(self, game_id:str) -> Union[Type[FeatureLoader],None]:
         _loader_class: Union[Type[FeatureLoader],None] = None
         if game_id == "AQUALAB":
             _loader_class = AqualabLoader
