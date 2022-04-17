@@ -46,6 +46,7 @@ class JobsAttempted(Feature):
             self._session_id = session_id
             self._mission_start_time = event.timestamp
             self._start_map[mission_id].append(session_id)
+            self._session_id = session_id
 
         elif checkpoint == "Case Closed" and mission_id == self._mission_id and session_id == self._session_id:
             self._num_completes += 1

@@ -131,21 +131,33 @@ class BigQueryInterface(DataInterface):
                 {player_clause}
             """
         # 4) Set up actual query
-        query = f"""
-            SELECT event_name, event_params, device, geo, platform,
-            concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
-            param_app_version.value.double_value as app_version,
-            param_log_version.value.int_value as log_version,
-            param_session.value.int_value as session_id,
-            param_user.value.string_value as fd_user_id
-            FROM `{db_name}.{table_name}`
-            CROSS JOIN UNNEST(event_params) AS param_app_version
-            CROSS JOIN UNNEST(event_params) AS param_log_version
-            CROSS JOIN UNNEST(event_params) AS param_session
-            CROSS JOIN UNNEST(event_params) AS param_user
-            {where_clause}
-            ORDER BY `session_id`, `timestamp` ASC
-        """
+        query = ""
+        if self._game_id == "SHIPWRECKS":
+            query = f"""
+                SELECT event_name, event_params, device, geo, platform,
+                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
+                param_session.value.int_value as session_id,
+                FROM `{db_name}.{table_name}`
+                CROSS JOIN UNNEST(event_params) AS param_session
+                WHERE param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})
+                ORDER BY `session_id`, `timestamp` ASC
+            """
+        else:
+            query = f"""
+                SELECT event_name, event_params, device, geo, platform,
+                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
+                param_app_version.value.double_value as app_version,
+                param_log_version.value.int_value as log_version,
+                param_session.value.int_value as session_id,
+                param_user.value.string_value as fd_user_id
+                FROM `{db_name}.{table_name}`
+                CROSS JOIN UNNEST(event_params) AS param_app_version
+                CROSS JOIN UNNEST(event_params) AS param_log_version
+                CROSS JOIN UNNEST(event_params) AS param_session
+                CROSS JOIN UNNEST(event_params) AS param_user
+                {where_clause}
+                ORDER BY `session_id`, `timestamp` ASC
+            """
         data = self._client.query(query)
         events = []
         for row in data:
