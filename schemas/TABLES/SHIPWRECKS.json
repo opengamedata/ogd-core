@@ -8,7 +8,7 @@
         "app_version": null,
         "log_version": null,
         "time_offset": null,
-        "user_id": "session_id",
+        "user_id": null,
         "user_data": null,
         "game_state": null,
         "event_sequence_index": null
