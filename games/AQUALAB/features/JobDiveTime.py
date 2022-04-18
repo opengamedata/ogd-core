@@ -46,7 +46,7 @@ class JobDiveTime(Feature):
     def _validate_job(self, job_data):
         ret_val : bool = False
         if job_data['string_value'] is not None:
-            if self._job_map[job_data['string_value']] == self._count_index:
+            if job_data['string_value'] in self._job_map and self._job_map[job_data['string_value']] == self._count_index:
                 ret_val = True
         else:
             Logger.Log(f"Got invalid job_name data in JobDiveTime", logging.WARNING)

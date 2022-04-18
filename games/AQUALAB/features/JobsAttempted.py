@@ -36,21 +36,22 @@ class JobsAttempted(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        user_code = event.user_id
-        job_name = event.event_data["job_name"]["string_value"]
-        job_id = self._job_map[job_name]
+        if self._validate_job(event.event_data['job_name']):
+            user_code = event.user_id
+            job_name = event.event_data["job_name"]["string_value"]
+            job_id = self._job_map[job_name]
 
-        if event.event_name == "accept_job" and job_id == self._job_id:
-            self._num_starts += 1
-            self._user_code = user_code
-            self._job_start_time = event.timestamp
+            if event.event_name == "accept_job" and job_id == self._job_id:
+                self._num_starts += 1
+                self._user_code = user_code
+                self._job_start_time = event.timestamp
 
-        elif event.event_name == "complete_job" and job_id == self._job_id and user_code == self._user_code:
-            self._num_completes += 1
+            elif event.event_name == "complete_job" and job_id == self._job_id and user_code == self._user_code:
+                self._num_completes += 1
 
-            if self._job_start_time:
-                self._times.append((event.timestamp - self._job_start_time).total_seconds())
-                self._job_start_time = None
+                if self._job_start_time:
+                    self._times.append((event.timestamp - self._job_start_time).total_seconds())
+                    self._job_start_time = None
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
@@ -77,9 +78,8 @@ class JobsAttempted(Feature):
     # *** Other local functions
     def _validate_job(self, job_data):
         ret_val : bool = False
-        if job_data['string_value'] is not None:
-            if self._job_map[job_data['string_value']] == self._count_index:
-                ret_val = True
+        if job_data['string_value'] and job_data['string_value'] in self._job_map:
+            ret_val = True
         else:
             Logger.Log(f"Got invalid job_name data in JobsAttempted", logging.WARNING)
         return ret_val
