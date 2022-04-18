@@ -70,27 +70,27 @@ class ExportManager:
         Logger.Log(f"Executing request: {str(request)}", logging.INFO)
         start = datetime.now()
         try:
-            Logger.Log(f"Setting up event/extract managers...", logging.DEBUG)
+            Logger.Log(f"Setting up event/extract managers...", logging.INFO)
             self._setupManagers(request=request, game_schema=_game_schema, feature_overrides=request._feat_overrides)
-            Logger.Log(f"Done", logging.DEBUG)
+            Logger.Log(f"Done", logging.INFO)
 
             if request.ToFile():
-                Logger.Log(f"File output requested, setting up file manager...", logging.DEBUG)
+                Logger.Log(f"File output requested, setting up file manager...", logging.INFO)
                 self._setupFileManager(request=request)
-                Logger.Log(f"Done", logging.DEBUG)
+                Logger.Log(f"Done", logging.INFO)
 
-            Logger.Log(f"Executing...", logging.DEBUG)
+            Logger.Log(f"Executing...", logging.INFO)
             _result = self._executeDataRequest(request=request, table_schema=_table_schema, file_manager=self._file_mgr)
-            Logger.Log(f"Done", logging.DEBUG)
+            Logger.Log(f"Done", logging.INFO)
 
-            Logger.Log(f"Saving output...", logging.DEBUG)
+            Logger.Log(f"Saving output...", logging.INFO)
             if request.ToFile() and self._file_mgr is not None:
                 # 4) Save and close files
                 num_sess : int = _result.get("sessions_ct", 0)
                 self._teardownFileManager(game_schema=_game_schema, table_schema=_table_schema, num_sess=num_sess)
             if request.ToDict():
                 ret_val.update(_result) # merge event, session, player, and population data into the return value.
-            Logger.Log(f"Done", logging.DEBUG)
+            Logger.Log(f"Done", logging.INFO)
             Logger.Log(f"Successfully executed data request {str(request)}.", logging.INFO)
             ret_val['success'] = True # if we made it to end, we were successful.
         except Exception as err:
