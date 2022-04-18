@@ -60,7 +60,7 @@ class TopJobCompletionDestinations(Feature):
                 item[0]:item[1] for item in dests[0:5]
             }
 
-            Logger.Log(f"For TopJobCompletionDestinations, sorted dests as: {json.dumps(dests)}")
+            # Logger.Log(f"For TopJobCompletionDestinations, sorted dests as: {json.dumps(dests)}")
 
         return [json.dumps(ret_val)]
 
