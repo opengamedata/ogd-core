@@ -135,7 +135,7 @@ class PopulationExtractor(Extractor):
     def PlayerCount(self):
         return len(self._player_extractors.keys()) - 1 # don't count null player
     def SessionCount(self):
-        sum([player.SessionCount() for player in self._player_extractors.values()])
+        return sum([player.SessionCount() for player in self._player_extractors.values()])
 
     def GetPopulationFeatureNames(self) -> List[str]:
         return self.GetFeatureNames()

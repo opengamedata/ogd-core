@@ -49,6 +49,9 @@ class FeatureRegistry:
         """Base constructor for Registry
 
         Just sets up mostly-empty dictionaries for use by the registry.
+        _features is a list of feature orders, where each element is a map from feature names to actual Feature instances.
+        _event_registry maps event names to Listener objects, which basically just say which feature(s) wants the given enent.
+        _feature_registry maps feature names to Listener objects, which basically just say which 2nd-order feature(s) wants the given 1st-order feature.
         """
         self._features : List[OrderedDict[str, Feature]] = [OrderedDict() for i in range(order)]
         # self._features : Dict[str, OrderedDict[str, Feature]] = {
@@ -193,23 +196,24 @@ class FeatureRegistry:
 
     def Register(self, feature:Feature, kind:Listener.Kinds):
         _listener = FeatureRegistry.Listener(name=feature.Name(), kind=kind)
-        _feature_types = feature.GetFeatureDependencies()
-        _event_types   = feature.GetEventDependencies()
+        _feature_deps = feature.GetFeatureDependencies()
+        _event_deps   = feature.GetEventDependencies()
         # First, add feature to the _features dict.
-        if len(_feature_types) > 0:
-            self._features[FeatureRegistry.FeatureOrders.SECOND_ORDER.value][feature.Name()] = feature
+        if len(_feature_deps) > 0:
+            _feat_order = FeatureRegistry.FeatureOrders.SECOND_ORDER.value
         else:
-            self._features[FeatureRegistry.FeatureOrders.FIRST_ORDER.value][feature.Name()] = feature
+            _feat_order = FeatureRegistry.FeatureOrders.FIRST_ORDER.value
+        self._features[_feat_order][feature.Name()] = feature
         # Register feature to listen for any requested first-order features.
-        for _feature in _feature_types:
-            if _feature not in self._feature_registry.keys():
-                self._feature_registry[_feature] = []
-            self._feature_registry[_feature].append(_listener)
+        for _feature_dep in _feature_deps:
+            if _feature_dep not in self._feature_registry.keys():
+                self._feature_registry[_feature_dep] = []
+            self._feature_registry[_feature_dep].append(_listener)
         # Finally, register feature's requested events.
-        if "all_events" in _event_types:
+        if "all_events" in _event_deps:
             self._event_registry["all_events"].append(_listener)
         else:
-            for event in _event_types:
+            for event in _event_deps:
                 if event not in self._event_registry.keys():
                     self._event_registry[event] = []
                 self._event_registry[event].append(_listener)

@@ -1,5 +1,5 @@
 {
-    "level_range": { "min":0, "max":35 },
+    "level_range": { "min":0, "max":40 },
 
     "events": {
         "accept_job": {

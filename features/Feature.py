@@ -208,7 +208,8 @@ class Feature(abc.ABC):
         :return: True if the given event type is in this feature's list, otherwise false.
         :rtype: bool
         """
-        if event_type in self.GetEventDependencies():
+        _deps = self.GetEventDependencies()
+        if event_type in _deps or 'all_events' in _deps:
             return True
         else:
             return False
