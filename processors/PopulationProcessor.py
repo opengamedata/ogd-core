@@ -22,7 +22,7 @@ class PopulationProcessor(Processor):
     def _prepareRegistry(self) -> ExtractorRegistry:
         return FeatureRegistry()
 
-    def _getFeatureNames(self) -> List[str]:
+    def _getExtractorNames(self) -> List[str]:
         if isinstance(self._registry, FeatureRegistry):
             return self._registry.GetFeatureNames() + ["PlayerCount", "SessionCount"]
         else:
@@ -144,9 +144,9 @@ class PopulationProcessor(Processor):
         return sum([player.SessionCount() for player in self._player_extractors.values()])
 
     def GetPopulationFeatureNames(self) -> List[str]:
-        return self.GetFeatureNames()
+        return self.GetExtractorNames()
     def GetPlayerFeatureNames(self) -> List[str]:
-        return self._player_extractors["null"].GetFeatureNames()
+        return self._player_extractors["null"].GetExtractorNames()
     def GetSessionFeatureNames(self) -> List[str]:
         return self._player_extractors["null"].GetSessionFeatureNames()
 

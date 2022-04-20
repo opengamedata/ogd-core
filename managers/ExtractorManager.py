@@ -85,7 +85,7 @@ class FeatureManager:
         if self._pop_extractor is not None:
             return self._pop_extractor.GetPlayerFeatureNames()
         elif self._player_extractor is not None:
-            return self._player_extractor.GetFeatureNames()
+            return self._player_extractor.GetExtractorNames()
         else:
             return []
     def GetPlayerFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[List[Any]]:
@@ -102,7 +102,7 @@ class FeatureManager:
         elif self._player_extractor is not None:
             return self._player_extractor.GetSessionFeatureNames()
         elif self._sess_extractor is not None:
-            return self._sess_extractor.GetFeatureNames()
+            return self._sess_extractor.GetExtractorNames()
         else:
             return []
     def GetSessionFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[List[Any]]:
