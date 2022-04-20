@@ -15,7 +15,7 @@ class LegacyLoader(FeatureLoader):
     def LoadToRegistry(self, registry:FeatureRegistry) -> None:
         feat = self.LoadFeature(feature_type="", name="", feature_args={}, count_index=0)
         # treat the monolithic LegacyFeature extractor as a single aggregate.
-        registry.Register(feat, FeatureRegistry.Listener.Kinds.AGGREGATE)
+        registry.Register(feat, ExtractorRegistry.Listener.Kinds.AGGREGATE)
 
     def LoadDetector(self, detector_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Detector:
         return LegacyDetector(name=name, description=feature_args["description"])

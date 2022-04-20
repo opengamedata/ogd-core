@@ -21,7 +21,7 @@ class EchoSessionID(SessionFeature):
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
-        self._session_id = feature.FeatureValues()[0]
+        self._session_id = feature.FeatureValues[0]
 
     def _getFeatureValues(self) -> List[Any]:
         return [f"The sess ID is: {self._session_id}"]

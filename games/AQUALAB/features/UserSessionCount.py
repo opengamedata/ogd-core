@@ -23,7 +23,7 @@ class UserSessionCount(SessionFeature):
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
-        if feature.PlayerID() == self._player_id:
+        if feature.PlayerID == self._player_id:
             self._count += 1
 
     def _getFeatureValues(self) -> List[Any]:

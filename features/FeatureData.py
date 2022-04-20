@@ -10,20 +10,26 @@ class FeatureData:
       self._player_id = player_id
       self._sess_id = sess_id
 
+   @property
    def Name(self):
       return self._name
 
+   @property
    def CountIndex(self):
       return self._count_index
 
+   @property
    def FeatureNames(self) -> List[str]:
       return self._cols
 
+   @property
    def FeatureValues(self) -> List[Any]:
       return self._vals
 
+   @property
    def PlayerID(self) -> Union[str, None]:
       return self._player_id
 
+   @property
    def SessionID(self) -> Union[str, None]:
       return self._sess_id

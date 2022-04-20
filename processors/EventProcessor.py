@@ -35,6 +35,7 @@ class EventProcessor(Processor):
             ret_val = LakelandLoader(player_id="events", session_id="events", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=None)
         else:
             ret_val = self._LoaderClass(player_id="events", session_id="events", game_schema=self._game_schema, feature_overrides=self._overrides)
+        self._loader.LoadToDetectorRegistry(registry=self._registry)
         return ret_val
 
     # *** PUBLIC BUILT-INS ***

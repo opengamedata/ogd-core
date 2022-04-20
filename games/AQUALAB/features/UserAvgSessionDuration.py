@@ -23,8 +23,8 @@ class UserAvgSessionDuration(SessionFeature):
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
-        if feature.PlayerID() == self._player_id:
-            self._times.append(feature.FeatureValues()[0])
+        if feature.PlayerID == self._player_id:
+            self._times.append(feature.FeatureValues[0])
 
     def _getFeatureValues(self) -> List[Any]:
         return [sum(self._times) / len(self._times)]

@@ -3,9 +3,8 @@ import abc
 import logging
 from typing import Any, Dict, List, Type, Union
 # import locals
-from utils import Logger
+from extractors.ExtractorRegistry import ExtractorRegistry
 from features.FeatureLoader import FeatureLoader
-from features.FeatureRegistry import FeatureRegistry
 from features.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
@@ -50,9 +49,8 @@ class Processor(abc.ABC):
         self._game_schema : GameSchema            = game_schema
         self._overrides   : Union[List[str],None] = feature_overrides
         self._LoaderClass : Type[FeatureLoader]   = LoaderClass
-        self._registry    : FeatureRegistry       = FeatureRegistry()
+        self._registry    : ExtractorRegistry     = self._prepareRegistry()
         self._loader      : FeatureLoader         = self._prepareLoader()
-        self._loader.LoadToFeatureRegistry(registry=self._registry)
     def __str__(self):
         return f""
 

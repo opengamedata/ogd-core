@@ -6,7 +6,8 @@ from collections import OrderedDict
 from datetime import datetime
 from typing import Any, Dict, List, Union
 ## import local files
-from utils import Logger
+from extractors.Extractor import Extractor
+from extractors.ExtractorRegistry import ExtractorRegistry
 from features.Feature import Feature
 from features.FeatureData import FeatureData
 from schemas.Event import Event
@@ -15,32 +16,80 @@ from schemas.Event import Event
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class FeatureRegistry:
+class FeatureRegistry(ExtractorRegistry):
     """Class for registering features to listen for events.
 
     :return: [description]
     :rtype: [type]
     """
-    class Listener:
-        @enum.unique
-        class Kinds(enum.Enum):
-            AGGREGATE = enum.auto()
-            PERCOUNT  = enum.auto()
-
-        def __init__(self, name:str, kind:Kinds):
-            self.name = name
-            self.kind = kind
-        
-        def __str__(self) -> str:
-            return f"{self.name} ({'aggregate' if self.kind == FeatureRegistry.Listener.Kinds.AGGREGATE else 'per-count'})"
-
-        def __repr__(self) -> str:
-            return str(self)
 
     @enum.unique
     class FeatureOrders(enum.Enum):
         FIRST_ORDER = 0
         SECOND_ORDER = 1
+
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
+    def _register(self, extractor:Extractor, kind:ExtractorRegistry.Listener.Kinds):
+        if isinstance(extractor, Feature):
+            self._registerFeature(feature=extractor, kind=kind)
+        else:
+            raise TypeError("FeatureRegistry was given an Extractor which was not a Feature!")
+
+    def _extractFromEvent(self, event:Event) -> None:
+        """Perform extraction of features from a row.
+
+        :param event: [description]
+        :type event: Event
+        :param table_schema: A data structure containing information on how the db
+                             table assiciated with this game is structured.
+        :type table_schema: TableSchema
+        """
+        if event.event_name in self._event_registry.keys():
+            # send event to every listener for the given event name.
+            for listener in self._event_registry[event.event_name]:
+                for order_key in range(len(self._features)):
+                    if listener.name in self._features[order_key].keys():
+                        self._features[order_key][listener.name].ExtractFromEvent(event)
+        # don't forget to send to any features listening for "all" events
+        for listener in self._event_registry["all_events"]:
+            for order_key in range(len(self._features)):
+                if listener.name in self._features[order_key].keys():
+                    self._features[order_key][listener.name].ExtractFromEvent(event)
+
+    def _extractFromFeatureData(self, feature:FeatureData) -> None:
+        """Perform extraction of features from a row.
+
+        :param event: [description]
+        :type event: Event
+        :param table_schema: A data structure containing information on how the db
+                             table assiciated with this game is structured.
+        :type table_schema: TableSchema
+        """
+        if feature.Name in self._feature_registry.keys():
+            # send event to every listener for the given feature name.
+            for listener in self._feature_registry[feature.Name]:
+                for order_key in range(len(self._features)):
+                    if listener.name in self._features[order_key].keys():
+                        self._features[order_key][listener.name].ExtractFromFeatureData(feature)
+
+    def _getExtractorNames(self) -> List[str]:
+        """Function to generate a list names of all enabled features, given a GameSchema
+        This is different from the feature_names() function of GameSchema,
+        which ignores the 'enabled' attribute and does not expand per-count features
+        (e.g. this function would include 'lvl0_someFeat', 'lvl1_someFeat', 'lvl2_someFeat', etc.
+        while feature_names() only would include 'someFeat').
+
+        :param schema: The schema from which feature names should be generated.
+        :type schema: GameSchema
+        :return: A list of feature names.
+        :rtype: List[str]
+        """
+        ret_val : List[str] = []
+        for order in self._features:
+            for feature in order.values():
+                ret_val += feature.GetFeatureNames()
+        return ret_val
 
     # *** BUILT-INS ***
 
@@ -58,8 +107,8 @@ class FeatureRegistry:
         #     "first_order" : OrderedDict(),
         #     "second_order" : OrderedDict()
         # }
-        self._event_registry : Dict[str,List[FeatureRegistry.Listener]] = {"all_events":[]}
-        self._feature_registry: Dict[str,List[FeatureRegistry.Listener]] = {}
+        self._event_registry : Dict[str,List[ExtractorRegistry.Listener]] = {"all_events":[]}
+        self._feature_registry: Dict[str,List[ExtractorRegistry.Listener]] = {}
 
     # string conversion for Extractors.
     def __str__(self) -> str:
@@ -106,61 +155,6 @@ class FeatureRegistry:
         """
         return len(self._features)
 
-    def ExtractFromEvent(self, event:Event) -> None:
-        """Perform extraction of features from a row.
-
-        :param event: [description]
-        :type event: Event
-        :param table_schema: A data structure containing information on how the db
-                             table assiciated with this game is structured.
-        :type table_schema: TableSchema
-        """
-        if event.event_name in self._event_registry.keys():
-            # send event to every listener for the given event name.
-            for listener in self._event_registry[event.event_name]:
-                for order_key in range(len(self._features)):
-                    if listener.name in self._features[order_key].keys():
-                        self._features[order_key][listener.name].ExtractFromEvent(event)
-        # don't forget to send to any features listening for "all" events
-        for listener in self._event_registry["all_events"]:
-            for order_key in range(len(self._features)):
-                if listener.name in self._features[order_key].keys():
-                    self._features[order_key][listener.name].ExtractFromEvent(event)
-
-    def ExtractFromFeatureData(self, feature:FeatureData) -> None:
-        """Perform extraction of features from a row.
-
-        :param event: [description]
-        :type event: Event
-        :param table_schema: A data structure containing information on how the db
-                             table assiciated with this game is structured.
-        :type table_schema: TableSchema
-        """
-        if feature.Name() in self._feature_registry.keys():
-            # send event to every listener for the given feature name.
-            for listener in self._feature_registry[feature.Name()]:
-                for order_key in range(len(self._features)):
-                    if listener.name in self._features[order_key].keys():
-                        self._features[order_key][listener.name].ExtractFromFeatureData(feature)
-
-    def GetFeatureNames(self) -> List[str]:
-        """Function to generate a list names of all enabled features, given a GameSchema
-        This is different from the feature_names() function of GameSchema,
-        which ignores the 'enabled' attribute and does not expand per-count features
-        (e.g. this function would include 'lvl0_someFeat', 'lvl1_someFeat', 'lvl2_someFeat', etc.
-        while feature_names() only would include 'someFeat').
-
-        :param schema: The schema from which feature names should be generated.
-        :type schema: GameSchema
-        :return: A list of feature names.
-        :rtype: List[str]
-        """
-        ret_val : List[str] = []
-        for order in self._features:
-            for feature in order.values():
-                ret_val += feature.GetFeatureNames()
-        return ret_val
-
     def GetFeatureData(self, order:int, player_id:Union[str, None]=None, sess_id:Union[str, None]=None) -> List[FeatureData]:
         ret_val : List[FeatureData] = []
         for feature in self._features[order].values():
@@ -194,8 +188,8 @@ class FeatureRegistry:
 
     # *** PRIVATE METHODS ***
 
-    def Register(self, feature:Feature, kind:Listener.Kinds):
-        _listener = FeatureRegistry.Listener(name=feature.Name(), kind=kind)
+    def _registerFeature(self, feature:Feature, kind:ExtractorRegistry.Listener.Kinds):
+        _listener = ExtractorRegistry.Listener(name=feature.Name, kind=kind)
         _feature_deps = feature.GetFeatureDependencies()
         _event_deps   = feature.GetEventDependencies()
         # First, add feature to the _features dict.
@@ -203,7 +197,7 @@ class FeatureRegistry:
             _feat_order = FeatureRegistry.FeatureOrders.SECOND_ORDER.value
         else:
             _feat_order = FeatureRegistry.FeatureOrders.FIRST_ORDER.value
-        self._features[_feat_order][feature.Name()] = feature
+        self._features[_feat_order][feature.Name] = feature
         # Register feature to listen for any requested first-order features.
         for _feature_dep in _feature_deps:
             if _feature_dep not in self._feature_registry.keys():
