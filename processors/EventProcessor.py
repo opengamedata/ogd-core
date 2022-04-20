@@ -2,7 +2,7 @@
 from typing import Any, Dict, List, Type
 # import locals
 from detectors.DetectorRegistry import DetectorRegistry
-from processors.Extractor import Extractor
+from processors.Processor import Processor
 from features.FeatureData import FeatureData
 from features.FeatureLoader import FeatureLoader
 from games.LAKELAND.LakelandLoader import LakelandLoader
@@ -10,7 +10,7 @@ from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.Request import ExporterTypes
 
-class EventExtractor(Extractor):
+class EventProcessor(Processor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getFeatureNames(self) -> List[str]:
         return self._registry.GetFeatureNames()

@@ -4,7 +4,7 @@ import traceback
 from typing import Any, List, Dict, IO, Type, Union
 # import local files
 from utils import Logger
-from processors.Extractor import Extractor
+from processors.Processor import Processor
 from features.FeatureData import FeatureData
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry
@@ -15,7 +15,7 @@ from schemas.Request import ExporterTypes
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.
-class SessionExtractor(Extractor):
+class SessionProcessor(Processor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _getFeatureNames(self) -> List[str]:
@@ -97,7 +97,7 @@ class SessionExtractor(Extractor):
     # *** PUBLIC METHODS ***
 
     def ClearLines(self):
-        Logger.Log(f"Clearing features from SessionExtractor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)
+        Logger.Log(f"Clearing features from SessionProcessor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
 
     # *** PRIVATE STATICS ***

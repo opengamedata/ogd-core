@@ -11,8 +11,8 @@ from schemas.GameSchema import GameSchema
 from schemas.Event import Event
 from schemas.Request import ExporterTypes
 
-## @class Extractor
-class Extractor(abc.ABC):
+## @class Processor
+class Processor(abc.ABC):
 
     # *** ABSTRACTS ***
 

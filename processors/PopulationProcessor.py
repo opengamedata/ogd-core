@@ -4,8 +4,8 @@ import traceback
 from typing import Any, Dict, IO, List, Type, Union
 # import local files
 from utils import Logger
-from processors.Extractor import Extractor
-from processors.PlayerExtractor import PlayerExtractor
+from processors.Processor import Processor
+from processors.PlayerProcessor import PlayerProcessor
 from features.FeatureData import FeatureData
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry
@@ -16,7 +16,7 @@ from schemas.Request import ExporterTypes
 
 ## @class PopulationProcessor
 #  Class to extract and manage features for a processed csv file.
-class PopulationExtractor(Extractor):
+class PopulationProcessor(Processor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _getFeatureNames(self) -> List[str]:
@@ -83,7 +83,7 @@ class PopulationExtractor(Extractor):
             self._player_extractors["null"].ProcessEvent(event=event)
         else:
             if event.user_id not in self._player_extractors.keys():
-                self._player_extractors[event.user_id] = PlayerExtractor(self._LoaderClass, game_schema=self._game_schema,
+                self._player_extractors[event.user_id] = PlayerProcessor(self._LoaderClass, game_schema=self._game_schema,
                                                                          player_id=event.user_id, feature_overrides=self._overrides)
             self._player_extractors[event.user_id].ProcessEvent(event=event)
 
@@ -123,8 +123,8 @@ class PopulationExtractor(Extractor):
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         # Set up dict of sub-processors to handle each player.
         # By default, set up a "null" player, who will cover any data without a player id.
-        self._player_extractors : Dict[str,PlayerExtractor] = {
-            "null" : PlayerExtractor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+        self._player_extractors : Dict[str,PlayerProcessor] = {
+            "null" : PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
                                      player_id="null", feature_overrides=self._overrides)
         }
 
@@ -148,7 +148,7 @@ class PopulationExtractor(Extractor):
     #   This is helpful if we're processing a lot of data and want to avoid
     #   eating too much memory.
     def ClearLines(self):
-        Logger.Log(f"Clearing features from PopulationExtractor.", logging.DEBUG, depth=2)
+        Logger.Log(f"Clearing features from PopulationProcessor.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
 
     def ClearPlayersLines(self):

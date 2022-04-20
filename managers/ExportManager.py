@@ -27,7 +27,7 @@ from games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
 from games.WAVES.WaveLoader import WaveLoader
 from managers.FileManager import FileManager
 from managers.EventManager import EventManager
-from managers.ExtractorManager import ExtractorManager
+from managers.FeatureManager import FeatureManager
 from schemas.Event import Event
 from schemas.IDMode import IDMode
 from schemas.GameSchema import GameSchema
@@ -52,7 +52,7 @@ class ExportManager:
         """
         self._settings = settings
         self._event_mgr   : Union[EventManager, None]     = None
-        self._extract_mgr : Union[ExtractorManager, None] = None
+        self._extract_mgr : Union[FeatureManager, None] = None
         self._file_mgr    : Union[FileManager, None]      = None
 
     # *** PUBLIC STATICS ***
@@ -130,7 +130,7 @@ class ExportManager:
             # evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
         # If game doesn't have an extractor, make sure we don't try to export it.
         if request.ExportSessions() or request.ExportPlayers() or request.ExportPopulation():
-            self._extract_mgr = ExtractorManager(game_id=request.GameID, exp_types=request._exports,
+            self._extract_mgr = FeatureManager(game_id=request.GameID, exp_types=request._exports,
                                                        game_schema=game_schema, feature_overrides=feature_overrides)
             if not self._extract_mgr.HasLoader():
                 request._exports.sessions   = False

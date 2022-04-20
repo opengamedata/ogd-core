@@ -4,10 +4,10 @@ import traceback
 from typing import Any, List, Dict, IO, Type, Union
 # import local files
 from utils import Logger
-from processors.Extractor import Extractor
+from processors.Processor import Processor
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry
-from processors.SessionExtractor import SessionExtractor
+from processors.SessionProcessor import SessionProcessor
 from features.FeatureData import FeatureData
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from schemas.Event import Event
@@ -16,7 +16,7 @@ from schemas.Request import ExporterTypes
 
 ## @class PlayerProcessor
 #  Class to extract and manage features for a processed csv file.
-class PlayerExtractor(Extractor):
+class PlayerProcessor(Processor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _getFeatureNames(self) -> List[str]:
@@ -60,7 +60,7 @@ class PlayerExtractor(Extractor):
         self._registry.ExtractFromEvent(event=event)
         # ensure we have an extractor for the given session:
         if event.session_id not in self._session_extractors.keys():
-            self._session_extractors[event.session_id] = SessionExtractor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+            self._session_extractors[event.session_id] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
                                                                           player_id=self._player_id, session_id=event.session_id,
                                                                           feature_overrides=self._overrides, session_file=self._player_file)
 
@@ -102,13 +102,13 @@ class PlayerExtractor(Extractor):
         :param player_file: _description_, defaults to None
         :type player_file: Union[IO[str],None], optional
         """
-        Logger.Log(f"Setting up PlayerExtractor for {player_id}...", logging.DEBUG, depth=2)
+        Logger.Log(f"Setting up PlayerProcessor for {player_id}...", logging.DEBUG, depth=2)
         self._player_file : Union[IO[str],None] = player_file
         self._player_id   : str                 = player_id
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         ## Define instance vars
-        self._session_extractors : Dict[str,SessionExtractor] = {
-            "null" : SessionExtractor(LoaderClass=LoaderClass, game_schema=game_schema,
+        self._session_extractors : Dict[str,SessionProcessor] = {
+            "null" : SessionProcessor(LoaderClass=LoaderClass, game_schema=game_schema,
                                       player_id=self._player_id, session_id="null",
                                       feature_overrides=feature_overrides, session_file=player_file)
         }
@@ -129,11 +129,11 @@ class PlayerExtractor(Extractor):
         """Function to empty the list of lines stored by the PlayerProcessor.
         This is helpful if we're processing a lot of data and want to avoid eating too much memory.
         """
-        Logger.Log(f"Clearing features from PlayerExtractor for {self._player_id}.", logging.DEBUG, depth=2)
+        Logger.Log(f"Clearing features from PlayerProcessor for {self._player_id}.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
 
     def ClearSessionsLines(self):
-        Logger.Log(f"Clearing {len(self._session_extractors)} sessions from PlayerExtractor for {self._player_id}.", logging.DEBUG, depth=2)
+        Logger.Log(f"Clearing {len(self._session_extractors)} sessions from PlayerProcessor for {self._player_id}.", logging.DEBUG, depth=2)
         self._session_extractors = {}
 
     # *** PRIVATE STATICS ***

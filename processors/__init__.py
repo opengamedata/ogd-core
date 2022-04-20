@@ -1,11 +1,11 @@
 __all__ = [
-    "Extractor",
-    "SessionExtractor",
-    "PlayerExtractor",
-    "PopulationExtractor"
+    "Processor",
+    "SessionProcessor",
+    "PlayerProcessor",
+    "PopulationProcessor"
 ]
 
-from . import Extractor
-from . import SessionExtractor
-from . import PlayerExtractor
-from . import PopulationExtractor
+from . import Processor
+from . import SessionProcessor
+from . import PlayerProcessor
+from . import PopulationProcessor
