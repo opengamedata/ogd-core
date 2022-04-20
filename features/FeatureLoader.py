@@ -5,6 +5,7 @@ from typing import Any, Callable, Dict, List, Union
 from detectors.Detector import Detector
 # import locals
 from detectors.DetectorRegistry import DetectorRegistry
+from extractors.ExtractorRegistry import ExtractorRegistry
 from features.Feature import Feature
 from features.FeatureRegistry import FeatureRegistry
 from schemas.Event import Event
@@ -57,27 +58,28 @@ class FeatureLoader(abc.ABC):
                     except NotImplementedError as err:
                         Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
                     else:
-                        registry.Register(feature=feature, kind=ExtractorRegistry.Listener.Kinds.PERCOUNT)
+                        registry.Register(extractor=feature, kind=ExtractorRegistry.Listener.Kinds.PERCOUNT)
 
-    def LoadToDetectorRegistry(self, registry:DetectorRegistry, trigger_callback:Callable[[Event], None]) -> None:
-        # first, liad aggregate features
-        for name,aggregate in self._game_schema.aggregate_detectors().items():
-            if FeatureLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=self._overrides):
-                try:
-                    detector = self.LoadDetector(detector_type=name, name=name, feature_args=aggregate, trigger_callback=trigger_callback)
-                except NotImplementedError as err:
-                    Logger.Log(f"{name} is not a valid detector for {self._game_schema._game_name}", logging.ERROR)
-                else:
-                    registry.Register(detector, ExtractorRegistry.Listener.Kinds.AGGREGATE)
-        for name,percount in self._game_schema.percount_features().items():
-            if FeatureLoader._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=self._overrides):
-                for i in FeatureLoader._genCountRange(count=percount["count"], schema=self._game_schema):
+    def LoadToDetectorRegistry(self, registry:ExtractorRegistry, trigger_callback:Callable[[Event], None]) -> None:
+        if isinstance(registry, DetectorRegistry):
+            # first, load aggregate features
+            for name,aggregate in self._game_schema.aggregate_detectors().items():
+                if FeatureLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=self._overrides):
                     try:
-                        detector = self.LoadDetector(detector_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, trigger_callback=trigger_callback, count_index=i)
+                        detector = self.LoadDetector(detector_type=name, name=name, feature_args=aggregate, trigger_callback=trigger_callback)
                     except NotImplementedError as err:
-                        Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
+                        Logger.Log(f"{name} is not a valid detector for {self._game_schema._game_name}", logging.ERROR)
                     else:
-                        registry.Register(detector=detector, kind=ExtractorRegistry.Listener.Kinds.PERCOUNT)
+                        registry.Register(detector, ExtractorRegistry.Listener.Kinds.AGGREGATE)
+            for name,percount in self._game_schema.percount_features().items():
+                if FeatureLoader._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=self._overrides):
+                    for i in FeatureLoader._genCountRange(count=percount["count"], schema=self._game_schema):
+                        try:
+                            detector = self.LoadDetector(detector_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, trigger_callback=trigger_callback, count_index=i)
+                        except NotImplementedError as err:
+                            Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
+                        else:
+                            registry.Register(extractor=detector, kind=ExtractorRegistry.Listener.Kinds.PERCOUNT)
 
     # *** PRIVATE STATICS ***
 
