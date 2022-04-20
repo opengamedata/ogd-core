@@ -5,9 +5,9 @@ from typing import Any, Dict, List, Type, Union
 ## import local files
 from utils import Logger
 from features.FeatureLoader import FeatureLoader
-from extractors.PopulationExtractor import PopulationExtractor
-from extractors.PlayerExtractor import PlayerExtractor
-from extractors.SessionExtractor import SessionExtractor
+from processors.PopulationExtractor import PopulationExtractor
+from processors.PlayerExtractor import PlayerExtractor
+from processors.SessionExtractor import SessionExtractor
 from games.AQUALAB.AqualabLoader import AqualabLoader
 from games.CRYSTAL.CrystalLoader import CrystalLoader
 from games.JOWILDER.JowilderLoader import JowilderLoader

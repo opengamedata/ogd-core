@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Union
 ## import local files
 from features.Feature import Feature
-from extractors.legacy.LegacyLoader import LegacyLoader
+from processors.legacy.LegacyLoader import LegacyLoader
 from games.JOWILDER.features.JowilderExtractor import JowilderExtractor
 from schemas.GameSchema import GameSchema
 

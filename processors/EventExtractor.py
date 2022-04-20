@@ -2,7 +2,7 @@
 from typing import Any, Dict, List, Type
 # import locals
 from detectors.DetectorRegistry import DetectorRegistry
-from extractors.Extractor import Extractor
+from processors.Extractor import Extractor
 from features.FeatureData import FeatureData
 from features.FeatureLoader import FeatureLoader
 from games.LAKELAND.LakelandLoader import LakelandLoader

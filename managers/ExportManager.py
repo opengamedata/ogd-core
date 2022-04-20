@@ -288,10 +288,12 @@ class ExportManager:
                     self._processEvent(next_event=next_event)
                 elif next_event.session_id is not None and next_event.session_id.upper() != "NONE":
                     Logger.Log(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
+                elif next_event.user_id is not None and next_event.user_id.upper() != "NONE":
+                    Logger.Log(f"Found a user ({next_event.user_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
                 else:
                     _unsessioned_event_count += 1
                     if _unsessioned_event_count < 10:
-                        Logger.Log(f"Found an event with no session ID, original row data: {row}", logging.WARNING, depth=2)
+                        Logger.Log(f"Found an event with no session/player ID, original row data: {row}", logging.WARNING, depth=2)
         if _unsessioned_event_count > 0:
             Logger.Log(f"Found {_unsessioned_event_count} events without session IDs.", logging.WARNING, depth=2)
         time_delta = datetime.now() - start

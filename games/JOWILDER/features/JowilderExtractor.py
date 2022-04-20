@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Tuple, Union
 ## import local files
 from utils import Logger
-from extractors.legacy.LegacyFeature import LegacyFeature
+from processors.legacy.LegacyFeature import LegacyFeature
 from games.JOWILDER import Jowilder_Enumerators as je
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema

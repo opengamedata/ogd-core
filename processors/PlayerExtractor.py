@@ -4,10 +4,10 @@ import traceback
 from typing import Any, List, Dict, IO, Type, Union
 # import local files
 from utils import Logger
-from extractors.Extractor import Extractor
+from processors.Extractor import Extractor
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry
-from extractors.SessionExtractor import SessionExtractor
+from processors.SessionExtractor import SessionExtractor
 from features.FeatureData import FeatureData
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from schemas.Event import Event

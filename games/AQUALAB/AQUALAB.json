@@ -444,61 +444,61 @@
     "features": {
         "per_count": {
             "JobArgumentationTime": {
-                "enabled": true,
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time spent in argumentation during a job"
             },
             "JobCompletionTime": {
-                "enabled": true,
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time taken to complete a given job"
             },
             "JobDiveSitesCount": {
-                "enabled": true,
+                "enabled": false,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Number of dive sites visited during a job"
             },
             "JobDiveTime": {
-                "enabled": true,
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time spent diving during a job"
             },
             "JobExperimentationTime": {
-                "enabled": true,
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time spent in experimentation during a job"
             },
             "JobModelingTime": {
-                "enabled": true,
+                "enabled": false,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Time spent in modeling during a job"
             },
             "JobGuideCount": {
-                "enabled": true,
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Number of times player talked with guide during a job"
             },
             "JobHelpCount": {
-                "enabled": true,
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Number of times player asked for help during a job"
             },
             "JobTasksCompleted": {
-                "enabled": true,
+                "enabled": false,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Number of tasks completed for a given job"
             },
             "JobsAttempted": {
-                "enabled": true,
+                "enabled": false,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Subfeatures for number of job starts and completes, percent complete, and avg/std time to complete",
@@ -512,7 +512,7 @@
                 }
             },
             "SyncCompletionTime": {
-                "enabled": true,
+                "enabled": false,
                 "count":"level_range",
                 "prefix": "job",
                 "description": "Time taken to achieve 100% sync in a simulation"
@@ -520,7 +520,7 @@
         },
         "aggregate":{
             "ActiveJobs": {
-                "enabled": true,
+                "enabled": false,
                 "description":"Count of players who left off on each job."
             },
             "EventList":{
@@ -528,19 +528,19 @@
                 "description": "List of key events that happened in a player's session(s)"
             },
             "SessionDiveSitesCount": {
-                "enabled": true,
+                "enabled": false,
                 "description":"Time spent playing in a given session"
             },
             "SessionDuration": {
-                "enabled": true,
+                "enabled": false,
                 "description":"Time spent playing in a given session"
             },
             "SessionGuideCount": {
-                "enabled": true,
+                "enabled": false,
                 "description":"Number of times player talked with the guide throughout the session"
             },
             "SessionHelpCount": {
-                "enabled": true,
+                "enabled": false,
                 "description":"Number of times player clicked the help button throughout the session"
             },
             "SessionID": {
@@ -548,35 +548,35 @@
                 "description":"The player's session ID number for this play session"
             },
             "SessionJobsCompleted": {
-                "enabled": true,
+                "enabled": false,
                 "description":"Number of jobs completed in a given session"
             },
             "SwitchJobsCount": {
-                "enabled": true,
+                "enabled": false,
                 "description":"Number of times player switched jobs before completion"
             },
             "TopJobCompletionDestinations": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Top five most accepted jobs after previously completing a given job"
             },
             "TopJobSwitchDestinations": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Top five most accepted jobs after switching away from a given job"
             },
             "TotalArgumentationTime": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Total time spent in argumentation"
             },
             "EchoSessionID": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Test of second-order features."
             },
             "TotalDiveTime": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Total time spent in dive sites"
             },
             "TotalExperimentationTime": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Total time spent in experimentation"
             },
             "UserAvgSessionDuration": {

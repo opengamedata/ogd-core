@@ -4,8 +4,8 @@ import traceback
 from typing import Any, Dict, IO, List, Type, Union
 # import local files
 from utils import Logger
-from extractors.Extractor import Extractor
-from extractors.PlayerExtractor import PlayerExtractor
+from processors.Extractor import Extractor
+from processors.PlayerExtractor import PlayerExtractor
 from features.FeatureData import FeatureData
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry

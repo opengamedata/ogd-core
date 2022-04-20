@@ -2,7 +2,7 @@
 from typing import Any, Dict, List, Union
 # import locals
 from detectors.Detector import Detector
-from extractors.legacy.LegacyDetector import LegacyDetector
+from processors.legacy.LegacyDetector import LegacyDetector
 from features.Feature import Feature
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry

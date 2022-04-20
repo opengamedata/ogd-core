@@ -33,10 +33,10 @@ class BigQueryInterface(DataInterface):
                 self._client = bigquery.Client()
             if self._client != None:
                 self._is_open = True
-                Logger.Log("Connected to BigQuery database.", logging.DEBUG, depth=3)
+                Logger.Log("Connected to BigQuery database.", logging.DEBUG)
                 return True
             else:
-                Logger.Log("Could not connect to BigQuery Database.", logging.WARN, depth=3)
+                Logger.Log("Could not connect to BigQuery Database.", logging.WARN)
                 return False
         else:
             return True
@@ -44,7 +44,7 @@ class BigQueryInterface(DataInterface):
     def _close(self) -> bool:
         self._client.close()
         self._is_open = False
-        Logger.Log("Closed connection to BigQuery.", logging.DEBUG, depth=3)
+        Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
     def _allIDs(self) -> List[str]:
