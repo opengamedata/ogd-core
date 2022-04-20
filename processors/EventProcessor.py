@@ -2,16 +2,21 @@
 from typing import Any, Dict, List, Type
 # import locals
 from detectors.DetectorRegistry import DetectorRegistry
-from processors.Processor import Processor
+from extractors.ExtractorRegistry import ExtractorRegistry
 from features.FeatureData import FeatureData
 from features.FeatureLoader import FeatureLoader
 from games.LAKELAND.LakelandLoader import LakelandLoader
+from processors.Processor import Processor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.Request import ExporterTypes
 
 class EventProcessor(Processor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
+    def _prepareRegistry(self) -> ExtractorRegistry:
+        return DetectorRegistry()
+
     def _getFeatureNames(self) -> List[str]:
         return self._registry.GetFeatureNames()
 

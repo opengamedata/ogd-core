@@ -4,9 +4,10 @@ import traceback
 from typing import Any, List, Dict, IO, Type, Union
 # import local files
 from utils import Logger
-from processors.Processor import Processor
+from extractors.ExtractorRegistry import ExtractorRegistry
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry
+from processors.FeatureProcessor import FeatureProcessor
 from processors.SessionProcessor import SessionProcessor
 from features.FeatureData import FeatureData
 from games.LAKELAND.LakelandLoader import LakelandLoader
@@ -16,11 +17,17 @@ from schemas.Request import ExporterTypes
 
 ## @class PlayerProcessor
 #  Class to extract and manage features for a processed csv file.
-class PlayerProcessor(Processor):
+class PlayerProcessor(FeatureProcessor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _getFeatureNames(self) -> List[str]:
-        return self._registry.GetFeatureNames() + ["SessionCount"]
+    def _prepareRegistry(self) -> ExtractorRegistry:
+        return FeatureRegistry()
+
+    def _getExtractorNames(self) -> List[str]:
+        if isinstance(self._registry, FeatureRegistry):
+            return self._registry.GetFeatureNames() + ["SessionCount"]
+        else:
+            raise TypeError()
 
     def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[Any]]:
         ret_val : Dict[str, List[Any]] = {}
@@ -122,7 +129,7 @@ class PlayerProcessor(Processor):
         return len(self._session_extractors.keys()) - 1 # don't count null player
 
     def GetSessionFeatureNames(self) -> List[str]:
-        return self._session_extractors["null"].GetFeatureNames()
+        return self._session_extractors["null"].GetExtractorNames()
 
     ##  Function to empty the list of lines stored by the PlayerProcessor.
     def ClearLines(self):

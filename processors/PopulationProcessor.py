@@ -3,13 +3,13 @@ import logging
 import traceback
 from typing import Any, Dict, IO, List, Type, Union
 # import local files
-from utils import Logger
-from processors.Processor import Processor
-from processors.PlayerProcessor import PlayerProcessor
+from extractors.ExtractorRegistry import ExtractorRegistry
 from features.FeatureData import FeatureData
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry
 from games.LAKELAND.LakelandLoader import LakelandLoader
+from processors.Processor import Processor
+from processors.PlayerProcessor import PlayerProcessor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.Request import ExporterTypes
@@ -19,8 +19,14 @@ from schemas.Request import ExporterTypes
 class PopulationProcessor(Processor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
+    def _prepareRegistry(self) -> ExtractorRegistry:
+        return FeatureRegistry()
+
     def _getFeatureNames(self) -> List[str]:
-        return self._registry.GetFeatureNames() + ["PlayerCount", "SessionCount"]
+        if isinstance(self._registry, FeatureRegistry):
+            return self._registry.GetFeatureNames() + ["PlayerCount", "SessionCount"]
+        else:
+            raise TypeError("PopulationProcessor's registry is not a FeatureRegistry!")
 
     def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[Any]]:
         ret_val = {}

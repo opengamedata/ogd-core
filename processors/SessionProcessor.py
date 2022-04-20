@@ -18,7 +18,7 @@ from schemas.Request import ExporterTypes
 class SessionProcessor(Processor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _getFeatureNames(self) -> List[str]:
+    def _getExtractorNames(self) -> List[str]:
         return self._registry.GetFeatureNames()
 
     def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str,List[Any]]:
