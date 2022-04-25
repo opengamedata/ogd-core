@@ -5,6 +5,7 @@ from typing import Any, Callable, Dict, List, Union
 from detectors.Detector import Detector
 # import locals
 from detectors.DetectorRegistry import DetectorRegistry
+from extractors.ExtractorRegistry import ExtractorRegistry
 from features.Feature import Feature
 from features.FeatureRegistry import FeatureRegistry
 from schemas.Event import Event
@@ -57,7 +58,7 @@ class ExtractorLoader(abc.ABC):
                     except NotImplementedError as err:
                         Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
                     else:
-                        registry.Register(feature=feature, kind=ExtractorRegistry.Listener.Kinds.PERCOUNT)
+                        registry.Register(extractor=feature, kind=ExtractorRegistry.Listener.Kinds.PERCOUNT)
 
     def LoadToDetectorRegistry(self, registry:DetectorRegistry, trigger_callback:Callable[[Event], None]) -> None:
         # first, liad aggregate features
@@ -77,7 +78,7 @@ class ExtractorLoader(abc.ABC):
                     except NotImplementedError as err:
                         Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
                     else:
-                        registry.Register(detector=detector, kind=ExtractorRegistry.Listener.Kinds.PERCOUNT)
+                        registry.Register(extractor=detector, kind=ExtractorRegistry.Listener.Kinds.PERCOUNT)
 
     # *** PRIVATE STATICS ***
 

@@ -77,7 +77,6 @@ class DetectorRegistry(ExtractorRegistry):
         Just sets up mostly-empty dictionaries for use by the registry.
         """
         self._detectors      : OrderedDict[str, Detector]                = OrderedDict()
-        self._event_registry : Dict[str,List[ExtractorRegistry.Listener]] = {"all_events":[]}
 
     # string conversion for Extractors.
     def __str__(self) -> str:

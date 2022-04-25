@@ -107,8 +107,6 @@ class FeatureRegistry(ExtractorRegistry):
         #     "first_order" : OrderedDict(),
         #     "second_order" : OrderedDict()
         # }
-        self._event_registry : Dict[str,List[ExtractorRegistry.Listener]] = {"all_events":[]}
-        self._feature_registry: Dict[str,List[ExtractorRegistry.Listener]] = {}
 
     # string conversion for Extractors.
     def __str__(self) -> str:
