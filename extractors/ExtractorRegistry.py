@@ -41,11 +41,7 @@ class ExtractorRegistry(abc.ABC):
     # *** ABSTRACTS ***
 
     @abc.abstractmethod
-    def _extractFromEvent(self, event:Event) -> None:
-        pass
-
-    @abc.abstractmethod
-    def _extractFromFeatureData(self, feature:FeatureData) -> None:
+    def _register(self, extractor:Extractor, kind:Listener.Kinds):
         pass
 
     @abc.abstractmethod
@@ -53,7 +49,11 @@ class ExtractorRegistry(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _register(self, extractor:Extractor, kind:Listener.Kinds):
+    def _extractFromEvent(self, event:Event) -> None:
+        pass
+
+    @abc.abstractmethod
+    def _extractFromFeatureData(self, feature:FeatureData) -> None:
         pass
 
     # *** BUILT-INS ***
@@ -77,6 +77,20 @@ class ExtractorRegistry(abc.ABC):
     def Register(self, extractor:Extractor, kind:Listener.Kinds):
         self._register(extractor=extractor, kind=kind)
 
+    def GetExtractorNames(self) -> List[str]:
+        """Function to generate a list names of all enabled features, given a GameSchema
+        This is different from the feature_names() function of GameSchema,
+        which ignores the 'enabled' attribute and does not expand per-count features
+        (e.g. this function would include 'lvl0_someFeat', 'lvl1_someFeat', 'lvl2_someFeat', etc.
+        while feature_names() only would include 'someFeat').
+
+        :param schema: The schema from which feature names should be generated.
+        :type schema: GameSchema
+        :return: A list of feature names.
+        :rtype: List[str]
+        """
+        return self._getExtractorNames()
+
     def ExtractFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.
 
@@ -98,20 +112,6 @@ class ExtractorRegistry(abc.ABC):
         :type table_schema: TableSchema
         """
         self._extractFromFeatureData(feature=feature)
-
-    def GetExtractorNames(self) -> List[str]:
-        """Function to generate a list names of all enabled features, given a GameSchema
-        This is different from the feature_names() function of GameSchema,
-        which ignores the 'enabled' attribute and does not expand per-count features
-        (e.g. this function would include 'lvl0_someFeat', 'lvl1_someFeat', 'lvl2_someFeat', etc.
-        while feature_names() only would include 'someFeat').
-
-        :param schema: The schema from which feature names should be generated.
-        :type schema: GameSchema
-        :return: A list of feature names.
-        :rtype: List[str]
-        """
-        return self._getExtractorNames()
 
     # *** PRIVATE STATICS ***
 
