@@ -11,7 +11,7 @@ from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from utils import Logger
 
-class FeatureLoader(abc.ABC):
+class ExtractorLoader(abc.ABC):
     # *** ABSTRACTS ***
     
     @abc.abstractmethod
@@ -41,7 +41,7 @@ class FeatureLoader(abc.ABC):
     def LoadToFeatureRegistry(self, registry:FeatureRegistry) -> None:
         # first, liad aggregate features
         for name,aggregate in self._game_schema.aggregate_features().items():
-            if FeatureLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=self._overrides):
+            if ExtractorLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=self._overrides):
                 try:
                     feature = self.LoadFeature(feature_type=name, name=name, feature_args=aggregate)
                 except NotImplementedError as err:
@@ -49,8 +49,8 @@ class FeatureLoader(abc.ABC):
                 else:
                     registry.Register(feature, ExtractorRegistry.Listener.Kinds.AGGREGATE)
         for name,percount in self._game_schema.percount_features().items():
-            if FeatureLoader._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=self._overrides):
-                for i in FeatureLoader._genCountRange(count=percount["count"], schema=self._game_schema):
+            if ExtractorLoader._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=self._overrides):
+                for i in ExtractorLoader._genCountRange(count=percount["count"], schema=self._game_schema):
                     try:
                         feat_name = f"{percount['prefix']}{i}_{name}"
                         feature = self.LoadFeature(feature_type=name, name=feat_name, feature_args=percount, count_index=i)
@@ -62,7 +62,7 @@ class FeatureLoader(abc.ABC):
     def LoadToDetectorRegistry(self, registry:DetectorRegistry, trigger_callback:Callable[[Event], None]) -> None:
         # first, liad aggregate features
         for name,aggregate in self._game_schema.aggregate_detectors().items():
-            if FeatureLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=self._overrides):
+            if ExtractorLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=self._overrides):
                 try:
                     detector = self.LoadDetector(detector_type=name, name=name, feature_args=aggregate, trigger_callback=trigger_callback)
                 except NotImplementedError as err:
@@ -70,8 +70,8 @@ class FeatureLoader(abc.ABC):
                 else:
                     registry.Register(detector, ExtractorRegistry.Listener.Kinds.AGGREGATE)
         for name,percount in self._game_schema.percount_features().items():
-            if FeatureLoader._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=self._overrides):
-                for i in FeatureLoader._genCountRange(count=percount["count"], schema=self._game_schema):
+            if ExtractorLoader._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=self._overrides):
+                for i in ExtractorLoader._genCountRange(count=percount["count"], schema=self._game_schema):
                     try:
                         detector = self.LoadDetector(detector_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, trigger_callback=trigger_callback, count_index=i)
                     except NotImplementedError as err:

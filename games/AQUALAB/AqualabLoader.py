@@ -3,7 +3,7 @@ import json
 from typing import Any, Callable, Dict, List, Union
 # import local files
 from detectors.Detector import Detector
-from features.FeatureLoader import FeatureLoader
+from extractors.ExtractorLoader import ExtractorLoader
 from features.Feature import Feature
 from games.AQUALAB.detectors import *
 from games.AQUALAB.features import *
@@ -14,7 +14,7 @@ EXPORT_PATH = "games/AQUALAB/DBExport.json"
 
 ## @class AqualabLoader
 #  Extractor subclass for extracting features from Aqualab game data.
-class AqualabLoader(FeatureLoader):
+class AqualabLoader(ExtractorLoader):
     ## Constructor for the AqualabLoader class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.

@@ -1,13 +1,13 @@
 from typing import Any, Dict, List, Union
 
 from games.SHIPWRECKS.features import *
-from features.FeatureLoader import FeatureLoader
+from extractors.ExtractorLoader import ExtractorLoader
 from features.Feature import Feature
 from schemas.GameSchema import GameSchema
 
 ## @class ShipwrecksLoader
 #  Extractor subclass for extracting features from Shipwrecks game data.
-class ShipwrecksLoader(FeatureLoader):
+class ShipwrecksLoader(ExtractorLoader):
     ## Constructor for the ShipwrecksLoader class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.

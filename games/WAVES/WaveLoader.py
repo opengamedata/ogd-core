@@ -9,13 +9,13 @@ from typing import Any, Dict, List, Union
 ## import local files
 from games.WAVES.features import *
 from utils import Logger
-from features.FeatureLoader import FeatureLoader
+from extractors.ExtractorLoader import ExtractorLoader
 from features.Feature import Feature
 from schemas.GameSchema import GameSchema
 
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
-class WaveLoader(FeatureLoader):
+class WaveLoader(ExtractorLoader):
     ## Constructor for the WaveExtractor class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.
