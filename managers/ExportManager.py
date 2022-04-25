@@ -16,7 +16,7 @@ from schemas.IDMode import IDMode
 ## import local files
 from utils import Logger
 from config.config import settings as default_settings
-from features.FeatureLoader import FeatureLoader
+from extractors.ExtractorLoader import ExtractorLoader
 from games.AQUALAB.AqualabLoader import AqualabLoader
 from games.CRYSTAL.CrystalLoader import CrystalLoader
 from games.JOWILDER.JowilderLoader import JowilderLoader
@@ -131,7 +131,7 @@ class ExportManager:
         # If game doesn't have an extractor, make sure we don't try to export it.
         if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
             self._feat_mgr = FeatureManager(game_id=request.GameID, exp_types=request._exports,
-                                                       game_schema=game_schema, feature_overrides=feature_overrides)
+                                            game_schema=game_schema, feature_overrides=feature_overrides)
             if not self._feat_mgr.HasLoader():
                 request._exports.sessions   = False
                 request._exports.players    = False
@@ -165,8 +165,8 @@ class ExportManager:
             else:
                 Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
 
-    def _loadLoaderClass(self, game_id:str) -> Union[Type[FeatureLoader],None]:
-        _loader_class: Union[Type[FeatureLoader],None] = None
+    def _loadLoaderClass(self, game_id:str) -> Union[Type[ExtractorLoader],None]:
+        _loader_class: Union[Type[ExtractorLoader],None] = None
         if game_id == "AQUALAB":
             _loader_class = AqualabLoader
         elif game_id == "CRYSTAL":

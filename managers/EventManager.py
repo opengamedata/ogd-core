@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any, List, Type, Union
 ## import local files
 from detectors.DetectorRegistry import DetectorRegistry
-from features.FeatureLoader import FeatureLoader
+from extractors.ExtractorLoader import ExtractorLoader
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
@@ -14,7 +14,7 @@ from utils import Logger
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
 class EventManager:
-    def __init__(self, LoaderClass:Type[FeatureLoader], game_schema: GameSchema,
+    def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema,
                  feature_overrides:Union[List[str],None]=None):
         """Constructor for EventManager.
         Just creates empty list of lines and generates list of column names.
@@ -25,8 +25,8 @@ class EventManager:
         self._registry    : DetectorRegistry = DetectorRegistry()
         self._game_schema : GameSchema            = game_schema
         self._overrides   : Union[List[str],None] = feature_overrides
-        self._LoaderClass : Type[FeatureLoader]   = LoaderClass
-        self._loader      : FeatureLoader         = self._prepareLoader()
+        self._LoaderClass : Type[ExtractorLoader]   = LoaderClass
+        self._loader      : ExtractorLoader         = self._prepareLoader()
         self._loader.LoadToDetectorRegistry(registry=self._registry, trigger_callback=self.ReceiveEventTrigger)
         self._debug_count : int                   = 0
 
@@ -66,8 +66,8 @@ class EventManager:
         Logger.Log(f"Clearing {len(self._lines)} entries from EventManager.", logging.DEBUG)
         self._lines = []
 
-    def _prepareLoader(self) -> FeatureLoader:
-        ret_val : FeatureLoader
+    def _prepareLoader(self) -> ExtractorLoader:
+        ret_val : ExtractorLoader
         if self._LoaderClass is LakelandLoader:
             ret_val = LakelandLoader(player_id="EventManager", session_id="EventManager", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=None)
         else:

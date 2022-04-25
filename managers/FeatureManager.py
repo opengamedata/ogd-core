@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Type, Union
 ## import local files
 from utils import Logger
-from features.FeatureLoader import FeatureLoader
+from extractors.ExtractorLoader import ExtractorLoader
 from processors.PopulationProcessor import PopulationProcessor
 from processors.PlayerProcessor import PlayerProcessor
 from processors.SessionProcessor import SessionProcessor
@@ -25,7 +25,7 @@ class FeatureManager:
         self._exp_types        : ExporterTypes       = exp_types
         self._latest_results   : Dict[str,List[Any]] = {}
         self._up_to_date       : bool                = True
-        self._LoaderClass      : Union[Type[FeatureLoader],None]
+        self._LoaderClass      : Union[Type[ExtractorLoader],None]
         self._pop_extractor    : Union[PopulationProcessor, None] = None
         self._player_extractor : Union[PlayerProcessor, None]     = None
         self._sess_extractor   : Union[SessionProcessor, None]    = None
@@ -131,8 +131,8 @@ class FeatureManager:
         elif self._sess_extractor is not None:
             self._sess_extractor.ClearLines()
 
-    def _prepareLoaderClass(self, game_id:str) -> Union[Type[FeatureLoader],None]:
-        _loader_class: Union[Type[FeatureLoader],None] = None
+    def _prepareLoaderClass(self, game_id:str) -> Union[Type[ExtractorLoader],None]:
+        _loader_class: Union[Type[ExtractorLoader],None] = None
         if game_id == "AQUALAB":
             _loader_class = AqualabLoader
         elif game_id == "CRYSTAL":
