@@ -4,7 +4,7 @@ import logging
 from typing import Any, Dict, List, Type, Union
 # import locals
 from extractors.ExtractorRegistry import ExtractorRegistry
-from features.FeatureLoader import FeatureLoader
+from extractors.ExtractorLoader import ExtractorLoader
 from features.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
@@ -20,7 +20,7 @@ class Processor(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _prepareLoader(self) -> FeatureLoader:
+    def _prepareLoader(self) -> ExtractorLoader:
         pass
 
     ## Abstract declaration of a function to get the names of all features.
@@ -39,13 +39,13 @@ class Processor(abc.ABC):
 
     # *** PUBLIC BUILT-INS ***
 
-    def __init__(self, LoaderClass:Type[FeatureLoader], game_schema: GameSchema,
+    def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema,
                  feature_overrides:Union[List[str],None]=None):
         self._game_schema : GameSchema            = game_schema
         self._overrides   : Union[List[str],None] = feature_overrides
-        self._LoaderClass : Type[FeatureLoader]   = LoaderClass
+        self._LoaderClass : Type[ExtractorLoader]   = LoaderClass
         self._registry    : ExtractorRegistry     = self._prepareRegistry()
-        self._loader      : FeatureLoader         = self._prepareLoader()
+        self._loader      : ExtractorLoader       = self._prepareLoader()
 
     def __str__(self):
         return f""

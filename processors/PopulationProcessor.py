@@ -5,7 +5,7 @@ from typing import Any, Dict, IO, List, Type, Union
 # import local files
 from extractors.ExtractorRegistry import ExtractorRegistry
 from features.FeatureData import FeatureData
-from features.FeatureLoader import FeatureLoader
+from extractors.ExtractorLoader import ExtractorLoader
 from features.FeatureRegistry import FeatureRegistry
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from processors.FeatureProcessor import FeatureProcessor
@@ -23,8 +23,8 @@ class PopulationProcessor(FeatureProcessor):
     def _prepareRegistry(self) -> ExtractorRegistry:
         return FeatureRegistry()
 
-    def _prepareLoader(self) -> FeatureLoader:
-        ret_val : FeatureLoader
+    def _prepareLoader(self) -> ExtractorLoader:
+        ret_val : ExtractorLoader
         if self._LoaderClass is LakelandLoader:
             ret_val = LakelandLoader(player_id="population", session_id="population", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=self._pop_file)
         else:
@@ -119,14 +119,14 @@ class PopulationProcessor(FeatureProcessor):
     # *** PUBLIC BUILT-INS ***
 
     ## Constructor for the PopulationProcessor class.
-    def __init__(self, LoaderClass: Type[FeatureLoader], game_schema: GameSchema,
+    def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema,
                  feature_overrides:Union[List[str],None]=None, pop_file:Union[IO[str],None]=None):
         """Constructor for the PopulationProcessor class.
         Simply stores some data for use later, including the type of extractor to use.
 
         :param LoaderClass: The type of data extractor to use for input data.
                             This should correspond to whatever game_id is in the TableSchema.
-        :type LoaderClass: Type[FeatureLoader]
+        :type LoaderClass: Type[ExtractorLoader]
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema
         :param feature_overrides: _description_, defaults to None

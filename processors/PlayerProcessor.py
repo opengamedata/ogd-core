@@ -5,7 +5,7 @@ from typing import Any, List, Dict, IO, Type, Union
 # import local files
 from utils import Logger
 from extractors.ExtractorRegistry import ExtractorRegistry
-from features.FeatureLoader import FeatureLoader
+from extractors.ExtractorLoader import ExtractorLoader
 from features.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from processors.SessionProcessor import SessionProcessor
@@ -20,8 +20,8 @@ from schemas.Request import ExporterTypes
 class PlayerProcessor(FeatureProcessor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _prepareLoader(self) -> FeatureLoader:
-        ret_val : FeatureLoader
+    def _prepareLoader(self) -> ExtractorLoader:
+        ret_val : ExtractorLoader
         if self._LoaderClass is LakelandLoader:
             ret_val = LakelandLoader(player_id=self._player_id, session_id="player", game_schema=self._game_schema,
                                     feature_overrides=self._overrides, output_file=self._player_file)
@@ -101,14 +101,14 @@ class PlayerProcessor(FeatureProcessor):
     # *** PUBLIC BUILT-INS ***
 
     ## Constructor for the PlayerProcessor class.
-    def __init__(self, LoaderClass: Type[FeatureLoader], game_schema: GameSchema, player_id:str,
+    def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema, player_id:str,
                  feature_overrides:Union[List[str],None]=None, player_file:Union[IO[str],None]=None):
         """Constructor for the PlayerProcessor class.
            Simply stores some data for use later, including the type of extractor to use.
 
         :param LoaderClass: The type of data extractor to use for input data.
                             This should correspond to whatever game_id is in the TableSchema.
-        :type LoaderClass: Type[FeatureLoader]
+        :type LoaderClass: Type[ExtractorLoader]
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema
         :param player_id: _description_

@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Type
 from detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorRegistry import ExtractorRegistry
 from features.FeatureData import FeatureData
-from features.FeatureLoader import FeatureLoader
+from extractors.ExtractorLoader import ExtractorLoader
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from processors.Processor import Processor
 from schemas.Event import Event
@@ -34,18 +34,17 @@ class EventProcessor(Processor):
     def _processFeatureData(self, feature:FeatureData):
         pass
 
-    def _prepareLoader(self) -> FeatureLoader:
-        ret_val : FeatureLoader
+    def _prepareLoader(self) -> ExtractorLoader:
+        ret_val : ExtractorLoader
         if self._LoaderClass is LakelandLoader:
             ret_val = LakelandLoader(player_id="events", session_id="events", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=None)
         else:
             ret_val = self._LoaderClass(player_id="events", session_id="events", game_schema=self._game_schema, feature_overrides=self._overrides)
-        self._loader.LoadToDetectorRegistry(registry=self._registry)
         return ret_val
 
     # *** PUBLIC BUILT-INS ***
 
-    def __init__(self, LoaderClass: Type[FeatureLoader], game_schema: GameSchema):
+    def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema):
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=None)
         self._registry = DetectorRegistry()
 
