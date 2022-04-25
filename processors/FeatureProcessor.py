@@ -26,6 +26,10 @@ class FeatureProcessor(Processor):
     def _getFeatureData(self, order:int) -> Dict[str,List[FeatureData]]:
         pass
 
+    @abc.abstractmethod
+    def _clearLines(self) -> None:
+        pass
+
     # *** PUBLIC BUILT-INS ***
 
     def __init__(self, LoaderClass:Type[FeatureLoader], game_schema: GameSchema,
@@ -46,6 +50,9 @@ class FeatureProcessor(Processor):
     def GetFeatureData(self, order:int) -> Dict[str,List[FeatureData]]:
         # TODO: add error handling code, if applicable.
         return self._getFeatureData(order=order)
+
+    def ClearLines(self):
+        self._clearLines()
 
     # *** PRIVATE STATICS ***
 

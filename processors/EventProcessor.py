@@ -18,7 +18,7 @@ class EventProcessor(Processor):
         return DetectorRegistry()
 
     def _getExtractorNames(self) -> List[str]:
-        return self._registry.GetFeatureNames()
+        return self._registry.GetExtractorNames()
 
     ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
     def _getFeatureValues(self, export_types:ExporterTypes) -> Dict[str,List[Any]]:

@@ -72,7 +72,7 @@ class FeatureManager:
         return self._latest_results
 
     def GetPopulationFeatureNames(self) -> List[str]:
-        return self._pop_extractor.GetPopulationFeatureNames() if self._pop_extractor is not None else []
+        return self._pop_extractor.GetExtractorNames() if self._pop_extractor is not None else []
     def GetPopulationFeatures(self, as_str:bool = False) -> List[Any]:
         start   : datetime = datetime.now()
         self._try_update(as_str=as_str)

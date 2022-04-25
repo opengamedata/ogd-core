@@ -46,6 +46,7 @@ class Processor(abc.ABC):
         self._LoaderClass : Type[FeatureLoader]   = LoaderClass
         self._registry    : ExtractorRegistry     = self._prepareRegistry()
         self._loader      : FeatureLoader         = self._prepareLoader()
+
     def __str__(self):
         return f""
 

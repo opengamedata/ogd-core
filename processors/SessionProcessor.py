@@ -4,42 +4,34 @@ import traceback
 from typing import Any, List, Dict, IO, Type, Union
 # import local files
 from utils import Logger
-from processors.Processor import Processor
+from extractors.ExtractorRegistry import ExtractorRegistry
 from features.FeatureData import FeatureData
 from features.FeatureLoader import FeatureLoader
 from features.FeatureRegistry import FeatureRegistry
 from games.LAKELAND.LakelandLoader import LakelandLoader
+from processors.FeatureProcessor import FeatureProcessor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.Request import ExporterTypes
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.
-class SessionProcessor(Processor):
+class SessionProcessor(FeatureProcessor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _getExtractorNames(self) -> List[str]:
-        return self._registry.GetFeatureNames()
+    def _prepareRegistry(self) -> ExtractorRegistry:
+        return FeatureRegistry()
 
-    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str,List[Any]]:
-        # 1) First, we get Session's first-order feature data:
-        _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
-        # 2) Then we can side-propogate the values to second-order features, and down-propogate to other extractors:
-        for feature in _first_order_data['sessions']:
-            self.ProcessFeatureData(feature=feature)
-        # 3) Finally, we assume higher-ups have already sent down their first-order features, so we are ready to return all feature values.
-        if export_types.sessions:
-            if as_str:
-                return {"sessions" : self._registry.GetFeatureStringValues()}
-            else:
-                return {"sessions" : self._registry.GetFeatureValues()}
+    def _prepareLoader(self) -> FeatureLoader:
+        ret_val : FeatureLoader
+        if self._LoaderClass is LakelandLoader:
+            ret_val = LakelandLoader(player_id=self._player_id, session_id=self._session_id, game_schema=self._game_schema, feature_overrides=self._overrides, output_file=self._session_file)
         else:
-            return {}
-
-    def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
-        ret_val : Dict[str, List[FeatureData]] = {}
-        ret_val["sessions"] = self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)
+            ret_val = self._LoaderClass(player_id=self._player_id, session_id=self._session_id, game_schema=self._game_schema, feature_overrides=self._overrides)
         return ret_val
+
+    def _getExtractorNames(self) -> List[str]:
+        return self._registry.GetExtractorNames()
 
     ## Function to handle processing of a single row of data.
     def _processEvent(self, event: Event):
@@ -55,13 +47,30 @@ class SessionProcessor(Processor):
     def _processFeatureData(self, feature: FeatureData):
         self._registry.ExtractFromFeatureData(feature=feature)
 
-    def _prepareLoader(self) -> FeatureLoader:
-        ret_val : FeatureLoader
-        if self._LoaderClass is LakelandLoader:
-            ret_val = LakelandLoader(player_id=self._player_id, session_id=self._session_id, game_schema=self._game_schema, feature_overrides=self._overrides, output_file=self._session_file)
+    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str,List[Any]]:
+        # 1) First, we get Session's first-order feature data:
+        _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
+        # 2) Then we can side-propogate the values to second-order features, and down-propogate to other extractors:
+        for feature in _first_order_data['sessions']:
+            self.ProcessFeatureData(feature=feature)
+        # 3) Finally, we assume higher-ups have already sent down their first-order features, so we are ready to return all feature values.
+        if export_types.sessions and isinstance(self._registry, FeatureRegistry):
+            if as_str:
+                return {"sessions" : self._registry.GetFeatureStringValues()}
+            else:
+                return {"sessions" : self._registry.GetFeatureValues()}
         else:
-            ret_val = self._LoaderClass(player_id=self._player_id, session_id=self._session_id, game_schema=self._game_schema, feature_overrides=self._overrides)
+            return {}
+
+    def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
+        ret_val : Dict[str, List[FeatureData]] = { "sessions":[] }
+        if isinstance(self._registry, FeatureRegistry):
+            ret_val["sessions"] = self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)
         return ret_val
+
+    def _clearLines(self) -> None:
+        Logger.Log(f"Clearing features from SessionProcessor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)
+        self._registry = FeatureRegistry()
 
     # *** PUBLIC BUILT-INS ***
 
@@ -95,10 +104,6 @@ class SessionProcessor(Processor):
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
-
-    def ClearLines(self):
-        Logger.Log(f"Clearing features from SessionProcessor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)
-        self._registry = FeatureRegistry()
 
     # *** PRIVATE STATICS ***
 
