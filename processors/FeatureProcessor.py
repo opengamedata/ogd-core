@@ -18,10 +18,6 @@ class FeatureProcessor(Processor):
 
     # *** ABSTRACTS ***
 
-    @abc.abstractmethod
-    def _prepareRegistry(self) -> FeatureRegistry:
-        pass
-
     ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
     @abc.abstractmethod
     def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str,List[Any]]:
