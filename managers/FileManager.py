@@ -113,16 +113,16 @@ class FileManager(abc.ABC):
         # then set up our paths, and ensure each exists.
         base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
         # finally, generate file names.
-        if request.ExportEvents():
+        if request.ExportEvents:
             self._file_names['events']     = self._game_data_dir / f"{base_file_name}_events.{self._extension}"
             self._zip_names['events']      = self._game_data_dir / f"{base_file_name}_events.zip"
-        if request.ExportSessions():
+        if request.ExportSessions:
             self._file_names['sessions']   = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}"
             self._zip_names['sessions']    = self._game_data_dir / f"{base_file_name}_session-features.zip"
-        if request.ExportPlayers():
+        if request.ExportPlayers:
             self._file_names['players']   = self._game_data_dir / f"{base_file_name}_player-features.{self._extension}"
             self._zip_names['players']    = self._game_data_dir / f"{base_file_name}_player-features.zip"
-        if request.ExportPopulation():
+        if request.ExportPopulation:
             self._file_names['population'] = self._game_data_dir / f"{base_file_name}_population-features.{self._extension}"
             self._zip_names['population']  = self._game_data_dir / f"{base_file_name}_population-features.zip"
 
