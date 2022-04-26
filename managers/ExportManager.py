@@ -123,20 +123,19 @@ class ExportManager:
         return TableSchema(schema_name=f"{_table_name}.json")
 
     def _setupManagers(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
-        if request.ExportEvents:
-            load_class = self._loadLoaderClass(game_schema._game_name)
-            if load_class is not None:
+        load_class = self._loadLoaderClass(game_schema._game_name)
+        if load_class is not None:
+            if request.ExportEvents:
                 self._event_mgr = EventManager(LoaderClass=load_class, game_schema=game_schema, feature_overrides=feature_overrides)
-            # evt_processor.WriteEventsCSVHeader(file_mgr=file_manager, separator="\t")
-        # If game doesn't have an extractor, make sure we don't try to export it.
-        if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
-            self._feat_mgr = FeatureManager(game_id=request.GameID, exp_types=request._exports,
-                                            game_schema=game_schema, feature_overrides=feature_overrides)
-            if not self._feat_mgr.HasLoader():
-                request._exports.sessions   = False
-                request._exports.players    = False
-                request._exports.population = False
-                Logger.Log("Could not set up feature extractors, no feature loader given!", logging.WARNING, depth=1)
+            if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
+                self._feat_mgr = FeatureManager(LoaderClass=load_class, exp_types=request._exports,
+                                                game_schema=game_schema, feature_overrides=feature_overrides)
+                # If game doesn't have an extractor, make sure we don't try to export it.
+                if not self._feat_mgr.HasLoader():
+                    request._exports.sessions   = False
+                    request._exports.players    = False
+                    request._exports.population = False
+                    Logger.Log("Could not set up feature extractors, no feature loader given!", logging.WARNING, depth=1)
 
     def _setupFileManager(self, request:Request):
         _data_dir : str = self._settings["DATA_DIR"] or default_settings["DATA_DIR"]
