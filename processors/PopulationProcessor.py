@@ -7,7 +7,6 @@ from extractors.ExtractorRegistry import ExtractorRegistry
 from features.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
 from features.FeatureRegistry import FeatureRegistry
-from games.LAKELAND.LakelandLoader import LakelandLoader
 from processors.FeatureProcessor import FeatureProcessor
 from processors.PlayerProcessor import PlayerProcessor
 from schemas.Event import Event
@@ -20,16 +19,9 @@ from utils import Logger
 class PopulationProcessor(FeatureProcessor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _prepareRegistry(self) -> ExtractorRegistry:
-        return FeatureRegistry()
-
     def _prepareLoader(self) -> ExtractorLoader:
-        ret_val : ExtractorLoader
-        if self._LoaderClass is LakelandLoader:
-            ret_val = LakelandLoader(player_id="population", session_id="population", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=self._pop_file)
-        else:
-            ret_val = self._LoaderClass(player_id="population", session_id="population", game_schema=self._game_schema, feature_overrides=self._overrides)
-        return ret_val
+        return self._LoaderClass(player_id="population",        session_id="population",
+                                 game_schema=self._game_schema, feature_overrides=self._overrides)
 
     def _getExtractorNames(self) -> List[str]:
         if isinstance(self._registry, FeatureRegistry):
@@ -47,20 +39,22 @@ class PopulationProcessor(FeatureProcessor):
         :type event: Event
         """
         # ensure we have an extractor for the given session:
-        self._registry.ExtractFromEvent(event=event)
-        if event.user_id is None:
-            self._player_extractors["null"].ProcessEvent(event=event)
-        else:
-            if event.user_id not in self._player_extractors.keys():
-                self._player_extractors[event.user_id] = PlayerProcessor(self._LoaderClass, game_schema=self._game_schema,
-                                                                         player_id=event.user_id, feature_overrides=self._overrides)
-            self._player_extractors[event.user_id].ProcessEvent(event=event)
+        if self._registry is not None:
+            self._registry.ExtractFromEvent(event=event)
+            if event.user_id is None:
+                self._player_extractors["null"].ProcessEvent(event=event)
+            else:
+                if event.user_id not in self._player_extractors.keys():
+                    self._player_extractors[event.user_id] = PlayerProcessor(self._LoaderClass, game_schema=self._game_schema,
+                                                                            player_id=event.user_id, feature_overrides=self._overrides)
+                self._player_extractors[event.user_id].ProcessEvent(event=event)
 
     def _processFeatureData(self, feature: FeatureData):
-        self._registry.ExtractFromFeatureData(feature=feature)
-        # Down-propogate values to player (and, by extension, session) features:
-        for player in self._player_extractors.values():
-            player.ProcessFeatureData(feature=feature)
+        if self._registry is not None:
+            self._registry.ExtractFromFeatureData(feature=feature)
+            # Down-propogate values to player (and, by extension, session) features:
+            for player in self._player_extractors.values():
+                player.ProcessFeatureData(feature=feature)
 
     def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[Any]]:
         ret_val = {}
@@ -99,7 +93,7 @@ class PopulationProcessor(FeatureProcessor):
 
     def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
         ret_val : Dict[str, List[FeatureData]] = { "population":[] }
-        if isinstance(self._registry, FeatureRegistry):
+        if self._registry is not None:
             ret_val["population"] = self._registry.GetFeatureData(order=order)
         _result = [player_extractor.GetFeatureData(order=order) for player_extractor in self._player_extractors.values()]
         ret_val["players"] = []

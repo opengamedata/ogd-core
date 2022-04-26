@@ -10,7 +10,6 @@ from features.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from processors.SessionProcessor import SessionProcessor
 from features.FeatureData import FeatureData
-from games.LAKELAND.LakelandLoader import LakelandLoader
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.Request import ExporterTypes
@@ -21,14 +20,8 @@ class PlayerProcessor(FeatureProcessor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _prepareLoader(self) -> ExtractorLoader:
-        ret_val : ExtractorLoader
-        if self._LoaderClass is LakelandLoader:
-            ret_val = LakelandLoader(player_id=self._player_id, session_id="player", game_schema=self._game_schema,
-                                    feature_overrides=self._overrides, output_file=self._player_file)
-        else:
-            ret_val = self._LoaderClass(player_id=self._player_id, session_id="player", game_schema=self._game_schema,
-                                        feature_overrides=self._overrides)
-        return ret_val
+        return self._LoaderClass(player_id=self._player_id, session_id="player",
+                                 game_schema=self._game_schema, feature_overrides=self._overrides)
 
     def _prepareRegistry(self) -> ExtractorRegistry:
         return FeatureRegistry()

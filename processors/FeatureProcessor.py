@@ -4,6 +4,8 @@ from ast import Load
 import logging
 import re
 from typing import Any, Dict, List, Type, Union
+
+from numpy import isin
 # import locals
 from features.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
@@ -36,6 +38,7 @@ class FeatureProcessor(Processor):
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema,
                  feature_overrides:Union[List[str],None]=None):
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        self._registry : FeatureRegistry = FeatureRegistry()
         self._loader.LoadToFeatureRegistry(registry=self._registry)
 
     def __str__(self):

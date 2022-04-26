@@ -6,7 +6,6 @@ from typing import Any, List, Type, Union
 ## import local files
 from detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
-from games.LAKELAND.LakelandLoader import LakelandLoader
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from utils import Logger
@@ -25,9 +24,7 @@ class EventManager:
         self._registry    : DetectorRegistry = DetectorRegistry()
         self._game_schema : GameSchema            = game_schema
         self._overrides   : Union[List[str],None] = feature_overrides
-        self._LoaderClass : Type[ExtractorLoader]   = LoaderClass
-        self._loader      : ExtractorLoader         = self._prepareLoader()
-        self._loader.LoadToDetectorRegistry(registry=self._registry, trigger_callback=self.ReceiveEventTrigger)
+        self._LoaderClass : Type[ExtractorLoader] = LoaderClass
         self._debug_count : int                   = 0
 
     def ReceiveEventTrigger(self, event:Event) -> None:
@@ -67,9 +64,5 @@ class EventManager:
         self._lines = []
 
     def _prepareLoader(self) -> ExtractorLoader:
-        ret_val : ExtractorLoader
-        if self._LoaderClass is LakelandLoader:
-            ret_val = LakelandLoader(player_id="EventManager", session_id="EventManager", game_schema=self._game_schema, feature_overrides=self._overrides, output_file=None)
-        else:
-            ret_val = self._LoaderClass(player_id="EventManager", session_id="EventManager", game_schema=self._game_schema, feature_overrides=self._overrides)
-        return ret_val
+        return self._LoaderClass(player_id="EventManager", session_id="EventManager",
+                                 game_schema=self._game_schema, feature_overrides=self._overrides)

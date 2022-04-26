@@ -98,7 +98,7 @@ class LakelandExtractor(LegacyFeature):
     #                    table associated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, game_schema:GameSchema, session_id:str, output_file:typing.IO[str]):
+    def __init__(self, game_schema:GameSchema, session_id:str):
         # Initialize superclass
         super().__init__(name="LakelandExtractor", description="Extractor for Lakeland game data",
                          count_index=0, game_schema=game_schema, session_id=session_id)
@@ -110,10 +110,6 @@ class LakelandExtractor(LegacyFeature):
         self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
         self.WINDOW_RANGE = range(game_schema.level_range().stop)
         self._WINDOW_RANGES = self._get_window_ranges()
-        if output_file:
-            self._WRITE_FEATURES = lambda: self.WriteFeatureValues(file=output_file)
-        else:
-            self._WRITE_FEATURES = lambda: Logger.Log("Dumping feature data, no writable file was given!")
         self._cur_gameplay = 1
         self._startgame_count = 0
         self.debug_strs = []
@@ -123,21 +119,6 @@ class LakelandExtractor(LegacyFeature):
         self.reset()
         self.setValByName('num_play', self._cur_gameplay)
     
-    ## Function to print data from an extractor to file.
-    def WriteFeatureValues(self, file: typing.IO[str], separator:str="\t") -> None:
-        """Function to print data from an extractor to file.
-
-        This function should be the same across all Extractor subtypes.
-        Simply prints out each value from the extractor's features dictionary.
-        :param file: An open csv file to which we will write column headers.
-        :type file: typing.IO[str]
-        :param separator: [description], defaults to "\t"
-        :type separator: str, optional
-        """
-        column_vals = self.GetFeatureValues()
-        file.write(separator.join([str(val) for val in column_vals]))
-        file.write("\n")
-
     def _extractFeaturesFromEvent(self, event:Event):
         try:
             self._extractFromEvent(event)
@@ -166,8 +147,6 @@ class LakelandExtractor(LegacyFeature):
         server_time = event.event_data['server_time']
         event_type_str = LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][int(event.event_name.split('.')[-1])].upper()
         if self._end and event_type_str in ['STARTGAME', 'NEWFARMBIT']:
-            self._WRITE_FEATURES()
-            self.reset()
             self._cur_gameplay += 1
             self.setValByName('num_play', self._cur_gameplay)
         if not self._VERSION:
@@ -631,7 +610,6 @@ class LakelandExtractor(LegacyFeature):
                 feature_name=f"{LakelandExtractor._SESS_PREFIX}avg_time_per_blurb_in_{_event_label}_tutorial",
                 new_value=avg_time_per_blurb(_event_label))
 
-
     def _extractFromSelecttile(self, event_client_time, event_data):
         # assign event_data variables
         d = event_data
@@ -657,7 +635,6 @@ class LakelandExtractor(LegacyFeature):
         # set features
         self.feature_count("count_inspect_item")
 
-
     def _extractFromSelectbuy(self, event_client_time, event_data):
         # assign event_data variables
         d = event_data
@@ -671,7 +648,6 @@ class LakelandExtractor(LegacyFeature):
         self._cur_money = _cur_money
 
     def _extractFromBuy(self, event_client_time, event_data):
-
         # assign event_data variables
         d = event_data
         _buy = d["buy"]
@@ -756,8 +732,6 @@ class LakelandExtractor(LegacyFeature):
 
         self._add_event(_buy)
 
-
-
     # def _tutorial_compliance_check(self, tut_name, event_client_time):
     #     tutorial_end_time = self._tutorial_start_and_end_times[tut_name][1]
     #     if not self._tutorial_compliance[tut_name] and tutorial_end_time:
@@ -841,7 +815,6 @@ class LakelandExtractor(LegacyFeature):
         # set features
         self.set_time_in_nutrition_view(event_client_time)
 
-
     def _extractFromToggleshop(self, event_client_time, event_data):
         # assign event_data variables
         d = event_data
@@ -904,7 +877,6 @@ class LakelandExtractor(LegacyFeature):
         self.feature_count("count_achievements")
         self.feature_time_since_start(f"time_to_{achievement_str}_achievement")
 
-
     def _extractFromFarmbitdeath(self, event_client_time, event_data):
         # assign event_data variables
         d = event_data
@@ -956,8 +928,6 @@ class LakelandExtractor(LegacyFeature):
             self.set_time_in_nutrition_view(event_client_time)
 
         self._end = True
-
-
 
     def _extractFromEmote(self, event_client_time, event_data):
         # assign event_data variables
@@ -1056,7 +1026,6 @@ class LakelandExtractor(LegacyFeature):
         self.feature_inc("count_poop_produced", 1)
         self.feature_time_since_start("time_to_first_poopproduced")
 
-
     def _extractFromDebug(self, event_client_time, event_data):
         # assign event_data variables
         d = event_data
@@ -1115,7 +1084,6 @@ class LakelandExtractor(LegacyFeature):
         d = event_data
         _lake_pos_tile = d["lake_pos_tile"]  # gg.lake_nutes.length | Number of lake tiles on the board  |
         _total_nutrition = d["total_nutrition"]  # gg.lake_nutes.reduce((a,b) => a + b, 0) | Total nutrition of the lake
-
         #helpers
         # set class variables
         # set features
@@ -1189,9 +1157,6 @@ class LakelandExtractor(LegacyFeature):
 
         # update time_in_secs to full (might not be full
 
-
-
-
     def start_window(self, w):
         for f in self.features.perlevels:
             self.setValByIndex(f, w, new_value=self._get_default_val(f))
@@ -1202,11 +1167,9 @@ class LakelandExtractor(LegacyFeature):
                 self.setValByIndex(f'min_num_{type}_in_play', w, prev_val)
                 self.setValByIndex(f'max_num_{type}_in_play', w, prev_val)
 
-
     def _calculateAggregateFeatures(self):
         for w in self._cur_windows:
             self.finish_window(w)
-
 
     def set_time_in_nutrition_view(self, event_client_time):
         if not self._nutrition_view_on:
@@ -1222,7 +1185,6 @@ class LakelandExtractor(LegacyFeature):
         
         # set features
         self.feature_inc(f'time_in_game_speed_{prev_speed_str}', time_at_prev_speed)
-
 
     # Feature Type Setters 
     def feature_average(self, fname_base, value):
@@ -1296,7 +1258,6 @@ class LakelandExtractor(LegacyFeature):
             self.setValByName(feature_name, new_value=self._get_default_val(feature_name))
         self.features.incAggregateVal(feature_name=feature_name, increment=increment)
 
-
     def _set_value_in_cur_windows(self, feature_name, value, windows = None):
         if windows == None:
             windows = self._cur_windows
@@ -1351,13 +1312,7 @@ class LakelandExtractor(LegacyFeature):
     def setValByIndex(self, feature_name, index, new_value):
         self.features.setValByIndex(feature_name, index, new_value)
 
-
-
-
     # Single Functions
-
-
-
 
     # unused
     # def _is_tutorial_mode_over(self):
@@ -1371,7 +1326,6 @@ class LakelandExtractor(LegacyFeature):
     #     for tut in LakelandExtractor._TUTORIAL_MODE:
     #         all_deltas.extend(self._tutorial_times_per_blurb[tut])
     #     return sum(all_deltas) / len(all_deltas)
-
 
     def _add_event(self, event_char):
         old = self.getValByName("event_sequence") or ''
@@ -1425,16 +1379,12 @@ class LakelandExtractor(LegacyFeature):
             window_start = window_end - self._NUM_SECONDS_PER_WINDOW_OVERLAP
         return window_ranges
 
-
-
-
     def _add_emote_to_window_by_time(self, emote):
         event_time = emote[-1]
         windows = self._get_windows_at_time(event_time)
         for window in windows:
             self._emotes_by_window[window].append(emote)
 
-  
     def milliseconds_to_datetime(self, milliseconds):
         ret = datetime.utcfromtimestamp(milliseconds / 1000)
         assert ret >= self._CLIENT_START_TIME - timedelta(seconds=1)
@@ -1468,7 +1418,6 @@ class LakelandExtractor(LegacyFeature):
             return [LakelandExtractor.index_to_xy(i) for i, type in enumerate(self._TILE_OG_TYPES) if
                 LakelandExtractor._ENUM_TO_STR['TILE TYPE'][type] in type_list]  # 5 is the lake type enum
 
-
     def time_since_start(self, client_time):
         return client_time - self._CLIENT_START_TIME
 
@@ -1488,7 +1437,6 @@ class LakelandExtractor(LegacyFeature):
             return (tx,ty) in buildable_xys
 
         return building_buildable
-
 
     def in_bounds(self, tx, ty):
         # initial bounds 17-30 for 0 or 1 max farmbits.
@@ -1563,21 +1511,16 @@ class LakelandExtractor(LegacyFeature):
         for w in self._cur_windows:
             self.start_window(w)
 
-
     @staticmethod
     def onscreen_item_dict():
         ret = {key: 0 for key in LakelandExtractor._BUILDING_TYPES + ['food', 'poop', 'fertilizer', 'milk']}
         return ret
-
 
     @staticmethod
     def index_to_xy(index):
         x = index % 50
         y = index // 50
         return x, y
-
-
-
 
 def avg(l):
     """
@@ -1595,10 +1538,8 @@ def avg(l):
         lsum += d
     return lsum / len(l)
 
-
 def list_deltas(l):
     return [l[i] - l[i - 1] for i in range(1, len(l))]
-
 
 def distance(point1, point2):
     """
@@ -1618,7 +1559,3 @@ def tile_i_to_xy(i):
     ty = i//50
     tx = i%50
     return tx,ty
-
-
-
-

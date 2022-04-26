@@ -8,7 +8,6 @@ from extractors.ExtractorRegistry import ExtractorRegistry
 from features.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
 from features.FeatureRegistry import FeatureRegistry
-from games.LAKELAND.LakelandLoader import LakelandLoader
 from processors.FeatureProcessor import FeatureProcessor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
@@ -23,12 +22,8 @@ class SessionProcessor(FeatureProcessor):
         return FeatureRegistry()
 
     def _prepareLoader(self) -> ExtractorLoader:
-        ret_val : ExtractorLoader
-        if self._LoaderClass is LakelandLoader:
-            ret_val = LakelandLoader(player_id=self._player_id, session_id=self._session_id, game_schema=self._game_schema, feature_overrides=self._overrides, output_file=self._session_file)
-        else:
-            ret_val = self._LoaderClass(player_id=self._player_id, session_id=self._session_id, game_schema=self._game_schema, feature_overrides=self._overrides)
-        return ret_val
+        return self._LoaderClass(player_id=self._player_id, session_id=self._session_id,
+                                 game_schema=self._game_schema, feature_overrides=self._overrides)
 
     def _getExtractorNames(self) -> List[str]:
         return self._registry.GetExtractorNames()

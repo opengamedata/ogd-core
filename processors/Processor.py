@@ -16,10 +16,6 @@ class Processor(abc.ABC):
     # *** ABSTRACTS ***
 
     @abc.abstractmethod
-    def _prepareRegistry(self) -> ExtractorRegistry:
-        pass
-
-    @abc.abstractmethod
     def _prepareLoader(self) -> ExtractorLoader:
         pass
 
@@ -43,9 +39,9 @@ class Processor(abc.ABC):
                  feature_overrides:Union[List[str],None]=None):
         self._game_schema : GameSchema            = game_schema
         self._overrides   : Union[List[str],None] = feature_overrides
-        self._LoaderClass : Type[ExtractorLoader]   = LoaderClass
-        self._registry    : ExtractorRegistry     = self._prepareRegistry()
+        self._LoaderClass : Type[ExtractorLoader] = LoaderClass
         self._loader      : ExtractorLoader       = self._prepareLoader()
+        self._registry    : Union[ExtractorRegistry, None] = None
 
     def __str__(self):
         return f""
