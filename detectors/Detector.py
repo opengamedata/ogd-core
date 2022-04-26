@@ -3,6 +3,7 @@ import abc
 from typing import Any, Callable, List, Union
 # import locals
 from extractors.Extractor import Extractor
+from detectors.DetectorEvent import DetectorEvent
 from schemas.Event import Event
 
 ## @class Model
@@ -21,7 +22,7 @@ class Detector(Extractor):
         pass
 
     @abc.abstractmethod
-    def _trigger_event(self) -> Event:
+    def _trigger_event(self) -> DetectorEvent:
         pass
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
