@@ -1,8 +1,7 @@
 ## import standard libraries
 import abc
-from typing import Any, Dict, List, Union
+from typing import List, Union
 # import locals
-from features.FeatureData import FeatureData
 from schemas.Event import Event
 
 ## @class Model
