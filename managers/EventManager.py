@@ -6,6 +6,7 @@ from typing import Any, List, Type, Union
 ## import local files
 from detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
+from processors.EventProcessor import EventProcessor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from utils import Logger
@@ -21,11 +22,9 @@ class EventManager:
         # define instance vars
         self._lines       : List[str]        = []
         self._columns     : List[str]        = Event.ColumnNames()
-        self._registry    : DetectorRegistry = DetectorRegistry()
-        self._game_schema : GameSchema            = game_schema
-        self._overrides   : Union[List[str],None] = feature_overrides
-        self._LoaderClass : Type[ExtractorLoader] = LoaderClass
-        self._debug_count : int                   = 0
+        self._processor   : EventProcessor   = EventProcessor(LoaderClass=LoaderClass,                   game_schema=game_schema,
+                                                              trigger_callback=self.ReceiveEventTrigger, feature_overrides=feature_overrides)
+        self._debug_count : int              = 0
 
     def ReceiveEventTrigger(self, event:Event) -> None:
         if self._debug_count < 20:
@@ -34,7 +33,7 @@ class EventManager:
         self.ProcessEvent(event=event, separator='\t')
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
-        self._registry.ExtractFromEvent(event=event)
+        self._processor.ProcessEvent(event=event)
         col_values = event.ColumnValues()
         for i,col in enumerate(col_values):
             # TODO: double-check if the remote_addr is there to be dropped/ignored.
@@ -62,7 +61,3 @@ class EventManager:
     def ClearLines(self):
         Logger.Log(f"Clearing {len(self._lines)} entries from EventManager.", logging.DEBUG)
         self._lines = []
-
-    def _prepareLoader(self) -> ExtractorLoader:
-        return self._LoaderClass(player_id="EventManager", session_id="EventManager",
-                                 game_schema=self._game_schema, feature_overrides=self._overrides)

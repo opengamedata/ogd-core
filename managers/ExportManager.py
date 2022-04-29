@@ -79,12 +79,7 @@ class ExportManager:
         Logger.Log(f"Executing request: {str(request)}", logging.INFO)
         start = datetime.now()
         try:
-            if request.ToFile:
-                Logger.Log(f"File output requested, setting up file manager...", logging.INFO)
-                self._setupFileManager(request=request)
-                Logger.Log(f"Done", logging.INFO)
-
-            Logger.Log(f"Setting up event/extract managers...", logging.INFO)
+            Logger.Log(f"Setting up file, event, and feature managers...", logging.INFO)
             self._setupManagers(request=request, game_schema=_game_schema, feature_overrides=request._feat_overrides)
             Logger.Log(f"Done", logging.INFO)
 
@@ -123,10 +118,42 @@ class ExportManager:
         return TableSchema(schema_name=f"{_table_name}.json")
 
     def _setupManagers(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
+        # 1. Set up file manager
+        if request.ToFile:
+            _data_dir : str = self._settings["DATA_DIR"] or default_settings["DATA_DIR"]
+            self._file_mgr = FileManager(request=request, data_dir=_data_dir, extension="tsv")
+            self._file_mgr.OpenFiles()
+            if self._event_mgr is not None:
+                if request.ExportEvents:
+                    cols = self._event_mgr.GetColumnNames()
+                    self._file_mgr.WriteEventsFile("\t".join(cols) + "\n")
+                else:
+                    Logger.Log("Event log not requested, skipping events file.", logging.INFO, depth=1)
+            if self._feat_mgr is not None:
+                if request.ExportPopulation:
+                    cols = self._feat_mgr.GetPopulationFeatureNames()
+                    self._file_mgr.WritePopulationFile("\t".join(cols) + "\n")
+                else:
+                    Logger.Log("Population features not requested, skipping population_features file.", logging.INFO, depth=1)
+                if request.ExportPlayers:
+                    cols = self._feat_mgr.GetPlayerFeatureNames()
+                    self._file_mgr.WritePlayersFile("\t".join(cols) + "\n")
+                else:
+                    Logger.Log("Player features not requested, skipping player_features file.", logging.INFO, depth=1)
+                if request.ExportSessions:
+                    cols = self._feat_mgr.GetSessionFeatureNames()
+                    self._file_mgr.WriteSessionsFile("\t".join(cols) + "\n")
+                else:
+                    Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
+        else:
+            Logger.Log(f"File output not requested, skipping file manager.", logging.INFO, depth=1)
+        # 2. Get LoaderClass so we can set up Event and Feature managers.
         load_class = self._loadLoaderClass(game_schema._game_name)
         if load_class is not None:
             if request.ExportEvents:
                 self._event_mgr = EventManager(LoaderClass=load_class, game_schema=game_schema, feature_overrides=feature_overrides)
+            else:
+                Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
             if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
                 self._feat_mgr = FeatureManager(LoaderClass=load_class, exp_types=request._exports,
                                                 game_schema=game_schema, feature_overrides=feature_overrides)
@@ -136,33 +163,8 @@ class ExportManager:
                     request._exports.players    = False
                     request._exports.population = False
                     Logger.Log("Could not set up feature extractors, no feature loader given!", logging.WARNING, depth=1)
-
-    def _setupFileManager(self, request:Request):
-        _data_dir : str = self._settings["DATA_DIR"] or default_settings["DATA_DIR"]
-        self._file_mgr = FileManager(request=request, data_dir=_data_dir, extension="tsv")
-        self._file_mgr.OpenFiles()
-        if self._event_mgr is not None:
-            if request.ExportEvents:
-                cols = self._event_mgr.GetColumnNames()
-                self._file_mgr.WriteEventsFile("\t".join(cols) + "\n")
             else:
-                Logger.Log("Event log not requested, skipping events file.", logging.INFO, depth=1)
-        if self._feat_mgr is not None:
-            if request.ExportPopulation:
-                cols = self._feat_mgr.GetPopulationFeatureNames()
-                self._file_mgr.WritePopulationFile("\t".join(cols) + "\n")
-            else:
-                Logger.Log("Population features not requested, skipping population_features file.", logging.INFO, depth=1)
-            if request.ExportPlayers:
-                cols = self._feat_mgr.GetPlayerFeatureNames()
-                self._file_mgr.WritePlayersFile("\t".join(cols) + "\n")
-            else:
-                Logger.Log("Player features not requested, skipping player_features file.", logging.INFO, depth=1)
-            if request.ExportSessions:
-                cols = self._feat_mgr.GetSessionFeatureNames()
-                self._file_mgr.WriteSessionsFile("\t".join(cols) + "\n")
-            else:
-                Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
+                Logger.Log("Feature data not requested, skipping feature manager.", logging.INFO, depth=1)
 
     def _loadLoaderClass(self, game_id:str) -> Union[Type[ExtractorLoader],None]:
         _loader_class: Union[Type[ExtractorLoader],None] = None
