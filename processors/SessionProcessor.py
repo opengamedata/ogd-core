@@ -18,9 +18,6 @@ from schemas.Request import ExporterTypes
 class SessionProcessor(FeatureProcessor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _prepareRegistry(self) -> ExtractorRegistry:
-        return FeatureRegistry()
-
     def _prepareLoader(self) -> ExtractorLoader:
         return self._LoaderClass(player_id=self._player_id, session_id=self._session_id,
                                  game_schema=self._game_schema, feature_overrides=self._overrides)
@@ -71,7 +68,7 @@ class SessionProcessor(FeatureProcessor):
 
     ## Constructor for the SessionProcessor class.
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, player_id:str, session_id:str,
-                 feature_overrides:Union[List[str],None]=None, session_file:Union[IO[str],None]=None):
+                 feature_overrides:Union[List[str],None]=None):
         """Constructor for the SessionProcessor class.
         Simply stores some data for use later, including the type of extractor to
         use.
@@ -91,7 +88,6 @@ class SessionProcessor(FeatureProcessor):
         :type session_file: Union[IO[str],None], optional
         """
         ## Define instance vars
-        self._session_file : Union[IO[str],None] = session_file
         self._session_id   : str = session_id
         self._player_id    : str = player_id
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)

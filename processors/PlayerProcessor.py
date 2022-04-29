@@ -23,9 +23,6 @@ class PlayerProcessor(FeatureProcessor):
         return self._LoaderClass(player_id=self._player_id, session_id="player",
                                  game_schema=self._game_schema, feature_overrides=self._overrides)
 
-    def _prepareRegistry(self) -> ExtractorRegistry:
-        return FeatureRegistry()
-
     def _getExtractorNames(self) -> List[str]:
         if isinstance(self._registry, FeatureRegistry):
             return self._registry.GetExtractorNames() + ["SessionCount"]
@@ -45,7 +42,7 @@ class PlayerProcessor(FeatureProcessor):
         if event.session_id not in self._session_extractors.keys():
             self._session_extractors[event.session_id] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
                                                                           player_id=self._player_id, session_id=event.session_id,
-                                                                          feature_overrides=self._overrides, session_file=self._player_file)
+                                                                          feature_overrides=self._overrides)
 
         self._session_extractors[event.session_id].ProcessEvent(event=event)
 
@@ -95,7 +92,7 @@ class PlayerProcessor(FeatureProcessor):
 
     ## Constructor for the PlayerProcessor class.
     def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema, player_id:str,
-                 feature_overrides:Union[List[str],None]=None, player_file:Union[IO[str],None]=None):
+                 feature_overrides:Union[List[str],None]=None):
         """Constructor for the PlayerProcessor class.
            Simply stores some data for use later, including the type of extractor to use.
 
@@ -112,14 +109,13 @@ class PlayerProcessor(FeatureProcessor):
         :type player_file: Union[IO[str],None], optional
         """
         Logger.Log(f"Setting up PlayerProcessor for {player_id}...", logging.DEBUG, depth=2)
-        self._player_file : Union[IO[str],None] = player_file
         self._player_id   : str                 = player_id
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         ## Define instance vars
         self._session_extractors : Dict[str,SessionProcessor] = {
             "null" : SessionProcessor(LoaderClass=LoaderClass, game_schema=game_schema,
                                       player_id=self._player_id, session_id="null",
-                                      feature_overrides=feature_overrides, session_file=player_file)
+                                      feature_overrides=feature_overrides)
         }
         Logger.Log(f"Done", logging.DEBUG, depth=2)
 

@@ -114,7 +114,7 @@ class PopulationProcessor(FeatureProcessor):
 
     ## Constructor for the PopulationProcessor class.
     def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema,
-                 feature_overrides:Union[List[str],None]=None, pop_file:Union[IO[str],None]=None):
+                 feature_overrides:Union[List[str],None]=None):
         """Constructor for the PopulationProcessor class.
         Simply stores some data for use later, including the type of extractor to use.
 
@@ -128,7 +128,6 @@ class PopulationProcessor(FeatureProcessor):
         :param pop_file: _description_, defaults to None
         :type pop_file: Union[IO[str],None], optional
         """
-        self._pop_file : Union[IO[str],None] = pop_file
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         # Set up dict of sub-processors to handle each player.
         # By default, set up a "null" player, who will cover any data without a player id.
