@@ -1,5 +1,4 @@
 # import libraries
-from datetime import datetime
 from typing import Any, List
 # import locals
 from features.SessionFeature import SessionFeature
