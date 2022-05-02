@@ -5,7 +5,7 @@ from collections import OrderedDict
 from datetime import datetime
 from typing import Any, Callable, Dict, List, Union
 ## import local files
-from Detector import Detector
+from detectors.Detector import Detector
 from extractors.Extractor import Extractor
 from extractors.ExtractorRegistry import ExtractorRegistry
 from features.FeatureData import FeatureData
@@ -26,7 +26,18 @@ class DetectorRegistry(ExtractorRegistry):
 
     def _register(self, extractor:Extractor, kind:ExtractorRegistry.Listener.Kinds):
         if isinstance(extractor, Detector):
-            self._registerDetector(detector=extractor, kind=kind)
+            _listener = ExtractorRegistry.Listener(name=extractor.Name, kind=kind)
+            _event_types   = extractor.GetEventDependencies()
+            # First, add detector to the _features dict.
+            self._detectors[extractor.Name] = extractor
+            # Register detector's requested events.
+            if "all_events" in _event_types:
+                self._event_registry["all_events"].append(_listener)
+            else:
+                for event in _event_types:
+                    if event not in self._event_registry.keys():
+                        self._event_registry[event] = []
+                    self._event_registry[event].append(_listener)
         else:
             raise TypeError("DetectorRegistry was given an Extractor which was not a Detector!")
 
@@ -116,20 +127,6 @@ class DetectorRegistry(ExtractorRegistry):
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
-
-    def _registerDetector(self, detector:Detector, kind:ExtractorRegistry.Listener.Kinds):
-        _listener = ExtractorRegistry.Listener(name=detector.Name, kind=kind)
-        _event_types   = detector.GetEventDependencies()
-        # First, add detector to the _features dict.
-        self._detectors[detector.Name] = detector
-        # Register detector's requested events.
-        if "all_events" in _event_types:
-            self._event_registry["all_events"].append(_listener)
-        else:
-            for event in _event_types:
-                if event not in self._event_registry.keys():
-                    self._event_registry[event] = []
-                self._event_registry[event].append(_listener)
 
     # def _format(obj):
     #     if obj == None:

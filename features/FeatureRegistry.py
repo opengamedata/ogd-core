@@ -32,7 +32,28 @@ class FeatureRegistry(ExtractorRegistry):
 
     def _register(self, extractor:Extractor, kind:ExtractorRegistry.Listener.Kinds):
         if isinstance(extractor, Feature):
-            self._registerFeature(feature=extractor, kind=kind)
+            _listener = ExtractorRegistry.Listener(name=extractor.Name, kind=kind)
+            _feature_deps = extractor.GetFeatureDependencies()
+            _event_deps   = extractor.GetEventDependencies()
+            # First, add feature to the _features dict.
+            if len(_feature_deps) > 0:
+                _feat_order = FeatureRegistry.FeatureOrders.SECOND_ORDER.value
+            else:
+                _feat_order = FeatureRegistry.FeatureOrders.FIRST_ORDER.value
+            self._features[_feat_order][extractor.Name] = extractor
+            # Register feature to listen for any requested first-order features.
+            for _feature_dep in _feature_deps:
+                if _feature_dep not in self._feature_registry.keys():
+                    self._feature_registry[_feature_dep] = []
+                self._feature_registry[_feature_dep].append(_listener)
+            # Finally, register feature's requested events.
+            if "all_events" in _event_deps:
+                self._event_registry["all_events"].append(_listener)
+            else:
+                for event in _event_deps:
+                    if event not in self._event_registry.keys():
+                        self._event_registry[event] = []
+                    self._event_registry[event].append(_listener)
         else:
             raise TypeError("FeatureRegistry was given an Extractor which was not a Feature!")
 
@@ -185,30 +206,6 @@ class FeatureRegistry(ExtractorRegistry):
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
-
-    def _registerFeature(self, feature:Feature, kind:ExtractorRegistry.Listener.Kinds):
-        _listener = ExtractorRegistry.Listener(name=feature.Name, kind=kind)
-        _feature_deps = feature.GetFeatureDependencies()
-        _event_deps   = feature.GetEventDependencies()
-        # First, add feature to the _features dict.
-        if len(_feature_deps) > 0:
-            _feat_order = FeatureRegistry.FeatureOrders.SECOND_ORDER.value
-        else:
-            _feat_order = FeatureRegistry.FeatureOrders.FIRST_ORDER.value
-        self._features[_feat_order][feature.Name] = feature
-        # Register feature to listen for any requested first-order features.
-        for _feature_dep in _feature_deps:
-            if _feature_dep not in self._feature_registry.keys():
-                self._feature_registry[_feature_dep] = []
-            self._feature_registry[_feature_dep].append(_listener)
-        # Finally, register feature's requested events.
-        if "all_events" in _event_deps:
-            self._event_registry["all_events"].append(_listener)
-        else:
-            for event in _event_deps:
-                if event not in self._event_registry.keys():
-                    self._event_registry[event] = []
-                self._event_registry[event].append(_listener)
 
     # def _format(obj):
     #     if obj == None:
