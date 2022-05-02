@@ -42,18 +42,18 @@ class PopulationProcessor(FeatureProcessor):
         if self._registry is not None:
             self._registry.ExtractFromEvent(event=event)
             if event.user_id is None:
-                self._player_extractors["null"].ProcessEvent(event=event)
+                self._player_processors["null"].ProcessEvent(event=event)
             else:
-                if event.user_id not in self._player_extractors.keys():
-                    self._player_extractors[event.user_id] = PlayerProcessor(self._LoaderClass, game_schema=self._game_schema,
+                if event.user_id not in self._player_processors.keys():
+                    self._player_processors[event.user_id] = PlayerProcessor(self._LoaderClass, game_schema=self._game_schema,
                                                                             player_id=event.user_id, feature_overrides=self._overrides)
-                self._player_extractors[event.user_id].ProcessEvent(event=event)
+                self._player_processors[event.user_id].ProcessEvent(event=event)
 
     def _processFeatureData(self, feature: FeatureData):
         if self._registry is not None:
             self._registry.ExtractFromFeatureData(feature=feature)
             # Down-propogate values to player (and, by extension, session) features:
-            for player in self._player_extractors.values():
+            for player in self._player_processors.values():
                 player.ProcessFeatureData(feature=feature)
 
     def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[Any]]:
@@ -79,7 +79,7 @@ class PopulationProcessor(FeatureProcessor):
         # 4) Finally, all Player/Session features have been exposed to all first-order feature values, so we can collect all values desired for export.
         if export_types.players or export_types.sessions:
             # first, get list of results
-            _results = [player_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for player_extractor in self._player_extractors.values()]
+            _results = [player_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for player_extractor in self._player_processors.values()]
             # then, each result will have players or sessions or both, need to loop over and append to a list in ret_val.
             if export_types.players:
                 ret_val["players"] = []
@@ -95,7 +95,7 @@ class PopulationProcessor(FeatureProcessor):
         ret_val : Dict[str, List[FeatureData]] = { "population":[] }
         if self._registry is not None:
             ret_val["population"] = self._registry.GetFeatureData(order=order)
-        _result = [player_extractor.GetFeatureData(order=order) for player_extractor in self._player_extractors.values()]
+        _result = [player_extractor.GetFeatureData(order=order) for player_extractor in self._player_processors.values()]
         ret_val["players"] = []
         ret_val["sessions"] = []
         for player in _result:
@@ -131,7 +131,7 @@ class PopulationProcessor(FeatureProcessor):
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         # Set up dict of sub-processors to handle each player.
         # By default, set up a "null" player, who will cover any data without a player id.
-        self._player_extractors : Dict[str,PlayerProcessor] = {
+        self._player_processors : Dict[str,PlayerProcessor] = {
             "null" : PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
                                      player_id="null", feature_overrides=self._overrides)
         }
@@ -141,20 +141,20 @@ class PopulationProcessor(FeatureProcessor):
     # *** PUBLIC METHODS ***
 
     def PlayerCount(self):
-        return len(self._player_extractors.keys()) - 1 # don't count null player
+        return len(self._player_processors.keys()) - 1 # don't count null player
     def SessionCount(self):
-        return sum([player.SessionCount() for player in self._player_extractors.values()])
+        return sum([player.SessionCount() for player in self._player_processors.values()])
 
     def GetPlayerFeatureNames(self) -> List[str]:
-        return self._player_extractors["null"].GetExtractorNames()
+        return self._player_processors["null"].GetExtractorNames()
     def GetSessionFeatureNames(self) -> List[str]:
-        return self._player_extractors["null"].GetSessionFeatureNames()
+        return self._player_processors["null"].GetSessionFeatureNames()
 
     def ClearPlayersLines(self):
-        for player in self._player_extractors.values():
+        for player in self._player_processors.values():
             player.ClearLines()
     def ClearSessionsLines(self):
-        for player in self._player_extractors.values():
+        for player in self._player_processors.values():
             player.ClearSessionsLines()
 
     # *** PRIVATE STATICS ***

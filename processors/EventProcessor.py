@@ -20,7 +20,6 @@ class EventProcessor(Processor):
     def _getExtractorNames(self, order:int) -> Dict[str,List[FeatureData]]:
         raise NotImplementedError("Function stub! Haven't written name getter for event processor.")
 
-    ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
     def _processEvent(self, event:Event):
         if self._registry is not None:
             self._registry.ExtractFromEvent(event)

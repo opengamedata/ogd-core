@@ -39,17 +39,17 @@ class PlayerProcessor(FeatureProcessor):
         """
         self._registry.ExtractFromEvent(event=event)
         # ensure we have an extractor for the given session:
-        if event.session_id not in self._session_extractors.keys():
-            self._session_extractors[event.session_id] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+        if event.session_id not in self._session_processors.keys():
+            self._session_processors[event.session_id] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
                                                                           player_id=self._player_id, session_id=event.session_id,
                                                                           feature_overrides=self._overrides)
 
-        self._session_extractors[event.session_id].ProcessEvent(event=event)
+        self._session_processors[event.session_id].ProcessEvent(event=event)
 
     def _processFeatureData(self, feature: FeatureData):
         self._registry.ExtractFromFeatureData(feature=feature)
         # Down-propogate values to player (and, by extension, session) features:
-        for session in self._session_extractors.values():
+        for session in self._session_processors.values():
             session.ProcessFeatureData(feature=feature)
 
     def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[Any]]:
@@ -62,7 +62,7 @@ class PlayerProcessor(FeatureProcessor):
                 ret_val["players"] = self._registry.GetFeatureValues() + [_sess_ct]
         if export_types.sessions:
             # _results gives us a list of dicts, each with a "session" element
-            _results = [sess_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for sess_extractor in self._session_extractors.values()]
+            _results = [sess_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for sess_extractor in self._session_processors.values()]
             ret_val["sessions"] = []
             # so we loop over list, and pull each "session" element into a master list of all sessions.
             for session in _results:
@@ -74,7 +74,7 @@ class PlayerProcessor(FeatureProcessor):
         ret_val : Dict[str, List[FeatureData]] = { "players":[] }
         if isinstance(self._registry, FeatureRegistry):
             ret_val["players"] = self._registry.GetFeatureData(order=order)
-        _result = [session_extractor.GetFeatureData(order=order) for session_extractor in self._session_extractors.values()]
+        _result = [session_extractor.GetFeatureData(order=order) for session_extractor in self._session_processors.values()]
         ret_val["sessions"] = []
         for session in _result:
             ret_val["sessions"] += session['sessions']
@@ -112,7 +112,7 @@ class PlayerProcessor(FeatureProcessor):
         self._player_id   : str                 = player_id
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         ## Define instance vars
-        self._session_extractors : Dict[str,SessionProcessor] = {
+        self._session_processors : Dict[str,SessionProcessor] = {
             "null" : SessionProcessor(LoaderClass=LoaderClass, game_schema=game_schema,
                                       player_id=self._player_id, session_id="null",
                                       feature_overrides=feature_overrides)
@@ -124,14 +124,14 @@ class PlayerProcessor(FeatureProcessor):
     # *** PUBLIC METHODS ***
 
     def SessionCount(self):
-        return len(self._session_extractors.keys()) - 1 # don't count null player
+        return len(self._session_processors.keys()) - 1 # don't count null player
 
     def GetSessionFeatureNames(self) -> List[str]:
-        return self._session_extractors["null"].GetExtractorNames()
+        return self._session_processors["null"].GetExtractorNames()
 
     def ClearSessionsLines(self):
-        Logger.Log(f"Clearing {len(self._session_extractors)} sessions from PlayerProcessor for {self._player_id}.", logging.DEBUG, depth=2)
-        self._session_extractors = {}
+        Logger.Log(f"Clearing {len(self._session_processors)} sessions from PlayerProcessor for {self._player_id}.", logging.DEBUG, depth=2)
+        self._session_processors = {}
 
     # *** PRIVATE STATICS ***
 
