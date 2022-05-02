@@ -64,15 +64,9 @@ class DetectorRegistry(ExtractorRegistry):
         return
 
     def _getExtractorNames(self) -> List[str]:
-        """Function to generate a list names of all enabled features, given a GameSchema
-        This is different from the feature_names() function of GameSchema,
-        which ignores the 'enabled' attribute and does not expand per-count features
-        (e.g. this function would include 'lvl0_someFeat', 'lvl1_someFeat', 'lvl2_someFeat', etc.
-        while feature_names() only would include 'someFeat').
+        """Implementation of abstract function to retrieve the names of all extractors currently registered.
 
-        :param schema: The schema from which feature names should be generated.
-        :type schema: GameSchema
-        :return: A list of feature names.
+        :return: A list of all currently-registered detectors.
         :rtype: List[str]
         """
         ret_val : List[str] = [feature.Name for feature in self._detectors.values()]
