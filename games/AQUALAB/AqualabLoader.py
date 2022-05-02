@@ -128,6 +128,8 @@ class AqualabLoader(ExtractorLoader):
         ret_val : Detector
         if detector_type == "CollectFactNoJob":
             ret_val = CollectFactNoJob.CollectFactNoJob(name=name, description=detector_args["description"], trigger_callback=trigger_callback)
+        elif detector_type == "EchoRoomChange":
+            ret_val = EchoRoomChange.EchoRoomChange(name=name, description=detector_args["description"], trigger_callback=trigger_callback)
         else:
             raise NotImplementedError(f"'{detector_type}' is not a valid detector for Aqualab.")
         return ret_val

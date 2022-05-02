@@ -437,6 +437,10 @@
             "CollectFactNoJob" : {
                 "enabled" : true,
                 "description" : "Triggers an event when a player collects a fact while not actively working on a job"
+            },
+            "EchoRoomChange" : {
+                "enabled" : true,
+                "description" : "Triggers an event when a player changes rooms."
             }
         }
     },
