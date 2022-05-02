@@ -310,7 +310,7 @@ class ExportManager:
                 Logger.Log(f"Error while processing event {next_event}.", logging.ERROR, depth=2)
                 raise err
             else:
-                Logger.Log(f"Error while processing event {next_event}. This event will be skipped. \nFull error: {err}", logging.WARNING, depth=2)
+                Logger.Log(f"Error while processing event {next_event}. This event will be skipped. \nFull error: {traceback.format_exc()}", logging.WARNING, depth=2)
 
     def _teardownFileManager(self, game_schema:GameSchema, table_schema:TableSchema, num_sess:int):
         if self._file_mgr is not None:
