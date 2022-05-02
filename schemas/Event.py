@@ -7,6 +7,12 @@ class EventSource(IntEnum):
     GAME = 1
     GENERATED = 2
 
+    def __str__(self):
+        if self.value == 1:
+            return "GAME"
+        elif self.value == 2:
+            return "GENERATED"
+
 ## @class Event
 #  Completely dumb struct that enforces a particular structure for the data we get from a source.
 #  Basically, whenever we fetch data, the TableSchema will be used to map columns to the required elements of an Event.
@@ -97,7 +103,7 @@ class Event:
                 "index"]
 
     def ColumnValues(self) -> List[Union[str, datetime, Map, int, None]]:
-        return [self.session_id,  self.app_id,        self.timestamp,   self.event_name,
-                self.event_data,  self.event_source,  self.app_version, self.log_version,
-                self.time_offset, self.user_id,       self.user_data,   self.game_state,
+        return [self.session_id,  self.app_id,             self.timestamp,   self.event_name,
+                self.event_data,  str(self.event_source),  self.app_version, self.log_version,
+                self.time_offset, self.user_id,            self.user_data,   self.game_state,
                 self.event_sequence_index]
