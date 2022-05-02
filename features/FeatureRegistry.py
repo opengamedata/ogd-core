@@ -117,6 +117,7 @@ class FeatureRegistry(ExtractorRegistry):
         _event_registry maps event names to Listener objects, which basically just say which feature(s) wants the given enent.
         _feature_registry maps feature names to Listener objects, which basically just say which 2nd-order feature(s) wants the given 1st-order feature.
         """
+        super().__init__()
         self._features : List[OrderedDict[str, Feature]] = [OrderedDict() for i in range(order)]
         # self._features : Dict[str, OrderedDict[str, Feature]] = {
         #     "first_order" : OrderedDict(),

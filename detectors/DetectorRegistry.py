@@ -81,6 +81,7 @@ class DetectorRegistry(ExtractorRegistry):
 
         Just sets up mostly-empty dictionaries for use by the registry.
         """
+        super().__init__()
         self._detectors      : OrderedDict[str, Detector]                = OrderedDict()
 
     # string conversion for Extractors.
