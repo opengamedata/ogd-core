@@ -20,7 +20,7 @@ class ExtractorLoader(abc.ABC):
         pass
     
     @abc.abstractmethod
-    def LoadDetector(self, detector_type:str, name:str, feature_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Union[int,None] = None) -> Detector:
+    def LoadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Union[int,None] = None) -> Detector:
         pass
 
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
@@ -65,7 +65,7 @@ class ExtractorLoader(abc.ABC):
         for name,aggregate in self._game_schema.aggregate_detectors().items():
             if ExtractorLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=self._overrides):
                 try:
-                    detector = self.LoadDetector(detector_type=name, name=name, feature_args=aggregate, trigger_callback=trigger_callback)
+                    detector = self.LoadDetector(detector_type=name, name=name, detector_args=aggregate, trigger_callback=trigger_callback)
                 except NotImplementedError as err:
                     Logger.Log(f"{name} is not a valid detector for {self._game_schema._game_name}", logging.ERROR)
                 else:
@@ -74,7 +74,7 @@ class ExtractorLoader(abc.ABC):
             if ExtractorLoader._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=self._overrides):
                 for i in ExtractorLoader._genCountRange(count=percount["count"], schema=self._game_schema):
                     try:
-                        detector = self.LoadDetector(detector_type=name, name=f"{percount['prefix']}{i}_{name}", feature_args=percount, trigger_callback=trigger_callback, count_index=i)
+                        detector = self.LoadDetector(detector_type=name, name=f"{percount['prefix']}{i}_{name}", detector_args=percount, trigger_callback=trigger_callback, count_index=i)
                     except NotImplementedError as err:
                         Logger.Log(f"{name} is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
                     else:
