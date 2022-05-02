@@ -33,7 +33,6 @@ class EventManager:
         self.ProcessEvent(event=event, separator='\t')
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
-        self._processor.ProcessEvent(event=event)
         col_values = event.ColumnValues()
         for i,col in enumerate(col_values):
             # TODO: double-check if the remote_addr is there to be dropped/ignored.
@@ -44,6 +43,7 @@ class EventManager:
                 col_values[i] = json.dumps(col)
         # event.event_data = json.dumps(event.event_data)
         self._lines.append(separator.join([str(item) for item in col_values]) + "\n") # changed , to \t
+        self._processor.ProcessEvent(event=event)
 
     def GetColumnNames(self) -> List[str]:
         return self._columns
