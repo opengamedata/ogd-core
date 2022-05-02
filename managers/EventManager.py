@@ -59,5 +59,5 @@ class EventManager:
     #  This is helpful if we're processing a lot of data and want to avoid
     #  Eating too much memory.
     def ClearLines(self):
-        Logger.Log(f"Clearing {len(self._lines)} entries from EventManager.", logging.DEBUG)
+        Logger.Log(f"Clearing {len(self._lines)} entries from EventManager.", logging.DEBUG, depth=2)
         self._lines = []
