@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Type, Union
 # import locals
 from extractors.ExtractorRegistry import ExtractorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
 from schemas.Request import ExporterTypes

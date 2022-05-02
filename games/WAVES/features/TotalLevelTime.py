@@ -5,7 +5,7 @@ from schemas import Event
 from typing import Any, List, Union
 # import locals
 from utils import Logger
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from features.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 

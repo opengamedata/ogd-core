@@ -9,7 +9,7 @@ from datetime import datetime
 from datetime import timedelta
 from collections import OrderedDict
 # import locals
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 

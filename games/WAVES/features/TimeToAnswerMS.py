@@ -3,7 +3,7 @@ from schemas import Event
 import typing
 from typing import Any, List, Union
 # import locals
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from features.Feature import Feature
 from schemas.Event import Event
 

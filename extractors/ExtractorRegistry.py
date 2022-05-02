@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Union
 ## import local files
 from utils import Logger
 from extractors.Extractor import Extractor
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 ## @class Extractor

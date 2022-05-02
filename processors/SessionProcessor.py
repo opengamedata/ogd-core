@@ -5,7 +5,7 @@ from typing import Any, List, Dict, IO, Type, Union
 # import local files
 from utils import Logger
 from extractors.ExtractorRegistry import ExtractorRegistry
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
 from features.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor

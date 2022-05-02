@@ -9,7 +9,7 @@ from extractors.ExtractorLoader import ExtractorLoader
 from features.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from processors.SessionProcessor import SessionProcessor
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from schemas.Request import ExporterTypes

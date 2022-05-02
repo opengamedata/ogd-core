@@ -1,7 +1,7 @@
 from typing import Any, List
 
 from features.SessionFeature import SessionFeature
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class UserTotalSessionDuration(SessionFeature):

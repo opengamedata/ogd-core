@@ -3,7 +3,7 @@ from typing import Any, Callable, Dict, List, Type, Union
 # import locals
 from detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorRegistry import ExtractorRegistry
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
 from processors.Processor import Processor
 from schemas.Event import Event

@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Tuple, Type, Union
 ## import local files
 from utils import Logger
 from features.Feature import Feature
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 
 ## @class LegacyFeature

@@ -5,7 +5,7 @@ from typing import Any, List, Union
 # import locals
 from utils import Logger
 from features.Feature import Feature
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class JobArgumentationTime(Feature):

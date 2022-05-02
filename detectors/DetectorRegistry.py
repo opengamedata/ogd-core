@@ -8,7 +8,7 @@ from typing import Any, Callable, Dict, List, Union
 from detectors.Detector import Detector
 from extractors.Extractor import Extractor
 from extractors.ExtractorRegistry import ExtractorRegistry
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 ## @class Extractor

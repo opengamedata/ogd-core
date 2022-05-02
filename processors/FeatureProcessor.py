@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Type, Union
 
 from numpy import isin
 # import locals
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
 from features.FeatureRegistry import FeatureRegistry
 from processors.Processor import Processor

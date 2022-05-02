@@ -3,7 +3,7 @@ import abc
 from typing import Any, Dict, List, Union
 # import locals
 from extractors.Extractor import Extractor
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 ## @class Model

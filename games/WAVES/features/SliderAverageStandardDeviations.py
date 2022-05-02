@@ -2,7 +2,7 @@
 import typing
 from typing import Any, List, Union
 # import locals
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from features.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 

@@ -4,7 +4,7 @@ from statistics import stdev
 from typing import Any, List
 # import locals
 from features.Feature import Feature
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class JobsAttempted(Feature):
