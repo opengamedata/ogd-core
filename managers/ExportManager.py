@@ -118,7 +118,25 @@ class ExportManager:
         return TableSchema(schema_name=f"{_table_name}.json")
 
     def _setupManagers(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
-        # 1. Set up file manager
+        # 1. Get LoaderClass so we can set up Event and Feature managers.
+        load_class = self._loadLoaderClass(game_schema._game_name)
+        if load_class is not None:
+            if request.ExportEvents:
+                self._event_mgr = EventManager(LoaderClass=load_class, game_schema=game_schema, feature_overrides=feature_overrides)
+            else:
+                Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
+            if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
+                self._feat_mgr = FeatureManager(LoaderClass=load_class, exp_types=request._exports,
+                                                game_schema=game_schema, feature_overrides=feature_overrides)
+                # If game doesn't have an extractor, make sure we don't try to export it.
+                if not self._feat_mgr.HasLoader():
+                    request._exports.sessions   = False
+                    request._exports.players    = False
+                    request._exports.population = False
+                    Logger.Log("Could not set up feature extractors, no feature loader given!", logging.WARNING, depth=1)
+            else:
+                Logger.Log("Feature data not requested, skipping feature manager.", logging.INFO, depth=1)
+        # 2. Set up file manager
         if request.ToFile:
             _data_dir : str = self._settings["DATA_DIR"] or default_settings["DATA_DIR"]
             self._file_mgr = FileManager(request=request, data_dir=_data_dir, extension="tsv")
@@ -147,24 +165,6 @@ class ExportManager:
                     Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
         else:
             Logger.Log(f"File output not requested, skipping file manager.", logging.INFO, depth=1)
-        # 2. Get LoaderClass so we can set up Event and Feature managers.
-        load_class = self._loadLoaderClass(game_schema._game_name)
-        if load_class is not None:
-            if request.ExportEvents:
-                self._event_mgr = EventManager(LoaderClass=load_class, game_schema=game_schema, feature_overrides=feature_overrides)
-            else:
-                Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
-            if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
-                self._feat_mgr = FeatureManager(LoaderClass=load_class, exp_types=request._exports,
-                                                game_schema=game_schema, feature_overrides=feature_overrides)
-                # If game doesn't have an extractor, make sure we don't try to export it.
-                if not self._feat_mgr.HasLoader():
-                    request._exports.sessions   = False
-                    request._exports.players    = False
-                    request._exports.population = False
-                    Logger.Log("Could not set up feature extractors, no feature loader given!", logging.WARNING, depth=1)
-            else:
-                Logger.Log("Feature data not requested, skipping feature manager.", logging.INFO, depth=1)
 
     def _loadLoaderClass(self, game_id:str) -> Union[Type[ExtractorLoader],None]:
         _loader_class: Union[Type[ExtractorLoader],None] = None
