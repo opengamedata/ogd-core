@@ -8,7 +8,7 @@ from schemas.Event import Event
 
 class MissionDiveTime(Feature):
     
-    def __init__(self, name:str, description:str, job_num:int, job_map:dict):
+    def __init__(self, name:str, description:str, job_num:int):
         super().__init__(name=name, description=description, count_index=job_num)
         self._dive_start_time = None
         self._time = timedelta(0)

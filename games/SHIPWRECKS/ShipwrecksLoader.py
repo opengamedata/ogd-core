@@ -1,8 +1,11 @@
-from typing import Any, Dict, List, Union
-
-from games.SHIPWRECKS.features import *
+## import standard libraries
+from typing import Any, Callable, Dict, List, Union
+## import local files
+from detectors.Detector import Detector
 from extractors.ExtractorLoader import ExtractorLoader
+from games.SHIPWRECKS.features import *
 from features.Feature import Feature
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 
 ## @class ShipwrecksLoader
@@ -55,5 +58,5 @@ class ShipwrecksLoader(ExtractorLoader):
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shipwrecks.")
         return ret_val
 
-    def _loadDetector(self, detector_type: str, name: str, detector_args: Dict[str, Any], count_index: Union[int, None] = None) -> Feature:
+    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Union[int,None] = None) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Shipwrecks.")
