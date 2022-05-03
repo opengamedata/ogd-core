@@ -16,11 +16,11 @@ class ExtractorLoader(abc.ABC):
     # *** ABSTRACTS ***
     
     @abc.abstractmethod
-    def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         pass
     
     @abc.abstractmethod
-    def LoadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Union[int,None] = None) -> Detector:
+    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Union[int,None] = None) -> Detector:
         pass
 
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
@@ -38,6 +38,12 @@ class ExtractorLoader(abc.ABC):
         self._session_id  : str        = session_id
         self._game_schema : GameSchema = game_schema
         self._overrides   : Union[List[str],None]    = feature_overrides
+
+    def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+        return self._loadFeature(feature_type=feature_type, name=name, feature_args=feature_args, count_index=count_index)
+    
+    def LoadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Union[int,None] = None) -> Detector:
+        return self._loadDetector(detector_type=detector_type, name=name, detector_args=detector_args, trigger_callback=trigger_callback, count_index=count_index)
 
     def LoadToFeatureRegistry(self, registry:FeatureRegistry) -> None:
         # first, liad aggregate features
