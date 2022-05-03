@@ -4,12 +4,17 @@ name: OpenGameData-Core CI Test
 on:
   push:
     paths:
+    - 'detectors/**'
     - 'extractors/**'
+    - 'features/**'
     - 'interfaces/**'
     - 'managers/**'
+    - 'processors/**'
     - 'schemas/Event.py'
+    - 'schemas/FeatureData.py'
     - 'schemas/GameSchema.py'
     - 'schemas/TableSchema.py'
+    - 'schemas/Request.py'
     - 'main.py'
     - 'utils.py'
     - '.github/workflows/OGD_CI.yml'
