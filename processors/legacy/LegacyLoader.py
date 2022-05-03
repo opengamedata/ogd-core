@@ -1,11 +1,12 @@
 # import libraries
-from typing import Any, Dict, List, Union
+from typing import Callable, List, Union
 # import locals
-from detectors.Detector import Detector
+from detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorRegistry import ExtractorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
 from features.FeatureRegistry import FeatureRegistry
 from processors.legacy.LegacyDetector import LegacyDetector
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 
 class LegacyLoader(ExtractorLoader):
@@ -17,5 +18,6 @@ class LegacyLoader(ExtractorLoader):
         # treat the monolithic LegacyFeature extractor as a single aggregate.
         registry.Register(feat, ExtractorRegistry.Listener.Kinds.AGGREGATE)
 
-    def LoadToDetectorRegistry(self, detector_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Detector:
-        return LegacyDetector(name=name, description=feature_args["description"])
+    def LoadToDetectorRegistry(self, registry:DetectorRegistry, trigger_callback:Callable[[Event], None]) -> None:
+        feat = self.LoadDetector(detector_type="", name="", detector_args={}, trigger_callback=trigger_callback, count_index=0)
+        registry.Register(feat, ExtractorRegistry.Listener.Kinds.AGGREGATE)
