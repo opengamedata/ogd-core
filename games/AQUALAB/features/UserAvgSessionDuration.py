@@ -27,6 +27,9 @@ class UserAvgSessionDuration(SessionFeature):
             self._times.append(feature.FeatureValues[0])
 
     def _getFeatureValues(self) -> List[Any]:
-        return [sum(self._times) / len(self._times)]
+        if len(self._times) > 0:
+            return [sum(self._times) / len(self._times)]
+        else:
+            return [0]
 
     # *** Optionally override public functions. ***

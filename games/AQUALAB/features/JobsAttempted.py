@@ -14,6 +14,7 @@ class JobsAttempted(Feature):
         self._job_map = job_map
         super().__init__(name=name, description=description, count_index=job_num)
         self._user_code = None
+        self._session_id = None
 
         # Subfeatures
         self._job_id = job_num
@@ -26,6 +27,7 @@ class JobsAttempted(Feature):
 
         # Time
         self._times = []
+        self._time = 0
         self._job_start_time = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -36,6 +38,13 @@ class JobsAttempted(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
+        if event.session_id != self._session_id:
+            self._session_id = event.session_id
+
+            if self._time != 0:
+                self._times.append(self._time)
+                self._time = 0
+
         if self._validate_job(event.event_data['job_name']):
             user_code = event.user_id
             job_name = event.event_data["job_name"]["string_value"]
@@ -50,7 +59,7 @@ class JobsAttempted(Feature):
                 self._num_completes += 1
 
                 if self._job_start_time:
-                    self._times.append((event.timestamp - self._job_start_time).total_seconds())
+                    self._time = (event.timestamp - self._job_start_time).total_seconds()
                     self._job_start_time = None
 
     def _extractFromFeatureData(self, feature: FeatureData):
@@ -59,6 +68,9 @@ class JobsAttempted(Feature):
     def _getFeatureValues(self) -> List[Any]:
         if self._num_starts > 0:
             self._percent_complete = (self._num_completes / self._num_starts) * 100
+
+        if self._time != 0:
+            self._times.append(self._time)
         
         if len(self._times) > 0:
             self._avg_time_complete = sum(self._times) / len(self._times)
