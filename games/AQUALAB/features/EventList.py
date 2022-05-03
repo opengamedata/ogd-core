@@ -26,7 +26,8 @@ class EventList(Feature):
                 "user_id":event.user_id,
                 "session_id":event.session_id,
                 "timestamp":event.timestamp.isoformat(),
-                "job_name":event.event_data["job_name"]["string_value"]
+                "job_name":event.event_data["job_name"]["string_value"],
+                "index":event.event_sequence_index
             }
             if event.event_name == "scene_changed":
                 next_event['scene_name'] = event.event_data['scene_name']['string_value']
