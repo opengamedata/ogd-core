@@ -438,8 +438,13 @@
                 "enabled" : true,
                 "description" : "Triggers an event when a player collects a fact while not actively working on a job"
             },
-            "EchoRoomChange" : {
+            "DiveSiteNoEvidence" : {
                 "enabled" : true,
+                "threshold" : 30,
+                "description" : "Triggers an event when a player has gone sufficiently long at a dive site without uncovering new evidence"
+            },
+            "EchoRoomChange" : {
+                "enabled" : false,
                 "description" : "Triggers an event when a player changes rooms."
             }
         }
