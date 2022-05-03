@@ -1,13 +1,7 @@
 ## import standard libraries
-import logging
-from pydoc import describe
-import typing
-import traceback
-from datetime import datetime
 from typing import Any, Callable, Dict, List, Union
 ## import local files
 from detectors.Detector import Detector
-from detectors.DummyDetector import DummyDetector
 from features.Feature import Feature
 from processors.legacy.LegacyLoader import LegacyLoader
 from games.JOWILDER.features.JowilderExtractor import JowilderExtractor

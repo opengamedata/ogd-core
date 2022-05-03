@@ -30,7 +30,7 @@ class ShadowspectLoader(ExtractorLoader):
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shadowspect.")
         return ret_val
 
-    def _loadDetector(self, detector_type: str, name: str, detector_args: Dict[str, Any], count_index: Union[int, None] = None) -> Detector:
+    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Union[int,None] = None) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Shadowspect.")
 
     ## Constructor for the ShadowspectExtractor class.
