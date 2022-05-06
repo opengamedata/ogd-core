@@ -66,7 +66,7 @@ class AqualabLoader(ExtractorLoader):
         elif feature_type == "JobsAttempted":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobsAttempted.JobsAttempted(name=name, description=feature_args["description"], job_num=count_index, job_map=self._job_map)
+            ret_val = JobsAttempted.JobsAttempted(name=name, description=feature_args["description"], job_num=count_index, job_map=self._job_map, diff_map=self._diff_map)
         elif feature_type == "SessionDiveSitesCount":
             ret_val = SessionDiveSitesCount.SessionDiveSitesCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionDuration":
@@ -132,6 +132,7 @@ class AqualabLoader(ExtractorLoader):
         """
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
         self._job_map = {"no-active-job": 0}
+        self._diff_map = {0: {"experimentation": 0, "modeling": 0, "argumentation": 0} }
         data = None
 
         # Load Aqualab jobs export and map job names to integer values
@@ -140,6 +141,9 @@ class AqualabLoader(ExtractorLoader):
 
             for i, job in enumerate(export["jobs"], start=1):
                 self._job_map[job["id"]] = i
+                self._diff_map[i] = job["difficulties"]
+
+        print(self._diff_map)
 
         # Update AQUALAB.json level count
         with open(CONFIG_PATH, "r") as file:

@@ -533,6 +533,10 @@
                     "std-dev-complete": {
                         "type": "float",
                         "description": "Standard deviation of time taken to complete"
+                    },
+                    "job-difficulties": {
+                        "type": "dict",
+                        "description": "Difficulty of experimentation, modeling, and argumentation phases in the job"
                     }
                 }
             },
