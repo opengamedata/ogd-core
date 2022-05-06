@@ -14,7 +14,7 @@ class EventList(Feature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
-        return ["scene_changed", "accept_job", "switch_job", "complete_job", "ask_for_help", "begin_dive", "begin_model", "end_model", "begin_argument"]
+        return ["all_events"]
 
     def _getFeatureDependencies(self) -> List[str]:
         return []
