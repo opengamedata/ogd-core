@@ -11,6 +11,7 @@ from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 
 EXPORT_PATH = "games/AQUALAB/DBExport.json"
+CONFIG_PATH = "games/AQUALAB/AQUALAB.json"
 
 ## @class AqualabLoader
 #  Extractor subclass for extracting features from Aqualab game data.
@@ -131,13 +132,23 @@ class AqualabLoader(ExtractorLoader):
         """
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
         self._job_map = {"no-active-job": 0}
+        data = None
 
         # Load Aqualab jobs export and map job names to integer values
-        with open(EXPORT_PATH) as file:
+        with open(EXPORT_PATH, "r") as file:
             export = json.load(file)
 
             for i, job in enumerate(export["jobs"], start=1):
                 self._job_map[job["id"]] = i
+
+        # Update AQUALAB.json level count
+        with open(CONFIG_PATH, "r") as file:
+            data = json.load(file)
+
+        data["level_range"]["max"] = len(self._job_map) - 1
+
+        with open(CONFIG_PATH, "w") as file:
+            json.dump(data, file, indent=4)
 
     def getJobMap(self) -> Dict:
         return self._job_map
