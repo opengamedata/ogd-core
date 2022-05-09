@@ -1,5 +1,5 @@
 # import standard libraries
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Callable, List, Union
 # import local files
 from detectors.Detector import Detector
@@ -29,30 +29,33 @@ class DiveSiteNoEvidence(Detector):
         :param event: _description_
         :type event: Event
         """
-        # >>> use the data in the Event object to update state variables as needed. <<<
-        # Note that this function runs once on each Event whose name matches one of the strings returned by _getEventDependencies()
-        #
-        # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
-        # if "Click" in event.event_name:
-        #     self._found_click = True
+        if event.event_name == "scene_changed":
+            # as soon as scene changes, reset state.
+            self._has_triggered = False
+            self._time_since_evidence = 0
+            if event.event_data['scene_name'] == "dive_site":
+                self._in_dive = True
+                # if we just started a dive, use now as starting point for counting time without evidence.
+                self._last_evidence_time = event.timestamp
+            else:
+                # if we changed to a different scene, reset state.
+                self._in_dive = False
+                self._last_evidence_time = None
+        elif event.event_name == "receive_entity":
+            self._last_evidence_time = event.timestamp
+
+        if self._in_dive and self._last_evidence_time is not None and not self._has_triggered:
+            self._time_since_evidence = (event.timestamp - self._last_evidence_time).total_seconds()
         return
     
     def _trigger_condition(self) -> bool:
         """_summary_
         """
-        # >>> use the detector's state data to determine if conditions are met to trigger an event. <<<
-        # Note that this function also runs once for each Event, after the _extractFromEvent(...) function is done.
-        #
-        # e.g. check if we have found a click event, and if so, we want to trigger the custom detector Event.
-        #      in the 'True' case, we also set self._found_click back to False, so that the trigger condition is False until a new click Event is found.
-        # if self._found_click == True:
-        #     self._found_click = False
-        #     return True
-        # else:
-        #     return False
-        # note the code above is redundant, we could just return self._found_click to get the same result;
-        # the more-verbose code is here for illustrative purposes.
-        return False
+        if self._in_dive and self._time_since_evidence > self._threshold and not self._has_triggered:
+            self._has_triggered = True
+            return True
+        else:
+            return False
 
     def _trigger_event(self) -> Union[Event, None]:
         """_summary_
@@ -75,9 +78,13 @@ class DiveSiteNoEvidence(Detector):
 
     # *** BUILT-INS ***
 
-    def __init__(self, name:str, description:str, count_index:int, trigger_callback:Callable[[Event], None]):
+    def __init__(self, name:str, description:str, count_index:int, trigger_callback:Callable[[Event], None], threshold:float):
         super().__init__(name=name, description=description, count_index=count_index, trigger_callback=trigger_callback)
-        self._last_evidence_time : Union[datetime, None] = None
+        self._threshold : float = threshold
+        self._in_dive : bool    = False
+        self._last_evidence_time  : Union[datetime, None] = None
+        self._time_since_evidence : float = 0
+        self._has_triggered : bool = False
 
     # *** PUBLIC STATICS ***
 
