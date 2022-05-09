@@ -30,6 +30,7 @@ class JobsAttempted(Feature):
         self._times = []
         self._time = 0
         self._job_start_time = None
+        self._prev_timestamp = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
@@ -42,9 +43,9 @@ class JobsAttempted(Feature):
         if event.session_id != self._session_id:
             self._session_id = event.session_id
 
-            if self._time != 0:
-                self._times.append(self._time)
-                self._time = 0
+            if self._job_start_time:
+                self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
+                self._job_start_time = event.timestamp
 
         if self._validate_job(event.event_data['job_name']):
             user_code = event.user_id
@@ -60,8 +61,10 @@ class JobsAttempted(Feature):
                 self._num_completes += 1
 
                 if self._job_start_time:
-                    self._time = (event.timestamp - self._job_start_time).total_seconds()
+                    self._time += (event.timestamp - self._job_start_time).total_seconds()
                     self._job_start_time = None
+
+        self._prev_timestamp = event.timestamp
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
