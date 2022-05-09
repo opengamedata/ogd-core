@@ -127,7 +127,7 @@ def genRequest(events:bool, features:bool) -> Request:
     interface : DataInterface
     range     : ExporterRange
     exporter_files : ExporterTypes
-    exporter_files = ExporterTypes(events=events, sessions=features, population=features) 
+    exporter_files = ExporterTypes(events=events, sessions=features, players=features, population=features) 
     supported_vers = GameSchema(schema_name=f"{args.game}.json")['config']['SUPPORTED_VERS']
     if args.file is not None and args.file != "":
         raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
