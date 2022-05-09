@@ -9,6 +9,7 @@ class EchoSessionID(SessionFeature):
 
     def __init__(self, name:str, description:str):
         super().__init__(name=name, description=description)
+        self._session_id = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
