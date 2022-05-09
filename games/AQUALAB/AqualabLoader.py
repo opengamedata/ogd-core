@@ -11,6 +11,7 @@ from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 
 EXPORT_PATH = "games/AQUALAB/DBExport.json"
+CONFIG_PATH = "games/AQUALAB/AQUALAB.json"
 
 ## @class AqualabLoader
 #  Extractor subclass for extracting features from Aqualab game data.
@@ -65,7 +66,7 @@ class AqualabLoader(ExtractorLoader):
         elif feature_type == "JobsAttempted":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobsAttempted.JobsAttempted(name=name, description=feature_args["description"], job_num=count_index, job_map=self._job_map)
+            ret_val = JobsAttempted.JobsAttempted(name=name, description=feature_args["description"], job_num=count_index, job_map=self._job_map, diff_map=self._diff_map)
         elif feature_type == "SessionDiveSitesCount":
             ret_val = SessionDiveSitesCount.SessionDiveSitesCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionDuration":
@@ -131,13 +132,27 @@ class AqualabLoader(ExtractorLoader):
         """
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
         self._job_map = {"no-active-job": 0}
+        self._diff_map = {0: {"experimentation": 0, "modeling": 0, "argumentation": 0} }
+        data = None
 
         # Load Aqualab jobs export and map job names to integer values
-        with open(EXPORT_PATH) as file:
+        with open(EXPORT_PATH, "r") as file:
             export = json.load(file)
 
             for i, job in enumerate(export["jobs"], start=1):
                 self._job_map[job["id"]] = i
+                self._diff_map[i] = job["difficulties"]
+
+        print(self._diff_map)
+
+        # Update AQUALAB.json level count
+        with open(CONFIG_PATH, "r") as file:
+            data = json.load(file)
+
+        data["level_range"]["max"] = len(self._job_map) - 1
+
+        with open(CONFIG_PATH, "w") as file:
+            json.dump(data, file, indent=4)
 
     def getJobMap(self) -> Dict:
         return self._job_map

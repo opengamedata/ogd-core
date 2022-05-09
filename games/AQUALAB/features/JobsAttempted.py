@@ -10,7 +10,7 @@ from schemas.Event import Event
 
 class JobsAttempted(Feature):
 
-    def __init__(self, name:str, description:str, job_num:int, job_map:dict):
+    def __init__(self, name:str, description:str, job_num:int, job_map:dict, diff_map: dict):
         self._job_map = job_map
         super().__init__(name=name, description=description, count_index=job_num)
         self._user_code = None
@@ -24,6 +24,7 @@ class JobsAttempted(Feature):
         self._percent_complete = 0
         self._avg_time_complete = 0
         self._std_dev_complete = 0
+        self._difficulties = diff_map[job_num]
 
         # Time
         self._times = []
@@ -78,11 +79,11 @@ class JobsAttempted(Feature):
         if len(self._times) > 1:
             self._std_dev_complete = stdev(self._times)
 
-        return [self._job_id, self._job_name, self._num_starts, self._num_completes, self._percent_complete, self._avg_time_complete, self._std_dev_complete]
+        return [self._job_id, self._job_name, self._num_starts, self._num_completes, self._percent_complete, self._avg_time_complete, self._std_dev_complete, self._difficulties]
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-complete", "std-dev-complete"]
+        return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-complete", "std-dev-complete", "job-difficulties"]
 
     def MinVersion(self) -> Union[str,None]:
         return "1"

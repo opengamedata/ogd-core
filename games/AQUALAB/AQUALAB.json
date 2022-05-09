@@ -1,6 +1,8 @@
 {
-    "level_range": { "min":0, "max":43 },
-
+    "level_range": {
+        "min": 0,
+        "max": 43
+    },
     "events": {
         "accept_job": {
             "user_code": "Generated user code for the current player",
@@ -428,39 +430,35 @@
             "job_name": "String name of the current job"
         }
     },
-
-    "detectors" : {
-        "per_count" : {
-
-        },
-        "aggregate" : {
-            "CollectFactNoJob" : {
-                "enabled" : true,
-                "description" : "Triggers an event when a player collects a fact while not actively working on a job"
+    "detectors": {
+        "per_count": {},
+        "aggregate": {
+            "CollectFactNoJob": {
+                "enabled": true,
+                "description": "Triggers an event when a player collects a fact while not actively working on a job"
             },
-            "DiveSiteNoEvidence" : {
-                "enabled" : true,
-                "threshold" : 30,
-                "description" : "Triggers an event when a player has gone sufficiently long at a dive site without uncovering new evidence"
+            "DiveSiteNoEvidence": {
+                "enabled": true,
+                "threshold": 30,
+                "description": "Triggers an event when a player has gone sufficiently long at a dive site without uncovering new evidence"
             },
-            "EchoRoomChange" : {
-                "enabled" : false,
-                "description" : "Triggers an event when a player changes rooms."
+            "EchoRoomChange": {
+                "enabled": false,
+                "description": "Triggers an event when a player changes rooms."
             }
         }
     },
-
     "features": {
         "per_count": {
             "JobArgumentationTime": {
                 "enabled": true,
-                "count":"level_range",
+                "count": "level_range",
                 "prefix": "job",
                 "description": "Time spent in argumentation during a job"
             },
             "JobCompletionTime": {
                 "enabled": true,
-                "count":"level_range",
+                "count": "level_range",
                 "prefix": "job",
                 "description": "Time taken to complete a given job"
             },
@@ -472,13 +470,13 @@
             },
             "JobDiveTime": {
                 "enabled": true,
-                "count":"level_range",
+                "count": "level_range",
                 "prefix": "job",
                 "description": "Time spent diving during a job"
             },
             "JobExperimentationTime": {
                 "enabled": true,
-                "count":"level_range",
+                "count": "level_range",
                 "prefix": "job",
                 "description": "Time spent in experimentation during a job"
             },
@@ -490,13 +488,13 @@
             },
             "JobGuideCount": {
                 "enabled": true,
-                "count":"level_range",
+                "count": "level_range",
                 "prefix": "job",
                 "description": "Number of times player talked with guide during a job"
             },
             "JobHelpCount": {
                 "enabled": true,
-                "count":"level_range",
+                "count": "level_range",
                 "prefix": "job",
                 "description": "Number of times player asked for help during a job"
             },
@@ -512,57 +510,79 @@
                 "prefix": "job",
                 "description": "Subfeatures for number of job starts and completes, percent complete, and avg/std time to complete",
                 "subfeatures": {
-                    "job-name":{"type":"string", "description":"String name for a job"},
-                    "num-starts":{"type":"int", "description":"Number of accept_job events for a given job id"},
-                    "num-completes":{"type":"int", "description":"Number of complete_job events for a given job id"},
-                    "percent-complete":{"type":"float", "description":"Percent of jobs which were accepted and completed"},
-                    "avg-time-complete":{"type":"float", "description":"Average time taken from accepting to completing a job"},
-                    "std-dev-complete":{"type":"float", "description":"Standard deviation of time taken to complete"}
+                    "job-name": {
+                        "type": "string",
+                        "description": "String name for a job"
+                    },
+                    "num-starts": {
+                        "type": "int",
+                        "description": "Number of accept_job events for a given job id"
+                    },
+                    "num-completes": {
+                        "type": "int",
+                        "description": "Number of complete_job events for a given job id"
+                    },
+                    "percent-complete": {
+                        "type": "float",
+                        "description": "Percent of jobs which were accepted and completed"
+                    },
+                    "avg-time-complete": {
+                        "type": "float",
+                        "description": "Average time taken from accepting to completing a job"
+                    },
+                    "std-dev-complete": {
+                        "type": "float",
+                        "description": "Standard deviation of time taken to complete"
+                    },
+                    "job-difficulties": {
+                        "type": "dict",
+                        "description": "Difficulty of experimentation, modeling, and argumentation phases in the job"
+                    }
                 }
             },
             "SyncCompletionTime": {
                 "enabled": true,
-                "count":"level_range",
+                "count": "level_range",
                 "prefix": "job",
                 "description": "Time taken to achieve 100% sync in a simulation"
             }
         },
-        "aggregate":{
+        "aggregate": {
             "ActiveJobs": {
                 "enabled": true,
-                "description":"Count of players who left off on each job."
+                "description": "Count of players who left off on each job."
             },
-            "EventList":{
+            "EventList": {
                 "enabled": true,
                 "description": "List of key events that happened in a player's session(s)"
             },
             "SessionDiveSitesCount": {
                 "enabled": true,
-                "description":"Time spent playing in a given session"
+                "description": "Time spent playing in a given session"
             },
             "SessionDuration": {
                 "enabled": true,
-                "description":"Time spent playing in a given session"
+                "description": "Time spent playing in a given session"
             },
             "SessionGuideCount": {
                 "enabled": true,
-                "description":"Number of times player talked with the guide throughout the session"
+                "description": "Number of times player talked with the guide throughout the session"
             },
             "SessionHelpCount": {
                 "enabled": true,
-                "description":"Number of times player clicked the help button throughout the session"
+                "description": "Number of times player clicked the help button throughout the session"
             },
             "SessionID": {
                 "enabled": true,
-                "description":"The player's session ID number for this play session"
+                "description": "The player's session ID number for this play session"
             },
             "SessionJobsCompleted": {
                 "enabled": true,
-                "description":"Number of jobs completed in a given session"
+                "description": "Number of jobs completed in a given session"
             },
             "SwitchJobsCount": {
                 "enabled": true,
-                "description":"Number of times player switched jobs before completion"
+                "description": "Number of times player switched jobs before completion"
             },
             "TopJobCompletionDestinations": {
                 "enabled": true,
@@ -602,8 +622,9 @@
             }
         }
     },
-
     "config": {
-    	"SUPPORTED_VERS": [1]
-	}
+        "SUPPORTED_VERS": [
+            1
+        ]
+    }
 }
