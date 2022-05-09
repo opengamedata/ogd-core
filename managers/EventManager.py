@@ -2,7 +2,7 @@
 import json
 import logging
 from datetime import datetime
-from typing import Any, List, Type, Union
+from typing import Any, Callable, List, Type, Union
 ## import local files
 from detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
@@ -15,22 +15,15 @@ from utils import Logger
 #  Class to manage data for a csv events file.
 class EventManager:
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema,
-                 feature_overrides:Union[List[str],None]=None):
+                 trigger_callback:Callable[[Event], None], feature_overrides:Union[List[str],None]=None):
         """Constructor for EventManager.
         Just creates empty list of lines and generates list of column names.
         """
         # define instance vars
         self._lines       : List[str]        = []
         self._columns     : List[str]        = Event.ColumnNames()
-        self._processor   : EventProcessor   = EventProcessor(LoaderClass=LoaderClass,                   game_schema=game_schema,
-                                                              trigger_callback=self.ReceiveEventTrigger, feature_overrides=feature_overrides)
-        self._debug_count : int              = 0
-
-    def ReceiveEventTrigger(self, event:Event) -> None:
-        if self._debug_count < 20:
-            Logger.Log("EventManager received an event trigger.", logging.DEBUG)
-            self._debug_count += 1
-        self.ProcessEvent(event=event, separator='\t')
+        self._processor   : EventProcessor   = EventProcessor(LoaderClass=LoaderClass,           game_schema=game_schema,
+                                                              trigger_callback=trigger_callback, feature_overrides=feature_overrides)
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
         col_values = event.ColumnValues()

@@ -51,9 +51,10 @@ class ExportManager:
         :type settings: [type]
         """
         self._settings = settings
-        self._event_mgr : Union[EventManager, None]   = None
-        self._feat_mgr  : Union[FeatureManager, None] = None
-        self._file_mgr  : Union[FileManager, None]    = None
+        self._event_mgr   : Union[EventManager, None]   = None
+        self._feat_mgr    : Union[FeatureManager, None] = None
+        self._file_mgr    : Union[FileManager, None]    = None
+        self._debug_count : int                         = 0
 
     # *** PUBLIC STATICS ***
 
@@ -110,6 +111,13 @@ class ExportManager:
 
     # *** PRIVATE METHODS ***
 
+    def _receiveEventTrigger(self, event:Event) -> None:
+        # TODO: consider how to put a limit on times this runs, based on how big export is.
+        if self._debug_count < 20:
+            Logger.Log("ExportManager received an event trigger.", logging.DEBUG)
+            self._debug_count += 1
+        self._processEvent(next_event=event)
+
     def _loadTableSchema(self, _game_id:str):
         if "GAME_SOURCE_MAP" in self._settings:
             _table_name = self._settings["GAME_SOURCE_MAP"][_game_id]["table"]
@@ -122,7 +130,8 @@ class ExportManager:
         load_class = self._loadLoaderClass(game_schema._game_name)
         if load_class is not None:
             if request.ExportEvents:
-                self._event_mgr = EventManager(LoaderClass=load_class, game_schema=game_schema, feature_overrides=feature_overrides)
+                self._event_mgr = EventManager(LoaderClass=load_class,                     game_schema=game_schema,
+                                               trigger_callback=self._receiveEventTrigger, feature_overrides=feature_overrides)
             else:
                 Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
             if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
