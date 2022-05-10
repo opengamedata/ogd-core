@@ -109,6 +109,8 @@ class AqualabLoader(ExtractorLoader):
         ret_val : Detector
         if detector_type == "CollectFactNoJob":
             ret_val = CollectFactNoJob.CollectFactNoJob(name=name, description=detector_args["description"], trigger_callback=trigger_callback)
+        if detector_type == "DiveSiteNoEvidence":
+            ret_val = DiveSiteNoEvidence.DiveSiteNoEvidence(name=name, description=detector_args["description"], trigger_callback=trigger_callback, threshold=detector_args['threshold'])
         elif detector_type == "EchoRoomChange":
             ret_val = EchoRoomChange.EchoRoomChange(name=name, description=detector_args["description"], trigger_callback=trigger_callback)
         else:
@@ -143,7 +145,7 @@ class AqualabLoader(ExtractorLoader):
                 self._job_map[job["id"]] = i
                 self._diff_map[i] = job["difficulties"]
 
-        print(self._diff_map)
+        # print(self._diff_map)
 
         # Update AQUALAB.json level count
         with open(CONFIG_PATH, "r") as file:
