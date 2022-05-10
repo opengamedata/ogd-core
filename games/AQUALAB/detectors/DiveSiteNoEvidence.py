@@ -33,7 +33,8 @@ class DiveSiteNoEvidence(Detector):
             # as soon as scene changes, reset state.
             self._has_triggered = False
             self._time_since_evidence = 0
-            if event.event_data['scene_name'] == "dive_site":
+            scene : str = event.event_data['scene_name']['string_value']
+            if scene.startswith("RS-"):
                 self._in_dive = True
                 # if we just started a dive, use now as starting point for counting time without evidence.
                 self._last_evidence_time = event.timestamp
@@ -78,8 +79,8 @@ class DiveSiteNoEvidence(Detector):
 
     # *** BUILT-INS ***
 
-    def __init__(self, name:str, description:str, count_index:int, trigger_callback:Callable[[Event], None], threshold:float):
-        super().__init__(name=name, description=description, count_index=count_index, trigger_callback=trigger_callback)
+    def __init__(self, name:str, description:str, trigger_callback:Callable[[Event], None], threshold:float):
+        super().__init__(name=name, description=description, count_index=0, trigger_callback=trigger_callback)
         self._threshold : float = threshold
         self._in_dive : bool    = False
         self._last_evidence_time  : Union[datetime, None] = None
