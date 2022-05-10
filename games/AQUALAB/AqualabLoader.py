@@ -145,11 +145,6 @@ class AqualabLoader(ExtractorLoader):
                 self._job_map[job["id"]] = i
                 self._diff_map[i] = job["difficulties"]
 
-<<<<<<< HEAD
-        # print(self._diff_map)
-
-=======
->>>>>>> 06fcc17e4a04b8c70499001e43b1f944f72cac0f
         # Update AQUALAB.json level count
         #with open(CONFIG_PATH, "r") as file:
         #    data = json.load(file)
