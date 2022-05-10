@@ -44,6 +44,8 @@ class ShipwrecksLoader(ExtractorLoader):
                 raise TypeError("Got None for count_index, should have a value!")
             else:
                 ret_val = MissionSonarTimeToComplete.MissionSonarTimeToComplete(name=name, description=feature_args["description"], job_num=count_index)
+        elif feature_type == "EventList":
+            ret_val = EventList.EventList(name=name, description=feature_args["description"])
         elif feature_type == "EvidenceBoardCompleteCount":
             ret_val = EvidenceBoardCompleteCount.EvidenceBoardCompleteCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionID":

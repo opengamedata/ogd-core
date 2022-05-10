@@ -1,5 +1,6 @@
 __all__ = [
     "ActiveJobs",
+    "EventList",
     "EvidenceBoardCompleteCount",
     "JobsAttempted",
     "MissionDiveTime",
@@ -11,6 +12,7 @@ __all__ = [
 ]
 
 from . import ActiveJobs
+from . import EventList
 from . import EvidenceBoardCompleteCount
 from . import JobsAttempted
 from . import MissionDiveTime
