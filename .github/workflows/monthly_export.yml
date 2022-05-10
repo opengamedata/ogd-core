@@ -29,14 +29,14 @@ jobs:
         export_default_credentials: true
     - if: ${{ matrix.game == 'SHADOWSPECT' }}
       name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ secrets.SHADOWSPECT_BQ_PROJECT_ID }}
         service_account_key: ${{ secrets.SHADOWSPECT_BQ_KEY }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'SHIPWRECKS' }}
       name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@master
+      uses: ggoogle-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ secrets.SHIPWRECKS_BQ_PROJECT_ID }}
         service_account_key: ${{ secrets.SHIPWRECKS_BQ_KEY }}
