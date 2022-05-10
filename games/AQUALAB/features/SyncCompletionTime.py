@@ -14,8 +14,8 @@ class SyncCompletionTime(Feature):
         super().__init__(name=name, description=description, count_index=0)
         self._session_id = None
         self._sim_start_time = None
+        self._prev_timestamp = None
         self._time = 0
-        self._times = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
@@ -26,28 +26,26 @@ class SyncCompletionTime(Feature):
     def _extractFromEvent(self, event:Event) -> None:
         if event.session_id != self._session_id:
             self._session_id = event.session_id
-            self._times.append(self._time)
-            self._time = 0
+
+            if self._sim_start_time:
+                self._time += (self._prev_timestamp - self._sim_start_time).total_seconds()
+                self._sim_start_time = event.timestamp
 
         if event.event_name == "begin_simulation":
             self._sim_start_time = event.timestamp
         elif event.event_name == "simulation_sync_achieved":
             if self._sim_start_time is not None:
-                self._time = (event.timestamp - self._sim_start_time).total_seconds()
+                self._time += (event.timestamp - self._sim_start_time).total_seconds()
                 self._sim_start_time = None
             else:
                 Logger.Log("Simulation synced when we had no active start time!", logging.WARNING)
+
+        self._prev_timestamp = event.timestamp
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        if self._time != 0:
-            self._times.append(self._time)
-
-        if len(self._times) > 0:
-            return [timedelta(seconds=sum(self._times))]
-        else:
-            return [0]
+        return [timedelta(seconds=self._time)]
 
     # *** Optionally override public functions. ***

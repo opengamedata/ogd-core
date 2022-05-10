@@ -15,8 +15,8 @@ class JobArgumentationTime(Feature):
         super().__init__(name=name, description=description, count_index=job_num)
         self._session_id = None
         self._argument_start_time : Union[datetime, None] = None
+        self._prev_timestamp = None
         self._time = 0
-        self._times = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
@@ -28,8 +28,10 @@ class JobArgumentationTime(Feature):
     def _extractFromEvent(self, event:Event) -> None:
         if event.session_id != self._session_id:
             self._session_id = event.session_id
-            self._times.append(self._time)
-            self._time = 0
+            
+            if self._argument_start_time:
+                self._time += (self._prev_timestamp - self._argument_start_time).total_seconds()
+                self._argument_start_time = event.timestamp
 
         if self._validate_job(event.event_data["job_name"]):
             if event.event_name == "begin_argument":
@@ -37,18 +39,14 @@ class JobArgumentationTime(Feature):
             elif event.event_name == "room_changed" and self._argument_start_time is not None:
                 self._time += (event.timestamp - self._argument_start_time).total_seconds()
                 self._argument_start_time = None
+        
+        self._prev_timestamp = event.timestamp
     
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        if self._time != 0:
-            self._times.append(self._time)
-
-        if len(self._times) > 0:
-            return [timedelta(seconds=sum(self._times))]
-        else:
-            return [0]
+        return [timedelta(seconds=self._time)]
 
     # *** Optionally override public functions. ***
     def MinVersion(self) -> Union[str,None]:
