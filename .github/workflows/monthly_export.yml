@@ -22,7 +22,7 @@ jobs:
       # A bunch of copy-paste crap to set up google cloud for any given game.
     - if: ${{ matrix.game == 'AQUALAB' }}
       name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ secrets.AQUALAB_BQ_PROJECT_ID }}
         service_account_key: ${{ secrets.AQUALAB_BQ_KEY }}
