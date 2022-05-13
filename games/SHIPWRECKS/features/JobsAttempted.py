@@ -14,6 +14,7 @@ class JobsAttempted(Feature):
         super().__init__(name=name, description=description, count_index=mission_num)
         self._session_id = None
         self._start_map = defaultdict(list)
+        self._complete_map = defaultdict(list)
 
         # Subfeatures
         self._mission_id = mission_num
@@ -41,15 +42,19 @@ class JobsAttempted(Feature):
         mission_name = event.event_data["mission_id"]["string_value"]
         mission_id = self._mission_map[mission_name]
 
-        if checkpoint == "Begin Mission" and mission_id == self._mission_id and session_id not in self._start_map[mission_id]:
-            self._num_starts += 1
-            self._session_id = session_id
-            self._mission_start_time = event.timestamp
-            self._start_map[mission_id].append(session_id)
-            self._session_id = session_id
+        if checkpoint == "Begin Mission":
+            if mission_name == "Level4" and session_id not in self._complete_map[2]:
+                return
+            elif mission_id == self._mission_id and session_id not in self._start_map[mission_id]:
+                self._num_starts += 1
+                self._session_id = session_id
+                self._mission_start_time = event.timestamp
+                self._start_map[mission_id].append(session_id)
+                self._session_id = session_id
 
         elif checkpoint == "Case Closed" and mission_id == self._mission_id and session_id == self._session_id:
             self._num_completes += 1
+            self._complete_map[mission_id].append(session_id)
 
             if self._mission_start_time:
                 self._times.append((event.timestamp - self._mission_start_time).total_seconds())
