@@ -52,13 +52,16 @@ class JobsAttempted(Feature):
                 self._start_map[mission_id].append(session_id)
                 self._session_id = session_id
 
-        elif checkpoint == "Case Closed" and mission_id == self._mission_id and session_id == self._session_id:
-            self._num_completes += 1
+        elif checkpoint == "Case Closed":
             self._complete_map[mission_id].append(session_id)
 
-            if self._mission_start_time:
-                self._times.append((event.timestamp - self._mission_start_time).total_seconds())
-                self._mission_start_time = None
+            if mission_id == self._mission_id and session_id == self._session_id:
+                self._num_completes += 1
+                self._complete_map[mission_id].append(session_id)
+
+                if self._mission_start_time:
+                    self._times.append((event.timestamp - self._mission_start_time).total_seconds())
+                    self._mission_start_time = None
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
