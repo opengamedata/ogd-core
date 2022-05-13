@@ -1,6 +1,6 @@
 # import libraries
 import json
-from typing import Any, List, Union
+from typing import Any, List
 # import locals
 from features.Feature import Feature
 from schemas.FeatureData import FeatureData
@@ -10,7 +10,6 @@ class EventList(Feature):
 
     def __init__(self, name:str, description:str):
         super().__init__(name=name, description=description, count_index=0)
-        print("SETUP")
         self._event_list = []
         self._mission_id = None
 
@@ -33,6 +32,10 @@ class EventList(Feature):
             "job_name": self._mission_id,
             "index": event.event_sequence_index
         }
+
+        if event.event_name == "checkpoint":
+            next_event["status"] = event.event_data["status"]["string_value"]
+
         self._event_list.append(next_event)
 
     def _extractFromFeatureData(self, feature: FeatureData):
