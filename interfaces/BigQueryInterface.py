@@ -14,6 +14,13 @@ AQUALAB_MIN_VERSION = 6.2
 
 class BigQueryInterface(DataInterface):
 
+    # *** PUBLIC BUILT-INS ***
+
+    def __init__(self, game_id: str, settings):
+        super().__init__(game_id=game_id)
+        self._settings = settings
+        self.Open()
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _open(self, force_reopen: bool = False) -> bool:
@@ -241,13 +248,6 @@ class BigQueryInterface(DataInterface):
         """
         data = list(self._client.query(query))
         return {'min':datetime.strptime(data[0][0], "%m-%d-%Y %H:%M:%S"), 'max':datetime.strptime(data[0][1], "%m-%d-%Y %H:%M:%S")}
-
-    # *** PUBLIC BUILT-INS ***
-
-    def __init__(self, game_id: str, settings):
-        super().__init__(game_id=game_id)
-        self._settings = settings
-        self.Open()
 
     # *** PUBLIC METHODS ***
     def IsOpen(self) -> bool:

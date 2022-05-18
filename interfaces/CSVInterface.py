@@ -11,6 +11,16 @@ from utils import Logger
 
 class CSVInterface(DataInterface):
 
+    # *** PUBLIC BUILT-INS ***
+
+    def __init__(self, game_id:str, filepath:Path, delim:str = ','):
+        # set up data from params
+        super().__init__(game_id=game_id)
+        self._filepath  : Path = filepath
+        self._delimiter : str = delim
+        # set up data from file
+        self._data      : pd.DataFrame = pd.DataFrame()
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _open(self) -> bool:
@@ -68,13 +78,3 @@ class CSVInterface(DataInterface):
             min_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].min()
             max_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].max()
         return {'min':pd.to_datetime(min_date), 'max':pd.to_datetime(max_date)}
-
-    # *** PUBLIC BUILT-INS ***
-
-    def __init__(self, game_id:str, filepath:Path, delim:str = ','):
-        # set up data from params
-        super().__init__(game_id=game_id)
-        self._filepath  : Path = filepath
-        self._delimiter : str = delim
-        # set up data from file
-        self._data      : pd.DataFrame = pd.DataFrame()

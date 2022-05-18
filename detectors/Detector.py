@@ -25,6 +25,12 @@ class Detector(Extractor):
     def _trigger_event(self) -> DetectorEvent:
         pass
 
+    # *** PUBLIC BUILT-INS ***
+
+    def __init__(self, name:str, description:str, count_index:int, trigger_callback:Callable[[Event], None]):
+        super().__init__(name=name, description=description, count_index=count_index)
+        self._callback    = trigger_callback
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _getFeatureDependencies(self) -> List[str]:
@@ -36,12 +42,6 @@ class Detector(Extractor):
         :rtype: List[str]
         """
         return []
-
-    # *** PUBLIC BUILT-INS ***
-
-    def __init__(self, name:str, description:str, count_index:int, trigger_callback:Callable[[Event], None]):
-        super().__init__(name=name, description=description, count_index=count_index)
-        self._callback    = trigger_callback
 
     # *** PUBLIC STATICS ***
 
