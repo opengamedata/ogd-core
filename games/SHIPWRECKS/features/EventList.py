@@ -13,6 +13,17 @@ class EventList(Feature):
         self._event_list = []
         self._mission_id = None
 
+        # Map of event names to primary detail parameter and its type
+        self._details_map = {
+            "scene_load":               ("scene", "string_value"),
+            "checkpoint":               ("status", "string_value"),
+            "new_evidence":             ("evidence_id", "string_value"),
+            "sonar_percentage_update":  ("percentage", "int_value"),
+            "dive_moveto_location":     ("next_node_id", "string_value"),
+            "dive_photo_click":         ("accurate", "string_value"),
+            "view_dialog":              ("dialog_id", "string_value")
+        }
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
         return ["all_events"]
@@ -30,11 +41,15 @@ class EventList(Feature):
             "session_id": event.session_id,
             "timestamp": event.timestamp.isoformat(),
             "job_name": self._mission_id,
-            "index": event.event_sequence_index
+            "index": event.event_sequence_index,
+            "event_primary_detail": None
         }
 
-        if event.event_name == "checkpoint":
-            next_event["status"] = event.event_data["status"]["string_value"]
+        if event.event_name in self._details_map:
+            param_name = self._details_map[event.event_name][0]
+            param_type = self._details_map[event.event_name][1]
+
+            next_event["event_primary_detail"] = event.event_data[param_name][param_type]
 
         self._event_list.append(next_event)
 
