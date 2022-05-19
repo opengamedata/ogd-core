@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from enum import IntEnum
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Union
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 
 class EventSource(IntEnum):
@@ -13,9 +13,9 @@ class EventSource(IntEnum):
 #  Then the extractors etc. can just access columns in a direct manner.
 class Event:
     def __init__(self, session_id:str, app_id:str,   timestamp:datetime, event_name:str, event_data:Map, event_source:EventSource,
-                 app_version:Union[str,None] = None, log_version:Union[str,None] = None, time_offset:Union[int,None] = None,
-                 user_id:Union[str,None] = "",   user_data:Union[Map,None] = {},
-                 game_state:Union[Map,None] = {}, event_sequence_index:Union[int,None] = None):
+                 app_version:Optional[str] = None, log_version:Optional[str] = None, time_offset:Optional[int] = None,
+                 user_id:Optional[str] = "",   user_data:Optional[Map] = {},
+                 game_state:Optional[Map] = {}, event_sequence_index:Optional[int] = None):
         """Constructor for an Event object.
 
         :param session_id: An identifier for the session during which the event occurred.
@@ -29,19 +29,19 @@ class Event:
         :param event_data: A "blob" of all data specific to the event type, contents vary by game and event type.
         :type  event_data: Dict[str,Any]
         :param app_version: The version of the given game that created the event.
-        :type  app_version: Union[int,None], optional
+        :type  app_version: Optional[int], optional
         :param log_version: The version of the given game's logging code (may or may not correspond to game's versioning)
-        :type  log_version: Union[int,None], optional
+        :type  log_version: Optional[int], optional
         :param time_offset: [description], defaults to None
-        :type  time_offset: Union[int,None], optional
+        :type  time_offset: Optional[int], optional
         :param user_id: Optional identifier for the specific user during whose session the event occurred. Defaults to None.
-        :type  user_id: Union[int,None], optional
+        :type  user_id: Optional[int], optional
         :param user_data: [description], defaults to None
-        :type  user_data: Union[Dict[str,Any],None], optional
+        :type  user_data: Optional[Dict[str,Any]], optional
         :param game_state: [description], defaults to None
-        :type  game_state: Union[Dict[str,Any],None], optional
+        :type  game_state: Optional[Dict[str,Any]], optional
         :param event_sequence_index: [description], defaults to None
-        :type  event_sequence_index: Union[int,None], optional
+        :type  event_sequence_index: Optional[int], optional
         """
         # TODO: event source, e.g. from game or from detector
         self.session_id           : str             = session_id
@@ -52,11 +52,11 @@ class Event:
         self.event_source         : EventSource     = event_source
         self.app_version          : str             = app_version if app_version is not None else "0"
         self.log_version          : str             = log_version if log_version is not None else "0"
-        self.time_offset          : Union[int,None] = time_offset
-        self.user_id              : Union[str,None] = user_id
+        self.time_offset          : Optional[int] = time_offset
+        self.user_id              : Optional[str] = user_id
         self.user_data            : Map             = user_data if user_data is not None else {}
         self.game_state           : Map             = game_state if game_state is not None else {}
-        self.event_sequence_index : Union[int,None] = event_sequence_index
+        self.event_sequence_index : Optional[int] = event_sequence_index
 
     def __str__(self):
         return f"session_id   : {self.session_id}\n"\

@@ -1,7 +1,7 @@
 # import standard libraries
 import logging
 import traceback
-from typing import Any, List, Dict, IO, Type, Union
+from typing import Any, List, Dict, IO, Type, Optional
 # import local files
 from utils import Logger
 from extractors.ExtractorRegistry import ExtractorRegistry
@@ -68,7 +68,7 @@ class SessionProcessor(FeatureProcessor):
 
     ## Constructor for the SessionProcessor class.
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, player_id:str, session_id:str,
-                 feature_overrides:Union[List[str],None]=None):
+                 feature_overrides:Optional[List[str]]=None):
         """Constructor for the SessionProcessor class.
         Simply stores some data for use later, including the type of extractor to
         use.
@@ -83,9 +83,9 @@ class SessionProcessor(FeatureProcessor):
         :param session_id: _description_
         :type session_id: str
         :param feature_overrides: _description_, defaults to None
-        :type feature_overrides: Union[List[str],None], optional
+        :type feature_overrides: Optional[List[str]], optional
         :param session_file: _description_, defaults to None
-        :type session_file: Union[IO[str],None], optional
+        :type session_file: Optional[IO[str]], optional
         """
         ## Define instance vars
         self._session_id   : str = session_id

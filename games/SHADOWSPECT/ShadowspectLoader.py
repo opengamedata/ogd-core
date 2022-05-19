@@ -1,5 +1,5 @@
 ## import standard libraries
-from typing import Any, Callable, Dict, List, Union
+from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from detectors.Detector import Detector
 from games.SHADOWSPECT.features import *
@@ -14,7 +14,7 @@ class ShadowspectLoader(ExtractorLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Optional[int] = None) -> Feature:
         ret_val : Feature
         if feature_type == "MoveShapeCount":
             ret_val = MoveShapeCount.MoveShapeCount(name=name, description=feature_args["description"])
@@ -30,11 +30,11 @@ class ShadowspectLoader(ExtractorLoader):
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shadowspect.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Union[int,None] = None) -> Detector:
+    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Shadowspect.")
 
     ## Constructor for the ShadowspectExtractor class.
-    def __init__(self, player_id:str, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]=None):
+    def __init__(self, player_id:str, session_id: str, game_schema: GameSchema, feature_overrides:Optional[List[str]]=None):
         """Constructor for the CrystalLoader class.
 
         :param player_id: _description_
@@ -44,7 +44,7 @@ class ShadowspectLoader(ExtractorLoader):
         :param game_schema: A data structure containing information on how the game events and other data are structured
         :type game_schema: GameSchema
         :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
-        :type feature_overrides: Union[List[str],None]
+        :type feature_overrides: Optional[List[str]]
         """
         self._game_schema = game_schema
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)

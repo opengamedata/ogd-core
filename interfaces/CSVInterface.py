@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 from pandas.io.parsers import TextFileReader
 from pathlib import Path
-from typing import Any, Dict, IO, List, Tuple, Union
+from typing import Any, Dict, IO, List, Tuple, Optional
 ## import local files
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
@@ -35,7 +35,7 @@ class CSVInterface(DataInterface):
         max_time = pd.to_datetime(self._data['server_time'].max())
         return {'min':min_time, 'max':max_time}
 
-    def _rowsFromIDs(self, id_list: List[str], id_mode:IDMode=IDMode.SESSION, versions: Union[List[int],None]=None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list: List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> List[Tuple]:
         if self.IsOpen() and self._data != None:
             if id_mode == IDMode.SESSION:
                 return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
@@ -46,7 +46,7 @@ class CSVInterface(DataInterface):
         else:
             return []
 
-    def _IDsFromDates(self, min:datetime, max:datetime, versions:Union[List[int],None]=None) -> List[str]:
+    def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]]=None) -> List[str]:
         if not self._data.empty:
             server_times = pd.to_datetime(self._data['server_time'])
             mask = (server_times >= min) & (server_times <= max)
@@ -57,7 +57,7 @@ class CSVInterface(DataInterface):
         else:
             return []
 
-    def _datesFromIDs(self, id_list:List[int], id_mode:IDMode=IDMode.SESSION, versions: Union[List[int],None]=None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[int], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Dict[str, datetime]:
         if id_mode == IDMode.SESSION:
             min_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].min()
             max_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].max()

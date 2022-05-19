@@ -2,7 +2,7 @@
 import bisect
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional
 ## import local files
 from utils import Logger
 from processors.legacy.LegacyFeature import LegacyFeature

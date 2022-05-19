@@ -1,6 +1,6 @@
 # standard libraries
 import json
-from typing import Any, Dict, List, Union
+from typing import List, Optional
 # local imports
 from coding.Coder import Coder
 from utils import map
@@ -13,14 +13,14 @@ class Code:
 
         @staticmethod
         def FromJSON(json_obj:map):
-            _session_id : Union[str, None] = json_obj.get("session_id", None)
-            _index      : Union[str, None] = json_obj.get("index", None)
+            _session_id : Optional[str] = json_obj.get("session_id", None)
+            _index      : Optional[int] = json_obj.get("index", None)
             if _index is None:
                 raise ValueError("JSON object for Coder has no 'name' element!")
             elif _session_id is None:
                 raise ValueError("JSON object for Coder has no 'id' element!")
             else:
-                return Code.EventID(name=_index, id=_session_id)
+                return Code.EventID(sess_id=_session_id, index=_index)
 
         @property
         def SessionID(self):
@@ -30,7 +30,7 @@ class Code:
         def Index(self):
             return self._index
 
-    def __init__(self, code_word:str, id:str, coder:Coder, events:List[EventID], notes:Union[str, None]=None):
+    def __init__(self, code_word:str, id:str, coder:Coder, events:List[EventID], notes:Optional[str]=None):
         self._code   = code_word
         self._id     = id
         self._coder  = coder
@@ -39,11 +39,11 @@ class Code:
 
     @staticmethod
     def FromJSON(json_obj:map):
-        _code_word  : Union[str, None]       = json_obj.get("code_word", None)
-        _id         : Union[str, None]       = json_obj.get("id", None)
-        _coder_obj  : Union[map, None]       = json_obj.get("coder", None)
-        _events_obj : Union[List[map], None] = json_obj.get("events", None)
-        _notes      : Union[str, None]       = json_obj.get("notes", None)
+        _code_word  : Optional[str]       = json_obj.get("code_word", None)
+        _id         : Optional[str]       = json_obj.get("id", None)
+        _coder_obj  : Optional[map]       = json_obj.get("coder", None)
+        _events_obj : Optional[List[map]] = json_obj.get("events", None)
+        _notes      : Optional[str]       = json_obj.get("notes", None)
         if _code_word is None:
             raise ValueError("JSON object for Code has no 'code_word' element!")
         elif _id is None:

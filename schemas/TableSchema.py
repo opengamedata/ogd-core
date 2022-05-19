@@ -6,7 +6,7 @@ import os
 import logging
 import traceback
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Tuple, Optional
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 ## import local files
 import utils
@@ -106,11 +106,11 @@ class TableSchema:
         edata   : Map
         app_ver : str
         log_ver : str
-        offset  : Union[int,None]
-        uid     : Union[str,None]
-        udata   : Union[Map,None]
-        state   : Union[Map,None]
-        index   : Union[int,None]
+        offset  : Optional[int]
+        uid     : Optional[str]
+        udata   : Optional[Map]
+        state   : Optional[Map]
+        index   : Optional[int]
 
         column_names = self.ColumnNames()
         row_dict = {col_i : row[i].isoformat() if type(row[i]) == datetime else str(row[i]) for i,col_i in enumerate(column_names)}

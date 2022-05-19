@@ -1,6 +1,6 @@
 ## import standard libraries
 import abc
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional
 # import locals
 from extractors.Extractor import Extractor
 from schemas.FeatureData import FeatureData
@@ -39,7 +39,7 @@ class Feature(Extractor):
 
     # *** PUBLIC BUILT-INS and FORMATTERS ***
 
-    def ToFeatureData(self, player_id:Union[str, None]=None, sess_id:Union[str, None]=None) -> FeatureData:
+    def ToFeatureData(self, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureData:
         return FeatureData(
             name=self.Name,
             count_index=self._count_index,

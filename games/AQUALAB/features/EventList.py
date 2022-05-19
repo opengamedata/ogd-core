@@ -1,6 +1,6 @@
 # import libraries
 import json
-from typing import Any, List, Union
+from typing import Any, List, Optional
 # import locals
 from features.Feature import Feature
 from schemas.FeatureData import FeatureData
@@ -94,5 +94,5 @@ class EventList(Feature):
         return [json.dumps(self._event_list)]
 
     # *** Optionally override public functions. ***
-    def MinVersion(self) -> Union[str,None]:
+    def MinVersion(self) -> Optional[str]:
         return "1"

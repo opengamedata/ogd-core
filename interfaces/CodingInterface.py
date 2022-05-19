@@ -1,7 +1,7 @@
 ## import standard libraries
 import abc
 from enum import IntEnum
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Optional
 
 # import local files
 from coding.Code import Code
@@ -19,7 +19,7 @@ class CodingInterface(Interface):
     # *** ABSTRACTS ***
 
     @abc.abstractmethod
-    def _allCoders(self) -> Union[List[Coder], None]:
+    def _allCoders(self) -> Optional[List[Coder]]:
         pass
 
     @abc.abstractmethod
@@ -27,27 +27,27 @@ class CodingInterface(Interface):
         pass
 
     @abc.abstractmethod
-    def _getCodeWordsBySession(self, session_id:str) -> Union[List[str], None]:
+    def _getCodeWordsBySession(self, session_id:str) -> Optional[List[str]]:
         pass
 
     @abc.abstractmethod
-    def _getCodeWordsByCoder(self, coder_id:str) -> Union[List[str], None]:
+    def _getCodeWordsByCoder(self, coder_id:str) -> Optional[List[str]]:
         pass
 
     @abc.abstractmethod
-    def _getCodeWordsByGame(self, session_id:str) -> Union[List[str], None]:
+    def _getCodeWordsByGame(self, session_id:str) -> Optional[List[str]]:
         pass
 
     @abc.abstractmethod
-    def _getCodesBySession(self, session_id:str) -> Union[List[Code], None]:
+    def _getCodesBySession(self, session_id:str) -> Optional[List[Code]]:
         pass
 
     @abc.abstractmethod
-    def _getCodesByCoder(self, coder_name:str) -> Union[List[Code], None]:
+    def _getCodesByCoder(self, coder_name:str) -> Optional[List[Code]]:
         pass
 
     @abc.abstractmethod
-    def _createCode(self, code:str, coder:Coder, events:List[Code.EventID], notes:Union[str, None]=None):
+    def _createCode(self, code:str, coder:Coder, events:List[Code.EventID], notes:Optional[str]=None):
         pass
 
     # *** PUBLIC BUILT-INS ***
@@ -63,7 +63,7 @@ class CodingInterface(Interface):
 
     # *** PUBLIC METHODS ***
 
-    def AllCoders(self) -> Union[List[Coder], None]:
+    def AllCoders(self) -> Optional[List[Coder]]:
         ret_val = None
         if self.IsOpen():
             ret_val = self._allCoders()

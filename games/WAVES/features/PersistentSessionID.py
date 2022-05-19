@@ -1,6 +1,6 @@
 # import libraries
 from schemas import Event
-from typing import Any, List, Union
+from typing import Any, List, Optional
 # import locals
 from schemas.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
@@ -9,7 +9,7 @@ from schemas.Event import Event
 class PersistentSessionID(SessionFeature):
     def __init__(self, name:str, description:str):
         SessionFeature.__init__(self, name=name, description=description)
-        self._persistent_id : Union[int,None] = None
+        self._persistent_id : Optional[int] = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:

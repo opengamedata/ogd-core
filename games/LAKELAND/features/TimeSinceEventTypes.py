@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict, Any, Union, Tuple, Callable
+from typing import List, Optional, Dict, Any, Optional, Tuple, Callable
 from collections import defaultdict
 from models.SequenceModel import SequenceModel
 import datetime

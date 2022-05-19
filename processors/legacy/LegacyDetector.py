@@ -1,6 +1,6 @@
 # import standard libraries
 from datetime import datetime
-from typing import Any, List, Union
+from typing import Any, List, Optional
 # import local files
 from detectors.Detector import Detector
 from schemas.Event import EventSource
@@ -31,7 +31,7 @@ class LegacyDetector(Detector):
     def _trigger_condition(self) -> bool:
         return False
 
-    def _trigger_event(self) -> Union[Event, None]:
+    def _trigger_event(self) -> Optional[Event]:
         """_summary_
 
         :return: _description_

@@ -2,7 +2,7 @@
 import logging
 from datetime import datetime
 from schemas import Event
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional
 # import locals
 from utils import Logger
 from schemas.FeatureData import FeatureData

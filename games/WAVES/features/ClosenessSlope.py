@@ -1,6 +1,6 @@
 # import libraries
 from schemas import Event
-from typing import Any, List, Union
+from typing import Any, List, Optional
 # import locals
 from features.Feature import Feature
 from schemas.FeatureData import FeatureData

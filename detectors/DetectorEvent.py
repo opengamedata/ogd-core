@@ -1,16 +1,17 @@
 # import libraries
 import abc
 from datetime import datetime
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, Optional
 # import locals
 from schemas.Event import Event, EventSource
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 
 class DetectorEvent(Event):
-   def __init__(self, session_id:str,  app_id:str, event_name:str,    event_data:Map, timestamp:datetime=datetime.now(),
-                app_version:Union[str, None]=None, log_version:Union[str, None]=None, time_offset:Union[int,None] = None,
-                user_id:Union[str,None] = "",      user_data:Union[Map,None] = {},
-                game_state:Union[Map,None] = {},   event_sequence_index:Union[int,None] = None):
+   def __init__(self, session_id:str,  app_id:str, event_name:str,    event_data:Map,
+                timestamp:datetime=datetime.now(), time_offset:Optional[int] = None,
+                app_version:Optional[str]=None,    log_version:Optional[str]=None,
+                user_id:Optional[str] = "",        user_data:Optional[Map] = {},
+                game_state:Optional[Map] = {},     event_sequence_index:Optional[int] = None):
       """Constructor for the simple DetectorEvent wrapper.
 
       :param session_id: _description_
@@ -24,19 +25,19 @@ class DetectorEvent(Event):
       :param timestamp: _description_, defaults to datetime.now()
       :type timestamp: datetime, optional
       :param app_version: _description_, defaults to None
-      :type app_version: Union[str, None], optional
+      :type app_version: Optional[str], optional
       :param log_version: _description_, defaults to None
-      :type log_version: Union[str, None], optional
+      :type log_version: Optional[str], optional
       :param time_offset: _description_, defaults to None
-      :type time_offset: Union[int,None], optional
+      :type time_offset: Optional[int], optional
       :param user_id: _description_, defaults to ""
-      :type user_id: Union[str,None], optional
+      :type user_id: Optional[str], optional
       :param user_data: _description_, defaults to {}
-      :type user_data: Union[Map,None], optional
+      :type user_data: Optional[Map], optional
       :param game_state: _description_, defaults to {}
-      :type game_state: Union[Map,None], optional
+      :type game_state: Optional[Map], optional
       :param event_sequence_index: _description_, defaults to None
-      :type event_sequence_index: Union[int,None], optional
+      :type event_sequence_index: Optional[int], optional
       """
       super().__init__(session_id=session_id,   app_id=app_id,           timestamp=timestamp,
                        event_name=event_name,   event_data=event_data,   event_source=EventSource.GENERATED,

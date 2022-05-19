@@ -1,7 +1,7 @@
 # import standard libraries
 import logging
 import traceback
-from typing import Any, Dict, IO, List, Type, Union
+from typing import Any, Dict, IO, List, Type, Optional
 # import local files
 from extractors.ExtractorRegistry import ExtractorRegistry
 from schemas.FeatureData import FeatureData
@@ -114,7 +114,7 @@ class PopulationProcessor(FeatureProcessor):
 
     ## Constructor for the PopulationProcessor class.
     def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema,
-                 feature_overrides:Union[List[str],None]=None):
+                 feature_overrides:Optional[List[str]]=None):
         """Constructor for the PopulationProcessor class.
         Simply stores some data for use later, including the type of extractor to use.
 
@@ -124,9 +124,9 @@ class PopulationProcessor(FeatureProcessor):
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema
         :param feature_overrides: _description_, defaults to None
-        :type feature_overrides: Union[List[str],None], optional
+        :type feature_overrides: Optional[List[str]], optional
         :param pop_file: _description_, defaults to None
-        :type pop_file: Union[IO[str],None], optional
+        :type pop_file: Optional[IO[str]], optional
         """
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         # Set up dict of sub-processors to handle each player.

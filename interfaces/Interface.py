@@ -2,7 +2,7 @@
 import abc
 import logging
 from datetime import datetime
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Optional
 
 # import local files
 from schemas.IDMode import IDMode

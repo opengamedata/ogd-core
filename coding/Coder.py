@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict, Union
+from typing import Any, Dict, Optional
 
 class Coder:
     def __init__(self, name:str, id:str):
@@ -8,8 +8,8 @@ class Coder:
 
     @staticmethod
     def FromJSON(json_obj:Dict[str, Any]):
-        _name : Union[str, None] = json_obj.get("name", None)
-        _id   : Union[str, None] = json_obj.get("id", None)
+        _name : Optional[str] = json_obj.get("name", None)
+        _id   : Optional[str] = json_obj.get("id", None)
         if _name is None:
             raise ValueError("JSON object for Coder has no 'name' element!")
         elif _id is None:

@@ -3,7 +3,7 @@ import logging
 import os
 from datetime import datetime
 from google.cloud import bigquery
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Optional
 # import locals
 from config.config import settings as default_settings
 from interfaces.DataInterface import DataInterface
@@ -89,7 +89,7 @@ class BigQueryInterface(DataInterface):
         data = list(self._client.query(query))
         return {'min':data[0][0], 'max':data[0][1]}
 
-    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None] = None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> List[Tuple]:
         db_name    : str
         table_name : str
         # 1) Get db and table names
@@ -174,7 +174,7 @@ class BigQueryInterface(DataInterface):
             events.append(tuple(event))
         return events if events != None else []
 
-    def _IDsFromDates(self, min:datetime, max:datetime, versions:Union[List[int],None] = None) -> List[str]:
+    def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]] = None) -> List[str]:
         ret_val = []
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         db_name    : str
@@ -198,7 +198,7 @@ class BigQueryInterface(DataInterface):
             ret_val = ids
         return ret_val
 
-    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None] = None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
         db_name    : str
         table_name : str
         if "BIGQUERY_CONFIG" in self._settings:
