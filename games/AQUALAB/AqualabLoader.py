@@ -67,6 +67,8 @@ class AqualabLoader(ExtractorLoader):
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
             ret_val = JobsAttempted.JobsAttempted(name=name, description=feature_args["description"], job_num=count_index, job_map=self._job_map, diff_map=self._diff_map)
+        elif feature_type == "PlayerSummary":
+            ret_val = PlayerSummary.PlayerSummary(name=name, description=feature_args["description"], player_id=self._player_id)
         elif feature_type == "SessionDiveSitesCount":
             ret_val = SessionDiveSitesCount.SessionDiveSitesCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionDuration":

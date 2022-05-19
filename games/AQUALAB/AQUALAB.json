@@ -556,6 +556,10 @@
                 "enabled": true,
                 "description": "List of key events that happened in a player's session(s)"
             },
+            "PlayerSummary": {
+                "enabled": true,
+                "description": "Summary of player statistics (active session time, jobs completed, number of sessions)"
+            },
             "SessionDiveSitesCount": {
                 "enabled": true,
                 "description": "Time spent playing in a given session"
