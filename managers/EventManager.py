@@ -2,22 +2,28 @@
 import json
 import logging
 from datetime import datetime
-from typing import Any, List, Tuple, Union
+from typing import Any, Callable, List, Type, Union
 ## import local files
-from utils import Logger
+from detectors.DetectorRegistry import DetectorRegistry
+from extractors.ExtractorLoader import ExtractorLoader
+from processors.EventProcessor import EventProcessor
 from schemas.Event import Event
-from schemas.TableSchema import TableSchema
+from schemas.GameSchema import GameSchema
+from utils import Logger
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
 class EventManager:
-    def __init__(self):
+    def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema,
+                 trigger_callback:Callable[[Event], None], feature_overrides:Union[List[str],None]=None):
         """Constructor for EventManager.
         Just creates empty list of lines and generates list of column names.
         """
         # define instance vars
-        self._lines        : List[str]      = []
-        self._columns      : List[str]      = Event.ColumnNames()
+        self._lines       : List[str]        = []
+        self._columns     : List[str]        = Event.ColumnNames()
+        self._processor   : EventProcessor   = EventProcessor(LoaderClass=LoaderClass,           game_schema=game_schema,
+                                                              trigger_callback=trigger_callback, feature_overrides=feature_overrides)
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
         col_values = event.ColumnValues()
@@ -30,6 +36,7 @@ class EventManager:
                 col_values[i] = json.dumps(col)
         # event.event_data = json.dumps(event.event_data)
         self._lines.append(separator.join([str(item) for item in col_values]) + "\n") # changed , to \t
+        self._processor.ProcessEvent(event=event)
 
     def GetColumnNames(self) -> List[str]:
         return self._columns
@@ -45,5 +52,5 @@ class EventManager:
     #  This is helpful if we're processing a lot of data and want to avoid
     #  Eating too much memory.
     def ClearLines(self):
-        Logger.Log(f"Clearing {len(self._lines)} entries from EventProcessor.", logging.DEBUG, depth=2)
+        Logger.Log(f"Clearing {len(self._lines)} entries from EventManager.", logging.DEBUG, depth=2)
         self._lines = []

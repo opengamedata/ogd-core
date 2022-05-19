@@ -1,61 +1,88 @@
 ## import standard libraries
 import enum
-import json
 import logging
 from collections import OrderedDict
 from datetime import datetime
-from typing import Any, Dict, List, Union
-from features.FeatureData import FeatureData
+from typing import Any, Callable, Dict, List, Union
 ## import local files
-from utils import Logger
-from Detector import Detector
+from detectors.Detector import Detector
+from extractors.Extractor import Extractor
+from extractors.ExtractorRegistry import ExtractorRegistry
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class DetectorRegistry:
+class DetectorRegistry(ExtractorRegistry):
     """Class for registering features to listen for events.
 
     :return: [description]
     :rtype: [type]
     """
-    class Listener:
-        @enum.unique
-        class Kinds(enum.Enum):
-            AGGREGATE = enum.auto()
-            PERCOUNT  = enum.auto()
 
-        def __init__(self, name:str, kind:Kinds):
-            self.name = name
-            self.kind = kind
-        
-        def __str__(self) -> str:
-            return f"{self.name} ({'aggregate' if self.kind == DetectorRegistry.Listener.Kinds.AGGREGATE else 'per-count'})"
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-        def __repr__(self) -> str:
-            return str(self)
+    def _register(self, extractor:Extractor, kind:ExtractorRegistry.Listener.Kinds):
+        if isinstance(extractor, Detector):
+            _listener = ExtractorRegistry.Listener(name=extractor.Name, kind=kind)
+            _event_types   = extractor.GetEventDependencies()
+            # First, add detector to the _features dict.
+            self._detectors[extractor.Name] = extractor
+            # Register detector's requested events.
+            if "all_events" in _event_types:
+                self._event_registry["all_events"].append(_listener)
+            else:
+                for event in _event_types:
+                    if event not in self._event_registry.keys():
+                        self._event_registry[event] = []
+                    self._event_registry[event].append(_listener)
+        else:
+            raise TypeError("DetectorRegistry was given an Extractor which was not a Detector!")
 
-    @enum.unique
-    class FeatureOrders(enum.Enum):
-        FIRST_ORDER = 0
-        SECOND_ORDER = 1
+    def _extractFromEvent(self, event:Event) -> None:
+        """Perform extraction of features from a row.
+
+        :param event: [description]
+        :type event: Event
+        :param table_schema: A data structure containing information on how the db
+                             table assiciated with this game is structured.
+        :type table_schema: TableSchema
+        """
+        if event.event_name in self._event_registry.keys():
+            # send event to every listener for the given event name.
+            for listener in self._event_registry[event.event_name]:
+                if listener.name in self._detectors.keys():
+                    self._detectors[listener.name].ExtractFromEvent(event)
+        # don't forget to send to any features listening for "all" events
+        for listener in self._event_registry["all_events"]:
+            if listener.name in self._detectors.keys():
+                self._detectors[listener.name].ExtractFromEvent(event)
+
+    def _extractFromFeatureData(self, feature:FeatureData) -> None:
+        return
+
+    def _getExtractorNames(self) -> List[str]:
+        """Implementation of abstract function to retrieve the names of all extractors currently registered.
+
+        :return: A list of all currently-registered detectors.
+        :rtype: List[str]
+        """
+        ret_val : List[str] = [feature.Name for feature in self._detectors.values()]
+        return ret_val
+
 
     # *** BUILT-INS ***
 
     # Base constructor for Registry.
-    def __init__(self, order:int=len(FeatureOrders)):
+    def __init__(self):
         """Base constructor for Registry
 
         Just sets up mostly-empty dictionaries for use by the registry.
         """
-        self._detectors : OrderedDict[str, Detector] = OrderedDict()
-        # self._features : Dict[str, OrderedDict[str, Feature]] = {
-        #     "first_order" : OrderedDict(),
-        #     "second_order" : OrderedDict()
-        # }
-        self._event_registry : Dict[str,List[DetectorRegistry.Listener]] = {"all_events":[]}
+        super().__init__()
+        self._detectors      : OrderedDict[str, Detector]                = OrderedDict()
 
     # string conversion for Extractors.
     def __str__(self) -> str:
@@ -91,57 +118,10 @@ class DetectorRegistry:
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
-    def ExtractFromEvent(self, event:Event) -> None:
-        """Perform extraction of features from a row.
-
-        :param event: [description]
-        :type event: Event
-        :param table_schema: A data structure containing information on how the db
-                             table assiciated with this game is structured.
-        :type table_schema: TableSchema
-        """
-        if event.event_name in self._event_registry.keys():
-            # send event to every listener for the given event name.
-            for listener in self._event_registry[event.event_name]:
-                if listener.name in self._detectors.keys():
-                    self._detectors[listener.name].ExtractFromEvent(event)
-        # don't forget to send to any features listening for "all" events
-        for listener in self._event_registry["all_events"]:
-            if listener.name in self._detectors.keys():
-                self._detectors[listener.name].ExtractFromEvent(event)
-
-    def GetDetectorNames(self) -> List[str]:
-        """Function to generate a list names of all enabled features, given a GameSchema
-        This is different from the feature_names() function of GameSchema,
-        which ignores the 'enabled' attribute and does not expand per-count features
-        (e.g. this function would include 'lvl0_someFeat', 'lvl1_someFeat', 'lvl2_someFeat', etc.
-        while feature_names() only would include 'someFeat').
-
-        :param schema: The schema from which feature names should be generated.
-        :type schema: GameSchema
-        :return: A list of feature names.
-        :rtype: List[str]
-        """
-        ret_val : List[str] = [feature.Name() for feature in self._detectors.values()]
-        return ret_val
 
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
-
-    def Register(self, detector:Detector, kind:Listener.Kinds):
-        _listener = DetectorRegistry.Listener(name=detector.Name(), kind=kind)
-        _event_types   = detector.GetEventDependencies()
-        # First, add detector to the _features dict.
-        self._detectors[detector.Name()] = detector
-        # Register detector's requested events.
-        if "all_events" in _event_types:
-            self._event_registry["all_events"].append(_listener)
-        else:
-            for event in _event_types:
-                if event not in self._event_registry.keys():
-                    self._event_registry[event] = []
-                self._event_registry[event].append(_listener)
 
     # def _format(obj):
     #     if obj == None:

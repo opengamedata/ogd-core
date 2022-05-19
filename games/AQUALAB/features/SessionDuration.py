@@ -1,10 +1,8 @@
 # import libraries
-import json
-from datetime import datetime
 from typing import Any, List
 # import locals
 from features.SessionFeature import SessionFeature
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class SessionDuration(SessionFeature):

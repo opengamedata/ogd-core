@@ -2,11 +2,11 @@
 __all__ = [
     "EventManager",
     "ExportManager",
-    "ExtractorManager",
+    "FeatureManager",
     "FileManager"
 ]
 
 from . import FileManager
 from . import EventManager
 from . import ExportManager
-from . import ExtractorManager
+from . import FeatureManager

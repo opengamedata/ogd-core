@@ -2,7 +2,7 @@
 from typing import Any, List
 # import locals
 from features.SessionFeature import SessionFeature
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class UserAvgSessionDuration(SessionFeature):
@@ -23,10 +23,13 @@ class UserAvgSessionDuration(SessionFeature):
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
-        if feature.PlayerID() == self._player_id:
-            self._times.append(feature.FeatureValues()[0])
+        if feature.PlayerID == self._player_id:
+            self._times.append(feature.FeatureValues[0])
 
     def _getFeatureValues(self) -> List[Any]:
-        return [sum(self._times) / len(self._times)]
+        if len(self._times) > 0:
+            return [sum(self._times) / len(self._times)]
+        else:
+            return [0]
 
     # *** Optionally override public functions. ***

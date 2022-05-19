@@ -84,6 +84,10 @@
                 "enabled": true,
                 "description":"Count of players who left off on each mission."
             },
+            "EventList": {
+                "enabled": true,
+                "description": "List of all events in a session"
+            },
             "EvidenceBoardCompleteCount": {
                 "enabled": false,
                 "description": "Evidence board completes in a session"

@@ -1,6 +1,6 @@
 from typing import Any, List
 
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 

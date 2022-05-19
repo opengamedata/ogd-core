@@ -1,11 +1,12 @@
 # import libraries
 import json
+import logging
 from collections import defaultdict
 from typing import Any, List, Union
 # import locals
 from utils import Logger
 from features.Feature import Feature
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class TopJobCompletionDestinations(Feature):
@@ -25,22 +26,23 @@ class TopJobCompletionDestinations(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        user_code = event.user_id
-        job_name = event.event_data["job_name"]["string_value"]
+        if self._validate_job(event.event_data['job_name']):
+            user_code = event.user_id
+            job_name = event.event_data["job_name"]["string_value"]
 
-        # in either case, handle event.
-        if event.event_name == "complete_job":
-            self._last_completed_id = job_name # here, we take what we last completed, and append where we switched to.
-        elif event.event_name == "accept_job":
-            if user_code == self._current_user_code and self._last_completed_id is not None:
-                if not job_name in self._job_complete_pairs[self._last_completed_id].keys():
-                    self._job_complete_pairs[self._last_completed_id][job_name] = []
+            # in either case, handle event.
+            if event.event_name == "complete_job":
+                self._last_completed_id = job_name # here, we take what we last completed, and append where we switched to.
+            elif event.event_name == "accept_job":
+                if user_code == self._current_user_code and self._last_completed_id is not None:
+                    if not job_name in self._job_complete_pairs[self._last_completed_id].keys():
+                        self._job_complete_pairs[self._last_completed_id][job_name] = []
 
-                self._job_complete_pairs[self._last_completed_id][job_name].append(user_code)
-                self._last_completed_id = None
+                    self._job_complete_pairs[self._last_completed_id][job_name].append(user_code)
+                    self._last_completed_id = None
 
-        # finally, once we process the event, we know we're looking at data for this event's user.
-        self._current_user_code = user_code
+            # finally, once we process the event, we know we're looking at data for this event's user.
+            self._current_user_code = user_code
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
@@ -58,10 +60,19 @@ class TopJobCompletionDestinations(Feature):
                 item[0]:item[1] for item in dests[0:5]
             }
 
-            Logger.Log(f"For TopJobCompletionDestinations, sorted dests as: {json.dumps(dests)}")
+            # Logger.Log(f"For TopJobCompletionDestinations, sorted dests as: {json.dumps(dests)}")
 
         return [json.dumps(ret_val)]
 
     # *** Optionally override public functions. ***
     def MinVersion(self) -> Union[str,None]:
         return "1"
+
+    # *** Other local functions
+    def _validate_job(self, job_data):
+        ret_val : bool = False
+        if job_data['string_value'] and job_data['string_value'] in self._job_map:
+                ret_val = True
+        else:
+            Logger.Log(f"Got invalid job_name data in JobsAttempted", logging.WARNING)
+        return ret_val

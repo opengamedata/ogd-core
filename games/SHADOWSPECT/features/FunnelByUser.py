@@ -3,7 +3,7 @@ from typing import Any, List
 import json
 import pandas as pd
 # import locals
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
 from schemas.Event import Event
 

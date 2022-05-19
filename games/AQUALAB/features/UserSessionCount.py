@@ -2,7 +2,7 @@
 from typing import Any, List
 # import locals
 from features.SessionFeature import SessionFeature
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class UserSessionCount(SessionFeature):
@@ -23,7 +23,7 @@ class UserSessionCount(SessionFeature):
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
-        if feature.PlayerID() == self._player_id:
+        if feature.PlayerID == self._player_id:
             self._count += 1
 
     def _getFeatureValues(self) -> List[Any]:

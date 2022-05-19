@@ -11,6 +11,8 @@ from typing import Any, Dict, Union
 # import locals
 from config.config import settings as settings
 
+map = Dict[str, Any]
+
 ## Function to open a given JSON file, and retrieve the data as a Python object.
 #  @param filename  The name of the JSON file. If the file extension is not .json,
 #                       then ".json" will be appended.

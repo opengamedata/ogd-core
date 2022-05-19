@@ -1,13 +1,16 @@
-from typing import Any, Dict, List, Union
-
+## import standard libraries
+from typing import Any, Callable, Dict, List, Union
+## import local files
+from detectors.Detector import Detector
+from extractors.ExtractorLoader import ExtractorLoader
 from games.SHIPWRECKS.features import *
-from features.FeatureLoader import FeatureLoader
 from features.Feature import Feature
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 
 ## @class ShipwrecksLoader
 #  Extractor subclass for extracting features from Shipwrecks game data.
-class ShipwrecksLoader(FeatureLoader):
+class ShipwrecksLoader(ExtractorLoader):
     ## Constructor for the ShipwrecksLoader class.
     #  Initializes some custom private data (not present in base class) for use
     #  when calculating some features.
@@ -23,14 +26,15 @@ class ShipwrecksLoader(FeatureLoader):
     def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, feature_overrides:Union[List[str],None]):
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
 
-    def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         ret_val : Feature
         if feature_type == "ActiveJobs":
             ret_val = ActiveJobs.ActiveJobs(name=name, description=feature_args["description"])
         elif feature_type == "MissionDiveTime":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = MissionDiveTime.MissionDiveTime(name=name, description=feature_args["description"], job_num=count_index)
+            else:
+                ret_val = MissionDiveTime.MissionDiveTime(name=name, description=feature_args["description"], job_num=count_index)
         elif feature_type == "JobsAttempted":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
@@ -38,7 +42,10 @@ class ShipwrecksLoader(FeatureLoader):
         elif feature_type == "MissionSonarTimeToComplete":
             if count_index is None:
                 raise TypeError("Got None for count_index, should have a value!")
-            ret_val = MissionSonarTimeToComplete.MissionSonarTimeToComplete(name=name, description=feature_args["description"], job_num=count_index)
+            else:
+                ret_val = MissionSonarTimeToComplete.MissionSonarTimeToComplete(name=name, description=feature_args["description"], job_num=count_index)
+        elif feature_type == "EventList":
+            ret_val = EventList.EventList(name=name, description=feature_args["description"])
         elif feature_type == "EvidenceBoardCompleteCount":
             ret_val = EvidenceBoardCompleteCount.EvidenceBoardCompleteCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionID":
@@ -53,5 +60,5 @@ class ShipwrecksLoader(FeatureLoader):
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shipwrecks.")
         return ret_val
 
-    def LoadDetector(self, detector_type: str, name: str, detector_args: Dict[str, Any], count_index: Union[int, None] = None) -> Feature:
+    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Union[int,None] = None) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Shipwrecks.")

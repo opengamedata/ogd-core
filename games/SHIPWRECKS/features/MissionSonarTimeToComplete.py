@@ -3,13 +3,13 @@ from datetime import timedelta
 from typing import Any, List, Union
 # import locals
 from features.Feature import Feature
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class MissionSonarTimeToComplete(Feature):
     
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def __init__(self, name:str, description:str, job_num:int, job_map:dict):
+    def __init__(self, name:str, description:str, job_num:int):
         super().__init__(name=name, description=description, count_index=job_num)
         self._sonar_start_time = None
         self._time = timedelta(0)

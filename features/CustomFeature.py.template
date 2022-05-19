@@ -3,7 +3,7 @@ import json
 from typing import Any, List, Union
 # import local files
 from features.Feature import Feature
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class CustomFeature(Feature):

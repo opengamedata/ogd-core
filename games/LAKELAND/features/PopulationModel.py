@@ -7,7 +7,7 @@ import logging
 import datetime
 
 from models.SequenceModel import SequenceModel
-from extractors.LakelandExtractor import  LakelandExtractor
+from processors.LakelandExtractor import  LakelandExtractor
 
 # birth/death events
 # ["FARMBITDEATH", "NEWFARMBIT"]

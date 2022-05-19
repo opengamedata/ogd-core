@@ -1,6 +1,6 @@
 # import standard libraries
 import abc
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
 from typing import Any, Dict, List, Union
 # import local files
@@ -63,31 +63,43 @@ class ResultStatus(Enum):
 class RequestResult:
     def __init__(self, msg:str, status:ResultStatus=ResultStatus.NONE,
                  events:Union[List[Any], None] = None, sessions:Union[List[Any], None] = None,
-                 players:Union[List[Any], None] = None, population:Union[List[Any], None] = None,):
+                 players:Union[List[Any], None] = None, population:Union[List[Any], None] = None,
+                 duration:timedelta=timedelta()):
         self._message    = msg
         self._status     = status
         self._events     = events
         self._sessions   = sessions
         self._players    = players
         self._population = population
+        self._duration   = duration
 
+    @property
     def Status(self) -> ResultStatus:
         return self._status
 
+    @property
     def Message(self) -> str:
         return self._message
     
+    @property
     def Events(self) -> Union[List[Any], None]:
         return self._events
     
+    @property
     def Sessions(self) -> Union[List[Any], None]:
         return self._sessions
     
+    @property
     def Players(self) -> Union[List[Any], None]:
         return self._players
     
+    @property
     def Population(self) -> Union[List[Any], None]:
         return self._population
+
+    @property
+    def Duration(self) -> timedelta:
+        return self._duration
 
 ## @class Request
 #  Dumb struct to hold data related to requests for data export.
@@ -138,17 +150,23 @@ class Request(abc.ABC):
     def Range(self) -> ExporterRange:
         return self._range
 
+    @property
     def ExportEvents(self) -> bool:
         return self._exports.events
+    @property
     def ExportSessions(self) -> bool:
         return self._exports.sessions
+    @property
     def ExportPlayers(self) -> bool:
         return self._exports.players
+    @property
     def ExportPopulation(self) -> bool:
         return self._exports.population
 
+    @property
     def ToFile(self) -> bool:
         return self._locs.files
+    @property
     def ToDict(self) -> bool:
         return self._locs.dict
 

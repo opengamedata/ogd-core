@@ -1,10 +1,12 @@
 # import libraries
 import json
+import logging
 from collections import defaultdict
 from typing import Any, List, Union
 # import locals
+from utils import Logger
 from features.Feature import Feature
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class ActiveJobs(Feature):
@@ -24,15 +26,16 @@ class ActiveJobs(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        user_code = event.user_id
-        job_name = event.event_data["job_name"]["string_value"]
+        if self._validate_job(event.event_data['job_name']):
+            user_code = event.user_id
+            job_name = event.event_data["job_name"]["string_value"]
 
-        if (self._current_user_code is not None) and (self._current_user_code != user_code):
-            # if we found a new user, then previous user must have left off on whatever their active job was.
-            # so, add the user to the list for that job
-            self._active_jobs[self._last_started_id].append(self._current_user_code)
-        self._current_user_code = user_code # in either case, set latest user as "current"
-        self._last_started_id = job_name # In either case, set latest job name as "current".
+            if (self._current_user_code is not None) and (self._current_user_code != user_code) and (self._current_user_code not in self._active_jobs[self._last_started_id]):
+                # if we found a new user, then previous user must have left off on whatever their active job was.
+                # so, add the user to the list for that job
+                self._active_jobs[self._last_started_id].append(self._current_user_code)
+            self._current_user_code = user_code # in either case, set latest user as "current"
+            self._last_started_id = job_name # In either case, set latest job name as "current".
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
@@ -40,7 +43,7 @@ class ActiveJobs(Feature):
     def _getFeatureValues(self) -> List[Any]:
         ret_val = self._active_jobs
 
-        if self._last_started_id is not None:
+        if (self._last_started_id is not None) and (self._current_user_code not in self._active_jobs[self._last_started_id]):
             ret_val[self._last_started_id].append(self._current_user_code) # whatever last event was, assume player left off there.
 
         return [json.dumps(ret_val)]
@@ -48,3 +51,12 @@ class ActiveJobs(Feature):
     # *** Optionally override public functions. ***
     def MinVersion(self) -> Union[str,None]:
         return "1"
+
+    # *** Other local functions
+    def _validate_job(self, job_data):
+        ret_val : bool = False
+        if job_data['string_value'] and job_data['string_value'] in self._job_map:
+            ret_val = True
+        else:
+            Logger.Log(f"Got invalid job_name data in JobsAttempted", logging.WARNING)
+        return ret_val

@@ -5,7 +5,7 @@ from typing import Any, List
 # import locals
 from utils import Logger
 from features.Feature import Feature
-from features.FeatureData import FeatureData
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class TopJobCompletionDestinations(Feature):
@@ -15,7 +15,7 @@ class TopJobCompletionDestinations(Feature):
         self._current_session_id = None
         self._current_mission_id = None
         self._last_completed_id = None
-        self._mission_complete_pairs = defaultdict(dict)
+        self._mission_complete_pairs = {}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
@@ -32,13 +32,22 @@ class TopJobCompletionDestinations(Feature):
         if session_id != self._current_session_id:
             self._last_completed_id = None
         elif checkpoint == "Case Closed" and mission_id != self._last_completed_id:
-            if not self._last_completed_id:
-                self._last_completed_id = mission_id
-            else:
-                if mission_id not in self._mission_complete_pairs[self._last_completed_id].keys():
-                    self._mission_complete_pairs[self._last_completed_id][mission_id] = []
+            if mission_id == "Level1":
+                if "Level1" not in self._mission_complete_pairs.keys():
+                    self._mission_complete_pairs["Level1"] = {"Level2": []}
 
-                self._mission_complete_pairs[self._last_completed_id][mission_id].append(session_id)
+                self._mission_complete_pairs["Level1"]["Level2"].append(session_id)
+            elif mission_id == "Level2":
+                if "Level2" not in self._mission_complete_pairs.keys():
+                    self._mission_complete_pairs["Level2"] = {"Level3": []}
+
+                self._mission_complete_pairs["Level2"]["Level3"].append(session_id)
+            elif mission_id == "Level3":
+                if "Level3" not in self._mission_complete_pairs.keys():
+                    self._mission_complete_pairs["Level3"] = {"Level4": []}
+
+                self._mission_complete_pairs["Level3"]["Level4"].append(session_id)
+
                 self._last_completed_id = mission_id
 
         self._current_session_id = session_id

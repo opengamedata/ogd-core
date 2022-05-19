@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Tuple, Union
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 ## import local files
 import utils
-from schemas.Event import Event
+from schemas.Event import Event, EventSource
 from utils import Logger
 
 ## @class TableSchema
@@ -152,16 +152,20 @@ class TableSchema:
         state   = params['game_state']
         index   = params['event_sequence_index']
 
-        if self._columns[0]['name'] == "event_name" and app_ver is None:
-            # Check log_version for Aqualab, app_version for other games
-            if "log_version" in params['event_data']:
-                app_ver = str(params['event_data']['log_version']['int_value'])
-            elif "app_version" in params['event_data'] and params['event_data']['app_version']['int_value'] is not None:
+        if self._columns[0]['name'] == 'event_name' and app_ver is None:
+            if 'app_version' in params['event_data']:
                 app_ver = str(params['event_data']['app_version']['int_value'])
             else:
                 app_ver = "0"
+
+        if self._columns[0]['name'] == 'event_name' and log_ver is None:
+            if 'log_ver' in params['event_data']:
+                log_ver = str(params['event_data']['log_version']['int_value'])
+            else:
+                log_ver = "0"
+
         return Event(session_id=sess_id, app_id=app_id, timestamp=time,
-                     event_name=ename, event_data=edata,
+                     event_name=ename, event_data=edata, event_source=EventSource.GAME,
                      app_version=app_ver, log_version=log_ver,
                      time_offset=offset, user_id=uid, user_data=udata,
                      game_state=state, event_sequence_index=index)

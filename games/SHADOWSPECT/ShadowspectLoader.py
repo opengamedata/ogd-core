@@ -1,29 +1,20 @@
 ## import standard libraries
-import logging
-import traceback
-from typing import Any, Dict, List, Union
+from typing import Any, Callable, Dict, List, Union
 ## import local files
+from detectors.Detector import Detector
 from games.SHADOWSPECT.features import *
-from utils import Logger
-from features.FeatureLoader import FeatureLoader
+from extractors.ExtractorLoader import ExtractorLoader
 from features.Feature import Feature
+from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 
 ## @class ShadowspectExtractor
 #  Extractor subclass for extracting features from Shadowspects game data.
-class ShadowspectLoader(FeatureLoader):
-    ## Constructor for the ShadowspectExtractor class.
-    #  Sets a game schema.
-    #
-    #  @param session_id The id number for the session whose data is being processed
-    #                    by this extractor instance.
-    #  @param game_schema A dictionary that defines how the game data itself is
-    #                     structured.
-    def __init__(self, player_id:str, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]=None):
-        self._game_schema = game_schema
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
+class ShadowspectLoader(ExtractorLoader):
 
-    def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
+    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
         ret_val : Feature
         if feature_type == "MoveShapeCount":
             ret_val = MoveShapeCount.MoveShapeCount(name=name, description=feature_args["description"])
@@ -39,5 +30,29 @@ class ShadowspectLoader(FeatureLoader):
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shadowspect.")
         return ret_val
 
-    def LoadDetector(self, detector_type: str, name: str, detector_args: Dict[str, Any], count_index: Union[int, None] = None) -> Feature:
+    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Union[int,None] = None) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Shadowspect.")
+
+    ## Constructor for the ShadowspectExtractor class.
+    def __init__(self, player_id:str, session_id: str, game_schema: GameSchema, feature_overrides:Union[List[str],None]=None):
+        """Constructor for the CrystalLoader class.
+
+        :param player_id: _description_
+        :type player_id: str
+        :param session_id: The id number for the session whose data is being processed by this instance
+        :type session_id: str
+        :param game_schema: A data structure containing information on how the game events and other data are structured
+        :type game_schema: GameSchema
+        :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
+        :type feature_overrides: Union[List[str],None]
+        """
+        self._game_schema = game_schema
+        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
+
+    # *** PUBLIC STATICS ***
+
+    # *** PUBLIC METHODS ***
+
+    # *** PRIVATE STATICS ***
+
+    # *** PRIVATE METHODS ***

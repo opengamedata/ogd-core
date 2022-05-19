@@ -1,5 +1,9 @@
 __all__ = [
-    "CollectFactNoJob"
+    "CollectFactNoJob",
+    "DiveSiteNoEvidence",
+    "EchoRoomChange"
 ]
 
 from . import CollectFactNoJob
+from . import DiveSiteNoEvidence
+from . import EchoRoomChange
