@@ -10,9 +10,6 @@ class PlayerSummary(SessionFeature):
         self._player_id = player_id
         super().__init__(name=name, description=description)
         self._summary = {}
-        self._active_time = 0
-        self._jobs_completed = []
-        self._num_sessions = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
