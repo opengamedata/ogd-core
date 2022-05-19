@@ -9,6 +9,7 @@ class PlayerSummary(SessionFeature):
     def __init__(self, name:str, description:str, player_id:str):
         self._player_id = player_id
         super().__init__(name=name, description=description)
+        self._summary = {}
         self._active_time = 0
         self._jobs_completed = []
         self._num_sessions = 0
@@ -21,26 +22,35 @@ class PlayerSummary(SessionFeature):
         return ["JobsAttempted", "SessionDuration", "SessionID"]
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.user_id == self._player_id:
-            job_name = event.event_data["job_name"]["string_value"]
+        user_id = event.user_id
+        job_name = event.event_data["job_name"]["string_value"]
 
-            if job_name not in self._jobs_completed:
-                self._jobs_completed.append(job_name)
+        if user_id not in self._summary:
+            self._summary[user_id] = {
+                "active_time": 0,
+                "jobs_completed": [],
+                "num_sessions": 0
+            }
+
+        if job_name not in self._summary[user_id]["jobs_completed"]:
+            self._summary[user_id]["jobs_completed"].append(job_name)
 
     def _extractFromFeatureData(self, feature: FeatureData):
-        if feature.Name == "SessionDuration" and feature.PlayerID == self._player_id:
-            self._active_time += feature.FeatureValues[0]
-        elif feature.Name == "SessionID" and feature.PlayerID == self._player_id:
-            self._num_sessions += 1
+        user_id = feature.PlayerID
+
+        if user_id not in self._summary:
+            self._summary[user_id] = {
+                "active_time": 0,
+                "jobs_completed": [],
+                "num_sessions": 0
+            }
+
+        if feature.Name == "SessionDuration":
+            self._summary[user_id]["active_time"] += feature.FeatureValues[0]
+        elif feature.Name == "SessionID":
+            self._summary[user_id]["num_sessions"] += 1
 
     def _getFeatureValues(self) -> List[Any]:
-        summary = {
-            "active_time": self._active_time,
-            "jobs_completed": self._jobs_completed,
-            "num_sessions": self._num_sessions,
-            "user_id": self._player_id
-        }
-
-        return [summary]
+        return [self._summary]
 
     # *** Optionally override public functions. ***
