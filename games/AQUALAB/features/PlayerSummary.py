@@ -37,7 +37,8 @@ class PlayerSummary(SessionFeature):
         summary = {
             "active_time": self._active_time,
             "jobs_completed": self._jobs_completed,
-            "num_sessions": self._num_sessions
+            "num_sessions": self._num_sessions,
+            "user_id": self._player_id
         }
 
         return [summary]
