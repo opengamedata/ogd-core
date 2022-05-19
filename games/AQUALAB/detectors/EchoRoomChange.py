@@ -1,8 +1,6 @@
 # import standard libraries
 from datetime import datetime
 from typing import Callable, List
-
-from chardet import detect
 # import local files
 from detectors.Detector import Detector
 from detectors.DetectorEvent import DetectorEvent

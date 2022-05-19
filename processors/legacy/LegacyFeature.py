@@ -5,7 +5,7 @@ import typing
 import logging
 from collections import defaultdict
 from datetime import timedelta
-from typing import Any, Dict, List, Tuple, Type, Optional
+from typing import Any, Dict, List, Optional, Union
 ## import local files
 from utils import Logger
 from features.Feature import Feature
@@ -120,7 +120,7 @@ class LegacyFeature(Feature):
             self.features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(game_schema)
 
         @staticmethod
-        def generateFeatureDict(game_schema: GameSchema) -> Dict[str,Optional[int,float,Dict[int,Dict[str,Any]]]]:
+        def generateFeatureDict(game_schema: GameSchema) -> Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]]:
             """Static function to generate a dictionary of game feature data from a given schema.
             The dictionary has the following hierarchy:
             feature_dict -> [individual features] -> [individual levels] -> {value, prefix}
@@ -128,14 +128,14 @@ class LegacyFeature(Feature):
             :param game_schema: A dictionary that defines how the game data is structured.
             :type game_schema: GameSchema
             :return: [description]
-            :rtype: Dict[str,Optional[int,float,Dict[int,Dict[str,Any]]]]
+            :rtype: Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]]
             """
             # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
             # which in turn maps each level to a value and prefix.
             perlevels = game_schema.perlevel_features()
             level_range = range(game_schema._min_level   if game_schema._min_level is not None else 0,
                                 game_schema._max_level+1 if game_schema._max_level is not None else 1)
-            features : Dict[str,Optional[int,float,Dict[int,Dict[str,Any]]]] = {f:{lvl:{"val":None, "prefix":"lvl"} for lvl in level_range } for f in perlevels.keys()}
+            features : Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]] = {f:{lvl:{"val":None, "prefix":"lvl"} for lvl in level_range } for f in perlevels.keys()}
             # next, do something similar for other per-custom-count features.
             percounts = game_schema.percount_features()
             features.update({f:{num:{"val":None, "prefix":percounts[f]["prefix"]} for num in range(0, percounts[f]["count"]) } for f in percounts})
@@ -247,7 +247,7 @@ class LegacyFeature(Feature):
         #  @param feature_name The name of the feature to increment
         #  @param index        The count index of the specific value, e.g. the level
         #  @param increment    The size of the increment (default = 1)
-        def incValByIndex(self, feature_name: str, index: int, increment: Optional[int, float] = 1) -> None:
+        def incValByIndex(self, feature_name: str, index: int, increment: Union[int, float] = 1) -> None:
             if self._has_feature(feature_name):
                 feature = self.features[feature_name]
                 if type(feature) is dict and index in feature.keys():
@@ -263,14 +263,14 @@ class LegacyFeature(Feature):
         #  @param feature_name The name of the feature to increment
         #  @param index        The count index of the specific value, e.g. the level
         #  @param increment    The size of the increment (default = 1)
-        def incValByLevel(self, feature_name: str, level: int, increment: Optional[int, float] = 1) -> None:
+        def incValByLevel(self, feature_name: str, level: int, increment: Union[int, float] = 1) -> None:
             self.incValByIndex(feature_name=feature_name, index=level, increment=increment)
 
         ## Function to increment value of an aggregate feature
         #
         #  @param feature_name The name of the feature to increment
         #  @param increment    The size of the increment (default = 1)
-        def incAggregateVal(self, feature_name: str, increment: Optional[int, float] = 1) -> None:
+        def incAggregateVal(self, feature_name: str, increment: Union[int, float] = 1) -> None:
             if self._has_feature(feature_name):
                 if (type(self.features[feature_name]) == int or type(self.features[feature_name]) == float):
                     self.features[feature_name] += increment

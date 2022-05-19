@@ -45,7 +45,7 @@ class SQL:
         :param ssh_settings: A dictionary mapping names of ssh parameters to values, or None if no ssh connection is desired., defaults to None
         :type ssh_settings: Optional[Dict[str,Any]], optional
         :return: A tuple consisting of the tunnel and database connection, respectively.
-        :rtype: Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection,None]]
+        :rtype: Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]
         """
         tunnel  : Optional[sshtunnel.SSHTunnelForwarder] = None
         db_conn : Optional[connection.MySQLConnection]   = None
@@ -111,7 +111,7 @@ class SQL:
         :param ssh: An SSHLogin object with the data needed to log into MySQL.
         :type ssh: SSHLogin
         :return: An open connection to the database if successful, otherwise None.
-        :rtype: Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection,None]]
+        :rtype: Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]
         """
         tunnel    : Optional[sshtunnel.SSHTunnelForwarder] = None
         db_conn   : Optional[connection.MySQLConnection] = None
