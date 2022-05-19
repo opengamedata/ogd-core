@@ -2,7 +2,6 @@
 from datetime import datetime
 from typing import Any, List, Union
 
-from chardet import detect
 # import local files
 from detectors.Detector import Detector
 from schemas.Event import Event
