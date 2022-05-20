@@ -62,6 +62,8 @@ class JobsAttempted(Feature):
 
                 if self._job_start_time:
                     self._time += (event.timestamp - self._job_start_time).total_seconds()
+                    self._times.append(self._time)
+                    self._time = 0
                     self._job_start_time = None
 
         self._prev_timestamp = event.timestamp
