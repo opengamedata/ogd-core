@@ -83,7 +83,7 @@ class TableSchema:
         ret_val += "\n".join(event_column_list)
         return ret_val
 
-    def RowToEvent(self, row:Tuple, concatenator:str = '.'):
+    def RowToEvent(self, row:Tuple, concatenator:str = '.', fallbacks:utils.map={}):
         """Function to convert a row to an Event, based on the loaded schema.
         In general, columns specified in the schema's column_map are mapped to corresponding elements of the Event.
         If the column_map gave a list, rather than a single column name, the values from each column are concatenated in order with '.' character separators.
@@ -121,7 +121,8 @@ class TableSchema:
             if key != 'event_data': # event_data is special case, handle separately.
                 inner_vals = self._column_map[key]
                 if inner_vals == None:
-                    params[key] = None
+                    # if column map didn't specify where to get data, check fallbacks. If nothing there, make "None"
+                    params[key] = fallbacks.get(key, None)
                 elif type(inner_vals) == list:
                     params[key] = concatenator.join([row_dict[inner_key] for inner_key in inner_vals])
                 else:
