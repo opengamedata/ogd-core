@@ -71,6 +71,8 @@ class AqualabLoader(ExtractorLoader):
             ret_val = JobsCompleted.JobsCompleted(name=name, description=feature_args["description"], player_id=self._player_id)
         elif feature_type == "PlayerSummary":
             ret_val = PlayerSummary.PlayerSummary(name=name, description=feature_args["description"])
+        elif feature_type == "PopulationSummary":
+            ret_val = PopulationSummary.PopulationSummary(name=name, description=feature_args["description"])
         elif feature_type == "SessionDiveSitesCount":
             ret_val = SessionDiveSitesCount.SessionDiveSitesCount(name=name, description=feature_args["description"])
         elif feature_type == "SessionDuration":
