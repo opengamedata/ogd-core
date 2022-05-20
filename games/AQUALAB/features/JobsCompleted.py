@@ -26,7 +26,6 @@ class JobsCompleted(SessionFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        print(f"USER {self._player_id} COMPLETED {self._jobs_completed}")
         return [self._jobs_completed]
 
     # *** Optionally override public functions. ***

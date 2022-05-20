@@ -38,7 +38,6 @@ class PlayerSummary(SessionFeature):
             self._summary[user_id]["num_sessions"] += 1
 
     def _getFeatureValues(self) -> List[Any]:
-        print(self._summary)
         return [self._summary]
 
     # *** Optionally override public functions. ***
