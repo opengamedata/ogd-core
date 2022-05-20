@@ -40,7 +40,7 @@ class JobsAttempted(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.user_id == self._user_code and event.session_id != self._session_id:
+        if event.session_id != self._session_id:
             self._session_id = event.session_id
 
             if self._job_start_time:
