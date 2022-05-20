@@ -1,6 +1,6 @@
 ## import standard libraries
 import abc
-from typing import Any, Callable, List, Union
+from typing import Any, Callable, List
 # import locals
 from extractors.Extractor import Extractor
 from detectors.DetectorEvent import DetectorEvent

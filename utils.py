@@ -7,7 +7,7 @@ import traceback
 from datetime import datetime
 from logging import Logger
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any, Dict, Optional
 # import locals
 from config.config import settings as settings
 
@@ -38,8 +38,8 @@ def loadJSONFile(filename:str, path:Path = Path("./")) -> Dict[Any, Any]:
         raise err
 
 class Logger:
-    std_logger  : Logger              = logging.getLogger("std_logger")
-    file_logger : Union[Logger, None] = None
+    std_logger  : Logger           = logging.getLogger("std_logger")
+    file_logger : Optional[Logger] = None
 
     # Set up loggers. First, the std out logger
     stdout_handler = logging.StreamHandler()

@@ -12,7 +12,7 @@ import zipfile
 from datetime import datetime
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
 from pathlib import Path
-from typing import Any, Dict, IO, Union
+from typing import Any, Dict, IO, Optional
 
 ## import locals
 import utils
@@ -84,15 +84,15 @@ class FileManager(abc.ABC):
         return template_str
 
     def __init__(self, request:Request, data_dir:str, extension:str="tsv"):
-        self._file_names   : Dict[str,Union[Path,None]] = {"population":None, "players":None, "sessions":None, "events":None}
-        self._zip_names    : Dict[str,Union[Path,None]] = {"population":None, "players":None, "sessions":None, "events":None}
-        self._files        : Dict[str,Union[IO,None]]   = {"population":None, "players":None, "sessions":None, "events":None}
+        self._file_names   : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "events":None}
+        self._zip_names    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "events":None}
+        self._files        : Dict[str,Optional[IO]]   = {"population":None, "players":None, "sessions":None, "events":None}
         self._game_id      : str  = request.GameID
         self._data_dir     : Path = Path("./" + data_dir)
         self._game_data_dir: Path = self._data_dir / self._game_id
         self._readme_path  : Path = self._game_data_dir/ "readme.md"
         self._extension    : str  = extension
-        self._date_range   : Dict[str,Union[datetime,None]] = request.Range.DateRange
+        self._date_range   : Dict[str,Optional[datetime]] = request.Range.DateRange
         self._dataset_id   : str  = ""
         self._short_hash   : str  = ""
         # figure out dataset ID.
@@ -126,7 +126,7 @@ class FileManager(abc.ABC):
             self._file_names['population'] = self._game_data_dir / f"{base_file_name}_population-features.{self._extension}"
             self._zip_names['population']  = self._game_data_dir / f"{base_file_name}_population-features.zip"
 
-    def GetFiles(self) -> Dict[str,Union[IO,None]]:
+    def GetFiles(self) -> Dict[str,Optional[IO]]:
         return self._files
 
     def GetPopulationFile(self) -> IO:

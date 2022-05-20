@@ -2,7 +2,7 @@
 import json
 import logging
 from datetime import datetime
-from typing import Any, Callable, List, Type, Union
+from typing import Any, Callable, List, Type, Optional
 ## import local files
 from detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
@@ -15,7 +15,7 @@ from utils import Logger
 #  Class to manage data for a csv events file.
 class EventManager:
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema,
-                 trigger_callback:Callable[[Event], None], feature_overrides:Union[List[str],None]=None):
+                 trigger_callback:Callable[[Event], None], feature_overrides:Optional[List[str]]=None):
         """Constructor for EventManager.
         Just creates empty list of lines and generates list of column names.
         """

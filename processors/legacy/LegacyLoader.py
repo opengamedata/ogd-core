@@ -1,6 +1,6 @@
 # import libraries
 import logging
-from typing import Callable, List, Union
+from typing import Callable, List, Optional
 # import locals
 from detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorRegistry import ExtractorRegistry
@@ -12,7 +12,7 @@ from schemas.GameSchema import GameSchema
 from utils import Logger
 
 class LegacyLoader(ExtractorLoader):
-    def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
+    def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, feature_overrides:Optional[List[str]]):
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
 
     def LoadToFeatureRegistry(self, registry:FeatureRegistry) -> None:

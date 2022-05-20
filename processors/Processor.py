@@ -1,7 +1,7 @@
 ## import standard libraries
 import abc
 import logging
-from typing import Any, Dict, List, Type, Union
+from typing import Any, Dict, List, Type, Optional
 # import locals
 from extractors.ExtractorRegistry import ExtractorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
@@ -35,13 +35,12 @@ class Processor(abc.ABC):
 
     # *** PUBLIC BUILT-INS ***
 
-    def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema,
-                 feature_overrides:Union[List[str],None]=None):
+    def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, feature_overrides:Optional[List[str]]=None):
         self._game_schema : GameSchema            = game_schema
-        self._overrides   : Union[List[str],None] = feature_overrides
+        self._overrides   : Optional[List[str]]   = feature_overrides
         self._LoaderClass : Type[ExtractorLoader] = LoaderClass
         self._loader      : ExtractorLoader       = self._prepareLoader()
-        self._registry    : Union[ExtractorRegistry, None] = None
+        self._registry    : Optional[ExtractorRegistry] = None
 
     def __str__(self):
         return f""

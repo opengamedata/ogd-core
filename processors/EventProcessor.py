@@ -1,5 +1,5 @@
 # import libraries
-from typing import Any, Callable, Dict, List, Type, Union
+from typing import Any, Callable, Dict, List, Type, Optional
 # import locals
 from detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorRegistry import ExtractorRegistry

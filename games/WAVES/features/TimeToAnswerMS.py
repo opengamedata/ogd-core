@@ -1,7 +1,7 @@
 # import libraries
 from schemas import Event
 import typing
-from typing import Any, List, Union
+from typing import Any, List, Optional
 # import locals
 from schemas.FeatureData import FeatureData
 from features.Feature import Feature
@@ -47,8 +47,8 @@ class TimeToAnswerMS(Feature):
     # *** Optionally override public functions. ***
 
     # *** Other local functions
-    def _calcAnswerTime(self, timestamp) -> Union[int,None]:
-        millis: Union[float,None]
+    def _calcAnswerTime(self, timestamp) -> Optional[int]:
+        millis: Optional[float]
         if self._count_index == 0:
             millis = 1000.0 * (timestamp - self._latest_complete_lvl8).total_seconds()
         elif self._count_index == 1:

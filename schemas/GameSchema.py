@@ -1,7 +1,7 @@
 # import standard libraries
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional
 # import local files
 import utils
 from utils import Logger
@@ -16,7 +16,7 @@ class GameSchema:
 
     # *** BUILT-INS ***
 
-    def __init__(self, schema_name:str, schema_path:Union[Path,None] = None):
+    def __init__(self, schema_name:str, schema_path:Optional[Path] = None):
         """Constructor for the GameSchema class.
         Given a path and filename, it loads the data from a JSON schema,
         storing the full schema into a private variable, and compiling a list of
@@ -28,12 +28,12 @@ class GameSchema:
         :type schema_path: str, optional
         """
         # define instance vars
-        self._schema:       Union[Dict, None] = {}
+        self._schema:       Optional[Dict] = {}
         self._game_name:    str  = schema_name.split('.')[0]
-        self._detector_list: Union[List[str],None] = None
-        self._feature_list: Union[List[str],None] = None
-        self._min_level:    Union[int,None] = None
-        self._max_level:    Union[int,None] = None
+        self._detector_list: Optional[List[str]] = None
+        self._feature_list: Optional[List[str]] = None
+        self._min_level:    Optional[int] = None
+        self._max_level:    Optional[int] = None
         self._job_map:      Dict = {}
         # set instance vars
         if not schema_name.lower().endswith(".json"):
@@ -116,7 +116,7 @@ class GameSchema:
         return self["detectors"]
 
     ## Function to retrieve the compiled list of all detector names.
-    def detector_names(self) -> Union[List[str], None]:
+    def detector_names(self) -> Optional[List[str]]:
         return self._detector_list
 
     ## Function to retrieve the dictionary of per-level detectors.
@@ -136,7 +136,7 @@ class GameSchema:
         return self["features"]
 
     ## Function to retrieve the compiled list of all feature names.
-    def feature_names(self) -> Union[List[str], None]:
+    def feature_names(self) -> Optional[List[str]]:
         return self._feature_list
 
     ## Function to retrieve the dictionary of per-level features.

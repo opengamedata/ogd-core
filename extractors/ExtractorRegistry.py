@@ -1,11 +1,9 @@
 ## import standard libraries
 import abc
 import enum
-import json
 import logging
 from collections import OrderedDict
-from datetime import datetime
-from typing import Any, Dict, List, Union
+from typing import Dict, List
 ## import local files
 from utils import Logger
 from extractors.Extractor import Extractor

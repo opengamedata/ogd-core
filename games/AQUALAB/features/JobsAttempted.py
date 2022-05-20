@@ -1,7 +1,7 @@
 # import libraries
 import logging
 from statistics import stdev
-from typing import Any, List, Union
+from typing import Any, List, Optional
 # import locals
 from utils import Logger
 from features.Feature import Feature
@@ -62,6 +62,8 @@ class JobsAttempted(Feature):
 
                 if self._job_start_time:
                     self._time += (event.timestamp - self._job_start_time).total_seconds()
+                    self._times.append(self._time)
+                    self._time = 0
                     self._job_start_time = None
 
         self._prev_timestamp = event.timestamp
@@ -88,7 +90,7 @@ class JobsAttempted(Feature):
     def Subfeatures(self) -> List[str]:
         return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-complete", "std-dev-complete", "job-difficulties"]
 
-    def MinVersion(self) -> Union[str,None]:
+    def MinVersion(self) -> Optional[str]:
         return "1"
 
     # *** Other local functions

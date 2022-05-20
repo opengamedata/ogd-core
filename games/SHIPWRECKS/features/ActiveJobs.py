@@ -1,7 +1,7 @@
 # import libraries
 import json
 from collections import defaultdict
-from typing import Any, List, Union
+from typing import Any, List, Optional
 # import locals
 from features.Feature import Feature
 from schemas.FeatureData import FeatureData
@@ -26,7 +26,7 @@ class ActiveJobs(Feature):
         session_id = event.session_id
         mission_name = event.event_data["mission_id"]["string_value"]
 
-        if (self._current_session_id is not None) and (self._current_session_id != session_id):
+        if (self._current_session_id is not None) and (self._current_session_id != session_id) and (self._current_session_id not in self._active_jobs[self._last_started_id]):
             # if we found a new user, then previous user must have left off on whatever their active job was.
             # so, add the user to the list for that job
             self._active_jobs[self._last_started_id].append(self._current_session_id)
@@ -39,7 +39,7 @@ class ActiveJobs(Feature):
     def _getFeatureValues(self) -> List[Any]:
         ret_val = self._active_jobs
 
-        if self._last_started_id is not None:
+        if (self._last_started_id is not None) and (self._current_session_id not in self._active_jobs[self._last_started_id]):
             ret_val[self._last_started_id].append(self._current_session_id) # whatever last event was, assume player left off there.
 
         return [json.dumps(ret_val)]

@@ -5,7 +5,7 @@ import typing
 import logging
 from collections import defaultdict
 from datetime import timedelta
-from typing import Any, Dict, List, Tuple, Type, Union
+from typing import Any, Dict, List, Optional, Union
 ## import local files
 from utils import Logger
 from features.Feature import Feature

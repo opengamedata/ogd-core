@@ -1,5 +1,4 @@
 ## import standard libraries
-import bisect
 import logging
 import sys
 import typing
@@ -7,14 +6,13 @@ import traceback
 from collections import defaultdict, deque
 from config.config import settings as settings
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Tuple, Union
+from typing import Tuple, Optional, Union
 ## import local files
 from utils import Logger
 from processors.legacy.LegacyFeature import LegacyFeature
 from games.JOWILDER import Jowilder_Enumerators as je
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
-from schemas.TableSchema import TableSchema
 
 # temp comment
 
@@ -114,7 +112,7 @@ class JowilderExtractor(LegacyFeature):
         self._CLIENT_START_TIME = None
         self.game_started = False
         self.setValByName(feature_name="sessionID", new_value=session_id)
-        self.level : Union[int,None] = None
+        self.level : Optional[int] = None
         self._cur_levels = []
         self.cur_question = 0
         self.last_display_time_text : Tuple = ()
@@ -1213,7 +1211,7 @@ class JowilderExtractor(LegacyFeature):
         self._features.setValByIndex(feature_name, index, new_value)
 
 
-    def get_debug_string(self, version:Union[str,None], num_lines=20):
+    def get_debug_string(self, version:Optional[str], num_lines=20):
         ret = [f'{"*" * 10} {self._session_id} v{version} @ {self._CLIENT_START_TIME} {"*"*10}']
         ret.extend(deque(self.debug_strs, num_lines))
         return '\n'.join(ret)

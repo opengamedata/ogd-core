@@ -3,7 +3,7 @@ import enum
 import logging
 from collections import OrderedDict
 from datetime import datetime
-from typing import Any, Callable, Dict, List, Union
+from typing import Any, Callable, List, Optional
 ## import local files
 from detectors.Detector import Detector
 from extractors.Extractor import Extractor
@@ -97,14 +97,14 @@ class DetectorRegistry(ExtractorRegistry):
         return '\n'.join(ret_val)
 
     # Alternate string conversion for Extractors, with limitable number of lines.
-    def to_string(self, num_lines:Union[int,None] = None) -> str:
+    def to_string(self, num_lines:Optional[int] = None) -> str:
         """Alternate string conversion for Extractors, with limitable number of lines.
 
         Creates a list of features in the extractor, separated by newlines.
         Optional num_lines param allows the function caller to limit number of lines in the string.
         :param num_lines: Max number of lines to include in the string.
         If None, then include all strings, defaults to None
-        :type num_lines:  Union[int,None], optional
+        :type num_lines:  Optional[int], optional
         :return: A string with line-separated stringified features.
         :rtype: str
         """

@@ -2,7 +2,7 @@
 import json
 import logging
 from collections import defaultdict
-from typing import Any, List, Union
+from typing import Any, List, Optional
 # import locals
 from utils import Logger
 from features.Feature import Feature
@@ -30,7 +30,7 @@ class ActiveJobs(Feature):
             user_code = event.user_id
             job_name = event.event_data["job_name"]["string_value"]
 
-            if (self._current_user_code is not None) and (self._current_user_code != user_code):
+            if (self._current_user_code is not None) and (self._current_user_code != user_code) and (self._current_user_code not in self._active_jobs[self._last_started_id]):
                 # if we found a new user, then previous user must have left off on whatever their active job was.
                 # so, add the user to the list for that job
                 self._active_jobs[self._last_started_id].append(self._current_user_code)
@@ -43,13 +43,13 @@ class ActiveJobs(Feature):
     def _getFeatureValues(self) -> List[Any]:
         ret_val = self._active_jobs
 
-        if self._last_started_id is not None:
+        if (self._last_started_id is not None) and (self._current_user_code not in self._active_jobs[self._last_started_id]):
             ret_val[self._last_started_id].append(self._current_user_code) # whatever last event was, assume player left off there.
 
         return [json.dumps(ret_val)]
 
     # *** Optionally override public functions. ***
-    def MinVersion(self) -> Union[str,None]:
+    def MinVersion(self) -> Optional[str]:
         return "1"
 
     # *** Other local functions

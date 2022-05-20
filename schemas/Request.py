@@ -2,7 +2,7 @@
 import abc
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional
 # import local files
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
@@ -12,29 +12,29 @@ class ExporterRange:
     """
     Simple class to define a range of data for export.
     """
-    def __init__(self, date_min:Union[datetime,None], date_max:Union[datetime,None], ids:Union[List[str],None], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None]=None):
-        self._date_min : Union[datetime,None] = date_min
-        self._date_max : Union[datetime,None] = date_max
-        self._ids      : Union[List[str],None] = ids
+    def __init__(self, date_min:Optional[datetime], date_max:Optional[datetime], ids:Optional[List[str]], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None):
+        self._date_min : Optional[datetime] = date_min
+        self._date_max : Optional[datetime] = date_max
+        self._ids      : Optional[List[str]] = ids
         self._id_mode  : IDMode                = id_mode
-        self._versions : Union[List[int],None] = versions
+        self._versions : Optional[List[int]] = versions
 
     @staticmethod
-    def FromDateRange(source:DataInterface, date_min:datetime, date_max:datetime, versions:Union[List[int],None]=None):
+    def FromDateRange(source:DataInterface, date_min:datetime, date_max:datetime, versions:Optional[List[int]]=None):
         ids = source.IDsFromDates(date_min, date_max, versions=versions)
         return ExporterRange(date_min=date_min, date_max=date_max, ids=ids, id_mode=IDMode.SESSION, versions=versions)
 
     @staticmethod
-    def FromIDs(source:DataInterface, ids:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None]=None):
+    def FromIDs(source:DataInterface, ids:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None):
         date_range = source.DatesFromIDs(id_list=ids, id_mode=id_mode, versions=versions)
         return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=ids, id_mode=id_mode, versions=versions)
 
     @property
-    def DateRange(self) -> Dict[str,Union[datetime,None]]:
+    def DateRange(self) -> Dict[str,Optional[datetime]]:
         return {'min':self._date_min, 'max':self._date_max}
 
     @property
-    def IDs(self) -> Union[List[str],None]:
+    def IDs(self) -> Optional[List[str]]:
         return self._ids
 
     @property
@@ -62,8 +62,8 @@ class ResultStatus(Enum):
 
 class RequestResult:
     def __init__(self, msg:str, status:ResultStatus=ResultStatus.NONE,
-                 events:Union[List[Any], None] = None, sessions:Union[List[Any], None] = None,
-                 players:Union[List[Any], None] = None, population:Union[List[Any], None] = None,
+                 events:Optional[List[Any]] = None, sessions:Optional[List[Any]] = None,
+                 players:Optional[List[Any]] = None, population:Optional[List[Any]] = None,
                  duration:timedelta=timedelta()):
         self._message    = msg
         self._status     = status
@@ -82,19 +82,19 @@ class RequestResult:
         return self._message
     
     @property
-    def Events(self) -> Union[List[Any], None]:
+    def Events(self) -> Optional[List[Any]]:
         return self._events
     
     @property
-    def Sessions(self) -> Union[List[Any], None]:
+    def Sessions(self) -> Optional[List[Any]]:
         return self._sessions
     
     @property
-    def Players(self) -> Union[List[Any], None]:
+    def Players(self) -> Optional[List[Any]]:
         return self._players
     
     @property
-    def Population(self) -> Union[List[Any], None]:
+    def Population(self) -> Optional[List[Any]]:
         return self._population
 
     @property
@@ -115,14 +115,14 @@ class Request(abc.ABC):
     #  @param end_date     The ending date for our range of data to process.
     def __init__(self, interface:DataInterface, range:ExporterRange,
                 exporter_types:ExporterTypes = ExporterTypes(), exporter_locs:ExporterLocations = ExporterLocations(),
-                feature_overrides:Union[List[str], None]=None):
+                feature_overrides:Optional[List[str]]=None):
         # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
         self._game_id        : str                    = str(interface._game_id)
         self._interface      : DataInterface          = interface
         self._range          : ExporterRange          = range
         self._exports        : ExporterTypes          = exporter_types
         self._locs           : ExporterLocations      = exporter_locs
-        self._feat_overrides : Union[List[str], None] = feature_overrides
+        self._feat_overrides : Optional[List[str]] = feature_overrides
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
@@ -172,5 +172,5 @@ class Request(abc.ABC):
 
     ## Method to retrieve the list of IDs for all sessions covered by the request.
     #  Note, this will use the 
-    def RetrieveIDs(self) -> Union[List[str],None]:
+    def RetrieveIDs(self) -> Optional[List[str]]:
         return self.Range.IDs

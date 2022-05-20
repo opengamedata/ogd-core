@@ -1,6 +1,6 @@
 # import standard libraries
 from datetime import datetime, timedelta
-from typing import Any, Callable, List, Union
+from typing import Any, Callable, List, Optional
 # import local files
 from detectors.Detector import Detector
 from detectors.DetectorEvent import DetectorEvent
@@ -58,7 +58,7 @@ class DiveSiteNoEvidence(Detector):
         else:
             return False
 
-    def _trigger_event(self) -> Union[Event, None]:
+    def _trigger_event(self) -> Optional[Event]:
         """_summary_
 
         :return: _description_
@@ -83,7 +83,7 @@ class DiveSiteNoEvidence(Detector):
         super().__init__(name=name, description=description, count_index=0, trigger_callback=trigger_callback)
         self._threshold : float = threshold
         self._in_dive : bool    = False
-        self._last_evidence_time  : Union[datetime, None] = None
+        self._last_evidence_time  : Optional[datetime] = None
         self._time_since_evidence : float = 0
         self._has_triggered : bool = False
 

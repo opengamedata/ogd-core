@@ -12,6 +12,9 @@ __all__ = [
     "JobModelingTime",
     "JobTasksCompleted",
     "JobsAttempted",
+    "JobsCompleted",
+    "PlayerSummary",
+    "PopulationSummary",
     "SessionDiveSitesCount",
     "SessionDuration",
     "SessionGuideCount",
@@ -43,6 +46,9 @@ from . import JobHelpCount
 from . import JobModelingTime
 from . import JobTasksCompleted
 from . import JobsAttempted
+from . import JobsCompleted
+from . import PlayerSummary
+from . import PopulationSummary
 from . import SessionDiveSitesCount
 from . import SessionDuration
 from . import SessionGuideCount

@@ -1,7 +1,7 @@
 # import standard libraries
 import logging
 import traceback
-from typing import Any, List, Dict, IO, Type, Union
+from typing import Any, List, Dict, IO, Type, Optional
 # import local files
 from utils import Logger
 from extractors.ExtractorRegistry import ExtractorRegistry

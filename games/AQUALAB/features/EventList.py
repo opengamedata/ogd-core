@@ -1,6 +1,6 @@
 # import libraries
 import json
-from typing import Any, List, Union
+from typing import Any, List, Optional
 # import locals
 from features.Feature import Feature
 from schemas.FeatureData import FeatureData
@@ -36,7 +36,7 @@ class EventList(Feature):
             "model_concept_exported":       ("ecosystem", "string_value"),
             "begin_simulation":             ("job_name", "string_value"),
             "model_sync_error":             ("sync", "int_value"),
-            "simulation_sync_achieved":     ("ecosystem", "string_value"),
+            "simulation_sync_achieved":     ("job_name", "string_value"),
             "model_predict_completed":      ("ecosystem", "string_value"),
             "model_intervene_update":       ("difference_value", "int_value"),
             "model_intervene_error":        ("ecosystem", "string_value"),
@@ -94,5 +94,5 @@ class EventList(Feature):
         return [json.dumps(self._event_list)]
 
     # *** Optionally override public functions. ***
-    def MinVersion(self) -> Union[str,None]:
+    def MinVersion(self) -> Optional[str]:
         return "1"

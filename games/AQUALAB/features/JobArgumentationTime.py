@@ -1,7 +1,7 @@
 # import libraries
 import logging
 from datetime import datetime, timedelta
-from typing import Any, List, Union
+from typing import Any, List, Optional
 # import locals
 from utils import Logger
 from features.Feature import Feature
@@ -14,7 +14,7 @@ class JobArgumentationTime(Feature):
         self._job_map = job_map
         super().__init__(name=name, description=description, count_index=job_num)
         self._session_id = None
-        self._argument_start_time : Union[datetime, None] = None
+        self._argument_start_time : Optional[datetime] = None
         self._prev_timestamp = None
         self._time = 0
 
@@ -49,7 +49,7 @@ class JobArgumentationTime(Feature):
         return [timedelta(seconds=self._time)]
 
     # *** Optionally override public functions. ***
-    def MinVersion(self) -> Union[str,None]:
+    def MinVersion(self) -> Optional[str]:
         return "1"
 
     # *** Other local functions

@@ -18,7 +18,7 @@ from copy import deepcopy
 from datetime import datetime, timedelta
 from math import sqrt
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional
 ## import local files
 import utils
 from processors.legacy.LegacyFeature import LegacyFeature
@@ -1459,7 +1459,7 @@ class LakelandExtractor(LegacyFeature):
         
     def reset(self):
         self.levels:           List[int]       = []
-        self.last_adjust_type: Union[str,None] = None
+        self.last_adjust_type: Optional[str] = None
         self.features:         LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=self._GAME_SCHEMA)
         self.setValByName('sessID', new_value=self._session_id)
 

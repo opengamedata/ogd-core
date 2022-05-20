@@ -1,5 +1,5 @@
 ## import standard libraries
-from typing import Any, Callable, Dict, List, Union
+from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from detectors.Detector import Detector
 from extractors.ExtractorLoader import ExtractorLoader
@@ -23,10 +23,10 @@ class ShipwrecksLoader(ExtractorLoader):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, feature_overrides:Union[List[str],None]):
+    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, feature_overrides:Optional[List[str]]):
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
 
-    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Union[int,None] = None) -> Feature:
+    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Optional[int] = None) -> Feature:
         ret_val : Feature
         if feature_type == "ActiveJobs":
             ret_val = ActiveJobs.ActiveJobs(name=name, description=feature_args["description"])
@@ -48,6 +48,14 @@ class ShipwrecksLoader(ExtractorLoader):
             ret_val = EventList.EventList(name=name, description=feature_args["description"])
         elif feature_type == "EvidenceBoardCompleteCount":
             ret_val = EvidenceBoardCompleteCount.EvidenceBoardCompleteCount(name=name, description=feature_args["description"])
+        elif feature_type == "JobsCompleted":
+            ret_val = JobsCompleted.JobsCompleted(name=name, description=feature_args["description"], session_id=self._session_id)
+        elif feature_type == "PlayerSummary":
+            ret_val = PlayerSummary.PlayerSummary(name=name, description=feature_args["description"])
+        elif feature_type == "PopulationSummary":
+            ret_val = PopulationSummary.PopulationSummary(name=name, description=feature_args["description"])
+        elif feature_type == "SessionDuration":
+            ret_val = SessionDuration.SessionDuration(name=name, description=feature_args["description"], session_id=self._session_id)
         elif feature_type == "SessionID":
             ret_val = SessionID.SessionID(name=name, description=feature_args["description"], session_id=self._session_id)
         elif feature_type == "TopJobCompletionDestinations":
@@ -60,5 +68,5 @@ class ShipwrecksLoader(ExtractorLoader):
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shipwrecks.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Union[int,None] = None) -> Detector:
+    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Shipwrecks.")

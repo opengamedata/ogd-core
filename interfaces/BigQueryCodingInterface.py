@@ -3,16 +3,18 @@ import logging
 import os
 from datetime import datetime
 from google.cloud import bigquery
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Union
 # import locals
+from coding.Code import Code
+from coding.Coder import Coder
 from config.config import settings as default_settings
-from interfaces.DataInterface import DataInterface
+from interfaces.CodingInterface import CodingInterface
 from schemas.IDMode import IDMode
 from utils import Logger
 
-AQUALAB_MIN_VERSION = 6.2
+# TODO: see about merging this back into BigQueryInterface for a unified interface.
 
-class BigQueryInterface(DataInterface):
+class BigQueryCodingInterface(CodingInterface):
 
     # *** PUBLIC BUILT-INS ***
 
@@ -54,7 +56,7 @@ class BigQueryInterface(DataInterface):
         Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
-    def _allIDs(self) -> List[str]:
+    def _allCoders(self) -> Union[List[Coder], None]:
         db_name    : str
         table_name : str
         if "BIGQUERY_CONFIG" in self._settings:
@@ -73,30 +75,8 @@ class BigQueryInterface(DataInterface):
         ids = [str(row['session_id']) for row in data]
         return ids if ids != None else []
 
-    def _fullDateRange(self) -> Dict[str, datetime]:
-        db_name    : str
-        table_name : str
-        if "BIGQUERY_CONFIG" in self._settings:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        else:
-            db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        query = f"""
-            WITH datetable AS
-            (
-                SELECT event_date, event_timestamp,
-                FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
-                FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
-                FROM `{db_name}.{table_name}`
-            )
-            SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
-            FROM datetable
-        """
-        data = list(self._client.query(query))
-        return {'min':data[0][0], 'max':data[0][1]}
 
-    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None] = None) -> List[Tuple]:
         db_name    : str
         table_name : str
         # 1) Get db and table names
@@ -181,7 +161,7 @@ class BigQueryInterface(DataInterface):
             events.append(tuple(event))
         return events if events != None else []
 
-    def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]] = None) -> List[str]:
+    def _IDsFromDates(self, min:datetime, max:datetime, versions:Union[List[int],None] = None) -> List[str]:
         ret_val = []
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         db_name    : str
@@ -205,7 +185,7 @@ class BigQueryInterface(DataInterface):
             ret_val = ids
         return ret_val
 
-    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None] = None) -> Dict[str, datetime]:
         db_name    : str
         table_name : str
         if "BIGQUERY_CONFIG" in self._settings:

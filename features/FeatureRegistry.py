@@ -4,7 +4,7 @@ import json
 import logging
 from collections import OrderedDict
 from datetime import datetime
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional
 ## import local files
 from extractors.Extractor import Extractor
 from extractors.ExtractorRegistry import ExtractorRegistry
@@ -138,14 +138,14 @@ class FeatureRegistry(ExtractorRegistry):
         return '\n'.join(ret_val)
 
     # Alternate string conversion for Extractors, with limitable number of lines.
-    def to_string(self, num_lines:Union[int,None] = None) -> str:
+    def to_string(self, num_lines:Optional[int] = None) -> str:
         """Alternate string conversion for Extractors, with limitable number of lines.
 
         Creates a list of features in the extractor, separated by newlines.
         Optional num_lines param allows the function caller to limit number of lines in the string.
         :param num_lines: Max number of lines to include in the string.
         If None, then include all strings, defaults to None
-        :type num_lines:  Union[int,None], optional
+        :type num_lines:  Optional[int], optional
         :return: A string with line-separated stringified features.
         :rtype: str
         """
@@ -169,7 +169,7 @@ class FeatureRegistry(ExtractorRegistry):
         """
         return len(self._features)
 
-    def GetFeatureData(self, order:int, player_id:Union[str, None]=None, sess_id:Union[str, None]=None) -> List[FeatureData]:
+    def GetFeatureData(self, order:int, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> List[FeatureData]:
         ret_val : List[FeatureData] = []
         for feature in self._features[order].values():
             ret_val.append(feature.ToFeatureData(player_id=player_id, sess_id=sess_id))

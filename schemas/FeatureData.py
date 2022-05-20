@@ -1,8 +1,8 @@
-from typing import Any, List, Union
+from typing import Any, List, Optional
 
 class FeatureData:
    def __init__(self, name:str, count_index:int, cols:List[str], vals:List[Any],
-                player_id:Union[str, None]=None, sess_id:Union[str, None]=None):
+                player_id:Optional[str]=None, sess_id:Optional[str]=None):
       self._name = name
       self._count_index = count_index
       self._cols = cols
@@ -27,9 +27,9 @@ class FeatureData:
       return self._vals
 
    @property
-   def PlayerID(self) -> Union[str, None]:
+   def PlayerID(self) -> Optional[str]:
       return self._player_id
 
    @property
-   def SessionID(self) -> Union[str, None]:
+   def SessionID(self) -> Optional[str]:
       return self._sess_id

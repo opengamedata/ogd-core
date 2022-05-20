@@ -10,7 +10,7 @@ import traceback
 from datetime import datetime
 from pathlib import Path
 from pprint import pformat
-from typing import Any, Dict, List, Tuple, Type, Union
+from typing import Any, Dict, List, Tuple, Type, Optional
 from schemas.IDMode import IDMode
 
 ## import local files
@@ -51,9 +51,9 @@ class ExportManager:
         :type settings: [type]
         """
         self._settings = settings
-        self._event_mgr   : Union[EventManager, None]   = None
-        self._feat_mgr    : Union[FeatureManager, None] = None
-        self._file_mgr    : Union[FileManager, None]    = None
+        self._event_mgr   : Optional[EventManager]   = None
+        self._feat_mgr    : Optional[FeatureManager] = None
+        self._file_mgr    : Optional[FileManager]    = None
         self._debug_count : int                         = 0
 
     # *** PUBLIC STATICS ***
@@ -125,7 +125,7 @@ class ExportManager:
             _table_name = default_settings["GAME_SOURCE_MAP"][_game_id]["table"]
         return TableSchema(schema_name=f"{_table_name}.json")
 
-    def _setupManagers(self, request:Request, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
+    def _setupManagers(self, request:Request, game_schema:GameSchema, feature_overrides:Optional[List[str]]):
         # 1. Get LoaderClass so we can set up Event and Feature managers.
         load_class = self._loadLoaderClass(game_schema._game_name)
         if load_class is not None:
@@ -175,8 +175,8 @@ class ExportManager:
         else:
             Logger.Log(f"File output not requested, skipping file manager.", logging.INFO, depth=1)
 
-    def _loadLoaderClass(self, game_id:str) -> Union[Type[ExtractorLoader],None]:
-        _loader_class: Union[Type[ExtractorLoader],None] = None
+    def _loadLoaderClass(self, game_id:str) -> Optional[Type[ExtractorLoader]]:
+        _loader_class: Optional[Type[ExtractorLoader]] = None
         if game_id == "AQUALAB":
             _loader_class = AqualabLoader
         elif game_id == "CRYSTAL":
@@ -200,9 +200,9 @@ class ExportManager:
             raise Exception(f"Got an invalid game ID ({game_id})!")
         return _loader_class
 
-    def _executeDataRequest(self, request:Request, table_schema:TableSchema, file_manager:Union[FileManager, None]=None) -> Dict[str,Any]:
+    def _executeDataRequest(self, request:Request, table_schema:TableSchema, file_manager:Optional[FileManager]=None) -> Dict[str,Any]:
         ret_val       : Dict[str,Any]           = {"events":None, "sessions":None, "players":None, "population":None, "sessions_ct":0}
-        next_slice_data : Union[List[Tuple],None] = None
+        next_slice_data : Optional[List[Tuple]] = None
 
         if request.ToDict:
             if request.ExportEvents and self._event_mgr is not None:
@@ -266,7 +266,7 @@ class ExportManager:
         return [[sess_ids[i] for i in range( j*_slice_size, min((j+1)*_slice_size, _num_sess) )]
                              for j in range( 0, math.ceil(_num_sess / _slice_size) )]
 
-    def _loadSlice(self, request:Request, next_slice_ids:List[str], slice_num:int, slice_count:int) -> Union[List[Tuple], None]:
+    def _loadSlice(self, request:Request, next_slice_ids:List[str], slice_num:int, slice_count:int) -> Optional[List[Tuple]]:
         start : datetime = datetime.now()
 
         ret_val = request.Interface.RowsFromIDs(id_list=next_slice_ids, id_mode=request.Range.IDMode)

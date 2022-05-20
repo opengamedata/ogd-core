@@ -1,7 +1,7 @@
 ## import standard libraries
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Type, Union
+from typing import Any, Dict, List, Type, Optional
 ## import local files
 from utils import Logger
 from extractors.ExtractorLoader import ExtractorLoader
@@ -13,14 +13,14 @@ from schemas.Event import Event
 from schemas.Request import ExporterTypes
 
 class FeatureManager:
-    def __init__(self, LoaderClass:Type[ExtractorLoader], exp_types:ExporterTypes, game_schema:GameSchema, feature_overrides:Union[List[str],None]):
+    def __init__(self, LoaderClass:Type[ExtractorLoader], exp_types:ExporterTypes, game_schema:GameSchema, feature_overrides:Optional[List[str]]):
         self._exp_types        : ExporterTypes       = exp_types
         self._latest_results   : Dict[str,List[Any]] = {}
         self._up_to_date       : bool                = True
-        self._pop_extractor    : Union[PopulationProcessor, None]  = None
-        self._player_extractor : Union[PlayerProcessor, None]      = None
-        self._sess_extractor   : Union[SessionProcessor, None]     = None
-        self._LoaderClass      : Union[Type[ExtractorLoader],None] = LoaderClass
+        self._pop_extractor    : Optional[PopulationProcessor]  = None
+        self._player_extractor : Optional[PlayerProcessor]      = None
+        self._sess_extractor   : Optional[SessionProcessor]     = None
+        self._LoaderClass      : Optional[Type[ExtractorLoader]] = LoaderClass
 
         if self._LoaderClass is not None:
             if exp_types.population:

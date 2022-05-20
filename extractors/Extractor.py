@@ -1,6 +1,6 @@
 ## import standard libraries
 import abc
-from typing import List, Union
+from typing import List, Optional
 # import locals
 from schemas.Event import Event
 
@@ -77,7 +77,7 @@ class Extractor(abc.ABC):
             self._extractFromEvent(event=event)
 
     ## Base function to get the minimum game data version the feature can handle.
-    def MinVersion(self) -> Union[str,None]:
+    def MinVersion(self) -> Optional[str]:
         """ Base function to get the minimum game data version the feature can handle.
             A value of None will set no minimum, so all levels are accepted (unless a max is set).
             Typically default to None, unless there is a required element of the event data that was not added until a certain version.        
@@ -85,12 +85,12 @@ class Extractor(abc.ABC):
             so this is a required part of interface instead of a config item in the schema.
 
         :return: [description]
-        :rtype: Union[str,None]
+        :rtype: Optional[str]
         """
         return None
 
     ## Base function to get the maximum game data version the feature can handle.
-    def MaxVersion(self) -> Union[str,None]:
+    def MaxVersion(self) -> Optional[str]:
         """ Base function to get the maximum game data version the feature can handle.
             A value of None will set no maximum, so all levels are accepted (unless a min is set).
             Typically default to None, unless the feature is not compatible with new data and is only kept for legacy purposes.
@@ -98,7 +98,7 @@ class Extractor(abc.ABC):
             so this is a required part of interface instead of a config item in the schema.
 
         :return: [description]
-        :rtype: Union[str,None]
+        :rtype: Optional[str]
         """
         return None
 
