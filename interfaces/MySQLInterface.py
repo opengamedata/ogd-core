@@ -243,9 +243,9 @@ class MySQLInterface(DataInterface):
         super().__init__(game_id=game_id)
         self._settings = settings
         # set up connection vars and try to make connection off the bat.
-        self._tunnel : Union[sshtunnel.SSHTunnelForwarder, None] = None
-        self._db : Union[connection.MySQLConnection, None] = None
-        self._db_cursor : Union[cursor.MySQLCursor, None] = None
+        self._tunnel : Optional[sshtunnel.SSHTunnelForwarder] = None
+        self._db     : Optional[connection.MySQLConnection] = None
+        self._db_cursor : Optional[cursor.MySQLCursor] = None
         self.Open()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

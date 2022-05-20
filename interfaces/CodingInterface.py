@@ -27,7 +27,7 @@ class CodingInterface(Interface):
         pass
 
     @abc.abstractmethod
-    def _getCodeWordsByGame(self, game_id:str) -> Union[List[str], None]:
+    def _getCodeWordsByGame(self, game_id:str) -> Optional[List[str]]:
         pass
 
     @abc.abstractmethod
@@ -35,19 +35,19 @@ class CodingInterface(Interface):
         pass
 
     @abc.abstractmethod
-    def _getCodeWordsBySession(self, session_id:str) -> Union[List[str], None]:
+    def _getCodeWordsBySession(self, session_id:str) -> Optional[List[str]]:
         pass
 
     @abc.abstractmethod
-    def _getCodesByGame(self, game_id:str) -> Union[List[Code], None]:
+    def _getCodesByGame(self, game_id:str) -> Optional[List[Code]]:
         pass
 
     @abc.abstractmethod
-    def _getCodesByCoder(self, coder_id:str) -> Union[List[Code], None]:
+    def _getCodesByCoder(self, coder_id:str) -> Optional[List[Code]]:
         pass
 
     @abc.abstractmethod
-    def _getCodesBySession(self, session_id:str) -> Union[List[Code], None]:
+    def _getCodesBySession(self, session_id:str) -> Optional[List[Code]]:
         pass
 
     @abc.abstractmethod

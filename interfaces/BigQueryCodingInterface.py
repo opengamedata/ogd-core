@@ -3,7 +3,7 @@ import logging
 import os
 from datetime import datetime
 from google.cloud import bigquery
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Optional
 # import locals
 from coding.Code import Code
 from coding.Coder import Coder
@@ -56,7 +56,7 @@ class BigQueryCodingInterface(CodingInterface):
         Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
-    def _allCoders(self) -> Union[List[Coder], None]:
+    def _allCoders(self) -> Optional[List[Coder]]:
         db_name    : str
         table_name : str
         if "BIGQUERY_CONFIG" in self._settings:
@@ -76,7 +76,7 @@ class BigQueryCodingInterface(CodingInterface):
         return ids if ids != None else []
 
 
-    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None] = None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> List[Tuple]:
         db_name    : str
         table_name : str
         # 1) Get db and table names
@@ -161,7 +161,7 @@ class BigQueryCodingInterface(CodingInterface):
             events.append(tuple(event))
         return events if events != None else []
 
-    def _IDsFromDates(self, min:datetime, max:datetime, versions:Union[List[int],None] = None) -> List[str]:
+    def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]] = None) -> List[str]:
         ret_val = []
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         db_name    : str
@@ -185,7 +185,7 @@ class BigQueryCodingInterface(CodingInterface):
             ret_val = ids
         return ret_val
 
-    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Union[List[int],None] = None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
         db_name    : str
         table_name : str
         if "BIGQUERY_CONFIG" in self._settings:

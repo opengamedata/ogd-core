@@ -15,7 +15,7 @@ class EventProcessor(Processor):
     # *** PUBLIC BUILT-INS ***
 
     def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema, trigger_callback:Callable[[Event], None],
-                 feature_overrides:Union[List[str],None]=None):
+                 feature_overrides:Optional[List[str]]=None):
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         self._registry = DetectorRegistry()
         self._loader.LoadToDetectorRegistry(registry=self._registry, trigger_callback=trigger_callback)
