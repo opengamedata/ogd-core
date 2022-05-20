@@ -88,9 +88,25 @@
                 "enabled": true,
                 "description": "List of all events in a session"
             },
+            "JobsCompleted": {
+                "enabled": true,
+                "description": "List of missions completed in a session"
+            },
+            "PlayerSummary": {
+                "enabled": true,
+                "description": "Summary of player statistics (active session time, jobs completed, number of sessions)"
+            },
+            "PopulationSummary": {
+                "enabled": true,
+                "description": "Summary of population statistics (active session time, average jobs completed count, average session count)"
+            },
             "EvidenceBoardCompleteCount": {
                 "enabled": false,
                 "description": "Evidence board completes in a session"
+            },
+            "SessionDuration": {
+                "enabled": true,
+                "description": "Time spent playing in a given session"
             },
             "SessionID": {
                 "enabled": true,
