@@ -115,7 +115,11 @@ class BigQueryCodingInterface(CodingInterface):
             VALUES (GENERATE_UUID(), @code, @coder_id, @notes, @events)
         """
         evt_params = [
-
+            bigquery.StructQueryParameter.positional(
+                bigquery.ScalarQueryParameter(name="session_id", type_="STRING", value=event.SessionID),
+                bigquery.ScalarQueryParameter(name="index", type="INTEGER", value=event.Index)
+            )
+            for event in events
         ]
         cfg = bigquery.QueryJobConfig(
             query_parameters= [
