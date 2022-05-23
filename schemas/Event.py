@@ -1,8 +1,8 @@
 from datetime import date, datetime
 from enum import IntEnum
 from typing import Any, Dict, List, Optional, Union
-Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 
+import utils
 class EventSource(IntEnum):
     GAME = 1
     GENERATED = 2
@@ -12,10 +12,12 @@ class EventSource(IntEnum):
 #  Basically, whenever we fetch data, the TableSchema will be used to map columns to the required elements of an Event.
 #  Then the extractors etc. can just access columns in a direct manner.
 class Event:
-    def __init__(self, session_id:str, app_id:str,   timestamp:datetime, event_name:str, event_data:Map, event_source:EventSource,
-                 app_version:Optional[str] = None, log_version:Optional[str] = None, time_offset:Optional[int] = None,
-                 user_id:Optional[str] = "",   user_data:Optional[Map] = {},
-                 game_state:Optional[Map] = {}, event_sequence_index:Optional[int] = None):
+    def __init__(self, session_id:str, app_id:str,     timestamp:datetime,
+                 event_name:str, event_data:utils.map, event_source:EventSource,
+                 app_version:Optional[str] = None,     log_version:Optional[str] = None,
+                 time_offset:Optional[int] = None,
+                 user_id:Optional[str] = "",           user_data:Optional[utils.map] = {},
+                 game_state:Optional[utils.map] = {},  event_sequence_index:Optional[int] = None):
         """Constructor for an Event object.
 
         :param session_id: An identifier for the session during which the event occurred.
@@ -44,18 +46,18 @@ class Event:
         :type  event_sequence_index: Optional[int], optional
         """
         # TODO: event source, e.g. from game or from detector
-        self.session_id           : str             = session_id
-        self.app_id               : str             = app_id
-        self.timestamp            : datetime        = timestamp
-        self.event_name           : str             = event_name
-        self.event_data           : Map             = event_data
-        self.event_source         : EventSource     = event_source
-        self.app_version          : str             = app_version if app_version is not None else "0"
-        self.log_version          : str             = log_version if log_version is not None else "0"
+        self.session_id           : str           = session_id
+        self.app_id               : str           = app_id
+        self.timestamp            : datetime      = timestamp
+        self.event_name           : str           = event_name
+        self.event_data           : utils.map     = event_data
+        self.event_source         : EventSource   = event_source
+        self.app_version          : str           = app_version if app_version is not None else "0"
+        self.log_version          : str           = log_version if log_version is not None else "0"
         self.time_offset          : Optional[int] = time_offset
         self.user_id              : Optional[str] = user_id
-        self.user_data            : Map             = user_data if user_data is not None else {}
-        self.game_state           : Map             = game_state if game_state is not None else {}
+        self.user_data            : utils.map     = user_data if user_data is not None else {}
+        self.game_state           : utils.map     = game_state if game_state is not None else {}
         self.event_sequence_index : Optional[int] = event_sequence_index
 
     def __str__(self):
@@ -72,6 +74,12 @@ class Event:
              + f"user_data    : {self.user_data}\n"\
              + f"game_state   : {self.game_state}\n"\
              + f"index        : {self.event_sequence_index}\n"\
+
+    def FallbackDefaults(self, app_id:Optional[str]=None, index:Optional[int]=None):
+        if self.app_id == None:
+            self.app_id = app_id
+        if self.event_sequence_index == None:
+            self.event_sequence_index = index
 
     @staticmethod
     def CompareVersions(a:str, b:str, version_separator='.'):

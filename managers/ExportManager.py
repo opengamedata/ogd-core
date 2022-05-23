@@ -278,14 +278,17 @@ class ExportManager:
             Logger.Log(f"Could not retrieve data set for slice [{slice_num}/{slice_count}].", logging.WARN, depth=2)
         return ret_val
 
-    def _processSlice(self, next_slice_data:List[Tuple], table_schema:TableSchema, ids:List[str], id_mode:IDMode, slice_num:int, slice_count:int):
+    def _processSlice(self, next_slice_data:List[Tuple], request: Request, table_schema:TableSchema, ids:List[str], slice_num:int, slice_count:int):
         start      : datetime = datetime.now()
         num_events : int      = len(next_slice_data)
+        _curr_sess : int      = 0
+        _evt_sess_index : int = 1
         _unsessioned_event_count : int = 0
         # 3a) If next slice yielded valid data from the interface, process row-by-row.
         for row in next_slice_data:
             try:
-                next_event = table_schema.RowToEvent(row)
+                _fallbacks = {"app_id":request.GameID}
+                next_event = table_schema.RowToEvent(row, fallbacks=_fallbacks)
             except Exception as err:
                 if default_settings.get("FAIL_FAST", None):
                     Logger.Log(f"Error while converting row to Event\nFull error: {err}\nRow data: {pformat(row)}", logging.ERROR, depth=2)
@@ -293,7 +296,13 @@ class ExportManager:
                 else:
                     Logger.Log(f"Error while converting row to Event. This row will be skipped.\nFull error: {err}", logging.WARNING, depth=2)
             else:
-                if (id_mode==IDMode.SESSION and next_event.session_id in ids) or (id_mode==IDMode.PLAYER and next_event.user_id in ids):
+                if next_event.session_id != _curr_sess:
+                    _curr_sess = next_event.session_id
+                    _evt_sess_index = 1
+                next_event.FallbackDefaults(index=_evt_sess_index)
+                _evt_sess_index += 1
+                if (request._range._id_mode==IDMode.SESSION and next_event.session_id in ids) \
+                or (request._range._id_mode==IDMode.PLAYER  and next_event.user_id    in ids):
                     self._processEvent(next_event=next_event)
                 elif next_event.session_id is not None and next_event.session_id.upper() != "NONE":
                     Logger.Log(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)

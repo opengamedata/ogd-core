@@ -11,6 +11,15 @@ from schemas.GameSchema import GameSchema
 from schemas.Request import ExporterTypes
 
 class EventProcessor(Processor):
+
+    # *** PUBLIC BUILT-INS ***
+
+    def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema, trigger_callback:Callable[[Event], None],
+                 feature_overrides:Optional[List[str]]=None):
+        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        self._registry = DetectorRegistry()
+        self._loader.LoadToDetectorRegistry(registry=self._registry, trigger_callback=trigger_callback)
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _prepareLoader(self) -> ExtractorLoader:
@@ -27,14 +36,6 @@ class EventProcessor(Processor):
     def _processFeatureData(self, feature:FeatureData):
         if self._registry is not None:
             self._registry.ExtractFromFeatureData(feature=feature)
-
-    # *** PUBLIC BUILT-INS ***
-
-    def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema, trigger_callback:Callable[[Event], None],
-                 feature_overrides:Optional[List[str]]=None):
-        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
-        self._registry = DetectorRegistry()
-        self._loader.LoadToDetectorRegistry(registry=self._registry, trigger_callback=trigger_callback)
 
     # *** PUBLIC STATICS ***
 

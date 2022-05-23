@@ -17,6 +17,38 @@ from schemas.Request import ExporterTypes
 ## @class PlayerProcessor
 #  Class to extract and manage features for a processed csv file.
 class PlayerProcessor(FeatureProcessor):
+
+    # *** PUBLIC BUILT-INS ***
+
+    ## Constructor for the PlayerProcessor class.
+    def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema, player_id:str,
+                 feature_overrides:Optional[List[str]]=None):
+        """Constructor for the PlayerProcessor class.
+           Simply stores some data for use later, including the type of extractor to use.
+
+        :param LoaderClass: The type of data extractor to use for input data.
+                            This should correspond to whatever game_id is in the TableSchema.
+        :type LoaderClass: Type[ExtractorLoader]
+        :param game_schema: A dictionary that defines how the game data itself is structured.
+        :type game_schema: GameSchema
+        :param player_id: _description_
+        :type player_id: str
+        :param feature_overrides: _description_, defaults to None
+        :type feature_overrides: Union[List[str],None], optional
+        :param player_file: _description_, defaults to None
+        :type player_file: Optional[IO[str]], optional
+        """
+        Logger.Log(f"Setting up PlayerProcessor for {player_id}...", logging.DEBUG, depth=2)
+        self._player_id   : str                 = player_id
+        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        ## Define instance vars
+        self._session_processors : Dict[str,SessionProcessor] = {
+            "null" : SessionProcessor(LoaderClass=LoaderClass, game_schema=game_schema,
+                                      player_id=self._player_id, session_id="null",
+                                      feature_overrides=feature_overrides)
+        }
+        Logger.Log(f"Done", logging.DEBUG, depth=2)
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _prepareLoader(self) -> ExtractorLoader:
@@ -87,37 +119,6 @@ class PlayerProcessor(FeatureProcessor):
         """
         Logger.Log(f"Clearing features from PlayerProcessor for {self._player_id}.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
-
-    # *** PUBLIC BUILT-INS ***
-
-    ## Constructor for the PlayerProcessor class.
-    def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema, player_id:str,
-                 feature_overrides:Optional[List[str]]=None):
-        """Constructor for the PlayerProcessor class.
-           Simply stores some data for use later, including the type of extractor to use.
-
-        :param LoaderClass: The type of data extractor to use for input data.
-                            This should correspond to whatever game_id is in the TableSchema.
-        :type LoaderClass: Type[ExtractorLoader]
-        :param game_schema: A dictionary that defines how the game data itself is structured.
-        :type game_schema: GameSchema
-        :param player_id: _description_
-        :type player_id: str
-        :param feature_overrides: _description_, defaults to None
-        :type feature_overrides: Optional[List[str]], optional
-        :param player_file: _description_, defaults to None
-        :type player_file: Optional[IO[str]], optional
-        """
-        Logger.Log(f"Setting up PlayerProcessor for {player_id}...", logging.DEBUG, depth=2)
-        self._player_id   : str                 = player_id
-        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
-        ## Define instance vars
-        self._session_processors : Dict[str,SessionProcessor] = {
-            "null" : SessionProcessor(LoaderClass=LoaderClass, game_schema=game_schema,
-                                      player_id=self._player_id, session_id="null",
-                                      feature_overrides=feature_overrides)
-        }
-        Logger.Log(f"Done", logging.DEBUG, depth=2)
 
     # *** PUBLIC STATICS ***
 

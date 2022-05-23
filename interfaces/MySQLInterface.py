@@ -34,6 +34,7 @@ class SSHLogin:
 #  Specifically, helps to connect to a database, make selections, and provides
 #  a nicely formatted 500 error message.
 class SQL:
+
     # Function to set up a connection to a database, via an ssh tunnel if available.
     @staticmethod
     def ConnectDB(db_settings:Dict[str,Any], ssh_settings:Optional[Dict[str,Any]]=None) -> Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]:
@@ -169,43 +170,6 @@ class SQL:
         else:
             Logger.Log("No MySQL tunnel to stop", logging.DEBUG)
 
-
-    # Function to build and execute SELECT statements on a database connection.
-    # @staticmethod
-    # def INSERT(cursor:cursor.MySQLCursor,    db_name:str,                  table:str,
-    #            columns:List[str],            items:List[Dict[str,object]], fetch_results:bool = False) -> Optional[List[Tuple]]:
-    #     """Function to build and execute INSERT statements on a database connection.
-    #     Assumes 
-
-    #     :param cursor: A database cursor, retrieved from the active connection.
-    #     :type cursor: cursor.MySQLCursor
-    #     :param db_name: The name of the database to which we are connected.
-    #     :type db_name: str
-    #     :param table: The name of the table from which we want to make a selection.
-    #     :type table: str
-    #     :param columns: A list of columns whose values should be included in the insert. Only columns in this list will be included from the items.
-    #     :type columns: List[str]
-    #     :param items: A list of items to be inserted.
-    #      Each item maps column names to values for insertion, and is converted to a "value" (SQL's term), a comma-separated list of values.
-    #     :type items: List[Dict[str,object]]
-    #     :param fetch_results: A bool to determine whether all results should be fetched and returned, defaults to True
-    #     :type fetch_results: bool, optional
-    #     :return: A collection of all rows from the selection, if fetch_results is true, otherwise None.
-    #     :rtype: Optional[List[Tuple]]
-    #     """
-    #     table_path: str      = db_name + "." + str(table)
-    #     values    : List[str] = []
-    #     for item in items:
-    #         val_list = ",".join([f"'{json.dumps(item[col])}'" for col in columns])
-    #         values.append(f"({val_list})")
-
-    #     ins_clause  = f"INSERT INTO {table_path}"
-    #     cols_clause = f"({','.join(columns)})"
-    #     vals_clause = f"VALUES {','.join(values)}"
-    #     query = f"{ins_clause} {cols_clause} {vals_clause};"
-    #     print(f"Insert query: {query}")
-    #     return SQL.Query(cursor=cursor, query=query, fetch_results=fetch_results)
-
     # Function to build and execute SELECT statements on a database connection.
     @staticmethod
     def SELECT(cursor        :cursor.MySQLCursor, db_name       :str,                      table:str,
@@ -271,6 +235,18 @@ class SQL:
         return result
 
 class MySQLInterface(DataInterface):
+
+    # *** PUBLIC BUILT-INS ***
+
+    def __init__(self, game_id:str, settings):
+        # set up data from params
+        super().__init__(game_id=game_id)
+        self._settings = settings
+        # set up connection vars and try to make connection off the bat.
+        self._tunnel : Optional[sshtunnel.SSHTunnelForwarder] = None
+        self._db     : Optional[connection.MySQLConnection] = None
+        self._db_cursor : Optional[cursor.MySQLCursor] = None
+        self.Open()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -436,15 +412,4 @@ class MySQLInterface(DataInterface):
         else:
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
         return ret_val
-    # *** PUBLIC BUILT-INS ***
-
-    def __init__(self, game_id:str, settings):
-        # set up data from params
-        super().__init__(game_id=game_id)
-        self._settings = settings
-        # set up connection vars and try to make connection off the bat.
-        self._tunnel    : Optional[sshtunnel.SSHTunnelForwarder] = None
-        self._db        : Optional[connection.MySQLConnection] = None
-        self._db_cursor : Optional[cursor.MySQLCursor] = None
-        self.Open()
         

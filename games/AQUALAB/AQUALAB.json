@@ -556,6 +556,18 @@
                 "enabled": true,
                 "description": "List of key events that happened in a player's session(s)"
             },
+            "JobsCompleted": {
+                "enabled": true,
+                "description": "List of completed jobs for a player"
+            },
+            "PlayerSummary": {
+                "enabled": true,
+                "description": "Summary of player statistics (active session time, jobs completed, number of sessions)"
+            },
+            "PopulationSummary": {
+                "enabled": true,
+                "description": "Summary of population statistics (active session time, average jobs completed count, average session count)"
+            },
             "SessionDiveSitesCount": {
                 "enabled": true,
                 "description": "Time spent playing in a given session"

@@ -38,7 +38,7 @@ class EventList(Feature):
             "model_concept_exported":       ("ecosystem", "string_value"),
             "begin_simulation":             ("job_name", "string_value"),
             "model_sync_error":             ("sync", "int_value"),
-            "simulation_sync_achieved":     ("ecosystem", "string_value"),
+            "simulation_sync_achieved":     ("job_name", "string_value"),
             "model_predict_completed":      ("ecosystem", "string_value"),
             "model_intervene_update":       ("difference_value", "int_value"),
             "model_intervene_error":        ("ecosystem", "string_value"),

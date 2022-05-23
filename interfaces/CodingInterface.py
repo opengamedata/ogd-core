@@ -27,7 +27,7 @@ class CodingInterface(Interface):
         pass
 
     @abc.abstractmethod
-    def _getCodeWordsBySession(self, session_id:str) -> Optional[List[str]]:
+    def _getCodeWordsByGame(self, game_id:str) -> Optional[List[str]]:
         pass
 
     @abc.abstractmethod
@@ -35,15 +35,19 @@ class CodingInterface(Interface):
         pass
 
     @abc.abstractmethod
-    def _getCodeWordsByGame(self, session_id:str) -> Optional[List[str]]:
+    def _getCodeWordsBySession(self, session_id:str) -> Optional[List[str]]:
+        pass
+
+    @abc.abstractmethod
+    def _getCodesByGame(self, game_id:str) -> Optional[List[Code]]:
+        pass
+
+    @abc.abstractmethod
+    def _getCodesByCoder(self, coder_id:str) -> Optional[List[Code]]:
         pass
 
     @abc.abstractmethod
     def _getCodesBySession(self, session_id:str) -> Optional[List[Code]]:
-        pass
-
-    @abc.abstractmethod
-    def _getCodesByCoder(self, coder_name:str) -> Optional[List[Code]]:
         pass
 
     @abc.abstractmethod
@@ -79,9 +83,25 @@ class CodingInterface(Interface):
             Logger.Log("Can't create Coder, the source interface is not open!")
         return ret_val
 
+    def GetCodes(self, mode:RetrievalMode, id:str):
+        if mode == CodingInterface.RetrievalMode.BY_GAME:
+            self._getCodesByGame(game_id=id)
+        elif mode == CodingInterface.RetrievalMode.BY_CODER:
+            self._getCodesByCoder(coder_id=id)
+        elif mode == CodingInterface.RetrievalMode.BY_SESSION:
+            self._getCodesBySession(session_id=id)
+        else:
+            raise NotImplementedError(f"The given retrieval mode '{mode}' is not supported for retrieving codes!")
+
     def GetCodeWords(self, mode:RetrievalMode, id:str):
-        if mode == CodingInterface.RetrievalMode.BY_CODER:
+        if mode == CodingInterface.RetrievalMode.BY_GAME:
+            self._getCodeWordsByGame(game_id=id)
+        elif mode == CodingInterface.RetrievalMode.BY_CODER:
             self._getCodeWordsByCoder(coder_id=id)
+        elif mode == CodingInterface.RetrievalMode.BY_SESSION:
+            self._getCodeWordsBySession(session_id=id)
+        else:
+            raise NotImplementedError(f"The given retrieval mode '{mode}' is not supported for retrieving code words!")
 
     # *** PRIVATE STATICS ***
 

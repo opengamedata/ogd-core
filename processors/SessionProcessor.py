@@ -16,6 +16,35 @@ from schemas.Request import ExporterTypes
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.
 class SessionProcessor(FeatureProcessor):
+
+    # *** PUBLIC BUILT-INS ***
+
+    ## Constructor for the SessionProcessor class.
+    def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, player_id:str, session_id:str,
+                 feature_overrides:Optional[List[str]]=None):
+        """Constructor for the SessionProcessor class.
+        Simply stores some data for use later, including the type of extractor to
+        use.
+
+        :param LoaderClass: The type of data extractor to use for input data.
+                            This should correspond to whatever game_id is in the TableSchema.
+        :type LoaderClass: Type[ExtractorLoader]
+        :param game_schema: A dictionary that defines how the game data itself is structured.
+        :type game_schema: GameSchema
+        :param player_id: _description_
+        :type player_id: str
+        :param session_id: _description_
+        :type session_id: str
+        :param feature_overrides: _description_, defaults to None
+        :type feature_overrides: Optional[List[str]], optional
+        :param session_file: _description_, defaults to None
+        :type session_file: Union[IO[str],None], optional
+        """
+        ## Define instance vars
+        self._session_id   : str = session_id
+        self._player_id    : str = player_id
+        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _prepareLoader(self) -> ExtractorLoader:
@@ -63,34 +92,6 @@ class SessionProcessor(FeatureProcessor):
     def _clearLines(self) -> None:
         Logger.Log(f"Clearing features from SessionProcessor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
-
-    # *** PUBLIC BUILT-INS ***
-
-    ## Constructor for the SessionProcessor class.
-    def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, player_id:str, session_id:str,
-                 feature_overrides:Optional[List[str]]=None):
-        """Constructor for the SessionProcessor class.
-        Simply stores some data for use later, including the type of extractor to
-        use.
-
-        :param LoaderClass: The type of data extractor to use for input data.
-                            This should correspond to whatever game_id is in the TableSchema.
-        :type LoaderClass: Type[ExtractorLoader]
-        :param game_schema: A dictionary that defines how the game data itself is structured.
-        :type game_schema: GameSchema
-        :param player_id: _description_
-        :type player_id: str
-        :param session_id: _description_
-        :type session_id: str
-        :param feature_overrides: _description_, defaults to None
-        :type feature_overrides: Optional[List[str]], optional
-        :param session_file: _description_, defaults to None
-        :type session_file: Optional[IO[str]], optional
-        """
-        ## Define instance vars
-        self._session_id   : str = session_id
-        self._player_id    : str = player_id
-        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
 
     # *** PUBLIC STATICS ***
 

@@ -28,6 +28,26 @@ class LegacyFeature(Feature):
         """
         return
 
+    # *** PUBLIC BUILT-INS ***
+
+    # Base constructor for LegacyFeature classes.
+    def __init__(self, name:str, description:str, count_index:int, game_schema:GameSchema, session_id:str):
+        """Base constructor for LegacyFeature classes.
+        The constructor sets an extractor's session id and range of levels,
+        as well as initializing the features dictionary and list of played levels.
+
+        :param session_id: The id of the session from which we will extract features.
+        :type session_id: int
+        :param game_schema: A dictionary that defines how the game data itself is structured
+        :type game_schema: GameSchema
+        """
+        super().__init__(name=name, description=description, count_index=count_index)
+        self._session_id  : str         = session_id
+        self._game_schema : GameSchema  = game_schema
+        self._levels      : List[int]   = []
+        self._sequences   : List        = []
+        self._features    : LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=game_schema)
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _getEventDependencies(self) -> List[str]:
@@ -67,26 +87,6 @@ class LegacyFeature(Feature):
             else:
                 column_vals.append(_format(self._features.getValByName(key)))
         return column_vals
-
-    # *** PUBLIC BUILT-INS ***
-
-    # Base constructor for LegacyFeature classes.
-    def __init__(self, name:str, description:str, count_index:int, game_schema:GameSchema, session_id:str):
-        """Base constructor for LegacyFeature classes.
-        The constructor sets an extractor's session id and range of levels,
-        as well as initializing the features dictionary and list of played levels.
-
-        :param session_id: The id of the session from which we will extract features.
-        :type session_id: int
-        :param game_schema: A dictionary that defines how the game data itself is structured
-        :type game_schema: GameSchema
-        """
-        super().__init__(name=name, description=description, count_index=count_index)
-        self._session_id  : str         = session_id
-        self._game_schema : GameSchema  = game_schema
-        self._levels      : List[int]   = []
-        self._sequences   : List        = []
-        self._features    : LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=game_schema)
 
     # *** PUBLIC STATICS ***
 

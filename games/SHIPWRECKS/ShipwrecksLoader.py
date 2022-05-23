@@ -48,6 +48,14 @@ class ShipwrecksLoader(ExtractorLoader):
             ret_val = EventList.EventList(name=name, description=feature_args["description"])
         elif feature_type == "EvidenceBoardCompleteCount":
             ret_val = EvidenceBoardCompleteCount.EvidenceBoardCompleteCount(name=name, description=feature_args["description"])
+        elif feature_type == "JobsCompleted":
+            ret_val = JobsCompleted.JobsCompleted(name=name, description=feature_args["description"], session_id=self._session_id)
+        elif feature_type == "PlayerSummary":
+            ret_val = PlayerSummary.PlayerSummary(name=name, description=feature_args["description"])
+        elif feature_type == "PopulationSummary":
+            ret_val = PopulationSummary.PopulationSummary(name=name, description=feature_args["description"])
+        elif feature_type == "SessionDuration":
+            ret_val = SessionDuration.SessionDuration(name=name, description=feature_args["description"], session_id=self._session_id)
         elif feature_type == "SessionID":
             ret_val = SessionID.SessionID(name=name, description=feature_args["description"], session_id=self._session_id)
         elif feature_type == "TopJobCompletionDestinations":
