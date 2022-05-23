@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from enum import IntEnum
-from typing import Any, Dict, List, Optional, Union
+from typing import List, Optional, Union
 
 import utils
 class EventSource(IntEnum):
@@ -76,7 +76,7 @@ class Event:
              + f"index        : {self.event_sequence_index}\n"\
 
     def FallbackDefaults(self, app_id:Optional[str]=None, index:Optional[int]=None):
-        if self.app_id == None:
+        if self.app_id == None and app_id != None:
             self.app_id = app_id
         if self.event_sequence_index == None:
             self.event_sequence_index = index
@@ -104,8 +104,60 @@ class Event:
                 "offset",     "user_id",      "user_data",   "game_state",
                 "index"]
 
-    def ColumnValues(self) -> List[Union[str, datetime, Map, int, None]]:
+    def ColumnValues(self) -> List[Union[str, datetime, utils.map, int, None]]:
         return [self.session_id,  self.app_id,             self.timestamp,   self.event_name,
                 self.event_data,  self.event_source.name,  self.app_version, self.log_version,
                 self.time_offset, self.user_id,            self.user_data,   self.game_state,
                 self.event_sequence_index]
+
+    @property
+    def SessionID(self) -> str:
+        return self.session_id
+
+    @property
+    def AppID(self) -> str:
+        return self.app_id
+
+    @property
+    def Timestamp(self) -> datetime:
+        return self.timestamp
+
+    @property
+    def EventName(self) -> str:
+        return self.event_name
+
+    @property
+    def EventData(self) -> utils.map:
+        return self.event_data
+
+    @property
+    def EventSource(self) -> EventSource:
+        return self.event_source
+
+    @property
+    def AppVersion(self) -> str:
+        return self.app_version
+
+    @property
+    def LogVersion(self) -> str:
+        return self.log_version
+
+    @property
+    def TimeOffset(self) -> Optional[int]:
+        return self.time_offset
+
+    @property
+    def UserID(self) -> Optional[str]:
+        return self.user_id
+
+    @property
+    def UserData(self) -> utils.map:
+        return self.user_data
+
+    @property
+    def GameState(self) -> utils.map:
+        return self.game_state
+
+    @property
+    def EventSequenceIndex(self) -> Optional[int]:
+        return self.event_sequence_index
