@@ -223,7 +223,7 @@ class ExportManager:
         for i, next_slice_ids in enumerate(_session_slices):
             next_slice_data = self._loadSlice(request=request, next_slice_ids=next_slice_ids, slice_num=i+1, slice_count=len(_session_slices))
             if next_slice_data is not None:
-                self._processSlice(next_slice_data=next_slice_data, table_schema=table_schema, ids=sess_ids, id_mode=request._range._id_mode, slice_num=i+1, slice_count=len(_session_slices))
+                self._processSlice(next_slice_data=next_slice_data, request=request, table_schema=table_schema, ids=sess_ids, slice_num=i+1, slice_count=len(_session_slices))
                 # 2b) After processing all rows for each slice, write out the session data and reset for next slice.
                 if request.ExportEvents and self._event_mgr is not None:
                     _events = self._event_mgr.GetLines(slice_num=i+1, slice_count=len(_session_slices))
