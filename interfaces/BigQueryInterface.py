@@ -97,7 +97,7 @@ class BigQueryInterface(DataInterface):
             id_string = ','.join([f"{x}" for x in id_list])
             session_clause = f"AND   param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
             player_clause  = f"AND   param_user.key    = 'user_code'"
-        elif id_mode == IDMode.PLAYER:
+        elif id_mode == IDMode.USER:
             id_string = ','.join([f"'{x}'" for x in id_list])
             session_clause = f"AND   param_session.key = 'ga_session_id'"
             player_clause  = f"AND   param_user.key    = 'user_code' AND param_user.value.string_value IN ({id_string})"
@@ -188,7 +188,7 @@ class BigQueryInterface(DataInterface):
                 WHERE param.key = "ga_session_id"
                 AND param.value.int_value IN ({id_string})
             """
-        elif id_mode==IDMode.PLAYER:
+        elif id_mode==IDMode.USER:
             id_string = ','.join([f"'{x}'" for x in id_list])
             where_clause = f"""
                 WHERE param.key = "user_code"

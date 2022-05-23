@@ -302,7 +302,7 @@ class ExportManager:
                 next_event.FallbackDefaults(index=_evt_sess_index)
                 _evt_sess_index += 1
                 if (request._range._id_mode==IDMode.SESSION and next_event.SessionID in ids) \
-                or (request._range._id_mode==IDMode.PLAYER  and next_event.UserID    in ids):
+                or (request._range._id_mode==IDMode.USER  and next_event.UserID    in ids):
                     self._processEvent(next_event=next_event)
                 elif next_event.SessionID is not None and next_event.SessionID.upper() != "NONE":
                     Logger.Log(f"Found a session ({next_event.SessionID}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)

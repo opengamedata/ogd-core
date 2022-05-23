@@ -49,7 +49,7 @@ class CSVInterface(DataInterface):
         if self.IsOpen() and self._data != None:
             if id_mode == IDMode.SESSION:
                 return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
-            elif id_mode == IDMode.PLAYER:
+            elif id_mode == IDMode.USER:
                 return list(self._data.loc[self._data['user_id'].isin(id_list)].itertuples(index=False, name=None))
             else:
                 return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
@@ -71,7 +71,7 @@ class CSVInterface(DataInterface):
         if id_mode == IDMode.SESSION:
             min_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].min()
             max_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].max()
-        elif id_mode == IDMode.PLAYER:
+        elif id_mode == IDMode.USER:
             min_date = self._data[self._data['user_id'].isin(id_list)]['server_time'].min()
             max_date = self._data[self._data['user_id'].isin(id_list)]['server_time'].max()
         else:

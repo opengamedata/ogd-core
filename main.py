@@ -146,7 +146,7 @@ def genRequest(events:bool, features:bool) -> Request:
         else:
             raise Exception(f"{interface_type} is not a valid DataInterface type!")
         # retrieve/calculate date range.
-        range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.PLAYER, versions=supported_vers)
+        range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER, versions=supported_vers)
     else:
         interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
         if interface_type == "BigQuery":

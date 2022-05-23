@@ -341,7 +341,7 @@ class MySQLInterface(DataInterface):
             id_list_string = ",".join([f"%s" for i in range(len(id_list))])
             if id_mode == IDMode.SESSION:
                 filt = f"`app_id`=%s AND `session_id` IN ({id_list_string}){ver_filter}"
-            elif id_mode == IDMode.PLAYER:
+            elif id_mode == IDMode.USER:
                 filt = f"`app_id`=%s AND `player_id` IN ({id_list_string}){ver_filter}"
             else:
                 raise ValueError("Invalid IDMode in MySQLInterface!")
@@ -400,7 +400,7 @@ class MySQLInterface(DataInterface):
             ver_filter = f" AND `app_version` in ({','.join([str(x) for x in versions])}) " if versions else ''
             if id_mode == IDMode.SESSION:
                 filt = f"`app_id`='{self._game_id}' AND `session_id` IN ({ids_string}){ver_filter}"
-            elif id_mode == IDMode.PLAYER:
+            elif id_mode == IDMode.USER:
                 filt = f"`app_id`='{self._game_id}' AND `player_id` IN ({ids_string}){ver_filter}"
             else:
                 raise ValueError("Invalid IDMode in MySQLInterface!")
