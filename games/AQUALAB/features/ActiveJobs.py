@@ -26,9 +26,9 @@ class ActiveJobs(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self._validate_job(event.event_data['job_name']):
-            user_code = event.user_id
-            job_name = event.event_data["job_name"]["string_value"]
+        if self._validate_job(event.EventData['job_name']):
+            user_code = event.UserID
+            job_name = event.EventData["job_name"]["string_value"]
 
             if (self._current_user_code is not None) and (self._current_user_code != user_code) and (self._current_user_code not in self._active_jobs[self._last_started_id]):
                 # if we found a new user, then previous user must have left off on whatever their active job was.

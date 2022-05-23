@@ -34,7 +34,7 @@ class EventManager:
                 col_values[i] = f"\"{col}\""
             elif type(col) == dict:
                 col_values[i] = json.dumps(col)
-        # event.event_data = json.dumps(event.event_data)
+        # event.EventData = json.dumps(event.EventData)
         self._lines.append(separator.join([str(item) for item in col_values]) + "\n") # changed , to \t
         self._processor.ProcessEvent(event=event)
 

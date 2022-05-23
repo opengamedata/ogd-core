@@ -38,15 +38,15 @@ class CollectFactNoJob(Detector):
         :param event: _description_
         :type event: Event
         """
-        if event.event_data['job_name'] == "no-active-job":
-            self._sess_id = event.session_id
-            self._player_id = event.user_id
-            self._time = event.timestamp
+        if event.EventData['job_name'] == "no-active-job":
+            self._sess_id = event.SessionID
+            self._player_id = event.UserID
+            self._time = event.Timestamp
             self._found_jobless_fact = True
-            self._fact_id = event.event_data['fact_id']
-            self._app_version = event.app_version
-            self._log_version = event.log_version
-            self._sequence_index = event.event_sequence_index
+            self._fact_id = event.EventData['fact_id']
+            self._app_version = event.AppVersion
+            self._log_version = event.LogVersion
+            self._sequence_index = event.EventSequenceIndex
         return
 
     def _trigger_condition(self) -> bool:

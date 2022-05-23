@@ -143,23 +143,23 @@ class LakelandExtractor(LegacyFeature):
     def _extractFromEvent(self, event:Event):
 
         # put some data in local vars, for readability later.
-        self.event_client_time = event.timestamp
-        server_time = event.event_data['server_time']
-        event_type_str = LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][int(event.event_name.split('.')[-1])].upper()
+        self.event_client_time = event.Timestamp
+        server_time = event.EventData['server_time']
+        event_type_str = LakelandExtractor._ENUM_TO_STR['EVENT CATEGORIES'][int(event.EventName.split('.')[-1])].upper()
         if self._end and event_type_str in ['STARTGAME', 'NEWFARMBIT']:
             self._cur_gameplay += 1
             self.setValByName('num_play', self._cur_gameplay)
         if not self._VERSION:
-            self._VERSION = event.app_version
+            self._VERSION = event.AppVersion
             self.setValByName("version", self._VERSION)
         # Check for invalid row.
-        if event.session_id != self._session_id:
-            Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!", logging.ERROR)
+        if event.SessionID != self._session_id:
+            Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.SessionID}!", logging.ERROR)
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
             if self.getValByName(feature_name="persistentSessionID") == 0:
-                self.setValByName(feature_name="persistentSessionID", new_value=event.event_data['persistent_session_id'])
+                self.setValByName(feature_name="persistentSessionID", new_value=event.EventData['persistent_session_id'])
             # if self.getValByName(feature_name="player_id") == 0:
             #     self.setValByName(feature_name="player_id",
             #                                new_value=row_with_complex_parsed[table_schema.player_id_index])
@@ -167,10 +167,10 @@ class LakelandExtractor(LegacyFeature):
             # if this is the first row
             if not self._CLIENT_START_TIME:
                 # initialize this time as the start
-                self._extractFromFirst(event.timestamp, event.event_data)
+                self._extractFromFirst(event.Timestamp, event.EventData)
 
             # set current windows
-            new_windows = self._get_windows_at_time(event.timestamp)
+            new_windows = self._get_windows_at_time(event.Timestamp)
             if not new_windows:
                 return # reached past the max windows
             old_max, new_min = max(self._cur_windows), min(new_windows)
@@ -205,113 +205,113 @@ class LakelandExtractor(LegacyFeature):
             self._cur_windows = new_windows
 
             # Record that an event of any kind occurred, for the window & session
-            time_since_start = self.time_since_start(event.timestamp)
+            time_since_start = self.time_since_start(event.Timestamp)
             self.feature_count(feature_base="EventCount")
             self.setValByName(feature_name="sessDuration", new_value=time_since_start)
-            if event_type_str == "BUY" and event.event_data["success"]:
-                debug_str = LakelandExtractor._ENUM_TO_STR['BUYS'][event.event_data["buy"]].upper()
+            if event_type_str == "BUY" and event.EventData["success"]:
+                debug_str = LakelandExtractor._ENUM_TO_STR['BUYS'][event.EventData["buy"]].upper()
             if event_type_str == 'STARTGAME':
-                debug_str = "START" if event.event_data.get("continue") == False else "CONTINUE"
-                debug_str += f' Language: {event.event_data.get("language")}'
+                debug_str = "START" if event.EventData.get("continue") == False else "CONTINUE"
+                debug_str += f' Language: {event.EventData.get("language")}'
             else:
                 debug_str = ''
             self.add_debug_str(f'{self._num_farmbits } {time_since_start} {event_type_str} {debug_str}')
 
 
-            self._extractFromAll(event.timestamp, event.event_data)
+            self._extractFromAll(event.Timestamp, event.EventData)
             # Then, handle cases for each type of event
             if event_type_str in LakelandExtractor._ACTIVE_EVENTS:
-                self._extractFromActive(event.timestamp, event.event_data)
+                self._extractFromActive(event.Timestamp, event.EventData)
             else:
-                self._extractFromInactive(event.timestamp, event.event_data)
+                self._extractFromInactive(event.Timestamp, event.EventData)
             if event_type_str in LakelandExtractor._EXPLORATORY_EVENTS:
-                self._extractFromExplore(event.timestamp, event.event_data)
+                self._extractFromExplore(event.Timestamp, event.EventData)
             if event_type_str in LakelandExtractor._IMPACT_EVENTS:
-                self._extractFromImpact(event.timestamp, event.event_data)
+                self._extractFromImpact(event.Timestamp, event.EventData)
             if event_type_str == "GAMESTATE":
-                self._extractFromGamestate(event.timestamp, event.event_data)
+                self._extractFromGamestate(event.Timestamp, event.EventData)
             elif event_type_str == "STARTGAME":
-                self._extractFromStartgame(event.timestamp, event.event_data)
+                self._extractFromStartgame(event.Timestamp, event.EventData)
             elif event_type_str == "CHECKPOINT":
-                self._extractFromCheckpoint(event.timestamp, event.event_data)
+                self._extractFromCheckpoint(event.Timestamp, event.EventData)
             elif event_type_str == "SELECTTILE":
-                self._extractFromSelecttile(event.timestamp, event.event_data)
+                self._extractFromSelecttile(event.Timestamp, event.EventData)
             elif event_type_str == "SELECTFARMBIT":
-                self._extractFromSelectfarmbit(event.timestamp, event.event_data)
+                self._extractFromSelectfarmbit(event.Timestamp, event.EventData)
             elif event_type_str == "SELECTITEM":
-                self._extractFromSelectitem(event.timestamp, event.event_data)
+                self._extractFromSelectitem(event.Timestamp, event.EventData)
             elif event_type_str == "SELECTBUY":
-                self._extractFromSelectbuy(event.timestamp, event.event_data)
+                self._extractFromSelectbuy(event.Timestamp, event.EventData)
             elif event_type_str == "BUY":
-                self._extractFromBuy(event.timestamp, event.event_data)
+                self._extractFromBuy(event.Timestamp, event.EventData)
             elif event_type_str == "CANCELBUY":
-                self._extractFromCancelbuy(event.timestamp, event.event_data)
+                self._extractFromCancelbuy(event.Timestamp, event.EventData)
             elif event_type_str == "ROADBUILDS":
-                self._extractFromRoadbuilds(event.timestamp, event.event_data)
+                self._extractFromRoadbuilds(event.Timestamp, event.EventData)
             elif event_type_str == "TILEUSESELECT":
-                self._extractFromTileuseselect(event.timestamp, event.event_data)
+                self._extractFromTileuseselect(event.Timestamp, event.EventData)
             elif event_type_str == "ITEMUSESELECT":
-                self._extractFromItemuseselect(event.timestamp, event.event_data)
+                self._extractFromItemuseselect(event.Timestamp, event.EventData)
             elif event_type_str == "TOGGLENUTRITION":
-                self._extractFromTogglenutrition(event.timestamp, event.event_data)
+                self._extractFromTogglenutrition(event.Timestamp, event.EventData)
             elif event_type_str == "TOGGLESHOP":
-                self._extractFromToggleshop(event.timestamp, event.event_data)
+                self._extractFromToggleshop(event.Timestamp, event.EventData)
             elif event_type_str == "TOGGLEACHIEVEMENTS":
-                self._extractFromToggleachievements(event.timestamp, event.event_data)
+                self._extractFromToggleachievements(event.Timestamp, event.EventData)
             elif event_type_str == "SKIPTUTORIAL":
-                self._extractFromSkiptutorial(event.timestamp, event.event_data)
+                self._extractFromSkiptutorial(event.Timestamp, event.EventData)
             elif event_type_str == "SPEED":
-                self._extractFromSpeed(event.timestamp, event.event_data)
+                self._extractFromSpeed(event.Timestamp, event.EventData)
             elif event_type_str == "ACHIEVEMENT":
-                self._extractFromAchievement(event.timestamp, event.event_data)
+                self._extractFromAchievement(event.Timestamp, event.EventData)
             elif event_type_str == "FARMBITDEATH":
-                self._extractFromFarmbitdeath(event.timestamp, event.event_data)
+                self._extractFromFarmbitdeath(event.Timestamp, event.EventData)
             elif event_type_str == "BLURB":
-                self._extractFromBlurb(event.timestamp, event.event_data)
+                self._extractFromBlurb(event.Timestamp, event.EventData)
             elif event_type_str == "CLICK":
-                self._extractFromClick(event.timestamp, event.event_data)
+                self._extractFromClick(event.Timestamp, event.EventData)
             elif event_type_str == "RAINSTOPPED":
-                self._extractFromRainstopped(event.timestamp, event.event_data)
+                self._extractFromRainstopped(event.Timestamp, event.EventData)
             elif event_type_str == "HISTORY":
-                self._extractFromHistory(event.timestamp, event.event_data)
+                self._extractFromHistory(event.Timestamp, event.EventData)
             elif event_type_str == "ENDGAME":
-                self._extractFromEndgame(event.timestamp, event.event_data)
+                self._extractFromEndgame(event.Timestamp, event.EventData)
             elif event_type_str == "EMOTE":
-                self._extractFromEmote(event.timestamp, event.event_data)
+                self._extractFromEmote(event.Timestamp, event.EventData)
             elif event_type_str == "FARMFAIL":
-                self._extractFromFarmfail(event.timestamp, event.event_data)
+                self._extractFromFarmfail(event.Timestamp, event.EventData)
             elif event_type_str == "BLOOM":
-                self._extractFromBloom(event.timestamp, event.event_data)
+                self._extractFromBloom(event.Timestamp, event.EventData)
             elif event_type_str == "FARMHARVESTED":
-                self._extractFromFarmharvested(event.timestamp, event.event_data)
+                self._extractFromFarmharvested(event.Timestamp, event.EventData)
             elif event_type_str == "MILKPRODUCED":
-                self._extractFromMilkproduced(event.timestamp, event.event_data)
+                self._extractFromMilkproduced(event.Timestamp, event.EventData)
             elif event_type_str == "POOPPRODUCED":
-                self._extractFromPoopproduced(event.timestamp, event.event_data)
+                self._extractFromPoopproduced(event.Timestamp, event.EventData)
             elif event_type_str == "DEBUG":
-                self._extractFromDebug(event.timestamp, event.event_data)
+                self._extractFromDebug(event.Timestamp, event.EventData)
             elif event_type_str == "NEWFARMBIT":
-                self._extractFromNewfarmbit(event.timestamp, event.event_data)
+                self._extractFromNewfarmbit(event.Timestamp, event.EventData)
             elif event_type_str == "AVAILABLEFOOD":
-                self._extractFromAvailablefood(event.timestamp, event.event_data)
+                self._extractFromAvailablefood(event.Timestamp, event.EventData)
             elif event_type_str == "MONEYRATE":
-                self._extractFromMoneyrate(event.timestamp, event.event_data)
+                self._extractFromMoneyrate(event.Timestamp, event.EventData)
             elif event_type_str == "SADFARMBITS":
-                self._extractFromSadfarmbits(event.timestamp, event.event_data)
+                self._extractFromSadfarmbits(event.Timestamp, event.EventData)
             elif event_type_str == "LAKENUTRITION":
-                self._extractFromLakenutrition(event.timestamp, event.event_data)
+                self._extractFromLakenutrition(event.Timestamp, event.EventData)
             elif event_type_str == "SALESTART":
-                self._extractFromSalestart(event.timestamp, event.event_data)
+                self._extractFromSalestart(event.Timestamp, event.EventData)
             elif event_type_str == "SALEEND":
-                self._extractFromSaleend(event.timestamp, event.event_data)
+                self._extractFromSaleend(event.Timestamp, event.EventData)
             elif event_type_str == "RAINSTARTED":
-                self._extractFromRainstarted(event.timestamp, event.event_data)
+                self._extractFromRainstarted(event.Timestamp, event.EventData)
             elif event_type_str == "EATFOOD":
-                self._extractFromEatfood(event.timestamp, event.event_data)
+                self._extractFromEatfood(event.Timestamp, event.EventData)
             elif event_type_str == "RESET":
-                self._extractFromReset(event.timestamp, event.event_data)
+                self._extractFromReset(event.Timestamp, event.EventData)
             else:
-                raise Exception(f"Found an unrecognized event type: {event.event_name}")
+                raise Exception(f"Found an unrecognized event type: {event.EventName}")
 
     def _extractFromFirst(self, event_client_time, event_data):
         self._CLIENT_START_TIME = event_client_time

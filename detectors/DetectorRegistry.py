@@ -50,9 +50,9 @@ class DetectorRegistry(ExtractorRegistry):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
-        if event.event_name in self._event_registry.keys():
+        if event.EventName in self._event_registry.keys():
             # send event to every listener for the given event name.
-            for listener in self._event_registry[event.event_name]:
+            for listener in self._event_registry[event.EventName]:
                 if listener.name in self._detectors.keys():
                     self._detectors[listener.name].ExtractFromEvent(event)
         # don't forget to send to any features listening for "all" events

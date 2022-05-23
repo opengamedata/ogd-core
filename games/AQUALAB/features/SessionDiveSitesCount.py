@@ -20,9 +20,9 @@ class SessionDiveSitesCount(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_data["site_id"]['string_value'] not in self._visited_sites:
+        if event.EventData["site_id"]['string_value'] not in self._visited_sites:
             self._count += 1
-            self._visited_sites.append(event.event_data["site_id"]['string_value'])
+            self._visited_sites.append(event.EventData["site_id"]['string_value'])
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

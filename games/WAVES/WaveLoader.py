@@ -164,11 +164,11 @@ class WaveLoader(ExtractorLoader):
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
     # def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
-    #     if event.session_id == self._session_id:
-    #         level = event.event_data['level']
+    #     if event.SessionID == self._session_id:
+    #         level = event.EventData['level']
     #         # If we haven't set persistent id, set now.
     #         if self._features.getValByName(feature_name="persistentSessionID") == 0:
-    #             self._features.setValByName(feature_name="persistentSessionID", new_value=event.event_data['persistent_session_id'])
+    #             self._features.setValByName(feature_name="persistentSessionID", new_value=event.EventData['persistent_session_id'])
     #         # Ensure we have private data initialized for the given level.
     #         if not level in self._levels:
     #             bisect.insort(self._levels, level)
@@ -180,18 +180,18 @@ class WaveLoader(ExtractorLoader):
     #         # NOTE: for BEGIN and COMPLETE, we assume only one event of each type happens.
     #         # If there are somehow multiples, the previous times are overwritten by the newer ones.
     #         # 1) figure out what type of event we had. If CUSTOM, we'll use the event_custom sub-item.
-    #         event_type = event.event_name.split('.')[0]
+    #         event_type = event.EventName.split('.')[0]
     #         if event_type == "CUSTOM":
-    #             event_type = event.event_data['event_custom']
+    #             event_type = event.EventData['event_custom']
     #         # 2) handle cases for each type of event
     #         if event_type == "BEGIN":
-    #             self._extractFromBegin(level=level, event_client_time=event.timestamp)
+    #             self._extractFromBegin(level=level, event_client_time=event.Timestamp)
     #         elif event_type == "COMPLETE":
-    #             self._extractFromComplete(level=level, event_client_time=event.timestamp)
+    #             self._extractFromComplete(level=level, event_client_time=event.Timestamp)
     #         elif event_type == "SUCCEED":
     #             self._extractFromSucceed(level=level)
     #         elif event_type == "MENU_BUTTON":
-    #             self._extractFromMenuBtn(level=level, event_client_time=event.timestamp)
+    #             self._extractFromMenuBtn(level=level, event_client_time=event.Timestamp)
     #         elif event_type == "SKIP_BUTTON":
     #             self._extractFromSkipBtn(level=level)
     #         elif event_type == "DISMISS_MENU_BUTTON":
@@ -202,14 +202,14 @@ class WaveLoader(ExtractorLoader):
     #         elif event_type == "FAIL":
     #             self._extractFromFail(level=level)
     #         elif event_type in ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"] :
-    #             self._extractFromMoveRelease(level=level, event_data=event.event_data, event_client_time=event.timestamp)
+    #             self._extractFromMoveRelease(level=level, event_data=event.EventData, event_client_time=event.Timestamp)
     #         elif event_type == "QUESTION_ANSWER":
-    #             self._extractFromQuestionAnswer(event_data=event.event_data, event_client_time=event.timestamp)
+    #             self._extractFromQuestionAnswer(event_data=event.EventData, event_client_time=event.Timestamp)
     #             # print("Q+A: " + str(event_data))
     #         else:
     #             raise Exception(f"Found an unrecognized event type: {event_type}")
     #     else:
-    #         Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!", logging.ERROR)
+    #         Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.SessionID}!", logging.ERROR)
                                                
     ## Function to perform calculation of aggregate features from existing
     #  per-level/per-custom-count features.

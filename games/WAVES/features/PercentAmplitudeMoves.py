@@ -23,7 +23,7 @@ class PercentAmplitudeMoves(PerLevelFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         self._count += 1
-        if event.event_data['slider'].upper() == 'AMPLITUDE':
+        if event.EventData['slider'].upper() == 'AMPLITUDE':
             self._amplitude_count += 1
 
     def _extractFromFeatureData(self, feature: FeatureData):

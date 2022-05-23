@@ -33,7 +33,7 @@ class CustomDetector(Detector):
         # Note that this function runs once on each Event whose name matches one of the strings returned by _getEventDependencies()
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
-        # if "Click" in event.event_name:
+        # if "Click" in event.EventName:
         #     self._found_click = True
         return
     

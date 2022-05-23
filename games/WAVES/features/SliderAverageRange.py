@@ -21,7 +21,7 @@ class SliderAverageRange(PerLevelFeature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        self._ranges.append(event.event_data["max_val"] - event.event_data["min_val"])
+        self._ranges.append(event.EventData["max_val"] - event.EventData["min_val"])
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

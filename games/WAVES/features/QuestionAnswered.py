@@ -20,8 +20,8 @@ class QuestionAnswered(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_data['question'] == self._count_index:
-            self._answer = event.event_data['answered']
+        if event.EventData['question'] == self._count_index:
+            self._answer = event.EventData['answered']
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

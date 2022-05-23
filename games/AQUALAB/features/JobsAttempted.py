@@ -40,33 +40,33 @@ class JobsAttempted(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.session_id != self._session_id:
-            self._session_id = event.session_id
+        if event.SessionID != self._session_id:
+            self._session_id = event.SessionID
 
             if self._job_start_time:
                 self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
-                self._job_start_time = event.timestamp
+                self._job_start_time = event.Timestamp
 
-        if self._validate_job(event.event_data['job_name']):
-            user_code = event.user_id
-            job_name = event.event_data["job_name"]["string_value"]
+        if self._validate_job(event.EventData['job_name']):
+            user_code = event.UserID
+            job_name = event.EventData["job_name"]["string_value"]
             job_id = self._job_map[job_name]
 
-            if event.event_name == "accept_job" and job_id == self._job_id:
+            if event.EventName == "accept_job" and job_id == self._job_id:
                 self._num_starts += 1
                 self._user_code = user_code
-                self._job_start_time = event.timestamp
+                self._job_start_time = event.Timestamp
 
-            elif event.event_name == "complete_job" and job_id == self._job_id and user_code == self._user_code:
+            elif event.EventName == "complete_job" and job_id == self._job_id and user_code == self._user_code:
                 self._num_completes += 1
 
                 if self._job_start_time:
-                    self._time += (event.timestamp - self._job_start_time).total_seconds()
+                    self._time += (event.Timestamp - self._job_start_time).total_seconds()
                     self._times.append(self._time)
                     self._time = 0
                     self._job_start_time = None
 
-        self._prev_timestamp = event.timestamp
+        self._prev_timestamp = event.Timestamp
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

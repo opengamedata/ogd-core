@@ -151,7 +151,7 @@ class JowilderExtractor(LegacyFeature):
             exc_type, exc_value, exc_traceback = sys.exc_info()
             Logger.Log('\n'.join(traceback.format_exception(exc_type, exc_value, exc_traceback)), logging.ERROR)
             Logger.Log('DEBUG STRINGS:', logging.DEBUG)
-            Logger.Log(self.get_debug_string(version=event.app_version, num_lines=2), logging.DEBUG)
+            Logger.Log(self.get_debug_string(version=event.AppVersion, num_lines=2), logging.DEBUG)
 
     def _extractFeaturesFromRow(self, event:Event):
         # put some data in local vars, for readability later.
@@ -159,28 +159,28 @@ class JowilderExtractor(LegacyFeature):
             return
         old_level = self.level
         if self.game_started:
-            self.level = event.event_data['level']
+            self.level = event.EventData['level']
         if self.level is not None:
             self._cur_levels = [self.level]
         if not old_level == self.level:
             self.new_level(old_level)
-        event_type_str = JowilderExtractor._EVENT_CUSTOM_TO_STR[int(event.event_name.split('.')[-1])].lower()
+        event_type_str = JowilderExtractor._EVENT_CUSTOM_TO_STR[int(event.EventName.split('.')[-1])].lower()
         # Check for invalid row.
-        if event.session_id != self._session_id:
+        if event.SessionID != self._session_id:
             Logger.Log(
-                f"Got a row with incorrect session id! Expected {self._session_id}, got {event.session_id}!",
+                f"Got a row with incorrect session id! Expected {self._session_id}, got {event.SessionID}!",
                 logging.ERROR)
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
             if self.getValByName(feature_name="persistentSessionID") == 0:
-                self.setValByName(feature_name="persistentSessionID", new_value=event.event_data['persistent_session_id'])
+                self.setValByName(feature_name="persistentSessionID", new_value=event.EventData['persistent_session_id'])
             if not self._CLIENT_START_TIME:
                 # initialize this time as the start
-                self._CLIENT_START_TIME = event.timestamp
+                self._CLIENT_START_TIME = event.Timestamp
                 self.last_click_time = self._CLIENT_START_TIME
                 self.last_click_hover_time = self._CLIENT_START_TIME
-                self.setValByName("version", event.app_version)
+                self.setValByName("version", event.AppVersion)
                 self.setValByName("play_year", self._CLIENT_START_TIME.year)
                 self.setValByName("play_month",self._CLIENT_START_TIME.month)
                 self.setValByName("play_day", self._CLIENT_START_TIME.day)
@@ -188,84 +188,84 @@ class JowilderExtractor(LegacyFeature):
                 self.setValByName("play_minute", self._CLIENT_START_TIME.minute)
                 self.setValByName("play_second", self._CLIENT_START_TIME.second)
                 if self.verbose:
-                    Logger.Log(f'{"*" * 10} {self._session_id} v{event.app_version} @ {self._CLIENT_START_TIME} {"*" * 10}')
+                    Logger.Log(f'{"*" * 10} {self._session_id} v{event.AppVersion} @ {self._CLIENT_START_TIME} {"*" * 10}')
 
             if self.level is not None:
                 if self.level_start_timestamp.get(self.level) == None:
-                    self.level_start_timestamp[self.level] = event.timestamp
-                self.setValByIndex('time_in_level', self.level, event.timestamp - self.level_start_timestamp[self.level])
+                    self.level_start_timestamp[self.level] = event.Timestamp
+                self.setValByIndex('time_in_level', self.level, event.Timestamp - self.level_start_timestamp[self.level])
 
-            self.time_since_start = self.get_time_since_start(client_time=event.timestamp)
+            self.time_since_start = self.get_time_since_start(client_time=event.Timestamp)
             self.feature_count(feature_base="EventCount")
             self.setValByName(feature_name="sessDuration", new_value=self.time_since_start)
             debug_strs = []
-            if event.event_data.get("save_code"):
-                debug_strs.append(f"Save code: {event.event_data.get('save_code')}")
-            if event.event_data.get("text"):
-                debug_strs.append(f"Text: {event.event_data.get('text')}")
+            if event.EventData.get("save_code"):
+                debug_strs.append(f"Save code: {event.EventData.get('save_code')}")
+            if event.EventData.get("text"):
+                debug_strs.append(f"Text: {event.EventData.get('text')}")
             if event_type_str == "wildcard_click":
-                d = event.event_data
-                if Event.CompareVersions(event.app_version, "4") < 0:
+                d = event.EventData
+                if Event.CompareVersions(event.AppVersion, "4") < 0:
                     debug_strs.append(f'ans: {d.get("answer")}')
                     debug_strs.append(f'corr: {d.get("correct")}')
             self.add_debug_str(f'{self.level} {self.cur_question} {self.time_since_start} {event_type_str} {"|".join(debug_strs)}')
             # Ensure we have private data initialized for this level.
             if "click" in event_type_str or "hover" in event_type_str:
-                self._extractFromClickOrHover(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromClickOrHover(timestamp=event.Timestamp, event_data=event.EventData)
             if "click" in event_type_str:
-                self._extractFromClick(timestamp=event.timestamp, event_data=event.event_data, version=event.app_version)
+                self._extractFromClick(timestamp=event.Timestamp, event_data=event.EventData, version=event.AppVersion)
             elif "hover" in event_type_str:
-                self._extractFromHover(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromHover(timestamp=event.Timestamp, event_data=event.EventData)
             if event_type_str == "checkpoint":
-                self._extractFromCheckpoint(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromCheckpoint(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "quiz":
-                self._extractFromQuiz(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromQuiz(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "quizquestion":
-               self._extractFromQuizquestion(timestamp=event.timestamp, event_data=event.event_data)
+               self._extractFromQuizquestion(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "quizstart":
-                self._extractFromQuizstart(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromQuizstart(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "quizend":
-                self._extractFromQuizend(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromQuizend(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "startgame":
-                self._extractFromStartgame(timestamp=event.timestamp, event_data=event.event_data, version=event.app_version)
+                self._extractFromStartgame(timestamp=event.Timestamp, event_data=event.EventData, version=event.AppVersion)
             elif event_type_str == "endgame":
-                self._extractFromEndgame(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromEndgame(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "navigate_click":
-                self._extractFromNavigate_click(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromNavigate_click(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "notebook_click":
-                self._extractFromNotebook_click(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromNotebook_click(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "map_click":
-                self._extractFromMap_click(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromMap_click(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "notification_click":
-                self._extractFromNotification_click(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromNotification_click(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "object_click":
-                self._extractFromObject_click(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromObject_click(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "observation_click":
-                self._extractFromObservation_click(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromObservation_click(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "person_click":
-                self._extractFromPerson_click(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromPerson_click(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "cutscene_click":
-                self._extractFromCutscene_click(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromCutscene_click(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "wildcard_click":
-                self._extractFromWildcard_click(timestamp=event.timestamp, event_data=event.event_data, version=event.app_version)
+                self._extractFromWildcard_click(timestamp=event.Timestamp, event_data=event.EventData, version=event.AppVersion)
             elif event_type_str == "navigate_hover":
-                self._extractFromNavigate_hover(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromNavigate_hover(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "notebook_hover":
-                self._extractFromNotebook_hover(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromNotebook_hover(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "map_hover":
-                self._extractFromMap_hover(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromMap_hover(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "notification_hover":
-                self._extractFromNotification_hover(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromNotification_hover(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "object_hover":
-                self._extractFromObject_hover(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromObject_hover(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "observation_hover":
-                self._extractFromObservation_hover(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromObservation_hover(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "person_hover":
-                self._extractFromPerson_hover(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromPerson_hover(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "cutscene_hover":
-                self._extractFromCutscene_hover(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromCutscene_hover(timestamp=event.Timestamp, event_data=event.EventData)
             elif event_type_str == "wildcard_hover":
-                self._extractFromWildcard_hover(timestamp=event.timestamp, event_data=event.event_data)
+                self._extractFromWildcard_hover(timestamp=event.Timestamp, event_data=event.EventData)
 
     def _extractFromClickOrHover(self, timestamp, event_data):
         time_between_click_hovers = timestamp - self.last_click_hover_time
@@ -775,7 +775,7 @@ class JowilderExtractor(LegacyFeature):
         # answer = _cur_cmd_fqid if _cur_cmd_type==2 else _answer or None
         # correct = _interacted_fqid if _cur_cmd_type==2 else _answer or None
 
-        # if event.app_version == 4:
+        # if event.AppVersion == 4:
         #
         #     # helpers
         #     click = bool(answer)
@@ -799,7 +799,7 @@ class JowilderExtractor(LegacyFeature):
         #     if click and not wrong_guess:
         #         self.cur_question += 1
         #
-        # # elif event.app_version == 6:
+        # # elif event.AppVersion == 6:
         # #     click = bool(_interacted_fqid)
         # #     wrong_guess = click and (_)
 

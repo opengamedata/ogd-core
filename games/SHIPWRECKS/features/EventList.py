@@ -32,24 +32,24 @@ class EventList(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_name == "checkpoint" and event.event_data["status"]["string_value"] == "Begin Mission":
-            self._mission_id = event.event_data["mission_id"]["string_value"]
+        if event.EventName == "checkpoint" and event.EventData["status"]["string_value"] == "Begin Mission":
+            self._mission_id = event.EventData["mission_id"]["string_value"]
 
         next_event = {
-            "name": event.event_name,
-            "user_id": event.user_id,
-            "session_id": event.session_id,
-            "timestamp": event.timestamp.isoformat(),
+            "name": event.EventName,
+            "user_id": event.UserID,
+            "session_id": event.SessionID,
+            "timestamp": event.Timestamp.isoformat(),
             "job_name": self._mission_id,
-            "index": event.event_sequence_index,
+            "index": event.EventSequenceIndex,
             "event_primary_detail": None
         }
 
-        if event.event_name in self._details_map:
-            param_name = self._details_map[event.event_name][0]
-            param_type = self._details_map[event.event_name][1]
+        if event.EventName in self._details_map:
+            param_name = self._details_map[event.EventName][0]
+            param_type = self._details_map[event.EventName][1]
 
-            next_event["event_primary_detail"] = event.event_data[param_name][param_type]
+            next_event["event_primary_detail"] = event.EventData[param_name][param_type]
 
         self._event_list.append(next_event)
 

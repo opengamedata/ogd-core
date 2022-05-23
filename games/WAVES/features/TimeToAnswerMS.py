@@ -24,19 +24,19 @@ class TimeToAnswerMS(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_name == "COMPLETE.0":
-            if event.event_data['level'] == 8:
-                self._latest_complete_lvl8 = event.timestamp
-            if event.event_data['level'] == 16:
-                self._latest_complete_lvl16 = event.timestamp
-        elif event.event_name == "CUSTOM.3":
-            q_num = event.event_data["question"]
+        if event.EventName == "COMPLETE.0":
+            if event.EventData['level'] == 8:
+                self._latest_complete_lvl8 = event.Timestamp
+            if event.EventData['level'] == 16:
+                self._latest_complete_lvl16 = event.Timestamp
+        elif event.EventName == "CUSTOM.3":
+            q_num = event.EventData["question"]
             if (q_num == 0):
-                self._latest_answer_Q0 = event.timestamp
+                self._latest_answer_Q0 = event.Timestamp
             elif (q_num == 2):
-                self._latest_answer_Q2 = event.timestamp
+                self._latest_answer_Q2 = event.Timestamp
             if self._count_index == q_num:
-                self._answer_time = self._calcAnswerTime(timestamp=event.timestamp)
+                self._answer_time = self._calcAnswerTime(timestamp=event.Timestamp)
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

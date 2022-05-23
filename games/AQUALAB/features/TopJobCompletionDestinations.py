@@ -26,14 +26,14 @@ class TopJobCompletionDestinations(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self._validate_job(event.event_data['job_name']):
-            user_code = event.user_id
-            job_name = event.event_data["job_name"]["string_value"]
+        if self._validate_job(event.EventData['job_name']):
+            user_code = event.UserID
+            job_name = event.EventData["job_name"]["string_value"]
 
             # in either case, handle event.
-            if event.event_name == "complete_job":
+            if event.EventName == "complete_job":
                 self._last_completed_id = job_name # here, we take what we last completed, and append where we switched to.
-            elif event.event_name == "accept_job":
+            elif event.EventName == "accept_job":
                 if user_code == self._current_user_code and self._last_completed_id is not None:
                     if not job_name in self._job_complete_pairs[self._last_completed_id].keys():
                         self._job_complete_pairs[self._last_completed_id][job_name] = []

@@ -22,9 +22,9 @@ class TotalMoveTypeChanges(PerLevelFeature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self._last_move != event.event_name:
+        if self._last_move != event.EventName:
             self._change_count += 1
-        self._last_move = event.event_name
+        self._last_move = event.EventName
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

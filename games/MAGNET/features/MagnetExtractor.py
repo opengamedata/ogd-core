@@ -40,18 +40,18 @@ class MagnetExtractor(LegacyFeature):
     #                     table assiciated with this game is structured.
     def _extractFromEvent(self, event:Event):
         # put some data in local vars, for readability later.
-        level = event.event_data['level']
+        level = event.EventData['level']
         if level > self._game_schema._max_level:
             Logger.Log(f"Got an event with level too high, full data:\n{str(event)}")
         # Check for invalid row.
-        if event.session_id != self._session_id:
-            Logger.Log(f"Got an event with incorrect session id! Expected {self._session_id}, got {event.session_id}!",
+        if event.SessionID != self._session_id:
+            Logger.Log(f"Got an event with incorrect session id! Expected {self._session_id}, got {event.SessionID}!",
                                 logging.ERROR)
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
             if self._features.getValByName(feature_name="persistentSessionID") == 0:
-                self._features.setValByName(feature_name="persistentSessionID", new_value=event.event_data['persistent_session_id'])
+                self._features.setValByName(feature_name="persistentSessionID", new_value=event.EventData['persistent_session_id'])
             # Ensure we have private data initialized for this level.
             if not level in self._levels:
                 bisect.insort(self._levels, level)
@@ -60,20 +60,20 @@ class MagnetExtractor(LegacyFeature):
             self._features.incValByIndex(feature_name="eventCount", index=level)
             self._features.incAggregateVal(feature_name="sessionEventCount")
             # 2) figure out what type of event we had. If CUSTOM, we'll use the event_custom sub-item.
-            event_type = event.event_name.split('.')[0]
+            event_type = event.EventName.split('.')[0]
             if event_type == "CUSTOM":
-                event_type = event.event_data['event_custom']
+                event_type = event.EventData['event_custom']
             # 3) handle cases for each type of event
             if event_type == "COMPLETE":
-                self._extractFromComplete(level=level, event_data=event.event_data)
+                self._extractFromComplete(level=level, event_data=event.EventData)
             elif event_type == "DRAG_TOOL":
                 pass
             elif event_type == "DRAG_POLE":
                 pass
             elif event_type == "PLAYGROUND_EXIT":
-                self._extractFromPlaygroundExit(level=level, event_data=event.event_data)
+                self._extractFromPlaygroundExit(level=level, event_data=event.EventData)
             elif event_type == "TUTORIAL_EXIT":
-                self._extractFromTutorialExit(level=level, event_data=event.event_data)
+                self._extractFromTutorialExit(level=level, event_data=event.EventData)
             else:
                 raise Exception(f"Found an unrecognized event type: {event_type}")
 

@@ -19,8 +19,8 @@ class JobsCompleted(SessionFeature):
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
-        if event.user_id == self._player_id:
-            self._jobs_completed.append(event.event_data["job_name"]["string_value"])
+        if event.UserID == self._player_id:
+            self._jobs_completed.append(event.EventData["job_name"]["string_value"])
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

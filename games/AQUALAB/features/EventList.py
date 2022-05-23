@@ -67,28 +67,28 @@ class EventList(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.user_id:
+        if event.UserID:
             next_event = {
-                "name": event.event_name,
-                "user_id": event.user_id,
-                "session_id": event.session_id,
-                "timestamp": event.timestamp.isoformat(),
-                "job_name": event.event_data["job_name"]["string_value"],
-                "index": event.event_sequence_index,
+                "name": event.EventName,
+                "user_id": event.UserID,
+                "session_id": event.SessionID,
+                "timestamp": event.Timestamp.isoformat(),
+                "job_name": event.EventData["job_name"]["string_value"],
+                "index": event.EventSequenceIndex,
                 "event_primary_detail": None
             }
 
-            if event.event_name == "scene_changed":
-                next_event['scene_name'] = event.event_data['scene_name']['string_value']
+            if event.EventName == "scene_changed":
+                next_event['scene_name'] = event.EventData['scene_name']['string_value']
 
-            if event.event_name in self._details_map:
-                param_name = self._details_map[event.event_name][0]
-                param_type = self._details_map[event.event_name][1]
+            if event.EventName in self._details_map:
+                param_name = self._details_map[event.EventName][0]
+                param_type = self._details_map[event.EventName][1]
 
                 try:
-                    next_event["event_primary_detail"] = event.event_data[param_name][param_type]
+                    next_event["event_primary_detail"] = event.EventData[param_name][param_type]
                 except KeyError as err:
-                    raise KeyError(f"Event of type {event.event_name} did not have parameter {param_name}, valid parameters are {event.event_data.keys()}")
+                    raise KeyError(f"Event of type {event.EventName} did not have parameter {param_name}, valid parameters are {event.EventData.keys()}")
 
             self._event_list.append(next_event)
 

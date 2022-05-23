@@ -37,12 +37,12 @@ class EchoRoomChange(Detector):
         :type event: Event
         """
         self._found = True
-        self._sess_id = event.session_id
-        self._player_id = event.user_id
-        self._time = event.timestamp
-        self._app_version = event.app_version
-        self._log_version = event.log_version
-        self._sequence_index = event.event_sequence_index
+        self._sess_id = event.SessionID
+        self._player_id = event.UserID
+        self._time = event.Timestamp
+        self._app_version = event.AppVersion
+        self._log_version = event.LogVersion
+        self._sequence_index = event.EventSequenceIndex
         return
 
     def _trigger_condition(self) -> bool:

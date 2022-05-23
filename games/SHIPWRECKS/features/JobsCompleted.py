@@ -19,8 +19,8 @@ class JobsCompleted(SessionFeature):
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
-        if event.event_data["status"]["string_value"] == "Case Closed" and event.session_id == self._session_id:
-            self._jobs_completed.append(event.event_data["mission_id"]["string_value"])
+        if event.EventData["status"]["string_value"] == "Case Closed" and event.SessionID == self._session_id:
+            self._jobs_completed.append(event.EventData["mission_id"]["string_value"])
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

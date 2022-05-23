@@ -21,7 +21,7 @@ class SequenceLevel(PerLevelFeature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        currentSliderType = event.event_data["slider"]
+        currentSliderType = event.EventData["slider"]
         if currentSliderType != self._lastSliderType:
             sliderTypeCode = ''
             if currentSliderType == "AMPLITUDE": sliderTypeCode = 'a'

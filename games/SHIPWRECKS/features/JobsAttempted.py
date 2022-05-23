@@ -37,9 +37,9 @@ class JobsAttempted(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        session_id = event.session_id
-        checkpoint = event.event_data["status"]["string_value"]
-        mission_name = event.event_data["mission_id"]["string_value"]
+        session_id = event.SessionID
+        checkpoint = event.EventData["status"]["string_value"]
+        mission_name = event.EventData["mission_id"]["string_value"]
         mission_id = self._mission_map[mission_name]
 
         if checkpoint == "Begin Mission":
@@ -48,7 +48,7 @@ class JobsAttempted(Feature):
             elif mission_id == self._mission_id and session_id not in self._start_map[mission_id]:
                 self._num_starts += 1
                 self._session_id = session_id
-                self._mission_start_time = event.timestamp
+                self._mission_start_time = event.Timestamp
                 self._start_map[mission_id].append(session_id)
                 self._session_id = session_id
 
@@ -60,7 +60,7 @@ class JobsAttempted(Feature):
                 self._complete_map[mission_id].append(session_id)
 
                 if self._mission_start_time:
-                    self._times.append((event.timestamp - self._mission_start_time).total_seconds())
+                    self._times.append((event.Timestamp - self._mission_start_time).total_seconds())
                     self._mission_start_time = None
 
     def _extractFromFeatureData(self, feature: FeatureData):

@@ -296,18 +296,18 @@ class ExportManager:
                 else:
                     Logger.Log(f"Error while converting row to Event. This row will be skipped.\nFull error: {err}", logging.WARNING, depth=2)
             else:
-                if next_event.session_id != _curr_sess:
-                    _curr_sess = next_event.session_id
+                if next_event.SessionID != _curr_sess:
+                    _curr_sess = next_event.SessionID
                     _evt_sess_index = 1
                 next_event.FallbackDefaults(index=_evt_sess_index)
                 _evt_sess_index += 1
-                if (request._range._id_mode==IDMode.SESSION and next_event.session_id in ids) \
-                or (request._range._id_mode==IDMode.PLAYER  and next_event.user_id    in ids):
+                if (request._range._id_mode==IDMode.SESSION and next_event.SessionID in ids) \
+                or (request._range._id_mode==IDMode.PLAYER  and next_event.UserID    in ids):
                     self._processEvent(next_event=next_event)
-                elif next_event.session_id is not None and next_event.session_id.upper() != "NONE":
-                    Logger.Log(f"Found a session ({next_event.session_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
-                elif next_event.user_id is not None and next_event.user_id.upper() != "NONE":
-                    Logger.Log(f"Found a user ({next_event.user_id}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
+                elif next_event.SessionID is not None and next_event.SessionID.upper() != "NONE":
+                    Logger.Log(f"Found a session ({next_event.SessionID}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
+                elif next_event.UserID is not None and next_event.UserID.upper() != "NONE":
+                    Logger.Log(f"Found a user ({next_event.UserID}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
                 else:
                     _unsessioned_event_count += 1
                     if _unsessioned_event_count < 10:

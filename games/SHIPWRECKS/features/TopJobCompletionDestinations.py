@@ -25,9 +25,9 @@ class TopJobCompletionDestinations(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        session_id = event.session_id
-        checkpoint = event.event_data["status"]["string_value"]
-        mission_id = event.event_data["mission_id"]["string_value"]
+        session_id = event.SessionID
+        checkpoint = event.EventData["status"]["string_value"]
+        mission_id = event.EventData["mission_id"]["string_value"]
 
         if session_id != self._current_session_id:
             self._last_completed_id = None

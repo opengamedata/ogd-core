@@ -58,13 +58,13 @@ class LevelsOfDifficulty(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         ignoreEvent = False
-        if event.event_name in ["start_level", "puzzle_started"]:
-            self._activePuzzle = event.event_data["task_id"]["string_value"]
+        if event.EventName in ["start_level", "puzzle_started"]:
+            self._activePuzzle = event.EventData["task_id"]["string_value"]
 
             if self._activePuzzle not in self._userPuzzleDict.keys():
                 self._userPuzzleDict[self._activePuzzle] = {"completed":0, "n_actions":0, "n_attempts":0, "active_time":0}
 
-        elif event.event_name == "puzzle_complete":
+        elif event.EventName == "puzzle_complete":
             if self._activePuzzle in self._userPuzzleDict.keys():
                 self._userPuzzleDict[self._activePuzzle]["completed"] = 1
         
@@ -78,19 +78,19 @@ class LevelsOfDifficulty(SessionFeature):
             
             if ignoreEvent == False:
                 #Add new active_time
-                delta_seconds = (event.timestamp - self._previousEvent.timestamp).total_seconds()
+                delta_seconds = (event.Timestamp - self._previousEvent.timestamp).total_seconds()
                 if delta_seconds < thresHoldActivity:
                     self._activeTime.append(delta_seconds)
                 
-                if (event.event_name in listActionEvents):
+                if (event.EventName in listActionEvents):
                     self._numberActions += 1
                 
-                if (event.event_name == "check_solution"):
+                if (event.EventName == "check_solution"):
                     self._numberAttempts += 1
                     
                 self._previousEvent = event
                     
-                if (event.event_name in ['puzzle_complete', 'exit_to_menu', 'disconnect']):
+                if (event.EventName in ['puzzle_complete', 'exit_to_menu', 'disconnect']):
                     self._userPuzzleDict[self._activePuzzle]['n_attempts'] += self._numberAttempts
                     self._userPuzzleDict[self._activePuzzle]['n_actions'] += self._numberActions
                     self._userPuzzleDict[self._activePuzzle]['active_time'] += round(np.sum(self._activeTime)/60, 2)

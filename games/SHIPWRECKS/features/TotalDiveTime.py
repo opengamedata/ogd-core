@@ -20,11 +20,11 @@ class TotalDiveTime(SessionFeature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_name == "dive_start":
-            self._dive_start_time = event.timestamp
-        elif event.event_name == "dive_exit":
+        if event.EventName == "dive_start":
+            self._dive_start_time = event.Timestamp
+        elif event.EventName == "dive_exit":
             if self._dive_start_time is not None:
-                self._time += (event.timestamp - self._dive_start_time).total_seconds()
+                self._time += (event.Timestamp - self._dive_start_time).total_seconds()
                 self._dive_start_time = None
 
     def _extractFromFeatureData(self, feature: FeatureData):

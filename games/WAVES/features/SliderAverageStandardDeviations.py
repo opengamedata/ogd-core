@@ -20,7 +20,7 @@ class SliderAverageStandardDeviations(PerLevelFeature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        self._std_devs.append(event.event_data["stdev_val"])
+        self._std_devs.append(event.EventData["stdev_val"])
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

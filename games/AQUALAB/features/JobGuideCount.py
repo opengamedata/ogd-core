@@ -22,7 +22,7 @@ class JobGuideCount(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self._validate_job(event.event_data['job_name']):
+        if self._validate_job(event.EventData['job_name']):
             self._count += 1
 
     def _extractFromFeatureData(self, feature: FeatureData):

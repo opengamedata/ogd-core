@@ -25,22 +25,22 @@ class JobModelingTime(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.session_id != self._session_id:
-            self._session_id = event.session_id
+        if event.SessionID != self._session_id:
+            self._session_id = event.SessionID
 
             if self._modeling_start_time:
                 self._time += (self._prev_timestamp - self._modeling_start_time).total_seconds()
-                self._modeling_start_time = event.timestamp
+                self._modeling_start_time = event.Timestamp
 
-        if self._validate_job(event.event_data['job_name']):
-            if event.event_name == "begin_modeling":
-                self._modeling_start_time = event.timestamp
-            elif event.event_name == "room_changed":
+        if self._validate_job(event.EventData['job_name']):
+            if event.EventName == "begin_modeling":
+                self._modeling_start_time = event.Timestamp
+            elif event.EventName == "room_changed":
                 if self._modeling_start_time is not None:
-                    self._time += (event.timestamp - self._modeling_start_time).total_seconds()
+                    self._time += (event.Timestamp - self._modeling_start_time).total_seconds()
                     self._modeling_start_time = None
 
-        self._prev_timestamp = event.timestamp
+        self._prev_timestamp = event.Timestamp
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

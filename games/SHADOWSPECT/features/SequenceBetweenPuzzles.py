@@ -29,8 +29,8 @@ class SequenceBetweenPuzzles(SessionFeature):
     def _extractFromEvent(self, event:Event) -> None:
         ignoreEvent = False
         
-        if event.event_name == "start_level":
-            self._activePuzzle = event.event_data["task_id"]["string_value"]
+        if event.EventName == "start_level":
+            self._activePuzzle = event.EventData["task_id"]["string_value"]
             
             if self._activePuzzle == "Sandbox":
                 ignoreEvent = True
@@ -47,19 +47,19 @@ class SequenceBetweenPuzzles(SessionFeature):
             
         if ignoreEvent == False:
         
-            if event.event_name == "puzzle_started":
+            if event.EventName == "puzzle_started":
                 self._currentPuzzle["funnel"] = "started"
 
-            elif event.event_name == "create_shape":
+            elif event.EventName == "create_shape":
                 self._currentPuzzle["funnel"] = "shape_created"
 
-            elif event.event_name == "check_solution":
+            elif event.EventName == "check_solution":
                 self._currentPuzzle["funnel"] = "submitted"
 
-            elif event.event_name == "puzzle_complete":
+            elif event.EventName == "puzzle_complete":
                 self._currentPuzzle["funnel"] = "completed"
                 
-            elif event.event_name in ["disconnect", "login_user", "exit_to_menu"]:
+            elif event.EventName in ["disconnect", "login_user", "exit_to_menu"]:
                 #Add current data
                 self._userPuzzleDict[self._activePuzzle].append(json.dumps(self._currentPuzzle))
                 self._currentPuzzle = {}

@@ -26,13 +26,13 @@ class TopJobSwitchDestinations(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self._validate_job(event.event_data['job_name']):
-            user_code = event.user_id
-            job_name = event.event_data["job_name"]["string_value"]
+        if self._validate_job(event.EventData['job_name']):
+            user_code = event.UserID
+            job_name = event.EventData["job_name"]["string_value"]
 
-            if event.event_name == "accept_job":
+            if event.EventName == "accept_job":
                 self._last_started_id = job_name
-            elif event.event_name == "switch_job":
+            elif event.EventName == "switch_job":
                 if user_code == self._current_user_code and self._last_started_id is not None and self._last_started_id != job_name and job_name != "no-active-job":
                     if not job_name in self._job_switch_pairs[self._last_started_id].keys():
                         self._job_switch_pairs[self._last_started_id][job_name] = []

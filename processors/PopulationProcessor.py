@@ -41,13 +41,13 @@ class PopulationProcessor(FeatureProcessor):
         # ensure we have an extractor for the given session:
         if self._registry is not None:
             self._registry.ExtractFromEvent(event=event)
-            if event.user_id is None:
+            if event.UserID is None:
                 self._player_processors["null"].ProcessEvent(event=event)
             else:
-                if event.user_id not in self._player_processors.keys():
-                    self._player_processors[event.user_id] = PlayerProcessor(self._LoaderClass, game_schema=self._game_schema,
-                                                                            player_id=event.user_id, feature_overrides=self._overrides)
-                self._player_processors[event.user_id].ProcessEvent(event=event)
+                if event.UserID not in self._player_processors.keys():
+                    self._player_processors[event.UserID] = PlayerProcessor(self._LoaderClass, game_schema=self._game_schema,
+                                                                            player_id=event.UserID, feature_overrides=self._overrides)
+                self._player_processors[event.UserID].ProcessEvent(event=event)
 
     def _processFeatureData(self, feature: FeatureData):
         if self._registry is not None:

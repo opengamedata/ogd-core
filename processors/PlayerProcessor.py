@@ -71,12 +71,12 @@ class PlayerProcessor(FeatureProcessor):
         """
         self._registry.ExtractFromEvent(event=event)
         # ensure we have an extractor for the given session:
-        if event.session_id not in self._session_processors.keys():
-            self._session_processors[event.session_id] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
-                                                                          player_id=self._player_id, session_id=event.session_id,
+        if event.SessionID not in self._session_processors.keys():
+            self._session_processors[event.SessionID] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+                                                                          player_id=self._player_id, session_id=event.SessionID,
                                                                           feature_overrides=self._overrides)
 
-        self._session_processors[event.session_id].ProcessEvent(event=event)
+        self._session_processors[event.SessionID].ProcessEvent(event=event)
 
     def _processFeatureData(self, feature: FeatureData):
         self._registry.ExtractFromFeatureData(feature=feature)

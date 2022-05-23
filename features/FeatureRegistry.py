@@ -66,9 +66,9 @@ class FeatureRegistry(ExtractorRegistry):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
-        if event.event_name in self._event_registry.keys():
+        if event.EventName in self._event_registry.keys():
             # send event to every listener for the given event name.
-            for listener in self._event_registry[event.event_name]:
+            for listener in self._event_registry[event.EventName]:
                 for order_key in range(len(self._features)):
                     if listener.name in self._features[order_key].keys():
                         self._features[order_key][listener.name].ExtractFromEvent(event)

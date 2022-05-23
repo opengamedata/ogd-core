@@ -20,8 +20,8 @@ class QuestionCorrect(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_data['question'] == self._count_index:
-            self._correct = (event.event_data['answered'] == event.event_data['answer'])
+        if event.EventData['question'] == self._count_index:
+            self._correct = (event.EventData['answered'] == event.EventData['answer'])
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

@@ -12,9 +12,9 @@ class PerLevelFeature(Feature):
 
     def _validateEvent(self, event:Event):
         return (
-            self._validateVersion(event.log_version)
-        and self._validateEventType(event_type=event.event_name)
-        and self._validateEventLevel(level=event.event_data['level'])
+            self._validateVersion(event.LogVersion)
+        and self._validateEventType(event_type=event.EventName)
+        and self._validateEventLevel(level=event.EventData['level'])
         )
 
     def _validateEventLevel(self, level:int):

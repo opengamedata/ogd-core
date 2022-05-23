@@ -21,11 +21,11 @@ class MissionSonarTimeToComplete(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_name == "sonar_start":
-            self._sonar_start_time = event.timestamp
-        elif event.event_name == "sonar_complete":
+        if event.EventName == "sonar_start":
+            self._sonar_start_time = event.Timestamp
+        elif event.EventName == "sonar_complete":
             if self._sonar_start_time is not None:
-                self._time += (event.timestamp - self._sonar_start_time).total_seconds()
+                self._time += (event.Timestamp - self._sonar_start_time).total_seconds()
                 self._sonar_start_time = None
 
     def _extractFromFeatureData(self, feature: FeatureData):

@@ -29,24 +29,24 @@ class DiveSiteNoEvidence(Detector):
         :param event: _description_
         :type event: Event
         """
-        if event.event_name == "scene_changed":
+        if event.EventName == "scene_changed":
             # as soon as scene changes, reset state.
             self._has_triggered = False
             self._time_since_evidence = 0
-            scene : str = event.event_data['scene_name']['string_value']
+            scene : str = event.EventData['scene_name']['string_value']
             if scene.startswith("RS-"):
                 self._in_dive = True
                 # if we just started a dive, use now as starting point for counting time without evidence.
-                self._last_evidence_time = event.timestamp
+                self._last_evidence_time = event.Timestamp
             else:
                 # if we changed to a different scene, reset state.
                 self._in_dive = False
                 self._last_evidence_time = None
-        elif event.event_name == "receive_entity":
-            self._last_evidence_time = event.timestamp
+        elif event.EventName == "receive_entity":
+            self._last_evidence_time = event.Timestamp
 
         if self._in_dive and self._last_evidence_time is not None and not self._has_triggered:
-            self._time_since_evidence = (event.timestamp - self._last_evidence_time).total_seconds()
+            self._time_since_evidence = (event.Timestamp - self._last_evidence_time).total_seconds()
         return
     
     def _trigger_condition(self) -> bool:

@@ -115,8 +115,8 @@ class Extractor(abc.ABC):
         :rtype: bool
         """
         return (
-            self._validateVersion(event.log_version)
-        and self._validateEventType(event_type=event.event_name)
+            self._validateVersion(event.LogVersion)
+        and self._validateEventType(event_type=event.EventName)
         )
 
     ## Private function to check whether the given data version from a row is acceptable by this feature extractor.

@@ -22,22 +22,22 @@ class FunnelByUser(SessionFeature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.event_name in ["start_level", "puzzle_started"]:
-            self._level = event.event_data["task_id"]["string_value"]
+        if event.EventName in ["start_level", "puzzle_started"]:
+            self._level = event.EventData["task_id"]["string_value"]
 
             if self._level not in self._userFunnelDict.keys():
                 self._userFunnelDict[self._level] = json.loads('{"started": 0, "create_shape": 0, "submitted": 0, "completed": 0}')
 
-        if event.event_name == "puzzle_started":
+        if event.EventName == "puzzle_started":
             self._userFunnelDict[self._level]["started"] = 1
 
-        elif event.event_name == "create_shape":
+        elif event.EventName == "create_shape":
             self._userFunnelDict[self._level]["create_shape"] = 1
 
-        elif event.event_name == "check_solution":
+        elif event.EventName == "check_solution":
             self._userFunnelDict[self._level]["submitted"] = 1
 
-        elif event.event_name == "puzzle_complete":
+        elif event.EventName == "puzzle_complete":
             self._userFunnelDict[self._level]["completed"] = 1
 
     def _extractFromFeatureData(self, feature: FeatureData):

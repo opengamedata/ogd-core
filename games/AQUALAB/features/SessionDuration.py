@@ -22,9 +22,9 @@ class SessionDuration(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         if not self._client_start_time:
-            self._client_start_time = event.timestamp
+            self._client_start_time = event.Timestamp
         else:
-            self._session_duration = (event.timestamp - self._client_start_time).total_seconds()
+            self._session_duration = (event.Timestamp - self._client_start_time).total_seconds()
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
