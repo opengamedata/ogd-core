@@ -11,10 +11,6 @@ from schemas.IDMode import IDMode
 from utils import Logger
 
 class CodingInterface(Interface):
-    class RetrievalMode(IntEnum):
-        BY_GAME    = 1
-        BY_CODER   = 2
-        BY_SESSION = 3
 
     # *** ABSTRACTS ***
 
@@ -56,9 +52,8 @@ class CodingInterface(Interface):
 
     # *** PUBLIC BUILT-INS ***
 
-    def __init__(self, game_id):
+    def __init__(self):
         super().__init__()
-        self._game_id : str  = game_id
 
     def __del__(self):
         self.Close()
@@ -83,22 +78,22 @@ class CodingInterface(Interface):
             Logger.Log("Can't create Coder, the source interface is not open!")
         return ret_val
 
-    def GetCodes(self, mode:RetrievalMode, id:str):
-        if mode == CodingInterface.RetrievalMode.BY_GAME:
+    def GetCodes(self, mode:IDMode, id:str):
+        if mode == IDMode.GAME:
             self._getCodesByGame(game_id=id)
-        elif mode == CodingInterface.RetrievalMode.BY_CODER:
+        elif mode == IDMode.USER:
             self._getCodesByCoder(coder_id=id)
-        elif mode == CodingInterface.RetrievalMode.BY_SESSION:
+        elif mode == IDMode.SESSION:
             self._getCodesBySession(session_id=id)
         else:
             raise NotImplementedError(f"The given retrieval mode '{mode}' is not supported for retrieving codes!")
 
-    def GetCodeWords(self, mode:RetrievalMode, id:str):
-        if mode == CodingInterface.RetrievalMode.BY_GAME:
+    def GetCodeWords(self, mode:IDMode, id:str):
+        if mode == IDMode.GAME:
             self._getCodeWordsByGame(game_id=id)
-        elif mode == CodingInterface.RetrievalMode.BY_CODER:
+        elif mode == IDMode.USER:
             self._getCodeWordsByCoder(coder_id=id)
-        elif mode == CodingInterface.RetrievalMode.BY_SESSION:
+        elif mode == IDMode.SESSION:
             self._getCodeWordsBySession(session_id=id)
         else:
             raise NotImplementedError(f"The given retrieval mode '{mode}' is not supported for retrieving code words!")
