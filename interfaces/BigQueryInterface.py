@@ -54,18 +54,19 @@ class BigQueryInterface(DataInterface):
         Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
-    def _allIDs(self) -> List[str]:
-        db_name    : str
-        table_name : str
+    def _dbPath(self) -> str:
         if "BIGQUERY_CONFIG" in self._settings:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+            db_name      = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+            table_name   = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
         else:
-            db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+            db_name      = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+            table_name   = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+        return f"{db_name}.{table_name}"
+
+    def _allIDs(self) -> List[str]:
         query = f"""
             SELECT DISTINCT param.value.int_value AS session_id
-            FROM `{db_name}.{table_name}`,
+            FROM `{self._dbPath()}`,
             UNNEST(event_params) AS param
             WHERE param.key = "ga_session_id"
         """
@@ -74,21 +75,13 @@ class BigQueryInterface(DataInterface):
         return ids if ids != None else []
 
     def _fullDateRange(self) -> Dict[str, datetime]:
-        db_name    : str
-        table_name : str
-        if "BIGQUERY_CONFIG" in self._settings:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        else:
-            db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
         query = f"""
             WITH datetable AS
             (
                 SELECT event_date, event_timestamp,
                 FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
                 FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
-                FROM `{db_name}.{table_name}`
+                FROM `{self._dbPath()}`
             )
             SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
             FROM datetable
@@ -97,15 +90,6 @@ class BigQueryInterface(DataInterface):
         return {'min':data[0][0], 'max':data[0][1]}
 
     def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> List[Tuple]:
-        db_name    : str
-        table_name : str
-        # 1) Get db and table names
-        if "BIGQUERY_CONFIG" in self._settings:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        else:
-            db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
         # 2) Set up clauses to select based on Session ID or Player ID.
         session_clause : str = ""
         player_clause  : str = ""
@@ -144,7 +128,7 @@ class BigQueryInterface(DataInterface):
                 SELECT event_name, event_params, device, geo, platform,
                 concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
                 param_session.value.int_value as session_id,
-                FROM `{db_name}.{table_name}`
+                FROM `{self._dbPath()}`
                 CROSS JOIN UNNEST(event_params) AS param_session
                 WHERE param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})
                 ORDER BY `session_id`, `timestamp` ASC
@@ -157,7 +141,7 @@ class BigQueryInterface(DataInterface):
                 param_log_version.value.int_value as log_version,
                 param_session.value.int_value as session_id,
                 param_user.value.string_value as fd_user_id
-                FROM `{db_name}.{table_name}`
+                FROM `{self._dbPath()}`
                 CROSS JOIN UNNEST(event_params) AS param_app_version
                 CROSS JOIN UNNEST(event_params) AS param_log_version
                 CROSS JOIN UNNEST(event_params) AS param_session
@@ -184,17 +168,9 @@ class BigQueryInterface(DataInterface):
     def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]] = None) -> List[str]:
         ret_val = []
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
-        db_name    : str
-        table_name : str
-        if "BIGQUERY_CONFIG" in self._settings:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        else:
-            db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
         query = f"""
             SELECT DISTINCT param.value.int_value AS session_id
-            FROM `{db_name}.{table_name}`,
+            FROM `{self._dbPath()}`,
             UNNEST(event_params) AS param
             WHERE param.key = "ga_session_id"
             AND _TABLE_SUFFIX BETWEEN '{str_min}' AND '{str_max}'
@@ -206,14 +182,6 @@ class BigQueryInterface(DataInterface):
         return ret_val
 
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
-        db_name    : str
-        table_name : str
-        if "BIGQUERY_CONFIG" in self._settings:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        else:
-            db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
         if id_mode==IDMode.SESSION:
             id_string = ','.join([f"{x}" for x in id_list])
             where_clause = f"""
@@ -239,7 +207,7 @@ class BigQueryInterface(DataInterface):
                 SELECT event_date, event_timestamp, event_params,
                 FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
                 FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
-                FROM `{db_name}.{table_name}`
+                FROM `{self._dbPath()}`
             )
             SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
             FROM datetable,
