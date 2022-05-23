@@ -56,178 +56,86 @@ class BigQueryCodingInterface(CodingInterface):
         Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
+    def _dbPath(self) -> str:
+        if "BIGQUERY_CONFIG" in self._settings:
+            project_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["PROJECT_ID"]
+        else:
+            project_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["PROJECT_ID"]
+        return f"{project_name}.coding"
+
     def _allCoders(self) -> Optional[List[Coder]]:
-        db_name    : str
-        table_name : str
-        if "BIGQUERY_CONFIG" in self._settings:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        else:
-            db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
         query = f"""
-            SELECT DISTINCT param.value.int_value AS session_id
-            FROM `{db_name}.{table_name}`,
-            UNNEST(event_params) AS param
-            WHERE param.key = "ga_session_id"
+            SELECT DISTINCT coder_id, name
+            FROM `{self._dbPath()}.coders`,
         """
         data = self._client.query(query)
-        ids = [str(row['session_id']) for row in data]
-        return ids if ids != None else []
+        coders = [Coder(name=str(row['name']), id=str(row['coder_id'])) for row in data]
+        return coders if coders != None else []
 
-
-    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> List[Tuple]:
-        db_name    : str
-        table_name : str
-        # 1) Get db and table names
-        if "BIGQUERY_CONFIG" in self._settings:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        else:
-            db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        # 2) Set up clauses to select based on Session ID or Player ID.
-        session_clause : str = ""
-        player_clause  : str = ""
-        if id_mode == IDMode.SESSION:
-            id_string = ','.join([f"{x}" for x in id_list])
-            session_clause = f"AND   param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
-            player_clause  = f"AND   param_user.key    = 'user_code'"
-        elif id_mode == IDMode.PLAYER:
-            id_string = ','.join([f"'{x}'" for x in id_list])
-            session_clause = f"AND   param_session.key = 'ga_session_id'"
-            player_clause  = f"AND   param_user.key    = 'user_code' AND param_user.value.string_value IN ({id_string})"
-        else:
-            Logger.Log(f"Invalid ID mode given (val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
-            id_string = ','.join([f"{x}" for x in id_list])
-            session_clause = f"AND   param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
-            player_clause  = f"AND   param_user.key    = 'user_code'"
-        # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
-        if self._game_id == "AQUALAB":
-            where_clause = f"""
-                WHERE param_app_version.key = 'app_version' AND param_app_version.value.double_value >= {AQUALAB_MIN_VERSION}
-                AND   param_log_version.key = 'log_version'
-                {session_clause}
-                {player_clause}
-            """
-        else:
-            where_clause = f"""
-                WHERE param_app_version.key = 'app_version'
-                AND   param_log_version.key = 'log_version'
-                {session_clause}
-                {player_clause}
-            """
-        # 4) Set up actual query
-        query = ""
-        if self._game_id == "SHIPWRECKS":
-            query = f"""
-                SELECT event_name, event_params, device, geo, platform,
-                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
-                param_session.value.int_value as session_id,
-                FROM `{db_name}.{table_name}`
-                CROSS JOIN UNNEST(event_params) AS param_session
-                WHERE param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})
-                ORDER BY `session_id`, `timestamp` ASC
-            """
-        else:
-            query = f"""
-                SELECT event_name, event_params, device, geo, platform,
-                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
-                param_app_version.value.double_value as app_version,
-                param_log_version.value.int_value as log_version,
-                param_session.value.int_value as session_id,
-                param_user.value.string_value as fd_user_id
-                FROM `{db_name}.{table_name}`
-                CROSS JOIN UNNEST(event_params) AS param_app_version
-                CROSS JOIN UNNEST(event_params) AS param_log_version
-                CROSS JOIN UNNEST(event_params) AS param_session
-                CROSS JOIN UNNEST(event_params) AS param_user
-                {where_clause}
-                ORDER BY `session_id`, `timestamp` ASC
-            """
-        data = self._client.query(query)
-        events = []
-        for row in data:
-            items = tuple(row.items())
-            event = []
-            for item in items:
-                if item[0] == "event_params":
-                    _params = {param['key']:param['value'] for param in item[1]}
-                    event.append(json.dumps(_params, sort_keys=True))
-                elif item[0] in ["device", "geo"]:
-                    event.append(json.dumps(item[1], sort_keys=True))
-                else:
-                    event.append(item[1])
-            events.append(tuple(event))
-        return events if events != None else []
-
-    def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]] = None) -> List[str]:
-        ret_val = []
-        str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
-        db_name    : str
-        table_name : str
-        if "BIGQUERY_CONFIG" in self._settings:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        else:
-            db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+    def _createCoder(self, coder_name:str) -> bool:
+        # TODO: figure out how to make metadata available for insert.
         query = f"""
-            SELECT DISTINCT param.value.int_value AS session_id
-            FROM `{db_name}.{table_name}`,
-            UNNEST(event_params) AS param
-            WHERE param.key = "ga_session_id"
-            AND _TABLE_SUFFIX BETWEEN '{str_min}' AND '{str_max}'
+            INSERT {self._dbPath()}(coder_id, name, metadata)
+            VALUES (GENERATE_UUID(), @name, NULL)
         """
-        data = self._client.query(query)
-        ids = [str(row['session_id']) for row in data]
-        if ids is not None:
-            ret_val = ids
-        return ret_val
+        cfg = bigquery.QueryJobConfig(
+            query_parameters= [
+                bigquery.ScalarQueryParameter(name="name", type_="STRING", value=coder_name),
+            ]
+        )
+        try:
+            self._client.query(query=query, job_config=cfg)
+        except Exception as err:
+            Logger.Log(f"Error while creating a new Coder in database: {err}", level=logging.ERROR, depth=2)
+            return False
+        else:
+            return True
 
-    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
-        db_name    : str
-        table_name : str
-        if "BIGQUERY_CONFIG" in self._settings:
-            db_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        else:
-            db_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        if id_mode==IDMode.SESSION:
-            id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"""
-                WHERE param.key = "ga_session_id"
-                AND param.value.int_value IN ({id_string})
-            """
-        elif id_mode==IDMode.PLAYER:
-            id_string = ','.join([f"'{x}'" for x in id_list])
-            where_clause = f"""
-                WHERE param.key = "user_code"
-                AND param.value.string_value IN ({id_string})
-            """
-        else:
-            Logger.Log(f"Invalid ID mode given (val={id_mode}), defaulting to session mode.", logging.WARNING, depth=3)
-            id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"""
-                WHERE param.key = "ga_session_id"
-                AND param.value.int_value IN ({id_string})
-            """
+    def _getCodeWordsByGame(self, game_id:str) -> Optional[List[str]]:
+        pass
+
+    def _getCodeWordsByCoder(self, coder_id:str) -> Optional[List[str]]:
+        pass
+
+    def _getCodeWordsBySession(self, session_id:str) -> Optional[List[str]]:
+        pass
+
+    def _getCodesByGame(self, game_id:str) -> Optional[List[Code]]:
+        pass
+
+    def _getCodesByCoder(self, coder_id:str) -> Optional[List[Code]]:
+        pass
+
+    def _getCodesBySession(self, session_id:str) -> Optional[List[Code]]:
+        pass
+
+    def _createCode(self, code:str, coder:Coder, events:List[Code.EventID], notes:Optional[str]=None):
         query = f"""
-            WITH datetable AS
-            (
-                SELECT event_date, event_timestamp, event_params,
-                FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
-                FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
-                FROM `{db_name}.{table_name}`
-            )
-            SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
-            FROM datetable,
-            UNNEST(event_params) AS param
-            {where_clause}
+            INSERT {self._dbPath()}(code_id, code, coder_id, notes, events)
+            VALUES (GENERATE_UUID(), @code, @coder_id, @notes, @events)
         """
-        data = list(self._client.query(query))
-        return {'min':datetime.strptime(data[0][0], "%m-%d-%Y %H:%M:%S"), 'max':datetime.strptime(data[0][1], "%m-%d-%Y %H:%M:%S")}
+        evt_params = [
+
+        ]
+        cfg = bigquery.QueryJobConfig(
+            query_parameters= [
+                bigquery.ScalarQueryParameter(name="code", type_="STRING", value=code),
+                bigquery.ScalarQueryParameter(name="coder_id", type_="STRING", value=coder.ID),
+                bigquery.ScalarQueryParameter(name="notes", type_="STRING", value=notes),
+                bigquery.ArrayQueryParameter(
+                    name="events",
+                    array_type="STRUCT",
+                    values=evt_params
+                ),
+            ]
+        )
+        try:
+            self._client.query(query=query, job_config=cfg)
+        except Exception as err:
+            Logger.Log(f"Error while creating a new Coder in database: {err}", level=logging.ERROR, depth=2)
+            return False
+        else:
+            return True
 
     # *** PUBLIC METHODS ***
     def IsOpen(self) -> bool:

@@ -23,7 +23,7 @@ class CodingInterface(Interface):
         pass
 
     @abc.abstractmethod
-    def _createCoder(self, coder_id:str) -> bool:
+    def _createCoder(self, coder_name:str) -> bool:
         pass
 
     @abc.abstractmethod
