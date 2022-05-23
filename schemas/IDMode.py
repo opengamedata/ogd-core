@@ -3,4 +3,5 @@ from enum import IntEnum
 
 class IDMode(IntEnum):
     SESSION = 1
-    PLAYER = 2
+    USER = 2
+    GAME = 3
