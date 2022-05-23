@@ -1,6 +1,8 @@
 # import libraries
 import json
 from typing import Any, List, Optional
+
+from docutils import DataError
 # import locals
 from features.Feature import Feature
 from schemas.FeatureData import FeatureData
@@ -83,7 +85,10 @@ class EventList(Feature):
                 param_name = self._details_map[event.event_name][0]
                 param_type = self._details_map[event.event_name][1]
 
-                next_event["event_primary_detail"] = event.event_data[param_name][param_type]
+                try:
+                    next_event["event_primary_detail"] = event.event_data[param_name][param_type]
+                except KeyError as err:
+                    raise KeyError(f"Event of type {event.event_name} did not have parameter {param_name}, valid parameters are {event.event_data.keys()}")
 
             self._event_list.append(next_event)
 
