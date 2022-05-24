@@ -101,7 +101,13 @@ class BigQueryCodingInterface(CodingInterface):
         pass
 
     def _getCodesByGame(self, game_id:str) -> Optional[List[Code]]:
-        pass
+        query = f"""
+            SELECT *
+            FROM `{self._dbPath(game_id=game_id)}.codes`,
+        """
+        data = self._client.query(query)
+        coders = [BigQueryCodingInterface._codeFromRow(row=row) for row in data]
+        return coders if coders != None else []
 
     def _getCodesByCoder(self, coder_id:str) -> Optional[List[Code]]:
         pass
@@ -149,3 +155,18 @@ class BigQueryCodingInterface(CodingInterface):
         :rtype: bool
         """
         return True if (super().IsOpen() and self._client is not None) else False
+
+    # *** PRIVATE STATICS ***
+
+    @staticmethod
+    def _codeFromRow(row) -> Code:
+        _code_word = str(row['code'])
+        _code_id   = str(row['code_id'])
+        _coder_id  = str(row['coder_id'])
+        _name      = str(row['coder_name'])
+        _events    = [] # TODO: figure out how to parse these out.
+        _notes     = str(row['notes'])
+        return Code(code_word=_code_word, id=_code_id,
+                    coder=Coder(name=_name, id=_coder_id),
+                    events=_events, notes=_notes
+        )
