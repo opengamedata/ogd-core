@@ -117,7 +117,7 @@ class BigQueryCodingInterface(CodingInterface):
         evt_params = [
             bigquery.StructQueryParameter.positional(
                 bigquery.ScalarQueryParameter(name="session_id", type_="STRING", value=event.SessionID),
-                bigquery.ScalarQueryParameter(name="index", type="INTEGER", value=event.Index)
+                bigquery.ScalarQueryParameter(name="index", type_="INTEGER", value=event.Index)
             )
             for event in events
         ]
