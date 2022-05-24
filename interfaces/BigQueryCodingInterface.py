@@ -105,15 +105,55 @@ class BigQueryCodingInterface(CodingInterface):
             SELECT *
             FROM `{self._dbPath(game_id=game_id)}.codes`,
         """
-        data = self._client.query(query)
-        coders = [BigQueryCodingInterface._codeFromRow(row=row) for row in data]
-        return coders if coders != None else []
+        try:
+            data = self._client.query(query)
+            codes = [BigQueryCodingInterface._codeFromRow(row=row) for row in data]
+        except Exception as err:
+            Logger.Log(f"Error while retrieving {game_id} codes from database: {err}", level=logging.ERROR, depth=2)
+            return []
+        else:
+            return codes
 
     def _getCodesByCoder(self, coder_id:str) -> Optional[List[Code]]:
-        pass
+        query = f"""
+            SELECT *
+            FROM `{self._dbPath()}.codes`
+            WHERE `coder_id`=@coder_id
+        """
+        cfg = bigquery.QueryJobConfig(
+            query_parameters= [
+                bigquery.ScalarQueryParameter(name="coder_id", type_="STRING", value=coder_id),
+            ]
+        )
+        try:
+            data = self._client.query(query)
+            codes = [BigQueryCodingInterface._codeFromRow(row=row) for row in data]
+        except Exception as err:
+            Logger.Log(f"Error while retrieving {coder_id} codes from database: {err}", level=logging.ERROR, depth=2)
+            return []
+        else:
+            return codes
 
     def _getCodesBySession(self, session_id:str) -> Optional[List[Code]]:
-        pass
+        query = f"""
+            SELECT *
+            FROM `{self._dbPath()}.codes`
+            CROSS JOIN UNNEST(events) AS param_session
+            WHERE param_session.key = 'session_id' AND param_session.value.int_value=@session_id
+        """
+        cfg = bigquery.QueryJobConfig(
+            query_parameters= [
+                bigquery.ScalarQueryParameter(name="session_id", type_="STRING", value=session_id),
+            ]
+        )
+        try:
+            data = self._client.query(query)
+            codes = [BigQueryCodingInterface._codeFromRow(row=row) for row in data]
+        except Exception as err:
+            Logger.Log(f"Error while retrieving {session_id} codes from database: {err}", level=logging.ERROR, depth=2)
+            return []
+        else:
+            return codes
 
     def _createCode(self, code:str, coder:Coder, events:List[Code.EventID], notes:Optional[str]=None):
         query = f"""
