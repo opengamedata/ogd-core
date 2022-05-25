@@ -54,15 +54,6 @@ class BigQueryInterface(DataInterface):
         Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
-    def _dbPath(self) -> str:
-        if "BIGQUERY_CONFIG" in self._settings:
-            db_name      = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name   = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        else:
-            db_name      = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name   = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        return f"{db_name}.{table_name}"
-
     def _allIDs(self) -> List[str]:
         query = f"""
             SELECT DISTINCT param.value.int_value AS session_id
@@ -217,7 +208,10 @@ class BigQueryInterface(DataInterface):
         data = list(self._client.query(query))
         return {'min':datetime.strptime(data[0][0], "%m-%d-%Y %H:%M:%S"), 'max':datetime.strptime(data[0][1], "%m-%d-%Y %H:%M:%S")}
 
+    # *** PUBLIC STATICS ***
+
     # *** PUBLIC METHODS ***
+
     def IsOpen(self) -> bool:
         """Overridden version of IsOpen function, checks that BigQueryInterface client has been initialized.
 
@@ -225,3 +219,18 @@ class BigQueryInterface(DataInterface):
         :rtype: bool
         """
         return True if (super().IsOpen() and self._client is not None) else False
+
+    # *** PROPERTIES ***
+
+    # *** PRIVATE STATICS ***
+
+    # *** PRIVATE METHODS ***
+
+    def _dbPath(self) -> str:
+        if "BIGQUERY_CONFIG" in self._settings:
+            db_name      = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+            table_name   = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+        else:
+            db_name      = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
+            table_name   = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+        return f"{db_name}.{table_name}"

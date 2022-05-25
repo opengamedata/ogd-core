@@ -89,6 +89,8 @@ class DataInterface(Interface):
             ret_val = self._datesFromIDs(id_list=id_list, id_mode=id_mode, versions=versions)
         return ret_val
 
+    # *** PROPERTIES ***
+
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***

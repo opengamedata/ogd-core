@@ -106,6 +106,8 @@ class CodingInterface(Interface):
             Logger.Log("Can't create Code, the source interface is not open!")
         return ret_val
 
+    # *** PROPERTIES ***
+
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***

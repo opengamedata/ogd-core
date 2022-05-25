@@ -57,14 +57,6 @@ class BigQueryCodingInterface(CodingInterface):
         Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
-    def _dbPath(self, game_id:Optional[str]=None) -> str:
-        _game_id = game_id or self._game_id
-        if "BIGQUERY_CONFIG" in self._settings:
-            project_name = self._settings["BIGQUERY_CONFIG"][_game_id]["PROJECT_ID"]
-        else:
-            project_name = default_settings["BIGQUERY_CONFIG"][_game_id]["PROJECT_ID"]
-        return f"{project_name}.coding"
-
     def _allCoders(self) -> Optional[List[Coder]]:
         query = f"""
             SELECT DISTINCT coder_id, name
@@ -233,6 +225,8 @@ class BigQueryCodingInterface(CodingInterface):
         """
         return True if (super().IsOpen() and self._client is not None) else False
 
+    # *** PROPERTIES ***
+
     # *** PRIVATE STATICS ***
 
     @staticmethod
@@ -249,3 +243,11 @@ class BigQueryCodingInterface(CodingInterface):
         )
 
     # *** PRIVATE METHODS ***
+
+    def _dbPath(self, game_id:Optional[str]=None) -> str:
+        _game_id = game_id or self._game_id
+        if "BIGQUERY_CONFIG" in self._settings:
+            project_name = self._settings["BIGQUERY_CONFIG"][_game_id]["PROJECT_ID"]
+        else:
+            project_name = default_settings["BIGQUERY_CONFIG"][_game_id]["PROJECT_ID"]
+        return f"{project_name}.coding"

@@ -412,4 +412,13 @@ class MySQLInterface(DataInterface):
         else:
             Logger.Log(f"Could not get date range for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
         return ret_val
-        
+
+    # *** PUBLIC STATICS ***
+
+    # *** PUBLIC METHODS ***
+
+    # *** PROPERTIES ***
+
+    # *** PRIVATE STATICS ***
+
+    # *** PRIVATE METHODS ***

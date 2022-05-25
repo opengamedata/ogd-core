@@ -47,6 +47,8 @@ class Interface(abc.ABC):
         else:
             return True
 
+    # *** PROPERTIES ***
+
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
