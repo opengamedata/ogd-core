@@ -18,8 +18,9 @@ class BigQueryCodingInterface(CodingInterface):
 
     # *** PUBLIC BUILT-INS ***
 
-    def __init__(self, game_id: str, settings):
+    def __init__(self, game_id:str, settings):
         super().__init__(game_id=game_id)
+        self._game_id : str = game_id
         self._settings = settings
         self.Open()
 
@@ -56,21 +57,22 @@ class BigQueryCodingInterface(CodingInterface):
         Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
-    def _dbPath(self) -> str:
+    def _dbPath(self, game_id:Optional[str]=None) -> str:
+        _game_id = game_id or self._game_id
         if "BIGQUERY_CONFIG" in self._settings:
-            project_name = self._settings["BIGQUERY_CONFIG"][self._game_id]["PROJECT_ID"]
+            project_name = self._settings["BIGQUERY_CONFIG"][_game_id]["PROJECT_ID"]
         else:
-            project_name = default_settings["BIGQUERY_CONFIG"][self._game_id]["PROJECT_ID"]
+            project_name = default_settings["BIGQUERY_CONFIG"][_game_id]["PROJECT_ID"]
         return f"{project_name}.coding"
 
     def _allCoders(self) -> Optional[List[Coder]]:
         query = f"""
             SELECT DISTINCT coder_id, name
-            FROM `{self._dbPath()}.coders`,
+            FROM `{self._dbPath()}.coders`
         """
         data = self._client.query(query)
         coders = [Coder(name=str(row['name']), id=str(row['coder_id'])) for row in data]
-        return coders if coders != None else []
+        return coders or []
 
     def _createCoder(self, coder_name:str) -> bool:
         # TODO: figure out how to make metadata available for insert.
