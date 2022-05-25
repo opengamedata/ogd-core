@@ -221,7 +221,10 @@ class BigQueryCodingInterface(CodingInterface):
         else:
             return True
 
+    # *** PUBLIC STATICS ***
+
     # *** PUBLIC METHODS ***
+
     def IsOpen(self) -> bool:
         """Overridden version of IsOpen function, checks that BigQueryInterface client has been initialized.
 
@@ -244,3 +247,5 @@ class BigQueryCodingInterface(CodingInterface):
                     coder=Coder(name=_name, id=_coder_id),
                     events=_events, notes=_notes
         )
+
+    # *** PRIVATE METHODS ***
