@@ -94,13 +94,45 @@ class BigQueryCodingInterface(CodingInterface):
             return True
 
     def _getCodeWordsByGame(self, game_id:str) -> Optional[List[str]]:
-        pass
+        query = f"""
+            SELECT DISTINCT code
+            FROM `{self._dbPath(game_id=game_id)}.codes`
+        """
+        data = self._client.query(query)
+        codes = [str(row['code']) for row in data]
+        return codes or []
 
     def _getCodeWordsByCoder(self, coder_id:str) -> Optional[List[str]]:
-        pass
+        query = f"""
+            SELECT DISTINCT code
+            FROM `{self._dbPath()}.codes`
+            WHERE coder_id=@coder_id
+        """
+        cfg = bigquery.QueryJobConfig(
+            query_parameters= [
+                bigquery.ScalarQueryParameter(name="coder_id", type_="STRING", value=coder_id),
+            ]
+        )
+        data = self._client.query(query=query, job_config=cfg)
+        codes = [str(row['code']) for row in data]
+        return codes or []
 
     def _getCodeWordsBySession(self, session_id:str) -> Optional[List[str]]:
-        pass
+        query = f"""
+            SELECT DISTINCT code
+            FROM `{self._dbPath()}.codes`
+            CROSS JOIN UNNEST(event_params) AS param_session
+            WHERE param_session.key = 'ga_session_id' AND param_session.value.int_value=@session_id)
+        """
+        i_session_id : int = int(session_id)
+        cfg = bigquery.QueryJobConfig(
+            query_parameters= [
+                bigquery.ScalarQueryParameter(name="session_id", type_="INTEGER", value=i_session_id),
+            ]
+        )
+        data = self._client.query(query=query, job_config=cfg)
+        codes = [str(row['code']) for row in data]
+        return codes or []
 
     def _getCodesByGame(self, game_id:str) -> Optional[List[Code]]:
         pass
