@@ -37,7 +37,7 @@ class Feature(Extractor):
         """
         pass
 
-    # *** PUBLIC BUILT-INS and FORMATTERS ***
+    # *** BUILT-INS ***
 
     def ToFeatureData(self, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureData:
         return FeatureData(
@@ -85,6 +85,8 @@ class Feature(Extractor):
 
     def GetFeatureValues(self) -> List[Any]:
         return self._getFeatureValues()
+
+    # *** PROPERTIES ***
 
     # *** PRIVATE STATICS ***
 

@@ -28,7 +28,7 @@ class LegacyFeature(Feature):
         """
         return
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     # Base constructor for LegacyFeature classes.
     def __init__(self, name:str, description:str, count_index:int, game_schema:GameSchema, session_id:str):

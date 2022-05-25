@@ -48,7 +48,7 @@ class Extractor(abc.ABC):
         """
         pass
 
-    # *** PUBLIC BUILT-INS and FORMATTERS ***
+    # *** BUILT-INS ***
 
     def __init__(self, name:str, description:str, count_index:int):
         self._name = name
@@ -61,10 +61,6 @@ class Extractor(abc.ABC):
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
-
-    @property
-    def Name(self):
-        return self._name
 
     def GetEventDependencies(self) -> List[str]:
         return self._getEventDependencies()
@@ -101,6 +97,12 @@ class Extractor(abc.ABC):
         :rtype: Optional[str]
         """
         return None
+
+    # *** PROPERTIES ***
+
+    @property
+    def Name(self):
+        return self._name
 
     # *** PRIVATE STATICS ***
 

@@ -110,7 +110,7 @@ class PopulationProcessor(FeatureProcessor):
         Logger.Log(f"Clearing features from PopulationProcessor.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     ## Constructor for the PopulationProcessor class.
     def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema,

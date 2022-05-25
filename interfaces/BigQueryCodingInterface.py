@@ -16,7 +16,7 @@ from utils import Logger
 
 class BigQueryCodingInterface(CodingInterface):
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     def __init__(self, game_id:str, settings):
         super().__init__(game_id=game_id)

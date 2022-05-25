@@ -41,7 +41,7 @@ class LegacyDetector(Detector):
                                 event_name="CustomDetector", event_data={}, event_source=EventSource.GENERATED)
         return ret_val
 
-    # *** PUBLIC BUILT-INS and FORMATTERS ***
+    # *** BUILT-INS ***
 
     def __init__(self, name:str, description:str):
         super().__init__(name=name, description=description, count_index=0, trigger_callback=lambda x : None)

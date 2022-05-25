@@ -22,6 +22,48 @@ class DetectorRegistry(ExtractorRegistry):
     :rtype: [type]
     """
 
+    # *** BUILT-INS ***
+
+    # Base constructor for Registry.
+    def __init__(self):
+        """Base constructor for Registry
+
+        Just sets up mostly-empty dictionaries for use by the registry.
+        """
+        super().__init__()
+        self._detectors      : OrderedDict[str, Detector]                = OrderedDict()
+
+    # string conversion for Extractors.
+    def __str__(self) -> str:
+        """string conversion for Extractors.
+
+        Creates a list of all features in the extractor, separated by newlines.
+        :return: A string with line-separated stringified features.
+        :rtype: str
+        """
+        ret_val : List[str] = []
+        ret_val = [str(feat) for feat in self._detectors.values()]
+        return '\n'.join(ret_val)
+
+    # Alternate string conversion for Extractors, with limitable number of lines.
+    def to_string(self, num_lines:Optional[int] = None) -> str:
+        """Alternate string conversion for Extractors, with limitable number of lines.
+
+        Creates a list of features in the extractor, separated by newlines.
+        Optional num_lines param allows the function caller to limit number of lines in the string.
+        :param num_lines: Max number of lines to include in the string.
+        If None, then include all strings, defaults to None
+        :type num_lines:  Optional[int], optional
+        :return: A string with line-separated stringified features.
+        :rtype: str
+        """
+        ret_val : List[str] = []
+        ret_val = [str(feat) for feat in self._detectors.values()]
+        if num_lines is None:
+            return '\n'.join(ret_val)
+        else:
+            return '\n'.join(ret_val[:num_lines])
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _register(self, extractor:Extractor, kind:ExtractorRegistry.Listener.Kinds):
@@ -72,52 +114,11 @@ class DetectorRegistry(ExtractorRegistry):
         ret_val : List[str] = [feature.Name for feature in self._detectors.values()]
         return ret_val
 
-
-    # *** BUILT-INS ***
-
-    # Base constructor for Registry.
-    def __init__(self):
-        """Base constructor for Registry
-
-        Just sets up mostly-empty dictionaries for use by the registry.
-        """
-        super().__init__()
-        self._detectors      : OrderedDict[str, Detector]                = OrderedDict()
-
-    # string conversion for Extractors.
-    def __str__(self) -> str:
-        """string conversion for Extractors.
-
-        Creates a list of all features in the extractor, separated by newlines.
-        :return: A string with line-separated stringified features.
-        :rtype: str
-        """
-        ret_val : List[str] = []
-        ret_val = [str(feat) for feat in self._detectors.values()]
-        return '\n'.join(ret_val)
-
-    # Alternate string conversion for Extractors, with limitable number of lines.
-    def to_string(self, num_lines:Optional[int] = None) -> str:
-        """Alternate string conversion for Extractors, with limitable number of lines.
-
-        Creates a list of features in the extractor, separated by newlines.
-        Optional num_lines param allows the function caller to limit number of lines in the string.
-        :param num_lines: Max number of lines to include in the string.
-        If None, then include all strings, defaults to None
-        :type num_lines:  Optional[int], optional
-        :return: A string with line-separated stringified features.
-        :rtype: str
-        """
-        ret_val : List[str] = []
-        ret_val = [str(feat) for feat in self._detectors.values()]
-        if num_lines is None:
-            return '\n'.join(ret_val)
-        else:
-            return '\n'.join(ret_val[:num_lines])
-
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
+
+    # *** PROPERTIES ***
 
     # *** PRIVATE STATICS ***
 

@@ -28,6 +28,57 @@ class FeatureRegistry(ExtractorRegistry):
         FIRST_ORDER = 0
         SECOND_ORDER = 1
 
+    # *** BUILT-INS ***
+
+    # Base constructor for Registry.
+    def __init__(self, order:int=len(FeatureOrders)):
+        """Base constructor for Registry
+
+        Just sets up mostly-empty dictionaries for use by the registry.
+        _features is a list of feature orders, where each element is a map from feature names to actual Feature instances.
+        _event_registry maps event names to Listener objects, which basically just say which feature(s) wants the given enent.
+        _feature_registry maps feature names to Listener objects, which basically just say which 2nd-order feature(s) wants the given 1st-order feature.
+        """
+        super().__init__()
+        self._features : List[OrderedDict[str, Feature]] = [OrderedDict() for i in range(order)]
+        # self._features : Dict[str, OrderedDict[str, Feature]] = {
+        #     "first_order" : OrderedDict(),
+        #     "second_order" : OrderedDict()
+        # }
+
+    # string conversion for Extractors.
+    def __str__(self) -> str:
+        """string conversion for Extractors.
+
+        Creates a list of all features in the extractor, separated by newlines.
+        :return: A string with line-separated stringified features.
+        :rtype: str
+        """
+        ret_val : List[str] = []
+        for order in self._features:
+            ret_val += [str(feat) for feat in order.values()]
+        return '\n'.join(ret_val)
+
+    # Alternate string conversion for Extractors, with limitable number of lines.
+    def to_string(self, num_lines:Optional[int] = None) -> str:
+        """Alternate string conversion for Extractors, with limitable number of lines.
+
+        Creates a list of features in the extractor, separated by newlines.
+        Optional num_lines param allows the function caller to limit number of lines in the string.
+        :param num_lines: Max number of lines to include in the string.
+        If None, then include all strings, defaults to None
+        :type num_lines:  Optional[int], optional
+        :return: A string with line-separated stringified features.
+        :rtype: str
+        """
+        ret_val : List[str] = []
+        for order in self._features:
+            ret_val += [str(feat) for feat in order.values()]
+        if num_lines is None:
+            return '\n'.join(ret_val)
+        else:
+            return '\n'.join(ret_val[:num_lines])
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _register(self, extractor:Extractor, kind:ExtractorRegistry.Listener.Kinds):
@@ -106,60 +157,11 @@ class FeatureRegistry(ExtractorRegistry):
                 ret_val += feature.GetFeatureNames()
         return ret_val
 
-    # *** BUILT-INS ***
-
-    # Base constructor for Registry.
-    def __init__(self, order:int=len(FeatureOrders)):
-        """Base constructor for Registry
-
-        Just sets up mostly-empty dictionaries for use by the registry.
-        _features is a list of feature orders, where each element is a map from feature names to actual Feature instances.
-        _event_registry maps event names to Listener objects, which basically just say which feature(s) wants the given enent.
-        _feature_registry maps feature names to Listener objects, which basically just say which 2nd-order feature(s) wants the given 1st-order feature.
-        """
-        super().__init__()
-        self._features : List[OrderedDict[str, Feature]] = [OrderedDict() for i in range(order)]
-        # self._features : Dict[str, OrderedDict[str, Feature]] = {
-        #     "first_order" : OrderedDict(),
-        #     "second_order" : OrderedDict()
-        # }
-
-    # string conversion for Extractors.
-    def __str__(self) -> str:
-        """string conversion for Extractors.
-
-        Creates a list of all features in the extractor, separated by newlines.
-        :return: A string with line-separated stringified features.
-        :rtype: str
-        """
-        ret_val : List[str] = []
-        for order in self._features:
-            ret_val += [str(feat) for feat in order.values()]
-        return '\n'.join(ret_val)
-
-    # Alternate string conversion for Extractors, with limitable number of lines.
-    def to_string(self, num_lines:Optional[int] = None) -> str:
-        """Alternate string conversion for Extractors, with limitable number of lines.
-
-        Creates a list of features in the extractor, separated by newlines.
-        Optional num_lines param allows the function caller to limit number of lines in the string.
-        :param num_lines: Max number of lines to include in the string.
-        If None, then include all strings, defaults to None
-        :type num_lines:  Optional[int], optional
-        :return: A string with line-separated stringified features.
-        :rtype: str
-        """
-        ret_val : List[str] = []
-        for order in self._features:
-            ret_val += [str(feat) for feat in order.values()]
-        if num_lines is None:
-            return '\n'.join(ret_val)
-        else:
-            return '\n'.join(ret_val[:num_lines])
 
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
+
     def OrderCount(self) -> int:
         """Gets the number of "orders" of features stored in the FeatureRegistry.
         For now, there's just two of them.
@@ -197,6 +199,8 @@ class FeatureRegistry(ExtractorRegistry):
                 str_val = str(val)
             ret_val.append(str_val)
         return ret_val
+
+    # *** PROPERTIES ***
 
     # *** PRIVATE STATICS ***
 

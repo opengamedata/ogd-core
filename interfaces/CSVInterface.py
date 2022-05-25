@@ -11,7 +11,7 @@ from utils import Logger
 
 class CSVInterface(DataInterface):
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     def __init__(self, game_id:str, filepath:Path, delim:str = ','):
         # set up data from params

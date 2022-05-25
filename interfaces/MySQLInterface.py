@@ -236,7 +236,7 @@ class SQL:
 
 class MySQLInterface(DataInterface):
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     def __init__(self, game_id:str, settings):
         # set up data from params
