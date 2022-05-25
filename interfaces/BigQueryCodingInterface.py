@@ -135,15 +135,61 @@ class BigQueryCodingInterface(CodingInterface):
         return codes or []
 
     def _getCodesByGame(self, game_id:str) -> Optional[List[Code]]:
-        pass
+        query = f"""
+            SELECT *
+            FROM `{self._dbPath(game_id=game_id)}.codes`,
+        """
+        try:
+            data = self._client.query(query)
+            codes = [BigQueryCodingInterface._codeFromRow(row=row) for row in data]
+        except Exception as err:
+            Logger.Log(f"Error while retrieving {game_id} codes from database: {err}", level=logging.ERROR, depth=2)
+            return []
+        else:
+            return codes
 
     def _getCodesByCoder(self, coder_id:str) -> Optional[List[Code]]:
-        pass
+        query = f"""
+            SELECT *
+            FROM `{self._dbPath()}.codes`
+            WHERE `coder_id`=@coder_id
+        """
+        cfg = bigquery.QueryJobConfig(
+            query_parameters= [
+                bigquery.ScalarQueryParameter(name="coder_id", type_="STRING", value=coder_id),
+            ]
+        )
+        try:
+            data = self._client.query(query)
+            codes = [BigQueryCodingInterface._codeFromRow(row=row) for row in data]
+        except Exception as err:
+            Logger.Log(f"Error while retrieving {coder_id} codes from database: {err}", level=logging.ERROR, depth=2)
+            return []
+        else:
+            return codes
 
     def _getCodesBySession(self, session_id:str) -> Optional[List[Code]]:
-        pass
+        query = f"""
+            SELECT *
+            FROM `{self._dbPath()}.codes`
+            CROSS JOIN UNNEST(events) AS param_session
+            WHERE param_session.key = 'session_id' AND param_session.value.int_value=@session_id
+        """
+        cfg = bigquery.QueryJobConfig(
+            query_parameters= [
+                bigquery.ScalarQueryParameter(name="session_id", type_="STRING", value=session_id),
+            ]
+        )
+        try:
+            data = self._client.query(query)
+            codes = [BigQueryCodingInterface._codeFromRow(row=row) for row in data]
+        except Exception as err:
+            Logger.Log(f"Error while retrieving {session_id} codes from database: {err}", level=logging.ERROR, depth=2)
+            return []
+        else:
+            return codes
 
-    def _createCode(self, code:str, coder:Coder, events:List[Code.EventID], notes:Optional[str]=None):
+    def _createCode(self, code:str, coder_id:str, events:List[Code.EventID], notes:Optional[str]=None):
         query = f"""
             INSERT {self._dbPath()}(code_id, code, coder_id, notes, events)
             VALUES (GENERATE_UUID(), @code, @coder_id, @notes, @events)
@@ -151,14 +197,14 @@ class BigQueryCodingInterface(CodingInterface):
         evt_params = [
             bigquery.StructQueryParameter.positional(
                 bigquery.ScalarQueryParameter(name="session_id", type_="STRING", value=event.SessionID),
-                bigquery.ScalarQueryParameter(name="index", type="INTEGER", value=event.Index)
+                bigquery.ScalarQueryParameter(name="index", type_="INTEGER", value=event.Index)
             )
             for event in events
         ]
         cfg = bigquery.QueryJobConfig(
             query_parameters= [
                 bigquery.ScalarQueryParameter(name="code", type_="STRING", value=code),
-                bigquery.ScalarQueryParameter(name="coder_id", type_="STRING", value=coder.ID),
+                bigquery.ScalarQueryParameter(name="coder_id", type_="STRING", value=coder_id),
                 bigquery.ScalarQueryParameter(name="notes", type_="STRING", value=notes),
                 bigquery.ArrayQueryParameter(
                     name="events",
@@ -183,3 +229,18 @@ class BigQueryCodingInterface(CodingInterface):
         :rtype: bool
         """
         return True if (super().IsOpen() and self._client is not None) else False
+
+    # *** PRIVATE STATICS ***
+
+    @staticmethod
+    def _codeFromRow(row) -> Code:
+        _code_word = str(row['code'])
+        _code_id   = str(row['code_id'])
+        _coder_id  = str(row['coder_id'])
+        _name      = str(row['coder_name'])
+        _events    = [] # TODO: figure out how to parse these out.
+        _notes     = str(row['notes'])
+        return Code(code_word=_code_word, id=_code_id,
+                    coder=Coder(name=_name, id=_coder_id),
+                    events=_events, notes=_notes
+        )
