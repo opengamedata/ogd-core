@@ -155,7 +155,7 @@ class BigQueryCodingInterface(CodingInterface):
         else:
             return codes
 
-    def _createCode(self, code:str, coder:Coder, events:List[Code.EventID], notes:Optional[str]=None):
+    def _createCode(self, code:str, coder_id:str, events:List[Code.EventID], notes:Optional[str]=None):
         query = f"""
             INSERT {self._dbPath()}(code_id, code, coder_id, notes, events)
             VALUES (GENERATE_UUID(), @code, @coder_id, @notes, @events)
@@ -170,7 +170,7 @@ class BigQueryCodingInterface(CodingInterface):
         cfg = bigquery.QueryJobConfig(
             query_parameters= [
                 bigquery.ScalarQueryParameter(name="code", type_="STRING", value=code),
-                bigquery.ScalarQueryParameter(name="coder_id", type_="STRING", value=coder.ID),
+                bigquery.ScalarQueryParameter(name="coder_id", type_="STRING", value=coder_id),
                 bigquery.ScalarQueryParameter(name="notes", type_="STRING", value=notes),
                 bigquery.ArrayQueryParameter(
                     name="events",

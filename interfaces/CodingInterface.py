@@ -47,7 +47,7 @@ class CodingInterface(Interface):
         pass
 
     @abc.abstractmethod
-    def _createCode(self, code:str, coder:Coder, events:List[Code.EventID], notes:Optional[str]=None) -> bool:
+    def _createCode(self, code:str, coder_id:str, events:List[Code.EventID], notes:Optional[str]=None) -> bool:
         pass
 
     # *** PUBLIC BUILT-INS ***
@@ -98,10 +98,10 @@ class CodingInterface(Interface):
         else:
             raise NotImplementedError(f"The given retrieval mode '{mode}' is not supported for retrieving code words!")
 
-    def CreateCode(self, code:str, coder:Coder, events:List[Code.EventID], notes:Optional[str]=None) -> bool:
+    def CreateCode(self, code:str, coder_id:str, events:List[Code.EventID], notes:Optional[str]=None) -> bool:
         ret_val = False
         if self.IsOpen():
-            ret_val = self._createCode(code=code, coder=coder, events=events, notes=notes)
+            ret_val = self._createCode(code=code, coder_id=coder_id, events=events, notes=notes)
         else:
             Logger.Log("Can't create Code, the source interface is not open!")
         return ret_val
