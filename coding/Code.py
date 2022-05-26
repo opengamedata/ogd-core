@@ -30,12 +30,16 @@ class Code:
         def Index(self):
             return self._index
 
+    # *** BUILT-INS ***
+
     def __init__(self, code_word:str, id:str, coder:Coder, events:List[EventID], notes:Optional[str]=None):
         self._code   = code_word
         self._id     = id
         self._coder  = coder
         self._events = events
         self._notes  = notes
+
+    # *** PUBLIC STATICS ***
 
     @staticmethod
     def FromJSON(json_obj:map):
@@ -56,6 +60,10 @@ class Code:
             _coder = Coder.FromJSON(json_obj=_coder_obj)
             _events = [Code.EventID.FromJSON(item) for item in _events_obj]
             return Code(code_word=_code_word, id=_id, coder=_coder, events=_events, notes=_notes)
+
+    # *** PUBLIC METHODS ***
+
+    # *** PROPERTIES ***
 
     @property
     def CodeWord(self):
@@ -86,3 +94,7 @@ class Code:
             "events":self.Events,
             "notes":self.Notes
         })
+
+    # *** PRIVATE STATICS ***
+
+    # *** PRIVATE METHODS ***

@@ -25,7 +25,7 @@ class Detector(Extractor):
     def _trigger_event(self) -> DetectorEvent:
         pass
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     def __init__(self, name:str, description:str, count_index:int, trigger_callback:Callable[[Event], None]):
         super().__init__(name=name, description=description, count_index=count_index)
@@ -54,6 +54,8 @@ class Detector(Extractor):
                 _event = self._trigger_event()
                 # TODO: add some logic to fill in empty values of Event with reasonable defaults, where applicable.
                 self._callback(_event)
+
+    # *** PROPERTIES ***
 
     # *** PRIVATE STATICS ***
 

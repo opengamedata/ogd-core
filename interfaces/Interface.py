@@ -20,7 +20,7 @@ class Interface(abc.ABC):
     def _close(self) -> bool:
         pass
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     def __init__(self):
         self._is_open : bool = False
@@ -46,6 +46,8 @@ class Interface(abc.ABC):
             return self._close()
         else:
             return True
+
+    # *** PROPERTIES ***
 
     # *** PRIVATE STATICS ***
 

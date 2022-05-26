@@ -111,6 +111,8 @@ class ExtractorRegistry(abc.ABC):
         """
         self._extractFromFeatureData(feature=feature)
 
+    # *** PROPERTIES ***
+
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***

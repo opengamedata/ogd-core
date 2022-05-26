@@ -18,7 +18,7 @@ from schemas.Request import ExporterTypes
 #  Class to extract and manage features for a processed csv file.
 class PlayerProcessor(FeatureProcessor):
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     ## Constructor for the PlayerProcessor class.
     def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema, player_id:str,

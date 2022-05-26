@@ -33,7 +33,7 @@ class Processor(abc.ABC):
     def _processFeatureData(self, feature:FeatureData) -> None:
         pass
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, feature_overrides:Optional[List[str]]=None):
         self._game_schema : GameSchema            = game_schema

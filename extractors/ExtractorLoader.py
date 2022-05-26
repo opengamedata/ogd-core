@@ -13,6 +13,7 @@ from schemas.GameSchema import GameSchema
 from utils import Logger
 
 class ExtractorLoader(abc.ABC):
+
     # *** ABSTRACTS ***
     
     @abc.abstractmethod
@@ -22,6 +23,8 @@ class ExtractorLoader(abc.ABC):
     @abc.abstractmethod
     def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
         pass
+
+    # *** BUILT-INS ***
 
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, feature_overrides:Optional[List[str]]):
         """Base constructor for Extractor classes.
@@ -38,6 +41,10 @@ class ExtractorLoader(abc.ABC):
         self._session_id  : str        = session_id
         self._game_schema : GameSchema = game_schema
         self._overrides   : Optional[List[str]]    = feature_overrides
+
+    # *** PUBLIC STATICS ***
+
+    # *** PUBLIC METHODS ***
 
     def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Optional[int] = None) -> Feature:
         return self._loadFeature(feature_type=feature_type, name=name, feature_args=feature_args, count_index=count_index)
@@ -86,6 +93,8 @@ class ExtractorLoader(abc.ABC):
                     else:
                         registry.Register(extractor=detector, kind=ExtractorRegistry.Listener.Kinds.PERCOUNT)
 
+    # *** PROPERTIES ***
+
     # *** PRIVATE STATICS ***
 
     @staticmethod
@@ -106,3 +115,4 @@ class ExtractorLoader(abc.ABC):
         else:
             return base_setting
 
+    # *** PRIVATE METHODS ***

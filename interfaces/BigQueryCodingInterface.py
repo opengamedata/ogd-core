@@ -16,7 +16,7 @@ from utils import Logger
 
 class BigQueryCodingInterface(CodingInterface):
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     def __init__(self, game_id:str, settings):
         super().__init__()
@@ -56,14 +56,6 @@ class BigQueryCodingInterface(CodingInterface):
         self._is_open = False
         Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
-
-    def _dbPath(self, game_id:Optional[str]=None) -> str:
-        _game_id = game_id or self._game_id
-        if "BIGQUERY_CONFIG" in self._settings:
-            project_name = self._settings["BIGQUERY_CONFIG"][_game_id]["PROJECT_ID"]
-        else:
-            project_name = default_settings["BIGQUERY_CONFIG"][_game_id]["PROJECT_ID"]
-        return f"{project_name}.coding"
 
     def _allCoders(self) -> Optional[List[Coder]]:
         query = f"""
@@ -221,7 +213,10 @@ class BigQueryCodingInterface(CodingInterface):
         else:
             return True
 
+    # *** PUBLIC STATICS ***
+
     # *** PUBLIC METHODS ***
+
     def IsOpen(self) -> bool:
         """Overridden version of IsOpen function, checks that BigQueryInterface client has been initialized.
 
@@ -229,6 +224,8 @@ class BigQueryCodingInterface(CodingInterface):
         :rtype: bool
         """
         return True if (super().IsOpen() and self._client is not None) else False
+
+    # *** PROPERTIES ***
 
     # *** PRIVATE STATICS ***
 
@@ -244,3 +241,13 @@ class BigQueryCodingInterface(CodingInterface):
                     coder=Coder(name=_name, id=_coder_id),
                     events=_events, notes=_notes
         )
+
+    # *** PRIVATE METHODS ***
+
+    def _dbPath(self, game_id:Optional[str]=None) -> str:
+        _game_id = game_id or self._game_id
+        if "BIGQUERY_CONFIG" in self._settings:
+            project_name = self._settings["BIGQUERY_CONFIG"][_game_id]["PROJECT_ID"]
+        else:
+            project_name = default_settings["BIGQUERY_CONFIG"][_game_id]["PROJECT_ID"]
+        return f"{project_name}.coding"

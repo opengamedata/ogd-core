@@ -33,7 +33,7 @@ class DataInterface(Interface):
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str,datetime]:
         pass
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     def __init__(self, game_id):
         super().__init__()
@@ -88,6 +88,8 @@ class DataInterface(Interface):
             Logger.Log(f"Retrieving date range from IDs with {id_mode} ID mode.", logging.DEBUG, depth=3)
             ret_val = self._datesFromIDs(id_list=id_list, id_mode=id_mode, versions=versions)
         return ret_val
+
+    # *** PROPERTIES ***
 
     # *** PRIVATE STATICS ***
 

@@ -17,7 +17,7 @@ from schemas.Request import ExporterTypes
 #  Class to extract and manage features for a processed csv file.
 class SessionProcessor(FeatureProcessor):
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     ## Constructor for the SessionProcessor class.
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, player_id:str, session_id:str,

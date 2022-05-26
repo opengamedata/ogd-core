@@ -33,7 +33,7 @@ class FeatureProcessor(Processor):
     def _clearLines(self) -> None:
         pass
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema,
                  feature_overrides:Optional[List[str]]=None):

@@ -50,7 +50,7 @@ class CodingInterface(Interface):
     def _createCode(self, code:str, coder_id:str, events:List[Code.EventID], notes:Optional[str]=None) -> bool:
         pass
 
-    # *** PUBLIC BUILT-INS ***
+    # *** BUILT-INS ***
 
     def __init__(self):
         super().__init__()
@@ -105,6 +105,8 @@ class CodingInterface(Interface):
         else:
             Logger.Log("Can't create Code, the source interface is not open!")
         return ret_val
+
+    # *** PROPERTIES ***
 
     # *** PRIVATE STATICS ***
 
