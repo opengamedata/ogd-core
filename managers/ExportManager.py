@@ -281,7 +281,7 @@ class ExportManager:
     def _processSlice(self, next_slice_data:List[Tuple], request: Request, table_schema:TableSchema, ids:List[str], slice_num:int, slice_count:int):
         start      : datetime = datetime.now()
         num_events : int      = len(next_slice_data)
-        _curr_sess : int      = 0
+        _curr_sess : str      = ""
         _evt_sess_index : int = 1
         _unsessioned_event_count : int = 0
         # 3a) If next slice yielded valid data from the interface, process row-by-row.
