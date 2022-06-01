@@ -49,7 +49,7 @@ class Feature(Extractor):
     def ToFeatureData(self, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureData:
         return FeatureData(
             name=self.Name,
-            count_index=self._count_index,
+            count_index=self.CountIndex,
             cols=self.GetFeatureNames(),
             vals=self.GetFeatureValues(),
             player_id=player_id,

@@ -6,7 +6,7 @@ class SessionFeature(Feature):
     # *** BUILT-INS ***
 
     def __init__(self, name:str, description:str):
-        Feature.__init__(self, name=name, description=description, count_index=0)
+        super().__init__(name=name, description=description, count_index=0)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 

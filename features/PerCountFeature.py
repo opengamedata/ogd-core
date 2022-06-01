@@ -1,9 +1,11 @@
+# import standard libraries
+import abc
 # import locals
-from features.PerCountFeature import PerCountFeature
+from features.Feature import Feature
 from schemas.Event import Event
 
 ## @class PerLevelFeature
-class PerLevelFeature(PerCountFeature):
+class PerCountFeature(Feature):
     """PerLevelFeature
     Abstract base class for per-level game features.
     Works like a normal Feature, but checks if the given event has right "level"
@@ -15,6 +17,12 @@ class PerLevelFeature(PerCountFeature):
     Returns:
         _type_: _description_
     """
+
+    # *** ABSTRACTS ***
+
+    @abc.abstractmethod
+    def _validateEventCountIndex(self, event:Event):
+        pass
 
     # *** BUILT-INS ***
 
@@ -33,5 +41,9 @@ class PerLevelFeature(PerCountFeature):
 
     # *** PRIVATE METHODS ***
 
-    def _validateEventCountIndex(self, event:Event):
-        return event.EventData['level'] == self.CountIndex
+    def _validateEvent(self, event:Event):
+        return (
+            self._validateVersion(event.LogVersion)
+        and self._validateEventType(event_type=event.EventName)
+        and self._validateEventCountIndex(event=event)
+        )
