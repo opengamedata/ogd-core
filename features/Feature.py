@@ -39,6 +39,13 @@ class Feature(Extractor):
 
     # *** BUILT-INS ***
 
+    def __init__(self, name:str, description:str, count_index:int):
+        super().__init__(name=name, description=description, count_index=count_index)
+
+    # *** PUBLIC STATICS ***
+
+    # *** PUBLIC METHODS ***
+
     def ToFeatureData(self, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureData:
         return FeatureData(
             name=self.Name,
@@ -48,10 +55,6 @@ class Feature(Extractor):
             player_id=player_id,
             sess_id=sess_id
         )
-
-    # *** PUBLIC STATICS ***
-
-    # *** PUBLIC METHODS ***
 
     def Subfeatures(self) -> List[str]:
         """Base function to get a list of names of the sub-feature(s) a given Feature class outputs.
