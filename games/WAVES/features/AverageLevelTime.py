@@ -42,7 +42,7 @@ class AverageLevelTime(SessionFeature):
 
     def _getFeatureValues(self) -> List[Any]:
         if len(self._begin_times) < len(self._complete_times):
-            Logger.Log(f"Player began level {self._count_index} {len(self._begin_times)} times but completed it {len(self._complete_times)}.", logging.WARNING)
+            Logger.Log(f"Player began level {self.CountIndex} {len(self._begin_times)} times but completed it {len(self._complete_times)}.", logging.WARNING)
         _diffs      = []
         for level in self._levels_encountered:
             if level in self._begin_times.keys() and level in self._complete_times.keys():

@@ -35,7 +35,7 @@ class TimeToAnswerMS(Feature):
                 self._latest_answer_Q0 = event.Timestamp
             elif (q_num == 2):
                 self._latest_answer_Q2 = event.Timestamp
-            if self._count_index == q_num:
+            if self.CountIndex == q_num:
                 self._answer_time = self._calcAnswerTime(timestamp=event.Timestamp)
 
     def _extractFromFeatureData(self, feature: FeatureData):
@@ -49,13 +49,13 @@ class TimeToAnswerMS(Feature):
     # *** Other local functions
     def _calcAnswerTime(self, timestamp) -> Optional[int]:
         millis: Optional[float]
-        if self._count_index == 0:
+        if self.CountIndex == 0:
             millis = 1000.0 * (timestamp - self._latest_complete_lvl8).total_seconds()
-        elif self._count_index == 1:
+        elif self.CountIndex == 1:
             millis = 1000.0 * (timestamp - self._latest_answer_Q0).total_seconds()
-        elif self._count_index == 2:
+        elif self.CountIndex == 2:
             millis = 1000.0 * (timestamp - self._latest_complete_lvl16).total_seconds()
-        elif self._count_index == 3:
+        elif self.CountIndex == 3:
             millis = 1000.0 * (timestamp - self._latest_answer_Q2).total_seconds()
         else:
             millis = None

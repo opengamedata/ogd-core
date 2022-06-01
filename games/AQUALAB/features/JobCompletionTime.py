@@ -4,16 +4,15 @@ from datetime import timedelta
 from typing import Any, List, Optional
 # import locals
 from utils import Logger
-from features.Feature import Feature
+from features.PerCountFeature import PerCountFeature
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
-class JobCompletionTime(Feature):
+class JobCompletionTime(PerCountFeature):
 
     def __init__(self, name:str, description:str, job_num:int, job_map:dict):
-        self._job_map = job_map
         super().__init__(name=name, description=description, count_index=job_num)
-        self._session_id = None
+        self._job_map = job_map
         self._job_start_time = None
         self._prev_timestamp = None
         self._time = 0
@@ -26,26 +25,25 @@ class JobCompletionTime(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.SessionID != self._session_id:
-            self._session_id = event.SessionID
+        if self._job_start_time:
+            self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
+            self._job_start_time = event.timestamp
 
-            if self._job_start_time:
-                self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
-                self._job_start_time = event.Timestamp
-
-        if self._validate_job(event.EventData['job_name']):
-            # if event.UserID == "":
-            #     Logger.Log(f"Processing event {event}", logging.WARNING)
-            if event.EventName == "accept_job" or event.EventName == "switch_job":
-                self._job_start_time = event.Timestamp
-            elif event.EventName == "complete_job":
+        if self._validate_job(event.event_data['job_name']):
+            if event.user_id == "MordantDead":
+                Logger.Log(f"Processing event {event}", logging.WARNING)
+            if event.event_name == "accept_job":
+                self._job_start_time = event.timestamp
+            elif event.event_name == "switch_job":
+                self._
+            elif event.event_name == "complete_job":
                 if self._job_start_time:
-                    self._time += (event.Timestamp - self._job_start_time).total_seconds()
+                    self._time += (event.timestamp - self._job_start_time).total_seconds()
                     self._job_start_time = None
                 else:
-                    Logger.Log(f"{event.UserID} ({event.SessionID}) completed job {event.EventData['job_name']['string_value']} with no active start time!", logging.WARNING)
+                    Logger.Log(f"{event.user_id} ({event.session_id}) completed job {event.event_data['job_name']['string_value']} with no active start time!", logging.WARNING)
 
-        self._prev_timestamp = event.Timestamp
+        self._prev_timestamp = event.timestamp
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
@@ -61,7 +59,7 @@ class JobCompletionTime(Feature):
     def _validate_job(self, job_data):
         ret_val : bool = False
         if job_data['string_value'] is not None:
-            if job_data['string_value'] in self._job_map and self._job_map[job_data['string_value']] == self._count_index:
+            if job_data['string_value'] in self._job_map and self._job_map[job_data['string_value']] == self.CountIndex:
                 ret_val = True
         else:
             Logger.Log(f"Got invalid job_name data in JobCompletionTime", logging.WARNING)

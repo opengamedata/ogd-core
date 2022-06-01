@@ -104,6 +104,10 @@ class Extractor(abc.ABC):
     def Name(self):
         return self._name
 
+    @property
+    def CountIndex(self):
+        return self._count_index
+
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
