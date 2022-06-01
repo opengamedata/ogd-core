@@ -5,7 +5,6 @@ from typing import Any, List, Optional
 # import locals
 from utils import Logger
 from features.PerCountFeature import PerCountFeature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class PerJobFeature(PerCountFeature):
@@ -15,13 +14,16 @@ class PerJobFeature(PerCountFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _validate_job(self, job_data):
+    def _validateEventCountIndex(self, event:Event):
         ret_val : bool = False
-        if job_data['string_value'] is not None:
-            if job_data['string_value'] in self._job_map and self._job_map[job_data['string_value']] == self.CountIndex:
+
+        job_data = event.EventData["job_name"]['string_value']
+        if job_data is not None:
+            if job_data in self._job_map and self._job_map[job_data] == self.CountIndex:
                 ret_val = True
         else:
-            Logger.Log(f"Got invalid job_name data in JobCompletionTime", logging.WARNING)
+            Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
+
         return ret_val
 
     # *** Optionally override public functions. ***
