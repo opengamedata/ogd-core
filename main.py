@@ -127,7 +127,7 @@ def genRequest(events:bool, features:bool) -> Request:
     interface : DataInterface
     range     : ExporterRange
     exporter_files : ExporterTypes
-    exporter_files = ExporterTypes(events=events, sessions=features, players=features, population=features) 
+    exporter_files = ExporterTypes(events=events, sessions=not args.no_session_file, players=not args.no_player_file, population=not args.no_pop_file) 
     supported_vers = GameSchema(schema_name=f"{args.game}.json")['config']['SUPPORTED_VERS']
     if args.file is not None and args.file != "":
         raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
@@ -206,6 +206,12 @@ export_parser.add_argument("-p", "--player", default="",
                     help="Tell the program to output data for a player with given ID, instead of using a date range.")
 export_parser.add_argument("-f", "--file", default="",
                     help="Tell the program to use a file as input, instead of looking up a database.")
+export_parser.add_argument("--no_session_file", default=False, action="store_true",
+                    help="Tell the program to skip outputting a per-session file.")
+export_parser.add_argument("--no_player_file", default=False, action="store_true",
+                    help="Tell the program to skip outputting a per-player file.")
+export_parser.add_argument("--no_pop_file", default=False, action="store_true",
+                    help="Tell the program to skip outputting a population file.")
 # set up main parser, with one sub-parser per-command.
 command_list = ["export", "export-events", "export-session-features",
                 "info", "readme", "list-games", "help"]
