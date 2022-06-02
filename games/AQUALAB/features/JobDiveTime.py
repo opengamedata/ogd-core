@@ -19,7 +19,7 @@ class JobDiveTime(PerJobFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
-        return ["begin_dive", "scene_changed"]
+        return ["all_events"]
 
     def _getFeatureDependencies(self) -> List[str]:
         return []
@@ -27,8 +27,8 @@ class JobDiveTime(PerJobFeature):
     def _extractFromEvent(self, event:Event) -> None:
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
-
-            if self._dive_start_time:
+            # if we jumped to a new session, we only want to count time up to last event, not the time between sessions.
+            if self._dive_start_time and self._prev_timestamp:
                 self._time += (self._prev_timestamp - self._dive_start_time).total_seconds()
                 self._dive_start_time = event.Timestamp
 

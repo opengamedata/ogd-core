@@ -12,13 +12,14 @@ class JobCompletionTime(PerJobFeature):
 
     def __init__(self, name:str, description:str, job_num:int, job_map:dict):
         super().__init__(name=name, description=description, job_num=job_num, job_map=job_map)
+        self._session_id = None
         self._job_start_time = None
         self._prev_timestamp = None
         self._time = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
-        return ["accept_job", "complete_job"]
+        return ["all_events"]
 
     def _getFeatureDependencies(self) -> List[str]:
         return []
@@ -26,17 +27,15 @@ class JobCompletionTime(PerJobFeature):
     def _extractFromEvent(self, event:Event) -> None:
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
-            
-            if self._job_start_time:
+            # if we jumped to a new session, we only want to count time up to last event, not the time between sessions.
+            if self._job_start_time and self._prev_timestamp:
                 self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
                 self._job_start_time = event.timestamp
 
-        if event.user_id == "MordantDead":
-            Logger.Log(f"Processing event {event}", logging.WARNING)
+        # if event.user_id == "MordantDead":
+        #     Logger.Log(f"Processing event {event}", logging.WARNING)
         if event.event_name == "accept_job":
             self._job_start_time = event.timestamp
-        elif event.event_name == "switch_job":
-            self._
         elif event.event_name == "complete_job":
             if self._job_start_time:
                 self._time += (event.timestamp - self._job_start_time).total_seconds()

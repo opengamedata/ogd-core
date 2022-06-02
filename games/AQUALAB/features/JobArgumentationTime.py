@@ -19,7 +19,7 @@ class JobArgumentationTime(PerJobFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
-        return ["begin_argument", "room_changed"]
+        return ["all_events"]
 
     def _getFeatureDependencies(self) -> List[str]:
         return []
@@ -27,17 +27,16 @@ class JobArgumentationTime(PerJobFeature):
     def _extractFromEvent(self, event:Event) -> None:
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
-            
-            if self._argument_start_time:
+            # if we jumped to a new session, we only want to count time up to last event, not the time between sessions.
+            if self._argument_start_time and self._prev_timestamp:
                 self._time += (self._prev_timestamp - self._argument_start_time).total_seconds()
                 self._argument_start_time = event.Timestamp
 
-        if self._validate_job(event.EventData["job_name"]):
-            if event.EventName == "begin_argument":
-                self._argument_start_time = event.Timestamp
-            elif event.EventName == "room_changed" and self._argument_start_time is not None:
-                self._time += (event.Timestamp - self._argument_start_time).total_seconds()
-                self._argument_start_time = None
+        if event.EventName == "begin_argument":
+            self._argument_start_time = event.Timestamp
+        elif event.EventName == "room_changed" and self._argument_start_time is not None:
+            self._time += (event.Timestamp - self._argument_start_time).total_seconds()
+            self._argument_start_time = None
         
         self._prev_timestamp = event.Timestamp
     

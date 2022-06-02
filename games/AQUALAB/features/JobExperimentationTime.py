@@ -20,7 +20,7 @@ class JobExperimentationTime(PerJobFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
-        return ["begin_experiment", "room_changed"]
+        return ["all_events"]
 
     def _getFeatureDependencies(self) -> List[str]:
         return []
@@ -28,8 +28,8 @@ class JobExperimentationTime(PerJobFeature):
     def _extractFromEvent(self, event:Event) -> None:
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
-
-            if self._experiment_start_time:
+            # if we jumped to a new session, we only want to count time up to last event, not the time between sessions.
+            if self._experiment_start_time and self._prev_timestamp:
                 self._time += (self._prev_timestamp - self._experiment_start_time).total_seconds()
                 self._experiment_start_time = event.Timestamp
 

@@ -21,7 +21,7 @@ class JobHelpCount(PerJobFeature):
     def _getFeatureDependencies(self) -> List[str]:
         return []
 
-    def _extractFromEvent(self) -> None:
+    def _extractFromEvent(self, event:Event) -> None:
         self._count += 1
 
     def _extractFromFeatureData(self, feature: FeatureData):

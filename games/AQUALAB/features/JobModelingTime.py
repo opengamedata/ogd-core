@@ -11,7 +11,7 @@ from schemas.Event import Event
 class JobModelingTime(PerJobFeature):
     def __init__(self, name:str, description:str, job_num:int, job_map:dict):
         self._job_map = job_map
-        super().__init__(name=name, description=description, count_index=job_num)
+        super().__init__(name=name, description=description, job_num=job_num, job_map=job_map)
         self._session_id = None
         self._modeling_start_time = None
         self._prev_timestamp = None
@@ -28,7 +28,7 @@ class JobModelingTime(PerJobFeature):
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
 
-            if self._modeling_start_time:
+            if self._modeling_start_time and self._prev_timestamp:
                 self._time += (self._prev_timestamp - self._modeling_start_time).total_seconds()
                 self._modeling_start_time = event.Timestamp
 
