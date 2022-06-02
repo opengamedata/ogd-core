@@ -1,4 +1,5 @@
 # import libraries
+import inspect
 import logging
 from datetime import timedelta
 from typing import Any, List, Optional
@@ -19,7 +20,7 @@ class JobCompletionTime(PerJobFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
-        return ["all_events"]
+        return ["accept_job", "complete_job"]
 
     def _getFeatureDependencies(self) -> List[str]:
         return []
@@ -32,8 +33,9 @@ class JobCompletionTime(PerJobFeature):
                 self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
                 self._job_start_time = event.timestamp
 
-        # if event.user_id == "MordantDead":
-        #     Logger.Log(f"Processing event {event}", logging.WARNING)
+        def _getFilename(full_path:str):
+            return full_path.split('\\')[-1].split('.')[0]
+
         if event.event_name == "accept_job":
             self._job_start_time = event.timestamp
         elif event.event_name == "complete_job":
@@ -41,7 +43,8 @@ class JobCompletionTime(PerJobFeature):
                 self._time += (event.timestamp - self._job_start_time).total_seconds()
                 self._job_start_time = None
             else:
-                Logger.Log(f"{event.user_id} ({event.session_id}) completed job {event.event_data['job_name']['string_value']} with no active start time!", logging.WARNING)
+                callstack = [f"{_getFilename(inspect.stack()[i].filename)}.{inspect.stack()[i].function}" for i in range(min(11, len(inspect.stack())))]
+                Logger.Log(f"In {callstack}:\n  {event.user_id} ({event.session_id}) completed job {event.event_data['job_name']['string_value']} with no active start time!", logging.WARNING)
 
         self._prev_timestamp = event.timestamp
 
