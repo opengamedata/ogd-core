@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Type, Optional
 ## import local files
 from utils import Logger
 from extractors.ExtractorLoader import ExtractorLoader
+from processors.FeatureProcessor import FeatureProcessor
 from processors.PopulationProcessor import PopulationProcessor
 from processors.PlayerProcessor import PlayerProcessor
 from processors.SessionProcessor import SessionProcessor
@@ -17,72 +18,64 @@ class FeatureManager:
         self._exp_types        : ExporterTypes       = exp_types
         self._latest_results   : Dict[str,List[Any]] = {}
         self._up_to_date       : bool                = True
-        self._pop_processor    : Optional[PopulationProcessor]  = None
-        self._player_processor : Optional[PlayerProcessor]      = None
-        self._sess_processor   : Optional[SessionProcessor]     = None
         self._LoaderClass      : Optional[Type[ExtractorLoader]] = LoaderClass
+        self._processor        : FeatureProcessor
 
-        if self._LoaderClass is not None:
+        if self.HasLoader():
             if exp_types.population:
-                self._pop_processor = PopulationProcessor(LoaderClass=self._LoaderClass, game_schema=game_schema,
-                                                          feature_overrides=feature_overrides)
+                self._processor = PopulationProcessor(LoaderClass=self._LoaderClass, game_schema=game_schema,
+                                                      feature_overrides=feature_overrides)
             elif exp_types.players:
-                self._player_processor = PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=game_schema,
-                                                         player_id="Player", feature_overrides=feature_overrides)
+                self._processor = PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=game_schema,
+                                                  player_id="Player", feature_overrides=feature_overrides)
             elif exp_types.sessions:
-                self._sess_processor = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=game_schema,
-                                                         player_id="Player", session_id="Session", feature_overrides=feature_overrides)
+                self._processor = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=game_schema,
+                                                   player_id="Player", session_id="Session", feature_overrides=feature_overrides)
         else:
             Logger.Log("Could not export population/session data, no feature loader given!", logging.WARNING, depth=1)
 
     def ProcessEvent(self, event:Event) -> None:
-        if self._pop_processor is not None:
-            self._pop_processor.ProcessEvent(event=event)
-        elif self._player_processor is not None:
-            self._player_processor.ProcessEvent(event=event)
-        elif self._sess_processor is not None:
-            self._sess_processor.ProcessEvent(event=event)
+        self._processor.ProcessEvent(event=event)
         self._up_to_date = False
 
     def HasLoader(self) -> bool:
         return self._LoaderClass is not None
 
     def GetFeatureValues(self, as_str:bool = False) -> Dict[str, List[Any]]:
+        start = datetime.now()
         self._try_update(as_str=as_str)
+        Logger.Log(f"Time to retrieve all feature values: {datetime.now() - start}", logging.INFO, depth=2)
         return self._latest_results
 
     def GetPopulationFeatureNames(self) -> List[str]:
-        return self._pop_processor.GetExtractorNames() if self._pop_processor is not None else []
+        return self._processor.GetExtractorNames() if isinstance(self._processor, PopulationProcessor) else []
     def GetPopulationFeatures(self, as_str:bool = False) -> List[Any]:
-        start   : datetime = datetime.now()
+        start = datetime.now()
         self._try_update(as_str=as_str)
         ret_val = self._latest_results.get('population', [])
-        time_delta = datetime.now() - start
-        Logger.Log(f"Time to retrieve Population lines: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        Logger.Log(f"Time to retrieve Population lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
 
     def GetPlayerFeatureNames(self) -> List[str]:
-        if self._pop_processor is not None:
-            return self._pop_processor.GetPlayerFeatureNames()
-        elif self._player_processor is not None:
-            return self._player_processor.GetExtractorNames()
+        if isinstance(self._processor, PopulationProcessor):
+            return self._processor.GetPlayerFeatureNames()
+        elif isinstance(self._processor, PlayerProcessor):
+            return self._processor.GetExtractorNames()
         else:
             return []
     def GetPlayerFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[List[Any]]:
         start   : datetime = datetime.now()
         self._try_update(as_str=as_str)
         ret_val = self._latest_results.get('players', [])
-        time_delta = datetime.now() - start
-        Logger.Log(f"Time to retrieve Player lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        Logger.Log(f"Time to retrieve Player lines for slice [{slice_num}/{slice_count}]: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
 
     def GetSessionFeatureNames(self) -> List[str]:
-        if self._pop_processor is not None:
-            return self._pop_processor.GetSessionFeatureNames()
-        elif self._player_processor is not None:
-            return self._player_processor.GetSessionFeatureNames()
-        elif self._sess_processor is not None:
-            return self._sess_processor.GetExtractorNames()
+        if isinstance(self._processor, PopulationProcessor) \
+        or isinstance(self._processor, PlayerProcessor):
+            return self._processor.GetSessionFeatureNames()
+        elif isinstance(self._processor, SessionProcessor):
+            return self._processor.GetExtractorNames()
         else:
             return []
     def GetSessionFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[List[Any]]:
@@ -94,27 +87,21 @@ class FeatureManager:
         return ret_val
 
     def ClearPopulationLines(self) -> None:
-        if self._pop_processor is not None:
-            self._pop_processor.ClearLines()
+        if isinstance(self._processor, PopulationProcessor):
+            self._processor.ClearLines()
     def ClearPlayerLines(self) -> None:
-        if self._pop_processor is not None:
-            self._pop_processor.ClearPlayersLines()
-        elif self._player_processor is not None:
-            self._player_processor.ClearLines()
+        if isinstance(self._processor, PopulationProcessor):
+            self._processor.ClearPlayersLines()
+        elif isinstance(self._processor, PlayerProcessor):
+            self._processor.ClearLines()
     def ClearSessionLines(self) -> None:
-        if self._pop_processor is not None:
-            self._pop_processor.ClearSessionsLines()
-        elif self._player_processor is not None:
-            self._player_processor.ClearSessionsLines()
-        elif self._sess_processor is not None:
-            self._sess_processor.ClearLines()
+        if isinstance(self._processor, PopulationProcessor) \
+        or isinstance(self._processor, PlayerProcessor):
+            self._processor.ClearSessionsLines()
+        elif isinstance(self._processor, PlayerProcessor):
+            self._processor.ClearLines()
 
     def _try_update(self, as_str:bool = False):
         if not self._up_to_date:
-            if self._pop_processor is not None:
-                self._latest_results = self._pop_processor.GetFeatureValues(export_types=self._exp_types, as_str=as_str)
-            elif self._player_processor is not None:
-                self._latest_results = self._player_processor.GetFeatureValues(export_types=self._exp_types, as_str=as_str)
-            elif self._sess_processor is not None:
-                self._latest_results = self._sess_processor.GetFeatureValues(export_types=self._exp_types, as_str=as_str)
+            self._latest_results = self._processor.GetFeatureValues(export_types=self._exp_types, as_str=as_str)
             self._up_to_date = True
