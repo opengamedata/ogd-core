@@ -112,7 +112,7 @@ class FeatureManager:
     def _try_update(self, as_str:bool = False):
         if not self._up_to_date:
             if self._pop_processor is not None:
-                self._latest_results['population'] = self._pop_processor.GetFeatureValues(export_types=self._exp_types, as_str=as_str)
+                self._latest_results = self._pop_processor.GetFeatureValues(export_types=self._exp_types, as_str=as_str)
             elif self._player_processor is not None:
                 self._latest_results = self._player_processor.GetFeatureValues(export_types=self._exp_types, as_str=as_str)
             elif self._sess_processor is not None:
