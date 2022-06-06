@@ -59,13 +59,14 @@ class JobActiveTime(PerJobFeature):
         ret_val : bool = False
 
         job_data = event.EventData["job_name"]['string_value']
-        if self._job_map.get(job_data, None) == self.CountIndex:
-                ret_val = True
-        elif event.EventName == "switch_job":
-            # if we got switch job, and were switching away from this instance's job, we still want to process it.
-            prev_job = event.EventData["prev_job_name"]["string_value"]
-            if self._job_map.get(prev_job, None) == self.CountIndex:
-                ret_val = True
+        if self._job_map.get(job_data, None) is not None:
+            if self._job_map.get(job_data, None) == self.CountIndex:
+                    ret_val = True
+            elif event.EventName == "switch_job":
+                # if we got switch job, and were switching away from this instance's job, we still want to process it.
+                prev_job = event.EventData["prev_job_name"]["string_value"]
+                if self._job_map.get(prev_job, None) == self.CountIndex:
+                    ret_val = True
         else:
             Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
 
