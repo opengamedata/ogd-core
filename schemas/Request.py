@@ -87,7 +87,7 @@ class ExportResult:
 
 class RequestResult:
     def __init__(self, msg:str="", status:ResultStatus=ResultStatus.NONE,
-                 events:ExportResult = ExportResult(), sessions:ExportResult = ExportResult(),
+                 events:ExportResult  = ExportResult(), sessions:ExportResult   = ExportResult(),
                  players:ExportResult = ExportResult(), population:ExportResult = ExportResult(),
                  duration:timedelta=timedelta()):
         self._message    = msg
@@ -138,14 +138,14 @@ class RequestResult:
     def Duration(self, new_duration):
         self._duration = new_duration
 
-    def RequestErrored(self, msg:str):
-        self._status = ResultStatus.FAILURE
-        self._msg = msg
-
     def RequestSucceeded(self, msg:str, val:Any):
         self._status = ResultStatus.SUCCESS
         self._msg = msg
         self._val = val
+
+    def RequestErrored(self, msg:str):
+        self._status = ResultStatus.FAILURE
+        self._msg = msg
 
 ## @class Request
 #  Dumb struct to hold data related to requests for data export.
