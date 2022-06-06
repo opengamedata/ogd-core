@@ -2,7 +2,6 @@
 import json
 from typing import Any, List, Optional
 
-from docutils import DataError
 # import locals
 from features.Feature import Feature
 from schemas.FeatureData import FeatureData
