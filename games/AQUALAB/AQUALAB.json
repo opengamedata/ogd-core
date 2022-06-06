@@ -450,6 +450,12 @@
     },
     "features": {
         "per_count": {
+            "JobActiveTime": {
+                "enabled": true,
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Time spent with job as the active job"
+            },
             "JobArgumentationTime": {
                 "enabled": true,
                 "count": "level_range",

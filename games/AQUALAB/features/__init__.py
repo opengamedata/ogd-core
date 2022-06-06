@@ -2,6 +2,7 @@ __all__ = [
     "ActiveJobs",
     "EchoSessionID",
     "EventList",
+    "JobActiveTime",
     "JobArgumentationTime",
     "JobCompletionTime",
     "JobDiveSitesCount",
@@ -36,6 +37,7 @@ __all__ = [
 from . import ActiveJobs
 from . import EchoSessionID
 from . import EventList
+from . import JobActiveTime
 from . import JobArgumentationTime
 from . import JobCompletionTime
 from . import JobDiveSitesCount
