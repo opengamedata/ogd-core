@@ -206,7 +206,17 @@ class BigQueryInterface(DataInterface):
             {where_clause}
         """
         data = list(self._client.query(query))
-        return {'min':datetime.strptime(data[0][0], "%m-%d-%Y %H:%M:%S"), 'max':datetime.strptime(data[0][1], "%m-%d-%Y %H:%M:%S")}
+        ret_val : Dict[str, datetime] = {}
+        if len(data) == 1:
+            if len(data[0]) == 2:
+                ret_val = {'min':datetime.strptime(data[0][0], "%m-%d-%Y %H:%M:%S"), 'max':datetime.strptime(data[0][1], "%m-%d-%Y %H:%M:%S")}
+            else:
+                Logger.Log(f"BigQueryInterface query did not give both a min and a max, setting both to 'now'", logging.WARNING, depth=3)
+                ret_val = {'min':datetime.now(), 'max':datetime.now()}
+        else:
+            Logger.Log(f"BigQueryInterface query did not return any results, setting both min and max to 'now'", logging.WARNING, depth=3)
+            ret_val = {'min':datetime.now(), 'max':datetime.now()}
+        return ret_val
 
     # *** PUBLIC STATICS ***
 
