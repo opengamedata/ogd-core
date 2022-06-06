@@ -26,6 +26,7 @@ from schemas.IDMode import IDMode
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 from schemas.Request import Request, ExporterTypes, ExporterRange
+from schemas.RequestResult import RequestResult, ResultStatus
 from utils import Logger
 
 ## Function to print a "help" listing for the export tool.
@@ -116,9 +117,9 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
 
     req = genRequest(events=events, features=features)
     if req.Interface.IsOpen():
-        export_manager = ExportManager(settings=settings)
-        result = export_manager.ExecuteRequest(request=req)
-        ret_val = result['success']
+        export_manager : ExportManager = ExportManager(settings=settings)
+        result         : RequestResult = export_manager.ExecuteRequest(request=req)
+        ret_val = result.Status == ResultStatus.SUCCESS
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     return ret_val
