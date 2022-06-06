@@ -12,6 +12,7 @@ class JobActiveTime(PerJobFeature):
 
     def __init__(self, name:str, description:str, job_num:int, job_map:dict):
         super().__init__(name=name, description=description, job_num=job_num, job_map=job_map)
+        self._session_id      = None
         self._last_start_time = None
         self._last_event_time = None
         self._total_seconds = 0
