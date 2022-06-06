@@ -45,7 +45,7 @@ class JobActiveTime(PerJobFeature):
                 self._total_seconds += (event.timestamp - self._last_start_time).total_seconds()
                 self._last_start_time = None
             else:
-                Logger.Log(f"{event.user_id} ({event.session_id}) completed job {event.event_data['job_name']['string_value']} with no active start time!", logging.WARNING)
+                Logger.Log(f"{event.user_id} ({event.session_id}) completed job {event.event_data['job_name']['string_value']} with no active start time!", logging.DEBUG)
 
         self._last_event_time = event.timestamp
 

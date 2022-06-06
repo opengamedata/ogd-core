@@ -44,7 +44,7 @@ class JobCompletionTime(PerJobFeature):
                 self._job_start_time = None
             else:
                 callstack = [f"{_getFilename(inspect.stack()[i].filename)}.{inspect.stack()[i].function}" for i in range(min(11, len(inspect.stack())))]
-                Logger.Log(f"In {callstack}:\n  {event.user_id} ({event.session_id}) completed job {event.event_data['job_name']['string_value']} with no active start time!", logging.WARNING)
+                Logger.Log(f"In {callstack}:\n  {event.user_id} ({event.session_id}) completed job {event.event_data['job_name']['string_value']} with no active start time!", logging.DEBUG)
 
         self._prev_timestamp = event.timestamp
 
