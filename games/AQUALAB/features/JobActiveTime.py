@@ -78,7 +78,10 @@ class JobActiveTime(PerJobFeature):
         return "1"
 
     def _updateTotalTime(self):
-        if self._last_start_time and self._last_event_time:
-            self._total_seconds += (self._last_event_time - self._last_start_time).total_seconds()
+        if self._last_start_time:
+            if self._last_event_time:
+                self._total_seconds += (self._last_event_time - self._last_start_time).total_seconds()
+            else:
+                Logger.Log(f"JobActiveTime could not update total time, missing previous event time!", logging.WARNING)
         else:
-            Logger.Log(f"Could not update total time, missing start time or event time!", logging.WARNING)
+            Logger.Log(f"JobActiveTime could not update total time, missing start time!", logging.WARNING)
