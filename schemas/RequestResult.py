@@ -87,6 +87,10 @@ class RequestResult:
     def Duration(self, new_duration):
         self._duration = new_duration
 
+    @property
+    def SessionCount(self):
+        return len(self._sessions.Values)
+
     def RequestSucceeded(self, msg:str, val:Any):
         self._status = ResultStatus.SUCCESS
         self._msg = msg
