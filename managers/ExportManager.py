@@ -33,6 +33,7 @@ from schemas.IDMode import IDMode
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 from schemas.Request import Request
+from schemas.RequestResult import RequestResult
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.
@@ -60,7 +61,7 @@ class ExportManager:
 
     # *** PUBLIC METHODS ***
 
-    def ExecuteRequest(self, request:Request) -> Dict[str,Any]:
+    def ExecuteRequest(self, request:Request) -> RequestResult:
         """Carry out the export given by a request.
         Each request has a game id, an interface for getting the data, a data range, the output type(s),
         the locations for output (to file or return value),
@@ -71,7 +72,7 @@ class ExportManager:
         :return: [description]
         :rtype: Dict[str,Any]
         """
-        ret_val : Dict[str,Any] = {"success":False}
+        ret_val : RequestResult = RequestResult(msg="No Export")
 
         _game_id      : str         = request.GameID
         _game_schema  : GameSchema  = GameSchema(schema_name=_game_id, schema_path=Path(f"./games/{_game_id}"))
@@ -85,23 +86,21 @@ class ExportManager:
             Logger.Log(f"Done", logging.INFO)
 
             Logger.Log(f"Executing...", logging.INFO)
-            _result = self._executeDataRequest(request=request, table_schema=_table_schema, file_manager=self._file_mgr)
+            ret_val = self._executeDataRequest(request=request, table_schema=_table_schema, file_manager=self._file_mgr)
             Logger.Log(f"Done", logging.INFO)
 
-            Logger.Log(f"Saving output...", logging.INFO)
             if request.ToFile and self._file_mgr is not None:
+                Logger.Log(f"Saving output...", logging.INFO)
                 # 4) Save and close files
-                num_sess : int = _result.get("sessions_ct", 0)
+                num_sess : int = len(ret_val.Sessions.Values)
                 self._teardownFileManager(game_schema=_game_schema, table_schema=_table_schema, num_sess=num_sess)
-            if request.ToDict:
-                ret_val.update(_result) # merge event, session, player, and population data into the return value.
-            Logger.Log(f"Done", logging.INFO)
+                Logger.Log(f"Done", logging.INFO)
             Logger.Log(f"Successfully executed data request {str(request)}.", logging.INFO)
-            ret_val['success'] = True # if we made it to end, we were successful.
         except Exception as err:
             msg = f"{type(err)} {str(err)}"
             Logger.Log(f"Failed to execute data request {str(request)}, an error occurred:\n{msg}", logging.ERROR)
             traceback.print_tb(err.__traceback__)
+            ret_val.RequestErrored(msg=msg)
         finally:
             time_delta = datetime.now() - start
             Logger.Log(f"Total data request execution time: {time_delta}", logging.INFO)
@@ -200,35 +199,34 @@ class ExportManager:
             raise Exception(f"Got an invalid game ID ({game_id})!")
         return _loader_class
 
-    def _executeDataRequest(self, request:Request, table_schema:TableSchema, file_manager:Optional[FileManager]=None) -> Dict[str,Any]:
-        ret_val       : Dict[str,Any]           = {"events":None, "sessions":None, "players":None, "population":None, "sessions_ct":0}
-        next_slice_data : Optional[List[Tuple]] = None
+    def _executeDataRequest(self, request:Request, table_schema:TableSchema, file_manager:Optional[FileManager]=None) -> RequestResult:
+        ret_val         : RequestResult         = RequestResult("No export")
 
         if request.ToDict:
             if request.ExportEvents and self._event_mgr is not None:
-                ret_val['events'] = {"cols":self._event_mgr.GetColumnNames(), "vals":[]}
+                ret_val.Events.Columns = self._event_mgr.GetColumnNames()
             if self._feat_mgr is not None:
                 if request.ExportSessions:
-                    ret_val['sessions'] = {"cols":self._feat_mgr.GetSessionFeatureNames(), "vals":[]}
+                    ret_val.Sessions.Columns = self._feat_mgr.GetSessionFeatureNames()
                 if request.ExportPlayers:
-                    ret_val['players'] = {"cols":self._feat_mgr.GetPlayerFeatureNames(), "vals":[]}
+                    ret_val.Sessions.Columns = self._feat_mgr.GetPlayerFeatureNames()
                 if request.ExportPopulation:
-                    ret_val['population'] = {"cols":self._feat_mgr.GetPopulationFeatureNames(), "vals":[]}
+                    ret_val.Population.Columns = self._feat_mgr.GetPopulationFeatureNames()
         # 1) Get the IDs of sessions to process
-        sess_ids = request.RetrieveIDs() or []
-        ret_val["sessions_ct"] = len(sess_ids)
-        _session_slices : List[List[str]] = self._generateSlices(sess_ids=sess_ids)
+        _sess_ids        : Optional[List[str]]   = request.RetrieveIDs() or []
+        _session_slices  : List[List[str]]       = self._generateSlices(sess_ids=_sess_ids)
         # 2) Loop over and process the sessions, slice-by-slice (where each slice is a list of sessions).
-        Logger.Log(f"Preparing to process {len(sess_ids)} sessions...", logging.INFO, depth=1)
+        _next_slice_data : Optional[List[Tuple]] = None
+        Logger.Log(f"Preparing to process {len(_sess_ids)} sessions...", logging.INFO, depth=1)
         for i, next_slice_ids in enumerate(_session_slices):
-            next_slice_data = self._loadSlice(request=request, next_slice_ids=next_slice_ids, slice_num=i+1, slice_count=len(_session_slices))
-            if next_slice_data is not None:
-                self._processSlice(next_slice_data=next_slice_data, request=request, table_schema=table_schema, ids=sess_ids, slice_num=i+1, slice_count=len(_session_slices))
+            _next_slice_data = self._loadSlice(request=request, next_slice_ids=next_slice_ids, slice_num=i+1, slice_count=len(_session_slices))
+            if _next_slice_data is not None:
+                self._processSlice(next_slice_data=_next_slice_data, request=request, table_schema=table_schema, ids=_sess_ids, slice_num=i+1, slice_count=len(_session_slices))
                 # 2b) After processing all rows for each slice, write out the session data and reset for next slice.
                 if request.ExportEvents and self._event_mgr is not None:
                     _events = self._event_mgr.GetLines(slice_num=i+1, slice_count=len(_session_slices))
                     if request.ToDict:
-                        ret_val['events']['vals'] += _events
+                        ret_val.Events.AppendValues(_events)
                     if request.ToFile and file_manager is not None:
                         file_manager.GetEventsFile().writelines(_events)
                     self._event_mgr.ClearLines()
@@ -236,14 +234,14 @@ class ExportManager:
                     if request.ExportSessions:
                         _sess_feats = self._feat_mgr.GetSessionFeatures(slice_num=i+1, slice_count=len(_session_slices), as_str=True)
                         if request.ToDict:
-                            ret_val['sessions']['vals'] += _sess_feats
+                            ret_val.Sessions.AppendValues(_sess_feats)
                         if request.ToFile and file_manager is not None:
                             file_manager.GetSessionsFile().writelines(["\t".join(sess) + "\n" for sess in _sess_feats])
                         self._feat_mgr.ClearSessionLines()
                     if request.ExportPlayers:
                         _player_feats = self._feat_mgr.GetPlayerFeatures(slice_num=i+1, slice_count=len(_session_slices), as_str=True)
                         if request.ToDict:
-                            ret_val['players']['vals'] += _player_feats
+                            ret_val.Players.AppendValues(_player_feats)
                         if request.ToFile and file_manager is not None:
                             file_manager.GetPlayersFile().writelines(["\t".join(player) + "\n" for player in _player_feats])
                         self._feat_mgr.ClearPlayerLines()
@@ -253,7 +251,7 @@ class ExportManager:
             if request.ExportPopulation:
                 _pop_feats = self._feat_mgr.GetPopulationFeatures(as_str=True)
                 if request.ToDict:
-                    ret_val['population']['vals'] = _pop_feats
+                    ret_val.Population.AppendValues([_pop_feats])
                 if request.ToFile and file_manager is not None:
                     file_manager.WritePopulationFile("\t".join(_pop_feats) + "\n")
             self._feat_mgr.ClearPopulationLines()
