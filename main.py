@@ -29,46 +29,6 @@ from schemas.Request import Request, ExporterTypes, ExporterRange
 from schemas.RequestResult import RequestResult, ResultStatus
 from utils import Logger
 
-## Function to print a "help" listing for the export tool.
-#  Hopefully not needed too often, if at all.
-#  Just nice to have on hand, in case we ever need it.
-# def ShowHelp() -> bool:
-#     width = 30
-#     print(width*"*")
-#     print("usage: <python> main.py <cmd> [<args>] [<opt-args>]")
-#     print("")
-#     print("<python> is your python command.")
-#     print("<cmd>    is one of the available commands:")
-#     print("         - export")
-#     print("         - export-events")
-#     print("         - export-session-features")
-#     print("         - info")
-#     print("         - readme")
-#     print("         - help")
-#     print("[<args>] are the arguments for the command:")
-#     print("         - export: game_id, [start_date, end_date]")
-#     print("             game_id    = id of game to export")
-#     print("             start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)")
-#     print("             end_date   = ending date for export, in form mm/dd/yyyy (default=current day)")
-#     print("         - export-events: game_id")
-#     print("             game_id    = id of game to export")
-#     print("             start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)")
-#     print("             end_date   = ending date for export, in form mm/dd/yyyy (default=current day)")
-#     print("         - export-session-features: game_id, [month_year]")
-#     print("             game_id    = id of game to export")
-#     print("             start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)")
-#     print("             end_date   = ending date for export, in form mm/dd/yyyy (default=current day)")
-#     print("         - info: game_id")
-#     print("             game_id    = id of game whose info should be shown")
-#     print("         - readme: game_id")
-#     print("             game_id    = id of game whose readme should be generated")
-#     print("         - help: *None*")
-#     print("[<opt-args>] are optional arguments, which affect certain commands:")
-#     print("         --file: specifies a file to export events or features")
-#     print("         --monthly: with this flag, specify dates by mm/yyyy instead of mm/dd/yyyy.")
-#     print(width*"*")
-#     return True
-
 def ListGames() -> bool:
     print(f"The games available for export are:\n{games_list}")
     return True
