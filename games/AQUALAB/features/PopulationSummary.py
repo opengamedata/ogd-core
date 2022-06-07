@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Any, List
+from typing import Any, Dict, List
 
 from schemas.FeatureData import FeatureData
 from features.SessionFeature import SessionFeature
@@ -40,7 +40,7 @@ class PopulationSummary(SessionFeature):
             for time in self._user_session_times[user]:
                 session_times.append(time)
 
-        summary = {
+        summary : Dict[str, float]= {
             "avg_session_count": 0,
             "avg_jobs_completed": 0,
             "avg_session_time": 0
