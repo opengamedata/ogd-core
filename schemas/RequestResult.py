@@ -91,10 +91,9 @@ class RequestResult:
     def SessionCount(self):
         return len(self._sessions.Values)
 
-    def RequestSucceeded(self, msg:str, val:Any):
+    def RequestSucceeded(self, msg:str):
         self._status = ResultStatus.SUCCESS
         self._msg = msg
-        self._val = val
 
     def RequestErrored(self, msg:str):
         self._status = ResultStatus.FAILURE

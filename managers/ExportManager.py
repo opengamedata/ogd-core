@@ -95,15 +95,13 @@ class ExportManager:
                 num_sess : int = len(ret_val.Sessions.Values)
                 self._teardownFileManager(game_schema=_game_schema, table_schema=_table_schema, num_sess=num_sess)
                 Logger.Log(f"Done", logging.INFO)
-            Logger.Log(f"Successfully executed data request {str(request)}.", logging.INFO)
+            ret_val.RequestSucceeded(msg=f"Successfully executed data request {request}.")
         except Exception as err:
-            msg = f"{type(err)} {str(err)}"
-            Logger.Log(f"Failed to execute data request {str(request)}, an error occurred:\n{msg}", logging.ERROR)
-            traceback.print_tb(err.__traceback__)
+            msg = f"Failed to execute data request {str(request)}, an error occurred:\n{type(err)} {str(err)}\n{err.__traceback__}"
             ret_val.RequestErrored(msg=msg)
         finally:
             time_delta = datetime.now() - start
-            Logger.Log(f"Total data request execution time: {time_delta}", logging.INFO)
+            ret_val.Duration = time_delta
             return ret_val
 
     # *** PRIVATE STATICS ***
@@ -200,7 +198,7 @@ class ExportManager:
         return _loader_class
 
     def _executeDataRequest(self, request:Request, table_schema:TableSchema, file_manager:Optional[FileManager]=None) -> RequestResult:
-        ret_val         : RequestResult         = RequestResult("No export")
+        ret_val : RequestResult = RequestResult("No export")
 
         if request.ToDict:
             if request.ExportEvents and self._event_mgr is not None:

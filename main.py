@@ -73,16 +73,19 @@ def WriteReadme() -> bool:
 ## Function to handle execution of export code. This is the main intended use of
 #  the program.
 def RunExport(events:bool = False, features:bool = False) -> bool:
-    ret_val : bool = False
+    success : bool = False
 
     req = genRequest(events=events, features=features)
     if req.Interface.IsOpen():
         export_manager : ExportManager = ExportManager(settings=settings)
         result         : RequestResult = export_manager.ExecuteRequest(request=req)
-        ret_val = result.Status == ResultStatus.SUCCESS
+        success = result.Status == ResultStatus.SUCCESS
+        level = logging.INFO if success else logging.ERROR
+        Logger.Log(message=result.Message, level=level)
+        Logger.Log(f"Total data request execution time: {result.Duration}", logging.INFO)
         # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
-    return ret_val
+    return success
 
 def genRequest(events:bool, features:bool) -> Request:
     interface : DataInterface
