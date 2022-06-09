@@ -249,7 +249,7 @@ class ExportManager:
             if request.ExportPopulation:
                 _pop_feats = self._feat_mgr.GetPopulationFeatures(as_str=True)
                 if request.ToDict:
-                    ret_val.Population.AppendValues([_pop_feats])
+                    ret_val.Population.AppendValues(_pop_feats)
                 if request.ToFile and file_manager is not None:
                     file_manager.WritePopulationFile("\t".join(_pop_feats) + "\n")
             self._feat_mgr.ClearPopulationLines()
