@@ -4,7 +4,7 @@ import typing
 from typing import Any, List, Optional
 # import locals
 from schemas.FeatureData import FeatureData
-from features.PerLevelFeature import PerLevelFeature
+from extractors.features.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
 class TotalSkips(PerLevelFeature):

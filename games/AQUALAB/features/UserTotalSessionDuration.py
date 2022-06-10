@@ -1,7 +1,7 @@
 from datetime import timedelta
 from typing import Any, List
 
-from features.SessionFeature import SessionFeature
+from extractors.features.SessionFeature import SessionFeature
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 

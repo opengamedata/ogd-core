@@ -2,12 +2,12 @@
 import abc
 import logging
 from typing import Any, Callable, Dict, List, Optional
-from detectors.Detector import Detector
+from extractors.detectors.Detector import Detector
 # import locals
-from detectors.DetectorRegistry import DetectorRegistry
+from extractors.detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorRegistry import ExtractorRegistry
-from features.Feature import Feature
-from features.FeatureRegistry import FeatureRegistry
+from extractors.features.Feature import Feature
+from extractors.features.FeatureRegistry import FeatureRegistry
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from utils import Logger

@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Any, List, Optional
 # import local files
-from detectors.Detector import Detector
+from extractors.detectors.Detector import Detector
 from schemas.Event import EventSource
 from schemas.Event import Event
 

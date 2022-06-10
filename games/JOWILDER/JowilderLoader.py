@@ -1,8 +1,8 @@
 ## import standard libraries
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
-from detectors.Detector import Detector
-from features.Feature import Feature
+from extractors.detectors.Detector import Detector
+from extractors.features.Feature import Feature
 from processors.legacy.LegacyLoader import LegacyLoader
 from games.JOWILDER.features.JowilderExtractor import JowilderExtractor
 from schemas.Event import Event

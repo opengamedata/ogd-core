@@ -3,7 +3,7 @@ from collections import defaultdict
 from statistics import stdev
 from typing import Any, List
 # import locals
-from features.Feature import Feature
+from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 

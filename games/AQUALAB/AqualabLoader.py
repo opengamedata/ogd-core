@@ -2,9 +2,9 @@
 import json
 from typing import Any, Callable, Dict, List, Optional
 # import local files
-from detectors.Detector import Detector
+from extractors.detectors.Detector import Detector
 from extractors.ExtractorLoader import ExtractorLoader
-from features.Feature import Feature
+from extractors.features.Feature import Feature
 from games.AQUALAB.detectors import *
 from games.AQUALAB.features import *
 from schemas.Event import Event

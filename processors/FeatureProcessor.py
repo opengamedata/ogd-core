@@ -9,7 +9,7 @@ from numpy import isin
 # import locals
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
-from features.FeatureRegistry import FeatureRegistry
+from extractors.features.FeatureRegistry import FeatureRegistry
 from processors.Processor import Processor
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event

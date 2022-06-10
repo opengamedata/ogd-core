@@ -7,7 +7,7 @@ from utils import Logger
 from extractors.ExtractorRegistry import ExtractorRegistry
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
-from features.FeatureRegistry import FeatureRegistry
+from extractors.features.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema

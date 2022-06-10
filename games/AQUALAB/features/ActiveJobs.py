@@ -5,7 +5,7 @@ from collections import defaultdict
 from typing import Any, List, Optional
 # import locals
 from utils import Logger
-from features.Feature import Feature
+from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 

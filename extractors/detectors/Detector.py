@@ -3,7 +3,7 @@ import abc
 from typing import Any, Callable, List
 # import locals
 from extractors.Extractor import Extractor
-from detectors.DetectorEvent import DetectorEvent
+from extractors.detectors.DetectorEvent import DetectorEvent
 from schemas.Event import Event
 
 ## @class Model

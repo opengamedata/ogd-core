@@ -3,7 +3,7 @@ from schemas import Event
 from typing import Any, List, Optional
 # import locals
 from schemas.FeatureData import FeatureData
-from features.Feature import Feature
+from extractors.features.Feature import Feature
 from schemas.Event import Event
 
 class ClosenessR2(Feature):

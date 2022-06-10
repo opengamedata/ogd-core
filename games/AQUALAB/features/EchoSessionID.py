@@ -2,7 +2,7 @@
 from typing import Any, List
 # import locals
 from schemas.FeatureData import FeatureData
-from features.SessionFeature import SessionFeature
+from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
 class EchoSessionID(SessionFeature):

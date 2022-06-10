@@ -1,7 +1,7 @@
 # import libraries
 from typing import Any, List
 # import locals
-from features.SessionFeature import SessionFeature
+from extractors.features.SessionFeature import SessionFeature
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 

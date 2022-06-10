@@ -2,10 +2,10 @@
 import logging
 from typing import Callable, List, Optional
 # import locals
-from detectors.DetectorRegistry import DetectorRegistry
+from extractors.detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorRegistry import ExtractorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
-from features.FeatureRegistry import FeatureRegistry
+from extractors.features.FeatureRegistry import FeatureRegistry
 from processors.legacy.LegacyDetector import LegacyDetector
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema

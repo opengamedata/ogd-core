@@ -10,7 +10,7 @@ from datetime import timedelta
 from collections import OrderedDict
 # import locals
 from schemas.FeatureData import FeatureData
-from features.SessionFeature import SessionFeature
+from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
 pd.options.mode.chained_assignment = None  # default='warn'

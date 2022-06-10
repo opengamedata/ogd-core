@@ -1,5 +1,5 @@
 # import locals
-from features.Feature import Feature
+from extractors.features.Feature import Feature
 
 class SessionFeature(Feature):
 

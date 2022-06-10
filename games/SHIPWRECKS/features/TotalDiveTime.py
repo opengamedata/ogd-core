@@ -3,7 +3,7 @@ from typing import Any, List, Optional
 from datetime import timedelta
 # import locals
 from schemas.FeatureData import FeatureData
-from features.SessionFeature import SessionFeature
+from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
 class TotalDiveTime(SessionFeature):

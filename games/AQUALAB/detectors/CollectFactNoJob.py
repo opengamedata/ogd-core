@@ -3,8 +3,8 @@ from datetime import datetime
 from typing import Callable, List
 
 # import local files
-from detectors.Detector import Detector
-from detectors.DetectorEvent import DetectorEvent
+from extractors.detectors.Detector import Detector
+from extractors.detectors.DetectorEvent import DetectorEvent
 from schemas.Event import Event
 
 class CollectFactNoJob(Detector):

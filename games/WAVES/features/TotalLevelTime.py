@@ -6,7 +6,7 @@ from typing import Any, List, Optional
 # import locals
 from utils import Logger
 from schemas.FeatureData import FeatureData
-from features.PerLevelFeature import PerLevelFeature
+from extractors.features.PerLevelFeature import PerLevelFeature
 from schemas.Event import Event
 
 class TotalLevelTime(PerLevelFeature):

@@ -1,7 +1,7 @@
 # import standard libraries
 import abc
 # import locals
-from features.Feature import Feature
+from extractors.features.Feature import Feature
 from schemas.Event import Event
 
 ## @class PerLevelFeature

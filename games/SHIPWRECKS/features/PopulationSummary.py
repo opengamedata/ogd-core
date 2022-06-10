@@ -2,7 +2,7 @@ from collections import defaultdict
 from typing import Any, List
 
 from schemas.FeatureData import FeatureData
-from features.SessionFeature import SessionFeature
+from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
 class PopulationSummary(SessionFeature):

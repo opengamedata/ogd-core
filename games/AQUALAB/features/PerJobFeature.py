@@ -4,7 +4,7 @@ from datetime import timedelta
 from typing import Any, List, Optional
 # import locals
 from utils import Logger
-from features.PerCountFeature import PerCountFeature
+from extractors.features.PerCountFeature import PerCountFeature
 from schemas.Event import Event
 
 class PerJobFeature(PerCountFeature):

@@ -8,7 +8,7 @@ from datetime import timedelta
 from typing import Any, Dict, List, Optional, Union
 ## import local files
 from utils import Logger
-from features.Feature import Feature
+from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 

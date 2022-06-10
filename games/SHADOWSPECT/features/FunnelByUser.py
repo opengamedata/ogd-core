@@ -4,7 +4,7 @@ import json
 import pandas as pd
 # import locals
 from schemas.FeatureData import FeatureData
-from features.SessionFeature import SessionFeature
+from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
 
 class FunnelByUser(SessionFeature):

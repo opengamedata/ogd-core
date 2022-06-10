@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 from typing import Any, Callable, List, Type, Optional
 ## import local files
-from detectors.DetectorRegistry import DetectorRegistry
+from extractors.detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
 from processors.EventProcessor import EventProcessor
 from schemas.Event import Event

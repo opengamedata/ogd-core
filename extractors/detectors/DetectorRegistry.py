@@ -5,7 +5,7 @@ from collections import OrderedDict
 from datetime import datetime
 from typing import Any, Callable, List, Optional
 ## import local files
-from detectors.Detector import Detector
+from extractors.detectors.Detector import Detector
 from extractors.Extractor import Extractor
 from extractors.ExtractorRegistry import ExtractorRegistry
 from schemas.FeatureData import FeatureData
