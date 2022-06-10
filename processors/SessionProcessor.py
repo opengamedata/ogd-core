@@ -11,7 +11,7 @@ from extractors.features.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
-from schemas.Request import ExporterTypes
+from requests.Request import ExporterTypes
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.

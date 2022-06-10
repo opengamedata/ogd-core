@@ -32,8 +32,8 @@ from schemas.Event import Event
 from schemas.IDMode import IDMode
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
-from schemas.Request import Request
-from schemas.RequestResult import RequestResult
+from requests.Request import Request
+from requests.RequestResult import RequestResult
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.

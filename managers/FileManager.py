@@ -18,7 +18,7 @@ from typing import Any, Dict, IO, Optional
 import utils
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
-from schemas.Request import Request
+from requests.Request import Request
 from utils import Logger
 
 class FileManager(abc.ABC):

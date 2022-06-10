@@ -11,7 +11,7 @@ from processors.FeatureProcessor import FeatureProcessor
 from processors.PlayerProcessor import PlayerProcessor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
-from schemas.Request import ExporterTypes
+from requests.Request import ExporterTypes
 from utils import Logger
 
 ## @class PopulationProcessor

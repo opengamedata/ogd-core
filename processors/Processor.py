@@ -8,7 +8,7 @@ from extractors.ExtractorLoader import ExtractorLoader
 from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
-from schemas.Request import ExporterTypes
+from requests.Request import ExporterTypes
 
 ## @class Processor
 class Processor(abc.ABC):

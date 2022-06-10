@@ -25,8 +25,8 @@ from managers.FileManager import FileManager
 from schemas.IDMode import IDMode
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
-from schemas.Request import Request, ExporterTypes, ExporterRange
-from schemas.RequestResult import RequestResult, ResultStatus
+from requests.Request import Request, ExporterTypes, ExporterRange
+from requests.RequestResult import RequestResult, ResultStatus
 from utils import Logger
 
 def ListGames() -> bool:
