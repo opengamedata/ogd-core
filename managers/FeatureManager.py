@@ -11,7 +11,7 @@ from processors.PlayerProcessor import PlayerProcessor
 from processors.SessionProcessor import SessionProcessor
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
-from requests.Request import ExporterTypes
+from ogd_requests.Request import ExporterTypes
 
 class FeatureManager:
     def __init__(self, LoaderClass:Type[ExtractorLoader], exp_types:ExporterTypes, game_schema:GameSchema, feature_overrides:Optional[List[str]]):

@@ -8,7 +8,7 @@ from extractors.ExtractorLoader import ExtractorLoader
 from processors.Processor import Processor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
-from requests.Request import ExporterTypes
+from ogd_requests.Request import ExporterTypes
 
 class EventProcessor(Processor):
 

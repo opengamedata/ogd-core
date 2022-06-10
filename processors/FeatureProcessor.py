@@ -13,7 +13,7 @@ from extractors.features.FeatureRegistry import FeatureRegistry
 from processors.Processor import Processor
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
-from requests.Request import ExporterTypes
+from ogd_requests.Request import ExporterTypes
 
 ## @class Processor
 class FeatureProcessor(Processor):

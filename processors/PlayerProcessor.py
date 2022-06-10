@@ -12,7 +12,7 @@ from processors.SessionProcessor import SessionProcessor
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
-from requests.Request import ExporterTypes
+from ogd_requests.Request import ExporterTypes
 
 ## @class PlayerProcessor
 #  Class to extract and manage features for a processed csv file.
