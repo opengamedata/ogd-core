@@ -177,16 +177,13 @@ export_parser.add_argument("--no_player_file", default=False, action="store_true
 export_parser.add_argument("--no_pop_file", default=False, action="store_true",
                     help="Tell the program to skip outputting a population file.")
 # set up main parser, with one sub-parser per-command.
-command_list = ["export", "export-events", "export-session-features",
-                "info", "readme", "list-games", "help"]
 parser = argparse.ArgumentParser(description="Simple command-line utility to execute OpenGameData export requests.")
 sub_parsers = parser.add_subparsers(help="Chosen command to run", dest="command")
-# parser.add_argument("command", choices=command_list, help="The command to run.")
 sub_parsers.add_parser("export", parents=[export_parser],
                         help="Export data in a given date range.")
 sub_parsers.add_parser("export-events", parents=[export_parser],
                         help="Export event data in a given date range.")
-sub_parsers.add_parser("export-session-features", parents=[export_parser],
+sub_parsers.add_parser("export-features", parents=[export_parser],
                         help="Export session feature data in a given date range.")
 sub_parsers.add_parser("info", parents=[game_parser],
                         help="Display info about the given game.")
@@ -205,7 +202,7 @@ if cmd == "export":
     success = RunExport(events=True, features=True)
 elif cmd == "export-events":
     success = RunExport(events=True)
-elif cmd == "export-session-features":
+elif cmd == "export-features":
     success = RunExport(features=True)
 elif cmd == "info":
     success = ShowGameInfo()
