@@ -263,6 +263,7 @@ class ExportManager:
                              for j in range( 0, math.ceil(_num_sess / _slice_size) )]
 
     def _loadSlice(self, request:Request, next_slice_ids:List[str], slice_num:int, slice_count:int) -> Optional[List[Tuple]]:
+        Logger.Log(f"Retrieving slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
         start : datetime = datetime.now()
 
         ret_val = request.Interface.RowsFromIDs(id_list=next_slice_ids, id_mode=request.Range.IDMode)
@@ -281,6 +282,7 @@ class ExportManager:
         _evt_sess_index : int = 1
         _unsessioned_event_count : int = 0
         # 3a) If next slice yielded valid data from the interface, process row-by-row.
+        Logger.Log(f"Processing slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
         for row in next_slice_data:
             try:
                 _fallbacks = {"app_id":request.GameID}
