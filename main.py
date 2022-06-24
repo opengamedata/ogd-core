@@ -10,6 +10,7 @@ import traceback
 from argparse import Namespace
 from calendar import monthrange
 from datetime import datetime
+from itertools import chain
 from pathlib import Path
 from typing import Tuple
 
@@ -112,13 +113,13 @@ def genRequest(events:bool, features:bool) -> Request:
             interface = MySQLInterface(game_id=args.game, settings=settings)
         else:
             raise Exception(f"{interface_type} is not a valid DataInterface type!")
-        # retrieve/calculate date range.
         range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER, versions=supported_vers)
     elif args.player_id_file is not None and args.player_id_file != "":
         file_path = Path(args.player_id_file)
         with open(file_path) as player_file:
             reader = csv.reader(player_file)
-            names = list(reader)
+            file_contents = list(reader) # this gives list of lines, each line a list
+            names = list(chain.from_iterable(file_contents)) # so, convert to single list
             print(f"list of names: {list(names)}")
             interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
             if interface_type == "BigQuery":
@@ -127,7 +128,6 @@ def genRequest(events:bool, features:bool) -> Request:
                 interface = MySQLInterface(game_id=args.game, settings=settings)
             else:
                 raise Exception(f"{interface_type} is not a valid DataInterface type!")
-            # retrieve/calculate date range.
             range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER, versions=supported_vers)
     else:
         interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
@@ -137,12 +137,12 @@ def genRequest(events:bool, features:bool) -> Request:
             interface = MySQLInterface(game_id=args.game, settings=settings)
         else:
             raise Exception(f"{interface_type} is not a valid DataInterface type!")
-        # retrieve/calculate date range.
         start_date, end_date = getDateRange()
         range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date, versions=supported_vers)
     # Once we have the parameters parsed out, construct the request.
     return Request(interface=interface, range=range, exporter_types=exporter_files)
 
+# retrieve/calculate date range.
 def getDateRange() -> Tuple[datetime, datetime]:
     start_date: datetime
     end_date  : datetime
