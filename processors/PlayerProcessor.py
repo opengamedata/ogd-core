@@ -57,7 +57,7 @@ class PlayerProcessor(FeatureProcessor):
 
     def _getExtractorNames(self) -> List[str]:
         if isinstance(self._registry, FeatureRegistry):
-            return self._registry.GetExtractorNames() + ["SessionCount"]
+            return ["PlayerID", "SessionCount"] + self._registry.GetExtractorNames()
         else:
             raise TypeError()
 
@@ -89,9 +89,9 @@ class PlayerProcessor(FeatureProcessor):
         if export_types.players and isinstance(self._registry, FeatureRegistry):
             _sess_ct = self.SessionCount()
             if as_str:
-                ret_val["players"] = self._registry.GetFeatureStringValues() + [str(_sess_ct)]
+                ret_val["players"] = [self._player_id, str(_sess_ct)] + self._registry.GetFeatureStringValues()
             else:
-                ret_val["players"] = self._registry.GetFeatureValues() + [_sess_ct]
+                ret_val["players"] = [self._player_id, _sess_ct]      + self._registry.GetFeatureValues()
         if export_types.sessions:
             # _results gives us a list of dicts, each with a "session" element
             _results = [sess_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for sess_extractor in self._session_processors.values()]

@@ -25,7 +25,7 @@ class PopulationProcessor(FeatureProcessor):
 
     def _getExtractorNames(self) -> List[str]:
         if isinstance(self._registry, FeatureRegistry):
-            return self._registry.GetExtractorNames() + ["PlayerCount", "SessionCount"]
+            return ["PlayerCount", "SessionCount"] + self._registry.GetExtractorNames()
         else:
             raise TypeError("PopulationProcessor's registry is not a FeatureRegistry!")
 
@@ -73,9 +73,9 @@ class PopulationProcessor(FeatureProcessor):
         # 3) Now, Population features have all been exposed to all first-order feature values, so we can collect all values desired for export.
         if export_types.population and isinstance(self._registry, FeatureRegistry):
             if as_str:
-                ret_val["population"] = self._registry.GetFeatureStringValues() + [str(_player_ct), str(_sess_ct)]
+                ret_val["population"] = [str(_player_ct), str(_sess_ct)] + self._registry.GetFeatureStringValues()
             else:
-                ret_val["population"] = self._registry.GetFeatureValues() + [_player_ct, _sess_ct]
+                ret_val["population"] = [_player_ct, _sess_ct]           + self._registry.GetFeatureValues()
         # 4) Finally, all Player/Session features have been exposed to all first-order feature values, so we can collect all values desired for export.
         if export_types.players or export_types.sessions:
             # first, get list of results

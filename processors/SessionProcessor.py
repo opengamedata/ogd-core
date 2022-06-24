@@ -52,7 +52,7 @@ class SessionProcessor(FeatureProcessor):
                                  game_schema=self._game_schema, feature_overrides=self._overrides)
 
     def _getExtractorNames(self) -> List[str]:
-        return self._registry.GetExtractorNames()
+        return ["SessionID", "PlayerID"] + self._registry.GetExtractorNames()
 
     ## Function to handle processing of a single row of data.
     def _processEvent(self, event: Event):
@@ -77,9 +77,9 @@ class SessionProcessor(FeatureProcessor):
         # 3) Finally, we assume higher-ups have already sent down their first-order features, so we are ready to return all feature values.
         if export_types.sessions and isinstance(self._registry, FeatureRegistry):
             if as_str:
-                return {"sessions" : self._registry.GetFeatureStringValues()}
+                return {"sessions" : [self._session_id, self._player_id] + self._registry.GetFeatureStringValues()}
             else:
-                return {"sessions" : self._registry.GetFeatureValues()}
+                return {"sessions" : [self._session_id, self._player_id] + self._registry.GetFeatureValues()}
         else:
             return {}
 
