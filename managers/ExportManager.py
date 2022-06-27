@@ -97,7 +97,7 @@ class ExportManager:
                 Logger.Log(f"Done", logging.INFO)
             ret_val.RequestSucceeded(msg=f"Successfully executed data request {request}.")
         except Exception as err:
-            msg = f"Failed to execute data request {str(request)}, an error occurred:\n{type(err)} {str(err)}\n{err.__traceback__}"
+            msg = f"Failed to execute data request {str(request)}, an error occurred:\n{type(err)} {str(err)}\n{traceback.format_exc()}"
             ret_val.RequestErrored(msg=msg)
         finally:
             time_delta = datetime.now() - start
