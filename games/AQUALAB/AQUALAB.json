@@ -555,11 +555,11 @@
         },
         "aggregate": {
             "ActiveJobs": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Count of players who left off on each job."
             },
             "EventList": {
-                "enabled": true,
+                "enabled": false,
                 "description": "List of key events that happened in a player's session(s)"
             },
             "JobsCompleted": {
@@ -567,11 +567,11 @@
                 "description": "List of completed jobs for a player"
             },
             "PlayerSummary": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Summary of player statistics (active session time, jobs completed, number of sessions)"
             },
             "PopulationSummary": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Summary of population statistics (active session time, average jobs completed count, average session count)"
             },
             "SessionDiveSitesCount": {
@@ -603,11 +603,11 @@
                 "description": "Number of times player switched jobs before completion"
             },
             "TopJobCompletionDestinations": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Top five most accepted jobs after previously completing a given job"
             },
             "TopJobSwitchDestinations": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Top five most accepted jobs after switching away from a given job"
             },
             "TotalArgumentationTime": {
@@ -615,7 +615,7 @@
                 "description": "Total time spent in argumentation"
             },
             "EchoSessionID": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Test of second-order features."
             },
             "TotalDiveTime": {

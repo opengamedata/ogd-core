@@ -9,8 +9,9 @@ from extractors.ExtractorLoader import ExtractorLoader
 from extractors.features.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from processors.SessionProcessor import SessionProcessor
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 from ogd_requests.Request import ExporterTypes
 
@@ -52,8 +53,8 @@ class PlayerProcessor(FeatureProcessor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _prepareLoader(self) -> ExtractorLoader:
-        return self._LoaderClass(player_id=self._player_id, session_id="player",
-                                 game_schema=self._game_schema, feature_overrides=self._overrides)
+        return self._LoaderClass(player_id=self._player_id, session_id="player", game_schema=self._game_schema,
+                                 mode=ExtractionMode.USER, feature_overrides=self._overrides)
 
     def _getExtractorNames(self) -> List[str]:
         if isinstance(self._registry, FeatureRegistry):

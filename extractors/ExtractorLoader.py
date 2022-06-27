@@ -9,6 +9,7 @@ from extractors.ExtractorRegistry import ExtractorRegistry
 from extractors.features.Feature import Feature
 from extractors.features.FeatureRegistry import FeatureRegistry
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 from utils import Logger
 
@@ -26,7 +27,7 @@ class ExtractorLoader(abc.ABC):
 
     # *** BUILT-INS ***
 
-    def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, feature_overrides:Optional[List[str]]):
+    def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         """Base constructor for Extractor classes.
         The constructor sets an extractor's session id and range of levels,
         as well as initializing the feature
@@ -37,10 +38,11 @@ class ExtractorLoader(abc.ABC):
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema
         """
-        self._player_id   : str        = player_id
-        self._session_id  : str        = session_id
-        self._game_schema : GameSchema = game_schema
-        self._overrides   : Optional[List[str]]    = feature_overrides
+        self._player_id   : str            = player_id
+        self._session_id  : str            = session_id
+        self._game_schema : GameSchema     = game_schema
+        self._mode        : ExtractionMode = mode
+        self._overrides   : Optional[List[str]] = feature_overrides
 
     # *** PUBLIC STATICS ***
 

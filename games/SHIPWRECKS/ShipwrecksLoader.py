@@ -6,6 +6,7 @@ from extractors.ExtractorLoader import ExtractorLoader
 from games.SHIPWRECKS.features import *
 from extractors.features.Feature import Feature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 
 ## @class ShipwrecksLoader
@@ -23,8 +24,8 @@ class ShipwrecksLoader(ExtractorLoader):
     #                    table assiciated with this game is structured. 
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, feature_overrides:Optional[List[str]]):
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
+    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
+        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
 
     def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Optional[int] = None) -> Feature:
         ret_val : Feature

@@ -7,6 +7,7 @@ from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
 from processors.Processor import Processor
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 from ogd_requests.Request import ExporterTypes
 
@@ -23,8 +24,8 @@ class EventProcessor(Processor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _prepareLoader(self) -> ExtractorLoader:
-        return self._LoaderClass(player_id="events", session_id="events",
-                                 game_schema=self._game_schema, feature_overrides=self._overrides)
+        return self._LoaderClass(player_id="events", session_id="events", game_schema=self._game_schema,
+                                 mode=ExtractionMode.DETECTOR, feature_overrides=self._overrides)
 
     def _getExtractorNames(self, order:int) -> Dict[str,List[FeatureData]]:
         raise NotImplementedError("Function stub! Haven't written name getter for event processor.")

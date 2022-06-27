@@ -3,9 +3,10 @@ from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from extractors.detectors.Detector import Detector
 from extractors.features.Feature import Feature
-from processors.legacy.LegacyLoader import LegacyLoader
+from extractors.legacy.LegacyLoader import LegacyLoader
 from games.MAGNET.features.MagnetExtractor import MagnetExtractor
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 
 class MagnetLoader(LegacyLoader):
@@ -21,7 +22,7 @@ class MagnetLoader(LegacyLoader):
     # *** BUILT-INS ***
 
     ## Constructor for the WaveExtractor class.
-    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, feature_overrides:Optional[List[str]]):
+    def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         """Constructor for the CrystalLoader class.
 
         :param player_id: _description_
@@ -33,7 +34,7 @@ class MagnetLoader(LegacyLoader):
         :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
         :type feature_overrides: Optional[List[str]]
         """
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
+        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
 
     # *** PUBLIC STATICS ***
 

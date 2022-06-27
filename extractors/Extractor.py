@@ -3,6 +3,7 @@ import abc
 from typing import List, Optional
 # import locals
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 
 ## @class Model
 #  Abstract base class for session-level Wave features.
@@ -50,10 +51,11 @@ class Extractor(abc.ABC):
 
     # *** BUILT-INS ***
 
-    def __init__(self, name:str, description:str, count_index:int):
+    def __init__(self, name:str, description:str, mode:ExtractionMode, count_index:int):
         self._name = name
         self._desc = description
         self._count_index = count_index
+        self._mode = mode
 
     def __str__(self):
         return f"{self._name} : {self._desc}"

@@ -6,6 +6,7 @@ from games.SHADOWSPECT.features import *
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.features.Feature import Feature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 
 ## @class ShadowspectExtractor
@@ -34,7 +35,7 @@ class ShadowspectLoader(ExtractorLoader):
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Shadowspect.")
 
     ## Constructor for the ShadowspectExtractor class.
-    def __init__(self, player_id:str, session_id: str, game_schema: GameSchema, feature_overrides:Optional[List[str]]=None):
+    def __init__(self, player_id:str, session_id: str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]=None):
         """Constructor for the CrystalLoader class.
 
         :param player_id: _description_
@@ -47,7 +48,7 @@ class ShadowspectLoader(ExtractorLoader):
         :type feature_overrides: Optional[List[str]]
         """
         self._game_schema = game_schema
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, feature_overrides=feature_overrides)
+        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
 
     # *** PUBLIC STATICS ***
 
