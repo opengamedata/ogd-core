@@ -93,8 +93,8 @@ class RequestResult:
 
     def RequestSucceeded(self, msg:str):
         self._status = ResultStatus.SUCCESS
-        self._msg = msg
+        self._message = msg
 
     def RequestErrored(self, msg:str):
         self._status = ResultStatus.FAILURE
-        self._msg = msg
+        self._message = msg
