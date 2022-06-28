@@ -2,6 +2,7 @@
 from typing import Any, List
 import json
 # import locals
+from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
@@ -12,8 +13,8 @@ orderMapping = {'1. One Box': 1, '2. Separated Boxes': 2, '3. Rotate a Pyramid':
 listPuzzles = list(orderMapping.keys())
 
 class SequenceBetweenPuzzles(SessionFeature):
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._numPuzzles = 1
         self._currentPuzzle = {}
         self._activePuzzle = None

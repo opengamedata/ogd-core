@@ -2,9 +2,11 @@
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from extractors.detectors.Detector import Detector
-from games.SHADOWSPECT.features import *
+from extractors.Extractor import ExtractorParameters
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.features.Feature import Feature
+from extractors.Extractor import ExtractorParameters
+from games.SHADOWSPECT.features import *
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
@@ -15,18 +17,18 @@ class ShadowspectLoader(ExtractorLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Optional[int] = None) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         if feature_type == "MoveShapeCount":
-            ret_val = MoveShapeCount.MoveShapeCount(name=name, description=feature_args["description"])
+            ret_val = MoveShapeCount.MoveShapeCount(params=extractor_params)
         elif feature_type == "SessionID":
-            ret_val = SessionID.SessionID(name=name, description=feature_args["description"], session_id=self._session_id)
+            ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
         elif feature_type == "FunnelByUser":
-            ret_val = FunnelByUser.FunnelByUser(name=name, description=feature_args["description"])
+            ret_val = FunnelByUser.FunnelByUser(params=extractor_params)
         elif feature_type == "LevelsOfDifficulty":
-            ret_val = LevelsOfDifficulty.LevelsOfDifficulty(name=name, description=feature_args["description"])
+            ret_val = LevelsOfDifficulty.LevelsOfDifficulty(params=extractor_params)
         elif feature_type == "SequenceBetweenPuzzles":
-            ret_val = SequenceBetweenPuzzles.SequenceBetweenPuzzles(name=name, description=feature_args["description"])
+            ret_val = SequenceBetweenPuzzles.SequenceBetweenPuzzles(params=extractor_params)
         else:
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shadowspect.")
         return ret_val

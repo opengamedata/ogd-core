@@ -2,12 +2,13 @@
 from typing import Any, List
 # import locals
 from extractors.features.Feature import Feature
+from extractors.Extractor import ExtractorParameters
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class MoveShapeCount(Feature):
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description, count_index=0)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

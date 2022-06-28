@@ -9,6 +9,7 @@ from datetime import datetime
 from datetime import timedelta
 from collections import OrderedDict
 # import locals
+from extractors.Extractor import ExtractorParameters
 from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
@@ -32,8 +33,8 @@ typeMapping = {'1. One Box': 'Basic Puzzles', '2. Separated Boxes': 'Basic Puzzl
 thresHoldActivity = 60
 
 class LevelsOfDifficulty(SessionFeature):
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._numberActions = 0
         self._numberAttempts = 0
         

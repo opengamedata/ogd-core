@@ -3,13 +3,14 @@ from typing import Any, List
 import json
 import pandas as pd
 # import locals
-from schemas.FeatureData import FeatureData
+from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class FunnelByUser(SessionFeature):
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._count = 0
         self._level = None
         self._userFunnelDict = dict()
