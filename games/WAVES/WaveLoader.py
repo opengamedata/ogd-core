@@ -2,9 +2,10 @@
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from extractors.detectors.Detector import Detector
-from games.WAVES.features import *
+from extractors.Extractor import ExtractorParameters
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.features.Feature import Feature
+from games.WAVES.features import *
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
@@ -15,7 +16,7 @@ class WaveLoader(ExtractorLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     
-    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Optional[int] = None) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         _count_index = count_index if count_index is not None else 0
         # Per-count features

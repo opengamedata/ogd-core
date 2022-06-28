@@ -2,9 +2,10 @@
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from extractors.detectors.Detector import Detector
+from extractors.Extractor import ExtractorParameters
 from extractors.ExtractorLoader import ExtractorLoader
-from games.SHIPWRECKS.features import *
 from extractors.features.Feature import Feature
+from games.SHIPWRECKS.features import *
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
@@ -27,7 +28,7 @@ class ShipwrecksLoader(ExtractorLoader):
     def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
 
-    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Optional[int] = None) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         if feature_type == "ActiveJobs":
             ret_val = ActiveJobs.ActiveJobs(name=name, description=feature_args["description"])
