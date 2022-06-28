@@ -7,11 +7,12 @@ from typing import Any, List, Optional
 from utils import Logger
 from schemas.FeatureData import FeatureData
 from extractors.features.PerLevelFeature import PerLevelFeature
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class TotalLevelTime(PerLevelFeature):
-    def __init__(self, name:str, description:str, count_index:int):
-        PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
+    def __init__(self, params:ExtractorParameters):
+        PerLevelFeature.__init__(self, params=params)
         self._begin_times    : List[datetime] = []
         self._complete_times : List[datetime] = []
 

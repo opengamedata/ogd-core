@@ -7,11 +7,12 @@ from typing import Any, Dict, List, Optional
 from utils import Logger
 from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class AverageLevelTime(SessionFeature):
-    def __init__(self, name:str, description:str):
-        SessionFeature.__init__(self, name=name, description=description)
+    def __init__(self, params:ExtractorParameters):
+        SessionFeature.__init__(self, params=params)
         self._levels_encountered : set                      = set()
         self._begin_times        : Dict[int,List[datetime]] = {}
         self._complete_times     : Dict[int,List[datetime]] = {}

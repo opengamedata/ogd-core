@@ -5,11 +5,12 @@ from typing import Any, List, Optional
 # import locals
 from schemas.FeatureData import FeatureData
 from extractors.features.Feature import Feature
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class TimeToAnswerMS(Feature):
-    def __init__(self, name:str, description:str, count_index:int):
-        Feature.__init__(self, name=name, description=description, count_index=count_index)
+    def __init__(self, params:ExtractorParameters):
+        Feature.__init__(self, params=params)
         self._latest_complete_lvl8  = None
         self._latest_complete_lvl16 = None
         self._latest_answer_Q0 = None

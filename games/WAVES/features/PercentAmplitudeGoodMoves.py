@@ -5,11 +5,12 @@ from typing import Any, List, Optional
 from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
 from extractors.features.PerLevelFeature import PerLevelFeature
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class PercentAmplitudeGoodMoves(PerLevelFeature):
-    def __init__(self, name:str, description:str, count_index:int):
-        Feature.__init__(self, name=name, description=description, count_index=count_index)
+    def __init__(self, params:ExtractorParameters):
+        Feature.__init__(self, params=params)
         self._amplitude_count = 0
         self._good_count = 0
 

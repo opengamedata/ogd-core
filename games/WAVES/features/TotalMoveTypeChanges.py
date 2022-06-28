@@ -5,11 +5,12 @@ from typing import Any, List, Optional
 # import locals
 from schemas.FeatureData import FeatureData
 from extractors.features.PerLevelFeature import PerLevelFeature
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class TotalMoveTypeChanges(PerLevelFeature):
-    def __init__(self, name:str, description:str, count_index:int):
-        PerLevelFeature.__init__(self, name=name, description=description, count_index=count_index)
+    def __init__(self, params:ExtractorParameters):
+        PerLevelFeature.__init__(self, params=params)
         self._last_move = None
         self._change_count = 0
 

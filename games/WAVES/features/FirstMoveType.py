@@ -4,11 +4,12 @@ from typing import Any, List, Optional
 # import locals
 from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class FirstMoveType(Feature):
-    def __init__(self, name:str, description:str, count_index:int):
-        Feature.__init__(self, name=name, description=description, count_index=count_index)
+    def __init__(self, params:ExtractorParameters):
+        Feature.__init__(self, params=params)
         self._first_move = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

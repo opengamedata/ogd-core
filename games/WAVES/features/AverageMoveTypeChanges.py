@@ -4,11 +4,12 @@ from typing import Any, List, Optional
 # import locals
 from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class AverageMoveTypeChanges(SessionFeature):
-    def __init__(self, name:str, description:str):
-        SessionFeature.__init__(self, name=name, description=description)
+    def __init__(self, params:ExtractorParameters):
+        SessionFeature.__init__(self, params=params)
         self._levels_encountered : set = set()
         self._last_move = {}
         self._change_count = {}
