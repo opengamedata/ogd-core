@@ -23,12 +23,50 @@ class AqualabLoader(ExtractorLoader):
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
+        # First run through aggregate features
         if feature_type == "ActiveJobs":
             ret_val = ActiveJobs.ActiveJobs(params=extractor_params, job_map=self._job_map)
         elif feature_type == "EchoSessionID":
             ret_val = EchoSessionID.EchoSessionID(params=extractor_params)
         elif feature_type == "EventList":
             ret_val = EventList.EventList(params=extractor_params)
+        elif feature_type == "JobsCompleted":
+            ret_val = JobsCompleted.JobsCompleted(params=extractor_params, player_id=self._player_id)
+        elif feature_type == "PlayerSummary":
+            ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
+        elif feature_type == "PopulationSummary":
+            ret_val = PopulationSummary.PopulationSummary(params=extractor_params)
+        elif feature_type == "SessionDiveSitesCount":
+            ret_val = SessionDiveSitesCount.SessionDiveSitesCount(params=extractor_params)
+        elif feature_type == "SessionDuration":
+            ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
+        elif feature_type == "SessionGuideCount":
+            ret_val = SessionGuideCount.SessionGuideCount(params=extractor_params)
+        elif feature_type == "SessionHelpCount":
+            ret_val = SessionHelpCount.SessionHelpCount(params=extractor_params)
+        elif feature_type == "SessionID":
+            ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
+        elif feature_type == "SessionJobsCompleted":
+            ret_val = SessionJobsCompleted.SessionJobsCompleted(params=extractor_params)
+        elif feature_type == "SwitchJobsCount":
+            ret_val = SwitchJobsCount.SwitchJobsCount(params=extractor_params)
+        elif feature_type == "TopJobCompletionDestinations":
+            ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params, job_map=self._job_map)
+        elif feature_type == "TopJobSwitchDestinations":
+            ret_val = TopJobSwitchDestinations.TopJobSwitchDestinations(params=extractor_params, job_map=self._job_map)
+        elif feature_type == "TotalArgumentationTime":
+            ret_val = TotalArgumentationTime.TotalArgumentationTime(params=extractor_params)
+        elif feature_type == "TotalDiveTime":
+            ret_val = TotalDiveTime.TotalDiveTime(params=extractor_params)
+        elif feature_type == "TotalExperimentationTime":
+            ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
+        elif feature_type == "UserAvgSessionDuration":
+            ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
+        elif feature_type == "UserSessionCount":
+            ret_val = UserSessionCount.UserSessionCount(params=extractor_params, player_id=self._player_id)
+        elif feature_type == "UserTotalSessionDuration":
+            ret_val = UserTotalSessionDuration.UserTotalSessionDuration(params=extractor_params, player_id=self._player_id)
+        # then run through per-count features.
         elif feature_type == "JobActiveTime":
             if extractor_params._count_index is None:
                 raise TypeError("Got None for extractor_params._count_index, should have a value!")
@@ -73,46 +111,10 @@ class AqualabLoader(ExtractorLoader):
             if extractor_params._count_index is None:
                 raise TypeError("Got None for extractor_params._count_index, should have a value!")
             ret_val = JobsAttempted.JobsAttempted(params=extractor_params, job_map=self._job_map, diff_map=self._diff_map)
-        elif feature_type == "JobsCompleted":
-            ret_val = JobsCompleted.JobsCompleted(params=extractor_params, player_id=self._player_id)
-        elif feature_type == "PlayerSummary":
-            ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
-        elif feature_type == "PopulationSummary":
-            ret_val = PopulationSummary.PopulationSummary(params=extractor_params)
-        elif feature_type == "SessionDiveSitesCount":
-            ret_val = SessionDiveSitesCount.SessionDiveSitesCount(params=extractor_params)
-        elif feature_type == "SessionDuration":
-            ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
-        elif feature_type == "SessionGuideCount":
-            ret_val = SessionGuideCount.SessionGuideCount(params=extractor_params)
-        elif feature_type == "SessionHelpCount":
-            ret_val = SessionHelpCount.SessionHelpCount(params=extractor_params)
-        elif feature_type == "SessionID":
-            ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
-        elif feature_type == "SessionJobsCompleted":
-            ret_val = SessionJobsCompleted.SessionJobsCompleted(params=extractor_params)
-        elif feature_type == "SwitchJobsCount":
-            ret_val = SwitchJobsCount.SwitchJobsCount(params=extractor_params)
         elif feature_type == "SyncCompletionTime":
             if extractor_params._count_index is None:
                 raise TypeError("Got None for extractor_params._count_index, should have a value!")
             ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
-        elif feature_type == "TopJobCompletionDestinations":
-            ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "TopJobSwitchDestinations":
-            ret_val = TopJobSwitchDestinations.TopJobSwitchDestinations(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "TotalArgumentationTime":
-            ret_val = TotalArgumentationTime.TotalArgumentationTime(params=extractor_params)
-        elif feature_type == "TotalDiveTime":
-            ret_val = TotalDiveTime.TotalDiveTime(params=extractor_params)
-        elif feature_type == "TotalExperimentationTime":
-            ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
-        elif feature_type == "UserAvgSessionDuration":
-            ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
-        elif feature_type == "UserSessionCount":
-            ret_val = UserSessionCount.UserSessionCount(params=extractor_params, player_id=self._player_id)
-        elif feature_type == "UserTotalSessionDuration":
-            ret_val = UserTotalSessionDuration.UserTotalSessionDuration(params=extractor_params, player_id=self._player_id)
         else:
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Aqualab.")
         return ret_val
