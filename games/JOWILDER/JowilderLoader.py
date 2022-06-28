@@ -2,6 +2,7 @@
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from extractors.detectors.Detector import Detector
+from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from extractors.legacy.LegacyLoader import LegacyLoader
 from games.JOWILDER.features.JowilderExtractor import JowilderExtractor
@@ -13,7 +14,7 @@ class JowilderLoader(LegacyLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Optional[int] = None) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         return JowilderExtractor(game_schema=self._game_schema, session_id=self._session_id)
 
     def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
