@@ -1,6 +1,7 @@
 # import standard libraries
 import abc
 # import locals
+from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.Event import Event
 
@@ -26,8 +27,8 @@ class PerCountFeature(Feature):
 
     # *** BUILT-INS ***
 
-    def __init__(self, name:str, description:str, count_index:int):
-        super().__init__(name=name, description=description, count_index=count_index)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 

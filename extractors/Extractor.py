@@ -5,12 +5,21 @@ from typing import List, Optional
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 
-## @class Model
-#  Abstract base class for session-level Wave features.
-#  Models only have one public function, called Eval.
-#  The Eval function takes a list of row data, computes some statistic, and returns a list of results.
-#  If the model works on features from session data, it should calculate one result for each row (each row being a session).
-#  If the model works on a raw list of recent events, it should calculate a single result (each row being an event).
+## @class ExtractorParams
+class ExtractorParameters:
+    """Dumb struct to hold the data that should be available to every Extractor.
+    This just makes it easier to add/manage any new params,
+    so that we don't need to change the param list for hundreds of individual
+    extractor subclasses every time something changes.
+    """
+    def __init__(self, name:str, description:str, mode:ExtractionMode, count_index:Optional[int]):
+        self._name = name
+        self._desc = description
+        self._mode = mode
+        self._count_index = count_index
+
+## @class Extractor
+#  Abstract base class for all data extractors (features and detectors)
 class Extractor(abc.ABC):
 #TODO: use a dirty bit so we only run the GetValue function if we've received an event or feature since last calculation
 
@@ -51,14 +60,11 @@ class Extractor(abc.ABC):
 
     # *** BUILT-INS ***
 
-    def __init__(self, name:str, description:str, mode:ExtractionMode, count_index:int):
-        self._name = name
-        self._desc = description
-        self._count_index = count_index
-        self._mode = mode
+    def __init__(self, params:ExtractorParameters):
+        self._params = params
 
     def __str__(self):
-        return f"{self._name} : {self._desc}"
+        return f"{self.Name} : {self.Description}"
 
     # *** PUBLIC STATICS ***
 
@@ -103,12 +109,20 @@ class Extractor(abc.ABC):
     # *** PROPERTIES ***
 
     @property
-    def Name(self):
-        return self._name
+    def Name(self) -> str:
+        return self._params._name
 
     @property
-    def CountIndex(self):
-        return self._count_index
+    def Description(self) -> str:
+        return self._params._desc
+
+    @property
+    def ExportMode(self) -> ExtractionMode:
+        return self._params._mode
+
+    @property
+    def CountIndex(self) -> Optional[int]:
+        return self._params._count_index
 
     # *** PRIVATE STATICS ***
 

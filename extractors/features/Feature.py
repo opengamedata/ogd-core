@@ -2,9 +2,10 @@
 import abc
 from typing import Any, Dict, List, Optional
 # import locals
-from extractors.Extractor import Extractor
-from schemas.FeatureData import FeatureData
+from extractors.Extractor import Extractor, ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
 
 ## @class Model
 #  Abstract base class for session-level Wave features.
@@ -39,8 +40,8 @@ class Feature(Extractor):
 
     # *** BUILT-INS ***
 
-    def __init__(self, name:str, description:str, count_index:int):
-        super().__init__(name=name, description=description, count_index=count_index)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
 
     # *** PUBLIC STATICS ***
 

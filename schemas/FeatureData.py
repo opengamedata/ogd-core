@@ -1,7 +1,7 @@
 from typing import Any, List, Optional
 
 class FeatureData:
-   def __init__(self, name:str, count_index:int, cols:List[str], vals:List[Any],
+   def __init__(self, name:str, count_index:Optional[int], cols:List[str], vals:List[Any],
                 player_id:Optional[str]=None, sess_id:Optional[str]=None):
       self._name = name
       self._count_index = count_index

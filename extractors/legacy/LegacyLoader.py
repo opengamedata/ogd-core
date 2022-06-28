@@ -17,13 +17,13 @@ class LegacyLoader(ExtractorLoader):
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
 
     def LoadToFeatureRegistry(self, registry:FeatureRegistry) -> None:
-        feat = self.LoadFeature(feature_type="", name="", feature_args={}, count_index=0)
+        feat = self.LoadFeature(feature_type="", name="", schema_args={}, count_index=0)
         # treat the monolithic LegacyFeature extractor as a single aggregate.
         registry.Register(feat, ExtractorRegistry.Listener.Kinds.AGGREGATE)
 
     def LoadToDetectorRegistry(self, registry:DetectorRegistry, trigger_callback:Callable[[Event], None]) -> None:
         try:
-            feat = self.LoadDetector(detector_type="", name="", detector_args={}, trigger_callback=trigger_callback, count_index=0)
+            feat = self.LoadDetector(detector_type="", name="", schema_args={}, trigger_callback=trigger_callback, count_index=0)
             registry.Register(feat, ExtractorRegistry.Listener.Kinds.AGGREGATE)
         except NotImplementedError as err:
             Logger.Log("No detectors to be loaded.", logging.INFO, depth=2)

@@ -3,6 +3,7 @@ import abc
 import logging
 from typing import Any, Callable, Dict, List, Optional
 from extractors.detectors.Detector import Detector
+from extractors.Extractor import ExtractorParameters
 # import locals
 from extractors.detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorRegistry import ExtractorRegistry
@@ -18,11 +19,11 @@ class ExtractorLoader(abc.ABC):
     # *** ABSTRACTS ***
     
     @abc.abstractmethod
-    def _loadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Optional[int] = None) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         pass
     
     @abc.abstractmethod
-    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
+    def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         pass
 
     # *** BUILT-INS ***
@@ -48,18 +49,20 @@ class ExtractorLoader(abc.ABC):
 
     # *** PUBLIC METHODS ***
 
-    def LoadFeature(self, feature_type:str, name:str, feature_args:Dict[str,Any], count_index:Optional[int] = None) -> Feature:
-        return self._loadFeature(feature_type=feature_type, name=name, feature_args=feature_args, count_index=count_index)
+    def LoadFeature(self, feature_type:str, name:str, schema_args:Dict[str,Any], count_index:Optional[int] = None) -> Feature:
+        params = ExtractorParameters(name=name, description=schema_args['description'], mode=self._mode, count_index=count_index)
+        return self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
     
-    def LoadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
-        return self._loadDetector(detector_type=detector_type, name=name, detector_args=detector_args, trigger_callback=trigger_callback, count_index=count_index)
+    def LoadDetector(self, detector_type:str, name:str, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
+        params = ExtractorParameters(name=name, description=schema_args['description'], mode=self._mode, count_index=count_index)
+        return self._loadDetector(detector_type=detector_type, extractor_params=params, schema_args=schema_args, trigger_callback=trigger_callback)
 
     def LoadToFeatureRegistry(self, registry:FeatureRegistry) -> None:
         # first, load aggregate features
         for name,aggregate in self._game_schema.aggregate_features().items():
             if ExtractorLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=self._overrides):
                 try:
-                    feature = self.LoadFeature(feature_type=name, name=name, feature_args=aggregate)
+                    feature = self.LoadFeature(feature_type=name, name=name, schema_args=aggregate)
                 except NotImplementedError as err:
                     Logger.Log(f"In ExtractorLoader, '{name}' is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
                 else:
@@ -69,7 +72,7 @@ class ExtractorLoader(abc.ABC):
                 for i in ExtractorLoader._genCountRange(count=percount["count"], schema=self._game_schema):
                     try:
                         feat_name = f"{percount['prefix']}{i}_{name}"
-                        feature = self.LoadFeature(feature_type=name, name=feat_name, feature_args=percount, count_index=i)
+                        feature = self.LoadFeature(feature_type=name, name=feat_name, schema_args=percount, count_index=i)
                     except NotImplementedError as err:
                         Logger.Log(f"In ExtractorLoader, '{name}' is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
                     else:
@@ -80,7 +83,7 @@ class ExtractorLoader(abc.ABC):
         for name,aggregate in self._game_schema.aggregate_detectors().items():
             if ExtractorLoader._validateFeature(name=name, base_setting=aggregate.get('enabled', False), overrides=self._overrides):
                 try:
-                    detector = self.LoadDetector(detector_type=name, name=name, detector_args=aggregate, trigger_callback=trigger_callback)
+                    detector = self.LoadDetector(detector_type=name, name=name, schema_args=aggregate, trigger_callback=trigger_callback)
                 except NotImplementedError as err:
                     Logger.Log(f"In ExtractorLoader, '{name}' is not a valid detector for {self._game_schema._game_name}", logging.ERROR)
                 else:
@@ -89,7 +92,7 @@ class ExtractorLoader(abc.ABC):
             if ExtractorLoader._validateFeature(name=name, base_setting=percount.get('enabled', False), overrides=self._overrides):
                 for i in ExtractorLoader._genCountRange(count=percount["count"], schema=self._game_schema):
                     try:
-                        detector = self.LoadDetector(detector_type=name, name=f"{percount['prefix']}{i}_{name}", detector_args=percount, trigger_callback=trigger_callback, count_index=i)
+                        detector = self.LoadDetector(detector_type=name, name=f"{percount['prefix']}{i}_{name}", schema_args=percount, trigger_callback=trigger_callback, count_index=i)
                     except NotImplementedError as err:
                         Logger.Log(f"In ExtractorLoader, '{name}' is not a valid detector for {self._game_schema._game_name}", logging.ERROR)
                     else:

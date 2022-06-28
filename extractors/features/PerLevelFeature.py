@@ -1,6 +1,8 @@
 # import locals
+from extractors.Extractor import ExtractorParameters
 from extractors.features.PerCountFeature import PerCountFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 
 ## @class PerLevelFeature
 class PerLevelFeature(PerCountFeature):
@@ -18,8 +20,8 @@ class PerLevelFeature(PerCountFeature):
 
     # *** BUILT-INS ***
 
-    def __init__(self, name:str, description:str, count_index:int):
-        super().__init__(name=name, description=description, count_index=count_index)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 

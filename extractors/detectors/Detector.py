@@ -1,8 +1,8 @@
 ## import standard libraries
 import abc
-from typing import Any, Callable, List
+from typing import Callable, List, Optional
 # import locals
-from extractors.Extractor import Extractor
+from extractors.Extractor import Extractor, ExtractorParameters
 from extractors.detectors.DetectorEvent import DetectorEvent
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
@@ -26,10 +26,10 @@ class Detector(Extractor):
     def _trigger_event(self) -> DetectorEvent:
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS *8jr47t*
 
-    def __init__(self, name:str, description:str, mode:ExtractionMode, count_index:int, trigger_callback:Callable[[Event], None]):
-        super().__init__(name=name, description=description, mode=mode, count_index=count_index)
+    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None]):
+        super().__init__(params=params)
         self._callback    = trigger_callback
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
