@@ -6,6 +6,7 @@ from extractors.Extractor import ExtractorParameters
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.features.Feature import Feature
 from games.SHIPWRECKS.features import *
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
@@ -31,44 +32,44 @@ class ShipwrecksLoader(ExtractorLoader):
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         if feature_type == "ActiveJobs":
-            ret_val = ActiveJobs.ActiveJobs(name=name, description=feature_args["description"])
+            ret_val = ActiveJobs.ActiveJobs(params=extractor_params)
         elif feature_type == "MissionDiveTime":
-            if count_index is None:
-                raise TypeError("Got None for count_index, should have a value!")
+            if extractor_params._count_index is None:
+                raise TypeError("Got None for extractor_params._count_index, should have a value!")
             else:
-                ret_val = MissionDiveTime.MissionDiveTime(name=name, description=feature_args["description"], job_num=count_index)
+                ret_val = MissionDiveTime.MissionDiveTime(params=extractor_params)
         elif feature_type == "JobsAttempted":
-            if count_index is None:
-                raise TypeError("Got None for count_index, should have a value!")
-            ret_val = JobsAttempted.JobsAttempted(name=name, description=feature_args["description"], mission_num=count_index, mission_map=self._game_schema["mission_map"])
+            if extractor_params._count_index is None:
+                raise TypeError("Got None for extractor_params._count_index, should have a value!")
+            ret_val = JobsAttempted.JobsAttempted(params=extractor_params, mission_map=self._game_schema["mission_map"])
         elif feature_type == "MissionSonarTimeToComplete":
-            if count_index is None:
-                raise TypeError("Got None for count_index, should have a value!")
+            if extractor_params._count_index is None:
+                raise TypeError("Got None for extractor_params._count_index, should have a value!")
             else:
-                ret_val = MissionSonarTimeToComplete.MissionSonarTimeToComplete(name=name, description=feature_args["description"], job_num=count_index)
+                ret_val = MissionSonarTimeToComplete.MissionSonarTimeToComplete(params=extractor_params)
         elif feature_type == "EventList":
-            ret_val = EventList.EventList(name=name, description=feature_args["description"])
+            ret_val = EventList.EventList(params=extractor_params)
         elif feature_type == "EvidenceBoardCompleteCount":
-            ret_val = EvidenceBoardCompleteCount.EvidenceBoardCompleteCount(name=name, description=feature_args["description"])
+            ret_val = EvidenceBoardCompleteCount.EvidenceBoardCompleteCount(params=extractor_params)
         elif feature_type == "JobsCompleted":
-            ret_val = JobsCompleted.JobsCompleted(name=name, description=feature_args["description"], session_id=self._session_id)
+            ret_val = JobsCompleted.JobsCompleted(params=extractor_params, session_id=self._session_id)
         elif feature_type == "PlayerSummary":
-            ret_val = PlayerSummary.PlayerSummary(name=name, description=feature_args["description"])
+            ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
         elif feature_type == "PopulationSummary":
-            ret_val = PopulationSummary.PopulationSummary(name=name, description=feature_args["description"])
+            ret_val = PopulationSummary.PopulationSummary(params=extractor_params)
         elif feature_type == "SessionDuration":
-            ret_val = SessionDuration.SessionDuration(name=name, description=feature_args["description"], session_id=self._session_id)
+            ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
         elif feature_type == "SessionID":
-            ret_val = SessionID.SessionID(name=name, description=feature_args["description"], session_id=self._session_id)
+            ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
         elif feature_type == "TopJobCompletionDestinations":
-            ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(name=name, description=feature_args["description"])
+            ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params)
         elif feature_type == "TopJobSwitchDestinations":
-            ret_val = TopJobSwitchDestinations.TopJobSwitchDestinations(name=name, description=feature_args["description"])
+            ret_val = TopJobSwitchDestinations.TopJobSwitchDestinations(params=extractor_params)
         elif feature_type == "TotalDiveTime":
-            ret_val = TotalDiveTime.TotalDiveTime(name=name, description=feature_args["description"])
+            ret_val = TotalDiveTime.TotalDiveTime(params=extractor_params)
         else:
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shipwrecks.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
+    def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Shipwrecks.")

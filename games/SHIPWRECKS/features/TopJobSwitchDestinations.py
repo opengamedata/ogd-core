@@ -6,12 +6,13 @@ from typing import Any, List
 from utils import Logger
 from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class TopJobSwitchDestinations(Feature):
 
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description, count_index=0)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._current_session_id = None
         self._last_started_id = None
         self._mission_switch_pairs = defaultdict(dict)

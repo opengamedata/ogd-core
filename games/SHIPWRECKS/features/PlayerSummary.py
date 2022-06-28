@@ -2,12 +2,13 @@ from typing import Any, List
 
 from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class PlayerSummary(SessionFeature):
 
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._summary = {}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

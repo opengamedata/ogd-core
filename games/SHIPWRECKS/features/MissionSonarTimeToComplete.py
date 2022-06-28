@@ -4,13 +4,14 @@ from typing import Any, List, Optional
 # import locals
 from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class MissionSonarTimeToComplete(Feature):
     
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def __init__(self, name:str, description:str, job_num:int):
-        super().__init__(name=name, description=description, count_index=job_num)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._sonar_start_time = None
         self._time = timedelta(0)
 
@@ -25,7 +26,7 @@ class MissionSonarTimeToComplete(Feature):
             self._sonar_start_time = event.Timestamp
         elif event.EventName == "sonar_complete":
             if self._sonar_start_time is not None:
-                self._time += (event.Timestamp - self._sonar_start_time).total_seconds()
+                self._time += (event.Timestamp - self._sonar_start_time).total_seconds() # TODO : maybe see if we should add timedeltas and convert to float at end?
                 self._sonar_start_time = None
 
     def _extractFromFeatureData(self, feature: FeatureData):

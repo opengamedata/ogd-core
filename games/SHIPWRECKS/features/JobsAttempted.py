@@ -5,20 +5,24 @@ from typing import Any, List
 # import locals
 from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class JobsAttempted(Feature):
 
-    def __init__(self, name:str, description:str, mission_num:int, mission_map:dict):
+    def __init__(self, params:ExtractorParameters, mission_map:dict):
         self._mission_map = mission_map
-        super().__init__(name=name, description=description, count_index=mission_num)
+        super().__init__(params=params)
         self._session_id = None
         self._start_map = defaultdict(list)
         self._complete_map = defaultdict(list)
 
         # Subfeatures
-        self._mission_id = mission_num
-        self._mission_name = list(mission_map.keys())[mission_num]
+        if self.CountIndex is not None:
+            self._mission_id = self.CountIndex
+            self._mission_name = list(mission_map.keys())[self.CountIndex]
+        else:
+            raise ValueError("JobsAttempted got a count index of None!")
         self._num_starts = 0
         self._num_completes = 0
         self._percent_complete = 0

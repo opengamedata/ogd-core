@@ -4,12 +4,13 @@ from typing import Any, List, Optional
 # import locals
 from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class MissionDiveTime(Feature):
     
-    def __init__(self, name:str, description:str, job_num:int):
-        super().__init__(name=name, description=description, count_index=job_num)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._dive_start_time = None
         self._time = timedelta(0)
 

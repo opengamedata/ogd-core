@@ -3,12 +3,13 @@ from typing import Any, List, Optional
 # import locals
 from schemas.FeatureData import FeatureData
 from extractors.features.Feature import Feature
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class EvidenceBoardCompleteCount(Feature):
 
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

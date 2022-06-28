@@ -1,14 +1,16 @@
 from collections import defaultdict
-from typing import Any, List
+from typing import Any, Dict, List, Union
+from unicodedata import numeric
 
 from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class PopulationSummary(SessionFeature):
 
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._session_completions = defaultdict(list)
         self._session_times = []
 
@@ -31,7 +33,7 @@ class PopulationSummary(SessionFeature):
     def _getFeatureValues(self) -> List[Any]:
         num_completions = [len(self._session_completions[session]) for session in self._session_completions]
 
-        summary = {
+        summary : Dict[str, Union[float, int]] = {
             "avg_session_count": 1,
             "avg_jobs_completed": 0,
             "avg_session_time": 0

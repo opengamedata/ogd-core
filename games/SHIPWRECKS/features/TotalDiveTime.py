@@ -4,12 +4,13 @@ from datetime import timedelta
 # import locals
 from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class TotalDiveTime(SessionFeature):
 
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._time = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
