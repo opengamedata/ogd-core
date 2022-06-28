@@ -79,8 +79,8 @@ class DiveSiteNoEvidence(Detector):
 
     # *** BUILT-INS ***
 
-    def __init__(self, name:str, description:str, trigger_callback:Callable[[Event], None], threshold:float):
-        super().__init__(name=name, description=description, count_index=0, trigger_callback=trigger_callback)
+    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None], threshold:float):
+        super().__init__(params=params, trigger_callback=trigger_callback)
         self._threshold : float = threshold
         self._in_dive : bool    = False
         self._last_evidence_time  : Optional[datetime] = None

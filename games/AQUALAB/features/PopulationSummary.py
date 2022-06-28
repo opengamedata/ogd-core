@@ -7,7 +7,7 @@ from schemas.Event import Event
 
 class PopulationSummary(SessionFeature):
 
-    def __init__(self, name:str, description:str):
+    def __init__(self, params:ExtractorParameters):
         super().__init__(name=name, description=description)
         self._user_sessions = defaultdict(list)
         self._user_completions = defaultdict(list)

@@ -8,8 +8,8 @@ from schemas.Event import Event
 
 class TotalDiveTime(Feature):
     
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description, count_index=0)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._session_id = None
         self._dive_start_time = None
         self._prev_timestamp = None

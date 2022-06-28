@@ -8,8 +8,8 @@ from schemas.Event import Event
 
 class TotalArgumentationTime(Feature):
     
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description, count_index=0)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._session_id = None
         self._argue_start_time = None
         self._prev_timestamp = None

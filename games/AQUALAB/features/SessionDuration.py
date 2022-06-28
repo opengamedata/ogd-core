@@ -7,7 +7,7 @@ from schemas.Event import Event
 
 class SessionDuration(SessionFeature):
 
-    def __init__(self, name:str, description:str, session_id:str):
+    def __init__(self, params:ExtractorParameters, session_id:str):
         self._session_id = session_id
         super().__init__(name=name, description=description)
         self._client_start_time = None

@@ -7,7 +7,7 @@ from schemas.Event import Event
 
 class UserAvgSessionDuration(SessionFeature):
 
-    def __init__(self, name:str, description:str, player_id:str):
+    def __init__(self, params:ExtractorParameters, player_id:str):
         self._player_id = player_id
         super().__init__(name=name, description=description)
         self._times = []

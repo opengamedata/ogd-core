@@ -13,8 +13,8 @@ class CollectFactNoJob(Detector):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, name:str, description:str, trigger_callback:Callable[[Event], None]):
-        super().__init__(name=name, description=description, count_index=0, trigger_callback=trigger_callback)
+    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None]):
+        super().__init__(params=params, trigger_callback=trigger_callback)
         self._found_jobless_fact = False
         self._sess_id = "Unknown"
         self._player_id = "Unknown"

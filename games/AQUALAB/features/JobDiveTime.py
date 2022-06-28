@@ -4,14 +4,15 @@ from datetime import timedelta
 from typing import Any, List, Optional
 # import locals
 from utils import Logger
+from extractors.Extractor import ExtractorParameters
 from games.AQUALAB.features.PerJobFeature import PerJobFeature
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class JobDiveTime(PerJobFeature):
 
-    def __init__(self, name:str, description:str, job_num:int, job_map:dict):
-        super().__init__(name=name, description=description, job_num=job_num, job_map=job_map)
+    def __init__(self, params:ExtractorParameters, job_map:dict):
+        super().__init__(params=params, job_map=job_map)
         self._session_id = None
         self._dive_start_time = None
         self._prev_timestamp = None

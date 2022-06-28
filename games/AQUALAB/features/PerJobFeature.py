@@ -4,12 +4,14 @@ from datetime import timedelta
 from typing import Any, List, Optional
 # import locals
 from utils import Logger
+from extractors.Extractor import ExtractorParameters
+from extractors.Extractor import ExtractorParameters
 from extractors.features.PerCountFeature import PerCountFeature
 from schemas.Event import Event
 
 class PerJobFeature(PerCountFeature):
-    def __init__(self, name:str, description:str, job_num:int, job_map:dict):
-        super().__init__(name=name, description=description, count_index=job_num)
+    def __init__(self, params:ExtractorParameters, job_map:dict):
+        super().__init__(params=params,)
         self._job_map = job_map
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

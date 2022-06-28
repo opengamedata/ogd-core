@@ -4,13 +4,14 @@ from statistics import stdev
 from typing import Any, List, Optional
 # import locals
 from utils import Logger
+from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class JobsAttempted(Feature):
 
-    def __init__(self, name:str, description:str, job_num:int, job_map:dict, diff_map: dict):
+    def __init__(self, params:ExtractorParameters, job_map:dict, diff_map: dict):
         self._job_map = job_map
         super().__init__(name=name, description=description, count_index=job_num)
         self._user_code = None

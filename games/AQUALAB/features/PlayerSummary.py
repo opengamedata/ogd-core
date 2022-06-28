@@ -6,7 +6,7 @@ from schemas.Event import Event
 
 class PlayerSummary(SessionFeature):
 
-    def __init__(self, name:str, description:str):
+    def __init__(self, params:ExtractorParameters):
         super().__init__(name=name, description=description)
         self._summary = {}
 

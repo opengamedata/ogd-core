@@ -4,14 +4,15 @@ from datetime import timedelta
 from typing import Any, List
 # import locals
 from utils import Logger
+from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class SyncCompletionTime(Feature):
 
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description, count_index=0)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._session_id = None
         self._sim_start_time = None
         self._prev_timestamp = None

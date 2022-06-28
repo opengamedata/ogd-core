@@ -11,7 +11,7 @@ class UserTotalSessionDuration(SessionFeature):
     :param SessionFeature: _description_
     :type SessionFeature: _type_
     """
-    def __init__(self, name:str, description:str, player_id:str):
+    def __init__(self, params:ExtractorParameters, player_id:str):
         super().__init__(name=name, description=description)
         self._player_id = player_id
         self._time = 0

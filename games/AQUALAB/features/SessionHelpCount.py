@@ -10,8 +10,8 @@ class SessionHelpCount(Feature):
     :param Feature: _description_
     :type Feature: _type_
     """
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description, count_index=0)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

@@ -10,7 +10,7 @@ class SessionID(SessionFeature):
     :param SessionFeature: _description_
     :type SessionFeature: _type_
     """
-    def __init__(self, name:str, description:str, session_id:str):
+    def __init__(self, params:ExtractorParameters, session_id:str):
         self._session_id = session_id
         super().__init__(name=name, description=description)
 

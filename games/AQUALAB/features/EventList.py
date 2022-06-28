@@ -9,8 +9,8 @@ from schemas.Event import Event
 
 class EventList(Feature):
 
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description, count_index=0)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         self._event_list = []
 
         # Map of event names to primary detail parameter and its type

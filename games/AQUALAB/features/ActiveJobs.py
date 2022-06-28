@@ -5,15 +5,16 @@ from collections import defaultdict
 from typing import Any, List, Optional
 # import locals
 from utils import Logger
+from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
 class ActiveJobs(Feature):
 
-    def __init__(self, name:str, description:str, job_map:dict):
+    def __init__(self, params:ExtractorParameters, job_map:dict):
         self._job_map = job_map
-        super().__init__(name=name, description=description, count_index=0)
+        super().__init__(params=params)
         self._current_user_code = None
         self._last_started_id = None
         self._active_jobs = defaultdict(list)
