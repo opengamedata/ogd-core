@@ -10,7 +10,7 @@ class SessionFeature(Feature):
     # *** BUILT-INS ***
 
     def __init__(self, params:ExtractorParameters):
-        if params._count_index != 0:
+        if params._count_index is not None and params._count_index != 0:
             Logger.Log(f"Session feature {params._name} got non-zero count index of {params._count_index}!", logging.WARN)
         params._count_index = 0
         super().__init__(params=params)
