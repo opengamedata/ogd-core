@@ -2,9 +2,10 @@
 from datetime import timedelta
 from typing import Any, List
 # import locals
+from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class TotalDiveTime(Feature):
     
@@ -39,7 +40,7 @@ class TotalDiveTime(Feature):
 
         self._prev_timestamp = event.Timestamp
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

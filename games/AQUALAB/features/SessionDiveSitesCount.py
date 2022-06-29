@@ -1,9 +1,10 @@
 # import libraries
 from typing import Any, List
 # import locals
+from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class SessionDiveSitesCount(Feature):
     
@@ -24,7 +25,7 @@ class SessionDiveSitesCount(Feature):
             self._count += 1
             self._visited_sites.append(event.EventData["site_id"]['string_value'])
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

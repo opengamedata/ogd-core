@@ -5,6 +5,7 @@ from typing import Callable, List
 # import local files
 from extractors.detectors.Detector import Detector
 from extractors.detectors.DetectorEvent import DetectorEvent
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 
 class CollectFactNoJob(Detector):

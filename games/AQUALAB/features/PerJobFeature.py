@@ -1,10 +1,8 @@
 # import libraries
 import logging
-from datetime import timedelta
-from typing import Any, List, Optional
+from typing import Optional
 # import locals
 from utils import Logger
-from extractors.Extractor import ExtractorParameters
 from extractors.Extractor import ExtractorParameters
 from extractors.features.PerCountFeature import PerCountFeature
 from schemas.Event import Event

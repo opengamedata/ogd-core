@@ -6,8 +6,8 @@ from typing import Any, List, Optional
 from utils import Logger
 from extractors.Extractor import ExtractorParameters
 from games.AQUALAB.features.PerJobFeature import PerJobFeature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class JobActiveTime(PerJobFeature):
 
@@ -58,7 +58,7 @@ class JobActiveTime(PerJobFeature):
 
         self._last_event_time = event.timestamp
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

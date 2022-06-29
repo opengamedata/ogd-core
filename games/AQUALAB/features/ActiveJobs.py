@@ -7,8 +7,8 @@ from typing import Any, List, Optional
 from utils import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class ActiveJobs(Feature):
 
@@ -38,7 +38,7 @@ class ActiveJobs(Feature):
             self._current_user_code = user_code # in either case, set latest user as "current"
             self._last_started_id = job_name # In either case, set latest job name as "current".
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

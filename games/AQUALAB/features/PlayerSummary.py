@@ -1,13 +1,14 @@
 from typing import Any, List
 
-from schemas.FeatureData import FeatureData
+from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class PlayerSummary(SessionFeature):
 
     def __init__(self, params:ExtractorParameters):
-        super().__init__(name=name, description=description)
+        super().__init__(params=params)
         self._summary = {}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -20,7 +21,7 @@ class PlayerSummary(SessionFeature):
     def _extractFromEvent(self, event:Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         user_id = feature.PlayerID
 
         if user_id not in self._summary:

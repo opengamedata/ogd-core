@@ -1,9 +1,10 @@
 from datetime import timedelta
 from typing import Any, List
 
+from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class UserTotalSessionDuration(SessionFeature):
     """_summary_
@@ -12,7 +13,7 @@ class UserTotalSessionDuration(SessionFeature):
     :type SessionFeature: _type_
     """
     def __init__(self, params:ExtractorParameters, player_id:str):
-        super().__init__(name=name, description=description)
+        super().__init__(params=params)
         self._player_id = player_id
         self._time = 0
 
@@ -26,7 +27,7 @@ class UserTotalSessionDuration(SessionFeature):
     def _extractFromEvent(self, event:Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         if feature.PlayerID == self._player_id:
             self._time += feature.FeatureValues[0]
 

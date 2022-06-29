@@ -1,8 +1,9 @@
 from typing import Any, List
 
+from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class SessionJobsCompleted(Feature):
     """_summary_
@@ -24,7 +25,7 @@ class SessionJobsCompleted(Feature):
     def _extractFromEvent(self, event:Event) -> None:
         self._count += 1
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

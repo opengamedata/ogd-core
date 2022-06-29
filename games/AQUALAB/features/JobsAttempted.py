@@ -1,37 +1,41 @@
 # import libraries
 import logging
+from datetime import datetime
 from statistics import stdev
 from typing import Any, List, Optional
 # import locals
 from utils import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class JobsAttempted(Feature):
 
     def __init__(self, params:ExtractorParameters, job_map:dict, diff_map: dict):
         self._job_map = job_map
-        super().__init__(name=name, description=description, count_index=job_num)
+        super().__init__(params=params)
         self._user_code = None
         self._session_id = None
 
         # Subfeatures
-        self._job_id = job_num
-        self._job_name = list(job_map.keys())[job_num]
+        if self.CountIndex is not None:
+            self._job_id = self.CountIndex
+            self._job_name = list(job_map.keys())[self.CountIndex]
+            self._difficulties = diff_map[self.CountIndex]
+        else:
+            raise ValueError("JobsAttempted was not given a count index!")
         self._num_starts = 0
         self._num_completes = 0
         self._percent_complete = 0
         self._avg_time_complete = 0
         self._std_dev_complete = 0
-        self._difficulties = diff_map[job_num]
 
         # Time
         self._times = []
         self._time = 0
-        self._job_start_time = None
-        self._prev_timestamp = None
+        self._job_start_time : Optional[datetime] = None
+        self._prev_timestamp : Optional[datetime] = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
@@ -44,7 +48,7 @@ class JobsAttempted(Feature):
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
 
-            if self._job_start_time:
+            if self._job_start_time is not None and self._prev_timestamp is not None:
                 self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
                 self._job_start_time = event.Timestamp
 
@@ -69,7 +73,7 @@ class JobsAttempted(Feature):
 
         self._prev_timestamp = event.Timestamp
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

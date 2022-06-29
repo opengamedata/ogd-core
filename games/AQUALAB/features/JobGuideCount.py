@@ -5,8 +5,8 @@ from typing import Any, List, Optional
 from utils import Logger
 from extractors.Extractor import ExtractorParameters
 from games.AQUALAB.features.PerJobFeature import PerJobFeature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class JobGuideCount(PerJobFeature):
 
@@ -25,7 +25,7 @@ class JobGuideCount(PerJobFeature):
     def _extractFromEvent(self, event:Event) -> None:
         self._count += 1
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

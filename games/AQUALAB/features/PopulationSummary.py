@@ -1,14 +1,15 @@
 from collections import defaultdict
 from typing import Any, Dict, List
 
-from schemas.FeatureData import FeatureData
+from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class PopulationSummary(SessionFeature):
 
     def __init__(self, params:ExtractorParameters):
-        super().__init__(name=name, description=description)
+        super().__init__(params=params)
         self._user_sessions = defaultdict(list)
         self._user_completions = defaultdict(list)
         self._user_session_times = defaultdict(list)
@@ -23,7 +24,7 @@ class PopulationSummary(SessionFeature):
     def _extractFromEvent(self, event: Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         if feature.Name == "JobsCompleted":
             self._user_completions[feature.PlayerID].append(feature.FeatureValues[0])
         elif feature.Name == "SessionID" and feature.SessionID not in self._user_sessions[feature.PlayerID]:

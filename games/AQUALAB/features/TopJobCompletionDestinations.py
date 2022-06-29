@@ -7,8 +7,8 @@ from typing import Any, List, Optional
 from utils import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class TopJobCompletionDestinations(Feature):
 
@@ -45,7 +45,7 @@ class TopJobCompletionDestinations(Feature):
             # finally, once we process the event, we know we're looking at data for this event's user.
             self._current_user_code = user_code
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

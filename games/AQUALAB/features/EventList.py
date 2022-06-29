@@ -4,8 +4,9 @@ from typing import Any, List, Optional
 
 # import locals
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class EventList(Feature):
 
@@ -91,7 +92,7 @@ class EventList(Feature):
 
             self._event_list.append(next_event)
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

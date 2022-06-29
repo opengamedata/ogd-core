@@ -5,10 +5,10 @@ from collections import defaultdict
 from typing import Any, List, Optional
 # import locals
 from utils import Logger
-from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class TopJobSwitchDestinations(Feature):
 
@@ -45,7 +45,7 @@ class TopJobSwitchDestinations(Feature):
             # once we process the event, we know we're looking at data for this event's user next time.
             self._current_user_code = user_code
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

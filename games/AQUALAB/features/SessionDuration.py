@@ -1,15 +1,16 @@
 # import libraries
 from typing import Any, List
 # import locals
+from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
 
 class SessionDuration(SessionFeature):
 
     def __init__(self, params:ExtractorParameters, session_id:str):
         self._session_id = session_id
-        super().__init__(name=name, description=description)
+        super().__init__(params=params)
         self._client_start_time = None
         self._session_duration = 0
 
@@ -26,7 +27,7 @@ class SessionDuration(SessionFeature):
         else:
             self._session_duration = (event.Timestamp - self._client_start_time).total_seconds()
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
