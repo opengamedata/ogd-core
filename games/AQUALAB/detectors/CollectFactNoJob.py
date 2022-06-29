@@ -31,7 +31,7 @@ class CollectFactNoJob(Detector):
         :return: _description_
         :rtype: List[str]
         """
-        return ["receive_fact"] # >>> fill in names of events this Feature should use for extraction. <<<
+        return ["receive_fact"]
 
     def _extractFromEvent(self, event:Event) -> None:
         """_summary_
