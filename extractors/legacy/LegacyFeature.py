@@ -8,6 +8,7 @@ from datetime import timedelta
 from typing import Any, Dict, List, Optional, Union
 ## import local files
 from utils import Logger
+from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
@@ -31,7 +32,7 @@ class LegacyFeature(Feature):
     # *** BUILT-INS ***
 
     # Base constructor for LegacyFeature classes.
-    def __init__(self, name:str, description:str, count_index:int, game_schema:GameSchema, session_id:str):
+    def __init__(self, params:ExtractorParameters, game_schema:GameSchema, session_id:str):
         """Base constructor for LegacyFeature classes.
         The constructor sets an extractor's session id and range of levels,
         as well as initializing the features dictionary and list of played levels.
@@ -41,7 +42,7 @@ class LegacyFeature(Feature):
         :param game_schema: A dictionary that defines how the game data itself is structured
         :type game_schema: GameSchema
         """
-        super().__init__(name=name, description=description, count_index=count_index)
+        super().__init__(params=params)
         self._session_id  : str         = session_id
         self._game_schema : GameSchema  = game_schema
         self._levels      : List[int]   = []

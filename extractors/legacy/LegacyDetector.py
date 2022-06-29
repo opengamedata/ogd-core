@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Any, List, Optional
 # import local files
 from extractors.detectors.Detector import Detector
+from extractors.Extractor import ExtractorParameters
 from schemas.Event import EventSource
 from schemas.Event import Event
 
@@ -43,5 +44,5 @@ class LegacyDetector(Detector):
 
     # *** BUILT-INS ***
 
-    def __init__(self, name:str, description:str):
-        super().__init__(name=name, description=description, count_index=0, trigger_callback=lambda x : None)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params, trigger_callback=lambda x : None)
