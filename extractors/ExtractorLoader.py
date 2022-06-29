@@ -50,11 +50,11 @@ class ExtractorLoader(abc.ABC):
     # *** PUBLIC METHODS ***
 
     def LoadFeature(self, feature_type:str, name:str, schema_args:Dict[str,Any], count_index:Optional[int] = None) -> Feature:
-        params = ExtractorParameters(name=name, description=schema_args['description'], mode=self._mode, count_index=count_index)
+        params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
         return self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
     
     def LoadDetector(self, detector_type:str, name:str, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
-        params = ExtractorParameters(name=name, description=schema_args['description'], mode=self._mode, count_index=count_index)
+        params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
         return self._loadDetector(detector_type=detector_type, extractor_params=params, schema_args=schema_args, trigger_callback=trigger_callback)
 
     def LoadToFeatureRegistry(self, registry:FeatureRegistry) -> None:
