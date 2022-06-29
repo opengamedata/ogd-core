@@ -27,7 +27,7 @@ class SessionDuration(SessionFeature):
         else:
             self._session_duration = (event.Timestamp - self._client_start_time).total_seconds()
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

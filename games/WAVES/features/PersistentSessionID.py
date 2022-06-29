@@ -23,7 +23,7 @@ class PersistentSessionID(SessionFeature):
         if self._persistent_id is None:
             self._persistent_id = event.EventData['persistent_session_id']
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

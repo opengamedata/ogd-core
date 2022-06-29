@@ -24,7 +24,7 @@ class QuestionCorrect(Feature):
         if event.EventData['question'] == self.CountIndex:
             self._correct = (event.EventData['answered'] == event.EventData['answer'])
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

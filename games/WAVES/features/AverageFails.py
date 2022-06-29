@@ -24,7 +24,7 @@ class AverageFails(SessionFeature):
         self._levels_encountered.add(event.EventData['level']) # set-add level to list, at end we will have set of all levels seen.
         self._fail_count += 1
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

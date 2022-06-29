@@ -22,7 +22,7 @@ class EvidenceBoardCompleteCount(Feature):
     def _extractFromEvent(self, event:Event) -> None:
         self._count += 1
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -23,7 +23,7 @@ class FirstMoveType(Feature):
     def _extractFromEvent(self, event:Event) -> None:
         self._first_move = event.EventData['slider'][0]
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

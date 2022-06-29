@@ -39,7 +39,7 @@ class ClosenessIntercept(Feature):
     #         self._features.setValByIndex(feature_name='closenessR2', index=lvl, new_value=r_sq)
         pass
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

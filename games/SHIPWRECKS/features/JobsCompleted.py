@@ -23,7 +23,7 @@ class JobsCompleted(SessionFeature):
         if event.EventData["status"]["string_value"] == "Case Closed" and event.SessionID == self._session_id:
             self._jobs_completed.append(event.EventData["mission_id"]["string_value"])
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -26,7 +26,7 @@ class OverallPercentOffsetMoves(SessionFeature):
         if event.EventData["slider"].upper() == "OFFSET":
             self._offset_count += 1
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

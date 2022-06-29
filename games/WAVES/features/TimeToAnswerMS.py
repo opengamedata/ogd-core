@@ -39,7 +39,7 @@ class TimeToAnswerMS(Feature):
             if self.CountIndex == q_num:
                 self._answer_time = self._calcAnswerTime(timestamp=event.Timestamp)
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

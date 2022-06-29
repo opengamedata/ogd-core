@@ -23,7 +23,7 @@ class OverallSliderAverageStandardDeviations(SessionFeature):
     def _extractFromEvent(self, event:Event) -> None:
         self._std_devs.append(event.EventData["stdev_val"])
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

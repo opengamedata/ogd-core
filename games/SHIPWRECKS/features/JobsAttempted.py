@@ -67,7 +67,7 @@ class JobsAttempted(Feature):
                     self._times.append((event.Timestamp - self._mission_start_time).total_seconds())
                     self._mission_start_time = None
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

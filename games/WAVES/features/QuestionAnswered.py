@@ -24,7 +24,7 @@ class QuestionAnswered(Feature):
         if event.EventData['question'] == self.CountIndex:
             self._answer = event.EventData['answered']
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -44,7 +44,7 @@ class TopJobSwitchDestinations(Feature):
         # once we process the event, we know we're looking at data for this event's user next time.
         self._current_session_id = session_id
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

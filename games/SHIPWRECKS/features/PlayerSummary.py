@@ -21,7 +21,7 @@ class PlayerSummary(SessionFeature):
     def _extractFromEvent(self, event:Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         session_id = feature.SessionID
 
         if session_id not in self._summary:

@@ -54,7 +54,7 @@ class EventList(Feature):
 
         self._event_list.append(next_event)
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

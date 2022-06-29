@@ -53,7 +53,7 @@ class TopJobCompletionDestinations(Feature):
 
         self._current_session_id = session_id
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

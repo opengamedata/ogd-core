@@ -31,7 +31,7 @@ class SequenceLevel(PerLevelFeature):
             self._seq = self._seq + sliderTypeCode
         self._lastSliderType = currentSliderType
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

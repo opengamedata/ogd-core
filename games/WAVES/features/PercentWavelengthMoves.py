@@ -26,7 +26,7 @@ class PercentWavelengthMoves(Feature):
         if event.EventData['slider'].upper() == 'WAVELENGTH':
             self._wavelength_count += 1
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

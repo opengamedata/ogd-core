@@ -23,7 +23,7 @@ class OverallSliderAverageRange(SessionFeature):
     def _extractFromEvent(self, event:Event) -> None:
         self._ranges.append(event.EventData["max_val"] - event.EventData["min_val"])
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

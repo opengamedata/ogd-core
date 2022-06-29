@@ -27,7 +27,7 @@ class TotalMoveTypeChanges(PerLevelFeature):
             self._change_count += 1
         self._last_move = event.EventName
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

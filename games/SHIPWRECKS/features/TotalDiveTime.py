@@ -28,7 +28,7 @@ class TotalDiveTime(SessionFeature):
                 self._time += (event.Timestamp - self._dive_start_time).total_seconds()
                 self._dive_start_time = None
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

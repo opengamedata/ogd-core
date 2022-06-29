@@ -24,7 +24,7 @@ class PopulationSummary(SessionFeature):
     def _extractFromEvent(self, event: Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         if feature.Name == "JobsCompleted":
             self._session_completions[feature.SessionID] = feature.FeatureValues[0]
         elif feature.Name == "SessionDuration":

@@ -32,7 +32,7 @@ class AverageMoveTypeChanges(SessionFeature):
             self._change_count[_level] += 1
         self._last_move[_level] = event.EventName
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

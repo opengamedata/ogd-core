@@ -34,7 +34,7 @@ class ActiveJobs(Feature):
         self._current_session_id = session_id # in either case, set latest user as "current"
         self._last_started_id = mission_name # In either case, set latest job name as "current".
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

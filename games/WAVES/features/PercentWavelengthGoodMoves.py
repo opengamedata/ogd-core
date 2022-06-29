@@ -33,7 +33,7 @@ class PercentWavelengthGoodMoves(Feature):
                 if abs(end_dist) < abs(start_dist):
                     self._good_count += 1
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
