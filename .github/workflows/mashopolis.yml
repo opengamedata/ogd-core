@@ -28,8 +28,8 @@ jobs:
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "DEBUG"
         game: "MASHOPOLIS"
-    - name: Do Export of last month's data
-      uses: ./.github/actions/export_last_month
+    - name: Do Export of last week's data
+      uses: ./.github/actions/export_last_week
       with:
         game: MASHOPOLIS
     - name: Upload logs as artifacts
