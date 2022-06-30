@@ -15,7 +15,7 @@ class LakelandLoader(ExtractorLoader):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
-        return LakelandExtractor(game_schema=self._game_schema, session_id=self._session_id)
+        return LakelandExtractor(params=extractor_params, game_schema=self._game_schema, session_id=self._session_id)
 
     def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Lakeland.")

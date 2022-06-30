@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 ## import local files
 from utils import Logger
+from extractors.Extractor import ExtractorParameters
 from extractors.legacy.LegacyFeature import LegacyFeature
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
@@ -25,9 +26,8 @@ class MagnetExtractor(LegacyFeature):
     #                    table assiciated with this game is structured.
     #  @param game_schema A dictionary that defines how the game data itself is
     #                     structured.
-    def __init__(self, game_schema:GameSchema, session_id:str):
-        super().__init__(name="MagnetExtractor", description="Extractor for Magnet game data",
-                         count_index=0, game_schema=game_schema, session_id=session_id)
+    def __init__(self, params:ExtractorParameters, game_schema:GameSchema, session_id:str):
+        super().__init__(params=params, game_schema=game_schema, session_id=session_id)
         # Define custom private data.
         self._game_schema : GameSchema = game_schema
         self._features.setValByName(feature_name="sessionID", new_value=session_id)
