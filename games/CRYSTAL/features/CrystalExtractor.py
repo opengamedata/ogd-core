@@ -9,8 +9,8 @@ from utils import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.legacy.LegacyFeature import LegacyFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
-from schemas.TableSchema import TableSchema
 
 # temp comment
 
@@ -54,7 +54,7 @@ class CrystalExtractor(LegacyFeature):
         level = event.EventData['level']
         event_client_time = event.Timestamp
         # Check for invalid row.
-        if event.SessionID != self._session_id:
+        if self.ExportMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
             Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.SessionID}!", logging.ERROR)
         # If row is valid, process it.
         else:

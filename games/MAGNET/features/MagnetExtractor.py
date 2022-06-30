@@ -8,8 +8,8 @@ from utils import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.legacy.LegacyFeature import LegacyFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
-from schemas.TableSchema import TableSchema
 
 ## @class MagnetExtractor
 #  Extractor subclass for extracting features from Magnet game data.
@@ -44,7 +44,7 @@ class MagnetExtractor(LegacyFeature):
         if level > self._game_schema._max_level:
             Logger.Log(f"Got an event with level too high, full data:\n{str(event)}")
         # Check for invalid row.
-        if event.SessionID != self._session_id:
+        if self.ExportMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
             Logger.Log(f"Got an event with incorrect session id! Expected {self._session_id}, got {event.SessionID}!",
                                 logging.ERROR)
         # If row is valid, process it.

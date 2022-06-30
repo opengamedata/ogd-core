@@ -24,6 +24,7 @@ import utils
 from extractors.Extractor import ExtractorParameters
 from extractors.legacy.LegacyFeature import LegacyFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 from utils import Logger
 
@@ -152,7 +153,7 @@ class LakelandExtractor(LegacyFeature):
             self._VERSION = event.AppVersion
             self.setValByName("version", self._VERSION)
         # Check for invalid row.
-        if event.SessionID != self._session_id:
+        if self.ExportMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
             Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.SessionID}!", logging.ERROR)
         # If row is valid, process it.
         else:

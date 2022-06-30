@@ -13,6 +13,7 @@ from extractors.Extractor import ExtractorParameters
 from extractors.legacy.LegacyFeature import LegacyFeature
 from games.JOWILDER import Jowilder_Enumerators as je
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 
 # temp comment
@@ -166,7 +167,7 @@ class JowilderExtractor(LegacyFeature):
             self.new_level(old_level)
         event_type_str = JowilderExtractor._EVENT_CUSTOM_TO_STR[int(event.EventName.split('.')[-1])].lower()
         # Check for invalid row.
-        if event.SessionID != self._session_id:
+        if self.ExportMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
             Logger.Log(
                 f"Got a row with incorrect session id! Expected {self._session_id}, got {event.SessionID}!",
                 logging.ERROR)
