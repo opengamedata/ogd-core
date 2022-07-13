@@ -1,12 +1,15 @@
 from typing import Any, List, Optional
 
+from schemas.ExtractionMode import ExtractionMode
+
 class FeatureData:
    def __init__(self, name:str, count_index:Optional[int], cols:List[str], vals:List[Any],
-                player_id:Optional[str]=None, sess_id:Optional[str]=None):
+                mode:ExtractionMode, player_id:Optional[str]=None, sess_id:Optional[str]=None):
       self._name = name
       self._count_index = count_index
       self._cols = cols
       self._vals = vals
+      self._mode = mode
       self._player_id = player_id
       self._sess_id = sess_id
 
@@ -25,6 +28,10 @@ class FeatureData:
    @property
    def FeatureValues(self) -> List[Any]:
       return self._vals
+
+   @property
+   def ExportMode(self):
+      return self._mode
 
    @property
    def PlayerID(self) -> Optional[str]:
