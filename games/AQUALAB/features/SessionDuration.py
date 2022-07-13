@@ -12,7 +12,8 @@ class SessionDuration(SessionFeature):
         self._session_id = session_id
         super().__init__(params=params)
         self._client_start_time = None
-        self._session_duration = 0
+        self._client_end_time = None
+        # self._session_duration = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
@@ -24,13 +25,16 @@ class SessionDuration(SessionFeature):
     def _extractFromEvent(self, event:Event) -> None:
         if not self._client_start_time:
             self._client_start_time = event.Timestamp
-        else:
-            self._session_duration = (event.Timestamp - self._client_start_time).total_seconds()
+        self._client_end_time = event.Timestamp
+        # self._session_duration = (event.Timestamp - self._client_start_time).total_seconds()
 
     def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._session_duration]
+        if self._client_start_time and self._client_end_time:
+            return [self._client_end_time - self._client_start_time]
+        else:
+            return ["No events"]
 
     # *** Optionally override public functions. ***
