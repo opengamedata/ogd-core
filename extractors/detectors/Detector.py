@@ -56,6 +56,15 @@ class Detector(Extractor):
                 # TODO: add some logic to fill in empty values of Event with reasonable defaults, where applicable.
                 self._callback(_event)
 
+    def AvailableModes(self) -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Detector.
+
+        Overridden from Extractor's version of the function, only makes Detector mode supported.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.DETECTOR]
+
     # *** PROPERTIES ***
 
     # *** PRIVATE STATICS ***

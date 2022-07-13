@@ -53,6 +53,7 @@ class Feature(Extractor):
             count_index=self.CountIndex,
             cols=self.GetFeatureNames(),
             vals=self.GetFeatureValues(),
+            mode=self.ExportMode,
             player_id=player_id,
             sess_id=sess_id
         )
@@ -89,6 +90,15 @@ class Feature(Extractor):
 
     def GetFeatureValues(self) -> List[Any]:
         return self._getFeatureValues()
+
+    def AvailableModes(self) -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Feature.
+
+        Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.POPULATION, ExtractionMode.USER, ExtractionMode.SESSION]
 
     # *** PROPERTIES ***
 

@@ -106,6 +106,15 @@ class Extractor(abc.ABC):
         """
         return None
 
+    def AvailableModes(self) -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Extractor
+
+        Base function to give a list of which ExtractionModes an extractor will handle.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.POPULATION, ExtractionMode.USER, ExtractionMode.SESSION, ExtractionMode.DETECTOR]
+
     # *** PROPERTIES ***
 
     @property
