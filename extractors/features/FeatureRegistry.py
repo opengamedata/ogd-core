@@ -11,6 +11,7 @@ from extractors.ExtractorRegistry import ExtractorRegistry
 from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.IterationMode import IterationMode
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
@@ -81,9 +82,9 @@ class FeatureRegistry(ExtractorRegistry):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _register(self, extractor:Extractor, kind:ExtractorRegistry.Listener.Kinds):
+    def _register(self, extractor:Extractor, mode:IterationMode):
         if isinstance(extractor, Feature):
-            _listener = ExtractorRegistry.Listener(name=extractor.Name, kind=kind)
+            _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=mode)
             _feature_deps = extractor.GetFeatureDependencies()
             _event_deps   = extractor.GetEventDependencies()
             # First, add feature to the _features dict.

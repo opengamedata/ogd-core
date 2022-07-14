@@ -67,9 +67,9 @@ class DetectorRegistry(ExtractorRegistry):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _register(self, extractor:Extractor, kind:IterationMode):
+    def _register(self, extractor:Extractor, mode:IterationMode):
         if isinstance(extractor, Detector):
-            _listener = ExtractorRegistry.Listener(name=extractor.Name, kind=kind)
+            _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=mode)
             _event_types   = extractor.GetEventDependencies()
             # First, add detector to the _features dict.
             self._detectors[extractor.Name] = extractor
