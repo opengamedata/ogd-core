@@ -1,9 +1,11 @@
 # import standard libraries
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 # import local files
 import utils
+from schemas.IterationMode import IterationMode
+from schemas.ExtractionMode import ExtractionMode
 from utils import Logger
 
 ## @class GameSchema
@@ -28,13 +30,13 @@ class GameSchema:
         :type schema_path: str, optional
         """
         # define instance vars
-        self._schema:       Optional[Dict] = {}
-        self._game_name:    str  = schema_name.split('.')[0]
+        self._schema:        Optional[Dict] = {}
+        self._game_name:     str  = schema_name.split('.')[0]
         self._detector_list: Optional[List[str]] = None
-        self._feature_list: Optional[List[str]] = None
-        self._min_level:    Optional[int] = None
-        self._max_level:    Optional[int] = None
-        self._job_map:      Dict = {}
+        self._feature_list:  Optional[List[str]] = None
+        self._min_level:     Optional[int] = None
+        self._max_level:     Optional[int] = None
+        self._job_map:       Dict = {}
         # set instance vars
         if not schema_name.lower().endswith(".json"):
             schema_name += ".json"
@@ -81,7 +83,7 @@ class GameSchema:
         # Set up list of events
         event_list = ['\n'.join([f"**{evt_name}**:  "]
                               + [f"- **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in evt_items.items()])
-                     for evt_name,evt_items in self.events().items()]
+                     for evt_name,evt_items in self.Events.items()]
         ret_val += "\n\n".join(event_list)
         # Set up list of features
         ret_val += "\n\n## Processed Features  \n\n"
@@ -94,6 +96,39 @@ class GameSchema:
         ret_val += "\n".join(feature_list)
         return ret_val
 
+    def DetectorEnabled(self, detector_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+        _val : Union[bool, List[str]] = False
+        # get the value from the schema
+        if iter_mode == IterationMode.AGGREGATE:
+            _val = self.AggregateDetectors.get(detector_name, False)
+        if iter_mode == IterationMode.PERCOUNT:
+            _val = self.PerCountDetectors.get(detector_name, False)
+        # figure out if the feature was enabled or not
+        if type(_val) == bool:
+            return bool(_val)
+        elif isinstance(_val, list):
+            _val = [str(item).upper() for item in _val]
+            if extract_mode is not None:
+                return extract_mode.name in _val
+        else:
+            raise ValueError(f"Invalid data type for detector {detector_name} in {self.GameName}")
+
+    def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+        _val : Union[bool, List[str]] = False
+        # get the value from the schema
+        if iter_mode == IterationMode.AGGREGATE:
+            _val = self.AggregateFeatures.get(feature_name, False)
+        if iter_mode == IterationMode.PERCOUNT:
+            _val = self.PerCountFeatures.get(feature_name, False)
+        # figure out if the feature was enabled or not
+        if type(_val) == bool:
+            return bool(_val)
+        elif isinstance(_val, list):
+            _val = [str(item).upper() for item in _val]
+            return extract_mode.name in _val
+        else:
+            raise ValueError(f"Invalid data type for feature {feature_name} in {self.GameName}")
+
     def level_range(self) -> range:
         ret_val = range(0)
         if self._min_level is not None and self._max_level is not None:
@@ -103,52 +138,60 @@ class GameSchema:
             Logger.Log(f"Could not generate per-level features, min_level={self._min_level} and max_level={self._max_level}", logging.ERROR)
         return ret_val
 
+    # *** PROPERTIES ***
+
+    @property
+    def GameName(self) -> str:
+        return self._game_name
+
     ## Function to retrieve the dictionary of event types for the game.
-    def events(self) -> Dict[str,Any]:
+    @property
+    def Events(self) -> Dict[str,Any]:
         return self["events"]
 
     ## Function to retrieve the names of all event types for the game.
-    def event_types(self) -> List[str]:
+    @property
+    def EventTypes(self) -> List[str]:
         return list(self["events"].keys())
 
     ## Function to retrieve the dictionary of categorized detectors to extract.
-    def detectors(self) -> Dict[str, Dict[str,Any]]:
+    @property
+    def Detectors(self) -> Dict[str, Dict[str,Any]]:
         return self["detectors"]
 
     ## Function to retrieve the compiled list of all detector names.
-    def detector_names(self) -> Optional[List[str]]:
+    @property
+    def DetectorNames(self) -> Optional[List[str]]:
         return self._detector_list
 
-    ## Function to retrieve the dictionary of per-level detectors.
-    def perlevel_detectors(self) -> Dict[str,Any]:
-        return self["detectors"]["perlevel"] if "perlevel" in self["detectors"].keys() else {}
-
     ## Function to retrieve the dictionary of per-custom-count detectors.
-    def percount_detectors(self) -> Dict[str,Any]:
+    @property
+    def PerCountDetectors(self) -> Dict[str,Any]:
         return self["detectors"]["per_count"] if "per_count" in self["detectors"].keys() else {}
 
     ## Function to retrieve the dictionary of aggregate detectors.
-    def aggregate_detectors(self) -> Dict[str,Any]:
+    @property
+    def AggregateDetectors(self) -> Dict[str,Any]:
         return self["detectors"]["aggregate"] if "aggregate" in self["detectors"].keys() else {}
 
     ## Function to retrieve the dictionary of categorized features to extract.
-    def features(self) -> Dict[str, Dict[str,Any]]:
+    @property
+    def Features(self) -> Dict[str, Dict[str,Any]]:
         return self["features"]
 
     ## Function to retrieve the compiled list of all feature names.
-    def feature_names(self) -> Optional[List[str]]:
+    @property
+    def FeatureNames(self) -> Optional[List[str]]:
         return self._feature_list
 
-    ## Function to retrieve the dictionary of per-level features.
-    def perlevel_features(self) -> Dict[str,Any]:
-        return self["features"]["perlevel"] if "perlevel" in self["features"].keys() else {}
-
     ## Function to retrieve the dictionary of per-custom-count features.
-    def percount_features(self) -> Dict[str,Any]:
+    @property
+    def PerCountFeatures(self) -> Dict[str,Any]:
         return self["features"]["per_count"] if "per_count" in self["features"].keys() else {}
 
     ## Function to retrieve the dictionary of aggregate features.
-    def aggregate_features(self) -> Dict[str,Any]:
+    @property
+    def AggregateFeatures(self) -> Dict[str,Any]:
         return self["features"]["aggregate"] if "aggregate" in self["features"].keys() else {}
 
     # *** PRIVATE METHODS ***

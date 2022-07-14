@@ -117,7 +117,7 @@ class LegacyFeature(Feature):
     #  to understand the structure of feature data.
     class LegacySessionFeatures:
         def __init__(self, game_schema: GameSchema):
-            self.perlevels: List[str] = list(game_schema.perlevel_features().keys())
+            self.perlevels: List[str] = list(game_schema.PerLevelFeatures.keys())
             self.features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(game_schema)
 
         @staticmethod
@@ -133,15 +133,15 @@ class LegacyFeature(Feature):
             """
             # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
             # which in turn maps each level to a value and prefix.
-            perlevels = game_schema.perlevel_features()
+            perlevels = game_schema.PerLevelFeatures
             level_range = range(game_schema._min_level   if game_schema._min_level is not None else 0,
                                 game_schema._max_level+1 if game_schema._max_level is not None else 1)
             features : Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]] = {f:{lvl:{"val":None, "prefix":"lvl"} for lvl in level_range } for f in perlevels.keys()}
             # next, do something similar for other per-custom-count features.
-            percounts = game_schema.percount_features()
+            percounts = game_schema.PerCountFeatures
             features.update({f:{num:{"val":None, "prefix":percounts[f]["prefix"]} for num in range(0, percounts[f]["count"]) } for f in percounts})
             # finally, add in aggregate-only features.
-            features.update({f:0 for f in game_schema.aggregate_features().keys()})
+            features.update({f:0 for f in game_schema.AggregateFeatures.keys()})
             return features
 
         ## Getter function to retrieve a list of all features in the LegacySessionFeatures dictionary.

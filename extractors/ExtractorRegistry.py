@@ -77,10 +77,10 @@ class ExtractorRegistry(abc.ABC):
 
     def GetExtractorNames(self) -> List[str]:
         """Function to generate a list names of all enabled features, given a GameSchema
-        This is different from the feature_names() function of GameSchema,
+        This is different from the FeatureNames property of GameSchema,
         which ignores the 'enabled' attribute and does not expand per-count features
         (e.g. this function would include 'lvl0_someFeat', 'lvl1_someFeat', 'lvl2_someFeat', etc.
-        while feature_names() only would include 'someFeat').
+        while FeatureNames only would include 'someFeat').
 
         :param schema: The schema from which feature names should be generated.
         :type schema: GameSchema
