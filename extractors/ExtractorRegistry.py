@@ -7,8 +7,9 @@ from typing import Dict, List
 ## import local files
 from utils import Logger
 from extractors.Extractor import Extractor
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
+from schemas.IterationMode import IterationMode
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
@@ -21,17 +22,12 @@ class ExtractorRegistry(abc.ABC):
     :rtype: [type]
     """
     class Listener:
-        @enum.unique
-        class Kinds(enum.Enum):
-            AGGREGATE = enum.auto()
-            PERCOUNT  = enum.auto()
-
-        def __init__(self, name:str, kind:Kinds):
+        def __init__(self, name:str, kind:IterationMode):
             self.name = name
             self.kind = kind
         
         def __str__(self) -> str:
-            return f"{self.name} ({'aggregate' if self.kind == ExtractorRegistry.Listener.Kinds.AGGREGATE else 'per-count'})"
+            return f"{self.name} ({self.kind.name})"
 
         def __repr__(self) -> str:
             return str(self)
@@ -39,7 +35,7 @@ class ExtractorRegistry(abc.ABC):
     # *** ABSTRACTS ***
 
     @abc.abstractmethod
-    def _register(self, extractor:Extractor, kind:Listener.Kinds):
+    def _register(self, extractor:Extractor, kind:IterationMode):
         pass
 
     @abc.abstractmethod
@@ -72,7 +68,7 @@ class ExtractorRegistry(abc.ABC):
 
     # *** PUBLIC METHODS ***
 
-    def Register(self, extractor:Extractor, kind:Listener.Kinds):
+    def Register(self, extractor:Extractor, kind:IterationMode):
         self._register(extractor=extractor, kind=kind)
 
     def GetExtractorNames(self) -> List[str]:

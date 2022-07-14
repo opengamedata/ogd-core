@@ -1,4 +1,5 @@
 # import standard libraries
+from faulthandler import is_enabled
 import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
@@ -96,7 +97,7 @@ class GameSchema:
         ret_val += "\n".join(feature_list)
         return ret_val
 
-    def DetectorEnabled(self, detector_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+    def DetectorEnabled(self, detector_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode, overrides:Optional[List[str]]) -> bool:
         _val : Union[bool, List[str]] = False
         # get the value from the schema
         if iter_mode == IterationMode.AGGREGATE:
@@ -104,16 +105,24 @@ class GameSchema:
         if iter_mode == IterationMode.PERCOUNT:
             _val = self.PerCountDetectors.get(detector_name, False)
         # figure out if the feature was enabled or not
+        _is_enabled : bool = False
         if type(_val) == bool:
-            return bool(_val)
+            _is_enabled = bool(_val)
         elif isinstance(_val, list):
             _val = [str(item).upper() for item in _val]
             if extract_mode is not None:
-                return extract_mode.name in _val
+                is_enabled = extract_mode.name in _val
         else:
             raise ValueError(f"Invalid data type for detector {detector_name} in {self.GameName}")
+        if overrides is not None:
+            if detector_name in overrides:
+                return _is_enabled
+            else:
+                return False
+        else:
+            return _is_enabled
 
-    def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+    def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode, overrides:Optional[List[str]]) -> bool:
         _val : Union[bool, List[str]] = False
         # get the value from the schema
         if iter_mode == IterationMode.AGGREGATE:
@@ -121,13 +130,21 @@ class GameSchema:
         if iter_mode == IterationMode.PERCOUNT:
             _val = self.PerCountFeatures.get(feature_name, False)
         # figure out if the feature was enabled or not
+        _is_enabled : bool = False
         if type(_val) == bool:
-            return bool(_val)
+            _is_enabled = bool(_val)
         elif isinstance(_val, list):
             _val = [str(item).upper() for item in _val]
-            return extract_mode.name in _val
+            _is_enabled = extract_mode.name in _val
         else:
             raise ValueError(f"Invalid data type for feature {feature_name} in {self.GameName}")
+        if overrides is not None:
+            if feature_name in overrides:
+                return _is_enabled
+            else:
+                return False
+        else:
+            return _is_enabled
 
     def level_range(self) -> range:
         ret_val = range(0)

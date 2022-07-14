@@ -2,10 +2,13 @@
 import abc
 import logging
 from typing import Any, Callable, Dict, List, Optional
+
+from numpy import extract
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 # import locals
 from extractors.detectors.DetectorRegistry import DetectorRegistry
+from extractors.Extractor import Extractor
 from extractors.ExtractorRegistry import ExtractorRegistry
 from extractors.features.Feature import Feature
 from extractors.features.FeatureRegistry import FeatureRegistry
@@ -50,54 +53,64 @@ class ExtractorLoader(abc.ABC):
 
     # *** PUBLIC METHODS ***
     
-    def LoadDetector(self, detector_type:str, name:str, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
-        params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
-        return self._loadDetector(detector_type=detector_type, extractor_params=params, schema_args=schema_args, trigger_callback=trigger_callback)
+    def LoadDetector(self, detector_type:str, name:str, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Optional[Detector]:
+        ret_val = None
 
-    def LoadFeature(self, feature_type:str, name:str, schema_args:Dict[str,Any], count_index:Optional[int] = None) -> Feature:
         params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
-        return self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
+        try:
+            ret_val = self._loadDetector(detector_type=detector_type, extractor_params=params, schema_args=schema_args, trigger_callback=trigger_callback)
+        except NotImplementedError as err:
+            Logger.Log(f"In ExtractorLoader, '{name}' is not a valid detector for {self._game_schema.GameName}", logging.ERROR)
 
-    def LoadToDetectorRegistry(self, schema:GameSchema, registry:DetectorRegistry, trigger_callback:Callable[[Event], None]) -> None:
+        return ret_val
+
+    def LoadFeature(self, feature_type:str, name:str, schema_args:Dict[str,Any], count_index:Optional[int] = None) -> Optional[Feature]:
+        ret_val = None
+
+        params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
+        try:
+            ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
+        except NotImplementedError as err:
+            Logger.Log(f"In ExtractorLoader, '{name}' is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
+
+        return ret_val
+
+    def RegisterExtractor(self, registry:ExtractorRegistry, extractor:Extractor, iter_mode:IterationMode):
+        if self._mode in extract.AvailableModes():
+            registry.Register(extractor=extractor, mode=iter_mode)
+
+    def LoadToDetectorRegistry(self, registry:DetectorRegistry, trigger_callback:Callable[[Event], None]) -> None:
         # first, load aggregate features
-        for name,aggregate in schema.AggregateDetectors.items():
-            if self._validateDetector(name=name, iter_mode=IterationMode.AGGREGATE, overrides=self._overrides):
-                try:
-                    detector = self.LoadDetector(detector_type=name, name=name, schema_args=aggregate, trigger_callback=trigger_callback)
-                except NotImplementedError as err:
-                    Logger.Log(f"In ExtractorLoader, '{name}' is not a valid detector for {schema._game_name}", logging.ERROR)
-                else:
-                    registry.Register(detector, ExtractorRegistry.Listener.Kinds.AGGREGATE)
-        for name,percount in schema.PerCountDetectors.items():
-            if self._validateDetector(name=name, iter_mode=IterationMode.PERCOUNT, overrides=self._overrides):
-                for i in ExtractorLoader._genCountRange(count=percount["count"], schema=schema):
-                    try:
-                        detector = self.LoadDetector(detector_type=name, name=f"{percount['prefix']}{i}_{name}", schema_args=percount, trigger_callback=trigger_callback, count_index=i)
-                    except NotImplementedError as err:
-                        Logger.Log(f"In ExtractorLoader, '{name}' is not a valid detector for {schema._game_name}", logging.ERROR)
-                    else:
-                        registry.Register(extractor=detector, kind=ExtractorRegistry.Listener.Kinds.PERCOUNT)
+        iter_mode = IterationMode.AGGREGATE
+        for base_name,aggregate in self._game_schema.AggregateDetectors.items():
+            if self._game_schema.DetectorEnabled(detector_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
+                detector = self.LoadDetector(detector_type=base_name, name=base_name, schema_args=aggregate, trigger_callback=trigger_callback)
+                if detector is not None:
+                    self.RegisterExtractor(registry=registry, extractor=detector, iter_mode=iter_mode)
+        iter_mode = IterationMode.PERCOUNT
+        for base_name,percount in self._game_schema.PerCountDetectors.items():
+            if self._game_schema.DetectorEnabled(detector_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
+                for i in ExtractorLoader._genCountRange(count=percount["count"], schema=self._game_schema):
+                    instance_name = f"{percount['prefix']}{i}_{base_name}"
+                    detector = self.LoadDetector(detector_type=base_name, name=instance_name, schema_args=percount, trigger_callback=trigger_callback, count_index=i)
+                    if detector is not None:
+                        self.RegisterExtractor(registry=registry, extractor=detector, iter_mode=iter_mode)
 
     def LoadToFeatureRegistry(self, schema:GameSchema, registry:FeatureRegistry) -> None:
-        # first, load aggregate features
-        for name,aggregate in schema.AggregateFeatures.items():
-            if self._validateFeature(name=name, iter_mode=IterationMode.AGGREGATE, overrides=self._overrides):
-                try:
-                    feature = self.LoadFeature(feature_type=name, name=name, schema_args=aggregate)
-                except NotImplementedError as err:
-                    Logger.Log(f"In ExtractorLoader, '{name}' is not a valid feature for {schema._game_name}", logging.ERROR)
-                else:
-                    registry.Register(feature, ExtractorRegistry.Listener.Kinds.AGGREGATE)
-        for name,percount in schema.PerCountFeatures.items():
-            if self._validateFeature(name=name, iter_mode=IterationMode.PERCOUNT, overrides=self._overrides):
+        iter_mode = IterationMode.AGGREGATE
+        for base_name,aggregate in schema.AggregateFeatures.items():
+            if self._game_schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
+                feature = self.LoadFeature(feature_type=base_name, name=base_name, schema_args=aggregate)
+                if feature is not None:
+                    self.RegisterExtractor(registry=registry, extractor=feature, iter_mode=iter_mode)
+        iter_mode = IterationMode.PERCOUNT
+        for base_name,percount in schema.PerCountFeatures.items():
+            if self._game_schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
                 for i in ExtractorLoader._genCountRange(count=percount["count"], schema=schema):
-                    try:
-                        feat_name = f"{percount['prefix']}{i}_{name}"
-                        feature = self.LoadFeature(feature_type=name, name=feat_name, schema_args=percount, count_index=i)
-                    except NotImplementedError as err:
-                        Logger.Log(f"In ExtractorLoader, '{name}' is not a valid feature for {schema._game_name}", logging.ERROR)
-                    else:
-                        registry.Register(extractor=feature, kind=ExtractorRegistry.Listener.Kinds.PERCOUNT)
+                    instance_name = f"{percount['prefix']}{i}_{base_name}"
+                    feature = self.LoadFeature(feature_type=base_name, name=instance_name, schema_args=percount)
+                    if feature is not None:
+                        self.RegisterExtractor(registry=registry, extractor=feature, iter_mode=iter_mode)
 
     # *** PROPERTIES ***
 
@@ -112,23 +125,3 @@ class ExtractorLoader(abc.ABC):
         return count_range
 
     # *** PRIVATE METHODS ***
-
-    def _validateDetector(self, name:str, iter_mode:IterationMode, overrides:Optional[List[str]]):
-        _is_enabled = self._game_schema.DetectorEnabled(detector_name=name, iter_mode=iter_mode, extract_mode=self._mode)
-        if overrides is not None:
-            if name in overrides:
-                return _is_enabled
-            else:
-                return False
-        else:
-            return _is_enabled
-
-    def _validateFeature(self, name:str, iter_mode:IterationMode, overrides:Optional[List[str]]):
-        _is_enabled = self._game_schema.FeatureEnabled(feature_name=name, iter_mode=iter_mode, extract_mode=self._mode)
-        if overrides is not None:
-            if name in overrides:
-                return _is_enabled
-            else:
-                return False
-        else:
-            return _is_enabled
