@@ -101,9 +101,9 @@ class GameSchema:
         _val : Union[bool, List[str]] = False
         # get the value from the schema
         if iter_mode == IterationMode.AGGREGATE:
-            _val = self.AggregateDetectors.get(detector_name, False)
+            _val = self.AggregateDetectors.get(detector_name, {}).get('enabled', False)
         if iter_mode == IterationMode.PERCOUNT:
-            _val = self.PerCountDetectors.get(detector_name, False)
+            _val = self.PerCountDetectors.get(detector_name, {}).get('enabled', False)
         # figure out if the feature was enabled or not
         _is_enabled : bool = False
         if type(_val) == bool:
@@ -113,7 +113,7 @@ class GameSchema:
             if extract_mode is not None:
                 is_enabled = extract_mode.name in _val
         else:
-            raise ValueError(f"Invalid data type for detector {detector_name} in {self.GameName}")
+            raise ValueError(f"Invalid data type for 'enabled' for detector {detector_name} in {self.GameName}, expected bool or list but got  of {type(_val)}!")
         if overrides is not None:
             if detector_name in overrides:
                 return _is_enabled
@@ -126,9 +126,9 @@ class GameSchema:
         _val : Union[bool, List[str]] = False
         # get the value from the schema
         if iter_mode == IterationMode.AGGREGATE:
-            _val = self.AggregateFeatures.get(feature_name, False)
+            _val = self.AggregateFeatures.get(feature_name, {}).get('enabled', False)
         if iter_mode == IterationMode.PERCOUNT:
-            _val = self.PerCountFeatures.get(feature_name, False)
+            _val = self.PerCountFeatures.get(feature_name, {}).get('enabled', False)
         # figure out if the feature was enabled or not
         _is_enabled : bool = False
         if type(_val) == bool:
