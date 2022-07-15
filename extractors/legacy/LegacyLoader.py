@@ -20,11 +20,13 @@ class LegacyLoader(ExtractorLoader):
     def LoadToFeatureRegistry(self, registry:FeatureRegistry) -> None:
         feat = self.LoadFeature(feature_type="", name="", schema_args={}, count_index=0)
         # treat the monolithic LegacyFeature extractor as a single aggregate.
-        registry.Register(feat, IterationMode.AGGREGATE)
+        if feat is not None:
+            registry.Register(feat, IterationMode.AGGREGATE)
 
     def LoadToDetectorRegistry(self, registry:DetectorRegistry, trigger_callback:Callable[[Event], None]) -> None:
         try:
             feat = self.LoadDetector(detector_type="", name="", schema_args={}, trigger_callback=trigger_callback, count_index=0)
-            registry.Register(feat, IterationMode.AGGREGATE)
+            if feat is not None:
+                registry.Register(feat, IterationMode.AGGREGATE)
         except NotImplementedError as err:
             Logger.Log("No detectors to be loaded.", logging.INFO, depth=2)
