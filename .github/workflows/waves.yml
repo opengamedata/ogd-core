@@ -8,7 +8,7 @@ on:
     - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
-  test_export:
+  Waves_CI:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
