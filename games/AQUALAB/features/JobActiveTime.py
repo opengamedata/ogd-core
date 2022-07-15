@@ -123,8 +123,11 @@ class JobActiveTime(PerJobFeature):
             Logger.Log(f"JobActiveTime could not update total time for session {self._session_id}, missing start time!", logging.WARNING)
 
     def _handle_population(self, feature:FeatureData):
-        _val = feature.FeatureValues[0]
-        if type(_val) == timedelta:
-            self._total_seconds += _val
+        if feature.ExportMode == ExtractionMode.USER:
+            _val = feature.FeatureValues[0]
+            if type(_val) == timedelta:
+                self._total_seconds += _val
+            else:
+                Logger.Log(f"JobActiveTime for population got invalid value {_val} of type {type(_val)} for column {feature.FeatureNames[0]}", logging.WARN)
         else:
-            Logger.Log(f"JobActiveTime for population got invalid value {_val} of type {type(_val)} for column {feature.FeatureNames[0]}")
+            Logger.Log(f"JobActiveTime for population got feature data for mode {feature.ExportMode.name}", logging.DEBUG)
