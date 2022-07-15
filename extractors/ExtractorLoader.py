@@ -95,17 +95,17 @@ class ExtractorLoader(abc.ABC):
                     if detector is not None:
                         self.RegisterExtractor(registry=registry, extractor=detector, iter_mode=iter_mode)
 
-    def LoadToFeatureRegistry(self, schema:GameSchema, registry:FeatureRegistry) -> None:
+    def LoadToFeatureRegistry(self, registry:FeatureRegistry) -> None:
         iter_mode = IterationMode.AGGREGATE
-        for base_name,aggregate in schema.AggregateFeatures.items():
+        for base_name,aggregate in self._game_schema.AggregateFeatures.items():
             if self._game_schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
                 feature = self.LoadFeature(feature_type=base_name, name=base_name, schema_args=aggregate)
                 if feature is not None:
                     self.RegisterExtractor(registry=registry, extractor=feature, iter_mode=iter_mode)
         iter_mode = IterationMode.PERCOUNT
-        for base_name,percount in schema.PerCountFeatures.items():
+        for base_name,percount in self._game_schema.PerCountFeatures.items():
             if self._game_schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
-                for i in ExtractorLoader._genCountRange(count=percount["count"], schema=schema):
+                for i in ExtractorLoader._genCountRange(count=percount["count"], schema=self._game_schema):
                     instance_name = f"{percount['prefix']}{i}_{base_name}"
                     feature = self.LoadFeature(feature_type=base_name, name=instance_name, schema_args=percount)
                     if feature is not None:
