@@ -6,7 +6,7 @@ on:
     - '.github/workflows/aqualab.yml'
   workflow_dispatch:
 jobs:
-  test_connect:
+  Aqualab_CI:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
