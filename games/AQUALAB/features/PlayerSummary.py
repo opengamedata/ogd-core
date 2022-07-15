@@ -1,3 +1,5 @@
+from datetime import timedelta
+from multiprocessing.sharedctypes import Value
 from typing import Any, List
 
 from extractors.Extractor import ExtractorParameters
@@ -34,7 +36,12 @@ class PlayerSummary(SessionFeature):
         if feature.Name == "JobsCompleted":
             self._summary[user_id]["jobs_completed"] = feature.FeatureValues[0]
         elif feature.Name == "SessionDuration":
-            self._summary[user_id]["active_time"] += feature.FeatureValues[0]
+            if type(feature.FeatureValues[0]) == timedelta:
+                self._summary[user_id]["active_time"] += feature.FeatureValues[0].seconds
+            elif type(feature.FeatureValues[0]) == str and feature.FeatureValues[0] == "No events":
+                pass
+            else:
+                raise ValueError(f"PlayerSummary got {feature.Name} feature with value {feature.FeatureValues[0]} of non-timedelta type {type(feature.FeatureValues[0])} in the {feature.FeatureNames[0]} column!")
         elif feature.Name == "SessionID":
             self._summary[user_id]["num_sessions"] += 1
 
