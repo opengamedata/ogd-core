@@ -3,7 +3,6 @@ import abc
 import logging
 from typing import Any, Callable, Dict, List, Optional
 
-from numpy import extract
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 # import locals
@@ -76,7 +75,7 @@ class ExtractorLoader(abc.ABC):
         return ret_val
 
     def RegisterExtractor(self, registry:ExtractorRegistry, extractor:Extractor, iter_mode:IterationMode):
-        if self._mode in extract.AvailableModes():
+        if self._mode in extractor.AvailableModes():
             registry.Register(extractor=extractor, mode=iter_mode)
 
     def LoadToDetectorRegistry(self, registry:DetectorRegistry, trigger_callback:Callable[[Event], None]) -> None:
