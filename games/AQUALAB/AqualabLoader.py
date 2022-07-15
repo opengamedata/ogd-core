@@ -67,56 +67,35 @@ class AqualabLoader(ExtractorLoader):
         elif feature_type == "UserTotalSessionDuration":
             ret_val = UserTotalSessionDuration.UserTotalSessionDuration(params=extractor_params, player_id=self._player_id)
         # then run through per-count features.
-        elif feature_type == "JobActiveTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobArgumentationTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobArgumentationTime.JobArgumentationTime(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobCompletionTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobCompletionTime.JobCompletionTime(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobDiveSitesCount":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobDiveSitesCount.JobDiveSitesCount(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobDiveTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobDiveTime.JobDiveTime(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobExperimentationTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobExperimentationTime.JobExperimentationTime(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobGuideCount":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobGuideCount.JobGuideCount(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobHelpCount":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobHelpCount.JobHelpCount(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobModelingTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobModelingTime.JobModelingTime(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobTasksCompleted":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobsAttempted":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobsAttempted.JobsAttempted(params=extractor_params, job_map=self._job_map, diff_map=self._diff_map)
-        elif feature_type == "SyncCompletionTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
+        elif extractor_params._count_index is not None:
+            if feature_type == "JobActiveTime":
+                ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobArgumentationTime":
+                ret_val = JobArgumentationTime.JobArgumentationTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobCompletionTime":
+                ret_val = JobCompletionTime.JobCompletionTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobDiveSitesCount":
+                ret_val = JobDiveSitesCount.JobDiveSitesCount(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobDiveTime":
+                ret_val = JobDiveTime.JobDiveTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobExperimentationTime":
+                ret_val = JobExperimentationTime.JobExperimentationTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobGuideCount":
+                ret_val = JobGuideCount.JobGuideCount(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobHelpCount":
+                ret_val = JobHelpCount.JobHelpCount(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobModelingTime":
+                ret_val = JobModelingTime.JobModelingTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobTasksCompleted":
+                ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobsAttempted":
+                ret_val = JobsAttempted.JobsAttempted(params=extractor_params, job_map=self._job_map, diff_map=self._diff_map)
+            elif feature_type == "SyncCompletionTime":
+                ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
+            else:
+                raise NotImplementedError(f"'{feature_type}' is not a valid feature for Aqualab.")
         else:
-            raise NotImplementedError(f"'{feature_type}' is not a valid feature for Aqualab.")
+            raise TypeError(f"Got None for extractor_params._count_index (feature_type={feature_type}), should have a value!")
         return ret_val
 
     def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
