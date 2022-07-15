@@ -107,7 +107,7 @@ class ExtractorLoader(abc.ABC):
             if self._game_schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
                 for i in ExtractorLoader._genCountRange(count=percount["count"], schema=self._game_schema):
                     instance_name = f"{percount['prefix']}{i}_{base_name}"
-                    feature = self.LoadFeature(feature_type=base_name, name=instance_name, schema_args=percount)
+                    feature = self.LoadFeature(feature_type=base_name, name=instance_name, schema_args=percount, count_index=i)
                     if feature is not None:
                         self.RegisterExtractor(registry=registry, extractor=feature, iter_mode=iter_mode)
 
