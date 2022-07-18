@@ -19,6 +19,37 @@ CONFIG_PATH = "games/AQUALAB/AQUALAB.json"
 #  Extractor subclass for extracting features from Aqualab game data.
 class AqualabLoader(ExtractorLoader):
 
+    # *** BUILT-INS ***
+
+    ## Constructor for the AqualabLoader class.
+    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
+        """Constructor for the AqualabLoader class.
+
+        :param player_id: _description_
+        :type player_id: str
+        :param session_id: The id number for the session whose data is being processed by this instance
+        :type session_id: str
+        :param game_schema: A data structure containing information on how the game events and other data are structured
+        :type game_schema: GameSchema
+        :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
+        :type feature_overrides: Optional[List[str]]
+        """
+        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
+        self._job_map = {"no-active-job": 0}
+        self._diff_map = {0: {"experimentation": 0, "modeling": 0, "argumentation": 0} }
+        data = None
+
+        # Load Aqualab jobs export and map job names to integer values
+        with open(EXPORT_PATH, "r") as file:
+            export = json.load(file)
+
+            for i, job in enumerate(export["jobs"], start=1):
+                self._job_map[job["id"]] = i
+                self._diff_map[i] = job["difficulties"]
+
+        # Update level count
+        self._game_schema._max_level = len(self._job_map) - 1
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
@@ -93,7 +124,7 @@ class AqualabLoader(ExtractorLoader):
             elif feature_type == "SyncCompletionTime":
                 ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
             else:
-                raise NotImplementedError(f"'{feature_type}' is not a valid feature for Aqualab.")
+                raise NotImplementedError(f"'{feature_type}' is not a valid feature type for Aqualab.")
         else:
             raise TypeError(f"Got None for extractor_params._count_index (feature_type={feature_type}), should have a value!")
         return ret_val
@@ -110,36 +141,6 @@ class AqualabLoader(ExtractorLoader):
             raise NotImplementedError(f"'{detector_type}' is not a valid detector for Aqualab.")
         return ret_val
 
-    # *** BUILT-INS ***
-
-    ## Constructor for the AqualabLoader class.
-    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
-        """Constructor for the AqualabLoader class.
-
-        :param player_id: _description_
-        :type player_id: str
-        :param session_id: The id number for the session whose data is being processed by this instance
-        :type session_id: str
-        :param game_schema: A data structure containing information on how the game events and other data are structured
-        :type game_schema: GameSchema
-        :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
-        :type feature_overrides: Optional[List[str]]
-        """
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
-        self._job_map = {"no-active-job": 0}
-        self._diff_map = {0: {"experimentation": 0, "modeling": 0, "argumentation": 0} }
-        data = None
-
-        # Load Aqualab jobs export and map job names to integer values
-        with open(EXPORT_PATH, "r") as file:
-            export = json.load(file)
-
-            for i, job in enumerate(export["jobs"], start=1):
-                self._job_map[job["id"]] = i
-                self._diff_map[i] = job["difficulties"]
-
-        # Update level count
-        self._game_schema._max_level = len(self._job_map) - 1
-
-    def getJobMap(self) -> Dict:
+    @property
+    def JobMap(self) -> Dict:
         return self._job_map
