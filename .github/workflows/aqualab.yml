@@ -6,7 +6,7 @@ on:
     - '.github/workflows/aqualab.yml'
   workflow_dispatch:
 jobs:
-  test_connect:
+  Aqualab_CI:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -28,8 +28,8 @@ jobs:
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "DEBUG"
         game: "AQUALAB"
-    - name: Do Export of last month's data
-      uses: ./.github/actions/export_last_month
+    - name: Do Export of last week's data
+      uses: ./.github/actions/export_last_week
       with:
         game: AQUALAB
     - name: Upload logs as artifacts

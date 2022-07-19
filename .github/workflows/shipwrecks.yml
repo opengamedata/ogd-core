@@ -6,7 +6,7 @@ on:
     - '.github/workflows/shipwrecks.yml'
   workflow_dispatch:
 jobs:
-  test_connect:
+  Shipwrecks_CI:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2

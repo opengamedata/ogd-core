@@ -7,7 +7,7 @@ on:
     - '.github/workflows/jowilder.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
-  test_export:
+  JoWilder_CI:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2

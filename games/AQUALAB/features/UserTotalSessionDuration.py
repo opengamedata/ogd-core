@@ -15,7 +15,7 @@ class UserTotalSessionDuration(SessionFeature):
     def __init__(self, params:ExtractorParameters, player_id:str):
         super().__init__(params=params)
         self._player_id = player_id
-        self._time = 0
+        self._time = timedelta(0)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
@@ -29,9 +29,12 @@ class UserTotalSessionDuration(SessionFeature):
 
     def _extractFromFeatureData(self, feature:FeatureData):
         if feature.PlayerID == self._player_id:
-            self._time += feature.FeatureValues[0]
+            if type(feature.FeatureValues[0]) == str and feature.FeatureValues[0] == "No events":
+                pass
+            else:
+                self._time += feature.FeatureValues[0]
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._time]
+        return [self._time.seconds]
 
     # *** Optionally override public functions. ***
