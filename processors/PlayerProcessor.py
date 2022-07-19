@@ -92,11 +92,7 @@ class PlayerProcessor(FeatureProcessor):
             if as_str:
                 ret_val["players"] = [self._player_id, str(_sess_ct)] + self._registry.GetFeatureStringValues()
             else:
-<<<<<<< Updated upstream
-                ret_val["players"] = [self._player_id, _sess_ct]      + self._registry.GetFeatureValues()
-=======
                 ret_val["players"] = [self._player_id, _sess_ct] + self._registry.GetFeatureValues()
->>>>>>> Stashed changes
         if export_types.sessions:
             # _results gives us a list of dicts, each with a "session" element
             _results = [sess_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for sess_extractor in self._session_processors.values()]
