@@ -77,6 +77,8 @@ class ExtractorLoader(abc.ABC):
                         Logger.Log(f"In ExtractorLoader, '{name}' is not a valid feature for {self._game_schema._game_name}", logging.ERROR)
                     else:
                         registry.Register(extractor=feature, kind=ExtractorRegistry.Listener.Kinds.PERCOUNT)
+        for firstOrder in registry.FirstOrdersRequested():
+            #TODO load firstOrder, if it's not loaded already
 
     def LoadToDetectorRegistry(self, registry:DetectorRegistry, trigger_callback:Callable[[Event], None]) -> None:
         # first, load aggregate features

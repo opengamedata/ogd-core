@@ -200,6 +200,10 @@ class FeatureRegistry(ExtractorRegistry):
             ret_val.append(str_val)
         return ret_val
 
+    @property
+    def FirstOrdersRequested(self) -> List[str]:
+        list(self._feature_registry.keys())
+
     # *** PROPERTIES ***
 
     # *** PRIVATE STATICS ***

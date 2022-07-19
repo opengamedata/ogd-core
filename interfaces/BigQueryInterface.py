@@ -93,7 +93,7 @@ class BigQueryInterface(DataInterface):
             session_clause = f"AND   param_session.key = 'ga_session_id'"
             player_clause  = f"AND   param_user.key    = 'user_code' AND param_user.value.string_value IN ({id_string})"
         else:
-            Logger.Log(f"Invalid ID mode given (val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
+            Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
             id_string = ','.join([f"{x}" for x in id_list])
             session_clause = f"AND   param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
             player_clause  = f"AND   param_user.key    = 'user_code'"
@@ -186,7 +186,7 @@ class BigQueryInterface(DataInterface):
                 AND param.value.string_value IN ({id_string})
             """
         else:
-            Logger.Log(f"Invalid ID mode given (val={id_mode}), defaulting to session mode.", logging.WARNING, depth=3)
+            Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
             id_string = ','.join([f"{x}" for x in id_list])
             where_clause = f"""
                 WHERE param.key = "ga_session_id"

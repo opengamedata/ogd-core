@@ -53,7 +53,11 @@ class SessionProcessor(FeatureProcessor):
                                  mode=ExtractionMode.SESSION, feature_overrides=self._overrides)
 
     def _getExtractorNames(self) -> List[str]:
+<<<<<<< Updated upstream
         return ["SessionID", "PlayerID"] + self._registry.GetExtractorNames()
+=======
+        return ["PlayerID", "SessionID"] + self._registry.GetExtractorNames()
+>>>>>>> Stashed changes
 
     ## Function to handle processing of a single row of data.
     def _processEvent(self, event: Event):
@@ -78,9 +82,15 @@ class SessionProcessor(FeatureProcessor):
         # 3) Finally, we assume higher-ups have already sent down their first-order features, so we are ready to return all feature values.
         if export_types.sessions and isinstance(self._registry, FeatureRegistry):
             if as_str:
+<<<<<<< Updated upstream
                 return {"sessions" : [self._session_id, self._player_id] + self._registry.GetFeatureStringValues()}
             else:
                 return {"sessions" : [self._session_id, self._player_id] + self._registry.GetFeatureValues()}
+=======
+                return {"sessions" : [self._player_id, self._session_id] + self._registry.GetFeatureStringValues()}
+            else:
+                return {"sessions" : [self._player_id, self._session_id] + self._registry.GetFeatureValues()}
+>>>>>>> Stashed changes
         else:
             return {}
 
