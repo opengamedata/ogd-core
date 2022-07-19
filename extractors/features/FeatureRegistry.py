@@ -139,7 +139,7 @@ class FeatureRegistry(ExtractorRegistry):
         :type table_schema: TableSchema
         """
         if feature.Name in self._feature_registry.keys():
-            # send event to every listener for the given feature name.
+            # send feature to every listener for the given feature name.
             for listener in self._feature_registry[feature.Name]:
                 for order_key in range(len(self._features)):
                     if listener.name in self._features[order_key].keys():
