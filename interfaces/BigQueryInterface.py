@@ -208,8 +208,9 @@ class BigQueryInterface(DataInterface):
         data = list(self._client.query(query))
         ret_val : Dict[str, datetime] = {}
         if len(data) == 1:
-            if len(data[0]) == 2:
-                ret_val = {'min':datetime.strptime(data[0][0], "%m-%d-%Y %H:%M:%S"), 'max':datetime.strptime(data[0][1], "%m-%d-%Y %H:%M:%S")}
+            dates = data[0]
+            if len(dates) == 2 and dates[0] is not None and dates[1] is not None:
+                ret_val = {'min':datetime.strptime(dates[0], "%m-%d-%Y %H:%M:%S"), 'max':datetime.strptime(dates[1], "%m-%d-%Y %H:%M:%S")}
             else:
                 Logger.Log(f"BigQueryInterface query did not give both a min and a max, setting both to 'now'", logging.WARNING, depth=3)
                 ret_val = {'min':datetime.now(), 'max':datetime.now()}
