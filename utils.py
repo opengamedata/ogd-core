@@ -5,7 +5,6 @@ import logging
 import os
 import traceback
 from datetime import datetime
-from logging import Logger
 from pathlib import Path
 from typing import Any, Dict, Optional
 # import locals
@@ -38,8 +37,8 @@ def loadJSONFile(filename:str, path:Path = Path("./")) -> Dict[Any, Any]:
         raise err
 
 class Logger:
-    std_logger  : Logger           = logging.getLogger("std_logger")
-    file_logger : Optional[Logger] = None
+    std_logger  : logging.Logger   = logging.getLogger("std_logger")
+    file_logger : Optional[logging.Logger] = None
 
     # Set up loggers. First, the std out logger
     stdout_handler = logging.StreamHandler()
