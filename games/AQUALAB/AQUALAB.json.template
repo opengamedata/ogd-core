@@ -615,7 +615,7 @@
                 "description": "Total time spent in argumentation"
             },
             "EchoSessionID": {
-                "enabled": false,
+                "enabled": true,
                 "description": "Test of second-order features."
             },
             "TotalDiveTime": {
