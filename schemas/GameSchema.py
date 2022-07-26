@@ -1,13 +1,13 @@
 # import standard libraries
-from faulthandler import is_enabled
 import logging
 from pathlib import Path
+from shutil import copyfile
 from typing import Any, Dict, List, Optional, Union
 # import local files
 import utils
 from schemas.IterationMode import IterationMode
 from schemas.ExtractionMode import ExtractionMode
-from utils import Logger
+from utils import Logger, loadJSONFile
 
 ## @class GameSchema
 #  A fairly simple class that reads a JSON schema with information on how a given
@@ -39,11 +39,7 @@ class GameSchema:
         self._max_level:     Optional[int] = None
         self._job_map:       Dict = {}
         # set instance vars
-        if not schema_name.lower().endswith(".json"):
-            schema_name += ".json"
-        if schema_path == None:
-            schema_path = Path("./games") / f"{schema_name.split('.')[0]}"
-        self._schema = utils.loadJSONFile(filename=schema_name, path=schema_path)
+        self._schema = GameSchema._loadSchema(game_name=self._game_name, schema_name=schema_name, schema_path=schema_path)
         if self._schema is not None:
             if "detectors" in self._schema.keys():
                 self._detector_list = []
@@ -67,8 +63,6 @@ class GameSchema:
                 self._max_level = self._schema["level_range"]['max']
             if "job_map" in self._schema.keys():
                 self._job_map = self._schema["job_map"]
-        else:
-            Logger.Log(f"Could not find game schema at {schema_path / schema_name}", logging.ERROR)
 
     def __getitem__(self, key) -> Any:
         return self._schema[key] if self._schema is not None else None
@@ -211,7 +205,41 @@ class GameSchema:
     def AggregateFeatures(self) -> Dict[str,Any]:
         return self["features"]["aggregate"] if "aggregate" in self["features"].keys() else {}
 
-    # *** PRIVATE METHODS ***
+    # *** PRIVATE STATICS ***
+
+    @staticmethod
+    def _loadSchema(game_name:str, schema_name:str, schema_path:Optional[Path] = None) -> Optional[Dict[Any, Any]]:
+        ret_val = None
+
+        if not schema_name.lower().endswith(".json"):
+            schema_name += ".json"
+        if schema_path == None:
+            schema_path = Path("./games") / f"{game_name}"
+        try:
+            ret_val = utils.loadJSONFile(filename=schema_name, path=schema_path)
+        except FileNotFoundError as err:
+            Logger.Log(f"Unable to load GameSchema for {game_name}, {schema_name} does not exist! Trying to load from json template instead...", logging.WARN, depth=1)
+            ret_val = GameSchema._schemaFromTemplate(schema_path=schema_path, schema_name=schema_name)
+            if ret_val is None:
+                Logger.Log(f"Failed to load schema for {game_name} from template.", logging.WARN, depth=1)
+        else:
+            if ret_val is None:
+                Logger.Log(f"Could not find game schema at {schema_path / schema_name}", logging.ERROR)
+        return ret_val
+
+    @staticmethod
+    def _schemaFromTemplate(schema_path:Path, schema_name:str) -> Optional[Dict[Any, Any]]:
+        ret_val = None
+
+        try:
+            template_name = schema_name + ".template"
+            template = schema_path / template_name
+            copyfile(template, schema_path / schema_name)
+        except Exception as cp_err:
+            Logger.Log(f"Could not create {schema_name} from template, an error occurred:\n{cp_err}", logging.WARN, depth=2)
+        else:
+            ret_val = loadJSONFile(filename=schema_name, path=schema_path)
+        return ret_val
 
     @staticmethod
     def _makeFeatureMarkdown(feat_name:str, feat_kind:str, feat_items) -> str:
@@ -225,3 +253,5 @@ class GameSchema:
             for subfeat_name, subfeat_items in _subfeats.items():
                 ret_val += f"- **{subfeat_name}** : *{subfeat_items.get('type', 'Unknown')}*, {subfeat_items.get('description', 'No description.')}  \n"
         return ret_val
+
+    # *** PRIVATE METHODS ***
