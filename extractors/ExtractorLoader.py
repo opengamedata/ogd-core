@@ -65,6 +65,7 @@ class ExtractorLoader(abc.ABC):
     def LoadFeature(self, feature_type:str, name:str, schema_args:Dict[str,Any], count_index:Optional[int] = None) -> Optional[Feature]:
         ret_val = None
 
+        # bit of a hack using globals() here, but theoretically this lets us access the class object with only a string.
         feature_class : Optional[Type[Extractor]] = globals().get(feature_type, None)
         if feature_class is not None and self._mode in feature_class.AvailableModes():
             params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
