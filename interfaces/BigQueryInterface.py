@@ -82,6 +82,26 @@ class BigQueryInterface(DataInterface):
 
     def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> List[Tuple]:
         # 2) Set up clauses to select based on Session ID or Player ID.
+        events = None
+        if self._client != None:
+            query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode)
+            data = self._client.query(query)
+            events = []
+            for row in data:
+                items = tuple(row.items())
+                event = []
+                for item in items:
+                    if item[0] == "event_params":
+                        _params = {param['key']:param['value'] for param in item[1]}
+                        event.append(json.dumps(_params, sort_keys=True))
+                    elif item[0] in ["device", "geo"]:
+                        event.append(json.dumps(item[1], sort_keys=True))
+                    else:
+                        event.append(item[1])
+                events.append(tuple(event))
+        return events if events != None else []
+
+    def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode) -> str:
         session_clause : str = ""
         player_clause  : str = ""
         if id_mode == IDMode.SESSION:
@@ -140,21 +160,7 @@ class BigQueryInterface(DataInterface):
                 {where_clause}
                 ORDER BY `session_id`, `timestamp` ASC
             """
-        data = self._client.query(query)
-        events = []
-        for row in data:
-            items = tuple(row.items())
-            event = []
-            for item in items:
-                if item[0] == "event_params":
-                    _params = {param['key']:param['value'] for param in item[1]}
-                    event.append(json.dumps(_params, sort_keys=True))
-                elif item[0] in ["device", "geo"]:
-                    event.append(json.dumps(item[1], sort_keys=True))
-                else:
-                    event.append(item[1])
-            events.append(tuple(event))
-        return events if events != None else []
+        return query
 
     def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]] = None) -> List[str]:
         ret_val = []
