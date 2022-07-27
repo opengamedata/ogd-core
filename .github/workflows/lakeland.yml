@@ -27,6 +27,10 @@ jobs:
         sql_pass: ${{secrets.SQL_PASS}}
         # TODO: set log_level to DEBUG once we've made sure there aren't excess outputs from the extractor itself.
         log_level: "INFO"
+    - name: Set up Schema File
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: "LAKELAND"
     - name: Do Export of yesterday's data
       uses: ./.github/actions/export_yesterday
       with:

@@ -57,6 +57,10 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "INFO"
+    - name: Set up Schema File
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: ${{matrix.game}}
     - name: Do Export of last month
       uses: ./.github/actions/export_last_month
       with:

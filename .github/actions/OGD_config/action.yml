@@ -37,16 +37,9 @@ inputs:
     description: "Logging level to use for export process"
     required: true
     default: "INFO"
-  game:
-    description: "Game selected for data export"
-    required: false
-    default: "game"
 runs:
   using: "composite"
   steps:
-    - name: Set up schema file
-      run: cp games/${{inputs.game}}/${{inputs.game}}.json.template games/${{inputs.game}}/${{inputs.game}}.json
-      shell: bash
     - name: Set up config
       run: cp config/config.py.template config/config.py 
       shell: bash

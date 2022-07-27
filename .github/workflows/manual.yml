@@ -101,6 +101,10 @@ jobs:
         sql_db: ${{github.event.inputs.database}}
         slice_size: ${{ github.event.inputs.slice_size }}
         log_level: ${{ github.event.inputs.log_level }}
+    - name: Set up Schema File
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: ${{matrix.game}}
     - name: Do Export of Month
       if: github.event.inputs.monthly == 'true'
       uses: ./.github/actions/export_custom_month

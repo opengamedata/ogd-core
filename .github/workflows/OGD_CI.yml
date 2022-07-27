@@ -41,10 +41,18 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "DEBUG"
+    - name: Set up Schema File for Crystal
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: "CRYSTAL"
     - name: Attempt Export of yesterday's data with LegacyFeature
       uses: ./.github/actions/export_yesterday
       with:
         game: CRYSTAL
+    - name: Set up Schema File for Waves
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: "WAVES"
     - name: Attempt Export of yesterday's data with Regular Extractor
       uses: ./.github/actions/export_yesterday
       with:
