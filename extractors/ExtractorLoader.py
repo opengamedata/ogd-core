@@ -1,14 +1,13 @@
 # import libraries
 import abc
 import logging
-from typing import Any, Callable, Dict, List, Optional
-
-from extractors.detectors.Detector import Detector
-from extractors.Extractor import ExtractorParameters
+from importlib import import_module
+from typing import Any, Callable, Dict, List, Optional, Type
 # import locals
-from extractors.detectors.DetectorRegistry import DetectorRegistry
-from extractors.Extractor import Extractor
+from extractors.Extractor import Extractor, ExtractorParameters
 from extractors.ExtractorRegistry import ExtractorRegistry
+from extractors.detectors.Detector import Detector
+from extractors.detectors.DetectorRegistry import DetectorRegistry
 from extractors.features.Feature import Feature
 from extractors.features.FeatureRegistry import FeatureRegistry
 from schemas.Event import Event
@@ -66,12 +65,14 @@ class ExtractorLoader(abc.ABC):
     def LoadFeature(self, feature_type:str, name:str, schema_args:Dict[str,Any], count_index:Optional[int] = None) -> Optional[Feature]:
         ret_val = None
 
-        params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
-        try:
-            ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
-        except NotImplementedError as err:
-            Logger.Log(f"In ExtractorLoader, '{name}' was not loaded due to an error:", logging.ERROR)
-            Logger.Log(str(err), logging.ERROR, depth=1)
+        feature_class : Optional[Type[Extractor]] = globals().get(feature_type, None)
+        if feature_class is not None and self._mode in feature_class.AvailableModes():
+            params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
+            try:
+                ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
+            except NotImplementedError as err:
+                Logger.Log(f"In ExtractorLoader, '{name}' was not loaded due to an error:", logging.ERROR)
+                Logger.Log(str(err), logging.ERROR, depth=1)
 
         return ret_val
 
