@@ -117,7 +117,7 @@ class LegacyFeature(Feature):
     #  to understand the structure of feature data.
     class LegacySessionFeatures:
         def __init__(self, game_schema: GameSchema):
-            self.perlevels: List[str] = list(game_schema.PerLevelFeatures.keys())
+            self.perlevels: List[str] = list(game_schema.Features['per_level'].keys())
             self.features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(game_schema)
 
         @staticmethod
@@ -133,7 +133,7 @@ class LegacyFeature(Feature):
             """
             # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
             # which in turn maps each level to a value and prefix.
-            perlevels = game_schema.PerLevelFeatures
+            perlevels = game_schema.Features['per_level']
             level_range = range(game_schema._min_level   if game_schema._min_level is not None else 0,
                                 game_schema._max_level+1 if game_schema._max_level is not None else 1)
             features : Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]] = {f:{lvl:{"val":None, "prefix":"lvl"} for lvl in level_range } for f in perlevels.keys()}
