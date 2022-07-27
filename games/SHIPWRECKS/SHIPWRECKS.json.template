@@ -49,8 +49,6 @@
     },
 
     "features": {
-        "perlevel":{
-        },
         "per_count": {
             "MissionDiveTime": {
                 "enabled": false,
