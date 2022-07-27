@@ -27,7 +27,8 @@ class Extractor(abc.ABC):
 
     ## Abstract function to get a list of event types the Feature wants.
     @abc.abstractmethod
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls) -> List[str]:
         """ Abstract function to get a list of event types the Feature wants.
             The types of event accepted by a feature are a responsibility of the Feature's developer,
             so this is a required part of interface instead of a config item in the schema.
@@ -38,7 +39,8 @@ class Extractor(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
         Any feature intented to be second-order should override this function.
@@ -70,18 +72,21 @@ class Extractor(abc.ABC):
 
     # *** PUBLIC METHODS ***
 
-    def GetEventDependencies(self) -> List[str]:
-        return self._getEventDependencies()
+    @classmethod
+    def GetEventDependencies(cls) -> List[str]:
+        return cls._getEventDependencies()
 
-    def GetFeatureDependencies(self) -> List[str]:
-        return self._getFeatureDependencies()
+    @classmethod
+    def GetFeatureDependencies(cls) -> List[str]:
+        return cls._getFeatureDependencies()
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event=event):
             self._extractFromEvent(event=event)
 
     ## Base function to get the minimum game data version the feature can handle.
-    def MinVersion(self) -> Optional[str]:
+    @staticmethod
+    def MinVersion() -> Optional[str]:
         """ Base function to get the minimum game data version the feature can handle.
             A value of None will set no minimum, so all levels are accepted (unless a max is set).
             Typically default to None, unless there is a required element of the event data that was not added until a certain version.        
@@ -94,7 +99,8 @@ class Extractor(abc.ABC):
         return None
 
     ## Base function to get the maximum game data version the feature can handle.
-    def MaxVersion(self) -> Optional[str]:
+    @staticmethod
+    def MaxVersion() -> Optional[str]:
         """ Base function to get the maximum game data version the feature can handle.
             A value of None will set no maximum, so all levels are accepted (unless a min is set).
             Typically default to None, unless the feature is not compatible with new data and is only kept for legacy purposes.
@@ -106,7 +112,8 @@ class Extractor(abc.ABC):
         """
         return None
 
-    def AvailableModes(self) -> List[ExtractionMode]:
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
         """List of ExtractionMode supported by the Extractor
 
         Base function to give a list of which ExtractionModes an extractor will handle.

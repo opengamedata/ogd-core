@@ -21,10 +21,12 @@ class SequenceBetweenPuzzles(SessionFeature):
         self._userPuzzleDict = dict()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls) -> List[str]:
         return ["start_level", "puzzle_started", "create_shape", "check_solution", "puzzle_complete", "disconnect", "login_user", "exit_to_menu"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

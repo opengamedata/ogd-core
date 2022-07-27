@@ -19,10 +19,12 @@ class JobModelingTime(PerJobFeature):
         self._time = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls) -> List[str]:
         return []
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -49,5 +51,6 @@ class JobModelingTime(PerJobFeature):
         return [timedelta(seconds=self._time)]
 
     # *** Optionally override public functions. ***
+    @staticmethod
     def MinVersion(self) -> Optional[str]:
         return "1"

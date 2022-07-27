@@ -19,10 +19,12 @@ class SyncCompletionTime(Feature):
         self._time = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls) -> List[str]:
         return ["begin_simulation, simulation_sync_achieved"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls) -> List[str]:
         return []
     def _extractFromEvent(self, event:Event) -> None:
         if event.SessionID != self._session_id:

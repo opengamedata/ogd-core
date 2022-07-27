@@ -28,5 +28,6 @@ class PerJobFeature(PerCountFeature):
 
     # *** Optionally override public functions. ***
 
+    @staticmethod
     def MinVersion(self) -> Optional[str]:
         return "1"

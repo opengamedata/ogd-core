@@ -25,7 +25,8 @@ class CollectFactNoJob(Detector):
         self._log_version = "Unknown"
 
     # *** Implement abstract functions ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls) -> List[str]:
         """_summary_
 
         :return: _description_

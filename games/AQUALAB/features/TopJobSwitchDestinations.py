@@ -20,10 +20,12 @@ class TopJobSwitchDestinations(Feature):
         self._job_switch_pairs = defaultdict(dict)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls) -> List[str]:
         return ["accept_job", "switch_job"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -65,6 +67,7 @@ class TopJobSwitchDestinations(Feature):
         return [json.dumps(ret_val)]
 
     # *** Optionally override public functions. ***
+    @staticmethod
     def MinVersion(self) -> Optional[str]:
         return "1"
 

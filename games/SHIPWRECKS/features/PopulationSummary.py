@@ -15,10 +15,12 @@ class PopulationSummary(SessionFeature):
         self._session_times = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls) -> List[str]:
         return []
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls) -> List[str]:
         return ["JobsCompleted", "SessionDuration"]
 
     def _extractFromEvent(self, event: Event) -> None:

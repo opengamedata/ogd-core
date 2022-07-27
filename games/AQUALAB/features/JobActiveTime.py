@@ -25,13 +25,15 @@ class JobActiveTime(PerJobFeature):
             raise NotImplementedError(f"Got invalid export mode of {self.ExportMode.name} in JobActiveTime!")
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls) -> List[str]:
         if self.ExportMode == ExtractionMode.USER:
             return ["all_events"]
         else:
             return []
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls) -> List[str]:
         if self.ExportMode == ExtractionMode.POPULATION:
             return ["JobActiveTime"]
         else:
@@ -72,6 +74,7 @@ class JobActiveTime(PerJobFeature):
 
     # *** Optionally override public functions. ***
 
+    @staticmethod
     def MinVersion(self) -> Optional[str]:
         return "1"
 

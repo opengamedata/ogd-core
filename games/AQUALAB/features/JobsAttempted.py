@@ -38,10 +38,12 @@ class JobsAttempted(Feature):
         self._prev_timestamp : Optional[datetime] = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls) -> List[str]:
         return ["accept_job", "complete_job"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -95,6 +97,7 @@ class JobsAttempted(Feature):
     def Subfeatures(self) -> List[str]:
         return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-complete", "std-dev-complete", "job-difficulties"]
 
+    @staticmethod
     def MinVersion(self) -> Optional[str]:
         return "1"
 

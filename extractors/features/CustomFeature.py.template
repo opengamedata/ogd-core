@@ -20,7 +20,8 @@ class CustomFeature(Feature):
         # self._found_click : bool = False
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -28,7 +29,8 @@ class CustomFeature(Feature):
         """
         return [] # >>> fill in names of events this Feature should use for extraction. <<<
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -87,10 +89,12 @@ class CustomFeature(Feature):
     def Subfeatures(self) -> List[str]:
         return [] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
+    @staticmethod
     def MinVersion(self) -> Optional[str]:
         # >>> replace return statement below with a string defining the minimum logging version for events to be processed by this Feature. <<<
         return super().MinVersion()
 
+    @staticmethod
     def MaxVersion(self) -> Optional[str]:
         # >>> replace return statement below with a string defining the maximum logging version for events to be processed by this Feature. <<<
         return super().MaxVersion()
