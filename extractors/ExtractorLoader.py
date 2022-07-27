@@ -84,7 +84,7 @@ class ExtractorLoader(abc.ABC):
         iter_mode = IterationMode.AGGREGATE
         for base_name,aggregate in self._game_schema.AggregateDetectors.items():
             if self._game_schema.DetectorEnabled(detector_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
-                detector_type = aggregate.get('type', base_name) # try to get 'type' from aggregate, if it's not there default to name of the config item.
+                detector_type = aggregate.get('detector_type', base_name) # try to get 'detector type' from aggregate, if it's not there default to name of the config item.
                 detector = self.LoadDetector(detector_type=detector_type, name=base_name, schema_args=aggregate, trigger_callback=trigger_callback)
                 if detector is not None:
                     self.RegisterExtractor(registry=registry, extractor=detector, iter_mode=iter_mode)
@@ -92,7 +92,7 @@ class ExtractorLoader(abc.ABC):
         iter_mode = IterationMode.PERCOUNT
         for base_name,percount in self._game_schema.PerCountDetectors.items():
             if self._game_schema.DetectorEnabled(detector_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
-                detector_type = percount.get('type', base_name) # try to get 'type' from percount config, if it's not there default to name of the config item.
+                detector_type = percount.get('detector_type', base_name) # try to get 'detector type' from percount config, if it's not there default to name of the config item.
                 for i in ExtractorLoader._genCountRange(count=percount["count"], schema=self._game_schema):
                     instance_name = f"{percount['prefix']}{i}_{base_name}"
                     detector = self.LoadDetector(detector_type=detector_type, name=instance_name, schema_args=percount, trigger_callback=trigger_callback, count_index=i)
@@ -103,14 +103,14 @@ class ExtractorLoader(abc.ABC):
         iter_mode = IterationMode.AGGREGATE
         for base_name,aggregate in self._game_schema.AggregateFeatures.items():
             if self._game_schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
-                feature_type = aggregate.get('type', base_name) # try to get 'type' from aggregate, if it's not there default to name of the config item.
+                feature_type = aggregate.get('feature_type', base_name) # try to get 'feature type' from aggregate, if it's not there default to name of the config item.
                 feature = self.LoadFeature(feature_type=feature_type, name=base_name, schema_args=aggregate)
                 if feature is not None:
                     self.RegisterExtractor(registry=registry, extractor=feature, iter_mode=iter_mode)
         iter_mode = IterationMode.PERCOUNT
         for base_name,percount in self._game_schema.PerCountFeatures.items():
             if self._game_schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
-                feature_type = percount.get('type', base_name) # try to get 'type' from percount, if it's not there default to name of the config item.
+                feature_type = percount.get('feature_type', base_name) # try to get 'feature type' from percount, if it's not there default to name of the config item.
                 for i in ExtractorLoader._genCountRange(count=percount["count"], schema=self._game_schema):
                     instance_name = f"{percount['prefix']}{i}_{base_name}"
                     feature = self.LoadFeature(feature_type=feature_type, name=instance_name, schema_args=percount, count_index=i)

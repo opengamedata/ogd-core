@@ -246,12 +246,12 @@ class GameSchema:
         ret_val   : str                     = ""
         _subfeats : Dict[str,Dict[str,str]] = feat_items.get("subfeatures", {})
 
-        ret_val += f"**{feat_name}** : *{feat_items.get('type', 'Unknown')}*, *{feat_kind} feature* {' (disabled)' if not feat_items.get('enabled', True) else ''}  \n"
+        ret_val += f"**{feat_name}** : *{feat_items.get('return_type', 'Unknown')}*, *{feat_kind} feature* {' (disabled)' if not feat_items.get('enabled', True) else ''}  \n"
         ret_val += f"{feat_items.get('description', 'No description.')}  \n"
         if len(_subfeats.keys()) > 0:
             ret_val += "*Sub-features*:  \n\n"
             for subfeat_name, subfeat_items in _subfeats.items():
-                ret_val += f"- **{subfeat_name}** : *{subfeat_items.get('type', 'Unknown')}*, {subfeat_items.get('description', 'No description.')}  \n"
+                ret_val += f"- **{subfeat_name}** : *{subfeat_items.get('return_type', 'Unknown')}*, {subfeat_items.get('description', 'No description.')}  \n"
         return ret_val
 
     # *** PRIVATE METHODS ***
