@@ -29,7 +29,6 @@ def loadJSONFile(filename:str, path:Path = Path("./")) -> Dict[Any, Any]:
             return json.loads(json_file.read())
     except FileNotFoundError as err:
         Logger.Log(f"File {file_path} does not exist.", logging.WARNING)
-        print(f"File {file_path} does not exist.")
         raise err
 
 class Logger:
