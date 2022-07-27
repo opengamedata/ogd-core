@@ -220,7 +220,9 @@ class GameSchema:
         except FileNotFoundError as err:
             Logger.Log(f"Unable to load GameSchema for {game_name}, {schema_name} does not exist! Trying to load from json template instead...", logging.WARN, depth=1)
             ret_val = GameSchema._schemaFromTemplate(schema_path=schema_path, schema_name=schema_name)
-            if ret_val is None:
+            if ret_val is not None:
+                Logger.Log(f"Loaded schema for {game_name} from template.", logging.WARN, depth=1)
+            else:
                 Logger.Log(f"Failed to load schema for {game_name} from template.", logging.WARN, depth=1)
         else:
             if ret_val is None:
