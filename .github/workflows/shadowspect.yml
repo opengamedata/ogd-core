@@ -1,0 +1,42 @@
+name: Shadowspect Exporter CI Test
+on:
+  push:
+    paths:
+    - 'games/SHADOWSPECT/**'
+    - '.github/workflows/shadowspect.yml'
+  workflow_dispatch:
+jobs:
+  Shadowspect_CI:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.SHADOWSPECT_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.SHADOWSPECT_BQ_KEY }}
+        export_default_credentials: true
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{secrets.SQL_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        log_level: "DEBUG"
+        game: "SHADOWSPECT"
+    - name: Do Export of last month's data
+      uses: ./.github/actions/export_last_month
+      with:
+        game: SHADOWSPECT
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./*.log
+    - name: Upload zips as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./data/SHADOWSPECT/*.zip

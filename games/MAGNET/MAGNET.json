@@ -60,27 +60,74 @@
     },
 
     "features": {
-        "perlevel":{
-            "eventCount":"Number of player events in the given level",
-            "southPoleScore": "The score for the south pole placement",
-            "northPoleScore": "The score for the north pole placement",
-            "northPoleToSouthGuess": "The score for the south pole placement if the poles were switched.",
-            "southPoleToNorthGuess": "The score for the north pole placement if the poles were switched.",
-            "numberOfCompassesUsed": "How many of the six compasses were placed before guessing",
-            "usedMagneticFilm": "Indicates whether the magnetic film was placed",
-            "usedIronFilings": "Indicates whether the iron filings were placed",
-            "numTimesPolesMoved": "The number of times the poles were moved before finalizing the guess",
-            "levelTime": "The amount of time spent in the level"
+        "perlevel": {
+            "eventCount": {
+                "enabled": true,
+                "description": "Number of player events in the given level"
+            },
+            "southPoleScore": {
+                "enabled": true,
+                "description": "The score for the south pole placement"
+            },
+            "northPoleScore": {
+                "enabled": true,
+                "description": "The score for the north pole placement"
+            },
+            "northPoleToSouthGuess": {
+                "enabled": true,
+                "description": "The score for the south pole placement if the poles were switched."
+            },
+            "southPoleToNorthGuess": {
+                "enabled": true,
+                "description": "The score for the north pole placement if the poles were switched."
+            },
+            "numberOfCompassesUsed": {
+                "enabled": true,
+                "description": "How many of the six compasses were placed before guessing"
+            },
+            "usedMagneticFilm": {
+                "enabled": true,
+                "description": "Indicates whether the magnetic film was placed"
+            },
+            "usedIronFilings": {
+                "enabled": true,
+                "description": "Indicates whether the iron filings were placed"
+            },
+            "numTimesPolesMoved": {
+                "enabled": true,
+                "description": "The number of times the poles were moved before finalizing the guess"
+            },
+            "levelTime": {
+                "enabled": true,
+                "description": "The amount of time spent in the level"
+            }
         },
-        "per_custom_count": {
-        },
-        "aggregate":{
-            "sessionID":"The player's session ID number for this play session",
-            "persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",
-            "sessionEventCount":"The total number of events across the entire session",
-            "sessionTime": "The total number of seconds spent",
-            "numberOfCompletePlays": "The number of times the player played the game",
-            "averageScore": "The average score across all complete plays"
+        "per_count": {},
+        "aggregate": {
+            "sessionID": {
+                "enabled": true,
+                "description": "The player's session ID number for this play session"
+            },
+            "persistentSessionID": {
+                "enabled": true,
+                "description": "The session ID for the player's device, persists across multiple players using the same device."
+            },
+            "sessionEventCount": {
+                "enabled": true,
+                "description": "The total number of events across the entire session"
+            },
+            "sessionTime": {
+                "enabled": true,
+                "description": "The total number of seconds spent"
+            },
+            "numberOfCompletePlays": {
+                "enabled": true,
+                "description": "The number of times the player played the game"
+            },
+            "averageScore": {
+                "enabled": true,
+                "description": "The average score across all complete plays"
+            }
         }
     },
 

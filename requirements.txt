@@ -3,10 +3,9 @@ cffi==1.14.4
 cryptography==3.3.1
 gitdb==4.0.5
 GitPython==3.1.12
-google-cloud-bigquery==2.20.0
+google-cloud-bigquery==3.2.0
 joblib==1.0.0
-mysql-connector-repackaged==0.3.1
-mysqlclient==2.0.3
+mysql-connector-python==8.0.25
 numpy==1.19.5
 pandas==1.2.4
 paramiko==2.7.2
@@ -20,4 +19,4 @@ six==1.15.0
 smmap==3.0.4
 sshtunnel==0.4.0
 threadpoolctl==2.1.0
-typing==3.7.4.1
+typing==3.7.4.3

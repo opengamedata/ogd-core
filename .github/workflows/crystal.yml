@@ -8,28 +8,33 @@ on:
     - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
-  test_export:
-    runs-on: ubuntu-18.04
+  Crystal_CI:
+    runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - name: Get OpenConnect
-      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get -q update && sudo apt-get -q install openconnect
+      run:  sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    - name: Get correct Python
-      run: |
-        sudo apt-get -q install python3.8
-        sudo apt-get -q install python3.8-dev
-    - uses: actions/checkout@v2
-    - name: Do Export
-      uses: ./.github/actions/export_yesterday
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
       with:
-        game: CRYSTAL
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "DEBUG"
+    - name: Do Export of yesterday's data
+      uses: ./.github/actions/export_yesterday
+      with:
+        game: CRYSTAL
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./*.log
     - name: Upload zips as artifacts
       uses: actions/upload-artifact@v2
       with:

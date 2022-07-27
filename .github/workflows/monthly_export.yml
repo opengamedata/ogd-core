@@ -1,5 +1,5 @@
 # Workflow to run monthly exports of data.
-name: Automated Monthly Exports
+name: Monthly Automated Exports
 on:
   schedule:
     - cron: '1 0 2 * *'
@@ -7,57 +7,80 @@ on:
 jobs:
   export_data:
     name: Export All Games
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         # don't use the first one until we've got STEMPORTS and AQUALAB
         # game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, STEMPORTS, WAVES, WIND]
-        # game: [BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, WAVES, WIND]
-        game: [BACTERIA, BALLOON, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, LAKELAND, MAGNET, WIND]
+        game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, SHADOWSPECT, SHIPWRECKS, WAVES, WIND]
       fail-fast: false # we don't want to cancel just because one game fails.
       max-parallel: 1
 
     # Steps to set up for and execute an export
     steps:
+    - uses: actions/checkout@v2
+      # A bunch of copy-paste crap to set up google cloud for any given game.
+    - if: ${{ matrix.game == 'AQUALAB' }}
+      name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.AQUALAB_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.AQUALAB_BQ_KEY }}
+        export_default_credentials: true
+    - if: ${{ matrix.game == 'SHADOWSPECT' }}
+      name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.SHADOWSPECT_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.SHADOWSPECT_BQ_KEY }}
+        export_default_credentials: true
+    - if: ${{ matrix.game == 'SHIPWRECKS' }}
+      name: Set up Cloud SDK
+      uses: ggoogle-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.SHIPWRECKS_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.SHIPWRECKS_BQ_KEY }}
+        export_default_credentials: true
+      # Back to normal setup stuff.
     - name: Get OpenConnect
-      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get -q update && sudo apt-get -q install openconnect
+      run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    - name: Get correct Python
-      run: |
-        sudo apt-get -q install python3.8
-        sudo apt-get -q install python3.8-dev
-    - uses: actions/checkout@v2
-    # - name: Fail the thing right now, if VPN conn is bad
-    #   run: |
-    #     mkdir -p ~/.ssh
-    #     echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
-    #     chmod 600 ./key.txt
-    #     ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata; pwd;"
-    - name: Do Export
-      uses: ./.github/actions/export_last_month
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
       with:
-        game: ${{matrix.game}}
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
+        log_level: "INFO"
+    - name: Do Export of last month
+      uses: ./.github/actions/export_last_month
+      with:
+        game: ${{matrix.game}}
     - name: Upload files to opengamedata via scp
       run: |
         mkdir -p ~/.ssh
         echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./*.log
   
   trigger_reindex:
     name: Reindex OpenGameData Files
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     if: always()
     needs: export_data
     steps:
     - name: Get OpenConnect
-      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
+      run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
       run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Trigger reindex via ssh

@@ -5,9 +5,10 @@ import os
 import traceback
 import typing
 import unittest
+from pathlib import Path
 from unittest import TestCase
 # local import(s)
-from config import settings
+from config.config import settings
 import utils
 
 class t_utils(TestCase):
@@ -16,7 +17,7 @@ class t_utils(TestCase):
         print("Ran all t_utils tests.")
 
     def test_loadJSONFile(self):
-        json_content = utils.loadJSONFile("t_utils.json", "./tests")
+        json_content = utils.loadJSONFile(filename="t_utils.json", path=Path("./tests"))
         self.assertEqual(json_content['first'], "the worst")
         self.assertEqual(json_content['second'], ["the best", "born, second place"])
         self.assertTrue("fourth" in json_content.keys())

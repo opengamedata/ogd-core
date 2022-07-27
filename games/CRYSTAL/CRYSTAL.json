@@ -105,33 +105,103 @@
     },
 
     "features": {
-        "perlevel":{
-            "eventCount":"Number of player events in the given level",
-            "durationInSecs":"Time (in seconds) spent on the given level",
-            "stampRotateCount":"Number of stamp rotate events in the level. These are MOLECULE_ROTATE events with isStamp set true.",
-            "singleRotateCount":"Number of single rotation events in the level",
-            "moleculeMoveCount":"Number of molecule move (MOLECULE_RELEASE) events in the level",
-            "clearBtnPresses":"Number of times the clear button was pressed in the level",
-            "avgMoleculeDragDurationInSecs":"The average number of seconds each drag took, over the given level",
-            "finalScore":"The max final score given when submit button pressed, for this level, among all plays",
-            "beginCount" : "number of times a player 'began' the level. [count of 'BEGIN' events]",
-            "menuBtnCount" : "The number of times a player pressed the 'return to menu' button during a level",
-            "completesCount":"The number of time the player (pressed the submit button)/(completed the level) in the level"
+        "perlevel": {
+            "eventCount": {
+                "enabled": true,
+                "description": "Number of player events in the given level"
+            },
+            "durationInSecs": {
+                "enabled": true,
+                "description": "Time (in seconds) spent on the given level"
+            },
+            "stampRotateCount": {
+                "enabled": true,
+                "description": "Number of stamp rotate events in the level. These are MOLECULE_ROTATE events with isStamp set true."
+            },
+            "singleRotateCount": {
+                "enabled": true,
+                "description": "Number of single rotation events in the level"
+            },
+            "moleculeMoveCount": {
+                "enabled": true,
+                "description": "Number of molecule move (MOLECULE_RELEASE) events in the level"
+            },
+            "clearBtnPresses": {
+                "enabled": true,
+                "description": "Number of times the clear button was pressed in the level"
+            },
+            "avgMoleculeDragDurationInSecs": {
+                "enabled": true,
+                "description": "The average number of seconds each drag took, over the given level"
+            },
+            "finalScore": {
+                "enabled": true,
+                "description": "The max final score given when submit button pressed, for this level, among all plays"
+            },
+            "beginCount": {
+                "enabled": true,
+                "description": "number of times a player 'began' the level. [count of 'BEGIN' events]"
+            },
+            "menuBtnCount": {
+                "enabled": true,
+                "description": "The number of times a player pressed the 'return to menu' button during a level"
+            },
+            "completesCount": {
+                "enabled": true,
+                "description": "The number of time the player (pressed the submit button)/(completed the level) in the level"
+            }
         },
-        "per_custom_count": {
-            "questionAnswered" : {"count" : 3, "prefix": "QA", "desc" : "The answer the user gave to a given question (or -1 if unanswered)"},
-            "questionCorrect"  : {"count" : 3, "prefix": "QA", "desc" : "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"}
+        "per_count": {
+            "questionAnswered": {
+                "enabled": true,
+                "count": 3,
+                "prefix": "QA",
+                "description": "The answer the user gave to a given question (or -1 if unanswered)"
+            },
+            "questionCorrect": {
+                "enabled": true,
+                "count": 3,
+                "prefix": "QA",
+                "description": "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"
+            }
         },
-        "aggregate":{
-            "sessionID":"The player's session ID number for this play session",
-            "persistentSessionID":"The session ID for the player's device, persists across multiple players using the same device.",
-            "sessionEventCount":"The total number of events across the entire session",
-            "sessionDurationInSecs":"The total time (in seconds) spent over the entire session",
-            "sessionStampRotateCount":"Total number of stamp rotation events over the session",
-            "sessionSingleRotateCount":"Total number of single rotation events over the session",
-            "sessionMoleculeMoveCount":"Total number of molecule move events over the session",
-            "sessionClearBtnPresses":"Total number of times the clear button was pressed during the session",
-            "sessionMuseumDurationInSecs":"Total amount of time spent in a museum during the session?"
+        "aggregate": {
+            "sessionID": {
+                "enabled": true,
+                "description": "The player's session ID number for this play session"
+            },
+            "persistentSessionID": {
+                "enabled": true,
+                "description": "The session ID for the player's device, persists across multiple players using the same device."
+            },
+            "sessionEventCount": {
+                "enabled": true,
+                "description": "The total number of events across the entire session"
+            },
+            "sessionDurationInSecs": {
+                "enabled": true,
+                "description": "The total time (in seconds) spent over the entire session"
+            },
+            "sessionStampRotateCount": {
+                "enabled": true,
+                "description": "Total number of stamp rotation events over the session"
+            },
+            "sessionSingleRotateCount": {
+                "enabled": true,
+                "description": "Total number of single rotation events over the session"
+            },
+            "sessionMoleculeMoveCount": {
+                "enabled": true,
+                "description": "Total number of molecule move events over the session"
+            },
+            "sessionClearBtnPresses": {
+                "enabled": true,
+                "description": "Total number of times the clear button was pressed during the session"
+            },
+            "sessionMuseumDurationInSecs": {
+                "enabled": true,
+                "description": "Total amount of time spent in a museum during the session?"
+            }
         }
     },
 

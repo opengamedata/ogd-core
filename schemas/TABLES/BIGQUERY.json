@@ -1,32 +1,20 @@
 {
     "column_map": {
-        "event_date": "event_date",
-        "event_timestamp": "event_timestamp",
+        "session_id": "session_id",
+        "app_id": null,
+        "timestamp": "timestamp",
         "event_name": "event_name",
-        "event_params": "event_params",
-        "event_server_timestamp_offset": "event_server_timestamp_offset",
-        "user_id": "user_id",
-        "user_pseudo_id": "user_pseudo_id",
-        "device": "device",
-        "geo": "geo",
-        "app_info": "app_info",
-        "traffic_source": "traffic_source",
-        "platform": "platform"
+        "event_data": "event_params",
+        "app_version": "app_version",
+        "log_version": "log_version",
+        "time_offset": null,
+        "user_id": "fd_user_id",
+        "user_data": null,
+        "game_state": null,
+        "event_sequence_index": null
     },
 
     "columns": [
-        {
-            "name": "event_date",
-            "readable": "Event Date",
-            "desc": "The date on which the event was logged",
-            "type": "str"
-        },
-        {
-            "name": "event_timestamp",
-            "readable": "Event Timestamp",
-            "desc": "The time (in microseconds, UTC) at which the event was logged on the client",
-            "type": "int"
-        },
         {
             "name": "event_name",
             "readable": "Event Name",
@@ -37,91 +25,19 @@
             "name": "event_params",
             "readable": "Event Parameters",
             "desc": "A repeated record of the parameters associated with this event",
-            "type": "dict"
-        },
-        {
-            "name": "event_previous_timestamp",
-            "readable": "Event Previous Timestamp",
-            "desc": "The time (in microseconds, UTC) at which the event was previously logged on the client",
-            "type": "int"
-        },
-        {
-            "name": "event_value_in_usd",
-            "readable": "Event Value In USD",
-            "desc": "The currency-converted value (in USD) of the event's value parameter",
-            "type": "float"
-        },
-        {
-            "name": "event_bundle_sequence_id",
-            "readable": "Event Bundle Sequence ID",
-            "desc": "The sequential ID of the bundle in which these events were uploaded",
-            "type": "int"
-        },
-        {
-            "name": "event_server_timestamp_offset",
-            "readable": "Event Server Timestamp Offset",
-            "desc": "Timestamp offset between collection time and upload time in micros",
-            "type": "int"
-        },
-        {
-            "name": "user_id",
-            "readable": "User ID",
-            "desc": "The user ID set via the setUserId API",
-            "type": "str"
-        },
-        {
-            "name": "user_pseudo_id",
-            "readable": "User Pseudo ID",
-            "desc": "The pseudonymous id (e.g., app instance ID) for the user",
-            "type": "str"
-        },
-        {
-            "name": "user_properties",
-            "readable": "User Properties",
-            "desc": "A repeated record of user properties set with the setUserProperty API",
-            "type": "dict"
-        },
-        {
-            "name": "user_first_touch_timestamp",
-            "readable": "User First Touch Timestamp",
-            "desc": "The time (in microseconds) at which the user first opened the app or visited the site",
-            "type": "int"
-        },
-        {
-            "name": "user_ltv",
-            "readable": "User Lifetime Value",
-            "desc": "A record of Lifetime Value information about the user",
-            "type": "dict"
+            "type": "json"
         },
         {
             "name": "device",
             "readable": "Device",
             "desc": "A record of device information",
-            "type": "dict"
+            "type": "json"
         },
         {
             "name": "geo",
             "readable": "Geo",
             "desc": "A record of the user's geographic information",
-            "type": "dict"
-        },
-        {
-            "name": "app_info",
-            "readable": "App Info",
-            "desc": "A record of information on the app",
-            "type": "dict"
-        },
-        {
-            "name": "traffic_source",
-            "readable": "Traffic Source",
-            "desc": "Name of the traffic source that first acquired the user",
-            "type": "dict"
-        },
-        {
-            "name": "stream_id",
-            "readable": "Stream ID",
-            "desc": "The numeric ID of the stream",
-            "type": "int"
+            "type": "json"
         },
         {
             "name": "platform",
@@ -130,22 +46,34 @@
             "type": "str"
         },
         {
-            "name": "event_dimensions",
-            "readable": "Event Dimensions",
-            "desc": "Dimensions associated with the event",
-            "type": "dict"
+            "name": "timestamp",
+            "readable": "Timestamp",
+            "desc": "Datetime when event was logged",
+            "type": "datetime"
         },
         {
-            "name": "ecommerce",
-            "readable": "Ecommerce",
-            "desc": "A record of information about ecommerce",
-            "type": "dict"
+            "name": "app_version",
+            "readable": "Application/Game Version",
+            "desc": "The version of the application (game) that generated the data",
+            "type": "float"
         },
         {
-            "name": "items",
-            "readable": "Items",
-            "desc": "A repeated record of items included in this event",
-            "type": "dict"
+            "name": "log_version",
+            "readable": "Logging Version",
+            "desc": "The version of the logging code that generated the data",
+            "type": "int"
+        },
+        {
+            "name": "session_id",
+            "readable": "Session ID",
+            "desc": "ID for the play session",
+            "type": "int"
+        },
+        {
+            "name": "fd_user_id",
+            "readable": "Field Day User ID",
+            "desc": "The player's generated user code",
+            "type": "str"
         }
     ]
 }
