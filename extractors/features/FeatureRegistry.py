@@ -202,7 +202,7 @@ class FeatureRegistry(ExtractorRegistry):
 
     @property
     def FirstOrdersRequested(self) -> List[str]:
-        list(self._feature_registry.keys())
+        return list(self._feature_registry.keys())
 
     # *** PROPERTIES ***
 
