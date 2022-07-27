@@ -40,7 +40,7 @@ class PlayerProcessor(FeatureProcessor):
         :type player_file: Optional[IO[str]], optional
         """
         Logger.Log(f"Setting up PlayerProcessor for {player_id}...", logging.DEBUG, depth=2)
-        self._player_id   : str                 = player_id
+        self._player_id : str = player_id
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         ## Define instance vars
         self._session_processors : Dict[str,SessionProcessor] = {
@@ -74,8 +74,8 @@ class PlayerProcessor(FeatureProcessor):
         # ensure we have an extractor for the given session:
         if event.SessionID not in self._session_processors.keys():
             self._session_processors[event.SessionID] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
-                                                                          player_id=self._player_id, session_id=event.SessionID,
-                                                                          feature_overrides=self._overrides)
+                                                                         player_id=self._player_id,     session_id=event.SessionID,
+                                                                         feature_overrides=self._overrides)
 
         self._session_processors[event.SessionID].ProcessEvent(event=event)
 
@@ -92,14 +92,12 @@ class PlayerProcessor(FeatureProcessor):
             if as_str:
                 ret_val["players"] = [self._player_id, str(_sess_ct)] + self._registry.GetFeatureStringValues()
             else:
-                ret_val["players"] = [self._player_id, _sess_ct]      + self._registry.GetFeatureValues()
+                ret_val["players"] = [self._player_id, _sess_ct] + self._registry.GetFeatureValues()
         if export_types.sessions:
             # _results gives us a list of dicts, each with a "session" element
             _results = [sess_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for sess_extractor in self._session_processors.values()]
-            ret_val["sessions"] = []
             # so we loop over list, and pull each "session" element into a master list of all sessions.
-            for session in _results:
-                ret_val["sessions"].append(session["sessions"])
+            ret_val["sessions"] = [session["sessions"] for session in _results]
             # finally, what we return is a dict with a "sessions" element, containing list of lists.
         return ret_val
 

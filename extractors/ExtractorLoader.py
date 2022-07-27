@@ -116,6 +116,10 @@ class ExtractorLoader(abc.ABC):
                     feature = self.LoadFeature(feature_type=feature_type, name=instance_name, schema_args=percount, count_index=i)
                     if feature is not None:
                         self.RegisterExtractor(registry=registry, extractor=feature, iter_mode=iter_mode)
+        # for firstOrder in registry.FirstOrdersRequested():
+        #     #TODO load firstOrder, if it's not loaded already
+        #     if not firstOrder in registry.GetExtractorNames():
+
 
     # *** PROPERTIES ***
 
