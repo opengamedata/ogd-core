@@ -1,12 +1,11 @@
 # import libraries
 import logging
-from typing import Callable, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 # import locals
 from extractors.detectors.DetectorRegistry import DetectorRegistry
-from extractors.ExtractorRegistry import ExtractorRegistry
+from extractors.Extractor import ExtractorParameters
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.features.FeatureRegistry import FeatureRegistry
-from extractors.legacy.LegacyDetector import LegacyDetector
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
@@ -30,3 +29,14 @@ class LegacyLoader(ExtractorLoader):
                 registry.Register(feat, IterationMode.AGGREGATE)
         except NotImplementedError as err:
             Logger.Log("No detectors to be loaded.", logging.INFO, depth=2)
+
+    def _validateMode(self, feature_type) -> bool:
+        """Overridden version of _validateMode.
+        For LegacyLoader, we never care to check modes, since feature is a monolith and should just go for all versions.
+
+        :param feature_type: _description_
+        :type feature_type: _type_
+        :return: _description_
+        :rtype: bool
+        """
+        return True

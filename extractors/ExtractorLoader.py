@@ -67,20 +67,13 @@ class ExtractorLoader(abc.ABC):
 
         # bit of a hack using globals() here, but theoretically this lets us access the class object with only a string.
         # feature_class : Optional[Type[Extractor]] = globals().get(feature_type, None)
-        mod_name = f"games.{self._game_schema.GameName}.features.{feature_type}"
-        try:
-            feature_module = import_module(mod_name)
-        except ModuleNotFoundError as mod_err:
-            Logger.Log(f"In ExtractorLoader, '{mod_name}' could not be found, skipping {feature_type}", logging.ERROR)
-        else:
-            feature_class : Optional[Type[Extractor]] = getattr(feature_module, feature_type, None)
-            if feature_class is not None and self._mode in feature_class.AvailableModes():
-                    params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
-                    try:
-                        ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
-                    except NotImplementedError as err:
-                        Logger.Log(f"In ExtractorLoader, unable to load '{name}', {feature_type} is not implemented!:", logging.ERROR)
-                        Logger.Log(str(err), logging.ERROR, depth=1)
+        if self._validateMode(feature_type=feature_type):
+            params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
+            try:
+                ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
+            except NotImplementedError as err:
+                Logger.Log(f"In ExtractorLoader, unable to load '{name}', {feature_type} is not implemented!:", logging.ERROR)
+                Logger.Log(str(err), logging.ERROR, depth=1)
 
         return ret_val
 
@@ -143,3 +136,17 @@ class ExtractorLoader(abc.ABC):
         return count_range
 
     # *** PRIVATE METHODS ***
+
+    def _validateMode(self, feature_type) -> bool:
+        ret_val = False
+
+        mod_name = f"games.{self._game_schema.GameName}.features.{feature_type}"
+        try:
+            feature_module = import_module(mod_name)
+        except ModuleNotFoundError:
+            Logger.Log(f"In ExtractorLoader, '{mod_name}' could not be found, skipping {feature_type}", logging.ERROR)
+        else:
+            feature_class : Optional[Type[Extractor]] = getattr(feature_module, feature_type, None)
+            ret_val = feature_class is not None and self._mode in feature_class.AvailableModes()
+
+        return ret_val
