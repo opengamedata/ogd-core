@@ -78,7 +78,8 @@ class JobActiveTime(PerJobFeature):
     def MinVersion(self) -> Optional[str]:
         return "1"
 
-    def AvailableModes(self) -> List[ExtractionMode]:
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
         return [ExtractionMode.USER, ExtractionMode.POPULATION]
 
     # *** PRIVATE METHODS ***

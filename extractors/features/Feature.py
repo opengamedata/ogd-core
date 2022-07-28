@@ -91,7 +91,8 @@ class Feature(Extractor):
     def GetFeatureValues(self) -> List[Any]:
         return self._getFeatureValues()
 
-    def AvailableModes(self) -> List[ExtractionMode]:
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
         """List of ExtractionMode supported by the Feature.
 
         Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
