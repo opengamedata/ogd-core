@@ -121,7 +121,7 @@ class LegacyFeature(Feature):
             self.features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(game_schema)
 
         @staticmethod
-        def generateFeatureDict(game_schema: GameSchema) -> Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]]:
+        def generateFeatureDict(game_schema: GameSchema) -> Dict[str,Union[int,float,timedelta,Dict[int,Dict[str,Any]]]]:
             """Static function to generate a dictionary of game feature data from a given schema.
             The dictionary has the following hierarchy:
             feature_dict -> [individual features] -> [individual levels] -> {value, prefix}
@@ -136,7 +136,7 @@ class LegacyFeature(Feature):
             perlevels = game_schema.Features['perlevel']
             level_range = range(game_schema._min_level   if game_schema._min_level is not None else 0,
                                 game_schema._max_level+1 if game_schema._max_level is not None else 1)
-            features : Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]] = {f:{lvl:{"val":None, "prefix":"lvl"} for lvl in level_range } for f in perlevels.keys()}
+            features : Dict[str,Union[int,float,timedelta,Dict[int,Dict[str,Any]]]] = {f:{lvl:{"val":None, "prefix":"lvl"} for lvl in level_range } for f in perlevels.keys()}
             # next, do something similar for other per-custom-count features.
             percounts = game_schema.PerCountFeatures
             features.update({f:{num:{"val":None, "prefix":percounts[f]["prefix"]} for num in range(0, percounts[f]["count"]) } for f in percounts})
