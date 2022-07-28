@@ -3,14 +3,14 @@ from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
-from extractors.ExtractorLoader import ExtractorLoader
+from extractors.legacy.LegacyLoader import LegacyLoader
 from extractors.features.Feature import Feature
 from games.LAKELAND.features.LakelandExtractor import LakelandExtractor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 
-class LakelandLoader(ExtractorLoader):
+class LakelandLoader(LegacyLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
