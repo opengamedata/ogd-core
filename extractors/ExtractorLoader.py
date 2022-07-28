@@ -67,21 +67,20 @@ class ExtractorLoader(abc.ABC):
 
         # bit of a hack using globals() here, but theoretically this lets us access the class object with only a string.
         # feature_class : Optional[Type[Extractor]] = globals().get(feature_type, None)
-        feature_module = import_module(f"games.{self._game_schema.GameName}.features.{feature_type}")
-        feature_class : Optional[Type[Extractor]] = getattr(feature_module, feature_type)
-        if feature_class is not None:
-            if self._mode in feature_class.AvailableModes():
-                Logger.Log(f"{self._mode.name} was found in AvailableModes for {feature_class}: [{feature_class.AvailableModes()}].")
-                params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
-                try:
-                    ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
-                except NotImplementedError as err:
-                    Logger.Log(f"In ExtractorLoader, '{name}' was not loaded due to an error:", logging.ERROR)
-                    Logger.Log(str(err), logging.ERROR, depth=1)
-            else:
-                Logger.Log(f"{self._mode.name} was not in AvailableModes for {feature_class}, we are skipping the loading of this feature.", logging.WARN, depth=1)
+        mod_name = f"games.{self._game_schema.GameName}.features.{feature_type}"
+        try:
+            feature_module = import_module(mod_name)
+        except ModuleNotFoundError as mod_err:
+            Logger.Log(f"In ExtractorLoader, '{mod_name}' could not be found, skipping {feature_type}", logging.ERROR)
         else:
-            Logger.Log(f"Could not find {feature_type} in globals()!", logging.WARN, depth=1)
+            feature_class : Optional[Type[Extractor]] = getattr(feature_module, feature_type, None)
+            if feature_class is not None and self._mode in feature_class.AvailableModes():
+                    params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
+                    try:
+                        ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
+                    except NotImplementedError as err:
+                        Logger.Log(f"In ExtractorLoader, unable to load '{name}', {feature_type} is not implemented!:", logging.ERROR)
+                        Logger.Log(str(err), logging.ERROR, depth=1)
 
         return ret_val
 
