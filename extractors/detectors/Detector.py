@@ -34,8 +34,7 @@ class Detector(Extractor):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    @classmethod
-    def _getFeatureDependencies(cls) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
         Any feature intented to be second-order should override this function.

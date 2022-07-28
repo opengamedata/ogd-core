@@ -13,13 +13,11 @@ class TotalArrowMoves(PerLevelFeature):
         self._arrow_move_count : int = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    @classmethod
-    def _getEventDependencies(cls) -> List[str]:
+    def _getEventDependencies(self) -> List[str]:
         return ["CUSTOM.2"]
         # return ["ARROW_MOVE_RELEASE"]
 
-    @classmethod
-    def _getFeatureDependencies(cls) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

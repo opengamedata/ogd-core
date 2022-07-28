@@ -6,6 +6,7 @@ from schemas.FeatureData import FeatureData
 from extractors.features.PerLevelFeature import PerLevelFeature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 
 class AmplitudeGoodMoveCount(PerLevelFeature):
     def __init__(self, params:ExtractorParameters):
@@ -13,13 +14,11 @@ class AmplitudeGoodMoveCount(PerLevelFeature):
         self._count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    @classmethod
-    def _getEventDependencies(cls) -> List[str]:
+    def _getEventDependencies(self) -> List[str]:
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
-    @classmethod
-    def _getFeatureDependencies(cls) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

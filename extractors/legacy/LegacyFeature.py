@@ -51,12 +51,10 @@ class LegacyFeature(Feature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    @classmethod
-    def _getEventDependencies(cls) -> List[str]:
+    def _getEventDependencies(self) -> List[str]:
         return ["all_events"]
 
-    @classmethod
-    def _getFeatureDependencies(cls) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return []
 
     def _extractFromFeatureData(self, feature: FeatureData):

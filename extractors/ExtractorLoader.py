@@ -71,7 +71,7 @@ class ExtractorLoader(abc.ABC):
         feature_class : Optional[Type[Extractor]] = getattr(feature_module, feature_type)
         if feature_class is not None:
             if self._mode in feature_class.AvailableModes():
-                Logger.Log(f"{self._mode} was found in AvailableModes for {feature_class}: [{feature_class.AvailableModes()}].")
+                Logger.Log(f"{self._mode.name} was found in AvailableModes for {feature_class}: [{feature_class.AvailableModes()}].")
                 params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
                 try:
                     ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
@@ -79,9 +79,9 @@ class ExtractorLoader(abc.ABC):
                     Logger.Log(f"In ExtractorLoader, '{name}' was not loaded due to an error:", logging.ERROR)
                     Logger.Log(str(err), logging.ERROR, depth=1)
             else:
-                Logger.Log(f"{self._mode} was not in AvailableModes for {feature_class}, we are skipping the loading of this feature.")
+                Logger.Log(f"{self._mode.name} was not in AvailableModes for {feature_class}, we are skipping the loading of this feature.", logging.WARN, depth=1)
         else:
-            Logger.Log(f"Could not find {feature_type} in globals()!", logging.WARN)
+            Logger.Log(f"Could not find {feature_type} in globals()!", logging.WARN, depth=1)
 
         return ret_val
 

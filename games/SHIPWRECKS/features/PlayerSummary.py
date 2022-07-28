@@ -12,12 +12,10 @@ class PlayerSummary(SessionFeature):
         self._summary = {}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    @classmethod
-    def _getEventDependencies(cls) -> List[str]:
+    def _getEventDependencies(self) -> List[str]:
         return []
 
-    @classmethod
-    def _getFeatureDependencies(cls) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         return ["JobsCompleted", "SessionDuration"]
 
     def _extractFromEvent(self, event:Event) -> None:

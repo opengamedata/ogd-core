@@ -26,9 +26,8 @@ class Extractor(abc.ABC):
     # *** ABSTRACTS ***
 
     ## Abstract function to get a list of event types the Feature wants.
-    @classmethod
     @abc.abstractmethod
-    def _getEventDependencies(cls) -> List[str]:
+    def _getEventDependencies(self) -> List[str]:
         """ Abstract function to get a list of event types the Feature wants.
             The types of event accepted by a feature are a responsibility of the Feature's developer,
             so this is a required part of interface instead of a config item in the schema.
@@ -38,9 +37,8 @@ class Extractor(abc.ABC):
         """
         pass
 
-    @classmethod
     @abc.abstractmethod
-    def _getFeatureDependencies(cls) -> List[str]:
+    def _getFeatureDependencies(self) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
         Any feature intented to be second-order should override this function.
@@ -72,13 +70,11 @@ class Extractor(abc.ABC):
 
     # *** PUBLIC METHODS ***
 
-    @classmethod
-    def GetEventDependencies(cls) -> List[str]:
-        return cls._getEventDependencies()
+    def GetEventDependencies(self) -> List[str]:
+        return self._getEventDependencies()
 
-    @classmethod
-    def GetFeatureDependencies(cls) -> List[str]:
-        return cls._getFeatureDependencies()
+    def GetFeatureDependencies(self) -> List[str]:
+        return self._getFeatureDependencies()
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event=event):
