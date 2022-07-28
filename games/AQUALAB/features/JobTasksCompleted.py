@@ -32,5 +32,5 @@ class JobTasksCompleted(PerJobFeature):
 
     # *** Optionally override public functions. ***
     @staticmethod
-    def MinVersion(self) -> Optional[str]:
+    def MinVersion() -> Optional[str]:
         return "1"
