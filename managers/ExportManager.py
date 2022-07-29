@@ -244,7 +244,7 @@ class ExportManager:
                     if request.ExportSessions:
                         _sess_feats = self._feat_mgr.GetSessionFeatures(slice_num=i+1, slice_count=len(_session_slices), as_str=True)
                         if request.ToDict:
-                            ret_val.Sessions.AppendValues(_sess_feats)
+                            ret_val.Sessions.ConcatValues(_sess_feats)
                         if request.ToFile and file_manager is not None:
                             _sess_feats = ExportManager._cleanSpecialChars(_sess_feats)
                             file_manager.GetSessionsFile().writelines(["\t".join(sess) + "\n" for sess in _sess_feats])
@@ -252,7 +252,7 @@ class ExportManager:
                     if request.ExportPlayers:
                         _player_feats = self._feat_mgr.GetPlayerFeatures(slice_num=i+1, slice_count=len(_session_slices), as_str=True)
                         if request.ToDict:
-                            ret_val.Players.AppendValues(_player_feats)
+                            ret_val.Players.ConcatValues(_player_feats)
                         if request.ToFile and file_manager is not None:
                             _player_feats = ExportManager._cleanSpecialChars(_player_feats)
                             file_manager.GetPlayersFile().writelines(["\t".join(player) + "\n" for player in _player_feats])

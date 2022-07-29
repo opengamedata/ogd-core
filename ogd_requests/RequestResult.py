@@ -1,7 +1,7 @@
 # import standard libraries
 from datetime import timedelta
 from enum import IntEnum
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 class ResultStatus(IntEnum):
     NONE = 1
@@ -9,7 +9,7 @@ class ResultStatus(IntEnum):
     FAILURE = 3
 
 class ExportResult:
-    def __init__(self, columns:List[str] = [], values:List[Any] = []):
+    def __init__(self, columns:List[str] = [], values:List[List[Any]] = []):
         self._columns = columns
         self._values  = values
 
@@ -21,18 +21,20 @@ class ExportResult:
         self._columns = new_columns
 
     @property
-    def Values(self) -> List[Any]:
+    def Values(self) -> List[List[Any]]:
         return self._values
 
-    def ToDict(self) -> Dict[str, List[Any]]:
+    def ToDict(self) -> Dict[str, Union[List[str], List[List[Any]]]]:
         return {
             "cols":self._columns,
             "vals":self._values
         }
 
     def AppendValues(self, new_values:List[Any]):
+        self._values.append(new_values)
+    
+    def ConcatValues(self, new_values:List[List[Any]]):
         self._values += new_values
-
 
 class RequestResult:
     def __init__(self, msg:str="", status:ResultStatus=ResultStatus.NONE,
