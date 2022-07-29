@@ -89,7 +89,11 @@ class RequestResult:
 
     @property
     def SessionCount(self):
-        return len(self._sessions.Values)
+        return len(self.Sessions.Values)
+
+    @property
+    def PlayerCount(self):
+        return len(self.Players.Values)
 
     def RequestSucceeded(self, msg:str):
         self._status = ResultStatus.SUCCESS
