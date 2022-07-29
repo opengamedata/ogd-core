@@ -218,7 +218,7 @@ class ExportManager:
                 if request.ExportSessions:
                     ret_val.Sessions.Columns = self._feat_mgr.GetSessionFeatureNames()
                 if request.ExportPlayers:
-                    ret_val.Sessions.Columns = self._feat_mgr.GetPlayerFeatureNames()
+                    ret_val.Players.Columns = self._feat_mgr.GetPlayerFeatureNames()
                 if request.ExportPopulation:
                     ret_val.Population.Columns = self._feat_mgr.GetPopulationFeatureNames()
         # 1) Get the IDs of sessions to process
