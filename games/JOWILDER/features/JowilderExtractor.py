@@ -132,6 +132,7 @@ class JowilderExtractor(LegacyFeature):
         self.text_fqid_start_end = []
         self.last_click_type = ''
         self.this_click_type = ''
+        # HACK: ????????
         self.cur_question = 0
         self.chosen_answer = ''
         self.prev_interaction = None
