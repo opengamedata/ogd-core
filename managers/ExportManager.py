@@ -106,6 +106,14 @@ class ExportManager:
 
     # *** PRIVATE STATICS ***
 
+    @staticmethod
+    def _cleanSpecialChars(vals:List[Any], tab_width:int=3):
+        # check all return values for strings, and ensure no newlines or tabs get through, as they could throw off our outputs.
+        for i in range(len(vals)):
+            if isinstance(vals[i], str):
+                vals[i] = vals[i].replace('\n', ' ').replace('\t', ' '*tab_width)
+        return vals
+
     # *** PRIVATE METHODS ***
 
     def _receiveEventTrigger(self, event:Event) -> None:
@@ -156,16 +164,19 @@ class ExportManager:
             if self._feat_mgr is not None:
                 if request.ExportPopulation:
                     cols = self._feat_mgr.GetPopulationFeatureNames()
+                    cols = ExportManager._cleanSpecialChars(vals=cols)
                     self._file_mgr.WritePopulationFile("\t".join(cols) + "\n")
                 else:
                     Logger.Log("Population features not requested, skipping population_features file.", logging.INFO, depth=1)
                 if request.ExportPlayers:
                     cols = self._feat_mgr.GetPlayerFeatureNames()
+                    cols = ExportManager._cleanSpecialChars(vals=cols)
                     self._file_mgr.WritePlayersFile("\t".join(cols) + "\n")
                 else:
                     Logger.Log("Player features not requested, skipping player_features file.", logging.INFO, depth=1)
                 if request.ExportSessions:
                     cols = self._feat_mgr.GetSessionFeatureNames()
+                    cols = ExportManager._cleanSpecialChars(vals=cols)
                     self._file_mgr.WriteSessionsFile("\t".join(cols) + "\n")
                 else:
                     Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
@@ -207,7 +218,7 @@ class ExportManager:
                 if request.ExportSessions:
                     ret_val.Sessions.Columns = self._feat_mgr.GetSessionFeatureNames()
                 if request.ExportPlayers:
-                    ret_val.Sessions.Columns = self._feat_mgr.GetPlayerFeatureNames()
+                    ret_val.Players.Columns = self._feat_mgr.GetPlayerFeatureNames()
                 if request.ExportPopulation:
                     ret_val.Population.Columns = self._feat_mgr.GetPopulationFeatureNames()
         # 1) Get the IDs of sessions to process
@@ -226,21 +237,24 @@ class ExportManager:
                     if request.ToDict:
                         ret_val.Events.AppendValues(_events)
                     if request.ToFile and file_manager is not None:
+                        _events = ExportManager._cleanSpecialChars(_events)
                         file_manager.GetEventsFile().writelines(_events)
                     self._event_mgr.ClearLines()
                 if self._feat_mgr is not None:
                     if request.ExportSessions:
                         _sess_feats = self._feat_mgr.GetSessionFeatures(slice_num=i+1, slice_count=len(_session_slices), as_str=True)
                         if request.ToDict:
-                            ret_val.Sessions.AppendValues(_sess_feats)
+                            ret_val.Sessions.ConcatValues(_sess_feats)
                         if request.ToFile and file_manager is not None:
+                            _sess_feats = ExportManager._cleanSpecialChars(_sess_feats)
                             file_manager.GetSessionsFile().writelines(["\t".join(sess) + "\n" for sess in _sess_feats])
                         self._feat_mgr.ClearSessionLines()
                     if request.ExportPlayers:
                         _player_feats = self._feat_mgr.GetPlayerFeatures(slice_num=i+1, slice_count=len(_session_slices), as_str=True)
                         if request.ToDict:
-                            ret_val.Players.AppendValues(_player_feats)
+                            ret_val.Players.ConcatValues(_player_feats)
                         if request.ToFile and file_manager is not None:
+                            _player_feats = ExportManager._cleanSpecialChars(_player_feats)
                             file_manager.GetPlayersFile().writelines(["\t".join(player) + "\n" for player in _player_feats])
                         self._feat_mgr.ClearPlayerLines()
         Logger.Log(f"Done", logging.INFO, depth=1)
@@ -251,6 +265,7 @@ class ExportManager:
                 if request.ToDict:
                     ret_val.Population.AppendValues(_pop_feats)
                 if request.ToFile and file_manager is not None:
+                    _pop_feats = ExportManager._cleanSpecialChars(vals=_pop_feats)
                     file_manager.WritePopulationFile("\t".join(_pop_feats) + "\n")
             self._feat_mgr.ClearPopulationLines()
         return ret_val
@@ -323,10 +338,10 @@ class ExportManager:
                 self._feat_mgr.ProcessEvent(event=next_event)
         except Exception as err:
             if default_settings.get("FAIL_FAST", None):
-                Logger.Log(f"Error while processing event {next_event}.", logging.ERROR, depth=2)
+                Logger.Log(f"Error while processing event {next_event.EventName}.", logging.ERROR, depth=2)
                 raise err
             else:
-                Logger.Log(f"Error while processing event {next_event}. This event will be skipped. \nFull error: {traceback.format_exc()}", logging.WARNING, depth=2)
+                Logger.Log(f"Error while processing event {next_event.EventName}. This event will be skipped. \nFull error: {traceback.format_exc()}", logging.WARNING, depth=2)
 
     def _teardownFileManager(self, game_schema:GameSchema, table_schema:TableSchema, num_sess:int):
         if self._file_mgr is not None:

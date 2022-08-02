@@ -82,6 +82,26 @@ class BigQueryInterface(DataInterface):
 
     def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> List[Tuple]:
         # 2) Set up clauses to select based on Session ID or Player ID.
+        events = None
+        if self._client != None:
+            query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode)
+            data = self._client.query(query)
+            events = []
+            for row in data:
+                items = tuple(row.items())
+                event = []
+                for item in items:
+                    if item[0] == "event_params":
+                        _params = {param['key']:param['value'] for param in item[1]}
+                        event.append(json.dumps(_params, sort_keys=True))
+                    elif item[0] in ["device", "geo"]:
+                        event.append(json.dumps(item[1], sort_keys=True))
+                    else:
+                        event.append(item[1])
+                events.append(tuple(event))
+        return events if events != None else []
+
+    def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode) -> str:
         session_clause : str = ""
         player_clause  : str = ""
         if id_mode == IDMode.SESSION:
@@ -93,7 +113,7 @@ class BigQueryInterface(DataInterface):
             session_clause = f"AND   param_session.key = 'ga_session_id'"
             player_clause  = f"AND   param_user.key    = 'user_code' AND param_user.value.string_value IN ({id_string})"
         else:
-            Logger.Log(f"Invalid ID mode given (val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
+            Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
             id_string = ','.join([f"{x}" for x in id_list])
             session_clause = f"AND   param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
             player_clause  = f"AND   param_user.key    = 'user_code'"
@@ -140,21 +160,7 @@ class BigQueryInterface(DataInterface):
                 {where_clause}
                 ORDER BY `session_id`, `timestamp` ASC
             """
-        data = self._client.query(query)
-        events = []
-        for row in data:
-            items = tuple(row.items())
-            event = []
-            for item in items:
-                if item[0] == "event_params":
-                    _params = {param['key']:param['value'] for param in item[1]}
-                    event.append(json.dumps(_params, sort_keys=True))
-                elif item[0] in ["device", "geo"]:
-                    event.append(json.dumps(item[1], sort_keys=True))
-                else:
-                    event.append(item[1])
-            events.append(tuple(event))
-        return events if events != None else []
+        return query
 
     def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]] = None) -> List[str]:
         ret_val = []
@@ -186,7 +192,7 @@ class BigQueryInterface(DataInterface):
                 AND param.value.string_value IN ({id_string})
             """
         else:
-            Logger.Log(f"Invalid ID mode given (val={id_mode}), defaulting to session mode.", logging.WARNING, depth=3)
+            Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
             id_string = ','.join([f"{x}" for x in id_list])
             where_clause = f"""
                 WHERE param.key = "ga_session_id"
@@ -208,8 +214,9 @@ class BigQueryInterface(DataInterface):
         data = list(self._client.query(query))
         ret_val : Dict[str, datetime] = {}
         if len(data) == 1:
-            if len(data[0]) == 2:
-                ret_val = {'min':datetime.strptime(data[0][0], "%m-%d-%Y %H:%M:%S"), 'max':datetime.strptime(data[0][1], "%m-%d-%Y %H:%M:%S")}
+            dates = data[0]
+            if len(dates) == 2 and dates[0] is not None and dates[1] is not None:
+                ret_val = {'min':datetime.strptime(dates[0], "%m-%d-%Y %H:%M:%S"), 'max':datetime.strptime(dates[1], "%m-%d-%Y %H:%M:%S")}
             else:
                 Logger.Log(f"BigQueryInterface query did not give both a min and a max, setting both to 'now'", logging.WARNING, depth=3)
                 ret_val = {'min':datetime.now(), 'max':datetime.now()}

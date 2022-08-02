@@ -11,6 +11,7 @@ from extractors.ExtractorRegistry import ExtractorRegistry
 from extractors.features.Feature import Feature
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.IterationMode import IterationMode
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
@@ -81,9 +82,9 @@ class FeatureRegistry(ExtractorRegistry):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _register(self, extractor:Extractor, kind:ExtractorRegistry.Listener.Kinds):
+    def _register(self, extractor:Extractor, mode:IterationMode):
         if isinstance(extractor, Feature):
-            _listener = ExtractorRegistry.Listener(name=extractor.Name, kind=kind)
+            _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=mode)
             _feature_deps = extractor.GetFeatureDependencies()
             _event_deps   = extractor.GetEventDependencies()
             # First, add feature to the _features dict.
@@ -139,7 +140,7 @@ class FeatureRegistry(ExtractorRegistry):
         :type table_schema: TableSchema
         """
         if feature.Name in self._feature_registry.keys():
-            # send event to every listener for the given feature name.
+            # send feature to every listener for the given feature name.
             for listener in self._feature_registry[feature.Name]:
                 for order_key in range(len(self._features)):
                     if listener.name in self._features[order_key].keys():
@@ -199,6 +200,10 @@ class FeatureRegistry(ExtractorRegistry):
                 str_val = str(val)
             ret_val.append(str_val)
         return ret_val
+
+    @property
+    def FirstOrdersRequested(self) -> List[str]:
+        return list(self._feature_registry.keys())
 
     # *** PROPERTIES ***
 

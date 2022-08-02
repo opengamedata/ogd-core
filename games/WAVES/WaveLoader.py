@@ -119,7 +119,7 @@ class WaveLoader(ExtractorLoader):
         return ret_val
 
     def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
-        raise NotImplementedError(f"'{detector_type}' is not a valid feature for Waves.")
+        raise NotImplementedError(f"'{detector_type}' is not a valid detector for Waves.")
 
     # *** BUILT-INS ***
 

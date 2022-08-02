@@ -95,7 +95,8 @@ class JobsAttempted(Feature):
     def Subfeatures(self) -> List[str]:
         return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-complete", "std-dev-complete", "job-difficulties"]
 
-    def MinVersion(self) -> Optional[str]:
+    @staticmethod
+    def MinVersion() -> Optional[str]:
         return "1"
 
     # *** Other local functions

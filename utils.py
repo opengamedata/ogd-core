@@ -5,7 +5,6 @@ import logging
 import os
 import traceback
 from datetime import datetime
-from logging import Logger
 from pathlib import Path
 from typing import Any, Dict, Optional
 # import locals
@@ -30,16 +29,11 @@ def loadJSONFile(filename:str, path:Path = Path("./")) -> Dict[Any, Any]:
             return json.loads(json_file.read())
     except FileNotFoundError as err:
         Logger.Log(f"File {file_path} does not exist.", logging.WARNING)
-        print(f"File {file_path} does not exist.")
-        raise err
-    except Exception as err:
-        Logger.Log(f"Could not read file at {file_path}\nFull error message: {type(err)} {str(err)}\nCurrent directory: {os.getcwd()}",
-                        logging.ERROR)
         raise err
 
 class Logger:
-    std_logger  : Logger           = logging.getLogger("std_logger")
-    file_logger : Optional[Logger] = None
+    std_logger  : logging.Logger   = logging.getLogger("std_logger")
+    file_logger : Optional[logging.Logger] = None
 
     # Set up loggers. First, the std out logger
     stdout_handler = logging.StreamHandler()

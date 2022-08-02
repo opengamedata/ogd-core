@@ -121,9 +121,9 @@
       "(none)": " | Log itself indicates the player has left the game page. Seperate history and gamestate logs are sent."
     },
     "EMOTE":{
-	"farmbit": "farmbit_data_short(t) | See [Data Short](#DataShort).",
-	"emote_enum": "emote_id | See [emotes](#Emotes)."
-	},
+      "farmbit": "farmbit_data_short(t) | See [Data Short](#DataShort).",
+      "emote_enum": "emote_id | See [emotes](#Emotes)."
+    },
     "FARMFAIL":{
         "tile": "tile_data_short(t) | Farm that failed. See [Data Short](#DataShort).",
         "marks": "t.marks | Farm [mark indices](#Mark)."

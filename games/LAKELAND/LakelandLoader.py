@@ -3,21 +3,21 @@ from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
-from extractors.ExtractorLoader import ExtractorLoader
+from extractors.legacy.LegacyLoader import LegacyLoader
 from extractors.features.Feature import Feature
 from games.LAKELAND.features.LakelandExtractor import LakelandExtractor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 
-class LakelandLoader(ExtractorLoader):
+class LakelandLoader(LegacyLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         return LakelandExtractor(params=extractor_params, game_schema=self._game_schema, session_id=self._session_id)
 
-    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
+    def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Lakeland.")
 
     # *** BUILT-INS ***

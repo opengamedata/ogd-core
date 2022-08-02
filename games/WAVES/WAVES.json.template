@@ -90,38 +90,38 @@
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"int",
+                "return_type":"int",
                 "description": "number of times a player 'began' the level. [count of 'BEGIN' events]"
             },
             "Completed": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"bool",
+                "return_type":"bool",
                 "description": "whether the level was completed or not [bool whether 'COMPLETE' event was found]",
                 "subfeatures": {
-                    "Count":{"type":"int", "description":"number of times a player 'completed' the level. [count of 'COMPLETE' events]"}
+                    "Count":{"return_type":"int", "description":"number of times a player 'completed' the level. [count of 'COMPLETE' events]"}
                 }
             },
             "MenuButtonCount": {
                 "enabled": false,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"int",
+                "return_type":"int",
                 "description": "number of times the player returned to the main menu. [count of 'MENU_BUTTON' events]"
             },
             "SucceedCount": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"int",
+                "return_type":"int",
                 "description": "number of times a 'SUCCEED' event occurs. [count of 'SUCCEED' events]"
             },
             "TotalFails": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"int",
+                "return_type":"int",
                 "description": "number of 'Fail' events across a level"
             },
             "TotalLevelTime": {
@@ -134,14 +134,14 @@
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"int",
+                "return_type":"int",
                 "description": "number of times the user pressed the 'reset' button across a level"
             },
             "TotalSkips": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"int",
+                "return_type":"int",
                 "description": "number of times the player chose to skip the level (only allowed if they already completed the level once)"
             },
 
@@ -157,21 +157,21 @@
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"int",
+                "return_type":"int",
                 "description": "number of amplitude moves that brought amplitude closer to the correct value"
             },
             "OffsetGoodMoveCount": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"int",
+                "return_type":"int",
                 "description": "number of offset moves that brought offset closer to the correct value"
             },
             "WavelengthGoodMoveCount": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"int",
+                "return_type":"int",
                 "description": "number of wavelength moves that brought wavelength closer to the correct value"
             },
             "PercentAmplitudeMoves": {
@@ -232,21 +232,21 @@
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"int",
+                "return_type":"int",
                 "description": "arrow moves across a given level [count of 'ARROW_MOVE_RELEASE' events]"
             },
             "TotalMoveTypeChanges": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"int",
+                "return_type":"int",
                 "description": "number of times the player changes between 'Arrow' and 'Slider' move types across a level"
             },
             "TotalSliderMoves": {
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"int",
+                "return_type":"int",
                 "description": "slider moves across a given level [count of 'SLIDER_MOVE_RELEASE' events]"
             },
 
@@ -279,7 +279,7 @@
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "type":"str",
+                "return_type":"str",
                 "description": "Sequence of slider interactions (e.g. 'wow' for Wavelength, Offset, Wavelength)"
             }
         },

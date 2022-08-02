@@ -30,5 +30,6 @@ class JobDiveSitesCount(PerJobFeature):
         return [self._count]
 
     # *** Optionally override public functions. ***
-    def MinVersion(self) -> Optional[str]:
+    @staticmethod
+    def MinVersion() -> Optional[str]:
         return "1"

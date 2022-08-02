@@ -7,8 +7,9 @@ from typing import Dict, List
 ## import local files
 from utils import Logger
 from extractors.Extractor import Extractor
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
+from schemas.IterationMode import IterationMode
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
@@ -21,17 +22,12 @@ class ExtractorRegistry(abc.ABC):
     :rtype: [type]
     """
     class Listener:
-        @enum.unique
-        class Kinds(enum.Enum):
-            AGGREGATE = enum.auto()
-            PERCOUNT  = enum.auto()
-
-        def __init__(self, name:str, kind:Kinds):
+        def __init__(self, name:str, mode:IterationMode):
             self.name = name
-            self.kind = kind
+            self.mode = mode
         
         def __str__(self) -> str:
-            return f"{self.name} ({'aggregate' if self.kind == ExtractorRegistry.Listener.Kinds.AGGREGATE else 'per-count'})"
+            return f"{self.name} ({self.mode.name})"
 
         def __repr__(self) -> str:
             return str(self)
@@ -39,7 +35,7 @@ class ExtractorRegistry(abc.ABC):
     # *** ABSTRACTS ***
 
     @abc.abstractmethod
-    def _register(self, extractor:Extractor, kind:Listener.Kinds):
+    def _register(self, extractor:Extractor, mode:IterationMode):
         pass
 
     @abc.abstractmethod
@@ -72,15 +68,15 @@ class ExtractorRegistry(abc.ABC):
 
     # *** PUBLIC METHODS ***
 
-    def Register(self, extractor:Extractor, kind:Listener.Kinds):
-        self._register(extractor=extractor, kind=kind)
+    def Register(self, extractor:Extractor, mode:IterationMode):
+        self._register(extractor=extractor, mode=mode)
 
     def GetExtractorNames(self) -> List[str]:
         """Function to generate a list names of all enabled features, given a GameSchema
-        This is different from the feature_names() function of GameSchema,
+        This is different from the FeatureNames property of GameSchema,
         which ignores the 'enabled' attribute and does not expand per-count features
         (e.g. this function would include 'lvl0_someFeat', 'lvl1_someFeat', 'lvl2_someFeat', etc.
-        while feature_names() only would include 'someFeat').
+        while FeatureNames only would include 'someFeat').
 
         :param schema: The schema from which feature names should be generated.
         :type schema: GameSchema

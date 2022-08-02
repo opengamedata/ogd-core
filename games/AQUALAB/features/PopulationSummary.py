@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import timedelta
 from typing import Any, Dict, List
 
 from extractors.Extractor import ExtractorParameters
@@ -35,11 +36,14 @@ class PopulationSummary(SessionFeature):
     def _getFeatureValues(self) -> List[Any]:
         num_sessions = [len(self._user_sessions[user]) for user in self._user_sessions]
         num_completions = [len(self._user_completions[user]) for user in self._user_completions]
-        session_times = []
+        session_times : List[timedelta] = []
 
         for user in self._user_session_times:
             for time in self._user_session_times[user]:
-                session_times.append(time)
+                if type(time) == str and time == "No events":
+                    pass
+                else:
+                    session_times.append(time)
 
         summary : Dict[str, float]= {
             "avg_session_count": 0,
@@ -54,8 +58,17 @@ class PopulationSummary(SessionFeature):
             summary["avg_jobs_completed"] = int(sum(num_completions) / len(num_completions))
 
         if len(session_times) > 0:
-            summary["avg_session_time"] = sum(session_times) / len(session_times)
+            summary["avg_session_time"] = PopulationSummary._timesum(session_times) / len(session_times)
 
         return [summary]
 
     # *** Optionally override public functions. ***
+
+    # *** Private Functions ***
+
+    @staticmethod
+    def _timesum(times:List[timedelta]):
+        ret_val = timedelta(0)
+        for time in times:
+            ret_val += time
+        return ret_val.seconds

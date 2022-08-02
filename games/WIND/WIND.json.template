@@ -1,12 +1,10 @@
 {
-    "level_range": { "min":0, "max":2 },
+    "level_range": { "min":0, "max":8 },
 
     "events":{
     },
 
     "features": {
-        "perlevel":{
-        },
         "per_count": {
         },
         "aggregate":{

@@ -81,7 +81,8 @@ class Extractor(abc.ABC):
             self._extractFromEvent(event=event)
 
     ## Base function to get the minimum game data version the feature can handle.
-    def MinVersion(self) -> Optional[str]:
+    @staticmethod
+    def MinVersion() -> Optional[str]:
         """ Base function to get the minimum game data version the feature can handle.
             A value of None will set no minimum, so all levels are accepted (unless a max is set).
             Typically default to None, unless there is a required element of the event data that was not added until a certain version.        
@@ -94,7 +95,8 @@ class Extractor(abc.ABC):
         return None
 
     ## Base function to get the maximum game data version the feature can handle.
-    def MaxVersion(self) -> Optional[str]:
+    @staticmethod
+    def MaxVersion() -> Optional[str]:
         """ Base function to get the maximum game data version the feature can handle.
             A value of None will set no maximum, so all levels are accepted (unless a min is set).
             Typically default to None, unless the feature is not compatible with new data and is only kept for legacy purposes.
@@ -105,6 +107,16 @@ class Extractor(abc.ABC):
         :rtype: Optional[str]
         """
         return None
+
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Extractor
+
+        Base function to give a list of which ExtractionModes an extractor will handle.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.POPULATION, ExtractionMode.USER, ExtractionMode.SESSION, ExtractionMode.DETECTOR]
 
     # *** PROPERTIES ***
 

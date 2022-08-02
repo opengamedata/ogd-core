@@ -8,8 +8,9 @@ from typing import Any, Callable, List, Optional
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import Extractor
 from extractors.ExtractorRegistry import ExtractorRegistry
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.FeatureData import FeatureData
+from schemas.IterationMode import IterationMode
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
@@ -66,9 +67,9 @@ class DetectorRegistry(ExtractorRegistry):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _register(self, extractor:Extractor, kind:ExtractorRegistry.Listener.Kinds):
+    def _register(self, extractor:Extractor, mode:IterationMode):
         if isinstance(extractor, Detector):
-            _listener = ExtractorRegistry.Listener(name=extractor.Name, kind=kind)
+            _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=mode)
             _event_types   = extractor.GetEventDependencies()
             # First, add detector to the _features dict.
             self._detectors[extractor.Name] = extractor

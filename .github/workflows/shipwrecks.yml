@@ -6,7 +6,7 @@ on:
     - '.github/workflows/shipwrecks.yml'
   workflow_dispatch:
 jobs:
-  test_connect:
+  Shipwrecks_CI:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -27,9 +27,12 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "DEBUG"
+    - name: Set up Schema File
+      uses: ./.github/actions/OGD_schema
+      with:
         game: "SHIPWRECKS"
-    - name: Do Export of last month's data
-      uses: ./.github/actions/export_last_month
+    - name: Do Export of last week's data
+      uses: ./.github/actions/export_last_week
       with:
         game: SHIPWRECKS
     - name: Upload logs as artifacts

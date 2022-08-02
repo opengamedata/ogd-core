@@ -3,8 +3,8 @@ fieldday-pyenv*
 data/
 tests/
 config/
-TestDriver.py
 config/config.py
+TestDriver.py
 .DS_Store
 .gitignore
 .gitmodules

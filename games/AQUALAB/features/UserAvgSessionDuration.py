@@ -25,7 +25,10 @@ class UserAvgSessionDuration(SessionFeature):
 
     def _extractFromFeatureData(self, feature:FeatureData):
         if feature.PlayerID == self._player_id:
-            self._times.append(feature.FeatureValues[0])
+            if feature.FeatureValues[0] == "No events":
+                pass
+            else:
+                self._times.append(feature.FeatureValues[0].seconds)
 
     def _getFeatureValues(self) -> List[Any]:
         if len(self._times) > 0:

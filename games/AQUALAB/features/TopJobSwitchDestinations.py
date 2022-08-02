@@ -65,7 +65,8 @@ class TopJobSwitchDestinations(Feature):
         return [json.dumps(ret_val)]
 
     # *** Optionally override public functions. ***
-    def MinVersion(self) -> Optional[str]:
+    @staticmethod
+    def MinVersion() -> Optional[str]:
         return "1"
 
     # *** Other local functions
