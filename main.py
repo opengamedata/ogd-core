@@ -1,299 +1,251 @@
 # import standard libraries
 import cProfile
-import datetime
-import getopt
+#import datetime
+import argparse
+import csv
 import logging
-import math
 import os
 import sys
 import traceback
-import typing
+from argparse import Namespace
+from calendar import monthrange
 from datetime import datetime
+from itertools import chain
+from pathlib import Path
+from typing import Tuple
+
+# import 3rd-party libraries
+from git.remote import FetchInfo
+
 # import local files
-import feature_extractors.Extractor
-import Request
-import utils
-from config import settings
+from utils import Logger
+from config.config import settings as settings
+from interfaces.DataInterface import DataInterface
+from interfaces.CSVInterface import CSVInterface
+from interfaces.MySQLInterface import MySQLInterface
+from interfaces.BigQueryInterface import BigQueryInterface
 from managers.ExportManager import ExportManager
-from feature_extractors.CrystalExtractor import CrystalExtractor
-from feature_extractors.WaveExtractor import WaveExtractor
-from schemas.Schema import Schema
+from managers.FileManager import FileManager
+from schemas.IDMode import IDMode
+from schemas.GameSchema import GameSchema
+from schemas.TableSchema import TableSchema
+from ogd_requests.Request import Request, ExporterTypes, ExporterRange
+from ogd_requests.RequestResult import RequestResult, ResultStatus
+from utils import Logger
 
-## Function to print a "help" listing for the export tool.
-#  Hopefully not needed too often, if at all.
-#  Just nice to have on hand, in case we ever need it.
-def showHelp():
-    width = 30
-    print(width*"*")
-    print("usage: <python> main.py <cmd> [<args>] [<opt-args>]")
-    print("")
-    print("<python> is your python command.")
-    print("<cmd>    is one of the available commands:")
-    print("         - export")
-    print("         - export-events")
-    print("         - export-session-features")
-    print("         - info")
-    print("         - readme")
-    print("         - help")
-    print("[<args>] are the arguments for the command:")
-    print("         - export: game_id, [start_date, end_date]")
-    print("             game_id    = id of game to export")
-    print("             start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)")
-    print("             end_date   = ending date for export, in form mm/dd/yyyy (default=current day)")
-    print("         - export-events: game_id")
-    print("             game_id    = id of game to export")
-    print("             start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)")
-    print("             end_date   = ending date for export, in form mm/dd/yyyy (default=current day)")
-    print("         - export-session-features: game_id, [month_year]")
-    print("             game_id    = id of game to export")
-    print("             start_date = beginning date for export, in form mm/dd/yyyy (default=first day of current month)")
-    print("             end_date   = ending date for export, in form mm/dd/yyyy (default=current day)")
-    print("         - info: game_id")
-    print("             game_id    = id of game whose info should be shown")
-    print("         - readme: game_id")
-    print("             game_id    = id of game whose readme should be generated")
-    print("         - help: *None*")
-    print("[<opt-args>] are optional arguments, which affect certain commands:")
-    print("         --file: specifies a file to export events or features")
-    print(width*"*")
-
-
-## Function to handle execution of export code. This is the main intended use of
-#  the program.
-def runExport(monthly: bool = False, events: bool = False, features: bool = False):
-    if "--file" in opts.keys():
-        _extractFromFile(file_path=opts["--file"], events=True, features=True)
-    else:
-        # retrieve game id
-        if num_args > 2:
-            game_id = args[2]
-        else:
-            showHelp()
-            return
-        # retrieve/calculate date range.
-        start_date: datetime
-        end_date: datetime
-        # If we want to export all data for a given month, calculate a date range.
-        if monthly is True:
-            month_year: typing.List[int]
-            if num_args > 3:
-                month_year_str = args[3].split("/")
-                month_year = [int(month_year_str[0]), int(month_year_str[1])]
-            else:
-                today   = datetime.now()
-                month_year = [today.month, today.year]
-            utils.Logger.toStdOut(f"Exporting {month_year[0]}/{month_year[1]} data for {game_id}...", logging.DEBUG)
-            _execMonthExport(game_id=game_id, month=month_year[0], year=month_year[1], events=events, features=features)
-            utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
-        # Otherwise, create date range from given pair of dates.
-        else:
-            today   = datetime.now()
-            start_date = datetime.strptime(args[3], "%m/%d/%Y") if num_args > 3 \
-                    else today
-            start_date = start_date.replace(hour=0, minute=0, second=0)
-            end_date   = datetime.strptime(args[4], "%m/%d/%Y") if num_args > 4 \
-                    else today
-            end_date = end_date.replace(hour=23, minute=59, second=59)
-            utils.Logger.toStdOut(f"Exporting from {str(start_date)} to {str(end_date)} of data for {game_id}...", logging.DEBUG)
-            _execExport(game_id, start_date, end_date, events=events, features=features)
-            utils.Logger.toStdOut(f"Done with {game_id}.", logging.DEBUG)
-
-def _execMonthExport(game_id, month, year, events, features):
-    from calendar import monthrange
-    month_range = monthrange(year, month)
-    days_in_month = month_range[1]
-    start_date = datetime(year=year, month=month, day=1, hour=0, minute=0, second=0)
-    end_date   = datetime(year=year, month=month, day=days_in_month, hour=23, minute=59, second=59)
-    _execExport(game_id, start_date, end_date, events, features)
-
-def _execExport(game_id, start_date, end_date, events, features):
-    # Once we have the parameters parsed out, construct the request.
-    export_files = Request.ExportFiles(dump=events, raw=False, proc=features)
-    req = Request.DateRangeRequest(game_id=game_id, start_date=start_date, end_date=end_date, \
-                max_sessions=settings["MAX_SESSIONS"], min_moves=settings["MIN_MOVES"], \
-                export_files=export_files)
-    start = datetime.now()
-    # breakpoint()
-    export_manager = ExportManager(game_id=req.game_id, settings=settings)
-    try:
-        schema = Schema(game_id)
-        export_manager.ExportFromSQL(request=req, game_schema=schema)
-        # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
-                        # {'req':req, 'feature_exporter':feature_exporter}, {})
-    except Exception as err:
-        msg = f"{type(err)} {str(err)}"
-        utils.Logger.toStdOut(msg, logging.ERROR)
-        traceback.print_tb(err.__traceback__)
-        utils.Logger.toFile(msg, logging.ERROR)
-    finally:
-        end = datetime.now()
-        time_delta = end - start
-        minutes = math.floor(time_delta.total_seconds()/60)
-        seconds = time_delta.total_seconds() % 60
-        print(f"Total time taken: {minutes} min, {seconds} sec")
-
-def _extractFromFile(file_path: str, events: bool = False, features: bool = False):
-    if num_args > 2:
-        game_id = args[2]
-    else:
-        showHelp()
-        return
-    start = datetime.now()
-    export_files = Request.ExportFiles(dump=events, raw=False, proc=features) 
-    req = Request.FileRequest(file_path=file_path, game_id=game_id, export_files=export_files)
-    # breakpoint()
-    export_manager = ExportManager(game_id=req.game_id, settings=settings)
-    try:
-        export_manager.ExtractFromFile(request=req, delimiter='\t')
-        # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
-                        # {'req':req, 'feature_exporter':feature_exporter}, {})
-    except Exception as err:
-        msg = f"{type(err)} {str(err)}"
-        utils.Logger.toStdOut(msg, logging.ERROR)
-        traceback.print_tb(err.__traceback__)
-        utils.Logger.toFile(msg, logging.ERROR)
-    finally:
-        end = datetime.now()
-        time_delta = end - start
-        minutes = math.floor(time_delta.total_seconds()/60)
-        seconds = time_delta.total_seconds() % 60
-        print(f"Total time taken: {minutes} min, {seconds} sec")
+def ListGames() -> bool:
+    print(f"The games available for export are:\n{games_list}")
+    return True
 
 ## Function to print out info on a game from the game's schema.
 #  This does a similar function to writeReadme, but is limited to the CSV
 #  metadata part (basically what was in the schema, at one time written into
 #  the csv's themselves). Further, the output is printed rather than written
 #  to file.
-def showGameInfo():
-    if num_args > 2:
-        # try:
-            # tunnel, db = utils.SQL.prepareDB(db_settings=db_settings, ssh_settings=ssh_settings)
-        game_name = args[2]
-        schema = Schema(schema_name=f"{game_name}.json")
-
-        feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-        print(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),\
-                                                        proc_field_list=feature_descriptions))
-        # finally:
-        #     pass
-            # utils.SQL.disconnectMySQLViaSSH(tunnel=tunnel, db=db)
+def ShowGameInfo() -> bool:
+    try:
+        game_schema = GameSchema(schema_name=f"{args.game}.json")
+        table_schema = TableSchema(schema_name=f"{settings['GAME_SOURCE_MAP'][args.game]['table']}.json")
+        print(FileManager.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema))
+    except Exception as err:
+        msg = f"Could not print information for {args.game}: {type(err)} {str(err)}"
+        Logger.Log(msg, logging.ERROR)
+        traceback.print_tb(err.__traceback__)
+        return False
     else:
-        print("Error, no game name given!")
-        showHelp()
+        return True
 
 ## Function to write out the readme file for a given game.
 #  This includes the CSV metadata (data from the schema, originally written into
 #  the CSV files themselves), custom readme source, and the global changelog.
 #  The readme is placed in the game's data folder.
-def writeReadme():
-    if num_args > 2:
-        try:
-            game_name = args[2]
-            path = f"./data/{game_name}"
-            os.makedirs(name=path, exist_ok=True)
-            readme = open(f"{path}/readme.md", "w")
-            try:
-                # Open files with game-specific readme data, and global db changelog.
-                readme_src    = open(f"./doc/readme_src/{game_name}_readme_src.md", "r")
-                readme.write(readme_src.read())
-            except FileNotFoundError as err:
-                readme.write("No readme prepared")
-                utils.Logger.toStdOut(f"Could not find readme_src for {game_name}", logging.ERROR)
-            finally:
-                readme.write("\n")
-            # Load schema, and write feature & column descriptions to the readme.
-            schema = Schema(schema_name=f"{game_name}.json")
-            feature_descriptions = {**schema.perlevel_features(), **schema.aggregate_features()}
-            readme.write(_genCSVMetadata(game_name=game_name, raw_field_list=schema.db_columns_with_types(),
-                                                                proc_field_list=feature_descriptions))
-            try:
-                changelog_src = open("./doc/readme_src/changelog_src.md", "r")
-                readme.write(changelog_src.read())
-            except FileNotFoundError as err:
-                readme.write("No changelog prepared")
-                utils.Logger.toStdOut(f"Could not find changelog_src", logging.ERROR)
-        except Exception as err:
-            msg = f"{type(err)} {str(err)}"
-            utils.Logger.toStdOut(msg, logging.ERROR)
-            traceback.print_tb(err.__traceback__)
-            utils.Logger.toFile(msg, logging.ERROR)
-        finally:
-            readme.close()
+def WriteReadme() -> bool:
+    path = Path(f"./data") / args.game
+    try:
+        game_schema = GameSchema(schema_name=f"{args.game}.json")
+        table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
+        FileManager.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=path)
+    except Exception as err:
+        msg = f"Could not create a readme for {args.game}: {type(err)} {str(err)}"
+        Logger.Log(msg, logging.ERROR)
+        traceback.print_tb(err.__traceback__)
+        return False
     else:
-        print("Error, no game name given!")
-        showHelp()
+        Logger.Log(f"Successfully generated a readme for {args.game}.", logging.INFO)
+        return True
 
-## Function to generate metadata for a given game.
-#  The "fields" are a sort of generalization of columns. Basically, columns which
-#  are repeated (say, once per level) all fall under a single field.
-#  Columns which are completely unique correspond to individual fields.
-#
-#  @param game_name         The name of the game for which the csv metadata is being generated.
-#  @param raw_field_list    A mapping of raw csv "fields" to descriptions of the fields.
-#  @param proc_field_list   A mapping of processed csv features to descriptions of the features.
-#  @return                  A string containing metadata for the given game.
-def _genCSVMetadata(game_name: str, raw_field_list: typing.Dict[str,str], proc_field_list: typing.Dict[str,str]) -> str:
-    raw_field_descriptions = [f"{key} - {raw_field_list[key]}" for key in raw_field_list.keys()]
-    proc_field_descriptions = [f"{key} - {proc_field_list[key]}" for key in proc_field_list.keys()]
-    raw_field_string = "\n".join(raw_field_descriptions)
-    proc_field_string = "\n".join(proc_field_descriptions)
-    template_str = \
-f"## Field Day Open Game Data \n\
-### Retrieved from https://fielddaylab.wisc.edu/opengamedata \n\
-### These anonymous data are provided in service of future educational data mining research. \n\
-### They are made available under the Creative Commons CCO 1.0 Universal license. \n\
-### See https://creativecommons.org/publicdomain/zero/1.0/ \n\
-\n\
-## Suggested citation: \n\
-### Field Day. (2019). Open Educational Game Play Logs - [dataset ID]. Retrieved [today's date] from https://fielddaylab.wisc.edu/opengamedata \n\
-\n\
-## Game: {game_name} \n\
-\n\
-## Field Descriptions: \n\
-### Raw CSV Columns:\n\
-{raw_field_string}\n\
-\n\
-### Processed Features:\n\
-{proc_field_string}\n\
-\n"
-    return template_str
+## Function to handle execution of export code. This is the main intended use of
+#  the program.
+def RunExport(events:bool = False, features:bool = False) -> bool:
+    success : bool = False
+
+    req = genRequest(events=events, features=features)
+    if req.Interface.IsOpen():
+        export_manager : ExportManager = ExportManager(settings=settings)
+        result         : RequestResult = export_manager.ExecuteRequest(request=req)
+        success = result.Status == ResultStatus.SUCCESS
+        level = logging.INFO if success else logging.ERROR
+        Logger.Log(message=result.Message, level=level)
+        Logger.Log(f"Total data request execution time: {result.Duration}", logging.INFO)
+        # cProfile.runctx("feature_exporter.ExportFromSQL(request=req)",
+                        # {'req':req, 'feature_exporter':feature_exporter}, {})
+    return success
+
+def genRequest(events:bool, features:bool) -> Request:
+    interface : DataInterface
+    range     : ExporterRange
+    exporter_files : ExporterTypes
+    exporter_files = ExporterTypes(events=events, sessions=not args.no_session_file, players=not args.no_player_file, population=not args.no_pop_file) 
+    supported_vers = GameSchema(schema_name=f"{args.game}.json")['config']['SUPPORTED_VERS']
+    if args.file is not None and args.file != "":
+        raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
+        ext = str(args.file).split('.')[-1]
+        interface = CSVInterface(game_id=args.game, filepath=args.file, delim="\t" if ext == '.tsv' else ',')
+        # retrieve/calculate id range.
+        ids = interface.AllIDs()
+        range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [], versions=supported_vers)
+        # breakpoint()
+    elif args.player is not None and args.player != "":
+        interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
+        if interface_type == "BigQuery":
+            interface = BigQueryInterface(game_id=args.game, settings=settings)
+        elif interface_type == "MySQL":
+            interface = MySQLInterface(game_id=args.game, settings=settings)
+        else:
+            raise Exception(f"{interface_type} is not a valid DataInterface type!")
+        range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER, versions=supported_vers)
+    elif args.player_id_file is not None and args.player_id_file != "":
+        file_path = Path(args.player_id_file)
+        with open(file_path) as player_file:
+            reader = csv.reader(player_file)
+            file_contents = list(reader) # this gives list of lines, each line a list
+            names = list(chain.from_iterable(file_contents)) # so, convert to single list
+            print(f"list of names: {list(names)}")
+            interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
+            if interface_type == "BigQuery":
+                interface = BigQueryInterface(game_id=args.game, settings=settings)
+            elif interface_type == "MySQL":
+                interface = MySQLInterface(game_id=args.game, settings=settings)
+            else:
+                raise Exception(f"{interface_type} is not a valid DataInterface type!")
+            range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER, versions=supported_vers)
+    elif args.session is not None and args.session != "":
+        interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
+        if interface_type == "BigQuery":
+            interface = BigQueryInterface(game_id=args.game, settings=settings)
+        elif interface_type == "MySQL":
+            interface = MySQLInterface(game_id=args.game, settings=settings)
+        else:
+            raise Exception(f"{interface_type} is not a valid DataInterface type!")
+        range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION, versions=supported_vers)
+    else:
+        interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
+        if interface_type == "BigQuery":
+            interface = BigQueryInterface(game_id=args.game, settings=settings)
+        elif interface_type == "MySQL":
+            interface = MySQLInterface(game_id=args.game, settings=settings)
+        else:
+            raise Exception(f"{interface_type} is not a valid DataInterface type!")
+        start_date, end_date = getDateRange()
+        range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date, versions=supported_vers)
+    # Once we have the parameters parsed out, construct the request.
+    return Request(interface=interface, range=range, exporter_types=exporter_files)
+
+# retrieve/calculate date range.
+def getDateRange() -> Tuple[datetime, datetime]:
+    start_date: datetime
+    end_date  : datetime
+    today     : datetime = datetime.now()
+    # If we want to export all data for a given month, calculate a date range.
+    if args.monthly:
+        month: int = today.month
+        year:  int = today.year
+        month_year = args.start_date.split("/")
+        month = int(month_year[0])
+        year  = int(month_year[1])
+        month_range = monthrange(year, month)
+        days_in_month = month_range[1]
+        start_date = datetime(year=year, month=month, day=1, hour=0, minute=0, second=0)
+        end_date   = datetime(year=year, month=month, day=days_in_month, hour=23, minute=59, second=59)
+        Logger.Log(f"Exporting {month}/{year} data for {args.game}...", logging.DEBUG)
+    # Otherwise, create date range from given pair of dates.
+    else:
+        start_date = datetime.strptime(args.start_date, "%m/%d/%Y") if args.start_date is not None else today
+        start_date = start_date.replace(hour=0, minute=0, second=0)
+        end_date   = datetime.strptime(args.end_date, "%m/%d/%Y") if args.end_date is not None else today
+        end_date = end_date.replace(hour=23, minute=59, second=59)
+        Logger.Log(f"Exporting from {str(start_date)} to {str(end_date)} of data for {args.game}...", logging.INFO)
+    return (start_date, end_date)
 
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
-utils.Logger.toStdOut(f"Running {sys.argv[0]}...", logging.INFO)
-utils.Logger.toFile(f"Running {sys.argv[0]}...", logging.INFO)
-try:
-    arg_options = ["file=", "help"]
-    optupi, args = getopt.gnu_getopt(sys.argv, shortopts="-h", longopts=arg_options)
+# Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
+games_folder : Path = Path("./games")
+# set up parent parsers with arguments for each class of command
+games_list = [name.upper() for name in os.listdir(games_folder) if (os.path.isdir(games_folder / name) and name != "__pycache__")]
+game_parser = argparse.ArgumentParser(add_help=False)
+game_parser.add_argument("game", type=str.upper, choices=games_list,
+                    help="The game to use with the given command.")
+export_parser = argparse.ArgumentParser(add_help=False, parents=[game_parser])
+export_parser.add_argument("start_date", nargs="?", default=None,
+                    help="The starting date of an export range in MM/DD/YYYY format (defaults to today).")
+export_parser.add_argument("end_date", nargs="?", default=None,
+                    help="The ending date of an export range in MM/DD/YYYY format (defaults to today).")
+export_parser.add_argument("-p", "--player", default="",
+                    help="Tell the program to output data for a player with given ID, instead of using a date range.")
+export_parser.add_argument("-s", "--session", default="",
+                    help="Tell the program to output data for a session with given ID, instead of using a date range.")
+export_parser.add_argument("--player_id_file", default="",
+                    help="Tell the program to output data for a collection of players with IDs in given file, instead of using a date range.")
+export_parser.add_argument("-f", "--file", default="",
+                    help="Tell the program to use a file as input, instead of looking up a database.")
+export_parser.add_argument("-m", "--monthly", default=False, action="store_true",
+                    help="Set the program to export a month's-worth of data, instead of using a date range. Replace the start_date argument with a month in MM/YYYY format.")
+# allow individual feature files to be skipped.
+export_parser.add_argument("--no_session_file", default=False, action="store_true",
+                    help="Tell the program to skip outputting a per-session file.")
+export_parser.add_argument("--no_player_file", default=False, action="store_true",
+                    help="Tell the program to skip outputting a per-player file.")
+export_parser.add_argument("--no_pop_file", default=False, action="store_true",
+                    help="Tell the program to skip outputting a population file.")
+# set up main parser, with one sub-parser per-command.
+parser = argparse.ArgumentParser(description="Simple command-line utility to execute OpenGameData export requests.")
+sub_parsers = parser.add_subparsers(help="Chosen command to run", dest="command")
+sub_parsers.add_parser("export", parents=[export_parser],
+                        help="Export data in a given date range.")
+sub_parsers.add_parser("export-events", parents=[export_parser],
+                        help="Export event data in a given date range.")
+sub_parsers.add_parser("export-features", parents=[export_parser],
+                        help="Export session feature data in a given date range.")
+sub_parsers.add_parser("info", parents=[game_parser],
+                        help="Display info about the given game.")
+sub_parsers.add_parser("readme", parents=[game_parser],
+                        help="Generate a readme for the given game.")
+sub_parsers.add_parser("list-games",
+                        help="Display a list of games available for parsing.")
+# sub_parsers.add_parser("help",
+#                         help="Display a list of games available for parsing.")
 
-    opts = {opt[0]: opt[1] for opt in optupi}
-    num_args = len(args)
-    cmd = args[1] if num_args > 1 else "help"
-except getopt.GetoptError as err:
-    print(f"Error, invalid option given!\n{err}")
-    cmd = "help"
-if type(cmd) == str:
-    # if we have a real command, load the config file.
-    # settings = utils.loadJSONFile("config.json")
-    db_settings = settings["db_config"]
-    ssh_settings = settings["ssh_config"]
+args : Namespace = parser.parse_args()
 
-    cmd = cmd.lower()
-
-    if cmd == "export":
-        runExport(events=True, features=True)
-    elif cmd == "export-events":
-        runExport(events=True)
-    elif cmd == "export-session-features":
-        runExport(features=True)
-    elif cmd == "info":
-        showGameInfo()
-    elif cmd == "readme":
-        writeReadme()
-    elif cmd == "help" or "-h" in opts.keys() or "--help" in opts.keys():
-        showHelp()
-    else:
-        print(f"Invalid Command {cmd}!")
+success : bool
+cmd = args.command.lower()
+if cmd == "export":
+    success = RunExport(events=True, features=True)
+elif cmd == "export-events":
+    success = RunExport(events=True)
+elif cmd == "export-features":
+    success = RunExport(features=True)
+elif cmd == "info":
+    success = ShowGameInfo()
+elif cmd == "readme":
+    success = WriteReadme()
+elif cmd == "list-games":
+    success = ListGames()
+# elif cmd == "help":
+#     success = ShowHelp()
 else:
-    print("Command is not a string!")
-    showHelp()
+    print(f"Invalid Command {cmd}!")
+    success = False
+if not success:
+    sys.exit(1)

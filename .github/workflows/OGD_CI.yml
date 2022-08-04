@@ -1,0 +1,71 @@
+# Workflow to run a test export of Crystal whenever we change the core OGD backend code.
+# Chose Crystal simply because it has an extractor, but not a particularly complex one.
+name: OpenGameData-Core CI Test
+on:
+  push:
+    paths:
+    - 'detectors/**'
+    - 'extractors/**'
+    - 'features/**'
+    - 'interfaces/**'
+    - 'managers/**'
+    - 'processors/**'
+    - 'schemas/Event.py'
+    - 'schemas/FeatureData.py'
+    - 'schemas/GameSchema.py'
+    - 'schemas/TableSchema.py'
+    - 'schemas/Request.py'
+    - 'main.py'
+    - 'utils.py'
+    - '.github/workflows/OGD_CI.yml'
+    - '.github/actions/**'
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+
+jobs:
+  test_export:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get OpenConnect
+      run: sudo apt-get -q update && sudo apt-get -q install openconnect
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{secrets.SQL_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        log_level: "DEBUG"
+    - name: Set up Schema File for Crystal
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: "CRYSTAL"
+    - name: Attempt Export of yesterday's data with LegacyFeature
+      uses: ./.github/actions/export_yesterday
+      with:
+        game: CRYSTAL
+    - name: Set up Schema File for Waves
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: "WAVES"
+    - name: Attempt Export of yesterday's data with Regular Extractor
+      uses: ./.github/actions/export_yesterday
+      with:
+        game: WAVES
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./*.log
+    - name: Upload Crystal zips as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./data/CRYSTAL/*.zip
+    - name: Upload Wave zips as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./data/WAVES/*.zip

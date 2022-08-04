@@ -1,0 +1,25 @@
+name: "Export Yesterday's Data"
+author: Luke Swanson
+description: "Given a game, this action will export the yesterday's data for that game."
+branding:
+  icon: 'arrow-left'
+  color: 'orange'
+inputs:
+  game:
+   description: "The game with data to export."
+   required: true
+   default: 'Crystal'
+runs:
+  using: "composite"
+  steps:
+    - name: Get yesterday, for export
+      run: |
+        YESTERDAY=$(date -d "$(date +%Y-%m-%d) -1 day" +'%m/%d/%Y')
+        echo "YESTERDAY=" $YESTERDAY >> $GITHUB_ENV
+      shell: bash
+    # - name: Clone code
+    #   uses: actions/checkout@v2
+    - name: Execute data export
+      run: python3.8 main.py export ${{ inputs.game }} ${{env.YESTERDAY}} ${{env.YESTERDAY}}
+      shell: bash
+      # python3.8 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021

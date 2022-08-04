@@ -2,10 +2,10 @@ import json
 from datetime import datetime as dt
 import math
 import pandas as pd
-from GameTable import GameTable
-from feature_extractors.LakelandExtractor import LakelandExtractor
+from schemas.TableSchema import TableSchema
+from games.LAKELAND.LakelandExtractor import LakelandExtractor
 from realtime.ModelManager import ModelManager
-from schemas.Schema import Schema
+from schemas.GameSchema import GameSchema
 
 dump = pd.read_csv(
     "tests/test_data/LAKELAND_20200828_to_20200828 2/LAKELAND_20200828_to_20200828_d45ae97_dump.tsv", sep='\t')
@@ -15,9 +15,14 @@ proc = pd.read_csv("tests/test_data/LAKELAND_20200828_to_20200828/LAKELAND_20200
 # print(df.columns)
 model_name = 'PopAchVelocityModel'
 file_version = 'v18'
-schema = Schema("LAKELAND", "schemas/JSON/")
+schema = GameSchema("LAKELAND", "schemas/JSON/")
 model_mgr = ModelManager(game_name="LAKELAND")
-table = GameTable.FromCSV(dump)
+col_names = list(dump.columns)
+game_id = dump['app_id'][0]
+min_level = dump['level'].min()
+max_level = dump['level'].max()
+table = TableSchema(game_id=game_id, column_names=col_names, max_level=max_level, min_level=min_level)
+#table = TableSchema.FromCSV(dump)
 session_id_list = dump.session_id.unique()
 model = model_mgr.LoadModel(model_name)
 test_outfile = open('test_outfile.csv', 'w+')
@@ -79,9 +84,9 @@ for session in session_id_list:
             row[table.client_time_index] = dt.strptime(row[table.client_time_index], '%Y-%m-%d %H:%M:%S')
             row[table.complex_data_index] = complex_data_parsed
             extractor.extractFromRow(row_with_complex_parsed=row, game_table=table)
-        extractor.calculateAggregateFeatures()
+        extractor.CalculateAggregateFeatures()
         all_features = dict(zip(extractor.getFeatureNames(game_table=table, game_schema=schema),
-                                extractor.getCurrentFeatures()))
+                                extractor.GetFeatureValues()))
         all_features = parse_nums(all_features)
         result = model.Eval([all_features])[0]
         if result is None:

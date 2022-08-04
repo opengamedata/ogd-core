@@ -1,0 +1,30 @@
+name: "Export Monthly Data"
+author: Luke Swanson
+description: "Given a game, this action will export last month's data for that game."
+branding:
+  icon: 'calendar'
+  color: 'purple'
+inputs:
+  game:
+   description: "The game with data to export."
+   required: true
+   default: 'Crystal'
+  month_year:
+   description: "The month and year to export."
+   required: true
+   default: '01/2021'
+runs:
+  using: "composite"
+  steps:
+    # - name: Clone code
+    #   uses: actions/checkout@v2
+    # - name: Set up config
+    #   run: cp config/config.py.template config/config.py 
+    #   shell: bash
+    # - name: Set table to the 2019-2020 one
+    #   run: sed -i 's/logger/logger2020/g' config.py
+    #   shell: bash
+    - name: Execute data export
+      run: python3.8 main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly
+      shell: bash
+      # python3.8 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021

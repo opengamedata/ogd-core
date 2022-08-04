@@ -1,0 +1,17 @@
+{
+    "level_range": { "min":0, "max":8 },
+
+    "events":{
+    },
+
+    "features": {
+        "per_count": {
+        },
+        "aggregate":{
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}
