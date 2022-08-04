@@ -129,6 +129,15 @@ def genRequest(events:bool, features:bool) -> Request:
             else:
                 raise Exception(f"{interface_type} is not a valid DataInterface type!")
             range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER, versions=supported_vers)
+    elif args.session is not None and args.session != "":
+        interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
+        if interface_type == "BigQuery":
+            interface = BigQueryInterface(game_id=args.game, settings=settings)
+        elif interface_type == "MySQL":
+            interface = MySQLInterface(game_id=args.game, settings=settings)
+        else:
+            raise Exception(f"{interface_type} is not a valid DataInterface type!")
+        range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION, versions=supported_vers)
     else:
         interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
         if interface_type == "BigQuery":
@@ -184,6 +193,8 @@ export_parser.add_argument("end_date", nargs="?", default=None,
                     help="The ending date of an export range in MM/DD/YYYY format (defaults to today).")
 export_parser.add_argument("-p", "--player", default="",
                     help="Tell the program to output data for a player with given ID, instead of using a date range.")
+export_parser.add_argument("-s", "--session", default="",
+                    help="Tell the program to output data for a session with given ID, instead of using a date range.")
 export_parser.add_argument("--player_id_file", default="",
                     help="Tell the program to output data for a collection of players with IDs in given file, instead of using a date range.")
 export_parser.add_argument("-f", "--file", default="",
