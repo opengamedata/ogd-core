@@ -4,20 +4,23 @@ from typing import Any, Callable, Dict, List, Optional
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
-from extractors.legacy.LegacyLoader import LegacyLoader
-from games.JOWILDER.features.JowilderExtractor import JowilderExtractor
+from extractors.ExtractorLoader import ExtractorLoader
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
+from games.JOWILDER.features import *
 
-class JowilderLoader(LegacyLoader):
+class JowilderLoader(ExtractorLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
-        if feature_type == "NumGuesses":
-            ret_val = None
+        if feature_type == "QuestionAnswers":
+            ret_val = QuestionAnswers.QuestionAnswers(params=extractor_params)
+        else:
+            raise NotImplementedError(
+                f"'{feature_type}' is not a valid feature for Waves.")
         return ret_val
 
     def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:

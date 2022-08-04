@@ -1,5 +1,5 @@
 __all__ = [
-    "NumGuesses"
+    "QuestionAnswers"
 ]
 
-from . import NumGuesses
+from . import QuestionAnswers
