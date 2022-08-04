@@ -284,6 +284,7 @@ class FileManager(abc.ABC):
                     Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
                     traceback.print_tb(err.__traceback__)
             if self._game_id == "JOWILDER":
+                survey_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_survey.{self._extension}"
                 self._addToZip(path=self._file_names["survey"], zip_file=sessions_zip_file, path_in_zip=survey_file)
                 if self._file_names["survey"] is not None:
                     os.remove(self._file_names["survey"])
