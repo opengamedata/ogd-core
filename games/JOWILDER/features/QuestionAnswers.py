@@ -56,4 +56,4 @@ class QuestionAnswers(PerCountFeature):
         return [self._guess_list, len(self._guess_list)]
 
     def Subfeatures(self) -> List[str]:
-        return ["count"]
+        return ["Count"]
