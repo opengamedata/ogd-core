@@ -18,6 +18,8 @@ class JowilderLoader(ExtractorLoader):
         ret_val : Feature
         if feature_type == "QuestionAnswers":
             ret_val = QuestionAnswers.QuestionAnswers(params=extractor_params)
+        elif feature_type == "SurveyItem":
+            ret_val = SurveyItem.SurveyItem(params=extractor_params)
         else:
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Waves.")

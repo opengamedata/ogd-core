@@ -1,5 +1,7 @@
 __all__ = [
-    "QuestionAnswers"
+    "QuestionAnswers",
+    "SurveyItem"
 ]
 
 from . import QuestionAnswers
+from . import SurveyItem
