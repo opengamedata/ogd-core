@@ -36,8 +36,11 @@ class Logger:
     file_logger : Optional[logging.Logger] = None
 
     # Set up loggers. First, the std out logger
-    stdout_handler = logging.StreamHandler()
-    std_logger.addHandler(stdout_handler)
+    if not std_logger.hasHandlers():
+        stdout_handler = logging.StreamHandler()
+        std_logger.addHandler(stdout_handler)
+    else:
+        std_logger.warning(f"Trying to add a handler to std_logger, when handlers ({std_logger.handlers}) already exist!")
     if settings['DEBUG_LEVEL'] == "ERROR":
         std_logger.setLevel(level=logging.ERROR)
     elif settings['DEBUG_LEVEL'] == "WARNING":
@@ -46,7 +49,7 @@ class Logger:
         std_logger.setLevel(level=logging.INFO)
     elif settings['DEBUG_LEVEL'] == "DEBUG":
         std_logger.setLevel(level=logging.DEBUG)
-    std_logger.debug("Testing standard out logger")
+    std_logger.info("Testing standard out logger")
 
     # Then, set up the file logger. Check for permissions errors.
     if settings.get('LOG_FILE', False):
