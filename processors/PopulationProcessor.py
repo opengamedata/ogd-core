@@ -38,7 +38,11 @@ class PopulationProcessor(FeatureProcessor):
         """
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         # Set up dict of sub-processors to handle each player.
-        self._player_processors : Dict[str,PlayerProcessor] = {}
+        self._player_processors : Dict[str,PlayerProcessor] = {
+            "null" : PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+                                     player_id="null", feature_overrides=self._overrides)
+        }
+        self._null_empty = True
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -65,10 +69,8 @@ class PopulationProcessor(FeatureProcessor):
         if self._registry is not None:
             self._registry.ExtractFromEvent(event=event)
             if event.UserID is None:
-                if not "null" in self._player_processors.keys():
-                    self._player_processors["null"] = PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
-                                                                      player_id="null", feature_overrides=self._overrides)
                 self._player_processors["null"].ProcessEvent(event=event)
+                self._null_empty = False
             else:
                 if event.UserID not in self._player_processors.keys():
                     self._player_processors[event.UserID] = PlayerProcessor(self._LoaderClass, game_schema=self._game_schema,
@@ -102,8 +104,8 @@ class PopulationProcessor(FeatureProcessor):
                 ret_val["population"] = [[self.PlayerCount, self.SessionCount]           + self._registry.GetFeatureValues()]
         # 4) Finally, all Player/Session features have been exposed to all first-order feature values, so we can collect all values desired for export.
         if export_types.players or export_types.sessions:
-            # first, get list of results
-            _results = [player_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for player_extractor in self._player_processors.values()]
+            # first, get list of results, skipping null player if they didn't get events.
+            _results = [player_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for name,player_extractor in self._player_processors.items() if not (name == 'null' and self._null_empty)]
             # then, each result will have players or sessions or both, need to loop over and append to a list in ret_val.
             if export_types.players:
                 ret_val["players"] = []
