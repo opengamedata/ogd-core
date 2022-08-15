@@ -87,11 +87,10 @@ class PlayerProcessor(FeatureProcessor):
     def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[ExportRow]]:
         ret_val : Dict[str, List[ExportRow]] = {}
         if export_types.players and isinstance(self._registry, FeatureRegistry):
-            _sess_ct = self.SessionCount()
             if as_str:
-                ret_val["players"] = [[self._player_id, str(_sess_ct)] + self._registry.GetFeatureStringValues()]
+                ret_val["players"] = [[self._player_id, str(self.SessionCount)] + self._registry.GetFeatureStringValues()]
             else:
-                ret_val["players"] = [[self._player_id, _sess_ct] + self._registry.GetFeatureValues()]
+                ret_val["players"] = [[self._player_id, self.SessionCount] + self._registry.GetFeatureValues()]
         if export_types.sessions:
             # _results gives us a list of dicts, each with a "session" element
             _results = [sess_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for sess_extractor in self._session_processors.values()]
@@ -124,15 +123,18 @@ class PlayerProcessor(FeatureProcessor):
 
     # *** PUBLIC METHODS ***
 
-    def SessionCount(self):
-        return len(self._session_processors.keys()) - 1 # don't count null player
-
     def GetSessionFeatureNames(self) -> List[str]:
         return self._session_processors["null"].GetExtractorNames()
 
     def ClearSessionsLines(self):
         Logger.Log(f"Clearing {len(self._session_processors)} sessions from PlayerProcessor for {self._player_id}.", logging.DEBUG, depth=2)
         self._session_processors = {}
+
+    # *** PROPERTIES ***
+
+    @property
+    def SessionCount(self):
+        return len(self._session_processors.keys()) - 1 # don't count null player
 
     # *** PRIVATE STATICS ***
 

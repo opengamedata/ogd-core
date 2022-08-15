@@ -17,6 +17,29 @@ from utils import Logger, ExportRow
 ## @class PopulationProcessor
 #  Class to extract and manage features for a processed csv file.
 class PopulationProcessor(FeatureProcessor):
+
+    # *** BUILT-INS ***
+
+    ## Constructor for the PopulationProcessor class.
+    def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema,
+                 feature_overrides:Optional[List[str]]=None):
+        """Constructor for the PopulationProcessor class.
+        Simply stores some data for use later, including the type of extractor to use.
+
+        :param LoaderClass: The type of data extractor to use for input data.
+                            This should correspond to whatever game_id is in the TableSchema.
+        :type LoaderClass: Type[ExtractorLoader]
+        :param game_schema: A dictionary that defines how the game data itself is structured.
+        :type game_schema: GameSchema
+        :param feature_overrides: _description_, defaults to None
+        :type feature_overrides: Optional[List[str]], optional
+        :param pop_file: _description_, defaults to None
+        :type pop_file: Optional[IO[str]], optional
+        """
+        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        # Set up dict of sub-processors to handle each player.
+        self._player_processors : Dict[str,PlayerProcessor] = {}
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _prepareLoader(self) -> ExtractorLoader:
@@ -42,6 +65,9 @@ class PopulationProcessor(FeatureProcessor):
         if self._registry is not None:
             self._registry.ExtractFromEvent(event=event)
             if event.UserID is None:
+                if not "null" in self._player_processors.keys():
+                    self._player_processors["null"] = PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+                                                                      player_id="null", feature_overrides=self._overrides)
                 self._player_processors["null"].ProcessEvent(event=event)
             else:
                 if event.UserID not in self._player_processors.keys():
@@ -59,8 +85,6 @@ class PopulationProcessor(FeatureProcessor):
     def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[ExportRow]]:
         ret_val : Dict[str, List[List[Any]]] = {}
         # 1a) First, we get Population's first-order feature data:
-        _player_ct = self.PlayerCount()
-        _sess_ct = self.SessionCount()
         _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
         # 1b) Then we can side-propogate the values to second-order features, and down-propogate to other extractors:
         for feature in _first_order_data['population']:
@@ -73,9 +97,9 @@ class PopulationProcessor(FeatureProcessor):
         # 3) Now, Population features have all been exposed to all first-order feature values, so we can collect all values desired for export.
         if export_types.population and isinstance(self._registry, FeatureRegistry):
             if as_str:
-                ret_val["population"] = [[str(_player_ct), str(_sess_ct)] + self._registry.GetFeatureStringValues()]
+                ret_val["population"] = [[str(self.PlayerCount), str(self.SessionCount)] + self._registry.GetFeatureStringValues()]
             else:
-                ret_val["population"] = [[_player_ct, _sess_ct]           + self._registry.GetFeatureValues()]
+                ret_val["population"] = [[self.PlayerCount, self.SessionCount]           + self._registry.GetFeatureValues()]
         # 4) Finally, all Player/Session features have been exposed to all first-order feature values, so we can collect all values desired for export.
         if export_types.players or export_types.sessions:
             # first, get list of results
@@ -110,40 +134,9 @@ class PopulationProcessor(FeatureProcessor):
         Logger.Log(f"Clearing features from PopulationProcessor.", logging.DEBUG, depth=2)
         self._registry = FeatureRegistry()
 
-    # *** BUILT-INS ***
-
-    ## Constructor for the PopulationProcessor class.
-    def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema,
-                 feature_overrides:Optional[List[str]]=None):
-        """Constructor for the PopulationProcessor class.
-        Simply stores some data for use later, including the type of extractor to use.
-
-        :param LoaderClass: The type of data extractor to use for input data.
-                            This should correspond to whatever game_id is in the TableSchema.
-        :type LoaderClass: Type[ExtractorLoader]
-        :param game_schema: A dictionary that defines how the game data itself is structured.
-        :type game_schema: GameSchema
-        :param feature_overrides: _description_, defaults to None
-        :type feature_overrides: Optional[List[str]], optional
-        :param pop_file: _description_, defaults to None
-        :type pop_file: Optional[IO[str]], optional
-        """
-        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
-        # Set up dict of sub-processors to handle each player.
-        # By default, set up a "null" player, who will cover any data without a player id.
-        self._player_processors : Dict[str,PlayerProcessor] = {
-            "null" : PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
-                                     player_id="null", feature_overrides=self._overrides)
-        }
-
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
-
-    def PlayerCount(self) -> int:
-        return len(self._player_processors.keys()) - 1 # don't count null player
-    def SessionCount(self) -> int:
-        return sum([player.SessionCount() for player in self._player_processors.values()])
 
     def GetPlayerFeatureNames(self) -> List[str]:
         return self._player_processors["null"].GetExtractorNames()
@@ -156,6 +149,15 @@ class PopulationProcessor(FeatureProcessor):
     def ClearSessionsLines(self) -> None:
         for player in self._player_processors.values():
             player.ClearSessionsLines()
+
+    # *** PROPERTIES ***
+
+    @property
+    def PlayerCount(self) -> int:
+        return len(self._player_processors.keys()) - 1 # don't count null player
+    @property
+    def SessionCount(self) -> int:
+        return sum([player.SessionCount for player in self._player_processors.values()])
 
     # *** PRIVATE STATICS ***
 
