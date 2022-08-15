@@ -149,7 +149,7 @@ class PopulationProcessor(FeatureProcessor):
         for id,player in self._player_processors.items():
             if not id == 'null':
                 player.ClearLines()
-                del self._player_processors[id]
+        self._player_processors = {'null':self._player_processors['null']}
     def ClearSessionsLines(self) -> None:
         for id,player in self._player_processors.items():
             if not id == 'null':

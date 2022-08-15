@@ -136,7 +136,7 @@ class PlayerProcessor(FeatureProcessor):
         for id,session in self._session_processors.items():
             if not id == 'null':
                 session.ClearLines()
-                del self._session_processors[id]
+        self._session_processors = { 'null' : self._session_processors['null'] }
 
     # *** PROPERTIES ***
 
