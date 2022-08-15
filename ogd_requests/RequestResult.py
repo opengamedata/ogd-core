@@ -2,6 +2,8 @@
 from datetime import timedelta
 from enum import IntEnum
 from typing import Any, Dict, List, Union
+# import locals
+from utils import ExportRow
 
 class ResultStatus(IntEnum):
     NONE = 1
@@ -9,7 +11,7 @@ class ResultStatus(IntEnum):
     FAILURE = 3
 
 class ExportResult:
-    def __init__(self, columns:List[str] = [], values:List[List[Any]] = []):
+    def __init__(self, columns:List[str] = [], values:List[ExportRow] = []):
         self._columns = columns
         self._values  = values
 
@@ -21,19 +23,19 @@ class ExportResult:
         self._columns = new_columns
 
     @property
-    def Values(self) -> List[List[Any]]:
+    def Values(self) -> List[ExportRow]:
         return self._values
 
-    def ToDict(self) -> Dict[str, Union[List[str], List[List[Any]]]]:
+    def ToDict(self) -> Dict[str, Union[List[str], List[ExportRow]]]:
         return {
             "cols":self._columns,
             "vals":self._values
         }
 
-    def AppendValues(self, new_values:List[Any]):
+    def AppendRow(self, new_values:ExportRow):
         self._values.append(new_values)
     
-    def ConcatValues(self, new_values:List[List[Any]]):
+    def ConcatRows(self, new_values:List[ExportRow]):
         self._values += new_values
 
 class RequestResult:
@@ -74,7 +76,7 @@ class RequestResult:
         return self._population
 
     @property
-    def ValuesDict(self) -> Dict[str, Dict[str, List[Any]]]:
+    def ValuesDict(self) -> Dict[str, Dict[str, ExportRow]]:
         return {
             "population" : self.Population.ToDict(),
             "players"    : self.Players.ToDict(),

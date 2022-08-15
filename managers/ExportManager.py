@@ -235,7 +235,7 @@ class ExportManager:
                 if request.ExportEvents and self._event_mgr is not None:
                     _events = self._event_mgr.GetLines(slice_num=i+1, slice_count=len(_session_slices))
                     if request.ToDict:
-                        ret_val.Events.AppendValues(_events)
+                        ret_val.Events.AppendRow(_events)
                     if request.ToFile and file_manager is not None:
                         _events = ExportManager._cleanSpecialChars(_events)
                         file_manager.GetEventsFile().writelines(_events)
@@ -244,7 +244,7 @@ class ExportManager:
                     if request.ExportSessions:
                         _sess_feats = self._feat_mgr.GetSessionFeatures(slice_num=i+1, slice_count=len(_session_slices), as_str=True)
                         if request.ToDict:
-                            ret_val.Sessions.ConcatValues(_sess_feats)
+                            ret_val.Sessions.ConcatRows(_sess_feats)
                         if request.ToFile and file_manager is not None:
                             _sess_feats = ExportManager._cleanSpecialChars(_sess_feats)
                             file_manager.GetSessionsFile().writelines(["\t".join(sess) + "\n" for sess in _sess_feats])
@@ -252,7 +252,7 @@ class ExportManager:
                     if request.ExportPlayers:
                         _player_feats = self._feat_mgr.GetPlayerFeatures(slice_num=i+1, slice_count=len(_session_slices), as_str=True)
                         if request.ToDict:
-                            ret_val.Players.ConcatValues(_player_feats)
+                            ret_val.Players.ConcatRows(_player_feats)
                         if request.ToFile and file_manager is not None:
                             _player_feats = ExportManager._cleanSpecialChars(_player_feats)
                             file_manager.GetPlayersFile().writelines(["\t".join(player) + "\n" for player in _player_feats])
@@ -263,7 +263,7 @@ class ExportManager:
             if request.ExportPopulation:
                 _pop_feats = self._feat_mgr.GetPopulationFeatures(as_str=True)
                 if request.ToDict:
-                    ret_val.Population.AppendValues(_pop_feats)
+                    ret_val.Population.AppendRow(_pop_feats)
                 if request.ToFile and file_manager is not None:
                     _pop_feats = [ExportManager._cleanSpecialChars(vals=pop) for pop in _pop_feats]
                     file_manager.GetPopulationFile().writelines(["\t".join(pop) + "\n" for pop in _pop_feats])
