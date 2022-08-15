@@ -146,11 +146,14 @@ class PopulationProcessor(FeatureProcessor):
         return self._player_processors["null"].GetSessionFeatureNames()
 
     def ClearPlayersLines(self) -> None:
-        for player in self._player_processors.values():
-            player.ClearLines()
+        for id,player in self._player_processors.items():
+            if not id == 'null':
+                player.ClearLines()
+                del self._player_processors[id]
     def ClearSessionsLines(self) -> None:
-        for player in self._player_processors.values():
-            player.ClearSessionsLines()
+        for id,player in self._player_processors.items():
+            if not id == 'null':
+                player.ClearSessionsLines()
 
     # *** PROPERTIES ***
 

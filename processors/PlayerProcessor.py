@@ -133,7 +133,10 @@ class PlayerProcessor(FeatureProcessor):
 
     def ClearSessionsLines(self):
         Logger.Log(f"Clearing {len(self._session_processors)} sessions from PlayerProcessor for {self._player_id}.", logging.DEBUG, depth=2)
-        self._session_processors = {}
+        for id,session in self._session_processors.items():
+            if not id == 'null':
+                session.ClearLines()
+                del self._session_processors[id]
 
     # *** PROPERTIES ***
 
