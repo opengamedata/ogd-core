@@ -3,7 +3,6 @@ import logging
 from datetime import datetime
 from typing import Any, Dict, List, Type, Optional
 ## import local files
-from utils import Logger
 from extractors.ExtractorLoader import ExtractorLoader
 from processors.FeatureProcessor import FeatureProcessor
 from processors.PopulationProcessor import PopulationProcessor
@@ -12,11 +11,12 @@ from processors.SessionProcessor import SessionProcessor
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
 from ogd_requests.Request import ExporterTypes
+from utils import Logger, ExportRow
 
 class FeatureManager:
     def __init__(self, LoaderClass:Type[ExtractorLoader], exp_types:ExporterTypes, game_schema:GameSchema, feature_overrides:Optional[List[str]]):
         self._exp_types        : ExporterTypes       = exp_types
-        self._latest_results   : Dict[str,List[Any]] = {}
+        self._latest_results   : Dict[str,List[ExportRow]] = {}
         self._up_to_date       : bool                = True
         self._LoaderClass      : Optional[Type[ExtractorLoader]] = LoaderClass
         self._processor        : FeatureProcessor
@@ -41,7 +41,7 @@ class FeatureManager:
     def HasLoader(self) -> bool:
         return self._LoaderClass is not None
 
-    def GetFeatureValues(self, as_str:bool = False) -> Dict[str, List[Any]]:
+    def GetFeatureValues(self, as_str:bool = False) -> Dict[str, List[ExportRow]]:
         start = datetime.now()
         self._try_update(as_str=as_str)
         Logger.Log(f"Time to retrieve all feature values: {datetime.now() - start}", logging.INFO, depth=2)
@@ -49,7 +49,7 @@ class FeatureManager:
 
     def GetPopulationFeatureNames(self) -> List[str]:
         return self._processor.GetExtractorNames() if isinstance(self._processor, PopulationProcessor) else []
-    def GetPopulationFeatures(self, as_str:bool = False) -> List[Any]:
+    def GetPopulationFeatures(self, as_str:bool = False) -> List[ExportRow]:
         start = datetime.now()
         self._try_update(as_str=as_str)
         ret_val = self._latest_results.get('population', [])
@@ -63,7 +63,7 @@ class FeatureManager:
             return self._processor.GetExtractorNames()
         else:
             return []
-    def GetPlayerFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[List[Any]]:
+    def GetPlayerFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update(as_str=as_str)
         ret_val = self._latest_results.get('players', [])
@@ -78,7 +78,7 @@ class FeatureManager:
             return self._processor.GetExtractorNames()
         else:
             return []
-    def GetSessionFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[List[Any]]:
+    def GetSessionFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[ExportRow]:
         start   : datetime = datetime.now()
         self._try_update(as_str=as_str)
         ret_val = self._latest_results.get('sessions', [])
@@ -98,7 +98,7 @@ class FeatureManager:
         if isinstance(self._processor, PopulationProcessor) \
         or isinstance(self._processor, PlayerProcessor):
             self._processor.ClearSessionsLines()
-        elif isinstance(self._processor, PlayerProcessor):
+        elif isinstance(self._processor, SessionProcessor):
             self._processor.ClearLines()
 
     def _try_update(self, as_str:bool = False):

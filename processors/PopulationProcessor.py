@@ -3,7 +3,6 @@ import logging
 import traceback
 from typing import Any, Dict, IO, List, Type, Optional
 # import local files
-from extractors.ExtractorRegistry import ExtractorRegistry
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.features.FeatureRegistry import FeatureRegistry
@@ -13,7 +12,7 @@ from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 from ogd_requests.Request import ExporterTypes
-from utils import Logger
+from utils import Logger, ExportRow
 
 ## @class PopulationProcessor
 #  Class to extract and manage features for a processed csv file.
@@ -57,8 +56,8 @@ class PopulationProcessor(FeatureProcessor):
             for player in self._player_processors.values():
                 player.ProcessFeatureData(feature=feature)
 
-    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[Any]]:
-        ret_val = {}
+    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[ExportRow]]:
+        ret_val : Dict[str, List[List[Any]]] = {}
         # 1a) First, we get Population's first-order feature data:
         _player_ct = self.PlayerCount()
         _sess_ct = self.SessionCount()
@@ -74,9 +73,9 @@ class PopulationProcessor(FeatureProcessor):
         # 3) Now, Population features have all been exposed to all first-order feature values, so we can collect all values desired for export.
         if export_types.population and isinstance(self._registry, FeatureRegistry):
             if as_str:
-                ret_val["population"] = [str(_player_ct), str(_sess_ct)] + self._registry.GetFeatureStringValues()
+                ret_val["population"] = [[str(_player_ct), str(_sess_ct)] + self._registry.GetFeatureStringValues()]
             else:
-                ret_val["population"] = [_player_ct, _sess_ct]           + self._registry.GetFeatureValues()
+                ret_val["population"] = [[_player_ct, _sess_ct]           + self._registry.GetFeatureValues()]
         # 4) Finally, all Player/Session features have been exposed to all first-order feature values, so we can collect all values desired for export.
         if export_types.players or export_types.sessions:
             # first, get list of results
@@ -85,11 +84,11 @@ class PopulationProcessor(FeatureProcessor):
             if export_types.players:
                 ret_val["players"] = []
                 for player in _results:
-                    ret_val["players"].append(player["players"]) # here, append list of features as new line.
+                    ret_val["players"] += player["players"]
             if export_types.sessions:
                 ret_val["sessions"] = []
                 for player in _results:
-                    ret_val["sessions"] += player["sessions"] # here, sessions should already be list of lists, so use +=
+                    ret_val["sessions"] += player["sessions"]
         return ret_val
 
     def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
@@ -141,9 +140,9 @@ class PopulationProcessor(FeatureProcessor):
 
     # *** PUBLIC METHODS ***
 
-    def PlayerCount(self):
+    def PlayerCount(self) -> int:
         return len(self._player_processors.keys()) - 1 # don't count null player
-    def SessionCount(self):
+    def SessionCount(self) -> int:
         return sum([player.SessionCount() for player in self._player_processors.values()])
 
     def GetPlayerFeatureNames(self) -> List[str]:
@@ -151,10 +150,10 @@ class PopulationProcessor(FeatureProcessor):
     def GetSessionFeatureNames(self) -> List[str]:
         return self._player_processors["null"].GetSessionFeatureNames()
 
-    def ClearPlayersLines(self):
+    def ClearPlayersLines(self) -> None:
         for player in self._player_processors.values():
             player.ClearLines()
-    def ClearSessionsLines(self):
+    def ClearSessionsLines(self) -> None:
         for player in self._player_processors.values():
             player.ClearSessionsLines()
 

@@ -265,8 +265,8 @@ class ExportManager:
                 if request.ToDict:
                     ret_val.Population.AppendValues(_pop_feats)
                 if request.ToFile and file_manager is not None:
-                    _pop_feats = ExportManager._cleanSpecialChars(vals=_pop_feats)
-                    file_manager.WritePopulationFile("\t".join(_pop_feats) + "\n")
+                    _pop_feats = [ExportManager._cleanSpecialChars(vals=pop) for pop in _pop_feats]
+                    file_manager.GetPopulationFile().writelines(["\t".join(pop) + "\n" for pop in _pop_feats])
             self._feat_mgr.ClearPopulationLines()
         return ret_val
 

@@ -3,7 +3,6 @@ import logging
 import traceback
 from typing import Any, List, Dict, IO, Type, Optional
 # import local files
-from utils import Logger
 from extractors.ExtractorRegistry import ExtractorRegistry
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
@@ -13,6 +12,7 @@ from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 from ogd_requests.Request import ExporterTypes
+from utils import Logger, ExportRow
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.
@@ -69,7 +69,7 @@ class SessionProcessor(FeatureProcessor):
     def _processFeatureData(self, feature: FeatureData):
         self._registry.ExtractFromFeatureData(feature=feature)
 
-    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str,List[Any]]:
+    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str,List[ExportRow]]:
         # 1) First, we get Session's first-order feature data:
         _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
         # 2) Then we can side-propogate the values to second-order features, and down-propogate to other extractors:
@@ -78,9 +78,9 @@ class SessionProcessor(FeatureProcessor):
         # 3) Finally, we assume higher-ups have already sent down their first-order features, so we are ready to return all feature values.
         if export_types.sessions and isinstance(self._registry, FeatureRegistry):
             if as_str:
-                return {"sessions" : [self._session_id, self._player_id] + self._registry.GetFeatureStringValues()}
+                return {"sessions" : [[self._session_id, self._player_id] + self._registry.GetFeatureStringValues()]}
             else:
-                return {"sessions" : [self._session_id, self._player_id] + self._registry.GetFeatureValues()}
+                return {"sessions" : [[self._session_id, self._player_id] + self._registry.GetFeatureValues()]}
         else:
             return {}
 

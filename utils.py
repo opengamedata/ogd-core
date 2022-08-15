@@ -6,11 +6,12 @@ import os
 import traceback
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 # import locals
 from config.config import settings as settings
 
 map = Dict[str, Any]
+ExportRow = List[Any]
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
 #  @param filename  The name of the JSON file. If the file extension is not .json,
