@@ -263,7 +263,7 @@ class ExportManager:
             if request.ExportPopulation:
                 _pop_feats = self._feat_mgr.GetPopulationFeatures(as_str=True)
                 if request.ToDict:
-                    ret_val.Population.AppendRow(_pop_feats)
+                    ret_val.Population.ConcatRows(_pop_feats)
                 if request.ToFile and file_manager is not None:
                     _pop_feats = [ExportManager._cleanSpecialChars(vals=pop) for pop in _pop_feats]
                     file_manager.GetPopulationFile().writelines(["\t".join(pop) + "\n" for pop in _pop_feats])
