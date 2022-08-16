@@ -90,7 +90,7 @@ class SQL:
             db_conn = connection.MySQLConnection(host     = login.host,    port    = login.port,
                                                  user     = login.user,    password= login.pword,
                                                  database = login.db_name, charset = 'utf8')
-            Logger.Log(f"Connected to SQL (no SSH) at {login.host}:{login.port}/{login.db_name}, {login.user}", logging.INFO)
+            Logger.Log(f"Connected to SQL (no SSH) at {login.host}:{login.port}/{login.db_name}, {login.user}", logging.DEBUG)
             return db_conn
         #except MySQLdb.connections.Error as err:
         except Exception as err:
@@ -131,7 +131,7 @@ class SQL:
                 )
                 tunnel.start()
                 connected_ssh = True
-                Logger.Log(f"Connected to SSH at {ssh.host}:{ssh.port}, {ssh.user}", logging.INFO)
+                Logger.Log(f"Connected to SSH at {ssh.host}:{ssh.port}, {ssh.user}", logging.DEBUG)
             except Exception as err:
                 msg = f"Could not connect to the SSH: {type(err)} {str(err)}"
                 Logger.Log(msg, logging.ERROR)
@@ -144,7 +144,7 @@ class SQL:
                 db_conn = connection.MySQLConnection(host     = sql.host,    port    = tunnel.local_bind_port,
                                                      user     = sql.user,    password= sql.pword,
                                                      database = sql.db_name, charset ='utf8')
-                Logger.Log(f"Connected to SQL (via SSH) at {sql.host}:{tunnel.local_bind_port}/{sql.db_name}, {sql.user}", logging.INFO)
+                Logger.Log(f"Connected to SQL (via SSH) at {sql.host}:{tunnel.local_bind_port}/{sql.db_name}, {sql.user}", logging.DEBUG)
                 return (tunnel, db_conn)
             except Exception as err:
                 msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
@@ -161,12 +161,12 @@ class SQL:
     def disconnectMySQL(db:Optional[connection.MySQLConnection], tunnel:Optional[sshtunnel.SSHTunnelForwarder]=None) -> None:
         if db is not None:
             db.close()
-            Logger.Log("Closed MySQL database connection", logging.INFO)
+            Logger.Log("Closed MySQL database connection", logging.DEBUG)
         else:
             Logger.Log("No MySQL database to close.", logging.DEBUG)
         if tunnel is not None:
             tunnel.stop()
-            Logger.Log("Stopped MySQL tunnel connection", logging.INFO)
+            Logger.Log("Stopped MySQL tunnel connection", logging.DEBUG)
         else:
             Logger.Log("No MySQL tunnel to stop", logging.DEBUG)
 
