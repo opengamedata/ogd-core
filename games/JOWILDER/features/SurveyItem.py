@@ -8,6 +8,9 @@ from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 from datetime import datetime, timedelta
 
+# BUG: Question0 and quiz 0 don't have start time
+# NOTE: Assumptions are: Every quiz should have a quizstart.
+
 QUIZ_INDEXES = {
     0: {0: 0, 1: 1},
     2: {0: 2, 1: 3, 2: 4, 3: 5},
@@ -69,6 +72,9 @@ class SurveyItem(PerCountFeature):
         :param event: _description_
         :type event: Event
         """
+        # TODO: Add explict code and comments to skip quiz 0 also for survey_time
+        if self.CountIndex == 0:
+            return 
         if event.EventName == "CUSTOM.23" or self._index == self.CountIndex - 1:
             self._last_timestamp = event.Timestamp
             return

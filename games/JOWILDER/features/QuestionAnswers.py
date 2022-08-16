@@ -9,6 +9,9 @@ from schemas.Event import Event
 from .. import Jowilder_Enumerators as je
 
 
+
+# NOTE: Assumption is that in question 10 and qustion 16, we will have hover events which indicates new answer
+
 class QuestionAnswers(PerCountFeature):
     def __init__(self, params: ExtractorParameters):
         PerCountFeature.__init__(self, params=params)
