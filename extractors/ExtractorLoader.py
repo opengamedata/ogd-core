@@ -147,6 +147,9 @@ class ExtractorLoader(abc.ABC):
             Logger.Log(f"In ExtractorLoader, '{mod_name}' could not be found, skipping {feature_type}", logging.ERROR)
         else:
             feature_class : Optional[Type[Extractor]] = getattr(feature_module, feature_type, None)
-            ret_val = feature_class is not None and self._mode in feature_class.AvailableModes()
+            if feature_class is not None:
+                ret_val = self._mode in feature_class.AvailableModes()
+            else:
+                Logger.Log(f"In ExtractorLoader, feature class '{feature_type}' could not be found in module {feature_module}", logging.WARN)
 
         return ret_val
