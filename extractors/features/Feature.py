@@ -58,6 +58,19 @@ class Feature(Extractor):
             sess_id=sess_id
         )
 
+    def BaseFeatureSuffix(self) -> str:
+        """Base function to add a suffix to the base feature name, which will not affect the naming of subfeatures.
+        By default, returns ""; override to set a suffix.
+        Example use-case: Suppose you want a feature that captures the number of times a player enters a given state,
+        as well as the time spent in that state.
+        The feature can be named "State", with BaseFeatureSuffix returning "EntryCount" and a subfeature named "Time."
+        Then the columns will be named "StateEntryCount" and "StateTime."
+
+        :return: _description_
+        :rtype: str
+        """
+        return ""
+
     def Subfeatures(self) -> List[str]:
         """Base function to get a list of names of the sub-feature(s) a given Feature class outputs.
         By default, a Feature class has no subfeatures.
@@ -78,7 +91,7 @@ class Feature(Extractor):
         :return: [description]
         :rtype: List[str]
         """
-        return [self.Name] + [f"{self.Name}-{subfeature}" for subfeature in self.Subfeatures()]
+        return [f"{self.Name}{self.BaseFeatureSuffix()}"] + [f"{self.Name}-{subfeature}" for subfeature in self.Subfeatures()]
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event=event):

@@ -6,11 +6,12 @@ import os
 import traceback
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 # import locals
 from config.config import settings as settings
 
 map = Dict[str, Any]
+ExportRow = List[Any]
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
 #  @param filename  The name of the JSON file. If the file extension is not .json,
@@ -36,8 +37,11 @@ class Logger:
     file_logger : Optional[logging.Logger] = None
 
     # Set up loggers. First, the std out logger
-    stdout_handler = logging.StreamHandler()
-    std_logger.addHandler(stdout_handler)
+    if not std_logger.hasHandlers():
+        stdout_handler = logging.StreamHandler()
+        std_logger.addHandler(stdout_handler)
+    else:
+        std_logger.warning(f"Trying to add a handler to std_logger, when handlers ({std_logger.handlers}) already exist!")
     if settings['DEBUG_LEVEL'] == "ERROR":
         std_logger.setLevel(level=logging.ERROR)
     elif settings['DEBUG_LEVEL'] == "WARNING":
@@ -46,7 +50,7 @@ class Logger:
         std_logger.setLevel(level=logging.INFO)
     elif settings['DEBUG_LEVEL'] == "DEBUG":
         std_logger.setLevel(level=logging.DEBUG)
-    std_logger.debug("Testing standard out logger")
+    std_logger.info("Testing standard out logger")
 
     # Then, set up the file logger. Check for permissions errors.
     if settings.get('LOG_FILE', False):
