@@ -109,7 +109,7 @@ class PlayerProcessor(FeatureProcessor):
     def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
         ret_val : Dict[str, List[FeatureData]] = { "players":[] }
         if isinstance(self._registry, FeatureRegistry):
-            ret_val["players"] = self._registry.GetFeatureData(order=order)
+            ret_val["players"] = self._registry.GetFeatureData(order=order, player_id=self._player_id)
         _result = [session_extractor.GetFeatureData(order=order) for session_extractor in self._session_processors.values()]
         ret_val["sessions"] = []
         for session in _result:
