@@ -29,6 +29,8 @@ class JowilderLoader(ExtractorLoader):
             ret_val = SurveyTime.SurveyTime(params=extractor_params)
         elif feature_type == "Clicks":
             ret_val = Clicks.Clicks(params=extractor_params)
+        elif feature_type == "Hovers":
+            ret_val = Hovers.Hovers(params=extractor_params)
         else:
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Jowilder.")
