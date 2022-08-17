@@ -32,6 +32,13 @@ def loadJSONFile(filename:str, path:Path = Path("./")) -> Dict[Any, Any]:
         Logger.Log(f"File {file_path} does not exist.", logging.WARNING)
         raise err
 
+def CleanSpecialChars(vals:List[Any], tab_width:int=3):
+    # check all return values for strings, and ensure no newlines or tabs get through, as they could throw off our outputs.
+    for i in range(len(vals)):
+        if isinstance(vals[i], str):
+            vals[i] = vals[i].replace('\n', ' ').replace('\t', ' '*tab_width)
+    return vals
+
 class Logger:
     std_logger  : logging.Logger   = logging.getLogger("std_logger")
     file_logger : Optional[logging.Logger] = None

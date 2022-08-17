@@ -4,6 +4,7 @@ import logging
 from datetime import datetime
 from typing import Any, Callable, List, Type, Optional
 ## import local files
+import utils
 from extractors.detectors.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
 from processors.EventProcessor import EventProcessor
@@ -35,7 +36,8 @@ class EventManager:
             elif type(col) == dict:
                 col_values[i] = json.dumps(col)
         # event.EventData = json.dumps(event.EventData)
-        self._lines.append(separator.join([str(item) for item in col_values]) + "\n") # changed , to \t
+        col_values = utils.CleanSpecialChars([str(item) for item in col_values])
+        self._lines.append(separator.join(col_values) + "\n") # changed , to \t
         self._processor.ProcessEvent(event=event)
 
     def GetColumnNames(self) -> List[str]:

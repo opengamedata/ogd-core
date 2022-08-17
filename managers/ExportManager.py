@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Tuple, Type, Optional
 from schemas.IDMode import IDMode
 
 ## import local files
-from utils import Logger
+import utils
 from config.config import settings as default_settings
 from extractors.ExtractorLoader import ExtractorLoader
 from games.AQUALAB.AqualabLoader import AqualabLoader
@@ -34,6 +34,7 @@ from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 from ogd_requests.Request import Request
 from ogd_requests.RequestResult import RequestResult
+from utils import Logger
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.
@@ -106,14 +107,6 @@ class ExportManager:
 
     # *** PRIVATE STATICS ***
 
-    @staticmethod
-    def _cleanSpecialChars(vals:List[Any], tab_width:int=3):
-        # check all return values for strings, and ensure no newlines or tabs get through, as they could throw off our outputs.
-        for i in range(len(vals)):
-            if isinstance(vals[i], str):
-                vals[i] = vals[i].replace('\n', ' ').replace('\t', ' '*tab_width)
-        return vals
-
     # *** PRIVATE METHODS ***
 
     def _receiveEventTrigger(self, event:Event) -> None:
@@ -158,25 +151,26 @@ class ExportManager:
             if self._event_mgr is not None:
                 if request.ExportEvents:
                     cols = self._event_mgr.GetColumnNames()
+                    cols = utils.CleanSpecialChars(vals=cols)
                     self._file_mgr.WriteEventsFile("\t".join(cols) + "\n")
                 else:
                     Logger.Log("Event log not requested, skipping events file.", logging.INFO, depth=1)
             if self._feat_mgr is not None:
                 if request.ExportPopulation:
                     cols = self._feat_mgr.GetPopulationFeatureNames()
-                    cols = ExportManager._cleanSpecialChars(vals=cols)
+                    cols = utils.CleanSpecialChars(vals=cols)
                     self._file_mgr.WritePopulationFile("\t".join(cols) + "\n")
                 else:
                     Logger.Log("Population features not requested, skipping population_features file.", logging.INFO, depth=1)
                 if request.ExportPlayers:
                     cols = self._feat_mgr.GetPlayerFeatureNames()
-                    cols = ExportManager._cleanSpecialChars(vals=cols)
+                    cols = utils.CleanSpecialChars(vals=cols)
                     self._file_mgr.WritePlayersFile("\t".join(cols) + "\n")
                 else:
                     Logger.Log("Player features not requested, skipping player_features file.", logging.INFO, depth=1)
                 if request.ExportSessions:
                     cols = self._feat_mgr.GetSessionFeatureNames()
-                    cols = ExportManager._cleanSpecialChars(vals=cols)
+                    cols = utils.CleanSpecialChars(vals=cols)
                     self._file_mgr.WriteSessionsFile("\t".join(cols) + "\n")
                 else:
                     Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
@@ -237,7 +231,6 @@ class ExportManager:
                     if request.ToDict:
                         ret_val.Events.AppendRow(_events)
                     if request.ToFile and file_manager is not None:
-                        _events = ExportManager._cleanSpecialChars(_events)
                         file_manager.GetEventsFile().writelines(_events)
                     self._event_mgr.ClearLines()
                 if self._feat_mgr is not None:
@@ -246,7 +239,7 @@ class ExportManager:
                         if request.ToDict:
                             ret_val.Sessions.ConcatRows(_sess_feats)
                         if request.ToFile and file_manager is not None:
-                            _sess_feats = ExportManager._cleanSpecialChars(_sess_feats)
+                            _sess_feats = utils.CleanSpecialChars(_sess_feats)
                             file_manager.GetSessionsFile().writelines(["\t".join(sess) + "\n" for sess in _sess_feats])
                         self._feat_mgr.ClearSessionLines()
                     if request.ExportPlayers:
@@ -254,7 +247,7 @@ class ExportManager:
                         if request.ToDict:
                             ret_val.Players.ConcatRows(_player_feats)
                         if request.ToFile and file_manager is not None:
-                            _player_feats = ExportManager._cleanSpecialChars(_player_feats)
+                            _player_feats = utils.CleanSpecialChars(_player_feats)
                             file_manager.GetPlayersFile().writelines(["\t".join(player) + "\n" for player in _player_feats])
                         self._feat_mgr.ClearPlayerLines()
         Logger.Log(f"Done", logging.INFO, depth=1)
@@ -265,7 +258,7 @@ class ExportManager:
                 if request.ToDict:
                     ret_val.Population.ConcatRows(_pop_feats)
                 if request.ToFile and file_manager is not None:
-                    _pop_feats = [ExportManager._cleanSpecialChars(vals=pop) for pop in _pop_feats]
+                    _pop_feats = [utils.CleanSpecialChars(vals=pop) for pop in _pop_feats]
                     file_manager.GetPopulationFile().writelines(["\t".join(pop) + "\n" for pop in _pop_feats])
             self._feat_mgr.ClearPopulationLines()
         return ret_val
