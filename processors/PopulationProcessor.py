@@ -1,6 +1,6 @@
 # import standard libraries
 import logging
-import traceback
+from datetime import datetime
 from typing import Any, Dict, IO, List, Type, Optional
 # import local files
 from schemas.FeatureData import FeatureData
@@ -88,7 +88,9 @@ class PopulationProcessor(FeatureProcessor):
         ret_val : Dict[str, List[List[Any]]] = {}
         # 1a) First, we get Population's first-order feature data:
         _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
-        # 1b) Then we can side-propogate the values to second-order features, and down-propogate to other extractors:
+        # 1b) Then we can side-propagate the values to second-order features, and down-propogate to other extractors:
+        start = datetime.now()
+        Logger.Log(f"PopulationProcessor is processing feature data in second-order features...", logging.INFO, depth=3)
         for feature in _first_order_data['population']:
             self.ProcessFeatureData(feature=feature)
         # 2) Second, we side-propogate feature data from players/sessions.
@@ -96,6 +98,7 @@ class PopulationProcessor(FeatureProcessor):
             self.ProcessFeatureData(feature=feature)
         for feature in _first_order_data['sessions']:
             self.ProcessFeatureData(feature=feature)
+        Logger.Log(f"Done, time to process feature data in PopulationProcessor was: {datetime.now() - start}", logging.INFO, depth=3)
         # 3) Now, Population features have all been exposed to all first-order feature values, so we can collect all values desired for export.
         if export_types.population and isinstance(self._registry, FeatureRegistry):
             if as_str:
