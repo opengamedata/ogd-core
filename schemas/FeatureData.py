@@ -13,6 +13,9 @@ class FeatureData:
       self._player_id = player_id
       self._sess_id = sess_id
 
+   def __str__(self):
+      return f"Name: {self.Name}\tCount Index: {self.CountIndex}\nColumns: {self._cols}\t Values: {self._vals}\nMode: {self._mode.name}\tPlayer: {self.PlayerID}\tSession: {self.SessionID}"
+
    @property
    def Name(self):
       return self._name
