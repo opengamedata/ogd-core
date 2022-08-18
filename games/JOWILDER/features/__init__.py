@@ -5,7 +5,8 @@ __all__ = [
     "SurveyTime",
     "Clicks",
     "Hovers",
-    "SessionDuration"
+    "SessionDuration",
+    "InteractionName"
 ]
 
 from . import QuestionAnswers
@@ -15,3 +16,4 @@ from . import SurveyTime
 from . import Clicks
 from . import Hovers
 from . import SessionDuration
+from . import InteractionName

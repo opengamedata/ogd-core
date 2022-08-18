@@ -33,6 +33,8 @@ class JowilderLoader(ExtractorLoader):
             ret_val = Hovers.Hovers(params=extractor_params)
         elif feature_type == "SessionDuration":
             ret_val = SessionDuration.SessionDuration(params=extractor_params)
+        elif feature_type == "InteractionName":
+            ret_val = InteractionName.InteractionName(params=extractor_params)
         else:
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Jowilder.")
