@@ -30,7 +30,8 @@ class SurveyItem(PerCountFeature):
     def __init__(self, params: ExtractorParameters):
         super().__init__(params=params)
         # NOTE: The time we record it the first time that players answered the given question minus the last time answering the last question or the time starting the quiz
-        self._last_timestamp : datetime = None
+        self._last_timestamp : Optional[datetime] = None
+        self._quiz_start_timestamp : Optional[datetime] = None
         self._time : Optional[timedelta] = None
         self._response_index : Optional[int] = None
         self._index : Optional[int] = None
@@ -42,9 +43,9 @@ class SurveyItem(PerCountFeature):
     def _validateEventCountIndex(self, event: Event):
         # BUG: It's so weird that question NO.0, 4, 8... use quizstart time but others use last question's time. see JowilderExtractor.py line 492
         # TODO: In the old code, when the quiz starts, self._last_timestamp is assigned a value, and when the quiz ends, the member is assigned to None. But logically, I don't think the latter one is needed, since after a quiz ends and before another starts, we shouldn't have any other quizquestion events or access this feature extractor. So I ignored this part.
-        if event.EventName == "CUSTOM.23":
-            return self.CountIndex%4 == 0
         quiz_index = event.event_data["quiz_number"]
+        if event.EventName == "CUSTOM.23":
+            return self.CountIndex in QUIZ_INDEXES[quiz_index].values()
         question_index = event.event_data["question_index"]
         self._index = QUIZ_INDEXES[quiz_index][question_index]
         return self._index == self.CountIndex or self._index == self.CountIndex - 1
@@ -75,11 +76,19 @@ class SurveyItem(PerCountFeature):
         # TODO: Add explict code and comments to skip quiz 0 also for survey_time
         if self.CountIndex == 0:
             return 
-        if event.EventName == "CUSTOM.23" or self._index == self.CountIndex - 1:
+        if event.EventName == "CUSTOM.23":
+            self._quiz_start_timestamp = event.Timestamp
+            return
+        if self._index == self.CountIndex - 1: 
             self._last_timestamp = event.Timestamp
             return
+        
         if self._time in [0, None]:
-            self._time = event.Timestamp - self._last_timestamp
+            _question_index = event.EventData.get("question_index")
+            if _question_index == 0:
+                self._time = event.Timestamp - self._quiz_start_timestamp
+            else:
+                self._time = event.Timestamp - self._last_timestamp
         self._response_index = event.EventData["response_index"]
         self._text = event.EventData["response"]
         self._num_answers += 1
@@ -91,8 +100,9 @@ class SurveyItem(PerCountFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._response_index, self._text, self._time, self._num_answers]
+        # By now, ResponseChanges will return -1 if there is no answer for this question.
+        return [self._response_index, self._text, self._time, self._num_answers - 1]
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["Text", "Time", "AnswerTimeCounts"]
+        return ["Text", "Time", "ResponseChanges"]
