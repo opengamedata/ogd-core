@@ -23,8 +23,8 @@ class JowilderLoader(ExtractorLoader):
             ret_val = QuestionAnswers.QuestionAnswers(params=extractor_params)
         elif feature_type == "SurveyItem":
             ret_val = SurveyItem.SurveyItem(params=extractor_params)
-        elif feature_type == "InteractionTime":
-            ret_val = InteractionTime.InteractionTime(params=extractor_params)
+        elif feature_type == "Interaction":
+            ret_val = Interaction.Interaction(params=extractor_params)
         elif feature_type == "SurveyTime":
             ret_val = SurveyTime.SurveyTime(params=extractor_params)
         elif feature_type == "Clicks":

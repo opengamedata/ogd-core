@@ -44,10 +44,15 @@ class ClickTrack:
     
     def StartNewInteraction(self, this_interaction : Optional[int]):
         return self._search_state == 0 and this_interaction is not None
+    
+    def startGame(self, event: Event):
+        self._game_start = True
+        self._game_start_time = event.Timestamp
+
 
 clicks_track = ClickTrack()
 
-class InteractionTime(PerCountFeature):
+class Interaction(PerCountFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
@@ -57,15 +62,16 @@ class InteractionTime(PerCountFeature):
     def __init__(self, params: ExtractorParameters):
         super().__init__(params=params)
         self._interaction : int = None
-        self._interaction_time : timedelta = timedelta()
-        self._first_encounter_time : timedelta = timedelta()
+        self._interaction_time : timedelta = timedelta(0)
+        self._first_encounter_time : timedelta = timedelta(0)
         self._num_encounters : int = 0
-        # TODO: not implemented
-        self._to : int = 0
+        self._to : timedelta = timedelta(0)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _validateEventCountIndex(self, event: Event):
+        if event.EventName == "CUSTOM.1":
+            return True
         self._interaction = je.fqid_to_enum.get(event.EventData.get("text_fqid"))
         if self._interaction is None:
             return self.CountIndex == clicks_track._last_interaction_index
@@ -76,7 +82,7 @@ class InteractionTime(PerCountFeature):
 
     def _getEventDependencies(self) -> List[str]:
         # NOTE: Count all the click events
-        return ["CUSTOM." + str(i) for i in range(3,12)]
+        return ["CUSTOM." + str(i) for i in range(3,12)] + ["CUSTOM.1"]
         # CUSTOM.X, X in [3,12) = ['navigate_click','notebook_click', 'map_click', 'notification_click', 'object_click', 'observation_click', 'person_click', 'cutscene_click', 'wildcard_click']
 
     def _getFeatureDependencies(self) -> List[str]:
@@ -88,6 +94,11 @@ class InteractionTime(PerCountFeature):
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
+        if not clicks_track._game_start:
+            if event.EventName == "CUSTOM.1":
+                clicks_track.startGame(event)
+            else:
+                raise(ValueError("A startgame event needed!"))
 
         if event.EventName == "CUSTOM.11" and event.EventData.get("cur_cmd_type") == 2:
             return
@@ -98,6 +109,8 @@ class InteractionTime(PerCountFeature):
         
         self._interaction_time += event.Timestamp - clicks_track.LastClickTime
         if clicks_track.StartNewInteraction(self._interaction):
+            if self._num_encounters == 0:
+                self._to = event.Timestamp - clicks_track._game_start_time
             self._num_encounters += 1
         if self._num_encounters <= 1:
             self._first_encounter_time = self._interaction_time
@@ -109,8 +122,11 @@ class InteractionTime(PerCountFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._interaction_time, self._first_encounter_time, self._num_encounters]
+        return [self._interaction_time, self._first_encounter_time, self._num_encounters, self._to]
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["FirstEncounter", "NumEncounter"]
+        return ["FirstEncounterTime", "NumEncounter", "TimeTo"]
+
+    def BaseFeatureSuffix(self) -> str:
+        return "Time"
