@@ -7,7 +7,8 @@ __all__ = [
     "Hovers",
     "SessionDuration",
     "InteractionName",
-    "NotebookUses"
+    "NotebookUses",
+    "EventCount"
 ]
 
 from . import QuestionAnswers
@@ -19,3 +20,4 @@ from . import Hovers
 from . import SessionDuration
 from . import InteractionName
 from . import NotebookUses
+from . import EventCount
