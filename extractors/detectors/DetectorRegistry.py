@@ -2,14 +2,16 @@
 import enum
 import logging
 from collections import OrderedDict
-from datetime import datetime
 from typing import Any, Callable, List, Optional
 ## import local files
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import Extractor
+from extractors.ExtractorLoader import ExtractorLoader
 from extractors.ExtractorRegistry import ExtractorRegistry
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
+from schemas.GameSchema import GameSchema
 from schemas.IterationMode import IterationMode
 
 ## @class Extractor
@@ -26,13 +28,14 @@ class DetectorRegistry(ExtractorRegistry):
     # *** BUILT-INS ***
 
     # Base constructor for Registry.
-    def __init__(self):
+    def __init__(self, mode:ExtractionMode, trigger_callback:Callable[[Event], None]):
         """Base constructor for Registry
 
         Just sets up mostly-empty dictionaries for use by the registry.
         """
-        super().__init__()
-        self._detectors      : OrderedDict[str, Detector]                = OrderedDict()
+        super().__init__(mode=mode)
+        self._detectors        : OrderedDict[str, Detector] = OrderedDict()
+        self._trigger_callback : Callable[[Event], None]
 
     # string conversion for Extractors.
     def __str__(self) -> str:
@@ -84,6 +87,35 @@ class DetectorRegistry(ExtractorRegistry):
         else:
             raise TypeError("DetectorRegistry was given an Extractor which was not a Detector!")
 
+    def _getExtractorNames(self) -> List[str]:
+        """Implementation of abstract function to retrieve the names of all extractors currently registered.
+
+        :return: A list of all currently-registered detectors.
+        :rtype: List[str]
+        """
+        ret_val : List[str] = [feature.Name for feature in self._detectors.values()]
+        return ret_val
+
+    def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, extract_mode:ExtractionMode, overrides:Optional[List[str]]):
+        # first, load aggregate detectors
+        iter_mode = IterationMode.AGGREGATE
+        for base_name,aggregate in schema.AggregateDetectors.items():
+            if schema.DetectorEnabled(detector_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=overrides):
+                detector_type = aggregate.get('detector_type', base_name) # try to get 'detector type' from aggregate, if it's not there default to name of the config item.
+                detector = loader.LoadDetector(detector_type=detector_type, name=base_name, schema_args=aggregate, trigger_callback=self._trigger_callback)
+                if detector is not None:
+                    self.Register(extractor=detector, mode=iter_mode)
+        # second, load iterated (per-count) detectors
+        iter_mode = IterationMode.PERCOUNT
+        for base_name,percount in schema.PerCountDetectors.items():
+            if schema.DetectorEnabled(detector_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=overrides):
+                detector_type = percount.get('detector_type', base_name) # try to get 'detector type' from percount config, if it's not there default to name of the config item.
+                for i in ExtractorLoader._genCountRange(count=percount["count"], schema=schema):
+                    instance_name = f"{percount['prefix']}{i}_{base_name}"
+                    detector = loader.LoadDetector(detector_type=detector_type, name=instance_name, schema_args=percount, trigger_callback=self._trigger_callback, count_index=i)
+                    if detector is not None:
+                        self.Register(extractor=detector, mode=iter_mode)
+
     def _extractFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.
 
@@ -105,15 +137,6 @@ class DetectorRegistry(ExtractorRegistry):
 
     def _extractFromFeatureData(self, feature:FeatureData) -> None:
         return
-
-    def _getExtractorNames(self) -> List[str]:
-        """Implementation of abstract function to retrieve the names of all extractors currently registered.
-
-        :return: A list of all currently-registered detectors.
-        :rtype: List[str]
-        """
-        ret_val : List[str] = [feature.Name for feature in self._detectors.values()]
-        return ret_val
 
     # *** PUBLIC STATICS ***
 

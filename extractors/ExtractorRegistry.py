@@ -1,14 +1,15 @@
 ## import standard libraries
 import abc
-import enum
 import logging
-from collections import OrderedDict
-from typing import Dict, List
+from typing import Any, Dict, ItemsView, List, Optional
+from extractors.ExtractorLoader import ExtractorLoader
 ## import local files
 from utils import Logger
 from extractors.Extractor import Extractor
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
+from schemas.GameSchema import GameSchema
 from schemas.IterationMode import IterationMode
 
 ## @class Extractor
@@ -43,6 +44,10 @@ class ExtractorRegistry(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, extract_mode:ExtractionMode, overrides:Optional[List[str]]):
+        pass
+
+    @abc.abstractmethod
     def _extractFromEvent(self, event:Event) -> None:
         pass
 
@@ -53,7 +58,7 @@ class ExtractorRegistry(abc.ABC):
     # *** BUILT-INS ***
 
     # Base constructor for Registry.
-    def __init__(self):
+    def __init__(self, mode:ExtractionMode):
         """Base constructor for Registry
 
         Just sets up mostly-empty dictionaries for use by the registry.
@@ -63,6 +68,7 @@ class ExtractorRegistry(abc.ABC):
         """
         self._event_registry : Dict[str,List[ExtractorRegistry.Listener]] = {"all_events":[]}
         self._feature_registry: Dict[str,List[ExtractorRegistry.Listener]] = {}
+        self._mode        : ExtractionMode = mode
 
     # *** PUBLIC STATICS ***
 
@@ -84,6 +90,9 @@ class ExtractorRegistry(abc.ABC):
         :rtype: List[str]
         """
         return self._getExtractorNames()
+
+    def LoadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, overrides:Optional[List[str]]):
+        self._loadFromSchema(schema=schema, loader=loader, extract_mode=self._mode, overrides=overrides)
 
     def ExtractFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.

@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Type, Optional
 # import locals
 from extractors.ExtractorRegistry import ExtractorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
@@ -17,6 +18,10 @@ class Processor(abc.ABC):
 
     @abc.abstractmethod
     def _prepareLoader(self) -> ExtractorLoader:
+        pass
+
+    @abc.abstractmethod
+    def _mode(self) -> ExtractionMode:
         pass
 
     ## Abstract declaration of a function to get the names of all features.

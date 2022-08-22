@@ -46,9 +46,12 @@ class PopulationProcessor(FeatureProcessor):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
+    def _mode(self) -> ExtractionMode:
+        return ExtractionMode.POPULATION
+
     def _prepareLoader(self) -> ExtractorLoader:
         return self._LoaderClass(player_id="population", session_id="population", game_schema=self._game_schema,
-                                 mode=ExtractionMode.POPULATION, feature_overrides=self._overrides)
+                                 mode=self._mode(), feature_overrides=self._overrides)
 
     def _getExtractorNames(self) -> List[str]:
         if isinstance(self._registry, FeatureRegistry):
@@ -137,7 +140,7 @@ class PopulationProcessor(FeatureProcessor):
     #   eating too much memory.
     def _clearLines(self) -> None:
         Logger.Log(f"Clearing features from PopulationProcessor.", logging.DEBUG, depth=2)
-        self._registry = FeatureRegistry()
+        self._registry = FeatureRegistry(mode=self._mode())
 
     # *** PUBLIC STATICS ***
 

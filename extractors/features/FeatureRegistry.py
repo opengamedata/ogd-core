@@ -4,13 +4,16 @@ import json
 import logging
 from collections import OrderedDict
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, ItemsView, List, Optional
 ## import local files
 from extractors.Extractor import Extractor
+from extractors.ExtractorLoader import ExtractorLoader
 from extractors.ExtractorRegistry import ExtractorRegistry
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
+from schemas.GameSchema import GameSchema
 from schemas.IterationMode import IterationMode
 
 ## @class Extractor
@@ -32,7 +35,7 @@ class FeatureRegistry(ExtractorRegistry):
     # *** BUILT-INS ***
 
     # Base constructor for Registry.
-    def __init__(self, order:int=len(FeatureOrders)):
+    def __init__(self, mode:ExtractionMode, order:int=len(FeatureOrders)):
         """Base constructor for Registry
 
         Just sets up mostly-empty dictionaries for use by the registry.
@@ -40,7 +43,7 @@ class FeatureRegistry(ExtractorRegistry):
         _event_registry maps event names to Listener objects, which basically just say which feature(s) wants the given enent.
         _feature_registry maps feature names to Listener objects, which basically just say which 2nd-order feature(s) wants the given 1st-order feature.
         """
-        super().__init__()
+        super().__init__(mode=mode)
         self._features : List[OrderedDict[str, Feature]] = [OrderedDict() for i in range(order)]
         # self._features : Dict[str, OrderedDict[str, Feature]] = {
         #     "first_order" : OrderedDict(),
@@ -109,6 +112,47 @@ class FeatureRegistry(ExtractorRegistry):
         else:
             raise TypeError("FeatureRegistry was given an Extractor which was not a Feature!")
 
+    def _getExtractorNames(self) -> List[str]:
+        """Implementation of abstract function to retrieve the names of all extractors currently registered.
+
+        :return: A list of all currently-registered features.
+        :rtype: List[str]
+        """
+        ret_val : List[str] = []
+        for order in self._features:
+            for feature in order.values():
+                ret_val += feature.GetFeatureNames()
+        return ret_val
+
+    def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, extract_mode:ExtractionMode, overrides:Optional[List[str]]):
+        iter_mode = IterationMode.AGGREGATE
+        for base_name,aggregate in schema.AggregateFeatures.items():
+            if schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=overrides):
+                feature_type = aggregate.get('feature_type', base_name) # try to get 'feature type' from aggregate, if it's not there default to name of the config item.
+                feature = loader.LoadFeature(feature_type=feature_type, name=base_name, schema_args=aggregate)
+                if feature is not None and self._mode in feature.AvailableModes():
+                    self.Register(extractor=feature, mode=iter_mode)
+        iter_mode = IterationMode.PERCOUNT
+        for base_name,percount in schema.PerCountFeatures.items():
+            if schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=overrides):
+                feature_type = percount.get('feature_type', base_name) # try to get 'feature type' from percount, if it's not there default to name of the config item.
+                for i in ExtractorLoader._genCountRange(count=percount["count"], schema=schema):
+                    instance_name = f"{percount['prefix']}{i}_{base_name}"
+                    feature = loader.LoadFeature(feature_type=feature_type, name=instance_name, schema_args=percount, count_index=i)
+                    if feature is not None and self._mode in feature.AvailableModes():
+                        self.Register(extractor=feature, mode=iter_mode)
+        # for firstOrder in registry.FirstOrdersRequested():
+        #     #TODO load firstOrder, if it's not loaded already
+        #     if not firstOrder in registry.GetExtractorNames():
+
+    def _getAggregateList(self, schema:GameSchema) -> ItemsView[str, Any]:
+        return schema.AggregateFeatures.items()
+    def _getPerCountList(self, schema:GameSchema) -> ItemsView[str, Any]:
+        return schema.PerCountFeatures.items()
+
+    def _extractorEnabled(self, schema:GameSchema, extractor_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode, overrides:Optional[List[str]]):
+        return schema.FeatureEnabled(feature_name=extractor_name, iter_mode=iter_mode, extract_mode=extract_mode, overrides=overrides)
+
     def _extractFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.
 
@@ -145,18 +189,6 @@ class FeatureRegistry(ExtractorRegistry):
                 for order_key in range(len(self._features)):
                     if listener.name in self._features[order_key].keys():
                         self._features[order_key][listener.name].ExtractFromFeatureData(feature)
-
-    def _getExtractorNames(self) -> List[str]:
-        """Implementation of abstract function to retrieve the names of all extractors currently registered.
-
-        :return: A list of all currently-registered features.
-        :rtype: List[str]
-        """
-        ret_val : List[str] = []
-        for order in self._features:
-            for feature in order.values():
-                ret_val += feature.GetFeatureNames()
-        return ret_val
 
 
     # *** PUBLIC STATICS ***

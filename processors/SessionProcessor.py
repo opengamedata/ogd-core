@@ -48,9 +48,12 @@ class SessionProcessor(FeatureProcessor):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
+    def _mode(self) -> ExtractionMode:
+        return ExtractionMode.SESSION
+
     def _prepareLoader(self) -> ExtractorLoader:
         return self._LoaderClass(player_id=self._player_id, session_id=self._session_id, game_schema=self._game_schema,
-                                 mode=ExtractionMode.SESSION, feature_overrides=self._overrides)
+                                 mode=self._mode(), feature_overrides=self._overrides)
 
     def _getExtractorNames(self) -> List[str]:
         return ["SessionID", "PlayerID"] + self._registry.GetExtractorNames()
@@ -92,7 +95,7 @@ class SessionProcessor(FeatureProcessor):
 
     def _clearLines(self) -> None:
         Logger.Log(f"Clearing features from SessionProcessor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)
-        self._registry = FeatureRegistry()
+        self._registry = FeatureRegistry(mode=self._mode())
 
     # *** PUBLIC STATICS ***
 
