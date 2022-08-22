@@ -33,8 +33,8 @@ class DetectorRegistry(ExtractorRegistry):
         Just sets up mostly-empty dictionaries for use by the registry.
         """
         super().__init__(mode=mode)
+        self._trigger_callback : Callable[[Event], None]    = trigger_callback
         self._detectors        : OrderedDict[str, Detector] = OrderedDict()
-        self._trigger_callback : Callable[[Event], None]
 
     # string conversion for Extractors.
     def __str__(self) -> str:
