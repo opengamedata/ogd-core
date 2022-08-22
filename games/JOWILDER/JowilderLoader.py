@@ -1,5 +1,6 @@
 ## import standard libraries
 from datetime import datetime
+import re
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from extractors.detectors.Detector import Detector
@@ -41,6 +42,8 @@ class JowilderLoader(ExtractorLoader):
             ret_val = EventCount.EventCount(params=extractor_params)
         elif feature_type == "UserEnabled":
             ret_val = UserEnabled.UserEnabled(params=extractor_params)
+        elif feature_type == "GameVersion":
+            ret_val = GameVersion.GameVersion(params=extractor_params)
         else:
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Jowilder.")
