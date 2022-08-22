@@ -1,5 +1,4 @@
 ## import standard libraries
-import enum
 import logging
 from collections import OrderedDict
 from typing import Any, Callable, List, Optional

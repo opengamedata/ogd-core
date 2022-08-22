@@ -1,7 +1,7 @@
 ## import standard libraries
 import abc
 import logging
-from typing import Any, Dict, ItemsView, List, Optional
+from typing import Any, Dict, List, Optional
 from extractors.ExtractorLoader import ExtractorLoader
 ## import local files
 from utils import Logger
