@@ -16,12 +16,19 @@ class Processor(abc.ABC):
 
     # *** ABSTRACTS ***
 
-    @abc.abstractmethod
-    def _prepareLoader(self) -> ExtractorLoader:
-        pass
-
+    @property
     @abc.abstractmethod
     def _mode(self) -> ExtractionMode:
+        pass
+
+    @property
+    @abc.abstractmethod
+    def _playerID(self) -> str:
+        pass
+
+    @property
+    @abc.abstractmethod
+    def _sessionID(self) -> str:
         pass
 
     ## Abstract declaration of a function to get the names of all features.
@@ -44,7 +51,8 @@ class Processor(abc.ABC):
         self._game_schema : GameSchema            = game_schema
         self._overrides   : Optional[List[str]]   = feature_overrides
         self._LoaderClass : Type[ExtractorLoader] = LoaderClass
-        self._loader      : ExtractorLoader       = self._prepareLoader()
+        self._loader      : ExtractorLoader       = LoaderClass(player_id=self._playerID, session_id=self._sessionID, game_schema=self._game_schema,
+                                                                mode=self._mode, feature_overrides=self._overrides)
         self._registry    : Optional[ExtractorRegistry] = None
 
     def __str__(self):

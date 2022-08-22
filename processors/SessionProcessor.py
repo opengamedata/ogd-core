@@ -44,16 +44,22 @@ class SessionProcessor(FeatureProcessor):
         ## Define instance vars
         self._session_id   : str = session_id
         self._player_id    : str = player_id
+        # NOTE: need session and player IDs set before we do initialization in parent.
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
+    @property
     def _mode(self) -> ExtractionMode:
         return ExtractionMode.SESSION
 
-    def _prepareLoader(self) -> ExtractorLoader:
-        return self._LoaderClass(player_id=self._player_id, session_id=self._session_id, game_schema=self._game_schema,
-                                 mode=self._mode(), feature_overrides=self._overrides)
+    @property
+    def _playerID(self) -> str:
+        return self._player_id
+
+    @property
+    def _sessionID(self) -> str:
+        return self._session_id
 
     def _getExtractorNames(self) -> List[str]:
         return ["SessionID", "PlayerID"] + self._registry.GetExtractorNames()
@@ -95,7 +101,7 @@ class SessionProcessor(FeatureProcessor):
 
     def _clearLines(self) -> None:
         Logger.Log(f"Clearing features from SessionProcessor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)
-        self._registry = FeatureRegistry(mode=self._mode())
+        self._registry = FeatureRegistry(mode=self._mode)
 
     # *** PUBLIC STATICS ***
 

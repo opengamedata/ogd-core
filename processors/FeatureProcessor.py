@@ -35,7 +35,7 @@ class FeatureProcessor(Processor):
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema,
                  feature_overrides:Optional[List[str]]=None):
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
-        self._registry : FeatureRegistry = FeatureRegistry(mode=self._mode())
+        self._registry : FeatureRegistry = FeatureRegistry(mode=self._mode)
         self._registry.LoadFromSchema(schema=game_schema, loader=self._loader, overrides=feature_overrides)
 
     def __str__(self):
