@@ -3,7 +3,7 @@ import abc
 import logging
 from typing import Any, Dict, List, Type, Optional
 # import locals
-from extractors.ExtractorRegistry import ExtractorRegistry
+from extractors.registries.ExtractorRegistry import ExtractorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData

@@ -3,10 +3,10 @@ import logging
 import traceback
 from typing import Any, List, Dict, IO, Type, Optional
 # import local files
-from extractors.ExtractorRegistry import ExtractorRegistry
+from extractors.registries.ExtractorRegistry import ExtractorRegistry
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
-from extractors.features.FeatureRegistry import FeatureRegistry
+from extractors.registries.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode

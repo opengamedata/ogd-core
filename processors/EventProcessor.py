@@ -1,8 +1,8 @@
 # import libraries
 from typing import Any, Callable, Dict, List, Type, Optional
 # import locals
-from extractors.detectors.DetectorRegistry import DetectorRegistry
-from extractors.ExtractorRegistry import ExtractorRegistry
+from extractors.registries.DetectorRegistry import DetectorRegistry
+from extractors.registries.ExtractorRegistry import ExtractorRegistry
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
 from processors.Processor import Processor

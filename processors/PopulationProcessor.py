@@ -5,7 +5,7 @@ from typing import Any, Dict, IO, List, Type, Optional
 # import local files
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
-from extractors.features.FeatureRegistry import FeatureRegistry
+from extractors.registries.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from processors.PlayerProcessor import PlayerProcessor
 from schemas.Event import Event

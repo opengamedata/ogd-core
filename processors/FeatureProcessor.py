@@ -6,7 +6,7 @@ from numpy import isin
 # import locals
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
-from extractors.features.FeatureRegistry import FeatureRegistry
+from extractors.registries.FeatureRegistry import FeatureRegistry
 from ogd_requests.Request import ExporterTypes
 from processors.Processor import Processor
 from schemas.GameSchema import GameSchema

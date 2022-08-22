@@ -4,7 +4,7 @@ import traceback
 from typing import Any, List, Dict, IO, Type, Optional
 # import local files
 from extractors.ExtractorLoader import ExtractorLoader
-from extractors.features.FeatureRegistry import FeatureRegistry
+from extractors.registries.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from processors.SessionProcessor import SessionProcessor
 from schemas.Event import Event
