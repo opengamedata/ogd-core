@@ -8,7 +8,8 @@ __all__ = [
     "SessionDuration",
     "InteractionName",
     "NotebookUses",
-    "EventCount"
+    "EventCount",
+    "UserEnabled"
 ]
 
 from . import QuestionAnswers
@@ -21,3 +22,4 @@ from . import SessionDuration
 from . import InteractionName
 from . import NotebookUses
 from . import EventCount
+from . import UserEnabled

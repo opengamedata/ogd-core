@@ -39,6 +39,8 @@ class JowilderLoader(ExtractorLoader):
             ret_val = NotebookUses.NotebookUses(params=extractor_params)
         elif feature_type == "EventCount":
             ret_val = EventCount.EventCount(params=extractor_params)
+        elif feature_type == "UserEnabled":
+            ret_val = UserEnabled.UserEnabled(params=extractor_params)
         else:
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Jowilder.")
