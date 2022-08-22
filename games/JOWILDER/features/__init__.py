@@ -10,7 +10,8 @@ __all__ = [
     "NotebookUses",
     "EventCount",
     "UserEnabled",
-    "GameVersion"
+    "GameVersion",
+    "UsedSaveCode"
 ]
 
 from . import QuestionAnswers
@@ -25,3 +26,4 @@ from . import NotebookUses
 from . import EventCount
 from . import UserEnabled
 from . import GameVersion
+from . import UsedSaveCode
