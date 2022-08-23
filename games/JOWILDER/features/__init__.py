@@ -12,7 +12,8 @@ __all__ = [
     "UserEnabled",
     "GameVersion",
     "UsedSaveCode",
-    "GameScript"
+    "GameScript",
+    "SessionStart"
 ]
 
 from . import QuestionAnswers
@@ -29,3 +30,4 @@ from . import UserEnabled
 from . import GameVersion
 from . import UsedSaveCode
 from . import GameScript
+from . import SessionStart
