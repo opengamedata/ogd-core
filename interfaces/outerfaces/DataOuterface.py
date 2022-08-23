@@ -7,7 +7,7 @@ from typing import Dict, List, Tuple, Optional, Union
 # import local files
 from interfaces.Interface import Interface
 from schemas.IDMode import IDMode
-from schemas.ExtractionMode import ExtractionMode
+from schemas.ExportMode import ExportMode
 from utils import Logger, ExportRow
 
 class DataOuterface(Interface):
@@ -15,7 +15,7 @@ class DataOuterface(Interface):
     # *** ABSTRACTS ***
 
     @abc.abstractmethod
-    def _destination(self, mode:ExtractionMode) -> str:
+    def _destination(self, mode:ExportMode) -> str:
         pass
 
     @abc.abstractmethod
@@ -63,7 +63,7 @@ class DataOuterface(Interface):
 
     # *** PUBLIC METHODS ***
 
-    def Destination(self, mode:ExtractionMode):
+    def Destination(self, mode:ExportMode):
         return self._destination(mode=mode)
 
     def WriteEventHeader(self, header:List[str]) -> None:
@@ -80,16 +80,19 @@ class DataOuterface(Interface):
 
     def WriteEventLines(self, events:List[str]) -> None:
         self._writeEventLines(events=events)
-        Logger.Log(f"Wrote ")
+        Logger.Log(f"Wrote {len(events)} events to {self.Destination(mode=ExportMode.EVENTS)}", logging.INFO, depth=2)
 
     def WriteSessionLines(self, sessions:List[ExportRow]) -> None:
         self._writeSessionLines(sessions=sessions)
+        Logger.Log(f"Wrote {len(sessions)} events to {self.Destination(mode=ExportMode.SESSION)}", logging.INFO, depth=2)
 
     def WritePlayerLines(self, players:List[ExportRow]) -> None:
         self._writePlayerLines(players=players)
+        Logger.Log(f"Wrote {len(players)} events to {self.Destination(mode=ExportMode.PLAYER)}", logging.INFO, depth=2)
 
     def WritePopulationLines(self, populations:List[ExportRow]) -> None:
         self._writePopulationLines(populations=populations)
+        Logger.Log(f"Wrote {len(populations)} events to {self.Destination(mode=ExportMode.POPULATION)}", logging.INFO, depth=2)
 
     # *** PROPERTIES ***
 
