@@ -53,7 +53,7 @@ class Feature(Extractor):
         :return: _description_
         :rtype: List[ExtractionMode]
         """
-        return [ExtractionMode.POPULATION, ExtractionMode.USER, ExtractionMode.SESSION]
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION]
 
     # *** PUBLIC METHODS ***
 

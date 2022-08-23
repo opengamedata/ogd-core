@@ -1,17 +1,16 @@
 # import standard libraries
 import logging
 import traceback
-from typing import Any, List, Dict, IO, Type, Optional
+from typing import List, Dict, Type, Optional, Set
 # import local files
-from extractors.registries.ExtractorRegistry import ExtractorRegistry
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.registries.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from schemas.Event import Event
+from schemas.ExportMode import ExportMode
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
-from ogd_requests.Request import ExporterTypes
 from utils import Logger, ExportRow
 
 ## @class SessionProcessor
@@ -78,14 +77,14 @@ class SessionProcessor(FeatureProcessor):
     def _processFeatureData(self, feature: FeatureData):
         self._registry.ExtractFromFeatureData(feature=feature)
 
-    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str,List[ExportRow]]:
+    def _getFeatureValues(self, export_types:Set[ExportMode], as_str:bool=False) -> Dict[str,List[ExportRow]]:
         # 1) First, we get Session's first-order feature data:
         _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
         # 2) Then we can side-propogate the values to second-order features, and down-propogate to other extractors:
         for feature in _first_order_data['sessions']:
             self.ProcessFeatureData(feature=feature)
         # 3) Finally, we assume higher-ups have already sent down their first-order features, so we are ready to return all feature values.
-        if export_types.sessions and isinstance(self._registry, FeatureRegistry):
+        if ExportMode.SESSION in export_types and isinstance(self._registry, FeatureRegistry):
             if as_str:
                 return {"sessions" : [[self._session_id, self._player_id] + self._registry.GetFeatureStringValues()]}
             else:

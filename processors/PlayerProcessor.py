@@ -1,17 +1,17 @@
 # import standard libraries
 import logging
 import traceback
-from typing import Any, List, Dict, IO, Type, Optional
+from typing import List, Dict, Type, Optional, Set
 # import local files
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.registries.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from processors.SessionProcessor import SessionProcessor
 from schemas.Event import Event
+from schemas.ExportMode import ExportMode
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
-from ogd_requests.Request import ExporterTypes
 from utils import Logger, ExportRow
 
 ## @class PlayerProcessor
@@ -54,7 +54,7 @@ class PlayerProcessor(FeatureProcessor):
 
     @property
     def _mode(self) -> ExtractionMode:
-        return ExtractionMode.USER
+        return ExtractionMode.PLAYER
 
     @property
     def _playerID(self) -> str:
@@ -97,14 +97,14 @@ class PlayerProcessor(FeatureProcessor):
         for session in self._session_processors.values():
             session.ProcessFeatureData(feature=feature)
 
-    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[ExportRow]]:
+    def _getFeatureValues(self, export_types:Set[ExportMode], as_str:bool=False) -> Dict[str, List[ExportRow]]:
         ret_val : Dict[str, List[ExportRow]] = {}
-        if export_types.players and isinstance(self._registry, FeatureRegistry):
+        if ExportMode.PLAYER in export_types and isinstance(self._registry, FeatureRegistry):
             if as_str:
                 ret_val["players"] = [[self._player_id, str(self.SessionCount)] + self._registry.GetFeatureStringValues()]
             else:
                 ret_val["players"] = [[self._player_id, self.SessionCount] + self._registry.GetFeatureValues()]
-        if export_types.sessions:
+        if ExportMode.SESSION in export_types:
             # _results gives us a list of dicts, each with a "session" element
             _results = [sess_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for name,sess_extractor in self._session_processors.items() if not (name == 'null' and self._null_empty)]
             # so we loop over list, and pull each "session" element into a master list of all sessions.

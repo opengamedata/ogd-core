@@ -2,14 +2,12 @@
 from typing import Any, Callable, Dict, List, Type, Optional
 # import locals
 from extractors.registries.DetectorRegistry import DetectorRegistry
-from extractors.registries.ExtractorRegistry import ExtractorRegistry
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
 from processors.Processor import Processor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
-from ogd_requests.Request import ExporterTypes
 
 class EventProcessor(Processor):
 

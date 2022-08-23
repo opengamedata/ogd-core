@@ -1,7 +1,7 @@
 ## import standard libraries
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Type, Optional
+from typing import Any, Dict, List, Type, Optional, Set
 ## import local files
 from extractors.ExtractorLoader import ExtractorLoader
 from processors.FeatureProcessor import FeatureProcessor
@@ -10,25 +10,26 @@ from processors.PlayerProcessor import PlayerProcessor
 from processors.SessionProcessor import SessionProcessor
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
-from ogd_requests.Request import ExporterTypes
+from schemas.ExportMode import ExportMode
 from utils import Logger, ExportRow
 
 class FeatureManager:
-    def __init__(self, LoaderClass:Type[ExtractorLoader], exp_types:ExporterTypes, game_schema:GameSchema, feature_overrides:Optional[List[str]]):
-        self._exp_types        : ExporterTypes       = exp_types
+    def __init__(self, LoaderClass:Type[ExtractorLoader], exp_modes:Set[ExportMode], game_schema:GameSchema, feature_overrides:Optional[List[str]]):
+        self._exp_types        : Set[ExportMode]           = exp_modes
         self._latest_results   : Dict[str,List[ExportRow]] = {}
-        self._up_to_date       : bool                = True
+        self._up_to_date       : bool                      = True
         self._LoaderClass      : Optional[Type[ExtractorLoader]] = LoaderClass
         self._processor        : FeatureProcessor
 
         if self.HasLoader():
-            if exp_types.population:
+            # Choose which kind of processor to make based on highest level in set of export modes.
+            if ExportMode.POPULATION in exp_modes:
                 self._processor = PopulationProcessor(LoaderClass=self._LoaderClass, game_schema=game_schema,
                                                       feature_overrides=feature_overrides)
-            elif exp_types.players:
+            elif ExportMode.PLAYER in exp_modes:
                 self._processor = PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=game_schema,
                                                   player_id="Player", feature_overrides=feature_overrides)
-            elif exp_types.sessions:
+            elif ExportMode.SESSION in exp_modes:
                 self._processor = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=game_schema,
                                                    player_id="Player", session_id="Session", feature_overrides=feature_overrides)
         else:

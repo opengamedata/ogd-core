@@ -116,7 +116,7 @@ class Extractor(abc.ABC):
         :return: _description_
         :rtype: List[ExtractionMode]
         """
-        return [ExtractionMode.POPULATION, ExtractionMode.USER, ExtractionMode.SESSION, ExtractionMode.DETECTOR]
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR]
 
     # *** PROPERTIES ***
 

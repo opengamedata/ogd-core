@@ -1,7 +1,7 @@
 # import standard libraries
 import logging
 from datetime import datetime
-from typing import Any, Dict, IO, List, Type, Optional
+from typing import Any, Dict, List, Type, Optional, Set
 # import local files
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
@@ -10,8 +10,8 @@ from processors.FeatureProcessor import FeatureProcessor
 from processors.PlayerProcessor import PlayerProcessor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
+from schemas.ExportMode import ExportMode
 from schemas.GameSchema import GameSchema
-from ogd_requests.Request import ExporterTypes
 from utils import Logger, ExportRow
 
 ## @class PopulationProcessor
@@ -92,7 +92,7 @@ class PopulationProcessor(FeatureProcessor):
             for player in self._player_processors.values():
                 player.ProcessFeatureData(feature=feature)
 
-    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[ExportRow]]:
+    def _getFeatureValues(self, export_types:Set[ExportMode], as_str:bool=False) -> Dict[str, List[ExportRow]]:
         ret_val : Dict[str, List[List[Any]]] = {}
         # 1a) First, we get Population's first-order feature data:
         _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
@@ -108,21 +108,21 @@ class PopulationProcessor(FeatureProcessor):
             self.ProcessFeatureData(feature=feature)
         Logger.Log(f"Done, time to process feature data in PopulationProcessor was: {datetime.now() - start}", logging.INFO, depth=3)
         # 3) Now, Population features have all been exposed to all first-order feature values, so we can collect all values desired for export.
-        if export_types.population and isinstance(self._registry, FeatureRegistry):
+        if ExportMode.POPULATION in export_types and isinstance(self._registry, FeatureRegistry):
             if as_str:
                 ret_val["population"] = [[str(self.PlayerCount), str(self.SessionCount)] + self._registry.GetFeatureStringValues()]
             else:
                 ret_val["population"] = [[self.PlayerCount, self.SessionCount]           + self._registry.GetFeatureValues()]
         # 4) Finally, all Player/Session features have been exposed to all first-order feature values, so we can collect all values desired for export.
-        if export_types.players or export_types.sessions:
+        if ExportMode.PLAYER in export_types or ExportMode.SESSION in export_types:
             # first, get list of results, skipping null player if they didn't get events.
             _results = [player_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for name,player_extractor in self._player_processors.items() if not (name == 'null' and self._null_empty)]
             # then, each result will have players or sessions or both, need to loop over and append to a list in ret_val.
-            if export_types.players:
+            if ExportMode.PLAYER in export_types:
                 ret_val["players"] = []
                 for player in _results:
                     ret_val["players"] += player["players"]
-            if export_types.sessions:
+            if ExportMode.SESSION in export_types:
                 ret_val["sessions"] = []
                 for player in _results:
                     ret_val["sessions"] += player["sessions"]
