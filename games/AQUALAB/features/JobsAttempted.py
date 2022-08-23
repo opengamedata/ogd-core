@@ -76,18 +76,19 @@ class JobsAttempted(Feature):
 
     def _extractFromFeatureData(self, feature:FeatureData):
         if feature.Name == "JobActiveTime":
-            if self.ExportMode    == ExtractionMode.SESSION \
-           and feature.ExportMode == ExtractionMode.SESSION:
-                # session should only have one time, namely the time for the session.
-                self._times = [feature.FeatureValues[0]]
-            elif self.ExportMode == ExtractionMode.PLAYER \
-             and feature.ExportMode == ExtractionMode.PLAYER:
-                # player should only have one time, namely the time for the player.
-                self._times = [feature.FeatureValues[0]]
-            elif self.ExportMode == ExtractionMode.POPULATION \
-             and feature.ExportMode == ExtractionMode.PLAYER:
-                # population should only have one time, namely the time for the player.
-                self._times.append(feature.FeatureValues[0])
+            if feature.CountIndex == self.CountIndex:
+                if self.ExportMode    == ExtractionMode.SESSION \
+            and feature.ExportMode == ExtractionMode.SESSION:
+                    # session should only have one time, namely the time for the session.
+                    self._times = [feature.FeatureValues[0]]
+                elif self.ExportMode == ExtractionMode.PLAYER \
+                and feature.ExportMode == ExtractionMode.PLAYER:
+                    # player should only have one time, namely the time for the player.
+                    self._times = [feature.FeatureValues[0]]
+                elif self.ExportMode == ExtractionMode.POPULATION \
+                and feature.ExportMode == ExtractionMode.PLAYER:
+                    # population should only have one time, namely the time for the player.
+                    self._times.append(feature.FeatureValues[0])
 
     def _getFeatureValues(self) -> List[Any]:
         if self._num_starts > 0:
