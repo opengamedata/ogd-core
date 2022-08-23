@@ -69,6 +69,7 @@ class TSVOuterface(DataOuterface):
         if ExportMode.POPULATION in export_modes:
             self._file_paths['population'] = self._game_data_dir / f"{base_file_name}_population-features.{self._extension}"
             self._zip_names['population']  = self._game_data_dir / f"{base_file_name}_population-features.zip"
+        self.Open()
 
     # *** IMPLEMENT ABSTRACTS ***
 
