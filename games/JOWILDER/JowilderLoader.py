@@ -46,6 +46,8 @@ class JowilderLoader(ExtractorLoader):
             ret_val = GameVersion.GameVersion(params=extractor_params)
         elif feature_type == "UsedSaveCode":
             ret_val = UsedSaveCode.UsedSaveCode(params=extractor_params)
+        elif feature_type == "GameScript":
+            ret_val = GameScript.GameScript(params=extractor_params)
         else:
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Jowilder.")
