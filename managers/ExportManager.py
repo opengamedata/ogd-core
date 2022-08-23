@@ -174,7 +174,7 @@ class ExportManager:
             if request.ExportSessions:
                 cols = self._feat_mgr.GetSessionFeatureNames()
                 for outerface in request.Outerfaces:
-                    outerface.WritePlayerHeader(header=cols)
+                    outerface.WriteSessionHeader(header=cols)
             else:
                 Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
             if request.ExportPlayers:
