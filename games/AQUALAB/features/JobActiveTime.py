@@ -33,24 +33,27 @@ class JobActiveTime(PerJobFeature):
             return []
 
     def _getFeatureDependencies(self) -> List[str]:
-        if self.ExportMode == ExtractionMode.POPULATION:
-            return ["JobActiveTime"]
-        else:
-            return []
+        return []
+        # if self.ExportMode == ExtractionMode.POPULATION:
+        #     return ["JobActiveTime"]
+        # else:
+        #     return []
 
     def _extractFromEvent(self, event:Event) -> None:
         if self.ExportMode == ExtractionMode.PLAYER \
         or self.ExportMode == ExtractionMode.SESSION:
             self._handle_user(event=event)
         elif self.ExportMode == ExtractionMode.POPULATION:
-            pass
+            # pass
+            self._handle_user(event=event)
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        if self.ExportMode == ExtractionMode.PLAYER \
-        or self.ExportMode == ExtractionMode.SESSION:
-            pass
-        elif self.ExportMode == ExtractionMode.POPULATION:
-            self._handle_population(feature=feature)
+        return
+        # if self.ExportMode == ExtractionMode.PLAYER \
+        # or self.ExportMode == ExtractionMode.SESSION:
+        #     pass
+        # elif self.ExportMode == ExtractionMode.POPULATION:
+        #     self._handle_population(feature=feature)
 
     def _getFeatureValues(self) -> List[Any]:
         return [self._total_seconds]
@@ -127,12 +130,12 @@ class JobActiveTime(PerJobFeature):
         else:
             Logger.Log(f"JobActiveTime could not update total time for session {self._session_id}, missing start time!", logging.WARNING)
 
-    def _handle_population(self, feature:FeatureData):
-        if feature.ExportMode == ExtractionMode.PLAYER:
-            _val = feature.FeatureValues[0]
-            if type(_val) == timedelta:
-                self._total_seconds += _val
-            else:
-                Logger.Log(f"JobActiveTime for population got invalid value {_val} of type {type(_val)} for column {feature.FeatureNames[0]}", logging.WARN)
-        else:
-            Logger.Log(f"JobActiveTime for population got feature data for mode {feature.ExportMode.name}", logging.DEBUG)
+    # def _handle_population(self, feature:FeatureData):
+    #     if feature.ExportMode == ExtractionMode.PLAYER:
+    #         _val = feature.FeatureValues[0]
+    #         if type(_val) == timedelta:
+    #             self._total_seconds += _val
+    #         else:
+    #             Logger.Log(f"JobActiveTime for population got invalid value {_val} of type {type(_val)} for column {feature.FeatureNames[0]}", logging.WARN)
+    #     else:
+    #         Logger.Log(f"JobActiveTime for population got feature data for mode {feature.ExportMode.name}", logging.DEBUG)
