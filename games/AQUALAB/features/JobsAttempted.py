@@ -1,8 +1,9 @@
 # import libraries
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from statistics import stdev
 from typing import Any, List, Optional
+from schemas.ExtractionMode import ExtractionMode
 # import locals
 from utils import Logger
 from extractors.Extractor import ExtractorParameters
@@ -32,8 +33,8 @@ class JobsAttempted(Feature):
         self._std_dev_complete = 0
 
         # Time
-        self._times = []
-        self._time = 0
+        self._times : List[timedelta] = []
+        # self._time = 0
         self._job_start_time : Optional[datetime] = None
         self._prev_timestamp : Optional[datetime] = None
 
@@ -42,14 +43,14 @@ class JobsAttempted(Feature):
         return ["accept_job", "complete_job"]
 
     def _getFeatureDependencies(self) -> List[str]:
-        return []
+        return ["JobActiveTime"]
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
 
             if self._job_start_time is not None and self._prev_timestamp is not None:
-                self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
+                # self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
                 self._job_start_time = event.Timestamp
 
         if self._validate_job(event.EventData['job_name']):
@@ -66,28 +67,40 @@ class JobsAttempted(Feature):
                 self._num_completes += 1
 
                 if self._job_start_time:
-                    self._time += (event.Timestamp - self._job_start_time).total_seconds()
-                    self._times.append(self._time)
-                    self._time = 0
+                    # self._time += (event.Timestamp - self._job_start_time).total_seconds()
+                    # self._times.append(self._time)
+                    # self._time = 0
                     self._job_start_time = None
 
         self._prev_timestamp = event.Timestamp
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        return
+        if feature.Name == "JobActiveTime":
+            if self.ExportMode    == ExtractionMode.SESSION \
+           and feature.ExportMode == ExtractionMode.SESSION:
+                # session should only have one time, namely the time for the session.
+                self._times = [feature.FeatureValues[0]]
+            elif self.ExportMode == ExtractionMode.PLAYER \
+             and feature.ExportMode == ExtractionMode.PLAYER:
+                # player should only have one time, namely the time for the player.
+                self._times = [feature.FeatureValues[0]]
+            elif self.ExportMode == ExtractionMode.POPULATION \
+             and feature.ExportMode == ExtractionMode.PLAYER:
+                # population should only have one time, namely the time for the player.
+                self._times.append(feature.FeatureValues[0])
 
     def _getFeatureValues(self) -> List[Any]:
         if self._num_starts > 0:
             self._percent_complete = (self._num_completes / self._num_starts) * 100
 
-        if self._time != 0:
-            self._times.append(self._time)
+        # if self._time != 0:
+        #     self._times.append(self._time)
         
         if len(self._times) > 0:
-            self._avg_time_complete = sum(self._times) / len(self._times)
+            self._avg_time_complete = sum([time.seconds for time in self._times]) / len(self._times)
 
         if len(self._times) > 1:
-            self._std_dev_complete = stdev(self._times)
+            self._std_dev_complete = stdev([time.seconds for time in self._times])
 
         return [self._job_id, self._job_name, self._num_starts, self._num_completes, self._percent_complete, self._avg_time_complete, self._std_dev_complete, self._difficulties]
 
