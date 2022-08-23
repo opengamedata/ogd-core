@@ -15,7 +15,7 @@ class JobActiveTime(PerJobFeature):
     def __init__(self, params:ExtractorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
         self._total_seconds = timedelta(0)
-        if self.ExportMode == ExtractionMode.USER:
+        if self.ExportMode == ExtractionMode.PLAYER:
             self._session_id      = None
             self._last_start_time = None
             self._last_event_time = None
@@ -26,7 +26,8 @@ class JobActiveTime(PerJobFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
-        if self.ExportMode == ExtractionMode.USER:
+        if self.ExportMode == ExtractionMode.PLAYER \
+        or self.ExportMode == ExtractionMode.SESSION:
             return ["all_events"]
         else:
             return []
@@ -38,13 +39,15 @@ class JobActiveTime(PerJobFeature):
             return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self.ExportMode == ExtractionMode.USER:
+        if self.ExportMode == ExtractionMode.PLAYER \
+        or self.ExportMode == ExtractionMode.SESSION:
             self._handle_user(event=event)
         elif self.ExportMode == ExtractionMode.POPULATION:
             pass
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        if self.ExportMode == ExtractionMode.USER:
+        if self.ExportMode == ExtractionMode.PLAYER \
+        or self.ExportMode == ExtractionMode.SESSION:
             pass
         elif self.ExportMode == ExtractionMode.POPULATION:
             self._handle_population(feature=feature)
@@ -78,7 +81,7 @@ class JobActiveTime(PerJobFeature):
 
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.USER, ExtractionMode.POPULATION]
+        return [ExtractionMode.PLAYER, ExtractionMode.POPULATION]
 
     # *** PRIVATE METHODS ***
 
@@ -125,7 +128,7 @@ class JobActiveTime(PerJobFeature):
             Logger.Log(f"JobActiveTime could not update total time for session {self._session_id}, missing start time!", logging.WARNING)
 
     def _handle_population(self, feature:FeatureData):
-        if feature.ExportMode == ExtractionMode.USER:
+        if feature.ExportMode == ExtractionMode.PLAYER:
             _val = feature.FeatureValues[0]
             if type(_val) == timedelta:
                 self._total_seconds += _val
