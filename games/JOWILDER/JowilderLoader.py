@@ -54,6 +54,8 @@ class JowilderLoader(ExtractorLoader):
             ret_val = IdleState.IdleState(params=extractor_params)
         elif feature_type == "ActiveStateTime":
             ret_val = ActiveStateTime.ActiveStateTime(params=extractor_params)
+        elif feature_type == "MeaningfulActions":
+            ret_val = MeaningfulActions.MeaningfulActions(params=extractor_params)
         else:
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Jowilder.")

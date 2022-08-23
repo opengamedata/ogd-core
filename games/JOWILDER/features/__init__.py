@@ -15,7 +15,8 @@ __all__ = [
     "GameScript",
     "SessionStart",
     "IdleState",
-    "ActiveStateTime"
+    "ActiveStateTime",
+    "MeaningfulActions"
 ]
 
 from . import QuestionAnswers
@@ -35,3 +36,4 @@ from . import GameScript
 from . import SessionStart
 from . import IdleState
 from . import ActiveStateTime
+from . import MeaningfulActions
