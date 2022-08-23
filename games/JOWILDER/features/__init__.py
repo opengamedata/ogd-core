@@ -14,7 +14,8 @@ __all__ = [
     "UsedSaveCode",
     "GameScript",
     "SessionStart",
-    "IdleState"
+    "IdleState",
+    "ActiveStateTime"
 ]
 
 from . import QuestionAnswers
@@ -33,3 +34,4 @@ from . import UsedSaveCode
 from . import GameScript
 from . import SessionStart
 from . import IdleState
+from . import ActiveStateTime
