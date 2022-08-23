@@ -37,7 +37,7 @@ class PlayerSummary(SessionFeature):
                 "num_sessions": 0
             }
 
-        if feature.ExportMode == ExtractionMode.USER:
+        if feature.ExportMode == ExtractionMode.PLAYER:
             if feature.Name == "JobsCompleted":
                 self._summary[user_id]["jobs_completed"] = feature.FeatureValues[0]
             elif feature.Name == "SessionDuration":
@@ -67,4 +67,4 @@ class PlayerSummary(SessionFeature):
         :return: _description_
         :rtype: List[ExtractionMode]
         """
-        return [ExtractionMode.POPULATION, ExtractionMode.USER]
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER]
