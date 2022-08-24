@@ -41,6 +41,7 @@ class Interface(abc.ABC):
         return True if self._is_open else False
 
     def Close(self) -> bool:
+        Logger.Log(f"Attempting to close {type(self).__name__}, IsOpen == {self.IsOpen()}", logging.INFO)
         if self.IsOpen():
             return self._close()
         else:

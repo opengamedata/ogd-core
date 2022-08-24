@@ -100,15 +100,10 @@ class TSVOuterface(DataOuterface):
             # otherwise, readme is there, so just close it and move on.
             readme.close()
         finally:
-            Logger.Log(f"Closing TSV files...")
             self._closeFiles()
-            Logger.Log(f"Zipping TSV files...")
             self._zipFiles()
-            Logger.Log(f"Writing meta files...")
             self._writeMetadataFile(num_sess=self._sess_count)
-            Logger.Log(f"Updating file export list...")
             self._updateFileExportList(num_sess=self._sess_count)
-            Logger.Log(f"Done")
             return True
 
     def _destination(self, mode:ExportMode) -> str:
