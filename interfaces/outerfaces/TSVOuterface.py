@@ -71,6 +71,9 @@ class TSVOuterface(DataOuterface):
             self._zip_names['population']  = self._game_data_dir / f"{base_file_name}_population-features.zip"
         self.Open()
 
+    def __del__(self):
+        self.Close()
+
     # *** IMPLEMENT ABSTRACTS ***
 
     def _open(self) -> bool:
@@ -82,6 +85,7 @@ class TSVOuterface(DataOuterface):
         return True
 
     def _close(self) -> bool:
+        Logger.Log(f"Closing TSV outerface...")
         try:
             # before we zip stuff up, let's check if the readme is in place:
             readme = open(self._readme_path, mode='r')
@@ -95,11 +99,17 @@ class TSVOuterface(DataOuterface):
         else:
             # otherwise, readme is there, so just close it and move on.
             readme.close()
-        self._closeFiles()
-        self._zipFiles()
-        self._writeMetadataFile(num_sess=self._sess_count)
-        self._updateFileExportList(num_sess=self._sess_count)
-        return True
+        finally:
+            Logger.Log(f"Closing TSV files...")
+            self._closeFiles()
+            Logger.Log(f"Zipping TSV files...")
+            self._zipFiles()
+            Logger.Log(f"Writing meta files...")
+            self._writeMetadataFile(num_sess=self._sess_count)
+            Logger.Log(f"Updating file export list...")
+            self._updateFileExportList(num_sess=self._sess_count)
+            Logger.Log(f"Done")
+            return True
 
     def _destination(self, mode:ExportMode) -> str:
         ret_val = ""
