@@ -97,7 +97,7 @@ def genRequest(events:bool, features:bool) -> Request:
     exporter_files : Set[ExportMode]
     interface      : DataInterface
     file_outerface : DataOuterface
-    range      : ExporterRange
+    range          : ExporterRange
 
     exporter_files = getModes(events=events, features=features)
     supported_vers = GameSchema(schema_name=f"{args.game}.json")['config']['SUPPORTED_VERS']

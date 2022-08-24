@@ -3,9 +3,11 @@ from typing import Any, List, Optional
 from schemas.ExtractionMode import ExtractionMode
 
 class FeatureData:
-   def __init__(self, name:str, count_index:Optional[int], cols:List[str], vals:List[Any],
-                mode:ExtractionMode, player_id:Optional[str]=None, sess_id:Optional[str]=None):
+   def __init__(self, name:str, feature_type:str, count_index:Optional[int],
+                cols:List[str], vals:List[Any],   mode:ExtractionMode,
+                player_id:Optional[str]=None,     sess_id:Optional[str]=None):
       self._name = name
+      self._feature_type = feature_type
       self._count_index = count_index
       self._cols = cols
       self._vals = vals
@@ -19,6 +21,10 @@ class FeatureData:
    @property
    def Name(self):
       return self._name
+
+   @property
+   def FeatureType(self):
+      return self._feature_type
 
    @property
    def CountIndex(self):

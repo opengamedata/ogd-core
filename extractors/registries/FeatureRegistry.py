@@ -15,6 +15,7 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 from schemas.IterationMode import IterationMode
+from utils import Logger
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
@@ -183,9 +184,9 @@ class FeatureRegistry(ExtractorRegistry):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
-        if feature.Name in self._feature_registry.keys():
+        if feature.FeatureType in self._feature_registry.keys():
             # send feature to every listener for the given feature name.
-            for listener in self._feature_registry[feature.Name]:
+            for listener in self._feature_registry[feature.FeatureType]:
                 for order_key in range(len(self._features)):
                     if listener.name in self._features[order_key].keys():
                         self._features[order_key][listener.name].ExtractFromFeatureData(feature)
