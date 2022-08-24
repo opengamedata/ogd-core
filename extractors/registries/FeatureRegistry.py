@@ -142,6 +142,7 @@ class FeatureRegistry(ExtractorRegistry):
                     feature = loader.LoadFeature(feature_type=feature_type, name=instance_name, schema_args=percount, count_index=i)
                     if feature is not None and self._mode in feature.AvailableModes():
                         self.Register(extractor=feature, mode=iter_mode)
+        return
         # for firstOrder in registry.FirstOrdersRequested():
         #     #TODO load firstOrder, if it's not loaded already
         #     if not firstOrder in registry.GetExtractorNames():
@@ -184,12 +185,12 @@ class FeatureRegistry(ExtractorRegistry):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
-        if feature.FeatureType in self._feature_registry.keys():
-            # send feature to every listener for the given feature name.
-            for listener in self._feature_registry[feature.FeatureType]:
-                for order_key in range(len(self._features)):
-                    if listener.name in self._features[order_key].keys():
-                        self._features[order_key][listener.name].ExtractFromFeatureData(feature)
+        listeners = self._feature_registry.get(feature.FeatureType, [])
+        # send feature to every listener for the given feature name.
+        for listener in listeners:
+            for order_key in range(len(self._features)):
+                if listener.name in self._features[order_key].keys():
+                    self._features[order_key][listener.name].ExtractFromFeatureData(feature)
 
 
     # *** PUBLIC STATICS ***
