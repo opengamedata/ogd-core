@@ -62,8 +62,8 @@ class Request(abc.ABC):
         self._interface      : DataInterface          = interface
         self._range          : ExporterRange          = range
         self._exports        : Set[ExportMode]        = exporter_modes
-        self._locs           : List[DataOuterface]    = exporter_locs
-        self._feat_overrides : Optional[List[str]] = feature_overrides
+        self._outerfaces     : List[DataOuterface]    = exporter_locs
+        self._feat_overrides : Optional[List[str]]    = feature_overrides
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
@@ -106,7 +106,7 @@ class Request(abc.ABC):
 
     @property
     def Outerfaces(self) -> List[DataOuterface]:
-        return self._locs
+        return self._outerfaces
 
     ## Method to retrieve the list of IDs for all sessions covered by the request.
     #  Note, this will use the 
