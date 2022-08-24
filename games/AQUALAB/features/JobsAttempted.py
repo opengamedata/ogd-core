@@ -33,7 +33,7 @@ class JobsAttempted(Feature):
         self._std_dev_complete = 0
 
         # Time
-        self._times : List[timedelta] = []
+        self._times : List[int] = []
         # self._time = 0
         self._job_start_time : Optional[datetime] = None
         self._prev_timestamp : Optional[datetime] = None
@@ -75,7 +75,7 @@ class JobsAttempted(Feature):
         self._prev_timestamp = event.Timestamp
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        if feature.Name == "JobActiveTime":
+        if feature.FeatureType == "JobActiveTime":
             if feature.CountIndex == self.CountIndex:
                 if self.ExportMode    == ExtractionMode.SESSION \
             and feature.ExportMode == ExtractionMode.SESSION:
@@ -98,10 +98,10 @@ class JobsAttempted(Feature):
         #     self._times.append(self._time)
         
         if len(self._times) > 0:
-            self._avg_time_complete = sum([time.seconds for time in self._times]) / len(self._times)
+            self._avg_time_complete = sum(self._times) / len(self._times)
 
         if len(self._times) > 1:
-            self._std_dev_complete = stdev([time.seconds for time in self._times])
+            self._std_dev_complete = stdev(self._times)
 
         return [self._job_id, self._job_name, self._num_starts, self._num_completes, self._percent_complete, self._avg_time_complete, self._std_dev_complete, self._difficulties]
 

@@ -25,9 +25,9 @@ class PopulationSummary(SessionFeature):
         return
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        if feature.Name == "JobsCompleted":
+        if feature.FeatureType == "JobsCompleted":
             self._session_completions[feature.SessionID] = feature.FeatureValues[0]
-        elif feature.Name == "SessionDuration":
+        elif feature.FeatureType == "SessionDuration":
             self._session_times.append(feature.FeatureValues[0])
 
     def _getFeatureValues(self) -> List[Any]:
