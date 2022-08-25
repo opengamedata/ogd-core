@@ -1,17 +1,17 @@
 # import standard libraries
 import logging
 import traceback
-from typing import Any, List, Dict, IO, Type, Optional
+from typing import List, Dict, Type, Optional, Set
 # import local files
 from extractors.ExtractorLoader import ExtractorLoader
-from extractors.features.FeatureRegistry import FeatureRegistry
+from extractors.registries.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from processors.SessionProcessor import SessionProcessor
 from schemas.Event import Event
+from schemas.ExportMode import ExportMode
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
-from ogd_requests.Request import ExporterTypes
 from utils import Logger, ExportRow
 
 ## @class PlayerProcessor
@@ -52,9 +52,17 @@ class PlayerProcessor(FeatureProcessor):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _prepareLoader(self) -> ExtractorLoader:
-        return self._LoaderClass(player_id=self._player_id, session_id="player", game_schema=self._game_schema,
-                                 mode=ExtractionMode.USER, feature_overrides=self._overrides)
+    @property
+    def _mode(self) -> ExtractionMode:
+        return ExtractionMode.PLAYER
+
+    @property
+    def _playerID(self) -> str:
+        return self._player_id
+
+    @property
+    def _sessionID(self) -> str:
+        return "player"
 
     def _getExtractorNames(self) -> List[str]:
         if isinstance(self._registry, FeatureRegistry):
@@ -89,14 +97,14 @@ class PlayerProcessor(FeatureProcessor):
         for session in self._session_processors.values():
             session.ProcessFeatureData(feature=feature)
 
-    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[ExportRow]]:
+    def _getFeatureValues(self, export_types:Set[ExportMode], as_str:bool=False) -> Dict[str, List[ExportRow]]:
         ret_val : Dict[str, List[ExportRow]] = {}
-        if export_types.players and isinstance(self._registry, FeatureRegistry):
+        if ExportMode.PLAYER in export_types and isinstance(self._registry, FeatureRegistry):
             if as_str:
                 ret_val["players"] = [[self._player_id, str(self.SessionCount)] + self._registry.GetFeatureStringValues()]
             else:
                 ret_val["players"] = [[self._player_id, self.SessionCount] + self._registry.GetFeatureValues()]
-        if export_types.sessions:
+        if ExportMode.SESSION in export_types:
             # _results gives us a list of dicts, each with a "session" element
             _results = [sess_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for name,sess_extractor in self._session_processors.items() if not (name == 'null' and self._null_empty)]
             # so we loop over list, and pull each "session" element into a master list of all sessions.
@@ -109,7 +117,7 @@ class PlayerProcessor(FeatureProcessor):
     def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
         ret_val : Dict[str, List[FeatureData]] = { "players":[] }
         if isinstance(self._registry, FeatureRegistry):
-            ret_val["players"] = self._registry.GetFeatureData(order=order)
+            ret_val["players"] = self._registry.GetFeatureData(order=order, player_id=self._player_id)
         _result = [session_extractor.GetFeatureData(order=order) for session_extractor in self._session_processors.values()]
         ret_val["sessions"] = []
         for session in _result:
@@ -122,7 +130,7 @@ class PlayerProcessor(FeatureProcessor):
         This is helpful if we're processing a lot of data and want to avoid eating too much memory.
         """
         Logger.Log(f"Clearing features from PlayerProcessor for {self._player_id}.", logging.DEBUG, depth=2)
-        self._registry = FeatureRegistry()
+        self._registry = FeatureRegistry(mode=self._mode)
 
     # *** PUBLIC STATICS ***
 

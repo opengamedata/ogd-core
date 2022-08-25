@@ -45,11 +45,22 @@ class Feature(Extractor):
 
     # *** PUBLIC STATICS ***
 
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Feature.
+
+        Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION]
+
     # *** PUBLIC METHODS ***
 
     def ToFeatureData(self, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureData:
         return FeatureData(
             name=self.Name,
+            feature_type=type(self).__name__,
             count_index=self.CountIndex,
             cols=self.GetFeatureNames(),
             vals=self.GetFeatureValues(),
@@ -103,16 +114,6 @@ class Feature(Extractor):
 
     def GetFeatureValues(self) -> List[Any]:
         return self._getFeatureValues()
-
-    @staticmethod
-    def AvailableModes() -> List[ExtractionMode]:
-        """List of ExtractionMode supported by the Feature.
-
-        Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
-        :return: _description_
-        :rtype: List[ExtractionMode]
-        """
-        return [ExtractionMode.POPULATION, ExtractionMode.USER, ExtractionMode.SESSION]
 
     # *** PROPERTIES ***
 

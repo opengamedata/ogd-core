@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Tuple, Optional
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 ## import local files
 import utils
+from config.config import settings as default_settings
 from schemas.Event import Event, EventSource
 from utils import Logger
 
@@ -49,6 +50,15 @@ class TableSchema:
             self._column_map = schema['column_map']
         else:
             Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
+
+    @staticmethod
+    def FromID(game_id:str, settings=None):
+        if settings is not None and "GAME_SOURCE_MAP" in settings:
+            _table_name = settings["GAME_SOURCE_MAP"][game_id]["table"]
+        else:
+            _table_name = default_settings["GAME_SOURCE_MAP"][game_id]["table"]
+        return TableSchema(schema_name=f"{_table_name}.json")
+
 
     def ColumnNames(self) -> List[str]:
         """Function to get the names of all columns in the schema.

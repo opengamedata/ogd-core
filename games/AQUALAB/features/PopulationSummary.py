@@ -26,11 +26,11 @@ class PopulationSummary(SessionFeature):
         return
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        if feature.Name == "JobsCompleted":
+        if feature.FeatureType == "JobsCompleted":
             self._user_completions[feature.PlayerID].append(feature.FeatureValues[0])
-        elif feature.Name == "SessionID" and feature.SessionID not in self._user_sessions[feature.PlayerID]:
+        elif feature.FeatureType == "SessionID" and feature.SessionID not in self._user_sessions[feature.PlayerID]:
             self._user_sessions[feature.PlayerID].append(feature.SessionID)
-        elif feature.Name == "SessionDuration":
+        elif feature.FeatureType == "SessionDuration":
             self._user_session_times[feature.PlayerID].append(feature.FeatureValues[0])
 
     def _getFeatureValues(self) -> List[Any]:

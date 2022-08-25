@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Tuple, Type, Optional
 from schemas.IDMode import IDMode
 
 ## import local files
-from utils import Logger
+import utils
 from config.config import settings as default_settings
 from extractors.ExtractorLoader import ExtractorLoader
 from games.AQUALAB.AqualabLoader import AqualabLoader
@@ -25,15 +25,16 @@ from games.MAGNET.MagnetLoader import MagnetLoader
 from games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
 from games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
 from games.WAVES.WaveLoader import WaveLoader
-from managers.FileManager import FileManager
 from managers.EventManager import EventManager
 from managers.FeatureManager import FeatureManager
 from schemas.Event import Event
+from schemas.ExportMode import ExportMode
 from schemas.IDMode import IDMode
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
 from ogd_requests.Request import Request
 from ogd_requests.RequestResult import RequestResult
+from utils import Logger
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.
@@ -54,8 +55,7 @@ class ExportManager:
         self._settings = settings
         self._event_mgr   : Optional[EventManager]   = None
         self._feat_mgr    : Optional[FeatureManager] = None
-        self._file_mgr    : Optional[FileManager]    = None
-        self._debug_count : int                         = 0
+        self._debug_count : int                      = 0
 
     # *** PUBLIC STATICS ***
 
@@ -76,7 +76,7 @@ class ExportManager:
 
         _game_id      : str         = request.GameID
         _game_schema  : GameSchema  = GameSchema(schema_name=_game_id, schema_path=Path(f"./games/{_game_id}"))
-        _table_schema : TableSchema = self._loadTableSchema(_game_id)
+        _table_schema : TableSchema = TableSchema.FromID(game_id=_game_id, settings=self._settings)
 
         Logger.Log(f"Executing request: {str(request)}", logging.INFO)
         start = datetime.now()
@@ -86,15 +86,13 @@ class ExportManager:
             Logger.Log(f"Done", logging.INFO)
 
             Logger.Log(f"Executing...", logging.INFO)
-            ret_val = self._executeDataRequest(request=request, table_schema=_table_schema, file_manager=self._file_mgr)
+            ret_val = self._executeDataRequest(request=request, table_schema=_table_schema)
             Logger.Log(f"Done", logging.INFO)
 
-            if request.ToFile and self._file_mgr is not None:
-                Logger.Log(f"Saving output...", logging.INFO)
-                # 4) Save and close files
-                num_sess : int = len(ret_val.Sessions.Values)
-                self._teardownFileManager(game_schema=_game_schema, table_schema=_table_schema, num_sess=num_sess)
-                Logger.Log(f"Done", logging.INFO)
+            Logger.Log(f"Saving output...", logging.INFO)
+            # 4) Save and close files
+            num_sess : int = len(ret_val.Sessions.Values)
+            Logger.Log(f"Done", logging.INFO)
             ret_val.RequestSucceeded(msg=f"Successfully executed data request {request}.")
         except Exception as err:
             msg = f"Failed to execute data request {str(request)}, an error occurred:\n{type(err)} {str(err)}\n{traceback.format_exc()}"
@@ -106,14 +104,6 @@ class ExportManager:
 
     # *** PRIVATE STATICS ***
 
-    @staticmethod
-    def _cleanSpecialChars(vals:List[Any], tab_width:int=3):
-        # check all return values for strings, and ensure no newlines or tabs get through, as they could throw off our outputs.
-        for i in range(len(vals)):
-            if isinstance(vals[i], str):
-                vals[i] = vals[i].replace('\n', ' ').replace('\t', ' '*tab_width)
-        return vals
-
     # *** PRIVATE METHODS ***
 
     def _receiveEventTrigger(self, event:Event) -> None:
@@ -122,13 +112,6 @@ class ExportManager:
             Logger.Log("ExportManager received an event trigger.", logging.DEBUG)
             self._debug_count += 1
         self._processEvent(next_event=event)
-
-    def _loadTableSchema(self, _game_id:str):
-        if "GAME_SOURCE_MAP" in self._settings:
-            _table_name = self._settings["GAME_SOURCE_MAP"][_game_id]["table"]
-        else:
-            _table_name = default_settings["GAME_SOURCE_MAP"][_game_id]["table"]
-        return TableSchema(schema_name=f"{_table_name}.json")
 
     def _setupManagers(self, request:Request, game_schema:GameSchema, feature_overrides:Optional[List[str]]):
         # 1. Get LoaderClass so we can set up Event and Feature managers.
@@ -140,48 +123,17 @@ class ExportManager:
             else:
                 Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
             if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
-                self._feat_mgr = FeatureManager(LoaderClass=load_class, exp_types=request._exports,
+                self._feat_mgr = FeatureManager(LoaderClass=load_class, exp_modes=request._exports,
                                                 game_schema=game_schema, feature_overrides=feature_overrides)
                 # If game doesn't have an extractor, make sure we don't try to export it.
                 if not self._feat_mgr.HasLoader():
-                    request._exports.sessions   = False
-                    request._exports.players    = False
-                    request._exports.population = False
+                    request._exports.remove(ExportMode.SESSION)
+                    request._exports.remove(ExportMode.PLAYER)
+                    request._exports.remove(ExportMode.POPULATION)
                     Logger.Log("Could not set up feature extractors, no feature loader given!", logging.WARNING, depth=1)
             else:
                 Logger.Log("Feature data not requested, skipping feature manager.", logging.INFO, depth=1)
         # 2. Set up file manager
-        if request.ToFile:
-            _data_dir : str = self._settings["DATA_DIR"] or default_settings["DATA_DIR"]
-            self._file_mgr = FileManager(request=request, data_dir=_data_dir, extension="tsv")
-            self._file_mgr.OpenFiles()
-            if self._event_mgr is not None:
-                if request.ExportEvents:
-                    cols = self._event_mgr.GetColumnNames()
-                    self._file_mgr.WriteEventsFile("\t".join(cols) + "\n")
-                else:
-                    Logger.Log("Event log not requested, skipping events file.", logging.INFO, depth=1)
-            if self._feat_mgr is not None:
-                if request.ExportPopulation:
-                    cols = self._feat_mgr.GetPopulationFeatureNames()
-                    cols = ExportManager._cleanSpecialChars(vals=cols)
-                    self._file_mgr.WritePopulationFile("\t".join(cols) + "\n")
-                else:
-                    Logger.Log("Population features not requested, skipping population_features file.", logging.INFO, depth=1)
-                if request.ExportPlayers:
-                    cols = self._feat_mgr.GetPlayerFeatureNames()
-                    cols = ExportManager._cleanSpecialChars(vals=cols)
-                    self._file_mgr.WritePlayersFile("\t".join(cols) + "\n")
-                else:
-                    Logger.Log("Player features not requested, skipping player_features file.", logging.INFO, depth=1)
-                if request.ExportSessions:
-                    cols = self._feat_mgr.GetSessionFeatureNames()
-                    cols = ExportManager._cleanSpecialChars(vals=cols)
-                    self._file_mgr.WriteSessionsFile("\t".join(cols) + "\n")
-                else:
-                    Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
-        else:
-            Logger.Log(f"File output not requested, skipping file manager.", logging.INFO, depth=1)
 
     def _loadLoaderClass(self, game_id:str) -> Optional[Type[ExtractorLoader]]:
         _loader_class: Optional[Type[ExtractorLoader]] = None
@@ -208,19 +160,35 @@ class ExportManager:
             raise Exception(f"Got an invalid game ID ({game_id})!")
         return _loader_class
 
-    def _executeDataRequest(self, request:Request, table_schema:TableSchema, file_manager:Optional[FileManager]=None) -> RequestResult:
+    def _executeDataRequest(self, request:Request, table_schema:TableSchema) -> RequestResult:
         ret_val : RequestResult = RequestResult("No export")
 
-        if request.ToDict:
-            if request.ExportEvents and self._event_mgr is not None:
-                ret_val.Events.Columns = self._event_mgr.GetColumnNames()
-            if self._feat_mgr is not None:
-                if request.ExportSessions:
-                    ret_val.Sessions.Columns = self._feat_mgr.GetSessionFeatureNames()
-                if request.ExportPlayers:
-                    ret_val.Players.Columns = self._feat_mgr.GetPlayerFeatureNames()
-                if request.ExportPopulation:
-                    ret_val.Population.Columns = self._feat_mgr.GetPopulationFeatureNames()
+        if self._event_mgr is not None:
+            if request.ExportEvents:
+                cols = self._event_mgr.GetColumnNames()
+                for outerface in request.Outerfaces:
+                    outerface.WriteEventHeader(header=cols)
+            else:
+                Logger.Log("Event log not requested, skipping events output.", logging.INFO, depth=1)
+        if self._feat_mgr is not None:
+            if request.ExportSessions:
+                cols = self._feat_mgr.GetSessionFeatureNames()
+                for outerface in request.Outerfaces:
+                    outerface.WriteSessionHeader(header=cols)
+            else:
+                Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
+            if request.ExportPlayers:
+                cols = self._feat_mgr.GetPlayerFeatureNames()
+                for outerface in request.Outerfaces:
+                    outerface.WritePlayerHeader(header=cols)
+            else:
+                Logger.Log("Player features not requested, skipping player_features file.", logging.INFO, depth=1)
+            if request.ExportPopulation:
+                cols = self._feat_mgr.GetPopulationFeatureNames()
+                for outerface in request.Outerfaces:
+                    outerface.WritePopulationHeader(header=cols)
+            else:
+                Logger.Log("Population features not requested, skipping population_features file.", logging.INFO, depth=1)
         # 1) Get the IDs of sessions to process
         _sess_ids        : Optional[List[str]]   = request.RetrieveIDs() or []
         _session_slices  : List[List[str]]       = self._generateSlices(sess_ids=_sess_ids)
@@ -234,40 +202,28 @@ class ExportManager:
                 # 2b) After processing all rows for each slice, write out the session data and reset for next slice.
                 if request.ExportEvents and self._event_mgr is not None:
                     _events = self._event_mgr.GetLines(slice_num=i+1, slice_count=len(_session_slices))
-                    if request.ToDict:
-                        ret_val.Events.AppendRow(_events)
-                    if request.ToFile and file_manager is not None:
-                        _events = ExportManager._cleanSpecialChars(_events)
-                        file_manager.GetEventsFile().writelines(_events)
+                    for outerface in request.Outerfaces:
+                        outerface.WriteEventLines(events=_events)
                     self._event_mgr.ClearLines()
                 if self._feat_mgr is not None:
                     if request.ExportSessions:
                         _sess_feats = self._feat_mgr.GetSessionFeatures(slice_num=i+1, slice_count=len(_session_slices), as_str=True)
-                        if request.ToDict:
-                            ret_val.Sessions.ConcatRows(_sess_feats)
-                        if request.ToFile and file_manager is not None:
-                            _sess_feats = ExportManager._cleanSpecialChars(_sess_feats)
-                            file_manager.GetSessionsFile().writelines(["\t".join(sess) + "\n" for sess in _sess_feats])
+                        for outerface in request.Outerfaces:
+                            outerface.WriteSessionLines(sessions=_sess_feats)
                         self._feat_mgr.ClearSessionLines()
                     if request.ExportPlayers:
                         _player_feats = self._feat_mgr.GetPlayerFeatures(slice_num=i+1, slice_count=len(_session_slices), as_str=True)
-                        if request.ToDict:
-                            ret_val.Players.ConcatRows(_player_feats)
-                        if request.ToFile and file_manager is not None:
-                            _player_feats = ExportManager._cleanSpecialChars(_player_feats)
-                            file_manager.GetPlayersFile().writelines(["\t".join(player) + "\n" for player in _player_feats])
+                        for outerface in request.Outerfaces:
+                            outerface.WritePlayerLines(players=_player_feats)
                         self._feat_mgr.ClearPlayerLines()
         Logger.Log(f"Done", logging.INFO, depth=1)
         # 3) If we made it all the way to the end, write population data and return the number of sessions processed.
         if self._feat_mgr is not None:
             if request.ExportPopulation:
                 _pop_feats = self._feat_mgr.GetPopulationFeatures(as_str=True)
-                if request.ToDict:
-                    ret_val.Population.AppendRow(_pop_feats)
-                if request.ToFile and file_manager is not None:
-                    _pop_feats = [ExportManager._cleanSpecialChars(vals=pop) for pop in _pop_feats]
-                    file_manager.GetPopulationFile().writelines(["\t".join(pop) + "\n" for pop in _pop_feats])
-            self._feat_mgr.ClearPopulationLines()
+                for outerface in request.Outerfaces:
+                    outerface.WritePopulationLines(populations=_pop_feats)
+                self._feat_mgr.ClearPopulationLines()
         return ret_val
 
     def _generateSlices(self, sess_ids:List[str]) -> List[List[str]]:
@@ -342,20 +298,3 @@ class ExportManager:
                 raise err
             else:
                 Logger.Log(f"Error while processing event {next_event.EventName}. This event will be skipped. \nFull error: {traceback.format_exc()}", logging.WARNING, depth=2)
-
-    def _teardownFileManager(self, game_schema:GameSchema, table_schema:TableSchema, num_sess:int):
-        if self._file_mgr is not None:
-            _game_id = game_schema._game_name
-            try:
-                # before we zip stuff up, let's ensure the readme is in place:
-                readme = open(self._file_mgr._readme_path, mode='r')
-            except FileNotFoundError:
-                Logger.Log(f"Missing readme for {_game_id}, generating new readme...", logging.WARNING, depth=1)
-                readme_path = Path("./data") / _game_id
-                FileManager.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=readme_path)
-            else:
-                readme.close()
-            self._file_mgr.CloseFiles()
-            self._file_mgr.ZipFiles()
-            self._file_mgr.WriteMetadataFile(num_sess=num_sess)
-            self._file_mgr.UpdateFileExportList(num_sess=num_sess)

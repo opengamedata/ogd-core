@@ -33,10 +33,9 @@ class Interface(abc.ABC):
     # *** PUBLIC METHODS ***
 
     def Open(self, force_reopen:bool = False) -> bool:
-        if force_reopen or not self._is_open:
-            return self._open()
-        else:
-            return True
+        if (not self._is_open) or force_reopen:
+            self._is_open = self._open()
+        return self._is_open
     
     def IsOpen(self) -> bool:
         return True if self._is_open else False

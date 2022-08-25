@@ -1,8 +1,8 @@
 # import standard libraries
 from enum import IntEnum
 
-class ExtractionMode(IntEnum):
+class ExportMode(IntEnum):
     SESSION = 1
     PLAYER = 2
     POPULATION = 3
-    DETECTOR = 4
+    EVENTS = 4
