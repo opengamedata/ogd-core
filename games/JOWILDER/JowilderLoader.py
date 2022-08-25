@@ -58,6 +58,8 @@ class JowilderLoader(ExtractorLoader):
             ret_val = MeaningfulActions.MeaningfulActions(params=extractor_params)
         elif feature_type == "FirstInteraction":
             ret_val = FirstInteraction.FirstInteraction(params=extractor_params)
+        elif feature_type == "LastInteraction":
+            ret_val = LastInteraction.LastInteraction(params=extractor_params)
         else:
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Jowilder.")

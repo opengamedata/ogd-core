@@ -17,7 +17,8 @@ __all__ = [
     "IdleState",
     "ActiveStateTime",
     "MeaningfulActions",
-    "FirstInteraction"
+    "FirstInteraction",
+    "LastInteraction"
 ]
 
 from . import QuestionAnswers
@@ -39,3 +40,4 @@ from . import IdleState
 from . import ActiveStateTime
 from . import MeaningfulActions
 from . import FirstInteraction
+from . import LastInteraction
