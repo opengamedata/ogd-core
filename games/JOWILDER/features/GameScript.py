@@ -27,7 +27,7 @@ class GameScript(SessionFeature):
         return [] 
 
     def _extractFromEvent(self, event:Event) -> None:
-        if Event.CompareVersions(event.AppVersion, "7") >= 0:
+        if Event.CompareVersions(event.LogVersion, "7") >= 0:
             self._name = event.EventData.get("script_type")
             self._version = event.EventData.get("script_version")
 
