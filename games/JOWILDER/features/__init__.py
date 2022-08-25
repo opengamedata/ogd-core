@@ -16,7 +16,8 @@ __all__ = [
     "SessionStart",
     "IdleState",
     "ActiveStateTime",
-    "MeaningfulActions"
+    "MeaningfulActions",
+    "FirstInteraction"
 ]
 
 from . import QuestionAnswers
@@ -37,3 +38,4 @@ from . import SessionStart
 from . import IdleState
 from . import ActiveStateTime
 from . import MeaningfulActions
+from . import FirstInteraction
