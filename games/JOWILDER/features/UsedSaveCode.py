@@ -25,7 +25,8 @@ class UsedSaveCode(SessionFeature):
         return [] 
 
     def _extractFromEvent(self, event:Event) -> None:
-        self._save_code = str(event.EventData.get("save_code"))
+        if event.EventData.get("save_code") != 0:
+            self._save_code = str(event.EventData.get("save_code"))
 
         return
 
