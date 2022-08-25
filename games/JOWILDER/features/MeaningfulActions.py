@@ -29,6 +29,7 @@ class MeaningfulActions(SessionFeature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
+        # fqid != 0 means that the click event does make Jo move to some interactive items, such as an interaction, an item that Jo can look into, or a way to next room.
         if event.EventData.get("fqid") != 0:
             self._click_count += 1
         return
