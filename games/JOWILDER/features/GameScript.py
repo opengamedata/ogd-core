@@ -13,6 +13,9 @@ class GameScript(SessionFeature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
+
+    TYPE = {0: 'Dry', 1: 'No Humor', 2: 'No Snark', 3: 'Normal'}
+
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
         self._name : Optional[str] = None
@@ -28,8 +31,9 @@ class GameScript(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         if Event.CompareVersions(event.LogVersion, "7") >= 0:
-            self._name = event.EventData.get("script_type")
+            _type = event.EventData.get("script_type")
             self._version = event.EventData.get("script_version")
+            self._name = GameScript.TYPE.get(_type)
 
         return
 
