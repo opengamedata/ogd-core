@@ -28,21 +28,21 @@ class UserEnabled(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         _data = event.EventData
-        true_values = [1, "1", "true", True]
+        true_values = ["1", "true"]
         for item in ["fullscreen", "music", "hq"]:
             if _data.get(item) is None:
                 raise(ValueError(f"Can't find {item} item in the event data!"))
-        if _data.get("fullscreen") in true_values:
+        if str(_data.get("fullscreen")).lower() in true_values:
             self._full_screen = 1
         else:
             self._full_screen = 0
 
-        if _data.get("music") in true_values:
+        if str(_data.get("music")).lower() in true_values:
             self._music = 1
         else:
             self._music = 0
 
-        if _data.get("hq") in true_values:
+        if str(_data.get("hq")).lower() in true_values:
             self._hq = 1
         else:
             self._hq = 0
