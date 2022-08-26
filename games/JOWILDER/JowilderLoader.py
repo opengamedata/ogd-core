@@ -52,9 +52,9 @@ class JowilderLoader(ExtractorLoader):
         elif feature_type == "SessionStart":
             ret_val = SessionStart.SessionStart(params=extractor_params)
         elif feature_type == "IdleState":
-            ret_val = IdleState.IdleState(params=extractor_params)
+            ret_val = IdleState.IdleState(params=extractor_params, threshold=schema_args.get("IDLE_THRESH_SECONDS", IdleState.IdleState.IDLE_TIME_THRESHOLD))
         elif feature_type == "ActiveStateTime":
-            ret_val = ActiveStateTime.ActiveStateTime(params=extractor_params)
+            ret_val = ActiveStateTime.ActiveStateTime(params=extractor_params, threshold=schema_args.get('ACTIVE_THRESH_SECONDS', ActiveStateTime.ActiveStateTime.ACTIVE_TIME_THRESHOLD))
         elif feature_type == "MeaningfulActions":
             ret_val = MeaningfulActions.MeaningfulActions(params=extractor_params)
         elif feature_type == "FirstInteraction":

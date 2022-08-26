@@ -18,11 +18,16 @@ class IdleState(SessionFeature):
 
     IDLE_TIME_THRESHOLD = timedelta(seconds=15)
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:ExtractorParameters, threshold:int):
         super().__init__(params=params)
         self._time : timedelta = timedelta(0)
         self._count : int = 0
         self._last_timestamp : Optional[datetime] = None
+        self._threshold : timedelta = timedelta(seconds=threshold)
+
+    @staticmethod
+    def defaultThreshold():
+        return IdleState.IDLE_TIME_THRESHOLD
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _getEventDependencies(self) -> List[str]:
