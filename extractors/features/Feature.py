@@ -42,6 +42,9 @@ class Feature(Extractor):
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
+        self._up_to_date = False
+        # by default, latest values should just be None, with length equal to number of columns for the feature.
+        self._latest_values : List[Any] = [None for i in range(len(self.GetFeatureNames())) ]
 
     # *** PUBLIC STATICS ***
 
@@ -105,15 +108,29 @@ class Feature(Extractor):
         return [f"{self.Name}{self.BaseFeatureSuffix()}"] + [f"{self.Name}-{subfeature}" for subfeature in self.Subfeatures()]
 
     def ExtractFromEvent(self, event:Event):
+        """Overridden version of function from Extractor base class;
+        In this case, set the "up to date" value to False whenever we see a new event.
+
+        :param event: _description_
+        :type event: Event
+        """
         if self._validateEvent(event=event):
             self._extractFromEvent(event=event)
+            self._up_to_date = False
 
     def ExtractFromFeatureData(self, feature:FeatureData):
         # TODO: add validation for FeatureData, if applicable/possible.
         self._extractFromFeatureData(feature=feature)
+        self._up_to_date = False
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._getFeatureValues()
+        # Only call calculation feature if new events were seen since last call.
+        # Practically, this doesn't matter because we always process all data before using GetFeatureValues.
+        # Someday, however, this may be useful when dealing with a caching system.
+        if not self._up_to_date:
+            self._latest_value = self._getFeatureValues()
+            self._up_to_date = True
+        return self._latest_value
 
     # *** PROPERTIES ***
 
