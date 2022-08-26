@@ -28,7 +28,7 @@ class LastInteraction(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         _interaction = event.EventData.get("text_fqid")
-        if _interaction is not None:
+        if _interaction is not None and _interaction != LastInteraction.NO_SENSE:
             self._interaction = _interaction
 
         return
