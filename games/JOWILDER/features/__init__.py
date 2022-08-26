@@ -18,7 +18,8 @@ __all__ = [
     "ActiveStateTime",
     "MeaningfulActions",
     "FirstInteraction",
-    "LastInteraction"
+    "LastInteraction",
+    "UsedContinue"
 ]
 
 from . import QuestionAnswers
@@ -41,3 +42,4 @@ from . import ActiveStateTime
 from . import MeaningfulActions
 from . import FirstInteraction
 from . import LastInteraction
+from . import UsedContinue
