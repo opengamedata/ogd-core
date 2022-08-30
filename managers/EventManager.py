@@ -42,7 +42,7 @@ class EventManager:
     def GetColumnNames(self) -> List[str]:
         return self._columns
 
-    def GetLines(self, slice_num:int, slice_count:int) -> List[Any]:
+    def GetLines(self, slice_num:int, slice_count:int) -> List[List[Any]]:
         start   : datetime = datetime.now()
         ret_val : List[Any] = self._lines
         time_delta = datetime.now() - start
