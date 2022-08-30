@@ -155,8 +155,8 @@ class TSVOuterface(DataOuterface):
             sys.stdout.write("".join(cols_line))
 
     def _writeEventLines(self, events:List[ExportRow]) -> None:
-        event_vals = [TSVOuterface._cleanSpecialChars(vals=[str(item) for item in event]) for event in events]
-        event_lines = ["\t".join(event) + "\n" for event in event_vals]
+        event_strs = [TSVOuterface._cleanSpecialChars(vals=[str(item) for item in event]) for event in events]
+        event_lines = ["\t".join(event) + "\n" for event in event_strs]
         if self._files['events'] is not None:
             self._files['events'].writelines(event_lines)
         else:
