@@ -125,15 +125,15 @@ class ExportManager:
             if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
                 self._feat_mgr = FeatureManager(LoaderClass=load_class, exp_modes=request._exports,
                                                 game_schema=game_schema, feature_overrides=feature_overrides)
-                # If game doesn't have an extractor, make sure we don't try to export it.
-                if not self._feat_mgr.HasLoader():
-                    request._exports.remove(ExportMode.SESSION)
-                    request._exports.remove(ExportMode.PLAYER)
-                    request._exports.remove(ExportMode.POPULATION)
-                    Logger.Log("Could not set up feature extractors, no feature loader given!", logging.WARNING, depth=1)
             else:
                 Logger.Log("Feature data not requested, skipping feature manager.", logging.INFO, depth=1)
-        # 2. Set up file manager
+        # If game doesn't have an extractor, make sure we don't try to export it.
+        else:
+            # TODO: figure out how to make sure event manager doesn't try to do detecting, but is still allowed to run.
+            request._exports.remove(ExportMode.SESSION)
+            request._exports.remove(ExportMode.PLAYER)
+            request._exports.remove(ExportMode.POPULATION)
+            Logger.Log("Could not set up feature extractors, no feature loader given!", logging.WARNING, depth=1)
 
     def _loadLoaderClass(self, game_id:str) -> Optional[Type[ExtractorLoader]]:
         _loader_class: Optional[Type[ExtractorLoader]] = None
