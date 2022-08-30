@@ -16,38 +16,58 @@ from games.JOWILDER import Jowilder_Enumerators as je
 
 
 class ClickTrack:
-    def __init__(self, start_time: datetime = None, game_start: bool = False, click_type: str = None, interaction_index : Optional[int] = 0) -> None:
-        self._last_click_time : datetime = start_time
+    def __init__(self, start_time: datetime = None, game_start: bool = False, this_click:Event=None, last_click:Event=None) -> None:
         self._game_start : bool = game_start
-        self._last_click_type : str = click_type
-        self._game_start_time : datetime = start_time
-        self._last_interaction_index : Optional[int] = interaction_index
+        self._game_start_time : Optional[datetime] = start_time
+        self._last_click : Optional[Event] = last_click
+        self._this_click : Optional[Event] = this_click
+        self._time_between : Optional[timedelta] = None
         # 1 means searching in an interaction; 0 means searching in an non-interaction click.
         self._search_state : int = 0
-        self._update_state : int = 0
 
     # TODO: Add more property decorators fuction
     @property
     def LastClickTime(self):
-        return self._last_click_time
+        return self._last_click.Timestamp
 
-    def Update(self, event: Event):
-        self._update_state += 1
-        if self._update_state < 3:
-            return
-        self._last_click_time = event.Timestamp
-        self._last_click_type = event.EventName
-        _interaction = je.fqid_to_enum.get(event.EventData.get("text_fqid"))
-        if _interaction is not None:
-            self._last_interaction_index = _interaction
-        self._update_state = 0
+    @property
+    def LastInteractionIndex(self):
+        _interaction = self._last_click.EventData.get(
+            "text_fqid") or self._last_click.EventData.get("cur_cmd_fqid")
+        return je.fqid_to_enum.get(_interaction)
+
+    @property
+    def GameStart(self):
+        return self._game_start
+
+    @property
+    def GameStartTime(self):
+        return self._game_start_time
+
+    @staticmethod
+    def EventEq(event1:Event, event2:Event) -> bool:
+        if event1.SessionID == event2.SessionID and event1.EventSequenceIndex == event2.EventSequenceIndex:
+            return True
+        return False
+
+    def Update(self, event: Event) -> timedelta:
+        # event_sequence_index
+        if ClickTrack.EventEq(self._this_click, event):
+            return self._time_between
+        self._last_click = self._this_click
+        self._this_click = event
+        self._time_between = self._this_click.Timestamp - self._last_click.Timestamp
+        return self._time_between
     
     def StartNewInteraction(self, this_interaction : Optional[int]):
-        return self._search_state == 0 and this_interaction is not None
+        if this_interaction is not None and (self._search_state == 0 or this_interaction != self.LastInteractionIndex):
+            return True
     
     def startGame(self, event: Event):
         self._game_start = True
         self._game_start_time = event.Timestamp
+        self._this_click = event
+        self._last_click = event
 
 
 clicks_track = ClickTrack()
@@ -72,9 +92,9 @@ class Interaction(PerCountFeature):
     def _validateEventCountIndex(self, event: Event):
         if event.EventName == "CUSTOM.1":
             return True
-        self._interaction = je.fqid_to_enum.get(event.EventData.get("text_fqid"))
+        self._interaction = je.fqid_to_enum.get(event.EventData.get("text_fqid") or event.EventData.get("cur_cmd_fqid"))
         if self._interaction is None:
-            return self.CountIndex == clicks_track._last_interaction_index
+            return self.CountIndex == clicks_track.LastInteractionIndex
         else:
             return self._interaction == self.CountIndex
 
@@ -94,11 +114,17 @@ class Interaction(PerCountFeature):
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
-        if not clicks_track._game_start:
+        if not clicks_track.GameStart:
             if event.EventName == "CUSTOM.1":
                 clicks_track.startGame(event)
+                return
             else:
                 raise(ValueError("A startgame event needed!"))
+        elif event.EventName == "CUSTOM.1": 
+            if clicks_track.EventEq(event, clicks_track._this_click):
+                return
+            else:
+                raise(ValueError("Too many startgame events!"))
 
         if event.EventName == "CUSTOM.11" and event.EventData.get("cur_cmd_type") == 2:
             return
@@ -107,15 +133,17 @@ class Interaction(PerCountFeature):
             clicks_track._search_state = 0
             return
         
+        clicks_track.Update(event)
         self._interaction_time += event.Timestamp - clicks_track.LastClickTime
         if clicks_track.StartNewInteraction(self._interaction):
+            clicks_track._search_state = 1
             if self._num_encounters == 0:
-                self._to = event.Timestamp - clicks_track._game_start_time
+                # The interaction starts from last click but recorded from this click
+                self._to = clicks_track.LastClickTime - clicks_track.GameStartTime
             self._num_encounters += 1
         if self._num_encounters <= 1:
             self._first_encounter_time = self._interaction_time
         
-        clicks_track.Update(event)
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
