@@ -154,8 +154,8 @@ class TSVOuterface(DataOuterface):
             Logger.Log("No population file available, writing to standard output instead.", logging.WARN)
             sys.stdout.write("".join(cols_line))
 
-    def _writeEventLines(self, events:List[List[str]]) -> None:
-        event_vals = [TSVOuterface._cleanSpecialChars(vals=event) for event in events]
+    def _writeEventLines(self, events:List[ExportRow]) -> None:
+        event_vals = [TSVOuterface._cleanSpecialChars(vals=[str(item) for item in event]) for event in events]
         event_lines = ["\t".join(event) + "\n" for event in event_vals]
         if self._files['events'] is not None:
             self._files['events'].writelines(event_lines)

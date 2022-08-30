@@ -35,7 +35,7 @@ class DataOuterface(Interface):
         pass
 
     @abc.abstractmethod
-    def _writeEventLines(self, events:List[str]) -> None:
+    def _writeEventLines(self, events:List[ExportRow]) -> None:
         pass
 
     @abc.abstractmethod
@@ -78,7 +78,7 @@ class DataOuterface(Interface):
     def WritePopulationHeader(self, header:List[str]) -> None:
         self._writePopulationHeader(header=header)
 
-    def WriteEventLines(self, events:List[str]) -> None:
+    def WriteEventLines(self, events:List[ExportRow]) -> None:
         self._writeEventLines(events=events)
         Logger.Log(f"Wrote {len(events)} events to {self.Destination(mode=ExportMode.EVENTS)}", logging.INFO, depth=2)
 
