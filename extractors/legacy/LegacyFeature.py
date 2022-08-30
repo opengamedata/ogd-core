@@ -42,9 +42,9 @@ class LegacyFeature(Feature):
         :param game_schema: A dictionary that defines how the game data itself is structured
         :type game_schema: GameSchema
         """
-        super().__init__(params=params)
         self._session_id  : str         = session_id
         self._game_schema : GameSchema  = game_schema
+        super().__init__(params=params)
         self._levels      : List[int]   = []
         self._sequences   : List        = []
         self._features    : LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=game_schema)
