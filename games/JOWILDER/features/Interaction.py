@@ -11,8 +11,6 @@ from datetime import datetime, timedelta
 from games.JOWILDER import Jowilder_Enumerators as je
 
 # NOTE: Assumptions are: 1. All click events occured in the order like xxxx111xx222x1x3. 2. Use "text_fqid" to identify interactions. 3. The first interaction "tunic.historicalsociety.closet.intro" makes no sense so we don't need to consider it. That is, there are 190 interactions in total, but we only count 189. And we should confirm that, this tunic.historicalsociety.closet.intro doesn't occur anywhere else.
-# BUG: Sometimes, dialogues are passed as wildcard click events and there are no text_fqid for that. For example, in chapter2.finale, before answering the bosses's question, some dialogue texts are categorized to wildcard click.
-# XXX: Each event will be loaded to feature processor three times since we have three levels of features, player, population, session
 
 
 class ClickTrack:

@@ -63,6 +63,10 @@ class JowilderLoader(ExtractorLoader):
             ret_val = LastInteraction.LastInteraction(params=extractor_params)
         elif feature_type == "UsedContinue":
             ret_val = UsedContinue.UsedContinue(params=extractor_params)
+        elif feature_type == "InteractionWordsPerSecond":
+            ret_val = InteractionWordsPerSecond.InteractionWordsPerSecond(params=extractor_params)
+        elif feature_type == "InteractionTextBoxesPerSecond":
+            ret_val = InteractionTextBoxesPerSecond.InteractionTextBoxesPerSecond(params=extractor_params)
         else:
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Jowilder.")

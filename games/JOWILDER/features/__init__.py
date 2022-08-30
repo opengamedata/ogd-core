@@ -19,7 +19,9 @@ __all__ = [
     "MeaningfulActions",
     "FirstInteraction",
     "LastInteraction",
-    "UsedContinue"
+    "UsedContinue",
+    "InteractionWordsPerSecond",
+    "InteractionTextBoxesPerSecond"
 ]
 
 from . import QuestionAnswers
@@ -43,3 +45,5 @@ from . import MeaningfulActions
 from . import FirstInteraction
 from . import LastInteraction
 from . import UsedContinue
+from . import InteractionWordsPerSecond
+from . import InteractionTextBoxesPerSecond
