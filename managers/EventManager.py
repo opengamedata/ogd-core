@@ -10,7 +10,7 @@ from extractors.ExtractorLoader import ExtractorLoader
 from processors.EventProcessor import EventProcessor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
-from utils import Logger
+from utils import ExportRow, Logger
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
@@ -42,7 +42,7 @@ class EventManager:
     def GetColumnNames(self) -> List[str]:
         return self._columns
 
-    def GetLines(self, slice_num:int, slice_count:int) -> List[List[Any]]:
+    def GetLines(self, slice_num:int, slice_count:int) -> List[ExportRow]:
         start   : datetime = datetime.now()
         ret_val : List[Any] = self._lines
         time_delta = datetime.now() - start
