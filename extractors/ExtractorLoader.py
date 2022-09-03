@@ -7,6 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Type
 from extractors.Extractor import Extractor, ExtractorParameters
 from extractors.detectors.Detector import Detector
 from extractors.features.Feature import Feature
+from extractors.features.builtin import *
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
@@ -17,7 +18,7 @@ class ExtractorLoader(abc.ABC):
     # *** ABSTRACTS ***
     
     @abc.abstractmethod
-    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
         pass
     
     @abc.abstractmethod
@@ -65,11 +66,11 @@ class ExtractorLoader(abc.ABC):
         # feature_class : Optional[Type[Extractor]] = globals().get(feature_type, None)
         if self._validateMode(feature_type=feature_type):
             params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
-            try:
-                ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
-            except NotImplementedError as err:
+            ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
+            if ret_val is None:
+                ret_val = self._loadBuiltinFeature(festure_type=feature_type, extractor_params=extractor_params, schema_args=schema_args)
+            if ret_val is None:
                 Logger.Log(f"In ExtractorLoader, unable to load '{name}', {feature_type} is not implemented!:", logging.ERROR)
-                Logger.Log(str(err), logging.ERROR, depth=1)
 
         return ret_val
 
@@ -103,3 +104,12 @@ class ExtractorLoader(abc.ABC):
                 Logger.Log(f"In ExtractorLoader, feature class '{feature_type}' could not be found in module {feature_module}", logging.WARN)
 
         return ret_val
+
+    def _loadBuiltinFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
+        if feature_type == "CountEvent":
+            ret_val = CoubtEvent.CountEvent(params=extractor_params, job_map=self._job_map)
+        elif feature_type == "Timespan":
+            ret_val = Timespan.Timespan(params=extractor_params)
+        else:
+            return None
+
