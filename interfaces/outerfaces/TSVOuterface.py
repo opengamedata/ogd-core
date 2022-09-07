@@ -288,18 +288,22 @@ class TSVOuterface(DataOuterface):
             self._files['population'].close()
 
     def _zipFiles(self) -> None:
+        existing_datasets = {}
         try:
-            existing_csvs = utils.loadJSONFile(filename="file_list.json", path=self._data_dir)
-        except Exception as err:
-            existing_csvs = {}
+            file_directory = utils.loadJSONFile(filename="file_list.json", path=self._data_dir)
+            existing_datasets = file_directory.get(self._game_id, {})
+        except FileNotFoundError as err:
+            Logger.Log("file_list.json does not exist.", logging.WARNING)
+        except json.decoder.JSONDecodeError as err:
+            Logger.Log(f"file_list.json has invalid format: {str(err)}.", logging.WARNING)
         # if we have already done this dataset before, rename old zip files
         # (of course, first check if we ever exported this game before).
-        if (self._game_id in existing_csvs and self._dataset_id in existing_csvs[self._game_id]):
-            existing_data = existing_csvs[self._game_id][self._dataset_id]
-            _existing_events_file  = existing_data.get('events_file', None)
-            _existing_sess_file    = existing_data.get('sessions_file', None)
-            _existing_players_file = existing_data.get('players_file', None)
-            _existing_pop_file     = existing_data.get('population_file', None)
+        existing_meta = existing_datasets.get(self._dataset_id, None)
+        if existing_meta is not None:
+            _existing_events_file  = existing_meta.get('events_file', None)
+            _existing_sess_file    = existing_meta.get('sessions_file', None)
+            _existing_players_file = existing_meta.get('players_file', None)
+            _existing_pop_file     = existing_meta.get('population_file', None)
             try:
                 if _existing_events_file is not None and self._zip_names['events'] is not None:
                     Logger.Log(f"Renaming {str(_existing_events_file)} -> {self._zip_names['events']}", logging.DEBUG)
@@ -425,41 +429,38 @@ class TSVOuterface(DataOuterface):
     #  @param num_sess      The number of sessions included in the recent export.
     def _updateFileExportList(self, num_sess: int) -> None:
         self._backupFileExportList()
-        existing_csvs = {}
+        file_directory = {}
+        existing_datasets = {}
         try:
-            existing_csvs = utils.loadJSONFile(filename="file_list.json", path=self._data_dir)
+            file_directory = utils.loadJSONFile(filename="file_list.json", path=self._data_dir)
         except FileNotFoundError as err:
             Logger.Log("file_list.json does not exist.", logging.WARNING)
-        except Exception as err:
-            msg = f"Could not load file list. {type(err)} {str(err)}"
-            Logger.Log(msg, logging.ERROR)
+        except json.decoder.JSONDecodeError as err:
+            Logger.Log(f"file_list.json has invalid format: {str(err)}.", logging.WARNING)
         finally:
+            if not self._game_id in file_directory.keys():
+                file_directory[self._game_id] = {}
+            existing_datasets  = file_directory[self._game_id]
             with open(self._data_dir / "file_list.json", "w") as existing_csv_file:
-                Logger.Log(f"opened csv file at {existing_csv_file.name}", logging.INFO)
-                if not self._game_id in existing_csvs.keys():
-                    existing_csvs[self._game_id] = {}
-                existing_data = existing_csvs[self._game_id][self._dataset_id] if self._dataset_id in existing_csvs[self._game_id].keys() else None
-                population_path = str(self._zip_names["population"]) if self._zip_names["population"] is not None \
-                                  else (existing_data["population"] if (existing_data is not None and "population" in existing_data.keys()) else None)
-                players_path    = str(self._zip_names["players"]) if self._zip_names["players"] is not None \
-                                  else (existing_data["players"] if (existing_data is not None and "players" in existing_data.keys()) else None)
-                sessions_path   = str(self._zip_names["sessions"]) if self._zip_names["sessions"] is not None \
-                                  else (existing_data["sessions"] if (existing_data is not None and "sessions" in existing_data.keys()) else None)
-                events_path     = str(self._zip_names["events"]) if self._zip_names["events"] is not None \
-                                  else (existing_data["events"] if (existing_data is not None and "events" in existing_data.keys()) else None)
-                existing_csvs[self._game_id][self._dataset_id] = \
+                Logger.Log(f"Opened file list for writing at {existing_csv_file.name}", logging.INFO)
+                existing_metadata = existing_datasets.get(self._dataset_id, {})
+                population_path = self._zip_names.get("population") or existing_metadata.get("population")
+                players_path    = self._zip_names.get("players")    or existing_metadata.get("players")
+                sessions_path   = self._zip_names.get("sessions")   or existing_metadata.get("sessions")
+                events_path     = self._zip_names.get("events")     or existing_metadata.get("events")
+                file_directory[self._game_id][self._dataset_id] = \
                 {
                     "ogd_revision" :self._short_hash,
                     "start_date"   :self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
                     "end_date"     :self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions"     :num_sess,
-                    "population_file" :population_path,
-                    "players_file"    :players_path,
-                    "sessions_file"   :sessions_path,
-                    "events_file"     :events_path,
+                    "population_file" :str(population_path) if population_path is not None else None,
+                    "players_file"    :str(players_path)    if players_path    is not None else None,
+                    "sessions_file"   :str(sessions_path)   if sessions_path   is not None else None,
+                    "events_file"     :str(events_path)     if events_path     is not None else None,
                 }
-                existing_csv_file.write(json.dumps(existing_csvs, indent=4))
+                existing_csv_file.write(json.dumps(existing_datasets, indent=4))
 
     def _backupFileExportList(self) -> bool:
         try:
