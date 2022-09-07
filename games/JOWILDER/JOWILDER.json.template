@@ -242,429 +242,116 @@
 		}
 	},
 	"features": {
-		"perlevel": {
-			"EventCount": {
-				"enabled": true,
-				"description": "number of total events"
-			},
-			"count_clicks": {
-				"enabled": true,
-				"description": "Number of clicks"
-			},
-			"count_hovers": {
-				"enabled": true,
-				"description": "Number of hovers"
-			},
-			"time_in_level": {
-				"enabled": true,
-				"description": "time_in_level"
-			},
-			"meaningful_action_count": {
-				"enabled": true,
-				"description": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations"
-			},
-			"count_notebook_uses": {
-				"enabled": true,
-				"description": "number of times the player opened the notebook in the given level"
-			},
-			"avg_time_between_clicks": {
-				"enabled": true,
-				"description": "average time between clicks"
-			},
-			"first_enc_words_read": {
-				"enabled": true,
-				"description": "sum words read in every first encounter"
-			},
-			"first_enc_boxes_read": {
-				"enabled": true,
-				"description": "boxes read in every first encounter"
-			},
-			"num_enc": {
-				"enabled": true,
-				"description": "number of encounters"
-			},
-			"first_enc_duration": {
-				"enabled": true,
-				"description": "duration of first encounters"
-			},
-			"first_enc_avg_wps": {
-				"enabled": true,
-				"description": "average words per second in each first encounter"
-			},
-			"first_enc_var_wps": {
-				"enabled": true,
-				"description": "variance words per second in each first encounter"
-			},
-			"first_enc_avg_tbps": {
-				"enabled": true,
-				"description": "average text boxes per second in each first encounter"
-			},
-			"first_enc_var_tbps": {
-				"enabled": true,
-				"description": "variance text boxes per second in each first encounter"
-			},
-			"time_idle": {
-				"enabled": true,
-				"description": "Amount of time in gameplay spent idle (time past IDLE_THRESH_SECONDS without clicks/hovers)"
-			},
-			"count_idle": {
-				"enabled": true,
-				"description": "Count going active > idle in game (time past IDLE_THRESH_SECONDS without clicks/hovers)"
-			},
-
-			"time_active": {
-				"enabled": true,
-				"description": "Amount of time in gameplay spent actively playing (not going more than IDLE_THRESH_SECONDS without an clicks/hovers)"
-			},
-			"time_active_clicking": {
-				"enabled": true,
-				"description": "time spent acitvely clicking in the game"
-			}
-		},
 		"per_count": {
-			"num_guesses": {
-				"enabled": true,
-				"count": 19,
-				"prefix": "Q",
-				"description": "number of wrong guesses for each assessment prompt"
-			},
-			"answers": {
+			"QuestionAnswers": {
 				"enabled": true,
 				"count": 19,
 				"prefix": "Q",
 				"description": "list the different answers that the player chose, by id#"
 			},
-			"A1": {
-				"enabled": true,
-				"count": 19,
-				"prefix": "Q",
-				"description": "first answer the player chose"
-			},
-			"A2": {
-				"enabled": true,
-				"count": 19,
-				"prefix": "Q",
-				"description": "second answer the player chose"
-			},
-			"A3": {
-				"enabled": true,
-				"count": 19,
-				"prefix": "Q",
-				"description": "third answer the player chose"
-			},
-			"A1_time": {
-				"enabled": true,
-				"count": 19,
-				"prefix": "Q",
-				"description": "time for the first answer the player chose"
-			},
-			"A2_time": {
-				"enabled": true,
-				"count": 19,
-				"prefix": "Q",
-				"description": "time for the second answer the player chose"
-			},
-			"A3_time": {
-				"enabled": true,
-				"count": 19,
-				"prefix": "Q",
-				"description": "time for the third answer the player chose"
-			},
-			"quiz_response": {
-				"enabled": true,
-				"count": 3,
-				"prefix": "R",
-				"description": "player's quiz responses (only used in v6)"
-			},
-			"sa_index": {
+			"SurveyItem": {
 				"enabled": true,
 				"count": 18,
 				"prefix": "SA",
 				"description": "Survey answer index for the given question"
 			},
-			"sa_text": {
-				"enabled": true,
-				"count": 18,
-				"prefix": "SA",
-				"description": "Survey answer text for the given question"
-			},
-			"sa_time": {
-				"enabled": true,
-				"count": 18,
-				"prefix": "SA",
-				"description": "Time to the initial survey answer for the given question"
-			},
-			"sa_num_answers": {
-				"enabled": true,
-				"count": 18,
-				"prefix": "SA",
-				"description": "Players may select an answer multiple times or change answers. This counts the number of times the player answered a given question"
-			},
-			"s_time": {
-				"enabled": true,
-				"count": 4,
-				"prefix": "S",
-				"description": "Time taken to answer a given survey"
-			},
-
-			"itime_to": {
+			"Interaction": {
 				"enabled": true,
 				"count": 189,
 				"prefix": "int",
-				"description": "first enc time"
+				"description": "The total time spent in this interaction, across all times having the interaction "
 			},
-			"inum_enc": {
+			"SurveyTime": {
+				"enabled": false,
+				"count": 5,
+				"prefix": "sv",
+				"description": "The total time spent on a survey screen."
+			},
+			"InteractionName": {
 				"enabled": true,
 				"count": 189,
 				"prefix": "int",
-				"description": "num enc"
+				"description": "The fqid of the interaction"
 			},
-			"ifirst_enc_duration": {
+			"InteractionWordsPerSecond": {
 				"enabled": true,
 				"count": 189,
 				"prefix": "int",
-				"description": "first enc duration"
+				"description": "A feature to calculate words-per-second in various interactions. It will include a subfeature for the first time the interaction was encountered."
 			},
-			"itotal_duration": {
+			"InteractionTextBoxesPerSecond": {
 				"enabled": true,
 				"count": 189,
 				"prefix": "int",
-				"description": "total enc duration"
-			},
-			"ifirst_enc_boxes_read": {
-				"enabled": true,
-				"count": 189,
-				"prefix": "int",
-				"description": "num boxes"
-			},
-			"ifirst_enc_words_read": {
-				"enabled": true,
-				"count": 189,
-				"prefix": "int",
-				"description": "num words"
-			},
-			"ifirst_enc_avg_wps": {
-				"enabled": true,
-				"count": 189,
-				"prefix": "int",
-				"description": "first enc avg wps"
-			},
-			"ifirst_enc_avg_tbps": {
-				"enabled": true,
-				"count": 189,
-				"prefix": "int",
-				"description": "first enc avg tbps"
-			},
-			"ifirst_enc_var_wps": {
-				"enabled": true,
-				"count": 189,
-				"prefix": "int",
-				"description": "first enc var wps"
-			},
-			"ifirst_enc_var_tbps": {
-				"enabled": true,
-				"count": 189,
-				"prefix": "int",
-				"description": "first enc var tbps"
-			},
-			"onext_int": {
-				"enabled": true,
-				"count": 80,
-				"prefix": "obj",
-				"description": "next int"
-			},
-			"onum_enc": {
-				"enabled": true,
-				"count": 80,
-				"prefix": "obj",
-				"description": "num ints to next obj"
-			},
-			"ocount_clicks": {
-				"enabled": true,
-				"count": 80,
-				"prefix": "obj",
-				"description": "num actions to next obj"
-			},
-			"omeaningful_action_count": {
-				"enabled": true,
-				"count": 80,
-				"prefix": "obj",
-				"description": "num meaningful actions to next obj"
-			},
-			"ocount_notebook_uses": {
-				"enabled": true,
-				"count": 80,
-				"prefix": "obj",
-				"description": "num ntbk opens to next obj"
-			},
-			"otime_to_next_obj": {
-				"enabled": true,
-				"count": 80,
-				"prefix": "obj",
-				"description": "num ntbk opens to next obj"
+				"description": "A feature to calculate text-boxes-per-second in various interactions. It will include a subfeature for the first time the interaction was encountered."
 			}
 		},
 		"aggregate": {
-			"sess_count_clicks": {
+			"Clicks": {
 				"enabled": true,
-				"description": "Number of clicks throughout the game"
+				"description": "The number of clicks in a session"
 			},
-			"sess_count_hovers": {
+			"Hovers": {
 				"enabled": true,
-				"description": "Number of hovers throughout the game"
+				"description": "The number of hovers in a session"
 			},
-			"sess_meaningful_action_count": {
+			"SessionDuration": {
 				"enabled": true,
-				"description": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations"
+				"description": "The total time in a session"
 			},
-			"sess_EventCount": {
+			"NotebookUses": {
 				"enabled": true,
-				"description": "count of all log events in the game"
+				"description": "The number of notebook uses in a session"
 			},
-			"sess_count_notebook_uses": {
+			"EventCount": {
 				"enabled": true,
-				"description": "number of times the player opened the notebook over the whole game"
+				"description": "The number of events in a session"
 			},
-			"sess_avg_time_between_clicks": {
+			"UserEnabled": {
 				"enabled": true,
-				"description": "average time between clicks"
+				"description": "A feature to show which options a user enabled."
 			},
-			"sess_first_enc_words_read": {
+			"GameVersion": {
 				"enabled": true,
-				"description": "sum words read in every first encounter"
+				"description": "A feature to show which version of the game the player played."
 			},
-			"sess_first_enc_boxes_read": {
+			"UsedSaveCode": {
 				"enabled": true,
-				"description": "boxes read in every first encounter"
+				"description": "A feature to show which save code, if any, a player used as a starting point for their game."
 			},
-			"sess_num_enc": {
+			"GameScript": {
 				"enabled": true,
-				"description": "number of encounters"
+				"description": "A feature to show which version of the script the player saw."
 			},
-			"sess_first_enc_duration": {
+			"SessionStart": {
 				"enabled": true,
-				"description": "duration of first encounters"
+				"description": "A feature to record the date and time on which the gameplay session started."
 			},
-			"sess_first_enc_avg_wps": {
+			"IdleState": {
 				"enabled": true,
-				"description": "average words per second in each first encounter"
+				"description": "A feature to calculate total time spent idle in session",
+				"IDLE_THRESH_SECONDS": 15
 			},
-			"sess_first_enc_var_wps": {
+			"ActiveStateTime": {
 				"enabled": true,
-				"description": "variance words per second in each first encounter"
+				"description": "A feature to calculate the time spent actively playing the game.",		
+				"ACTIVE_THRESH_SECONDS": 15		
 			},
-			"sess_first_enc_avg_tbps": {
+			"MeaningfulActions": {
 				"enabled": true,
-				"description": "average text boxes per second in each first encounter"
+				"description": "A feature to calculate the total number of 'meaningful' clicks in a session. That is, the number of navigation clicks on items/objects/people/portholes + number of clicks on map locations."
 			},
-			"sess_first_enc_var_tbps": {
+			"FirstInteraction": {
 				"enabled": true,
-				"description": "variance text boxes per second in each first encounter"
+				"description": "A feature to show which interaction a player had first within the game session."
 			},
-			"sess_start_obj": {
+			"LastInteraction": {
 				"enabled": true,
-				"description": "objective the player started with"
+				"description": "A feature to show which interaction a player had last within the game session."
 			},
-			"sess_end_obj": {
+			"UsedContinue": {
 				"enabled": true,
-				"description": "objective the player ended with"
-			},
-
-			"sess_time_idle": {
-				"enabled": true,
-				"description": "time spent idle in session (past IDLE_THRESH seconds without clicks/hovers)"
-			},
-			"sess_count_idle": {
-				"enabled": true,
-				"description": "count going active to idle in session (past IDLE_THRESH seconds without clicks/hovers)"
-			},
-			"sess_time_active": {
-				"enabled": true,
-				"description": "time spent acitvely playing the game"
-			},
-			"sess_time_active_clicking": {
-				"enabled": true,
-				"description": "time spent acitvely clicking in the game"
-			},
-
-			"start_level": {
-				"enabled": true,
-				"description": "Level the player started at"
-			},
-			"max_level": {
-				"enabled": true,
-				"description": "Highest level reached in the session"
-			},
-			"sessDuration": {
-				"enabled": true,
-				"description": "Length of the session"
-			},
-
-			"play_year": {
-				"enabled": true,
-				"description": "year started the game (UTC)"
-			},
-			"play_month": {
-				"enabled": true,
-				"description": "month started the game (UTC)"
-			},
-			"play_day": {
-				"enabled": true,
-				"description": "day started the game (UTC)"
-			},
-			"play_hour": {
-				"enabled": true,
-				"description": "hour started the game (UTC)"
-			},
-			"play_minute": {
-				"enabled": true,
-				"description": "minute started the game (UTC)"
-			},
-			"play_second": {
-				"enabled": true,
-				"description": "second started the game (UTC)"
-			},
-
-			"continue": {
-				"enabled": true,
-				"description": "1 if continuing a game, 0 otherwise"
-			},
-			"save_code": {
-				"enabled": true,
-				"description": "the save code the user inputted (or 0 if NA)"
-			},
-			"music": {
-				"enabled": true,
-				"description": "boolean (1/0) whether or not the player turned music on"
-			},
-			"hq": {
-				"enabled": true,
-				"description": "boolean (1/0) for whether or not the player turned hq graphics on"
-			},
-			"fullscreen": {
-				"enabled": true,
-				"description": "boolean (1/0) whether or not the player checked fullscreen"
-			},
-			"script_type": {
-				"enabled": true,
-				"description": "enum for script type (only used in v7+)"
-			},
-			"script_version": {
-				"enabled": true,
-				"description": "version of the script type (only used in v7+)"
-			},
-			"version": {
-				"enabled": true,
-				"description": "version of the game (database app_version)"
-			},
-
-			"sessionID": {
-				"enabled": true,
-				"description": "The player's session ID number for this play session"
-			},
-			"persistentSessionID": {
-				"enabled": true,
-				"description": "The session ID for the player's device, persists across multiple players using the same device."
+				"description": "A feature to indicate whether the session began from the 'continue' button; i.e. whether this session continued from the ending savecode of another session."
 			}
 		}
 	},
