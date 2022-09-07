@@ -66,8 +66,8 @@ class InteractionTextBoxesPerSecond(PerCountFeature):
         elif event.EventName == "CUSTOM.1": 
             if clicks_track.EventEq(event, clicks_track._this_click):
                 return
-            else:
-                raise(ValueError("Too many startgame events!"))
+            # else:
+            #     raise(ValueError("Too many startgame events!"))
 
         if event.EventName == "CUSTOM.11" and event.EventData.get("cur_cmd_type") == 2:
             return

@@ -35,8 +35,7 @@ class SessionDuration(SessionFeature):
         elif event.EventName == "CUSTOM.2" and self._start_time:
             self._duration = event.Timestamp - self._start_time
             return
-        else:
-            raise(ValueError("Wrong events passed to SessionDuration!"))
+
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return

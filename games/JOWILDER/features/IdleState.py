@@ -40,8 +40,6 @@ class IdleState(SessionFeature):
         if event.EventName == "CUSTOM.1" and not self._last_timestamp:
             self._last_timestamp = event.Timestamp
             return
-        elif event.EventName == "CUSTOM.1" or not self._last_timestamp:
-            raise(ValueError("Multiple game start events or none gamestart events!"))
         time_since_last = event.Timestamp - self._last_timestamp
         if time_since_last > IdleState.IDLE_TIME_THRESHOLD:
             self._time += time_since_last

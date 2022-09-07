@@ -40,8 +40,8 @@ class ActiveStateTime(SessionFeature):
             self._last_hover_or_click_timestamp = event.Timestamp
             self._last_click_timestamp = event.Timestamp
             return
-        elif event.EventName == "CUSTOM.1" or not self._last_hover_or_click_timestamp:
-            raise(ValueError("Multiple game start events or none gamestart events!"))
+        # elif event.EventName == "CUSTOM.1" or not self._last_hover_or_click_timestamp:
+        #     raise(ValueError("Multiple game start events or none gamestart events!"))
 
         _time_between_hover_or_click = event.Timestamp - self._last_hover_or_click_timestamp
         if _time_between_hover_or_click < self._threshold:
