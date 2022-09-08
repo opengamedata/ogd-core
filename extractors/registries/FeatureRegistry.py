@@ -203,8 +203,9 @@ class FeatureRegistry(ExtractorRegistry):
         return len(self._features)
 
     def GetFeatureData(self, order:int, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> List[FeatureData]:
+        order_index = order - 1 # orders are counted from 1, so need to adjust to index from 0.
         ret_val : List[FeatureData] = []
-        for feature in self._features[order].values():
+        for feature in self._features[order_index].values():
             ret_val.append(feature.ToFeatureData(player_id=player_id, sess_id=sess_id))
         return ret_val
 
