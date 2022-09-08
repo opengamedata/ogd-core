@@ -77,11 +77,8 @@ class PopulationProcessor(FeatureProcessor):
             ret_val = self._registry.GetFeatureValues()
         return ret_val
 
-    def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
-        ret_val : Dict[str, List[FeatureData]] = { "population":[] }
-        if self._registry is not None:
-            ret_val["population"] = self._registry.GetFeatureData(order=order)
-        return ret_val
+    def _getFeatureData(self, order:int) -> List[FeatureData]:
+        return self._registry.GetFeatureData(order=order)
 
     ##  Function to empty the list of lines stored by the PopulationProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid

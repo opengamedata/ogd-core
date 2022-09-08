@@ -140,6 +140,7 @@ class FeatureManager:
 
     def _try_update(self, as_str:bool = False):
         if not self._up_to_date:
+            self.ProcessFeatureData()
             # for some reason, this didn't work as sum over list of lists, so get sessions manually with a normal loop:
             list_o_lists   : List[List[ExportRow]] = [[session.GetFeatureValues(as_str=as_str) for session in session_list.values()] for player_name,session_list in self._sessions.items()]
             sess_flat_list : List[ExportRow]       = list(itertools.chain.from_iterable(list_o_lists))

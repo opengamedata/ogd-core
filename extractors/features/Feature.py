@@ -120,6 +120,7 @@ class Feature(Extractor):
 
     def ExtractFromFeatureData(self, feature:FeatureData):
         # TODO: add validation for FeatureData, if applicable/possible.
+        # TODO: figure out a way to invalidate/reset if more events are given to features on which the given feature depends.
         self._extractFromFeatureData(feature=feature)
         self._up_to_date = False
 

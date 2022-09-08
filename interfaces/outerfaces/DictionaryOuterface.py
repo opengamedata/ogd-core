@@ -21,6 +21,7 @@ class DictionaryOuterface(DataOuterface):
         self._sess : List[ExportRow] = []
         self._plrs : List[ExportRow] = []
         self._pops : List[ExportRow] = []
+        self.Open()
 
     def __del__(self):
         self.Close()
