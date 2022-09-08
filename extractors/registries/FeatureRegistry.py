@@ -4,7 +4,7 @@ import json
 import logging
 from collections import OrderedDict
 from datetime import datetime
-from typing import Any, ItemsView, List, Optional
+from typing import Any, Dict, ItemsView, List, Optional
 ## import local files
 from extractors.Extractor import Extractor
 from extractors.ExtractorLoader import ExtractorLoader
@@ -46,6 +46,7 @@ class FeatureRegistry(ExtractorRegistry):
         """
         super().__init__(mode=mode)
         self._features : List[OrderedDict[str, Feature]] = [OrderedDict() for i in range(order)]
+        self._feature_registry: Dict[str,List[ExtractorRegistry.Listener]] = {}
         # self._features : Dict[str, OrderedDict[str, Feature]] = {
         #     "first_order" : OrderedDict(),
         #     "second_order" : OrderedDict()
