@@ -148,11 +148,6 @@ class FeatureRegistry(ExtractorRegistry):
         #     #TODO load firstOrder, if it's not loaded already
         #     if not firstOrder in registry.GetExtractorNames():
 
-    def _getAggregateList(self, schema:GameSchema) -> ItemsView[str, Any]:
-        return schema.AggregateFeatures.items()
-    def _getPerCountList(self, schema:GameSchema) -> ItemsView[str, Any]:
-        return schema.PerCountFeatures.items()
-
     def _extractorEnabled(self, schema:GameSchema, extractor_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode, overrides:Optional[List[str]]):
         return schema.FeatureEnabled(feature_name=extractor_name, iter_mode=iter_mode, extract_mode=extract_mode, overrides=overrides)
 
