@@ -82,10 +82,8 @@ class PlayerProcessor(FeatureProcessor):
             ret_val = [self._player_id] + self._registry.GetFeatureValues()
         return ret_val
 
-    def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
-        ret_val : Dict[str, List[FeatureData]] = { "players":[] }
-        ret_val["players"] = self._registry.GetFeatureData(order=order, player_id=self._player_id)
-        return ret_val
+    def _getFeatureData(self, order:int) -> List[FeatureData]:
+        return self._registry.GetFeatureData(order=order, player_id=self._player_id)
 
     ##  Function to empty the list of lines stored by the PlayerProcessor.
     def _clearLines(self) -> None:
