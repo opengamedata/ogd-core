@@ -42,9 +42,9 @@ class LegacyFeature(Feature):
         :param game_schema: A dictionary that defines how the game data itself is structured
         :type game_schema: GameSchema
         """
-        super().__init__(params=params)
         self._session_id  : str         = session_id
         self._game_schema : GameSchema  = game_schema
+        super().__init__(params=params)
         self._levels      : List[int]   = []
         self._sequences   : List        = []
         self._features    : LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=game_schema)
@@ -273,10 +273,12 @@ class LegacyFeature(Feature):
         #  @param increment    The size of the increment (default = 1)
         def incAggregateVal(self, feature_name: str, increment: Union[int, float] = 1) -> None:
             if self._has_feature(feature_name):
-                if (type(self.features[feature_name]) == int) \
-                or (type(self.features[feature_name]) == float) \
-                or (type(self.features[feature_name]) == timedelta):
-                    self.features[feature_name] += increment
+                old_val = self.features[feature_name]
+                if (isinstance(old_val, int)) \
+                or (isinstance(old_val, float)):
+                    self.features[feature_name] = old_val + increment
+                elif isinstance(old_val, timedelta):
+                    self.features[feature_name] = old_val + timedelta(seconds=increment)
                 else:
                     Logger.Log(f"In LegacyFeature, tried to increment {feature_name} of non-numeric type {type(self.features[feature_name])} by {increment} of type {type(increment)}", logging.WARN)
             else:

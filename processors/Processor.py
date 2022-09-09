@@ -40,10 +40,6 @@ class Processor(abc.ABC):
     def _processEvent(self, event:Event) -> None:
         pass
 
-    @abc.abstractmethod
-    def _processFeatureData(self, feature:FeatureData) -> None:
-        pass
-
     # *** BUILT-INS ***
 
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, feature_overrides:Optional[List[str]]=None):
@@ -69,9 +65,10 @@ class Processor(abc.ABC):
         # TODO: add error handling code, if applicable.
         self._processEvent(event=event)
 
-    def ProcessFeatureData(self, feature:FeatureData) -> None:
-        # TODO: add error handling code, if applicable.
-        self._processFeatureData(feature=feature)
+    def ProcessFeatureData(self, feature_list:List[FeatureData]) -> None:
+        if self._registry is not None:
+            for feature in feature_list:
+                self._registry.ExtractFromFeatureData(feature=feature)
 
     # *** PRIVATE STATICS ***
 

@@ -40,10 +40,6 @@ class EventProcessor(Processor):
         if self._registry is not None:
             self._registry.ExtractFromEvent(event)
 
-    def _processFeatureData(self, feature:FeatureData):
-        if self._registry is not None:
-            self._registry.ExtractFromFeatureData(feature=feature)
-
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
