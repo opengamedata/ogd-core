@@ -128,17 +128,8 @@ class PopulationProcessor(FeatureProcessor):
                     ret_val["sessions"] += player["sessions"]
         return ret_val
 
-    def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
-        ret_val : Dict[str, List[FeatureData]] = { "population":[] }
-        if self._registry is not None:
-            ret_val["population"] = self._registry.GetFeatureData(order=order)
-        _result = [player_extractor.GetFeatureData(order=order) for player_extractor in self._player_processors.values()]
-        ret_val["players"] = []
-        ret_val["sessions"] = []
-        for player in _result:
-            ret_val["players"] += player['players']
-            ret_val["sessions"] += player['sessions']
-        return ret_val
+    def _getFeatureData(self, order:int) -> List[FeatureData]:
+        return self._registry.GetFeatureData(order=order)
 
     ##  Function to empty the list of lines stored by the PopulationProcessor.
     #   This is helpful if we're processing a lot of data and want to avoid

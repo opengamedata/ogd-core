@@ -4,7 +4,7 @@ import json
 import logging
 from collections import OrderedDict
 from datetime import datetime
-from typing import Any, ItemsView, List, Optional
+from typing import Any, Dict, ItemsView, List, Optional
 ## import local files
 from extractors.Extractor import Extractor
 from extractors.ExtractorLoader import ExtractorLoader
@@ -46,6 +46,7 @@ class FeatureRegistry(ExtractorRegistry):
         """
         super().__init__(mode=mode)
         self._features : List[OrderedDict[str, Feature]] = [OrderedDict() for i in range(order)]
+        self._feature_registry: Dict[str,List[ExtractorRegistry.Listener]] = {}
         # self._features : Dict[str, OrderedDict[str, Feature]] = {
         #     "first_order" : OrderedDict(),
         #     "second_order" : OrderedDict()
@@ -147,11 +148,6 @@ class FeatureRegistry(ExtractorRegistry):
         #     #TODO load firstOrder, if it's not loaded already
         #     if not firstOrder in registry.GetExtractorNames():
 
-    def _getAggregateList(self, schema:GameSchema) -> ItemsView[str, Any]:
-        return schema.AggregateFeatures.items()
-    def _getPerCountList(self, schema:GameSchema) -> ItemsView[str, Any]:
-        return schema.PerCountFeatures.items()
-
     def _extractorEnabled(self, schema:GameSchema, extractor_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode, overrides:Optional[List[str]]):
         return schema.FeatureEnabled(feature_name=extractor_name, iter_mode=iter_mode, extract_mode=extract_mode, overrides=overrides)
 
@@ -207,8 +203,9 @@ class FeatureRegistry(ExtractorRegistry):
         return len(self._features)
 
     def GetFeatureData(self, order:int, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> List[FeatureData]:
+        order_index = order - 1 # orders are counted from 1, so need to adjust to index from 0.
         ret_val : List[FeatureData] = []
-        for feature in self._features[order].values():
+        for feature in self._features[order_index].values():
             ret_val.append(feature.ToFeatureData(player_id=player_id, sess_id=sess_id))
         return ret_val
 
