@@ -2,83 +2,76 @@
    "__serializerVersion": 2,
    "jobs": [
       {
-         "id": "arctic-missing-whale",
+         "id": "above-n-below",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
-         ],
-         "requiredUpgrades": [
             {
-               "id": "ROVScanner",
+               "id": "arctic-seal-habbits",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
+         "requiredUpgrades": [
+         ],
          "difficulties": {
-            "experimentation": 0,
-            "modeling": 0,
+            "experimentation": 1,
+            "modeling": 2,
             "argumentation": 1
          },
          "tasks": [
-            {
-               "id": "findWhale",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "findTracker",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "foundDetritus",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            }
          ]
       },
       {
-         "id": "arctic-time-of-death",
+         "id": "arctic-cause-of-death",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "arctic-disappearing-act",
                "date": {
-                  "added": 1.32953970272584E+17
-               }
-            },
-            {
-               "id": "arctic-time-of-death",
-               "date": {
-                  "added": 1.32953970272584E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
          "requiredUpgrades": [
             {
-               "id": "ProbeHacker",
+               "id": "PredictionModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "VisualModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "ROVTagger",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "ROVScanner",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "Microscope",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "ProbeHacker",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -89,22 +82,658 @@
          },
          "tasks": [
             {
-               "id": "getPopulations",
+               "id": "getEnvironmentData",
                "date": {
-                  "added": 1.32914936623526E+17,
-                  "deprecated": 1.3294107995602E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "getHistPopulationData",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "getCurrPopulationData",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "arctic-disappearing-act",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "arctic-missing-whale",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "ObservationTank",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             },
             {
+               "id": "ROVTagger",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "ROVScanner",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 2,
+            "modeling": 2,
+            "argumentation": 1
+         },
+         "tasks": [
+            {
+               "id": "scanCritters",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "modelInteractions",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "arctic-in-ice",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "arctic-salmon-monitoring",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "ObservationTank",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "ROVScanner",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 1,
+            "modeling": 0,
+            "argumentation": 2
+         },
+         "tasks": [
+            {
+               "id": "scanAlgae",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "countAlgae",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "observeEat",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "arctic-isolated-instance",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "arctic-stationary-survival",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "StressTank",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "Flashlight",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "Microscope",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "ProbeHacker",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 3,
+            "modeling": 2,
+            "argumentation": 1
+         },
+         "tasks": [
+            {
+               "id": "scanSponge",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "scanAll",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "checkCrab",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "checkSeal",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "checkShark",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "discussFindings",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "findPredator",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "experimentPredatorAll",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "countPopulations",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "determineStress",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportFinal",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "arctic-missing-whale",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "ROVScanner",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 0,
+            "modeling": 0,
+            "argumentation": 1
+         },
+         "tasks": [
+            {
+               "id": "findTracker",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "findWhale",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "foundDetritus",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "arctic-picky-eaters",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "arctic-in-ice",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "MeasurementTank",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "Microscope",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 4,
+            "modeling": 0,
+            "argumentation": 4
+         },
+         "tasks": [
+            {
+               "id": "obtainRateAlgae",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "obtainRateDiatoms",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "arctic-salmon-competition",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "arctic-in-ice",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "VisualModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "SyncModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "ObservationTank",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "MeasurementTank",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 2,
+            "modeling": 1,
+            "argumentation": 1
+         },
+         "tasks": [
+            {
+               "id": "observeCod",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "modelFish",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "arctic-salmon-monitoring",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "ROVScanner",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "ROVTagger",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 0,
+            "modeling": 0,
+            "argumentation": 1
+         },
+         "tasks": [
+            {
+               "id": "countSalmon",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "arctic-seal-habbits",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "ROVTagger",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "Icebreaker",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "Microscope",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 0,
+            "modeling": 0,
+            "argumentation": 1
+         },
+         "tasks": [
+            {
+               "id": "findRibbon",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "findHabitat",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "findMicro",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "findPop",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "report",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "arctic-stationary-survival",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "arctic-underneath",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "VisualModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "ObservationTank",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "ROVScanner",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 1,
+            "modeling": 2,
+            "argumentation": 0
+         },
+         "tasks": [
+            {
+               "id": "visualModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "report",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "arctic-time-of-death",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "arctic-disappearing-act",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "ProbeHacker",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 2,
+            "modeling": 0,
+            "argumentation": 5
+         },
+         "tasks": [
+            {
                "id": "getPops",
                "date": {
-                  "added": 1.3294107995602E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "arctic-underneath",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "Flashlight",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 0,
+            "modeling": 0,
+            "argumentation": 1
+         },
+         "tasks": [
+            {
+               "id": "explore",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -112,7 +741,7 @@
       {
          "id": "arctic-whale-csi",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
          ],
@@ -127,19 +756,131 @@
             {
                "id": "scanAndTag",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "scanIceAlgae",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "bayou-alt-energy",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "bayou-boom-cause",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "ObservationTank",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "Microscope",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "Hull",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 1,
+            "modeling": 1,
+            "argumentation": 2
+         },
+         "tasks": [
+            {
+               "id": "scanCritters",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "wormEat",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "getModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "bayou-boom-cause",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "Flashlight",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "Hull",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 0,
+            "modeling": 0,
+            "argumentation": 1
+         },
+         "tasks": [
+            {
+               "id": "methaneScan",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "methaneTag",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -147,7 +888,7 @@
       {
          "id": "displaced-reef",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
          ],
@@ -162,54 +903,45 @@
             {
                "id": "visitSiteO",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "getScans",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "getCounts",
                "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "makeModel",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ]
       },
       {
-         "id": "hide-n-seek",
+         "id": "bayou-hide-n-seek",
          "date": {
-            "added": 1.32914936623526E+17,
-            "deprecated": 1.3295916222049E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "turtle-danger2",
                "date": {
-                  "added": 1.32953970272584E+17,
-                  "deprecated": 1.3295916222049E+17
-               }
-            },
-            {
-               "id": "hide-n-seek",
-               "date": {
-                  "added": 1.32953970272584E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -217,15 +949,19 @@
             {
                "id": "Flashlight",
                "date": {
-                  "added": 1.32953898419312E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "MeasurementTank",
                "date": {
-                  "added": 1.32953898419312E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "PredictionModel",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -238,36 +974,102 @@
             {
                "id": "jellyScan",
                "date": {
-                  "added": 1.32914936623526E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "jellyObservation",
                "date": {
-                  "added": 1.32914936623526E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "jellyRates",
                "date": {
-                  "added": 1.32914936623526E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "jellyPrediction",
                "date": {
-                  "added": 1.32914936623526E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.32914936623526E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "bayou-methanogen",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "bayou-alt-energy",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "VisualModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "StressTank",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "MeasurementTank",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 2,
+            "modeling": 0,
+            "argumentation": 1
+         },
+         "tasks": [
+            {
+               "id": "EatRule",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "StressRanges",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "WaterChem",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "Reproduction",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "Report",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -275,13 +1077,13 @@
       {
          "id": "bayou-oxygen-tracking",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "bayou-shrimp-tastrophe",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -296,48 +1098,45 @@
             {
                "id": "getScans",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "measureOxygenUsage",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "createModel",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
       },
       {
-         "id": "reef-decision",
+         "id": "bayou-reef-decision",
          "date": {
-            "added": 1.32914936623526E+17,
-            "deprecated": 1.3295916222049E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "turtle-danger2",
                "date": {
-                  "added": 1.32953970272584E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "reef-decision",
+               "id": "bayou-hide-n-seek",
                "date": {
-                  "added": 1.32953970272584E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -345,8 +1144,7 @@
             {
                "id": "InterveneModel",
                "date": {
-                  "added": 1.32953898419312E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -359,15 +1157,13 @@
             {
                "id": "interventionDecision",
                "date": {
-                  "added": 1.32914936623526E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.32914936623526E+17,
-                  "deprecated": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -375,13 +1171,13 @@
       {
          "id": "bayou-save-our-shrimp",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "bayou-save-our-shrimp",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -396,13 +1192,13 @@
             {
                "id": "getScans",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -410,13 +1206,13 @@
       {
          "id": "bayou-shrimp-tastrophe",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "bayou-save-our-shrimp",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -431,13 +1227,13 @@
             {
                "id": "measureOxygen",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -445,13 +1241,13 @@
       {
          "id": "turtle-danger",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "displaced-reef",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -459,13 +1255,13 @@
             {
                "id": "ObservationTank",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "Microscope",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -476,33 +1272,33 @@
          },
          "tasks": [
             {
-               "id": "experimentsForSiteO",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "visualModelO",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
                "id": "scanCyano",
                "date": {
-                  "added": 1.3294107995602E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "countCyano",
                "date": {
-                  "added": 1.3294107995602E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "experimentsForSiteO",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "visualModelO",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -510,13 +1306,13 @@
       {
          "id": "turtle-danger2",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "turtle-danger",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -524,49 +1320,49 @@
             {
                "id": "ProbeHacker",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "MeasurementTank",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "PredictionModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "VisualModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "ROVScanner",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "ROVTagger",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "Microscope",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "StressTank",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -579,25 +1375,25 @@
             {
                "id": "historicalData",
                "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "syncModel",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "measureStress",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "syncModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -605,13 +1401,13 @@
       {
          "id": "coral-casting-shade",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "coral-stressed",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -619,43 +1415,43 @@
             {
                "id": "ProbeHacker",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "MeasurementTank",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "StressTank",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "PropGuard",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "VisualModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "SyncModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "ROVScanner",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -668,61 +1464,61 @@
             {
                "id": "scanSarg",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "popProbe",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "chemHistory",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "sargGrowthRate",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "sargLight",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "coralGrowthRate",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "coralGrowthStressed",
                "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "sargModel",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "sargArgue",
-               "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "coralLight",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "sargModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "sargArgue",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -730,13 +1526,13 @@
       {
          "id": "coral-eat-seaweed",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "coral-casting-shade",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -751,13 +1547,13 @@
             {
                "id": "urchinSarg",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "urchinSargArgue",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -765,13 +1561,13 @@
       {
          "id": "coral-fake-fix",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "coral-turtle-population",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -779,19 +1575,19 @@
             {
                "id": "ProbeHacker",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "ROVTagger",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "VisualModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -804,25 +1600,25 @@
             {
                "id": "findReef",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "scanProbes",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "countPopulation",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "argue",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -830,7 +1626,7 @@
       {
          "id": "coral-fishy-bizz",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
          ],
@@ -838,25 +1634,25 @@
             {
                "id": "ProbeHacker",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "InterveneModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "VisualModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "ROVTagger",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -869,25 +1665,25 @@
             {
                "id": "getScans",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "historicalPopulations",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "getModel",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -895,20 +1691,13 @@
       {
          "id": "coral-hunting-lions",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "coral-lionfish-conspiracy",
                "date": {
-                  "added": 1.32953970272584E+17
-               }
-            },
-            {
-               "id": "coral-hunting-lions",
-               "date": {
-                  "added": 1.32953970272584E+17,
-                  "deprecated": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -916,49 +1705,43 @@
             {
                "id": "PredictionModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "InterveneModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "MeasurementTank",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "VisualModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "ROVTagger",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "ProbeHacker",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "Microscope",
                "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "StressTank",
-               "date": {
-                  "added": 1.33067919669553E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -969,83 +1752,69 @@
          },
          "tasks": [
             {
-               "id": "scanSpear",
-               "date": {
-                  "added": 1.32914936623526E+17,
-                  "deprecated": 1.3305916268445E+17
-               }
-            },
-            {
                "id": "scanCritters",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "scanHistory",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "countPopulation",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "observeEatRules",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "obtainStressRules",
                "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "measureStressEatRates",
-               "date": {
-                  "added": 1.32914936623526E+17,
-                  "deprecated": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "measureStressReproduceRates",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "obtainChemistry",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "predictModel",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "interveneModel",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "argueIncentive",
-               "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "measureEatRates",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "measureStressReproduceRates",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "obtainChemistry",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "predictModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "interveneModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "argueIncentive",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1053,13 +1822,13 @@
       {
          "id": "coral-lionfish-conspiracy",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "coral-fake-fix",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1067,7 +1836,7 @@
             {
                "id": "ObservationTank",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1080,19 +1849,19 @@
             {
                "id": "scanNew",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "observeInteractions",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "arguePredator",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1100,13 +1869,13 @@
       {
          "id": "coral-much-algae",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "coral-fake-fix",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1114,19 +1883,19 @@
             {
                "id": "ROVTagger",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "MeasurementTank",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "SyncModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1139,37 +1908,37 @@
             {
                "id": "scanAll",
                "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "observeEatAlgae",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "measureEatRate",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "modelPopulations",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "histPop",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "observeEatAlgae",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "measureEatRate",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "modelPopulations",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1177,7 +1946,7 @@
       {
          "id": "coral-ocean-plastics",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
          ],
@@ -1185,25 +1954,25 @@
             {
                "id": "VisualModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "ROVTagger",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "PropGuard",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "Microscope",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1216,25 +1985,25 @@
             {
                "id": "scanReefEdge",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "whatTurtlesEat",
                "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "makeModel",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1242,7 +2011,7 @@
       {
          "id": "coral-stressed",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
          ],
@@ -1250,25 +2019,25 @@
             {
                "id": "StressTank",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "PropGuard",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "VisualModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "ROVTagger",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1281,19 +2050,96 @@
             {
                "id": "siteR",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "stressCoral",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "coral-tang-checkup",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "coral-much-algae",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "Microscope",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "StressTank",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "MeasurementTank",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 3,
+            "modeling": 3,
+            "argumentation": 1
+         },
+         "tasks": [
+            {
+               "id": "findStress",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "findMicro",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "countIck",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "observeIck",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reviseModels",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "report",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1301,7 +2147,7 @@
       {
          "id": "coral-turtle-population",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
          ],
@@ -1316,25 +2162,19 @@
             {
                "id": "scanTurtle",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "turtleModel",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "countTurtle",
-               "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1342,7 +2182,7 @@
       {
          "id": "coral-turtle-stability",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
          ],
@@ -1350,7 +2190,7 @@
             {
                "id": "Microscope",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1363,25 +2203,25 @@
             {
                "id": "scanAll",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "behavior",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "turtleModel",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1389,13 +2229,13 @@
       {
          "id": "coral-urchin-friends",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "coral-urchin-friends",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1410,25 +2250,25 @@
             {
                "id": "coralUrchinModel",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "urchinStressed",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "siteRModel",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "present",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1436,13 +2276,13 @@
       {
          "id": "kelp-bull-kelp-forest",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "kelp-welcome",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1457,19 +2297,19 @@
             {
                "id": "siteA",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "foodweb",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1477,13 +2317,13 @@
       {
          "id": "kelp-energy",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "kelp-shop-welcome",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1498,13 +2338,13 @@
             {
                "id": "foodweb",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1512,7 +2352,7 @@
       {
          "id": "kelp-mussel-fest",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
          ],
@@ -1520,25 +2360,25 @@
             {
                "id": "StressTank",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "ProbeHacker",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "ROVTagger",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "VisualModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1551,25 +2391,25 @@
             {
                "id": "scanMussels",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "waterData",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "stressParam",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "report",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1577,13 +2417,13 @@
       {
          "id": "kelp-musselfest-solution",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "kelp-mussel-fest",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1591,13 +2431,13 @@
             {
                "id": "MeasurementTank",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "StressTank",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1610,19 +2450,19 @@
             {
                "id": "unstressedRate",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "stressedRate",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportChange",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1630,13 +2470,13 @@
       {
          "id": "kelp-refuge-failure",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "kelp-start-refuge",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1644,19 +2484,19 @@
             {
                "id": "MeasurementTank",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "PredictionModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "ProbeHacker",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1669,55 +2509,55 @@
             {
                "id": "visitSite",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "histPop",
                "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "growthRates",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "growthRatesBull",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "lightRatesGiant",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "lightRatesBull",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "newModel",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "getPaid",
-               "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "histChem",
                "date": {
-                  "added": 1.3294107995602E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "growthRates",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "growthRatesBull",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "lightRatesGiant",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "lightRatesBull",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "newModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "getPaid",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1725,13 +2565,13 @@
       {
          "id": "kelp-refuge-failure-simulation",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "kelp-refuge-failure",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1739,7 +2579,7 @@
             {
                "id": "PredictionModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1752,13 +2592,13 @@
             {
                "id": "createModel",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "shareModel",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -1766,13 +2606,13 @@
       {
          "id": "kelp-save-urchin-barren",
          "date": {
-            "added": 1.32914936623526E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "kelp-urchin-barren-predict",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1780,7 +2620,7 @@
             {
                "id": "InterveneModel",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -1793,657 +2633,13 @@
             {
                "id": "makeAPlan",
                "date": {
-                  "added": 1.32914936623526E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "return",
                "date": {
-                  "added": 1.32914936623526E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "kelp-start-refuge",
-         "date": {
-            "added": 1.32914936623526E+17
-         },
-         "requiredJobs": [
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "StressTank",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "VisualModel",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "ROVTagger",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 2,
-            "modeling": 0,
-            "argumentation": 2
-         },
-         "tasks": [
-            {
-               "id": "getBullKelpStress",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "getGiantKelpStress",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "argueSite",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "kelp-urchin-barren-predict",
-         "date": {
-            "added": 1.32914936623526E+17
-         },
-         "requiredJobs": [
-            {
-               "id": "kelp-urchin-barren-viz",
-               "date": {
-                  "added": 1.32953970272584E+17
-               }
-            }
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "PredictionModel",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 0,
-            "modeling": 2,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "predictSiteB",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "kelp-urchin-barren-viz",
-         "date": {
-            "added": 1.32914936623526E+17
-         },
-         "requiredJobs": [
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "ProbeHacker",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "VisualModel",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "ROVTagger",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 0,
-            "modeling": 1,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "gotoSiteB",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "getProbeData",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "getTagged",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "visualSiteB",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "kelp-urchin-farm",
-         "date": {
-            "added": 1.32914936623526E+17
-         },
-         "requiredJobs": [
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "MeasurementTank",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "VisualModel",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "ROVTagger",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 2,
-            "modeling": 0,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "urchinEatBull",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "urchinEatGiant",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "kelp-welcome",
-         "date": {
-            "added": 1.32914936623526E+17
-         },
-         "requiredJobs": [
-         ],
-         "requiredUpgrades": [
-         ],
-         "difficulties": {
-            "experimentation": 1,
-            "modeling": 0,
-            "argumentation": 0
-         },
-         "tasks": [
-            {
-               "id": "gotoSiteC",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "scanGiantKelp",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "scanUrchin",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "scanOtter",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "returnToShip",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "runExperiment",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.32914936623526E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "arctic-cause-of-death",
-         "date": {
-            "added": 1.3294107995602E+17
-         },
-         "requiredJobs": [
-            {
-               "id": "arctic-disappearing-act",
-               "date": {
-                  "added": 1.32953970272584E+17
-               }
-            }
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "PredictionModel",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "VisualModel",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "ROVTagger",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "ROVScanner",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "Microscope",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "ProbeHacker",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 2,
-            "modeling": 0,
-            "argumentation": 5
-         },
-         "tasks": [
-            {
-               "id": "getEnvironmentData",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "getPopulationData",
-               "date": {
-                  "added": 1.3294107995602E+17,
-                  "deprecated": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "getHistPopulationData",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "getCurrPopulationData",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "arctic-disappearing-act",
-         "date": {
-            "added": 1.3294107995602E+17
-         },
-         "requiredJobs": [
-            {
-               "id": "arctic-missing-whale",
-               "date": {
-                  "added": 1.32953970272584E+17
-               }
-            }
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "ObservationTank",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "ROVTagger",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "ROVScanner",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 2,
-            "modeling": 2,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "scanCritters",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "modelInteractions",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "arctic-isolated-instance",
-         "date": {
-            "added": 1.3294107995602E+17
-         },
-         "requiredJobs": [
-            {
-               "id": "arctic-stationary-survival",
-               "date": {
-                  "added": 1.32953970272584E+17
-               }
-            },
-            {
-               "id": "arctic-isolated-instance",
-               "date": {
-                  "added": 1.32953970272584E+17,
-                  "deprecated": 1.3305916268445E+17
-               }
-            }
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "StressTank",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "Flashlight",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "Microscope",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "ProbeHacker",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 3,
-            "modeling": 2,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "scanSponge",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "scanAll",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "experimentPredatorZ",
-               "date": {
-                  "added": 1.3294107995602E+17,
-                  "deprecated": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "findPredator",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "experimentPredatorAll",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "countPopulations",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "determineStress",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "discussFindings",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "checkCrab",
-               "date": {
-                  "added": 1.3305916268445E+17,
-                  "deprecated": 1.33067919669553E+17
-               }
-            },
-            {
-               "id": "checkSeal",
-               "date": {
-                  "added": 1.3305916268445E+17,
-                  "deprecated": 1.33067919669553E+17
-               }
-            },
-            {
-               "id": "checkShark",
-               "date": {
-                  "added": 1.3305916268445E+17,
-                  "deprecated": 1.33067919669553E+17
-               }
-            },
-            {
-               "id": "reportFinal",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "checkPredator",
-               "date": {
-                  "added": 1.33067919669553E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "arctic-stationary-survival",
-         "date": {
-            "added": 1.3294107995602E+17
-         },
-         "requiredJobs": [
-            {
-               "id": "arctic-underneath",
-               "date": {
-                  "added": 1.32953970272584E+17
-               }
-            }
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "VisualModel",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "ObservationTank",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "ROVScanner",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 1,
-            "modeling": 2,
-            "argumentation": 0
-         },
-         "tasks": [
-            {
-               "id": "visualModel",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "report",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "arctic-underneath",
-         "date": {
-            "added": 1.3294107995602E+17
-         },
-         "requiredJobs": [
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "Flashlight",
-               "date": {
-                  "added": 1.32953898419312E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 0,
-            "modeling": 0,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "explore",
-               "date": {
-                  "added": 1.3294107995602E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.3294107995602E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
@@ -2451,13 +2647,13 @@
       {
          "id": "kelp-shop-welcome",
          "date": {
-            "added": 1.32953898419312E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
                "id": "kelp-bull-kelp-forest",
                "date": {
-                  "added": 1.32953970272584E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -2472,608 +2668,206 @@
             {
                "id": "gotoShop",
                "date": {
-                  "added": 1.32953898419312E+17,
-                  "deprecated": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "getTagger",
                "date": {
-                  "added": 1.32953898419312E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "getVisualModel",
                "date": {
-                  "added": 1.32953898419312E+17
-               }
-            },
-            {
-               "id": "returnShip",
-               "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
       },
       {
-         "id": "bayou-hide-n-seek",
+         "id": "kelp-start-refuge",
          "date": {
-            "added": 1.3295916222049E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
-            {
-               "id": "turtle-danger2",
-               "date": {
-                  "added": 1.3295916222049E+17
-               }
-            }
          ],
          "requiredUpgrades": [
             {
-               "id": "Flashlight",
+               "id": "StressTank",
                "date": {
-                  "added": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "MeasurementTank",
+               "id": "VisualModel",
                "date": {
-                  "added": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "PredictionModel",
+               "id": "ROVTagger",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
          "difficulties": {
-            "experimentation": 3,
-            "modeling": 4,
-            "argumentation": 1
+            "experimentation": 2,
+            "modeling": 0,
+            "argumentation": 2
          },
          "tasks": [
             {
-               "id": "jellyScan",
+               "id": "getBullKelpStress",
                "date": {
-                  "added": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "jellyObservation",
+               "id": "getGiantKelpStress",
                "date": {
-                  "added": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "jellyRates",
+               "id": "argueSite",
                "date": {
-                  "added": 1.3295916222049E+17
-               }
-            },
-            {
-               "id": "jellyPrediction",
-               "date": {
-                  "added": 1.3295916222049E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
       },
       {
-         "id": "bayou-reef-decision",
+         "id": "kelp-urchin-barren-predict",
          "date": {
-            "added": 1.3295916222049E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
-               "id": "turtle-danger2",
+               "id": "kelp-urchin-barren-viz",
                "date": {
-                  "added": 1.3295916222049E+17
-               }
-            },
-            {
-               "id": "bayou-hide-n-seek",
-               "date": {
-                  "added": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
          "requiredUpgrades": [
             {
-               "id": "InterveneModel",
+               "id": "PredictionModel",
                "date": {
-                  "added": 1.3295916222049E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
          "difficulties": {
             "experimentation": 0,
-            "modeling": 4,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "interventionDecision",
-               "date": {
-                  "added": 1.3295916222049E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.3295916222049E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "above-n-below",
-         "date": {
-            "added": 1.3305916268445E+17
-         },
-         "requiredJobs": [
-            {
-               "id": "arctic-seal-habbits",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "arctic-seal-habitats",
-               "date": {
-                  "added": 1.33067919669553E+17
-               }
-            }
-         ],
-         "requiredUpgrades": [
-         ],
-         "difficulties": {
-            "experimentation": 1,
             "modeling": 2,
             "argumentation": 1
          },
          "tasks": [
-         ]
-      },
-      {
-         "id": "arctic-in-ice",
-         "date": {
-            "added": 1.3305916268445E+17
-         },
-         "requiredJobs": [
             {
-               "id": "arctic-salmon-monitoring",
+               "id": "predictSiteB",
                "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "ObservationTank",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "ROVScanner",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "Microscope",
-               "date": {
-                  "added": 1.33067919669553E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 1,
-            "modeling": 0,
-            "argumentation": 2
-         },
-         "tasks": [
-            {
-               "id": "scanAlgae",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "countAlgae",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "observeEat",
-               "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
       },
       {
-         "id": "arctic-picky-eaters",
+         "id": "kelp-urchin-barren-viz",
          "date": {
-            "added": 1.3305916268445E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
-            {
-               "id": "arctic-in-ice",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
          ],
          "requiredUpgrades": [
             {
-               "id": "MeasurementTank",
+               "id": "ProbeHacker",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             },
-            {
-               "id": "Microscope",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 4,
-            "modeling": 0,
-            "argumentation": 4
-         },
-         "tasks": [
-            {
-               "id": "obtainRateAlgae",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "obtainRateDiatoms",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "arctic-salmon-competition",
-         "date": {
-            "added": 1.3305916268445E+17
-         },
-         "requiredJobs": [
-            {
-               "id": "arctic-in-ice",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ],
-         "requiredUpgrades": [
             {
                "id": "VisualModel",
                "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "SyncModel",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "ObservationTank",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "MeasurementTank",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 2,
-            "modeling": 1,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "observeCod",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "modelFish",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "arctic-salmon-monitoring",
-         "date": {
-            "added": 1.3305916268445E+17
-         },
-         "requiredJobs": [
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "ROVScanner",
-               "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "ROVTagger",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ],
          "difficulties": {
             "experimentation": 0,
-            "modeling": 0,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "countSalmon",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "arctic-seal-habbits",
-         "date": {
-            "added": 1.3305916268445E+17
-         },
-         "requiredJobs": [
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "ROVTagger",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "Icebreaker",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "Microscope",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 0,
-            "modeling": 0,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "findRibbon",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "findHabitat",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "findMicro",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "findPop",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "report",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "bayou-alt-energy",
-         "date": {
-            "added": 1.3305916268445E+17
-         },
-         "requiredJobs": [
-            {
-               "id": "bayou-boom-cause",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "ObservationTank",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "Microscope",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "Hull",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 1,
             "modeling": 1,
-            "argumentation": 2
-         },
-         "tasks": [
-            {
-               "id": "scanCritters",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "wormEat",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "getModel",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "bayou-boom-cause",
-         "date": {
-            "added": 1.3305916268445E+17
-         },
-         "requiredJobs": [
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "Flashlight",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "Hull",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 0,
-            "modeling": 0,
             "argumentation": 1
          },
          "tasks": [
             {
-               "id": "methaneScan",
+               "id": "gotoSiteB",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "methaneTag",
+               "id": "getProbeData",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "getTagged",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "visualSiteB",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
       },
       {
-         "id": "bayou-methanogen",
+         "id": "kelp-urchin-farm",
          "date": {
-            "added": 1.3305916268445E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
-            {
-               "id": "bayou-alt-energy",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
          ],
          "requiredUpgrades": [
-            {
-               "id": "VisualModel",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "StressTank",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
             {
                "id": "MeasurementTank",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "VisualModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "ROVTagger",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ],
@@ -3084,210 +2878,80 @@
          },
          "tasks": [
             {
-               "id": "EatRule",
+               "id": "urchinEatBull",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "StressRanges",
+               "id": "urchinEatGiant",
                "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "WaterChem",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "Reproduction",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "Report",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "bayou-test-model",
-         "date": {
-            "added": 1.3305916268445E+17
-         },
-         "requiredJobs": [
-         ],
-         "requiredUpgrades": [
-         ],
-         "difficulties": {
-            "experimentation": 0,
-            "modeling": 4,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "obtainSyncModel",
-               "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.3305916268445E+17
+                  "added": 1.33022973299848E+17
                }
             }
          ]
       },
       {
-         "id": "coral-tang-checkup",
+         "id": "kelp-welcome",
          "date": {
-            "added": 1.3305916268445E+17
-         },
-         "requiredJobs": [
-            {
-               "id": "coral-much-algae",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "Microscope",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "StressTank",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "MeasurementTank",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 3,
-            "modeling": 3,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "findStress",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "findMicro",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "countIck",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "observeIck",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "reviseModels",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            },
-            {
-               "id": "report",
-               "date": {
-                  "added": 1.3305916268445E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "arctic-seal-habitats",
-         "date": {
-            "added": 1.33067919669553E+17
+            "added": 1.33022973299848E+17
          },
          "requiredJobs": [
          ],
          "requiredUpgrades": [
-            {
-               "id": "ROVTagger",
-               "date": {
-                  "added": 1.33067919669553E+17
-               }
-            },
-            {
-               "id": "Icebreaker",
-               "date": {
-                  "added": 1.33067919669553E+17
-               }
-            },
-            {
-               "id": "Microscope",
-               "date": {
-                  "added": 1.33067919669553E+17
-               }
-            }
          ],
          "difficulties": {
-            "experimentation": 0,
+            "experimentation": 1,
             "modeling": 0,
-            "argumentation": 1
+            "argumentation": 0
          },
          "tasks": [
             {
-               "id": "findHabitat",
+               "id": "gotoSiteC",
                "date": {
-                  "added": 1.33067919669553E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "findRibbon",
+               "id": "scanGiantKelp",
                "date": {
-                  "added": 1.33067919669553E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "findMicro",
+               "id": "scanUrchin",
                "date": {
-                  "added": 1.33067919669553E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "countMicro",
+               "id": "scanOtter",
                "date": {
-                  "added": 1.33067919669553E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "findPop",
+               "id": "returnToShip",
                "date": {
-                  "added": 1.33067919669553E+17
+                  "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "report",
+               "id": "runExperiment",
                "date": {
-                  "added": 1.33067919669553E+17
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33022973299848E+17
                }
             }
          ]

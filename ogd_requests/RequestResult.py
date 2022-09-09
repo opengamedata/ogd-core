@@ -40,10 +40,15 @@ class ExportResult:
 
 class RequestResult:
     def __init__(self, msg:str="", status:ResultStatus=ResultStatus.NONE,
-                 sess_ct : int = 0, duration:timedelta=timedelta()):
+                 events:ExportResult  = ExportResult(), sessions:ExportResult   = ExportResult(),
+                 players:ExportResult = ExportResult(), population:ExportResult = ExportResult(),
+                 duration:timedelta=timedelta()):
         self._message    = msg
         self._status     = status
-        self._sess_ct    = sess_ct
+        self._events     = events
+        self._sessions   = sessions
+        self._players    = players
+        self._population = population
         self._duration   = duration
 
     @property
@@ -53,13 +58,31 @@ class RequestResult:
     @property
     def Message(self) -> str:
         return self._message
+    
+    @property
+    def Events(self) -> ExportResult:
+        return self._events
+    
+    @property
+    def Sessions(self) -> ExportResult:
+        return self._sessions
+    
+    @property
+    def Players(self) -> ExportResult:
+        return self._players
+    
+    @property
+    def Population(self) -> ExportResult:
+        return self._population
 
     @property
-    def SessionCount(self):
-        return self._sess_ct
-    @SessionCount.setter
-    def SessionCount(self, new_ct:int):
-        self._sess_ct = new_ct
+    def ValuesDict(self) -> Dict[str, Dict[str, ExportRow]]:
+        return {
+            "population" : self.Population.ToDict(),
+            "players"    : self.Players.ToDict(),
+            "sessions"   : self.Sessions.ToDict(),
+            "events"     : self.Events.ToDict()
+        }
 
     @property
     def Duration(self) -> timedelta:
@@ -67,6 +90,14 @@ class RequestResult:
     @Duration.setter
     def Duration(self, new_duration):
         self._duration = new_duration
+
+    @property
+    def SessionCount(self):
+        return len(self.Sessions.Values)
+
+    @property
+    def PlayerCount(self):
+        return len(self.Players.Values)
 
     def RequestSucceeded(self, msg:str):
         self._status = ResultStatus.SUCCESS

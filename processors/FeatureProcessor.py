@@ -19,11 +19,11 @@ class FeatureProcessor(Processor):
 
     ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
     @abc.abstractmethod
-    def _getFeatureValues(self, as_str:bool=False) -> ExportRow:
+    def _getFeatureValues(self, export_types:Set[ExportMode], as_str:bool=False) -> Dict[str, List[ExportRow]]:
         pass
 
     @abc.abstractmethod
-    def _getFeatureData(self, order:int) -> List[FeatureData]:
+    def _getFeatureData(self, order:int) -> Dict[str,List[FeatureData]]:
         pass
 
     @abc.abstractmethod
@@ -45,11 +45,11 @@ class FeatureProcessor(Processor):
 
     # *** PUBLIC METHODS ***
 
-    def GetFeatureValues(self, as_str:bool=False) -> ExportRow:
+    def GetFeatureValues(self, export_types:Set[ExportMode], as_str:bool=False) -> Dict[str, List[ExportRow]]:
         # TODO: add error handling code, if applicable.
-        return self._getFeatureValues(as_str=as_str)
+        return self._getFeatureValues(export_types=export_types, as_str=as_str)
 
-    def GetFeatureData(self, order:int) -> List[FeatureData]:
+    def GetFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
         # TODO: add error handling code, if applicable.
         return self._getFeatureData(order=order)
 

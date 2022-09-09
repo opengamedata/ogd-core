@@ -74,11 +74,23 @@ class SessionProcessor(FeatureProcessor):
         """
         self._registry.ExtractFromEvent(event)
 
-    def _getFeatureValues(self, as_str:bool=False) -> ExportRow:
-        if as_str:
-            return [self._sessionID, self._playerID] + self._registry.GetFeatureStringValues()
+    def _processFeatureData(self, feature: FeatureData):
+        self._registry.ExtractFromFeatureData(feature=feature)
+
+    def _getFeatureValues(self, export_types:Set[ExportMode], as_str:bool=False) -> Dict[str,List[ExportRow]]:
+        # 1) First, we get Session's first-order feature data:
+        _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
+        # 2) Then we can side-propogate the values to second-order features, and down-propogate to other extractors:
+        for feature in _first_order_data['sessions']:
+            self.ProcessFeatureData(feature=feature)
+        # 3) Finally, we assume higher-ups have already sent down their first-order features, so we are ready to return all feature values.
+        if ExportMode.SESSION in export_types and isinstance(self._registry, FeatureRegistry):
+            if as_str:
+                return {"sessions" : [[self._session_id, self._player_id] + self._registry.GetFeatureStringValues()]}
+            else:
+                return {"sessions" : [[self._session_id, self._player_id] + self._registry.GetFeatureValues()]}
         else:
-            return [self._sessionID, self._playerID] + self._registry.GetFeatureValues()
+            return {}
 
     def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
         ret_val : Dict[str, List[FeatureData]] = { "sessions":[] }

@@ -42,6 +42,12 @@ class PlayerProcessor(FeatureProcessor):
         self._player_id : str = player_id
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         ## Define instance vars
+        self._session_processors : Dict[str,SessionProcessor] = {
+            "null" : SessionProcessor(LoaderClass=LoaderClass, game_schema=game_schema,
+                                      player_id=self._player_id, session_id="null",
+                                      feature_overrides=feature_overrides)
+        }
+        self._null_empty = True
         Logger.Log(f"Done", logging.DEBUG, depth=2)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -60,7 +66,7 @@ class PlayerProcessor(FeatureProcessor):
 
     def _getExtractorNames(self) -> List[str]:
         if isinstance(self._registry, FeatureRegistry):
-            return ["PlayerID"] + self._registry.GetExtractorNames()
+            return ["PlayerID", "SessionCount"] + self._registry.GetExtractorNames()
         else:
             raise TypeError()
 
@@ -73,18 +79,49 @@ class PlayerProcessor(FeatureProcessor):
         :type event: Event
         """
         self._registry.ExtractFromEvent(event=event)
-
-    def _getFeatureValues(self, as_str:bool=False) -> ExportRow:
-        ret_val : ExportRow
-        if as_str:
-            ret_val = [self._player_id] + self._registry.GetFeatureStringValues()
+        if event.SessionID is None:
+            self._session_processors["null"].ProcessEvent(event=event)
+            self._null_empty = False
         else:
-            ret_val = [self._player_id] + self._registry.GetFeatureValues()
+            # ensure we have an extractor for the given session:
+            if event.SessionID not in self._session_processors.keys():
+                self._session_processors[event.SessionID] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+                                                                            player_id=self._player_id,     session_id=event.SessionID,
+                                                                            feature_overrides=self._overrides)
+
+            self._session_processors[event.SessionID].ProcessEvent(event=event)
+
+    def _processFeatureData(self, feature: FeatureData) -> None:
+        self._registry.ExtractFromFeatureData(feature=feature)
+        # Down-propogate values to player (and, by extension, session) features:
+        for session in self._session_processors.values():
+            session.ProcessFeatureData(feature=feature)
+
+    def _getFeatureValues(self, export_types:Set[ExportMode], as_str:bool=False) -> Dict[str, List[ExportRow]]:
+        ret_val : Dict[str, List[ExportRow]] = {}
+        if ExportMode.PLAYER in export_types and isinstance(self._registry, FeatureRegistry):
+            if as_str:
+                ret_val["players"] = [[self._player_id, str(self.SessionCount)] + self._registry.GetFeatureStringValues()]
+            else:
+                ret_val["players"] = [[self._player_id, self.SessionCount] + self._registry.GetFeatureValues()]
+        if ExportMode.SESSION in export_types:
+            # _results gives us a list of dicts, each with a "session" element
+            _results = [sess_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for name,sess_extractor in self._session_processors.items() if not (name == 'null' and self._null_empty)]
+            # so we loop over list, and pull each "session" element into a master list of all sessions.
+            ret_val["sessions"] = []
+            for session in _results:
+                ret_val["sessions"] += session["sessions"]
+            # finally, what we return is a dict with a "sessions" element, containing list of lists.
         return ret_val
 
     def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
         ret_val : Dict[str, List[FeatureData]] = { "players":[] }
-        ret_val["players"] = self._registry.GetFeatureData(order=order, player_id=self._player_id)
+        if isinstance(self._registry, FeatureRegistry):
+            ret_val["players"] = self._registry.GetFeatureData(order=order, player_id=self._player_id)
+        _result = [session_extractor.GetFeatureData(order=order) for session_extractor in self._session_processors.values()]
+        ret_val["sessions"] = []
+        for session in _result:
+            ret_val["sessions"] += session['sessions']
         return ret_val
 
     ##  Function to empty the list of lines stored by the PlayerProcessor.
@@ -99,7 +136,21 @@ class PlayerProcessor(FeatureProcessor):
 
     # *** PUBLIC METHODS ***
 
+    def GetSessionFeatureNames(self) -> List[str]:
+        return self._session_processors["null"].GetExtractorNames()
+
+    def ClearSessionsLines(self):
+        Logger.Log(f"Clearing {len(self._session_processors)} sessions from PlayerProcessor for {self._player_id}.", logging.DEBUG, depth=2)
+        for id,session in self._session_processors.items():
+            if not id == 'null':
+                session.ClearLines()
+        self._session_processors = { 'null' : self._session_processors['null'] }
+
     # *** PROPERTIES ***
+
+    @property
+    def SessionCount(self):
+        return len(self._session_processors.keys()) - 1 # don't count null player
 
     # *** PRIVATE STATICS ***
 
