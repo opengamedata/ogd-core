@@ -12,7 +12,7 @@ from calendar import monthrange
 from datetime import datetime
 from itertools import chain
 from pathlib import Path
-from typing import Any, Dict, Set, Tuple
+from typing import Any, Dict, Optional, Set, Tuple
 
 # import 3rd-party libraries
 from git.remote import FetchInfo
@@ -96,6 +96,7 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
 def genRequest(events:bool, features:bool) -> Request:
     exporter_files : Set[ExportMode]
     interface      : DataInterface
+    dataset_id     : Optional[str] = None
     file_outerface : DataOuterface
     range          : ExporterRange
 
@@ -109,36 +110,29 @@ def genRequest(events:bool, features:bool) -> Request:
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [], versions=supported_vers)
-    elif args.player is not None and args.player != "":
-        interface = genDBInterface()
-        range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER, versions=supported_vers)
-        file_outerface = TSVOuterface(game_id=args.game, export_modes=exporter_files,
-                                      date_range=range.DateRange, data_dir=settings["DATA_DIR"],
-                                      dataset_id=f"{args.game}_{args.player}")
-    elif args.player_id_file is not None and args.player_id_file != "":
-        file_path = Path(args.player_id_file)
-        with open(file_path) as player_file:
-            reader = csv.reader(player_file)
-            file_contents = list(reader) # this gives list of lines, each line a list
-            names = list(chain.from_iterable(file_contents)) # so, convert to single list
-            print(f"list of names: {list(names)}")
-            interface = genDBInterface()
-            range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER, versions=supported_vers)
-        file_outerface = TSVOuterface(game_id=args.game, export_modes=exporter_files,
-                                    date_range=range.DateRange, data_dir=settings["DATA_DIR"])
-    elif args.session is not None and args.session != "":
-        interface = genDBInterface()
-        range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION, versions=supported_vers)
-        file_outerface = TSVOuterface(game_id=args.game, export_modes=exporter_files,
-                                      date_range=range.DateRange, data_dir=settings["DATA_DIR"],
-                                      dataset_id=f"{args.game}_{args.session}")
     else:
         interface = genDBInterface()
-        start_date, end_date = getDateRange()
-        range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date, versions=supported_vers)
-        file_outerface = TSVOuterface(game_id=args.game, export_modes=exporter_files,
-                                      date_range=range.DateRange, data_dir=settings["DATA_DIR"])
+        if args.player is not None and args.player != "":
+            range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER, versions=supported_vers)
+            dataset_id = f"{args.game}_{args.player}"
+        elif args.player_id_file is not None and args.player_id_file != "":
+            file_path = Path(args.player_id_file)
+            with open(file_path) as player_file:
+                reader = csv.reader(player_file)
+                file_contents = list(reader) # this gives list of lines, each line a list
+                names = list(chain.from_iterable(file_contents)) # so, convert to single list
+                print(f"list of names: {list(names)}")
+                range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER, versions=supported_vers)
+        elif args.session is not None and args.session != "":
+            range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION, versions=supported_vers)
+            dataset_id = f"{args.game}_{args.session}"
+        else:
+            start_date, end_date = getDateRange()
+            range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date, versions=supported_vers)
     # Once we have the parameters parsed out, construct the request.
+    file_outerface = TSVOuterface(game_id=args.game, export_modes=exporter_files,
+                                  date_range=range.DateRange, data_dir=settings["DATA_DIR"],
+                                  dataset_id=dataset_id)
     return Request(interface=interface, range=range, exporter_modes=exporter_files, exporter_locs=[file_outerface])
 
 def genDBInterface() -> DataInterface:
