@@ -12,7 +12,7 @@ from calendar import monthrange
 from datetime import datetime
 from itertools import chain
 from pathlib import Path
-from typing import List, Set, Tuple
+from typing import Any, Dict, Set, Tuple
 
 # import 3rd-party libraries
 from git.remote import FetchInfo
@@ -99,24 +99,18 @@ def genRequest(events:bool, features:bool) -> Request:
     file_outerface : DataOuterface
     range          : ExporterRange
 
+
     exporter_files = getModes(events=events, features=features)
     supported_vers = GameSchema(schema_name=f"{args.game}.json")['config']['SUPPORTED_VERS']
     if args.file is not None and args.file != "":
-        raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
+        # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
         ext = str(args.file).split('.')[-1]
         interface = CSVInterface(game_id=args.game, filepath=args.file, delim="\t" if ext == '.tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [], versions=supported_vers)
-        # breakpoint()
     elif args.player is not None and args.player != "":
-        interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
-        if interface_type == "BigQuery":
-            interface = BigQueryInterface(game_id=args.game, settings=settings)
-        elif interface_type == "MySQL":
-            interface = MySQLInterface(game_id=args.game, settings=settings)
-        else:
-            raise Exception(f"{interface_type} is not a valid DataInterface type!")
+        interface = genDBInterface()
         range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER, versions=supported_vers)
         file_outerface = TSVOuterface(game_id=args.game, export_modes=exporter_files,
                                       date_range=range.DateRange, data_dir=settings["DATA_DIR"],
@@ -128,42 +122,41 @@ def genRequest(events:bool, features:bool) -> Request:
             file_contents = list(reader) # this gives list of lines, each line a list
             names = list(chain.from_iterable(file_contents)) # so, convert to single list
             print(f"list of names: {list(names)}")
-            interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
-            if interface_type == "BigQuery":
-                interface = BigQueryInterface(game_id=args.game, settings=settings)
-            elif interface_type == "MySQL":
-                interface = MySQLInterface(game_id=args.game, settings=settings)
-            else:
-                raise Exception(f"{interface_type} is not a valid DataInterface type!")
+            interface = genDBInterface()
             range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER, versions=supported_vers)
         file_outerface = TSVOuterface(game_id=args.game, export_modes=exporter_files,
                                     date_range=range.DateRange, data_dir=settings["DATA_DIR"])
     elif args.session is not None and args.session != "":
-        interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
-        if interface_type == "BigQuery":
-            interface = BigQueryInterface(game_id=args.game, settings=settings)
-        elif interface_type == "MySQL":
-            interface = MySQLInterface(game_id=args.game, settings=settings)
-        else:
-            raise Exception(f"{interface_type} is not a valid DataInterface type!")
+        interface = genDBInterface()
         range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION, versions=supported_vers)
         file_outerface = TSVOuterface(game_id=args.game, export_modes=exporter_files,
                                       date_range=range.DateRange, data_dir=settings["DATA_DIR"],
                                       dataset_id=f"{args.game}_{args.session}")
     else:
-        interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
-        if interface_type == "BigQuery":
-            interface = BigQueryInterface(game_id=args.game, settings=settings)
-        elif interface_type == "MySQL":
-            interface = MySQLInterface(game_id=args.game, settings=settings)
-        else:
-            raise Exception(f"{interface_type} is not a valid DataInterface type!")
+        interface = genDBInterface()
         start_date, end_date = getDateRange()
         range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date, versions=supported_vers)
         file_outerface = TSVOuterface(game_id=args.game, export_modes=exporter_files,
                                       date_range=range.DateRange, data_dir=settings["DATA_DIR"])
     # Once we have the parameters parsed out, construct the request.
     return Request(interface=interface, range=range, exporter_modes=exporter_files, exporter_locs=[file_outerface])
+
+def genDBInterface() -> DataInterface:
+    ret_val : DataInterface
+    interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
+    source_name = settings["GAME_SOURCE_MAP"][args.game]['source']
+    source : Dict[str,Any] = settings["GAME_SOURCES"][source_name]
+
+    config = settings["GAME_SOURCE_MAP"][args.game]
+    config['source'] = {key:val for key,val in source.items()}
+
+    if interface_type == "BigQuery":
+        ret_val = BigQueryInterface(game_id=args.game, config=config)
+    elif interface_type == "MySQL":
+        ret_val = MySQLInterface(game_id=args.game, config=config)
+    else:
+        raise Exception(f"{interface_type} is not a valid DataInterface type!")
+    return ret_val
 
 def getModes(events:bool, features:bool) -> Set[ExportMode]:
     ret_val = set()
