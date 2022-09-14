@@ -115,7 +115,7 @@ class ExportManager:
 
     def _receiveEventTrigger(self, event:Event) -> None:
         # TODO: consider how to put a limit on times this runs, based on how big export is.
-        if self._debug_count < 20:
+        if self._debug_count < 5:
             Logger.Log("ExportManager received an event trigger.", logging.DEBUG)
             self._debug_count += 1
         self._processEvent(next_event=event)
