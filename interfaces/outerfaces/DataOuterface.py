@@ -1,8 +1,7 @@
 ## import standard libraries
 import abc
 import logging
-from datetime import datetime
-from typing import Dict, List, Tuple, Optional, Union
+from typing import Any, Dict, List
 
 # import local files
 from interfaces.Interface import Interface
@@ -52,8 +51,8 @@ class DataOuterface(Interface):
 
     # *** BUILT-INS ***
 
-    def __init__(self, game_id):
-        super().__init__()
+    def __init__(self, game_id, config:Dict[str, Any]):
+        super().__init__(config=config)
         self._game_id : str  = game_id
 
     def __del__(self):

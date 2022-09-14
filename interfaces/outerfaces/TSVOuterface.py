@@ -27,7 +27,7 @@ class TSVOuterface(DataOuterface):
     # *** BUILT-INS ***
 
     def __init__(self, game_id:str, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], data_dir:str, extension:str="tsv", dataset_id:Optional[str]=None):
-        super().__init__(game_id=game_id)
+        super().__init__(game_id=game_id, config={})
         self._file_paths   : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._zip_names    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._files        : Dict[str,Optional[IO]]   = {"population":None, "players":None, "sessions":None, "events":None}

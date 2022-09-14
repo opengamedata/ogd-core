@@ -15,7 +15,7 @@ class CSVInterface(DataInterface):
 
     def __init__(self, game_id:str, filepath:Path, delim:str = ','):
         # set up data from params
-        super().__init__(game_id=game_id)
+        super().__init__(game_id=game_id, config={})
         self._filepath  : Path = filepath
         self._delimiter : str = delim
         # set up data from file
