@@ -94,19 +94,21 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
     return success
 
 def genRequest(events:bool, features:bool) -> Request:
-    exporter_files : Set[ExportMode]
+    export_modes   : Set[ExportMode]
     interface      : DataInterface
-    dataset_id     : Optional[str] = None
-    file_outerface : DataOuterface
     range          : ExporterRange
+    file_outerface : DataOuterface
+    dataset_id     : Optional[str] = None
 
 
-    exporter_files = getModes(events=events, features=features)
+    # 1. get exporter modes to run
+    export_modes = getModes(events=events, features=features)
     supported_vers = GameSchema(schema_name=f"{args.game}.json")['config']['SUPPORTED_VERS']
+    # 2. figure out the interface and range; optionally set a different dataset_id
     if args.file is not None and args.file != "":
         # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
-        ext = str(args.file).split('.')[-1]
-        interface = CSVInterface(game_id=args.game, filepath=args.file, delim="\t" if ext == '.tsv' else ',')
+        _ext = str(args.file).split('.')[-1]
+        interface = CSVInterface(game_id=args.game, filepath=args.file, delim="\t" if _ext == '.tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [], versions=supported_vers)
@@ -129,11 +131,12 @@ def genRequest(events:bool, features:bool) -> Request:
         else:
             start_date, end_date = getDateRange()
             range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date, versions=supported_vers)
-    # Once we have the parameters parsed out, construct the request.
-    file_outerface = TSVOuterface(game_id=args.game, export_modes=exporter_files,
+    # 3. set up the outerface, based on the range and dataset_id.
+    file_outerface = TSVOuterface(game_id=args.game, export_modes=export_modes,
                                   date_range=range.DateRange, data_dir=settings["DATA_DIR"],
                                   dataset_id=dataset_id)
-    return Request(interface=interface, range=range, exporter_modes=exporter_files, exporter_locs=[file_outerface])
+    # 4. Once we have the parameters parsed out, construct the request.
+    return Request(interface=interface, range=range, exporter_modes=export_modes, exporter_locs=[file_outerface])
 
 def genDBInterface() -> DataInterface:
     ret_val : DataInterface
