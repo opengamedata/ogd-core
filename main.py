@@ -140,9 +140,9 @@ def genRequest(events:bool, features:bool) -> Request:
 
 def genDBInterface() -> DataInterface:
     ret_val : DataInterface
-    interface_type = settings["GAME_SOURCE_MAP"][args.game]['source']
     source_name = settings["GAME_SOURCE_MAP"][args.game]['source']
     source : Dict[str,Any] = settings["GAME_SOURCES"][source_name]
+    interface_type = source.get('interface')
 
     config = settings["GAME_SOURCE_MAP"][args.game]
     config['source'] = {key:val for key,val in source.items()}
