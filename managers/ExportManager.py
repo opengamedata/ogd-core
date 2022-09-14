@@ -45,14 +45,14 @@ class ExportManager:
 
     # *** BUILT-INS ***
 
-    def __init__(self, settings):
+    def __init__(self, settings:Dict[str, Any]):
         """Constructor for an ExportManager object.
         Simply sets the settings for the manager. All other data comes from a request given to the manager.
 
         :param settings: [description]
         :type settings: [type]
         """
-        self._settings = settings
+        self._settings    : Dict[str, Any] = settings
         self._event_mgr   : Optional[EventManager]   = None
         self._feat_mgr    : Optional[FeatureManager] = None
         self._debug_count : int                      = 0
@@ -198,7 +198,7 @@ class ExportManager:
         start   : datetime
 
         # 1) Get the IDs of sessions to process
-        _table_schema : TableSchema = TableSchema.FromID(game_id=request.GameID, settings=self._settings)
+        _table_schema : TableSchema = TableSchema.FromID(game_id=request.GameID, schema_name=self._settings['GAME_SOURCE_MAP'][request.GameID]['schema'])
         # 2) Loop over and process the sessions, slice-by-slice (where each slice is a list of sessions).
         _next_slice_data : Optional[List[Tuple]] = None
         for i, next_slice_ids in enumerate(slices):
