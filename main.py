@@ -142,7 +142,7 @@ def genDBInterface() -> DataInterface:
     ret_val : DataInterface
     source_name = settings["GAME_SOURCE_MAP"][args.game]['source']
     source : Dict[str,Any] = settings["GAME_SOURCES"][source_name]
-    interface_type = source.get('interface')
+    interface_type = source.get('DB_TYPE')
 
     config = settings["GAME_SOURCE_MAP"][args.game]
     config['source'] = {key:val for key,val in source.items()}
