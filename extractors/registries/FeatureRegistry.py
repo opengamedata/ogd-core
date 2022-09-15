@@ -126,7 +126,7 @@ class FeatureRegistry(ExtractorRegistry):
                 ret_val += feature.GetFeatureNames()
         return ret_val
 
-    def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, extract_mode:ExtractionMode, overrides:Optional[List[str]]):
+    def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, overrides:Optional[List[str]]):
         iter_mode = IterationMode.AGGREGATE
         for base_name,aggregate in schema.AggregateFeatures.items():
             if schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=overrides):
