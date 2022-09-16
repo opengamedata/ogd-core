@@ -4,15 +4,6 @@ settings = {
     "LOG_FILE"   : False,
     "DEBUG_LEVEL": "INFO",
     "FAIL_FAST"  : False,
-    "MYSQL_CONFIG":
-    {
-        "DB_HOST" : "127.0.0.1",
-        "DB_USER" : "username",
-        "DB_PW" : "password",
-        "DB_NAME" : "logger",
-        "TABLE" : "log",
-        "DB_PORT" : 3306
-    },
     "SSH_CONFIG":
     {
         "SSH_HOST" : "hostname",
@@ -49,18 +40,18 @@ settings = {
         "LOGGER": {
             "DB_TYPE" : "MySQL",
             "DB_HOST" : "127.0.0.1",
-            "DB_PORT" : 3306
+            "DB_PORT" : 3306,
             "DB_NAME" : "logger",
             "DB_USER" : "username",
-            "DB_PW"   : "password",
+            "DB_PW"   : "password"
         },
         "OPENGAMEDATA_MYSQL": {
             "DB_TYPE" : "MySQL",
             "DB_HOST" : "127.0.0.1",
-            "DB_PORT" : 3306
+            "DB_PORT" : 3306,
             "DB_NAME" : "opengamedata",
             "DB_USER" : "username",
-            "DB_PW"   : "password",
+            "DB_PW"   : "password"
         },
     },
     "GAME_SOURCE_MAP":
