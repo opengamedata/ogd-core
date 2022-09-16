@@ -45,14 +45,14 @@ class ExportManager:
 
     # *** BUILT-INS ***
 
-    def __init__(self, settings):
+    def __init__(self, settings:Dict[str, Any]):
         """Constructor for an ExportManager object.
         Simply sets the settings for the manager. All other data comes from a request given to the manager.
 
         :param settings: [description]
         :type settings: [type]
         """
-        self._settings = settings
+        self._settings    : Dict[str, Any] = settings
         self._event_mgr   : Optional[EventManager]   = None
         self._feat_mgr    : Optional[FeatureManager] = None
         self._debug_count : int                      = 0
@@ -108,7 +108,7 @@ class ExportManager:
 
     def _receiveEventTrigger(self, event:Event) -> None:
         # TODO: consider how to put a limit on times this runs, based on how big export is.
-        if self._debug_count < 20:
+        if self._debug_count < 5:
             Logger.Log("ExportManager received an event trigger.", logging.DEBUG)
             self._debug_count += 1
         self._processEvent(next_event=event)
@@ -232,6 +232,36 @@ class ExportManager:
         Logger.Log(f"With slice size = {_slice_size}, there are {math.ceil(_num_sess / _slice_size)} slices", logging.INFO, depth=1)
         return [[sess_ids[i] for i in range( j*_slice_size, min((j+1)*_slice_size, _num_sess) )]
                              for j in range( 0, math.ceil(_num_sess / _slice_size) )]
+
+    def _processSlices(self, request:Request, ids:List[str], slices:List[List[str]]) -> None:
+        start   : datetime
+
+        # 1) Get the IDs of sessions to process
+        _table_schema : TableSchema = TableSchema.FromID(game_id=request.GameID, schema_name=self._settings['GAME_SOURCE_MAP'][request.GameID]['schema'])
+        # 2) Loop over and process the sessions, slice-by-slice (where each slice is a list of sessions).
+        _next_slice_data : Optional[List[Tuple]] = None
+        for i, next_slice_ids in enumerate(slices):
+            _next_slice_data = self._loadSlice(request=request, next_slice_ids=next_slice_ids, slice_num=i+1, slice_count=len(slices))
+            if _next_slice_data is not None:
+                # 2a) Process all rows for each slice.
+                start = datetime.now()
+                Logger.Log(f"Processing slice [{i+1}/{len(slices)}]...", logging.INFO, depth=2)
+                self._processSlice(next_slice_data=_next_slice_data, request=request, table_schema=_table_schema, ids=ids)
+                time_delta = datetime.now() - start
+                Logger.Log(f"Processing time for slice [{i+1}/{len(slices)}]: {time_delta} to handle {len(_next_slice_data)} events", logging.INFO, depth=2)
+
+                # 2b) After processing all rows for each slice, write out the session data and reset for next slice.
+                start = datetime.now()
+                Logger.Log(f"Outputting slice [{i+1}/{len(slices)}]...", logging.INFO, depth=2)
+                self._outputSlice(request=request, slice_num=i+1, slice_count=len(slices))
+                time_delta = datetime.now() - start
+                Logger.Log(f"Output time for slice [{i+1}/{len(slices)}]: {time_delta} to handle {len(_next_slice_data)} events", logging.INFO, depth=2)
+        # 3) If we made it all the way to the end, write population data and return the number of sessions processed.
+        start = datetime.now()
+        Logger.Log(f"Outputting population...", logging.INFO, depth=2)
+        self._outputPopulation(request=request)
+        time_delta = datetime.now() - start
+        Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
 
     def _loadSlice(self, request:Request, next_slice_ids:List[str], slice_num:int, slice_count:int) -> Optional[List[Tuple]]:
         Logger.Log(f"Retrieving slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)

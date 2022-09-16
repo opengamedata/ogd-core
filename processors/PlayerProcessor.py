@@ -50,6 +50,9 @@ class PlayerProcessor(FeatureProcessor):
         self._null_empty = True
         Logger.Log(f"Done", logging.DEBUG, depth=2)
 
+    def __str__(self):
+        return f"PlayerProcessor({self._player_id})"
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @property

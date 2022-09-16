@@ -18,6 +18,9 @@ class FeatureData:
    def __str__(self):
       return f"Name: {self.Name}\tCount Index: {self.CountIndex}\nColumns: {self._cols}\t Values: {self._vals}\nMode: {self._mode.name}\tPlayer: {self.PlayerID}\tSession: {self.SessionID}"
 
+   def __repr__(self):
+      return self.Name
+
    @property
    def Name(self):
       return self._name

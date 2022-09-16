@@ -44,6 +44,9 @@ class PopulationProcessor(FeatureProcessor):
         }
         self._null_empty = True
 
+    def __str__(self):
+        return f"PopulationProcessor"
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @property
