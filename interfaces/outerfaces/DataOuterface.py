@@ -83,15 +83,15 @@ class DataOuterface(Interface):
 
     def WriteSessionLines(self, sessions:List[ExportRow]) -> None:
         self._writeSessionLines(sessions=sessions)
-        Logger.Log(f"Wrote {len(sessions)} events to {self.Destination(mode=ExportMode.SESSION)}", logging.INFO, depth=2)
+        Logger.Log(f"Wrote {len(sessions)} sessions to {self.Destination(mode=ExportMode.SESSION)}", logging.INFO, depth=2)
 
     def WritePlayerLines(self, players:List[ExportRow]) -> None:
         self._writePlayerLines(players=players)
-        Logger.Log(f"Wrote {len(players)} events to {self.Destination(mode=ExportMode.PLAYER)}", logging.INFO, depth=2)
+        Logger.Log(f"Wrote {len(players)} players to {self.Destination(mode=ExportMode.PLAYER)}", logging.INFO, depth=2)
 
     def WritePopulationLines(self, populations:List[ExportRow]) -> None:
         self._writePopulationLines(populations=populations)
-        Logger.Log(f"Wrote {len(populations)} events to {self.Destination(mode=ExportMode.POPULATION)}", logging.INFO, depth=2)
+        Logger.Log(f"Wrote {len(populations)} populations to {self.Destination(mode=ExportMode.POPULATION)}", logging.INFO, depth=2)
 
     # *** PROPERTIES ***
 
