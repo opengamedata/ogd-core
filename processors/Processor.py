@@ -9,7 +9,6 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
-from utils import Logger
 
 ## @class Processor
 class Processor(abc.ABC):
@@ -70,12 +69,9 @@ class Processor(abc.ABC):
         # TODO: add error handling code, if applicable.
         self._processEvent(event=event)
 
-    def ProcessFeatureData(self, feature_list:List[FeatureData]) -> None:
-        if self._registry is not None:
-            for feature in feature_list:
-                self._registry.ExtractFromFeatureData(feature=feature)
-        else:
-            Logger.Log(f"Processor has no registry, skipping FeatureData.", logging.WARN)
+    def ProcessFeatureData(self, feature:FeatureData) -> None:
+        # TODO: add error handling code, if applicable.
+        self._processFeatureData(feature=feature)
 
     # *** PRIVATE STATICS ***
 

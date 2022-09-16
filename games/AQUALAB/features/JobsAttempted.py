@@ -107,7 +107,7 @@ class JobsAttempted(Feature):
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-per-attempt", "std-dev-per-attempt", "job-difficulties"]
+        return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-complete", "std-dev-complete", "job-difficulties"]
 
     @staticmethod
     def MinVersion() -> Optional[str]:

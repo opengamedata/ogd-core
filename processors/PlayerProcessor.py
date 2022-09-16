@@ -114,8 +114,15 @@ class PlayerProcessor(FeatureProcessor):
             # finally, what we return is a dict with a "sessions" element, containing list of lists.
         return ret_val
 
-    def _getFeatureData(self, order:int) -> List[FeatureData]:
-        return self._registry.GetFeatureData(order=order, player_id=self._player_id)
+    def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
+        ret_val : Dict[str, List[FeatureData]] = { "players":[] }
+        if isinstance(self._registry, FeatureRegistry):
+            ret_val["players"] = self._registry.GetFeatureData(order=order, player_id=self._player_id)
+        _result = [session_extractor.GetFeatureData(order=order) for session_extractor in self._session_processors.values()]
+        ret_val["sessions"] = []
+        for session in _result:
+            ret_val["sessions"] += session['sessions']
+        return ret_val
 
     ##  Function to empty the list of lines stored by the PlayerProcessor.
     def _clearLines(self) -> None:

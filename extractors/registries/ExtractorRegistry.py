@@ -67,6 +67,7 @@ class ExtractorRegistry(abc.ABC):
         _feature_registry maps feature names to Listener objects, which basically just say which 2nd-order feature(s) wants the given 1st-order feature.
         """
         self._event_registry : Dict[str,List[ExtractorRegistry.Listener]] = {"all_events":[]}
+        self._feature_registry: Dict[str,List[ExtractorRegistry.Listener]] = {}
         self._mode        : ExtractionMode = mode
 
     # *** PUBLIC STATICS ***
@@ -113,10 +114,7 @@ class ExtractorRegistry(abc.ABC):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
-        if isinstance(feature, FeatureData):
-            self._extractFromFeatureData(feature=feature)
-        else:
-            Logger.Log(f"Got an invalid feature {feature} of type {type(feature)} for a registry in {self._mode.name} mode")
+        self._extractFromFeatureData(feature=feature)
 
     # *** PROPERTIES ***
 

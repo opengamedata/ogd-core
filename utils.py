@@ -74,7 +74,7 @@ class Logger:
     # Function to print a method to both the standard out and file logs.
     # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
     @staticmethod
-    def Log(message:str, level=logging.INFO, depth:int=0) -> None:
+    def Log(message:str, level=logging.DEBUG, depth:int=0) -> None:
         now = datetime.now().strftime("%y-%m-%d %H:%M:%S")
         indent = ''.join(['  '*depth])
         if Logger.file_logger is not None:

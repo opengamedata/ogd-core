@@ -92,8 +92,11 @@ class SessionProcessor(FeatureProcessor):
         else:
             return {}
 
-    def _getFeatureData(self, order:int) -> List[FeatureData]:
-        return self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)
+    def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
+        ret_val : Dict[str, List[FeatureData]] = { "sessions":[] }
+        if isinstance(self._registry, FeatureRegistry):
+            ret_val["sessions"] = self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)
+        return ret_val
 
     def _clearLines(self) -> None:
         Logger.Log(f"Clearing features from SessionProcessor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)
