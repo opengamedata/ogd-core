@@ -5,6 +5,7 @@ from typing import Any, Dict, List
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class PopulationSummary(SessionFeature):

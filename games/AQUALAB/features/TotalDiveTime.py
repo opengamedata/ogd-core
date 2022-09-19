@@ -5,6 +5,7 @@ from typing import Any, List
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class TotalDiveTime(Feature):

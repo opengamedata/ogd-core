@@ -8,6 +8,7 @@ from utils import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class ActiveJobs(Feature):

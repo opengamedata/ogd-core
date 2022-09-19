@@ -6,6 +6,7 @@ from utils import Logger
 from extractors.Extractor import ExtractorParameters
 from games.AQUALAB.features.PerJobFeature import PerJobFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class JobGuideCount(PerJobFeature):
