@@ -136,7 +136,7 @@ def genRequest(events:bool, features:bool) -> Request:
                                   date_range=range.DateRange, data_dir=settings["DATA_DIR"],
                                   dataset_id=dataset_id)
     # 4. Once we have the parameters parsed out, construct the request.
-    return Request(interface=interface, range=range, exporter_modes=export_modes, exporter_locs=[file_outerface])
+    return Request(interface=interface, range=range, exporter_modes=export_modes, outerfaces=[file_outerface])
 
 def genDBInterface() -> DataInterface:
     ret_val : DataInterface
