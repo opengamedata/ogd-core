@@ -93,15 +93,15 @@ def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
 
         if feature.FeatureType == "JobActiveTime":
             if feature.CountIndex == self.CountIndex:
-                if self.ExportMode    == ExtractionMode.SESSION \
+                if self.ExtractionMode    == ExtractionMode.SESSION \
             and feature.ExportMode == ExtractionMode.SESSION:
                     # session should only have one time, namely the time for the session.
                     self._times = [feature.FeatureValues[0]]
-                elif self.ExportMode == ExtractionMode.PLAYER \
+                elif self.ExtractionMode == ExtractionMode.PLAYER \
                 and feature.ExportMode == ExtractionMode.PLAYER:
                     # player should only have one time, namely the time for the player.
                     self._times = [feature.FeatureValues[0]]
-                elif self.ExportMode == ExtractionMode.POPULATION \
+                elif self.ExtractionMode == ExtractionMode.POPULATION \
                 and feature.ExportMode == ExtractionMode.PLAYER:
                     # population should only have one time, namely the time for the player.
                     self._times.append(feature.FeatureValues[0])
@@ -111,11 +111,11 @@ def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
         count_str = f"{total_ct} times ({self._pop_call_count}, {self._pla_call_count}, {self._ses_call_count})"
         # temp
         if self.CountIndex == 0:
-            if self.ExportMode == ExtractionMode.POPULATION:
+            if self.ExtractionMode == ExtractionMode.POPULATION:
                 Logger.Log(f"{self.Name} was called {count_str} in pop mode")
-            if self.ExportMode == ExtractionMode.PLAYER:
+            if self.ExtractionMode == ExtractionMode.PLAYER:
                 Logger.Log(f"{self.Name} was called {count_str} in player mode for player {self._player_id}")
-            if self.ExportMode == ExtractionMode.SESSION:
+            if self.ExtractionMode == ExtractionMode.SESSION:
                 Logger.Log(f"{self.Name} was called {count_str} in session mode for player {self._player_id}, session {self._session_id}")
 
         if self._num_starts > 0:

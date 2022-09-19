@@ -30,8 +30,8 @@ class JobActiveTime(PerJobFeature):
     @classmethod
 def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
         return ["all_events"]
-        # if self.ExportMode == ExtractionMode.PLAYER \
-        # or self.ExportMode == ExtractionMode.SESSION:
+        # if self.ExtractionMode == ExtractionMode.PLAYER \
+        # or self.ExtractionMode == ExtractionMode.SESSION:
         #     return ["all_events"]
         # else:
         #     return []
@@ -39,27 +39,27 @@ def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
     @classmethod
 def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
         return []
-        # if self.ExportMode == ExtractionMode.POPULATION:
+        # if self.ExtractionMode == ExtractionMode.POPULATION:
         #     return ["JobActiveTime"]
         # else:
         #     return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self.ExportMode == ExtractionMode.POPULATION:
+        if self.ExtractionMode == ExtractionMode.POPULATION:
             # pass
             self._handle_user(event=event)
-        elif self.ExportMode == ExtractionMode.PLAYER:
+        elif self.ExtractionMode == ExtractionMode.PLAYER:
             self._player_id = event.UserID
             self._handle_user(event=event)
-        elif self.ExportMode == ExtractionMode.SESSION:
+        elif self.ExtractionMode == ExtractionMode.SESSION:
             self._handle_user(event=event)
 
     def _extractFromFeatureData(self, feature:FeatureData):
         return
-        # if self.ExportMode == ExtractionMode.PLAYER \
-        # or self.ExportMode == ExtractionMode.SESSION:
+        # if self.ExtractionMode == ExtractionMode.PLAYER \
+        # or self.ExtractionMode == ExtractionMode.SESSION:
         #     pass
-        # elif self.ExportMode == ExtractionMode.POPULATION:
+        # elif self.ExtractionMode == ExtractionMode.POPULATION:
         #     self._handle_population(feature=feature)
 
     def _getFeatureValues(self) -> List[Any]:
@@ -134,7 +134,7 @@ def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
                 self._last_start_time = None
             else:
                 Logger.Log(f"JobActiveTime could not update total time, missing previous event time!", logging.WARNING)
-        elif self.ExportMode == ExtractionMode.PLAYER:
+        elif self.ExtractionMode == ExtractionMode.PLAYER:
             Logger.Log(f"JobActiveTime could not update total time for player {self._player_id}, session {self._session_id} missing start time!", logging.WARNING)
 
     # def _handle_population(self, feature:FeatureData):
