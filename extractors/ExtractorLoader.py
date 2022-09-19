@@ -24,6 +24,11 @@ class ExtractorLoader(abc.ABC):
     def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         pass
 
+    @abc.abstractmethod
+    @staticmethod
+    def _getLoadedModule():
+        pass
+
     # *** BUILT-INS ***
 
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
@@ -72,6 +77,17 @@ class ExtractorLoader(abc.ABC):
                 Logger.Log(str(err), logging.ERROR, depth=1)
 
         return ret_val
+
+    def GetFeatureClass(self, feature_type:str) -> Optional[Type[Feature]]:
+        ret_val : Optional[Type[Feature]] = None
+        base_mod = self._getLoadedModule()
+        try:
+            feature_mod = getattr(base_mod, feature_type)
+            ret_val     = getattr(feature_mod, feature_type)
+        except NameError as err:
+            Logger.Log(f"Could not get class {feature_type}")
+        finally:
+            return ret_val
 
     # *** PROPERTIES ***
 
