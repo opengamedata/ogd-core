@@ -116,7 +116,7 @@ class GameSchema:
         else:
             return _is_enabled
 
-    def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode, overrides:Optional[List[str]]) -> bool:
+    def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode, overrides:Optional[List[str]]=None) -> bool:
         _val : Union[bool, List[str]] = False
         # get the value from the schema
         if iter_mode == IterationMode.AGGREGATE:
@@ -132,7 +132,7 @@ class GameSchema:
             _is_enabled = extract_mode.name in _val
         else:
             raise ValueError(f"Invalid data type for feature {feature_name} in {self.GameName}")
-        if overrides is not None:
+        if overrides is not None and len(overrides) > 0:
             if feature_name in overrides:
                 return _is_enabled
             else:
