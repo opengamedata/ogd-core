@@ -16,11 +16,11 @@ class JobTasksCompleted(PerJobFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["complete_task"]
 
     @classmethod
-    _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

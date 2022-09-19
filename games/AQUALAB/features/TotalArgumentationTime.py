@@ -18,11 +18,11 @@ class TotalArgumentationTime(Feature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["begin_argument", "room_changed"]
 
     @classmethod
-    _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

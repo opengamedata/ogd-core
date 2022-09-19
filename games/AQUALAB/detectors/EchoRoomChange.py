@@ -24,7 +24,7 @@ class EchoRoomChange(Detector):
 
     # *** Implement abstract functions ***
     @classmethod
-    _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_

@@ -35,7 +35,7 @@ class Detector(Extractor):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @classmethod
-    _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
         Any feature intented to be second-order should override this function.
