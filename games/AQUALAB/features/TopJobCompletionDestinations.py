@@ -21,10 +21,11 @@ class TopJobCompletionDestinations(Feature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
         return ["accept_job", "complete_job"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

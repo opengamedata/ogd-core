@@ -45,7 +45,7 @@ class LevelsOfDifficulty(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
         return ['move_shape', 'rotate_shape', 'scale_shape',
                 'check_solution', 'undo_action', 'redo_action',
                 'rotate_view', 'snapshot', 'mode_change',
@@ -55,7 +55,8 @@ def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
                 'click_nothing', 'toggle_paint_display', 'palette_change',
                 'paint', 'toggle_snapshot_display']
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

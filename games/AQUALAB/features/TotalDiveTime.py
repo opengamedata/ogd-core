@@ -18,10 +18,11 @@ class TotalDiveTime(Feature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
         return ["begin_dive", "scene_changed"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

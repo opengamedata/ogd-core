@@ -28,7 +28,7 @@ class Extractor(abc.ABC):
     ## Abstract function to get a list of event types the Feature wants.
     @abc.abstractmethod
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
         """ Abstract function to get a list of event types the Feature wants.
             The types of event accepted by a feature are a responsibility of the Feature's developer,
             so this is a required part of interface instead of a config item in the schema.
@@ -179,6 +179,7 @@ class Extractor(abc.ABC):
         else:
             return False # data_version of None is invalid.
 
+    @classmethod
     def _validateEventType(self, event_type:str) -> bool:
         """Private function to check whether a given event type is accepted by this Feature.
 
@@ -187,7 +188,7 @@ class Extractor(abc.ABC):
         :return: True if the given event type is in this feature's list, otherwise false.
         :rtype: bool
         """
-        _deps = self.GetEventDependencies()
+        _deps = self.GetEventDependencies(mode=self.ExportMode)
         if event_type in _deps or 'all_events' in _deps:
             return True
         else:

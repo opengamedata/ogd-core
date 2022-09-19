@@ -21,7 +21,7 @@ class CustomFeature(Feature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -29,7 +29,8 @@ def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """
         return [] # >>> fill in names of events this Feature should use for extraction. <<<
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
         """_summary_
 
         :return: _description_
