@@ -3,10 +3,11 @@ from os import truncate
 from schemas import Event
 from typing import Any, List, Optional
 # import locals
-from schemas.FeatureData import FeatureData
 from extractors.features.PerLevelFeature import PerLevelFeature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
 
 class Completed(PerLevelFeature):
     def __init__(self, params:ExtractorParameters):
