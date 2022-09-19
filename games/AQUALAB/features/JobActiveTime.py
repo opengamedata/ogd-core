@@ -15,16 +15,16 @@ class JobActiveTime(PerJobFeature):
     def __init__(self, params:ExtractorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
         self._total_time = timedelta(0)
-        if self.ExportMode == ExtractionMode.PLAYER:
+        if self.ExtractionMode == ExtractionMode.PLAYER:
             self._session_id      = None
             self._last_start_time = None
             self._last_event_time = None
-        elif self.ExportMode == ExtractionMode.POPULATION:
+        elif self.ExtractionMode == ExtractionMode.POPULATION:
             self._session_id      = None
             self._last_start_time = None
             self._last_event_time = None
         else:
-            raise NotImplementedError(f"Got invalid export mode of {self.ExportMode.name} in JobActiveTime!")
+            raise NotImplementedError(f"Got invalid export mode of {self.ExtractionMode.name} in JobActiveTime!")
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod

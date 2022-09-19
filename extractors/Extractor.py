@@ -133,7 +133,7 @@ class Extractor(abc.ABC):
         return self._params._desc
 
     @property
-    def ExportMode(self) -> ExtractionMode:
+    def ExtractionMode(self) -> ExtractionMode:
         return self._params._mode
 
     @property
@@ -188,7 +188,7 @@ class Extractor(abc.ABC):
         :return: True if the given event type is in this feature's list, otherwise false.
         :rtype: bool
         """
-        _deps = self.GetEventDependencies(mode=self.ExportMode)
+        _deps = self.GetEventDependencies(mode=self.ExtractionMode)
         if event_type in _deps or 'all_events' in _deps:
             return True
         else:
