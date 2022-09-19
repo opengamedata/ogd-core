@@ -21,7 +21,7 @@ class PopulationSummary(SessionFeature):
         return []
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["JobsCompleted", "SessionID", "SessionDuration"]
 
     def _extractFromEvent(self, event: Event) -> None:

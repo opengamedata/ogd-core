@@ -19,7 +19,7 @@ class UserAvgSessionDuration(SessionFeature):
         return []
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["SessionDuration"]
 
     def _extractFromEvent(self, event:Event) -> None:
