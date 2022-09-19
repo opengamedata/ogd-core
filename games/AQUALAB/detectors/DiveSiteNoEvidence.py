@@ -17,7 +17,7 @@ class DiveSiteNoEvidence(Detector):
     # *** Implement abstract functions ***
 
     @classmethod
-def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_

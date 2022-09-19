@@ -17,11 +17,11 @@ class FunnelByUser(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["start_level", "puzzle_started", "create_shape", "check_solution", "puzzle_complete"]
 
     @classmethod
-def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

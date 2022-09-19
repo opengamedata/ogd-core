@@ -14,12 +14,12 @@ class QuestionAnswered(Feature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.3"]
         # return ["QUESTION_ANSWER"]
 
     @classmethod
-def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
