@@ -14,7 +14,8 @@ class SessionDiveSitesCount(Feature):
         self._visited_sites = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["begin_dive"]
 
     def _getFeatureDependencies(self) -> List[str]:

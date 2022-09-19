@@ -13,7 +13,8 @@ class FirstMoveType(Feature):
         self._first_move = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.1", "CUSTOM.2"]
         # "events": ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"],
 

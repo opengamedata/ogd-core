@@ -12,7 +12,8 @@ class ClosenessR2(Feature):
         Feature.__init__(self, params=params)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _getFeatureDependencies(self) -> List[str]:

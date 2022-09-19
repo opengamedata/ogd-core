@@ -13,7 +13,8 @@ class EvidenceBoardCompleteCount(Feature):
         self._count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["evidence_board_complete"]
 
     def _getFeatureDependencies(self) -> List[str]:

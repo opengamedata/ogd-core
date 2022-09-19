@@ -15,7 +15,8 @@ class MissionSonarTimeToComplete(Feature):
         self._sonar_start_time = None
         self._time = timedelta(0)
 
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["sonar_start", "sonar_exit"]
 
     def _getFeatureDependencies(self) -> List[str]:

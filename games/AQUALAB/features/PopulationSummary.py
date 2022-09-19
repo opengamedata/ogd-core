@@ -16,7 +16,8 @@ class PopulationSummary(SessionFeature):
         self._user_session_times = defaultdict(list)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _getFeatureDependencies(self) -> List[str]:

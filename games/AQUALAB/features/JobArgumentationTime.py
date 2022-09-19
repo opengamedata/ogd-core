@@ -19,7 +19,8 @@ class JobArgumentationTime(PerJobFeature):
         self._time = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["all_events"]
 
     def _getFeatureDependencies(self) -> List[str]:

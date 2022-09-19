@@ -13,7 +13,8 @@ class QuestionAnswered(Feature):
         self._answer = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.3"]
         # return ["QUESTION_ANSWER"]
 

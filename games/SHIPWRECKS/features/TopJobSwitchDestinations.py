@@ -18,7 +18,8 @@ class TopJobSwitchDestinations(Feature):
         self._mission_switch_pairs = defaultdict(dict)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["checkpoint"]
 
     def _getFeatureDependencies(self) -> List[str]:

@@ -20,7 +20,8 @@ class ActiveJobs(Feature):
         self._active_jobs = defaultdict(list)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["accept_job", "switch_job"]
 
     def _getFeatureDependencies(self) -> List[str]:

@@ -13,7 +13,8 @@ class BeginCount(PerLevelFeature):
         self._num_begins = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["BEGIN.0"]
         # return ["BEGIN"]
 

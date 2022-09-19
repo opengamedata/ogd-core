@@ -13,7 +13,8 @@ class JobsCompleted(SessionFeature):
         self._jobs_completed = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["complete_job"]
 
     def _getFeatureDependencies(self) -> List[str]:

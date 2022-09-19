@@ -44,7 +44,8 @@ class LevelsOfDifficulty(SessionFeature):
         self._userPuzzleDict = dict()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ['move_shape', 'rotate_shape', 'scale_shape',
                 'check_solution', 'undo_action', 'redo_action',
                 'rotate_view', 'snapshot', 'mode_change',

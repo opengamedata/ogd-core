@@ -27,7 +27,8 @@ class JobActiveTime(PerJobFeature):
             raise NotImplementedError(f"Got invalid export mode of {self.ExportMode.name} in JobActiveTime!")
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["all_events"]
         # if self.ExportMode == ExtractionMode.PLAYER \
         # or self.ExportMode == ExtractionMode.SESSION:

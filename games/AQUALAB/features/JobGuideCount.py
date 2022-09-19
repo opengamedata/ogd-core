@@ -16,7 +16,8 @@ class JobGuideCount(PerJobFeature):
         self._count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["guide_triggered"]
 
     def _getFeatureDependencies(self) -> List[str]:

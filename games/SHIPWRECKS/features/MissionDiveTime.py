@@ -15,7 +15,8 @@ class MissionDiveTime(Feature):
         self._time = timedelta(0)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["dive_start", "dive_exit"]
 
     def _getFeatureDependencies(self) -> List[str]:
