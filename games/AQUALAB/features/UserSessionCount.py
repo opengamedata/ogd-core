@@ -15,11 +15,11 @@ class UserSessionCount(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     @classmethod
-def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["SessionID"]
 
     def _extractFromEvent(self, event:Event) -> None:

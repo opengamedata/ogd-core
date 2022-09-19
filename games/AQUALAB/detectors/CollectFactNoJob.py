@@ -26,7 +26,7 @@ class CollectFactNoJob(Detector):
 
     # *** Implement abstract functions ***
     @classmethod
-def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
+def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_

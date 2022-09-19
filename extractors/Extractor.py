@@ -28,7 +28,7 @@ class Extractor(abc.ABC):
     ## Abstract function to get a list of event types the Feature wants.
     @abc.abstractmethod
     @classmethod
-    def _getEventDependencies(cls, mode:ExportMode) -> List[str]:
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """ Abstract function to get a list of event types the Feature wants.
             The types of event accepted by a feature are a responsibility of the Feature's developer,
             so this is a required part of interface instead of a config item in the schema.
