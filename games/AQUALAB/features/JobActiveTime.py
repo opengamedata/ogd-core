@@ -37,7 +37,7 @@ class JobActiveTime(PerJobFeature):
         #     return []
 
     @classmethod
-    _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
         # if self.ExtractionMode == ExtractionMode.POPULATION:
         #     return ["JobActiveTime"]
