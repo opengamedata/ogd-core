@@ -3,9 +3,11 @@ from schemas import Event
 from typing import Any, List, Optional
 # import locals
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
+
 
 class PercentOffsetMoves(Feature):
     def __init__(self, params:ExtractorParameters):
