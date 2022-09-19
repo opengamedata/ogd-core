@@ -3,8 +3,10 @@ from typing import Any, List
 # import locals
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
+
 
 class SessionID(SessionFeature):
     def __init__(self, params:ExtractorParameters, session_id:str):

@@ -3,8 +3,10 @@ from typing import Any, List
 # import locals
 from extractors.features.Feature import Feature
 from extractors.Extractor import ExtractorParameters
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
+
 
 class MoveShapeCount(Feature):
     def __init__(self, params:ExtractorParameters):
