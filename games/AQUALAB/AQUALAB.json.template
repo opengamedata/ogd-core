@@ -532,13 +532,13 @@
                         "return_type": "float",
                         "description": "Percent of jobs which were accepted and completed"
                     },
-                    "avg-time-complete": {
+                    "avg-time-per-attempt": {
                         "return_type": "float",
-                        "description": "Average time taken from accepting to completing a job"
+                        "description": "Average time taken from accepting to completing/leaving a job"
                     },
-                    "std-dev-complete": {
+                    "std-dev-per-attempt": {
                         "return_type": "float",
-                        "description": "Standard deviation of time taken to complete"
+                        "description": "Standard deviation of time taken on a job"
                     },
                     "job-difficulties": {
                         "return_type": "dict",
