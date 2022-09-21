@@ -9,11 +9,17 @@ from utils import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class JobsAttempted(Feature):
 
     def __init__(self, params:ExtractorParameters, job_map:dict, diff_map: dict):
+        self._pop_call_count = 0
+        self._pla_call_count = 0
+        self._ses_call_count = 0
+        self._player_id = None
+
         self._job_map = job_map
         super().__init__(params=params)
         self._user_code = None
@@ -39,13 +45,17 @@ class JobsAttempted(Feature):
         self._prev_timestamp : Optional[datetime] = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["accept_job", "complete_job"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["JobActiveTime"]
 
     def _extractFromEvent(self, event:Event) -> None:
+        if event.UserID != self._player_id:
+            self._player_id = event.UserID
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
 
@@ -75,22 +85,40 @@ class JobsAttempted(Feature):
         self._prev_timestamp = event.Timestamp
 
     def _extractFromFeatureData(self, feature:FeatureData):
+        if feature.ExportMode == ExtractionMode.POPULATION:
+            self._pop_call_count += 1
+        if feature.ExportMode == ExtractionMode.PLAYER:
+            self._pla_call_count += 1
+        if feature.ExportMode == ExtractionMode.SESSION:
+            self._ses_call_count += 1
+
         if feature.FeatureType == "JobActiveTime":
             if feature.CountIndex == self.CountIndex:
-                if self.ExportMode    == ExtractionMode.SESSION \
+                if self.ExtractionMode    == ExtractionMode.SESSION \
             and feature.ExportMode == ExtractionMode.SESSION:
                     # session should only have one time, namely the time for the session.
                     self._times = [feature.FeatureValues[0]]
-                elif self.ExportMode == ExtractionMode.PLAYER \
+                elif self.ExtractionMode == ExtractionMode.PLAYER \
                 and feature.ExportMode == ExtractionMode.PLAYER:
                     # player should only have one time, namely the time for the player.
                     self._times = [feature.FeatureValues[0]]
-                elif self.ExportMode == ExtractionMode.POPULATION \
+                elif self.ExtractionMode == ExtractionMode.POPULATION \
                 and feature.ExportMode == ExtractionMode.PLAYER:
                     # population should only have one time, namely the time for the player.
                     self._times.append(feature.FeatureValues[0])
 
     def _getFeatureValues(self) -> List[Any]:
+        total_ct = self._pop_call_count + self._pla_call_count + self._ses_call_count
+        count_str = f"{total_ct} times ({self._pop_call_count}, {self._pla_call_count}, {self._ses_call_count})"
+        # temp
+        if self.CountIndex == 0:
+            if self.ExtractionMode == ExtractionMode.POPULATION:
+                Logger.Log(f"{self.Name} was called {count_str} in pop mode")
+            if self.ExtractionMode == ExtractionMode.PLAYER:
+                Logger.Log(f"{self.Name} was called {count_str} in player mode for player {self._player_id}")
+            if self.ExtractionMode == ExtractionMode.SESSION:
+                Logger.Log(f"{self.Name} was called {count_str} in session mode for player {self._player_id}, session {self._session_id}")
+
         if self._num_starts > 0:
             self._percent_complete = (self._num_completes / self._num_starts) * 100
 

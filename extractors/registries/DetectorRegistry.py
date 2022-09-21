@@ -95,7 +95,7 @@ class DetectorRegistry(ExtractorRegistry):
         ret_val : List[str] = [feature.Name for feature in self._detectors.values()]
         return ret_val
 
-    def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, extract_mode:ExtractionMode, overrides:Optional[List[str]]):
+    def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, overrides:Optional[List[str]]=None):
         # first, load aggregate detectors
         iter_mode = IterationMode.AGGREGATE
         for base_name,aggregate in schema.AggregateDetectors.items():

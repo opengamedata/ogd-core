@@ -6,3 +6,4 @@ class ExportMode(IntEnum):
     PLAYER = 2
     POPULATION = 3
     EVENTS = 4
+    DETECTORS = 5

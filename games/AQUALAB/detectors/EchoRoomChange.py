@@ -23,7 +23,8 @@ class EchoRoomChange(Detector):
         self._log_version = "Unknown"
 
     # *** Implement abstract functions ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_

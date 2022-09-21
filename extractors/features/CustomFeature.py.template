@@ -20,7 +20,8 @@ class CustomFeature(Feature):
         # self._found_click : bool = False
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -28,7 +29,8 @@ class CustomFeature(Feature):
         """
         return [] # >>> fill in names of events this Feature should use for extraction. <<<
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_

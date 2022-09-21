@@ -17,11 +17,13 @@ class TimeToAnswerMS(Feature):
         self._latest_answer_Q2 = None
         self._answer_time = None
 
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.3", "COMPLETE.0"]
         # return ["QUESTION_ANSWER"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

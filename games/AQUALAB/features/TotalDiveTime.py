@@ -5,6 +5,7 @@ from typing import Any, List
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class TotalDiveTime(Feature):
@@ -17,10 +18,12 @@ class TotalDiveTime(Feature):
         self._time = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["begin_dive", "scene_changed"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
