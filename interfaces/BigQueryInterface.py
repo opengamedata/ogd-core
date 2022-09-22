@@ -89,7 +89,7 @@ class BigQueryInterface(DataInterface):
                     if item[0] == "event_params":
                         _params = {param['key']:param['value'] for param in item[1]}
                         event.append(json.dumps(_params, sort_keys=True))
-                    elif item[0] in ["device", "geo"]:
+                    elif item[0] in {"device", "geo"}:
                         event.append(json.dumps(item[1], sort_keys=True))
                     else:
                         event.append(item[1])

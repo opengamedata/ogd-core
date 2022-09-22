@@ -26,7 +26,7 @@ class ExtractorSchema(abc.ABC):
             else:
                 self._description = ""
                 Logger.Log(f"{name} config does not have an 'description' element; defaulting to description=''", logging.WARN)
-            self._elements = { key : val for key,val in all_elements.items() if key not in ["enabled", "description"] }
+            self._elements = { key : val for key,val in all_elements.items() if key not in {"type", "enabled", "description"} }
         else:
             self._enabled = set()
             self._description = "No Description"

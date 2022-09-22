@@ -24,7 +24,7 @@ class SubfeatureSchema:
             else:
                 self._description = ""
                 Logger.Log(f"{name} subfeature config does not have an 'description' element; defaulting to description=''", logging.WARN)
-            self._elements = { key : val for key,val in all_elements.items() if key not in ["return_value", "description"] }
+            self._elements = { key : val for key,val in all_elements.items() if key not in {"return_value", "description"} }
         else:
             self._return_type = "Unknown"
             self._description = "No description"
@@ -106,7 +106,7 @@ class FeatureSchema(ExtractorSchema):
             all_elements = {}
             Logger.Log(f"For {name} Feature config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
 
-        _elements = { key : val for key,val in all_elements.items() if key != "subfeatures" }
+        _elements = { key : val for key,val in all_elements.items() if key not in {"type", "subfeatures"} }
         super().__init__(name=name, all_elements=_elements)
 
     @property

@@ -26,7 +26,7 @@ class PerCountSchema(FeatureSchema):
             all_elements = {}
             Logger.Log(f"For {name} Per-count Feature config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
 
-        self._elements = { key : val for key,val in all_elements.items() if key not in ["count", "prefix"] }
+        self._elements = { key : val for key,val in all_elements.items() if key not in {"count", "prefix"} }
         super().__init__(name=name, all_elements=all_elements)
 
     @property

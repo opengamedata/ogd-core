@@ -152,7 +152,7 @@ class ExportManager:
             _loader_class = ShipwrecksLoader
         elif game_id == "WAVES":
             _loader_class = WaveLoader
-        elif game_id in ["BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "STEMPORTS", "WIND"]:
+        elif game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "STEMPORTS", "WIND"}:
             # all games with data but no extractor.
             pass
         else:
