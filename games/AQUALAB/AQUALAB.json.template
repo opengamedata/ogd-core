@@ -434,15 +434,18 @@
         "per_count": {},
         "aggregate": {
             "CollectFactNoJob": {
+                "type": "CollectFactNoJob",
                 "enabled": true,
                 "description": "Triggers an event when a player collects a fact while not actively working on a job"
             },
             "DiveSiteNoEvidence": {
+                "type": "DiveSiteNoEvidence",
                 "enabled": true,
                 "threshold": 30,
                 "description": "Triggers an event when a player has gone sufficiently long at a dive site without uncovering new evidence"
             },
             "EchoRoomChange": {
+                "type": "EchoRoomChange",
                 "enabled": false,
                 "description": "Triggers an event when a player changes rooms."
             }
@@ -451,66 +454,77 @@
     "features": {
         "per_count": {
             "JobActiveTime": {
+                "type": "JobActiveTime",
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Time spent with job as the active job"
             },
             "JobArgumentationTime": {
+                "type": "JobArgumentationTime",
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Time spent in argumentation during a job"
             },
             "JobCompletionTime": {
+                "type": "JobCompletionTime",
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Time taken to complete a given job"
             },
             "JobDiveSitesCount": {
+                "type": "JobDiveSitesCount",
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Number of dive sites visited during a job"
             },
             "JobDiveTime": {
+                "type": "JobDiveTime",
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Time spent diving during a job"
             },
             "JobExperimentationTime": {
+                "type": "JobExperimentationTime",
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Time spent in experimentation during a job"
             },
             "JobModelingTime": {
+                "type": "JobModelingTime",
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Time spent in modeling during a job"
             },
             "JobGuideCount": {
+                "type": "JobGuideCount",
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Number of times player talked with guide during a job"
             },
             "JobHelpCount": {
+                "type": "JobHelpCount",
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Number of times player asked for help during a job"
             },
             "JobTasksCompleted": {
+                "type": "JobTasksCompleted",
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Number of tasks completed for a given job"
             },
             "JobsAttempted": {
+                "type": "JobsAttempted",
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
@@ -547,6 +561,7 @@
                 }
             },
             "SyncCompletionTime": {
+                "type": "SyncCompletionTime",
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "job",
@@ -555,86 +570,107 @@
         },
         "aggregate": {
             "ActiveJobs": {
+                "type": "ActiveJobs",
                 "enabled": false,
                 "description": "Count of players who left off on each job."
             },
             "EventList": {
+                "type": "EventList",
                 "enabled": false,
                 "description": "List of key events that happened in a player's session(s)"
             },
             "JobsCompleted": {
+                "type": "JobsCompleted",
                 "enabled": true,
                 "description": "List of completed jobs for a player"
             },
             "PlayerSummary": {
+                "type": "PlayerSummary",
                 "enabled": false,
                 "description": "Summary of player statistics (active session time, jobs completed, number of sessions)"
             },
             "PopulationSummary": {
+                "type": "PopulationSummary",
                 "enabled": false,
                 "description": "Summary of population statistics (active session time, average jobs completed count, average session count)"
             },
             "SessionDiveSitesCount": {
+                "type": "SessionDiveSitesCount",
                 "enabled": true,
                 "description": "Time spent playing in a given session"
             },
             "SessionDuration": {
+                "type": "SessionDuration",
                 "enabled": true,
                 "description": "Time spent playing in a given session"
             },
             "SessionGuideCount": {
+                "type": "SessionGuideCount",
                 "enabled": true,
                 "description": "Number of times player talked with the guide throughout the session"
             },
             "SessionHelpCount": {
+                "type": "SessionHelpCount",
                 "enabled": true,
                 "description": "Number of times player clicked the help button throughout the session"
             },
             "SessionID": {
+                "type": "SessionID",
                 "enabled": true,
                 "description": "The player's session ID number for this play session"
             },
             "SessionJobsCompleted": {
+                "type": "SessionJobsCompleted",
                 "enabled": true,
                 "description": "Number of jobs completed in a given session"
             },
             "SwitchJobsCount": {
+                "type": "SwitchJobsCount",
                 "enabled": true,
                 "description": "Number of times player switched jobs before completion"
             },
             "TopJobCompletionDestinations": {
+                "type": "TopJobCompletionDestinations",
                 "enabled": true,
                 "description": "Top five most accepted jobs after previously completing a given job"
             },
             "TopJobSwitchDestinations": {
+                "type": "TopJobSwitchDestinations",
                 "enabled": true,
                 "description": "Top five most accepted jobs after switching away from a given job"
             },
             "TotalArgumentationTime": {
+                "type": "TotalArgumentationTime",
                 "enabled": true,
                 "description": "Total time spent in argumentation"
             },
             "EchoSessionID": {
+                "type": "EchoSessionID",
                 "enabled": true,
                 "description": "Test of second-order features."
             },
             "TotalDiveTime": {
+                "type": "TotalDiveTime",
                 "enabled": true,
                 "description": "Total time spent in dive sites"
             },
             "TotalExperimentationTime": {
+                "type": "TotalExperimentationTime",
                 "enabled": true,
                 "description": "Total time spent in experimentation"
             },
             "UserAvgSessionDuration": {
+                "type": "UserAvgSessionDuration",
                 "enabled": true,
                 "description": "Average session duration for a user."
             },
             "UserSessionCount": {
+                "type": "UserSessionCount",
                 "enabled": true,
                 "description": "Count of sessions played for a user."
             },
             "UserTotalSessionDuration": {
+                "type": "UserTotalSessionDuration",
                 "enabled": true,
                 "description": "Total duration of all sessions for a user."
             }
