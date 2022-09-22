@@ -2,9 +2,14 @@
 import logging
 from pathlib import Path
 from shutil import copyfile
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Set, Union
 # import local files
 import utils
+from schemas.game_schemas.AggregateSchema import AggregateSchema
+from schemas.game_schemas.DetectorSchema import DetectorSchema
+from schemas.game_schemas.EventSchema import EventSchema
+from schemas.game_schemas.FeatureSchema import FeatureSchema
+from schemas.game_schemas.PerCountSchema import PerCountSchema
 from schemas.IterationMode import IterationMode
 from schemas.ExtractionMode import ExtractionMode
 from utils import Logger, loadJSONFile
@@ -16,7 +21,6 @@ from utils import Logger, loadJSONFile
 #  The class includes several functions for easy access to the various parts of
 #  this schema data.
 class GameSchema:
-
     # *** BUILT-INS ***
 
     def __init__(self, schema_name:str, schema_path:Optional[Path] = None):
@@ -31,41 +35,65 @@ class GameSchema:
         :type schema_path: str, optional
         """
         # define instance vars
-        self._schema:        Optional[Dict] = {}
-        self._game_name:     str  = schema_name.split('.')[0]
-        self._detector_list: Optional[List[str]] = None
-        self._feature_list:  Optional[List[str]] = None
-        self._min_level:     Optional[int] = None
-        self._max_level:     Optional[int] = None
-        self._job_map:       Dict = {}
+        self._schema         : Optional[Dict[str, Dict[str, Any]]]
+        self._event_list     : List[EventSchema] = []
+        self._detector_map   : Dict[str, Dict[str, DetectorSchema]] = {}
+        self._feature_map    : Dict[str, Dict[str, FeatureSchema]] = {}
+        self._min_level      : Optional[int]
+        self._max_level      : Optional[int]
+        self._supported_vers : Optional[List[int]]
+        self._game_name      : str = schema_name.split('.')[0]
         # set instance vars
         self._schema = GameSchema._loadSchema(game_name=self._game_name, schema_name=schema_name, schema_path=schema_path)
         if self._schema is not None:
+            # 1. Get events, if any
+            if "events" in self._schema.keys():
+                self._event_list = [EventSchema(name=key, all_elements=val) for key,val in self._schema['events'].items()]
+            else:
+                Logger.Log(f"{self._game_name} game schema does not document any events.", logging.INFO)
+            # 2. Get detectors, if any
             if "detectors" in self._schema.keys():
-                self._detector_list = []
-                for feat_kind in ["perlevel", "per_count", "aggregate"]:
-                    if feat_kind in self._schema['detectors']:
-                        self._detector_list += self._schema['detectors'][feat_kind].keys()
+                if "perlevel" in self._schema['detectors']:
+                    _perlevels = self._schema['detectors']['perlevel']
+                    self._detector_map['perlevel'] = {key : DetectorSchema(name=key, all_elements=val) for key,val in _perlevels.items()}
+                if "per_count" in self._schema['detectors']:
+                    _percounts = self._schema['detectors']['per_count']
+                    self._detector_map['per_count'] = {key : DetectorSchema(name=key, all_elements=val) for key,val in _percounts.items()}
+                if "aggregate" in self._schema['detectors']:
+                    _aggregates = self._schema['detectors']['aggregate']
+                    self._detector_map['aggregate'] = {key : DetectorSchema(name=key, all_elements=val) for key,val in _aggregates.items()}
             else:
-                self._schema["detectors"] = {}
-                Logger.Log(f"{schema_name} game schema does not define any detectors.", logging.WARN)
+                Logger.Log(f"{self._game_name} game schema does not define any detectors.", logging.INFO)
+            # 3. Get features, if any
             if "features" in self._schema.keys():
-                self._feature_list = []
-                for feat_kind in ["perlevel", "per_count", "aggregate"]:
-                    if feat_kind in self._schema['features']:
-                        self._feature_list += self._schema['features'][feat_kind].keys()
+                if "perlevel" in self._schema['features']:
+                    _perlevels = self._schema['features']['perlevel']
+                    self._feature_map['perlevel'] = {key : PerCountSchema(name=key, all_elements=val) for key,val in _perlevels.items()}
+                if "per_count" in self._schema['features']:
+                    _percounts = self._schema['features']['per_count']
+                    self._feature_map['per_count'] = {key : PerCountSchema(name=key, all_elements=val) for key,val in _percounts.items()}
+                if "aggregate" in self._schema['features']:
+                    _aggregates = self._schema['features']['aggregate']
+                    self._feature_map['aggregate'] = {key : AggregateSchema(name=key, all_elements=val) for key,val in _aggregates.items()}
             else:
-                self._schema["features"] = {}
-                Logger.Log(f"{schema_name} game schema does not define any features.", logging.WARN)
-            # lastly, get max and min levels.
+                Logger.Log(f"{self._game_name} game schema does not define any features.", logging.INFO)
+            # 4. Get level_range, if any
             if "level_range" in self._schema.keys():
-                self._min_level = self._schema["level_range"]['min']
-                self._max_level = self._schema["level_range"]['max']
-            if "job_map" in self._schema.keys():
-                self._job_map = self._schema["job_map"]
+                self._min_level = self._schema.get("level_range", {}).get('min', None)
+                self._max_level = self._schema.get("level_range", {}).get('max', None)
 
-    def __getitem__(self, key) -> Any:
-        return self._schema[key] if self._schema is not None else None
+            # 5. Get config, if any
+            if "config" in self._schema.keys():
+                if "SUPPORTED_VERS" in self._schema['config']:
+                    self._supported_vers = self._schema['config']['SUPPORTED_VERS']
+                else:
+                    self._supported_vers = None
+                    Logger.Log(f"{self._game_name} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
+
+            # 6. Notify if there are other, unexpected elements
+
+    # def __getitem__(self, key) -> Any:
+    #     return self._schema[key] if self._schema is not None else None
     
     def __str__(self) -> str:
         return str(self._game_name)
@@ -157,48 +185,55 @@ class GameSchema:
 
     ## Function to retrieve the dictionary of event types for the game.
     @property
-    def Events(self) -> Dict[str,Any]:
-        return self["events"]
+    def Events(self) -> List[EventSchema]:
+        return self._event_list
 
     ## Function to retrieve the names of all event types for the game.
     @property
     def EventTypes(self) -> List[str]:
-        return list(self["events"].keys())
+        return [event.Name for event in self.Events]
 
     ## Function to retrieve the dictionary of categorized detectors to extract.
     @property
-    def Detectors(self) -> Dict[str, Dict[str,Any]]:
-        return self["detectors"]
+    def Detectors(self) -> Dict[str, Dict[str, DetectorSchema]]:
+        return self._detector_map
 
     ## Function to retrieve the compiled list of all detector names.
     @property
-    def DetectorNames(self) -> Optional[List[str]]:
-        return self._detector_list
+    def DetectorNames(self) -> List[str]:
+        ret_val : List[str] = []
+        for _category in self.Detectors.values():
+            ret_val += [detector.Name for detector in _category.values()]
+        return ret_val
 
     ## Function to retrieve the dictionary of per-custom-count detectors.
     @property
-    def PerCountDetectors(self) -> Dict[str,Any]:
-        return self["detectors"]["per_count"] if "per_count" in self["detectors"].keys() else {}
+    def PerCountDetectors(self) -> Dict[str, DetectorSchema]:
+        return self.Detectors.get("percount", {})
 
     ## Function to retrieve the dictionary of aggregate detectors.
     @property
-    def AggregateDetectors(self) -> Dict[str,Any]:
-        return self["detectors"]["aggregate"] if "aggregate" in self["detectors"].keys() else {}
+    def AggregateDetectors(self) -> Dict[str, DetectorSchema]:
+        return self.Detectors.get("aggregate", {})
 
     ## Function to retrieve the dictionary of categorized features to extract.
     @property
-    def Features(self) -> Dict[str, Dict[str,Any]]:
-        return self["features"]
+    def Features(self) -> Dict[str, Dict[str, FeatureSchema]]:
+        return self._feature_map
 
     ## Function to retrieve the compiled list of all feature names.
     @property
-    def FeatureNames(self) -> Optional[List[str]]:
-        return self._feature_list
+    def FeatureNames(self) -> List[str]:
+        ret_val : List[str] = []
+        for _category in self.Features.values():
+            ret_val += [feature.Name for feature in _category.values()]
+        return ret_val
 
     ## Function to retrieve the dictionary of per-custom-count features.
     @property
-    def PerCountFeatures(self) -> Dict[str,Any]:
-        return self["features"]["per_count"] if "per_count" in self["features"].keys() else {}
+    def PerCountFeatures(self) -> Dict[str,PerCountSchema]:
+        _percounts = self.Features.get("percount", {}).items()
+        return {key:val for key,val in _percounts if isinstance(val, GameSchema.PerCountSchema)}
 
     ## Function to retrieve the dictionary of aggregate features.
     @property
@@ -211,10 +246,12 @@ class GameSchema:
     def _loadSchema(game_name:str, schema_name:str, schema_path:Optional[Path] = None) -> Optional[Dict[Any, Any]]:
         ret_val = None
 
+        # 1. make sure the name and path are in the right form.
         if not schema_name.lower().endswith(".json"):
             schema_name += ".json"
         if schema_path == None:
             schema_path = Path("./games") / f"{game_name}"
+        # 2. try to actually load the contents of the file.
         try:
             ret_val = utils.loadJSONFile(filename=schema_name, path=schema_path)
         except FileNotFoundError as err:
@@ -241,19 +278,6 @@ class GameSchema:
             Logger.Log(f"Could not create {schema_name} from template, an error occurred:\n{cp_err}", logging.WARN, depth=2)
         else:
             ret_val = loadJSONFile(filename=schema_name, path=schema_path)
-        return ret_val
-
-    @staticmethod
-    def _makeFeatureMarkdown(feat_name:str, feat_kind:str, feat_items) -> str:
-        ret_val   : str                     = ""
-        _subfeats : Dict[str,Dict[str,str]] = feat_items.get("subfeatures", {})
-
-        ret_val += f"**{feat_name}** : *{feat_items.get('return_type', 'Unknown')}*, *{feat_kind} feature* {' (disabled)' if not feat_items.get('enabled', True) else ''}  \n"
-        ret_val += f"{feat_items.get('description', 'No description.')}  \n"
-        if len(_subfeats.keys()) > 0:
-            ret_val += "*Sub-features*:  \n\n"
-            for subfeat_name, subfeat_items in _subfeats.items():
-                ret_val += f"- **{subfeat_name}** : *{subfeat_items.get('return_type', 'Unknown')}*, {subfeat_items.get('description', 'No description.')}  \n"
         return ret_val
 
     # *** PRIVATE METHODS ***
