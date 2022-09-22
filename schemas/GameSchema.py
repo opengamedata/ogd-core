@@ -1,4 +1,5 @@
 # import standard libraries
+from ftplib import all_errors
 import logging
 from pathlib import Path
 from shutil import copyfile
@@ -38,7 +39,7 @@ class GameSchema:
         self._schema         : Optional[Dict[str, Dict[str, Any]]]
         self._event_list     : List[EventSchema] = []
         self._detector_map   : Dict[str, Dict[str, DetectorSchema]] = {}
-        self._feature_map    : Dict[str, Dict[str, FeatureSchema]] = {}
+        self._feature_map    : Dict[str, Dict[str, Union[AggregateSchema, PerCountSchema]]] = {}
         self._min_level      : Optional[int]
         self._max_level      : Optional[int]
         self._supported_vers : Optional[List[int]]
@@ -100,62 +101,38 @@ class GameSchema:
 
     # *** PUBLIC METHODS ***
 
-    def DetectorEnabled(self, detector_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode, overrides:Optional[List[str]]) -> bool:
-        _val : Union[bool, List[str]] = False
-        # get the value from the schema
-        if iter_mode == IterationMode.AGGREGATE:
-            _val = self.AggregateDetectors.get(detector_name, {}).get('enabled', False)
-        if iter_mode == IterationMode.PERCOUNT:
-            _val = self.PerCountDetectors.get(detector_name, {}).get('enabled', False)
-        # figure out if the feature was enabled or not
-        _is_enabled : bool = False
-        if type(_val) == bool:
-            _is_enabled = bool(_val)
-        elif isinstance(_val, list):
-            _val = [str(item).upper() for item in _val]
-            if extract_mode is not None:
-                is_enabled = extract_mode.name in _val
-        else:
-            raise ValueError(f"Invalid data type for 'enabled' for detector {detector_name} in {self.GameName}, expected bool or list but got  of {type(_val)}!")
-        if overrides is not None:
-            if detector_name in overrides:
-                return _is_enabled
-            else:
-                return False
-        else:
-            return _is_enabled
+    def DetectorEnabled(self, detector_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+        ret_val : bool
 
-    def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode, overrides:Optional[List[str]]=None) -> bool:
-        _val : Union[bool, List[str]] = False
-        # get the value from the schema
+        _detector_schema : Optional[DetectorSchema]
         if iter_mode == IterationMode.AGGREGATE:
-            _val = self.AggregateFeatures.get(feature_name, {}).get('enabled', False)
-        if iter_mode == IterationMode.PERCOUNT:
-            _val = self.PerCountFeatures.get(feature_name, {}).get('enabled', False)
-        # figure out if the feature was enabled or not
-        _is_enabled : bool = False
-        if type(_val) == bool:
-            _is_enabled = bool(_val)
-        elif isinstance(_val, list):
-            _val = [str(item).upper() for item in _val]
-            _is_enabled = extract_mode.name in _val
+            _detector_schema = self.Detectors['aggregate'].get(detector_name)
+        elif iter_mode == IterationMode.PERCOUNT:
+            _detector_schema = self.Detectors['per_count'].get(detector_name, self.Detectors['perlevel'].get(detector_name))
         else:
-            raise ValueError(f"Invalid data type for feature {feature_name} in {self.GameName}")
-        if overrides is not None and len(overrides) > 0:
-            if feature_name in overrides:
-                return _is_enabled
-            else:
-                return False
+            raise ValueError(f"In GameSchema, DetectorEnabled was given an unrecognized iteration mode of {iter_mode.name}")
+        if _detector_schema is not None:
+            ret_val = extract_mode in _detector_schema.Enabled
         else:
-            return _is_enabled
+            Logger.Log(f"Could not find detector {detector_name} in schema for {iter_mode.name} mode")
+            ret_val = False
+        return ret_val
 
-    def level_range(self) -> range:
-        ret_val = range(0)
-        if self._min_level is not None and self._max_level is not None:
-            # for i in range(self._min_level, self._max_level+1):
-            ret_val = range(self._min_level, self._max_level+1)
+    def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+        ret_val : bool
+
+        _feature_schema : Optional[FeatureSchema]
+        if iter_mode == IterationMode.AGGREGATE:
+            _feature_schema = self.Features['aggregate'].get(feature_name)
+        elif iter_mode == IterationMode.PERCOUNT:
+            _feature_schema = self.Features['per_count'].get(feature_name, self.Features['perlevel'].get(feature_name))
         else:
-            Logger.Log(f"Could not generate per-level features, min_level={self._min_level} and max_level={self._max_level}", logging.ERROR)
+            raise ValueError(f"In GameSchema, FeatureEnabled was given an unrecognized iteration mode of {iter_mode.name}")
+        if _feature_schema is not None:
+            ret_val = extract_mode in _feature_schema.Enabled
+        else:
+            Logger.Log(f"Could not find feature {feature_name} in schema for {iter_mode.name} mode")
+            ret_val = False
         return ret_val
 
     # *** PROPERTIES ***
@@ -199,7 +176,7 @@ class GameSchema:
 
     ## Function to retrieve the dictionary of categorized features to extract.
     @property
-    def Features(self) -> Dict[str, Dict[str, FeatureSchema]]:
+    def Features(self) -> Dict[str, Dict[str, Union[AggregateSchema, PerCountSchema]]]:
         return self._feature_map
 
     ## Function to retrieve the compiled list of all feature names.
@@ -214,13 +191,23 @@ class GameSchema:
     @property
     def PerCountFeatures(self) -> Dict[str,PerCountSchema]:
         _percounts = self.Features.get("percount", {}).items()
-        return {key:val for key,val in _percounts if isinstance(val, GameSchema.PerCountSchema)}
+        return {key:val for key,val in _percounts if isinstance(val, PerCountSchema)}
 
     ## Function to retrieve the dictionary of aggregate features.
     @property
     def AggregateFeatures(self) -> Dict[str,AggregateSchema]:
         _aggregates = self.Features.get("aggregate", {}).items()
-        return {key:val for key,val in _aggregates if isinstance(val, GameSchema.AggregateSchema)}
+        return {key:val for key,val in _aggregates if isinstance(val, AggregateSchema)}
+
+    @property
+    def LevelRange(self) -> range:
+        ret_val = range(0)
+        if self._min_level is not None and self._max_level is not None:
+            # for i in range(self._min_level, self._max_level+1):
+            ret_val = range(self._min_level, self._max_level+1)
+        else:
+            Logger.Log(f"Could not generate per-level features, min_level={self._min_level} and max_level={self._max_level}", logging.ERROR)
+        return ret_val
 
     @property
     def AsMarkdown(self) -> str:
