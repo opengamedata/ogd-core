@@ -51,18 +51,21 @@
     "features": {
         "per_count": {
             "MissionDiveTime": {
+                "type": "MissionDiveTime",
                 "enabled": false,
                 "count": "level_range",
                 "prefix": "mission",
                 "description": "Time spent diving for a given mission"
             },
             "MissionSonarTimeToComplete": {
+                "type": "MissionSonarTimeToComplete",
                 "enabled": false,
                 "count": "level_range",
                 "prefix": "mission",
                 "description": "Time taken to complete sonar scan for a given mission"
             },
             "JobsAttempted": {
+                "type": "JobsAttempted",
                 "enabled": true,
                 "count": "level_range",
                 "prefix": "mission",
@@ -79,46 +82,57 @@
         },
         "aggregate":{
             "ActiveJobs": {
+                "type": "ActiveJobs",
                 "enabled": true,
                 "description":"Count of players who left off on each mission."
             },
             "EventList": {
+                "type": "EventList",
                 "enabled": true,
                 "description": "List of all events in a session"
             },
             "JobsCompleted": {
+                "type": "JobsCompleted",
                 "enabled": true,
                 "description": "List of missions completed in a session"
             },
             "PlayerSummary": {
+                "type": "PlayerSummary",
                 "enabled": true,
                 "description": "Summary of player statistics (active session time, jobs completed, number of sessions)"
             },
             "PopulationSummary": {
+                "type": "PopulationSummary",
                 "enabled": true,
                 "description": "Summary of population statistics (active session time, average jobs completed count, average session count)"
             },
             "EvidenceBoardCompleteCount": {
+                "type": "EvidenceBoardCompleteCount",
                 "enabled": false,
                 "description": "Evidence board completes in a session"
             },
             "SessionDuration": {
+                "type": "SessionDuration",
                 "enabled": true,
                 "description": "Time spent playing in a given session"
             },
             "SessionID": {
+                "type": "SessionID",
                 "enabled": true,
                 "description":"The player's session ID number for this play session"
             },
             "TopJobCompletionDestinations": {
+                "type": "TopJobCompletionDestinations",
                 "enabled": true,
                 "description": "Top accepted missions after previously completing a given mission"
             },
             "TopJobSwitchDestinations": {
+                "type": "TopJobSwitchDestinations",
                 "enabled": true,
                 "description": "Top accepted missions after leaving a given mission"
             },
             "TotalDiveTime": {
+                "type": "TotalDiveTime",
                 "enabled": false,
                 "description": "Total time spent diving in a session"
             }
