@@ -179,7 +179,6 @@ class Extractor(abc.ABC):
         else:
             return False # data_version of None is invalid.
 
-    @classmethod
     def _validateEventType(self, event_type:str) -> bool:
         """Private function to check whether a given event type is accepted by this Feature.
 
