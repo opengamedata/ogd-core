@@ -56,10 +56,10 @@ class GameSchema:
             if "detectors" in self._schema.keys():
                 if "perlevel" in self._schema['detectors']:
                     _perlevels = self._schema['detectors']['perlevel']
-                    self._detector_map['perlevel'] = {key : DetectorSchema(name=key, all_elements=val) for key,val in _perlevels.items()}
+                    self._detector_map['per_count'] = {key : DetectorSchema(name=key, all_elements=val) for key,val in _perlevels.items()}
                 if "per_count" in self._schema['detectors']:
                     _percounts = self._schema['detectors']['per_count']
-                    self._detector_map['per_count'] = {key : DetectorSchema(name=key, all_elements=val) for key,val in _percounts.items()}
+                    self._detector_map['per_count'].update({key : DetectorSchema(name=key, all_elements=val) for key,val in _percounts.items()})
                 if "aggregate" in self._schema['detectors']:
                     _aggregates = self._schema['detectors']['aggregate']
                     self._detector_map['aggregate'] = {key : DetectorSchema(name=key, all_elements=val) for key,val in _aggregates.items()}
@@ -69,10 +69,10 @@ class GameSchema:
             if "features" in self._schema.keys():
                 if "perlevel" in self._schema['features']:
                     _perlevels = self._schema['features']['perlevel']
-                    self._feature_map['perlevel'] = {key : PerCountSchema(name=key, all_elements=val) for key,val in _perlevels.items()}
+                    self._feature_map['per_count'] = {key : PerCountSchema(name=key, all_elements=val) for key,val in _perlevels.items()}
                 if "per_count" in self._schema['features']:
                     _percounts = self._schema['features']['per_count']
-                    self._feature_map['per_count'] = {key : PerCountSchema(name=key, all_elements=val) for key,val in _percounts.items()}
+                    self._feature_map['per_count'].update({key : PerCountSchema(name=key, all_elements=val) for key,val in _percounts.items()})
                 if "aggregate" in self._schema['features']:
                     _aggregates = self._schema['features']['aggregate']
                     self._feature_map['aggregate'] = {key : AggregateSchema(name=key, all_elements=val) for key,val in _aggregates.items()}
