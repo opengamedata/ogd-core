@@ -59,40 +59,6 @@ class TableSchema:
             _table_name = default_settings["GAME_SOURCE_MAP"][game_id]["schema"]
         return TableSchema(schema_name=f"{_table_name}.json")
 
-
-    def ColumnNames(self) -> List[str]:
-        """Function to get the names of all columns in the schema.
-
-        :return: Names of each column in the schema.
-        :rtype: List[str]
-        """
-        return [col['name'] for col in self._columns]
-
-    def ColumnList(self) -> List[Dict[str,str]]:
-        return list(self._columns)
-
-    def Markdown(self) -> str:
-        ret_val = "## Database Columns  \n\n"
-        ret_val += "The individual columns recorded in the database for this game.  \n\n"
-        # set up list of database columns
-        column_list = [f"**{item['name']}** : *{item['type']}* - {item['readable']}, {item['desc']}  " for item in self._columns]
-        ret_val += "\n".join(column_list)
-        # set up info on what is mapped to each event entry
-        ret_val += "\n\n## Event Object Elements  \n\n"
-        ret_val += "The elements (member variables) of each Event object, available to programmers when writing feature extractors. The right-hand side shows which database column(s) are mapped to a given element.  \n\n"
-        event_column_list = []
-        for evt_col,row_col in self._column_map.items():
-            if row_col is not None:
-                if type(row_col) == list:
-                    mapped_list = ", ".join([f"'*{item}*'" for item in row_col])
-                    event_column_list.append(f"**{evt_col}** = Columns {mapped_list}  ") # figure out how to do one string foreach item in list.
-                elif type(row_col) == str:
-                    event_column_list.append(f"**{evt_col}** = Column '*{row_col}*'  ")
-            else:
-                event_column_list.append(f"**{evt_col}** = null  ")
-        ret_val += "\n".join(event_column_list)
-        return ret_val
-
     def RowToEvent(self, row:Tuple, concatenator:str = '.', fallbacks:utils.map={}):
         """Function to convert a row to an Event, based on the loaded schema.
         In general, columns specified in the schema's column_map are mapped to corresponding elements of the Event.
@@ -122,7 +88,7 @@ class TableSchema:
         state   : Optional[Map]
         index   : Optional[int]
 
-        column_names = self.ColumnNames()
+        column_names = self.ColumnNames
         row_dict = {col_i : row[i].isoformat() if type(row[i]) == datetime else str(row[i]) for i,col_i in enumerate(column_names)}
         # 1) Get values from row mapped to Event ctor params. Wait to do event_data.
         #    If anything in the map was a list, concatenate vals from corresponding columns, and anything that wasn't, get val.
@@ -180,6 +146,41 @@ class TableSchema:
                      app_version=app_ver, log_version=log_ver,
                      time_offset=offset, user_id=uid, user_data=udata,
                      game_state=state, event_sequence_index=index)
+
+    @property
+    def ColumnNames(self) -> List[str]:
+        """Function to get the names of all columns in the schema.
+
+        :return: Names of each column in the schema.
+        :rtype: List[str]
+        """
+        return [col['name'] for col in self._columns]
+
+    def ColumnList(self) -> List[Dict[str,str]]:
+        return list(self._columns)
+
+    @property
+    def AsMarkdown(self) -> str:
+        ret_val = "## Database Columns  \n\n"
+        ret_val += "The individual columns recorded in the database for this game.  \n\n"
+        # set up list of database columns
+        column_list = [f"**{item['name']}** : *{item['type']}* - {item['readable']}, {item['desc']}  " for item in self._columns]
+        ret_val += "\n".join(column_list)
+        # set up info on what is mapped to each event entry
+        ret_val += "\n\n## Event Object Elements  \n\n"
+        ret_val += "The elements (member variables) of each Event object, available to programmers when writing feature extractors. The right-hand side shows which database column(s) are mapped to a given element.  \n\n"
+        event_column_list = []
+        for evt_col,row_col in self._column_map.items():
+            if row_col is not None:
+                if type(row_col) == list:
+                    mapped_list = ", ".join([f"'*{item}*'" for item in row_col])
+                    event_column_list.append(f"**{evt_col}** = Columns {mapped_list}  ") # figure out how to do one string foreach item in list.
+                elif type(row_col) == str:
+                    event_column_list.append(f"**{evt_col}** = Column '*{row_col}*'  ")
+            else:
+                event_column_list.append(f"**{evt_col}** = null  ")
+        ret_val += "\n".join(event_column_list)
+        return ret_val
 
     @staticmethod
     def _parse(input:str, column_descriptor:Dict[str,str]) -> Any:

@@ -248,9 +248,9 @@ class TSVOuterface(DataOuterface):
         f"# Game: {game_schema._game_name}  ",
         "",
         "## Field Descriptions:  \n",
-        f"{table_schema.Markdown()}",
+        f"{table_schema.AsMarkdown}",
         "",
-        f"{game_schema.Markdown()}",
+        f"{game_schema.AsMarkdown}",
         ""])
         return template_str
 

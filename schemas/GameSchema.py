@@ -100,25 +100,6 @@ class GameSchema:
 
     # *** PUBLIC METHODS ***
 
-    def Markdown(self) -> str:
-        ret_val = "## Event Types  \n\n"
-        ret_val += "The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  \n\n"
-        # Set up list of events
-        event_list = ['\n'.join([f"**{evt_name}**:  "]
-                              + [f"- **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in evt_items.items()])
-                     for evt_name,evt_items in self.Events.items()]
-        ret_val += "\n\n".join(event_list)
-        # Set up list of features
-        ret_val += "\n\n## Processed Features  \n\n"
-        ret_val += "The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run.  \n\n"
-        feature_list = []
-        for feat_kind in ["perlevel", "per_count", "aggregate"]:
-            if feat_kind in self['features']:
-                feature_list += [GameSchema._makeFeatureMarkdown(feat_name=feat_name, feat_kind=feat_kind, feat_items=feat_items)
-                                for feat_name,feat_items in self['features'][feat_kind].items()]
-        ret_val += "\n".join(feature_list)
-        return ret_val
-
     def DetectorEnabled(self, detector_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode, overrides:Optional[List[str]]) -> bool:
         _val : Union[bool, List[str]] = False
         # get the value from the schema
@@ -237,8 +218,34 @@ class GameSchema:
 
     ## Function to retrieve the dictionary of aggregate features.
     @property
-    def AggregateFeatures(self) -> Dict[str,Any]:
-        return self["features"]["aggregate"] if "aggregate" in self["features"].keys() else {}
+    def AggregateFeatures(self) -> Dict[str,AggregateSchema]:
+        _aggregates = self.Features.get("aggregate", {}).items()
+        return {key:val for key,val in _aggregates if isinstance(val, GameSchema.AggregateSchema)}
+
+    @property
+    def AsMarkdown(self) -> str:
+        ret_val = "## Logged Event Types  \n\n"
+        ret_val += "The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  \n\n"
+        # Set up list of events
+        event_list = ['\n'.join(event.AsMarkdown) for event in self.Events]
+        ret_val += "\n\n".join(event_list) if len(event_list) > 0 else "None  \n"
+        # Set up list of detectors
+        ret_val += "\n\n## Detected Events  \n\n"
+        ret_val += "The custom, data-driven Events calculated from this game's logged events by OpenGameData when an 'export' is run.  \n\n"
+        detector_list = []
+        for detect_kind in ["perlevel", "per_count", "aggregate"]:
+            if detect_kind in self._detector_map:
+                detector_list += [detector.AsMarkdown for detector in self.Detectors[detect_kind].values()]
+        ret_val += "\n".join(detector_list) if len(detector_list) > 0 else "None  \n"
+        # Set up list of features
+        ret_val += "\n\n## Processed Features  \n\n"
+        ret_val += "The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run.  \n\n"
+        feature_list = []
+        for feat_kind in ["perlevel", "per_count", "aggregate"]:
+            if feat_kind in self._feature_map:
+                feature_list += [feature.AsMarkdown for feature in self.Features[feat_kind].values()]
+        ret_val += "\n".join(feature_list) if len(feature_list) > 0 else "None  \n"
+        return ret_val
 
     # *** PRIVATE STATICS ***
 
