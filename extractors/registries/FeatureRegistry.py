@@ -126,7 +126,28 @@ class FeatureRegistry(ExtractorRegistry):
                 ret_val += feature.GetFeatureNames()
         return ret_val
 
-    def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, overrides:Optional[List[str]]):
+    def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, overrides:Optional[List[str]]=None):
+        # first, get list of what should actually be loaded.
+        # 1. Start with overrides, else list of enabled features in schema.
+        # 2. For each, grab the 
+        load_list = overrides or []
+        load_set = set(load_list)
+        iter_mode = IterationMode.AGGREGATE
+        for base_name,aggregate in schema.AggregateFeatures.items():
+            feat_class = loader.GetFeatureClass(feature_type=base_name)
+            if schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=overrides):
+                load_list.add(base_name)
+        iter_mode = IterationMode.PERCOUNT
+        for base_name,percount in schema.PerCountFeatures.items():
+            if schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=overrides):
+                feature_type = percount.get('feature_type', base_name) # try to get 'feature type' from percount, if it's not there default to name of the config item.
+                for i in ExtractorLoader._genCountRange(count=percount["count"], schema=schema):
+                    instance_name = f"{percount['prefix']}{i}_{base_name}"
+                    feature = loader.LoadFeature(feature_type=feature_type, name=instance_name, schema_args=percount, count_index=i)
+                    if feature is not None and self._mode in feature.AvailableModes():
+                        self.Register(extractor=feature, mode=iter_mode)
+
+        # then, actually load everything.
         iter_mode = IterationMode.AGGREGATE
         for base_name,aggregate in schema.AggregateFeatures.items():
             if schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=overrides):
