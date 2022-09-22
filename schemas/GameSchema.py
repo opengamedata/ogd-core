@@ -45,7 +45,7 @@ class GameSchema:
         self._supported_vers : Optional[List[int]]
         self._game_name      : str = schema_name.split('.')[0]
         # set instance vars
-        self._schema = GameSchema._loadSchema(game_name=self._game_name, schema_name=schema_name, schema_path=schema_path)
+        self._schema = GameSchema._loadSchemaFile(game_name=self._game_name, schema_name=schema_name, schema_path=schema_path)
         if self._schema is not None:
             # 1. Get events, if any
             if "events" in self._schema.keys():
@@ -237,7 +237,7 @@ class GameSchema:
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _loadSchema(game_name:str, schema_name:str, schema_path:Optional[Path] = None) -> Optional[Dict[Any, Any]]:
+    def _loadSchemaFile(game_name:str, schema_name:str, schema_path:Optional[Path] = None) -> Optional[Dict[Any, Any]]:
         ret_val = None
 
         # 1. make sure the name and path are in the right form.
