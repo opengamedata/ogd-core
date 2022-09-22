@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional, Union
 from utils import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 
@@ -141,7 +142,7 @@ class LegacyFeature(Feature):
             features : Dict[str,Union[int,float,timedelta,Dict[int,Dict[str,Any]]]] = {f:{lvl:{"val":None, "prefix":"lvl"} for lvl in level_range } for f in perlevels.keys()}
             # next, do something similar for other per-custom-count features.
             percounts = game_schema.PerCountFeatures
-            features.update({f:{num:{"val":None, "prefix":percounts[f]["prefix"]} for num in range(0, percounts[f]["count"]) } for f in percounts})
+            features.update({f:{num:{"val":None, "prefix":percounts[f].Prefix} for num in range(0, percounts[f].Count) } for f in percounts})
             # finally, add in aggregate-only features.
             features.update({f:0 for f in game_schema.AggregateFeatures.keys()})
             return features
