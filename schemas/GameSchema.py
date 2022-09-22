@@ -36,14 +36,16 @@ class GameSchema:
         :type schema_path: str, optional
         """
         # define instance vars
-        self._schema         : Optional[Dict[str, Dict[str, Any]]]
-        self._event_list     : List[EventSchema] = []
-        self._detector_map   : Dict[str, Dict[str, DetectorSchema]] = {}
-        self._feature_map    : Dict[str, Dict[str, Union[AggregateSchema, PerCountSchema]]] = {}
-        self._min_level      : Optional[int]
-        self._max_level      : Optional[int]
-        self._supported_vers : Optional[List[int]]
-        self._game_name      : str = schema_name.split('.')[0]
+        self._schema                 : Optional[Dict[str, Dict[str, Any]]]
+        self._event_list             : List[EventSchema] = []
+        self._detector_map           : Dict[str, Dict[str, DetectorSchema]] = {}
+        self._aggregate_feats        : Dict[str, AggregateSchema]           = {}
+        self._percount_feats         : Dict[str, PerCountSchema]            = {}
+        self._legacy_perlevel_feats  : Dict[str, PerCountSchema]            = {}
+        self._min_level              : Optional[int]
+        self._max_level              : Optional[int]
+        self._supported_vers         : Optional[List[int]]
+        self._game_name              : str = schema_name.split('.')[0]
         # set instance vars
         self._schema = GameSchema._loadSchemaFile(game_name=self._game_name, schema_name=schema_name, schema_path=schema_path)
         if self._schema is not None:
@@ -69,13 +71,14 @@ class GameSchema:
             if "features" in self._schema.keys():
                 if "perlevel" in self._schema['features']:
                     _perlevels = self._schema['features']['perlevel']
-                    self._feature_map['per_count'] = {key : PerCountSchema(name=key, all_elements=val) for key,val in _perlevels.items()}
+                    self._legacy_perlevel_feats.update({key : PerCountSchema(name=key, all_elements=val) for key,val in _perlevels.items()})
+                    self._percount_feats.update({key : PerCountSchema(name=key, all_elements=val) for key,val in _perlevels.items()})
                 if "per_count" in self._schema['features']:
                     _percounts = self._schema['features']['per_count']
-                    self._feature_map['per_count'].update({key : PerCountSchema(name=key, all_elements=val) for key,val in _percounts.items()})
+                    self._percount_feats.update({key : PerCountSchema(name=key, all_elements=val) for key,val in _percounts.items()})
                 if "aggregate" in self._schema['features']:
                     _aggregates = self._schema['features']['aggregate']
-                    self._feature_map['aggregate'] = {key : AggregateSchema(name=key, all_elements=val) for key,val in _aggregates.items()}
+                    self._aggregate_feats.update({key : AggregateSchema(name=key, all_elements=val) for key,val in _aggregates.items()})
             else:
                 Logger.Log(f"{self._game_name} game schema does not define any features.", logging.INFO)
             # 4. Get level_range, if any
@@ -123,9 +126,9 @@ class GameSchema:
 
         _feature_schema : Optional[FeatureSchema]
         if iter_mode == IterationMode.AGGREGATE:
-            _feature_schema = self.Features['aggregate'].get(feature_name)
+            _feature_schema = self.AggregateFeatures.get(feature_name)
         elif iter_mode == IterationMode.PERCOUNT:
-            _feature_schema = self.Features['per_count'].get(feature_name, self.Features['perlevel'].get(feature_name))
+            _feature_schema = self.PerCountFeatures.get(feature_name)
         else:
             raise ValueError(f"In GameSchema, FeatureEnabled was given an unrecognized iteration mode of {iter_mode.name}")
         if _feature_schema is not None:
@@ -133,6 +136,28 @@ class GameSchema:
         else:
             Logger.Log(f"Could not find feature {feature_name} in schema for {iter_mode.name} mode")
             ret_val = False
+        return ret_val
+
+    def EnabledDetectors(self, iter_mode:IterationMode, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, DetectorSchema]:
+        ret_val : Dict[str, DetectorSchema]
+
+        if iter_mode == IterationMode.AGGREGATE:
+            ret_val = {key:val for key,val in self.AggregateDetectors.items() if val.Enabled.issuperset(extract_modes)}
+        elif iter_mode == IterationMode.PERCOUNT:
+            ret_val = {key:val for key,val in self.PerCountDetectors.items() if val.Enabled.issuperset(extract_modes)}
+        else:
+            raise ValueError(f"In GameSchema, EnabledDetectors was given an unrecognized iteration mode of {iter_mode.name}")
+        return ret_val
+
+    def EnabledFeatures(self, iter_mode:IterationMode, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, FeatureSchema]:
+        ret_val : Dict[str, FeatureSchema]
+
+        if iter_mode == IterationMode.AGGREGATE:
+            ret_val = {key:val for key,val in self.AggregateFeatures.items() if val.Enabled.issuperset(extract_modes)}
+        elif iter_mode == IterationMode.PERCOUNT:
+            ret_val = {key:val for key,val in self.PerCountFeatures.items() if val.Enabled.issuperset(extract_modes)}
+        else:
+            raise ValueError(f"In GameSchema, EnabledFeatures was given an unrecognized iteration mode of {iter_mode.name}")
         return ret_val
 
     # *** PROPERTIES ***
@@ -167,7 +192,7 @@ class GameSchema:
     ## Function to retrieve the dictionary of per-custom-count detectors.
     @property
     def PerCountDetectors(self) -> Dict[str, DetectorSchema]:
-        return self.Detectors.get("percount", {})
+        return self.Detectors.get("per_count", {})
 
     ## Function to retrieve the dictionary of aggregate detectors.
     @property
@@ -176,8 +201,8 @@ class GameSchema:
 
     ## Function to retrieve the dictionary of categorized features to extract.
     @property
-    def Features(self) -> Dict[str, Dict[str, Union[AggregateSchema, PerCountSchema]]]:
-        return self._feature_map
+    def Features(self) -> Dict[str, Union[Dict[str, AggregateSchema], Dict[str, PerCountSchema]]]:
+        return { 'aggregate' : self._aggregate_feats, 'per_count' : self._percount_feats, 'perlevel' : self._legacy_perlevel_feats }
 
     ## Function to retrieve the compiled list of all feature names.
     @property
@@ -190,14 +215,12 @@ class GameSchema:
     ## Function to retrieve the dictionary of per-custom-count features.
     @property
     def PerCountFeatures(self) -> Dict[str,PerCountSchema]:
-        _percounts = self.Features.get("percount", {}).items()
-        return {key:val for key,val in _percounts if isinstance(val, PerCountSchema)}
+        return self._percount_feats
 
     ## Function to retrieve the dictionary of aggregate features.
     @property
     def AggregateFeatures(self) -> Dict[str,AggregateSchema]:
-        _aggregates = self.Features.get("aggregate", {}).items()
-        return {key:val for key,val in _aggregates if isinstance(val, AggregateSchema)}
+        return self._aggregate_feats
 
     @property
     def LevelRange(self) -> range:
@@ -227,10 +250,7 @@ class GameSchema:
         # Set up list of features
         ret_val += "\n\n## Processed Features  \n\n"
         ret_val += "The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run.  \n\n"
-        feature_list = []
-        for feat_kind in ["perlevel", "per_count", "aggregate"]:
-            if feat_kind in self._feature_map:
-                feature_list += [feature.AsMarkdown for feature in self.Features[feat_kind].values()]
+        feature_list = [feature.AsMarkdown for feature in self._aggregate_feats.values()] + [feature.AsMarkdown for feature in self._percount_feats.values()]
         ret_val += "\n".join(feature_list) if len(feature_list) > 0 else "None  \n"
         return ret_val
 
