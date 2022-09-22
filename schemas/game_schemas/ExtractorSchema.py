@@ -10,11 +10,17 @@ class ExtractorSchema(abc.ABC):
     def __init__(self, name:str, all_elements:Dict[str, Any]):
         self._name        : str = name
         self._enabled     : Set[ExtractionMode]
+        self._type_name   : str
         self._description : str
         self._elements    : Dict[str, Any]
 
         self._name = ExtractorSchema._parseName(name)
         if isinstance(all_elements, dict):
+            if "type" in all_elements.keys():
+                self._type_name = ExtractorSchema._parseType(all_elements['type'])
+            else:
+                self._type_name = self._name
+
             if "enabled" in all_elements.keys():
                 self._enabled = ExtractorSchema._parseEnabled(all_elements['enabled'])
             else:
@@ -36,6 +42,10 @@ class ExtractorSchema(abc.ABC):
     @property
     def Name(self) -> str:
         return self._name
+
+    @property
+    def TypeName(self) -> str:
+        return self._type_name
 
     @property
     def Enabled(self) -> Set[ExtractionMode]:
@@ -66,6 +76,16 @@ class ExtractorSchema(abc.ABC):
         else:
             ret_val = str(name)
             Logger.Log(f"Extractor name was not a string, defaulting to str(name) == {ret_val}", logging.WARN)
+        return ret_val
+    
+    @staticmethod
+    def _parseType(extractor_type):
+        ret_val : str
+        if isinstance(extractor_type, str):
+            ret_val = extractor_type
+        else:
+            ret_val = str(extractor_type)
+            Logger.Log(f"Extractor type was not a string, defaulting to str(type) == {ret_val}", logging.WARN)
         return ret_val
 
     @staticmethod
