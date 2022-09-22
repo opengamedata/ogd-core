@@ -149,15 +149,13 @@ class GameSchema:
             raise ValueError(f"In GameSchema, EnabledDetectors was given an unrecognized iteration mode of {iter_mode.name}")
         return ret_val
 
-    def EnabledFeatures(self, iter_mode:IterationMode, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, FeatureSchema]:
-        ret_val : Dict[str, FeatureSchema]
+    def EnabledFeatures(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.PERCOUNT}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, FeatureSchema]:
+        ret_val : Dict[str, FeatureSchema] = {}
 
-        if iter_mode == IterationMode.AGGREGATE:
-            ret_val = {key:val for key,val in self.AggregateFeatures.items() if val.Enabled.issuperset(extract_modes)}
-        elif iter_mode == IterationMode.PERCOUNT:
-            ret_val = {key:val for key,val in self.PerCountFeatures.items() if val.Enabled.issuperset(extract_modes)}
-        else:
-            raise ValueError(f"In GameSchema, EnabledFeatures was given an unrecognized iteration mode of {iter_mode.name}")
+        if IterationMode.AGGREGATE in iter_modes:
+            ret_val.update({key:val for key,val in self.AggregateFeatures.items() if val.Enabled.issuperset(extract_modes)})
+        elif IterationMode.PERCOUNT in iter_modes:
+            ret_val.update({key:val for key,val in self.PerCountFeatures.items() if val.Enabled.issuperset(extract_modes)})
         return ret_val
 
     # *** PROPERTIES ***
