@@ -85,7 +85,7 @@ class ExtractorLoader(abc.ABC):
             feature_mod = getattr(base_mod, feature_type)
             ret_val     = getattr(feature_mod, feature_type)
         except NameError as err:
-            Logger.Log(f"Could not get class {feature_type}")
+            Logger.Log(f"Could not get class {feature_type}, a NameError occurred:\n{err}", logging.WARN)
         finally:
             return ret_val
 
