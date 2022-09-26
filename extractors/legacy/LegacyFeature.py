@@ -164,7 +164,7 @@ class LegacyFeature(Feature):
                     if feature[level]["val"] == None:
                         feature[level]["val"] = 0
                 else:
-                    Logger.Log(f"Tried to intialize invalid level: {level}", logging.ERROR)
+                    Logger.Log(f"Tried to initialize invalid level {level} for feature {f_name}", logging.ERROR)
 
         ## Function to get value of a per-count feature (including per-level)
         #  For a per-level feature, index is the level.
