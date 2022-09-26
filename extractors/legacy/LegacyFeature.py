@@ -120,7 +120,7 @@ class LegacyFeature(Feature):
     #  to understand the structure of feature data.
     class LegacySessionFeatures:
         def __init__(self, game_schema: GameSchema):
-            self.perlevels: List[str] = list(game_schema._legacy_perlevel_feats.keys())
+            self._perlevel_names: List[str] = list(game_schema._legacy_perlevel_feats.keys())
             self.features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(game_schema)
 
         @staticmethod
@@ -158,7 +158,7 @@ class LegacyFeature(Feature):
         #  simply never got incremented.
         #  @param level The level for which we should initialize values.
         def initLevel(self, level) -> None:
-            for f_name in self.perlevels:
+            for f_name in self._perlevel_names:
                 feature = self.features[f_name]
                 if type(feature) is dict and level in feature.keys():
                     if feature[level]["val"] == None:

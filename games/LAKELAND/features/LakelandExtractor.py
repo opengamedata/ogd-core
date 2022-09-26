@@ -1147,7 +1147,7 @@ class LakelandExtractor(LegacyFeature):
 
     def finish_window(self, w):
         window_end_time = timedelta(seconds=self._WINDOW_RANGES[w][1])
-        for f in self.features.perlevels:
+        for f in self.features._perlevel_names:
             cur_val = self.getValByIndex(f, w)
             if cur_val == float('inf'):
                 # if min_ feature is still float('inf'), then max_value and min_value should still be 0.
@@ -1159,7 +1159,7 @@ class LakelandExtractor(LegacyFeature):
         # update time_in_secs to full (might not be full
 
     def start_window(self, w):
-        for f in self.features.perlevels:
+        for f in self.features._perlevel_names:
             self.setValByIndex(f, w, new_value=self._get_default_val(f))
         if w > 0:
             for type in self._BUILDING_TYPES:
