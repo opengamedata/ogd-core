@@ -102,7 +102,7 @@ class JowilderExtractor(LegacyFeature):
 
     def __init__(self, params:ExtractorParameters, game_schema:GameSchema, session_id:str):
         super().__init__(params=params, session_id=session_id, game_schema=game_schema)
-        self._IDLE_THRESH_SECONDS = game_schema.NonStandardElements['IDLE_THRESH_SECONDS']
+        self._IDLE_THRESH_SECONDS = game_schema.Config['IDLE_THRESH_SECONDS']
         self._IDLE_THRESH = timedelta(seconds=self._IDLE_THRESH_SECONDS)
         self._level_range = game_schema.LevelRange
         self.cur_task = 1
