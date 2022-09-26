@@ -233,10 +233,6 @@ class GameSchema:
         return ret_val
 
     @property
-    def SupporterVersions(self) -> Optional[List[int]]:
-        return self._supported_vers
-
-    @property
     def Config(self) -> Dict[str, Any]:
         if self._schema is not None:
             return self._schema['config']

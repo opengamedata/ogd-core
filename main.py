@@ -103,7 +103,6 @@ def genRequest(events:bool, features:bool) -> Request:
 
     # 1. get exporter modes to run
     export_modes = getModes(events=events, features=features)
-    supported_vers = GameSchema(schema_name=f"{args.game}.json").SupporterVersions
     # 2. figure out the interface and range; optionally set a different dataset_id
     if args.file is not None and args.file != "":
         # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
@@ -111,11 +110,11 @@ def genRequest(events:bool, features:bool) -> Request:
         interface = CSVInterface(game_id=args.game, filepath=args.file, delim="\t" if _ext == '.tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()
-        range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [], versions=supported_vers)
+        range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [])
     else:
         interface = genDBInterface()
         if args.player is not None and args.player != "":
-            range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER, versions=supported_vers)
+            range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER)
             dataset_id = f"{args.game}_{args.player}"
         elif args.player_id_file is not None and args.player_id_file != "":
             file_path = Path(args.player_id_file)
@@ -124,13 +123,13 @@ def genRequest(events:bool, features:bool) -> Request:
                 file_contents = list(reader) # this gives list of lines, each line a list
                 names = list(chain.from_iterable(file_contents)) # so, convert to single list
                 print(f"list of names: {list(names)}")
-                range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER, versions=supported_vers)
+                range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER)
         elif args.session is not None and args.session != "":
-            range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION, versions=supported_vers)
+            range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION)
             dataset_id = f"{args.game}_{args.session}"
         else:
             start_date, end_date = getDateRange()
-            range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date, versions=supported_vers)
+            range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date)
     # 3. set up the outerface, based on the range and dataset_id.
     file_outerface = TSVOuterface(game_id=args.game, export_modes=export_modes,
                                   date_range=range.DateRange, data_dir=settings["DATA_DIR"],
