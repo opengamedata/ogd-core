@@ -26,7 +26,7 @@ class ExtractorLoader(abc.ABC):
 
     @staticmethod
     @abc.abstractmethod
-    def _getLoadedModule():
+    def _getFeaturesModule():
         pass
 
     # *** BUILT-INS ***
@@ -80,7 +80,7 @@ class ExtractorLoader(abc.ABC):
 
     def GetFeatureClass(self, feature_type:str) -> Optional[Type[Feature]]:
         ret_val : Optional[Type[Feature]] = None
-        base_mod = self._getLoadedModule()
+        base_mod = self._getFeaturesModule()
         try:
             feature_mod = getattr(base_mod, feature_type)
             ret_val     = getattr(feature_mod, feature_type)

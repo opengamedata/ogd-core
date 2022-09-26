@@ -42,10 +42,11 @@ class GameSchema:
         self._aggregate_feats        : Dict[str, AggregateSchema]           = {}
         self._percount_feats         : Dict[str, PerCountSchema]            = {}
         self._legacy_perlevel_feats  : Dict[str, PerCountSchema]            = {}
+        self._other_elements         : Dict[str, Dict[str, Any]]            = {}
+        self._game_name              : str                                  = schema_name.split('.')[0]
         self._min_level              : Optional[int]
         self._max_level              : Optional[int]
         self._supported_vers         : Optional[List[int]]
-        self._game_name              : str = schema_name.split('.')[0]
         # set instance vars
         self._schema = GameSchema._loadSchemaFile(game_name=self._game_name, schema_name=schema_name, schema_path=schema_path)
         if self._schema is not None:
@@ -95,6 +96,7 @@ class GameSchema:
                     Logger.Log(f"{self._game_name} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
 
             # 6. Notify if there are other, unexpected elements
+            self._other_elements = { key:val for key,val in self._schema.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'} }
 
     # def __getitem__(self, key) -> Any:
     #     return self._schema[key] if self._schema is not None else None
