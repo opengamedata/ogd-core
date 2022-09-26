@@ -50,12 +50,17 @@ class FeatureManager:
                                                         player_id=_player_id,          feature_overrides=self._overrides)
         if _player_id not in self._sessions.keys():
             self._sessions[_player_id] = {}
+            self._used_null_sess[_player_id] = False
         self._players[_player_id].ProcessEvent(event=event)
+        if _player_id == "null":
+            self._used_null_play = True
         # 3. process at session level, adding session if needed.
         if event.SessionID not in self._sessions[_player_id].keys():
             self._sessions[_player_id][event.SessionID] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
                                                                 player_id=_player_id,          session_id=event.SessionID,    feature_overrides=self._overrides)
         self._sessions[_player_id][event.SessionID].ProcessEvent(event=event)
+        if event.SessionID == None or event.SessionID.upper() == "NULL":
+            self._used_null_sess[_player_id] = True
         self._up_to_date = False
 
     def ProcessFeatureData(self) -> None:
@@ -142,11 +147,11 @@ class FeatureManager:
         if not self._up_to_date:
             self.ProcessFeatureData()
             # for some reason, this didn't work as sum over list of lists, so get sessions manually with a normal loop:
-            list_o_lists   : List[List[ExportRow]] = [[session.GetFeatureValues(as_str=as_str) for session in session_list.values()] for player_name,session_list in self._sessions.items()]
+            list_o_lists   : List[List[ExportRow]] = [[session.GetFeatureValues(as_str=as_str) for session_id,session in session_list.items() if (session_id != "null" or self._used_null_sess[player_name])] for player_name,session_list in self._sessions.items()]
             sess_flat_list : List[ExportRow]       = list(itertools.chain.from_iterable(list_o_lists))
             self._latest_values = {
                 "population" : [self._population.GetFeatureValues(as_str=as_str)],
-                "players" : [player.GetFeatureValues(as_str=as_str) for player in self._players.values()],
-                "sessions" : sess_flat_list
+                "players"    : [player.GetFeatureValues(as_str=as_str) for player_id,player in self._players.items() if (player_id != "null" or self._used_null_play)],
+                "sessions"   : sess_flat_list
             }
             self._up_to_date = True
