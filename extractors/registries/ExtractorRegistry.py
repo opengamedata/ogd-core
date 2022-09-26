@@ -36,7 +36,7 @@ class ExtractorRegistry(abc.ABC):
     # *** ABSTRACTS ***
 
     @abc.abstractmethod
-    def _register(self, extractor:Extractor, mode:IterationMode):
+    def _register(self, extractor:Extractor, iter_mode:IterationMode):
         pass
 
     @abc.abstractmethod
@@ -73,8 +73,8 @@ class ExtractorRegistry(abc.ABC):
 
     # *** PUBLIC METHODS ***
 
-    def Register(self, extractor:Extractor, mode:IterationMode):
-        self._register(extractor=extractor, mode=mode)
+    def Register(self, extractor:Extractor, iter_mode:IterationMode):
+        self._register(extractor=extractor, iter_mode=iter_mode)
 
     def GetExtractorNames(self) -> List[str]:
         """Function to generate a list names of all enabled features, given a GameSchema

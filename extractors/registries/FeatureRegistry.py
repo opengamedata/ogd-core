@@ -158,13 +158,13 @@ class FeatureRegistry(ExtractorRegistry):
         for agg_schema in agg_load_set:
             feature = loader.LoadFeature(feature_type=agg_schema.TypeName, name=agg_schema.Name, schema_args=agg_schema.Elements)
             if feature is not None and self._mode in feature.AvailableModes():
-                    self.Register(extractor=feature, mode=IterationMode.AGGREGATE)
+                    self.Register(extractor=feature, iter_mode=IterationMode.AGGREGATE)
         for per_schema in per_load_set:
             for i in ExtractorLoader._genCountRange(count=per_schema.Count, schema=schema):
                 instance_name = f"{per_schema.Prefix}{i}_{per_schema.Name}"
                 feature = loader.LoadFeature(feature_type=per_schema.TypeName, name=per_schema.Name, schema_args=per_schema.Elements, count_index=i)
                 if feature is not None and self._mode in feature.AvailableModes():
-                        self.Register(extractor=feature, mode=IterationMode.PERCOUNT)
+                        self.Register(extractor=feature, iter_mode=IterationMode.PERCOUNT)
 
     def _extractFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.

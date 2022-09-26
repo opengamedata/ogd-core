@@ -70,9 +70,9 @@ class DetectorRegistry(ExtractorRegistry):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _register(self, extractor:Extractor, mode:IterationMode):
+    def _register(self, extractor:Extractor, iter_mode:IterationMode):
         if isinstance(extractor, Detector):
-            _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=mode)
+            _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=iter_mode)
             _event_types   = extractor.GetEventDependencies(mode=self._mode)
             # First, add detector to the _features dict.
             self._detectors[extractor.Name] = extractor
@@ -114,13 +114,13 @@ class DetectorRegistry(ExtractorRegistry):
         for agg_schema in agg_load_set:
             detector = loader.LoadDetector(detector_type=agg_schema.TypeName, name=agg_schema.Name, schema_args=agg_schema.Elements, trigger_callback=self._trigger_callback)
             if detector is not None and self._mode in detector.AvailableModes():
-                    self.Register(extractor=detector, mode=IterationMode.AGGREGATE)
+                    self.Register(extractor=detector, iter_mode=IterationMode.AGGREGATE)
         for per_schema in per_load_set:
             for i in ExtractorLoader._genCountRange(count=per_schema.Elements.get('count', 1), schema=schema):
                 instance_name = f"{per_schema.Elements.get('prefix', '')}{i}_{per_schema.Name}"
                 detector = loader.LoadDetector(detector_type=per_schema.TypeName, name=per_schema.Name, schema_args=per_schema.Elements, trigger_callback=self._trigger_callback)
                 if detector is not None and self._mode in detector.AvailableModes():
-                        self.Register(extractor=detector, mode=IterationMode.PERCOUNT)
+                        self.Register(extractor=detector, iter_mode=IterationMode.PERCOUNT)
 
     def _extractFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.
