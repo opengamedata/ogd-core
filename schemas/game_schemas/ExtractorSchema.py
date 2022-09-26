@@ -92,7 +92,10 @@ class ExtractorSchema(abc.ABC):
     def _parseEnabled(enabled):
         ret_val : Set[ExtractionMode] = set()
         if isinstance(enabled, bool):
-            ret_val = {ExtractionMode.DETECTOR, ExtractionMode.SESSION, ExtractionMode.PLAYER, ExtractionMode.POPULATION}
+            if enabled:
+                ret_val = {ExtractionMode.DETECTOR, ExtractionMode.SESSION, ExtractionMode.PLAYER, ExtractionMode.POPULATION}
+            else:
+                ret_val = set()
         elif isinstance(enabled, list):
             for mode in enabled:
                 mode = str(mode)
