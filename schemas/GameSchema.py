@@ -38,7 +38,7 @@ class GameSchema:
         # define instance vars
         self._schema                 : Optional[Dict[str, Dict[str, Any]]]
         self._event_list             : List[EventSchema] = []
-        self._detector_map           : Dict[str, Dict[str, DetectorSchema]] = {}
+        self._detector_map           : Dict[str, Dict[str, DetectorSchema]] = {'perlevel':{}, 'per_count':{}, 'aggregate':{}}
         self._aggregate_feats        : Dict[str, AggregateSchema]           = {}
         self._percount_feats         : Dict[str, PerCountSchema]            = {}
         self._legacy_perlevel_feats  : Dict[str, PerCountSchema]            = {}
