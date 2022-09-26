@@ -1,16 +1,9 @@
 # import libraries
-import logging
-from typing import Any, Callable, Dict, List, Optional
+from typing import List, Optional
 # import locals
-from extractors.registries.DetectorRegistry import DetectorRegistry
-from extractors.Extractor import ExtractorParameters
 from extractors.ExtractorLoader import ExtractorLoader
-from extractors.registries.FeatureRegistry import FeatureRegistry
-from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
-from schemas.IterationMode import IterationMode
-from utils import Logger
 
 class LegacyLoader(ExtractorLoader):
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
