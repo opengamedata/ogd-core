@@ -237,6 +237,13 @@ class GameSchema:
         return self._supported_vers
 
     @property
+    def Config(self) -> Dict[str, Any]:
+        if self._schema is not None:
+            return self._schema['config']
+        else:
+            return {}
+
+    @property
     def NonStandardElements(self) -> Dict[str, Dict[str, Any]]:
         return self._other_elements
 
