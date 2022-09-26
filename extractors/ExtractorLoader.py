@@ -24,8 +24,8 @@ class ExtractorLoader(abc.ABC):
     def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         pass
 
-    @abc.abstractmethod
     @staticmethod
+    @abc.abstractmethod
     def _getLoadedModule():
         pass
 
