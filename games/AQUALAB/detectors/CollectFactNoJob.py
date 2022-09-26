@@ -7,6 +7,7 @@ from extractors.detectors.Detector import Detector
 from extractors.detectors.DetectorEvent import DetectorEvent
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 
 class CollectFactNoJob(Detector):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
