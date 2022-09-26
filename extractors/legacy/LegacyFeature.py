@@ -131,7 +131,7 @@ class LegacyFeature(Feature):
             self._features.update({f:{lvl:{"val":None, "prefix":"lvl"} for lvl in _level_range } for f in _perlevels.keys()})
             # next, do something similar for other per-custom-count features.
             _percounts = game_schema.PerCountFeatures
-            self._features.update({f:{num:{"val":None, "prefix":_percounts[f].Prefix} for num in range(0, _percounts[f].Count) } for f in _percounts})
+            self._features.update({f:{num:{"val":None, "prefix":_percounts[f].Prefix} for num in range(0, int(_percounts[f].Count)) } for f in _percounts.keys()})
             # finally, add in aggregate-only features.
             self._features.update({f:0 for f in game_schema.AggregateFeatures.keys()})
 
