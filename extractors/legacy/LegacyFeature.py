@@ -14,6 +14,8 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 
+LegacyFeatureType = Union[int,float,timedelta,Dict[int,Dict[str,Any]]]
+
 ## @class LegacyFeature
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
@@ -120,38 +122,24 @@ class LegacyFeature(Feature):
     #  to understand the structure of feature data.
     class LegacySessionFeatures:
         def __init__(self, game_schema: GameSchema):
-            self._perlevel_names: List[str] = list(game_schema._legacy_perlevel_feats.keys())
-            self.features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(game_schema)
+            self._features       : Dict[str, LegacyFeatureType] = {}
+            self._perlevel_names : List[str] = list(game_schema._legacy_perlevel_feats.keys())
 
-        @staticmethod
-        def generateFeatureDict(game_schema: GameSchema) -> Dict[str,Union[int,float,timedelta,Dict[int,Dict[str,Any]]]]:
-            """Static function to generate a dictionary of game feature data from a given schema.
-            The dictionary has the following hierarchy:
-            feature_dict -> [individual features] -> [individual levels] -> {value, prefix}
-
-            :param game_schema: A dictionary that defines how the game data is structured.
-            :type game_schema: GameSchema
-            :return: [description]
-            :rtype: Dict[str,Union[int,float,Dict[int,Dict[str,Any]]]]
-            """
-            # construct features as a dictionary that maps each per-level feature to a sub-dictionary,
-            # which in turn maps each level to a value and prefix.
-            perlevels = game_schema._legacy_perlevel_feats
-            level_range = range(game_schema._min_level   if game_schema._min_level is not None else 0,
-                                game_schema._max_level+1 if game_schema._max_level is not None else 1)
-            features : Dict[str,Union[int,float,timedelta,Dict[int,Dict[str,Any]]]] = {f:{lvl:{"val":None, "prefix":"lvl"} for lvl in level_range } for f in perlevels.keys()}
+            _perlevels = game_schema._legacy_perlevel_feats
+            _level_range = range(game_schema._min_level   if game_schema._min_level is not None else 0,
+                                 game_schema._max_level+1 if game_schema._max_level is not None else 1)
+            self._features.update({f:{lvl:{"val":None, "prefix":"lvl"} for lvl in _level_range } for f in _perlevels.keys()})
             # next, do something similar for other per-custom-count features.
-            percounts = game_schema.PerCountFeatures
-            features.update({f:{num:{"val":None, "prefix":percounts[f].Prefix} for num in range(0, percounts[f].Count) } for f in percounts})
+            _percounts = game_schema.PerCountFeatures
+            self._features.update({f:{num:{"val":None, "prefix":_percounts[f].Prefix} for num in range(0, _percounts[f].Count) } for f in _percounts})
             # finally, add in aggregate-only features.
-            features.update({f:0 for f in game_schema.AggregateFeatures.keys()})
-            return features
+            self._features.update({f:0 for f in game_schema.AggregateFeatures.keys()})
 
         ## Getter function to retrieve a list of all features in the LegacySessionFeatures dictionary.
         #
         #  @return The keys in the LegacySessionFeatures dictionary.
         def featureList(self):
-            return self.features.keys()
+            return self._features.keys()
 
         ## Function to initialize any previously uninitialized values of per-level features to 0, for given level.
         #  This means we can have "None" values for unreached levels, and 0's for features that
@@ -159,7 +147,7 @@ class LegacyFeature(Feature):
         #  @param level The level for which we should initialize values.
         def initLevel(self, level) -> None:
             for f_name in self._perlevel_names:
-                feature = self.features[f_name]
+                feature = self._features[f_name]
                 if type(feature) is dict and level in feature.keys():
                     if feature[level]["val"] == None:
                         feature[level]["val"] = 0
@@ -174,7 +162,7 @@ class LegacyFeature(Feature):
         #  @return             The value stored for the given feature at given index.
         def getValByIndex(self, feature_name: str, index: int) -> Any:
             if self._has_feature(feature_name):
-                feature = self.features[feature_name]
+                feature = self._features[feature_name]
                 if type(feature) is dict and index in feature.keys():
                     return feature[index]["val"]
                 else:
@@ -191,7 +179,7 @@ class LegacyFeature(Feature):
         #                      This feature is a dictionary with a "val" and "prefix"
         def getFeatureByIndex(self, feature_name: str, index: int) -> Any:
             if self._has_feature(feature_name):
-                feature = self.features[feature_name]
+                feature = self._features[feature_name]
                 if type(feature) is dict and index in feature.keys():
                     return feature[index]
                 else:
@@ -208,7 +196,7 @@ class LegacyFeature(Feature):
         #  @return             The value stored for the given feature.
         def getValByName(self, feature_name: str) -> Any:
             if self._has_feature(feature_name):
-                return self.features[feature_name]
+                return self._features[feature_name]
             else:
                 return None
 
@@ -220,7 +208,7 @@ class LegacyFeature(Feature):
         #  @param new_value    The value to be stored for the given feature at given index.
         def setValByIndex(self, feature_name: str, index: int, new_value) -> None:
             if self._has_feature(feature_name):
-                feature = self.features[feature_name]
+                feature = self._features[feature_name]
                 if type(feature) is dict and index in feature.keys():
                     feature[index]["val"] = new_value
                 else:
@@ -243,7 +231,7 @@ class LegacyFeature(Feature):
         #  @param new_value    The value to be stored for the given feature.
         def setValByName(self, feature_name: str, new_value) -> None:
             if self._has_feature(feature_name):
-                self.features[feature_name] = new_value
+                self._features[feature_name] = new_value
 
         ## Function to increment the value of a per-count feature (including per-level)
         #  For a per-level feature, index is the level.
@@ -253,7 +241,7 @@ class LegacyFeature(Feature):
         #  @param increment    The size of the increment (default = 1)
         def incValByIndex(self, feature_name: str, index: int, increment: Union[int, float] = 1) -> None:
             if self._has_feature(feature_name):
-                feature = self.features[feature_name]
+                feature = self._features[feature_name]
                 if type(feature) is dict and index in feature.keys():
                     if feature[index]["val"] == 'null':
                         feature[index]["val"] = 0
@@ -276,20 +264,20 @@ class LegacyFeature(Feature):
         #  @param increment    The size of the increment (default = 1)
         def incAggregateVal(self, feature_name: str, increment: Union[int, float] = 1) -> None:
             if self._has_feature(feature_name):
-                old_val = self.features[feature_name]
+                old_val = self._features[feature_name]
                 if (isinstance(old_val, int)) \
                 or (isinstance(old_val, float)):
-                    self.features[feature_name] = old_val + increment
+                    self._features[feature_name] = old_val + increment
                 elif isinstance(old_val, timedelta):
-                    self.features[feature_name] = old_val + timedelta(seconds=increment)
+                    self._features[feature_name] = old_val + timedelta(seconds=increment)
                 else:
-                    Logger.Log(f"In LegacyFeature, tried to increment {feature_name} of non-numeric type {type(self.features[feature_name])} by {increment} of type {type(increment)}", logging.WARN)
+                    Logger.Log(f"In LegacyFeature, tried to increment {feature_name} of non-numeric type {type(self._features[feature_name])} by {increment} of type {type(increment)}", logging.WARN)
             else:
                 Logger.Log("Attempted to increment a feature that doesn't exist!", logging.WARN)
 
         def _has_feature(self, feature_name) -> bool:
             try:
-                _ = self.features[feature_name]
+                _ = self._features[feature_name]
             except KeyError:
                 Logger.Log(f'Feature {feature_name} does not exist.', logging.ERROR)
                 return False
