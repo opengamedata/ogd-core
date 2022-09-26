@@ -31,7 +31,7 @@ class PerCountSchema(FeatureSchema):
 
     @property
     def Count(self) -> Union[int, str]:
-        return self._name
+        return self._count
 
     @property
     def Prefix(self) -> str:
