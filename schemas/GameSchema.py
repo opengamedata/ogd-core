@@ -229,6 +229,10 @@ class GameSchema:
         return ret_val
 
     @property
+    def SupporterVersions(self) -> Optional[List[int]]:
+        return self._supported_vers
+
+    @property
     def AsMarkdown(self) -> str:
         ret_val = "## Logged Event Types  \n\n"
         ret_val += "The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  \n\n"

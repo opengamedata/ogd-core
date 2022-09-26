@@ -103,7 +103,7 @@ def genRequest(events:bool, features:bool) -> Request:
 
     # 1. get exporter modes to run
     export_modes = getModes(events=events, features=features)
-    supported_vers = GameSchema(schema_name=f"{args.game}.json")['config']['SUPPORTED_VERS']
+    supported_vers = GameSchema(schema_name=f"{args.game}.json").SupporterVersions
     # 2. figure out the interface and range; optionally set a different dataset_id
     if args.file is not None and args.file != "":
         # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
