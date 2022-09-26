@@ -105,12 +105,11 @@ class LakelandExtractor(LegacyFeature):
         # Initialize superclass
         super().__init__(params=params, game_schema=game_schema, session_id=session_id)
         # Set window and overlap size
-        config = game_schema['config']
-        self._NUM_SECONDS_PER_WINDOW = config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
-        self._NUM_SECONDS_PER_WINDOW_OVERLAP = config["WINDOW_OVERLAP_SECONDS"]
+        self._NUM_SECONDS_PER_WINDOW = game_schema.NonStandardElements[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
+        self._NUM_SECONDS_PER_WINDOW_OVERLAP = game_schema.NonStandardElements["WINDOW_OVERLAP_SECONDS"]
         self._GAME_SCHEMA = game_schema
-        self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
-        self.WINDOW_RANGE = range(game_schema.level_range().stop)
+        self._IDLE_THRESH_SECONDS = game_schema.NonStandardElements['IDLE_THRESH_SECONDS']
+        self.WINDOW_RANGE = range(game_schema.LevelRange.stop)
         self._WINDOW_RANGES = self._get_window_ranges()
         self._cur_gameplay = 1
         self._startgame_count = 0
