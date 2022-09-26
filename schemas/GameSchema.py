@@ -97,6 +97,8 @@ class GameSchema:
 
             # 6. Notify if there are other, unexpected elements
             self._other_elements = { key:val for key,val in self._schema.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'} }
+            if len(self._other_elements.keys()) > 0:
+                Logger.Log(f"Schema for {self.GameName} contained nonstandard elements {self.NonStandardElements}")
 
     # def __getitem__(self, key) -> Any:
     #     return self._schema[key] if self._schema is not None else None
@@ -233,6 +235,10 @@ class GameSchema:
     @property
     def SupporterVersions(self) -> Optional[List[int]]:
         return self._supported_vers
+
+    @property
+    def NonStandardElements(self) -> Dict[str, Dict[str, Any]]:
+        return self._other_elements
 
     @property
     def AsMarkdown(self) -> str:
