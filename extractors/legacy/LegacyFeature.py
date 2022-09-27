@@ -85,7 +85,7 @@ class LegacyFeature(Feature):
         # TODO: Should we do anything if the user accidentally adds a feature? For example I accidentally was adding 2
         # features that weren't in the schema (by misreferencing actual features), and they were appended to the end of
         # the feature list.
-        for key in self._features.featureList():
+        for key in self._features.FeatureNames:
             key_type = type(self._features.getValByName(key))
             if key_type is type({}) or key_type is type(defaultdict()):
                 # if it's a dictionary, expand.
@@ -101,13 +101,12 @@ class LegacyFeature(Feature):
 
     def GetFeatureNames(self) -> List[str]:
         columns = []
-        features = LegacyFeature.LegacySessionFeatures.generateFeatureDict(self._game_schema)
-        for feature_name,feature_content in features.items():
-            if type(feature_content) is dict:
+        for feat_name,feat_content in self._features.Features.items():
+            if type(feat_content) is dict:
                 # if it's a dictionary, expand.
-                columns.extend([f"{feature_content[num]['prefix']}{num}_{feature_name}" for num in feature_content.keys()])
+                columns.extend([f"{feat_content[num]['prefix']}{num}_{feat_name}" for num in feat_content.keys()])
             else:
-                columns.append(str(feature_name))
+                columns.append(str(feat_name))
         return columns
 
 
@@ -135,10 +134,15 @@ class LegacyFeature(Feature):
             # finally, add in aggregate-only features.
             self._features.update({f:0 for f in game_schema.AggregateFeatures.keys()})
 
+        @property
+        def Features(self):
+            return self._features
+
         ## Getter function to retrieve a list of all features in the LegacySessionFeatures dictionary.
         #
         #  @return The keys in the LegacySessionFeatures dictionary.
-        def featureList(self):
+        @property
+        def FeatureNames(self):
             return self._features.keys()
 
         ## Function to initialize any previously uninitialized values of per-level features to 0, for given level.
