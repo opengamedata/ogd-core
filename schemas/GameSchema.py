@@ -42,6 +42,7 @@ class GameSchema:
         self._aggregate_feats        : Dict[str, AggregateSchema]           = {}
         self._percount_feats         : Dict[str, PerCountSchema]            = {}
         self._legacy_perlevel_feats  : Dict[str, PerCountSchema]            = {}
+        self._legacy_mode            : bool                                 = False
         self._other_elements         : Dict[str, Dict[str, Any]]            = {}
         self._game_name              : str                                  = schema_name.split('.')[0]
         self._min_level              : Optional[int]
@@ -70,6 +71,8 @@ class GameSchema:
                 Logger.Log(f"{self._game_name} game schema does not define any detectors.", logging.INFO)
             # 3. Get features, if any
             if "features" in self._schema.keys():
+                if "legacy" in self._schema['features'].keys():
+                    self._legacy_mode = self._schema['features']['legacy'].get('enabled', False)
                 if "perlevel" in self._schema['features']:
                     _perlevels = self._schema['features']['perlevel']
                     self._legacy_perlevel_feats.update({key : PerCountSchema(name=key, all_elements=val) for key,val in _perlevels.items()})
@@ -109,6 +112,8 @@ class GameSchema:
     # *** PUBLIC METHODS ***
 
     def DetectorEnabled(self, detector_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+        if self._legacy_mode:
+            return False
         ret_val : bool
 
         _detector_schema : Optional[DetectorSchema]
@@ -126,6 +131,8 @@ class GameSchema:
         return ret_val
 
     def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+        if self._legacy_mode:
+            return feature_name == "legacy"
         ret_val : bool
 
         _feature_schema : Optional[FeatureSchema]
@@ -143,6 +150,8 @@ class GameSchema:
         return ret_val
 
     def EnabledDetectors(self, iter_modes:Set[IterationMode], extract_modes:Set[ExtractionMode]=set()) -> Dict[str, DetectorSchema]:
+        if self._legacy_mode:
+            return {}
         ret_val : Dict[str, DetectorSchema] = {}
 
         if IterationMode.AGGREGATE in iter_modes:
@@ -152,6 +161,8 @@ class GameSchema:
         return ret_val
 
     def EnabledFeatures(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.PERCOUNT}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, FeatureSchema]:
+        if self._legacy_mode:
+            return {"legacy" : AggregateSchema("legacy", {"type":"legacy", "return_type":None, "description":"", "enabled":True})}
         ret_val : Dict[str, FeatureSchema] = {}
 
         if IterationMode.AGGREGATE in iter_modes:

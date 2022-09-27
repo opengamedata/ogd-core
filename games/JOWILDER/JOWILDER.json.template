@@ -242,6 +242,9 @@
 		}
 	},
 	"features": {
+		"legacy" : {
+			"enabled" : true
+		},
 		"perlevel": {
 			"EventCount": {
 				"enabled": false,
