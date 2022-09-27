@@ -12,7 +12,7 @@ class UserAvgSessionDuration(SessionFeature):
     def __init__(self, params:ExtractorParameters, player_id:str):
         self._player_id = player_id
         super().__init__(params=params)
-        self._times = []
+        self._times : List[int] = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
