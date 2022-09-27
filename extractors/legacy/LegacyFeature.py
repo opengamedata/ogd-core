@@ -47,10 +47,10 @@ class LegacyFeature(Feature):
         """
         self._session_id  : str         = session_id
         self._game_schema : GameSchema  = game_schema
-        super().__init__(params=params)
         self._levels      : List[int]   = []
         self._sequences   : List        = []
         self._features    : LegacyFeature.LegacySessionFeatures = LegacyFeature.LegacySessionFeatures(game_schema=game_schema)
+        super().__init__(params=params)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
