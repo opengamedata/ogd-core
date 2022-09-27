@@ -541,32 +541,32 @@
                 "description": "Subfeatures for number of job starts and completes, percent complete, and avg/std time to complete",
                 "subfeatures": {
                     "job-name": {
-                        "description": "String name for a job"
-                        "return_type": "string",
+                        "description": "String name for a job",
+                        "return_type": "string"
                     },
                     "num-starts": {
-                        "description": "Number of accept_job events for a given job id"
-                        "return_type": "int",
+                        "description": "Number of accept_job events for a given job id",
+                        "return_type": "int"
                     },
                     "num-completes": {
-                        "description": "Number of complete_job events for a given job id"
-                        "return_type": "int",
+                        "description": "Number of complete_job events for a given job id",
+                        "return_type": "int"
                     },
                     "percent-complete": {
-                        "description": "Percent of jobs which were accepted and completed"
-                        "return_type": "float",
+                        "description": "Percent of jobs which were accepted and completed",
+                        "return_type": "float"
                     },
                     "avg-time-per-attempt": {
-                        "description": "Average time taken from accepting to completing/leaving a job"
-                        "return_type": "float",
+                        "description": "Average time taken from accepting to completing/leaving a job",
+                        "return_type": "float"
                     },
                     "std-dev-per-attempt": {
-                        "description": "Standard deviation of time taken on a job"
-                        "return_type": "float",
+                        "description": "Standard deviation of time taken on a job",
+                        "return_type": "float"
                     },
                     "job-difficulties": {
-                        "description": "Difficulty of experimentation, modeling, and argumentation phases in the job"
-                        "return_type": "dict",
+                        "description": "Difficulty of experimentation, modeling, and argumentation phases in the job",
+                        "return_type": "dict"
                     }
                 }
             },
