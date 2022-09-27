@@ -172,11 +172,11 @@ class SQL:
 
     # Function to build and execute SELECT statements on a database connection.
     @staticmethod
-    def SELECT(cursor        :cursor.MySQLCursor, db_name       :str,                      table:str,
-               columns       :List[str] = [],     filter        :Optional[str] = None,
-               sort_columns  :Optional[List[str]] = None,   sort_direction:str              = "ASC", grouping:Optional[str] = None,
-               distinct      :bool      = False,  offset        :int = 0,     limit         :int = -1,
-               fetch_results :bool      = True) -> Optional[List[Tuple]]:
+    def SELECT(cursor        :cursor.MySQLCursor,          db_name        : str,                   table    : str,
+               columns       :List[str]           = [],    filter         : Optional[str] = None,
+               sort_columns  :Optional[List[str]] = None,  sort_direction : str           = "ASC", grouping : Optional[str] = None,
+               distinct      :bool                = False, offset         : int           = 0,     limit    : int           = -1,
+               fetch_results :bool                = True) -> Optional[List[Tuple]]:
         """Function to build and execute SELECT statements on a database connection.
 
         :param cursor: A database cursor, retrieved from the active connection.
@@ -242,8 +242,8 @@ class MySQLInterface(DataInterface):
         # set up data from params
         super().__init__(game_id=game_id, config=config)
         # set up connection vars and try to make connection off the bat.
-        self._tunnel : Optional[sshtunnel.SSHTunnelForwarder] = None
-        self._db     : Optional[connection.MySQLConnection] = None
+        self._tunnel    : Optional[sshtunnel.SSHTunnelForwarder] = None
+        self._db        : Optional[connection.MySQLConnection] = None
         self._db_cursor : Optional[cursor.MySQLCursor] = None
         self.Open()
 
