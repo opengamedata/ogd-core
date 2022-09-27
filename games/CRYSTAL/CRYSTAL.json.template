@@ -105,61 +105,64 @@
     },
 
     "features": {
+		"legacy" : {
+			"enabled" : true
+		},
         "perlevel": {
             "eventCount": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Number of player events in the given level"
             },
             "durationInSecs": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Time (in seconds) spent on the given level"
             },
             "stampRotateCount": {
-                "enabled": true,
-                "description": "Number of stamp rotate events in the level. These are MOLECULE_ROTATE events with isStamp set true."
+                "enabled": false,
+                "description": "Number of stamp rotate events in the level. These are MOLECULE_ROTATE events with isStamp set false."
             },
             "singleRotateCount": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Number of single rotation events in the level"
             },
             "moleculeMoveCount": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Number of molecule move (MOLECULE_RELEASE) events in the level"
             },
             "clearBtnPresses": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Number of times the clear button was pressed in the level"
             },
             "avgMoleculeDragDurationInSecs": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The average number of seconds each drag took, over the given level"
             },
             "finalScore": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The max final score given when submit button pressed, for this level, among all plays"
             },
             "beginCount": {
-                "enabled": true,
+                "enabled": false,
                 "description": "number of times a player 'began' the level. [count of 'BEGIN' events]"
             },
             "menuBtnCount": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The number of times a player pressed the 'return to menu' button during a level"
             },
             "completesCount": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The number of time the player (pressed the submit button)/(completed the level) in the level"
             }
         },
         "per_count": {
             "questionAnswered": {
-                "enabled": true,
+                "enabled": false,
                 "count": 3,
                 "prefix": "QA",
                 "description": "The answer the user gave to a given question (or -1 if unanswered)"
             },
             "questionCorrect": {
-                "enabled": true,
+                "enabled": false,
                 "count": 3,
                 "prefix": "QA",
                 "description": "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"
@@ -167,39 +170,39 @@
         },
         "aggregate": {
             "sessionID": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The player's session ID number for this play session"
             },
             "persistentSessionID": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The session ID for the player's device, persists across multiple players using the same device."
             },
             "sessionEventCount": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The total number of events across the entire session"
             },
             "sessionDurationInSecs": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The total time (in seconds) spent over the entire session"
             },
             "sessionStampRotateCount": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Total number of stamp rotation events over the session"
             },
             "sessionSingleRotateCount": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Total number of single rotation events over the session"
             },
             "sessionMoleculeMoveCount": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Total number of molecule move events over the session"
             },
             "sessionClearBtnPresses": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Total number of times the clear button was pressed during the session"
             },
             "sessionMuseumDurationInSecs": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Total amount of time spent in a museum during the session?"
             }
         }
