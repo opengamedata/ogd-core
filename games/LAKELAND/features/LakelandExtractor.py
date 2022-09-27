@@ -1350,7 +1350,7 @@ class LakelandExtractor(LegacyFeature):
     def _get_windows_at_time(self, client_time=None):
         # if no client time, get windows at start
         if client_time is not None:
-            seconds_since_start = self.time_since_start(client_time).seconds
+            seconds_since_start = self.time_since_start(client_time).total_seconds()
         else:
             seconds_since_start = 0
         windows = []

@@ -148,7 +148,7 @@ class FeatSeqPercentModel(FeatureModel):
             next_feat = self._feature_sequence[-1]
             cur_time = time_to_vals[-1]
         if type(cur_time) is timedelta:  # sessions features give float, but cgi might give timedelta
-            cur_time = cur_time.seconds
+            cur_time = cur_time.total_seconds()
 
         percentile_if_next_feat_now = self._featureQuantiles.get_quantile(next_feat, cur_time, verbose=verbose)
 

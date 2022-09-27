@@ -74,4 +74,4 @@ class PopulationSummary(SessionFeature):
         ret_val = timedelta(0)
         for time in times:
             ret_val += time
-        return ret_val.seconds
+        return ret_val.total_seconds()

@@ -44,9 +44,9 @@ class PlayerSummary(SessionFeature):
             if feature.FeatureType == "JobsCompleted":
                 self._summary[user_id]["jobs_completed"] = feature.FeatureValues[0]
             elif feature.FeatureType == "SessionDuration":
-                if type(feature.FeatureValues[0]) == timedelta:
-                    self._summary[user_id]["active_time"] += feature.FeatureValues[0].seconds
-                elif type(feature.FeatureValues[0]) == str and feature.FeatureValues[0] == "No events":
+                if isinstance(feature.FeatureValues[0], timedelta):
+                    self._summary[user_id]["active_time"] += feature.FeatureValues[0].total_seconds()
+                elif isinstance(feature.FeatureValues[0], str) and feature.FeatureValues[0] == "No events":
                     pass
                 else:
                     raise ValueError(f"PlayerSummary got {feature.Name} feature with value {feature.FeatureValues[0]} of non-timedelta type {type(feature.FeatureValues[0])} in the {feature.FeatureNames[0]} column!")
