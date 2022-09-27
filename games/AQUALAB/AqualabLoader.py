@@ -138,7 +138,7 @@ class AqualabLoader(ExtractorLoader):
         ret_val : Detector
         if detector_type == "CollectFactNoJob":
             ret_val = CollectFactNoJob.CollectFactNoJob(params=extractor_params, trigger_callback=trigger_callback)
-        if detector_type == "DiveSiteNoEvidence":
+        elif detector_type == "DiveSiteNoEvidence":
             ret_val = DiveSiteNoEvidence.DiveSiteNoEvidence(params=extractor_params, trigger_callback=trigger_callback, threshold=schema_args['threshold'])
         elif detector_type == "EchoRoomChange":
             ret_val = EchoRoomChange.EchoRoomChange(params=extractor_params, trigger_callback=trigger_callback)
