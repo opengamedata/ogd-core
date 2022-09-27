@@ -76,7 +76,6 @@ class GameSchema:
                 if "perlevel" in self._schema['features']:
                     _perlevels = self._schema['features']['perlevel']
                     self._legacy_perlevel_feats.update({key : PerCountSchema(name=key, all_elements=val) for key,val in _perlevels.items()})
-                    self._percount_feats.update({key : PerCountSchema(name=key, all_elements=val) for key,val in _perlevels.items()})
                 if "per_count" in self._schema['features']:
                     _percounts = self._schema['features']['per_count']
                     self._percount_feats.update({key : PerCountSchema(name=key, all_elements=val) for key,val in _percounts.items()})
@@ -222,6 +221,10 @@ class GameSchema:
         for _category in self.Features.values():
             ret_val += [feature.Name for feature in _category.values()]
         return ret_val
+
+    @property
+    def LegacyPerLevelFeatures(self) -> Dict[str,PerCountSchema]:
+        return self._legacy_perlevel_feats
 
     ## Function to retrieve the dictionary of per-custom-count features.
     @property
