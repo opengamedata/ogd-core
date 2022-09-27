@@ -277,8 +277,8 @@ class JowilderExtractor(LegacyFeature):
             self.feature_count('count_idle')
             active_time = timedelta(0)
             idle_time = time_between_click_hovers
-        self.feature_inc('time_active', active_time)
-        self.feature_inc('time_idle', idle_time)
+        self.feature_inc('time_active', active_time.total_seconds())
+        self.feature_inc('time_idle', idle_time.total_seconds())
 
 
         self.last_click_hover_time = timestamp
