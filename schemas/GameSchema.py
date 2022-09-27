@@ -162,7 +162,7 @@ class GameSchema:
 
     def EnabledFeatures(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.PERCOUNT}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, FeatureSchema]:
         if self._legacy_mode:
-            return {"legacy" : AggregateSchema("legacy", {"type":"legacy", "return_type":None, "description":"", "enabled":True})}
+            return {"legacy" : AggregateSchema("legacy", {"type":"legacy", "return_type":None, "description":"", "enabled":True})} if IterationMode.AGGREGATE in iter_modes else {}
         ret_val : Dict[str, FeatureSchema] = {}
 
         if IterationMode.AGGREGATE in iter_modes:
