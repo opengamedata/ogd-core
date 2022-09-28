@@ -161,7 +161,7 @@
         "prefix": "pre",
         "count": 0,
         "description": "Number of player events in the given level",
-        "return_type": int
+        "return_type": "int"
       },
       "ActiveEventCount": {
         "enabled": false,
