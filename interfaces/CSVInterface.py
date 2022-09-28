@@ -42,8 +42,8 @@ class CSVInterface(DataInterface):
         return self._data['session_id'].unique().tolist()
 
     def _fullDateRange(self) -> Dict[str,datetime]:
-        min_time = pd.to_datetime(self._data['server_time'].min())
-        max_time = pd.to_datetime(self._data['server_time'].max())
+        min_time = pd.to_datetime(self._data['timestamp'].min())
+        max_time = pd.to_datetime(self._data['timestamp'].max())
         return {'min':min_time, 'max':max_time}
 
     def _rowsFromIDs(self, id_list: List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> List[Tuple]:
@@ -70,14 +70,14 @@ class CSVInterface(DataInterface):
 
     def _datesFromIDs(self, id_list:List[int], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Dict[str, datetime]:
         if id_mode == IDMode.SESSION:
-            min_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].min()
-            max_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].max()
+            min_date = self._data[self._data['session_id'].isin(id_list)]['timestamp'].min()
+            max_date = self._data[self._data['session_id'].isin(id_list)]['timestamp'].max()
         elif id_mode == IDMode.USER:
-            min_date = self._data[self._data['user_id'].isin(id_list)]['server_time'].min()
-            max_date = self._data[self._data['user_id'].isin(id_list)]['server_time'].max()
+            min_date = self._data[self._data['user_id'].isin(id_list)]['timestamp'].min()
+            max_date = self._data[self._data['user_id'].isin(id_list)]['timestamp'].max()
         else:
-            min_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].min()
-            max_date = self._data[self._data['session_id'].isin(id_list)]['server_time'].max()
+            min_date = self._data[self._data['session_id'].isin(id_list)]['timestamp'].min()
+            max_date = self._data[self._data['session_id'].isin(id_list)]['timestamp'].max()
         return {'min':pd.to_datetime(min_date), 'max':pd.to_datetime(max_date)}
 
     # *** PUBLIC STATICS ***
