@@ -20,12 +20,13 @@ class CSVInterface(DataInterface):
         self._delimiter : str = delim
         # set up data from file
         self._data      : pd.DataFrame = pd.DataFrame()
+        self.Open()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _open(self) -> bool:
         try:
-            self._data = pd.read_csv(filepath=self._filepath, delimiter=self._delimiter, parse_dates=['timestamp'])
+            self._data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter, parse_dates=['timestamp'])
             self._is_open = True
             return True
         except FileNotFoundError as err:
