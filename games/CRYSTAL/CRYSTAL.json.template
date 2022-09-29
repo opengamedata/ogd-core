@@ -111,46 +111,68 @@
         "perlevel": {
             "eventCount": {
                 "enabled": false,
+                "count": "per_level"
+                "prefix": "lvl"
                 "description": "Number of player events in the given level"
             },
             "durationInSecs": {
                 "enabled": false,
+                "count": "per_level"
+                "prefix": "lvl"
                 "description": "Time (in seconds) spent on the given level"
             },
             "stampRotateCount": {
                 "enabled": false,
+                "count": "per_level"
+                "prefix": "lvl"
                 "description": "Number of stamp rotate events in the level. These are MOLECULE_ROTATE events with isStamp set false."
             },
             "singleRotateCount": {
                 "enabled": false,
+                "count": "per_level"
+                "prefix": "lvl"
                 "description": "Number of single rotation events in the level"
             },
             "moleculeMoveCount": {
                 "enabled": false,
+                "count": "per_level"
+                "prefix": "lvl"
                 "description": "Number of molecule move (MOLECULE_RELEASE) events in the level"
             },
             "clearBtnPresses": {
                 "enabled": false,
+                "count": "per_level"
+                "prefix": "lvl"
                 "description": "Number of times the clear button was pressed in the level"
             },
             "avgMoleculeDragDurationInSecs": {
                 "enabled": false,
+                "count": "per_level"
+                "prefix": "lvl"
                 "description": "The average number of seconds each drag took, over the given level"
             },
             "finalScore": {
                 "enabled": false,
+                "count": "per_level"
+                "prefix": "lvl"
                 "description": "The max final score given when submit button pressed, for this level, among all plays"
             },
             "beginCount": {
                 "enabled": false,
+                "count": "per_level"
+                "prefix": "lvl"
                 "description": "number of times a player 'began' the level. [count of 'BEGIN' events]"
             },
             "menuBtnCount": {
                 "enabled": false,
+                "count": "per_level"
+                "prefix": "lvl"
                 "description": "The number of times a player pressed the 'return to menu' button during a level"
             },
             "completesCount": {
                 "enabled": false,
+                "count": "per_level"
+                "prefix": "lvl"
                 "description": "The number of time the player (pressed the submit button)/(completed the level) in the level"
             }
         },
