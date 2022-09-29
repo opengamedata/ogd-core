@@ -1,10 +1,10 @@
 ## import standard libraries
-from datetime import datetime
 import json
-from json.decoder import JSONDecodeError
 import os
 import logging
 import traceback
+from datetime import datetime
+from json.decoder import JSONDecodeError
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Optional
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
@@ -21,6 +21,7 @@ from utils import Logger
 #  of the database columns, the max and min levels in the game, and a list of
 #  IDs for the game sessions in the given requested date range.
 class TableSchema:
+
     def __init__(self, schema_name:str, schema_path:Path = Path("./") / os.path.dirname(__file__) / "TABLES/"):
         """Constructor for the TableSchema class.
         Given a database connection and a game data request,
@@ -58,6 +59,21 @@ class TableSchema:
         else:
             _table_name = default_settings["GAME_SOURCE_MAP"].get(game_id, {}).get("schema", "NO SCHEMA DEFINED")
         return TableSchema(schema_name=f"{_table_name}.json")
+
+    @staticmethod
+    def ConvertTime(time_str) -> datetime:
+        ret_val : datetime
+
+        formats = ["%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M:%S.%f"]
+
+        for fmt in formats:
+            try:
+                ret_val = datetime.strptime(time_str, fmt)
+            except ValueError as err:
+                pass
+            else:
+                return ret_val
+        raise ValueError(f"Could not parse timestamp {time_str}, it did not match any expected formats.")
 
     def RowToEvent(self, row:Tuple, concatenator:str = '.', fallbacks:utils.map={}):
         """Function to convert a row to an Event, based on the loaded schema.
@@ -118,7 +134,7 @@ class TableSchema:
         sess_id = params['session_id']
         app_id  = params['app_id']
         # TODO: go bac to isostring function; need 0-padding on ms first, though
-        time    = datetime.strptime(params['timestamp'], "%Y-%m-%dT%H:%M:%S.%f")
+        time    = TableSchema.ConvertTime(params['timestamp'])
         ename   = params['event_name']
         edata   = dict(sorted(params['event_data'].items())) # Sort keys alphabetically
         app_ver = params['app_version']
