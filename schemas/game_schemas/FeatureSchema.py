@@ -97,7 +97,7 @@ class FeatureSchema(ExtractorSchema):
                 self._return_type = FeatureSchema._parseReturnType(all_elements['return_type'])
             else:
                 self._return_type = ""
-                Logger.Log(f"{name} subfeature config does not have an 'return_type' element; defaulting to return_type=''", logging.WARN)
+                Logger.Log(f"{name} Feature config does not have an 'return_type' element; defaulting to return_type=''", logging.WARN)
             if "subfeatures" in all_elements.keys():
                 self._subfeatures = FeatureSchema._parseSubfeatures(all_elements['subfeatures'])
             else:
