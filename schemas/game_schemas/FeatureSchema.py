@@ -94,7 +94,7 @@ class FeatureSchema(ExtractorSchema):
 
         if isinstance(all_elements, dict):
             if "return_type" in all_elements.keys():
-                self._return_type = FeatureSchema._parseReturnType(all_elements['return_type'])
+                self._return_type = FeatureSchema._parseReturnType(all_elements['return_type'], feature_name=name)
             else:
                 self._return_type = ""
                 Logger.Log(f"{name} Feature config does not have an 'return_type' element; defaulting to return_type=''", logging.WARN)
@@ -118,13 +118,13 @@ class FeatureSchema(ExtractorSchema):
         return self._subfeatures
 
     @staticmethod
-    def _parseReturnType(return_type):
+    def _parseReturnType(return_type, feature_name:str=""):
         ret_val : str
         if isinstance(return_type, str):
             ret_val = return_type
         else:
             ret_val = str(return_type)
-            Logger.Log(f"Feature return_type was not a string, defaulting to str(return_type) == {ret_val}", logging.WARN)
+            Logger.Log(f"Feature {feature_name} return_type was not a string, defaulting to str(return_type) == {ret_val}", logging.WARN)
         return ret_val
 
     @staticmethod
