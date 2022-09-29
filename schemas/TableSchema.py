@@ -53,7 +53,7 @@ class TableSchema:
             Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
 
     @staticmethod
-    def FromID(game_id:str, settings:Optional[Dict[str, Any]]):
+    def FromID(game_id:str, settings:Optional[Dict[str, Any]]=None):
         if settings is not None:
             _table_name = settings["GAME_SOURCE_MAP"].get(game_id, {}).get("schema", "NO SCHEMA DEFINED")
         else:
