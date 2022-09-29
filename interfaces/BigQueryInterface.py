@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Tuple, Optional
 from config.config import settings as default_settings
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
+from schemas.TableSchema import TableSchema
 from utils import Logger
 
 AQUALAB_MIN_VERSION = 6.2
@@ -48,6 +49,10 @@ class BigQueryInterface(DataInterface):
         self._is_open = False
         Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
+
+    def _loadTableSchema(self, game_id:str) -> TableSchema:
+        _schema_name = self._config.get("schema") or default_settings['GAME_SOURCE_MAP'].get(game_id, {}).get('schema', "NO SCHEMA DEFINED")
+        return TableSchema(schema_name=_schema_name)
 
     def _allIDs(self) -> List[str]:
         query = f"""

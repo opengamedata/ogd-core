@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Tuple, Optional
 from interfaces.DataInterface import DataInterface
 from config.config import settings as default_settings
 from schemas.IDMode import IDMode
+from schemas.TableSchema import TableSchema
 from utils import Logger
 
 
@@ -239,12 +240,10 @@ class MySQLInterface(DataInterface):
     # *** BUILT-INS ***
 
     def __init__(self, game_id:str, config:Dict[str,Any]):
-        # set up data from params
-        super().__init__(game_id=game_id, config=config)
-        # set up connection vars and try to make connection off the bat.
         self._tunnel    : Optional[sshtunnel.SSHTunnelForwarder] = None
         self._db        : Optional[connection.MySQLConnection] = None
         self._db_cursor : Optional[cursor.MySQLCursor] = None
+        super().__init__(game_id=game_id, config=config)
         self.Open()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -278,6 +277,10 @@ class MySQLInterface(DataInterface):
         Logger.Log("Closed connection to MySQL.", logging.DEBUG)
         self._is_open = False
         return True
+
+    def _loadTableSchema(self, game_id:str) -> TableSchema:
+        _schema_name = self._config.get("schema") or default_settings['GAME_SOURCE_MAP'].get(game_id, {}).get('schema', "NO SCHEMA DEFINED")
+        return TableSchema(schema_name=_schema_name)
 
     def _allIDs(self) -> List[str]:
         if not self._db_cursor == None:

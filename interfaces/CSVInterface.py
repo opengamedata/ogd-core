@@ -7,17 +7,19 @@ from typing import Any, Dict, IO, List, Tuple, Optional
 ## import local files
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
+from schemas.TableSchema import TableSchema
 from utils import Logger
 
 class CSVInterface(DataInterface):
 
     # *** BUILT-INS ***
 
-    def __init__(self, game_id:str, filepath:Path, delim:str = ','):
+    def __init__(self, game_id:str, filepath:Path, delim:str = ',', file_schema_name:str = "OGD_EVENT_FILE"):
         # set up data from params
-        super().__init__(game_id=game_id, config={})
+        self._file_schema_name = file_schema_name
         self._filepath  : Path = filepath
         self._delimiter : str = delim
+        super().__init__(game_id=game_id, config={})
         # set up data from file
         self._data      : pd.DataFrame = pd.DataFrame()
         self.Open()
@@ -38,6 +40,10 @@ class CSVInterface(DataInterface):
         self._data = pd.DataFrame() # make new dataframe, let old data get garbage collected I assume.
         return True
 
+    def _loadTableSchema(self, game_id:str) -> TableSchema:
+        # TODO: make the .meta file of an export include the name of the most current table schema for Event files, then read that in here as default.
+        return TableSchema(schema_name=self._file_schema_name)
+
     def _allIDs(self) -> List[str]:
         return self._data['session_id'].unique().tolist()
 
@@ -47,7 +53,7 @@ class CSVInterface(DataInterface):
         return {'min':min_time, 'max':max_time}
 
     def _rowsFromIDs(self, id_list: List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> List[Tuple]:
-        if self.IsOpen() and self._data != None:
+        if self.IsOpen() and not self._data.empty:
             if id_mode == IDMode.SESSION:
                 return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
             elif id_mode == IDMode.USER:

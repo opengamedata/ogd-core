@@ -9,7 +9,6 @@ import subprocess
 import traceback
 from datetime import datetime
 from pathlib import Path
-from pprint import pformat
 from typing import Any, Dict, List, Tuple, Type, Optional
 from schemas.IDMode import IDMode
 
@@ -198,16 +197,15 @@ class ExportManager:
         start   : datetime
 
         # 1) Get the IDs of sessions to process
-        _table_schema : TableSchema = TableSchema.FromID(game_id=request.GameID, schema_name=self._settings['GAME_SOURCE_MAP'][request.GameID]['schema'])
         # 2) Loop over and process the sessions, slice-by-slice (where each slice is a list of sessions).
-        _next_slice_data : Optional[List[Tuple]] = None
+        _next_slice_data : Optional[List[Event]] = None
         for i, next_slice_ids in enumerate(slices):
             _next_slice_data = self._loadSlice(request=request, next_slice_ids=next_slice_ids, slice_num=i+1, slice_count=len(slices))
             if _next_slice_data is not None:
                 # 2a) Process all rows for each slice.
                 start = datetime.now()
                 Logger.Log(f"Processing slice [{i+1}/{len(slices)}]...", logging.INFO, depth=2)
-                self._processSlice(next_slice_data=_next_slice_data, request=request, table_schema=_table_schema, ids=ids)
+                self._processSlice(next_slice_data=_next_slice_data, request=request, ids=ids)
                 time_delta = datetime.now() - start
                 Logger.Log(f"Processing time for slice [{i+1}/{len(slices)}]: {time_delta} to handle {len(_next_slice_data)} events", logging.INFO, depth=2)
 
@@ -224,52 +222,35 @@ class ExportManager:
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
 
-    def _loadSlice(self, request:Request, next_slice_ids:List[str], slice_num:int, slice_count:int) -> Optional[List[Tuple]]:
+    def _loadSlice(self, request:Request, next_slice_ids:List[str], slice_num:int, slice_count:int) -> Optional[List[Event]]:
+        ret_val : Optional[List[Event]]
+
         Logger.Log(f"Retrieving slice [{slice_num}/{slice_count}]...", logging.INFO, depth=2)
         start : datetime = datetime.now()
-
-        ret_val = request.Interface.RowsFromIDs(id_list=next_slice_ids, id_mode=request.Range.IDMode)
+        ret_val = request.Interface.EventsFromIDs(id_list=next_slice_ids, id_mode=request.Range.IDMode)
         time_delta = datetime.now() - start
         if ret_val is not None:
-            # extra space below so output aligns nicely with "Processing time for slice..."
             Logger.Log(f"Retrieval  time for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} events", logging.INFO, depth=2)
         else:
             Logger.Log(f"Could not retrieve data set for slice [{slice_num}/{slice_count}].", logging.WARN, depth=2)
         return ret_val
 
-    def _processSlice(self, next_slice_data:List[Tuple], request: Request, table_schema:TableSchema, ids:List[str]):
-        _curr_sess : str      = ""
-        _evt_sess_index : int = 1
+    def _processSlice(self, next_slice_data:List[Event], request: Request, ids:List[str]):
         _unsessioned_event_count : int = 0
         # 3a) If next slice yielded valid data from the interface, process row-by-row.
-        for row in next_slice_data:
-            try:
-                _fallbacks = {"app_id":request.GameID}
-                next_event = table_schema.RowToEvent(row, fallbacks=_fallbacks)
-                # in case event index was not given, we should fall back on using the order it came to us.
-                if next_event.SessionID != _curr_sess:
-                    _curr_sess = next_event.SessionID
-                    _evt_sess_index = 1
-                next_event.FallbackDefaults(index=_evt_sess_index)
-                _evt_sess_index += 1
-            except Exception as err:
-                if default_settings.get("FAIL_FAST", None):
-                    Logger.Log(f"Error while converting row to Event\nFull error: {err}\nRow data: {pformat(row)}", logging.ERROR, depth=2)
-                    raise err
-                else:
-                    Logger.Log(f"Error while converting row to Event. This row will be skipped.\nFull error: {err}", logging.WARNING, depth=2)
+        # TODO: instead of separating everything out into one call per event, turn this into a list comprehension using a validation function, so we can pass whole list down a level.
+        for event in next_slice_data:
+            if (request._range._id_mode==IDMode.SESSION and event.SessionID in ids) \
+            or (request._range._id_mode==IDMode.USER    and event.UserID    in ids):
+                self._processEvent(next_event=event)
+            elif event.SessionID is not None and event.SessionID.upper() != "NONE":
+                Logger.Log(f"Found a session ({event.SessionID}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
+            elif event.UserID is not None and event.UserID.upper() != "NONE":
+                Logger.Log(f"Found a user ({event.UserID}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
             else:
-                if (request._range._id_mode==IDMode.SESSION and next_event.SessionID in ids) \
-                or (request._range._id_mode==IDMode.USER    and next_event.UserID    in ids):
-                    self._processEvent(next_event=next_event)
-                elif next_event.SessionID is not None and next_event.SessionID.upper() != "NONE":
-                    Logger.Log(f"Found a session ({next_event.SessionID}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
-                elif next_event.UserID is not None and next_event.UserID.upper() != "NONE":
-                    Logger.Log(f"Found a user ({next_event.UserID}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
-                else:
-                    _unsessioned_event_count += 1
-                    if _unsessioned_event_count < 10:
-                        Logger.Log(f"Found an event with no session/player ID, original row data: {row}", logging.WARNING, depth=2)
+                _unsessioned_event_count += 1
+                if _unsessioned_event_count < 10:
+                    Logger.Log(f"Found an event with no session/player ID, event is: {event}", logging.WARNING, depth=2)
         if _unsessioned_event_count > 0:
             Logger.Log(f"Found {_unsessioned_event_count} events without session IDs.", logging.WARNING, depth=2)
 
