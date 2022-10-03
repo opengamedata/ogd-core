@@ -49,6 +49,9 @@ class SessionProcessor(FeatureProcessor):
     def __str__(self):
         return f"SessionProcessor({self._player_id}, {self._session_id})"
 
+    def __repr__(self):
+        return str(self)
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @property
