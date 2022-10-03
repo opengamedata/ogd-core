@@ -21,9 +21,9 @@ class JobsAttempted(Feature):
         self._player_id = None
 
         self._job_map = job_map
-        super().__init__(params=params)
         self._user_code = None
         self._session_id = None
+        super().__init__(params=params)
 
         # Subfeatures
         if self.CountIndex is not None:
@@ -41,8 +41,8 @@ class JobsAttempted(Feature):
         # Time
         self._times : List[int] = []
         # self._time = 0
-        self._job_start_time : Optional[datetime] = None
-        self._prev_timestamp : Optional[datetime] = None
+        # self._job_start_time : Optional[datetime] = None
+        # self._prev_timestamp : Optional[datetime] = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -59,9 +59,9 @@ class JobsAttempted(Feature):
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
 
-            if self._job_start_time is not None and self._prev_timestamp is not None:
+            # if self._job_start_time is not None and self._prev_timestamp is not None:
                 # self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
-                self._job_start_time = event.Timestamp
+                # self._job_start_time = event.Timestamp
 
         if self._validate_job(event.EventData['job_name']):
             user_code = event.UserID
@@ -71,18 +71,18 @@ class JobsAttempted(Feature):
             if event.EventName == "accept_job" and job_id == self._job_id:
                 self._num_starts += 1
                 self._user_code = user_code
-                self._job_start_time = event.Timestamp
+                # self._job_start_time = event.Timestamp
 
             elif event.EventName == "complete_job" and job_id == self._job_id and user_code == self._user_code:
                 self._num_completes += 1
 
-                if self._job_start_time:
+                # if self._job_start_time:
                     # self._time += (event.Timestamp - self._job_start_time).total_seconds()
                     # self._times.append(self._time)
                     # self._time = 0
-                    self._job_start_time = None
+                    # self._job_start_time = None
 
-        self._prev_timestamp = event.Timestamp
+        # self._prev_timestamp = event.Timestamp
 
     def _extractFromFeatureData(self, feature:FeatureData):
         if feature.ExportMode == ExtractionMode.POPULATION:
