@@ -39,6 +39,12 @@ class ExtractorSchema(abc.ABC):
             self._elements = {}
             Logger.Log(f"For {name} Extractor config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
 
+    def __str__(self):
+        return self.Name
+
+    def __repr__(self):
+        return self.Name
+
     @property
     def Name(self) -> str:
         return self._name
