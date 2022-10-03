@@ -94,31 +94,22 @@ class JobsAttempted(Feature):
 
         if feature.FeatureType == "JobActiveTime":
             if feature.CountIndex == self.CountIndex:
-                if self.ExtractionMode    == ExtractionMode.SESSION \
+                _active_time = feature.FeatureValues[0]
+                if self.ExtractionMode == ExtractionMode.SESSION \
             and feature.ExportMode == ExtractionMode.SESSION:
                     # session should only have one time, namely the time for the session.
-                    self._times = [feature.FeatureValues[0]]
+                    self._times = [_active_time]
                 elif self.ExtractionMode == ExtractionMode.PLAYER \
                 and feature.ExportMode == ExtractionMode.PLAYER:
                     # player should only have one time, namely the time for the player.
-                    self._times = [feature.FeatureValues[0]]
+                    self._times = [_active_time]
                 elif self.ExtractionMode == ExtractionMode.POPULATION \
                 and feature.ExportMode == ExtractionMode.PLAYER:
-                    # population should only have one time, namely the time for the player.
-                    self._times.append(feature.FeatureValues[0])
+                    # population could have many times. Only add to list if they actually spent time there, though.
+                    if _active_time > 0:
+                        self._times.append(_active_time)
 
     def _getFeatureValues(self) -> List[Any]:
-        total_ct = self._pop_call_count + self._pla_call_count + self._ses_call_count
-        count_str = f"{total_ct} times ({self._pop_call_count}, {self._pla_call_count}, {self._ses_call_count})"
-        # temp
-        if self.CountIndex == 0:
-            if self.ExtractionMode == ExtractionMode.POPULATION:
-                Logger.Log(f"{self.Name} was called {count_str} in pop mode")
-            if self.ExtractionMode == ExtractionMode.PLAYER:
-                Logger.Log(f"{self.Name} was called {count_str} in player mode for player {self._player_id}")
-            if self.ExtractionMode == ExtractionMode.SESSION:
-                Logger.Log(f"{self.Name} was called {count_str} in session mode for player {self._player_id}, session {self._session_id}")
-
         if self._num_starts > 0:
             self._percent_complete = (self._num_completes / self._num_starts) * 100
 
