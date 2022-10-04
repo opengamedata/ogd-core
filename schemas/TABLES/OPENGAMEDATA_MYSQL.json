@@ -1,17 +1,18 @@
 {
     "column_map": {
-        "session_id": "session_id",
-        "app_id": "app_id",
-        "timestamp": ["client_time", "client_time_ms"],
-        "event_name": ["event_name"],
-        "event_data": ["event_data", "server_time", "remote_addr", "http_user_agent"],
-        "app_version": ["app_version", "app_branch"],
-        "log_version": "log_version",
-        "time_offset": "client_offset",
-        "user_id": "user_id",
-        "user_data": "user_data",
-        "game_state": "user_data",
-        "event_sequence_index": "event_sequence_index"
+        "session_id"           : "session_id",
+        "app_id"               : "app_id",
+        "timestamp"            : ["client_time", "client_time_ms"],
+        "event_name"           : ["event_name"],
+        "event_data"           : ["event_data", "server_time", "remote_addr", "http_user_agent"],
+        "event_source"         : null,
+        "app_version"          : ["app_version", "app_branch"],
+        "log_version"          : "log_version",
+        "time_offset"          : "client_offset",
+        "user_id"              : "user_id",
+        "user_data"            : "user_data",
+        "game_state"           : "user_data",
+        "event_sequence_index" : "event_sequence_index"
     },
 
     "columns": [
