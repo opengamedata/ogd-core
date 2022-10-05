@@ -68,7 +68,7 @@
             "name": "session_id",
             "readable": "Session ID",
             "desc": "ID for the play session",
-            "type": "int"
+            "type": "str"
         },
         {
             "name": "fd_user_id",
