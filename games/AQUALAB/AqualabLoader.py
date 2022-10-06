@@ -142,6 +142,8 @@ class AqualabLoader(ExtractorLoader):
             ret_val = DiveSiteNoEvidence.DiveSiteNoEvidence(params=extractor_params, trigger_callback=trigger_callback, threshold=schema_args['threshold'])
         elif detector_type == "EchoRoomChange":
             ret_val = EchoRoomChange.EchoRoomChange(params=extractor_params, trigger_callback=trigger_callback)
+        elif detector_type == "Idle":
+            ret_val = Idle.Idle(params=extractor_params, trigger_callback=trigger_callback, idle_levels=schema_args.get("idle_levels"))
         else:
             raise NotImplementedError(f"'{detector_type}' is not a valid detector for Aqualab.")
         return ret_val
