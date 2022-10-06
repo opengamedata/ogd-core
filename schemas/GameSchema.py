@@ -110,6 +110,17 @@ class GameSchema:
 
     # *** PUBLIC METHODS ***
 
+    def GetCountRange(self, count:Any) -> range:
+        if isinstance(count, str):
+            if count.lower() == "level_range":
+                count_range = self.LevelRange
+            else:
+                other_range : Dict[str, int] = self.NonStandardElements.get(count, {'min':0, 'max':1})
+                count_range = range(other_range['min'], other_range['max'])
+        else:
+            count_range = range(0,int(count))
+        return count_range
+
     def DetectorEnabled(self, detector_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
         if self._legacy_mode:
             return False
