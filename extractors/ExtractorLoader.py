@@ -93,14 +93,6 @@ class ExtractorLoader(abc.ABC):
 
     # *** PRIVATE STATICS ***
 
-    @staticmethod
-    def _genCountRange(count:Any, schema:GameSchema) -> range:
-        if isinstance(count, str) and count.lower() == "level_range":
-            count_range = schema.LevelRange
-        else:
-            count_range = range(0,int(count))
-        return count_range
-
     # *** PRIVATE METHODS ***
 
     def _validateMode(self, feature_type) -> bool:

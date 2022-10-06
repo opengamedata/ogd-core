@@ -160,7 +160,7 @@ class FeatureRegistry(ExtractorRegistry):
             if feature is not None and self._mode in feature.AvailableModes():
                     self.Register(extractor=feature, iter_mode=IterationMode.AGGREGATE)
         for per_schema in per_load_set:
-            for i in ExtractorLoader._genCountRange(count=per_schema.Count, schema=schema):
+            for i in schema.GetCountRange(count=per_schema.Count):
                 instance_name = f"{per_schema.Prefix}{i}_{per_schema.Name}"
                 feature = loader.LoadFeature(feature_type=per_schema.TypeName, name=instance_name, schema_args=per_schema.Elements, count_index=i)
                 if feature is not None and self._mode in feature.AvailableModes():
