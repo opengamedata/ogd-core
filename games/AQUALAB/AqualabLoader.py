@@ -49,7 +49,7 @@ class AqualabLoader(ExtractorLoader):
                 self._diff_map[i] = job["difficulties"]
 
         # Update level count
-        self._game_schema._max_level = len(self._job_map) + 1
+        self._game_schema._max_level = len(self._job_map) - 1
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
