@@ -1,7 +1,11 @@
 {
     "level_range": {
         "min": 0,
-        "max": 43
+        "max": 56
+    },
+    "task_range": {
+        "min": 0,
+        "max": 235
     },
     "events": {
         "accept_job": {
