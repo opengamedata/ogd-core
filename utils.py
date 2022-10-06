@@ -2,8 +2,7 @@
 #  A module of utility functions used in the feature_extraction_to_csv project
 import json
 import logging
-import os
-import traceback
+import itertools
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional, List
@@ -106,3 +105,15 @@ class Logger:
             print(f"warning: {message}")
         elif level == logging.ERROR:
             print(f"error:   {message}")
+
+def GetAqualabJobCount(db_export_path:Path=Path("./games/AQUALAB/")):
+    db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
+    return len(db_export.get("jobs", []))
+
+def GetAqualabTaskCount(db_export_path:Path=Path("./games/AQUALAB/")):
+    db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
+    list_o_lists = [job.get('tasks', []) for job in db_export.get('jobs', [])]
+    # jobs_to_task_cts = [f"{job.get('id')}: {len(job.get('tasks', []))}" for job in db_export.get('jobs', [])]
+    # Logger.Log(f"Task counts by job:\n{jobs_to_task_cts}", logging.DEBUG)
+    all_tasks    = list(itertools.chain.from_iterable(list_o_lists))
+    return len(all_tasks)
