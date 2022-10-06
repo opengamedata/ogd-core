@@ -117,8 +117,10 @@ class GameSchema:
         if isinstance(count, str):
             if count.lower() == "level_range":
                 count_range = self.LevelRange
+            elif count in self.OtherRanges.keys():
+                count_range = self.OtherRanges.get(count, range(0))
             else:
-                other_range : Dict[str, int] = self.NonStandardElements.get(count, {'min':0, 'max':1})
+                other_range : Dict[str, int] = self.NonStandardElements.get(count, {'min':0, 'max':-1})
                 count_range = range(other_range['min'], other_range['max']+1)
         else:
             count_range = range(0,int(count))
