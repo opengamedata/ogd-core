@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from enum import IntEnum
 from typing import List, Optional, Union
 
@@ -15,7 +15,7 @@ class Event:
     def __init__(self, session_id:str, app_id:str,     timestamp:datetime,
                  event_name:str, event_data:utils.map, event_source:EventSource,
                  app_version:Optional[str] = None,     log_version:Optional[str] = None,
-                 time_offset:Optional[int] = None,
+                 time_offset:Optional[timedelta] = None,
                  user_id:Optional[str] = "",           user_data:Optional[utils.map] = {},
                  game_state:Optional[utils.map] = {},  event_sequence_index:Optional[int] = None):
         """Constructor for an Event object.
@@ -54,7 +54,7 @@ class Event:
         self.event_source         : EventSource   = event_source
         self.app_version          : str           = app_version if app_version is not None else "0"
         self.log_version          : str           = log_version if log_version is not None else "0"
-        self.time_offset          : Optional[int] = time_offset
+        self.time_offset          : Optional[timedelta] = time_offset
         self.user_id              : Optional[str] = user_id
         self.user_data            : utils.map     = user_data if user_data is not None else {}
         self.game_state           : utils.map     = game_state if game_state is not None else {}
@@ -104,7 +104,7 @@ class Event:
                 "offset",     "user_id",      "user_data",   "game_state",
                 "index"]
 
-    def ColumnValues(self) -> List[Union[str, datetime, utils.map, int, None]]:
+    def ColumnValues(self) -> List[Union[str, datetime, timedelta, utils.map, int, None]]:
         return [self.session_id,  self.app_id,             self.timestamp,   self.event_name,
                 self.event_data,  self.event_source.name,  self.app_version, self.log_version,
                 self.time_offset, self.user_id,            self.user_data,   self.game_state,
@@ -143,7 +143,7 @@ class Event:
         return self.log_version
 
     @property
-    def TimeOffset(self) -> Optional[int]:
+    def TimeOffset(self) -> Optional[timedelta]:
         return self.time_offset
 
     @property
