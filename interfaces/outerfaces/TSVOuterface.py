@@ -27,7 +27,7 @@ class TSVOuterface(DataOuterface):
     # *** BUILT-INS ***
 
     def __init__(self, game_id:str, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], data_dir:str, extension:str="tsv", dataset_id:Optional[str]=None):
-        super().__init__(game_id=game_id)
+        super().__init__(game_id=game_id, config={})
         self._file_paths   : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._zip_names    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._files        : Dict[str,Optional[IO]]   = {"population":None, "players":None, "sessions":None, "events":None}
@@ -221,6 +221,8 @@ class TSVOuterface(DataOuterface):
         except FileNotFoundError as err:
             Logger.Log(f"Could not open readme.md for writing.", logging.ERROR)
             traceback.print_tb(err.__traceback__)
+        else:
+            Logger.Log(f"Wrote readme file to {path}/readme.md", logging.INFO)
 
     @staticmethod
     def GenCSVMetadata(game_schema: GameSchema, table_schema: TableSchema) -> str:
@@ -248,9 +250,9 @@ class TSVOuterface(DataOuterface):
         f"# Game: {game_schema._game_name}  ",
         "",
         "## Field Descriptions:  \n",
-        f"{table_schema.Markdown()}",
+        f"{table_schema.AsMarkdown}",
         "",
-        f"{game_schema.Markdown()}",
+        f"{game_schema.AsMarkdown}",
         ""])
         return template_str
 

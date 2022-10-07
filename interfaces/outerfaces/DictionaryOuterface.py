@@ -15,7 +15,7 @@ class DictionaryOuterface(DataOuterface):
     # *** BUILT-INS ***
 
     def __init__(self, game_id:str, out_dict:Dict[str, Dict[str, Union[List[str], List[ExportRow]]]]):
-        super().__init__(game_id = game_id)
+        super().__init__(game_id=game_id, config={})
         self._out = out_dict
         self._evts : List[ExportRow] = []
         self._sess : List[ExportRow] = []

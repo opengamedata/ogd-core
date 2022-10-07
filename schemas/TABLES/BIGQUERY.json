@@ -1,17 +1,18 @@
 {
     "column_map": {
-        "session_id": "session_id",
-        "app_id": null,
-        "timestamp": "timestamp",
-        "event_name": "event_name",
-        "event_data": "event_params",
-        "app_version": "app_version",
-        "log_version": "log_version",
-        "time_offset": null,
-        "user_id": "fd_user_id",
-        "user_data": null,
-        "game_state": null,
-        "event_sequence_index": null
+        "session_id"           : "session_id",
+        "app_id"               : null,
+        "timestamp"            : "timestamp",
+        "event_name"           : "event_name",
+        "event_data"           : "event_params",
+        "event_source"         : null,
+        "app_version"          : "app_version",
+        "log_version"          : "log_version",
+        "time_offset"          : null,
+        "user_id"              : "fd_user_id",
+        "user_data"            : null,
+        "game_state"           : null,
+        "event_sequence_index" : null
     },
 
     "columns": [

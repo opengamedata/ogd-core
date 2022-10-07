@@ -54,15 +54,15 @@ class Request(abc.ABC):
     #                 Should correspond to the app_id in the database.
     #  @param start_date   The starting date for our range of data to process.
     #  @param end_date     The ending date for our range of data to process.
-    def __init__(self, interface:DataInterface, range:ExporterRange,
-                exporter_modes:Set[ExportMode], exporter_locs:List[DataOuterface],
+    def __init__(self, range:ExporterRange, exporter_modes:Set[ExportMode],
+                interface:DataInterface,    outerfaces:Set[DataOuterface],
                 feature_overrides:Optional[List[str]]=None):
         # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
         self._game_id        : str                    = str(interface._game_id)
         self._interface      : DataInterface          = interface
         self._range          : ExporterRange          = range
         self._exports        : Set[ExportMode]        = exporter_modes
-        self._outerfaces     : List[DataOuterface]    = exporter_locs
+        self._outerfaces     : Set[DataOuterface]     = outerfaces
         self._feat_overrides : Optional[List[str]]    = feature_overrides
 
     ## String representation of a request. Just gives game id, and date range.
@@ -105,7 +105,7 @@ class Request(abc.ABC):
         return ExportMode.POPULATION in self._exports
 
     @property
-    def Outerfaces(self) -> List[DataOuterface]:
+    def Outerfaces(self) -> Set[DataOuterface]:
         return self._outerfaces
 
     ## Method to retrieve the list of IDs for all sessions covered by the request.

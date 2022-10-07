@@ -6,6 +6,7 @@ from typing import Any, List
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.ExtractionMode import ExtractionMode
 from utils import Logger
@@ -17,10 +18,12 @@ class PlayerSummary(SessionFeature):
         self._summary = {}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["JobsCompleted", "SessionDuration", "SessionID"]
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -41,9 +44,9 @@ class PlayerSummary(SessionFeature):
             if feature.FeatureType == "JobsCompleted":
                 self._summary[user_id]["jobs_completed"] = feature.FeatureValues[0]
             elif feature.FeatureType == "SessionDuration":
-                if type(feature.FeatureValues[0]) == timedelta:
-                    self._summary[user_id]["active_time"] += feature.FeatureValues[0].seconds
-                elif type(feature.FeatureValues[0]) == str and feature.FeatureValues[0] == "No events":
+                if isinstance(feature.FeatureValues[0], timedelta):
+                    self._summary[user_id]["active_time"] += feature.FeatureValues[0].total_seconds()
+                elif isinstance(feature.FeatureValues[0], str) and feature.FeatureValues[0] == "No events":
                     pass
                 else:
                     raise ValueError(f"PlayerSummary got {feature.Name} feature with value {feature.FeatureValues[0]} of non-timedelta type {type(feature.FeatureValues[0])} in the {feature.FeatureNames[0]} column!")

@@ -102,10 +102,9 @@ class JowilderExtractor(LegacyFeature):
 
     def __init__(self, params:ExtractorParameters, game_schema:GameSchema, session_id:str):
         super().__init__(params=params, session_id=session_id, game_schema=game_schema)
-        config = game_schema['config']
-        self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
+        self._IDLE_THRESH_SECONDS = game_schema.Config['IDLE_THRESH_SECONDS']
         self._IDLE_THRESH = timedelta(seconds=self._IDLE_THRESH_SECONDS)
-        self._level_range = game_schema.level_range()
+        self._level_range = game_schema.LevelRange
         self.cur_task = 1
         self.time_since_start = timedelta(0)
         self._task_complete_helper = dict()
@@ -167,7 +166,7 @@ class JowilderExtractor(LegacyFeature):
             self.new_level(old_level)
         event_type_str = JowilderExtractor._EVENT_CUSTOM_TO_STR[int(event.EventName.split('.')[-1])].lower()
         # Check for invalid row.
-        if self.ExportMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
+        if self.ExtractionMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
             Logger.Log(
                 f"Got a row with incorrect session id! Expected {self._session_id}, got {event.SessionID}!",
                 logging.ERROR)
@@ -278,8 +277,8 @@ class JowilderExtractor(LegacyFeature):
             self.feature_count('count_idle')
             active_time = timedelta(0)
             idle_time = time_between_click_hovers
-        self.feature_inc('time_active', active_time)
-        self.feature_inc('time_idle', idle_time)
+        self.feature_inc('time_active', active_time.total_seconds())
+        self.feature_inc('time_idle', idle_time.total_seconds())
 
 
         self.last_click_hover_time = timestamp

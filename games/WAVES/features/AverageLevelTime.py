@@ -5,10 +5,11 @@ from schemas import Event
 from typing import Any, Dict, List, Optional
 # import locals
 from utils import Logger
-from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
 
 class AverageLevelTime(SessionFeature):
     def __init__(self, params:ExtractorParameters):
@@ -18,10 +19,12 @@ class AverageLevelTime(SessionFeature):
         self._complete_times     : Dict[int,List[datetime]] = {}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["BEGIN.0", "COMPLETE.0"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

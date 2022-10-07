@@ -2,6 +2,7 @@
 import json
 from typing import Any, Callable, Dict, List, Optional
 # import local files
+import games.AQUALAB.features
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 from extractors.ExtractorLoader import ExtractorLoader
@@ -51,6 +52,10 @@ class AqualabLoader(ExtractorLoader):
         self._game_schema._max_level = len(self._job_map) - 1
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
+    @staticmethod
+    def _getFeaturesModule():
+        return games.AQUALAB.features
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
@@ -133,7 +138,7 @@ class AqualabLoader(ExtractorLoader):
         ret_val : Detector
         if detector_type == "CollectFactNoJob":
             ret_val = CollectFactNoJob.CollectFactNoJob(params=extractor_params, trigger_callback=trigger_callback)
-        if detector_type == "DiveSiteNoEvidence":
+        elif detector_type == "DiveSiteNoEvidence":
             ret_val = DiveSiteNoEvidence.DiveSiteNoEvidence(params=extractor_params, trigger_callback=trigger_callback, threshold=schema_args['threshold'])
         elif detector_type == "EchoRoomChange":
             ret_val = EchoRoomChange.EchoRoomChange(params=extractor_params, trigger_callback=trigger_callback)

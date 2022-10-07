@@ -1,12 +1,9 @@
 ## import standard libraries
 import abc
-import logging
-from datetime import datetime
-from typing import Dict, List, Tuple, Optional
+from typing import Any, Dict
 
 # import local files
 from schemas.IDMode import IDMode
-from utils import Logger
 
 class Interface(abc.ABC):
 
@@ -22,7 +19,8 @@ class Interface(abc.ABC):
 
     # *** BUILT-INS ***
 
-    def __init__(self):
+    def __init__(self, config:Dict[str,Any]):
+        self._config  : Dict[str, Any] = config
         self._is_open : bool = False
 
     def __del__(self):

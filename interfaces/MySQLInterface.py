@@ -9,17 +9,18 @@ from typing import Any, Dict, List, Tuple, Optional
 from interfaces.DataInterface import DataInterface
 from config.config import settings as default_settings
 from schemas.IDMode import IDMode
+from schemas.TableSchema import TableSchema
 from utils import Logger
 
 
 ## Dumb struct to collect data used to establish a connection to a SQL database.
 class SQLLogin:
-    def __init__(self, host: str, port: int, user: str, pword: str, db_name: str):
+    def __init__(self, host: str, port: int, db_name: str, user: str, pword: str):
         self.host    = host
         self.port    = port
+        self.db_name = db_name
         self.user    = user
         self.pword   = pword
-        self.db_name = db_name
  
 ## Dumb struct to collect data used to establish a connection over ssh.
 class SSHLogin:
@@ -51,16 +52,16 @@ class SQL:
         tunnel  : Optional[sshtunnel.SSHTunnelForwarder] = None
         db_conn : Optional[connection.MySQLConnection]   = None
         # Load settings, set up consts.
+        DB_HOST = db_settings['DB_HOST']
         DB_NAME = db_settings["DB_NAME"]
+        DB_PORT = int(db_settings['DB_PORT'])
         DB_USER = db_settings['DB_USER']
         DB_PW = db_settings['DB_PW']
-        DB_HOST = db_settings['DB_HOST']
-        DB_PORT = int(db_settings['DB_PORT'])
-        sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, user=DB_USER, pword=DB_PW, db_name=DB_NAME)
+        sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, db_name=DB_NAME, user=DB_USER, pword=DB_PW)
         Logger.Log("Preparing database connection...", logging.INFO)
         if ssh_settings is not None:
             SSH_USER = ssh_settings['SSH_USER']
-            SSH_PW = ssh_settings['SSH_PW']
+            SSH_PW   = ssh_settings['SSH_PW']
             SSH_HOST = ssh_settings['SSH_HOST']
             SSH_PORT = ssh_settings['SSH_PORT']
             if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
@@ -77,7 +78,7 @@ class SQL:
 
     # Function to help connect to a mySQL server.
     @staticmethod
-    def _connectToMySQL(login: SQLLogin) -> Optional[connection.MySQLConnection]:
+    def _connectToMySQL(login:SQLLogin) -> Optional[connection.MySQLConnection]:
         """Function to help connect to a mySQL server.
 
         Simply tries to make a connection, and prints an error in case of failure.
@@ -103,7 +104,7 @@ class SQL:
 
     ## Function to help connect to a mySQL server over SSH.
     @staticmethod
-    def _connectToMySQLviaSSH(sql: SQLLogin, ssh: SSHLogin) -> Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]:
+    def _connectToMySQLviaSSH(sql:SQLLogin, ssh:SSHLogin) -> Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]:
         """Function to help connect to a mySQL server over SSH.
 
         Simply tries to make a connection, and prints an error in case of failure.
@@ -172,11 +173,11 @@ class SQL:
 
     # Function to build and execute SELECT statements on a database connection.
     @staticmethod
-    def SELECT(cursor        :cursor.MySQLCursor, db_name       :str,                      table:str,
-               columns       :List[str] = [],     filter        :Optional[str] = None,
-               sort_columns  :Optional[List[str]] = None,   sort_direction:str              = "ASC", grouping:Optional[str] = None,
-               distinct      :bool      = False,  offset        :int = 0,     limit         :int = -1,
-               fetch_results :bool      = True) -> Optional[List[Tuple]]:
+    def SELECT(cursor        :cursor.MySQLCursor,          db_name        : str,                   table    : str,
+               columns       :List[str]           = [],    filter         : Optional[str] = None,
+               sort_columns  :Optional[List[str]] = None,  sort_direction : str           = "ASC", grouping : Optional[str] = None,
+               distinct      :bool                = False, offset         : int           = 0,     limit    : int           = -1,
+               fetch_results :bool                = True) -> Optional[List[Tuple]]:
         """Function to build and execute SELECT statements on a database connection.
 
         :param cursor: A database cursor, retrieved from the active connection.
@@ -238,14 +239,11 @@ class MySQLInterface(DataInterface):
 
     # *** BUILT-INS ***
 
-    def __init__(self, game_id:str, settings):
-        # set up data from params
-        super().__init__(game_id=game_id)
-        self._settings = settings
-        # set up connection vars and try to make connection off the bat.
-        self._tunnel : Optional[sshtunnel.SSHTunnelForwarder] = None
-        self._db     : Optional[connection.MySQLConnection] = None
+    def __init__(self, game_id:str, config:Dict[str,Any]):
+        self._tunnel    : Optional[sshtunnel.SSHTunnelForwarder] = None
+        self._db        : Optional[connection.MySQLConnection] = None
         self._db_cursor : Optional[cursor.MySQLCursor] = None
+        super().__init__(game_id=game_id, config=config)
         self.Open()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -256,10 +254,12 @@ class MySQLInterface(DataInterface):
             self.Open(force_reopen=False)
         if not self._is_open:
             start = datetime.now()
-            _sql_cfg = self._settings.get("MYSQL_CONFIG") or default_settings["MYSQL_CONFIG"]
-            _ssh_cfg = self._settings.get("SSH_CONFIG") or default_settings["SSH_CONFIG"]
+            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
+
+            _sql_cfg = self._config.get("source") or default_settings["GAME_SOURCES"][default_source]
+            _ssh_cfg = default_settings["SSH_CONFIG"]
             self._tunnel, self._db = SQL.ConnectDB(db_settings=_sql_cfg, ssh_settings=_ssh_cfg)
-            if self._db != None:
+            if self._db is not None:
                 self._db_cursor = self._db.cursor()
                 self._is_open = True
                 time_delta = datetime.now() - start
@@ -278,22 +278,20 @@ class MySQLInterface(DataInterface):
         self._is_open = False
         return True
 
+    def _loadTableSchema(self, game_id:str) -> TableSchema:
+        _schema_name = self._config.get("schema") or default_settings['GAME_SOURCE_MAP'].get(game_id, {}).get('schema', "NO SCHEMA DEFINED")
+        return TableSchema(schema_name=_schema_name)
+
     def _allIDs(self) -> List[str]:
         if not self._db_cursor == None:
-            # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            db_name    : str
-            table_name : str
-            if "MYSQL_CONFIG" in self._settings:
-                db_name = self._settings["MYSQL_CONFIG"]["DB_NAME"]
-                table_name = self._settings["MYSQL_CONFIG"]["TABLE"]
-            else:
-                db_name = default_settings["MYSQL_CONFIG"]["DB_NAME"]
-                table_name = default_settings["MYSQL_CONFIG"]["TABLE"]
+            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
+
+            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
+            table_name : str = self._config.get("table") or default_settings["MYSQL_CONFIG"]["TABLE"]
             filt = f"`app_id`='{self._game_id}'"
             data = SQL.SELECT(cursor =self._db_cursor, db_name=db_name, table   =table_name,
                               columns=['session_id'],  filter =filt,    distinct=True)
             return [str(id[0]) for id in data] if data != None else []
-            # self._select_queries.append(select_query) # this doesn't appear to be used???
         else:
             Logger.Log(f"Could not get list of all session ids, MySQL connection is not open.", logging.WARN)
             return []
@@ -301,15 +299,10 @@ class MySQLInterface(DataInterface):
     def _fullDateRange(self) -> Dict[str,datetime]:
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
         if not self._db_cursor == None:
-            # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            db_name    : str
-            table_name : str
-            if "MYSQL_CONFIG" in self._settings:
-                db_name = self._settings["MYSQL_CONFIG"]["DB_NAME"]
-                table_name = self._settings["MYSQL_CONFIG"]["TABLE"]
-            else:
-                db_name = default_settings["MYSQL_CONFIG"]["DB_NAME"]
-                table_name = default_settings["MYSQL_CONFIG"]["TABLE"]
+            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
+
+            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
+            table_name : str = self._config.get("table") or default_settings["MYSQL_CONFIG"]["TABLE"]
             # prep filter strings
             filt = f"`app_id`='{self._game_id}'"
             # run query
@@ -330,14 +323,10 @@ class MySQLInterface(DataInterface):
             else:
                 ver_filter = ''
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            db_name    : str
-            table_name : str
-            if "MYSQL_CONFIG" in self._settings:
-                db_name = self._settings["MYSQL_CONFIG"]["DB_NAME"]
-                table_name = self._settings["MYSQL_CONFIG"]["TABLE"]
-            else:
-                db_name = default_settings["MYSQL_CONFIG"]["DB_NAME"]
-                table_name = default_settings["MYSQL_CONFIG"]["TABLE"]
+            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
+
+            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
+            table_name : str = self._config.get("table") or default_settings["MYSQL_CONFIG"]["TABLE"]
             id_list_string = ",".join([f"%s" for i in range(len(id_list))])
             if id_mode == IDMode.SESSION:
                 filt = f"`app_id`=%s AND `session_id` IN ({id_list_string}){ver_filter}"
@@ -359,19 +348,13 @@ class MySQLInterface(DataInterface):
         ret_val = []
         if not self._db_cursor == None:
             # alias long setting names.
-            db_name    : str
-            table_name : str
-            if "MYSQL_CONFIG" in self._settings:
-                db_name = self._settings["MYSQL_CONFIG"]["DB_NAME"]
-                table_name = self._settings["MYSQL_CONFIG"]["TABLE"]
-            else:
-                db_name = default_settings["MYSQL_CONFIG"]["DB_NAME"]
-                table_name = default_settings["MYSQL_CONFIG"]["TABLE"]
-            start = min.isoformat()
-            end = max.isoformat()
+            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
+
+            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
+            table_name : str = self._config.get("table") or default_settings["MYSQL_CONFIG"]["TABLE"]
             # prep filter strings
             ver_filter = f" AND `app_version` in ({','.join([str(x) for x in versions])}) " if versions else ''
-            filt = f"`app_id`=\"{self._game_id}\" AND `session_n`='0' AND (`server_time` BETWEEN '{start}' AND '{end}'){ver_filter}"
+            filt = f"`app_id`=\"{self._game_id}\" AND `session_n`='0' AND (`server_time` BETWEEN '{min.isoformat()}' AND '{max.isoformat()}'){ver_filter}"
             # run query
             # We grab the ids for all sessions that have 0th move in the proper date range.
             session_ids_raw = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
@@ -387,14 +370,10 @@ class MySQLInterface(DataInterface):
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
         if not self._db_cursor == None:
             # alias long setting names.
-            db_name    : str
-            table_name : str
-            if "MYSQL_CONFIG" in self._settings:
-                db_name = self._settings["MYSQL_CONFIG"]["DB_NAME"]
-                table_name = self._settings["MYSQL_CONFIG"]["TABLE"]
-            else:
-                db_name = default_settings["MYSQL_CONFIG"]["DB_NAME"]
-                table_name = default_settings["MYSQL_CONFIG"]["TABLE"]
+            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
+
+            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
+            table_name : str = self._config.get("table") or default_settings["MYSQL_CONFIG"]["TABLE"]
             # prep filter strings
             ids_string = ','.join([f"'{x}'" for x in id_list])
             ver_filter = f" AND `app_version` in ({','.join([str(x) for x in versions])}) " if versions else ''

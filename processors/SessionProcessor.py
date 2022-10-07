@@ -46,6 +46,12 @@ class SessionProcessor(FeatureProcessor):
         # NOTE: need session and player IDs set before we do initialization in parent.
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
 
+    def __str__(self):
+        return f"SessionProcessor({self._player_id}, {self._session_id})"
+
+    def __repr__(self):
+        return str(self)
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @property

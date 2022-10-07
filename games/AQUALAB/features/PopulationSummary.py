@@ -5,6 +5,7 @@ from typing import Any, Dict, List
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class PopulationSummary(SessionFeature):
@@ -16,10 +17,12 @@ class PopulationSummary(SessionFeature):
         self._user_session_times = defaultdict(list)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["JobsCompleted", "SessionID", "SessionDuration"]
 
     def _extractFromEvent(self, event: Event) -> None:
@@ -71,4 +74,4 @@ class PopulationSummary(SessionFeature):
         ret_val = timedelta(0)
         for time in times:
             ret_val += time
-        return ret_val.seconds
+        return ret_val.total_seconds()

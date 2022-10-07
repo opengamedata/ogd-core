@@ -13,6 +13,7 @@ from extractors.Extractor import ExtractorParameters
 from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 
 pd.options.mode.chained_assignment = None  # default='warn'
     
@@ -44,7 +45,8 @@ class LevelsOfDifficulty(SessionFeature):
         self._userPuzzleDict = dict()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ['move_shape', 'rotate_shape', 'scale_shape',
                 'check_solution', 'undo_action', 'redo_action',
                 'rotate_view', 'snapshot', 'mode_change',
@@ -54,7 +56,8 @@ class LevelsOfDifficulty(SessionFeature):
                 'click_nothing', 'toggle_paint_display', 'palette_change',
                 'paint', 'toggle_snapshot_display']
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

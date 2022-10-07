@@ -38,6 +38,9 @@ class PopulationProcessor(FeatureProcessor):
         """
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
 
+    def __str__(self):
+        return f"PopulationProcessor"
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @property

@@ -4,10 +4,11 @@ import json
 import logging
 from collections import OrderedDict
 from datetime import datetime
-from typing import Any, Dict, ItemsView, List, Optional
+from typing import Any, Dict, List, Optional, Set, Tuple
 ## import local files
 from extractors.Extractor import Extractor
 from extractors.ExtractorLoader import ExtractorLoader
+from extractors.features.PerCountFeature import PerCountFeature
 from extractors.registries.ExtractorRegistry import ExtractorRegistry
 from extractors.features.Feature import Feature
 from schemas.Event import Event
@@ -15,6 +16,8 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 from schemas.IterationMode import IterationMode
+from schemas.game_schemas.AggregateSchema import AggregateSchema
+from schemas.game_schemas.PerCountSchema import PerCountSchema
 from utils import Logger
 
 ## @class Extractor
@@ -87,11 +90,11 @@ class FeatureRegistry(ExtractorRegistry):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _register(self, extractor:Extractor, mode:IterationMode):
+    def _register(self, extractor:Extractor, iter_mode:IterationMode):
         if isinstance(extractor, Feature):
-            _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=mode)
-            _feature_deps = extractor.GetFeatureDependencies()
-            _event_deps   = extractor.GetEventDependencies()
+            _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=iter_mode)
+            _feature_deps = extractor.GetFeatureDependencies(mode=self._mode)
+            _event_deps   = extractor.GetEventDependencies(mode=self._mode)
             # First, add feature to the _features dict.
             if len(_feature_deps) > 0:
                 _feat_order = FeatureRegistry.FeatureOrders.SECOND_ORDER.value
@@ -126,30 +129,42 @@ class FeatureRegistry(ExtractorRegistry):
                 ret_val += feature.GetFeatureNames()
         return ret_val
 
-    def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, extract_mode:ExtractionMode, overrides:Optional[List[str]]):
-        iter_mode = IterationMode.AGGREGATE
-        for base_name,aggregate in schema.AggregateFeatures.items():
-            if schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=overrides):
-                feature_type = aggregate.get('feature_type', base_name) # try to get 'feature type' from aggregate, if it's not there default to name of the config item.
-                feature = loader.LoadFeature(feature_type=feature_type, name=base_name, schema_args=aggregate)
+    def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, overrides:Optional[List[str]]=None):
+        # first, get list of what should actually be loaded.
+        # TODO : move this logic as high up as possible, so that we only need to do it once for each kind of processor.
+        # 1. Start with overrides, else list of enabled features in schema.
+        agg_load_set : Set[AggregateSchema]
+        per_load_set : Set[PerCountSchema]
+        if overrides is not None:
+            agg_load_set = {schema.AggregateFeatures[name] for name in overrides if name in schema.AggregateFeatures.keys()}
+            per_load_set = {schema.PerCountFeatures[name]  for name in overrides if name in schema.PerCountFeatures.keys()}
+        else:
+            agg_load_set = {val for val in schema.EnabledFeatures(iter_modes={IterationMode.AGGREGATE}, extract_modes={self._mode}).values() if isinstance(val, AggregateSchema)}
+            per_load_set = {val for val in schema.EnabledFeatures(iter_modes={IterationMode.PERCOUNT}, extract_modes={self._mode}).values() if isinstance(val, PerCountSchema)}
+        # 2. For each, grab the list of feature dependencies, and add to the list of features we want to load.
+        _agg_deps = set()
+        for agg in agg_load_set:
+            _class = loader.GetFeatureClass(feature_type=agg.TypeName)
+            if _class is not None:
+                _agg_deps = _agg_deps.union(set(_class.GetFeatureDependencies(mode=self._mode)))
+        agg_load_set = agg_load_set.union({schema.AggregateFeatures[agg] for agg in _agg_deps if agg in schema.AggregateFeatures.keys()})
+        _per_deps = set()
+        for per in per_load_set:
+            _class = loader.GetFeatureClass(feature_type=per.TypeName)
+            if _class is not None:
+                _per_deps = _per_deps.union(set(_class.GetFeatureDependencies(mode=self._mode)))
+        per_load_set = per_load_set.union({schema.PerCountFeatures[per] for per in _per_deps if per in schema.PerCountFeatures.keys()})
+        # 3. Now that we know what needs loading, load them and register.
+        for agg_schema in sorted(agg_load_set, key=lambda x : x.Name):
+            feature = loader.LoadFeature(feature_type=agg_schema.TypeName, name=agg_schema.Name, schema_args=agg_schema.Elements)
+            if feature is not None and self._mode in feature.AvailableModes():
+                    self.Register(extractor=feature, iter_mode=IterationMode.AGGREGATE)
+        for per_schema in sorted(per_load_set, key=lambda x : x.Name):
+            for i in schema.GetCountRange(count=per_schema.Count):
+                instance_name = f"{per_schema.Prefix}{i}_{per_schema.Name}"
+                feature = loader.LoadFeature(feature_type=per_schema.TypeName, name=instance_name, schema_args=per_schema.Elements, count_index=i)
                 if feature is not None and self._mode in feature.AvailableModes():
-                    self.Register(extractor=feature, mode=iter_mode)
-        iter_mode = IterationMode.PERCOUNT
-        for base_name,percount in schema.PerCountFeatures.items():
-            if schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=overrides):
-                feature_type = percount.get('feature_type', base_name) # try to get 'feature type' from percount, if it's not there default to name of the config item.
-                for i in ExtractorLoader._genCountRange(count=percount["count"], schema=schema):
-                    instance_name = f"{percount['prefix']}{i}_{base_name}"
-                    feature = loader.LoadFeature(feature_type=feature_type, name=instance_name, schema_args=percount, count_index=i)
-                    if feature is not None and self._mode in feature.AvailableModes():
-                        self.Register(extractor=feature, mode=iter_mode)
-        return
-        # for firstOrder in registry.FirstOrdersRequested():
-        #     #TODO load firstOrder, if it's not loaded already
-        #     if not firstOrder in registry.GetExtractorNames():
-
-    def _extractorEnabled(self, schema:GameSchema, extractor_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode, overrides:Optional[List[str]]):
-        return schema.FeatureEnabled(feature_name=extractor_name, iter_mode=iter_mode, extract_mode=extract_mode, overrides=overrides)
+                        self.Register(extractor=feature, iter_mode=IterationMode.PERCOUNT)
 
     def _extractFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.
