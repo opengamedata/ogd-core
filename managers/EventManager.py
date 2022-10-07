@@ -36,8 +36,8 @@ class EventManager:
             elif type(col) == dict:
                 col_values[i] = json.dumps(col)
         # event.EventData = json.dumps(event.EventData)
-        self._lines.append(col_values) # changed , to \t
         self._processor.ProcessEvent(event=event)
+        self._lines.append(col_values) # changed , to \t
 
     def GetColumnNames(self) -> List[str]:
         return self._columns
