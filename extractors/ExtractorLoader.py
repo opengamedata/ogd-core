@@ -115,7 +115,7 @@ class ExtractorLoader(abc.ABC):
 
     def _loadBuiltinFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
         if feature_type == "CountEvent":
-            ret_val = CountEvent.CountEvent(params=extractor_params, job_map=self._job_map)
+            ret_val = CountEvent.CountEvent(params=extractor_params, schema_args=schema_args)
         elif feature_type == "Timespan":
             ret_val = Timespan.Timespan(params=extractor_params)
         else:
