@@ -117,7 +117,7 @@ class ExtractorLoader(abc.ABC):
         if feature_type == "CountEvent":
             ret_val = CountEvent.CountEvent(params=extractor_params, schema_args=schema_args)
         elif feature_type == "Timespan":
-            ret_val = Timespan.Timespan(params=extractor_params)
+            ret_val = Timespan.Timespan(params=extractor_params, schema_args=schema_args)
         else:
             return None
 
