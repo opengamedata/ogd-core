@@ -1,5 +1,7 @@
 __all__ = [
-    "CountEvent"
+    "CountEvent",
+    "Timespan"
 ]
 
 from . import CountEvent
+from . import Timespan
