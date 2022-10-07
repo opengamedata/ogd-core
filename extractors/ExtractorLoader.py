@@ -73,7 +73,7 @@ class ExtractorLoader(abc.ABC):
             params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
             ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
             if ret_val is None:
-                ret_val = self._loadBuiltinFeature(festure_type=feature_type, extractor_params=extractor_params, schema_args=schema_args)
+                ret_val = self._loadBuiltinFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
             if ret_val is None:
                 Logger.Log(f"In ExtractorLoader, unable to load '{name}', {feature_type} is not implemented!:", logging.ERROR)
 
@@ -115,7 +115,7 @@ class ExtractorLoader(abc.ABC):
 
     def _loadBuiltinFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
         if feature_type == "CountEvent":
-            ret_val = CoubtEvent.CountEvent(params=extractor_params, job_map=self._job_map)
+            ret_val = CountEvent.CountEvent(params=extractor_params, job_map=self._job_map)
         elif feature_type == "Timespan":
             ret_val = Timespan.Timespan(params=extractor_params)
         else:

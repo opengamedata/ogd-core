@@ -3,6 +3,7 @@ import json
 from typing import Any, List, Optional
 # import local files
 from extractors.features.Feature import Feature
+from extractors.Extractor import ExtractorParameters
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
@@ -40,7 +41,7 @@ class CountEvent(Feature):
         :param event: _description_
         :type event: Event
         """
-        if event.EventType == self._target_event:
+        if event.EventName == self._target_event:
             self._count += 1
         return
 
