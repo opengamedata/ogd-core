@@ -69,13 +69,14 @@ class ExtractorLoader(abc.ABC):
 
         # bit of a hack using globals() here, but theoretically this lets us access the class object with only a string.
         # feature_class : Optional[Type[Extractor]] = globals().get(feature_type, None)
+        params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
         if self._validateMode(feature_type=feature_type):
-            params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
             ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
-            if ret_val is None:
-                ret_val = self._loadBuiltinFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
-            if ret_val is None:
-                Logger.Log(f"In ExtractorLoader, unable to load '{name}', {feature_type} is not implemented!:", logging.ERROR)
+        if ret_val is None:
+            Logger.Log(f"In ExtractorLoader, attempting to load '{name}' as builtin {feature_type}", logging.INFO)
+            ret_val = self._loadBuiltinFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
+        if ret_val is None:
+            Logger.Log(f"In ExtractorLoader, unable to load '{name}', {feature_type} is not implemented!", logging.ERROR)
 
         return ret_val
 
@@ -114,10 +115,12 @@ class ExtractorLoader(abc.ABC):
         return ret_val
 
     def _loadBuiltinFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Optional[Feature]:
-        if feature_type == "CountEvent":
+        ret_val : Optional[Feature] = None
+        if feature_type == "CountEvent" and self._mode in CountEvent.CountEvent.AvailableModes():
             ret_val = CountEvent.CountEvent(params=extractor_params, schema_args=schema_args)
-        elif feature_type == "Timespan":
+        elif feature_type == "Timespan" and self._mode in Timespan.Timespan.AvailableModes():
             ret_val = Timespan.Timespan(params=extractor_params, schema_args=schema_args)
         else:
             return None
+        return ret_val
 
