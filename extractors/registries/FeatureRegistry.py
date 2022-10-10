@@ -8,7 +8,6 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 ## import local files
 from extractors.Extractor import Extractor
 from extractors.ExtractorLoader import ExtractorLoader
-from extractors.features.PerCountFeature import PerCountFeature
 from extractors.registries.ExtractorRegistry import ExtractorRegistry
 from extractors.features.Feature import Feature
 from schemas.Event import Event
