@@ -60,7 +60,9 @@ class AqualabLoader(ExtractorLoader):
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         # First run through aggregate features
-        if feature_type == "ActiveJobs":
+        if feature_type == "ActiveTime":
+            ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
+        elif feature_type == "ActiveJobs":
             ret_val = ActiveJobs.ActiveJobs(params=extractor_params, job_map=self._job_map)
         elif feature_type == "EchoSessionID":
             ret_val = EchoSessionID.EchoSessionID(params=extractor_params)
@@ -143,7 +145,7 @@ class AqualabLoader(ExtractorLoader):
         elif detector_type == "EchoRoomChange":
             ret_val = EchoRoomChange.EchoRoomChange(params=extractor_params, trigger_callback=trigger_callback)
         elif detector_type == "Idle":
-            ret_val = Idle.Idle(params=extractor_params, trigger_callback=trigger_callback, idle_levels=schema_args.get("idle_levels"))
+            ret_val = Idle.Idle(params=extractor_params, trigger_callback=trigger_callback, idle_level=schema_args.get("idle_level"))
         else:
             raise NotImplementedError(f"'{detector_type}' is not a valid detector for Aqualab.")
         return ret_val

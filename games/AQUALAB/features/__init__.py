@@ -1,4 +1,5 @@
 __all__ = [
+    "ActiveTime",
     "ActiveJobs",
     "EchoSessionID",
     "EventList",
@@ -34,6 +35,7 @@ __all__ = [
     "UserTotalSessionDuration"
 ]
 
+from . import ActiveTime
 from . import ActiveJobs
 from . import EchoSessionID
 from . import EventList
