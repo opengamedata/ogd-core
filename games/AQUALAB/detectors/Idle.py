@@ -1,5 +1,6 @@
 # import standard libraries
 from datetime import datetime, timedelta
+from time import time
 from typing import Callable, List, Optional, Union
 # import local files
 from extractors.detectors.Detector import Detector
@@ -14,10 +15,10 @@ class Idle(Detector):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    DEFAULT_IDLE_LEVELS = [30, 60, 90]
+    DEFAULT_IDLE_LEVEL = 30
 
 
-    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None], idle_levels:Optional[List[int]]):
+    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None], idle_level:Optional[int]):
         super().__init__(params=params, trigger_callback=trigger_callback)
         self._found = False
         self._sess_id = "Unknown"
@@ -27,10 +28,10 @@ class Idle(Detector):
         self._log_version = "Unknown"
         self._idle_level = 0
         self._idle_time: Optional[Union[float, timedelta]] = None
-        if idle_levels is not None:
-            self._idle_threads = sorted(idle_levels)
+        if idle_level is not None:
+            self._idle_threads: timedelta = timedelta(seconds=idle_level)
         else:
-            self._idle_threads = Idle.DEFAULT_IDLE_LEVELS
+            self._idle_threads: timedelta = timedelta(seconds=Idle.DEFAULT_IDLE_LEVEL)
 
     # *** Implement abstract functions ***
     @classmethod
@@ -48,20 +49,23 @@ class Idle(Detector):
         :param event: _description_
         :type event: Event
         """
-        if "script" in event.EventName:
+        if event.EventName == "script_fired" and ("somethingLeft" or "nothingLeft") in event.EventData.get("node_id").get("string_value"):
             return
+        if self._sess_id == "Unknown":
+            self._sess_id = event.SessionID
+        elif self._sess_id != event.SessionID:
+            self._sess_id = event.SessionID
+            self._last_action_time = None
         if not self._last_action_time:
             self._last_action_time = event.Timestamp
             return
+
         self._idle_time = event.Timestamp - self._last_action_time
         self._last_action_time = event.Timestamp
-        if self._idle_time > timedelta(seconds = self._idle_threads[0]):
+        if self._idle_time > self._idle_threads:
             self._found = True
             self._idle_time = self._idle_time / timedelta(seconds=1)
-            for thread in self._idle_threads:
-                if self._idle_time < thread:
-                    break
-                self._idle_level = thread
+            self._idle_level = self._idle_threads / timedelta(seconds=1)
             self._sess_id = event.SessionID
             self._player_id = event.UserID
             self._time = event.Timestamp
