@@ -38,15 +38,21 @@ class AqualabLoader(ExtractorLoader):
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
         self._job_map = {"no-active-job": 0}
         self._diff_map = {0: {"experimentation": 0, "modeling": 0, "argumentation": 0} }
+        self._task_map = {}
         data = None
 
         # Load Aqualab jobs export and map job names to integer values
         with open(EXPORT_PATH, "r") as file:
             export = json.load(file)
 
+            task_num = 1
             for i, job in enumerate(export["jobs"], start=1):
                 self._job_map[job["id"]] = i
                 self._diff_map[i] = job["difficulties"]
+                for task in job["tasks"]:
+                    task_by_job = job["id"] + "_" + task["id"]
+                    self._task_map[task_by_job] = task_num
+                    task_num += 1
 
         # Update level count
         self._game_schema._max_level = len(self._job_map) - 1
