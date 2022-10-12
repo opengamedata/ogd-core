@@ -4,6 +4,7 @@ from typing import Any, List, Optional
 # import local files
 from extractors.features.Feature import Feature
 from extractors.Extractor import ExtractorParameters
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
@@ -19,7 +20,8 @@ class CountEvent(Feature):
         self._count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -27,7 +29,8 @@ class CountEvent(Feature):
         """
         return [self._target_event]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
