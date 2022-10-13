@@ -1,8 +1,9 @@
 # import libraries
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 from extractors.Extractor import ExtractorParameters
 # import local files
 from extractors.features.SessionFeature import SessionFeature
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
@@ -14,15 +15,17 @@ class GameVersion(SessionFeature):
     """
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        self._version : Optional[int] = None
-        self._log_version: Optional[int] = None
+        self._version    : Union[str,int,None] = None
+        self._log_version: Union[str,int,None] = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.1"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return [] 
 
     def _extractFromEvent(self, event:Event) -> None:

@@ -1,20 +1,21 @@
 # import libraries
 import json
+from datetime import datetime, timedelta
 from os import environ
 from typing import Any, List, Optional
 from extractors.Extractor import ExtractorParameters
 # import local files
 from extractors.features.PerCountFeature import PerCountFeature
+from games.JOWILDER import Jowilder_Enumerators as je
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
-from datetime import datetime, timedelta
-from games.JOWILDER import Jowilder_Enumerators as je
 
 # NOTE: Assumptions are: 1. All click events occured in the order like xxxx111xx222x1x3. 2. Use "text_fqid" to identify interactions. 3. The first interaction "tunic.historicalsociety.closet.intro" makes no sense so we don't need to consider it. That is, there are 190 interactions in total, but we only count 189. And we should confirm that, this tunic.historicalsociety.closet.intro doesn't occur anywhere else.
 
 
 class ClickTrack:
-    def __init__(self, start_time: datetime = None, game_start: bool = False, this_click:Event=None, last_click:Event=None) -> None:
+    def __init__(self, start_time:Optional[datetime] = None, game_start: bool = False, this_click:Optional[Event]=None, last_click:Optional[Event]=None) -> None:
         self._game_start : bool = game_start
         self._game_start_time : Optional[datetime] = start_time
         self._last_click : Optional[Event] = last_click
@@ -26,13 +27,19 @@ class ClickTrack:
     # TODO: Add more property decorators fuction
     @property
     def LastClickTime(self):
-        return self._last_click.Timestamp
+        if self._last_click is not None:
+            return self._last_click.Timestamp
+        else:
+            return None
 
     @property
     def LastInteractionIndex(self):
-        _interaction = self._last_click.EventData.get(
-            "text_fqid") or self._last_click.EventData.get("cur_cmd_fqid")
-        return je.fqid_to_enum.get(_interaction)
+        if self._last_click is not None:
+            _interaction = self._last_click.EventData.get("text_fqid") \
+                        or self._last_click.EventData.get("cur_cmd_fqid")
+            return je.fqid_to_enum.get(_interaction)
+        else:
+            return None
 
     @property
     def GameStart(self):
@@ -97,13 +104,14 @@ class Interaction(PerCountFeature):
             return self._interaction == self.CountIndex
 
         
-
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         # NOTE: Count all the click events
         return ["CUSTOM." + str(i) for i in range(3,12)] + ["CUSTOM.1"]
         # CUSTOM.X, X in [3,12) = ['navigate_click','notebook_click', 'map_click', 'notification_click', 'object_click', 'observation_click', 'person_click', 'cutscene_click', 'wildcard_click']
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_

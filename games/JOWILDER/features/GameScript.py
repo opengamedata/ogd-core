@@ -4,6 +4,7 @@ from typing import Any, List, Optional
 from extractors.Extractor import ExtractorParameters
 # import local files
 from extractors.features.SessionFeature import SessionFeature
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
@@ -23,17 +24,22 @@ class GameScript(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.1"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return [] 
 
     def _extractFromEvent(self, event:Event) -> None:
         if Event.CompareVersions(event.LogVersion, "7") >= 0:
             _type = event.EventData.get("script_type")
             self._version = event.EventData.get("script_version")
-            self._name = GameScript.TYPE.get(_type)
+            if _type is not None:
+                self._name = GameScript.TYPE.get(_type)
+            else:
+                raise ValueError(f"")
 
         return
 
