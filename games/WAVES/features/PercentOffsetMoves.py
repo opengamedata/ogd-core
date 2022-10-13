@@ -14,11 +14,13 @@ class PercentOffsetMoves(Feature):
         self._count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

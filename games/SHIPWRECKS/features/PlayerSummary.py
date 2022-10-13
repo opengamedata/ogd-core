@@ -12,10 +12,12 @@ class PlayerSummary(SessionFeature):
         self._summary = {}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["JobsCompleted", "SessionDuration"]
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -31,9 +33,9 @@ class PlayerSummary(SessionFeature):
                 "num_sessions": 1
             }
 
-        if feature.Name == "JobsCompleted":
+        if feature.FeatureType == "JobsCompleted":
             self._summary[session_id]["jobs_completed"] = feature.FeatureValues[0]
-        elif feature.Name == "SessionDuration":
+        elif feature.FeatureType == "SessionDuration":
             self._summary[session_id]["active_time"] += feature.FeatureValues[0]
 
     def _getFeatureValues(self) -> List[Any]:

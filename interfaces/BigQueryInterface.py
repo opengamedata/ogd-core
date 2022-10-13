@@ -3,7 +3,7 @@ import logging
 import os
 from datetime import datetime
 from google.cloud import bigquery
-from typing import Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Tuple, Optional
 # import locals
 from config.config import settings as default_settings
 from interfaces.DataInterface import DataInterface
@@ -16,9 +16,8 @@ class BigQueryInterface(DataInterface):
 
     # *** BUILT-INS ***
 
-    def __init__(self, game_id: str, settings):
-        super().__init__(game_id=game_id)
-        self._settings = settings
+    def __init__(self, game_id:str, config:Dict[str,Any]):
+        super().__init__(game_id=game_id, config=config)
         self.Open()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -31,11 +30,7 @@ class BigQueryInterface(DataInterface):
             if "GITHUB_ACTIONS" in os.environ:
                 self._client = bigquery.Client()
             else:
-                credential_path : str
-                if "GAME_SOURCE_MAP" in self._settings:
-                    credential_path = self._settings["GAME_SOURCE_MAP"][self._game_id]["credential"]
-                else:
-                    credential_path = default_settings["GAME_SOURCE_MAP"][self._game_id]["credential"]
+                credential_path : str = self._config.get("credential") or default_settings["GAME_SOURCE_MAP"][self._game_id]["credential"]
                 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
                 self._client = bigquery.Client()
             if self._client != None:
@@ -244,10 +239,10 @@ class BigQueryInterface(DataInterface):
     # *** PRIVATE METHODS ***
 
     def _dbPath(self) -> str:
-        if "BIGQUERY_CONFIG" in self._settings:
-            db_name      = self._settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name   = self._settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
-        else:
-            db_name      = default_settings["BIGQUERY_CONFIG"][self._game_id]["DB_NAME"]
-            table_name   = default_settings["BIGQUERY_CONFIG"]["TABLE_NAME"]
+        default_source : str = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
+
+        db_name : str    = self._config.get("source", {}).get("DB_NAME") \
+                        or default_settings["GAME_SOURCES"][default_source]["DB_NAME"]
+        table_name : str = self._config.get("table") \
+                        or default_settings["GAME_SOURCE_MAP"][self._game_id]["table"]
         return f"{db_name}.{table_name}"

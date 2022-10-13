@@ -45,18 +45,42 @@ class Feature(Extractor):
 
     # *** PUBLIC STATICS ***
 
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Feature.
+
+        Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION]
+
     # *** PUBLIC METHODS ***
 
     def ToFeatureData(self, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureData:
         return FeatureData(
             name=self.Name,
+            feature_type=type(self).__name__,
             count_index=self.CountIndex,
             cols=self.GetFeatureNames(),
             vals=self.GetFeatureValues(),
-            mode=self.ExportMode,
+            mode=self.ExtractionMode,
             player_id=player_id,
             sess_id=sess_id
         )
+
+    def BaseFeatureSuffix(self) -> str:
+        """Base function to add a suffix to the base feature name, which will not affect the naming of subfeatures.
+        By default, returns ""; override to set a suffix.
+        Example use-case: Suppose you want a feature that captures the number of times a player enters a given state,
+        as well as the time spent in that state.
+        The feature can be named "State", with BaseFeatureSuffix returning "EntryCount" and a subfeature named "Time."
+        Then the columns will be named "StateEntryCount" and "StateTime."
+
+        :return: _description_
+        :rtype: str
+        """
+        return ""
 
     def Subfeatures(self) -> List[str]:
         """Base function to get a list of names of the sub-feature(s) a given Feature class outputs.
@@ -78,7 +102,7 @@ class Feature(Extractor):
         :return: [description]
         :rtype: List[str]
         """
-        return [self.Name] + [f"{self.Name}-{subfeature}" for subfeature in self.Subfeatures()]
+        return [f"{self.Name}{self.BaseFeatureSuffix()}"] + [f"{self.Name}-{subfeature}" for subfeature in self.Subfeatures()]
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event=event):
@@ -90,16 +114,6 @@ class Feature(Extractor):
 
     def GetFeatureValues(self) -> List[Any]:
         return self._getFeatureValues()
-
-    @staticmethod
-    def AvailableModes() -> List[ExtractionMode]:
-        """List of ExtractionMode supported by the Feature.
-
-        Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
-        :return: _description_
-        :rtype: List[ExtractionMode]
-        """
-        return [ExtractionMode.POPULATION, ExtractionMode.USER, ExtractionMode.SESSION]
 
     # *** PROPERTIES ***
 

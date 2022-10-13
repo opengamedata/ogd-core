@@ -5,14 +5,10 @@ from importlib import import_module
 from typing import Any, Callable, Dict, List, Optional, Type
 # import locals
 from extractors.Extractor import Extractor, ExtractorParameters
-from extractors.ExtractorRegistry import ExtractorRegistry
 from extractors.detectors.Detector import Detector
-from extractors.detectors.DetectorRegistry import DetectorRegistry
 from extractors.features.Feature import Feature
-from extractors.features.FeatureRegistry import FeatureRegistry
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.IterationMode import IterationMode
 from schemas.GameSchema import GameSchema
 from utils import Logger
 
@@ -26,6 +22,11 @@ class ExtractorLoader(abc.ABC):
     
     @abc.abstractmethod
     def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
+        pass
+
+    @abc.abstractmethod
+    @staticmethod
+    def _getLoadedModule():
         pass
 
     # *** BUILT-INS ***
@@ -77,51 +78,16 @@ class ExtractorLoader(abc.ABC):
 
         return ret_val
 
-    def RegisterExtractor(self, registry:ExtractorRegistry, extractor:Extractor, iter_mode:IterationMode):
-        if self._mode in extractor.AvailableModes():
-            registry.Register(extractor=extractor, mode=iter_mode)
-
-    def LoadToDetectorRegistry(self, registry:DetectorRegistry, trigger_callback:Callable[[Event], None]) -> None:
-        # first, load aggregate detectors
-        iter_mode = IterationMode.AGGREGATE
-        for base_name,aggregate in self._game_schema.AggregateDetectors.items():
-            if self._game_schema.DetectorEnabled(detector_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
-                detector_type = aggregate.get('detector_type', base_name) # try to get 'detector type' from aggregate, if it's not there default to name of the config item.
-                detector = self.LoadDetector(detector_type=detector_type, name=base_name, schema_args=aggregate, trigger_callback=trigger_callback)
-                if detector is not None:
-                    self.RegisterExtractor(registry=registry, extractor=detector, iter_mode=iter_mode)
-        # second, load iterated (per-count) detectors
-        iter_mode = IterationMode.PERCOUNT
-        for base_name,percount in self._game_schema.PerCountDetectors.items():
-            if self._game_schema.DetectorEnabled(detector_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
-                detector_type = percount.get('detector_type', base_name) # try to get 'detector type' from percount config, if it's not there default to name of the config item.
-                for i in ExtractorLoader._genCountRange(count=percount["count"], schema=self._game_schema):
-                    instance_name = f"{percount['prefix']}{i}_{base_name}"
-                    detector = self.LoadDetector(detector_type=detector_type, name=instance_name, schema_args=percount, trigger_callback=trigger_callback, count_index=i)
-                    if detector is not None:
-                        self.RegisterExtractor(registry=registry, extractor=detector, iter_mode=iter_mode)
-
-    def LoadToFeatureRegistry(self, registry:FeatureRegistry) -> None:
-        iter_mode = IterationMode.AGGREGATE
-        for base_name,aggregate in self._game_schema.AggregateFeatures.items():
-            if self._game_schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
-                feature_type = aggregate.get('feature_type', base_name) # try to get 'feature type' from aggregate, if it's not there default to name of the config item.
-                feature = self.LoadFeature(feature_type=feature_type, name=base_name, schema_args=aggregate)
-                if feature is not None:
-                    self.RegisterExtractor(registry=registry, extractor=feature, iter_mode=iter_mode)
-        iter_mode = IterationMode.PERCOUNT
-        for base_name,percount in self._game_schema.PerCountFeatures.items():
-            if self._game_schema.FeatureEnabled(feature_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=self._overrides):
-                feature_type = percount.get('feature_type', base_name) # try to get 'feature type' from percount, if it's not there default to name of the config item.
-                for i in ExtractorLoader._genCountRange(count=percount["count"], schema=self._game_schema):
-                    instance_name = f"{percount['prefix']}{i}_{base_name}"
-                    feature = self.LoadFeature(feature_type=feature_type, name=instance_name, schema_args=percount, count_index=i)
-                    if feature is not None:
-                        self.RegisterExtractor(registry=registry, extractor=feature, iter_mode=iter_mode)
-        # for firstOrder in registry.FirstOrdersRequested():
-        #     #TODO load firstOrder, if it's not loaded already
-        #     if not firstOrder in registry.GetExtractorNames():
-
+    def GetFeatureClass(self, feature_type:str) -> Optional[Type[Feature]]:
+        ret_val : Optional[Type[Feature]] = None
+        base_mod = self._getLoadedModule()
+        try:
+            feature_mod = getattr(base_mod, feature_type)
+            ret_val     = getattr(feature_mod, feature_type)
+        except NameError as err:
+            Logger.Log(f"Could not get class {feature_type}")
+        finally:
+            return ret_val
 
     # *** PROPERTIES ***
 
@@ -147,6 +113,9 @@ class ExtractorLoader(abc.ABC):
             Logger.Log(f"In ExtractorLoader, '{mod_name}' could not be found, skipping {feature_type}", logging.ERROR)
         else:
             feature_class : Optional[Type[Extractor]] = getattr(feature_module, feature_type, None)
-            ret_val = feature_class is not None and self._mode in feature_class.AvailableModes()
+            if feature_class is not None:
+                ret_val = self._mode in feature_class.AvailableModes()
+            else:
+                Logger.Log(f"In ExtractorLoader, feature class '{feature_type}' could not be found in module {feature_module}", logging.WARN)
 
         return ret_val

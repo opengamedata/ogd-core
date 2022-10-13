@@ -2,64 +2,62 @@
    "__serializerVersion": 2,
    "jobs": [
       {
-         "id": "above-n-below",
+         "id": "arctic-missing-whale",
          "date": {
-            "added": 1.33022973299848E+17
+            "added": 1.32914936623526E+17
          },
          "requiredJobs": [
+         ],
+         "requiredUpgrades": [
             {
-               "id": "arctic-seal-habbits",
+               "id": "ROVScanner",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32953898419312E+17
                }
             }
          ],
-         "requiredUpgrades": [
-         ],
          "difficulties": {
-            "experimentation": 1,
-            "modeling": 2,
-            "argumentation": 1
+            "experimentation": 0,
+            "modeling": 0,
+            "argumentation": 2
          },
          "tasks": [
+            {
+               "id": "findWhale",
+               "date": {
+                  "added": 1.32914936623526E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.32914936623526E+17
+               }
+            },
+            {
+               "id": "findTracker",
+               "date": {
+                  "added": 1.3294107995602E+17
+               }
+            },
+            {
+               "id": "foundDetritus",
+               "date": {
+                  "added": 1.3294107995602E+17
+               }
+            }
          ]
       },
       {
-         "id": "arctic-cause-of-death",
+         "id": "arctic-time-of-death",
          "date": {
-            "added": 1.33022973299848E+17
+            "added": 1.32914936623526E+17
          },
          "requiredJobs": [
             {
                "id": "arctic-disappearing-act",
                "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "PredictionModel",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "VisualModel",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "ROVTagger",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "ROVScanner",
-               "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32953970272584E+17
                }
             },
             {
@@ -71,56 +69,58 @@
             {
                "id": "ProbeHacker",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32953898419312E+17
+               }
+            },
+            {
+               "id": "Microscope",
+               "date": {
+                  "added": 1.3305916268445E+17
                }
             }
          ],
          "difficulties": {
-            "experimentation": 2,
+            "experimentation": 0,
             "modeling": 0,
             "argumentation": 5
          },
          "tasks": [
             {
-               "id": "getEnvironmentData",
+               "id": "getPopulations",
                "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "getHistPopulationData",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "getCurrPopulationData",
-               "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32914936623526E+17,
+                  "deprecated": 1.3294107995602E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32914936623526E+17
+               }
+            },
+            {
+               "id": "getPops",
+               "date": {
+                  "added": 1.3294107995602E+17
                }
             }
          ]
       },
       {
-         "id": "arctic-disappearing-act",
+         "id": "arctic-whale-csi",
          "date": {
-            "added": 1.33022973299848E+17
+            "added": 1.32914936623526E+17
          },
          "requiredJobs": [
-            {
-               "id": "arctic-missing-whale",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
          ],
          "requiredUpgrades": [
+         ],
+         "difficulties": {
+            "experimentation": 0,
+            "modeling": 0,
+            "argumentation": 0
+         },
+         "tasks": [
             {
                "id": "ObservationTank",
                "date": {
@@ -139,29 +139,51 @@
                   "added": 1.33022973299848E+17
                }
             }
+         ]
+      },
+      {
+         "id": "displaced-reef",
+         "date": {
+            "added": 1.32914936623526E+17
+         },
+         "requiredJobs": [
+         ],
+         "requiredUpgrades": [
          ],
          "difficulties": {
-            "experimentation": 2,
+            "experimentation": 0,
             "modeling": 2,
             "argumentation": 1
          },
          "tasks": [
             {
-               "id": "scanCritters",
+               "id": "visitSiteO",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32914936623526E+17
                }
             },
             {
-               "id": "modelInteractions",
+               "id": "getScans",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32914936623526E+17
+               }
+            },
+            {
+               "id": "getCounts",
+               "date": {
+                  "added": 1.32914936623526E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32914936623526E+17
+               }
+            },
+            {
+               "id": "makeModel",
+               "date": {
+                  "added": 1.3305916268445E+17
                }
             }
          ]
@@ -194,9 +216,9 @@
             }
          ],
          "difficulties": {
-            "experimentation": 1,
-            "modeling": 0,
-            "argumentation": 2
+            "experimentation": 3,
+            "modeling": 4,
+            "argumentation": 1
          },
          "tasks": [
             {
@@ -239,6 +261,13 @@
             }
          ],
          "requiredUpgrades": [
+         ],
+         "difficulties": {
+            "experimentation": 0,
+            "modeling": 0,
+            "argumentation": 0
+         },
+         "tasks": [
             {
                "id": "StressTank",
                "date": {
@@ -287,171 +316,196 @@
                "date": {
                   "added": 1.33022973299848E+17
                }
-            },
+            }
+         ],
+         "requiredUpgrades": [
             {
-               "id": "checkSeal",
+               "id": "InterveneModel",
                "date": {
                   "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "checkShark",
+               "id": "interventionDecision",
                "date": {
                   "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "discussFindings",
+               "id": "reportBack",
                "date": {
                   "added": 1.33022973299848E+17
                }
-            },
-            {
-               "id": "findPredator",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "experimentPredatorAll",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
+            }
+         ]
+      },
+      {
+         "id": "bayou-save-our-shrimp",
+         "date": {
+            "added": 1.32914936623526E+17
+         },
+         "requiredJobs": [
             {
                "id": "countPopulations",
                "date": {
                   "added": 1.33022973299848E+17
                }
-            },
-            {
-               "id": "determineStress",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "reportFinal",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
             }
-         ]
-      },
-      {
-         "id": "arctic-missing-whale",
-         "date": {
-            "added": 1.33022973299848E+17
-         },
-         "requiredJobs": [
          ],
          "requiredUpgrades": [
-            {
-               "id": "ROVScanner",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
          ],
          "difficulties": {
             "experimentation": 0,
             "modeling": 0,
-            "argumentation": 1
+            "argumentation": 0
          },
          "tasks": [
             {
-               "id": "findTracker",
+               "id": "getScans",
                "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "findWhale",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "foundDetritus",
-               "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32914936623526E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32914936623526E+17
                }
             }
          ]
       },
       {
-         "id": "arctic-picky-eaters",
+         "id": "bayou-shrimp-tastrophe",
          "date": {
-            "added": 1.33022973299848E+17
+            "added": 1.32914936623526E+17
          },
          "requiredJobs": [
             {
-               "id": "arctic-in-ice",
+               "id": "bayou-save-our-shrimp",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32953970272584E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+         ],
+         "difficulties": {
+            "experimentation": 0,
+            "modeling": 0,
+            "argumentation": 0
+         },
+         "tasks": [
+            {
+               "id": "measureOxygen",
+               "date": {
+                  "added": 1.32914936623526E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.32914936623526E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "turtle-danger",
+         "date": {
+            "added": 1.32914936623526E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "displaced-reef",
+               "date": {
+                  "added": 1.32953970272584E+17
                }
             }
          ],
          "requiredUpgrades": [
             {
-               "id": "MeasurementTank",
+               "id": "ObservationTank",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32953898419312E+17
                }
             },
             {
                "id": "Microscope",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32953898419312E+17
                }
             }
          ],
          "difficulties": {
-            "experimentation": 4,
-            "modeling": 0,
+            "experimentation": 1,
+            "modeling": 1,
             "argumentation": 4
          },
          "tasks": [
             {
-               "id": "obtainRateAlgae",
+               "id": "experimentsForSiteO",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32914936623526E+17
                }
             },
             {
-               "id": "obtainRateDiatoms",
+               "id": "visualModelO",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32914936623526E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32914936623526E+17
+               }
+            },
+            {
+               "id": "scanCyano",
+               "date": {
+                  "added": 1.3294107995602E+17
+               }
+            },
+            {
+               "id": "countCyano",
+               "date": {
+                  "added": 1.3294107995602E+17
                }
             }
          ]
       },
       {
-         "id": "arctic-salmon-competition",
+         "id": "turtle-danger2",
          "date": {
-            "added": 1.33022973299848E+17
+            "added": 1.32914936623526E+17
          },
          "requiredJobs": [
             {
-               "id": "arctic-in-ice",
+               "id": "turtle-danger",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32953970272584E+17
                }
             }
          ],
          "requiredUpgrades": [
+            {
+               "id": "ProbeHacker",
+               "date": {
+                  "added": 1.32953898419312E+17
+               }
+            },
+            {
+               "id": "MeasurementTank",
+               "date": {
+                  "added": 1.32953898419312E+17
+               }
+            },
+            {
+               "id": "PredictionModel",
+               "date": {
+                  "added": 1.32953898419312E+17
+               }
+            },
             {
                "id": "VisualModel",
                "date": {
@@ -461,7 +515,7 @@
             {
                "id": "SyncModel",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32953898419312E+17
                }
             },
             {
@@ -478,8 +532,8 @@
             }
          ],
          "difficulties": {
-            "experimentation": 2,
-            "modeling": 1,
+            "experimentation": 4,
+            "modeling": 3,
             "argumentation": 1
          },
          "tasks": [
@@ -514,7 +568,7 @@
             {
                "id": "ROVScanner",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32953898419312E+17
                }
             },
             {
@@ -522,14 +576,7 @@
                "date": {
                   "added": 1.33022973299848E+17
                }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 0,
-            "modeling": 0,
-            "argumentation": 1
-         },
-         "tasks": [
+            },
             {
                "id": "countSalmon",
                "date": {
@@ -572,8 +619,8 @@
             }
          ],
          "difficulties": {
-            "experimentation": 0,
-            "modeling": 0,
+            "experimentation": 3,
+            "modeling": 3,
             "argumentation": 1
          },
          "tasks": [
@@ -584,7 +631,7 @@
                }
             },
             {
-               "id": "findHabitat",
+               "id": "popProbe",
                "date": {
                   "added": 1.33022973299848E+17
                }
@@ -624,7 +671,7 @@
          ],
          "requiredUpgrades": [
             {
-               "id": "VisualModel",
+               "id": "sargArgue",
                "date": {
                   "added": 1.33022973299848E+17
                }
@@ -643,9 +690,9 @@
             }
          ],
          "difficulties": {
-            "experimentation": 1,
-            "modeling": 2,
-            "argumentation": 0
+            "experimentation": 2,
+            "modeling": 0,
+            "argumentation": 2
          },
          "tasks": [
             {
@@ -686,7 +733,7 @@
          "difficulties": {
             "experimentation": 2,
             "modeling": 0,
-            "argumentation": 5
+            "argumentation": 4
          },
          "tasks": [
             {
@@ -720,8 +767,8 @@
          ],
          "difficulties": {
             "experimentation": 0,
-            "modeling": 0,
-            "argumentation": 1
+            "modeling": 4,
+            "argumentation": 3
          },
          "tasks": [
             {
@@ -744,31 +791,37 @@
             "added": 1.33022973299848E+17
          },
          "requiredJobs": [
+            {
+               "id": "coral-lionfish-conspiracy",
+               "date": {
+                  "added": 1.32953970272584E+17
+               }
+            },
+            {
+               "id": "coral-hunting-lions",
+               "date": {
+                  "added": 1.32953970272584E+17,
+                  "deprecated": 1.3305916268445E+17
+               }
+            }
          ],
          "requiredUpgrades": [
-         ],
-         "difficulties": {
-            "experimentation": 1,
-            "modeling": 0,
-            "argumentation": 1
-         },
-         "tasks": [
             {
-               "id": "scanAndTag",
+               "id": "PredictionModel",
+               "date": {
+                  "added": 1.32953898419312E+17
+               }
+            },
+            {
+               "id": "InterveneModel",
                "date": {
                   "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "scanIceAlgae",
+               "id": "MeasurementTank",
                "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32953898419312E+17
                }
             }
          ]
@@ -807,9 +860,9 @@
             }
          ],
          "difficulties": {
-            "experimentation": 1,
-            "modeling": 1,
-            "argumentation": 2
+            "experimentation": 5,
+            "modeling": 5,
+            "argumentation": 5
          },
          "tasks": [
             {
@@ -895,9 +948,9 @@
          "requiredUpgrades": [
          ],
          "difficulties": {
-            "experimentation": 0,
+            "experimentation": 1,
             "modeling": 0,
-            "argumentation": 0
+            "argumentation": 3
          },
          "tasks": [
             {
@@ -928,6 +981,12 @@
                "id": "reportBack",
                "date": {
                   "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "observeCoral",
+               "date": {
+                  "added": 1.33080912981555E+17
                }
             }
          ]
@@ -967,8 +1026,8 @@
          ],
          "difficulties": {
             "experimentation": 3,
-            "modeling": 4,
-            "argumentation": 1
+            "modeling": 3,
+            "argumentation": 3
          },
          "tasks": [
             {
@@ -1009,12 +1068,6 @@
             "added": 1.33022973299848E+17
          },
          "requiredJobs": [
-            {
-               "id": "bayou-alt-energy",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
          ],
          "requiredUpgrades": [
             {
@@ -1091,8 +1144,8 @@
          ],
          "difficulties": {
             "experimentation": 2,
-            "modeling": 2,
-            "argumentation": 1
+            "modeling": 0,
+            "argumentation": 4
          },
          "tasks": [
             {
@@ -1127,6 +1180,15 @@
             "added": 1.33022973299848E+17
          },
          "requiredJobs": [
+         ],
+         "requiredUpgrades": [
+         ],
+         "difficulties": {
+            "experimentation": 0,
+            "modeling": 0,
+            "argumentation": 1
+         },
+         "tasks": [
             {
                "id": "turtle-danger2",
                "date": {
@@ -1149,8 +1211,8 @@
             }
          ],
          "difficulties": {
-            "experimentation": 0,
-            "modeling": 4,
+            "experimentation": 1,
+            "modeling": 1,
             "argumentation": 1
          },
          "tasks": [
@@ -1184,9 +1246,9 @@
          "requiredUpgrades": [
          ],
          "difficulties": {
-            "experimentation": 1,
+            "experimentation": 0,
             "modeling": 0,
-            "argumentation": 1
+            "argumentation": 0
          },
          "tasks": [
             {
@@ -1266,9 +1328,9 @@
             }
          ],
          "difficulties": {
-            "experimentation": 1,
+            "experimentation": 0,
             "modeling": 1,
-            "argumentation": 3
+            "argumentation": 1
          },
          "tasks": [
             {
@@ -1316,7 +1378,12 @@
                }
             }
          ],
-         "requiredUpgrades": [
+         "difficulties": {
+            "experimentation": 2,
+            "modeling": 0,
+            "argumentation": 2
+         },
+         "tasks": [
             {
                "id": "ProbeHacker",
                "date": {
@@ -1334,7 +1401,18 @@
                "date": {
                   "added": 1.33022973299848E+17
                }
+<<<<<<< HEAD
             },
+=======
+            }
+         ],
+         "difficulties": {
+            "experimentation": 4,
+            "modeling": 3,
+            "argumentation": 3
+         },
+         "tasks": [
+>>>>>>> master
             {
                "id": "VisualModel",
                "date": {
@@ -1367,9 +1445,9 @@
             }
          ],
          "difficulties": {
-            "experimentation": 4,
-            "modeling": 2,
-            "argumentation": 1
+            "experimentation": 2,
+            "modeling": 0,
+            "argumentation": 3
          },
          "tasks": [
             {
@@ -1417,7 +1495,18 @@
                "date": {
                   "added": 1.33022973299848E+17
                }
+<<<<<<< HEAD
             },
+=======
+            }
+         ],
+         "difficulties": {
+            "experimentation": 0,
+            "modeling": 4,
+            "argumentation": 1
+         },
+         "tasks": [
+>>>>>>> master
             {
                "id": "MeasurementTank",
                "date": {
@@ -1429,7 +1518,14 @@
                "date": {
                   "added": 1.33022973299848E+17
                }
-            },
+            }
+         ],
+         "difficulties": {
+            "experimentation": 4,
+            "modeling": 3,
+            "argumentation": 3
+         },
+         "tasks": [
             {
                "id": "PropGuard",
                "date": {
@@ -1453,14 +1549,7 @@
                "date": {
                   "added": 1.33022973299848E+17
                }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 3,
-            "modeling": 3,
-            "argumentation": 3
-         },
-         "tasks": [
+            },
             {
                "id": "scanSarg",
                "date": {
@@ -1490,13 +1579,15 @@
                "date": {
                   "added": 1.33022973299848E+17
                }
-            },
-            {
-               "id": "coralGrowthRate",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
+            }
+         ]
+      },
+      {
+         "id": "kelp-refuge-failure-simulation",
+         "date": {
+            "added": 1.32914936623526E+17
+         },
+         "requiredJobs": [
             {
                "id": "coralGrowthStressed",
                "date": {
@@ -1508,7 +1599,14 @@
                "date": {
                   "added": 1.33022973299848E+17
                }
-            },
+            }
+         ],
+         "difficulties": {
+            "experimentation": 0,
+            "modeling": 4,
+            "argumentation": 1
+         },
+         "tasks": [
             {
                "id": "sargModel",
                "date": {
@@ -1539,9 +1637,9 @@
          "requiredUpgrades": [
          ],
          "difficulties": {
-            "experimentation": 1,
-            "modeling": 0,
-            "argumentation": 1
+            "experimentation": 0,
+            "modeling": 4,
+            "argumentation": 2
          },
          "tasks": [
             {
@@ -1594,21 +1692,56 @@
          "difficulties": {
             "experimentation": 0,
             "modeling": 0,
-            "argumentation": 3
+            "argumentation": 4
          },
          "tasks": [
             {
                "id": "findReef",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32914936623526E+17
                }
             },
             {
-               "id": "scanProbes",
+               "id": "getGiantKelpStress",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.32914936623526E+17
                }
             },
+            {
+               "id": "argueSite",
+               "date": {
+                  "added": 1.32914936623526E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "kelp-urchin-barren-predict",
+         "date": {
+            "added": 1.32914936623526E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "kelp-urchin-barren-viz",
+               "date": {
+                  "added": 1.32953970272584E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "PredictionModel",
+               "date": {
+                  "added": 1.32953898419312E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 0,
+            "modeling": 3,
+            "argumentation": 1
+         },
+         "tasks": [
             {
                "id": "countPopulation",
                "date": {
@@ -1657,9 +1790,15 @@
             }
          ],
          "difficulties": {
+<<<<<<< HEAD
             "experimentation": 0,
             "modeling": 1,
             "argumentation": 1
+=======
+            "experimentation": 3,
+            "modeling": 0,
+            "argumentation": 4
+>>>>>>> master
          },
          "tasks": [
             {
@@ -1694,12 +1833,6 @@
             "added": 1.33022973299848E+17
          },
          "requiredJobs": [
-            {
-               "id": "coral-lionfish-conspiracy",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
          ],
          "requiredUpgrades": [
             {
@@ -1719,7 +1852,14 @@
                "date": {
                   "added": 1.33022973299848E+17
                }
-            },
+            }
+         ],
+         "difficulties": {
+            "experimentation": 3,
+            "modeling": 0,
+            "argumentation": 4
+         },
+         "tasks": [
             {
                "id": "VisualModel",
                "date": {
@@ -1746,9 +1886,9 @@
             }
          ],
          "difficulties": {
-            "experimentation": 5,
-            "modeling": 5,
-            "argumentation": 4
+            "experimentation": 1,
+            "modeling": 0,
+            "argumentation": 1
          },
          "tasks": [
             {
@@ -1786,7 +1926,18 @@
                "date": {
                   "added": 1.33022973299848E+17
                }
+<<<<<<< HEAD
             },
+=======
+            }
+         ],
+         "difficulties": {
+            "experimentation": 1,
+            "modeling": 0,
+            "argumentation": 5
+         },
+         "tasks": [
+>>>>>>> master
             {
                "id": "measureStressReproduceRates",
                "date": {
@@ -1841,7 +1992,7 @@
             }
          ],
          "difficulties": {
-            "experimentation": 2,
+            "experimentation": 1,
             "modeling": 0,
             "argumentation": 1
          },
@@ -1900,9 +2051,9 @@
             }
          ],
          "difficulties": {
-            "experimentation": 3,
-            "modeling": 1,
-            "argumentation": 2
+            "experimentation": 2,
+            "modeling": 2,
+            "argumentation": 1
          },
          "tasks": [
             {
@@ -1977,9 +2128,9 @@
             }
          ],
          "difficulties": {
-            "experimentation": 0,
+            "experimentation": 3,
             "modeling": 0,
-            "argumentation": 0
+            "argumentation": 5
          },
          "tasks": [
             {
@@ -2101,8 +2252,8 @@
             }
          ],
          "difficulties": {
-            "experimentation": 3,
-            "modeling": 3,
+            "experimentation": 1,
+            "modeling": 2,
             "argumentation": 1
          },
          "tasks": [
@@ -2233,54 +2384,46 @@
          },
          "requiredJobs": [
             {
-               "id": "coral-urchin-friends",
+               "id": "turtle-danger2",
                "date": {
                   "added": 1.33022973299848E+17
                }
             }
          ],
          "requiredUpgrades": [
-         ],
-         "difficulties": {
-            "experimentation": 0,
-            "modeling": 1,
-            "argumentation": 1
-         },
-         "tasks": [
             {
-               "id": "coralUrchinModel",
+               "id": "Flashlight",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.3295916222049E+17
                }
             },
             {
-               "id": "urchinStressed",
+               "id": "MeasurementTank",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.3295916222049E+17
                }
             },
             {
-               "id": "siteRModel",
+               "id": "PredictionModel",
                "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "present",
-               "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.3305916268445E+17
                }
             }
-         ]
-      },
-      {
-         "id": "kelp-bull-kelp-forest",
-         "date": {
-            "added": 1.33022973299848E+17
+         ],
+         "difficulties": {
+            "experimentation": 3,
+            "modeling": 4,
+            "argumentation": 3
          },
+            {
+               "id": "jellyScan",
+               "date": {
+                  "added": 1.3295916222049E+17
+               }
+            },
          "requiredJobs": [
             {
-               "id": "kelp-welcome",
+               "id": "jellyObservation",
                "date": {
                   "added": 1.33022973299848E+17
                }
@@ -2295,44 +2438,50 @@
          },
          "tasks": [
             {
-               "id": "siteA",
+               "id": "jellyRates",
                "date": {
                   "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "foodweb",
+               "id": "jellyPrediction",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.3295916222049E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.3295916222049E+17
                }
             }
          ]
       },
       {
-         "id": "kelp-energy",
+         "id": "bayou-reef-decision",
          "date": {
             "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
-               "id": "kelp-shop-welcome",
+               "id": "turtle-danger2",
                "date": {
                   "added": 1.33022973299848E+17
                }
             }
          ],
          "requiredUpgrades": [
+            {
+               "id": "InterveneModel",
+               "date": {
+                  "added": 1.3295916222049E+17
+               }
+            }
          ],
          "difficulties": {
             "experimentation": 0,
-            "modeling": 1,
-            "argumentation": 0
+            "modeling": 4,
+            "argumentation": 1
          },
          "tasks": [
             {
@@ -2350,7 +2499,7 @@
          ]
       },
       {
-         "id": "kelp-mussel-fest",
+         "id": "above-n-below",
          "date": {
             "added": 1.33022973299848E+17
          },
@@ -2358,34 +2507,96 @@
          ],
          "requiredUpgrades": [
             {
-               "id": "StressTank",
+               "id": "arctic-seal-habbits",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.3305916268445E+17,
+                  "deprecated": 1.33080912981555E+17
                }
             },
             {
-               "id": "ProbeHacker",
+               "id": "arctic-seal-habitats",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.33067919669553E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+         ],
+         "difficulties": {
+            "experimentation": 2,
+            "modeling": 1,
+            "argumentation": 1
+         },
+         "tasks": [
+            {
+               "id": "scanNew",
+               "date": {
+                  "added": 1.33080912981555E+17
                }
             },
             {
-               "id": "ROVTagger",
+               "id": "countNew",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.33080912981555E+17
                }
             },
             {
-               "id": "VisualModel",
+               "id": "experimentInteractions",
+               "date": {
+                  "added": 1.33080912981555E+17
+               }
+            },
+            {
+               "id": "createModel",
+               "date": {
+                  "added": 1.33080912981555E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.33080912981555E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "arctic-in-ice",
+         "date": {
+            "added": 1.3305916268445E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "arctic-salmon-monitoring",
                "date": {
                   "added": 1.33022973299848E+17
                }
             }
          ],
+         "requiredUpgrades": [
+            {
+               "id": "ObservationTank",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            },
+            {
+               "id": "ROVScanner",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "Microscope",
+               "date": {
+                  "added": 1.33067919669553E+17
+               }
+            }
+         ],
          "difficulties": {
-            "experimentation": 2,
+            "experimentation": 1,
             "modeling": 0,
-            "argumentation": 1
+            "argumentation": 2
          },
          "tasks": [
             {
@@ -2470,7 +2681,7 @@
       {
          "id": "kelp-refuge-failure",
          "date": {
-            "added": 1.33022973299848E+17
+            "added": 1.3305916268445E+17
          },
          "requiredJobs": [
             {
@@ -2498,12 +2709,18 @@
                "date": {
                   "added": 1.33022973299848E+17
                }
+            },
+            {
+               "id": "ProbeHacker",
+               "date": {
+                  "added": 1.33080912981555E+17
+               }
             }
          ],
          "difficulties": {
-            "experimentation": 2,
-            "modeling": 1,
-            "argumentation": 1
+            "experimentation": 1,
+            "modeling": 3,
+            "argumentation": 4
          },
          "tasks": [
             {
@@ -2565,79 +2782,63 @@
       {
          "id": "kelp-refuge-failure-simulation",
          "date": {
-            "added": 1.33022973299848E+17
+            "added": 1.33022973299848E+17,
+            "deprecated": 1.33080912981555E+17
          },
          "requiredJobs": [
-            {
-               "id": "kelp-refuge-failure",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
          ],
          "requiredUpgrades": [
             {
-               "id": "PredictionModel",
+               "id": "ROVTagger",
                "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 0,
-            "modeling": 1,
-            "argumentation": 0
-         },
-         "tasks": [
-            {
-               "id": "createModel",
-               "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.3305916268445E+17
                }
             },
             {
-               "id": "shareModel",
+               "id": "Icebreaker",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.3305916268445E+17
                }
-            }
-         ]
-      },
-      {
-         "id": "kelp-save-urchin-barren",
-         "date": {
-            "added": 1.33022973299848E+17
-         },
-         "requiredJobs": [
+            },
             {
-               "id": "kelp-urchin-barren-predict",
+               "id": "Microscope",
                "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "InterveneModel",
-               "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.3305916268445E+17
                }
             }
          ],
          "difficulties": {
             "experimentation": 0,
-            "modeling": 2,
+            "modeling": 0,
             "argumentation": 1
          },
          "tasks": [
             {
-               "id": "makeAPlan",
+               "id": "findRibbon",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            },
+            {
+               "id": "findHabitat",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            },
+            {
+               "id": "findMicro",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            },
+            {
+               "id": "findPop",
                "date": {
                   "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "return",
+               "id": "report",
                "date": {
                   "added": 1.33022973299848E+17
                }
@@ -2645,17 +2846,186 @@
          ]
       },
       {
-         "id": "kelp-shop-welcome",
+         "id": "bayou-alt-energy",
          "date": {
             "added": 1.33022973299848E+17
          },
          "requiredJobs": [
             {
-               "id": "kelp-bull-kelp-forest",
+               "id": "bayou-boom-cause",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "ObservationTank",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            },
+            {
+               "id": "Microscope",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            },
+            {
+               "id": "Hull",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 1,
+            "modeling": 1,
+            "argumentation": 3
+         },
+         "tasks": [
+            {
+               "id": "scanCritters",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "wormEat",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            },
+            {
+               "id": "getModel",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            },
+            {
+               "id": "reportBack",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "bayou-boom-cause",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "Flashlight",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            },
+            {
+               "id": "Hull",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 0,
+            "modeling": 0,
+            "argumentation": 3
+         },
+         "tasks": [
+            {
+               "id": "methaneScan",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "methaneTag",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            },
+            {
+               "id": "reportBack",
                "date": {
                   "added": 1.33022973299848E+17
                }
             }
+         ]
+      },
+      {
+         "id": "bayou-methanogen",
+         "date": {
+            "added": 1.33022973299848E+17
+         },
+         "requiredJobs": [
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "VisualModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "VisualModel",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "ROVTagger",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 4,
+            "modeling": 0,
+            "argumentation": 3
+         },
+         "tasks": [
+            {
+               "id": "EatRule",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "StressRanges",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "WaterChem",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "Reproduction",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            },
+            {
+               "id": "Report",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "bayou-test-model",
+         "date": {
+            "added": 1.3305916268445E+17
+         },
+         "requiredJobs": [
          ],
          "requiredUpgrades": [
          ],
@@ -2666,19 +3036,13 @@
          },
          "tasks": [
             {
-               "id": "gotoShop",
+               "id": "obtainSyncModel",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.3305916268445E+17
                }
             },
             {
-               "id": "getTagger",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "getVisualModel",
+               "id": "reportBack",
                "date": {
                   "added": 1.33022973299848E+17
                }
@@ -2686,13 +3050,20 @@
          ]
       },
       {
-         "id": "kelp-start-refuge",
+         "id": "coral-tang-checkup",
          "date": {
             "added": 1.33022973299848E+17
          },
          "requiredJobs": [
          ],
          "requiredUpgrades": [
+            {
+               "id": "Microscope",
+               "date": {
+                  "added": 1.3305916268445E+17
+               }
+            },
+         "tasks": [
             {
                "id": "StressTank",
                "date": {
@@ -2700,191 +3071,37 @@
                }
             },
             {
-               "id": "VisualModel",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "ROVTagger",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 2,
-            "modeling": 0,
-            "argumentation": 2
-         },
-         "tasks": [
-            {
-               "id": "getBullKelpStress",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "getGiantKelpStress",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "argueSite",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "kelp-urchin-barren-predict",
-         "date": {
-            "added": 1.33022973299848E+17
-         },
-         "requiredJobs": [
-            {
-               "id": "kelp-urchin-barren-viz",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "PredictionModel",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 0,
-            "modeling": 2,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "predictSiteB",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "kelp-urchin-barren-viz",
-         "date": {
-            "added": 1.33022973299848E+17
-         },
-         "requiredJobs": [
-         ],
-         "requiredUpgrades": [
-            {
-               "id": "ProbeHacker",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "VisualModel",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "ROVTagger",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
-         ],
-         "difficulties": {
-            "experimentation": 0,
-            "modeling": 1,
-            "argumentation": 1
-         },
-         "tasks": [
-            {
-               "id": "gotoSiteB",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "getProbeData",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "getTagged",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "visualSiteB",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "reportBack",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            }
-         ]
-      },
-      {
-         "id": "kelp-urchin-farm",
-         "date": {
-            "added": 1.33022973299848E+17
-         },
-         "requiredJobs": [
-         ],
-         "requiredUpgrades": [
-            {
                "id": "MeasurementTank",
                "date": {
                   "added": 1.33022973299848E+17
                }
-            },
-            {
-               "id": "VisualModel",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
-            },
-            {
-               "id": "ROVTagger",
-               "date": {
-                  "added": 1.33022973299848E+17
-               }
             }
          ],
          "difficulties": {
-            "experimentation": 2,
-            "modeling": 0,
-            "argumentation": 1
+            "experimentation": 3,
+            "modeling": 3,
+            "argumentation": 2
          },
-         "tasks": [
             {
-               "id": "urchinEatBull",
+               "id": "findStress",
                "date": {
                   "added": 1.33022973299848E+17
                }
             },
             {
-               "id": "urchinEatGiant",
+               "id": "findMicro",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "countIck",
+               "date": {
+                  "added": 1.33022973299848E+17
+               }
+            },
+            {
+               "id": "observeIck",
                "date": {
                   "added": 1.33022973299848E+17
                }
@@ -2892,69 +3109,225 @@
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.3305916268445E+17
+               }
+            },
+            {
+               "id": "report",
+               "date": {
+                  "added": 1.3305916268445E+17
                }
             }
          ]
       },
       {
-         "id": "kelp-welcome",
+         "id": "arctic-seal-habitats",
          "date": {
-            "added": 1.33022973299848E+17
+            "added": 1.33067919669553E+17
          },
          "requiredJobs": [
+            {
+               "id": "above-n-below",
+               "date": {
+                  "added": 1.33080912981555E+17
+               }
+            }
          ],
          "requiredUpgrades": [
+            {
+               "id": "ROVTagger",
+               "date": {
+                  "added": 1.33067919669553E+17
+               }
+            },
+            {
+               "id": "Icebreaker",
+               "date": {
+                  "added": 1.33067919669553E+17
+               }
+            },
+            {
+               "id": "Microscope",
+               "date": {
+                  "added": 1.33067919669553E+17
+               }
+            },
+            {
+               "id": "MeasurementTank",
+               "date": {
+                  "added": 1.33080912981555E+17
+            }
          ],
          "difficulties": {
-            "experimentation": 1,
+            "experimentation": 0,
             "modeling": 0,
-            "argumentation": 0
+            "argumentation": 2
+         },
+            {
+               "id": "findHabitat",
+               "date": {
+                  "added": 1.33067919669553E+17
+               }
+            },
+            {
+               "id": "findRibbon",
+               "date": {
+                  "added": 1.33067919669553E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 5,
+            "modeling": 4,
+            "argumentation": 4
          },
          "tasks": [
             {
-               "id": "gotoSiteC",
+               "id": "findMicro",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.33067919669553E+17
                }
             },
             {
-               "id": "scanGiantKelp",
+               "id": "countMicro",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.33067919669553E+17
                }
             },
             {
-               "id": "scanUrchin",
+               "id": "findPop",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.33067919669553E+17
                }
             },
             {
-               "id": "scanOtter",
+               "id": "report",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.33067919669553E+17
                }
             },
             {
-               "id": "returnToShip",
+               "id": "countSeal",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.33080912981555E+17
+               }
+            }
+         ]
+      },
+      {
+         "id": "arctic-endangered-seals",
+         "date": {
+            "added": 1.33080912981555E+17
+         },
+         "requiredJobs": [
+            {
+               "id": "above-n-below",
+               "date": {
+                  "added": 1.33080912981555E+17
+               }
+            }
+         ],
+         "requiredUpgrades": [
+            {
+               "id": "ObservationTank",
+               "date": {
+                  "added": 1.33080912981555E+17
                }
             },
             {
-               "id": "runExperiment",
+               "id": "ROVTagger",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.33080912981555E+17
+               }
+            },
+            {
+               "id": "ROVScanner",
+               "date": {
+                  "added": 1.33080912981555E+17
+               }
+            },
+            {
+               "id": "PredictionModel",
+               "date": {
+                  "added": 1.33080912981555E+17
+               }
+            },
+            {
+               "id": "MeasurementTank",
+               "date": {
+                  "added": 1.33080912981555E+17
+               }
+            },
+            {
+               "id": "Microscope",
+               "date": {
+                  "added": 1.33080912981555E+17
+               }
+            },
+            {
+               "id": "ProbeHacker",
+               "date": {
+                  "added": 1.33080912981555E+17
+               }
+            }
+         ],
+         "difficulties": {
+            "experimentation": 5,
+            "modeling": 4,
+            "argumentation": 4
+         },
+         "tasks": [
+            {
+               "id": "scanProbe",
+               "date": {
+                  "added": 1.33080912981555E+17
+               }
+            },
+            {
+               "id": "modelSync",
+               "date": {
+                  "added": 1.33080912981555E+17
+               }
+            },
+            {
+               "id": "modelPredict",
+               "date": {
+                  "added": 1.33080912981555E+17
                }
             },
             {
                "id": "reportBack",
                "date": {
-                  "added": 1.33022973299848E+17
+                  "added": 1.33080912981555E+17
                }
             }
          ]
       }
-   ]
+   ],
+   "jobsSummary": {
+      "experimentSummary": [
+         16,
+         10,
+         8,
+         7,
+         3,
+         2
+      ],
+      "modelingSummary": [
+         23,
+         6,
+         3,
+         7,
+         6,
+         1
+      ],
+      "argumentationSummary": [
+         0,
+         18,
+         7,
+         9,
+         8,
+         4
+      ]
+   }
 }

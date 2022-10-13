@@ -1,115 +1,22 @@
 # import standard libraries
 import logging
-import traceback
-from typing import Any, Dict, IO, List, Type, Optional
+from datetime import datetime
+from typing import Any, Dict, List, Type, Optional, Set
 # import local files
-from extractors.ExtractorRegistry import ExtractorRegistry
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
-from extractors.features.FeatureRegistry import FeatureRegistry
+from extractors.registries.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from processors.PlayerProcessor import PlayerProcessor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
+from schemas.ExportMode import ExportMode
 from schemas.GameSchema import GameSchema
-from ogd_requests.Request import ExporterTypes
-from utils import Logger
+from utils import Logger, ExportRow
 
 ## @class PopulationProcessor
 #  Class to extract and manage features for a processed csv file.
 class PopulationProcessor(FeatureProcessor):
-    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-
-    def _prepareLoader(self) -> ExtractorLoader:
-        return self._LoaderClass(player_id="population", session_id="population", game_schema=self._game_schema,
-                                 mode=ExtractionMode.POPULATION, feature_overrides=self._overrides)
-
-    def _getExtractorNames(self) -> List[str]:
-        if isinstance(self._registry, FeatureRegistry):
-            return ["PlayerCount", "SessionCount"] + self._registry.GetExtractorNames()
-        else:
-            raise TypeError("PopulationProcessor's registry is not a FeatureRegistry!")
-
-    ## Function to handle processing of a single row of data.
-    def _processEvent(self, event:Event):
-        """Function to handle processing of a single row of data.
-        Basically just responsible for ensuring an extractor for the session corresponding
-        to the row already exists, then delegating the processing to that extractor.
-
-        :param event: An object with the data for the event to be processed.
-        :type event: Event
-        """
-        # ensure we have an extractor for the given session:
-        if self._registry is not None:
-            self._registry.ExtractFromEvent(event=event)
-            if event.UserID is None:
-                self._player_processors["null"].ProcessEvent(event=event)
-            else:
-                if event.UserID not in self._player_processors.keys():
-                    self._player_processors[event.UserID] = PlayerProcessor(self._LoaderClass, game_schema=self._game_schema,
-                                                                            player_id=event.UserID, feature_overrides=self._overrides)
-                self._player_processors[event.UserID].ProcessEvent(event=event)
-
-    def _processFeatureData(self, feature: FeatureData):
-        if self._registry is not None:
-            self._registry.ExtractFromFeatureData(feature=feature)
-            # Down-propogate values to player (and, by extension, session) features:
-            for player in self._player_processors.values():
-                player.ProcessFeatureData(feature=feature)
-
-    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str, List[Any]]:
-        ret_val = {}
-        # 1a) First, we get Population's first-order feature data:
-        _player_ct = self.PlayerCount()
-        _sess_ct = self.SessionCount()
-        _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
-        # 1b) Then we can side-propogate the values to second-order features, and down-propogate to other extractors:
-        for feature in _first_order_data['population']:
-            self.ProcessFeatureData(feature=feature)
-        # 2) Second, we side-propogate feature data from players/sessions.
-        for feature in _first_order_data['players']:
-            self.ProcessFeatureData(feature=feature)
-        for feature in _first_order_data['sessions']:
-            self.ProcessFeatureData(feature=feature)
-        # 3) Now, Population features have all been exposed to all first-order feature values, so we can collect all values desired for export.
-        if export_types.population and isinstance(self._registry, FeatureRegistry):
-            if as_str:
-                ret_val["population"] = [str(_player_ct), str(_sess_ct)] + self._registry.GetFeatureStringValues()
-            else:
-                ret_val["population"] = [_player_ct, _sess_ct]           + self._registry.GetFeatureValues()
-        # 4) Finally, all Player/Session features have been exposed to all first-order feature values, so we can collect all values desired for export.
-        if export_types.players or export_types.sessions:
-            # first, get list of results
-            _results = [player_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for player_extractor in self._player_processors.values()]
-            # then, each result will have players or sessions or both, need to loop over and append to a list in ret_val.
-            if export_types.players:
-                ret_val["players"] = []
-                for player in _results:
-                    ret_val["players"].append(player["players"]) # here, append list of features as new line.
-            if export_types.sessions:
-                ret_val["sessions"] = []
-                for player in _results:
-                    ret_val["sessions"] += player["sessions"] # here, sessions should already be list of lists, so use +=
-        return ret_val
-
-    def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
-        ret_val : Dict[str, List[FeatureData]] = { "population":[] }
-        if self._registry is not None:
-            ret_val["population"] = self._registry.GetFeatureData(order=order)
-        _result = [player_extractor.GetFeatureData(order=order) for player_extractor in self._player_processors.values()]
-        ret_val["players"] = []
-        ret_val["sessions"] = []
-        for player in _result:
-            ret_val["players"] += player['players']
-            ret_val["sessions"] += player['sessions']
-        return ret_val
-
-    ##  Function to empty the list of lines stored by the PopulationProcessor.
-    #   This is helpful if we're processing a lot of data and want to avoid
-    #   eating too much memory.
-    def _clearLines(self) -> None:
-        Logger.Log(f"Clearing features from PopulationProcessor.", logging.DEBUG, depth=2)
-        self._registry = FeatureRegistry()
 
     # *** BUILT-INS ***
 
@@ -131,32 +38,145 @@ class PopulationProcessor(FeatureProcessor):
         """
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         # Set up dict of sub-processors to handle each player.
-        # By default, set up a "null" player, who will cover any data without a player id.
         self._player_processors : Dict[str,PlayerProcessor] = {
             "null" : PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
                                      player_id="null", feature_overrides=self._overrides)
         }
+        self._null_empty = True
+
+    def __str__(self):
+        return f"PopulationProcessor"
+
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
+    @property
+    def _mode(self) -> ExtractionMode:
+        return ExtractionMode.POPULATION
+
+    @property
+    def _playerID(self) -> str:
+        return "population"
+
+    @property
+    def _sessionID(self) -> str:
+        return "population"
+
+    def _getExtractorNames(self) -> List[str]:
+        if isinstance(self._registry, FeatureRegistry):
+            return ["PlayerCount", "SessionCount"] + self._registry.GetExtractorNames()
+        else:
+            raise TypeError("PopulationProcessor's registry is not a FeatureRegistry!")
+
+    ## Function to handle processing of a single row of data.
+    def _processEvent(self, event:Event):
+        """Function to handle processing of a single row of data.
+        Basically just responsible for ensuring an extractor for the session corresponding
+        to the row already exists, then delegating the processing to that extractor.
+
+        :param event: An object with the data for the event to be processed.
+        :type event: Event
+        """
+        # ensure we have an extractor for the given session:
+        if self._registry is not None:
+            self._registry.ExtractFromEvent(event=event)
+            if event.UserID is None:
+                self._player_processors["null"].ProcessEvent(event=event)
+                self._null_empty = False
+            else:
+                if event.UserID not in self._player_processors.keys():
+                    self._player_processors[event.UserID] = PlayerProcessor(self._LoaderClass, game_schema=self._game_schema,
+                                                                            player_id=event.UserID, feature_overrides=self._overrides)
+                self._player_processors[event.UserID].ProcessEvent(event=event)
+
+    def _processFeatureData(self, feature: FeatureData):
+        if self._registry is not None:
+            self._registry.ExtractFromFeatureData(feature=feature)
+            # Down-propogate values to player (and, by extension, session) features:
+            for player in self._player_processors.values():
+                player.ProcessFeatureData(feature=feature)
+
+    def _getFeatureValues(self, export_types:Set[ExportMode], as_str:bool=False) -> Dict[str, List[ExportRow]]:
+        ret_val : Dict[str, List[List[Any]]] = {}
+        # 1a) First, we get Population's first-order feature data:
+        _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
+        # 1b) Then we can side-propagate the values to second-order features, and down-propogate to other extractors:
+        start = datetime.now()
+        Logger.Log(f"PopulationProcessor is processing feature data in second-order features...", logging.INFO, depth=3)
+        for feature in _first_order_data['population']:
+            self.ProcessFeatureData(feature=feature)
+        # 2) Second, we side-propogate feature data from players/sessions.
+        for feature in _first_order_data['players']:
+            self.ProcessFeatureData(feature=feature)
+        for feature in _first_order_data['sessions']:
+            self.ProcessFeatureData(feature=feature)
+        Logger.Log(f"Done, time to process feature data in PopulationProcessor was: {datetime.now() - start}", logging.INFO, depth=3)
+        # 3) Now, Population features have all been exposed to all first-order feature values, so we can collect all values desired for export.
+        if ExportMode.POPULATION in export_types and isinstance(self._registry, FeatureRegistry):
+            if as_str:
+                ret_val["population"] = [[str(self.PlayerCount), str(self.SessionCount)] + self._registry.GetFeatureStringValues()]
+            else:
+                ret_val["population"] = [[self.PlayerCount, self.SessionCount]           + self._registry.GetFeatureValues()]
+        # 4) Finally, all Player/Session features have been exposed to all first-order feature values, so we can collect all values desired for export.
+        if ExportMode.PLAYER in export_types or ExportMode.SESSION in export_types:
+            # first, get list of results, skipping null player if they didn't get events.
+            _results = [player_extractor.GetFeatureValues(export_types=export_types, as_str=as_str) for name,player_extractor in self._player_processors.items() if not (name == 'null' and self._null_empty)]
+            # then, each result will have players or sessions or both, need to loop over and append to a list in ret_val.
+            if ExportMode.PLAYER in export_types:
+                ret_val["players"] = []
+                for player in _results:
+                    ret_val["players"] += player["players"]
+            if ExportMode.SESSION in export_types:
+                ret_val["sessions"] = []
+                for player in _results:
+                    ret_val["sessions"] += player["sessions"]
+        return ret_val
+
+    def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
+        ret_val : Dict[str, List[FeatureData]] = { "population":[] }
+        if self._registry is not None:
+            ret_val["population"] = self._registry.GetFeatureData(order=order)
+        _result = [player_extractor.GetFeatureData(order=order) for player_extractor in self._player_processors.values()]
+        ret_val["players"] = []
+        ret_val["sessions"] = []
+        for player in _result:
+            ret_val["players"] += player['players']
+            ret_val["sessions"] += player['sessions']
+        return ret_val
+
+    ##  Function to empty the list of lines stored by the PopulationProcessor.
+    #   This is helpful if we're processing a lot of data and want to avoid
+    #   eating too much memory.
+    def _clearLines(self) -> None:
+        Logger.Log(f"Clearing features from PopulationProcessor.", logging.DEBUG, depth=2)
+        self._registry = FeatureRegistry(mode=self._mode)
 
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
-
-    def PlayerCount(self):
-        return len(self._player_processors.keys()) - 1 # don't count null player
-    def SessionCount(self):
-        return sum([player.SessionCount() for player in self._player_processors.values()])
 
     def GetPlayerFeatureNames(self) -> List[str]:
         return self._player_processors["null"].GetExtractorNames()
     def GetSessionFeatureNames(self) -> List[str]:
         return self._player_processors["null"].GetSessionFeatureNames()
 
-    def ClearPlayersLines(self):
-        for player in self._player_processors.values():
-            player.ClearLines()
-    def ClearSessionsLines(self):
-        for player in self._player_processors.values():
-            player.ClearSessionsLines()
+    def ClearPlayersLines(self) -> None:
+        for id,player in self._player_processors.items():
+            if not id == 'null':
+                player.ClearLines()
+        self._player_processors = {'null':self._player_processors['null']}
+    def ClearSessionsLines(self) -> None:
+        for id,player in self._player_processors.items():
+            if not id == 'null':
+                player.ClearSessionsLines()
+
+    # *** PROPERTIES ***
+
+    @property
+    def PlayerCount(self) -> int:
+        return len(self._player_processors.keys()) - 1 # don't count null player
+    @property
+    def SessionCount(self) -> int:
+        return sum([player.SessionCount for player in self._player_processors.values()])
 
     # *** PRIVATE STATICS ***
 

@@ -12,10 +12,13 @@ from calendar import monthrange
 from datetime import datetime
 from itertools import chain
 from pathlib import Path
-from typing import Tuple
+from typing import Any, Dict, Optional, Set, Tuple
 
 # import 3rd-party libraries
 from git.remote import FetchInfo
+from interfaces.outerfaces.DataOuterface import DataOuterface
+from interfaces.outerfaces.TSVOuterface import TSVOuterface
+from schemas.ExportMode import ExportMode
 
 # import local files
 from utils import Logger
@@ -25,11 +28,10 @@ from interfaces.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface
 from interfaces.BigQueryInterface import BigQueryInterface
 from managers.ExportManager import ExportManager
-from managers.FileManager import FileManager
 from schemas.IDMode import IDMode
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
-from ogd_requests.Request import Request, ExporterTypes, ExporterRange
+from ogd_requests.Request import Request, ExporterRange
 from ogd_requests.RequestResult import RequestResult, ResultStatus
 from utils import Logger
 
@@ -46,7 +48,7 @@ def ShowGameInfo() -> bool:
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
         table_schema = TableSchema(schema_name=f"{settings['GAME_SOURCE_MAP'][args.game]['table']}.json")
-        print(FileManager.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema))
+        print(TSVOuterface.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema))
     except Exception as err:
         msg = f"Could not print information for {args.game}: {type(err)} {str(err)}"
         Logger.Log(msg, logging.ERROR)
@@ -64,7 +66,7 @@ def WriteReadme() -> bool:
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
         table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
-        FileManager.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=path)
+        TSVOuterface.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=path)
     except Exception as err:
         msg = f"Could not create a readme for {args.game}: {type(err)} {str(err)}"
         Logger.Log(msg, logging.ERROR)
@@ -92,65 +94,82 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
     return success
 
 def genRequest(events:bool, features:bool) -> Request:
-    interface : DataInterface
-    range     : ExporterRange
-    exporter_files : ExporterTypes
-    exporter_files = ExporterTypes(events=events, sessions=not args.no_session_file, players=not args.no_player_file, population=not args.no_pop_file) 
+    export_modes   : Set[ExportMode]
+    interface      : DataInterface
+    range          : ExporterRange
+    file_outerface : DataOuterface
+    dataset_id     : Optional[str] = None
+
+
+    # 1. get exporter modes to run
+    export_modes = getModes(events=events, features=features)
     supported_vers = GameSchema(schema_name=f"{args.game}.json")['config']['SUPPORTED_VERS']
+    # 2. figure out the interface and range; optionally set a different dataset_id
     if args.file is not None and args.file != "":
-        raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
-        ext = str(args.file).split('.')[-1]
-        interface = CSVInterface(game_id=args.game, filepath=args.file, delim="\t" if ext == '.tsv' else ',')
+        # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
+        _ext = str(args.file).split('.')[-1]
+        interface = CSVInterface(game_id=args.game, filepath=args.file, delim="\t" if _ext == '.tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [], versions=supported_vers)
-        # breakpoint()
-    elif args.player is not None and args.player != "":
-        interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
-        if interface_type == "BigQuery":
-            interface = BigQueryInterface(game_id=args.game, settings=settings)
-        elif interface_type == "MySQL":
-            interface = MySQLInterface(game_id=args.game, settings=settings)
-        else:
-            raise Exception(f"{interface_type} is not a valid DataInterface type!")
-        range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER, versions=supported_vers)
-    elif args.player_id_file is not None and args.player_id_file != "":
-        file_path = Path(args.player_id_file)
-        with open(file_path) as player_file:
-            reader = csv.reader(player_file)
-            file_contents = list(reader) # this gives list of lines, each line a list
-            names = list(chain.from_iterable(file_contents)) # so, convert to single list
-            print(f"list of names: {list(names)}")
-            interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
-            if interface_type == "BigQuery":
-                interface = BigQueryInterface(game_id=args.game, settings=settings)
-            elif interface_type == "MySQL":
-                interface = MySQLInterface(game_id=args.game, settings=settings)
-            else:
-                raise Exception(f"{interface_type} is not a valid DataInterface type!")
-            range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER, versions=supported_vers)
-    elif args.session is not None and args.session != "":
-        interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
-        if interface_type == "BigQuery":
-            interface = BigQueryInterface(game_id=args.game, settings=settings)
-        elif interface_type == "MySQL":
-            interface = MySQLInterface(game_id=args.game, settings=settings)
-        else:
-            raise Exception(f"{interface_type} is not a valid DataInterface type!")
-        range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION, versions=supported_vers)
     else:
-        interface_type = settings["GAME_SOURCE_MAP"][args.game]['interface']
-        if interface_type == "BigQuery":
-            interface = BigQueryInterface(game_id=args.game, settings=settings)
-        elif interface_type == "MySQL":
-            interface = MySQLInterface(game_id=args.game, settings=settings)
+        interface = genDBInterface()
+        if args.player is not None and args.player != "":
+            range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER, versions=supported_vers)
+            dataset_id = f"{args.game}_{args.player}"
+        elif args.player_id_file is not None and args.player_id_file != "":
+            file_path = Path(args.player_id_file)
+            with open(file_path) as player_file:
+                reader = csv.reader(player_file)
+                file_contents = list(reader) # this gives list of lines, each line a list
+                names = list(chain.from_iterable(file_contents)) # so, convert to single list
+                print(f"list of names: {list(names)}")
+                range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.USER, versions=supported_vers)
+        elif args.session is not None and args.session != "":
+            range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION, versions=supported_vers)
+            dataset_id = f"{args.game}_{args.session}"
         else:
-            raise Exception(f"{interface_type} is not a valid DataInterface type!")
-        start_date, end_date = getDateRange()
-        range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date, versions=supported_vers)
-    # Once we have the parameters parsed out, construct the request.
-    return Request(interface=interface, range=range, exporter_types=exporter_files)
+            start_date, end_date = getDateRange()
+            range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date, versions=supported_vers)
+    # 3. set up the outerface, based on the range and dataset_id.
+    file_outerface = TSVOuterface(game_id=args.game, export_modes=export_modes,
+                                  date_range=range.DateRange, data_dir=settings["DATA_DIR"],
+                                  dataset_id=dataset_id)
+    # 4. Once we have the parameters parsed out, construct the request.
+    return Request(interface=interface, range=range, exporter_modes=export_modes, exporter_locs=[file_outerface])
 
+def genDBInterface() -> DataInterface:
+    ret_val : DataInterface
+    source_name = settings["GAME_SOURCE_MAP"][args.game]['source']
+    source : Dict[str,Any] = settings["GAME_SOURCES"][source_name]
+    interface_type = source.get('DB_TYPE')
+
+    config = settings["GAME_SOURCE_MAP"][args.game]
+    config['source'] = {key:val for key,val in source.items()}
+
+    if interface_type == "BigQuery":
+        ret_val = BigQueryInterface(game_id=args.game, config=config)
+    elif interface_type == "MySQL":
+        ret_val = MySQLInterface(game_id=args.game, config=config)
+    else:
+        raise Exception(f"{interface_type} is not a valid DataInterface type!")
+    return ret_val
+
+def getModes(events:bool, features:bool) -> Set[ExportMode]:
+    ret_val = set()
+
+    if events:
+        ret_val.add(ExportMode.EVENTS)
+    if features:
+        if not args.no_session_file:
+            ret_val.add(ExportMode.SESSION)
+        if not args.no_player_file:
+            ret_val.add(ExportMode.PLAYER)
+        if not args.no_pop_file:
+            ret_val.add(ExportMode.POPULATION)
+
+    return ret_val
+    
 # retrieve/calculate date range.
 def getDateRange() -> Tuple[datetime, datetime]:
     start_date: datetime

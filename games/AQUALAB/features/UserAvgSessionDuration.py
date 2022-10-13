@@ -4,6 +4,7 @@ from typing import Any, List
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class UserAvgSessionDuration(SessionFeature):
@@ -14,10 +15,12 @@ class UserAvgSessionDuration(SessionFeature):
         self._times = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["SessionDuration"]
 
     def _extractFromEvent(self, event:Event) -> None:

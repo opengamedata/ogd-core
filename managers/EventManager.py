@@ -4,7 +4,8 @@ import logging
 from datetime import datetime
 from typing import Any, Callable, List, Type, Optional
 ## import local files
-from extractors.detectors.DetectorRegistry import DetectorRegistry
+import utils
+from extractors.registries.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
 from processors.EventProcessor import EventProcessor
 from schemas.Event import Event
@@ -20,7 +21,7 @@ class EventManager:
         Just creates empty list of lines and generates list of column names.
         """
         # define instance vars
-        self._lines       : List[str]        = []
+        self._lines       : List[List[Any]]  = []
         self._columns     : List[str]        = Event.ColumnNames()
         self._processor   : EventProcessor   = EventProcessor(LoaderClass=LoaderClass,           game_schema=game_schema,
                                                               trigger_callback=trigger_callback, feature_overrides=feature_overrides)
@@ -35,15 +36,15 @@ class EventManager:
             elif type(col) == dict:
                 col_values[i] = json.dumps(col)
         # event.EventData = json.dumps(event.EventData)
-        self._lines.append(separator.join([str(item) for item in col_values]) + "\n") # changed , to \t
+        self._lines.append(col_values) # changed , to \t
         self._processor.ProcessEvent(event=event)
 
     def GetColumnNames(self) -> List[str]:
         return self._columns
 
-    def GetLines(self, slice_num:int, slice_count:int) -> List[str]:
+    def GetLines(self, slice_num:int, slice_count:int) -> List[Any]:
         start   : datetime = datetime.now()
-        ret_val : List[str] = self._lines
+        ret_val : List[Any] = self._lines
         time_delta = datetime.now() - start
         Logger.Log(f"Time to retrieve Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val

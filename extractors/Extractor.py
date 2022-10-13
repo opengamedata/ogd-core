@@ -27,7 +27,8 @@ class Extractor(abc.ABC):
 
     ## Abstract function to get a list of event types the Feature wants.
     @abc.abstractmethod
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """ Abstract function to get a list of event types the Feature wants.
             The types of event accepted by a feature are a responsibility of the Feature's developer,
             so this is a required part of interface instead of a config item in the schema.
@@ -38,7 +39,8 @@ class Extractor(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
         Any feature intented to be second-order should override this function.
@@ -70,11 +72,13 @@ class Extractor(abc.ABC):
 
     # *** PUBLIC METHODS ***
 
-    def GetEventDependencies(self) -> List[str]:
-        return self._getEventDependencies()
+    @classmethod
+    def GetEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+        return cls._getEventDependencies(mode=mode)
 
-    def GetFeatureDependencies(self) -> List[str]:
-        return self._getFeatureDependencies()
+    @classmethod
+    def GetFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+        return cls._getFeatureDependencies(mode=mode)
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event=event):
@@ -116,7 +120,7 @@ class Extractor(abc.ABC):
         :return: _description_
         :rtype: List[ExtractionMode]
         """
-        return [ExtractionMode.POPULATION, ExtractionMode.USER, ExtractionMode.SESSION, ExtractionMode.DETECTOR]
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR]
 
     # *** PROPERTIES ***
 
@@ -129,7 +133,7 @@ class Extractor(abc.ABC):
         return self._params._desc
 
     @property
-    def ExportMode(self) -> ExtractionMode:
+    def ExtractionMode(self) -> ExtractionMode:
         return self._params._mode
 
     @property
@@ -175,6 +179,7 @@ class Extractor(abc.ABC):
         else:
             return False # data_version of None is invalid.
 
+    @classmethod
     def _validateEventType(self, event_type:str) -> bool:
         """Private function to check whether a given event type is accepted by this Feature.
 
@@ -183,7 +188,7 @@ class Extractor(abc.ABC):
         :return: True if the given event type is in this feature's list, otherwise false.
         :rtype: bool
         """
-        _deps = self.GetEventDependencies()
+        _deps = self.GetEventDependencies(mode=self.ExtractionMode)
         if event_type in _deps or 'all_events' in _deps:
             return True
         else:
