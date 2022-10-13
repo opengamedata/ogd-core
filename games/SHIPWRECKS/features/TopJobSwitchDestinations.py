@@ -5,9 +5,11 @@ from typing import Any, List
 # import locals
 from utils import Logger
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
+
 
 class TopJobSwitchDestinations(Feature):
 

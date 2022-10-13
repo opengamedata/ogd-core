@@ -91,7 +91,7 @@ class TimeSinceEventTypesModel(SequenceModel):
 
         super().__init__()
 
-    def _eval(self, events: List[Dict[str, Any]], verbose: bool = False) -> Optional[int]:
+    def _eval(self, events: List[Dict[str, Any]], verbose: bool = False) -> Optional[float]:
         if not events:
             return None
         now = events[-1]["client_time"] # assume this script in the same timezone as server, and server exports
@@ -107,7 +107,7 @@ class TimeSinceEventTypesModel(SequenceModel):
             event_time = datetime.datetime.fromisoformat(event_time)
         if type(now) is str:
             now = datetime.datetime.fromisoformat(now)
-        return (now - event_time).seconds
+        return (now - event_time).total_seconds()
 
 
     def __repr__(self):

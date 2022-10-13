@@ -38,6 +38,6 @@ class UserTotalSessionDuration(SessionFeature):
                 self._time += feature.FeatureValues[0]
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._time.seconds]
+        return [self._time.total_seconds()]
 
     # *** Optionally override public functions. ***

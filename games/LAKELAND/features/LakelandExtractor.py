@@ -103,12 +103,11 @@ class LakelandExtractor(LegacyFeature):
         # Initialize superclass
         super().__init__(params=params, game_schema=game_schema, session_id=session_id)
         # Set window and overlap size
-        config = game_schema['config']
-        self._NUM_SECONDS_PER_WINDOW = config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
-        self._NUM_SECONDS_PER_WINDOW_OVERLAP = config["WINDOW_OVERLAP_SECONDS"]
+        self._NUM_SECONDS_PER_WINDOW = game_schema.Config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
+        self._NUM_SECONDS_PER_WINDOW_OVERLAP = game_schema.Config["WINDOW_OVERLAP_SECONDS"]
         self._GAME_SCHEMA = game_schema
-        self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
-        self.WINDOW_RANGE = range(game_schema.level_range().stop)
+        self._IDLE_THRESH_SECONDS = game_schema.Config['IDLE_THRESH_SECONDS']
+        self.WINDOW_RANGE = range(game_schema.LevelRange.stop)
         self._WINDOW_RANGES = self._get_window_ranges()
         self._cur_gameplay = 1
         self._startgame_count = 0
@@ -1146,7 +1145,7 @@ class LakelandExtractor(LegacyFeature):
 
     def finish_window(self, w):
         window_end_time = timedelta(seconds=self._WINDOW_RANGES[w][1])
-        for f in self.features.perlevels:
+        for f in self.features._perlevel_names:
             cur_val = self.getValByIndex(f, w)
             if cur_val == float('inf'):
                 # if min_ feature is still float('inf'), then max_value and min_value should still be 0.
@@ -1158,7 +1157,7 @@ class LakelandExtractor(LegacyFeature):
         # update time_in_secs to full (might not be full
 
     def start_window(self, w):
-        for f in self.features.perlevels:
+        for f in self.features._perlevel_names:
             self.setValByIndex(f, w, new_value=self._get_default_val(f))
         if w > 0:
             for type in self._BUILDING_TYPES:
@@ -1349,7 +1348,7 @@ class LakelandExtractor(LegacyFeature):
     def _get_windows_at_time(self, client_time=None):
         # if no client time, get windows at start
         if client_time is not None:
-            seconds_since_start = self.time_since_start(client_time).seconds
+            seconds_since_start = self.time_since_start(client_time).total_seconds()
         else:
             seconds_since_start = 0
         windows = []

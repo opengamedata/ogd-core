@@ -24,9 +24,9 @@ class ExtractorLoader(abc.ABC):
     def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         pass
 
-    @abc.abstractmethod
     @staticmethod
-    def _getLoadedModule():
+    @abc.abstractmethod
+    def _getFeaturesModule():
         pass
 
     # *** BUILT-INS ***
@@ -80,26 +80,18 @@ class ExtractorLoader(abc.ABC):
 
     def GetFeatureClass(self, feature_type:str) -> Optional[Type[Feature]]:
         ret_val : Optional[Type[Feature]] = None
-        base_mod = self._getLoadedModule()
+        base_mod = self._getFeaturesModule()
         try:
             feature_mod = getattr(base_mod, feature_type)
             ret_val     = getattr(feature_mod, feature_type)
         except NameError as err:
-            Logger.Log(f"Could not get class {feature_type}")
+            Logger.Log(f"Could not get class {feature_type}, a NameError occurred:\n{err}", logging.WARN)
         finally:
             return ret_val
 
     # *** PROPERTIES ***
 
     # *** PRIVATE STATICS ***
-
-    @staticmethod
-    def _genCountRange(count:Any, schema:GameSchema) -> range:
-        if type(count) == str and count.lower() == "level_range":
-            count_range = schema.level_range()
-        else:
-            count_range = range(0,int(count))
-        return count_range
 
     # *** PRIVATE METHODS ***
 

@@ -60,72 +60,75 @@
     },
 
     "features": {
+		"legacy" : {
+			"enabled" : true
+		},
         "perlevel": {
             "eventCount": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Number of player events in the given level"
             },
             "southPoleScore": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The score for the south pole placement"
             },
             "northPoleScore": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The score for the north pole placement"
             },
             "northPoleToSouthGuess": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The score for the south pole placement if the poles were switched."
             },
             "southPoleToNorthGuess": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The score for the north pole placement if the poles were switched."
             },
             "numberOfCompassesUsed": {
-                "enabled": true,
+                "enabled": false,
                 "description": "How many of the six compasses were placed before guessing"
             },
             "usedMagneticFilm": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Indicates whether the magnetic film was placed"
             },
             "usedIronFilings": {
-                "enabled": true,
+                "enabled": false,
                 "description": "Indicates whether the iron filings were placed"
             },
             "numTimesPolesMoved": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The number of times the poles were moved before finalizing the guess"
             },
             "levelTime": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The amount of time spent in the level"
             }
         },
         "per_count": {},
         "aggregate": {
             "sessionID": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The player's session ID number for this play session"
             },
             "persistentSessionID": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The session ID for the player's device, persists across multiple players using the same device."
             },
             "sessionEventCount": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The total number of events across the entire session"
             },
             "sessionTime": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The total number of seconds spent"
             },
             "numberOfCompletePlays": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The number of times the player played the game"
             },
             "averageScore": {
-                "enabled": true,
+                "enabled": false,
                 "description": "The average score across all complete plays"
             }
         }

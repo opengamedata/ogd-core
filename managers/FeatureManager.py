@@ -36,7 +36,30 @@ class FeatureManager:
             Logger.Log("Could not export population/session data, no feature loader given!", logging.WARNING, depth=1)
 
     def ProcessEvent(self, event:Event) -> None:
+<<<<<<< HEAD
         self._processor.ProcessEvent(event=event)
+=======
+        # 1. process at population level.
+        self._population.ProcessEvent(event=event)
+        # 2. process at player level, adding player if needed.
+        _player_id = event.UserID or "null"
+        if _player_id not in self._players.keys():
+            self._players[_player_id] = PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+                                                        player_id=_player_id,          feature_overrides=self._overrides)
+        if _player_id not in self._sessions.keys():
+            self._sessions[_player_id] = {}
+            self._used_null_sess[_player_id] = False
+        self._players[_player_id].ProcessEvent(event=event)
+        if _player_id == "null":
+            self._used_null_play = True
+        # 3. process at session level, adding session if needed.
+        if event.SessionID not in self._sessions[_player_id].keys():
+            self._sessions[_player_id][event.SessionID] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+                                                                player_id=_player_id,          session_id=event.SessionID,    feature_overrides=self._overrides)
+        self._sessions[_player_id][event.SessionID].ProcessEvent(event=event)
+        if event.SessionID == None or event.SessionID.upper() == "NULL":
+            self._used_null_sess[_player_id] = True
+>>>>>>> master
         self._up_to_date = False
 
     def HasLoader(self) -> bool:
@@ -104,5 +127,17 @@ class FeatureManager:
 
     def _try_update(self, as_str:bool = False):
         if not self._up_to_date:
+<<<<<<< HEAD
             self._latest_results = self._processor.GetFeatureValues(export_types=self._exp_types, as_str=as_str)
+=======
+            self.ProcessFeatureData()
+            # for some reason, this didn't work as sum over list of lists, so get sessions manually with a normal loop:
+            list_o_lists   : List[List[ExportRow]] = [[session.GetFeatureValues(as_str=as_str) for session_id,session in session_list.items() if (session_id != "null" or self._used_null_sess[player_name])] for player_name,session_list in self._sessions.items()]
+            sess_flat_list : List[ExportRow]       = list(itertools.chain.from_iterable(list_o_lists))
+            self._latest_values = {
+                "population" : [self._population.GetFeatureValues(as_str=as_str)],
+                "players"    : [player.GetFeatureValues(as_str=as_str) for player_id,player in self._players.items() if (player_id != "null" or self._used_null_play)],
+                "sessions"   : sess_flat_list
+            }
+>>>>>>> master
             self._up_to_date = True

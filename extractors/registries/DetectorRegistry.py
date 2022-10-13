@@ -1,7 +1,7 @@
 ## import standard libraries
 import logging
 from collections import OrderedDict
-from typing import Any, Callable, List, Optional
+from typing import Any, Callable, List, Optional, Set
 ## import local files
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import Extractor
@@ -10,6 +10,7 @@ from extractors.registries.ExtractorRegistry import ExtractorRegistry
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
+from schemas.game_schemas.DetectorSchema import DetectorSchema
 from schemas.GameSchema import GameSchema
 from schemas.IterationMode import IterationMode
 
@@ -69,10 +70,10 @@ class DetectorRegistry(ExtractorRegistry):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _register(self, extractor:Extractor, mode:IterationMode):
+    def _register(self, extractor:Extractor, iter_mode:IterationMode):
         if isinstance(extractor, Detector):
-            _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=mode)
-            _event_types   = extractor.GetEventDependencies()
+            _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=iter_mode)
+            _event_types   = extractor.GetEventDependencies(mode=self._mode)
             # First, add detector to the _features dict.
             self._detectors[extractor.Name] = extractor
             # Register detector's requested events.
@@ -96,24 +97,30 @@ class DetectorRegistry(ExtractorRegistry):
         return ret_val
 
     def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, overrides:Optional[List[str]]=None):
-        # first, load aggregate detectors
-        iter_mode = IterationMode.AGGREGATE
-        for base_name,aggregate in schema.AggregateDetectors.items():
-            if schema.DetectorEnabled(detector_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=overrides):
-                detector_type = aggregate.get('detector_type', base_name) # try to get 'detector type' from aggregate, if it's not there default to name of the config item.
-                detector = loader.LoadDetector(detector_type=detector_type, name=base_name, schema_args=aggregate, trigger_callback=self._trigger_callback)
-                if detector is not None:
-                    self.Register(extractor=detector, mode=iter_mode)
-        # second, load iterated (per-count) detectors
-        iter_mode = IterationMode.PERCOUNT
-        for base_name,percount in schema.PerCountDetectors.items():
-            if schema.DetectorEnabled(detector_name=base_name, iter_mode=iter_mode, extract_mode=self._mode, overrides=overrides):
-                detector_type = percount.get('detector_type', base_name) # try to get 'detector type' from percount config, if it's not there default to name of the config item.
-                for i in ExtractorLoader._genCountRange(count=percount["count"], schema=schema):
-                    instance_name = f"{percount['prefix']}{i}_{base_name}"
-                    detector = loader.LoadDetector(detector_type=detector_type, name=instance_name, schema_args=percount, trigger_callback=self._trigger_callback, count_index=i)
-                    if detector is not None:
-                        self.Register(extractor=detector, mode=iter_mode)
+        # first, get list of what should actually be loaded.
+        # TODO : move this logic as high up as possible, so that we only need to do it once for each kind of processor.
+        # 1. Start with overrides, else list of enabled features in schema.
+        agg_load_set : Set[DetectorSchema]
+        per_load_set : Set[DetectorSchema]
+        if overrides is not None:
+            agg_load_set = {schema.Detectors['aggregate'][name] for name in overrides if name in schema.Detectors['aggregate'].keys()}
+            per_load_set = {schema.Detectors['per_count'][name] for name in overrides if name in schema.Detectors['per_count'].keys()}
+        else:
+            agg_load_set = {val for val in schema.EnabledDetectors(iter_modes={IterationMode.AGGREGATE}, extract_modes={self._mode}).values() if isinstance(val, DetectorSchema)}
+            per_load_set = {val for val in schema.EnabledDetectors(iter_modes={IterationMode.PERCOUNT}, extract_modes={self._mode}).values() if isinstance(val, DetectorSchema)}
+        # 2. Now that we know what needs loading, load them and register.
+        # TODO : right now, Detectors are at weird halfway point wrt whether they can be aggregate and percount or not. Need to resolve that.
+        detector : Optional[Detector]
+        for agg_schema in agg_load_set:
+            detector = loader.LoadDetector(detector_type=agg_schema.TypeName, name=agg_schema.Name, schema_args=agg_schema.Elements, trigger_callback=self._trigger_callback)
+            if detector is not None and self._mode in detector.AvailableModes():
+                    self.Register(extractor=detector, iter_mode=IterationMode.AGGREGATE)
+        for per_schema in per_load_set:
+            for i in schema.GetCountRange(count=per_schema.Elements.get('count', 1)):
+                instance_name = f"{per_schema.Elements.get('prefix', '')}{i}_{per_schema.Name}"
+                detector = loader.LoadDetector(detector_type=per_schema.TypeName, name=per_schema.Name, schema_args=per_schema.Elements, trigger_callback=self._trigger_callback)
+                if detector is not None and self._mode in detector.AvailableModes():
+                        self.Register(extractor=detector, iter_mode=IterationMode.PERCOUNT)
 
     def _extractFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.

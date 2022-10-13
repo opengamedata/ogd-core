@@ -65,6 +65,7 @@ class TopJobSwitchDestinations(Feature):
             }
             # Logger.Log(f"For TopJobSwitchDestinations, sorted dests as: {json.dumps(dests)}")
 
+        # TODO: figure out if we really need to dump to string, or if we can assume things get stringified as needed elsewhere.
         return [json.dumps(ret_val)]
 
     # *** Optionally override public functions. ***

@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Tuple, Optional
 from config.config import settings as default_settings
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
+from schemas.TableSchema import TableSchema
 from utils import Logger
 
 AQUALAB_MIN_VERSION = 6.2
@@ -49,6 +50,10 @@ class BigQueryInterface(DataInterface):
         Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
+    def _loadTableSchema(self, game_id:str) -> TableSchema:
+        _schema_name = self._config.get("schema") or default_settings['GAME_SOURCE_MAP'].get(game_id, {}).get('schema', "NO SCHEMA DEFINED")
+        return TableSchema(schema_name=_schema_name)
+
     def _allIDs(self) -> List[str]:
         query = f"""
             SELECT DISTINCT param.value.int_value AS session_id
@@ -89,7 +94,7 @@ class BigQueryInterface(DataInterface):
                     if item[0] == "event_params":
                         _params = {param['key']:param['value'] for param in item[1]}
                         event.append(json.dumps(_params, sort_keys=True))
-                    elif item[0] in ["device", "geo"]:
+                    elif item[0] in {"device", "geo"}:
                         event.append(json.dumps(item[1], sort_keys=True))
                     else:
                         event.append(item[1])

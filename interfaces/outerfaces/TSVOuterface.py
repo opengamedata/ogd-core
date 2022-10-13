@@ -221,6 +221,8 @@ class TSVOuterface(DataOuterface):
         except FileNotFoundError as err:
             Logger.Log(f"Could not open readme.md for writing.", logging.ERROR)
             traceback.print_tb(err.__traceback__)
+        else:
+            Logger.Log(f"Wrote readme file to {path}/readme.md", logging.INFO)
 
     @staticmethod
     def GenCSVMetadata(game_schema: GameSchema, table_schema: TableSchema) -> str:
@@ -248,9 +250,9 @@ class TSVOuterface(DataOuterface):
         f"# Game: {game_schema._game_name}  ",
         "",
         "## Field Descriptions:  \n",
-        f"{table_schema.Markdown()}",
+        f"{table_schema.AsMarkdown}",
         "",
-        f"{game_schema.Markdown()}",
+        f"{game_schema.AsMarkdown}",
         ""])
         return template_str
 

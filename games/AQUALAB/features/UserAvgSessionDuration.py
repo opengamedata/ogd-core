@@ -12,7 +12,7 @@ class UserAvgSessionDuration(SessionFeature):
     def __init__(self, params:ExtractorParameters, player_id:str):
         self._player_id = player_id
         super().__init__(params=params)
-        self._times = []
+        self._times : List[int] = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -31,7 +31,7 @@ class UserAvgSessionDuration(SessionFeature):
             if feature.FeatureValues[0] == "No events":
                 pass
             else:
-                self._times.append(feature.FeatureValues[0].seconds)
+                self._times.append(feature.FeatureValues[0].total_seconds())
 
     def _getFeatureValues(self) -> List[Any]:
         if len(self._times) > 0:

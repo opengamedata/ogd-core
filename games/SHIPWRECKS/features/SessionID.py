@@ -1,10 +1,11 @@
 # import libraries
 from typing import Any, List, Optional
 # import locals
-from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
 
 class SessionID(SessionFeature):
 

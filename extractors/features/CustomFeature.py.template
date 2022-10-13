@@ -3,8 +3,10 @@ import json
 from typing import Any, List, Optional
 # import local files
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
+
 
 class CustomFeature(Feature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.

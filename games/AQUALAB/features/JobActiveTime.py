@@ -63,7 +63,7 @@ class JobActiveTime(PerJobFeature):
         #     self._handle_population(feature=feature)
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._total_time.seconds]
+        return [self._total_time.total_seconds()]
 
     def _validateEventCountIndex(self, event:Event):
         ret_val : bool = False
