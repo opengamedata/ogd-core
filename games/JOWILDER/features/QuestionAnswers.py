@@ -2,9 +2,10 @@
 from schemas import Event
 from typing import Any, List, Optional
 # import locals
-from schemas.FeatureData import FeatureData
 from extractors.features.PerCountFeature import PerCountFeature
 from extractors.Extractor import ExtractorParameters
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 from .. import Jowilder_Enumerators as je
 
@@ -27,11 +28,13 @@ class QuestionAnswers(PerCountFeature):
                 self.cur_question = je.answer_to_question(event.EventData.get("cur_cmd_fqid"), event.EventData["level"])
         return self.cur_question==self.CountIndex
     
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.11", "CUSTOM.20"]
         # ["CUSTOM.11", "CUSTOM.20"] = ["wildcard_clicks", "wildcard_hover"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event: Event) -> None:

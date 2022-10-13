@@ -4,6 +4,7 @@ from typing import Any, List, Optional
 from extractors.Extractor import ExtractorParameters
 # import local files
 from extractors.features.PerCountFeature import PerCountFeature
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 from datetime import datetime, timedelta
@@ -50,7 +51,8 @@ class SurveyItem(PerCountFeature):
         self._index = QUIZ_INDEXES[quiz_index][question_index]
         return self._index == self.CountIndex or self._index == self.CountIndex - 1
 
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -59,7 +61,8 @@ class SurveyItem(PerCountFeature):
         return ["CUSTOM.22", "CUSTOM.23"] 
         # ["CUSTOM.22", "CUSTOM.23"] = ["quizquestion", "quizstart"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_

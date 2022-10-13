@@ -1,16 +1,17 @@
 # import libraries
 import json
+from datetime import datetime, timedelta
 from os import environ
 from typing import Any, List, Optional
 import numpy as np
 from extractors.Extractor import ExtractorParameters
 # import local files
 from extractors.features.PerCountFeature import PerCountFeature
-from schemas.FeatureData import FeatureData
-from schemas.Event import Event
-from datetime import datetime, timedelta
 from games.JOWILDER import Jowilder_Enumerators as je
 from games.JOWILDER.features.Interaction import clicks_track
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
+from schemas.Event import Event
 
 # NOTE: Assumptions are: 1. All click events occured in the order like xxxx111xx222x1x3. 2. Use "text_fqid" to identify interactions. 3. The first interaction "tunic.historicalsociety.closet.intro" makes no sense so we don't need to consider it. That is, there are 190 interactions in total, but we only count 189. And we should confirm that, this tunic.historicalsociety.closet.intro doesn't occur anywhere else.
 
@@ -43,12 +44,14 @@ class InteractionTextBoxesPerSecond(PerCountFeature):
 
         
 
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         # NOTE: Count all the click events
         return ["CUSTOM." + str(i) for i in range(3,12)] + ["CUSTOM.1"]
         # CUSTOM.X, X in [3,12) = ['navigate_click','notebook_click', 'map_click', 'notification_click', 'object_click', 'observation_click', 'person_click', 'cutscene_click', 'wildcard_click']
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
