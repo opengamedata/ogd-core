@@ -32,6 +32,7 @@ class HintAndLeave(Detector):
         self._hint = "Unknown"
         self._last_hint_time:Optional[datetime] = None
         self._time_spent: Optional[Union[timedelta, float]] = None
+        self._detector_event_data: Optional[dict] = None
         if time_threshold is not None:
             self._threshold: Union[timedelta, float] = timedelta(seconds=time_threshold)
         else:
@@ -46,7 +47,7 @@ class HintAndLeave(Detector):
         :return: _description_
         :rtype: List[str]
         """
-        return ["ask_for_help", "scene_changed"] # >>> fill in names of events this Feature should use for extraction. <<<
+        return ["ask_for_help", "scene_changed", "room_changed"] # >>> fill in names of events this Feature should use for extraction. <<<
 
     def _extractFromEvent(self, event:Event) -> None:
         """_summary_
@@ -65,12 +66,12 @@ class HintAndLeave(Detector):
             self._job_name = event.EventData.get("job_name")
             self._hint = event.EventData.get("node_id")
             return
-        else:
-            if not self._last_hint_time:
-                return
-            self._time_spent = event.Timestamp - self._last_hint_time
-            self._scene = event.EventData.get("scene_name")
-            self._last_hint_time = None
+
+        if not self._last_hint_time:
+            return
+        self._time_spent = event.Timestamp - self._last_hint_time
+        self._last_hint_time = None
+
         if self._time_spent <= self._threshold:
             self._found = True
             self._time_spent = self._time_spent / timedelta(seconds=1)
@@ -80,6 +81,14 @@ class HintAndLeave(Detector):
             self._app_version = event.AppVersion
             self._log_version = event.LogVersion
             self._sequence_index = event.EventSequenceIndex
+            if event.EventName == "scene_changed":
+                self._scene = event.EventData.get("scene_name")
+                self._detector_event_data = {"time": self._time_spent, "level": self._threshold / timedelta(
+                    seconds=1), "scene": self._scene, "job": self._job_name, "hint_node": self._hint}
+            else:
+                self._room = event.EventData.get("room_name")
+                self._detector_event_data = {"time": self._time_spent, "level": self._threshold / timedelta(
+                    seconds=1), "room": self._room, "job": self._job_name, "hint_node": self._hint}
         return
 
     def _trigger_condition(self) -> bool:
@@ -95,6 +104,5 @@ class HintAndLeave(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val: DetectorEvent = DetectorEvent(session_id=self._sess_id, app_id="AQUALAB", timestamp=self._time, event_name="HintAndLeave", event_data={"time": self._time_spent, "level": self._threshold / timedelta(
-            seconds=1), "scene": self._scene, "job": self._job_name, "hint_node": self._hint}, app_version=self._app_version, log_version=self._log_version, user_id=self._player_id, event_sequence_index=self._sequence_index)
+        ret_val: DetectorEvent = DetectorEvent(session_id=self._sess_id, app_id="AQUALAB", timestamp=self._time, event_name="HintAndLeave", event_data=self._detector_event_data, app_version=self._app_version, log_version=self._log_version, user_id=self._player_id, event_sequence_index=self._sequence_index)
         return ret_val
