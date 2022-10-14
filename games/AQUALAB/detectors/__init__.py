@@ -3,11 +3,13 @@ __all__ = [
     "DiveSiteNoEvidence",
     "EchoRoomChange",
     "Idle",
-    "SceneChangeFrequently"
+    "SceneChangeFrequently",
+    "HintAndLeave"
 ]
 
 from . import CollectFactNoJob
 from . import DiveSiteNoEvidence
 from . import EchoRoomChange
 from . import Idle
+from . import HintAndLeave
 from . import SceneChangeFrequently
