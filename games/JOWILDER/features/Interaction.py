@@ -26,14 +26,14 @@ class ClickTrack:
 
     # TODO: Add more property decorators fuction
     @property
-    def LastClickTime(self):
+    def LastClickTime(self) -> Optional[datetime]:
         if self._last_click is not None:
             return self._last_click.Timestamp
         else:
             return None
 
     @property
-    def LastInteractionIndex(self):
+    def LastInteractionIndex(self) -> Optional[int]:
         if self._last_click is not None:
             _interaction = self._last_click.EventData.get("text_fqid") \
                         or self._last_click.EventData.get("cur_cmd_fqid") \
@@ -43,11 +43,11 @@ class ClickTrack:
             return None
 
     @property
-    def GameStart(self):
+    def GameStart(self) -> bool:
         return self._game_start
 
     @property
-    def GameStartTime(self):
+    def GameStartTime(self) -> Optional[datetime]:
         return self._game_start_time
 
     @staticmethod
