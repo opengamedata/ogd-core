@@ -36,7 +36,8 @@ class ClickTrack:
     def LastInteractionIndex(self):
         if self._last_click is not None:
             _interaction = self._last_click.EventData.get("text_fqid") \
-                        or self._last_click.EventData.get("cur_cmd_fqid")
+                        or self._last_click.EventData.get("cur_cmd_fqid") \
+                        or "FQID NOT FOUND"
             return je.fqid_to_enum.get(_interaction)
         else:
             return None
@@ -86,7 +87,7 @@ class Interaction(PerCountFeature):
 
     def __init__(self, params: ExtractorParameters):
         super().__init__(params=params)
-        self._interaction : int = None
+        self._interaction : Optional[int] = None
         self._interaction_time : timedelta = timedelta(0)
         self._first_encounter_time : timedelta = timedelta(0)
         self._num_encounters : int = 0
@@ -97,7 +98,8 @@ class Interaction(PerCountFeature):
     def _validateEventCountIndex(self, event: Event):
         if event.EventName == "CUSTOM.1":
             return True
-        self._interaction = je.fqid_to_enum.get(event.EventData.get("text_fqid") or event.EventData.get("cur_cmd_fqid"))
+        _fqid = event.EventData.get("text_fqid") or event.EventData.get("cur_cmd_fqid") or "FQID NOT FOUND"
+        self._interaction = je.fqid_to_enum.get(_fqid)
         if self._interaction is None:
             return self.CountIndex == clicks_track.LastInteractionIndex
         else:

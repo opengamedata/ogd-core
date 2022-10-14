@@ -35,8 +35,8 @@ class InteractionTextBoxesPerSecond(PerCountFeature):
     def _validateEventCountIndex(self, event: Event):
         if event.EventName == "CUSTOM.1":
             return True
-        self._interaction = je.fqid_to_enum.get(event.EventData.get(
-            "text_fqid") or event.EventData.get("cur_cmd_fqid"))
+        _fqid = event.EventData.get("text_fqid") or event.EventData.get("cur_cmd_fqid") or "FQID NOT FOUND"
+        self._interaction = je.fqid_to_enum.get(_fqid)
         if self._interaction is None:
             return self.CountIndex == clicks_track.LastInteractionIndex
         else:
