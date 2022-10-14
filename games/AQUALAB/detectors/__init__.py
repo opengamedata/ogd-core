@@ -4,7 +4,8 @@ __all__ = [
     "EchoRoomChange",
     "Idle",
     "SceneChangeFrequently",
-    "HintAndLeave"
+    "HintAndLeave",
+    "TwoHints"
 ]
 
 from . import CollectFactNoJob
@@ -13,3 +14,4 @@ from . import EchoRoomChange
 from . import Idle
 from . import HintAndLeave
 from . import SceneChangeFrequently
+from . import TwoHints
