@@ -18,7 +18,7 @@ class ActiveStateTime(SessionFeature):
     """
 
     ACTIVE_TIME_THRESHOLD = timedelta(seconds=15)
-    CLICK_EVENTS_NAME = ["CUSTOM." + str(i) for i in range(3, 12)]
+    CLICK_EVENTS_NAME = [f"CUSTOM.{i}" for i in range(3, 12)]
 
     def __init__(self, params:ExtractorParameters, threshold:int):
         super().__init__(params=params)
@@ -32,7 +32,7 @@ class ActiveStateTime(SessionFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["CUSTOM." + str(i) for i in range(3, 21)] + ["CUSTOM.1"]
+        return [f"CUSTOM.{i}" for i in range(3, 21)] + ["CUSTOM.1"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:

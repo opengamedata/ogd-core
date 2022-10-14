@@ -35,8 +35,8 @@ class InteractionWordsPerSecond(PerCountFeature):
     def _validateEventCountIndex(self, event: Event):
         if event.EventName == "CUSTOM.1":
             return True
-        self._interaction = je.fqid_to_enum.get(event.EventData.get(
-            "text_fqid") or event.EventData.get("cur_cmd_fqid"))
+        _key = event.EventData.get("text_fqid") or event.EventData.get("cur_cmd_fqid") or "FQID NOT FOUND"
+        self._interaction = je.fqid_to_enum.get(_key)
         if self._interaction is None:
             return self.CountIndex == clicks_track.LastInteractionIndex
         else:
@@ -46,7 +46,7 @@ class InteractionWordsPerSecond(PerCountFeature):
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         # NOTE: Count all the click events
-        return ["CUSTOM." + str(i) for i in range(3,12)] + ["CUSTOM.1"]
+        return [f"CUSTOM.{i}" for i in range(3,12)] + ["CUSTOM.1"]
         # CUSTOM.X, X in [3,12) = ['navigate_click','notebook_click', 'map_click', 'notification_click', 'object_click', 'observation_click', 'person_click', 'cutscene_click', 'wildcard_click']
 
     @classmethod

@@ -33,7 +33,7 @@ class IdleState(SessionFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["CUSTOM." + str(i) for i in range(3, 21)] + ["CUSTOM.1"]
+        return [f"CUSTOM.{i}" for i in range(3, 21)] + ["CUSTOM.1"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:

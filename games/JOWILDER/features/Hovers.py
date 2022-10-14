@@ -21,7 +21,7 @@ class Hovers(SessionFeature):
 
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["CUSTOM." + str(i) for i in range(12, 21)]
+        return [f"CUSTOM.{i}" for i in range(12, 21)]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
