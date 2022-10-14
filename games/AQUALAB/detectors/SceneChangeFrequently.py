@@ -72,7 +72,7 @@ class SceneChangeFrequently(Detector):
         self._scene_from = self._scene_stopby
         self._scene_stopby = self._scene_at
         self._scene_at = event.EventData.get("scene_name")
-        if self._time_spent < self._threshold:
+        if self._time_spent <= self._threshold:
             self._found = True
             self._time_spent = self._time_spent / timedelta(seconds=1)
             self._sess_id = event.SessionID
