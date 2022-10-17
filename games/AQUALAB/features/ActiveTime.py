@@ -19,18 +19,27 @@ class ActiveTime(Feature):
         self._Idle_time: float = 0
         self.active_level:float = active_threads if active_threads else ActiveTime.IDLE_LEVEL
         self._sess_duration: Optional[timedelta] = None
+        self._client_start_time: Optional[datetime] = None
+        self._client_end_time: Optional[datetime] = None
         
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["Idle"]
+        return ["all_events"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["SessionDuration"]
+        return []
 
     def _extractFromEvent(self, event:Event) -> None:
+        if not self._client_start_time:
+            self._client_start_time = event.Timestamp
+        self._client_end_time = event.Timestamp
+        
+        if event.EventName != "Idle":
+            return
+
         if not self.active_level:
             self.active_level = event.EventData.get("level")
         else:
@@ -41,13 +50,13 @@ class ActiveTime(Feature):
         
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        self._sess_duration = feature.FeatureValues[0]
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        if self._sess_duration == "No events":
+        if self._client_start_time and self._client_end_time:
+            return [self._client_end_time - self._client_start_time - timedelta(seconds=self._Idle_time)]
+        else:
             return ["No events"]
-        return [self._sess_duration - timedelta(seconds=self._Idle_time)]
 
     # *** Optionally override public functions. ***
     @staticmethod
