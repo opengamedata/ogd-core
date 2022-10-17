@@ -19,61 +19,61 @@
         {
             "name": "event_name",
             "readable": "Event Name",
-            "desc": "The name of the event",
+            "description": "The name of the event",
             "type": "str"
         },
         {
             "name": "event_params",
             "readable": "Event Parameters",
-            "desc": "A repeated record of the parameters associated with this event",
+            "description": "A repeated record of the parameters associated with this event",
             "type": "json"
         },
         {
             "name": "device",
             "readable": "Device",
-            "desc": "A record of device information",
+            "description": "A record of device information",
             "type": "json"
         },
         {
             "name": "geo",
             "readable": "Geo",
-            "desc": "A record of the user's geographic information",
+            "description": "A record of the user's geographic information",
             "type": "json"
         },
         {
             "name": "platform",
             "readable": "Platform",
-            "desc": "The platform on which the app was built",
+            "description": "The platform on which the app was built",
             "type": "str"
         },
         {
             "name": "timestamp",
             "readable": "Timestamp",
-            "desc": "Datetime when event was logged",
+            "description": "Datetime when event was logged",
             "type": "datetime"
         },
         {
             "name": "app_version",
             "readable": "Application/Game Version",
-            "desc": "The version of the application (game) that generated the data",
+            "description": "The version of the application (game) that generated the data",
             "type": "float"
         },
         {
             "name": "log_version",
             "readable": "Logging Version",
-            "desc": "The version of the logging code that generated the data",
+            "description": "The version of the logging code that generated the data",
             "type": "int"
         },
         {
             "name": "session_id",
             "readable": "Session ID",
-            "desc": "ID for the play session",
+            "description": "ID for the play session",
             "type": "int"
         },
         {
             "name": "fd_user_id",
             "readable": "Field Day User ID",
-            "desc": "The player's generated user code",
+            "description": "The player's generated user code",
             "type": "str"
         }
     ]
