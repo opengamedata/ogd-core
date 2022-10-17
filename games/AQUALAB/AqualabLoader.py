@@ -74,6 +74,9 @@ class AqualabLoader(ExtractorLoader):
             ret_val = ModelExportCount.ModelExportCount(params=extractor_params, job_map=self._job_map)
         elif feature_type == "ModelPredictCount":
             ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
+        elif feature_type == "UserAvgActiveTime":
+            ret_val = UserAvgActiveTime.UserAvgActiveTime(
+                params=extractor_params, player_id=self._player_id)
         elif feature_type == "ActiveJobs":
             ret_val = ActiveJobs.ActiveJobs(params=extractor_params, job_map=self._job_map)
         elif feature_type == "EchoSessionID":

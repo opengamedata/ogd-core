@@ -1,6 +1,7 @@
 __all__ = [
     "ModelExportCount",
     "ModelPredictCount",
+    "UserAvgActiveTime",
     "ModelInterveneCount",
     "ActiveTime",
     "ActiveJobs",
@@ -38,6 +39,7 @@ __all__ = [
     "UserTotalSessionDuration"
 ]
 
+from . import UserAvgActiveTime
 from . import ModelInterveneCount
 from . import ModelPredictCount
 from . import ModelExportCount
