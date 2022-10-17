@@ -2,6 +2,7 @@
 import json
 from datetime import datetime, timedelta
 from os import environ
+from sqlite3 import Timestamp
 from typing import Any, List, Optional
 from extractors.Extractor import ExtractorParameters
 # import local files
@@ -56,14 +57,18 @@ class ClickTrack:
             return True
         return False
 
-    def Update(self, event: Event) -> timedelta:
+    def Update(self, event:Event) -> timedelta:
         # event_sequence_index
-        if ClickTrack.EventEq(self._this_click, event):
-            return self._time_between
-        self._last_click = self._this_click
-        self._this_click = event
-        self._time_between = self._this_click.Timestamp - self._last_click.Timestamp
-        return self._time_between
+        ret_val : timedelta = timedelta(0)
+        if self._this_click is not None and ClickTrack.EventEq(self._this_click, event):
+            ret_val = self._time_between or ret_val # if self._time_between was non-null, return it.
+        else:
+            self._last_click = self._this_click
+            self._this_click = event
+            if self._last_click is not None:
+                self._time_between = self._this_click.Timestamp - self._last_click.Timestamp
+                ret_val = self._time_between
+        return ret_val
     
     def StartNewInteraction(self, this_interaction : Optional[int]):
         if this_interaction is not None and (self._search_state == 0 or this_interaction != self.LastInteractionIndex):
