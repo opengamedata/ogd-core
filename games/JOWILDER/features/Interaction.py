@@ -134,7 +134,7 @@ class Interaction(PerCountFeature):
             else:
                 raise(ValueError("A startgame event needed!"))
         elif event.EventName == "CUSTOM.1": 
-            if clicks_track.EventEq(event, clicks_track._this_click):
+            if clicks_track._this_click is not None and clicks_track.EventEq(event, clicks_track._this_click):
                 return
             # else:
             #     raise(ValueError("Too many startgame events!"))
@@ -147,15 +147,21 @@ class Interaction(PerCountFeature):
             return
         
         clicks_track.Update(event)
-        self._interaction_time += event.Timestamp - clicks_track.LastClickTime
-        if clicks_track.StartNewInteraction(self._interaction):
-            clicks_track._search_state = 1
-            if self._num_encounters == 0:
-                # The interaction starts from last click but recorded from this click
-                self._to = clicks_track.LastClickTime - clicks_track.GameStartTime
-            self._num_encounters += 1
-        if self._num_encounters <= 1:
-            self._first_encounter_time = self._interaction_time
+        if clicks_track.LastClickTime is not None:
+            self._interaction_time += event.Timestamp - clicks_track.LastClickTime
+            if clicks_track.StartNewInteraction(self._interaction):
+                clicks_track._search_state = 1
+                if self._num_encounters == 0:
+                    if clicks_track.GameStartTime is not None:
+                        # The interaction starts from last click but recorded from this click
+                        self._to = clicks_track.LastClickTime - clicks_track.GameStartTime
+                    else:
+                        raise ValueError(f"Interaction feature tried to get _to value, but clicks_track didn't have a game start time.")
+                self._num_encounters += 1
+            if self._num_encounters <= 1:
+                self._first_encounter_time = self._interaction_time
+        else:
+            raise ValueError(f"Interaction feature tried to get interaction time, but clicks_track didn't have a previous click.")
         
         return
 
