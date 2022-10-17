@@ -247,111 +247,253 @@
 				"enabled": true,
 				"count": 19,
 				"prefix": "Q",
-				"description": "list the different answers that the player chose, by id#"
+				"description": "list the different answers that the player chose, by id#",
+				"return_type": "List[str]",
+				"subfeatures": {
+					"Count": {
+						"description": "The total count of answers the player chose",
+						"return_type": "int"
+					}
+				}
 			},
 			"SurveyItem": {
 				"enabled": true,
 				"count": 18,
 				"prefix": "SA",
-				"description": "Survey answer index for the given question"
+				"description": "Survey answer index for the given question",
+				"return_type": "int",
+				"subfeatures": {
+					"Text": {
+						"description": "The text associated with the given answer",
+						"return_type": "str"
+					},
+					"Time": {
+						"return_type": "timedelta"
+					},
+					"ResponseChanges": {
+						"description": "The number of times the player changed their answer before submitting",
+						"return_type": "int"
+					},
+				}
 			},
 			"Interaction": {
 				"enabled": true,
 				"count": 189,
 				"prefix": "int",
-				"description": "The total time spent in this interaction, across all times having the interaction "
+				"description": "The total time spent in this interaction, across all times having the interaction ",
+				"return_type": "timedelta",
+				"subfeatures": {
+					"FirstEncounterTime": {
+						"description": "The time spent in this interaction the first time the player encountered it",
+						"return_type": "timedelta"
+					},
+					"NumEncounter": {
+						"description": "The number of times the player encountered the interaction",
+						"return_type": "int"
+					},
+					"TimeTo": {
+						"description": "The time it took the player to reach the interaction",
+						"return_type": "timedelta"
+					}
+				}
 			},
 			"SurveyTime": {
 				"enabled": false,
 				"count": 5,
 				"prefix": "sv",
-				"description": "The total time spent on a survey screen."
+				"description": "The total time spent on a survey screen.",
+				"return_type": "timedelta"
 			},
 			"InteractionName": {
 				"enabled": true,
 				"count": 189,
 				"prefix": "int",
-				"description": "The fqid of the interaction"
-			},
-			"InteractionWordsPerSecond": {
-				"enabled": true,
-				"count": 189,
-				"prefix": "int",
-				"description": "A feature to calculate words-per-second in various interactions. It will include a subfeature for the first time the interaction was encountered."
+				"description": "The fqid of the interaction",
+				"return_type": "str",
+				"subfeatures": {
+					"BoxesCount": {
+						"description": "The number of text boxes in the interaction",
+						"return_type": "int"
+					},
+					"WordsCount": {
+						"description": "The number of words in the interaction",
+						"return_type": "int"
+					}
+				}
 			},
 			"InteractionTextBoxesPerSecond": {
 				"enabled": true,
 				"count": 189,
 				"prefix": "int",
-				"description": "A feature to calculate text-boxes-per-second in various interactions. It will include a subfeature for the first time the interaction was encountered."
-			}
+				"description": "A feature to calculate text-boxes-per-second in various interactions. It will include a subfeature for the first time the interaction was encountered.",
+				"return_type": "float",
+				"subfeatures": {
+					"FirstEncounter": {
+						"description": "The text-boxes-per-second the first time the player encountered the interaction.",
+						"return_type": "float"
+					},
+					"Variance": {
+						"return_type": "float"
+					}
+				}
+			},
+			"InteractionWordsPerSecond": {
+				"enabled": true,
+				"count": 189,
+				"prefix": "int",
+				"description": "A feature to calculate words-per-second in various interactions. It will include a subfeature for the first time the interaction was encountered.",
+				"return_type": "float",
+				"subfeatures": {
+					"FirstEncounter": {
+						"description": "The words-per-second the first time the player encountered the interaction.",
+						"return_type": "float"
+					},
+					"Variance": {
+						"return_type": "float"
+					}
+				}
+			},
 		},
 		"aggregate": {
 			"Clicks": {
 				"enabled": true,
-				"description": "The number of clicks in a session"
+				"description": "The number of clicks in a session",
+				"return_type": "int",
+				"subfeatures": {
+					"AverageTimeBetween": {
+						"description": "The average number of seconds between clicks",
+						"return_type": "float"
+					}
+				}
 			},
 			"Hovers": {
 				"enabled": true,
-				"description": "The number of hovers in a session"
+				"description": "The number of hovers in a session",
+				"return_type": "int"
 			},
 			"SessionDuration": {
 				"enabled": true,
-				"description": "The total time in a session"
+				"description": "The total time in a session",
+				"return_type": "timedelta"
 			},
 			"NotebookUses": {
 				"enabled": true,
-				"description": "The number of notebook uses in a session"
+				"description": "The number of notebook uses in a session",
+				"return_type": "int"
 			},
 			"EventCount": {
 				"enabled": true,
-				"description": "The number of events in a session"
+				"description": "The number of events in a session",
+				"return_type": "int"
 			},
 			"UserEnabled": {
 				"enabled": true,
-				"description": "A feature to show which options a user enabled."
+				"description": "A feature to show which options a user enabled; Base feature is 1 if user enabled fullscreen, otherwise 0.",
+				"return_type": "int",
+				"subfeatures": {
+					"Music": {
+						"description": "1 if the user enabled music, otherwise 0",
+						"return_type": "int"
+					}
+					"HQGraphics": {
+						"description": "1 if the user enabled high-quality graphics, otherwise 0",
+						"return_type": "int"
+					}
+				}
 			},
 			"GameVersion": {
 				"enabled": true,
-				"description": "A feature to show which version of the game the player played."
+				"description": "A feature to show which version of the game the player played.",
+				"return_type": "str",
+				"subfeatures": {
+					"Log": {
+						"description": "The log version of the game the player played",
+						"return_type": "str"
+					}
+				}
 			},
 			"UsedSaveCode": {
 				"enabled": true,
-				"description": "A feature to show which save code, if any, a player used as a starting point for their game."
+				"description": "A feature to show which save code, if any, a player used as a starting point for their game.",
+				"return_type": "str"
 			},
 			"GameScript": {
 				"enabled": true,
-				"description": "A feature to show which version of the script the player saw."
+				"description": "A feature to show which version of the script the player saw.",
+				"return_type": "str",
+				"subfeatures": {
+					"Version": {
+						"description": "Version of the game script the player saw.",
+						"return_type": "int"
+					}
+				}
 			},
 			"SessionStart": {
 				"enabled": true,
-				"description": "A feature to record the date and time on which the gameplay session started."
+				"description": "A feature to record the date and time on which the gameplay session started.",
+				"return_type": "date",
+				"subfeatures": {
+					"Time": {
+						"description": "The time the player started their session",
+						"return_type": "time"
+					},
+					"Year": {
+						"description": "The year the player started their session",
+						"return_type": "int"
+					},
+					"Month": {
+						"description": "The month in which the player started their session",
+						"return_type": "int"
+					},
+					"Hour": {
+						"description": "The hour during which the player started their session",
+						"return_type": "int"
+					}
+				}
 			},
-			"IdleState": {
+			"IdleState15": {
 				"enabled": true,
-				"description": "A feature to calculate total time spent idle in session",
+				"type": "IdleState"
+				"description": "A feature to calculate total time spent idle in session; configured to define 'idle' as spending 15 seconds or more without making a 'meaningful' action",
+				"return_type": "timedelta",
+				"subfeatures": {
+					"Count": {
+						"description": "The total number of times the player entered an idle state",
+						"return_type": "int"
+					}
+				},
 				"IDLE_THRESH_SECONDS": 15
 			},
 			"ActiveStateTime": {
 				"enabled": true,
 				"description": "A feature to calculate the time spent actively playing the game.",		
+				"return_type": "timedelta",
+				"subfeatures": {
+					"Clicking": {
+						"return_type": "timedelta"
+					}
+				},
 				"ACTIVE_THRESH_SECONDS": 15		
 			},
 			"MeaningfulActions": {
 				"enabled": true,
-				"description": "A feature to calculate the total number of 'meaningful' clicks in a session. That is, the number of navigation clicks on items/objects/people/portholes + number of clicks on map locations."
+				"description": "A feature to calculate the total number of 'meaningful' clicks in a session. That is, the number of navigation clicks on items/objects/people/portholes + number of clicks on map locations.",
+				"return_type": "int"
 			},
 			"FirstInteraction": {
 				"enabled": true,
-				"description": "A feature to show which interaction a player had first within the game session."
+				"description": "A feature to show which interaction a player had first within the game session.",
+				"return_type": "str"
 			},
 			"LastInteraction": {
 				"enabled": true,
-				"description": "A feature to show which interaction a player had last within the game session."
+				"description": "A feature to show which interaction a player had last within the game session.",
+				"return_type": "str"
 			},
 			"UsedContinue": {
 				"enabled": true,
-				"description": "A feature to indicate whether the session began from the 'continue' button; i.e. whether this session continued from the ending savecode of another session."
+				"description": "A feature to indicate whether the session began from the 'continue' button; i.e. whether this session continued from the ending savecode of another session.",
+				"return_type": "int"
 			}
 		}
 	},
