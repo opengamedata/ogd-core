@@ -452,6 +452,30 @@
                 "type": "EchoRoomChange",
                 "enabled": false,
                 "description": "Triggers an event when a player changes rooms."
+            },
+            "HintAndLeave": {
+                "type": "HintAndLeave",
+                "enabled": true,
+                "description": "",
+                "threshold": 30
+            },
+            "Idle": {
+                "type": "Idle",
+                "enabled": true,
+                "description": "",
+                "idle_level": 30
+            },
+            "SceneChangeFrequently": {
+                "type": "SceneChangeFrequently",
+                "enabled": true,
+                "description": "",
+                "threshold": 30
+            },
+            "TwoHints": {
+                "type": "TwoHints",
+                "enabled": true,
+                "description": "",
+                "threshold": 30
             }
         }
     },
