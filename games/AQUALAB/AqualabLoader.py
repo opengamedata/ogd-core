@@ -70,6 +70,8 @@ class AqualabLoader(ExtractorLoader):
             ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
         elif feature_type == "ModelExportCount":
             ret_val = ModelExportCount.ModelExportCount(params=extractor_params, job_map=self._job_map)
+        elif feature_type == "ModelPredictCount":
+            ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
         elif feature_type == "ActiveJobs":
             ret_val = ActiveJobs.ActiveJobs(params=extractor_params, job_map=self._job_map)
         elif feature_type == "EchoSessionID":
