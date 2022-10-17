@@ -89,9 +89,15 @@ class SurveyItem(PerCountFeature):
         if self._time in [0, None]:
             _question_index = event.EventData.get("question_index")
             if _question_index == 0:
-                self._time = event.Timestamp - self._quiz_start_timestamp
+                if self._quiz_start_timestamp is not None:
+                    self._time = event.Timestamp - self._quiz_start_timestamp
+                else:
+                    raise ValueError(f"SurveyItem got a question answer when there was no quiz start time.")
             else:
-                self._time = event.Timestamp - self._last_timestamp
+                if self._last_timestamp is not None:
+                    self._time = event.Timestamp - self._last_timestamp
+                else:
+                    raise ValueError(f"SurveyItem got a question answer when there was no last timestamp.")
         self._response_index = event.EventData["response_index"]
         self._text = event.EventData["response"]
         self._num_answers += 1
