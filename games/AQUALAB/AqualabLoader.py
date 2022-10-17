@@ -70,6 +70,8 @@ class AqualabLoader(ExtractorLoader):
             ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
         elif feature_type == "ModelInterveneCount":
             ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
+        elif feature_type == "TankRulesCount":
+            ret_val = TankRulesCount.TankRulesCount(params=extractor_params)
         elif feature_type == "ModelExportCount":
             ret_val = ModelExportCount.ModelExportCount(params=extractor_params, job_map=self._job_map)
         elif feature_type == "ModelPredictCount":
