@@ -273,7 +273,7 @@
 					"ResponseChanges": {
 						"description": "The number of times the player changed their answer before submitting",
 						"return_type": "int"
-					},
+					}
 				}
 			},
 			"Interaction": {
@@ -352,7 +352,7 @@
 						"return_type": "float"
 					}
 				}
-			},
+			}
 		},
 		"aggregate": {
 			"Clicks": {
@@ -394,7 +394,7 @@
 					"Music": {
 						"description": "1 if the user enabled music, otherwise 0",
 						"return_type": "int"
-					}
+					},
 					"HQGraphics": {
 						"description": "1 if the user enabled high-quality graphics, otherwise 0",
 						"return_type": "int"
@@ -453,7 +453,7 @@
 			},
 			"IdleState15": {
 				"enabled": true,
-				"type": "IdleState"
+				"type": "IdleState",
 				"description": "A feature to calculate total time spent idle in session; configured to define 'idle' as spending 15 seconds or more without making a 'meaningful' action",
 				"return_type": "timedelta",
 				"subfeatures": {
