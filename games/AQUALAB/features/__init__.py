@@ -1,4 +1,5 @@
 __all__ = [
+    "ModelExportCount",
     "ActiveTime",
     "ActiveJobs",
     "EchoSessionID",
@@ -35,6 +36,7 @@ __all__ = [
     "UserTotalSessionDuration"
 ]
 
+from . import ModelExportCount
 from . import ActiveTime
 from . import ActiveJobs
 from . import EchoSessionID
