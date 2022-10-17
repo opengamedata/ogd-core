@@ -614,6 +614,11 @@
                 "description": "Count of players who left off on each job.",
                 "return_type": "dict"
             },
+            "ActiveTime": {
+                "enabled": true,
+                "type": "ActiveTime",
+                "return_type": "timedelta"
+            },
             "EventList": {
                 "enabled": false,
                 "type": "EventList",
