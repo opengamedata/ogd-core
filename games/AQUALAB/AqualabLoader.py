@@ -68,6 +68,8 @@ class AqualabLoader(ExtractorLoader):
         # First run through aggregate features
         if feature_type == "ActiveTime":
             ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
+        elif feature_type == "JobTriesInArgument":
+            ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
         elif feature_type == "ModelInterveneCount":
             ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
         elif feature_type == "TankRulesCount":
