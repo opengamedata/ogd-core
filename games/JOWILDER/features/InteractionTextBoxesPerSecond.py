@@ -25,7 +25,7 @@ class InteractionTextBoxesPerSecond(PerCountFeature):
     def __init__(self, params: ExtractorParameters):
         super().__init__(params=params)
         self._interaction : Optional[int] = None
-        self._interaction_time : List[int] = []
+        self._interaction_time : List[float] = []
         self._boxes_persecond : Optional[float] = None
         self._bps_variance : Optional[float] = None
         self._first_encounter : Optional[float] = None
