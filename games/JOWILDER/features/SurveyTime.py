@@ -52,7 +52,7 @@ class SurveyTime(PerCountFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return self._duration
+        return [self._duration]
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
