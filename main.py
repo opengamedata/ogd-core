@@ -107,7 +107,7 @@ def genRequest(events:bool, features:bool) -> Request:
     if args.file is not None and args.file != "":
         # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
         _ext = str(args.file).split('.')[-1]
-        interface = CSVInterface(game_id=args.game, filepath=args.file, delim="\t" if _ext == 'tsv' else ',')
+        interface = CSVInterface(game_id=args.game, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [])
