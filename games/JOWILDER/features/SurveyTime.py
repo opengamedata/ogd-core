@@ -26,10 +26,13 @@ class SurveyTime(PerCountFeature):
     def _validateEventCountIndex(self, event: Event):
         # NOTE: [0,2,3,4,5] to [0,1,2,3,4]
         quiz_index = event.EventData.get("quiz_number")
-        if quiz_index >= 2:
-            return quiz_index - 1 == self.CountIndex
+        if quiz_index is not None:
+            if quiz_index >= 2:
+                return quiz_index - 1 == self.CountIndex
+            else:
+                return quiz_index == self.CountIndex
         else:
-            return quiz_index == self.CountIndex
+            raise KeyError(f"SurveyTime got an event of type {event.EventName} with no quiz_number! EventData keys are: {event.EventData.keys()}")
 
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
