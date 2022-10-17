@@ -175,17 +175,21 @@ class FeatureRegistry(ExtractorRegistry):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
-        if event.EventName in self._event_registry.keys():
-            # send event to every listener for the given event name.
-            for listener in self._event_registry[event.EventName]:
+        listener : ExtractorRegistry.Listener = ExtractorRegistry.Listener("EMPTY", IterationMode.AGGREGATE)
+        try:
+            if event.EventName in self._event_registry.keys():
+                # send event to every listener for the given event name.
+                for listener in self._event_registry[event.EventName]:
+                    for order_key in range(len(self._features)):
+                        if listener.name in self._features[order_key].keys():
+                            self._features[order_key][listener.name].ExtractFromEvent(event)
+            # don't forget to send to any features listening for "all" events
+            for listener in self._event_registry["all_events"]:
                 for order_key in range(len(self._features)):
                     if listener.name in self._features[order_key].keys():
                         self._features[order_key][listener.name].ExtractFromEvent(event)
-        # don't forget to send to any features listening for "all" events
-        for listener in self._event_registry["all_events"]:
-            for order_key in range(len(self._features)):
-                if listener.name in self._features[order_key].keys():
-                    self._features[order_key][listener.name].ExtractFromEvent(event)
+        except KeyError as err:
+            Logger.Log(f"{listener.name} found event {event} missing expected key: {err}", logging.ERROR)
 
     def _extractFromFeatureData(self, feature:FeatureData) -> None:
         """Perform extraction of features from a row.
