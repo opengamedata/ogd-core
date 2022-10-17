@@ -1,5 +1,4 @@
 # import libraries
-from schemas import Event
 from typing import Any, List, Optional
 # import locals
 from extractors.features.PerCountFeature import PerCountFeature
