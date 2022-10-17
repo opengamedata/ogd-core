@@ -45,6 +45,8 @@ class ActiveTime(Feature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
+        if self._sess_duration == "No events":
+            return ["No events"]
         return [self._sess_duration - timedelta(seconds=self._Idle_time)]
 
     # *** Optionally override public functions. ***
