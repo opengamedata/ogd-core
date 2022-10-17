@@ -66,7 +66,7 @@ class InteractionWordsPerSecond(PerCountFeature):
             else:
                 raise(ValueError("A startgame event needed!"))
         elif event.EventName == "CUSTOM.1": 
-            if clicks_track.EventEq(event, clicks_track._this_click):
+            if clicks_track._this_click is not None and clicks_track.EventEq(event, clicks_track._this_click):
                 return
             # else:
             #     raise(ValueError("Too many startgame events!"))
