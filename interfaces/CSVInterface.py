@@ -66,7 +66,7 @@ class CSVInterface(DataInterface):
     def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]]=None) -> List[str]:
         if not self._data.empty:
             server_times = pd.to_datetime(self._data['server_time'])
-            mask = (server_times >= min) & (server_times <= max)
+            mask = (server_times >= pd.to_datetime(min)) & (server_times <= pd.to_datetime(max))
             if versions is not None and versions is not []:
                 mask = mask & (self._data['app_version'].isin(versions))
             data_masked = self._data.loc[mask]
