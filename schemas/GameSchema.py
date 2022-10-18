@@ -89,7 +89,10 @@ class GameSchema:
                 self._min_level = self._schema.get("level_range", {}).get('min', None)
                 self._max_level = self._schema.get("level_range", {}).get('max', None)
 
-            # 5. Get config, if any
+            # 5. Get other ranges, if any
+            self._other_ranges = {key:range(val.get('min', 0), val.get('max', 1)) for key,val in self._schema.items() if key.endswith("_range")}
+
+            # 6. Get config, if any
             if "config" in self._schema.keys():
                 if "SUPPORTED_VERS" in self._schema['config']:
                     self._supported_vers = self._schema['config']['SUPPORTED_VERS']
@@ -97,8 +100,8 @@ class GameSchema:
                     self._supported_vers = None
                     Logger.Log(f"{self._game_name} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
 
-            # 6. Notify if there are other, unexpected elements
-            self._other_elements = { key:val for key,val in self._schema.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'} }
+            # 7. Notify if there are other, unexpected elements
+            self._other_elements = { key:val for key,val in self._schema.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
             if len(self._other_elements.keys()) > 0:
                 Logger.Log(f"Schema for {self.GameName} contained nonstandard elements {self.NonStandardElements}")
 
@@ -114,9 +117,11 @@ class GameSchema:
         if isinstance(count, str):
             if count.lower() == "level_range":
                 count_range = self.LevelRange
+            elif count in self.OtherRanges.keys():
+                count_range = self.OtherRanges.get(count, range(0))
             else:
-                other_range : Dict[str, int] = self.NonStandardElements.get(count, {'min':0, 'max':1})
-                count_range = range(other_range['min'], other_range['max'])
+                other_range : Dict[str, int] = self.NonStandardElements.get(count, {'min':0, 'max':-1})
+                count_range = range(other_range['min'], other_range['max']+1)
         else:
             count_range = range(0,int(count))
         return count_range
@@ -256,6 +261,10 @@ class GameSchema:
         else:
             Logger.Log(f"Could not generate per-level features, min_level={self._min_level} and max_level={self._max_level}", logging.ERROR)
         return ret_val
+
+    @property
+    def OtherRanges(self) -> Dict[str, range]:
+        return self._other_ranges
 
     @property
     def Config(self) -> Dict[str, Any]:

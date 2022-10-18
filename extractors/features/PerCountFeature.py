@@ -1,5 +1,6 @@
 # import standard libraries
 import abc
+from multiprocessing.sharedctypes import Value
 # import locals
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
@@ -37,6 +38,14 @@ class PerCountFeature(Feature):
     # *** PUBLIC METHODS ***
 
     # *** PROPERTIES ***
+
+    @property
+    def CountIndex(self) -> int:
+        _ci = super().CountIndex
+        if _ci is None:
+            raise ValueError(f"PerCountFeature of type {type(self)} was given a null CountIndex!")
+        else:
+            return _ci
 
     # *** PRIVATE STATICS ***
 

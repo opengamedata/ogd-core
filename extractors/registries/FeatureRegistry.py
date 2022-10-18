@@ -155,11 +155,11 @@ class FeatureRegistry(ExtractorRegistry):
                 _per_deps = _per_deps.union(set(_class.GetFeatureDependencies(mode=self._mode)))
         per_load_set = per_load_set.union({schema.PerCountFeatures[per] for per in _per_deps if per in schema.PerCountFeatures.keys()})
         # 3. Now that we know what needs loading, load them and register.
-        for agg_schema in agg_load_set:
+        for agg_schema in sorted(agg_load_set, key=lambda x : x.Name):
             feature = loader.LoadFeature(feature_type=agg_schema.TypeName, name=agg_schema.Name, schema_args=agg_schema.Elements)
             if feature is not None and self._mode in feature.AvailableModes():
                     self.Register(extractor=feature, iter_mode=IterationMode.AGGREGATE)
-        for per_schema in per_load_set:
+        for per_schema in sorted(per_load_set, key=lambda x : x.Name):
             for i in schema.GetCountRange(count=per_schema.Count):
                 instance_name = f"{per_schema.Prefix}{i}_{per_schema.Name}"
                 feature = loader.LoadFeature(feature_type=per_schema.TypeName, name=instance_name, schema_args=per_schema.Elements, count_index=i)
