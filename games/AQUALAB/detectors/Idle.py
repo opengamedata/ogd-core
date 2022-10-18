@@ -26,6 +26,7 @@ class Idle(Detector):
         self._last_action_time = None
         self._app_version = "Unknown"
         self._log_version = "Unknown"
+        self._job_name = "Unknown"
         self._idle_level = 0
         self._idle_time: Optional[Union[float, timedelta]] = None
         if idle_level is not None:
@@ -71,6 +72,7 @@ class Idle(Detector):
             self._time = event.Timestamp
             self._app_version = event.AppVersion
             self._log_version = event.LogVersion
+            self._job_name = event.EventData.get("job_name", "JOB NAME NOT FOUND")
             self._sequence_index = event.EventSequenceIndex
         return
 
@@ -87,5 +89,5 @@ class Idle(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val : DetectorEvent = DetectorEvent(session_id=self._sess_id, app_id="AQUALAB", timestamp=self._time, event_name="Idle", event_data={"level" : self._idle_level, "time": self._idle_time}, app_version=self._app_version, log_version=self._log_version, user_id=self._player_id, event_sequence_index=self._sequence_index)
+        ret_val : DetectorEvent = DetectorEvent(session_id=self._sess_id, app_id="AQUALAB", timestamp=self._time, event_name="Idle", event_data={"level" : self._idle_level, "time": self._idle_time, "job_name": self._job_name}, app_version=self._app_version, log_version=self._log_version, user_id=self._player_id, event_sequence_index=self._sequence_index)
         return ret_val
