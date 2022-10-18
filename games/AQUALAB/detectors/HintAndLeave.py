@@ -84,11 +84,11 @@ class HintAndLeave(Detector):
             if event.EventName == "scene_changed":
                 self._scene = event.EventData.get("scene_name")
                 self._detector_event_data = {"time": self._time_spent, "level": self._threshold / timedelta(
-                    seconds=1), "scene": self._scene, "job": self._job_name, "hint_node": self._hint}
+                    seconds=1), "scene": self._scene, "job_name": self._job_name, "hint_node": self._hint}
             else:
                 self._room = event.EventData.get("room_name")
                 self._detector_event_data = {"time": self._time_spent, "level": self._threshold / timedelta(
-                    seconds=1), "room": self._room, "job": self._job_name, "hint_node": self._hint}
+                    seconds=1), "room": self._room, "job_name": self._job_name, "hint_node": self._hint}
         return
 
     def _trigger_condition(self) -> bool:
@@ -104,5 +104,8 @@ class HintAndLeave(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val: DetectorEvent = DetectorEvent(session_id=self._sess_id, app_id="AQUALAB", timestamp=self._time, event_name="HintAndLeave", event_data=self._detector_event_data, app_version=self._app_version, log_version=self._log_version, user_id=self._player_id, event_sequence_index=self._sequence_index)
+        ret_val: DetectorEvent = DetectorEvent(session_id=self._sess_id, app_id="AQUALAB", timestamp=self._time,
+                                               event_name="HintAndLeave", event_data=self._detector_event_data,
+                                               app_version=self._app_version, log_version=self._log_version,
+                                               user_id=self._player_id, event_sequence_index=self._sequence_index)
         return ret_val
