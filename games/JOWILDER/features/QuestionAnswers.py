@@ -17,7 +17,7 @@ class QuestionAnswers(PerCountFeature):
         PerCountFeature.__init__(self, params=params)
         self._guess_list : List[str] = []
         self.cur_question : Optional[int] = None
-        self.chosen_answer : Optional[int] = None
+        self.chosen_answer : Optional[str] = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     def _validateEventCountIndex(self, event: Event):
