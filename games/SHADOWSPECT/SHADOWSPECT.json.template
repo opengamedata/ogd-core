@@ -1,0 +1,298 @@
+{
+    "level_range": { "min":0, "max":0 },
+
+    "events": {
+        "start_game": {
+            "group": "string",
+            "version_num":"string",
+            "env_configs":"dict{}",
+            "game_id": "string"
+        },
+        "login_user": {
+            "game_id": "string",
+            "user": "string",
+            "group": "string"
+        },
+        "disconnect": {
+        
+        },
+        "exit_to_menu": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int"
+        },
+        "start_level": {
+            "user": "string",
+            "group": "string",
+            "task_id": "string",
+            "set_id": "string",
+            "fullscreen":"bool",
+            "resolution":"dict",
+            "conditions":"dict"
+        },
+        "puzzle_started": {
+            "user": "string",
+            "group": "string",
+            "task_id": "string",
+            "set_id": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int"
+        },
+        "puzzle_complete": {
+            "user": "string",
+            "group": "string",
+            "task_id": "string",
+            "set_id": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int"
+        },
+        "restart_puzzle": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int"
+        },
+        "create_shape": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "color":"int",
+            "spawnPosition":"dict",
+            "input":"string",
+            "changeMode":"bool",
+            "objSerialization":"int",
+            "shapeType":"int"
+        },
+        "delete_shape": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "color":"int",
+            "input":"string",
+            "changeMode":"bool",
+            "deletedShapes":"List[int]"
+        },
+        "select_shape": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "input":"string",
+            "newSelection": "List[int]",
+            "prevSelection": "List[int]"
+        },
+        "deselect_shape": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "input":"string",
+            "newSelection": "List[int]",
+            "prevSelection": "List[int]"
+        },
+        "select_shape_add": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "input":"string",
+            "newSelection": "List[int]",
+            "prevSelection": "List[int]"
+        },
+        "move_shape": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "input":"string",
+            "selectedObjects":"List[int]",
+            "prevPositions": "List[dict]",
+            "targetOffset": "dict",
+            "validMove": "bool"
+        },
+        "rotate_shape": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "input":"string",
+            "selectedObject":"int",
+            "rotationOffset": "dict"
+        },
+        "scale_shape": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "input":"string",
+            "selectedObject":"int",
+            "newScale": "dict",
+            "prevScale": "dict"
+        },
+        "mode_change": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "input":"string",
+            "mode":"int",
+            "prevMode":"int",
+            "xfmMode":"int",
+            "prevXfmMode":"int",
+            "shape":"int",
+            "prevShape":"int"
+        },
+        "click_nothing": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int"
+        },
+        "rotate_view": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "input":"string",
+            "freeformDrag":"bool",
+            "freeformRelease":"bool",
+            "targetCam": "int",
+            "prevCam": "int"
+        },
+        "check_solution": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "correct":"List[bool]"
+        },
+        "toogle_paint_display": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "isOpen":"bool"
+        },
+        "palette_change": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "newPalette":"int",
+            "prevPalette":"int",
+            "changeMode":"bool"
+        },
+        "paint": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "shapeIndex":"int",
+            "newColor":"int",
+            "prevColor":"int"
+        },
+        "toggle_snapshot_display": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "isOpen":"bool"
+        },
+        "snapshot": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "actionIndex":"int",
+            "cameraAngle":"int"
+        },
+        "undo_action": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "input":"string",
+            "actionIndex":"int",
+            "targetedActionIndex":"int"
+        },
+        "redo_action": {
+            "user": "string",
+            "group": "string",
+            "timeStamp":"double",
+            "screenPos":"dict",
+            "input":"string",
+            "actionIndex":"int",
+            "targetedActionIndex":"int"
+        }
+    },
+
+    "features": {
+        "per_count": {
+        },
+        "aggregate":{
+            "MoveShapeCount": {
+                "type": "MoveShapeCount",
+                "enabled": true,
+                "description":"Total number of shape moves in a given session"
+            },
+            "SessionID": {
+                "type": "SessionID",
+                "enabled": true,
+                "description":"The player's session ID number for this play session"
+            },
+            "FunnelByUser": {
+                "type": "FunnelByUser",
+                "enabled": false,
+                "description":"Funnel of puzzles for this play session"
+            },
+            "LevelsOfDifficulty": {
+                "type": "LevelsOfDifficulty",
+                "enabled": true,
+                "description":"Set of features for each level describing the difficulty of a puzzle (on-going-work)"
+            },
+            "SequenceBetweenPuzzles": {
+                "type": "SequenceBetweenPuzzles",
+                "enabled": false,
+                "description":"Sequence of puzzles and its funnel stage reached of a given session"
+            }
+        }
+    },
+
+    "db_columns": {
+        "event_name": "The name of the event",
+        "event_params": "A repeated record of the parameters associated with this event",
+        "user_id": "The user ID set via the setUserId API",
+        "device": "A record of device information",
+        "geo": "A record of the user's geographic information",
+        "platform": "The platform on which the app was built",
+        "session_id": "ID for the current play session",
+        "timestamp": "Datetime when the event was logged"
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}

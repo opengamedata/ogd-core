@@ -1,6 +1,7 @@
 ## import standard libraries
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
+import games.WAVES.features
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 from extractors.ExtractorLoader import ExtractorLoader
@@ -16,6 +17,10 @@ from schemas.GameSchema import GameSchema
 class WaveLoader(ExtractorLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
+    @staticmethod
+    def _getFeaturesModule():
+        return games.WAVES.features
     
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
@@ -119,7 +124,7 @@ class WaveLoader(ExtractorLoader):
         return ret_val
 
     def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
-        raise NotImplementedError(f"'{detector_type}' is not a valid feature for Waves.")
+        raise NotImplementedError(f"'{detector_type}' is not a valid detector for Waves.")
 
     # *** BUILT-INS ***
 

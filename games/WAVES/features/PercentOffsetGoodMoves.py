@@ -3,10 +3,11 @@ from schemas import Event
 from typing import Any, List, Optional
 # import locals
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from extractors.features.PerLevelFeature import PerLevelFeature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
 
 class PercentOffsetGoodMoves(PerLevelFeature):
     def __init__(self, params:ExtractorParameters):
@@ -15,11 +16,13 @@ class PercentOffsetGoodMoves(PerLevelFeature):
         self._good_count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.1", "CUSTOM.2"]
         # return ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

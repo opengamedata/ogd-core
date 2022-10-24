@@ -2,6 +2,7 @@
 import json
 from typing import Any, Callable, Dict, List, Optional
 # import local files
+import games.AQUALAB.features
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 from extractors.ExtractorLoader import ExtractorLoader
@@ -19,7 +20,42 @@ CONFIG_PATH = "games/AQUALAB/AQUALAB.json"
 #  Extractor subclass for extracting features from Aqualab game data.
 class AqualabLoader(ExtractorLoader):
 
+    # *** BUILT-INS ***
+
+    ## Constructor for the AqualabLoader class.
+    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
+        """Constructor for the AqualabLoader class.
+
+        :param player_id: _description_
+        :type player_id: str
+        :param session_id: The id number for the session whose data is being processed by this instance
+        :type session_id: str
+        :param game_schema: A data structure containing information on how the game events and other data are structured
+        :type game_schema: GameSchema
+        :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
+        :type feature_overrides: Optional[List[str]]
+        """
+        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
+        self._job_map = {"no-active-job": 0}
+        self._diff_map = {0: {"experimentation": 0, "modeling": 0, "argumentation": 0} }
+        data = None
+
+        # Load Aqualab jobs export and map job names to integer values
+        with open(EXPORT_PATH, "r") as file:
+            export = json.load(file)
+
+            for i, job in enumerate(export["jobs"], start=1):
+                self._job_map[job["id"]] = i
+                self._diff_map[i] = job["difficulties"]
+
+        # Update level count
+        self._game_schema._max_level = len(self._job_map) - 1
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
+    @staticmethod
+    def _getFeaturesModule():
+        return games.AQUALAB.features
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
@@ -67,63 +103,42 @@ class AqualabLoader(ExtractorLoader):
         elif feature_type == "UserTotalSessionDuration":
             ret_val = UserTotalSessionDuration.UserTotalSessionDuration(params=extractor_params, player_id=self._player_id)
         # then run through per-count features.
-        elif feature_type == "JobActiveTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobArgumentationTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobArgumentationTime.JobArgumentationTime(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobCompletionTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobCompletionTime.JobCompletionTime(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobDiveSitesCount":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobDiveSitesCount.JobDiveSitesCount(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobDiveTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobDiveTime.JobDiveTime(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobExperimentationTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobExperimentationTime.JobExperimentationTime(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobGuideCount":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobGuideCount.JobGuideCount(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobHelpCount":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobHelpCount.JobHelpCount(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobModelingTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobModelingTime.JobModelingTime(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobTasksCompleted":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "JobsAttempted":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobsAttempted.JobsAttempted(params=extractor_params, job_map=self._job_map, diff_map=self._diff_map)
-        elif feature_type == "SyncCompletionTime":
-            if extractor_params._count_index is None:
-                raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
+        elif extractor_params._count_index is not None:
+            if feature_type == "JobActiveTime":
+                ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobArgumentationTime":
+                ret_val = JobArgumentationTime.JobArgumentationTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobCompletionTime":
+                ret_val = JobCompletionTime.JobCompletionTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobDiveSitesCount":
+                ret_val = JobDiveSitesCount.JobDiveSitesCount(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobDiveTime":
+                ret_val = JobDiveTime.JobDiveTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobExperimentationTime":
+                ret_val = JobExperimentationTime.JobExperimentationTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobGuideCount":
+                ret_val = JobGuideCount.JobGuideCount(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobHelpCount":
+                ret_val = JobHelpCount.JobHelpCount(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobModelingTime":
+                ret_val = JobModelingTime.JobModelingTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobTasksCompleted":
+                ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobsAttempted":
+                ret_val = JobsAttempted.JobsAttempted(params=extractor_params, job_map=self._job_map, diff_map=self._diff_map)
+            elif feature_type == "SyncCompletionTime":
+                ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
+            else:
+                raise NotImplementedError(f"'{feature_type}' is not a valid feature type for Aqualab.")
         else:
-            raise NotImplementedError(f"'{feature_type}' is not a valid feature for Aqualab.")
+            raise TypeError(f"Got None for extractor_params._count_index (feature_type={feature_type}), should have a value!")
         return ret_val
 
     def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         ret_val : Detector
         if detector_type == "CollectFactNoJob":
             ret_val = CollectFactNoJob.CollectFactNoJob(params=extractor_params, trigger_callback=trigger_callback)
-        if detector_type == "DiveSiteNoEvidence":
+        elif detector_type == "DiveSiteNoEvidence":
             ret_val = DiveSiteNoEvidence.DiveSiteNoEvidence(params=extractor_params, trigger_callback=trigger_callback, threshold=schema_args['threshold'])
         elif detector_type == "EchoRoomChange":
             ret_val = EchoRoomChange.EchoRoomChange(params=extractor_params, trigger_callback=trigger_callback)
@@ -131,36 +146,6 @@ class AqualabLoader(ExtractorLoader):
             raise NotImplementedError(f"'{detector_type}' is not a valid detector for Aqualab.")
         return ret_val
 
-    # *** BUILT-INS ***
-
-    ## Constructor for the AqualabLoader class.
-    def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
-        """Constructor for the AqualabLoader class.
-
-        :param player_id: _description_
-        :type player_id: str
-        :param session_id: The id number for the session whose data is being processed by this instance
-        :type session_id: str
-        :param game_schema: A data structure containing information on how the game events and other data are structured
-        :type game_schema: GameSchema
-        :param feature_overrides: A list of features to export, overriding the default of exporting all enabled features.
-        :type feature_overrides: Optional[List[str]]
-        """
-        super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
-        self._job_map = {"no-active-job": 0}
-        self._diff_map = {0: {"experimentation": 0, "modeling": 0, "argumentation": 0} }
-        data = None
-
-        # Load Aqualab jobs export and map job names to integer values
-        with open(EXPORT_PATH, "r") as file:
-            export = json.load(file)
-
-            for i, job in enumerate(export["jobs"], start=1):
-                self._job_map[job["id"]] = i
-                self._diff_map[i] = job["difficulties"]
-
-        # Update level count
-        self._game_schema._max_level = len(self._job_map) - 1
-
-    def getJobMap(self) -> Dict:
+    @property
+    def JobMap(self) -> Dict:
         return self._job_map

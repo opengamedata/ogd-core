@@ -2,6 +2,7 @@
 data
 config/*.json
 config/config.py
+games/*/*.json
 fieldday-pyenv
 
 # Byte-compiled / optimized / DLL files
@@ -124,3 +125,4 @@ venv.bak/
 
 OGD_venv/
 john_temp/
+games/JOWILDER/convert.py

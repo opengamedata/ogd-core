@@ -3,8 +3,16 @@ fieldday-pyenv*
 data/
 tests/
 config/
-TestDriver.py
 config/config.py
+games/AQUALAB/AQUALAB.json
+games/CRYSTAL/CRYSTAL.json
+games/JOWILDER/JOWILDER.json
+games/LAKELAND/LAKELAND.json
+games/MAGNET/MAGNET.json
+games/SHADOWSPECT/SHADOWSPECT.json
+games/SHIPWRECKS/SHIPWRECKS.json
+games/WAVES/WAVES.json
+TestDriver.py
 .DS_Store
 .gitignore
 .gitmodules

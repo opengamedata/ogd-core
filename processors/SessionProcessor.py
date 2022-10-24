@@ -1,18 +1,17 @@
 # import standard libraries
 import logging
 import traceback
-from typing import Any, List, Dict, IO, Type, Optional
+from typing import List, Dict, Type, Optional, Set
 # import local files
-from utils import Logger
-from extractors.ExtractorRegistry import ExtractorRegistry
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
-from extractors.features.FeatureRegistry import FeatureRegistry
+from extractors.registries.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
 from schemas.Event import Event
+from schemas.ExportMode import ExportMode
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
-from ogd_requests.Request import ExporterTypes
+from utils import Logger, ExportRow
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.
@@ -44,13 +43,28 @@ class SessionProcessor(FeatureProcessor):
         ## Define instance vars
         self._session_id   : str = session_id
         self._player_id    : str = player_id
+        # NOTE: need session and player IDs set before we do initialization in parent.
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+
+    def __str__(self):
+        return f"SessionProcessor({self._player_id}, {self._session_id})"
+
+    def __repr__(self):
+        return str(self)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _prepareLoader(self) -> ExtractorLoader:
-        return self._LoaderClass(player_id=self._player_id, session_id=self._session_id, game_schema=self._game_schema,
-                                 mode=ExtractionMode.SESSION, feature_overrides=self._overrides)
+    @property
+    def _mode(self) -> ExtractionMode:
+        return ExtractionMode.SESSION
+
+    @property
+    def _playerID(self) -> str:
+        return self._player_id
+
+    @property
+    def _sessionID(self) -> str:
+        return self._session_id
 
     def _getExtractorNames(self) -> List[str]:
         return ["SessionID", "PlayerID"] + self._registry.GetExtractorNames()
@@ -66,33 +80,18 @@ class SessionProcessor(FeatureProcessor):
         """
         self._registry.ExtractFromEvent(event)
 
-    def _processFeatureData(self, feature: FeatureData):
-        self._registry.ExtractFromFeatureData(feature=feature)
-
-    def _getFeatureValues(self, export_types:ExporterTypes, as_str:bool=False) -> Dict[str,List[Any]]:
-        # 1) First, we get Session's first-order feature data:
-        _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
-        # 2) Then we can side-propogate the values to second-order features, and down-propogate to other extractors:
-        for feature in _first_order_data['sessions']:
-            self.ProcessFeatureData(feature=feature)
-        # 3) Finally, we assume higher-ups have already sent down their first-order features, so we are ready to return all feature values.
-        if export_types.sessions and isinstance(self._registry, FeatureRegistry):
-            if as_str:
-                return {"sessions" : [self._session_id, self._player_id] + self._registry.GetFeatureStringValues()}
-            else:
-                return {"sessions" : [self._session_id, self._player_id] + self._registry.GetFeatureValues()}
+    def _getFeatureValues(self, as_str:bool=False) -> ExportRow:
+        if as_str:
+            return [self._sessionID, self._playerID] + self._registry.GetFeatureStringValues()
         else:
-            return {}
+            return [self._sessionID, self._playerID] + self._registry.GetFeatureValues()
 
-    def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
-        ret_val : Dict[str, List[FeatureData]] = { "sessions":[] }
-        if isinstance(self._registry, FeatureRegistry):
-            ret_val["sessions"] = self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)
-        return ret_val
+    def _getFeatureData(self, order:int) -> List[FeatureData]:
+        return self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)
 
     def _clearLines(self) -> None:
         Logger.Log(f"Clearing features from SessionProcessor for player {self._player_id}, session {self._session_id}.", logging.DEBUG, depth=2)
-        self._registry = FeatureRegistry()
+        self._registry = FeatureRegistry(mode=self._mode)
 
     # *** PUBLIC STATICS ***
 

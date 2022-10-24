@@ -1,0 +1,17 @@
+name: "Set up schema file for a run"
+author: Luke Swanson
+description: "Given a game to export, make a copy of its schema from the template."
+branding:
+  icon: 'clipboard'
+  color: 'blue'
+inputs:
+  game:
+    description: "Game selected for data export"
+    required: false
+    default: "game"
+runs:
+  using: "composite"
+  steps:
+    - name: Set up schema file
+      run: cp games/${{inputs.game}}/${{inputs.game}}.json.template games/${{inputs.game}}/${{inputs.game}}.json
+      shell: bash

@@ -7,6 +7,7 @@ from utils import Logger
 from extractors.Extractor import ExtractorParameters
 from games.AQUALAB.features.PerJobFeature import PerJobFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class JobArgumentationTime(PerJobFeature):
@@ -19,10 +20,12 @@ class JobArgumentationTime(PerJobFeature):
         self._time = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["all_events"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -48,5 +51,6 @@ class JobArgumentationTime(PerJobFeature):
         return [timedelta(seconds=self._time)]
 
     # *** Optionally override public functions. ***
-    def MinVersion(self) -> Optional[str]:
+    @staticmethod
+    def MinVersion() -> Optional[str]:
         return "1"

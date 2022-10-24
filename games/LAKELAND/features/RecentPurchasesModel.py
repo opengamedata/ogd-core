@@ -45,42 +45,42 @@ class RecentPurchasesModel(SequenceModel):
                     event_time = event["client_time"]
                     if type(event_time) is str:
                         event_time = datetime.datetime.fromisoformat(event_time)
-                    homes.append((now - event_time).seconds)
+                    homes.append((now - event_time).total_seconds())
                 elif event ["event_data_complex"]["buy"] == 2:
                     event_time = event["client_time"]
                     if type(event_time) is str:
                         event_time = datetime.datetime.fromisoformat(event_time)
-                    food.append((now - event_time).seconds)
+                    food.append((now - event_time).total_seconds())
                 elif event["event_data_complex"]["buy"] == 3:
                     event_time = event["client_time"]
                     if type(event_time) is str:
                         event_time = datetime.datetime.fromisoformat(event_time)
-                    farms.append((now - event_time).seconds)
+                    farms.append((now - event_time).total_seconds())
                 elif event["event_data_complex"]["buy"] == 4:
                     event_time = event["client_time"]
                     if type(event_time) is str:
                         event_time = datetime.datetime.fromisoformat(event_time)
-                    fertilizer.append((now - event_time).seconds)
+                    fertilizer.append((now - event_time).total_seconds())
                 elif event["event_data_complex"]["buy"] == 5:
                     event_time = event["client_time"]
                     if type(event_time) is str:
                         event_time = datetime.datetime.fromisoformat(event_time)
-                    livestock.append((now - event_time).seconds)
+                    livestock.append((now - event_time).total_seconds())
                 elif event["event_data_complex"]["buy"] == 6:
                     event_time = event["client_time"]
                     if type(event_time) is str:
                         event_time = datetime.datetime.fromisoformat(event_time)
-                    skimmers.append((now - event_time).seconds)
+                    skimmers.append((now - event_time).total_seconds())
                 elif event["event_data_complex"]["buy"] == 7:
                     event_time = event["client_time"]
                     if type(event_time) is str:
                         event_time = datetime.datetime.fromisoformat(event_time)
-                    signs.append((now - event_time).seconds)
+                    signs.append((now - event_time).total_seconds())
                 elif event["event_data_complex"]["buy"] == 8:
                     event_time = event["client_time"]
                     if type(event_time) is str:
                         event_time = datetime.datetime.fromisoformat(event_time)
-                    roads.append((now - event_time).seconds)
+                    roads.append((now - event_time).total_seconds())
                 # Check if ten purchases have been tallied. If so, break from the loop.
                 count += 1
                 if count >= 10:

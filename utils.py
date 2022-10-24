@@ -2,16 +2,15 @@
 #  A module of utility functions used in the feature_extraction_to_csv project
 import json
 import logging
-import os
-import traceback
+import itertools
 from datetime import datetime
-from logging import Logger
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 # import locals
 from config.config import settings as settings
 
 map = Dict[str, Any]
+ExportRow = List[Any]
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
 #  @param filename  The name of the JSON file. If the file extension is not .json,
@@ -30,20 +29,18 @@ def loadJSONFile(filename:str, path:Path = Path("./")) -> Dict[Any, Any]:
             return json.loads(json_file.read())
     except FileNotFoundError as err:
         Logger.Log(f"File {file_path} does not exist.", logging.WARNING)
-        print(f"File {file_path} does not exist.")
-        raise err
-    except Exception as err:
-        Logger.Log(f"Could not read file at {file_path}\nFull error message: {type(err)} {str(err)}\nCurrent directory: {os.getcwd()}",
-                        logging.ERROR)
         raise err
 
 class Logger:
-    std_logger  : Logger           = logging.getLogger("std_logger")
-    file_logger : Optional[Logger] = None
+    std_logger  : logging.Logger   = logging.getLogger("std_logger")
+    file_logger : Optional[logging.Logger] = None
 
     # Set up loggers. First, the std out logger
-    stdout_handler = logging.StreamHandler()
-    std_logger.addHandler(stdout_handler)
+    if not std_logger.hasHandlers():
+        stdout_handler = logging.StreamHandler()
+        std_logger.addHandler(stdout_handler)
+    else:
+        std_logger.warning(f"Trying to add a handler to std_logger, when handlers ({std_logger.handlers}) already exist!")
     if settings['DEBUG_LEVEL'] == "ERROR":
         std_logger.setLevel(level=logging.ERROR)
     elif settings['DEBUG_LEVEL'] == "WARNING":
@@ -52,7 +49,7 @@ class Logger:
         std_logger.setLevel(level=logging.INFO)
     elif settings['DEBUG_LEVEL'] == "DEBUG":
         std_logger.setLevel(level=logging.DEBUG)
-    std_logger.debug("Testing standard out logger")
+    std_logger.info("Testing standard out logger")
 
     # Then, set up the file logger. Check for permissions errors.
     if settings.get('LOG_FILE', False):
@@ -76,7 +73,7 @@ class Logger:
     # Function to print a method to both the standard out and file logs.
     # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
     @staticmethod
-    def Log(message:str, level=logging.DEBUG, depth:int=0) -> None:
+    def Log(message:str, level=logging.INFO, depth:int=0) -> None:
         now = datetime.now().strftime("%y-%m-%d %H:%M:%S")
         indent = ''.join(['  '*depth])
         if Logger.file_logger is not None:
@@ -108,3 +105,15 @@ class Logger:
             print(f"warning: {message}")
         elif level == logging.ERROR:
             print(f"error:   {message}")
+
+def GetAqualabJobCount(db_export_path:Path=Path("./games/AQUALAB/")):
+    db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
+    return len(db_export.get("jobs", []))
+
+def GetAqualabTaskCount(db_export_path:Path=Path("./games/AQUALAB/")):
+    db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
+    list_o_lists = [job.get('tasks', []) for job in db_export.get('jobs', [])]
+    # jobs_to_task_cts = [f"{job.get('id')}: {len(job.get('tasks', []))}" for job in db_export.get('jobs', [])]
+    # Logger.Log(f"Task counts by job:\n{jobs_to_task_cts}", logging.DEBUG)
+    all_tasks    = list(itertools.chain.from_iterable(list_o_lists))
+    return len(all_tasks)

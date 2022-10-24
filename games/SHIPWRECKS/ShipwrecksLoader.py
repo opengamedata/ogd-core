@@ -1,6 +1,7 @@
 ## import standard libraries
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
+import games.SHIPWRECKS.features
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 from extractors.ExtractorLoader import ExtractorLoader
@@ -29,6 +30,10 @@ class ShipwrecksLoader(ExtractorLoader):
     def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
 
+    @staticmethod
+    def _getFeaturesModule():
+        return games.SHIPWRECKS.features
+
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         if feature_type == "ActiveJobs":
@@ -41,7 +46,7 @@ class ShipwrecksLoader(ExtractorLoader):
         elif feature_type == "JobsAttempted":
             if extractor_params._count_index is None:
                 raise TypeError("Got None for extractor_params._count_index, should have a value!")
-            ret_val = JobsAttempted.JobsAttempted(params=extractor_params, mission_map=self._game_schema["mission_map"])
+            ret_val = JobsAttempted.JobsAttempted(params=extractor_params, mission_map=self._game_schema.NonStandardElements["mission_map"])
         elif feature_type == "MissionSonarTimeToComplete":
             if extractor_params._count_index is None:
                 raise TypeError("Got None for extractor_params._count_index, should have a value!")

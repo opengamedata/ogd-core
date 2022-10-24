@@ -3,8 +3,10 @@ import json
 from typing import Any, List, Optional
 # import local files
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
+
 
 class CustomFeature(Feature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
@@ -20,7 +22,8 @@ class CustomFeature(Feature):
         # self._found_click : bool = False
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -28,7 +31,8 @@ class CustomFeature(Feature):
         """
         return [] # >>> fill in names of events this Feature should use for extraction. <<<
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -87,10 +91,12 @@ class CustomFeature(Feature):
     def Subfeatures(self) -> List[str]:
         return [] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
-    def MinVersion(self) -> Optional[str]:
+    @staticmethod
+    def MinVersion() -> Optional[str]:
         # >>> replace return statement below with a string defining the minimum logging version for events to be processed by this Feature. <<<
         return super().MinVersion()
 
-    def MaxVersion(self) -> Optional[str]:
+    @staticmethod
+    def MaxVersion() -> Optional[str]:
         # >>> replace return statement below with a string defining the maximum logging version for events to be processed by this Feature. <<<
         return super().MaxVersion()

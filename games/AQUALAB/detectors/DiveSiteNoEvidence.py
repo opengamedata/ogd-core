@@ -6,6 +6,7 @@ from extractors.detectors.Detector import Detector
 from extractors.detectors.DetectorEvent import DetectorEvent
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 
 class DiveSiteNoEvidence(Detector):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
@@ -16,7 +17,8 @@ class DiveSiteNoEvidence(Detector):
 
     # *** Implement abstract functions ***
 
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_

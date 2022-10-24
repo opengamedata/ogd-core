@@ -1,6 +1,7 @@
 ## import standard libraries
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
+import games.CRYSTAL.features
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
@@ -13,6 +14,10 @@ from schemas.GameSchema import GameSchema
 class CrystalLoader(LegacyLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
+    @staticmethod
+    def _getFeaturesModule():
+        return games.CRYSTAL.features
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         return CrystalExtractor(params=extractor_params, game_schema=self._game_schema, session_id=self._session_id)

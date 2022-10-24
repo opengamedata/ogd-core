@@ -14,19 +14,88 @@ class JobActiveTime(PerJobFeature):
 
     def __init__(self, params:ExtractorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
-        self._session_id      = None
-        self._last_start_time = None
-        self._last_event_time = None
-        self._total_seconds = 0
+        self._total_time = timedelta(0)
+        if self.ExtractionMode == ExtractionMode.PLAYER:
+            self._session_id      = None
+            self._last_start_time = None
+            self._last_event_time = None
+        elif self.ExtractionMode == ExtractionMode.POPULATION:
+            self._session_id      = None
+            self._last_start_time = None
+            self._last_event_time = None
+        else:
+            raise NotImplementedError(f"Got invalid export mode of {self.ExtractionMode.name} in JobActiveTime!")
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["all_events"]
+        # if self.ExtractionMode == ExtractionMode.PLAYER \
+        # or self.ExtractionMode == ExtractionMode.SESSION:
+        #     return ["all_events"]
+        # else:
+        #     return []
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
+        # if self.ExtractionMode == ExtractionMode.POPULATION:
+        #     return ["JobActiveTime"]
+        # else:
+        #     return []
 
     def _extractFromEvent(self, event:Event) -> None:
+        if self.ExtractionMode == ExtractionMode.POPULATION:
+            # pass
+            self._handle_user(event=event)
+        elif self.ExtractionMode == ExtractionMode.PLAYER:
+            self._player_id = event.UserID
+            self._handle_user(event=event)
+        elif self.ExtractionMode == ExtractionMode.SESSION:
+            self._handle_user(event=event)
+
+    def _extractFromFeatureData(self, feature:FeatureData):
+        return
+        # if self.ExtractionMode == ExtractionMode.PLAYER \
+        # or self.ExtractionMode == ExtractionMode.SESSION:
+        #     pass
+        # elif self.ExtractionMode == ExtractionMode.POPULATION:
+        #     self._handle_population(feature=feature)
+
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._total_time.total_seconds()]
+
+    def _validateEventCountIndex(self, event:Event):
+        ret_val : bool = False
+
+        new_job = event.EventData["job_name"]['string_value']
+        if self._job_map.get(new_job, None) is not None:
+            if self._job_map.get(new_job, None) == self.CountIndex:
+                    ret_val = True
+            elif event.EventName == "switch_job":
+                # if we got switch job, and were switching away from this instance's job, we still want to process it.
+                old_job = event.EventData["prev_job_name"]["string_value"]
+                if self._job_map.get(old_job, None) == self.CountIndex:
+                    ret_val = True
+        else:
+            Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
+
+        return ret_val
+
+
+    # *** Optionally override public functions. ***
+
+    @staticmethod
+    def MinVersion() -> Optional[str]:
+        return "1"
+
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        return [ExtractionMode.PLAYER, ExtractionMode.POPULATION]
+
+    # *** PRIVATE METHODS ***
+
+    def _handle_user(self, event:Event) -> None:
         if event.SessionID != self._session_id:
             _old_sess = self._session_id
             self._session_id = event.SessionID
@@ -56,49 +125,24 @@ class JobActiveTime(PerJobFeature):
                 self._updateTotalTime()
         elif event.EventName == "complete_job":
             self._updateTotalTime()
-
         self._last_event_time = event.timestamp
-
-    def _extractFromFeatureData(self, feature:FeatureData):
-        return
-
-    def _getFeatureValues(self) -> List[Any]:
-        return [timedelta(seconds=self._total_seconds)]
-
-    def _validateEventCountIndex(self, event:Event):
-        ret_val : bool = False
-
-        new_job = event.EventData["job_name"]['string_value']
-        if self._job_map.get(new_job, None) is not None:
-            if self._job_map.get(new_job, None) == self.CountIndex:
-                    ret_val = True
-            elif event.EventName == "switch_job":
-                # if we got switch job, and were switching away from this instance's job, we still want to process it.
-                old_job = event.EventData["prev_job_name"]["string_value"]
-                if self._job_map.get(old_job, None) == self.CountIndex:
-                    ret_val = True
-        else:
-            Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
-
-        return ret_val
-
-
-    # *** Optionally override public functions. ***
-
-    def MinVersion(self) -> Optional[str]:
-        return "1"
-
-    def AvailableModes(self) -> List[ExtractionMode]:
-        return [ExtractionMode.USER]
-
-    # *** PRIVATE METHODS ***
 
     def _updateTotalTime(self):
         if self._last_start_time:
             if self._last_event_time:
-                self._total_seconds += (self._last_event_time - self._last_start_time).total_seconds()
+                self._total_time += (self._last_event_time - self._last_start_time)
                 self._last_start_time = None
             else:
                 Logger.Log(f"JobActiveTime could not update total time, missing previous event time!", logging.WARNING)
-        else:
-            Logger.Log(f"JobActiveTime could not update total time for session {self._session_id}, missing start time!", logging.WARNING)
+        elif self.ExtractionMode == ExtractionMode.PLAYER:
+            Logger.Log(f"JobActiveTime could not update total time for player {self._player_id}, session {self._session_id} missing start time!", logging.WARNING)
+
+    # def _handle_population(self, feature:FeatureData):
+    #     if feature.ExportMode == ExtractionMode.PLAYER:
+    #         _val = feature.FeatureValues[0]
+    #         if type(_val) == timedelta:
+    #             self._total_seconds += _val
+    #         else:
+    #             Logger.Log(f"JobActiveTime for population got invalid value {_val} of type {type(_val)} for column {feature.FeatureNames[0]}", logging.WARN)
+    #     else:
+    #         Logger.Log(f"JobActiveTime for population got feature data for mode {feature.ExportMode.name}", logging.DEBUG)

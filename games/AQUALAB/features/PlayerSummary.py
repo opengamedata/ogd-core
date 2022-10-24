@@ -1,3 +1,4 @@
+import logging
 from datetime import timedelta
 from multiprocessing.sharedctypes import Value
 from typing import Any, List
@@ -5,7 +6,10 @@ from typing import Any, List
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
+from schemas.ExtractionMode import ExtractionMode
+from utils import Logger
 
 class PlayerSummary(SessionFeature):
 
@@ -14,10 +18,12 @@ class PlayerSummary(SessionFeature):
         self._summary = {}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["JobsCompleted", "SessionDuration", "SessionID"]
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -30,22 +36,38 @@ class PlayerSummary(SessionFeature):
             self._summary[user_id] = {
                 "active_time": 0,
                 "jobs_completed": [],
+                "sessions": [],
                 "num_sessions": 0
             }
 
-        if feature.Name == "JobsCompleted":
-            self._summary[user_id]["jobs_completed"] = feature.FeatureValues[0]
-        elif feature.Name == "SessionDuration":
-            if type(feature.FeatureValues[0]) == timedelta:
-                self._summary[user_id]["active_time"] += feature.FeatureValues[0].seconds
-            elif type(feature.FeatureValues[0]) == str and feature.FeatureValues[0] == "No events":
-                pass
-            else:
-                raise ValueError(f"PlayerSummary got {feature.Name} feature with value {feature.FeatureValues[0]} of non-timedelta type {type(feature.FeatureValues[0])} in the {feature.FeatureNames[0]} column!")
-        elif feature.Name == "SessionID":
-            self._summary[user_id]["num_sessions"] += 1
+        if feature.ExportMode == ExtractionMode.PLAYER:
+            if feature.FeatureType == "JobsCompleted":
+                self._summary[user_id]["jobs_completed"] = feature.FeatureValues[0]
+            elif feature.FeatureType == "SessionDuration":
+                if isinstance(feature.FeatureValues[0], timedelta):
+                    self._summary[user_id]["active_time"] += feature.FeatureValues[0].total_seconds()
+                elif isinstance(feature.FeatureValues[0], str) and feature.FeatureValues[0] == "No events":
+                    pass
+                else:
+                    raise ValueError(f"PlayerSummary got {feature.Name} feature with value {feature.FeatureValues[0]} of non-timedelta type {type(feature.FeatureValues[0])} in the {feature.FeatureNames[0]} column!")
+        elif feature.ExportMode == ExtractionMode.SESSION:
+            if feature.FeatureType == "SessionID":
+                self._summary[user_id]["sessions"].append(feature.FeatureValues[0])
 
     def _getFeatureValues(self) -> List[Any]:
+        for summary in self._summary.values():
+            summary['num_sessions'] = len(set(summary['sessions']))
         return [self._summary]
 
     # *** Optionally override public functions. ***
+
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Feature.
+
+        Overridden from base Feature version.
+        A PlayerSummary is only used at player and population levels; not concerned with session-level.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER]

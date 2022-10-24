@@ -26,8 +26,9 @@ class Extractor(abc.ABC):
     # *** ABSTRACTS ***
 
     ## Abstract function to get a list of event types the Feature wants.
+    @classmethod
     @abc.abstractmethod
-    def _getEventDependencies(self) -> List[str]:
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """ Abstract function to get a list of event types the Feature wants.
             The types of event accepted by a feature are a responsibility of the Feature's developer,
             so this is a required part of interface instead of a config item in the schema.
@@ -37,8 +38,9 @@ class Extractor(abc.ABC):
         """
         pass
 
+    @classmethod
     @abc.abstractmethod
-    def _getFeatureDependencies(self) -> List[str]:
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
         Any feature intented to be second-order should override this function.
@@ -70,18 +72,21 @@ class Extractor(abc.ABC):
 
     # *** PUBLIC METHODS ***
 
-    def GetEventDependencies(self) -> List[str]:
-        return self._getEventDependencies()
+    @classmethod
+    def GetEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+        return cls._getEventDependencies(mode=mode)
 
-    def GetFeatureDependencies(self) -> List[str]:
-        return self._getFeatureDependencies()
+    @classmethod
+    def GetFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+        return cls._getFeatureDependencies(mode=mode)
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event=event):
             self._extractFromEvent(event=event)
 
     ## Base function to get the minimum game data version the feature can handle.
-    def MinVersion(self) -> Optional[str]:
+    @staticmethod
+    def MinVersion() -> Optional[str]:
         """ Base function to get the minimum game data version the feature can handle.
             A value of None will set no minimum, so all levels are accepted (unless a max is set).
             Typically default to None, unless there is a required element of the event data that was not added until a certain version.        
@@ -94,7 +99,8 @@ class Extractor(abc.ABC):
         return None
 
     ## Base function to get the maximum game data version the feature can handle.
-    def MaxVersion(self) -> Optional[str]:
+    @staticmethod
+    def MaxVersion() -> Optional[str]:
         """ Base function to get the maximum game data version the feature can handle.
             A value of None will set no maximum, so all levels are accepted (unless a min is set).
             Typically default to None, unless the feature is not compatible with new data and is only kept for legacy purposes.
@@ -106,14 +112,15 @@ class Extractor(abc.ABC):
         """
         return None
 
-    def AvailableModes(self) -> List[ExtractionMode]:
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
         """List of ExtractionMode supported by the Extractor
 
         Base function to give a list of which ExtractionModes an extractor will handle.
         :return: _description_
         :rtype: List[ExtractionMode]
         """
-        return [ExtractionMode.POPULATION, ExtractionMode.USER, ExtractionMode.SESSION, ExtractionMode.DETECTOR]
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR]
 
     # *** PROPERTIES ***
 
@@ -126,7 +133,7 @@ class Extractor(abc.ABC):
         return self._params._desc
 
     @property
-    def ExportMode(self) -> ExtractionMode:
+    def ExtractionMode(self) -> ExtractionMode:
         return self._params._mode
 
     @property
@@ -180,7 +187,7 @@ class Extractor(abc.ABC):
         :return: True if the given event type is in this feature's list, otherwise false.
         :rtype: bool
         """
-        _deps = self.GetEventDependencies()
+        _deps = self.GetEventDependencies(mode=self.ExtractionMode)
         if event_type in _deps or 'all_events' in _deps:
             return True
         else:

@@ -4,6 +4,7 @@ from typing import Any, List
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class UserAvgSessionDuration(SessionFeature):
@@ -11,13 +12,15 @@ class UserAvgSessionDuration(SessionFeature):
     def __init__(self, params:ExtractorParameters, player_id:str):
         self._player_id = player_id
         super().__init__(params=params)
-        self._times = []
+        self._times : List[int] = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["SessionDuration"]
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -28,7 +31,7 @@ class UserAvgSessionDuration(SessionFeature):
             if feature.FeatureValues[0] == "No events":
                 pass
             else:
-                self._times.append(feature.FeatureValues[0].seconds)
+                self._times.append(feature.FeatureValues[0].total_seconds())
 
     def _getFeatureValues(self) -> List[Any]:
         if len(self._times) > 0:

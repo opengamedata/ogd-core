@@ -34,7 +34,8 @@ class Detector(Extractor):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
         Any feature intented to be second-order should override this function.
@@ -56,7 +57,8 @@ class Detector(Extractor):
                 # TODO: add some logic to fill in empty values of Event with reasonable defaults, where applicable.
                 self._callback(_event)
 
-    def AvailableModes(self) -> List[ExtractionMode]:
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
         """List of ExtractionMode supported by the Detector.
 
         Overridden from Extractor's version of the function, only makes Detector mode supported.

@@ -8,6 +8,7 @@ from utils import Logger
 from extractors.features.Feature import Feature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class TopJobSwitchDestinations(Feature):
@@ -20,10 +21,12 @@ class TopJobSwitchDestinations(Feature):
         self._job_switch_pairs = defaultdict(dict)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["accept_job", "switch_job"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -62,10 +65,12 @@ class TopJobSwitchDestinations(Feature):
             }
             # Logger.Log(f"For TopJobSwitchDestinations, sorted dests as: {json.dumps(dests)}")
 
+        # TODO: figure out if we really need to dump to string, or if we can assume things get stringified as needed elsewhere.
         return [json.dumps(ret_val)]
 
     # *** Optionally override public functions. ***
-    def MinVersion(self) -> Optional[str]:
+    @staticmethod
+    def MinVersion() -> Optional[str]:
         return "1"
 
     # *** Other local functions

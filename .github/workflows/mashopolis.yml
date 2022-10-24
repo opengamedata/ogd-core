@@ -27,6 +27,9 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "DEBUG"
+    - name: Set up Schema File
+      uses: ./.github/actions/OGD_schema
+      with:
         game: "MASHOPOLIS"
     - name: Do Export of last week's data
       uses: ./.github/actions/export_last_week

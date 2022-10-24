@@ -1,16 +1,20 @@
 ## import standard libraries
-from datetime import datetime
 import json
-from json.decoder import JSONDecodeError
+from operator import concat
 import os
 import logging
 import traceback
+from datetime import datetime, time, timedelta
+from json.decoder import JSONDecodeError
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Tuple, Optional, Union
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 ## import local files
 import utils
+from config.config import settings as default_settings
 from schemas.Event import Event, EventSource
+from schemas.table_schemas.ColumnMapSchema import ColumnMapSchema
+from schemas.table_schemas.ColumnSchema import ColumnSchema
 from utils import Logger
 
 ## @class TableSchema
@@ -20,7 +24,8 @@ from utils import Logger
 #  of the database columns, the max and min levels in the game, and a list of
 #  IDs for the game sessions in the given requested date range.
 class TableSchema:
-    def __init__(self, schema_name:str, schema_path:Path = Path("./") / os.path.dirname(__file__) / "TABLES/", is_legacy:bool = False):
+
+    def __init__(self, schema_name:str, schema_path:Path = Path("./") / os.path.dirname(__file__) / "TABLES/"):
         """Constructor for the TableSchema class.
         Given a database connection and a game data request,
         this retrieves a bit of information from the database to fill in the
@@ -34,55 +39,63 @@ class TableSchema:
         :type is_legacy: bool, optional
         """
         # declare and initialize vars
+        self._schema            : Optional[Dict[str, Any]]
+        self._column_map        : ColumnMapSchema
+        self._columns           : List[ColumnSchema]   = []
         self._table_format_name : str                  = schema_name
-        # self._is_legacy         : bool                 = is_legacy
-        self._columns           : List[Dict[str, str]] = []
-        self._column_map        : Map                  = {}
 
         if not self._table_format_name.lower().endswith(".json"):
             self._table_format_name += ".json"
-        schema = utils.loadJSONFile(filename=self._table_format_name, path=schema_path)
+        self._schema = utils.loadJSONFile(filename=self._table_format_name, path=schema_path)
 
         # after loading the file, take the stuff we need and store.
-        if schema is not None:
-            self._columns = schema['columns']
-            self._column_map = schema['column_map']
+        if self._schema is not None:
+            self._columns    = [ColumnSchema(column_details) for column_details in self._schema.get('columns', [])]
+            self._column_map = ColumnMapSchema(map=self._schema.get('column_map', {}), column_names=self.ColumnNames)
         else:
             Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
 
-    def ColumnNames(self) -> List[str]:
-        """Function to get the names of all columns in the schema.
+    @staticmethod
+    def FromID(game_id:str, settings:Optional[Dict[str, Any]]=None):
+        if settings is not None:
+            _table_name = settings["GAME_SOURCE_MAP"].get(game_id, {}).get("schema", "NO SCHEMA DEFINED")
+        else:
+            _table_name = default_settings["GAME_SOURCE_MAP"].get(game_id, {}).get("schema", "NO SCHEMA DEFINED")
+        return TableSchema(schema_name=f"{_table_name}.json")
 
-        :return: Names of each column in the schema.
-        :rtype: List[str]
-        """
-        return [col['name'] for col in self._columns]
+    @staticmethod
+    def ConvertDateTime(time_str) -> datetime:
+        ret_val : datetime
 
-    def ColumnList(self) -> List[Dict[str,str]]:
-        return list(self._columns)
+        formats = ["%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M:%S.%f"]
 
-    def Markdown(self) -> str:
-        ret_val = "## Database Columns  \n\n"
-        ret_val += "The individual columns recorded in the database for this game.  \n\n"
-        # set up list of database columns
-        column_list = [f"**{item['name']}** : *{item['type']}* - {item['readable']}, {item['desc']}  " for item in self._columns]
-        ret_val += "\n".join(column_list)
-        # set up info on what is mapped to each event entry
-        ret_val += "\n\n## Event Object Elements  \n\n"
-        ret_val += "The elements (member variables) of each Event object, available to programmers when writing feature extractors. The right-hand side shows which database column(s) are mapped to a given element.  \n\n"
-        event_column_list = []
-        for evt_col,row_col in self._column_map.items():
-            if row_col is not None:
-                if type(row_col) == list:
-                    mapped_list = ", ".join([f"'*{item}*'" for item in row_col])
-                    event_column_list.append(f"**{evt_col}** = Columns {mapped_list}  ") # figure out how to do one string foreach item in list.
-                elif type(row_col) == str:
-                    event_column_list.append(f"**{evt_col}** = Column '*{row_col}*'  ")
+        for fmt in formats:
+            try:
+                ret_val = datetime.strptime(time_str, fmt)
+            except ValueError as err:
+                pass
             else:
-                event_column_list.append(f"**{evt_col}** = null  ")
-        ret_val += "\n".join(event_column_list)
-        return ret_val
+                return ret_val
+        raise ValueError(f"Could not parse timestamp {time_str}, it did not match any expected formats.")
 
+    @staticmethod
+    def ConvertTimedelta(time_str:str) -> timedelta:
+        ret_val : timedelta
+
+        try:
+            pieces = time_str.split(':')
+            seconds_pieces = pieces[2].split('.')
+            ret_val = timedelta(hours=int(pieces[0]),
+                                minutes=int(pieces[1]),
+                                seconds=int(seconds_pieces[0]),
+                                milliseconds=int(seconds_pieces[1]) if len(seconds_pieces) > 1 else 0)
+        except ValueError as err:
+            pass
+        else:
+            return ret_val
+        raise ValueError(f"Could not parse timedelta {time_str}, it did not match any expected formats.")
+
+    _conversion_warnings = []
     def RowToEvent(self, row:Tuple, concatenator:str = '.', fallbacks:utils.map={}):
         """Function to convert a row to an Event, based on the loaded schema.
         In general, columns specified in the schema's column_map are mapped to corresponding elements of the Event.
@@ -99,6 +112,7 @@ class TableSchema:
         :rtype: [type]
         """
         # define vars to be passed as params
+        MAX_WARNINGS : int = 10
         sess_id : str
         app_id  : str
         time    : datetime
@@ -106,91 +120,181 @@ class TableSchema:
         edata   : Map
         app_ver : str
         log_ver : str
-        offset  : Optional[int]
+        offset  : Optional[timedelta]
         uid     : Optional[str]
         udata   : Optional[Map]
         state   : Optional[Map]
         index   : Optional[int]
 
-        column_names = self.ColumnNames()
-        row_dict = {col_i : row[i].isoformat() if type(row[i]) == datetime else str(row[i]) for i,col_i in enumerate(column_names)}
-        # 1) Get values from row mapped to Event ctor params. Wait to do event_data.
-        #    If anything in the map was a list, concatenate vals from corresponding columns, and anything that wasn't, get val.
-        params : Map = {}
-        for key in self._column_map.keys():
-            if key != 'event_data': # event_data is special case, handle separately.
-                inner_vals = self._column_map[key]
-                if inner_vals == None:
-                    # if column map didn't specify where to get data, check fallbacks. If nothing there, make "None"
-                    params[key] = fallbacks.get(key, None)
-                elif type(inner_vals) == list:
-                    params[key] = concatenator.join([row_dict[inner_key] for inner_key in inner_vals])
-                else:
-                    params[key] = row_dict[inner_vals]
         # 2) Handle event_data parameter, a special case.
         #    For this case we've got to parse the json, and then fold in whatever other columns were desired.
-        if type(self._column_map['event_data']) == list:
-            # if we had a list of event_data columns, we need a merger, not a concatenation
-            params['event_data'] = {}
-            for i,col_name in enumerate(self._column_map['event_data']):
-                val = TableSchema._parse(row_dict[col_name], self._columns[column_names.index(col_name)])
-                params['event_data'].update(val if type(val) == dict else {col_name:val})
-        else:
-            col_name = self._column_map['event_data']
-            params['event_data'] = TableSchema._parse(row_dict[col_name], self._columns[column_names.index(col_name)])
         # 3) Assign vals to our arg vars and pass to Event ctor.
-        sess_id = params['session_id']
-        app_id  = params['app_id']
+        sess_id = self._getValueFromRow(row=row, indices=self._column_map.SessionID,   concatenator=concatenator, fallback=fallbacks.get('session_id'))
+        if not isinstance(sess_id, str):
+            if "sess_id" not in TableSchema._conversion_warnings:
+                Logger.Log(f"{self._table_format_name} table schema set session_id as {type(sess_id)}, but session_id should be a string", logging.WARN)
+                TableSchema._conversion_warnings.append("sess_id")
+            sess_id = str(sess_id)
+
+        app_id  = self._getValueFromRow(row=row, indices=self._column_map.AppID,       concatenator=concatenator, fallback=fallbacks.get('app_id'))
+        if not isinstance(app_id, str):
+            if "app_id" not in TableSchema._conversion_warnings:
+                Logger.Log(f"{self._table_format_name} table schema set app_id as {type(app_id)}, but app_id should be a string", logging.WARN)
+                TableSchema._conversion_warnings.append("app_id")
+            app_id = str(app_id)
+
+        _time   = self._getValueFromRow(row=row, indices=self._column_map.Timestamp,   concatenator=concatenator, fallback=fallbacks.get('timestamp'))
+        time    = TableSchema.ConvertDateTime(_time)
+
+        ename   = self._getValueFromRow(row=row, indices=self._column_map.EventName,   concatenator=concatenator, fallback=fallbacks.get('event_name'))
+        if not isinstance(ename, str):
+            if "ename" not in TableSchema._conversion_warnings:
+                Logger.Log(f"{self._table_format_name} table schema set event_name as {type(ename)}, but event_name should be a string", logging.WARN)
+                TableSchema._conversion_warnings.append("ename")
+            ename = str(ename)
+
+        datas : Dict[str, Any] = {}
+        if self._column_map.EventData is not None:
+            if isinstance(self._column_map.EventData, list):
+                # if we had a list of event_data columns, we need a merger, not a concatenation
+                for index in self._column_map.EventData:
+                    val = TableSchema._parse(input=row[index], col_schema=self._columns[index])
+                    datas.update(val if isinstance(val, dict) else {self._columns[index].Name:val})
+            elif isinstance(self._column_map.EventData, int):
+                # if event_data is just one column, then we can just get that item
+                datas = TableSchema._parse(input=row[self._column_map.EventData], col_schema=self.Columns[self._column_map.EventData])
+        else:
+            datas = fallbacks.get('event_data', {})
         # TODO: go bac to isostring function; need 0-padding on ms first, though
-        time    = datetime.strptime(params['timestamp'], "%Y-%m-%dT%H:%M:%S.%f")
-        ename   = params['event_name']
-        edata   = dict(sorted(params['event_data'].items())) # Sort keys alphabetically
-        app_ver = params['app_version']
-        log_ver = params['log_version']
-        offset  = params['time_offset']
-        uid     = params['user_id']
-        udata   = params['user_data']
-        state   = params['game_state']
-        index   = params['event_sequence_index']
+        edata   = dict(sorted(datas.items())) # Sort keys alphabetically
 
-        if self._columns[0]['name'] == 'event_name' and app_ver is None:
-            if 'app_version' in params['event_data']:
-                app_ver = str(params['event_data']['app_version']['int_value'])
-            else:
-                app_ver = "0"
+        esrc    = self._getValueFromRow(row=row, indices=self._column_map.EventSource, concatenator=concatenator, fallback=fallbacks.get('event_source', EventSource.GAME))
+        if not isinstance(esrc, EventSource):
+            if "esrc" not in TableSchema._conversion_warnings:
+                Logger.Log(f"{self._table_format_name} table schema set event_source as {type(esrc)}, but event_source should be an EventSource", logging.WARN)
+                TableSchema._conversion_warnings.append("esrc")
+            esrc = EventSource.GENERATED if esrc == "GENERATED" else EventSource.GAME
 
-        if self._columns[0]['name'] == 'event_name' and log_ver is None:
-            if 'log_ver' in params['event_data']:
-                log_ver = str(params['event_data']['log_version']['int_value'])
-            else:
-                log_ver = "0"
+        app_ver = self._getValueFromRow(row=row, indices=self._column_map.AppVersion,  concatenator=concatenator, fallback=fallbacks.get('app_version'))
+        if not isinstance(app_ver, str):
+            if "app_ver" not in TableSchema._conversion_warnings:
+                Logger.Log(f"{self._table_format_name} table schema set app_version as {type(app_ver)}, but app_version should be a string", logging.WARN)
+                TableSchema._conversion_warnings.append("app_ver")
+            app_ver = str(app_ver)
+
+        log_ver = self._getValueFromRow(row=row, indices=self._column_map.LogVersion,  concatenator=concatenator, fallback=fallbacks.get('log_version'))
+        if not isinstance(log_ver, str):
+            if "log_ver" not in TableSchema._conversion_warnings:
+                Logger.Log(f"{self._table_format_name} table schema set log_version as {type(log_ver)}, but log_version should be a string", logging.WARN)
+                TableSchema._conversion_warnings.append("log_ver")
+            log_ver = str(log_ver)
+
+        _offset = self._getValueFromRow(row=row, indices=self._column_map.TimeOffset,  concatenator=concatenator, fallback=fallbacks.get('time_offset'))
+        offset  = TableSchema.ConvertTimedelta(_offset) if _offset is not None else None
+
+        uid     = self._getValueFromRow(row=row, indices=self._column_map.UserID,      concatenator=concatenator, fallback=fallbacks.get('user_id'))
+        if uid is not None and not isinstance(uid, str):
+            if "uid" not in TableSchema._conversion_warnings:
+                Logger.Log(f"{self._table_format_name} table schema set user_id as {type(uid)}, but user_id should be a string", logging.WARN)
+                TableSchema._conversion_warnings.append("uid")
+            uid = str(uid)
+
+        udata   = self._getValueFromRow(row=row, indices=self._column_map.UserData,    concatenator=concatenator, fallback=fallbacks.get('user_data'))
+
+        state   = self._getValueFromRow(row=row, indices=self._column_map.GameState,   concatenator=concatenator, fallback=fallbacks.get('game_state'))
+
+        index   = self._getValueFromRow(row=row, indices=self._column_map.EventSequenceIndex, concatenator=concatenator, fallback=fallbacks.get('event_sequence_index'))
+        if index is not None and not isinstance(index, int):
+            if "index" not in TableSchema._conversion_warnings:
+                Logger.Log(f"{self._table_format_name} table schema set event_sequence_index as {type(index)}, but event_sequence_index should be an int", logging.WARN)
+                TableSchema._conversion_warnings.append("index")
+            index = int(index)
+
+
+        # if self._columns[0].Name == 'event_name' and app_ver is None:
+        #     if 'app_version' in params['event_data']:
+        #         app_ver = str(params['event_data']['app_version']['int_value'])
+        #     else:
+        #         app_ver = "0"
+
+        # if self._columns[0].Name == 'event_name' and log_ver is None:
+        #     if 'log_ver' in params['event_data']:
+        #         log_ver = str(params['event_data']['log_version']['int_value'])
+        #     else:
+        #         log_ver = "0"
 
         return Event(session_id=sess_id, app_id=app_id, timestamp=time,
-                     event_name=ename, event_data=edata, event_source=EventSource.GAME,
+                     event_name=ename, event_data=edata, event_source=esrc,
                      app_version=app_ver, log_version=log_ver,
                      time_offset=offset, user_id=uid, user_data=udata,
                      game_state=state, event_sequence_index=index)
 
+    @property
+    def ColumnNames(self) -> List[str]:
+        """Function to get the names of all columns in the schema.
+
+        :return: Names of each column in the schema.
+        :rtype: List[str]
+        """
+        return [col.Name for col in self._columns]
+
+    @property
+    def Columns(self) -> List[ColumnSchema]:
+        return self._columns
+
+    @property
+    def AsMarkdown(self) -> str:
+        ret_val = "  \n\n".join([
+            "## Database Columns",
+            "The individual columns recorded in the database for this game.",
+            "\n".join([item.AsMarkdown for item in self.Columns]),
+            "\n\n## Event Object Elements",
+            "The elements (member variables) of each Event object, available to programmers when writing feature extractors. The right-hand side shows which database column(s) are mapped to a given element.",
+            self._column_map.AsMarkdown,
+            ""])
+        return ret_val
+
+    def _getValueFromRow(self, row:Tuple, indices:Union[int, List[int], None], concatenator:str, fallback:Any) -> Any:
+        ret_val : Any
+        if indices is not None:
+            if isinstance(indices, int):
+                # if there's a single index, use parse to get the value it is stated to be
+                ret_val = TableSchema._parse(input=row[indices], col_schema=self.Columns[indices])
+            elif isinstance(indices, list):
+                ret_val = concatenator.join([str(row[index]) for index in indices])
+        else:
+            ret_val = fallback
+        return ret_val
+
     @staticmethod
-    def _parse(input:str, column_descriptor:Dict[str,str]) -> Any:
-        if column_descriptor['type'] == 'str':
+    def _parse(input:str, col_schema:ColumnSchema) -> Any:
+        """Applies whatever parsing is appropriate based on what type the schema said a column contained.
+
+        :param input: _description_
+        :type input: str
+        :param col_schema: _description_
+        :type col_schema: ColumnSchema
+        :return: _description_
+        :rtype: Any
+        """
+        if col_schema.ValueType == 'str':
             return str(input)
-        elif column_descriptor['type'] == 'int':
+        elif col_schema.ValueType == 'int':
             return int(input)
-        elif column_descriptor['type'] == 'float':
+        elif col_schema.ValueType == 'float':
             return float(input)
-        elif column_descriptor['type'] == 'datetime':
+        elif col_schema.ValueType == 'datetime':
             return str(input)
-        elif column_descriptor['type'] == 'json':
+        elif col_schema.ValueType == 'json':
             if input != 'None': # watch out for nasty corner case.
                 try:
                     return json.loads(str(input))
                 except JSONDecodeError as err:
-                    Logger.Log(f"Could not parse input '{input}' of type {type(input)} from column {column_descriptor['name']}, got the following error:\n{str(err)}", logging.WARN)
+                    Logger.Log(f"Could not parse input '{input}' of type {type(input)} from column {col_schema.Name}, got the following error:\n{str(err)}", logging.WARN)
                     return {}
             else:
                 return None
-        elif column_descriptor['type'].startswith('enum'):
+        elif col_schema.ValueType.startswith('enum'):
             # if the column is supposed to be an enum, for now we just stick with the string.
             return str(input)
     
