@@ -32,7 +32,7 @@ class TwoHints(Detector):
         self._this_hint = "Unknown"
         self._last_hint_time:Optional[datetime] = None
         self._time_spent: Optional[Union[timedelta, float]] = None
-        self._detector_event_data: Optional[dict] = None
+        self._detector_event_data: Optional[dict] = {"job_name": self._job_name}
         if time_threshold is not None:
             self._threshold: Union[timedelta, float] = timedelta(seconds=time_threshold)
         else:
@@ -81,7 +81,7 @@ class TwoHints(Detector):
             self._job_name = event.EventData.get("job_name")
             self._this_hint = event.EventData.get("node_id")
             self._detector_event_data = {"time": self._time_spent, "level": self._threshold / timedelta(
-                seconds=1), "job": self._job_name, "last_hint_node": self._last_hint, "this_hint_node": self._this_hint}
+                seconds=1), "job_name": self._job_name, "last_hint_node": self._last_hint, "this_hint_node": self._this_hint}
 
         self._last_hint_time = event.Timestamp
         self._last_hint = self._this_hint

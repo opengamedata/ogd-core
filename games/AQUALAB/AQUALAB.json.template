@@ -551,7 +551,27 @@
                 "count": "level_range",
                 "prefix": "job",
                 "description": "Number of times player asked for help during a job",
-                "return_type": "int"
+                "return_type": "int",
+                "subfeatures": {
+                    "ByTask": {
+                        "description": "Help counts leading up to each completed task",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "JobLocationChanges": {
+                "enabled": true,
+                "type": "JobLocationChanges",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Number of times player changed scenes or rooms",
+                "return_type": "int",
+                "subfeatures": {
+                    "ByTask": {
+                        "description": "Change counts leading up to each completed task",
+                        "return_type": "int"
+                    }
+                }
             },
             "JobTasksCompleted": {
                 "enabled": true,
