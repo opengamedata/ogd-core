@@ -79,21 +79,26 @@ class TableSchema:
         raise ValueError(f"Could not parse timestamp {time_str}, it did not match any expected formats.")
 
     @staticmethod
-    def ConvertTimedelta(time_str:str) -> timedelta:
-        ret_val : timedelta
+    def ConvertTimedelta(time_str:str) -> Optional[timedelta]:
+        ret_val : Optional[timedelta]
 
-        try:
-            pieces = time_str.split(':')
-            seconds_pieces = pieces[2].split('.')
-            ret_val = timedelta(hours=int(pieces[0]),
-                                minutes=int(pieces[1]),
-                                seconds=int(seconds_pieces[0]),
-                                milliseconds=int(seconds_pieces[1]) if len(seconds_pieces) > 1 else 0)
-        except ValueError as err:
-            pass
+        if time_str == "None" or time_str == "none" or time_str == "null":
+            return None
         else:
-            return ret_val
-        raise ValueError(f"Could not parse timedelta {time_str}, it did not match any expected formats.")
+            try:
+                pieces = time_str.split(':')
+                seconds_pieces = pieces[2].split('.')
+                ret_val = timedelta(hours=int(pieces[0]),
+                                    minutes=int(pieces[1]),
+                                    seconds=int(seconds_pieces[0]),
+                                    milliseconds=int(seconds_pieces[1]) if len(seconds_pieces) > 1 else 0)
+            except ValueError as err:
+                pass
+            except IndexError as err:
+                pass
+            else:
+                return ret_val
+        raise ValueError(f"Could not parse timedelta {time_str} of type {type(time_str)}, it did not match any expected formats.")
 
     _conversion_warnings = []
     def RowToEvent(self, row:Tuple, concatenator:str = '.', fallbacks:utils.map={}):
@@ -277,7 +282,9 @@ class TableSchema:
         :return: _description_
         :rtype: Any
         """
-        if col_schema.ValueType == 'str':
+        if input == "None" or input == "null":
+            return None
+        elif col_schema.ValueType == 'str':
             return str(input)
         elif col_schema.ValueType == 'int':
             return int(input)
