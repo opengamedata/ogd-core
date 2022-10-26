@@ -84,9 +84,18 @@ class Event:
 
     @staticmethod
     def CompareVersions(a:str, b:str, version_separator='.') -> int:
-        if a is not None and b is not None:
+        a_parts : Optional[List[int]]
+        b_parts : Optional[List[int]]
+        try:
             a_parts = [int(i) for i in a.split(version_separator)]
+        except ValueError:
+            a_parts = None
+        try:
             b_parts = [int(i) for i in b.split(version_separator)]
+        except ValueError:
+            b_parts = None
+
+        if a_parts is not None and b_parts is not None:
             for i in range(0, min(len(a_parts), len(b_parts))):
                 if a_parts[i] < b_parts[i]:
                     return -1
@@ -100,14 +109,14 @@ class Event:
                 return 0
         else:
             # try to do some sort of sane handling in case we got null values for a version
-            if a == b:
-                utils.Logger.Log(f"Got a value of 'None' for versions a & b!", logging.ERROR)
+            if a_parts is None and b_parts is None:
+                utils.Logger.Log(f"Got invalid values of {a} & {b} for versions a & b!", logging.ERROR)
                 return 0
-            elif a is None:
-                utils.Logger.Log(f"Got a value of 'None' for version a!", logging.ERROR)
+            elif a_parts is None:
+                utils.Logger.Log(f"Got invalid value of {a} for version a!", logging.ERROR)
                 return 1
-            elif b is None:
-                utils.Logger.Log(f"Got a value of 'None' for version b!", logging.ERROR)
+            elif b_parts is None:
+                utils.Logger.Log(f"Got invalid value of {b} for version b!", logging.ERROR)
                 return -1
         return 0 # should never reach here; just putting this here to satisfy linter
 
