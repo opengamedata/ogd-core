@@ -282,6 +282,8 @@ class TableSchema:
         :return: _description_
         :rtype: Any
         """
+        if input is None:
+            return None
         if input == "None" or input == "null":
             return None
         elif col_schema.ValueType == 'str':
