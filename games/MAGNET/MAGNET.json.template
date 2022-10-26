@@ -61,7 +61,8 @@
 
     "features": {
 		"legacy" : {
-			"enabled" : true
+			"enabled" : true,
+            "return_type" : "Any"
 		},
         "perlevel": {
             "eventCount": {
