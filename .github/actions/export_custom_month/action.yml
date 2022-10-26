@@ -29,7 +29,7 @@ runs:
     #   run: sed -i 's/logger/logger2020/g' config.py
     #   shell: bash
     - name: Execute data export
-      if: ! ${{ inputs.events_only }}
+      if: ${{ ! inputs.events_only }}
       run: python3.8 main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly
       shell: bash
     - name: Execute data export (events only)

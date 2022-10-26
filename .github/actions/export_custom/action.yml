@@ -31,7 +31,7 @@ runs:
     # - name: Clone code
     #   uses: actions/checkout@v2
     - name: Execute data export
-      if: ! ${{ inputs.events_only }}
+      if: ${{ ! inputs.events_only }}
       run: python3.8 main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }}
       shell: bash
     - name: Execute data export (events only)
