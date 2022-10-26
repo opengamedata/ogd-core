@@ -1,3 +1,4 @@
+import logging
 from datetime import date, datetime, timedelta
 from enum import IntEnum
 from typing import List, Optional, Union
@@ -82,20 +83,33 @@ class Event:
             self.event_sequence_index = index
 
     @staticmethod
-    def CompareVersions(a:str, b:str, version_separator='.'):
-        a_parts = [int(i) for i in a.split(version_separator)]
-        b_parts = [int(i) for i in b.split(version_separator)]
-        for i in range(0, min(len(a_parts), len(b_parts))):
-            if a_parts[i] < b_parts[i]:
+    def CompareVersions(a:str, b:str, version_separator='.') -> int:
+        if a is not None and b is not None:
+            a_parts = [int(i) for i in a.split(version_separator)]
+            b_parts = [int(i) for i in b.split(version_separator)]
+            for i in range(0, min(len(a_parts), len(b_parts))):
+                if a_parts[i] < b_parts[i]:
+                    return -1
+                elif a_parts[i] > b_parts[i]:
+                    return 1
+            if len(a_parts) < len(b_parts):
                 return -1
-            elif a_parts[i] > b_parts[i]:
+            elif len(a_parts) > len(b_parts):
                 return 1
-        if len(a_parts) < len(b_parts):
-            return -1
-        elif len(a_parts) > len(b_parts):
-            return 1
+            else:
+                return 0
         else:
-            return 0
+            # try to do some sort of sane handling in case we got null values for a version
+            if a == b:
+                utils.Logger.Log(f"Got a value of 'None' for versions a & b!", logging.ERROR)
+                return 0
+            elif a is None:
+                utils.Logger.Log(f"Got a value of 'None' for version a!", logging.ERROR)
+                return 1
+            elif b is None:
+                utils.Logger.Log(f"Got a value of 'None' for version b!", logging.ERROR)
+                return -1
+        return 0 # should never reach here; just putting this here to satisfy linter
 
     @staticmethod
     def ColumnNames() -> List[str]:
