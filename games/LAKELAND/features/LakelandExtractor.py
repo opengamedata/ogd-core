@@ -151,7 +151,7 @@ class LakelandExtractor(LegacyFeature):
             self._cur_gameplay += 1
             self.setValByName('num_play', self._cur_gameplay)
         if not self._VERSION:
-            self._VERSION = event.AppVersion
+            self._VERSION = event.LogVersion
             self.setValByName("version", self._VERSION)
         # Check for invalid row.
         if self.ExtractionMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
