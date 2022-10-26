@@ -1,6 +1,5 @@
 # import libraries
 import json
-from signal import raise_signal
 from typing import Any, Dict, List, Optional
 from extractors.Extractor import ExtractorParameters
 # import local files
