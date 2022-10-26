@@ -40,7 +40,7 @@ class FeatureManager:
         }
 
     # TODO: make this function take list of events, and do the loop over events as low in the hierarchy as possible, which technically should be faster.
-    def ProcessEvent(self, event:Event) -> None:
+    def ProcessEvents(self, event_list:List[Event], fail_fast:bool) -> None:
         # 1. process at population level.
         self._population.ProcessEvent(event=event)
         # 2. process at player level, adding player if needed.
