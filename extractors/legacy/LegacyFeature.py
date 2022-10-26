@@ -247,9 +247,14 @@ class LegacyFeature(Feature):
             if self._has_feature(feature_name):
                 feature = self._features[feature_name]
                 if type(feature) is dict and index in feature.keys():
-                    if feature[index]["val"] == 'null':
+                    old_val = feature[index]["val"]
+                    if old_val == 'null':
                         feature[index]["val"] = 0
-                    feature[index]["val"] += increment
+                    elif (isinstance(old_val, int)) \
+                      or (isinstance(old_val, float)):
+                        feature[index]["val"] += increment
+                    elif isinstance(old_val, timedelta):
+                        feature[index]["val"] = old_val + timedelta(seconds=increment)
                 else:
                     Logger.Log(f"Tried to increment value on invalid index of {feature_name}: {index}", logging.ERROR)
 
