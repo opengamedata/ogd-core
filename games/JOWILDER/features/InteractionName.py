@@ -1,5 +1,6 @@
 # import libraries
 import json
+import logging
 from typing import Any, Dict, List, Optional
 from extractors.Extractor import ExtractorParameters
 # import local files
@@ -8,10 +9,16 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 from games.JOWILDER import Jowilder_Enumerators as je
+from utils import Logger
 
-with open(file="./games/JOWILDER/interaction_metadata.json") as f:
-    METADATA_RAW : Dict[str, Dict[str, Any]] = json.load(f)
-    METADATA     : Dict[int, Dict[str, Any]] = {je.fqid_to_enum.get(v.get("fqid", "FQID NOT FOUND"), -1): v for v in METADATA_RAW.values()}
+try:
+    with open(file="./games/JOWILDER/interaction_metadata.json") as f:
+        METADATA_RAW : Dict[str, Dict[str, Any]] = json.load(f)
+        METADATA     : Dict[int, Dict[str, Any]] = {je.fqid_to_enum.get(v.get("fqid", "FQID NOT FOUND"), -1): v for v in METADATA_RAW.values()}
+except FileNotFoundError as err:
+    Logger.Log(f"Could not find ./games/JOWILDER/interaction_metadata.json")
+    METADATA_RAW = {}
+    METADATA     = {}
 
 class InteractionName(PerCountFeature):
 
