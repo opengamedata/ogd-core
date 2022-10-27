@@ -15,7 +15,9 @@ class SessionDuration(SessionFeature):
         self._session_id = session_id
         super().__init__(params=params)
         self._client_start_time = None
+        self._client_start_index = None
         self._client_end_time = None
+        self._client_end_index = None
         # self._session_duration = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -31,14 +33,17 @@ class SessionDuration(SessionFeature):
         # if this was earliest event, make it the start time.
         if not self._client_start_time:
             self._client_start_time = event.Timestamp
+            self._client_start_index = event.EventSequenceIndex
         if self._client_start_time > event.Timestamp:
-            Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than start event, with time {self._client_start_time}!", logging.WARN)
+            Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp} earlier than start event, with time {self._client_start_time}, index {self._client_start_index}!", logging.WARN)
             self._client_start_time = event.Timestamp
+            self._client_start_index = event.EventSequenceIndex
         # if this was the latest event, make it the end time, otherwise output error.
-        if self._client_end_time and self._client_end_time > event.Timestamp:
-            Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than end event, with time {self._client_end_time}!", logging.WARN)
+        if self._client_end_time is not None and self._client_end_time > event.Timestamp:
+            Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp} earlier than end event, with time {self._client_end_time}, index {self._client_end_index}!", logging.WARN)
         else:
             self._client_end_time = event.Timestamp
+            self._client_end_index = event.EventSequenceIndex
         # self._session_duration = (event.Timestamp - self._client_start_time).total_seconds()
 
     def _extractFromFeatureData(self, feature:FeatureData):
