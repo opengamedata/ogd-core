@@ -1,4 +1,5 @@
 # import libraries
+import logging
 from typing import Any, List
 # import locals
 from extractors.Extractor import ExtractorParameters
@@ -6,6 +7,7 @@ from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
+from utils import Logger
 
 class SessionDuration(SessionFeature):
 
@@ -26,9 +28,17 @@ class SessionDuration(SessionFeature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
+        # if this was earliest event, make it the start time.
         if not self._client_start_time:
             self._client_start_time = event.Timestamp
-        self._client_end_time = event.Timestamp
+        if self._client_start_time > event.Timestamp:
+            Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than start event, with time {self._client_start_time}!", logging.WARN)
+            self._client_start_time = event.Timestamp
+        # if this was the latest event, make it the end time, otherwise output error.
+        if self._client_end_time and self._client_end_time > event.Timestamp:
+            Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than end event, with time {self._client_end_time}!", logging.WARN)
+        else:
+            self._client_end_time = event.Timestamp
         # self._session_duration = (event.Timestamp - self._client_start_time).total_seconds()
 
     def _extractFromFeatureData(self, feature:FeatureData):

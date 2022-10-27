@@ -20,7 +20,7 @@ class CollectFactNoJob(Detector):
         self._found_jobless_fact = False
         self._sess_id = "Unknown"
         self._player_id = "Unknown"
-        self._time = datetime.now()
+        self._time = None # datetime.now()
         self._fact_id = None
         self._app_version = "Unknown"
         self._log_version = "Unknown"
