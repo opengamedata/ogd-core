@@ -39,7 +39,8 @@ class PlayerProcessor(FeatureProcessor):
         :type player_file: Optional[IO[str]], optional
         """
         Logger.Log(f"Setting up PlayerProcessor for {player_id}...", logging.DEBUG, depth=2)
-        self._player_id : str = player_id
+        self._player_id : str      = player_id
+        self._sessions  : Set[str] = set()
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
         ## Define instance vars
         Logger.Log(f"Done", logging.DEBUG, depth=2)
@@ -63,7 +64,7 @@ class PlayerProcessor(FeatureProcessor):
 
     def _getExtractorNames(self) -> List[str]:
         if isinstance(self._registry, FeatureRegistry):
-            return ["PlayerID"] + self._registry.GetExtractorNames()
+            return ["PlayerID", "SessionCount"] + self._registry.GetExtractorNames()
         else:
             raise TypeError()
 
@@ -75,14 +76,15 @@ class PlayerProcessor(FeatureProcessor):
         :param event: An object with the data for the event to be processed.
         :type event: Event
         """
+        self._sessions.add(event.SessionID)
         self._registry.ExtractFromEvent(event=event)
 
     def _getFeatureValues(self, as_str:bool=False) -> ExportRow:
         ret_val : ExportRow
         if as_str:
-            ret_val = [self._player_id] + self._registry.GetFeatureStringValues()
+            ret_val = [self._player_id, len(self._sessions)] + self._registry.GetFeatureStringValues()
         else:
-            ret_val = [self._player_id] + self._registry.GetFeatureValues()
+            ret_val = [self._player_id, len(self._sessions)] + self._registry.GetFeatureValues()
         return ret_val
 
     def _getFeatureData(self, order:int) -> List[FeatureData]:
