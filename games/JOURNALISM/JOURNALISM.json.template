@@ -1,0 +1,202 @@
+{
+    "level_range": { "min":1, "max":6 },
+
+    "events":{
+        game_state: {
+            "level":"int"
+            "current_stats":"dict"
+            "location" : "str"
+        }
+
+        event_data : {
+            text_click {
+                desc:"clicked to advance to the next text bubble",
+                node_id: "str",
+                text_content : "maybe use it, maybe not",
+                speaker : "player, 3rd-party, text"
+            }
+            display_text_dialog {
+
+            }
+            display_breakdown_dialog {
+
+            }
+            display_quality_dialog {
+
+            }
+            display_choices {
+
+            }
+            TODO : figure out whether/what choice types to split out
+            choice_click {
+                desc: "clicked to choose a text option",
+                text_content : "maybe, maybe not"
+                node_id: "str",
+                choice_type: "hub, time, once, location, continue, action"
+                next_node_id: "str"
+                time_cost : int
+                time_cost_is_mystery : bool
+                context : conversation or 'location map'
+            }
+            fallback_choice_click {
+                time_cost
+            }
+            open_stats_tab { 
+                
+            }
+            close_stats_tab {
+
+            }
+            open_map_tab { 
+                locations_list : "List[str], each string is a location ID"
+                current_location
+            }
+            open_choice_map {
+                current_location
+                locations_list
+            }
+            open_impact_map {
+                feeback_ids : "not sure if this is available."
+                feedback_texts : [str]
+            }
+            close_impact_map {
+                
+            }
+            close_map_tab {
+                
+            }
+            reached_checkpoint {
+                desc: "happens when you reach a checkpoint"
+                node_id : "str"
+            }
+            stat_update {
+                "desc" : happens when a stat is updated
+                "node_id" : str
+                "stats" : "subset of endurance, resourceful, tech, social, trust, research"
+                "change" : "list of change amounts"
+            }
+            change_background_image {
+                desc: "a change in the background image behind text"
+                "node_id" : "str"
+            }
+            show_popup_image {
+                desc : "a change in popup image next to text"
+                "is_animated": "true"
+                "node_id" : "str"
+            }
+            change_location {
+                desc: "a change in player location"
+            }
+            unlocked_notebook {
+
+            }
+            TODO : figure out how to handle notebook layout data
+            open_notebook {
+                snippet_list : {
+                    snippet_ids
+                }
+                layout
+            }
+            select_snippet {
+                snippet_id : str
+                snippet_type : image or quote
+                snippet_quality : good, bad, great, lousy
+                snippet_attribute : List[] made up of: color, facts, useful
+            }
+            place_snippet {
+                layout:
+                location : 
+                snippet_id : str
+                snippet_type : image or quote
+                snippet_quality : good, bad, great, lousy
+                snippet_attribute : List[] made up of: color, facts, useful
+            }
+            remove_snippet {
+                layout:
+                location : 
+                snippet_id : str
+                snippet_type : image or quote
+                snippet_quality : good, bad, great, lousy
+                snippet_attribute : List[] made up of: color, facts, useful
+            }
+            open_editor_note {
+                target_breakdown : {
+                    color_weight : int,
+                    facts_weight : int,
+                    useful_weight : int,
+                }
+                current_breakdown {
+                    color_weight : int,
+                    facts_weight : int,
+                    useful_weight : int,
+                }
+                current_quality
+            }
+            close_editor_note {
+
+            }
+            end_notebook {
+
+            }
+            time_limit_assigned {
+                how_long : timedelta
+            }
+            open_timer {
+                time_left : timedelta
+            }
+            close_timer {
+
+            }
+            time_expired {
+
+            }
+            time_elapsed {
+                how_much : int
+            }
+            snippet_received {
+
+            }
+            story_updated {
+                new_breakdown {
+                    color_weight : int,
+                    facts_weight : int,
+                    useful_weight : int,
+                },
+                new_quality : 
+            }
+            publish_story_click {
+                snippet_layout_map : {}
+                unused_snippets : []
+            }
+            open_published_story {
+
+            }
+            close_published_story {
+
+            }
+            start_level {
+                level_started : int
+            }
+            complete_level {
+                level_completed : int
+            }
+            start_endgame {
+                city_score : int
+                scenario : 1, 2, or 3
+            }
+
+        }
+
+    },
+
+    "features": {
+        "per_count": {
+        },
+        "aggregate":{
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}
