@@ -249,80 +249,80 @@
 		"perlevel": {
 			"EventCount": {
 				"enabled": false,
-				"description": "number of total events", "return_type":"Any"
+				"description": "number of total events", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"count_clicks": {
 				"enabled": false,
-				"description": "Number of clicks", "return_type":"Any"
+				"description": "Number of clicks", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"count_hovers": {
 				"enabled": false,
-				"description": "Number of hovers", "return_type":"Any"
+				"description": "Number of hovers", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"time_in_level": {
 				"enabled": false,
-				"description": "time_in_level", "return_type":"Any"
+				"description": "time_in_level", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"meaningful_action_count": {
 				"enabled": false,
-				"description": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations", "return_type":"Any"
+				"description": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"count_notebook_uses": {
 				"enabled": false,
-				"description": "number of times the player opened the notebook in the given level", "return_type":"Any"
+				"description": "number of times the player opened the notebook in the given level", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"avg_time_between_clicks": {
 				"enabled": false,
-				"description": "average time between clicks", "return_type":"Any"
+				"description": "average time between clicks", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"first_enc_words_read": {
 				"enabled": false,
-				"description": "sum words read in every first encounter", "return_type":"Any"
+				"description": "sum words read in every first encounter", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"first_enc_boxes_read": {
 				"enabled": false,
-				"description": "boxes read in every first encounter", "return_type":"Any"
+				"description": "boxes read in every first encounter", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"num_enc": {
 				"enabled": false,
-				"description": "number of encounters", "return_type":"Any"
+				"description": "number of encounters", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"first_enc_duration": {
 				"enabled": false,
-				"description": "duration of first encounters", "return_type":"Any"
+				"description": "duration of first encounters", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"first_enc_avg_wps": {
 				"enabled": false,
-				"description": "average words per second in each first encounter", "return_type":"Any"
+				"description": "average words per second in each first encounter", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"first_enc_var_wps": {
 				"enabled": false,
-				"description": "variance words per second in each first encounter", "return_type":"Any"
+				"description": "variance words per second in each first encounter", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"first_enc_avg_tbps": {
 				"enabled": false,
-				"description": "average text boxes per second in each first encounter", "return_type":"Any"
+				"description": "average text boxes per second in each first encounter", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"first_enc_var_tbps": {
 				"enabled": false,
-				"description": "variance text boxes per second in each first encounter", "return_type":"Any"
+				"description": "variance text boxes per second in each first encounter", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"time_idle": {
 				"enabled": false,
-				"description": "Amount of time in gameplay spent idle (time past IDLE_THRESH_SECONDS without clicks/hovers)", "return_type":"Any"
+				"description": "Amount of time in gameplay spent idle (time past IDLE_THRESH_SECONDS without clicks/hovers)", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"count_idle": {
 				"enabled": false,
-				"description": "Count going active > idle in game (time past IDLE_THRESH_SECONDS without clicks/hovers)", "return_type":"Any"
+				"description": "Count going active > idle in game (time past IDLE_THRESH_SECONDS without clicks/hovers)", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 
 			"time_active": {
 				"enabled": false,
-				"description": "Amount of time in gameplay spent actively playing (not going more than IDLE_THRESH_SECONDS without an clicks/hovers)", "return_type":"Any"
+				"description": "Amount of time in gameplay spent actively playing (not going more than IDLE_THRESH_SECONDS without an clicks/hovers)", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			},
 			"time_active_clicking": {
 				"enabled": false,
-				"description": "time spent acitvely clicking in the game", "return_type":"Any"
+				"description": "time spent acitvely clicking in the game", "return_type":"Any", "count":"level_range", "prefix":"lvl"
 			}
 		},
 		"per_count": {
