@@ -248,80 +248,80 @@
 		"perlevel": {
 			"EventCount": {
 				"enabled": false,
-				"description": "number of total events"
+				"description": "number of total events", "return_type":"Any"
 			},
 			"count_clicks": {
 				"enabled": false,
-				"description": "Number of clicks"
+				"description": "Number of clicks", "return_type":"Any"
 			},
 			"count_hovers": {
 				"enabled": false,
-				"description": "Number of hovers"
+				"description": "Number of hovers", "return_type":"Any"
 			},
 			"time_in_level": {
 				"enabled": false,
-				"description": "time_in_level"
+				"description": "time_in_level", "return_type":"Any"
 			},
 			"meaningful_action_count": {
 				"enabled": false,
-				"description": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations"
+				"description": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations", "return_type":"Any"
 			},
 			"count_notebook_uses": {
 				"enabled": false,
-				"description": "number of times the player opened the notebook in the given level"
+				"description": "number of times the player opened the notebook in the given level", "return_type":"Any"
 			},
 			"avg_time_between_clicks": {
 				"enabled": false,
-				"description": "average time between clicks"
+				"description": "average time between clicks", "return_type":"Any"
 			},
 			"first_enc_words_read": {
 				"enabled": false,
-				"description": "sum words read in every first encounter"
+				"description": "sum words read in every first encounter", "return_type":"Any"
 			},
 			"first_enc_boxes_read": {
 				"enabled": false,
-				"description": "boxes read in every first encounter"
+				"description": "boxes read in every first encounter", "return_type":"Any"
 			},
 			"num_enc": {
 				"enabled": false,
-				"description": "number of encounters"
+				"description": "number of encounters", "return_type":"Any"
 			},
 			"first_enc_duration": {
 				"enabled": false,
-				"description": "duration of first encounters"
+				"description": "duration of first encounters", "return_type":"Any"
 			},
 			"first_enc_avg_wps": {
 				"enabled": false,
-				"description": "average words per second in each first encounter"
+				"description": "average words per second in each first encounter", "return_type":"Any"
 			},
 			"first_enc_var_wps": {
 				"enabled": false,
-				"description": "variance words per second in each first encounter"
+				"description": "variance words per second in each first encounter", "return_type":"Any"
 			},
 			"first_enc_avg_tbps": {
 				"enabled": false,
-				"description": "average text boxes per second in each first encounter"
+				"description": "average text boxes per second in each first encounter", "return_type":"Any"
 			},
 			"first_enc_var_tbps": {
 				"enabled": false,
-				"description": "variance text boxes per second in each first encounter"
+				"description": "variance text boxes per second in each first encounter", "return_type":"Any"
 			},
 			"time_idle": {
 				"enabled": false,
-				"description": "Amount of time in gameplay spent idle (time past IDLE_THRESH_SECONDS without clicks/hovers)"
+				"description": "Amount of time in gameplay spent idle (time past IDLE_THRESH_SECONDS without clicks/hovers)", "return_type":"Any"
 			},
 			"count_idle": {
 				"enabled": false,
-				"description": "Count going active > idle in game (time past IDLE_THRESH_SECONDS without clicks/hovers)"
+				"description": "Count going active > idle in game (time past IDLE_THRESH_SECONDS without clicks/hovers)", "return_type":"Any"
 			},
 
 			"time_active": {
 				"enabled": false,
-				"description": "Amount of time in gameplay spent actively playing (not going more than IDLE_THRESH_SECONDS without an clicks/hovers)"
+				"description": "Amount of time in gameplay spent actively playing (not going more than IDLE_THRESH_SECONDS without an clicks/hovers)", "return_type":"Any"
 			},
 			"time_active_clicking": {
 				"enabled": false,
-				"description": "time spent acitvely clicking in the game"
+				"description": "time spent acitvely clicking in the game", "return_type":"Any"
 			}
 		},
 		"per_count": {
@@ -329,345 +329,345 @@
 				"enabled": false,
 				"count": 19,
 				"prefix": "Q",
-				"description": "number of wrong guesses for each assessment prompt"
+				"description": "number of wrong guesses for each assessment prompt", "return_type":"Any"
 			},
 			"answers": {
 				"enabled": false,
 				"count": 19,
 				"prefix": "Q",
-				"description": "list the different answers that the player chose, by id#"
+				"description": "list the different answers that the player chose, by id#", "return_type":"Any"
 			},
 			"A1": {
 				"enabled": false,
 				"count": 19,
 				"prefix": "Q",
-				"description": "first answer the player chose"
+				"description": "first answer the player chose", "return_type":"Any"
 			},
 			"A2": {
 				"enabled": false,
 				"count": 19,
 				"prefix": "Q",
-				"description": "second answer the player chose"
+				"description": "second answer the player chose", "return_type":"Any"
 			},
 			"A3": {
 				"enabled": false,
 				"count": 19,
 				"prefix": "Q",
-				"description": "third answer the player chose"
+				"description": "third answer the player chose", "return_type":"Any"
 			},
 			"A1_time": {
 				"enabled": false,
 				"count": 19,
 				"prefix": "Q",
-				"description": "time for the first answer the player chose"
+				"description": "time for the first answer the player chose", "return_type":"Any"
 			},
 			"A2_time": {
 				"enabled": false,
 				"count": 19,
 				"prefix": "Q",
-				"description": "time for the second answer the player chose"
+				"description": "time for the second answer the player chose", "return_type":"Any"
 			},
 			"A3_time": {
 				"enabled": false,
 				"count": 19,
 				"prefix": "Q",
-				"description": "time for the third answer the player chose"
+				"description": "time for the third answer the player chose", "return_type":"Any"
 			},
 			"quiz_response": {
 				"enabled": false,
 				"count": 3,
 				"prefix": "R",
-				"description": "player's quiz responses (only used in v6)"
+				"description": "player's quiz responses (only used in v6)", "return_type":"Any"
 			},
 			"sa_index": {
 				"enabled": false,
 				"count": 18,
 				"prefix": "SA",
-				"description": "Survey answer index for the given question"
+				"description": "Survey answer index for the given question", "return_type":"Any"
 			},
 			"sa_text": {
 				"enabled": false,
 				"count": 18,
 				"prefix": "SA",
-				"description": "Survey answer text for the given question"
+				"description": "Survey answer text for the given question", "return_type":"Any"
 			},
 			"sa_time": {
 				"enabled": false,
 				"count": 18,
 				"prefix": "SA",
-				"description": "Time to the initial survey answer for the given question"
+				"description": "Time to the initial survey answer for the given question", "return_type":"Any"
 			},
 			"sa_num_answers": {
 				"enabled": false,
 				"count": 18,
 				"prefix": "SA",
-				"description": "Players may select an answer multiple times or change answers. This counts the number of times the player answered a given question"
+				"description": "Players may select an answer multiple times or change answers. This counts the number of times the player answered a given question", "return_type":"Any"
 			},
 			"s_time": {
 				"enabled": false,
 				"count": 4,
 				"prefix": "S",
-				"description": "Time taken to answer a given survey"
+				"description": "Time taken to answer a given survey", "return_type":"Any"
 			},
 
 			"itime_to": {
 				"enabled": false,
 				"count": 189,
 				"prefix": "int",
-				"description": "first enc time"
+				"description": "first enc time", "return_type":"Any"
 			},
 			"inum_enc": {
 				"enabled": false,
 				"count": 189,
 				"prefix": "int",
-				"description": "num enc"
+				"description": "num enc", "return_type":"Any"
 			},
 			"ifirst_enc_duration": {
 				"enabled": false,
 				"count": 189,
 				"prefix": "int",
-				"description": "first enc duration"
+				"description": "first enc duration", "return_type":"Any"
 			},
 			"itotal_duration": {
 				"enabled": false,
 				"count": 189,
 				"prefix": "int",
-				"description": "total enc duration"
+				"description": "total enc duration", "return_type":"Any"
 			},
 			"ifirst_enc_boxes_read": {
 				"enabled": false,
 				"count": 189,
 				"prefix": "int",
-				"description": "num boxes"
+				"description": "num boxes", "return_type":"Any"
 			},
 			"ifirst_enc_words_read": {
 				"enabled": false,
 				"count": 189,
 				"prefix": "int",
-				"description": "num words"
+				"description": "num words", "return_type":"Any"
 			},
 			"ifirst_enc_avg_wps": {
 				"enabled": false,
 				"count": 189,
 				"prefix": "int",
-				"description": "first enc avg wps"
+				"description": "first enc avg wps", "return_type":"Any"
 			},
 			"ifirst_enc_avg_tbps": {
 				"enabled": false,
 				"count": 189,
 				"prefix": "int",
-				"description": "first enc avg tbps"
+				"description": "first enc avg tbps", "return_type":"Any"
 			},
 			"ifirst_enc_var_wps": {
 				"enabled": false,
 				"count": 189,
 				"prefix": "int",
-				"description": "first enc var wps"
+				"description": "first enc var wps", "return_type":"Any"
 			},
 			"ifirst_enc_var_tbps": {
 				"enabled": false,
 				"count": 189,
 				"prefix": "int",
-				"description": "first enc var tbps"
+				"description": "first enc var tbps", "return_type":"Any"
 			},
 			"onext_int": {
 				"enabled": false,
 				"count": 80,
 				"prefix": "obj",
-				"description": "next int"
+				"description": "next int", "return_type":"Any"
 			},
 			"onum_enc": {
 				"enabled": false,
 				"count": 80,
 				"prefix": "obj",
-				"description": "num ints to next obj"
+				"description": "num ints to next obj", "return_type":"Any"
 			},
 			"ocount_clicks": {
 				"enabled": false,
 				"count": 80,
 				"prefix": "obj",
-				"description": "num actions to next obj"
+				"description": "num actions to next obj", "return_type":"Any"
 			},
 			"omeaningful_action_count": {
 				"enabled": false,
 				"count": 80,
 				"prefix": "obj",
-				"description": "num meaningful actions to next obj"
+				"description": "num meaningful actions to next obj", "return_type":"Any"
 			},
 			"ocount_notebook_uses": {
 				"enabled": false,
 				"count": 80,
 				"prefix": "obj",
-				"description": "num ntbk opens to next obj"
+				"description": "num ntbk opens to next obj", "return_type":"Any"
 			},
 			"otime_to_next_obj": {
 				"enabled": false,
 				"count": 80,
 				"prefix": "obj",
-				"description": "num ntbk opens to next obj"
+				"description": "num ntbk opens to next obj", "return_type":"Any"
 			}
 		},
 		"aggregate": {
 			"sess_count_clicks": {
 				"enabled": false,
-				"description": "Number of clicks throughout the game"
+				"description": "Number of clicks throughout the game", "return_type":"Any"
 			},
 			"sess_count_hovers": {
 				"enabled": false,
-				"description": "Number of hovers throughout the game"
+				"description": "Number of hovers throughout the game", "return_type":"Any"
 			},
 			"sess_meaningful_action_count": {
 				"enabled": false,
-				"description": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations"
+				"description": "number of navigation clicks on items/objects/people/portholes + number of clicks on map locations", "return_type":"Any"
 			},
 			"sess_EventCount": {
 				"enabled": false,
-				"description": "count of all log events in the game"
+				"description": "count of all log events in the game", "return_type":"Any"
 			},
 			"sess_count_notebook_uses": {
 				"enabled": false,
-				"description": "number of times the player opened the notebook over the whole game"
+				"description": "number of times the player opened the notebook over the whole game", "return_type":"Any"
 			},
 			"sess_avg_time_between_clicks": {
 				"enabled": false,
-				"description": "average time between clicks"
+				"description": "average time between clicks", "return_type":"Any"
 			},
 			"sess_first_enc_words_read": {
 				"enabled": false,
-				"description": "sum words read in every first encounter"
+				"description": "sum words read in every first encounter", "return_type":"Any"
 			},
 			"sess_first_enc_boxes_read": {
 				"enabled": false,
-				"description": "boxes read in every first encounter"
+				"description": "boxes read in every first encounter", "return_type":"Any"
 			},
 			"sess_num_enc": {
 				"enabled": false,
-				"description": "number of encounters"
+				"description": "number of encounters", "return_type":"Any"
 			},
 			"sess_first_enc_duration": {
 				"enabled": false,
-				"description": "duration of first encounters"
+				"description": "duration of first encounters", "return_type":"Any"
 			},
 			"sess_first_enc_avg_wps": {
 				"enabled": false,
-				"description": "average words per second in each first encounter"
+				"description": "average words per second in each first encounter", "return_type":"Any"
 			},
 			"sess_first_enc_var_wps": {
 				"enabled": false,
-				"description": "variance words per second in each first encounter"
+				"description": "variance words per second in each first encounter", "return_type":"Any"
 			},
 			"sess_first_enc_avg_tbps": {
 				"enabled": false,
-				"description": "average text boxes per second in each first encounter"
+				"description": "average text boxes per second in each first encounter", "return_type":"Any"
 			},
 			"sess_first_enc_var_tbps": {
 				"enabled": false,
-				"description": "variance text boxes per second in each first encounter"
+				"description": "variance text boxes per second in each first encounter", "return_type":"Any"
 			},
 			"sess_start_obj": {
 				"enabled": false,
-				"description": "objective the player started with"
+				"description": "objective the player started with", "return_type":"Any"
 			},
 			"sess_end_obj": {
 				"enabled": false,
-				"description": "objective the player ended with"
+				"description": "objective the player ended with", "return_type":"Any"
 			},
 
 			"sess_time_idle": {
 				"enabled": false,
-				"description": "time spent idle in session (past IDLE_THRESH seconds without clicks/hovers)"
+				"description": "time spent idle in session (past IDLE_THRESH seconds without clicks/hovers)", "return_type":"Any"
 			},
 			"sess_count_idle": {
 				"enabled": false,
-				"description": "count going active to idle in session (past IDLE_THRESH seconds without clicks/hovers)"
+				"description": "count going active to idle in session (past IDLE_THRESH seconds without clicks/hovers)", "return_type":"Any"
 			},
 			"sess_time_active": {
 				"enabled": false,
-				"description": "time spent acitvely playing the game"
+				"description": "time spent acitvely playing the game", "return_type":"Any"
 			},
 			"sess_time_active_clicking": {
 				"enabled": false,
-				"description": "time spent acitvely clicking in the game"
+				"description": "time spent acitvely clicking in the game", "return_type":"Any"
 			},
 
 			"start_level": {
 				"enabled": false,
-				"description": "Level the player started at"
+				"description": "Level the player started at", "return_type":"Any"
 			},
 			"max_level": {
 				"enabled": false,
-				"description": "Highest level reached in the session"
+				"description": "Highest level reached in the session", "return_type":"Any"
 			},
 			"sessDuration": {
 				"enabled": false,
-				"description": "Length of the session"
+				"description": "Length of the session", "return_type":"Any"
 			},
 
 			"play_year": {
 				"enabled": false,
-				"description": "year started the game (UTC)"
+				"description": "year started the game (UTC)", "return_type":"Any"
 			},
 			"play_month": {
 				"enabled": false,
-				"description": "month started the game (UTC)"
+				"description": "month started the game (UTC)", "return_type":"Any"
 			},
 			"play_day": {
 				"enabled": false,
-				"description": "day started the game (UTC)"
+				"description": "day started the game (UTC)", "return_type":"Any"
 			},
 			"play_hour": {
 				"enabled": false,
-				"description": "hour started the game (UTC)"
+				"description": "hour started the game (UTC)", "return_type":"Any"
 			},
 			"play_minute": {
 				"enabled": false,
-				"description": "minute started the game (UTC)"
+				"description": "minute started the game (UTC)", "return_type":"Any"
 			},
 			"play_second": {
 				"enabled": false,
-				"description": "second started the game (UTC)"
+				"description": "second started the game (UTC)", "return_type":"Any"
 			},
 
 			"continue": {
 				"enabled": false,
-				"description": "1 if continuing a game, 0 otherwise"
+				"description": "1 if continuing a game, 0 otherwise", "return_type":"Any"
 			},
 			"save_code": {
 				"enabled": false,
-				"description": "the save code the user inputted (or 0 if NA)"
+				"description": "the save code the user inputted (or 0 if NA)", "return_type":"Any"
 			},
 			"music": {
 				"enabled": false,
-				"description": "boolean (1/0) whether or not the player turned music on"
+				"description": "boolean (1/0) whether or not the player turned music on", "return_type":"Any"
 			},
 			"hq": {
 				"enabled": false,
-				"description": "boolean (1/0) for whether or not the player turned hq graphics on"
+				"description": "boolean (1/0) for whether or not the player turned hq graphics on", "return_type":"Any"
 			},
 			"fullscreen": {
 				"enabled": false,
-				"description": "boolean (1/0) whether or not the player checked fullscreen"
+				"description": "boolean (1/0) whether or not the player checked fullscreen", "return_type":"Any"
 			},
 			"script_type": {
 				"enabled": false,
-				"description": "enum for script type (only used in v7+)"
+				"description": "enum for script type (only used in v7+)", "return_type":"Any"
 			},
 			"script_version": {
 				"enabled": false,
-				"description": "version of the script type (only used in v7+)"
+				"description": "version of the script type (only used in v7+)", "return_type":"Any"
 			},
 			"version": {
 				"enabled": false,
-				"description": "version of the game (database app_version)"
+				"description": "version of the game (database app_version)", "return_type":"Any"
 			},
 
 			"sessionID": {
 				"enabled": false,
-				"description": "The player's session ID number for this play session"
+				"description": "The player's session ID number for this play session", "return_type":"Any"
 			},
 			"persistentSessionID": {
 				"enabled": false,
-				"description": "The session ID for the player's device, persists across multiple players using the same device."
+				"description": "The session ID for the player's device, persists across multiple players using the same device.", "return_type":"Any"
 			}
 		}
 	},
