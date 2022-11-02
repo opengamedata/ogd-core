@@ -56,3 +56,7 @@ class SessionDuration(SessionFeature):
             return ["No events"]
 
     # *** Optionally override public functions. ***
+
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        return [ExtractionMode.PLAYER, ExtractionMode.SESSION]
