@@ -91,6 +91,7 @@ class CustomFeature(Feature):
     def Subfeatures(self) -> List[str]:
         return [] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
+    @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
         return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
     
