@@ -91,6 +91,9 @@ class CustomFeature(Feature):
     def Subfeatures(self) -> List[str]:
         return [] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
+    def AvailableModes() -> List[ExtractionMode]:
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
+    
     @staticmethod
     def MinVersion() -> Optional[str]:
         # >>> replace return statement below with a string defining the minimum logging version for events to be processed by this Feature. <<<
