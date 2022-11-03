@@ -82,8 +82,8 @@ class DataInterface(Interface):
             _fallbacks = {"app_id":self._game_id}
             ret_val = []
             for row in _rows:
-                next_event = self._table_schema.RowToEvent(row=row, fallbacks=_fallbacks)
                 try:
+                    next_event = self._table_schema.RowToEvent(row=row, fallbacks=_fallbacks)
                     # in case event index was not given, we should fall back on using the order it came to us.
                     if next_event.SessionID != _curr_sess:
                         _curr_sess = next_event.SessionID
