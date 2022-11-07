@@ -45,57 +45,7 @@ class JobActiveTime(PerJobFeature):
         #     return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self.ExtractionMode == ExtractionMode.POPULATION:
-            # pass
-            self._handle_user(event=event)
-        elif self.ExtractionMode == ExtractionMode.PLAYER:
-            self._player_id = event.UserID
-            self._handle_user(event=event)
-        elif self.ExtractionMode == ExtractionMode.SESSION:
-            self._handle_user(event=event)
-
-    def _extractFromFeatureData(self, feature:FeatureData):
-        return
-        # if self.ExtractionMode == ExtractionMode.PLAYER \
-        # or self.ExtractionMode == ExtractionMode.SESSION:
-        #     pass
-        # elif self.ExtractionMode == ExtractionMode.POPULATION:
-        #     self._handle_population(feature=feature)
-
-    def _getFeatureValues(self) -> List[Any]:
-        return [self._total_time.total_seconds()]
-
-    def _validateEventCountIndex(self, event:Event):
-        ret_val : bool = False
-
-        new_job = event.EventData["job_name"]['string_value']
-        if self._job_map.get(new_job, None) is not None:
-            if self._job_map.get(new_job, None) == self.CountIndex:
-                    ret_val = True
-            elif event.EventName == "switch_job":
-                # if we got switch job, and were switching away from this instance's job, we still want to process it.
-                old_job = event.EventData["prev_job_name"]["string_value"]
-                if self._job_map.get(old_job, None) == self.CountIndex:
-                    ret_val = True
-        else:
-            Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
-
-        return ret_val
-
-
-    # *** Optionally override public functions. ***
-
-    @staticmethod
-    def MinVersion() -> Optional[str]:
-        return "1"
-
-    @staticmethod
-    def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.PLAYER, ExtractionMode.POPULATION]
-
-    # *** PRIVATE METHODS ***
-
-    def _handle_user(self, event:Event) -> None:
+        self._player_id = event.UserID
         if event.SessionID != self._session_id:
             _old_sess = self._session_id
             self._session_id = event.SessionID
@@ -138,6 +88,47 @@ class JobActiveTime(PerJobFeature):
             Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than end event, with time {self._last_event_time}!", logging.WARN)
         else:
             self._last_event_time = event.timestamp
+
+    def _extractFromFeatureData(self, feature:FeatureData):
+        return
+        # if self.ExtractionMode == ExtractionMode.PLAYER \
+        # or self.ExtractionMode == ExtractionMode.SESSION:
+        #     pass
+        # elif self.ExtractionMode == ExtractionMode.POPULATION:
+        #     self._handle_population(feature=feature)
+
+    def _getFeatureValues(self) -> List[Any]:
+        return [self._total_time.total_seconds()]
+
+    def _validateEventCountIndex(self, event:Event):
+        ret_val : bool = False
+
+        new_job = event.EventData["job_name"]['string_value']
+        if self._job_map.get(new_job, None) is not None:
+            if self._job_map.get(new_job, None) == self.CountIndex:
+                    ret_val = True
+            elif event.EventName == "switch_job":
+                # if we got switch job, and were switching away from this instance's job, we still want to process it.
+                old_job = event.EventData["prev_job_name"]["string_value"]
+                if self._job_map.get(old_job, None) == self.CountIndex:
+                    ret_val = True
+        else:
+            Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
+
+        return ret_val
+
+
+    # *** Optionally override public functions. ***
+
+    @staticmethod
+    def MinVersion() -> Optional[str]:
+        return "1"
+
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        return [ExtractionMode.PLAYER]
+
+    # *** PRIVATE METHODS ***
 
     def _updateTotalTime(self):
         if self._last_start_time:
