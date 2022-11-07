@@ -13,7 +13,7 @@ from schemas.FeatureData import FeatureData
 class ActiveTime(Feature):
     IDLE_LEVEL = 30
 
-    def __init__(self, params:ExtractorParameters, job_map:dict, active_threads:float = None):
+    def __init__(self, params:ExtractorParameters, job_map:dict, active_threads:Optional[float] = None):
         self._job_map = job_map
         super().__init__(params=params)
         self._Idle_time: float = 0

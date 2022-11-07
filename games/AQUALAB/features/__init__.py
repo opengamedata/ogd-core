@@ -19,6 +19,7 @@ __all__ = [
     "JobHelpCount",
     "JobLocationChanges",
     "JobModelingTime",
+    "JobStartCount",
     "JobTasksCompleted",
     "JobsAttempted",
     "JobsCompleted",
@@ -62,6 +63,7 @@ from . import JobGuideCount
 from . import JobHelpCount
 from . import JobLocationChanges
 from . import JobModelingTime
+from . import JobStartCount
 from . import JobTasksCompleted
 from . import JobsAttempted
 from . import JobsCompleted

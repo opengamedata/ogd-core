@@ -145,6 +145,8 @@ class AqualabLoader(ExtractorLoader):
                 ret_val = JobLocationChanges.JobLocationChanges(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobModelingTime":
                 ret_val = JobModelingTime.JobModelingTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobStartCount":
+                ret_val = JobStartCount.JobStartCount(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobTasksCompleted":
                 ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobsAttempted":
