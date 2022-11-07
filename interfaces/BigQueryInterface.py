@@ -158,7 +158,7 @@ class BigQueryInterface(DataInterface):
                 CROSS JOIN UNNEST(event_params) AS param_session
                 CROSS JOIN UNNEST(event_params) AS param_user
                 {where_clause}
-                ORDER BY `session_id`, `timestamp` ASC
+                ORDER BY `fd_user_id`, `session_id`, `timestamp` ASC
             """
         return query
 
