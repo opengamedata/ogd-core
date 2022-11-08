@@ -1,0 +1,65 @@
+{
+    "level_range": { "min":1, "max":47 },
+
+    "events":{
+        headset_on : {
+
+        },
+        start : {
+        
+        },
+        language_selected : {
+            "language" : "str",
+            "seconds_from_launch" : "float"
+        },
+        scene_change : {
+            "scene_name" : "enum(ICE, VOYAGER, NOTHING, EXTREME, EARTH, CREDITS)",
+            "seconds_from_launch" : "float"
+        },
+        new_object_displayed : {
+            "has_the_indicator" : "bool",
+            "object" : "str",
+            "posX" : "float",
+            "posY" : "float",
+            "posZ" : "float",
+            "rotX" : "float",
+            "rotY" : "float",
+            "rotZ" : "float",
+            "rotW" : "float",
+            "seconds_from_launch" : "float"
+        }
+        object_assigned : {
+            "object" : "str",
+            "seconds_from_launch" : "float"
+        }
+        object_selected : {
+            "gaze_point_name" : "str",
+            "seconds_from_launch" : "float"
+        },
+        caption_displayed : {
+            "caption" : "str",
+            "seconds_from_launch" : "float"
+        },
+        script_audio_started : {
+            "caption" : "str",
+            "seconds_from_launch" : "float"
+        },
+        script_audio_complete : {
+            "seconds_from_launch" : "float"
+        },
+        failed : {
+            "seconds_from_launch" : "float"
+        }
+    },
+
+    "features": {
+        "per_count": {
+        },
+        "aggregate":{
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}
