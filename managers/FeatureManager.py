@@ -68,36 +68,39 @@ class FeatureManager:
         self._up_to_date = False
 
     def ProcessFeatureData(self) -> None:
-        if ExportMode.POPULATION in self._exp_types:
-            # 1. Get population 1st-order data
-            pop_data = self._population.GetFeatureData(order=1)
-            # 2. Distribute population 1st-order data
-            self._population.ProcessFeatureData(feature_list=pop_data)
-            for player in self._players.values():
-                player.ProcessFeatureData(feature_list=pop_data)
-            for session_list in self._sessions.values():
-                for session in session_list.values():
-                    session.ProcessFeatureData(feature_list=pop_data)
-        if ExportMode.PLAYER in self._exp_types:
-            # 3. For each player, get 1st-order data
-            for player_name,player in self._players.items():
-                play_data = player.GetFeatureData(order=1)
-                # 4. Distribute player 1st-order data
-                self._population.ProcessFeatureData(feature_list=play_data)
-                player.ProcessFeatureData(feature_list=play_data)
-                for session in self._sessions.get(player_name, {}).values():
-                    session.ProcessFeatureData(feature_list=play_data)
-        if ExportMode.SESSION in self._exp_types:
-            # 5. For each session, get 1st-order data
-            for session_list in self._sessions.values():
-                for session in session_list.values():
-                    sess_data = session.GetFeatureData(order=1)
-                    # 6. Distribute session 1st-order data
-                    self._population.ProcessFeatureData(feature_list=sess_data)
-                    player = self._players.get(session._playerID, None)
-                    if player is not None:
-                        player.ProcessFeatureData(feature_list=sess_data)
-                    session.ProcessFeatureData(feature_list=sess_data)
+        start = datetime.now()
+        Logger.Log(f"Processing Feature Data...", logging.INFO, depth=3)
+        # if ExportMode.POPULATION in self._exp_types:
+        # 1. Get population 1st-order data
+        pop_data = self._population.GetFeatureData(order=1)
+        # 2. Distribute population 1st-order data
+        self._population.ProcessFeatureData(feature_list=pop_data)
+        for player in self._players.values():
+            player.ProcessFeatureData(feature_list=pop_data)
+        for session_list in self._sessions.values():
+            for session in session_list.values():
+                session.ProcessFeatureData(feature_list=pop_data)
+        # if ExportMode.PLAYER in self._exp_types:
+        # 3. For each player, get 1st-order data
+        for player_name,player in self._players.items():
+            play_data = player.GetFeatureData(order=1)
+            # 4. Distribute player 1st-order data
+            self._population.ProcessFeatureData(feature_list=play_data)
+            player.ProcessFeatureData(feature_list=play_data)
+            for session in self._sessions.get(player_name, {}).values():
+                session.ProcessFeatureData(feature_list=play_data)
+        # if ExportMode.SESSION in self._exp_types:
+        # 5. For each session, get 1st-order data
+        for session_list in self._sessions.values():
+            for session in session_list.values():
+                sess_data = session.GetFeatureData(order=1)
+                # 6. Distribute session 1st-order data
+                self._population.ProcessFeatureData(feature_list=sess_data)
+                player = self._players.get(session._playerID, None)
+                if player is not None:
+                    player.ProcessFeatureData(feature_list=sess_data)
+                session.ProcessFeatureData(feature_list=sess_data)
+        Logger.Log(f"Time to process Feature Data: {datetime.now() - start}", logging.INFO, depth=3)
 
     def GetFeatureValues(self, as_str:bool = False) -> Dict[str, List[ExportRow]]:
         start = datetime.now()
