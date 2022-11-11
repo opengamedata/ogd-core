@@ -36,6 +36,8 @@ class PopulationProcessor(FeatureProcessor):
         :param pop_file: _description_, defaults to None
         :type pop_file: Optional[IO[str]], optional
         """
+        self._players  : Set[str] = set()
+        self._sessions : Set[str] = set()
         super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
 
     def __str__(self):
@@ -57,7 +59,7 @@ class PopulationProcessor(FeatureProcessor):
 
     def _getExtractorNames(self) -> List[str]:
         if isinstance(self._registry, FeatureRegistry):
-            return self._registry.GetExtractorNames()
+            return ["PlayerCount", "SessionCount"] + self._registry.GetExtractorNames()
         else:
             raise TypeError("PopulationProcessor's registry is not a FeatureRegistry!")
 
@@ -70,6 +72,9 @@ class PopulationProcessor(FeatureProcessor):
         :param event: An object with the data for the event to be processed.
         :type event: Event
         """
+        if event.UserID:
+            self._players.add(event.UserID)
+        self._sessions.add(event.SessionID)
         self._registry.ExtractFromEvent(event=event)
 
     def _getFeatureValues(self, as_str:bool=False) -> ExportRow:
