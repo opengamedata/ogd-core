@@ -80,9 +80,9 @@ class PopulationProcessor(FeatureProcessor):
     def _getFeatureValues(self, as_str:bool=False) -> ExportRow:
         ret_val : ExportRow
         if as_str:
-            ret_val = self._registry.GetFeatureStringValues()
+            ret_val = [str(len(self._players)), str(len(self._sessions))] + self._registry.GetFeatureStringValues()
         else:
-            ret_val = self._registry.GetFeatureValues()
+            ret_val = [len(self._players), len(self._sessions)] + self._registry.GetFeatureValues()
         return ret_val
 
     def _getFeatureData(self, order:int) -> List[FeatureData]:
