@@ -89,20 +89,20 @@ class JobsAttempted(Feature):
                 and feature.ExportMode == ExtractionMode.SESSION:
                     # session should only have one time, namely the time for the session.
                     self._times = [_active_time]
-                    print(f"JobsAttempted got session-session for player {self._player_id}")
+                    # print(f"JobsAttempted got session-session for player {self._player_id}")
                 elif self.ExtractionMode == ExtractionMode.PLAYER \
                 and feature.ExportMode   == ExtractionMode.PLAYER:
                     # player should only have one time, namely the time for the player.
                     self._times = [_active_time]
-                    print(f"JobsAttempted got player-player for player {self._player_id}")
+                    # print(f"JobsAttempted got player-player for player {self._player_id}")
                 elif self.ExtractionMode == ExtractionMode.POPULATION \
                 and feature.ExportMode   == ExtractionMode.PLAYER:
                     # population could have many times. Only add to list if they actually spent time there, though.
                     if _active_time > 0:
                         self._times.append(_active_time)
-                    print(f"JobsAttempted got population-player for player {self._player_id}")
-                else:
-                    print(f"JobsAttempted got a {self.ExtractionMode.name}-{feature.ExportMode} matching, not helpful.")
+                    # print(f"JobsAttempted got population-player for player {self._player_id}")
+                # else:
+                    # print(f"JobsAttempted got a {self.ExtractionMode.name}-{feature.ExportMode.name} matching, not helpful.")
         else:
             print(f"JobsAttempted got a feature of wrong type: {feature.FeatureType}")
 
