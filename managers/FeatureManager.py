@@ -42,28 +42,29 @@ class FeatureManager:
     # TODO: make this function take list of events, and do the loop over events as low in the hierarchy as possible, which technically should be faster.
     def ProcessEvent(self, event:Event) -> None:
         # 1. process at population level.
-        if ExportMode.POPULATION in self._exp_types:
-            self._population.ProcessEvent(event=event)
+        # NOTE: commented out the skipping of unrequested modes because second-order features may need feats at levels not requested for final export.
+        # if ExportMode.POPULATION in self._exp_types:
+        self._population.ProcessEvent(event=event)
         # 2. process at player level, adding player if needed.
         _player_id = event.UserID or "null"
-        if ExportMode.PLAYER in self._exp_types:
-            if _player_id not in self._players.keys():
-                self._players[_player_id] = PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
-                                                            player_id=_player_id,          feature_overrides=self._overrides)
-            if _player_id not in self._sessions.keys():
-                self._sessions[_player_id] = {}
-                self._used_null_sess[_player_id] = False
-            self._players[_player_id].ProcessEvent(event=event)
-            if _player_id == "null":
-                self._used_null_play = True
+        # if ExportMode.PLAYER in self._exp_types:
+        if _player_id not in self._players.keys():
+            self._players[_player_id] = PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+                                                        player_id=_player_id,          feature_overrides=self._overrides)
+        if _player_id not in self._sessions.keys():
+            self._sessions[_player_id] = {}
+            self._used_null_sess[_player_id] = False
+        self._players[_player_id].ProcessEvent(event=event)
+        if _player_id == "null":
+            self._used_null_play = True
         # 3. process at session level, adding session if needed.
-        if ExportMode.SESSION in self._exp_types:
-            if event.SessionID not in self._sessions[_player_id].keys():
-                self._sessions[_player_id][event.SessionID] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
-                                                                    player_id=_player_id,          session_id=event.SessionID,    feature_overrides=self._overrides)
-            self._sessions[_player_id][event.SessionID].ProcessEvent(event=event)
-            if event.SessionID == None or event.SessionID.upper() == "NULL":
-                self._used_null_sess[_player_id] = True
+        # if ExportMode.SESSION in self._exp_types:
+        if event.SessionID not in self._sessions[_player_id].keys():
+            self._sessions[_player_id][event.SessionID] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+                                                                player_id=_player_id,          session_id=event.SessionID,    feature_overrides=self._overrides)
+        self._sessions[_player_id][event.SessionID].ProcessEvent(event=event)
+        if event.SessionID == None or event.SessionID.upper() == "NULL":
+            self._used_null_sess[_player_id] = True
         self._up_to_date = False
 
     def ProcessFeatureData(self) -> None:
