@@ -15,9 +15,6 @@ from schemas.FeatureData import FeatureData
 class JobsAttempted(Feature):
 
     def __init__(self, params:ExtractorParameters, job_map:dict, diff_map: dict):
-        self._pop_call_count = 0
-        self._pla_call_count = 0
-        self._ses_call_count = 0
         self._player_id = None
 
         self._job_map = job_map
@@ -85,29 +82,29 @@ class JobsAttempted(Feature):
         # self._prev_timestamp = event.Timestamp
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        if feature.ExportMode == ExtractionMode.POPULATION:
-            self._pop_call_count += 1
-        if feature.ExportMode == ExtractionMode.PLAYER:
-            self._pla_call_count += 1
-        if feature.ExportMode == ExtractionMode.SESSION:
-            self._ses_call_count += 1
-
         if feature.FeatureType == "JobActiveTime":
             if feature.CountIndex == self.CountIndex:
                 _active_time = feature.FeatureValues[0]
                 if self.ExtractionMode == ExtractionMode.SESSION \
-            and feature.ExportMode == ExtractionMode.SESSION:
+                and feature.ExportMode == ExtractionMode.SESSION:
                     # session should only have one time, namely the time for the session.
                     self._times = [_active_time]
+                    print(f"JobsAttempted got session-session for player {self._player_id}")
                 elif self.ExtractionMode == ExtractionMode.PLAYER \
-                and feature.ExportMode == ExtractionMode.PLAYER:
+                and feature.ExportMode   == ExtractionMode.PLAYER:
                     # player should only have one time, namely the time for the player.
                     self._times = [_active_time]
+                    print(f"JobsAttempted got player-player for player {self._player_id}")
                 elif self.ExtractionMode == ExtractionMode.POPULATION \
-                and feature.ExportMode == ExtractionMode.PLAYER:
+                and feature.ExportMode   == ExtractionMode.PLAYER:
                     # population could have many times. Only add to list if they actually spent time there, though.
                     if _active_time > 0:
                         self._times.append(_active_time)
+                    print(f"JobsAttempted got population-player for player {self._player_id}")
+                else:
+                    print(f"JobsAttempted got a {self.ExtractionMode.name}-{feature.ExportMode} matching, not helpful.")
+        else:
+            print(f"JobsAttempted got a feature of wrong type: {feature.FeatureType}")
 
     def _getFeatureValues(self) -> List[Any]:
         if self._num_starts > 0:
