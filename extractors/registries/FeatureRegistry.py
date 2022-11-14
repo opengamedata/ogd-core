@@ -205,7 +205,9 @@ class FeatureRegistry(ExtractorRegistry):
         for listener in listeners:
             for order_key in range(len(self._features)):
                 if listener.name in self._features[order_key].keys():
-                    self._features[order_key][listener.name].ExtractFromFeatureData(feature)
+                    _extractor = self._features[order_key][listener.name]
+                    if feature.ExportMode in _extractor.FeatureDependencyModes():
+                        self._features[order_key][listener.name].ExtractFromFeatureData(feature)
 
 
     # *** PUBLIC STATICS ***

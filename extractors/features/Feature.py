@@ -58,6 +58,16 @@ class Feature(Extractor):
         """
         return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION]
 
+    @staticmethod
+    def FeatureDependencyModes() -> List[ExtractionMode]:
+        """List of ExtractionModes .
+
+        Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION]
+
     # *** PUBLIC METHODS ***
 
     def ToFeatureData(self, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureData:
