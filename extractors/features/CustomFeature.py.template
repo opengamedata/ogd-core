@@ -32,7 +32,7 @@ class CustomFeature(Feature):
         return [] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
