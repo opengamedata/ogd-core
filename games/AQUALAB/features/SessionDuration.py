@@ -59,4 +59,4 @@ class SessionDuration(SessionFeature):
 
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.PLAYER, ExtractionMode.SESSION]
+        return [ExtractionMode.SESSION]
