@@ -56,6 +56,12 @@
         "per_count": {
         },
         "aggregate":{
+            "ScenesEncountered": {
+                "enabled": true,
+                "type": "ScenesEncountered",
+                "description": "The set of all scenes the player encountered.",
+                "return_type": "List[str]"
+            },
         }
     },
 
