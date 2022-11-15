@@ -14,8 +14,8 @@ class CustomFeature(Feature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, name:str, description:str, job_map:dict):
-        super().__init__(name=name, description=description, count_index=0)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         # >>> create/initialize any variables to track feature extractor state <<<
         #
         # e.g. To track whether extractor found a click event yet:
