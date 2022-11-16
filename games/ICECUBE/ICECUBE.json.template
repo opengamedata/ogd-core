@@ -1,22 +1,22 @@
 {
-    "level_range": { "min":1, "max":47 },
+    "level_range": { "min":1, "max":6 },
 
     "events":{
-        headset_on : {
+        "headset_on" : {
 
         },
-        start : {
-        
+        "start" : {
+            "seconds_from_launch" : "float"
         },
-        language_selected : {
+        "language_selected" : {
             "language" : "str",
             "seconds_from_launch" : "float"
         },
-        scene_change : {
+        "scene_change" : {
             "scene_name" : "enum(ICE, VOYAGER, NOTHING, EXTREME, EARTH, CREDITS)",
             "seconds_from_launch" : "float"
         },
-        new_object_displayed : {
+        "new_object_displayed" : {
             "has_the_indicator" : "bool",
             "object" : "str",
             "posX" : "float",
@@ -27,27 +27,27 @@
             "rotZ" : "float",
             "rotW" : "float",
             "seconds_from_launch" : "float"
-        }
-        object_assigned : {
+        },
+        "object_assigned" : {
             "object" : "str",
             "seconds_from_launch" : "float"
-        }
-        object_selected : {
+        },
+        "object_selected" : {
             "gaze_point_name" : "str",
             "seconds_from_launch" : "float"
         },
-        caption_displayed : {
+        "caption_displayed" : {
             "caption" : "str",
             "seconds_from_launch" : "float"
         },
-        script_audio_started : {
+        "script_audio_started" : {
             "caption" : "str",
             "seconds_from_launch" : "float"
         },
-        script_audio_complete : {
+        "script_audio_complete" : {
             "seconds_from_launch" : "float"
         },
-        failed : {
+        "failed" : {
             "seconds_from_launch" : "float"
         }
     },
@@ -61,7 +61,7 @@
                 "type": "ScenesEncountered",
                 "description": "The set of all scenes the player encountered.",
                 "return_type": "List[str]"
-            },
+            }
         }
     },
 
