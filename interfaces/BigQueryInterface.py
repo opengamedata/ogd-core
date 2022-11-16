@@ -61,6 +61,7 @@ class BigQueryInterface(DataInterface):
             UNNEST(event_params) AS param
             WHERE param.key = "ga_session_id"
         """
+        Logger.Log(f"Running query for all ids:\n{query}", logging.DEBUG, depth=3)
         data = self._client.query(query)
         ids = [str(row['session_id']) for row in data]
         return ids if ids != None else []
@@ -77,6 +78,7 @@ class BigQueryInterface(DataInterface):
             SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
             FROM datetable
         """
+        Logger.Log(f"Running query for full date range:\n{query}", logging.DEBUG, depth=3)
         data = list(self._client.query(query))
         return {'min':data[0][0], 'max':data[0][1]}
 
@@ -85,6 +87,7 @@ class BigQueryInterface(DataInterface):
         events = None
         if self._client != None:
             query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode)
+            Logger.Log(f"Running query for rows from IDs:\n{query}", logging.DEBUG, depth=3)
             data = self._client.query(query)
             events = []
             for row in data:
@@ -211,6 +214,7 @@ class BigQueryInterface(DataInterface):
             UNNEST(event_params) AS param
             {where_clause}
         """
+        Logger.Log(f"Running query for dates from IDs:\n{query}", logging.DEBUG, depth=3)
         data = list(self._client.query(query))
         ret_val : Dict[str, datetime] = {}
         if len(data) == 1:
