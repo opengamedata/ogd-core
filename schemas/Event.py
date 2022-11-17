@@ -15,8 +15,8 @@ class EventSource(IntEnum):
 class Event:
     def __init__(self, session_id:str, app_id:str,     timestamp:datetime,
                  event_name:str, event_data:utils.map, event_source:EventSource,
-                 app_version:Optional[str] = None,     log_version:Optional[str] = None,
-                 time_offset:Optional[timedelta] = None,
+                 app_version:Optional[str] = None,     app_branch:Optional[str] = None,
+                 log_version:Optional[str] = None,     time_offset:Optional[timedelta] = None,
                  user_id:Optional[str] = "",           user_data:Optional[utils.map] = {},
                  game_state:Optional[utils.map] = {},  event_sequence_index:Optional[int] = None):
         """Constructor for an Event object.
@@ -54,6 +54,7 @@ class Event:
         self.event_data           : utils.map     = event_data
         self.event_source         : EventSource   = event_source
         self.app_version          : str           = app_version if app_version is not None else "0"
+        self.app_branch           : str           = app_branch  if app_branch  is not None else "main"
         self.log_version          : str           = log_version if log_version is not None else "0"
         self.time_offset          : Optional[timedelta] = time_offset
         self.user_id              : Optional[str] = user_id
@@ -69,6 +70,7 @@ class Event:
              + f"event_data   : {self.event_data}\n"\
              + f"event_source : {self.event_source.name}\n"\
              + f"app_version  : {self.app_version}\n"\
+             + f"app_branch   : {self.app_branch}\n"\
              + f"log_version  : {self.log_version}\n"\
              + f"offset       : {self.time_offset}\n"\
              + f"user_id      : {self.user_id}\n"\
@@ -122,16 +124,16 @@ class Event:
 
     @staticmethod
     def ColumnNames() -> List[str]:
-        return ["session_id", "app_id",       "timestamp",   "event_name",
-                "event_data", "event_source", "app_version", "log_version",
-                "offset",     "user_id",      "user_data",   "game_state",
-                "index"]
+        return ["session_id",  "app_id",       "timestamp",   "event_name",
+                "event_data",  "event_source", "app_version", "app_branch",
+                "log_version", "offset",        "user_id",    "user_data",
+                "game_state",  "index"]
 
     def ColumnValues(self) -> List[Union[str, datetime, timedelta, utils.map, int, None]]:
         return [self.session_id,  self.app_id,             self.timestamp,   self.event_name,
-                self.event_data,  self.event_source.name,  self.app_version, self.log_version,
-                self.time_offset, self.user_id,            self.user_data,   self.game_state,
-                self.event_sequence_index]
+                self.event_data,  self.event_source.name,  self.app_version, self.app_branch,
+                self.log_version, self.time_offset,        self.user_id,     self.user_data,
+                self.game_state,  self.event_sequence_index]
 
     @property
     def SessionID(self) -> str:
@@ -160,6 +162,10 @@ class Event:
     @property
     def AppVersion(self) -> str:
         return self.app_version
+
+    @property
+    def AppBranch(self) -> str:
+        return self.app_branch
 
     @property
     def LogVersion(self) -> str:

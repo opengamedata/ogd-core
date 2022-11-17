@@ -15,6 +15,7 @@ class ColumnMapSchema:
             "event_data"           : None,
             "event_source"         : None,
             "app_version"          : None,
+            "app_branch"           : None,
             "log_version"          : None,
             "time_offset"          : None,
             "user_id"              : None,
@@ -70,6 +71,10 @@ class ColumnMapSchema:
     @property
     def AppVersion(self) -> Union[int, List[int], None]:
         return self._map['app_version']
+
+    @property
+    def AppBranch(self) -> Union[int, List[int], None]:
+        return self._map['app_branch']
 
     @property
     def LogVersion(self) -> Union[int, List[int], None]:

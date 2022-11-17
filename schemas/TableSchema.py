@@ -124,6 +124,7 @@ class TableSchema:
         ename   : str
         edata   : Map
         app_ver : str
+        app_br  : str
         log_ver : str
         offset  : Optional[timedelta]
         uid     : Optional[str]
@@ -187,6 +188,13 @@ class TableSchema:
                 TableSchema._conversion_warnings.append("app_ver")
             app_ver = str(app_ver)
 
+        app_br = self._getValueFromRow(row=row, indices=self._column_map.AppBranch,  concatenator=concatenator, fallback=fallbacks.get('app_branch'))
+        if not isinstance(app_br, str):
+            if "app_br" not in TableSchema._conversion_warnings:
+                Logger.Log(f"{self._table_format_name} table schema set app_branch as {type(app_br)}, but app_branch should be a string", logging.WARN)
+                TableSchema._conversion_warnings.append("app_br")
+            app_br = str(app_br)
+
         log_ver = self._getValueFromRow(row=row, indices=self._column_map.LogVersion,  concatenator=concatenator, fallback=fallbacks.get('log_version'))
         if not isinstance(log_ver, str):
             if "log_ver" not in TableSchema._conversion_warnings:
@@ -230,7 +238,7 @@ class TableSchema:
 
         return Event(session_id=sess_id, app_id=app_id, timestamp=time,
                      event_name=ename, event_data=edata, event_source=esrc,
-                     app_version=app_ver, log_version=log_ver,
+                     app_version=app_ver, app_branch=app_br, log_version=log_ver,
                      time_offset=offset, user_id=uid, user_data=udata,
                      game_state=state, event_sequence_index=index)
 
