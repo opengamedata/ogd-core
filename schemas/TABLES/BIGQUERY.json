@@ -7,6 +7,7 @@
         "event_data"           : "event_params",
         "event_source"         : null,
         "app_version"          : "app_version",
+        "app_branch"           : null,
         "log_version"          : "log_version",
         "time_offset"          : null,
         "user_id"              : "fd_user_id",

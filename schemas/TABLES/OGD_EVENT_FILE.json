@@ -7,6 +7,7 @@
         "event_data"           : "event_data",
         "event_source"         : "event_source",
         "app_version"          : "app_version",
+        "app_branch"           : "app_version",
         "log_version"          : "log_version",
         "time_offset"          : "offset",
         "user_id"              : "user_id",
@@ -56,6 +57,12 @@
             "name": "app_version",
             "readable": "App Version",
             "description": "The version of the game from which the event came",
+            "type": "int"
+        },
+        {
+            "name": "app_branch",
+            "readable": "App Branch",
+            "description": "The branch of the game from which the event came",
             "type": "int"
         },
         {

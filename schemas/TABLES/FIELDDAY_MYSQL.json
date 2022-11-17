@@ -7,6 +7,7 @@
         "event_data"           : ["event_data_complex", "server_time", "level", "persistent_session_id", "remote_addr", "http_user_agent"],
         "event_source"         : null,
         "app_version"          : null,
+        "app_branch"           : null,
         "log_version"          : "app_version",
         "time_offset"          : null,
         "user_id"              : "player_id",
