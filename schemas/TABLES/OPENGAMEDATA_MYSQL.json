@@ -1,7 +1,7 @@
 {
     "column_map": {
         "session_id"           : "session_id",
-        "app_id"               : "app_id",
+        "app_id"               : null,
         "timestamp"            : ["client_time", "client_time_ms"],
         "event_name"           : ["event_name"],
         "event_data"           : ["event_data", "server_time", "remote_addr", "http_user_agent"],
