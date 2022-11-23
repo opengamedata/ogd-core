@@ -18,6 +18,7 @@ from config.config import settings as default_settings
 from extractors.ExtractorLoader import ExtractorLoader
 from games.AQUALAB.AqualabLoader import AqualabLoader
 from games.CRYSTAL.CrystalLoader import CrystalLoader
+from games.ICECUBE.IcecubeLoader import IcecubeLoader
 from games.JOWILDER.JowilderLoader import JowilderLoader
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from games.MAGNET.MagnetLoader import MagnetLoader
@@ -139,6 +140,8 @@ class ExportManager:
             _loader_class = AqualabLoader
         elif game_id == "CRYSTAL":
             _loader_class = CrystalLoader
+        elif game_id == "ICECUBE":
+            _loader_class = IcecubeLoader
         elif game_id == "JOWILDER":
             _loader_class = JowilderLoader
         elif game_id == "LAKELAND":
