@@ -267,17 +267,134 @@ class TableSchema:
             ""])
         return ret_val
 
-    def _getValueFromRow(self, row:Tuple, indices:Union[int, List[int], None], concatenator:str, fallback:Any) -> Any:
-        ret_val : Any
-        if indices is not None:
-            if isinstance(indices, int):
-                # if there's a single index, use parse to get the value it is stated to be
-                ret_val = TableSchema._parse(input=row[indices], col_schema=self.Columns[indices])
-            elif isinstance(indices, list):
-                ret_val = concatenator.join([str(row[index]) for index in indices])
-        else:
-            ret_val = fallback
+    @property
+    def SessionIDColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.SessionID, int):
+            ret_val = self.ColumnNames[self._column_map.SessionID]
+        elif isinstance(self._column_map.SessionID, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.SessionID])
         return ret_val
+
+    @property
+    def AppIDColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.AppID, int):
+            ret_val = self.ColumnNames[self._column_map.AppID]
+        elif isinstance(self._column_map.AppID, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.AppID])
+        return ret_val
+
+    @property
+    def TimestampColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.Timestamp, int):
+            ret_val = self.ColumnNames[self._column_map.Timestamp]
+        elif isinstance(self._column_map.Timestamp, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.Timestamp])
+        return ret_val
+
+    @property
+    def EventNameColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.EventName, int):
+            ret_val = self.ColumnNames[self._column_map.EventName]
+        elif isinstance(self._column_map.EventName, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.EventName])
+        return ret_val
+
+    @property
+    def EventDataColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.EventData, int):
+            ret_val = self.ColumnNames[self._column_map.EventData]
+        elif isinstance(self._column_map.EventData, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.EventData])
+        return ret_val
+
+    @property
+    def EventSourceColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.EventSource, int):
+            ret_val = self.ColumnNames[self._column_map.EventSource]
+        elif isinstance(self._column_map.EventSource, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.EventSource])
+        return ret_val
+
+    @property
+    def AppVersionColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.AppVersion, int):
+            ret_val = self.ColumnNames[self._column_map.AppVersion]
+        elif isinstance(self._column_map.AppVersion, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.AppVersion])
+        return ret_val
+
+    @property
+    def AppBranchColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.AppBranch, int):
+            ret_val = self.ColumnNames[self._column_map.AppBranch]
+        elif isinstance(self._column_map.AppBranch, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.AppBranch])
+        return ret_val
+
+    @property
+    def LogVersionColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.LogVersion, int):
+            ret_val = self.ColumnNames[self._column_map.LogVersion]
+        elif isinstance(self._column_map.LogVersion, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.LogVersion])
+        return ret_val
+
+    @property
+    def TimeOffsetColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.TimeOffset, int):
+            ret_val = self.ColumnNames[self._column_map.TimeOffset]
+        elif isinstance(self._column_map.TimeOffset, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.TimeOffset])
+        return ret_val
+
+    @property
+    def UserIDColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.UserID, int):
+            ret_val = self.ColumnNames[self._column_map.UserID]
+        elif isinstance(self._column_map.UserID, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.UserID])
+        return ret_val
+
+    @property
+    def UserDataColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.UserData, int):
+            ret_val = self.ColumnNames[self._column_map.UserData]
+        elif isinstance(self._column_map.UserData, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.UserData])
+        return ret_val
+
+    @property
+    def GameStateColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.GameState, int):
+            ret_val = self.ColumnNames[self._column_map.GameState]
+        elif isinstance(self._column_map.GameState, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.GameState])
+        return ret_val
+
+    @property
+    def EventSequenceIndexColumn(self) -> Optional[str]:
+        ret_val = None
+        if isinstance(self._column_map.EventSequenceIndex, int):
+            ret_val = self.ColumnNames[self._column_map.EventSequenceIndex]
+        elif isinstance(self._column_map.EventSequenceIndex, list):
+            ret_val = ", ".join([self.ColumnNames[idx] for idx in self._column_map.EventSequenceIndex])
+        return ret_val
+
+
+    # *** PRIVATE STATICS ***
 
     @staticmethod
     def _parse(input:str, col_schema:ColumnSchema) -> Any:
@@ -314,27 +431,18 @@ class TableSchema:
         elif col_schema.ValueType.startswith('enum'):
             # if the column is supposed to be an enum, for now we just stick with the string.
             return str(input)
+
+    # *** PRIVATE METHODS ***
+
+    def _getValueFromRow(self, row:Tuple, indices:Union[int, List[int], None], concatenator:str, fallback:Any) -> Any:
+        ret_val : Any
+        if indices is not None:
+            if isinstance(indices, int):
+                # if there's a single index, use parse to get the value it is stated to be
+                ret_val = TableSchema._parse(input=row[indices], col_schema=self.Columns[indices])
+            elif isinstance(indices, list):
+                ret_val = concatenator.join([str(row[index]) for index in indices])
+        else:
+            ret_val = fallback
+        return ret_val
     
-
-    # # parse out complex data from json
-    # col = event[game_table.complex_data_index]
-    # try:
-    #     # complex_data_parsed = json.loads(col.replace("'", "\"")) if (col is not None) else {"event_custom":row[game_table.event_index]}
-    #     complex_data_parsed = json.loads(col) if (col is not None) else {"event_custom":event[game_table.event_index]}
-    # except Exception as err:
-    #     msg = f"When trying to parse {col}, get error\n{type(err)} {str(err)}"
-    #     Logger.Log(msg, logging.ERROR)
-    #     raise err
-
-    # # make sure we get *something* in the event_custom name
-    # # TODO: Make a better solution for games without event_custom fields in the logs themselves
-    # if self._game_id == 'LAKELAND' or self._game_id == 'JOWILDER':
-    #     if type(complex_data_parsed) is not type({}):
-    #         complex_data_parsed = {"item": complex_data_parsed}
-    #     complex_data_parsed["event_custom"] = event[game_table.event_custom_index]
-    # elif "event_custom" not in complex_data_parsed.keys():
-    #     complex_data_parsed["event_custom"] = event[game_table.event_index]
-    # # replace the json with parsed version.
-    # m_row = list(event)
-    # m_row[game_table.complex_data_index] = complex_data_parsed
-    # event = tuple(m_row)
