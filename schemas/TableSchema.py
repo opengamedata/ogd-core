@@ -144,7 +144,7 @@ class TableSchema:
                 TableSchema._conversion_warnings.append("esrc")
             esrc = EventSource.GENERATED if esrc == "GENERATED" else EventSource.GAME
 
-        app_ver = self._getValueFromRow(row=row, indices=self._column_map.AppVersion,  concatenator=concatenator, fallback=fallbacks.get('app_version'))
+        app_ver = self._getValueFromRow(row=row, indices=self._column_map.AppVersion,  concatenator=concatenator, fallback=fallbacks.get('app_version', "0"))
         if not isinstance(app_ver, str):
             if "app_ver" not in TableSchema._conversion_warnings:
                 Logger.Log(f"{self._table_format_name} table schema set app_version as {type(app_ver)}, but app_version should be a string", logging.WARN)
@@ -158,15 +158,14 @@ class TableSchema:
                 TableSchema._conversion_warnings.append("app_br")
             app_br = str(app_br)
 
-        log_ver = self._getValueFromRow(row=row, indices=self._column_map.LogVersion,  concatenator=concatenator, fallback=fallbacks.get('log_version'))
+        log_ver = self._getValueFromRow(row=row, indices=self._column_map.LogVersion,  concatenator=concatenator, fallback=fallbacks.get('log_version', "0"))
         if not isinstance(log_ver, str):
             if "log_ver" not in TableSchema._conversion_warnings:
                 Logger.Log(f"{self._table_format_name} table schema set log_version as {type(log_ver)}, but log_version should be a string", logging.WARN)
                 TableSchema._conversion_warnings.append("log_ver")
             log_ver = str(log_ver)
 
-        _offset = self._getValueFromRow(row=row, indices=self._column_map.TimeOffset,  concatenator=concatenator, fallback=fallbacks.get('time_offset'))
-        offset  = TableSchema.ConvertTimedelta(_offset) if _offset is not None else None
+        offset = self._getValueFromRow(row=row, indices=self._column_map.TimeOffset,  concatenator=concatenator, fallback=fallbacks.get('time_offset'))
 
         uid     = self._getValueFromRow(row=row, indices=self._column_map.UserID,      concatenator=concatenator, fallback=fallbacks.get('user_id'))
         if uid is not None and not isinstance(uid, str):
@@ -368,9 +367,11 @@ class TableSchema:
         elif col_schema.ValueType == 'float':
             return float(input)
         elif col_schema.ValueType == 'datetime':
-            return str(input)
+            return input if isinstance(input, datetime) else TableSchema._convertDateTime(str(input))
+        elif col_schema.ValueType == 'timedelta':
+            return input if isinstance(input, timedelta) else TableSchema._convertTimedelta(str(input))
         elif col_schema.ValueType == 'json':
-            if input != 'None': # watch out for nasty corner case.
+            if input != 'None' and input != '': # watch out for nasty corner cases.
                 try:
                     return json.loads(str(input))
                 except JSONDecodeError as err:
