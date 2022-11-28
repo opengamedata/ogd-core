@@ -63,43 +63,6 @@ class TableSchema:
             _table_name = default_settings["GAME_SOURCE_MAP"].get(game_id, {}).get("schema", "NO SCHEMA DEFINED")
         return TableSchema(schema_name=f"{_table_name}.json")
 
-    @staticmethod
-    def ConvertDateTime(time_str) -> datetime:
-        ret_val : datetime
-
-        formats = ["%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M:%S.%f"]
-
-        for fmt in formats:
-            try:
-                ret_val = datetime.strptime(time_str, fmt)
-            except ValueError as err:
-                pass
-            else:
-                return ret_val
-        raise ValueError(f"Could not parse timestamp {time_str}, it did not match any expected formats.")
-
-    @staticmethod
-    def ConvertTimedelta(time_str:str) -> Optional[timedelta]:
-        ret_val : Optional[timedelta]
-
-        if time_str == "None" or time_str == "none" or time_str == "null":
-            return None
-        else:
-            try:
-                pieces = time_str.split(':')
-                seconds_pieces = pieces[2].split('.')
-                ret_val = timedelta(hours=int(pieces[0]),
-                                    minutes=int(pieces[1]),
-                                    seconds=int(seconds_pieces[0]),
-                                    milliseconds=int(seconds_pieces[1]) if len(seconds_pieces) > 1 else 0)
-            except ValueError as err:
-                pass
-            except IndexError as err:
-                pass
-            else:
-                return ret_val
-        raise ValueError(f"Could not parse timedelta {time_str} of type {type(time_str)}, it did not match any expected formats.")
-
     _conversion_warnings = []
     def RowToEvent(self, row:Tuple, concatenator:str = '.', fallbacks:utils.map={}):
         """Function to convert a row to an Event, based on the loaded schema.
@@ -222,19 +185,6 @@ class TableSchema:
                 Logger.Log(f"{self._table_format_name} table schema set event_sequence_index as {type(index)}, but event_sequence_index should be an int", logging.WARN)
                 TableSchema._conversion_warnings.append("index")
             index = int(index)
-
-
-        # if self._columns[0].Name == 'event_name' and app_ver is None:
-        #     if 'app_version' in params['event_data']:
-        #         app_ver = str(params['event_data']['app_version']['int_value'])
-        #     else:
-        #         app_ver = "0"
-
-        # if self._columns[0].Name == 'event_name' and log_ver is None:
-        #     if 'log_ver' in params['event_data']:
-        #         log_ver = str(params['event_data']['log_version']['int_value'])
-        #     else:
-        #         log_ver = "0"
 
         return Event(session_id=sess_id, app_id=app_id, timestamp=time,
                      event_name=ename, event_data=edata, event_source=esrc,
@@ -431,6 +381,43 @@ class TableSchema:
         elif col_schema.ValueType.startswith('enum'):
             # if the column is supposed to be an enum, for now we just stick with the string.
             return str(input)
+
+    @staticmethod
+    def _convertDateTime(time_str:str) -> datetime:
+        ret_val : datetime
+
+        formats = ["%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M:%S.%f"]
+
+        for fmt in formats:
+            try:
+                ret_val = datetime.strptime(time_str, fmt)
+            except ValueError as err:
+                pass
+            else:
+                return ret_val
+        raise ValueError(f"Could not parse timestamp {time_str}, it did not match any expected formats.")
+
+    @staticmethod
+    def _convertTimedelta(time_str:str) -> Optional[timedelta]:
+        ret_val : Optional[timedelta]
+
+        if time_str == "None" or time_str == "none" or time_str == "null":
+            return None
+        else:
+            try:
+                pieces = time_str.split(':')
+                seconds_pieces = pieces[2].split('.')
+                ret_val = timedelta(hours=int(pieces[0]),
+                                    minutes=int(pieces[1]),
+                                    seconds=int(seconds_pieces[0]),
+                                    milliseconds=int(seconds_pieces[1]) if len(seconds_pieces) > 1 else 0)
+            except ValueError as err:
+                pass
+            except IndexError as err:
+                pass
+            else:
+                return ret_val
+        raise ValueError(f"Could not parse timedelta {time_str} of type {type(time_str)}, it did not match any expected formats.")
 
     # *** PRIVATE METHODS ***
 
