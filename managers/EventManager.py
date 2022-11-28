@@ -29,12 +29,11 @@ class EventManager:
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
         col_values = event.ColumnValues()
         for i,col in enumerate(col_values):
-            # TODO: double-check if the remote_addr is there to be dropped/ignored.
-            # if row_columns[i] != "remote_addr":
-            if type(col) == str:
+            if isinstance(col, str):
                 col_values[i] = f"\"{col}\""
-            elif type(col) == dict:
-                col_values[i] = json.dumps(col)
+            elif isinstance(col, dict):
+                # TODO: double-check if the remote_addr is there to be dropped/ignored.
+                col_values[i] = json.dumps(col, default=lambda x : x.isoformat() if isinstance(x, datetime) else str(x))
         # event.EventData = json.dumps(event.EventData)
         self._lines.append(col_values) # changed , to \t
         self._processor.ProcessEvent(event=event)
