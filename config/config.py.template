@@ -64,7 +64,7 @@ settings = {
         "CYCLE_NITROGEN":{"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",      "credential":None},
         "CYCLE_WATER":   {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",      "credential":None},
         "EARTHQUAKE":    {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",      "credential":None},
-        "ICECUBE":       {"schema":"OPENGAMEDATA_MYSQL", "source":"OPENGAMEDATA_MYSQL", "table":"ICECUBE", "credential":None}
+        "ICECUBE":       {"schema":"OPENGAMEDATA_MYSQL", "source":"OPENGAMEDATA_MYSQL", "table":"ICECUBE",  "credential":None},
         "JOWILDER":      {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",      "credential":None},
         "LAKELAND":      {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",      "credential":None},
         "MAGNET":        {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",      "credential":None},
