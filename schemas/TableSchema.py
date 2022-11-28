@@ -113,7 +113,7 @@ class TableSchema:
             app_id = str(app_id)
 
         _time   = self._getValueFromRow(row=row, indices=self._column_map.Timestamp,   concatenator=concatenator, fallback=fallbacks.get('timestamp'))
-        time    = TableSchema.ConvertDateTime(_time)
+        time    = TableSchema._convertDateTime(_time)
 
         ename   = self._getValueFromRow(row=row, indices=self._column_map.EventName,   concatenator=concatenator, fallback=fallbacks.get('event_name'))
         if not isinstance(ename, str):
