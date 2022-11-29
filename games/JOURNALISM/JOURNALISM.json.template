@@ -3,32 +3,49 @@
         "min": 1,
         "max": 6
     },
+    "game_state": {
+        "level": {
+            "type": "int",
+            "description": "The current level when the event happens"
+        },
+        "current_stats": {
+            "type": "Dict",
+            "details": {
+                "endurance": "int",
+                "resourceful": "int",
+                "tech": "int",
+                "social": "int",
+                "trust": "int",
+                "research": "int"
+            },
+            "description": "The player's current stats for each attribute"
+        },
+        "location": {
+            "type": "str",
+            "description": "The current location of the player when the event happens"
+        }
+    },
     "events": {
-        "game_state": {
-            "level": {
-                "type": "int",
-                "description": "The current level when the event happens"
-            },
-            "current_stats": {
-                "type": "Dict",
-                "details": {
-                    "endurance": "int",
-                    "resourceful": "int",
-                    "tech": "int",
-                    "social": "int",
-                    "trust": "int",
-                    "research": "int"
+        "text_click": {
+            "description": "clicked to advance to the next text bubble",
+            "event_data" : {
+                "node_id": {
+                    "type": "str",
+                    "description": "the node id containing the text"
                 },
-                "description": "The player's current stats for each attribute"
-            },
-            "location": {
-                "type": "str",
-                "description": "The current location of the player when the event happens"
+                "text_content": {
+                    "type": "str",
+                    "description": "the actual text content of the bubble"
+                },
+                "speaker": {
+                    "type": "str",
+                    "description": "the speaker_id of the character/entity who 'spoke' the text"
+                }
             }
         },
-        "event_data": {
-            "text_click": {
-                "description": "clicked to advance to the next text bubble",
+        "display_text_dialog": {
+            "description": "a new dialog text bubble is displayed on the screen",
+            "event_data" : {
                 "node_id": {
                     "type": "str",
                     "description": "the node id containing the text"
@@ -41,24 +58,11 @@
                     "type": "str",
                     "description": "the speaker_id of the character/entity who 'spoke' the text"
                 }
-            },
-            "display_text_dialog": {
-                "description": "a new dialog text bubble is displayed on the screen",
-                "node_id": {
-                    "type": "str",
-                    "description": "the node id containing the text"
-                },
-                "text_content": {
-                    "type": "str",
-                    "description": "the actual text content of the bubble"
-                },
-                "speaker": {
-                    "type": "str",
-                    "description": "the speaker_id of the character/entity who 'spoke' the text"
-                }
-            },
-            "display_breakdown_dialog": {
-                "description": "during the editor review of a submitted story, the story composition/breakdown is displayed like a text bubble.",
+            }
+        },
+        "display_breakdown_dialog": {
+            "description": "during the editor review of a submitted story, the story composition/breakdown is displayed like a text bubble.",
+            "event_data" : {
                 "final_breakdown": {
                     "type": "Dict",
                     "details": {
@@ -77,21 +81,20 @@
                     },
                     "description": "The target color/fact/useful breakdown assigned to the story"
                 }
-            },
-            "display_quality_dialog": {
-                "description": "during the editor review of a submitted story, the story quality is displayed like a text bubble.",
+            }
+        },
+        "display_snippet_quality_dialog": {
+            "description": "during the editor review of a submitted story, the story snippet qualities are displayed like a text bubble.",
+            "event_data" : {
                 "current_quality": {
-                    "type": "List[Dict]",
-                    "details": {
-                        TODO: what are the attribute names?
-                        "attribute_name": "str",
-                        "type": "enum(BAD, GOOD, GREAT)"
-                    },
-                    "description": "The quality for each attribute "
+                    "type": "List[enum(BAD, GOOD, GREAT)]",
+                    "description": "The quality for each snippet used in the story, sorted by quality. Note that 'GOOD' quality is not displayed to the player"
                 }
-            },
-            "display_feedback_dialog": {
-                "description": "a new dialog text bubble is displayed on the screen during the editor's feedback on a submitted story",
+            }
+        },
+        "display_feedback_dialog": {
+            "description": "a new dialog text bubble is displayed on the screen during the editor's feedback on a submitted story",
+            "event_data" : {
                 "node_id": {
                     "type": "str",
                     "description": "the node id containing the text"
@@ -108,12 +111,24 @@
                     "type": "float",
                     "description": "score based on how well the player followed the target composition"
                 }
-            },
-            "display_choices": {
-                "context": "enum(CONVERSATION, LOCATION_MAP)"
-            },
-            "hub_choice_click": {
-                "description": "clicked to choose a text option",
+            }
+        },
+        "display_choices": {
+            "description": "Event for when a set of choices are displayed to the user.",
+            "event_data": {
+                "context": {
+                    "type": "enum(CONVERSATION, LOCATION_MAP)",
+                    "description" : "Whether the choices are being displayed in a normal conversation, or in front of a map image"
+                },
+                "choices" : {
+                    TODO
+                    "type":"List"
+                }
+            }
+        },
+        "hub_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
                 "text_content": {
                     "type": "str",
                     "description": "The text contents of the choice button"
@@ -138,9 +153,11 @@
                     "type": "bool",
                     "description": ""
                 }
-            },
-            "time_choice_click": {
-                "description": "clicked to choose a text option",
+            }
+        },
+        "time_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
                 "text_content": {
                     "type": "str",
                     "description": ""
@@ -161,9 +178,11 @@
                     "type": "bool",
                     "description": ""
                 }
-            },
-            "location_choice_click": {
-                "description": "clicked to choose a text option",
+            }
+        },
+        "location_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
                 "text_content": {
                     "type": "str",
                     "description": ""
@@ -180,9 +199,11 @@
                     "type": "str",
                     "description": ""
                 }
-            },
-            "once_choice_click": {
-                "description": "clicked to choose a text option",
+            }
+        },
+        "once_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
                 "text_content": {
                     "type": "str",
                     "description": ""
@@ -195,9 +216,11 @@
                     "type": "str",
                     "description": ""
                 }
-            },
-            "continue_choice_click": {
-                "description": "clicked to choose a text option",
+            }
+        },
+        "continue_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
                 "text_content": {
                     "type": "str",
                     "description": ""
@@ -206,9 +229,11 @@
                     "type": "str",
                     "description": ""
                 }
-            },
-            "action_choice_click": {
-                "description": "clicked to choose a text option",
+            }
+        },
+        "action_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
                 "text_content": {
                     "type": "str",
                     "description": ""
@@ -217,9 +242,11 @@
                     "type": "str",
                     "description": ""
                 }
-            },
-            "fallback_choice_click": {
-                "description": "clicked to choose a text option",
+            }
+        },
+        "fallback_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
                 "text_content": {
                     "type": "str",
                     "description": ""
@@ -232,17 +259,21 @@
                     "type": "str",
                     "description": ""
                 }
-            },
-            "open_stats_tab": {
-                "description": "",
-                TODO
-            },
-            "close_stats_tab": {
-                "description": ""
-                TODO
-            },
-            "open_map_tab": {
-                "description": "Event when the player opens their non-interactive map tab",
+            }
+        },
+        "open_stats_tab": {
+            "description": "The event when player clicks to open the player stats tab",
+            "event_data" : {
+            }
+        },
+        "close_stats_tab": {
+            "description": "The event when player clicks to clsoe the player stats tab",
+            "event_data" : {
+            }
+        },
+        "open_map_tab": {
+            "description": "Event when the player opens their non-interactive map tab",
+            "event_data" : {
                 "current_location": {
                     "type": "str",
                     "description": "The player's currently-displayed location on the map"
@@ -251,9 +282,11 @@
                     "type": "List[str]",
                     "description": "each string is a location ID for one of the locations currently shown on the map"
                 }
-            },
-            "open_choice_map": {
-                "description": "Event when the game displays a map during a choice dialog",
+            }
+        },
+        "open_choice_map": {
+            "description": "Event when the game displays a map during a choice dialog",
+            "event_data" : {
                 "current_location": {
                     "type": "str",
                     "description": "The player's currently-displayed location on the map"
@@ -262,10 +295,16 @@
                     "type": "List[str]",
                     "description": "each string is a location ID for one of the locations currently shown on the map"
                 }
-            },
-            "open_impact_map": {
-                TODO
-                "description": "",
+            }
+        },
+        "close_map_tab": {
+            "description": "When the player closes their map tab",
+            "event_data" : {
+            }
+        },
+        "open_impact_map": {
+            "description": "When a player publishes the story, the impact map displays",
+            "event_data" : {
                 "feeback_ids": {
                     "type": "List[str]",
                     "description": ""
@@ -274,64 +313,91 @@
                     "type": "List[str]",
                     "description": ""
                 }
-            },
-            "close_impact_map": {
-                "description": ""
-                TODO
-            },
-            "close_map_tab": {
-                "description": ""
-                TODO
-            },
-            "reached_checkpoint": {
-                "description": "Event when player reaches a checkpoint",
+            }
+        },
+        "close_impact_map": {
+            "description": "Player clicks button to close the impact map.",
+            "event_data" : {
+            }
+        },
+        "reached_checkpoint": {
+            "description": "Event when player reaches a checkpoint",
+            "event_data" : {
                 "node_id": {
                     "type": "str",
-                    "description": ""
+                    "description": "The node ID from which the checkpoint was saved"
                 }
-            },
-            "stat_update": {
-                "description": "happens when a stat is updated",
+            }
+        },
+        "stat_update": {
+            "description": "happens when a stat is updated",
+            "event_data" : {
                 "node_id": {
                     "type": "str",
-                    "description": ""
+                    "description": "Node ID in which the stat update happens"
                 },
                 "stats": {
                     "type": "Dict[enum(ENDURANCE, RESOURCEFUL, TECH, SOCIAL, TRUST, RESEARCH), int]",
                     "description": "Mapping of stat types to change amounts"
                 }
-            },
-            "change_background_image": {
-                "description": "a change in the background image behind text",
+            }
+        },
+        "change_background_image": {
+            "description": "a change in the background image behind text",
+            "event_data" : {
                 "node_id": {
                     "type": "str",
-                    "description": ""
+                    "description": "The node in which the background image is changed"
+                },
+                "image_name": {
+                    "type":"str",
+                    "description":"The image file's name without file extension."
                 }
-            },
-            "show_popup_image": {
-                "description": "a change in popup image next to text",
+            }
+        },
+        "show_popup_image": {
+            "description": "a change in popup image next to text",
+            "event_data" : {
                 "is_animated": {
                     "type": "bool",
-                    "description": ""
+                    "description": "True if the image is animated, otherwise false"
                 },
                 "node_id": {
                     "type": "str",
-                    "description": ""
+                    "description": "The node in which the popup image is displayed"
+                },
+                "image_name": {
+                    "type":"str",
+                    "description":"The image file's name without file extension."
                 }
-            },
-            "change_location": {
-                "description": "a change in player location"
-                TODO
-            },
-            "unlocked_notebook": {
-                "description": "",
-                TODO
-            },
-            "open_notebook": {
-                TODO
-                "description": "",
+            }
+        },
+        "change_location": {
+            "description": "a change in player location",
+            "event_data" : {
+                "new_location_id" : {
+                    "type":"str",
+                    "description":""
+                }
+            }
+        },
+        "unlocked_notebook": {
+            "description": "When the player unlocks the notebook early in the game",
+            "event_data" : {
+            }
+        },
+        "open_notebook": {
+            "description": "When the player opens the notebook (not editor notes)",
+            "event_data" : {
                 "snippet_list": {
-                    "type": "List[str]",
+                    "type": "List[Dict]",
+                    "details": {
+                        "snippet_id":"str",
+                        "snippet_type":"enum(IMAGE, QUOTE)",
+                        "snippet_quality":"enum(BAD, GOOD, GREAT)",
+                        "snippet_attributes":"List[enum(COLOR, FACTS, USEFUL)]",
+                        "is_selectable":"bool"
+                    },
                     "description": "A list of snippet ids available on the left of the notebook"
                 },
                 "layout": {
@@ -343,9 +409,11 @@
                     },
                     "description": "A list whose elements are 'slots', each with a type and the id of the currently-assigned snippet, if one is assigned."
                 }
-            },
-            "select_snippet": {
-                "description": "When a player selects a snippet in the notebook",
+            }
+        },
+        "select_snippet": {
+            "description": "When a player selects a snippet in the notebook",
+            "event_data" : {
                 "snippet_id": {
                     "type": "str",
                     "description": ""
@@ -358,21 +426,30 @@
                     "type": "enum(BAD, GOOD, GREAT)",
                     "description": "good, bad, great"
                 },
-                "snippet_attribute": {
-                    TODO
-                    "type": "List[]",
-                    "description": "color, facts, useful"
+                "snippet_attributes": {
+                    "type": "List[enum(COLOR, FACTS, USEFUL)]",
+                    "description": ""
                 }
-            },
-            "place_snippet": {
-                TODO
-                "layout": {},
-                "location ": {
-                    "type": "",
+            }
+        },
+        "place_snippet": {
+            "description" : "When a player places a snippet into a spot on the story layout",
+            "event_data" : {
+                "layout": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "type": "enum(ANY,PICTURE)",
+                        "is_wide": "bool",
+                        "assigned_snippet": "Optional[snippet_id]"
+                    },
+                    "description": "A list whose elements are 'slots', each with a type and the id of the currently-assigned snippet, if one is assigned."
+                },
+                "location": {
+                    "type": "int",
                     "description": ""
                 },
-                "snippet_id ": {
-                    "type": "",
+                "snippet_id": {
+                    "type": "str",
                     "description": "str"
                 },
                 "snippet_type": {
@@ -387,15 +464,25 @@
                     "type": "List[]",
                     "description": "color, facts, useful"
                 }
-            },
-            "remove_snippet": {
-                TODO
-                layout: "",
-                " location ": {
-                    "type": "",
+            }
+        },
+        "remove_snippet": {
+            "description" : "When a player removes an item from the story layout",
+            "event_data" : {
+                "layout": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "type": "enum(ANY,PICTURE)",
+                        "is_wide": "bool",
+                        "assigned_snippet": "Optional[snippet_id]"
+                    },
+                    "description": "A list whose elements are 'slots', each with a type and the id of the currently-assigned snippet, if one is assigned."
+                },
+                "location": {
+                    "type": "int",
                     "description": ""
                 },
-                "snippet_id ": {
+                "snippet_id": {
                     "type": "",
                     "description": "str"
                 },
@@ -403,16 +490,19 @@
                     "type": "",
                     "description": "image or quote"
                 },
-                "snippet_quality ": {
+                "snippet_quality": {
                     "type": "",
                     "description": "good, bad, great, lousy"
                 },
-                "snippet_attribute ": {
+                "snippet_attribute": {
                     "type": "",
                     "description": "List[] made up of color, facts, useful"
                 }
-            },
-            "open_editor_note": {
+            }
+        },
+        "open_editor_note": {
+            "description":"Event when user is in the notebook and clicks to open editor's notes",
+            "event_data" : {
                 "current_breakdown": {
                     "type": "Dict",
                     "details": {
@@ -432,61 +522,102 @@
                     "description": "The target color/fact/useful breakdown assigned to the story"
                 },
                 "current_quality": {
-                    "type": "List[Dict]",
-                    "details": {
-                        TODO: what are the attribute names?
-                        "attribute_name": "str",
-                        "type": "enum(BAD, GOOD, GREAT)"
-                    },
-                    "description": "The quality for each attribute "
+                    "type": "List[enum(BAD, GOOD, GREAT)]",
+                    "description": "The quality for each snippet used in the story, sorted by quality. Note that 'GOOD' quality is not displayed to the player"
                 }
-            },
-            "close_editor_note": {
-                "description": "",
-                TODO
-            },
-            "end_notebook": {
-                "description": "",
-                TODO
-            },
-            "time_limit_assigned": {
-                TODO
-                "description": "",
+            }
+        },
+        "close_editor_note": {
+            "description": "",
+            "event_data" : {
+            }
+        },
+        "close_notebook": {
+            "description": "",
+            "event_data" : {
+            }
+        },
+        "time_limit_assigned": {
+            "description": "",
+            "event_data" : {
+                "node_id": {
+                    "type":"str",
+                    "description":"The node for which a time limit was assigned"
+                },
                 "how_long": {
                     "type": "timedelta",
                     "description": ""
                 }
-            },
-            "open_timer": {
-                TODO
-                "description": "",
+            }
+        },
+        "open_timer": {
+            "description": "A player clicks to view the timer tab",
+            "event_data" : {
                 "time_left": {
                     "type": "timedelta",
                     "description": ""
                 }
-            },
-            "close_timer": {
-                TODO
-                "description": ""
-            },
-            "time_expired": {
-                TODO
-                "description": ""
-            },
-            "time_elapsed": {
-                TODO
-                "description": "",
+            }
+        },
+        "close_timer": {
+            "description": "The player closes the timer tab",
+            "event_data" : {
+            }
+        },
+        "time_elapsed": {
+            "description": "",
+            "event_data" : {
+                "node_id" : {
+                    "type":"str",
+                    "description":""
+                },
                 "how_much": {
                     "type": "int",
+                    "description": "The amount of time that elapsed"
+                }
+            }
+        },
+        "time_expired": {
+            "description": "",
+            "event_data" : {
+                "node_id" : {
+                    "type":"str",
+                    "description":""
+                },
+                "leftover_time": {
+                    "type":"int",
+                    "description":"If the player's time expired because remaining choices all are too long, this is the remaining time they would have had."
+                }
+            }
+        },
+        "snippet_received": {
+            "description": "",
+            "event_data" : {
+                "node_id" : {
+                    "type":"str",
+                    "description":""
+                },
+                "snippet_id": {
+                    "type": "str",
+                    "description": ""
+                },
+                "snippet_type": {
+                    "type": "enum(IMAGE, QUOTE)",
+                    "description": "Whether the given snippet is an image or a quote"
+                },
+                "snippet_quality": {
+                    "type": "enum(BAD, GOOD, GREAT)",
+                    "description": "good, bad, great"
+                },
+                "snippet_attributes": {
+                    "type": "List[enum(COLOR, FACTS, USEFUL)]",
                     "description": ""
                 }
-            },
-            "snippet_received": {
-                TODO
-                "description": ""
-            },
-            "story_updated": {
-                "description": "Event when a snippet is placed or removed, changing the current story",
+            }
+        },
+        "story_updated": {
+            "description": "Event when a snippet is placed or removed, changing the current story",
+            "event_data" : {
                 "new_breakdown": {
                     "type": "Dict",
                     "details": {
@@ -496,48 +627,88 @@
                     },
                     "description": "The color/fact/useful breakdown of the submitted story"
                 },
+                "target_breakdown": {
+                    "type": "Dict",
+                    "details": {
+                        "color_weight": "int",
+                        "facts_weight": "int",
+                        "useful_weight": "int"
+                    },
+                    "description": "The target color/fact/useful breakdown assigned to the story"
+                },
                 "new_quality": {
+                    "type": "List[enum(BAD, GOOD, GREAT)]",
+                    "description": "The quality for each snippet used in the story, sorted by quality. Note that 'GOOD' quality is not displayed to the player"
+                }
+            }
+        },
+        "publish_story_click": {
+            "description": "When a player clicks to submit the story for publishing",
+            "event_data" : {
+                "snippet_list": {
                     "type": "List[Dict]",
                     "details": {
-                        TODO: what are the attribute names?
-                        "attribute_name": "str",
-                        "type": "enum(BAD, GOOD, GREAT)"
+                        "snippet_id":"str",
+                        "snippet_type":"enum(IMAGE, QUOTE)",
+                        "snippet_quality":"enum(BAD, GOOD, GREAT)",
+                        "snippet_attributes":"List[enum(COLOR, FACTS, USEFUL)]",
+                        "is_selectable":"bool"
                     },
-                    "description": "The quality for each attribute "
+                    "description": "A list of snippet ids available on the left of the notebook"
+                },
+                "layout": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "type": "enum(ANY,PICTURE)",
+                        "is_wide": "bool",
+                        "assigned_snippet": "Optional[snippet_id]"
+                    },
+                    "description": "A list whose elements are 'slots', each with a type and the id of the currently-assigned snippet, if one is assigned."
                 }
-            },
-            "publish_story_click": {
-                "description": "When a player clicks to submit the story for publishing",
-                TODO
-                "snippet_layout_map": {
-                    "description": "",
+            }
+        },
+        "display_published_story": {
+            "description": "",
+            "event_data" : {
+                "story_layout": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "type": "enum(TEXT,PICTURE,EMPTY)",
+                        "is_wide": "bool",
+                        "text": "str"
+                    },
+                    "description": "A list whose elements are 'slots', each with a type and the id of the currently-assigned snippet, if one is assigned."
                 }
-                "unused_snippets": []
-            },
-            "open_published_story": {
-                "description": "",
-                TODO
-            },
-            "close_published_story": {
-                "description": "",
-                TODO
-            },
-            "start_level": {
-                "description": "When a new level is started",
+            }
+        },
+        "close_published_story": {
+            "description": "",
+            "event_data" : {
+            }
+        },
+        "start_level": {
+            "description": "When a new level is started",
+            "event_data" : {
                 "level_started": {
                     "type": "int",
                     "description": ""
                 }
-            },
-            "complete_level": {
+            }
+        },
+        "complete_level": {
+            "description": "The event when a level is completely finished, following a fade to black",
+            "event_data" : {
                 "level_completed": {
                     "type": "int",
                     "description": ""
                 }
-            },
-            "start_endgame": {
+            }
+        },
+        "start_endgame": {
+            "description" : "When the player finishes the last level, and enters the 'endgame' portion showing where their town ended up",
+            "event_data" : {
                 "city_score": {
-                    "type": "int",
+                    "type": "float",
                     "description": ""
                 },
                 "scenario": {
@@ -545,14 +716,15 @@
                     "description": "1, 2, or 3"
                 }
             }
-        },
-        "features": {
-            "per_count": {},
-            "aggregate": {}
-        },
-        "config": {
-            "SUPPORTED_VERS": [
-                1
-            ]
         }
+    },
+    "features": {
+        "per_count": {},
+        "aggregate": {}
+    },
+    "config": {
+        "SUPPORTED_VERS": [
+            1
+        ]
     }
+}
