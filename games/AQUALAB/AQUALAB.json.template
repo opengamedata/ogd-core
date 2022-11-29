@@ -16,12 +16,13 @@
             "job_name": "String name of the accepted job"
         },
         "switch_job": {
+            "description":"Event that occurs whenever the job switches, whether manually or through an `accept_job` or `complete_job`",
             "user_code": "Generated user code for the current player",
             "app_version": "Current game build version",
             "app_flavor": "Git branch origin for current build",
             "log_version": "Current logging version",
             "job_name": "String name of the current job",
-            "prev_job_name": "String name of the previous job"
+            "prev_job_name": "String name of the previous job, may be incorrect when coinciding with any `complete_job`, or with an `accept_job` at a time the user was actively in a job."
         },
         "receive_fact": {
             "user_code": "Generated user code for the current player",
