@@ -113,6 +113,11 @@ class TableSchema:
             app_id = str(app_id)
 
         time   = self._getValueFromRow(row=row, indices=self._column_map.Timestamp,   concatenator=concatenator, fallback=fallbacks.get('timestamp'))
+        if not isinstance(time, datetime):
+            if "timestamp" not in TableSchema._conversion_warnings:
+                Logger.Log(f"{self._table_format_name} table schema parsed timestamp as {type(time)}, but timestamp should be a datetime", logging.WARN)
+                TableSchema._conversion_warnings.append("timestamp")
+            time = TableSchema._convertDateTime(time)
 
         ename   = self._getValueFromRow(row=row, indices=self._column_map.EventName,   concatenator=concatenator, fallback=fallbacks.get('event_name'))
         if not isinstance(ename, str):
