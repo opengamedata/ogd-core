@@ -271,6 +271,7 @@ class ExportManager:
                 Logger.Log(f"Error while processing event {next_event.EventName}. This event will be skipped. \nFull error: {traceback.format_exc()}", logging.WARNING, depth=2)
 
     def _outputSlice(self, request:Request, slice_num:int, slice_count:int):
+        # TODO: um, so discarding session features after every slice will fuck up second-order features, I believe. Need to deal with that.
         if request.ExportEvents and self._event_mgr is not None:
             _events = self._event_mgr.GetLines(slice_num=slice_num, slice_count=slice_count)
             for outerface in request.Outerfaces:
@@ -282,11 +283,6 @@ class ExportManager:
                 for outerface in request.Outerfaces:
                     outerface.WriteSessionLines(sessions=_sess_feats)
                 self._feat_mgr.ClearSessionLines()
-            if request.ExportPlayers:
-                _player_feats = self._feat_mgr.GetPlayerFeatures(slice_num=slice_num, slice_count=slice_count, as_str=True)
-                for outerface in request.Outerfaces:
-                    outerface.WritePlayerLines(players=_player_feats)
-                self._feat_mgr.ClearPlayerLines()
 
     def _outputPopulation(self, request:Request):
         if self._feat_mgr is not None:
@@ -295,3 +291,8 @@ class ExportManager:
                 for outerface in request.Outerfaces:
                     outerface.WritePopulationLines(populations=_pop_feats)
                 self._feat_mgr.ClearPopulationLines()
+            if request.ExportPlayers:
+                _player_feats = self._feat_mgr.GetPlayerFeatures(as_str=True)
+                for outerface in request.Outerfaces:
+                    outerface.WritePlayerLines(players=_player_feats)
+                self._feat_mgr.ClearPlayerLines()
