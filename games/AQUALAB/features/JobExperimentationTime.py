@@ -16,6 +16,7 @@ class JobExperimentationTime(PerJobFeature):
     def __init__(self, params:ExtractorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
         self._session_id = None
+        self._experiment_start_count : int = 0
         self._experiment_start_time = None
         self._prev_timestamp = None
         self._time = 0
@@ -38,8 +39,9 @@ class JobExperimentationTime(PerJobFeature):
                 self._experiment_start_time = event.Timestamp
 
         if event.EventName == "begin_experiment":
+            self._experiment_start_count += 1
             self._experiment_start_time = event.Timestamp
-        elif event.EventName == "room_changed":
+        elif event.EventName in ["room_changed", "end_experiment"]:
             if self._experiment_start_time is not None:
                 self._time += (event.Timestamp - self._experiment_start_time).total_seconds()
                 self._experiment_start_time = None
@@ -53,6 +55,10 @@ class JobExperimentationTime(PerJobFeature):
         return [timedelta(seconds=self._time)]
 
     # *** Optionally override public functions. ***
+
+    def Subfeatures(self) -> List[str]:
+        return ["Time"]
+
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"
