@@ -112,8 +112,7 @@ class TableSchema:
                 TableSchema._conversion_warnings.append("app_id")
             app_id = str(app_id)
 
-        _time   = self._getValueFromRow(row=row, indices=self._column_map.Timestamp,   concatenator=concatenator, fallback=fallbacks.get('timestamp'))
-        time    = TableSchema._convertDateTime(_time)
+        time   = self._getValueFromRow(row=row, indices=self._column_map.Timestamp,   concatenator=concatenator, fallback=fallbacks.get('timestamp'))
 
         ename   = self._getValueFromRow(row=row, indices=self._column_map.EventName,   concatenator=concatenator, fallback=fallbacks.get('event_name'))
         if not isinstance(ename, str):
