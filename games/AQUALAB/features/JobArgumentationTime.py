@@ -15,6 +15,7 @@ class JobArgumentationTime(PerJobFeature):
     def __init__(self, params:ExtractorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
         self._session_id = None
+        self._argumentation_start_count : int = 0
         self._argument_start_time : Optional[datetime] = None
         self._prev_timestamp = None
         self._time = 0
@@ -37,10 +38,12 @@ class JobArgumentationTime(PerJobFeature):
                 self._argument_start_time = event.Timestamp
 
         if event.EventName == "begin_argument":
+            self._argumentation_start_count += 1
             self._argument_start_time = event.Timestamp
-        elif event.EventName == "room_changed" and self._argument_start_time is not None:
-            self._time += (event.Timestamp - self._argument_start_time).total_seconds()
-            self._argument_start_time = None
+        elif event.EventName in ["room_changed", "leave_argument", "complete_argument"]:
+            if self._argument_start_time is not None:
+                self._time += (event.Timestamp - self._argument_start_time).total_seconds()
+                self._argument_start_time = None
         
         self._prev_timestamp = event.Timestamp
     
@@ -48,9 +51,13 @@ class JobArgumentationTime(PerJobFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [timedelta(seconds=self._time)]
+        return [self._argumentation_start_count, timedelta(seconds=self._time)]
 
     # *** Optionally override public functions. ***
+
+    def Subfeatures(self) -> List[str]:
+        return ["Time"]
+
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"
