@@ -10,7 +10,7 @@ from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
-class JobArgumentationTime(PerJobFeature):
+class JobArgumentation(PerJobFeature):
 
     def __init__(self, params:ExtractorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
