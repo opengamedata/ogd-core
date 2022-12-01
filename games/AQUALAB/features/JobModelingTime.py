@@ -15,6 +15,7 @@ class JobModelingTime(PerJobFeature):
         self._job_map = job_map
         super().__init__(params=params, job_map=job_map)
         self._session_id = None
+        self._modeling_start_count : int = 0
         self._modeling_start_time = None
         self._prev_timestamp = None
         self._time = 0
@@ -22,7 +23,7 @@ class JobModelingTime(PerJobFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return []
+        return ["all_events"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -36,9 +37,10 @@ class JobModelingTime(PerJobFeature):
                 self._time += (self._prev_timestamp - self._modeling_start_time).total_seconds()
                 self._modeling_start_time = event.Timestamp
 
-        if event.EventName == "begin_modeling":
+        if event.EventName == "begin_model":
+            self._modeling_start_count += 1
             self._modeling_start_time = event.Timestamp
-        elif event.EventName == "room_changed":
+        elif event.EventName in ["room_changed", "end_model"]:
             if self._modeling_start_time is not None:
                 self._time += (event.Timestamp - self._modeling_start_time).total_seconds()
                 self._modeling_start_time = None
@@ -52,6 +54,10 @@ class JobModelingTime(PerJobFeature):
         return [timedelta(seconds=self._time)]
 
     # *** Optionally override public functions. ***
+
+    def Subfeatures(self) -> List[str]:
+        return ["Time"]
+
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "1"

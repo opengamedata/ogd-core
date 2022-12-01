@@ -80,12 +80,12 @@ class JobActiveTime(PerJobFeature):
             self._last_start_time = event.Timestamp
         # if we got an event earlier than last start, we are out of order
         elif self._last_start_time > event.Timestamp:
-            Logger.Log(f"Got out-of-order events in JobActiveTime; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than start event, with time {self._last_start_time}!", logging.WARN)
+            Logger.Log(f"Got out-of-order events in JobActiveTime; event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp} earlier than start event, with time {self._last_start_time}!", logging.WARN)
             self._last_start_time = event.Timestamp
 
         # finally, update latest timestamp
         if self._last_event_time and self._last_event_time > event.Timestamp:
-            Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} had timestamp {event.Timestamp} earlier than end event, with time {self._last_event_time}!", logging.WARN)
+            Logger.Log(f"Got out-of-order events in JobActiveTime; event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp} earlier than end event, with time {self._last_event_time}!", logging.WARN)
         else:
             self._last_event_time = event.timestamp
 
