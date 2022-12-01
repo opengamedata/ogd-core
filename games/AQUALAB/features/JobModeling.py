@@ -51,7 +51,7 @@ class JobModeling(PerJobFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [timedelta(seconds=self._time)]
+        return [self._modeling_start_count, timedelta(seconds=self._time)]
 
     # *** Optionally override public functions. ***
 
