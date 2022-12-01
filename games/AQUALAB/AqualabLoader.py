@@ -127,24 +127,24 @@ class AqualabLoader(ExtractorLoader):
         elif extractor_params._count_index is not None:
             if feature_type == "JobActiveTime":
                 ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobArgumentationTime":
-                ret_val = JobArgumentationTime.JobArgumentationTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobArgumentation":
+                ret_val = JobArgumentation.JobArgumentation(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobCompletionTime":
                 ret_val = JobCompletionTime.JobCompletionTime(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobDiveSitesCount":
                 ret_val = JobDiveSitesCount.JobDiveSitesCount(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobDiveTime":
                 ret_val = JobDiveTime.JobDiveTime(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobExperimentationTime":
-                ret_val = JobExperimentationTime.JobExperimentationTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobExperimentation":
+                ret_val = JobExperimentation.JobExperimentation(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobGuideCount":
                 ret_val = JobGuideCount.JobGuideCount(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobHelpCount":
                 ret_val = JobHelpCount.JobHelpCount(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobLocationChanges":
                 ret_val = JobLocationChanges.JobLocationChanges(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobModelingTime":
-                ret_val = JobModelingTime.JobModelingTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobModeling":
+                ret_val = JobModeling.JobModeling(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobStartCount":
                 ret_val = JobStartCount.JobStartCount(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobTasksCompleted":
