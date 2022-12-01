@@ -10,15 +10,15 @@ __all__ = [
     "EchoSessionID",
     "EventList",
     "JobActiveTime",
-    "JobArgumentationTime",
+    "JobArgumentation",
     "JobCompletionTime",
     "JobDiveSitesCount",
     "JobDiveTime",
-    "JobExperimentationTime",
+    "JobExperimentation",
     "JobGuideCount",
     "JobHelpCount",
     "JobLocationChanges",
-    "JobModelingTime",
+    "JobModeling",
     "JobStartCount",
     "JobTasksCompleted",
     "JobsAttempted",
@@ -54,15 +54,15 @@ from . import ActiveJobs
 from . import EchoSessionID
 from . import EventList
 from . import JobActiveTime
-from . import JobArgumentationTime
+from . import JobArgumentation
 from . import JobCompletionTime
 from . import JobDiveSitesCount
 from . import JobDiveTime
-from . import JobExperimentationTime
+from . import JobExperimentation
 from . import JobGuideCount
 from . import JobHelpCount
 from . import JobLocationChanges
-from . import JobModelingTime
+from . import JobModeling
 from . import JobStartCount
 from . import JobTasksCompleted
 from . import JobsAttempted
