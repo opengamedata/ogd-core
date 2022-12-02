@@ -97,8 +97,6 @@ class AqualabLoader(ExtractorLoader):
             ret_val = SessionDiveSitesCount.SessionDiveSitesCount(params=extractor_params)
         elif feature_type == "SessionDuration":
             ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
-        elif feature_type == "SessionGuideCount":
-            ret_val = SessionGuideCount.SessionGuideCount(params=extractor_params)
         elif feature_type == "TotalHelpCount":
             ret_val = TotalHelpCount.TotalHelpCount(params=extractor_params)
         elif feature_type == "SessionID":
@@ -115,6 +113,8 @@ class AqualabLoader(ExtractorLoader):
             ret_val = TotalDiveTime.TotalDiveTime(params=extractor_params)
         elif feature_type == "TotalExperimentationTime":
             ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
+        elif feature_type == "TotalGuideCount":
+            ret_val = TotalGuideCount.TotalGuideCount(params=extractor_params)
         elif feature_type == "UserAvgSessionDuration":
             ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
         elif feature_type == "UserSessionCount":

@@ -27,7 +27,6 @@ __all__ = [
     "PopulationSummary",
     "SessionDiveSitesCount",
     "SessionDuration",
-    "SessionGuideCount",
     "SessionID",
     "SwitchJobsCount",
     "SyncCompletionTime",
@@ -37,6 +36,7 @@ __all__ = [
     "TotalArgumentationTime",
     "TotalDiveTime",
     "TotalExperimentationTime",
+    "TotalGuideCount",
     "UserAvgSessionDuration",
     "UserSessionCount",
     "UserTotalSessionDuration"
@@ -70,7 +70,6 @@ from . import PlayerSummary
 from . import PopulationSummary
 from . import SessionDiveSitesCount
 from . import SessionDuration
-from . import SessionGuideCount
 from . import SessionID
 from . import SwitchJobsCount
 from . import SyncCompletionTime
@@ -80,6 +79,7 @@ from . import TotalArgumentationTime
 from . import TotalDiveTime
 from . import TotalHelpCount
 from . import TotalExperimentationTime
+from . import TotalGuideCount
 from . import UserAvgSessionDuration
 from . import UserSessionCount
 from . import UserTotalSessionDuration

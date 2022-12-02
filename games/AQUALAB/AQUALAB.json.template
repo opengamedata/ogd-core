@@ -676,12 +676,6 @@
                 "description": "Time spent playing in a given session",
                 "return_type": "timedelta"
             },
-            "SessionGuideCount": {
-                "enabled": true,
-                "type": "SessionGuideCount",
-                "description": "Number of times player talked with the guide throughout the session",
-                "return_type": "int"
-            },
             "SessionID": {
                 "enabled": true,
                 "type": "SessionID",
@@ -723,6 +717,12 @@
                 "type": "TotalExperimentationTime",
                 "description": "Total time spent in experimentation",
                 "return_type": "timedelta"
+            },
+            "TotalGuideCount": {
+                "enabled": true,
+                "type": "TotalGuideCount",
+                "description": "Number of times player talked with the guide throughout the session",
+                "return_type": "int"
             },
             "TotalHelpCount": {
                 "enabled": true,

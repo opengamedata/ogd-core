@@ -7,7 +7,7 @@ from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
-class SessionGuideCount(Feature):
+class TotalGuideCount(Feature):
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
