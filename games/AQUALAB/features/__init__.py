@@ -28,10 +28,10 @@ __all__ = [
     "SessionDiveSitesCount",
     "SessionDuration",
     "SessionGuideCount",
-    "SessionHelpCount",
     "SessionID",
     "SwitchJobsCount",
     "SyncCompletionTime",
+    "TotalHelpCount",
     "TopJobCompletionDestinations",
     "TopJobSwitchDestinations",
     "TotalArgumentationTime",
@@ -71,7 +71,6 @@ from . import PopulationSummary
 from . import SessionDiveSitesCount
 from . import SessionDuration
 from . import SessionGuideCount
-from . import SessionHelpCount
 from . import SessionID
 from . import SwitchJobsCount
 from . import SyncCompletionTime
@@ -79,6 +78,7 @@ from . import TopJobCompletionDestinations
 from . import TopJobSwitchDestinations
 from . import TotalArgumentationTime
 from . import TotalDiveTime
+from . import TotalHelpCount
 from . import TotalExperimentationTime
 from . import UserAvgSessionDuration
 from . import UserSessionCount

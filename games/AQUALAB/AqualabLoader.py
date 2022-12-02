@@ -99,8 +99,8 @@ class AqualabLoader(ExtractorLoader):
             ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
         elif feature_type == "SessionGuideCount":
             ret_val = SessionGuideCount.SessionGuideCount(params=extractor_params)
-        elif feature_type == "SessionHelpCount":
-            ret_val = SessionHelpCount.SessionHelpCount(params=extractor_params)
+        elif feature_type == "TotalHelpCount":
+            ret_val = TotalHelpCount.TotalHelpCount(params=extractor_params)
         elif feature_type == "SessionID":
             ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
         elif feature_type == "SwitchJobsCount":

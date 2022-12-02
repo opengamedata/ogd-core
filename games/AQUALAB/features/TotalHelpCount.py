@@ -6,7 +6,7 @@ from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
-class SessionHelpCount(Feature):
+class TotalHelpCount(Feature):
     """_summary_
 
     :param Feature: _description_

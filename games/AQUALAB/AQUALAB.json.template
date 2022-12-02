@@ -682,12 +682,6 @@
                 "description": "Number of times player talked with the guide throughout the session",
                 "return_type": "int"
             },
-            "SessionHelpCount": {
-                "enabled": true,
-                "type": "SessionHelpCount",
-                "description": "Number of times player clicked the help button throughout the session",
-                "return_type": "int"
-            },
             "SessionID": {
                 "enabled": true,
                 "type": "SessionID",
@@ -718,12 +712,6 @@
                 "description": "Total time spent in argumentation",
                 "return_type": "timedelta"
             },
-            "EchoSessionID": {
-                "enabled": false,
-                "type": "EchoSessionID",
-                "description": "Test of second-order features.",
-                "return_type": "str"
-            },
             "TotalDiveTime": {
                 "enabled": true,
                 "type": "TotalDiveTime",
@@ -735,6 +723,12 @@
                 "type": "TotalExperimentationTime",
                 "description": "Total time spent in experimentation",
                 "return_type": "timedelta"
+            },
+            "TotalHelpCount": {
+                "enabled": true,
+                "type": "TotalHelpCount",
+                "description": "Number of times player clicked the help button throughout the session",
+                "return_type": "int"
             },
             "UserAvgSessionDuration": {
                 "enabled": true,
