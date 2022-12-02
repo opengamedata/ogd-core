@@ -30,7 +30,6 @@ __all__ = [
     "SessionGuideCount",
     "SessionHelpCount",
     "SessionID",
-    "SessionJobsCompleted",
     "SwitchJobsCount",
     "SyncCompletionTime",
     "TopJobCompletionDestinations",
@@ -74,7 +73,6 @@ from . import SessionDuration
 from . import SessionGuideCount
 from . import SessionHelpCount
 from . import SessionID
-from . import SessionJobsCompleted
 from . import SwitchJobsCount
 from . import SyncCompletionTime
 from . import TopJobCompletionDestinations

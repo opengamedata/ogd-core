@@ -30,6 +30,9 @@ class JobsCompleted(SessionFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._jobs_completed]
+        return [len(self._jobs_completed), self._jobs_completed]
 
     # *** Optionally override public functions. ***
+
+    def Subfeatures(self) -> List[str]:
+        return ["Names"]

@@ -694,12 +694,6 @@
                 "description": "The player's session ID number for this play session",
                 "return_type": "str"
             },
-            "SessionJobsCompleted": {
-                "enabled": true,
-                "type": "SessionJobsCompleted",
-                "description": "Number of jobs completed in a given session",
-                "return_type": "int"
-            },
             "SwitchJobsCount": {
                 "enabled": true,
                 "type": "SwitchJobsCount",

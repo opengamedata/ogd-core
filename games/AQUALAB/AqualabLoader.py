@@ -103,8 +103,6 @@ class AqualabLoader(ExtractorLoader):
             ret_val = SessionHelpCount.SessionHelpCount(params=extractor_params)
         elif feature_type == "SessionID":
             ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
-        elif feature_type == "SessionJobsCompleted":
-            ret_val = SessionJobsCompleted.SessionJobsCompleted(params=extractor_params)
         elif feature_type == "SwitchJobsCount":
             ret_val = SwitchJobsCount.SwitchJobsCount(params=extractor_params)
         elif feature_type == "TopJobCompletionDestinations":
