@@ -27,7 +27,7 @@ class ScenesEncountered(Feature):
         :return: _description_
         :rtype: List[str]
         """
-        return ["scene_change"]
+        return ["scene_change", "scene_changed"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -44,7 +44,7 @@ class ScenesEncountered(Feature):
         :param event: _description_
         :type event: Event
         """
-        self._scenes.add(event.EventData.get("scene_name", "NON_SCENE_CHANGE"))
+        self._scenes.add(event.EventData.get("scene_name", "NO_SCENE_CHANGE"))
 
     def _extractFromFeatureData(self, feature: FeatureData):
         """_summary_
