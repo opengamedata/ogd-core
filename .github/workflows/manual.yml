@@ -51,7 +51,7 @@ jobs:
       max-parallel: 3
 
     # Steps to set up for and execute an export
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
       # A bunch of copy-paste crap to set up google cloud for any given game.
@@ -134,7 +134,7 @@ jobs:
     name: Reindex OpenGameData Files
     if: always()
     needs: export_data
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - name: Get OpenConnect
       run: sudo apt-get -q update && sudo apt-get -q install openconnect

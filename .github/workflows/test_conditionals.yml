@@ -14,7 +14,7 @@ on:
 jobs:
   test_export:
     name: Export Game
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         game: ${{ FromJson(github.event.inputs.game) }}
