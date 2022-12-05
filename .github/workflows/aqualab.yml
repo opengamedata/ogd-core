@@ -13,8 +13,8 @@ jobs:
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.AQUALAB_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.AQUALAB_BQ_KEY }}
+        project_id: ${{ secrets.BQ_AQUALAB_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_AQUALAB_JSON }}
         export_default_credentials: true
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
