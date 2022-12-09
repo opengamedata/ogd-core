@@ -39,7 +39,9 @@ __all__ = [
     "TotalGuideCount",
     "UserAvgSessionDuration",
     "UserSessionCount",
-    "UserTotalSessionDuration"
+    "UserTotalSessionDuration",
+    "JobPriorComplete",
+    "JobPriorAttempt"
 ]
 
 from . import JobTriesInArgument
@@ -83,3 +85,5 @@ from . import TotalGuideCount
 from . import UserAvgSessionDuration
 from . import UserSessionCount
 from . import UserTotalSessionDuration
+from . import JobPriorComplete
+from . import JobPriorAttempt

@@ -151,6 +151,10 @@ class AqualabLoader(ExtractorLoader):
                 ret_val = JobsAttempted.JobsAttempted(params=extractor_params, job_map=self._job_map, diff_map=self._diff_map)
             elif feature_type == "SyncCompletionTime":
                 ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
+            elif feature_type == "JobPriorComplete":
+                ret_val = JobPriorComplete.JobPriorComplete(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobPriorAttempt":
+                ret_val = JobPriorAttempt.JobPriorAttempt(params=extractor_params, job_map=self._job_map)
             else:
                 raise NotImplementedError(f"'{feature_type}' is not a valid feature type for Aqualab.")
         else:
