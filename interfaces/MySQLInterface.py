@@ -206,7 +206,7 @@ class SQL:
         :rtype: Optional[List[Tuple]]
         """
         d          = "DISTINCT" if distinct else ""
-        cols       = ",".join([f"`{col}`" for col in columns]) if len(columns) > 0 else "*"
+        cols       = ",".join([f"{col}" for col in columns]) if len(columns) > 0 else "*"
         sort_cols  = ",".join([f"`{col}`" for col in sort_columns]) if sort_columns is not None and len(sort_columns) > 0 else None
         table_path = db_name + "." + str(table)
 
