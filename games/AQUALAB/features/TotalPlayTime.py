@@ -30,7 +30,10 @@ class TotalPlayTime(Feature):
 
     def _extractFromFeatureData(self, feature:FeatureData):
         if feature.ExportMode == ExtractionMode.SESSION:
-            self._play_time += feature.FeatureValues[0]
+            try:
+                self._play_time += feature.FeatureValues[0]
+            except TypeError as err:
+                Logger.Log(f"TotalPlayTime for player {feature.PlayerID} got non-timedelta value of {feature.FeatureValues[0]}")
 
     def _getFeatureValues(self) -> List[Any]:
         return [self._play_time]
