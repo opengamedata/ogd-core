@@ -52,7 +52,7 @@ class JobExperimentation(PerJobFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [timedelta(seconds=self._time)]
+        return [self._experiment_start_count, timedelta(seconds=self._time)]
 
     # *** Optionally override public functions. ***
 
