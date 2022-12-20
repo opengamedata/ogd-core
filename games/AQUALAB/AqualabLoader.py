@@ -115,6 +115,8 @@ class AqualabLoader(ExtractorLoader):
             ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
         elif feature_type == "TotalGuideCount":
             ret_val = TotalGuideCount.TotalGuideCount(params=extractor_params)
+        elif feature_type == "TotalPlayTime":
+            ret_val = TotalPlayTime.TotalPlayTime(params=extractor_params)
         elif feature_type == "UserAvgSessionDuration":
             ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
         elif feature_type == "UserTotalSessionDuration":
