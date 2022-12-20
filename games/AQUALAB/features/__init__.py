@@ -39,7 +39,6 @@ __all__ = [
     "TotalDiveTime",
     "TotalExperimentationTime",
     "UserAvgSessionDuration",
-    "UserSessionCount",
     "UserTotalSessionDuration"
 ]
 
