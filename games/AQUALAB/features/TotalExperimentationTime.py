@@ -20,7 +20,7 @@ class TotalExperimentationTime(Feature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["begin_experiment", "room_changed"]
+        return ["begin_experiment", "room_changed", "end_experiment"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -36,7 +36,7 @@ class TotalExperimentationTime(Feature):
 
         if event.EventName == "begin_experiment":
             self._experiment_start_time = event.Timestamp
-        elif event.EventName == "room_changed":
+        elif event.EventName in ["room_changed", "end_experiment"]:
             if self._experiment_start_time is not None:
                 self._time += (event.Timestamp - self._experiment_start_time).total_seconds()
                 self._experiment_start_time = None
