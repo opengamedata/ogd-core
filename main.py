@@ -127,6 +127,14 @@ def genRequest(events:bool, features:bool) -> Request:
         elif args.session is not None and args.session != "":
             range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION)
             dataset_id = f"{args.game}_{args.session}"
+        elif args.session_id_file is not None and args.session_id_file != "":
+            file_path = Path(args.session_id_file)
+            with open(file_path) as session_file:
+                reader = csv.reader(session_file)
+                file_contents = list(reader) # this gives list of lines, each line a list
+                names = list(chain.from_iterable(file_contents)) # so, convert to single list
+                print(f"list of sessions: {list(names)}")
+                range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.SESSION)
         else:
             start_date, end_date = getDateRange()
             range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date)
@@ -215,6 +223,8 @@ export_parser.add_argument("-s", "--session", default="",
                     help="Tell the program to output data for a session with given ID, instead of using a date range.")
 export_parser.add_argument("--player_id_file", default="",
                     help="Tell the program to output data for a collection of players with IDs in given file, instead of using a date range.")
+export_parser.add_argument("--session_id_file", default="",
+                    help="Tell the program to output data for a collection of sessions with IDs in given file, instead of using a date range.")
 export_parser.add_argument("-f", "--file", default="",
                     help="Tell the program to use a file as input, instead of looking up a database.")
 export_parser.add_argument("-m", "--monthly", default=False, action="store_true",

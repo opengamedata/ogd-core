@@ -19,6 +19,8 @@ __all__ = [
     "JobHelpCount",
     "JobLocationChanges",
     "JobModeling",
+    "JobPriorAttempt",
+    "JobPriorComplete",
     "JobStartCount",
     "JobTasksCompleted",
     "JobsAttempted",
@@ -38,10 +40,7 @@ __all__ = [
     "TotalExperimentationTime",
     "TotalGuideCount",
     "UserAvgSessionDuration",
-    "UserSessionCount",
-    "UserTotalSessionDuration",
-    "JobPriorComplete",
-    "JobPriorAttempt"
+    "UserTotalSessionDuration"
 ]
 
 from . import JobTriesInArgument
@@ -83,7 +82,6 @@ from . import TotalHelpCount
 from . import TotalExperimentationTime
 from . import TotalGuideCount
 from . import UserAvgSessionDuration
-from . import UserSessionCount
 from . import UserTotalSessionDuration
 from . import JobPriorComplete
 from . import JobPriorAttempt
