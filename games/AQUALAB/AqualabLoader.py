@@ -113,6 +113,8 @@ class AqualabLoader(ExtractorLoader):
             ret_val = TotalDiveTime.TotalDiveTime(params=extractor_params)
         elif feature_type == "TotalExperimentationTime":
             ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
+        elif feature_type == "TotalModelingTime":
+            ret_val = TotalModelingTime.TotalModelingTime(params=extractor_params)
         elif feature_type == "TotalGuideCount":
             ret_val = TotalGuideCount.TotalGuideCount(params=extractor_params)
         elif feature_type == "TotalPlayTime":

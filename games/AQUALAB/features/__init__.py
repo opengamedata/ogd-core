@@ -38,6 +38,7 @@ __all__ = [
     "TotalArgumentationTime",
     "TotalDiveTime",
     "TotalExperimentationTime",
+    "TotalModelingTime",
     "TotalGuideCount",
     "TotalPlayTime",
     "UserAvgSessionDuration",
@@ -81,6 +82,7 @@ from . import TotalArgumentationTime
 from . import TotalDiveTime
 from . import TotalHelpCount
 from . import TotalExperimentationTime
+from . import TotalModelingTime
 from . import TotalGuideCount
 from . import TotalPlayTime
 from . import UserAvgSessionDuration

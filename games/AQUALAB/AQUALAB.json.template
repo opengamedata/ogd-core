@@ -734,6 +734,12 @@
                 "description": "Total time spent in experimentation",
                 "return_type": "timedelta"
             },
+            "TotalModelingTime": {
+                "enabled": false,
+                "type": "TotalModelingTime",
+                "description": "Total time spent in modeling",
+                "return_type": "timedelta"
+            },
             "TotalGuideCount": {
                 "enabled": false,
                 "type": "TotalGuideCount",

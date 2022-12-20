@@ -20,7 +20,7 @@ class TotalArgumentationTime(Feature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["begin_argument", "room_changed"]
+        return ["begin_argument", "room_changed", "leave_argument", "complete_argument"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -36,7 +36,7 @@ class TotalArgumentationTime(Feature):
 
         if event.EventName == "begin_argument":
             self._argue_start_time = event.Timestamp
-        elif event.EventName == "room_changed":
+        elif event.EventName in ["room_changed", "leave_argument", "complete_argument"]:
             if self._argue_start_time is not None:
                 self._time += (event.Timestamp - self._argue_start_time).total_seconds()
                 self._argue_start_time = None
