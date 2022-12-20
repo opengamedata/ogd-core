@@ -1,5 +1,6 @@
 # import libraries
 import logging
+from datetime import timedelta
 from typing import Any, List
 # import locals
 from extractors.Extractor import ExtractorParameters
@@ -51,7 +52,8 @@ class SessionDuration(SessionFeature):
 
     def _getFeatureValues(self) -> List[Any]:
         if self._client_start_time and self._client_end_time:
-            return [self._client_end_time - self._client_start_time]
+            time_diff : timedelta = self._client_end_time - self._client_start_time
+            return [time_diff]
         else:
             return ["No events"]
 
