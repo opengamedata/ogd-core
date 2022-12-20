@@ -83,5 +83,4 @@ from . import TotalArgumentationTime
 from . import TotalDiveTime
 from . import TotalExperimentationTime
 from . import UserAvgSessionDuration
-from . import UserSessionCount
 from . import UserTotalSessionDuration
