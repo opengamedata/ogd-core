@@ -746,6 +746,12 @@
                 "description": "Number of times player clicked the help button throughout the session",
                 "return_type": "int"
             },
+            "TotalPlayTime": {
+                "enabled": true,
+                "type": "TotalPlayTime",
+                "description": "Total time the player had the game open, based on sum total of SessionDurations."
+                "return_type": "timedelta"
+            },
             "UserAvgSessionDuration": {
                 "enabled": false,
                 "type": "UserAvgSessionDuration",

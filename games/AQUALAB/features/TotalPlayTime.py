@@ -29,7 +29,7 @@ class TotalPlayTime(Feature):
         pass
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        if feature.ExportMode == ExtractionMode.PLAYER:
+        if feature.ExportMode == ExtractionMode.SESSION:
             self._play_time += feature.FeatureValues[0]
 
     def _getFeatureValues(self) -> List[Any]:
