@@ -235,6 +235,8 @@ class FeatureRegistry(ExtractorRegistry):
         for order in self._features:
             for feature in order.values():
                 next_vals = feature.GetFeatureValues()
+                if len(next_vals) != len(feature.GetFeatureNames()):
+                    raise ValueError(f"Feature {feature.Name} lists {len(feature.GetFeatureNames())} feature names, but returns {len(next_vals)} values!")
                 ret_val += next_vals if next_vals != [] else [None]
         return ret_val
 
