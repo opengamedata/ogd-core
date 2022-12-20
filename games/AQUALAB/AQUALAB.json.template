@@ -749,7 +749,7 @@
             "TotalPlayTime": {
                 "enabled": true,
                 "type": "TotalPlayTime",
-                "description": "Total time the player had the game open, based on sum total of SessionDurations."
+                "description": "Total time the player had the game open, based on sum total of SessionDurations.",
                 "return_type": "timedelta"
             },
             "UserAvgSessionDuration": {
