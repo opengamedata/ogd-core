@@ -1,0 +1,412 @@
+{
+    "level_range": { "min":1, "max":6 },
+    "game_state" : {
+        "seconds_from_launch" : {
+            "type" : "float",
+            "description" : "The number of seconds elapsed since the game was launched"
+        },
+        "gaze" : {
+        }
+    },
+    "events":{
+        "open_menu" : {
+            "description" : "When the player opens the game menu",
+            "event_data" : {}
+        },
+        "close_menu" : {
+            "description" : "When the player closes the game menu",
+            "event_data" : {}
+        },
+        "select_menu_item" : {
+            "description" : "When the player clicks and item in the menu",
+            "event_data" : {
+                "item" : {
+                    "type" : "str",
+                    "description" : "The name of the menu item the player selected"
+                }
+            }
+        },
+        "viewport_data" : {
+            "description" : "An event sent approximately once per second, containing the in-game position and orientation of the player for each frame in the past second",
+            "event_data" : {
+                "px" : {
+                    "type" : "List[float]",
+                    "description" : "The x-positions of the player for each frame in the last second"
+                },
+                "py" : {
+                    "type" : "List[float]",
+                    "description" : "The y-positions of the player for each frame in the last second"
+                },
+                "pz" : {
+                    "type" : "List[float]",
+                    "description" : "The z-positions of the player for each frame in the last second"
+                },
+                "qx" : {
+                    "type" : "List[float]",
+                    "description" : "The x-component of the quaternion for the player's orientation for each frame in the last second"
+                },
+                "qy" : {
+                    "type" : "List[float]",
+                    "description" : "The y-component of the quaternion for the player's orientation for each frame in the last second"
+                },
+                "qz" : {
+                    "type" : "List[float]",
+                    "description" : "The z-component of the quaternion for the player's orientation for each frame in the last second"
+                },
+                "qw" : {
+                    "type" : "List[float]",
+                    "description" : "The w-component of the quaternion for the player's orientation for each frame in the last second"
+                }
+            }
+        },
+        "player_waddle" : {
+            "description" : "When a player performs a waddle movement to move their penguin avatar forward",
+            "event_data" : {
+                "DATA" : "NOT YET IMPLEMENTED"
+            }
+        },
+        "gaze_object_begin" : {
+            "description" : "An event triggered when the player has gazed at an object for at least 0.25 seconds, where 'gazed at' means the object is the nearest on a raycast from the viewport center",
+            "event_data" : {
+                "object_id" : {
+                    "type" : "str",
+                    "description" : "The name of the object the player is gazing at"
+                }
+            }
+        },
+        "gaze_object_end" : {
+            "description" : "An event triggered when the player turns away from an object they'd gazed at, so the object is no longer nearest on a raycast from the viewport center. Note there may be a small buffer around the object for the raycast.",
+            "event_data" : {
+                "object_id" : {
+                    "type" : "str",
+                    "description" : "The name of the object the player had previously gazed at"
+                }
+            }
+        },
+        "bubble_pop" : {
+            "description" : "An event triggered when the player pops a bubble in the bubble-popping mini-game. A bubble should be popped on a 'beat' of the music, but can be popped up to 0.5 seconds before or after the 'beat.'",
+            "event_data" : {
+                "object_id" : {
+                    "type" : "str",
+                    "description" : "The name of the bubble object the player popped"
+                },
+                "timing_error" : {
+                    "type" : "float",
+                    "description" : "The timing difference between the pop event and the music 'beat.' This value is in the range [-0.5, 0.5], where a negative indicates the bubble was popped before the 'beat,' and positive indicates popping after the 'beat.'"
+                }
+            }
+        },
+        "eat_fish" : {
+            "description" : "An event triggered when the player eats a fish.",
+            "event_data" : {
+                "object_id" : {
+                    "type" : "str",
+                    "description" : "The name of the fish object the player ate"
+                }
+            }
+        },
+        "flipper_bash_skua" : {
+            "description" : "An event triggered when the player makes a flipper-bashing move to shoo a skua away from their nest/egg.",
+            "event_data" : {
+                "object_id" : {
+                    "type" : "str",
+                    "description" : "The name of the skua object the player bashed"
+                }
+            }
+        },
+        "pickup_rock" : {
+            "description" : "An event triggered when the player picks up a rock lying on the ground, which contributes to the building of their nest.",
+            "event_data" : {
+                "total_picked_up" : {
+                    "type" : "int",
+                    "description" : "The running total of rocks the player has picked up."
+                },
+                "px" : {
+                    "type" : "float",
+                    "description" : "The x-position of the player when the event happened"
+                },
+                "py" : {
+                    "type" : "float",
+                    "description" : "The y-position of the player when the event happened"
+                },
+                "pz" : {
+                    "type" : "float",
+                    "description" : "The z-position of the player when the event happened"
+                },
+                "qx" : {
+                    "type" : "float",
+                    "description" : "The x-component of the quaternion for the player's orientation when the event happened"
+                },
+                "qy" : {
+                    "type" : "float",
+                    "description" : "The y-component of the quaternion for the player's orientation when the event happened"
+                },
+                "qz" : {
+                    "type" : "float",
+                    "description" : "The z-component of the quaternion for the player's orientation when the event happened"
+                },
+                "qw" : {
+                    "type" : "float",
+                    "description" : "The w-component of the quaternion for the player's orientation when the event happened"
+                }
+            }
+        },
+        "push_snowball" : {
+            "description" : "An event triggered when the player pushes a snowball down the hill.",
+            "event_data" : {
+                "object_id" : {
+                    "type" : "str",
+                    "description" : "The name of the snowball object the player pushed"
+                },
+                "px" : {
+                    "type" : "float",
+                    "description" : "The x-position of the player when the event happened"
+                },
+                "py" : {
+                    "type" : "float",
+                    "description" : "The y-position of the player when the event happened"
+                },
+                "pz" : {
+                    "type" : "float",
+                    "description" : "The z-position of the player when the event happened"
+                },
+                "qx" : {
+                    "type" : "float",
+                    "description" : "The x-component of the quaternion for the player's orientation when the event happened"
+                },
+                "qy" : {
+                    "type" : "float",
+                    "description" : "The y-component of the quaternion for the player's orientation when the event happened"
+                },
+                "qz" : {
+                    "type" : "float",
+                    "description" : "The z-component of the quaternion for the player's orientation when the event happened"
+                },
+                "qw" : {
+                    "type" : "float",
+                    "description" : "The w-component of the quaternion for the player's orientation when the event happened"
+                }
+            }
+        },
+        "ring_chime" : {
+            "description" : "An event when the player rings one of the chimes in the chime mini-game.",
+            "event_data" : {
+                "note_played" : {
+                    "type" : "str",
+                    "description" : "The name of the chime the player rang"
+                }
+            }
+        },
+        "bubble_appeared" : {
+            "description" : "Event when a new bubble appears in the mating dance minigame.",
+            "event_data" : {
+                "object_id" : {
+                    "type" : "str",
+                    "description" : "The name of the bubble object that appeared"
+                },
+                "posX" : {
+                    "type" : "float",
+                    "description" : "The x-position of the bubble that appeared"
+                },
+                "posY" : {
+                    "type" : "float",
+                    "description" : "The y-position of the bubble that appeared"
+                },
+                "posZ" : {
+                    "type" : "float",
+                    "description" : "The z-position of the bubble that appeared"
+                }
+            }
+        },
+        "bubble_expired" : {
+            "description" : "Event when a bubble's pop-able time ends and the bubble disappears.",
+            "event_data" : {
+                "object_id" : {
+                    "type" : "str",
+                    "description" : "The name of the bubble object that disappeared"
+                }
+            }
+        },
+        "egg_hatch_indicator_updated" : {
+            "description" : "NOT YET DOCUMENTED",
+            "event_data" : {
+                "time_remaining" : {
+                    "type" : "int",
+                    "description" : "The time left until the egg will hatch"
+                }
+            }
+        },
+        "egg_hatched" : {
+            "description" : "Event when the egg hatches",
+            "event_data" : {
+            }
+        },
+        "egg_lost" : {
+            "description" : "Event when the player's egg is stolen by a skua.",
+            "event_data" : {
+                "object_id" : {
+                    "type" : "str",
+                    "description" : "The name of the skua that stole the egg"
+                }
+            }
+        },
+        "egg_recovered" : {
+            "description" : "Event when the player recovers the egg from the skuas.",
+            "event_data" : {
+            }
+        },
+        "mating_dance_indicator_updated" : {
+            "description" : "Event when a bubble is popped and the indicator for progress to completion of the mating dance updates.",
+            "event_data" : {
+                "percent_full" : {
+                    "type" : "int",
+                    "description" : "The new percent to which the dance completion indicator is filled"
+                }
+            }
+        },
+        "nest_complete" : {
+            "description" : "Event when the player completes the building of their nest.",
+            "event_data" : {
+            }
+        },
+        "penguin_pin_fell" : {
+            "description" : "NOT YET DOCUMENTED"
+        },
+        "skua_spawn" : {
+            "description" : "Event when a new skua is added in the nest/egg defense mini-game.",
+            "event_data" : {
+                "object_id" : {
+                    "type" : "str",
+                    "description" : "The name of the skua object that appeared"
+                },
+                "posX" : {
+                    "type" : "float",
+                    "description" : "The x-position of the skua that appeared"
+                },
+                "posY" : {
+                    "type" : "float",
+                    "description" : "The y-position of the skua that appeared"
+                },
+                "posZ" : {
+                    "type" : "float",
+                    "description" : "The z-position of the skua that appeared"
+                }
+            }
+        },
+        "skua_move" : {
+            "description" : "Event when a skua moves to a new location in the nest/egg defense mini-game.",
+            "event_data" : {
+                "object_id" : {
+                    "type" : "str",
+                    "description" : "The name of the skua object that moved"
+                },
+                "from_position_x" : {
+                    "type" : "float",
+                    "description" : "The initial x-position of the skua that moved"
+                },
+                "from_position_y" : {
+                    "type" : "float",
+                    "description" : "The initial y-position of the skua that moved"
+                },
+                "from_position_z" : {
+                    "type" : "float",
+                    "description" : "The initial z-position of the skua that moved"
+                },
+                "to_position_x" : {
+                    "type" : "float",
+                    "description" : "The new x-position of the skua that moved"
+                },
+                "to_position_y" : {
+                    "type" : "float",
+                    "description" : "The new y-position of the skua that moved"
+                },
+                "to_position_z" : {
+                    "type" : "float",
+                    "description" : "The new z-position of the skua that moved"
+                }
+            }
+        },
+        "application_start" : {
+            "description" : "Event when the application begins to run. The player has not necessarily begun the game itself yet.",
+            "event_data" : {
+            }
+        },
+        "begin" : {
+            "description" : "Event when the player actually starts the game itself.",
+            "event_data" : {
+                "mode" : {
+                    "type" : "enum(home_mode, ...)",
+                    "description" : "The game mode that the player launched"
+                }
+            }
+        },
+        "enter_region" : {
+            "description" : "Event when the player moves into one of the regions containing a mini-game or other feature.",
+            "event_data" : {
+                "region_name" : {
+                    "type" : "str",
+                    "description" : "The name of the region the player entered"
+                }
+            }
+        },
+        "exit_region" : {
+            "description" : "Event when a moves out of one of the regions containing a mini-game or other feature.",
+            "event_data" : {
+                "region_name" : {
+                    "type" : "str",
+                    "description" : "The name of the region the player left"
+                }
+            }
+        },
+        "activity_begin" : {
+            "description" : "Event when the player begins to engage with a mini-game.",
+            "event_data" : {
+                "activity_name" : {
+                    "type" : "enum(skuas, mating_dance, ...)",
+                    "description" : "The name of the mini-game/activity with which the player began to engage"
+                }
+            }
+        },
+        "activity_end" : {
+            "description" : "NOT YET DOCUMENTED",
+            "event_data" : {
+                "activity_name" : {
+                    "type" : "enum(skuas, mating_dance, ...)",
+                    "description" : "NOT YET DOCUMENTED"
+                }
+            }
+        },
+        "global_timer_begin" : {
+            "description" : "NOT YET DOCUMENTED",
+            "event_data" : {
+                "time_remaining" : {
+                    "type" : "int",
+                    "description" : "The left on the global timer"
+                }
+            }
+        },
+        "global_timer_pause" : {
+            "description" : "NOT YET DOCUMENTED",
+            "event_data" : {
+                "data" : "NOT YET DOCUMENTED"
+            }
+        },
+        "global_timer_expired" : {
+            "description" : "NOT YET DOCUMENTED",
+            "event_data" : {
+
+            }
+        }
+    },
+
+    "features": {
+        "per_count": {
+        },
+        "aggregate":{
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}
