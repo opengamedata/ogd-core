@@ -199,13 +199,13 @@ class TSVOuterface(DataOuterface):
             os.makedirs(name=path, exist_ok=True)
             with open(path / "readme.md", "w") as readme:
                 # 1. Open files with game-specific readme data, and global db changelog.
-                source_dir = Path("./doc/readme_src/")
+                game_schema_dir = Path(f"./games/{game_schema.GameName}/schemas")
                 try:
-                    with open(source_dir / f"{game_schema._game_name}_readme_src.md", "r") as readme_src:
+                    with open(game_schema_dir / f"{game_schema.GameName}_readme_src.md", "r") as readme_src:
                         readme.write(readme_src.read())
                 except FileNotFoundError as err:
                     readme.write("No game readme prepared")
-                    Logger.Log(f"Could not find {game_schema._game_name}_readme_src", logging.WARNING)
+                    Logger.Log(f"Could not find {game_schema.GameName}_readme_src", logging.WARNING)
                 finally:
                     readme.write("\n\n")
                 # 2. Use schema to write feature & column descriptions to the readme.
@@ -213,7 +213,7 @@ class TSVOuterface(DataOuterface):
                 readme.write(meta)
                 # 3. Append any important data from the data changelog.
                 try:
-                    with open(source_dir / "changelog_src.md", "r") as changelog_src:
+                    with open(game_schema_dir / "changelog_src.md", "r") as changelog_src:
                         readme.write(changelog_src.read())
                 except FileNotFoundError as err:
                     readme.write("No changelog prepared")
