@@ -212,8 +212,9 @@ class TSVOuterface(DataOuterface):
                 meta = TSVOuterface.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema)
                 readme.write(meta)
                 # 3. Append any important data from the data changelog.
+                changelog_dir = Path(f"./schemas/")
                 try:
-                    with open(game_schema_dir / "changelog_src.md", "r") as changelog_src:
+                    with open(changelog_dir / "database_changelog_src.md", "r") as changelog_src:
                         readme.write(changelog_src.read())
                 except FileNotFoundError as err:
                     readme.write("No changelog prepared")
