@@ -218,7 +218,7 @@ class TSVOuterface(DataOuterface):
                         readme.write(changelog_src.read())
                 except FileNotFoundError as err:
                     readme.write("No changelog prepared")
-                    Logger.Log(f"Could not find changelog_src", logging.WARNING)
+                    Logger.Log(f"Could not find database_changelog_src", logging.WARNING)
         except FileNotFoundError as err:
             Logger.Log(f"Could not open readme.md for writing.", logging.ERROR)
             traceback.print_tb(err.__traceback__)
