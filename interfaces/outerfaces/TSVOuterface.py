@@ -93,7 +93,7 @@ class TSVOuterface(DataOuterface):
             # if not in place, generate the readme
             Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING, depth=1)
             readme_path = Path("./data") / self._game_id
-            game_schema  : GameSchema  = GameSchema(schema_name=self._game_id, schema_path=Path(f"./games/{self._game_id}"))
+            game_schema  : GameSchema  = GameSchema(schema_name=self._game_id, schema_path=Path(f"./games/{self._game_id}/schemas"))
             table_schema = TableSchema.FromID(game_id=self._game_id)
             TSVOuterface.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=readme_path)
         else:
