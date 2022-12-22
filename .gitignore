@@ -2,7 +2,7 @@
 data
 config/*.json
 config/config.py
-games/*/*.json
+games/*/schemas/*.json
 fieldday-pyenv
 
 # Byte-compiled / optimized / DLL files

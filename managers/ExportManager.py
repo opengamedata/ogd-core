@@ -121,7 +121,7 @@ class ExportManager:
         self._processEvent(next_event=event)
 
     def _setupManagers(self, request:Request, load_class:Type[ExtractorLoader], feature_overrides:Optional[List[str]]):
-        _game_schema  : GameSchema  = GameSchema(schema_name=request.GameID, schema_path=Path(f"./games/{request.GameID}"))
+        _game_schema  : GameSchema  = GameSchema(schema_name=request.GameID, schema_path=Path(f"./games/{request.GameID}/schemas"))
 
         if request.ExportEvents:
             self._event_mgr = EventManager(LoaderClass=load_class,                     game_schema=_game_schema,

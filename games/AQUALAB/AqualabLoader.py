@@ -14,7 +14,6 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 
 EXPORT_PATH = "games/AQUALAB/DBExport.json"
-CONFIG_PATH = "games/AQUALAB/AQUALAB.json"
 
 ## @class AqualabLoader
 #  Extractor subclass for extracting features from Aqualab game data.

@@ -309,7 +309,7 @@ class GameSchema:
         if not schema_name.lower().endswith(".json"):
             schema_name += ".json"
         if schema_path == None:
-            schema_path = Path("./games") / f"{game_name}"
+            schema_path = Path("./games") / f"{game_name}" / "schemas"
         # 2. try to actually load the contents of the file.
         try:
             ret_val = utils.loadJSONFile(filename=schema_name, path=schema_path)

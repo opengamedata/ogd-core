@@ -93,7 +93,7 @@ class TSVOuterface(DataOuterface):
             # if not in place, generate the readme
             Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING, depth=1)
             readme_path = Path("./data") / self._game_id
-            game_schema  : GameSchema  = GameSchema(schema_name=self._game_id, schema_path=Path(f"./games/{self._game_id}"))
+            game_schema  : GameSchema  = GameSchema(schema_name=self._game_id, schema_path=Path(f"./games/{self._game_id}/schemas"))
             table_schema = TableSchema.FromID(game_id=self._game_id)
             TSVOuterface.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=readme_path)
         else:
@@ -199,25 +199,26 @@ class TSVOuterface(DataOuterface):
             os.makedirs(name=path, exist_ok=True)
             with open(path / "readme.md", "w") as readme:
                 # 1. Open files with game-specific readme data, and global db changelog.
-                source_dir = Path("./doc/readme_src/")
+                game_schema_dir = Path(f"./games/{game_schema.GameName}/schemas")
                 try:
-                    with open(source_dir / f"{game_schema._game_name}_readme_src.md", "r") as readme_src:
+                    with open(game_schema_dir / f"{game_schema.GameName}_readme_src.md", "r") as readme_src:
                         readme.write(readme_src.read())
                 except FileNotFoundError as err:
                     readme.write("No game readme prepared")
-                    Logger.Log(f"Could not find {game_schema._game_name}_readme_src", logging.WARNING)
+                    Logger.Log(f"Could not find {game_schema.GameName}_readme_src", logging.WARNING)
                 finally:
                     readme.write("\n\n")
                 # 2. Use schema to write feature & column descriptions to the readme.
                 meta = TSVOuterface.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema)
                 readme.write(meta)
                 # 3. Append any important data from the data changelog.
+                changelog_dir = Path(f"./schemas/")
                 try:
-                    with open(source_dir / "changelog_src.md", "r") as changelog_src:
+                    with open(changelog_dir / "database_changelog_src.md", "r") as changelog_src:
                         readme.write(changelog_src.read())
                 except FileNotFoundError as err:
                     readme.write("No changelog prepared")
-                    Logger.Log(f"Could not find changelog_src", logging.WARNING)
+                    Logger.Log(f"Could not find database_changelog_src", logging.WARNING)
         except FileNotFoundError as err:
             Logger.Log(f"Could not open readme.md for writing.", logging.ERROR)
             traceback.print_tb(err.__traceback__)
