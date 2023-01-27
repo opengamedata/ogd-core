@@ -362,7 +362,7 @@
             "description" : "Event when the player begins to engage with a mini-game.",
             "event_data" : {
                 "activity_name" : {
-                    "type" : "enum(skuas, mating_dance, ...)",
+                    "type" : "enum(skuas, mating_dance)",
                     "description" : "The name of the mini-game/activity with which the player began to engage"
                 }
             }
@@ -371,7 +371,7 @@
             "description" : "NOT YET DOCUMENTED",
             "event_data" : {
                 "activity_name" : {
-                    "type" : "enum(skuas, mating_dance, ...)",
+                    "type" : "enum(skuas, mating_dance)",
                     "description" : "NOT YET DOCUMENTED"
                 }
             }
