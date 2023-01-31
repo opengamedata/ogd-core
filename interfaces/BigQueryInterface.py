@@ -155,7 +155,7 @@ class BigQueryInterface(DataInterface):
             query = f"""
                 SELECT event_name, event_params, device, geo, platform,
                 concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
-                param_app_version.value.double_value as app_version,
+                param_app_version.value.string_value as app_version,
                 param_log_version.value.int_value as log_version,
                 param_session.value.int_value as session_id,
                 param_user.value.string_value as fd_user_id
