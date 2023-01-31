@@ -123,7 +123,7 @@ class BigQueryInterface(DataInterface):
         # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
         if self._game_id == "AQUALAB":
             where_clause = f"""
-                WHERE param_app_version.key = 'app_version' AND param_app_version.value.double_value >= {AQUALAB_MIN_VERSION}
+                WHERE param_app_version.key = 'app_version'
                 AND   param_log_version.key = 'log_version'
                 {session_clause}
                 {player_clause}
@@ -148,6 +148,10 @@ class BigQueryInterface(DataInterface):
                 ORDER BY `session_id`, `timestamp` ASC
             """
         else:
+            # TODO Order by user_id, and by timestamp within that.
+            # Note that this could prove to be wonky when we have more games without user ids,
+            # will need to really rethink this when we start using new system.
+            # Still, not a huge deal because most of these will be rewritten at that time anyway.
             query = f"""
                 SELECT event_name, event_params, device, geo, platform,
                 concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
@@ -161,7 +165,7 @@ class BigQueryInterface(DataInterface):
                 CROSS JOIN UNNEST(event_params) AS param_session
                 CROSS JOIN UNNEST(event_params) AS param_user
                 {where_clause}
-                ORDER BY `fd_user_id`, `session_id`, `timestamp` ASC
+                ORDER BY `fd_user_id`, `timestamp` ASC
             """
         return query
 
@@ -175,6 +179,7 @@ class BigQueryInterface(DataInterface):
             WHERE param.key = "ga_session_id"
             AND _TABLE_SUFFIX BETWEEN '{str_min}' AND '{str_max}'
         """
+        Logger.Log(f"Running query for ids from dates:\n{query}", logging.DEBUG, depth=3)
         data = self._client.query(query)
         ids = [str(row['session_id']) for row in data]
         if ids is not None:
