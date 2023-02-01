@@ -110,7 +110,7 @@ class BigQueryInterface(DataInterface):
         if id_mode == IDMode.SESSION:
             id_string = ','.join([f"{x}" for x in id_list])
             session_clause = f"AND   param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
-            player_clause  = f"AND   (param_user.key   = 'user_code'     OR  param_user.key = 'undefined'"
+            player_clause  = f"AND   (param_user.key   = 'user_code'     OR  param_user.key = 'undefined')"
         elif id_mode == IDMode.USER:
             id_string = ','.join([f"'{x}'" for x in id_list])
             session_clause = f"AND   param_session.key = 'ga_session_id'"
