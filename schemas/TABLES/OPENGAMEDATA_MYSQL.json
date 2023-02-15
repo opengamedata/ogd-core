@@ -12,7 +12,7 @@
         "time_offset"          : "client_offset",
         "user_id"              : "user_id",
         "user_data"            : "user_data",
-        "game_state"           : "user_data",
+        "game_state"           : "game_state",
         "event_sequence_index" : "event_sequence_index"
     },
 
