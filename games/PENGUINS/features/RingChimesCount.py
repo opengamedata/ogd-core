@@ -5,35 +5,40 @@ from typing import Any, Dict, List, Optional
 from utils import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
-from extractors.features.SessionFeature import SessionFeature
+from games.PENGUINS.features.PerRegionFeature import PerRegionFeature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
+from extractors.features.SessionFeature import SessionFeature
 
-class ScenesEncountered(SessionFeature):
+chime_dict = {'chime 1':0, 'chime 2':0, 'chime 3':0, 'chime 4':0, 'chime 5':0, 'chime 6':0}
+class RingChimesCount(SessionFeature):
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        self._scene_name = None
-        self._cnt_list = list()
+        self._current_count : int = 0
+        self._object_id = None
+        self._chime_dict = chime_dict.copy()
+        self._obj_list = list()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["scene_change"]
+        return ["ring_chime"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        self._scene_name = event.EventData.get("scene_name")
-        self._cnt_list.append(self._scene_name)
-
+        # self._current_count += 1
+        self._object_id = event.event_data.get("note_played")
+        self._chime_dict[self._object_id]+=1
+        
     def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._cnt_list]
+        return [self._chime_dict]
 
-    # *** Optionally override public functions. ***
+    

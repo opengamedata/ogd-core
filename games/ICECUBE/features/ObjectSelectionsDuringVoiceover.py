@@ -9,31 +9,42 @@ from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
-
-class ScenesEncountered(SessionFeature):
+# count of object_selected 
+# between script_audio_started and script_audio_complete
+# return the # of object_selected during audio playing
+class ObjectSelectionsDuringVoiceover (SessionFeature):
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        self._scene_name = None
-        self._cnt_list = list()
+        self._select_count = 0
+        self._audio_started = False
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["scene_change"]
+        return ["script_audio_started","script_audio_complete","object_selected"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        self._scene_name = event.EventData.get("scene_name")
-        self._cnt_list.append(self._scene_name)
+        if event.EventName == "script_audio_complete" or event.EventName == "scene_changed":
+            self._audio_started = False
+            return
+        if not self._audio_started:
+            if event.EventName == "script_audio_started":
+                self._audio_started = True
+            return
+        if event.EventName == "object_selected":
+            self._select_count += 1
+        return
+
 
     def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._cnt_list]
+        return [self._select_count]
 
     # *** Optionally override public functions. ***

@@ -10,7 +10,7 @@ from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
-class ScenesEncountered(SessionFeature):
+class RegionsEncountered(SessionFeature):
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
@@ -20,15 +20,16 @@ class ScenesEncountered(SessionFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["scene_change"]
+        return ["enter_region"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        self._scene_name = event.EventData.get("scene_name")
-        self._cnt_list.append(self._scene_name)
+        self._scene_name = event.EventData.get("region_name")
+        if self._scene_name not in self._cnt_list:
+            self._cnt_list.append(self._scene_name)
 
     def _extractFromFeatureData(self, feature:FeatureData):
         return

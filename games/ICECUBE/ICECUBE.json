@@ -1,0 +1,124 @@
+{
+    "level_range": { "min":0, "max":6 },
+   
+    "task_range": {"min":0, "max":4},
+
+    "events":{
+        "headset_on" : {
+
+        },
+        "start" : {
+            "seconds_from_launch" : "float"
+        },
+        "language_selected" : {
+            "language" : "str",
+            "seconds_from_launch" : "float"
+        },
+        "scene_change" : {
+            "scene_name" : "enum(ICE, VOYAGER, NOTHING, EXTREME, EARTH, CREDITS)",
+            "seconds_from_launch" : "float"
+        },
+        "new_object_displayed" : {
+            "has_the_indicator" : "bool",
+            "object" : "str",
+            "posX" : "float",
+            "posY" : "float",
+            "posZ" : "float",
+            "rotX" : "float",
+            "rotY" : "float",
+            "rotZ" : "float",
+            "rotW" : "float",
+            "seconds_from_launch" : "float"
+        },
+        "object_assigned" : {
+            "object" : "str",
+            "seconds_from_launch" : "float"
+        },
+        "object_selected" : {
+            "gaze_point_name" : "str",
+            "seconds_from_launch" : "float"
+        },
+        "caption_displayed" : {
+            "caption" : "str",
+            "seconds_from_launch" : "float"
+        },
+        "script_audio_started" : {
+            "caption" : "str",
+            "seconds_from_launch" : "float"
+        },
+        "script_audio_complete" : {
+            "seconds_from_launch" : "float"
+        },
+        "failed" : {
+            "seconds_from_launch" : "float"
+        }
+    },
+
+    "features": {
+        "per_count": {
+            "SceneFailures": {
+                "enabled": true,
+                "type": "SceneFailures",
+                "count": "level_range",
+                "prefix": "task",
+                "description": "Number of failed attempt for a given scene",
+                "return_type": "int"
+            },
+            "SceneDuration": {
+                "enabled": true,
+                "type": "SceneDuration",
+                "count": "level_range",
+                "prefix": "task",
+                "description": "Time spent playing in a given scene",
+                "return_type": "list"
+            },
+            "TaskTimeToComplete": {
+                "enabled": true,
+                "type": "TaskTimeToComplete",
+                "count": "level_range",
+                "prefix": "task",
+                "description": "Time spent completing in each task",
+                "return_type": "timedelta"
+            }
+        },
+        "aggregate":{
+            "ScenesEncountered": {
+                "enabled": true,
+                "type": "ScenesEncountered",
+                "count": "level_range",
+                "prefix": "task",
+                "description": "The set of all scenes the player encountered.",
+                "return_type": "list"
+            },
+            "Session_Language": {
+                "enabled": true,
+                "type": "Session_Language",
+                "count": "level_range",
+                "prefix": "task",
+                "description": "The Language that the player choose in a given session",
+                "return_type": "str"
+            },
+            "SessionDuration": {
+                "enabled": false,
+                "type": "SessionDuration",
+                "count": "level_range",
+                "prefix": "task",
+                "description": "Time spent playing in a given session",
+                "return_type": "int"
+            },
+            "HeadsetOnCount":{
+                "enabled": true,
+                "type": "HeadsetOnCount",
+                "count": "level_range",
+                "prefix": "task",
+                "description": "Number of time that player put on the headset during a session",
+                "return_type": "int"
+
+            }
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}
