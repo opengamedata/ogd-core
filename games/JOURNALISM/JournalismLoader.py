@@ -25,10 +25,8 @@ class JournalismLoader(ExtractorLoader):
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
-        if feature_type == "QuestionAnswers":
-            ret_val = QuestionAnswers.QuestionAnswers(params=extractor_params)
-        elif feature_type == "SurveyItem":
-            ret_val = SurveyItem.SurveyItem(params=extractor_params)
+        if feature_type == "TextClickCount":
+            ret_val = TextClickCount.TextClickCount(params=extractor_params)
         else:
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Journalism.")
