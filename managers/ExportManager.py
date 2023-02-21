@@ -143,7 +143,7 @@ class ExportManager:
             _loader_class = CrystalLoader
         elif game_id == "ICECUBE":
             _loader_class = IcecubeLoader
-        elif game_id == "JOUNALISM":
+        elif game_id == "JOURNALISM":
             _loader_class = JournalismLoader
         elif game_id == "JOWILDER":
             _loader_class = JowilderLoader
