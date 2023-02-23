@@ -16,7 +16,8 @@ runs:
       run: |
         LASTWEEK=$(date -d "$(date +%Y-%m-%d) -1 week" +'%m/%d/%Y')
         YESTERDAY=$(date -d "$(date +%Y-%m-%d) -1 day" +'%m/%d/%Y')
-        echo "LAST WEEK=" $LASTWEEK "-" $YESTERDAY >> $GITHUB_ENV
+        echo "LASTWEEK=" $LASTWEEK >> $GITHUB_ENV
+        echo "YESTERDAY=" $YESTERDAY >> $GITHUB_ENV
       shell: bash
     # - name: Clone code
     #   uses: actions/checkout@v2

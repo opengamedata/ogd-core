@@ -2,7 +2,8 @@ name: Aqualab BigQuery Test
 on:
   push:
     paths:
-    - 'games/AQUALAB/**'
+    - 'games/BigQueryInterface.py'
+    - 'interfaces/AQUALAB/**'
     - '.github/workflows/aqualab.yml'
   workflow_dispatch:
 jobs:
