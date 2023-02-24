@@ -139,9 +139,9 @@ def genRequest(events:bool, features:bool) -> Request:
             start_date, end_date = getDateRange()
             range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date)
     # 3. set up the outerface, based on the range and dataset_id.
-    file_outerface = TSVOuterface(game_id=args.game, export_modes=export_modes,
-                                  date_range=range.DateRange, data_dir=settings["DATA_DIR"],
-                                  dataset_id=dataset_id)
+    data_dir = settings.get("FILE_INDEXING", {}).get("LOCAL_DIR", "./data/")
+    file_outerface = TSVOuterface(game_id=args.game, export_modes=export_modes, date_range=range.DateRange,
+                                  data_dir=data_dir, dataset_id=dataset_id)
     # 4. Once we have the parameters parsed out, construct the request.
     return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces={file_outerface})
 

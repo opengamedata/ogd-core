@@ -1,9 +1,14 @@
 settings = {
-    "DATA_DIR"   : "./data/",
     "BATCH_SIZE" : 1000,
     "LOG_FILE"   : False,
     "DEBUG_LEVEL": "INFO",
     "FAIL_FAST"  : False,
+    "FILE_INDEXING" : 
+    {
+        "LOCAL_DIR"     : "./data/",
+        "REMOTE_URL"    : "https://fieldday-web.ad.education.wisc.edu/opengamedata/",
+        "TEMPLATES_URL" : "https://github.com/opengamedata/opengamedata-templates"
+    },
     "SSH_CONFIG":
     {
         "SSH_HOST" : "hostname",
