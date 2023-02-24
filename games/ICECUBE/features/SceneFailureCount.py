@@ -49,3 +49,6 @@ class SceneFailureCount(SessionFeature):
         return [self._game_state]
 
     # *** Optionally override public functions. ***
+    @staticmethod
+    def MinVersion() -> Optional[str]:
+        return "2"

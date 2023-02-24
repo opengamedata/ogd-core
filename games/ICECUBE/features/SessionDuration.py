@@ -76,3 +76,6 @@ class SessionDuration(SessionFeature):
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
         return [] 
+    @staticmethod
+    def MinVersion() -> Optional[str]:
+        return "2"

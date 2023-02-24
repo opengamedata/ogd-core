@@ -48,3 +48,6 @@ class ObjectSelectionsDuringVoiceover (SessionFeature):
         return [self._select_count]
 
     # *** Optionally override public functions. ***
+    @staticmethod
+    def MinVersion() -> Optional[str]:
+        return "2"

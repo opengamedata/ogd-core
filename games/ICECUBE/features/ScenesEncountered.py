@@ -37,3 +37,6 @@ class ScenesEncountered(SessionFeature):
         return [self._cnt_list]
 
     # *** Optionally override public functions. ***
+    @staticmethod
+    def MinVersion() -> Optional[str]:
+        return "2"

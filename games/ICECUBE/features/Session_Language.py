@@ -1,5 +1,6 @@
 from typing import Any, List
 
+from typing import Any, Dict, List, Optional
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
@@ -35,3 +36,6 @@ class Session_Language(SessionFeature):
         return [self._session_language]
 
     # *** Optionally override public functions. ***
+    @staticmethod
+    def MinVersion() -> Optional[str]:
+        return "2"

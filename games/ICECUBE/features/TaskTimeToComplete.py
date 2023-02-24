@@ -52,5 +52,7 @@ class TaskTimeToComplete(SessionFeature):
 
     def _getFeatureValues(self) -> List[Any]:
         return [timedelta(seconds=self._time)]
-
+    @staticmethod
+    def MinVersion() -> Optional[str]:
+        return "2"
     

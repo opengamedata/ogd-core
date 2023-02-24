@@ -35,3 +35,6 @@ class HeadsetOnCount(SessionFeature):
         return [self._headset_count]
 
     # *** Optionally override public functions. ***
+    @staticmethod
+    def MinVersion() -> Optional[str]:
+        return "2"

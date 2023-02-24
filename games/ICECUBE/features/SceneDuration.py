@@ -74,4 +74,6 @@ class SceneDuration(PerCountFeature):
             Logger.Log(f"Got invalid scene data in {type(self).__name__}", logging.WARNING)
 
         return ret_val
-       
+    @staticmethod
+    def MinVersion() -> Optional[str]:
+        return "2"

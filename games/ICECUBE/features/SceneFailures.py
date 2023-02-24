@@ -75,4 +75,6 @@ class SceneFailures(PerCountFeature):
         #     Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
 
         return ret_val
-      
+    @staticmethod
+    def MinVersion() -> Optional[str]:
+        return "2"
