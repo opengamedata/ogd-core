@@ -478,7 +478,7 @@ class TSVOuterface(DataOuterface):
                     "events_file"         : str(events_path)     if events_path     is not None else None,
                     "events_template"     : ''                   if events_path     is not None else None
                 }
-                existing_csv_file.write(json.dumps(existing_datasets, indent=4))
+                existing_csv_file.write(json.dumps(file_directory, indent=4))
 
     def _backupFileExportList(self) -> bool:
         try:
