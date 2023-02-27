@@ -417,10 +417,14 @@ class TSVOuterface(DataOuterface):
                     "end_date"     :self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions"     :num_sess,
-                    "population_file" :str(self._zip_names['population']) if self._zip_names['population'] else None,
-                    "players_file"    :str(self._zip_names['players'])   if self._zip_names['players']   else None,
-                    "sessions_file"   :str(self._zip_names['sessions'])   if self._zip_names['sessions']   else None,
-                    "events_file"     :str(self._zip_names['events'])     if self._zip_names['events']     else None
+                    "population_file"     :str(self._zip_names['population']) if self._zip_names['population'] else None,
+                    "population_template" : ''                                if self._zip_names['population'] else None,
+                    "players_file"        :str(self._zip_names['players'])    if self._zip_names['players']    else None,
+                    "players_template" : ''                                   if self._zip_names['players']    else None,
+                    "sessions_file"       :str(self._zip_names['sessions'])   if self._zip_names['sessions']   else None,
+                    "sessions_template" : ''                                  if self._zip_names['sessions']   else None,
+                    "events_file"         :str(self._zip_names['events'])     if self._zip_names['events']     else None,
+                    "events_template" : ''                                    if self._zip_names['events']     else None
                 }
                 meta_file.write(json.dumps(metadata, indent=4))
                 meta_file.close()
@@ -460,15 +464,19 @@ class TSVOuterface(DataOuterface):
                 events_path     = self._zip_names.get("events")     or existing_metadata.get("events")
                 file_directory[self._game_id][self._dataset_id] = \
                 {
-                    "ogd_revision" :self._short_hash,
-                    "start_date"   :self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
-                    "end_date"     :self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
-                    "date_modified":datetime.now().strftime("%m/%d/%Y"),
-                    "sessions"     :num_sess,
-                    "population_file" :str(population_path) if population_path is not None else None,
-                    "players_file"    :str(players_path)    if players_path    is not None else None,
-                    "sessions_file"   :str(sessions_path)   if sessions_path   is not None else None,
-                    "events_file"     :str(events_path)     if events_path     is not None else None,
+                    "ogd_revision"        : self._short_hash,
+                    "start_date"          : self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
+                    "end_date"            : self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
+                    "date_modified"       : datetime.now().strftime("%m/%d/%Y"),
+                    "sessions"            : num_sess,
+                    "population_file"     : str(population_path) if population_path is not None else None,
+                    "population_template" : ''                   if population_path is not None else None,
+                    "players_file"        : str(players_path)    if players_path    is not None else None,
+                    "players_template"    : ''                   if players_path    is not None else None,
+                    "sessions_file"       : str(sessions_path)   if sessions_path   is not None else None,
+                    "sessions_template"   : ''                   if sessions_path   is not None else None,
+                    "events_file"         : str(events_path)     if events_path     is not None else None,
+                    "events_template"     : ''                   if events_path     is not None else None
                 }
                 existing_csv_file.write(json.dumps(existing_datasets, indent=4))
 
