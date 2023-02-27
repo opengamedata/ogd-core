@@ -437,24 +437,24 @@ class TSVOuterface(DataOuterface):
     #  @param num_sess      The number of sessions included in the recent export.
     def _updateFileExportList(self, num_sess: int) -> None:
         self._backupFileExportList()
-        file_directory = {}
+        file_index = {}
         existing_datasets = {}
         try:
-            file_directory = utils.loadJSONFile(filename="file_list.json", path=self._data_dir)
+            file_index = utils.loadJSONFile(filename="file_list.json", path=self._data_dir)
         except FileNotFoundError as err:
             Logger.Log("file_list.json does not exist.", logging.WARNING)
         except json.decoder.JSONDecodeError as err:
             Logger.Log(f"file_list.json has invalid format: {str(err)}.", logging.WARNING)
         finally:
-            if not "CONFIG" in file_directory.keys():
+            if not "CONFIG" in file_index.keys():
                 Logger.Log(f"No CONFIG found in file_list.json, adding default CONFIG...", logging.WARNING)
-                file_directory["CONFIG"] = {
+                file_index["CONFIG"] = {
                     "files_base" : self._file_indexing.get("LOCAL_DIR", "./data/"),
                     "templates_base" : self._file_indexing.get("TEMPLATES_URL", None)
                 }
-            if not self._game_id in file_directory.keys():
-                file_directory[self._game_id] = {}
-            existing_datasets  = file_directory[self._game_id]
+            if not self._game_id in file_index.keys():
+                file_index[self._game_id] = {}
+            existing_datasets  = file_index[self._game_id]
             with open(self._data_dir / "file_list.json", "w") as existing_csv_file:
                 Logger.Log(f"Opened file list for writing at {existing_csv_file.name}", logging.INFO)
                 existing_metadata = existing_datasets.get(self._dataset_id, {})
@@ -462,7 +462,7 @@ class TSVOuterface(DataOuterface):
                 players_path    = self._zip_names.get("players")    or existing_metadata.get("players")
                 sessions_path   = self._zip_names.get("sessions")   or existing_metadata.get("sessions")
                 events_path     = self._zip_names.get("events")     or existing_metadata.get("events")
-                file_directory[self._game_id][self._dataset_id] = \
+                file_index[self._game_id][self._dataset_id] = \
                 {
                     "ogd_revision"        : self._short_hash,
                     "start_date"          : self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
@@ -478,7 +478,7 @@ class TSVOuterface(DataOuterface):
                     "events_file"         : str(events_path)     if events_path     is not None else None,
                     "events_template"     : ''                   if events_path     is not None else None
                 }
-                existing_csv_file.write(json.dumps(file_directory, indent=4))
+                existing_csv_file.write(json.dumps(file_index, indent=4))
 
     def _backupFileExportList(self) -> bool:
         try:
