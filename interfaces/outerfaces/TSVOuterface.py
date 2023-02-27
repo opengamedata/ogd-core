@@ -26,14 +26,15 @@ class TSVOuterface(DataOuterface):
 
     # *** BUILT-INS ***
 
-    def __init__(self, game_id:str, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], data_dir:str, extension:str="tsv", dataset_id:Optional[str]=None):
+    def __init__(self, game_id:str, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], file_indexing:Dict[str,str], extension:str="tsv", dataset_id:Optional[str]=None):
         super().__init__(game_id=game_id, config={})
         self._file_paths   : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._zip_names    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._files        : Dict[str,Optional[IO]]   = {"population":None, "players":None, "sessions":None, "events":None}
-        self._data_dir     : Path = Path("./" + data_dir)
+        self._file_indexing: Dict[str, str]           = file_indexing
+        self._data_dir     : Path = Path(f"./{self._file_indexing.get('LOCAL_DIR', 'data')}")
         self._game_data_dir: Path = self._data_dir / self._game_id
-        self._readme_path  : Path = self._game_data_dir/ "readme.md"
+        self._readme_path  : Path = self._game_data_dir / "readme.md"
         self._extension    : str  = extension
         self._date_range   : Dict[str,Optional[datetime]] = date_range
         self._dataset_id   : str  = ""
@@ -441,6 +442,12 @@ class TSVOuterface(DataOuterface):
         except json.decoder.JSONDecodeError as err:
             Logger.Log(f"file_list.json has invalid format: {str(err)}.", logging.WARNING)
         finally:
+            if not "CONFIG" in file_directory.keys():
+                Logger.Log(f"No CONFIG found in file_list.json, adding default CONFIG...", logging.WARNING)
+                file_directory["CONFIG"] = {
+                    "files_base" : self._file_indexing.get("LOCAL_DIR", "./data/"),
+                    "templates_base" : self._file_indexing.get("TEMPLATES_URL", None)
+                }
             if not self._game_id in file_directory.keys():
                 file_directory[self._game_id] = {}
             existing_datasets  = file_directory[self._game_id]
