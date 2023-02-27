@@ -10,7 +10,7 @@ jobs:
   Lakeland_CI:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Get OpenConnect
       run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
