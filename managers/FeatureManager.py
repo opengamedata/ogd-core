@@ -159,6 +159,11 @@ class FeatureManager:
         for sess_list in self._sessions.values():
             for sess in sess_list.values():
                 sess.ClearLines()
+        self._sessions = {}
+        self._sessions["null"] = {
+            "null" : SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+                                      player_id="null", session_id="null", feature_overrides=self._overrides)
+        }
 
     def _flatHierarchy(self) -> List[FeatureProcessor]:
         ret_val : List[FeatureProcessor] = [self._population]
