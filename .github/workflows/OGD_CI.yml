@@ -58,14 +58,14 @@ jobs:
       with:
         game: WAVES
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./*.log
     - name: Upload Crystal zips as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./data/CRYSTAL/*.zip
     - name: Upload Wave zips as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./data/WAVES/*.zip
