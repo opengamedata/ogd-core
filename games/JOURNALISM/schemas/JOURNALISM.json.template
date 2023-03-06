@@ -121,6 +121,10 @@
                     "description" : "Whether the choices are being displayed in a normal conversation, or in front of a map image"
                 },
                 "choices" : {
+<<<<<<< HEAD
+=======
+                    "TODO":"TODO",
+>>>>>>> master
                     "type":"List"
                 }
             }

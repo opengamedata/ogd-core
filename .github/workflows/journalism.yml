@@ -1,4 +1,4 @@
-# Workflow to test-run data when we modify JowilderExtractor.
+# Workflow to test-run data when we modify JournalismExtractor.
 name: Journalism (Headlines & High Waters) Exporter CI Test
 on:
   push:
@@ -7,10 +7,10 @@ on:
     - '.github/workflows/journalism.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
-  JoWilder_CI:
+  Journalism_CI:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Get OpenConnect
       run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
@@ -31,8 +31,8 @@ jobs:
       uses: ./.github/actions/OGD_schema
       with:
         game: "JOURNALISM"
-    - name: Do Export of yesterday's data
-      uses: ./.github/actions/export_yesterday
+    - name: Do Export of last week's data
+      uses: ./.github/actions/export_last_week
       with:
         game: JOURNALISM
     - name: Upload logs as artifacts

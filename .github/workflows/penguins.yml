@@ -1,13 +1,13 @@
-# Workflow to test-run data when we modify MagnetExtractor.
-name: Magnet Exporter CI Test
+# Workflow to test-run data when we modify PenguinExtractor.
+name: Penguins (Waddle) Exporter CI Test
 on:
   push:
     paths:
-    - 'games/MAGNET/**'
-    - '.github/workflows/magnet.yml'
+    - 'games/PENGUINS/**'
+    - '.github/workflows/penguins.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
-  Magnet_CI:
+  Penguin_CI:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
@@ -25,15 +25,16 @@ jobs:
         sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "DEBUG"
+        # TODO: set log_level to DEBUG once we've made sure there aren't excess outputs from the extractor itself.
+        log_level: "INFO"
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:
-        game: "MAGNET"
-    - name: Do Export of yesterday's data
-      uses: ./.github/actions/export_yesterday
+        game: "PENGUINS"
+    - name: Do Export of last week's data
+      uses: ./.github/actions/export_last_week
       with:
-        game: MAGNET
+        game: PENGUINS
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v2
       with:
@@ -41,4 +42,4 @@ jobs:
     - name: Upload zips as artifacts
       uses: actions/upload-artifact@v2
       with:
-        path: ./data/MAGNET/*.zip
+        path: ./data/PENGUINS/*.zip
