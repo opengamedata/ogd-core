@@ -121,7 +121,7 @@
                     "description" : "Whether the choices are being displayed in a normal conversation, or in front of a map image"
                 },
                 "choices" : {
-                    TODO
+                    "TODO":"TODO",
                     "type":"List"
                 }
             }
