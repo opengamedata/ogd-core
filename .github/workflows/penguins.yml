@@ -1,5 +1,5 @@
 # Workflow to test-run data when we modify JowilderExtractor.
-name: Penguins (Headlines & High Waters) Exporter CI Test
+name: Penguins (Waddle) Exporter CI Test
 on:
   push:
     paths:
