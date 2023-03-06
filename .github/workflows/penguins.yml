@@ -31,8 +31,8 @@ jobs:
       uses: ./.github/actions/OGD_schema
       with:
         game: "PENGUINS"
-    - name: Do Export of yesterday's data
-      uses: ./.github/actions/export_yesterday
+    - name: Do Export of last week's data
+      uses: ./.github/actions/export_last_week
       with:
         game: PENGUINS
     - name: Upload logs as artifacts
