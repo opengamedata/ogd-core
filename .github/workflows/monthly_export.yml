@@ -12,13 +12,13 @@ jobs:
       matrix:
         # don't use the first one until we've got STEMPORTS and AQUALAB
         # game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, STEMPORTS, WAVES, WIND]
-        game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, LAKELAND, MAGNET, SHADOWSPECT, SHIPWRECKS, WAVES, WIND]
+        game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, ICECUBE, JOURNALISM, LAKELAND, MAGNET, PENGUINS, SHADOWSPECT, SHIPWRECKS, WAVES, WIND]
       fail-fast: false # we don't want to cancel just because one game fails.
       max-parallel: 1
 
     # Steps to set up for and execute an export
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       # A bunch of copy-paste crap to set up google cloud for any given game.
     - if: ${{ matrix.game == 'AQUALAB' }}
       name: Set up Cloud SDK
@@ -73,7 +73,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./*.log
   

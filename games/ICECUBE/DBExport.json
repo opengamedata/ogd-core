@@ -1,0 +1,105 @@
+{
+   "scenes": [
+      {
+         "id": "ICE",
+         "tasks": [
+            {
+               "id": "VisibleLight"
+            },
+            {
+               "id": "gazefeet"
+               
+            },
+            {
+               "id": "gazeup"
+            }
+         ]
+      },
+      {
+         "id": "VOYAGER",
+         "tasks": [
+            {
+               "id": "VisibleLight"
+            },
+            {
+               "id": "gazefeet"
+               
+            },
+            {
+               "id": "NeutrinoVision"
+               
+            },
+            {
+               "id": "X-ray"
+            }
+         ]
+      },
+      {
+         "id": "NOTHING",
+         "tasks": [
+            {
+               "id": "VisibleLight"
+            },
+            {
+               "id": "gazefeet"
+               
+            },
+            {
+               "id": "gazeup"
+            }
+         ]
+      },
+      {
+         "id": "EXTREME",
+         "tasks": [
+            {
+               "id": "VisibleLight"
+            },
+            {
+               "id": "NeutrinoVision"
+            },
+            {
+               "id": "gazefeet"
+               
+            },
+            {
+               "id": "gazeup"
+            },
+            {
+               "id": "X-ray"
+               
+            }
+         ]
+      },
+      {
+         "id": "EARTH",
+         "tasks": [
+            {
+               "id": "VisibleLight"
+            },
+            {
+               "id": "gazefeet"
+               
+            },
+            {
+               "id": "gazeup"
+            }
+         ]
+      },
+      {
+         "id": "CREDITS",
+         "tasks": [
+            {
+               "id": "VisibleLight"
+            },
+            {
+               "id": "gazefeet"
+               
+            },
+            {
+               "id": "gazeup"
+            }
+         ]
+      }
+   ]
+}
