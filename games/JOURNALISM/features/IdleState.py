@@ -1,6 +1,9 @@
 # import libraries
 import json
 from typing import Any, List, Optional
+import json
+from time import time
+from datetime  import timedelta, datetime
 # import local files
 from extractors.features.Feature import Feature
 from schemas.Event import Event
@@ -12,21 +15,32 @@ from extractors.features.SessionFeature import SessionFeature
 
 
 
-class ChoiceClickCount(SessionFeature):
+
+class IdleState(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, params:ExtractorParameters):
+    IDLE_TIME_THRESHOLD = timedelta(seconds=15)
+
+    def __init__(self, params:ExtractorParameters, threshold: int):
         super().__init__(params=params)
-        self._choice_click_count : int = 0;
-        choice_type_names = ["hub", "time", "location", "once", "continue","action","fallback"]
-        self._init_vals = {name: 0 for name in choice_type_names}
+        self._text_click_count : int = 0;
+        self._time : timedelta = timedelta(0)
+        self._count : int = 0
+        self._last_timestamp : Optional[datetime] = None
+        self._threshold : timedelta = timedelta(seconds=threshold)
+
+
         # >>> create/initialize any variables to track feature extractor state <<<
         #
         # e.g. To track whether extractor found a click event yet:
         # self._found_click : bool = False
+    
+    @staticmethod
+    def defaultThreshold():
+        return IdleState.IDLE_TIME_THRESHOLD
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -57,14 +71,19 @@ class ChoiceClickCount(SessionFeature):
         # Note that this function runs once on each Event whose name matches one of the strings returned by _getEventDependencies()
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
-        
-        if "choice_click" in event.event_name:
-            self._choice_click_count += 1
-            for key in self._init_vals:
-                if key in event.event_name:
-                    self._init_vals[key] +=1
-        
-        
+        if not self._last_timestamp:
+            self._last_timestamp = event.Timestamp
+            return
+        if self._last_timestamp is not None:
+            time_since_last = event.Timestamp - self._last_timestamp
+            if time_since_last > IdleState.IDLE_TIME_THRESHOLD:
+                self._time += time_since_last
+                self._count += 1
+        else:
+            raise ValueError("In IdleState, last timestamp is None!")
+        self._last_timestamp = event.Timestamp
+
+
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
@@ -85,26 +104,12 @@ class ChoiceClickCount(SessionFeature):
         :rtype: List[Any]
         """
         
-        # >>> use state variables to calculate the return value(s) of the base Feature and any Subfeatures. <<<
-        # >>> put the calculated value(s) into a list as the function return value. <<<
-        # >>> definitely don't return ["template"], unless you really find that useful... <<<
-        #
-        # e.g. use the self._found_click, which was created/initialized in __init__(...), and updated in _extractFromEvent(...):
-        # if self._found_click:
-        #     ret_val = [True]
-        # else:
-        #     ret_val = [False]
-        # return ret_val
-        #
-        # note the code above is redundant, we could just return [self._found_click] to get the same result;
-        # the more-verbose code is here for illustrative purposes.
-        
-        return [self._choice_click_count, self._init_vals["action"]]
+        return [self._time, self._count]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["Action"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+        return ["Count"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:

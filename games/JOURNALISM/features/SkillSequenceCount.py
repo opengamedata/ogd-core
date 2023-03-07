@@ -12,7 +12,7 @@ from extractors.features.SessionFeature import SessionFeature
 
 
 
-class ChoiceClickCount(SessionFeature):
+class SkillSequenceCount(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
@@ -20,13 +20,9 @@ class ChoiceClickCount(SessionFeature):
     """
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        self._choice_click_count : int = 0;
-        choice_type_names = ["hub", "time", "location", "once", "continue","action","fallback"]
-        self._init_vals = {name: 0 for name in choice_type_names}
-        # >>> create/initialize any variables to track feature extractor state <<<
-        #
-        # e.g. To track whether extractor found a click event yet:
-        # self._found_click : bool = False
+        self._total_upgrades : int = 0
+        self._skill_event_sequence : Optional[List]= [];
+                
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -36,7 +32,7 @@ class ChoiceClickCount(SessionFeature):
         :return: _description_
         :rtype: List[str]
         """
-        return ["all_events"] # >>> fill in names of events this Feature should use for extraction. <<<
+        return ["stat_update"] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -58,12 +54,17 @@ class ChoiceClickCount(SessionFeature):
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
         
-        if "choice_click" in event.event_name:
-            self._choice_click_count += 1
-            for key in self._init_vals:
-                if key in event.event_name:
-                    self._init_vals[key] +=1
-        
+        if "stat_update" == event.EventName:
+            self._total_upgrades += 1
+    
+            #add update event to list for sequence of events
+            date_string = event.Timestamp.strftime("%Y-%m-%d %H:%M:%S")
+            self._skill_event_sequence.append({
+                "skill": event.event_data["stats"],
+                "time": date_string,
+                "index": self._total_upgrades-1#start index at 0
+            })      
+            
         
         return
 
@@ -98,13 +99,16 @@ class ChoiceClickCount(SessionFeature):
         #
         # note the code above is redundant, we could just return [self._found_click] to get the same result;
         # the more-verbose code is here for illustrative purposes.
-        
-        return [self._choice_click_count, self._init_vals["action"]]
+        event_string = json.dumps(self._skill_event_sequence)
+
+        # print("TOTAL DEBUG: " + self._total_upgrades)
+        # print(self._total_upgrades)
+        return [self._total_upgrades, event_string]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["Action"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+        return ["Event Sequence"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:

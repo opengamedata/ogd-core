@@ -25,12 +25,37 @@ class JournalismLoader(ExtractorLoader):
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
-        if feature_type == "TextClickCount":
+        if feature_type == "ChoiceClickCount":
+            ret_val = ChoiceClickCount.ChoiceClickCount(params=extractor_params)
+        elif feature_type == "IdleState":
+            ret_val = IdleState.IdleState(params=extractor_params, threshold=schema_args.get("IDLE_THRESH_SECONDS", IdleState.IdleState.IDLE_TIME_THRESHOLD))
+        elif feature_type == "SkillSequenceCount":
+            ret_val = SkillSequenceCount.SkillSequenceCount(params = extractor_params)
+        elif feature_type == "MeanSnippetTime":
+            ret_val = MeanSnippetTime.MeanSnippetTime(params = extractor_params)
+        elif feature_type == "TextClickCount":
             ret_val = TextClickCount.TextClickCount(params=extractor_params)
+        elif feature_type == "SnippetReceivedCount":
+            ret_val = SnippetReceivedCount.SnippetReceivedCount(params =extractor_params)
+        elif feature_type == "StoryCompleteTime":
+            ret_val = StoryCompleteTime.StoryCompleteTime(params = extractor_params)
+        elif feature_type == "TotalLevelTime":
+            ret_val = TotalLevelTime.TotalLevelTime(params = extractor_params)
+        elif feature_type == "PlayerAttributes":
+            ret_val = PlayerAttributes.PlayerAttributes(params = extractor_params)
+        
+        ##per-count features
+        elif extractor_params._count_index is not None:
+            if feature_type == "LevelStoryAlignment":
+                ret_val = LevelStoryAlignment.LevelStoryAlignment(params = extractor_params)
+
+
+
         else:
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Journalism.")
         return ret_val
+    
 
     def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Journalism.")
