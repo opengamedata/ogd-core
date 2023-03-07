@@ -36,4 +36,5 @@ class PerLevelFeature(PerCountFeature):
     # *** PRIVATE METHODS ***
 
     def _validateEventCountIndex(self, event:Event):
-        return event.EventData['level'] == self.CountIndex
+        ##updated to check for level in gamestate, instead of eventdata
+        return event.GameState['level'] == self.CountIndex

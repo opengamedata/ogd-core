@@ -8,11 +8,13 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
+from time import time
+from datetime  import timedelta, datetime
 
 
 
 
-class ChoiceClickCount(SessionFeature):
+class MeanSnippetTime(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
@@ -20,13 +22,11 @@ class ChoiceClickCount(SessionFeature):
     """
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        self._choice_click_count : int = 0;
-        choice_type_names = ["hub", "time", "location", "once", "continue","action","fallback"]
-        self._init_vals = {name: 0 for name in choice_type_names}
-        # >>> create/initialize any variables to track feature extractor state <<<
-        #
-        # e.g. To track whether extractor found a click event yet:
-        # self._found_click : bool = False
+
+        self._snippet_receive_count : int = 0;
+        self._snippet_time_logs: List[datetime] = [];
+        self._game_init_time: Optional[datetime] = None;
+        
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -36,7 +36,7 @@ class ChoiceClickCount(SessionFeature):
         :return: _description_
         :rtype: List[str]
         """
-        return ["all_events"] # >>> fill in names of events this Feature should use for extraction. <<<
+        return ["snippet_received", "start_level"] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -58,13 +58,19 @@ class ChoiceClickCount(SessionFeature):
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
         
-        if "choice_click" in event.event_name:
-            self._choice_click_count += 1
-            for key in self._init_vals:
-                if key in event.event_name:
-                    self._init_vals[key] +=1
+
+        if not self._game_init_time:
+            try:
+                self._game_init_time = event.Timestamp
+            except:
+                print("event does not have a timestamp attached!")
         
-        
+        if event.EventName=="snippet_received":
+            print("snippet!")
+            self._snippet_receive_count += 1
+            self._snippet_time_logs.append(event.Timestamp)
+
+
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
@@ -98,13 +104,23 @@ class ChoiceClickCount(SessionFeature):
         #
         # note the code above is redundant, we could just return [self._found_click] to get the same result;
         # the more-verbose code is here for illustrative purposes.
-        
-        return [self._choice_click_count, self._init_vals["action"]]
+        if not self._snippet_time_logs:
+            return ""
+        else:
+            last_datetime = self._snippet_time_logs[-1]
+
+        time_delta = last_datetime-self._game_init_time
+        snippets_per_time : float = self._snippet_receive_count/time_delta
+
+
+        #eturn [snippets_per_time, [self._snippet_time_logs]]
+        return [2.0, [2,2]]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["Action"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+       
+        return ["TimeLog"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
