@@ -2,57 +2,74 @@
 import json
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
-import games.ICECUBE.features
+import games.PENGUINS.features
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.features.Feature import Feature
-from games.ICECUBE.features import *
+from games.PENGUINS.features import *
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
-# from games.ICECUBE.DBExport import scene_map
+# from games.PENGUINS.DBExport import scene_map
 
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
 
-EXPORT_PATH = "games/ICECUBE/DBExport.json"
-class IcecubeLoader(ExtractorLoader):
+region_map = {'Mirror':0, 'HillUp':1, 'Entrance':2, 'SnowballBowling':3, 'HillDown':4, 'Bridge':5, 'Chimes':6, 'MatingDPath':7, 'MatingD':8, 'ProtectNestPath':9, 'ProtectNest':10}
+
+class PenguinsLoader(ExtractorLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @staticmethod
     def _getFeaturesModule():
-        return games.ICECUBE.features
+        return games.PENGUINS.features
     
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         # Per-count features
             # level attempt features
-        if feature_type == "ScenesEncountered":
-            ret_val = ScenesEncountered.ScenesEncountered(params=extractor_params)
-        elif feature_type == "Session_Language":
-            ret_val = Session_Language.Session_Language(params=extractor_params)
-        elif feature_type == "SessionDuration":
+        if feature_type == "SessionDuration":
             ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
-        elif feature_type == "HeadsetOnCount":
-            ret_val = HeadsetOnCount.HeadsetOnCount(params=extractor_params)
-        elif feature_type == "ObjectSelectionsDuringVoiceover":
-            ret_val = ObjectSelectionsDuringVoiceover.ObjectSelectionsDuringVoiceover(params=extractor_params)
-        elif feature_type == "SceneFailureCount":
-            ret_val = SceneFailureCount.SceneFailureCount(params=extractor_params)
+        elif feature_type == "RegionsEncountered":
+            ret_val = RegionsEncountered.RegionsEncountered(params=extractor_params)
+        elif feature_type == "PlayerWaddleCount":
+            ret_val = PlayerWaddleCount.PlayerWaddleCount(params=extractor_params)
+        elif feature_type == "GazeDuration":
+            ret_val = GazeDuration.GazeDuration(params=extractor_params)
+        elif feature_type == "GazeCount":
+            ret_val = GazeCount.GazeCount(params=extractor_params)
+        elif feature_type == "SnowBallDuration":
+            ret_val = SnowBallDuration.SnowBallDuration(params=extractor_params)
+        elif feature_type == "RingChimesCount":
+            ret_val = RingChimesCount.RingChimesCount(params=extractor_params)
+        elif feature_type == "RegionWaddleCount":
+            ret_val = RegionWaddleCount.RegionWaddleCount(params=extractor_params)
+        elif feature_type == "EatFishCount":
+            ret_val = EatFishCount.EatFishCount(params=extractor_params)
+        elif feature_type == "PickupRockCount":
+            ret_val = PickupRockCount.PickupRockCount(params=extractor_params)
+        elif feature_type == "EggLostCount":
+            ret_val = EggLostCount.EggLostCount(params=extractor_params)
+        elif feature_type == "EggRecoverTime":
+            ret_val = EggRecoverTime.EggRecoverTime(params=extractor_params)
+        # elif feature_type == "PlayerInactiveAvgDuration":
+        #     ret_val = PlayerInactiveAvgDuration.PlayerInactiveAvgDuration(params=extractor_params)
+        elif feature_type == "MirrorWaddleDuration":
+            ret_val = MirrorWaddleDuration.MirrorWaddleDuration(params=extractor_params)
         
         elif extractor_params._count_index is not None:
-            if feature_type == "SceneFailures":
-                ret_val = SceneFailures.SceneFailures(params=extractor_params)
-            elif feature_type == "TaskTimeToComplete":
-                    ret_val = TaskTimeToComplete.TaskTimeToComplete(params=extractor_params)
-            elif feature_type == "SceneDuration":
-                    ret_val = SceneDuration.SceneDuration(params=extractor_params)
+            if feature_type == "RegionEnterCount":
+                ret_val = RegionEnterCount.RegionEnterCount(params=extractor_params)
+            elif feature_type == "WaddlePerRegion":
+                    ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
+            elif feature_type == "RegionDuration":
+                    ret_val = RegionDuration.RegionDuration(params=extractor_params)
             
         else:
-            raise NotImplementedError(f"'{feature_type}' is not a valid feature for Waves.")
+            raise NotImplementedError(f"'{feature_type}' is not a valid feature for Penguins.")
         return ret_val
 
     def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
@@ -74,7 +91,7 @@ class IcecubeLoader(ExtractorLoader):
         :type feature_overrides: Optional[List[str]]
         """
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
-        self._scene_map = {"no-active-scene": 0}
+        self._region_map = region_map
         self._task_map = {}
 
         # Load Aqualab scenes export and map scene names to integer values

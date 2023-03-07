@@ -36,10 +36,10 @@ jobs:
       with:
         game: MASHOPOLIS
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./*.log
     - name: Upload zips as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./data/MASHOPOLIS/*.zip

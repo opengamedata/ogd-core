@@ -26,6 +26,7 @@ from games.MAGNET.MagnetLoader import MagnetLoader
 from games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
 from games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
 from games.WAVES.WaveLoader import WaveLoader
+from games.PENGUINS.PenguinsLoader import PenguinsLoader
 from managers.EventManager import EventManager
 from managers.FeatureManager import FeatureManager
 from schemas.Event import Event
@@ -157,7 +158,9 @@ class ExportManager:
             _loader_class = ShipwrecksLoader
         elif game_id == "WAVES":
             _loader_class = WaveLoader
-        elif game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "STEMPORTS", "WIND"}:
+        elif game_id == "PENGUINS":
+            _loader_class = PenguinsLoader
+        elif game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WIND"}:
             # all games with data but no extractor.
             pass
         else:
