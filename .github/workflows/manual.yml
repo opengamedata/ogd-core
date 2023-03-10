@@ -142,7 +142,7 @@ jobs:
   
   trigger_reindex:
     name: Reindex OpenGameData Files
-    if: always()
+    if: github.event.inputs.export_to_web == 'true'
     needs: export_data
     runs-on: ubuntu-20.04
     steps:
