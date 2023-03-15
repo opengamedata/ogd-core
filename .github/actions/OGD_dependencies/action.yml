@@ -12,12 +12,11 @@ runs:
       shell: bash
     - name: Get correct Python
       run: |
-        sudo apt-get -q install python3.11
-        sudo apt-get -q install python3.11-dev
+        sudo apt-get -q install python3.10
       shell: bash
     - name: Set up pip
       run: |
-        python3.11 -m pip install --upgrade pip
+        python3.10 -m pip install --upgrade pip
       shell: bash
     # - name: Get pip cache dir
     #   id: pip-cache
@@ -38,7 +37,7 @@ runs:
     - name: Set up Python libraries
       # if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        python3.11 -m pip install setuptools --quiet
-        python3.11 -m pip install wheel --quiet
-        python3.11 -m pip install -r requirements.txt --quiet
+        python3.10 -m pip install setuptools --quiet
+        python3.10 -m pip install wheel --quiet
+        python3.10 -m pip install -r requirements.txt --quiet
       shell: bash
