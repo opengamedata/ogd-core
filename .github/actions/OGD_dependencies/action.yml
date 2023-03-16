@@ -10,28 +10,15 @@ runs:
     - name: Set up local bin in path # there is a warning about this in pip output, so we'll do this and see if that makes things better.
       run: export PATH=/home/runner/.local/bin:$PATH
       shell: bash
-    - name: Figure out what the fuck any of the Python bullshit is before we run the fucking install that goes nowhere.
-      run: |
-        which python
-        whereis python
-        ls /usr/bin/python*
-      shell: bash
     - name: Get correct Python
       run: |
         sudo apt-get -q install python3.10
       shell: bash
-    - name: Try to figure out where the fuck any of the new Python bullshit went.
-      run: |
-        which python
-        whereis python
-        ls /usr/bin/python*
-        python3 --version
-      shell: bash
     - name: Set up pip
       run: |
-        python3 -m pip install --upgrade pip
+        python3.10 -m pip install --upgrade pip
       shell: bash
-    # sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1
+    # sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
     # sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 2
     # sudo update-alternatives --config python3
     # - name: Get pip cache dir
@@ -53,7 +40,7 @@ runs:
     - name: Set up Python libraries
       # if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        python -m pip install setuptools --quiet
-        python -m pip install wheel --quiet
-        python -m pip install -r requirements.txt --quiet
+        python3.10 -m pip install setuptools --quiet
+        python3.10 -m pip install wheel --quiet
+        python3.10 -m pip install -r requirements.txt --quiet
       shell: bash
