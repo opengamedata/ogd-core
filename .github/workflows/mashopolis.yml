@@ -1,4 +1,4 @@
-# Workflow to test-run data when we modify MagnetExtractor.
+# Workflow to test-run data when we modify MashopolisExtractor.
 name: Mashopolis Exporter CI Test
 on:
   push:
@@ -7,7 +7,7 @@ on:
     - '.github/workflows/mashopolis.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
-  Magnet_CI:
+  Mashopolis_CI:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
