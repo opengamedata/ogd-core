@@ -16,8 +16,9 @@ runs:
       shell: bash
     - name: Set up pip
       run: |
-        python3.10 --version
-        python3.10 -m pip install --upgrade pip
+        ls /usr/bin/python*
+        python3 --version
+        python3 -m pip install --upgrade pip
       shell: bash
     # - name: Get pip cache dir
     #   id: pip-cache
