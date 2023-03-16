@@ -74,7 +74,7 @@ settings = {
         "JOWILDER":      {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
         "LAKELAND":      {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
         "MAGNET":        {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
-        "MASHOPOLIS":    {"schema":"BIGQUERY",           "source":"MASHOPOLIS_BQ",      "table":"events_*",   "credential":"./config/shipwrecks.json"},
+        "MASHOPOLIS":    {"schema":"OPENGAMEDATA_MYSQL", "source":"OPENGAMEDATA_MYSQL", "table":"MASHOPOLIS", "credential":None},
         "PENGUINS":      {"schema":"OPENGAMEDATA_MYSQL", "source":"OPENGAMEDATA_MYSQL", "table":"PENGUINS",   "credential":None},
         "SHIPWRECKS":    {"schema":"BIGQUERY",           "source":"SHIPWRECKS_BQ",      "table":"events_*",   "credential":"./config/shipwrecks.json"},
         "SHADOWSPECT":   {"schema":"BIGQUERY",           "source":"SHADOWSPECT_BQ",     "table":"events_*",   "credential":"./config/shadowspect.json"},
