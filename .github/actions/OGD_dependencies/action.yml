@@ -15,6 +15,7 @@ runs:
         which python
         whereis python
         ls /usr/bin/python*
+      shell: bash
     - name: Get correct Python
       run: |
         sudo apt-get -q install python3.10
@@ -25,6 +26,7 @@ runs:
         whereis python
         ls /usr/bin/python*
         python3 --version
+      shell: bash
     - name: Set up pip
       run: |
         python3 -m pip install --upgrade pip
