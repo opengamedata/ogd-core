@@ -11,20 +11,19 @@ class PerCountSchema(FeatureSchema):
         self._prefix : str
 
 
-        if isinstance(all_elements, dict):
-            if "count" in all_elements.keys():
-                self._count = PerCountSchema._parseCount(all_elements["count"])
-            else:
-                self._count = 0
-                Logger.Log(f"{name} config does not have an 'count' element; defaulting to count=0", logging.WARN)
-            if "prefix" in all_elements.keys():
-                self._prefix = PerCountSchema._parsePrefix(all_elements['prefix'])
-            else:
-                self._prefix = "pre"
-                Logger.Log(f"{name} config does not have an 'prefix' element; defaulting to prefix='pre'", logging.WARN)
-        else:
+        if not isinstance(all_elements, dict):
             all_elements = {}
             Logger.Log(f"For {name} Per-count Feature config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
+        if "count" in all_elements.keys():
+            self._count = PerCountSchema._parseCount(all_elements["count"])
+        else:
+            self._count = 0
+            Logger.Log(f"{name} config does not have an 'count' element; defaulting to count=0", logging.WARN)
+        if "prefix" in all_elements.keys():
+            self._prefix = PerCountSchema._parsePrefix(all_elements['prefix'])
+        else:
+            self._prefix = "pre"
+            Logger.Log(f"{name} config does not have an 'prefix' element; defaulting to prefix='pre'", logging.WARN)
 
         self._elements = { key : val for key,val in all_elements.items() if key not in {"count", "prefix"} }
         super().__init__(name=name, all_elements=all_elements)
