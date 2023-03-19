@@ -13,23 +13,21 @@ class SubfeatureSchema:
         self._description : str    
 
         self._name = SubfeatureSchema._parseName(name)
-        if isinstance(all_elements, dict):
-            if "return_type" in all_elements.keys():
-                self._return_type = SubfeatureSchema._parseReturnType(all_elements['return_type'])
-            else:
-                self._return_type = ""
-                Logger.Log(f"{name} subfeature config does not have an 'return_type' element; defaulting to return_type=''", logging.WARN)
-            if "description" in all_elements.keys():
-                self._description = SubfeatureSchema._parseDescription(all_elements['description'])
-            else:
-                self._description = ""
-                Logger.Log(f"{name} subfeature config does not have an 'description' element; defaulting to description=''", logging.WARN)
-            self._elements = { key : val for key,val in all_elements.items() if key not in {"return_value", "description"} }
-        else:
-            self._return_type = "Unknown"
-            self._description = "No description"
+        if not isinstance(all_elements, dict):
             self._elements = {}
             Logger.Log(f"For {name} subfeature config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
+
+        if "return_type" in all_elements.keys():
+            self._return_type = SubfeatureSchema._parseReturnType(all_elements['return_type'])
+        else:
+            self._return_type = "Unknown"
+            Logger.Log(f"{name} subfeature config does not have an 'return_type' element; defaulting to return_type='{self._return_type}", logging.WARN)
+        if "description" in all_elements.keys():
+            self._description = SubfeatureSchema._parseDescription(all_elements['description'])
+        else:
+            self._description = "No description"
+            Logger.Log(f"{name} subfeature config does not have an 'description' element; defaulting to description='{self._description}'", logging.WARN)
+        self._elements = { key : val for key,val in all_elements.items() if key not in {"return_value", "description"} }
 
     @property
     def Name(self) -> str:
@@ -91,20 +89,21 @@ class SubfeatureSchema:
 class FeatureSchema(ExtractorSchema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):
         self._subfeatures : Dict[str, SubfeatureSchema]
+        self._return_type : str
 
-        if isinstance(all_elements, dict):
-            if "return_type" in all_elements.keys():
-                self._return_type = FeatureSchema._parseReturnType(all_elements['return_type'], feature_name=name)
-            else:
-                self._return_type = ""
-                Logger.Log(f"{name} Feature config does not have an 'return_type' element; defaulting to return_type=''", logging.WARN)
-            if "subfeatures" in all_elements.keys():
-                self._subfeatures = FeatureSchema._parseSubfeatures(all_elements['subfeatures'])
-            else:
-                self._subfeatures = {}
-        else:
+        if not isinstance(all_elements, dict):
             all_elements = {}
             Logger.Log(f"For {name} Feature config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
+
+        if "return_type" in all_elements.keys():
+            self._return_type = FeatureSchema._parseReturnType(all_elements['return_type'], feature_name=name)
+        else:
+            self._return_type = ""
+            Logger.Log(f"{name} Feature config does not have an 'return_type' element; defaulting to return_type='{self._return_type}'", logging.WARN)
+        if "subfeatures" in all_elements.keys():
+            self._subfeatures = FeatureSchema._parseSubfeatures(all_elements['subfeatures'])
+        else:
+            self._subfeatures = {}
 
         _elements = { key : val for key,val in all_elements.items() if key not in {"return_type", "subfeatures"} }
         super().__init__(name=name, all_elements=_elements)
