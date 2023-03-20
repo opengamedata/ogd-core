@@ -1,10 +1,11 @@
 # import standard libraries
+import abc
 import logging
 from typing import Any, Dict, List, Optional
 # import local files
 from utils import Logger
 
-class Schema:
+class Schema(abc.ABC):
     def __init__(self, name:str, other_elements:Optional[Dict[str, Any]]):
         self._name : str
         self._other_elements : Dict[str, Any]
@@ -20,6 +21,11 @@ class Schema:
 
     def __repr__(self):
         return self.Name
+
+    @property
+    @abc.abstractmethod
+    def AsMarkdown(self) -> str:
+        pass
 
     @property
     def Name(self) -> str:
