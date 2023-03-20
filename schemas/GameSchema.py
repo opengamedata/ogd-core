@@ -5,6 +5,7 @@ from shutil import copyfile
 from typing import Any, Dict, List, Optional, Set, Union
 # import local files
 import utils
+from schemas.Schema import Schema
 from schemas.game_schemas.AggregateSchema import AggregateSchema
 from schemas.game_schemas.DetectorSchema import DetectorSchema
 from schemas.game_schemas.EventSchema import EventSchema
@@ -20,7 +21,7 @@ from utils import Logger, loadJSONFile
 #  for that game.
 #  The class includes several functions for easy access to the various parts of
 #  this schema data.
-class GameSchema:
+class GameSchema(Schema):
     # *** BUILT-INS ***
 
     def __init__(self, schema_name:str, schema_path:Optional[Path] = None):
@@ -42,7 +43,6 @@ class GameSchema:
         self._percount_feats         : Dict[str, PerCountSchema]            = {}
         self._legacy_perlevel_feats  : Dict[str, PerCountSchema]            = {}
         self._legacy_mode            : bool                                 = False
-        self._other_elements         : Dict[str, Dict[str, Any]]            = {}
         self._game_name              : str                                  = schema_name.split('.')[0]
         self._min_level              : Optional[int]
         self._max_level              : Optional[int]
@@ -99,16 +99,12 @@ class GameSchema:
                     self._supported_vers = None
                     Logger.Log(f"{self._game_name} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
 
-            # 7. Notify if there are other, unexpected elements
-            self._other_elements = { key:val for key,val in self._schema.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
-            if len(self._other_elements.keys()) > 0:
-                Logger.Log(f"Schema for {self.GameName} contained nonstandard elements {self.NonStandardElements}")
+            # 7. Collect any other, unexpected elements
+            _leftovers = { key:val for key,val in self._schema.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
+            super().__init__(name=self._game_name, other_elements=_leftovers)
 
     # def __getitem__(self, key) -> Any:
     #     return self._schema[key] if self._schema is not None else None
-    
-    def __str__(self) -> str:
-        return str(self._game_name)
 
     # *** PUBLIC METHODS ***
 
@@ -271,10 +267,6 @@ class GameSchema:
             return self._schema['config']
         else:
             return {}
-
-    @property
-    def NonStandardElements(self) -> Dict[str, Dict[str, Any]]:
-        return self._other_elements
 
     @property
     def AsMarkdown(self) -> str:
