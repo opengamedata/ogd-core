@@ -1,5 +1,4 @@
 # import standard libraries
-from ftplib import all_errors
 import logging
 from pathlib import Path
 from shutil import copyfile
