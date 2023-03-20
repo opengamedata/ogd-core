@@ -4,51 +4,38 @@ import logging
 from typing import Any, Dict, List, Set
 # import local files
 from schemas.ExtractionMode import ExtractionMode
+from schemas.Schema import Schema
 from utils import Logger
 
-class ExtractorSchema(abc.ABC):
+class ExtractorSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):
-        self._name        : str = name
         self._enabled     : Set[ExtractionMode]
         self._type_name   : str
         self._description : str
-        self._elements    : Dict[str, Any]
 
-        self._name = ExtractorSchema._parseName(name)
-        if isinstance(all_elements, dict):
-            if "type" in all_elements.keys():
-                self._type_name = ExtractorSchema._parseType(all_elements['type'])
-            else:
-                self._type_name = self._name
-
-            if "enabled" in all_elements.keys():
-                self._enabled = ExtractorSchema._parseEnabled(all_elements['enabled'])
-            else:
-                self._enabled = {ExtractionMode.DETECTOR, ExtractionMode.SESSION, ExtractionMode.PLAYER, ExtractionMode.POPULATION}
-                Logger.Log(f"{name} config does not have an 'enabled' element; defaulting to enabled=True", logging.WARN)
-
-            if "description" in all_elements.keys():
-                self._description = ExtractorSchema._parseDescription(all_elements['description'])
-            else:
-                self._description = ""
-                Logger.Log(f"{name} config does not have an 'description' element; defaulting to description=''", logging.WARN)
-            self._elements = { key : val for key,val in all_elements.items() if key not in {"type", "enabled", "description"} }
-        else:
+        if not isinstance(all_elements, dict):
             self._type_name = self._name
             self._enabled = set()
-            self._description = "No Description"
-            self._elements = {}
+            self._description = ""
             Logger.Log(f"For {name} Extractor config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
 
-    def __str__(self):
-        return self.Name
+        if "type" in all_elements.keys():
+            self._type_name = ExtractorSchema._parseType(all_elements['type'])
+        else:
+            self._type_name = self._name
+        if "enabled" in all_elements.keys():
+            self._enabled = ExtractorSchema._parseEnabled(all_elements['enabled'])
+        else:
+            self._enabled = {ExtractionMode.DETECTOR, ExtractionMode.SESSION, ExtractionMode.PLAYER, ExtractionMode.POPULATION}
+            Logger.Log(f"{name} config does not have an 'enabled' element; defaulting to enabled=True", logging.WARN)
+        if "description" in all_elements.keys():
+            self._description = ExtractorSchema._parseDescription(all_elements['description'])
+        else:
+            self._description = "No Description"
+            Logger.Log(f"{name} config does not have an 'description' element; defaulting to description='{self._description}'", logging.WARN)
 
-    def __repr__(self):
-        return self.Name
-
-    @property
-    def Name(self) -> str:
-        return self._name
+        _leftovers = { key : val for key,val in all_elements.items() if key not in {"type", "enabled", "description"} }
+        super().__init__(name=name, other_elements=_leftovers)
 
     @property
     def TypeName(self) -> str:
@@ -61,29 +48,6 @@ class ExtractorSchema(abc.ABC):
     @property
     def Description(self) -> str:
         return self._description
-
-    @property
-    def Elements(self) -> Dict[str, Any]:
-        return self._elements
-
-    @property
-    def ElementNames(self) -> List[str]:
-        return list(self._elements.keys())
-
-    @property
-    @abc.abstractmethod
-    def AsMarkdown(self) -> str:
-        pass
-    
-    @staticmethod
-    def _parseName(name):
-        ret_val : str
-        if isinstance(name, str):
-            ret_val = name
-        else:
-            ret_val = str(name)
-            Logger.Log(f"Extractor name was not a string, defaulting to str(name) == {ret_val}", logging.WARN)
-        return ret_val
     
     @staticmethod
     def _parseType(extractor_type):

@@ -13,6 +13,6 @@ class DetectorSchema(ExtractorSchema):
         ret_val   : str
 
         ret_val = f"**{self.Name}** : *Detector* {' (disabled)' if not ExtractionMode.DETECTOR in self.Enabled else ''}  \n{self.Description}  \n"
-        if len(self.Elements) > 0:
-            ret_val += "*Other elements*:  \n\n" + "\n".join([f"{elem_name} - {elem}" for elem_name,elem in self.Elements.items()])
+        if len(self.NonStandardElements) > 0:
+            ret_val += "*Other elements*:  \n\n" + "\n".join([f"{elem_name} - {elem}" for elem_name,elem in self.NonStandardElements.items()])
         return ret_val
