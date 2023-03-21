@@ -12,587 +12,1545 @@
         "accept_job": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the accepted job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the accepted job"
+                }
             }
         },
         "switch_job": {
             "description": "Event that occurs whenever the job switches, whether manually or through an `accept_job` or `complete_job`",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "prev_job_name": "String name of the previous job, may be incorrect when coinciding with any `complete_job`, or with an `accept_job` at a time the user was actively in a job."
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "prev_job_name": {
+                    "type": null,
+                    "description": "String name of the previous job, may be incorrect when coinciding with any `complete_job`, or with an `accept_job` at a time the user was actively in a job."
+                }
             }
         },
         "receive_fact": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "fact_id": "Unique ID for the given fact"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "fact_id": {
+                    "type": null,
+                    "description": "Unique ID for the given fact"
+                }
             }
         },
         "receive_entity": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "entity_id": "Unique ID for the given entity"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "entity_id": {
+                    "type": null,
+                    "description": "Unique ID for the given entity"
+                }
             }
         },
         "complete_job": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the completed job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the completed job"
+                }
             }
         },
         "complete_task": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "ID of the completed task"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "ID of the completed task"
+                }
             }
         },
         "scene_changed": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "scene_name": "Name of the loaded scene"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "scene_name": {
+                    "type": null,
+                    "description": "Name of the loaded scene"
+                }
             }
         },
         "room_changed": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "room_name": "Name of the room being entered"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "room_name": {
+                    "type": null,
+                    "description": "Name of the room being entered"
+                }
             }
         },
         "begin_dive": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "site_id": "ID of the dive site"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "site_id": {
+                    "type": null,
+                    "description": "ID of the dive site"
+                }
             }
         },
         "ask_for_help": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "node_id": "Scripting ID for the hint response"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "node_id": {
+                    "type": null,
+                    "description": "Scripting ID for the hint response"
+                }
             }
         },
         "guide_script_triggered": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "node_id": "Scripting ID for the guide's response"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "node_id": {
+                    "type": null,
+                    "description": "Scripting ID for the guide's response"
+                }
             }
         },
         "script_fired": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "node_id": "ID of a given script node"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "node_id": {
+                    "type": null,
+                    "description": "ID of a given script node"
+                }
             }
         },
         "open_bestiary": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "bestiary_open_species_tab": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "bestiary_open_environments_tab": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "bestiary_open_models_tab": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "bestiary_select_species": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "species_id": "ID of the selected species"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "species_id": {
+                    "type": null,
+                    "description": "ID of the selected species"
+                }
             }
         },
         "bestiary_select_environment": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "environment_id": "ID of the selected environment"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "environment_id": {
+                    "type": null,
+                    "description": "ID of the selected environment"
+                }
             }
         },
         "bestiary_select_model": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "model_id": "ID of the selected model"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "model_id": {
+                    "type": null,
+                    "description": "ID of the selected model"
+                }
             }
         },
         "close_bestiary": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "open_status": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "status_open_job_tab": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "status_open_item_tab": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "status_open_tech_tab": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "close_status": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "begin_model": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "model_phase_changed": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "phase": "The selected modeling phase"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "phase": {
+                    "type": null,
+                    "description": "The selected modeling phase"
+                }
             }
         },
         "model_ecosystem_selected": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "ecosystem": "Ecosystem selected for modeling"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "ecosystem": {
+                    "type": null,
+                    "description": "Ecosystem selected for modeling"
+                }
             }
         },
         "model_concept_started": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "ecosystem": "Ecosystem selected for modeling"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "ecosystem": {
+                    "type": null,
+                    "description": "Ecosystem selected for modeling"
+                }
             }
         },
         "model_concept_updated": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "ecosystem": "Ecosystem selected for modeling",
-                "status": "Updated status of the concept model"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "ecosystem": {
+                    "type": null,
+                    "description": "Ecosystem selected for modeling"
+                },
+                "status": {
+                    "type": null,
+                    "description": "Updated status of the concept model"
+                }
             }
         },
         "model_concept_exported": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "ecosystem": "Ecosystem selected for modeling"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "ecosystem": {
+                    "type": null,
+                    "description": "Ecosystem selected for modeling"
+                }
             }
         },
         "begin_simulation": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "ecosystem": "Ecosystem selected for modeling"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "ecosystem": {
+                    "type": null,
+                    "description": "Ecosystem selected for modeling"
+                }
             }
         },
         "model_sync_error": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "ecosystem": "Ecosystem selected for modeling",
-                "sync": "Sync % achieved with the current model"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "ecosystem": {
+                    "type": null,
+                    "description": "Ecosystem selected for modeling"
+                },
+                "sync": {
+                    "type": null,
+                    "description": "Sync % achieved with the current model"
+                }
             }
         },
         "simulation_sync_achieved": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "ecosystem": "Ecosystem selected for modeling"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "ecosystem": {
+                    "type": null,
+                    "description": "Ecosystem selected for modeling"
+                }
             }
         },
         "model_predict_completed": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "ecosystem": "Ecosystem selected for modeling"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "ecosystem": {
+                    "type": null,
+                    "description": "Ecosystem selected for modeling"
+                }
             }
         },
         "model_intervene_update": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "ecosystem": "Ecosystem selected for modeling",
-                "organism": "The organism having its population modified by the player",
-                "difference_value": "The population change for the selected organism"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "ecosystem": {
+                    "type": null,
+                    "description": "Ecosystem selected for modeling"
+                },
+                "organism": {
+                    "type": null,
+                    "description": "The organism having its population modified by the player"
+                },
+                "difference_value": {
+                    "type": null,
+                    "description": "The population change for the selected organism"
+                }
             }
         },
         "model_intervene_error": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "ecosystem": "Ecosystem selected for modeling"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "ecosystem": {
+                    "type": null,
+                    "description": "Ecosystem selected for modeling"
+                }
             }
         },
         "model_intervene_completed": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "ecosystem": "Ecosystem selected for modeling"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "ecosystem": {
+                    "type": null,
+                    "description": "Ecosystem selected for modeling"
+                }
             }
         },
         "end_model": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "phase": "The selected modeling phase upon leaving",
-                "ecosystem": "The selected ecosystem upon leaving"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "phase": {
+                    "type": null,
+                    "description": "The selected modeling phase upon leaving"
+                },
+                "ecosystem": {
+                    "type": null,
+                    "description": "The selected ecosystem upon leaving"
+                }
             }
         },
         "purchase_upgrade": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "item_id": "ID of the purchased item",
-                "item_name": "String name of the purchased item",
-                "cost": "Cost of the purchased item"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "item_id": {
+                    "type": null,
+                    "description": "ID of the purchased item"
+                },
+                "item_name": {
+                    "type": null,
+                    "description": "String name of the purchased item"
+                },
+                "cost": {
+                    "type": null,
+                    "description": "Cost of the purchased item"
+                }
             }
         },
         "insufficient_funds": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "item_id": "ID of the item",
-                "item_name": "String name of the item",
-                "cost": "Cost of the item"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "item_id": {
+                    "type": null,
+                    "description": "ID of the item"
+                },
+                "item_name": {
+                    "type": null,
+                    "description": "String name of the item"
+                },
+                "cost": {
+                    "type": null,
+                    "description": "Cost of the item"
+                }
             }
         },
         "talk_to_shopkeep": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "add_environment": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "tank_type": "Selected tank type for the experiment",
-                "environment": "Name of the added environment"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "tank_type": {
+                    "type": null,
+                    "description": "Selected tank type for the experiment"
+                },
+                "environment": {
+                    "type": null,
+                    "description": "Name of the added environment"
+                }
             }
         },
         "remove_environment": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "tank_type": "Selected tank type for the experiment",
-                "environment": "Name of the removed environment"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "tank_type": {
+                    "type": null,
+                    "description": "Selected tank type for the experiment"
+                },
+                "environment": {
+                    "type": null,
+                    "description": "Name of the removed environment"
+                }
             }
         },
         "add_critter": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "tank_type": "Selected tank type for the experiment",
-                "environment": "Selected environment for the experiment",
-                "critter": "Name of the critter added to the tank"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "tank_type": {
+                    "type": null,
+                    "description": "Selected tank type for the experiment"
+                },
+                "environment": {
+                    "type": null,
+                    "description": "Selected environment for the experiment"
+                },
+                "critter": {
+                    "type": null,
+                    "description": "Name of the critter added to the tank"
+                }
             }
         },
         "remove_critter": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "tank_type": "Selected tank type for the experiment",
-                "environment": "Selected environment for the experiment",
-                "critter": "Name of the critter removed from the tank"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "tank_type": {
+                    "type": null,
+                    "description": "Selected tank type for the experiment"
+                },
+                "environment": {
+                    "type": null,
+                    "description": "Selected environment for the experiment"
+                },
+                "critter": {
+                    "type": null,
+                    "description": "Name of the critter removed from the tank"
+                }
             }
         },
         "begin_experiment": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "tank_type": "Selected tank type for the experiment",
-                "environment": "Selected environment for the experiment",
-                "critters": "Comma separated list of all critters added to the tank"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "tank_type": {
+                    "type": null,
+                    "description": "Selected tank type for the experiment"
+                },
+                "environment": {
+                    "type": null,
+                    "description": "Selected environment for the experiment"
+                },
+                "critters": {
+                    "type": null,
+                    "description": "Comma separated list of all critters added to the tank"
+                }
             }
         },
         "end_experiment": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "tank_type": "Selected tank type for the experiment",
-                "environment": "Selected environment for the experiment",
-                "critters": "Comma separated list of all critters added to the tank"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "tank_type": {
+                    "type": null,
+                    "description": "Selected tank type for the experiment"
+                },
+                "environment": {
+                    "type": null,
+                    "description": "Selected environment for the experiment"
+                },
+                "critters": {
+                    "type": null,
+                    "description": "Comma separated list of all critters added to the tank"
+                }
             }
         },
         "begin_argument": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "fact_submitted": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "fact_id": "ID of the submitted fact"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "fact_id": {
+                    "type": null,
+                    "description": "ID of the submitted fact"
+                }
             }
         },
         "fact_rejected": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job",
-                "fact_id": "ID of the rejected fact"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                },
+                "fact_id": {
+                    "type": null,
+                    "description": "ID of the rejected fact"
+                }
             }
         },
         "leave_argument": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         },
         "complete_argument": {
             "description": "N/A",
             "event_data": {
-                "user_code": "Generated user code for the current player",
-                "app_version": "Current game build version",
-                "app_flavor": "Git branch origin for current build",
-                "log_version": "Current logging version",
-                "job_name": "String name of the current job"
+                "user_code": {
+                    "type": null,
+                    "description": "Generated user code for the current player"
+                },
+                "app_version": {
+                    "type": null,
+                    "description": "Current game build version"
+                },
+                "app_flavor": {
+                    "type": null,
+                    "description": "Git branch origin for current build"
+                },
+                "log_version": {
+                    "type": null,
+                    "description": "Current logging version"
+                },
+                "job_name": {
+                    "type": null,
+                    "description": "String name of the current job"
+                }
             }
         }
+    },
     },
     "detectors": {
         "per_count": {},
