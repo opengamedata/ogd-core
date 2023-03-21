@@ -26,14 +26,15 @@ class TSVOuterface(DataOuterface):
 
     # *** BUILT-INS ***
 
-    def __init__(self, game_id:str, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], data_dir:str, extension:str="tsv", dataset_id:Optional[str]=None):
+    def __init__(self, game_id:str, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], file_indexing:Dict[str,str], extension:str="tsv", dataset_id:Optional[str]=None):
         super().__init__(game_id=game_id, config={})
         self._file_paths   : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "events":None}
-        self._zip_names    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "events":None}
+        self._zip_paths    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "events":None}
         self._files        : Dict[str,Optional[IO]]   = {"population":None, "players":None, "sessions":None, "events":None}
-        self._data_dir     : Path = Path("./" + data_dir)
+        self._file_indexing: Dict[str, str]           = file_indexing
+        self._data_dir     : Path = Path(f"./{self._file_indexing.get('LOCAL_DIR', './')}")
         self._game_data_dir: Path = self._data_dir / self._game_id
-        self._readme_path  : Path = self._game_data_dir/ "readme.md"
+        self._readme_path  : Path = self._game_data_dir / "readme.md"
         self._extension    : str  = extension
         self._date_range   : Dict[str,Optional[datetime]] = date_range
         self._dataset_id   : str  = ""
@@ -59,16 +60,16 @@ class TSVOuterface(DataOuterface):
         # finally, generate file names.
         if ExportMode.EVENTS in export_modes:
             self._file_paths['events']     = self._game_data_dir / f"{base_file_name}_events.{self._extension}"
-            self._zip_names['events']      = self._game_data_dir / f"{base_file_name}_events.zip"
+            self._zip_paths['events']      = self._game_data_dir / f"{base_file_name}_events.zip"
         if ExportMode.SESSION in export_modes:
             self._file_paths['sessions']   = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}"
-            self._zip_names['sessions']    = self._game_data_dir / f"{base_file_name}_session-features.zip"
+            self._zip_paths['sessions']    = self._game_data_dir / f"{base_file_name}_session-features.zip"
         if ExportMode.PLAYER in export_modes:
             self._file_paths['players']   = self._game_data_dir / f"{base_file_name}_player-features.{self._extension}"
-            self._zip_names['players']    = self._game_data_dir / f"{base_file_name}_player-features.zip"
+            self._zip_paths['players']    = self._game_data_dir / f"{base_file_name}_player-features.zip"
         if ExportMode.POPULATION in export_modes:
             self._file_paths['population'] = self._game_data_dir / f"{base_file_name}_population-features.{self._extension}"
-            self._zip_names['population']  = self._game_data_dir / f"{base_file_name}_population-features.zip"
+            self._zip_paths['population']  = self._game_data_dir / f"{base_file_name}_population-features.zip"
         self.Open()
 
     def __del__(self):
@@ -93,7 +94,7 @@ class TSVOuterface(DataOuterface):
             # if not in place, generate the readme
             Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING, depth=1)
             readme_path = Path("./data") / self._game_id
-            game_schema  : GameSchema  = GameSchema(schema_name=self._game_id, schema_path=Path(f"./games/{self._game_id}"))
+            game_schema  : GameSchema  = GameSchema(schema_name=self._game_id, schema_path=Path(f"./games/{self._game_id}/schemas"))
             table_schema = TableSchema.FromID(game_id=self._game_id)
             TSVOuterface.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=readme_path)
         else:
@@ -199,25 +200,26 @@ class TSVOuterface(DataOuterface):
             os.makedirs(name=path, exist_ok=True)
             with open(path / "readme.md", "w") as readme:
                 # 1. Open files with game-specific readme data, and global db changelog.
-                source_dir = Path("./doc/readme_src/")
+                game_schema_dir = Path(f"./games/{game_schema.GameName}/schemas")
                 try:
-                    with open(source_dir / f"{game_schema._game_name}_readme_src.md", "r") as readme_src:
+                    with open(game_schema_dir / f"{game_schema.GameName}_readme_src.md", "r") as readme_src:
                         readme.write(readme_src.read())
                 except FileNotFoundError as err:
                     readme.write("No game readme prepared")
-                    Logger.Log(f"Could not find {game_schema._game_name}_readme_src", logging.WARNING)
+                    Logger.Log(f"Could not find {game_schema.GameName}_readme_src", logging.WARNING)
                 finally:
                     readme.write("\n\n")
                 # 2. Use schema to write feature & column descriptions to the readme.
                 meta = TSVOuterface.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema)
                 readme.write(meta)
                 # 3. Append any important data from the data changelog.
+                changelog_dir = Path(f"./schemas/")
                 try:
-                    with open(source_dir / "changelog_src.md", "r") as changelog_src:
+                    with open(changelog_dir / "database_changelog_src.md", "r") as changelog_src:
                         readme.write(changelog_src.read())
                 except FileNotFoundError as err:
                     readme.write("No changelog prepared")
-                    Logger.Log(f"Could not find changelog_src", logging.WARNING)
+                    Logger.Log(f"Could not find database_changelog_src", logging.WARNING)
         except FileNotFoundError as err:
             Logger.Log(f"Could not open readme.md for writing.", logging.ERROR)
             traceback.print_tb(err.__traceback__)
@@ -307,25 +309,25 @@ class TSVOuterface(DataOuterface):
             _existing_players_file = existing_meta.get('players_file', None)
             _existing_pop_file     = existing_meta.get('population_file', None)
             try:
-                if _existing_events_file is not None and self._zip_names['events'] is not None:
-                    Logger.Log(f"Renaming {str(_existing_events_file)} -> {self._zip_names['events']}", logging.DEBUG)
-                    os.rename(_existing_events_file, str(self._zip_names['events']))
-                if _existing_sess_file is not None and self._zip_names['sessions'] is not None:
-                    Logger.Log(f"Renaming {str(_existing_sess_file)} -> {self._zip_names['sessions']}", logging.DEBUG)
-                    os.rename(_existing_sess_file, str(self._zip_names['sessions']))
-                if _existing_players_file is not None and self._zip_names['players'] is not None:
-                    Logger.Log(f"Renaming {str(_existing_players_file)} -> {self._zip_names['players']}", logging.DEBUG)
-                    os.rename(_existing_players_file, str(self._zip_names['players']))
-                if _existing_pop_file is not None and self._zip_names['population'] is not None:
-                    Logger.Log(f"Renaming {str(_existing_pop_file)} -> {self._zip_names['population']}", logging.DEBUG)
-                    os.rename(_existing_pop_file, str(self._zip_names['population']))
+                if _existing_events_file is not None and self._zip_paths['events'] is not None:
+                    Logger.Log(f"Renaming {str(_existing_events_file)} -> {self._zip_paths['events']}", logging.DEBUG)
+                    os.rename(_existing_events_file, str(self._zip_paths['events']))
+                if _existing_sess_file is not None and self._zip_paths['sessions'] is not None:
+                    Logger.Log(f"Renaming {str(_existing_sess_file)} -> {self._zip_paths['sessions']}", logging.DEBUG)
+                    os.rename(_existing_sess_file, str(self._zip_paths['sessions']))
+                if _existing_players_file is not None and self._zip_paths['players'] is not None:
+                    Logger.Log(f"Renaming {str(_existing_players_file)} -> {self._zip_paths['players']}", logging.DEBUG)
+                    os.rename(_existing_players_file, str(self._zip_paths['players']))
+                if _existing_pop_file is not None and self._zip_paths['population'] is not None:
+                    Logger.Log(f"Renaming {str(_existing_pop_file)} -> {self._zip_paths['population']}", logging.DEBUG)
+                    os.rename(_existing_pop_file, str(self._zip_paths['population']))
             except Exception as err:
                 msg = f"Error while setting up zip files! {type(err)} : {err}"
                 Logger.Log(msg, logging.ERROR)
                 traceback.print_tb(err.__traceback__)
         # for each file, try to save out the csv/tsv to a file - if it's one that should be exported, that is.
-        if self._zip_names['population'] is not None:
-            with zipfile.ZipFile(self._zip_names["population"], "w", compression=zipfile.ZIP_DEFLATED) as population_zip_file:
+        if self._zip_paths['population'] is not None:
+            with zipfile.ZipFile(self._zip_paths["population"], "w", compression=zipfile.ZIP_DEFLATED) as population_zip_file:
                 try:
                     population_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_population-features.{self._extension}"
                     readme_file  = Path(self._dataset_id) / "readme.md"
@@ -337,8 +339,8 @@ class TSVOuterface(DataOuterface):
                 except FileNotFoundError as err:
                     Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
                     traceback.print_tb(err.__traceback__)
-        if self._zip_names['players'] is not None:
-            with zipfile.ZipFile(self._zip_names["players"], "w", compression=zipfile.ZIP_DEFLATED) as players_zip_file:
+        if self._zip_paths['players'] is not None:
+            with zipfile.ZipFile(self._zip_paths["players"], "w", compression=zipfile.ZIP_DEFLATED) as players_zip_file:
                 try:
                     player_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_player-features.{self._extension}"
                     readme_file  = Path(self._dataset_id) / "readme.md"
@@ -350,8 +352,8 @@ class TSVOuterface(DataOuterface):
                 except FileNotFoundError as err:
                     Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
                     traceback.print_tb(err.__traceback__)
-        if self._zip_names['sessions'] is not None:
-            with zipfile.ZipFile(self._zip_names["sessions"], "w", compression=zipfile.ZIP_DEFLATED) as sessions_zip_file:
+        if self._zip_paths['sessions'] is not None:
+            with zipfile.ZipFile(self._zip_paths["sessions"], "w", compression=zipfile.ZIP_DEFLATED) as sessions_zip_file:
                 try:
                     session_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_session-features.{self._extension}"
                     readme_file  = Path(self._dataset_id) / "readme.md"
@@ -363,8 +365,8 @@ class TSVOuterface(DataOuterface):
                 except FileNotFoundError as err:
                     Logger.Log(f"FileNotFoundError Exception: {err}", logging.ERROR)
                     traceback.print_tb(err.__traceback__)
-        if self._zip_names['events'] is not None:
-            with zipfile.ZipFile(self._zip_names["events"], "w", compression=zipfile.ZIP_DEFLATED) as events_zip_file:
+        if self._zip_paths['events'] is not None:
+            with zipfile.ZipFile(self._zip_paths["events"], "w", compression=zipfile.ZIP_DEFLATED) as events_zip_file:
                 try:
                     events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_events.{self._extension}"
                     readme_file = Path(self._dataset_id) / "readme.md"
@@ -415,10 +417,14 @@ class TSVOuterface(DataOuterface):
                     "end_date"     :self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions"     :num_sess,
-                    "population_file" :str(self._zip_names['population']) if self._zip_names['population'] else None,
-                    "players_file"    :str(self._zip_names['players'])   if self._zip_names['players']   else None,
-                    "sessions_file"   :str(self._zip_names['sessions'])   if self._zip_names['sessions']   else None,
-                    "events_file"     :str(self._zip_names['events'])     if self._zip_names['events']     else None
+                    "population_file"     :str(self._zip_paths['population']) if self._zip_paths['population'] else None,
+                    "population_template" : ''                                if self._zip_paths['population'] else None,
+                    "players_file"        :str(self._zip_paths['players'])    if self._zip_paths['players']    else None,
+                    "players_template" : ''                                   if self._zip_paths['players']    else None,
+                    "sessions_file"       :str(self._zip_paths['sessions'])   if self._zip_paths['sessions']   else None,
+                    "sessions_template" : ''                                  if self._zip_paths['sessions']   else None,
+                    "events_file"         :str(self._zip_paths['events'])     if self._zip_paths['events']     else None,
+                    "events_template" : ''                                    if self._zip_paths['events']     else None
                 }
                 meta_file.write(json.dumps(metadata, indent=4))
                 meta_file.close()
@@ -431,38 +437,48 @@ class TSVOuterface(DataOuterface):
     #  @param num_sess      The number of sessions included in the recent export.
     def _updateFileExportList(self, num_sess: int) -> None:
         self._backupFileExportList()
-        file_directory = {}
+        file_index = {}
         existing_datasets = {}
         try:
-            file_directory = utils.loadJSONFile(filename="file_list.json", path=self._data_dir)
+            file_index = utils.loadJSONFile(filename="file_list.json", path=self._data_dir)
         except FileNotFoundError as err:
             Logger.Log("file_list.json does not exist.", logging.WARNING)
         except json.decoder.JSONDecodeError as err:
             Logger.Log(f"file_list.json has invalid format: {str(err)}.", logging.WARNING)
         finally:
-            if not self._game_id in file_directory.keys():
-                file_directory[self._game_id] = {}
-            existing_datasets  = file_directory[self._game_id]
+            if not "CONFIG" in file_index.keys():
+                Logger.Log(f"No CONFIG found in file_list.json, adding default CONFIG...", logging.WARNING)
+                file_index["CONFIG"] = {
+                    "files_base" : self._file_indexing.get("REMOTE_URL", None),
+                    "templates_base" : self._file_indexing.get("TEMPLATES_URL", None)
+                }
+            if not self._game_id in file_index.keys():
+                file_index[self._game_id] = {}
+            existing_datasets  = file_index[self._game_id]
             with open(self._data_dir / "file_list.json", "w") as existing_csv_file:
                 Logger.Log(f"Opened file list for writing at {existing_csv_file.name}", logging.INFO)
                 existing_metadata = existing_datasets.get(self._dataset_id, {})
-                population_path = self._zip_names.get("population") or existing_metadata.get("population")
-                players_path    = self._zip_names.get("players")    or existing_metadata.get("players")
-                sessions_path   = self._zip_names.get("sessions")   or existing_metadata.get("sessions")
-                events_path     = self._zip_names.get("events")     or existing_metadata.get("events")
-                file_directory[self._game_id][self._dataset_id] = \
+                population_path = self._zip_paths.get("population") or existing_metadata.get("population")
+                players_path    = self._zip_paths.get("players")    or existing_metadata.get("players")
+                sessions_path   = self._zip_paths.get("sessions")   or existing_metadata.get("sessions")
+                events_path     = self._zip_paths.get("events")     or existing_metadata.get("events")
+                file_index[self._game_id][self._dataset_id] = \
                 {
-                    "ogd_revision" :self._short_hash,
-                    "start_date"   :self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
-                    "end_date"     :self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
-                    "date_modified":datetime.now().strftime("%m/%d/%Y"),
-                    "sessions"     :num_sess,
-                    "population_file" :str(population_path) if population_path is not None else None,
-                    "players_file"    :str(players_path)    if players_path    is not None else None,
-                    "sessions_file"   :str(sessions_path)   if sessions_path   is not None else None,
-                    "events_file"     :str(events_path)     if events_path     is not None else None,
+                    "ogd_revision"        : self._short_hash,
+                    "start_date"          : self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
+                    "end_date"            : self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
+                    "date_modified"       : datetime.now().strftime("%m/%d/%Y"),
+                    "sessions"            : num_sess,
+                    "population_file"     : str(population_path) if population_path is not None else None,
+                    "population_template" : ''                   if population_path is not None else None,
+                    "players_file"        : str(players_path)    if players_path    is not None else None,
+                    "players_template"    : ''                   if players_path    is not None else None,
+                    "sessions_file"       : str(sessions_path)   if sessions_path   is not None else None,
+                    "sessions_template"   : ''                   if sessions_path   is not None else None,
+                    "events_file"         : str(events_path)     if events_path     is not None else None,
+                    "events_template"     : ''                   if events_path     is not None else None
                 }
-                existing_csv_file.write(json.dumps(existing_datasets, indent=4))
+                existing_csv_file.write(json.dumps(file_index, indent=4))
 
     def _backupFileExportList(self) -> bool:
         try:

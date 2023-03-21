@@ -127,13 +127,20 @@ def genRequest(events:bool, features:bool) -> Request:
         elif args.session is not None and args.session != "":
             range = ExporterRange.FromIDs(source=interface, ids=[args.session], id_mode=IDMode.SESSION)
             dataset_id = f"{args.game}_{args.session}"
+        elif args.session_id_file is not None and args.session_id_file != "":
+            file_path = Path(args.session_id_file)
+            with open(file_path) as session_file:
+                reader = csv.reader(session_file)
+                file_contents = list(reader) # this gives list of lines, each line a list
+                names = list(chain.from_iterable(file_contents)) # so, convert to single list
+                print(f"list of sessions: {list(names)}")
+                range = ExporterRange.FromIDs(source=interface, ids=names, id_mode=IDMode.SESSION)
         else:
             start_date, end_date = getDateRange()
             range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date)
     # 3. set up the outerface, based on the range and dataset_id.
-    file_outerface = TSVOuterface(game_id=args.game, export_modes=export_modes,
-                                  date_range=range.DateRange, data_dir=settings["DATA_DIR"],
-                                  dataset_id=dataset_id)
+    file_outerface = TSVOuterface(game_id=args.game, export_modes=export_modes, date_range=range.DateRange,
+                                  file_indexing=settings.get("FILE_INDEXING", {}), dataset_id=dataset_id)
     # 4. Once we have the parameters parsed out, construct the request.
     return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces={file_outerface})
 
@@ -215,6 +222,8 @@ export_parser.add_argument("-s", "--session", default="",
                     help="Tell the program to output data for a session with given ID, instead of using a date range.")
 export_parser.add_argument("--player_id_file", default="",
                     help="Tell the program to output data for a collection of players with IDs in given file, instead of using a date range.")
+export_parser.add_argument("--session_id_file", default="",
+                    help="Tell the program to output data for a collection of sessions with IDs in given file, instead of using a date range.")
 export_parser.add_argument("-f", "--file", default="",
                     help="Tell the program to use a file as input, instead of looking up a database.")
 export_parser.add_argument("-m", "--monthly", default=False, action="store_true",
@@ -247,23 +256,27 @@ sub_parsers.add_parser("list-games",
 args : Namespace = parser.parse_args()
 
 success : bool
-cmd = args.command.lower()
-if cmd == "export":
-    success = RunExport(events=True, features=True)
-elif cmd == "export-events":
-    success = RunExport(events=True)
-elif cmd == "export-features":
-    success = RunExport(features=True)
-elif cmd == "info":
-    success = ShowGameInfo()
-elif cmd == "readme":
-    success = WriteReadme()
-elif cmd == "list-games":
-    success = ListGames()
-# elif cmd == "help":
-#     success = ShowHelp()
+if args is not None:
+    cmd = args.command.lower()
+    if cmd == "export":
+        success = RunExport(events=True, features=True)
+    elif cmd == "export-events":
+        success = RunExport(events=True)
+    elif cmd == "export-features":
+        success = RunExport(features=True)
+    elif cmd == "info":
+        success = ShowGameInfo()
+    elif cmd == "readme":
+        success = WriteReadme()
+    elif cmd == "list-games":
+        success = ListGames()
+    # elif cmd == "help":
+    #     success = ShowHelp()
+    else:
+        print(f"Invalid Command {cmd}!")
+        success = False
 else:
-    print(f"Invalid Command {cmd}!")
+    print(f"Need to enter a command!")
     success = False
 if not success:
     sys.exit(1)

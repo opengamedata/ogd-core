@@ -14,7 +14,6 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 
 EXPORT_PATH = "games/AQUALAB/DBExport.json"
-CONFIG_PATH = "games/AQUALAB/AQUALAB.json"
 
 ## @class AqualabLoader
 #  Extractor subclass for extracting features from Aqualab game data.
@@ -119,8 +118,6 @@ class AqualabLoader(ExtractorLoader):
             ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
         elif feature_type == "UserAvgSessionDuration":
             ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
-        elif feature_type == "UserSessionCount":
-            ret_val = UserSessionCount.UserSessionCount(params=extractor_params, player_id=self._player_id)
         elif feature_type == "UserTotalSessionDuration":
             ret_val = UserTotalSessionDuration.UserTotalSessionDuration(params=extractor_params, player_id=self._player_id)
         # then run through per-count features.

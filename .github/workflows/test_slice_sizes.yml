@@ -6,7 +6,7 @@ on:
 
 jobs:
   test_export:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         size: [1000, 100, 250, 500, 1000, 2000]
@@ -14,7 +14,7 @@ jobs:
       max-parallel: 1
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Get OpenConnect
       run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Connect VPN
@@ -35,6 +35,6 @@ jobs:
       with:
         game: WAVES
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./*.log

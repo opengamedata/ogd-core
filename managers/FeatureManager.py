@@ -128,12 +128,12 @@ class FeatureManager:
             return self._players["null"].GetExtractorNames()
         else:
             return []
-    def GetPlayerFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[ExportRow]:
+    def GetPlayerFeatures(self, as_str:bool = False) -> List[ExportRow]:
         if ExportMode.PLAYER in self._exp_types:
             start   : datetime = datetime.now()
             self._try_update(as_str=as_str)
             ret_val = self._latest_values.get('players', [])
-            Logger.Log(f"Time to retrieve Player lines for slice [{slice_num}/{slice_count}]: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
+            Logger.Log(f"Time to retrieve Player lines: {datetime.now() - start} to get {len(ret_val)} lines", logging.INFO, depth=2)
             return ret_val
         else:
             return []
@@ -159,10 +159,18 @@ class FeatureManager:
     def ClearPlayerLines(self) -> None:
         for player in self._players.values():
             player.ClearLines()
+        self._players = {}
+        self._players["null"] = PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+                                                player_id="null", feature_overrides=self._overrides)
     def ClearSessionLines(self) -> None:
         for sess_list in self._sessions.values():
             for sess in sess_list.values():
                 sess.ClearLines()
+        self._sessions = {}
+        self._sessions["null"] = {
+            "null" : SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
+                                      player_id="null", session_id="null", feature_overrides=self._overrides)
+        }
 
     def _flatHierarchy(self) -> List[FeatureProcessor]:
         ret_val : List[FeatureProcessor] = [self._population]

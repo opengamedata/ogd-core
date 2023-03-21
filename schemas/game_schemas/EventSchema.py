@@ -1,139 +1,71 @@
 # import standard libraries
 import logging
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 # import local files
+from schemas.Schema import Schema
 from utils import Logger
 
-class ElementDetailSchema:
-    def __init__(self, name:str, type_name:str):
-        self._name        : str
-        self._type_name   : str
+class EventDataElementSchema(Schema):
+    def __init__(self, name:str, all_elements:Dict[str, Any]):
+        self._type        : str
+        self._description : str
+        self._details     : Optional[Dict[str, str]]
 
-        self._name = ElementDetailSchema._parseName(name)
-        self._type_name = ElementDetailSchema._parseType(type_name)
+        if not isinstance(all_elements, dict):
+            if isinstance(all_elements, str):
+                all_elements = { 'description' : all_elements }
+                Logger.Log(f"For {name} EventDataElement config, all_elements was a str, probably in legacy format. Defaulting to all_elements = {'{'} description : {all_elements['description']} {'}'}", logging.WARN)
+            else:
+                all_elements = {}
+                Logger.Log(f"For {name} EventDataElement config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
 
-    @property
-    def Name(self) -> str:
-        return self._name
-
-    @property
-    def TypeName(self) -> str:
-        return self._type_name
+        if "type" in all_elements.keys():
+            self._type = EventDataElementSchema._parseElementType(all_elements['type'])
+        else:
+            self._type = "Unknown"
+            Logger.Log(f"{name} EventDataElement config does not have a 'type' element; defaulting to type='{self._type}", logging.WARN)
+        if "description" in all_elements.keys():
+            self._description = EventDataElementSchema._parseDescription(all_elements['description'])
+        else:
+            self._type = "Unknown"
+            Logger.Log(f"{name} EventDataElement config does not have a 'description' element; defaulting to description='{self._description}", logging.WARN)
+        if "details" in all_elements.keys():
+            self._details = EventDataElementSchema._parseDetails(details=all_elements['details'])
+        else:
+            self._details = None
+        _leftovers = { key : val for key,val in all_elements.items() if key not in {"type", "description", "details"} }
+        super().__init__(name=name, other_elements=_leftovers)
 
     @property
     def AsMarkdown(self) -> str:
-        return f"**{self.Name}** :  *{self.TypeName}*  \n"
-    
-    @staticmethod
-    def _parseName(name):
-        ret_val : str
-        if isinstance(name, str):
-            ret_val = name
-        else:
-            ret_val = str(name)
-            Logger.Log(f"ElementDetail name was not a string, defaulting to str(name) == {ret_val}", logging.WARN)
-        return ret_val
-    
-    @staticmethod
-    def _parseType(extractor_type):
-        ret_val : str
-        if isinstance(extractor_type, str):
-            ret_val = extractor_type
-        else:
-            ret_val = str(extractor_type)
-            Logger.Log(f"ElementDetail type was not a string, defaulting to str(type) == {ret_val}", logging.WARN)
+        ret_val : str = f"- **{self.Name}** : *{self.ElementType}*, {self.Description}"
+        if self.Details is not None:
+            detail_markdown = [f"**{name}** - {desc}" for name,desc in self.Details]
+            ret_val += f"\n  Details: {detail_markdown}\n"
         return ret_val
 
-class EventElementSchema:
-    def __init__(self, name:str, all_elements:Dict[str, str]):
-        self._name        : str
-        self._type_name   : str
-        self._description : str
-        self._details     : Dict[str, ElementDetailSchema]
-        self._elements    : Dict[str, str]
-
-        self._name = EventSchema._parseName(name)
-        if isinstance(all_elements, dict):
-            if "type" in all_elements.keys():
-                self._type_name = EventElementSchema._parseType(all_elements['type'])
-            else:
-                self._type_name = self._name
-
-            if "description" in all_elements.keys():
-                self._description = EventElementSchema._parseDescription(all_elements['description'])
-            else:
-                self._description = ""
-                Logger.Log(f"{name} config does not have an 'description' element; defaulting to description=''", logging.WARN)
-
-            if "details" in all_elements.keys():
-                self._details = EventElementSchema._parseDetails(all_elements['details'])
-            else:
-                self._details = {}
-
-            self._elements = { key : val for key,val in all_elements.items() if key not in {"type", "description", "details"} }
-        else:
-            self._type_name = "UNKNOWN"
-            self._description = "No Description"
-            self._details = {}
-            self._elements = {}
-            Logger.Log(f"For {name} EventElement config, all_elements was not a dictionary. Using defaults.", logging.WARN)
-
     @property
-    def Name(self) -> str:
-        return self._name
-
-    @property
-    def TypeName(self) -> str:
-        return self._type_name
+    def ElementType(self) -> str:
+        return self._type
 
     @property
     def Description(self) -> str:
         return self._description
 
     @property
-    def Details(self) -> Dict[str, ElementDetailSchema]:
+    def Details(self) -> Optional[Dict[str, str]]:
         return self._details
-
-    @property
-    def Elements(self) -> Dict[str, str]:
-        return self._elements
-
-    @property
-    def ElementNames(self) -> List[str]:
-        return list(self._elements.keys())
-
-    @property
-    def AsMarkdown(self) -> str:
-        ret_val : str
-
-        ret_val = f"**{self.Name}** :  *{self.TypeName}*, {self.Description}  \n"
-        if len(self.Details) > 0:
-            ret_val += "*Details*:  \n\n" + "\n".join([detail.AsMarkdown for detail in self.Details.values()])
-        if len(self.Elements) > 0:
-            ret_val += "*Other elements*:  \n\n" + "\n".join([f"{elem_name} - {elem}" for elem_name,elem in self.Elements.items()])
-
-        return ret_val
     
     @staticmethod
-    def _parseName(name):
+    def _parseElementType(event_type):
         ret_val : str
-        if isinstance(name, str):
-            ret_val = name
+        if isinstance(event_type, str):
+            ret_val = event_type
         else:
-            ret_val = str(name)
-            Logger.Log(f"EventElement name was not a string, defaulting to str(name) == {ret_val}", logging.WARN)
+            ret_val = str(event_type)
+            Logger.Log(f"EventDataElement type was not a string, defaulting to str(type) == {ret_val}", logging.WARN)
         return ret_val
     
-    @staticmethod
-    def _parseType(extractor_type):
-        ret_val : str
-        if isinstance(extractor_type, str):
-            ret_val = extractor_type
-        else:
-            ret_val = str(extractor_type)
-            Logger.Log(f"EventElement type was not a string, defaulting to str(type) == {ret_val}", logging.WARN)
-        return ret_val
-
     @staticmethod
     def _parseDescription(description):
         ret_val : str
@@ -141,59 +73,68 @@ class EventElementSchema:
             ret_val = description
         else:
             ret_val = str(description)
-            Logger.Log(f"EventElement description was not a string, defaulting to str(description) == {ret_val}", logging.WARN)
+            Logger.Log(f"EventDataElement description was not a string, defaulting to str(description) == {ret_val}", logging.WARN)
         return ret_val
-
+    
     @staticmethod
-    def _parseDetails(details) -> Dict[str, ElementDetailSchema]:
-        ret_val : Dict[str, ElementDetailSchema]
+    def _parseDetails(details):
+        ret_val : Dict[str, str] = {}
         if isinstance(details, dict):
-            ret_val = { name : ElementDetailSchema(name, elem_type) for name, elem_type in details.items() }
+            for key,val in details.items():
+                if isinstance(key, str):
+                    if isinstance(val, str):
+                        ret_val[key] = val
+                    else:
+                        ret_val[key] = str(val)
+                        Logger.Log(f"EventDataElement detail value for key {key} was unexpected type {type(val)}, defaulting to str(val) == {ret_val[key]}", logging.WARN)
+                else:
+                    _key = str(key)
+                    Logger.Log(f"EventDataElement detail key was unexpected type {type(key)}, defaulting to str(key) == {_key}", logging.WARN)
+                    if isinstance(val, str):
+                        ret_val[_key] = val
+                    else:
+                        ret_val[_key] = str(val)
+                        Logger.Log(f"EventDataElement detail value for key {_key} was unexpected type {type(val)}, defaulting to str(val) == {ret_val[_key]}", logging.WARN)
         else:
             ret_val = {}
-            Logger.Log(f"EventElement details was not a dict, defaulting to empty dictionary.", logging.WARN)
+            Logger.Log(f"EventDataElement details was not a dict, defaulting to empty dict.", logging.WARN)
         return ret_val
 
 class EventSchema:
-    def __init__(self, name:str, all_elements:Dict[str, str]):
+    def __init__(self, name:str, all_elements:Dict[str, Dict]):
         self._name        : str
         self._description : str
-        self._event_data  : Dict[str, EventElementSchema]
-        self._elements    : Dict[str, str]
+        self._event_data  : Dict[str, EventDataElementSchema]
+        self._elements    : Dict[str, Any]
 
-        self._name = EventSchema._parseName(name)
-        if isinstance(all_elements, dict):
-            if "description" in all_elements.keys():
-                self._description = EventSchema._parseDescription(all_elements['description'])
-            else:
-                self._description = ""
-                Logger.Log(f"{name} config does not have an 'description' element; defaulting to description=''", logging.WARN)
-            if "event_data" in all_elements.keys():
-                self._event_data = EventSchema._parseData(all_elements['event_data'])
-            else:
-                self._event_data = {}
-                Logger.Log(f"{name} config does not have an 'event_data' element; defaulting to empty dictionary", logging.WARN)
-            self._elements = { key : val for key,val in all_elements.items() if key not in {"event_data", "description"} }
+        if type(name) == str:
+            self._name = name
         else:
-            self._description = "No Description"
-            self._event_data = {}
-            self._elements = {}
-            Logger.Log(f"For {name} Event config, all_elements was not a dictionary. Using defaults.", logging.WARN)
+            self._name = str(name)
+            Logger.Log(f"Event name was not a string, defaulting to str(name) == {self._name}", logging.WARN)
+        if not isinstance(all_elements, dict):
+            self._elements   = {}
+            Logger.Log(f"For {name} Event config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
+        if "description" in all_elements.keys():
+            self._description = EventSchema._parseDescription(description=all_elements['description'])
+        else:
+            pass
+        if "event_data" in all_elements.keys():
+            self._event_data = EventSchema._parseEventDataElements(event_data=all_elements['event_data'])
+        else:
+            pass
+        self._elements = { key : val for key,val in all_elements.items() if key not in {"description", "event_data"} }
 
     @property
     def Name(self) -> str:
         return self._name
 
     @property
-    def Description(self) -> str:
-        return self._description
-
-    @property
-    def EventData(self) -> Dict[str, EventElementSchema]:
+    def EventData(self) -> Dict[str, EventDataElementSchema]:
         return self._event_data
 
     @property
-    def Elements(self) -> Dict[str, str]:
+    def Elements(self) -> Dict[str, Any]:
         return self._elements
 
     @property
@@ -202,34 +143,16 @@ class EventSchema:
 
     @property
     def AsMarkdown(self) -> str:
-        ret_val : str
-        
-        ret_val = f"**{self.Name}**: {self.Description}"
-        if len(self.EventData) > 0:
-            ret_val += "`event_data`:  \n\n" + "\n".join([datum.AsMarkdown for datum in self.EventData.values()])
-        if len(self.Elements) > 0:
-            ret_val += "*Other elements*:  \n\n" + "\n".join([f"{elem_name} - {elem}" for elem_name,elem in self.Elements.items()])
-
-        return ret_val
-    
-    @staticmethod
-    def _parseName(name):
-        ret_val : str
-        if isinstance(name, str):
-            ret_val = name
-        else:
-            ret_val = str(name)
-            Logger.Log(f"Extractor name was not a string, defaulting to str(name) == {ret_val}", logging.WARN)
-        return ret_val
+        return "\n".join([f"**{self.Name}**:  "] + [f"- **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in self.Elements])
 
     @staticmethod
-    def _parseData(event_data):
-        ret_val : Dict[str, EventElementSchema]
+    def _parseEventDataElements(event_data):
+        ret_val : Dict[str, EventDataElementSchema]
         if isinstance(event_data, dict):
-            ret_val = { key : EventElementSchema(key, val) for key,val in event_data.items() }
+            ret_val = {name:EventDataElementSchema(name=name, all_elements=elems) for name,elems in event_data.items()}
         else:
             ret_val = {}
-            Logger.Log(f"Extractor event_data was not a dict, defaulting to empty dictionary", logging.WARN)
+            Logger.Log(f"event_data was unexpected type {type(event_data)}, defaulting to empty dict.", logging.WARN)
         return ret_val
 
     @staticmethod
@@ -239,6 +162,5 @@ class EventSchema:
             ret_val = description
         else:
             ret_val = str(description)
-            Logger.Log(f"Extractor description was not a string, defaulting to str(description) == {ret_val}", logging.WARN)
+            Logger.Log(f"Event description was not a string, defaulting to str(description) == {ret_val}", logging.WARN)
         return ret_val
-

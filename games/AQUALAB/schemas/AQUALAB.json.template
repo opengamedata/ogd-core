@@ -748,12 +748,6 @@
                 "description": "Average session duration for a user.",
                 "return_type": "float"
             },
-            "UserSessionCount": {
-                "enabled": true,
-                "type": "UserSessionCount",
-                "description": "Count of sessions played for a user.",
-                "return_type": "int"
-            },
             "UserTotalSessionDuration": {
                 "enabled": true,
                 "type": "UserTotalSessionDuration",

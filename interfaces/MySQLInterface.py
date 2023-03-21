@@ -58,7 +58,7 @@ class SQL:
         DB_USER = db_settings['DB_USER']
         DB_PW = db_settings['DB_PW']
         sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, db_name=DB_NAME, user=DB_USER, pword=DB_PW)
-        Logger.Log("Preparing database connection...", logging.INFO)
+        # Logger.Log("Preparing database connection...", logging.INFO)
         if ssh_settings is not None:
             SSH_USER = ssh_settings['SSH_USER']
             SSH_PW   = ssh_settings['SSH_PW']
@@ -73,7 +73,7 @@ class SQL:
         else:
             db_conn = SQL._connectToMySQL(login=sql_login)
             tunnel = None
-        Logger.Log("Done preparing database connection.", logging.INFO)
+        # Logger.Log("Done preparing database connection.", logging.INFO)
         return (tunnel, db_conn)
 
     # Function to help connect to a mySQL server.
@@ -206,7 +206,7 @@ class SQL:
         :rtype: Optional[List[Tuple]]
         """
         d          = "DISTINCT" if distinct else ""
-        cols       = ",".join([f"`{col}`" for col in columns]) if len(columns) > 0 else "*"
+        cols       = ",".join([f"{col}" for col in columns]) if len(columns) > 0 else "*"
         sort_cols  = ",".join([f"`{col}`" for col in sort_columns]) if sort_columns is not None and len(sort_columns) > 0 else None
         table_path = db_name + "." + str(table)
 

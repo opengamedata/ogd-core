@@ -57,7 +57,7 @@
             "name": "app_version",
             "readable": "Application/Game Version",
             "description": "The version of the application (game) that generated the data",
-            "type": "float"
+            "type": "str"
         },
         {
             "name": "log_version",

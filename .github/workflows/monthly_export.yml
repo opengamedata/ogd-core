@@ -7,39 +7,39 @@ on:
 jobs:
   export_data:
     name: Export All Games
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         # don't use the first one until we've got STEMPORTS and AQUALAB
         # game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, STEMPORTS, WAVES, WIND]
-        game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, SHADOWSPECT, SHIPWRECKS, WAVES, WIND]
+        game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, ICECUBE, JOURNALISM, LAKELAND, MAGNET, PENGUINS, SHADOWSPECT, SHIPWRECKS, WAVES, WIND]
       fail-fast: false # we don't want to cancel just because one game fails.
       max-parallel: 1
 
     # Steps to set up for and execute an export
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       # A bunch of copy-paste crap to set up google cloud for any given game.
     - if: ${{ matrix.game == 'AQUALAB' }}
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.AQUALAB_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.AQUALAB_BQ_KEY }}
+        project_id: ${{ secrets.BQ_AQUALAB_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_AQUALAB_JSON }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'SHADOWSPECT' }}
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.SHADOWSPECT_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.SHADOWSPECT_BQ_KEY }}
+        project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'SHIPWRECKS' }}
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.SHIPWRECKS_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.SHIPWRECKS_BQ_KEY }}
+        project_id: ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
         export_default_credentials: true
       # Back to normal setup stuff.
     - name: Get OpenConnect
@@ -73,13 +73,13 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./*.log
   
   trigger_reindex:
     name: Reindex OpenGameData Files
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: always()
     needs: export_data
     steps:

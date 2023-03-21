@@ -19,12 +19,14 @@ from extractors.ExtractorLoader import ExtractorLoader
 from games.AQUALAB.AqualabLoader import AqualabLoader
 from games.CRYSTAL.CrystalLoader import CrystalLoader
 from games.ICECUBE.IcecubeLoader import IcecubeLoader
+from games.JOURNALISM.JournalismLoader import JournalismLoader
 from games.JOWILDER.JowilderLoader import JowilderLoader
 from games.LAKELAND.LakelandLoader import LakelandLoader
 from games.MAGNET.MagnetLoader import MagnetLoader
 from games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
 from games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
 from games.WAVES.WaveLoader import WaveLoader
+from games.PENGUINS.PenguinsLoader import PenguinsLoader
 from managers.EventManager import EventManager
 from managers.FeatureManager import FeatureManager
 from schemas.Event import Event
@@ -86,9 +88,9 @@ class ExportManager:
             # If game doesn't have an extractor, make sure we don't try to export it.
             else:
                 # TODO: figure out how to make sure event manager doesn't try to do detecting, but is still allowed to run.
-                request._exports.remove(ExportMode.SESSION)
-                request._exports.remove(ExportMode.PLAYER)
-                request._exports.remove(ExportMode.POPULATION)
+                request._exports.discard(ExportMode.SESSION)
+                request._exports.discard(ExportMode.PLAYER)
+                request._exports.discard(ExportMode.POPULATION)
                 Logger.Log("Could not set up feature manager, no feature loader given!", logging.WARNING)
 
             Logger.Log(f"Executing...", logging.INFO)
@@ -121,7 +123,7 @@ class ExportManager:
         self._processEvent(next_event=event)
 
     def _setupManagers(self, request:Request, load_class:Type[ExtractorLoader], feature_overrides:Optional[List[str]]):
-        _game_schema  : GameSchema  = GameSchema(schema_name=request.GameID, schema_path=Path(f"./games/{request.GameID}"))
+        _game_schema  : GameSchema  = GameSchema(schema_name=request.GameID, schema_path=Path(f"./games/{request.GameID}/schemas"))
 
         if request.ExportEvents:
             self._event_mgr = EventManager(LoaderClass=load_class,                     game_schema=_game_schema,
@@ -142,6 +144,8 @@ class ExportManager:
             _loader_class = CrystalLoader
         elif game_id == "ICECUBE":
             _loader_class = IcecubeLoader
+        elif game_id == "JOURNALISM":
+            _loader_class = JournalismLoader
         elif game_id == "JOWILDER":
             _loader_class = JowilderLoader
         elif game_id == "LAKELAND":
@@ -154,7 +158,9 @@ class ExportManager:
             _loader_class = ShipwrecksLoader
         elif game_id == "WAVES":
             _loader_class = WaveLoader
-        elif game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "STEMPORTS", "WIND"}:
+        elif game_id == "PENGUINS":
+            _loader_class = PenguinsLoader
+        elif game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WIND"}:
             # all games with data but no extractor.
             pass
         else:
@@ -247,7 +253,7 @@ class ExportManager:
             or (request._range._id_mode==IDMode.USER    and event.UserID    in ids):
                 self._processEvent(next_event=event)
             elif event.SessionID is not None and event.SessionID.upper() != "NONE":
-                Logger.Log(f"Found a session ({event.SessionID}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
+                Logger.Log(f"Found a session ({event.SessionID}, type {type(event.SessionID)}) which was in the slice but not in the list of sessions for processing ({ids}, type {type(ids[0])}).", logging.WARNING, depth=2)
             elif event.UserID is not None and event.UserID.upper() != "NONE":
                 Logger.Log(f"Found a user ({event.UserID}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
             else:
@@ -271,6 +277,7 @@ class ExportManager:
                 Logger.Log(f"Error while processing event {next_event.EventName}. This event will be skipped. \nFull error: {traceback.format_exc()}", logging.WARNING, depth=2)
 
     def _outputSlice(self, request:Request, slice_num:int, slice_count:int):
+        # TODO: um, so discarding session features after every slice will fuck up second-order features, I believe. Need to deal with that.
         if request.ExportEvents and self._event_mgr is not None:
             _events = self._event_mgr.GetLines(slice_num=slice_num, slice_count=slice_count)
             for outerface in request.Outerfaces:
@@ -282,11 +289,6 @@ class ExportManager:
                 for outerface in request.Outerfaces:
                     outerface.WriteSessionLines(sessions=_sess_feats)
                 self._feat_mgr.ClearSessionLines()
-            if request.ExportPlayers:
-                _player_feats = self._feat_mgr.GetPlayerFeatures(slice_num=slice_num, slice_count=slice_count, as_str=True)
-                for outerface in request.Outerfaces:
-                    outerface.WritePlayerLines(players=_player_feats)
-                self._feat_mgr.ClearPlayerLines()
 
     def _outputPopulation(self, request:Request):
         if self._feat_mgr is not None:
@@ -295,3 +297,8 @@ class ExportManager:
                 for outerface in request.Outerfaces:
                     outerface.WritePopulationLines(populations=_pop_feats)
                 self._feat_mgr.ClearPopulationLines()
+            if request.ExportPlayers:
+                _player_feats = self._feat_mgr.GetPlayerFeatures(as_str=True)
+                for outerface in request.Outerfaces:
+                    outerface.WritePlayerLines(players=_player_feats)
+                self._feat_mgr.ClearPlayerLines()

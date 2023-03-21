@@ -14,6 +14,6 @@ class AggregateSchema(FeatureSchema):
         ret_val = f"**{self.Name}** : *{self.ReturnType}*, *Aggregate feature* {' (disabled)' if not len(self.Enabled) > 0 else ''}  \n{self.Description}  \n"
         if len(self.Subfeatures) > 0:
             ret_val += "*Sub-features*:  \n\n" + "\n".join([subfeature.AsMarkdown for subfeature in self.Subfeatures.values()])
-        if len(self.Elements) > 0:
-            ret_val += "*Other elements*:  \n\n" + "\n".join([f"{elem_name} - {elem}" for elem_name,elem in self.Elements.items()])
+        if len(self.NonStandardElements) > 0:
+            ret_val += "*Other elements*:  \n\n" + "\n".join([f"{elem_name} - {elem}" for elem_name,elem in self.NonStandardElements.items()])
         return ret_val
