@@ -253,7 +253,7 @@ class ExportManager:
             or (request._range._id_mode==IDMode.USER    and event.UserID    in ids):
                 self._processEvent(next_event=event)
             elif event.SessionID is not None and event.SessionID.upper() != "NONE":
-                Logger.Log(f"Found a session ({event.SessionID}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
+                Logger.Log(f"Found a session ({event.SessionID}, type {type(event.SessionID)}) which was in the slice but not in the list of sessions for processing ({ids}, type {type(ids[0])}).", logging.WARNING, depth=2)
             elif event.UserID is not None and event.UserID.upper() != "NONE":
                 Logger.Log(f"Found a user ({event.UserID}) which was in the slice but not in the list of sessions for processing.", logging.WARNING, depth=2)
             else:
