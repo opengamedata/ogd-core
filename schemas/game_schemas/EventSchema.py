@@ -27,7 +27,7 @@ class EventDataElementSchema(Schema):
         if "description" in all_elements.keys():
             self._description = EventDataElementSchema._parseDescription(all_elements['description'])
         else:
-            self._type = "Unknown"
+            self._description = "Unknown"
             Logger.Log(f"{name} EventDataElement config does not have a 'description' element; defaulting to description='{self._description}", logging.WARN)
         if "details" in all_elements.keys():
             self._details = EventDataElementSchema._parseDetails(details=all_elements['details'])
