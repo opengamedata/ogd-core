@@ -62,7 +62,50 @@
         "player_waddle" : {
             "description" : "When a player performs a waddle movement to move their penguin avatar forward",
             "event_data" : {
-                "DATA" : "NOT YET IMPLEMENTED"
+                "object_id" : {
+                    "type" : "str",
+                    "description" : "The name of... some object"
+                },
+                "old_posX" : {
+                    "type":"float",
+                    "description":"The previous X-position, where the waddle started."
+                },
+                "old_posY" : {
+                    "type":"float",
+                    "description":"The previous Y-position, where the waddle started."
+                },
+                "old_posZ" : {
+                    "type":"float",
+                    "description":"The previous Z-position, where the waddle started."
+                },
+                "posX" : {
+                    "type":"float",
+                    "description":"The new X-position, where the waddle ended."
+                },
+                "posY" : {
+                    "type":"float",
+                    "description":"The new Y-position, where the waddle ended."
+                },
+                "posZ" : {
+                    "type":"float",
+                    "description":"The new Z-position, where the waddle ended."
+                },
+                "rotX" : {
+                    "type":"float",
+                    "description":"The X-component of the rotation when the waddle ended."
+                },
+                "rotY" : {
+                    "type":"float",
+                    "description":"The Y-component of the rotation when the waddle ended."
+                },
+                "rotZ" : {
+                    "type":"float",
+                    "description":"The Z-component of the rotation when the waddle ended."
+                },
+                "rotW" : {
+                    "type":"float",
+                    "description":"The W-component of the rotation when the waddle ended."
+                }
             }
         },
         "gaze_object_begin" : {
