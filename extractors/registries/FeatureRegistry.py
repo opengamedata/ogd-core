@@ -36,6 +36,9 @@ class FeatureRegistry(ExtractorRegistry):
         FIRST_ORDER = 0
         SECOND_ORDER = 1
 
+        def __str__(self):
+            return self.name
+
     # *** BUILT-INS ***
 
     # Base constructor for Registry.
