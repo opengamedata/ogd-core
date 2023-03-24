@@ -108,6 +108,11 @@ class Request(abc.ABC):
     def Outerfaces(self) -> Set[DataOuterface]:
         return self._outerfaces
 
+    def RemoveExportMode(self, mode:ExportMode):
+        self._exports.discard(mode)
+        for outerface in self.Outerfaces:
+            outerface.RemoveExportMode(mode=mode)
+
     ## Method to retrieve the list of IDs for all sessions covered by the request.
     #  Note, this will use the 
     def RetrieveIDs(self) -> Optional[List[str]]:

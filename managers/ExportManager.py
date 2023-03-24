@@ -88,9 +88,9 @@ class ExportManager:
             # If game doesn't have an extractor, make sure we don't try to export it.
             else:
                 # TODO: figure out how to make sure event manager doesn't try to do detecting, but is still allowed to run.
-                request._exports.discard(ExportMode.SESSION)
-                request._exports.discard(ExportMode.PLAYER)
-                request._exports.discard(ExportMode.POPULATION)
+                request.RemoveExportMode(ExportMode.SESSION)
+                request.RemoveExportMode(ExportMode.PLAYER)
+                request.RemoveExportMode(ExportMode.POPULATION)
                 Logger.Log("Could not set up feature manager, no feature loader given!", logging.WARNING)
 
             Logger.Log(f"Executing...", logging.INFO)
