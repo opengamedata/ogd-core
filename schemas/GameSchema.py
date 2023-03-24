@@ -24,6 +24,8 @@ from utils import Logger, loadJSONFile
 class GameSchema(Schema):
     # *** BUILT-INS ***
 
+    # TODO: need to get game_state from schema file.
+
     def __init__(self, schema_name:str, schema_path:Optional[Path] = None):
         """Constructor for the GameSchema class.
         Given a path and filename, it loads the data from a JSON schema,

@@ -27,7 +27,7 @@ class EventDataElementSchema(Schema):
         if "description" in all_elements.keys():
             self._description = EventDataElementSchema._parseDescription(all_elements['description'])
         else:
-            self._type = "Unknown"
+            self._description = "Unknown"
             Logger.Log(f"{name} EventDataElement config does not have a 'description' element; defaulting to description='{self._description}", logging.WARN)
         if "details" in all_elements.keys():
             self._details = EventDataElementSchema._parseDetails(details=all_elements['details'])
@@ -100,50 +100,42 @@ class EventDataElementSchema(Schema):
             Logger.Log(f"EventDataElement details was not a dict, defaulting to empty dict.", logging.WARN)
         return ret_val
 
-class EventSchema:
+class EventSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Dict]):
-        self._name        : str
         self._description : str
         self._event_data  : Dict[str, EventDataElementSchema]
-        self._elements    : Dict[str, Any]
 
-        if type(name) == str:
-            self._name = name
-        else:
-            self._name = str(name)
-            Logger.Log(f"Event name was not a string, defaulting to str(name) == {self._name}", logging.WARN)
         if not isinstance(all_elements, dict):
             self._elements   = {}
             Logger.Log(f"For {name} Event config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if "description" in all_elements.keys():
             self._description = EventSchema._parseDescription(description=all_elements['description'])
         else:
-            pass
+            self._description = "Unknown"
+            Logger.Log(f"{name} EventSchema config does not have a 'description' element; defaulting to description='{self._description}", logging.WARN)
         if "event_data" in all_elements.keys():
             self._event_data = EventSchema._parseEventDataElements(event_data=all_elements['event_data'])
         else:
-            pass
-        self._elements = { key : val for key,val in all_elements.items() if key not in {"description", "event_data"} }
+            self._event_data = {}
+            Logger.Log(f"{name} EventSchema config does not have an 'event_data' element; defaulting to empty dict", logging.WARN)
+        _leftovers = { key : val for key,val in all_elements.items() if key not in {"description", "event_data"} }
+        super().__init__(name=name, other_elements=_leftovers)
 
     @property
-    def Name(self) -> str:
-        return self._name
+    def Description(self) -> str:
+        return self._description
 
     @property
     def EventData(self) -> Dict[str, EventDataElementSchema]:
         return self._event_data
 
     @property
-    def Elements(self) -> Dict[str, Any]:
-        return self._elements
-
-    @property
-    def ElementNames(self) -> List[str]:
-        return list(self._elements.keys())
-
-    @property
     def AsMarkdown(self) -> str:
-        return "\n".join([f"**{self.Name}**:  "] + [f"- **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in self.Elements])
+        summary = [f"**{self.Name}**: {self.Description}"]
+        event_data = [elem.AsMarkdown for elem in self.EventData.values()]
+        other_data_desc = [f"- Other Elements:"]
+        other_data = [f"  - **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in self.NonStandardElements]
+        return "\n".join(summary + event_data + other_data_desc + other_data)
 
     @staticmethod
     def _parseEventDataElements(event_data):

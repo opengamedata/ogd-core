@@ -14,15 +14,13 @@ class ExtractorSchema(Schema):
         self._description : str
 
         if not isinstance(all_elements, dict):
-            self._type_name = self._name
-            self._enabled = set()
-            self._description = ""
+            all_elements = {}
             Logger.Log(f"For {name} Extractor config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
 
         if "type" in all_elements.keys():
             self._type_name = ExtractorSchema._parseType(all_elements['type'])
         else:
-            self._type_name = self._name
+            self._type_name = name
         if "enabled" in all_elements.keys():
             self._enabled = ExtractorSchema._parseEnabled(all_elements['enabled'])
         else:

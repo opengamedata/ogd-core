@@ -1,155 +1,503 @@
 {
   "level_range": { "min":-1, "max":-1 },
 
-  "events":{
-    "GAMESTATE":{
-      "tiles": "pako.gzip(uint8_tile_array()).join() | Gzipped tile [data matrix](#DataMatrices).",
-      "farmbits": "pako.gzip(uint8_farmbit_array()).join() | Gzipped farmbit [data matrix](#DataMatrices).",
-      "items": "pako.gzip(uint8_item_array()).join() | Gzipped item [data matrix](#DataMatrices).",
-      "money": "gg.money | current money",
-      "speed": "gg.speed | current game speed (see [Speed](#SpeedConst))",
-      "achievements": "achievements | A boolean array of whether the player has gotten the [achievement](#Achievements) at that index.",
-      "num_checkpoints_completed": "get_num_checkpoints_completed() | Number of tutorials began + number of tutorial ended. Includes tutorials skipped.",
-      "raining": "gg.b.raining | Boolean - currently raining or not.",
-      "curr_selection_type": "gg.inspector.detailed_type | Current selection [inspector content](#InspectorContent) index. (Note that because the game currently (as of 7/25) logs gamestate only after buys, this will always be the type of tile.)",
-      "curr_selection_data": "detailed_data() | SelectFarmbit/SelectItem/SelectTile data, depending on the curr_selection_type.",
-      "camera_center": "prev_center_txty | Tile that the game is currently centered on.",
-      "gametime": "time | Metric to count speed-adjusted time. Based on number of ticks.",
-      "timestamp": "now | current client time",
-      "num_food_produced": "num_food_produced | total number of food produced (not bought) since the start of the game |",
-      "num_milk_produced": "num_milk_produced | total number of milk produced (not bought) since the start of the game |",
-      "num_poop_produced": "num_poop_produced | total number of poop produced (not bought) since the start of the game |"
-      },
-    "STARTGAME":{
-      "tile_states": "tile_states | 2500 element array of tile state indices.",
-      "tile_nutritions": "tile_nutritions | 2500 element array of tile nutritions on a scale 0-255."
-      },
-    "CHECKPOINT":{
-      "event_category": "arguments[2] | Usually (always?) begin or end",
-      "event_label": "arguments[2] | Tutorial name. For example, the name of the tutorial that teaches the player how to build a house is called 'build_a_house'",
-      "event_type": "arguments[1] | Usually (always?) tutorial",
-      "blurb_history": "flush_blurb_history(now) | List of client time relative to now for each blurb popup. (Blurbs are now logged here instead of the [blurb](#blurb) event.)",
-      "client_time": "now | current client time",
-      "continue":  "gg.continue_ls ? 1: 0 | 1/0 boolean to indicate whether the player continued or not",
-      "language":  "g.scenes[1].language_toggle.on ? 'espanol':'english' | language of the game",
-      "audio": "AUDIO ? 1: 0 | 1/0 boolean to indicate whether audio was toggled on or not",
-      "fullscreen": "g.scenes[1].fullscreen_toggle.on ? 1:  | 1/0 boolean to indicate whether the game was toggled into fullscreen whether or not"
-      },
-    "SELECTTILE":{
-      "tile": "tile_data_short(t) | See [Data Short](#DataShort).",
-      "marks": "t.marks | Tile [mark indices](#Mark)."
-      },
-    "SELECTFARMBIT":{
-      "farmbit": "farmbit_data_short(f) | See [Data Short](#DataShort)."
-      },
-    "SELECTITEM":{
-      "item": "item_data_short(it) | See [Data Short](#DataShort).",
-      "mark": "it.mark | Item [mark index](#Mark)."
-      },
-    "SELECTBUY":{
-      "buy": "buy | [Buy index](#Buys).",
-      "cost": "gg.shop.buy_cost(buy) | Cost of buy",
-      "curr_money": "gg.money | Current money",
-      "success": "gg.money>=gg.shop.buy_cost(buy) | Boolean. Whether the buy can be selected or not. (Cannot select a buy that cannot be paid for.)"
-      },
-    "BUY":{
-      "buy": "gg.shop.selected_buy | [Buy index](#Buys).",
-      "tile": "tile_data_short(gg.b.hover_t) | [Data Short](#DataShort) for the tile the buy will be placed on.",
-      "success": "gg.b.placement_valid(gg.b.hover_tgg.shop.selected_buy) | Boolean. Whether the buy can be put on the tile. If not, buy fails.",
-      "buy_hovers": "flush_buy_hovers(now) | List of tile [Data Short](#DataShort) appended with client time before now for each hovered tile since either selectbuy log or the previous buy log.",
-      "client_time": "now | current client time"
-      },
-    "CANCELBUY":{
-      "selected_buy": "buy | [Buy index](#Buys).",
-      "cost": "gg.shop.buy_cost(buy) | Cost of buy.",
-      "curr_money": "gg.money | Current money.",
-      "buy_hovers": "flush_buy_hovers(now) | List of tile [Data Short](#DataShort) appended with client time before now for each hovered tile since either selectbuy log or the previous buy log.",
-      "client_time": "now | current client time"
-      },
-    "ROADBUILDS":{
-      "road_builds": "flush_road_hovers(now) | List of tile [Data Short](#DataShort) appended with client time before now for each tile a road was built on.",
-      "client_time": "now | current client time"
-      },
-    "TILEUSESELECT":{
-      "tile": "tile_data_short(t) | See [Data Short](#DataShort).",
-      "marks": "t.marks | Tile [mark indices](#Mark)."
-      },
-    "ITEMUSESELECT":{
-      "item": "item_data_short(it) | See [Data Short](#DataShort).",
-      "prev_mark": "it.mark | Item [mark index](#Mark)."
-      },
-    "TOGGLENUTRITION":{
-      "to_state": "gg.b.nutrition_view | 1 if nutrition view is being turned on, 0 if turned off.",
-      "tile_nutritions": "nutrition_array() | 2500 element array of tile nutritions on a scale 0-255."
-      },
-    "TOGGLESHOP":{
-      "shop_open": "gg.shop.open | 1 if the shop view is being opened, 0 if closed."
-      },
-    "TOGGLEACHIEVEMENTS":{
-      "achievements_open": "gg.achievements.open | 1 if the achievement view is being opened, 0 if closed."
-      },
-    "SKIPTUTORIAL":{
-      "(none)": " | Event itself indicates that the player skipped a tutorial (the tutorial skipped is the last tutorial event logged)."
-      },
-    "SPEED":{
-      "cur_speed": "gg.speed | To [speed](#SpeedConst) index.",
-      "prev_speed": "speed | From [speed](#SpeedConst) index.",
-      "manual": "manual_speed_bool | bool: 1 if speed was manually changed, 0 if not "
-      },
-    "ACHIEVEMENT":{
-      "achievement": "i | [Achievement](#Achievements) index."
-      },
-    "FARMBITDEATH":{
-      "farmbit": "farmbit_data_short(f) | See [Data Short](#DataShort).",
-      "grave": "tile_data_short(f.home) | Tile data short of dead farmbit's home."
-      },
-    "BLURB":{
-      "(none)": " | Event itself indicates that the player clicked to the next blurb in a tutorial etc. (the tutorial itself is the last tutorial event logged)."
-      },
-    "CLICK":{
-      "(not currently implemented)": " | "
-      },
-    "RAINSTOPPED":{
-      "(none)": " | Log itself indicates that it was raining and the raining has now stopped."
-      },
-    "HISTORY":{
-      "client_time": "now | current client time",
-      "camera_history": "flush_camera_history(now) | List of [camera moves](#CameraMove) since last history log.",
-      "emote_history": "flush_emote_history(now) | List of 11 element sublists [[farmbit](#DataShort), [emote index](#Emotes), time before client_time (negative number)] emotes since last history log."
-      },
-    "ENDGAME":{
-      "(none)": " | Log itself indicates the player has left the game page. Seperate history and gamestate logs are sent."
-    },
-    "EMOTE":{
-      "farmbit": "farmbit_data_short(t) | See [Data Short](#DataShort).",
-      "emote_enum": "emote_id | See [emotes](#Emotes)."
-    },
-    "FARMFAIL":{
-        "tile": "tile_data_short(t) | Farm that failed. See [Data Short](#DataShort).",
-        "marks": "t.marks | Farm [mark indices](#Mark)."
+  "events": {
+    "GAMESTATE": {
+      "description": "N/A",
+      "event_data": {
+        "tiles": {
+          "type": "N/A",
+          "description": "pako.gzip(uint8_tile_array()).join() | Gzipped tile [data matrix](#DataMatrices)."
         },
-    "BLOOM":{
-        "tile": "tile_data_short(t) | See [Data Short](#DataShort).",
-        "marks": "t.marks | Not relevant to lake tiles. Included for uniformity."
+        "farmbits": {
+          "type": "N/A",
+          "description": "pako.gzip(uint8_farmbit_array()).join() | Gzipped farmbit [data matrix](#DataMatrices)."
         },
-    "FARMHARVESTED":{
-        "tile": "tile_data_short(t) | Farm that produced corn. See [Data Short](#DataShort).",
-        "marks": "t.marks | Tile [mark indices](#Mark)."
+        "items": {
+          "type": "N/A",
+          "description": "pako.gzip(uint8_item_array()).join() | Gzipped item [data matrix](#DataMatrices)."
         },
-    "MILKPRODUCED":{
-        "tile": "tile_data_short(t) | Dairy that produced milk. See [Data Short](#DataShort).",
-        "marks": "t.marks | Tile [mark indices](#Mark)."
+        "money": {
+          "type": "N/A",
+          "description": "gg.money | current money"
         },
-    "POOPPRODUCED":{
-        "tile": "tile_data_short(t) | Dairy that produced poop. See [Data Short](#DataShort).",
-        "marks": "t.marks | Tile [mark indices](#Mark)."
+        "speed": {
+          "type": "N/A",
+          "description": "gg.speed | current game speed (see [Speed](#SpeedConst))"
         },
-    "DEBUG":{
-        "(none)": " | Event itself means that someone has used 'spyparty' to enter debug mode."
+        "achievements": {
+          "type": "N/A",
+          "description": "achievements | A boolean array of whether the player has gotten the [achievement](#Achievements) at that index."
         },
-    "NEWFARMBIT":{
-        "farmbit": "farmbit_data_short(t) | See [Data Short](#DataShort)."
+        "num_checkpoints_completed": {
+          "type": "N/A",
+          "description": "get_num_checkpoints_completed() | Number of tutorials began + number of tutorial ended. Includes tutorials skipped."
+        },
+        "raining": {
+          "type": "N/A",
+          "description": "gg.b.raining | Boolean - currently raining or not."
+        },
+        "curr_selection_type": {
+          "type": "N/A",
+          "description": "gg.inspector.detailed_type | Current selection [inspector content](#InspectorContent) index. (Note that because the game currently (as of 7/25) logs gamestate only after buys, this will always be the type of tile.)"
+        },
+        "curr_selection_data": {
+          "type": "N/A",
+          "description": "detailed_data() | SelectFarmbit/SelectItem/SelectTile data, depending on the curr_selection_type."
+        },
+        "camera_center": {
+          "type": "N/A",
+          "description": "prev_center_txty | Tile that the game is currently centered on."
+        },
+        "gametime": {
+          "type": "N/A",
+          "description": "time | Metric to count speed-adjusted time. Based on number of ticks."
+        },
+        "timestamp": {
+          "type": "N/A",
+          "description": "now | current client time"
+        },
+        "num_food_produced": {
+          "type": "N/A",
+          "description": "num_food_produced | total number of food produced (not bought) since the start of the game |"
+        },
+        "num_milk_produced": {
+          "type": "N/A",
+          "description": "num_milk_produced | total number of milk produced (not bought) since the start of the game |"
+        },
+        "num_poop_produced": {
+          "type": "N/A",
+          "description": "num_poop_produced | total number of poop produced (not bought) since the start of the game |"
         }
+      }
+    },
+    "STARTGAME": {
+      "description": "N/A",
+      "event_data": {
+        "tile_states": {
+          "type": "N/A",
+          "description": "tile_states | 2500 element array of tile state indices."
+        },
+        "tile_nutritions": {
+          "type": "N/A",
+          "description": "tile_nutritions | 2500 element array of tile nutritions on a scale 0-255."
+        }
+      }
+    },
+    "CHECKPOINT": {
+      "description": "N/A",
+      "event_data": {
+        "event_category": {
+          "type": "N/A",
+          "description": "arguments[2] | Usually (always?) begin or end"
+        },
+        "event_label": {
+          "type": "N/A",
+          "description": "arguments[2] | Tutorial name. For example, the name of the tutorial that teaches the player how to build a house is called 'build_a_house'"
+        },
+        "event_type": {
+          "type": "N/A",
+          "description": "arguments[1] | Usually (always?) tutorial"
+        },
+        "blurb_history": {
+          "type": "N/A",
+          "description": "flush_blurb_history(now) | List of client time relative to now for each blurb popup. (Blurbs are now logged here instead of the [blurb](#blurb) event.)"
+        },
+        "client_time": {
+          "type": "N/A",
+          "description": "now | current client time"
+        },
+        "continue": {
+          "type": "N/A",
+          "description": "gg.continue_ls ? 1: 0 | 1/0 boolean to indicate whether the player continued or not"
+        },
+        "language": {
+          "type": "N/A",
+          "description": "g.scenes[1].language_toggle.on ? 'espanol':'english' | language of the game"
+        },
+        "audio": {
+          "type": "N/A",
+          "description": "AUDIO ? 1: 0 | 1/0 boolean to indicate whether audio was toggled on or not"
+        },
+        "fullscreen": {
+          "type": "N/A",
+          "description": "g.scenes[1].fullscreen_toggle.on ? 1:  | 1/0 boolean to indicate whether the game was toggled into fullscreen whether or not"
+        }
+      }
+    },
+    "SELECTTILE": {
+      "description": "N/A",
+      "event_data": {
+        "tile": {
+          "type": "N/A",
+          "description": "tile_data_short(t) | See [Data Short](#DataShort)."
+        },
+        "marks": {
+          "type": "N/A",
+          "description": "t.marks | Tile [mark indices](#Mark)."
+        }
+      }
+    },
+    "SELECTFARMBIT": {
+      "description": "N/A",
+      "event_data": {
+        "farmbit": {
+          "type": "N/A",
+          "description": "farmbit_data_short(f) | See [Data Short](#DataShort)."
+        }
+      }
+    },
+    "SELECTITEM": {
+      "description": "N/A",
+      "event_data": {
+        "item": {
+          "type": "N/A",
+          "description": "item_data_short(it) | See [Data Short](#DataShort)."
+        },
+        "mark": {
+          "type": "N/A",
+          "description": "it.mark | Item [mark index](#Mark)."
+        }
+      }
+    },
+    "SELECTBUY": {
+      "description": "N/A",
+      "event_data": {
+        "buy": {
+          "type": "N/A",
+          "description": "buy | [Buy index](#Buys)."
+        },
+        "cost": {
+          "type": "N/A",
+          "description": "gg.shop.buy_cost(buy) | Cost of buy"
+        },
+        "curr_money": {
+          "type": "N/A",
+          "description": "gg.money | Current money"
+        },
+        "success": {
+          "type": "N/A",
+          "description": "gg.money>=gg.shop.buy_cost(buy) | Boolean. Whether the buy can be selected or not. (Cannot select a buy that cannot be paid for.)"
+        }
+      }
+    },
+    "BUY": {
+      "description": "N/A",
+      "event_data": {
+        "buy": {
+          "type": "N/A",
+          "description": "gg.shop.selected_buy | [Buy index](#Buys)."
+        },
+        "tile": {
+          "type": "N/A",
+          "description": "tile_data_short(gg.b.hover_t) | [Data Short](#DataShort) for the tile the buy will be placed on."
+        },
+        "success": {
+          "type": "N/A",
+          "description": "gg.b.placement_valid(gg.b.hover_tgg.shop.selected_buy) | Boolean. Whether the buy can be put on the tile. If not, buy fails."
+        },
+        "buy_hovers": {
+          "type": "N/A",
+          "description": "flush_buy_hovers(now) | List of tile [Data Short](#DataShort) appended with client time before now for each hovered tile since either selectbuy log or the previous buy log."
+        },
+        "client_time": {
+          "type": "N/A",
+          "description": "now | current client time"
+        }
+      }
+    },
+    "CANCELBUY": {
+      "description": "N/A",
+      "event_data": {
+        "selected_buy": {
+          "type": "N/A",
+          "description": "buy | [Buy index](#Buys)."
+        },
+        "cost": {
+          "type": "N/A",
+          "description": "gg.shop.buy_cost(buy) | Cost of buy."
+        },
+        "curr_money": {
+          "type": "N/A",
+          "description": "gg.money | Current money."
+        },
+        "buy_hovers": {
+          "type": "N/A",
+          "description": "flush_buy_hovers(now) | List of tile [Data Short](#DataShort) appended with client time before now for each hovered tile since either selectbuy log or the previous buy log."
+        },
+        "client_time": {
+          "type": "N/A",
+          "description": "now | current client time"
+        }
+      }
+    },
+    "ROADBUILDS": {
+      "description": "N/A",
+      "event_data": {
+        "road_builds": {
+          "type": "N/A",
+          "description": "flush_road_hovers(now) | List of tile [Data Short](#DataShort) appended with client time before now for each tile a road was built on."
+        },
+        "client_time": {
+          "type": "N/A",
+          "description": "now | current client time"
+        }
+      }
+    },
+    "TILEUSESELECT": {
+      "description": "N/A",
+      "event_data": {
+        "tile": {
+          "type": "N/A",
+          "description": "tile_data_short(t) | See [Data Short](#DataShort)."
+        },
+        "marks": {
+          "type": "N/A",
+          "description": "t.marks | Tile [mark indices](#Mark)."
+        }
+      }
+    },
+    "ITEMUSESELECT": {
+      "description": "N/A",
+      "event_data": {
+        "item": {
+          "type": "N/A",
+          "description": "item_data_short(it) | See [Data Short](#DataShort)."
+        },
+        "prev_mark": {
+          "type": "N/A",
+          "description": "it.mark | Item [mark index](#Mark)."
+        }
+      }
+    },
+    "TOGGLENUTRITION": {
+      "description": "N/A",
+      "event_data": {
+        "to_state": {
+          "type": "N/A",
+          "description": "gg.b.nutrition_view | 1 if nutrition view is being turned on, 0 if turned off."
+        },
+        "tile_nutritions": {
+          "type": "N/A",
+          "description": "nutrition_array() | 2500 element array of tile nutritions on a scale 0-255."
+        }
+      }
+    },
+    "TOGGLESHOP": {
+      "description": "N/A",
+      "event_data": {
+        "shop_open": {
+          "type": "N/A",
+          "description": "gg.shop.open | 1 if the shop view is being opened, 0 if closed."
+        }
+      }
+    },
+    "TOGGLEACHIEVEMENTS": {
+      "description": "N/A",
+      "event_data": {
+        "achievements_open": {
+          "type": "N/A",
+          "description": "gg.achievements.open | 1 if the achievement view is being opened, 0 if closed."
+        }
+      }
+    },
+    "SKIPTUTORIAL": {
+      "description": "N/A",
+      "event_data": {
+        "(none)": {
+          "type": "N/A",
+          "description": " | Event itself indicates that the player skipped a tutorial (the tutorial skipped is the last tutorial event logged)."
+        }
+      }
+    },
+    "SPEED": {
+      "description": "N/A",
+      "event_data": {
+        "cur_speed": {
+          "type": "N/A",
+          "description": "gg.speed | To [speed](#SpeedConst) index."
+        },
+        "prev_speed": {
+          "type": "N/A",
+          "description": "speed | From [speed](#SpeedConst) index."
+        },
+        "manual": {
+          "type": "N/A",
+          "description": "manual_speed_bool | bool: 1 if speed was manually changed, 0 if not "
+        }
+      }
+    },
+    "ACHIEVEMENT": {
+      "description": "N/A",
+      "event_data": {
+        "achievement": {
+          "type": "N/A",
+          "description": "i | [Achievement](#Achievements) index."
+        }
+      }
+    },
+    "FARMBITDEATH": {
+      "description": "N/A",
+      "event_data": {
+        "farmbit": {
+          "type": "N/A",
+          "description": "farmbit_data_short(f) | See [Data Short](#DataShort)."
+        },
+        "grave": {
+          "type": "N/A",
+          "description": "tile_data_short(f.home) | Tile data short of dead farmbit's home."
+        }
+      }
+    },
+    "BLURB": {
+      "description": "N/A",
+      "event_data": {
+        "(none)": {
+          "type": "N/A",
+          "description": " | Event itself indicates that the player clicked to the next blurb in a tutorial etc. (the tutorial itself is the last tutorial event logged)."
+        }
+      }
+    },
+    "CLICK": {
+      "description": "N/A",
+      "event_data": {
+        "(not currently implemented)": {
+          "type": "N/A",
+          "description": " | "
+        }
+      }
+    },
+    "RAINSTOPPED": {
+      "description": "N/A",
+      "event_data": {
+        "(none)": {
+          "type": "N/A",
+          "description": " | Log itself indicates that it was raining and the raining has now stopped."
+        }
+      }
+    },
+    "HISTORY": {
+      "description": "N/A",
+      "event_data": {
+        "client_time": {
+          "type": "N/A",
+          "description": "now | current client time"
+        },
+        "camera_history": {
+          "type": "N/A",
+          "description": "flush_camera_history(now) | List of [camera moves](#CameraMove) since last history log."
+        },
+        "emote_history": {
+          "type": "N/A",
+          "description": "flush_emote_history(now) | List of 11 element sublists [[farmbit](#DataShort), [emote index](#Emotes), time before client_time (negative number)] emotes since last history log."
+        }
+      }
+    },
+    "ENDGAME": {
+      "description": "N/A",
+      "event_data": {
+        "(none)": {
+          "type": "N/A",
+          "description": " | Log itself indicates the player has left the game page. Seperate history and gamestate logs are sent."
+        }
+      }
+    },
+    "EMOTE": {
+      "description": "N/A",
+      "event_data": {
+        "farmbit": {
+          "type": "N/A",
+          "description": "farmbit_data_short(t) | See [Data Short](#DataShort)."
+        },
+        "emote_enum": {
+          "type": "N/A",
+          "description": "emote_id | See [emotes](#Emotes)."
+        }
+      }
+    },
+    "FARMFAIL": {
+      "description": "N/A",
+      "event_data": {
+        "tile": {
+          "type": "N/A",
+          "description": "tile_data_short(t) | Farm that failed. See [Data Short](#DataShort)."
+        },
+        "marks": {
+          "type": "N/A",
+          "description": "t.marks | Farm [mark indices](#Mark)."
+        }
+      }
+    },
+    "BLOOM": {
+      "description": "N/A",
+      "event_data": {
+        "tile": {
+          "type": "N/A",
+          "description": "tile_data_short(t) | See [Data Short](#DataShort)."
+        },
+        "marks": {
+          "type": "N/A",
+          "description": "t.marks | Not relevant to lake tiles. Included for uniformity."
+        }
+      }
+    },
+    "FARMHARVESTED": {
+      "description": "N/A",
+      "event_data": {
+        "tile": {
+          "type": "N/A",
+          "description": "tile_data_short(t) | Farm that produced corn. See [Data Short](#DataShort)."
+        },
+        "marks": {
+          "type": "N/A",
+          "description": "t.marks | Tile [mark indices](#Mark)."
+        }
+      }
+    },
+    "MILKPRODUCED": {
+      "description": "N/A",
+      "event_data": {
+        "tile": {
+          "type": "N/A",
+          "description": "tile_data_short(t) | Dairy that produced milk. See [Data Short](#DataShort)."
+        },
+        "marks": {
+          "type": "N/A",
+          "description": "t.marks | Tile [mark indices](#Mark)."
+        }
+      }
+    },
+    "POOPPRODUCED": {
+      "description": "N/A",
+      "event_data": {
+        "tile": {
+          "type": "N/A",
+          "description": "tile_data_short(t) | Dairy that produced poop. See [Data Short](#DataShort)."
+        },
+        "marks": {
+          "type": "N/A",
+          "description": "t.marks | Tile [mark indices](#Mark)."
+        }
+      }
+    },
+    "DEBUG": {
+      "description": "N/A",
+      "event_data": {
+        "(none)": {
+          "type": "N/A",
+          "description": " | Event itself means that someone has used 'spyparty' to enter debug mode."
+        }
+      }
+    },
+    "NEWFARMBIT": {
+      "description": "N/A",
+      "event_data": {
+        "farmbit": {
+          "type": "N/A",
+          "description": "farmbit_data_short(t) | See [Data Short](#DataShort)."
+        }
+      }
+    }
   },
   "features": {
 		"legacy" : {

@@ -3,7 +3,13 @@
 
     "events": {
         "change_button": {
-            "VALUE": "Time taken to click, bool for correct click"
+            "description": "N/A",
+            "event_data": {
+                "VALUE": {
+                    "type":"N/A",
+                    "description":"Time taken to click, bool for correct click"
+                }
+            }
         }
     },
 
