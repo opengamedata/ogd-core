@@ -41,6 +41,20 @@ class DictionaryOuterface(DataOuterface):
     def _destination(self, mode:ExportMode) -> str:
         return "RequestResult"
 
+    def _removeExportMode(self, mode:ExportMode):
+        if mode == ExportMode.EVENTS:
+            self._evts = []
+            self._out['events']      = { "cols" : [], "vals" : self._evts }
+        elif mode == ExportMode.SESSION:
+            self._sess = []
+            self._out['sessions']    = { "cols" : [], "vals" : self._sess }
+        elif mode == ExportMode.PLAYER:
+            self._plrs = []
+            self._out['players']     = { "cols" : [], "vals" : self._plrs }
+        elif mode == ExportMode.POPULATION:
+            self._pops = []
+            self._out['populations'] = { "cols" : [], "vals" : self._pops }
+
     def _writeEventsHeader(self, header:List[str]) -> None:
         self._out['events']['cols'] = header
 

@@ -119,6 +119,32 @@ class TSVOuterface(DataOuterface):
             ret_val = str(self._file_paths['population'])
         return ret_val
 
+    def _removeExportMode(self, mode:ExportMode):
+        if mode == ExportMode.EVENTS:
+            if self._files['events'] is not None:
+                self._files['events'].close()
+            self._files['events']      = None
+            self._file_paths['events'] = None
+            self._zip_paths['events']  = None
+        elif mode == ExportMode.SESSION:
+            if self._files['sessions'] is not None:
+                self._files['sessions'].close()
+            self._files['sessions']      = None
+            self._file_paths['sessions'] = None
+            self._zip_paths['sessions']  = None
+        elif mode == ExportMode.PLAYER:
+            if self._files['players'] is not None:
+                self._files['players'].close()
+            self._files['players']      = None
+            self._file_paths['players'] = None
+            self._zip_paths['players']  = None
+        elif mode == ExportMode.POPULATION:
+            if self._files['population'] is not None:
+                self._files['population'].close()
+            self._files['population']      = None
+            self._file_paths['population'] = None
+            self._zip_paths['population']  = None
+
     def _writeEventsHeader(self, header:List[str]) -> None:
         cols = TSVOuterface._cleanSpecialChars(vals=header)
         cols_line = "\t".join(cols) + "\n"

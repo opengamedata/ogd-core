@@ -18,6 +18,10 @@ class DataOuterface(Interface):
         pass
 
     @abc.abstractmethod
+    def _removeExportMode(self, mode:ExportMode) -> str:
+        pass
+
+    @abc.abstractmethod
     def _writeEventsHeader(self, header:List[str]) -> None:
         pass
 
@@ -64,6 +68,9 @@ class DataOuterface(Interface):
 
     def Destination(self, mode:ExportMode):
         return self._destination(mode=mode)
+
+    def RemoveExportMode(self, mode:ExportMode):
+        self._removeExportMode(mode)
 
     def WriteEventHeader(self, header:List[str]) -> None:
         self._writeEventsHeader(header=header)
