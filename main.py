@@ -18,6 +18,7 @@ from typing import Any, Dict, Optional, Set, Tuple
 from git.remote import FetchInfo
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from interfaces.outerfaces.TSVOuterface import TSVOuterface
+from interfaces.outerfaces.DebugOuterface import DebugOuterface
 from schemas.ExportMode import ExportMode
 
 # import local files
@@ -141,8 +142,13 @@ def genRequest(events:bool, features:bool) -> Request:
     # 3. set up the outerface, based on the range and dataset_id.
     file_outerface = TSVOuterface(game_id=args.game, export_modes=export_modes, date_range=range.DateRange,
                                   file_indexing=settings.get("FILE_INDEXING", {}), dataset_id=dataset_id)
+    _outerfaces : Set[DataOuterface] = {file_outerface}
+    # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
+    if settings.get("DEBUG_LEVEL") == "DEBUG":
+        _outerfaces.add(DebugOuterface(game_id=args.game))
+
     # 4. Once we have the parameters parsed out, construct the request.
-    return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces={file_outerface})
+    return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces=_outerfaces)
 
 def genDBInterface() -> DataInterface:
     ret_val : DataInterface
