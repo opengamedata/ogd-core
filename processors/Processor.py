@@ -43,12 +43,9 @@ class Processor(abc.ABC):
 
     # *** BUILT-INS ***
 
-    def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, feature_overrides:Optional[List[str]]=None):
+    def __init__(self, game_schema: GameSchema, feature_overrides:Optional[List[str]]=None):
         self._game_schema : GameSchema            = game_schema
         self._overrides   : Optional[List[str]]   = feature_overrides
-        self._LoaderClass : Type[ExtractorLoader] = LoaderClass
-        self._loader      : ExtractorLoader       = LoaderClass(player_id=self._playerID, session_id=self._sessionID, game_schema=self._game_schema,
-                                                                mode=self._mode, feature_overrides=self._overrides)
         self._registry    : Optional[ExtractorRegistry] = None
 
     def __str__(self):

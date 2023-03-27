@@ -7,13 +7,13 @@ from numpy import isin
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.registries.FeatureRegistry import FeatureRegistry
-from processors.Processor import Processor
+from processors.ExtractorProcessor import ExtractorProcessor
 from schemas.GameSchema import GameSchema
 from schemas.ExportMode import ExportMode
 from utils import ExportRow
 
 ## @class Processor
-class FeatureProcessor(Processor):
+class FeatureProcessor(ExtractorProcessor):
 
     # *** ABSTRACTS ***
 
@@ -26,15 +26,11 @@ class FeatureProcessor(Processor):
     def _getFeatureData(self, order:int) -> List[FeatureData]:
         pass
 
-    @abc.abstractmethod
-    def _clearLines(self) -> None:
-        pass
-
     # *** BUILT-INS ***
 
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema,
                  feature_overrides:Optional[List[str]]=None):
-        super().__init__(LoaderClass=LoaderClass, game_schema=game_schema, feature_overrides=feature_overrides)
+        super().__init__(game_schema=game_schema, LoaderClass=LoaderClass, feature_overrides=feature_overrides)
         self._registry : FeatureRegistry = FeatureRegistry(mode=self._mode)
         self._registry.LoadFromSchema(schema=game_schema, loader=self._loader, overrides=feature_overrides)
 
@@ -52,9 +48,6 @@ class FeatureProcessor(Processor):
     def GetFeatureData(self, order:int) -> List[FeatureData]:
         # TODO: add error handling code, if applicable.
         return self._getFeatureData(order=order)
-
-    def ClearLines(self):
-        self._clearLines()
 
     # *** PRIVATE STATICS ***
 
