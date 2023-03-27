@@ -335,16 +335,16 @@ class TSVOuterface(DataOuterface):
             _existing_players_file = existing_meta.get('players_file', None)
             _existing_pop_file     = existing_meta.get('population_file', None)
             try:
-                if _existing_events_file is not None and self._zip_paths['events'] is not None:
+                if _existing_events_file is not None and Path(_existing_events_file).is_file() and self._zip_paths['events'] is not None:
                     Logger.Log(f"Renaming {str(_existing_events_file)} -> {self._zip_paths['events']}", logging.DEBUG)
                     os.rename(_existing_events_file, str(self._zip_paths['events']))
-                if _existing_sess_file is not None and self._zip_paths['sessions'] is not None:
+                if _existing_sess_file is not None and Path(_existing_sess_file).is_file() and self._zip_paths['sessions'] is not None:
                     Logger.Log(f"Renaming {str(_existing_sess_file)} -> {self._zip_paths['sessions']}", logging.DEBUG)
                     os.rename(_existing_sess_file, str(self._zip_paths['sessions']))
-                if _existing_players_file is not None and self._zip_paths['players'] is not None:
+                if _existing_players_file is not None and Path(_existing_players_file).is_file() and self._zip_paths['players'] is not None:
                     Logger.Log(f"Renaming {str(_existing_players_file)} -> {self._zip_paths['players']}", logging.DEBUG)
                     os.rename(_existing_players_file, str(self._zip_paths['players']))
-                if _existing_pop_file is not None and self._zip_paths['population'] is not None:
+                if _existing_pop_file is not None and Path(_existing_pop_file).is_file() and self._zip_paths['population'] is not None:
                     Logger.Log(f"Renaming {str(_existing_pop_file)} -> {self._zip_paths['population']}", logging.DEBUG)
                     os.rename(_existing_pop_file, str(self._zip_paths['population']))
             except Exception as err:
