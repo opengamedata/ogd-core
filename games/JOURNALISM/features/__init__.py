@@ -9,7 +9,7 @@ __all__ = [
     "TotalLevelTime",
     "PlayerAttributes",
     "LevelStoryAlignment",
-    "QuitTimestamp",
+    "QuitLevel",
     "QuitType",
     "WorstAttribute",
     "WorstPlayerAttribute",
@@ -30,7 +30,7 @@ from . import SkillSequenceCount
 from . import TotalLevelTime
 from . import PlayerAttributes
 from . import LevelStoryAlignment
-from . import QuitTimestamp
+from . import QuitLevel
 from . import QuitType
 from . import WorstAttribute
 from . import WorstPlayerAttribute
