@@ -51,6 +51,8 @@ class JournalismLoader(ExtractorLoader):
             ret_val = WorstAttribute.WorstAttribute(params = extractor_params)
         elif feature_type == "TopAttribute":
             ret_val = TopAttribute.TopAttribute(params=extractor_params)
+        elif feature_type == "TopPlayerAttribute":
+            ret_val = TopPlayerAttribute.TopPlayerAttribute(params=extractor_params)
         
         ##per-count features
         elif extractor_params._count_index is not None:
