@@ -49,6 +49,8 @@ class JournalismLoader(ExtractorLoader):
             ret_val = QuitType.QuitType(params = extractor_params)
         elif feature_type == "WorstAttribute":
             ret_val = WorstAttribute.WorstAttribute(params = extractor_params)
+        elif feature_type == "TopAttribute":
+            ret_val = TopAttribute.TopAttribute(params=extractor_params)
         
         ##per-count features
         elif extractor_params._count_index is not None:
@@ -56,7 +58,7 @@ class JournalismLoader(ExtractorLoader):
                 ret_val = LevelStoryAlignment.LevelStoryAlignment(params = extractor_params)
             elif feature_type == "WorstPlayerAttribute":
                 ret_val = WorstPlayerAttribute.WorstPlayerAttribute(params=extractor_params)
-
+           
 
 
         else:
