@@ -13,7 +13,8 @@ __all__ = [
     "QuitType",
     "WorstAttribute",
     "WorstPlayerAttribute",
-    "TopAttribute"
+    "TopAttribute",
+    "TopPlayerAttribute"
 ]
 
 from . import TextClickCount
@@ -31,4 +32,5 @@ from . import QuitType
 from . import WorstAttribute
 from . import WorstPlayerAttribute
 from . import TopAttribute
+from . import TopPlayerAttribute
 
