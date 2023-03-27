@@ -1,6 +1,9 @@
 # import libraries
 import json
 from typing import Any, List, Optional
+import json
+from time import time
+from datetime  import timedelta, datetime
 # import local files
 from extractors.features.Feature import Feature
 from schemas.Event import Event
@@ -12,17 +15,23 @@ from extractors.features.SessionFeature import SessionFeature
 
 
 
-class PlayerAttributes(SessionFeature):
+
+class QuitTimestamp(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
+
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        self._current_stats ="null"
-        
-        
+        self._first_timestamp : Optional[datetime] = None
+        self._current_timestamp : Optional[datetime]
+        self._delta_time : Optional[timedelta] = None
+        self._level_quit : int = 0
+        self._last_event : Optional[str] = None
+
+    
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -32,8 +41,7 @@ class PlayerAttributes(SessionFeature):
         :return: _description_
         :rtype: List[str]
         """
-        return ["all_events"]
-        #return ["snippet_received"] # >>> fill in names of events this Feature should use for extraction. <<<
+        return ["all_events"] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -55,10 +63,17 @@ class PlayerAttributes(SessionFeature):
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
         
-        self._current_stats = event.game_state["current_stats"]
+        if not self._first_timestamp:
+            self._first_timestamp = event.Timestamp
+            self._delta_time = self._first_timestamp
+        else:
+            self._delta_time = event.Timestamp - self._first_timestamp
 
-        
-        
+        self._level_quit = event.GameState["level"]
+        self._last_event = event.event_name
+
+
+
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
@@ -79,29 +94,17 @@ class PlayerAttributes(SessionFeature):
         :rtype: List[Any]
         """
         
-        # >>> use state variables to calculate the return value(s) of the base Feature and any Subfeatures. <<<
-        # >>> put the calculated value(s) into a list as the function return value. <<<
-        # >>> definitely don't return ["template"], unless you really find that useful... <<<
-        #
-        # e.g. use the self._found_click, which was created/initialized in __init__(...), and updated in _extractFromEvent(...):
-        # if self._found_click:
-        #     ret_val = [True]
-        # else:
-        #     ret_val = [False]
-        # return ret_val
-        #
-        # note the code above is redundant, we could just return [self._found_click] to get the same result;
-        # the more-verbose code is here for illustrative purposes.
-        
-        return [self._current_stats]
+        return [self._delta_time, self._level_quit, self._last_event]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return []
+        return ["Level", "EventName"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+    
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
+        ##don't make available for grouping by playerID
+        return [ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
     
     # @staticmethod
     # def MinVersion() -> Optional[str]:

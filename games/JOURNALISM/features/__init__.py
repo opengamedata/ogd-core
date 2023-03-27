@@ -8,7 +8,10 @@ __all__ = [
     "SkillSequenceCount",
     "TotalLevelTime",
     "PlayerAttributes",
-    "LevelStoryAlignment"
+    "LevelStoryAlignment",
+    "QuitTimestamp",
+    "QuitType",
+    "WorstAttribute"
 ]
 
 from . import TextClickCount
@@ -21,4 +24,7 @@ from . import SkillSequenceCount
 from . import TotalLevelTime
 from . import PlayerAttributes
 from . import LevelStoryAlignment
+from . import QuitTimestamp
+from . import QuitType
+from . import WorstAttribute
 
