@@ -60,7 +60,8 @@ class JournalismLoader(ExtractorLoader):
                 ret_val = LevelStoryAlignment.LevelStoryAlignment(params = extractor_params)
             elif feature_type == "WorstPlayerAttribute":
                 ret_val = WorstPlayerAttribute.WorstPlayerAttribute(params=extractor_params)
-           
+            elif feature_type == "MaxedPlayerAttribute":
+                ret_val = MaxedPlayerAttribute.MaxedPlayerAttribute(params=extractor_params)           
 
 
         else:
