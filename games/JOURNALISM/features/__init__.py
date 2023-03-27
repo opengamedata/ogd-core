@@ -11,7 +11,8 @@ __all__ = [
     "LevelStoryAlignment",
     "QuitTimestamp",
     "QuitType",
-    "WorstAttribute"
+    "WorstAttribute",
+    "WorstPlayerAttribute"
 ]
 
 from . import TextClickCount
@@ -27,4 +28,5 @@ from . import LevelStoryAlignment
 from . import QuitTimestamp
 from . import QuitType
 from . import WorstAttribute
+from . import WorstPlayerAttribute
 
