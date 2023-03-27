@@ -9,7 +9,7 @@ jobs:
   Shipwrecks_CI:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
@@ -36,10 +36,10 @@ jobs:
       with:
         game: SHIPWRECKS
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./*.log
     - name: Upload zips as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./data/SHIPWRECKS/*.zip

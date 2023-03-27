@@ -31,6 +31,10 @@ on:
         description: "The end date for the export"
         required: false
         default: "01/01/2021"
+      export_to_web:
+        description: "Boolean indicating whether the export should go to the website, or only be uploaded as an artifact."
+        required: true
+        default: "false"
       database:
         desription: "Which database to pull from"
         required: true
@@ -53,7 +57,7 @@ jobs:
     # Steps to set up for and execute an export
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       # A bunch of copy-paste crap to set up google cloud for any given game.
     - if: ${{ matrix.game == 'AQUALAB' }}
       name: Set up Cloud SDK
@@ -119,14 +123,20 @@ jobs:
         start_date: ${{github.event.inputs.start_date}}
         end_date: ${{github.event.inputs.end_date}}
     - name: Upload files to opengamedata via scp
+      if: github.event.inputs.export_to_web == 'true'
       run: |
         mkdir -p ~/.ssh
         echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
         ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
+    - name: Upload data as artifact
+      if: github.event.inputs.export_to_web == 'false'
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./data/{{matrix.game}}/*.zip
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./*.log
   

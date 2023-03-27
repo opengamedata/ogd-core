@@ -139,9 +139,8 @@ def genRequest(events:bool, features:bool) -> Request:
             start_date, end_date = getDateRange()
             range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date)
     # 3. set up the outerface, based on the range and dataset_id.
-    file_outerface = TSVOuterface(game_id=args.game, export_modes=export_modes,
-                                  date_range=range.DateRange, data_dir=settings["DATA_DIR"],
-                                  dataset_id=dataset_id)
+    file_outerface = TSVOuterface(game_id=args.game, export_modes=export_modes, date_range=range.DateRange,
+                                  file_indexing=settings.get("FILE_INDEXING", {}), dataset_id=dataset_id)
     # 4. Once we have the parameters parsed out, construct the request.
     return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces={file_outerface})
 
@@ -257,23 +256,27 @@ sub_parsers.add_parser("list-games",
 args : Namespace = parser.parse_args()
 
 success : bool
-cmd = args.command.lower()
-if cmd == "export":
-    success = RunExport(events=True, features=True)
-elif cmd == "export-events":
-    success = RunExport(events=True)
-elif cmd == "export-features":
-    success = RunExport(features=True)
-elif cmd == "info":
-    success = ShowGameInfo()
-elif cmd == "readme":
-    success = WriteReadme()
-elif cmd == "list-games":
-    success = ListGames()
-# elif cmd == "help":
-#     success = ShowHelp()
+if args is not None:
+    cmd = args.command.lower()
+    if cmd == "export":
+        success = RunExport(events=True, features=True)
+    elif cmd == "export-events":
+        success = RunExport(events=True)
+    elif cmd == "export-features":
+        success = RunExport(features=True)
+    elif cmd == "info":
+        success = ShowGameInfo()
+    elif cmd == "readme":
+        success = WriteReadme()
+    elif cmd == "list-games":
+        success = ListGames()
+    # elif cmd == "help":
+    #     success = ShowHelp()
+    else:
+        print(f"Invalid Command {cmd}!")
+        success = False
 else:
-    print(f"Invalid Command {cmd}!")
+    print(f"Need to enter a command!")
     success = False
 if not success:
     sys.exit(1)

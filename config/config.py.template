@@ -1,9 +1,14 @@
 settings = {
-    "DATA_DIR"   : "./data/",
     "BATCH_SIZE" : 1000,
     "LOG_FILE"   : False,
     "DEBUG_LEVEL": "INFO",
     "FAIL_FAST"  : False,
+    "FILE_INDEXING" : 
+    {
+        "LOCAL_DIR"     : "./data/",
+        "REMOTE_URL"    : "https://fieldday-web.ad.education.wisc.edu/opengamedata/",
+        "TEMPLATES_URL" : "https://github.com/opengamedata/opengamedata-samples"
+    },
     "SSH_CONFIG":
     {
         "SSH_HOST" : "hostname",
@@ -70,6 +75,7 @@ settings = {
         "LAKELAND":      {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
         "MAGNET":        {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
         "MASHOPOLIS":    {"schema":"BIGQUERY",           "source":"MASHOPOLIS_BQ",      "table":"events_*",   "credential":"./config/shipwrecks.json"},
+        "PENGUINS":      {"schema":"OPENGAMEDATA_MYSQL", "source":"OPENGAMEDATA_MYSQL", "table":"PENGUINS",   "credential":None},
         "SHIPWRECKS":    {"schema":"BIGQUERY",           "source":"SHIPWRECKS_BQ",      "table":"events_*",   "credential":"./config/shipwrecks.json"},
         "SHADOWSPECT":   {"schema":"BIGQUERY",           "source":"SHADOWSPECT_BQ",     "table":"events_*",   "credential":"./config/shadowspect.json"},
         "STEMPORTS":     {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},

@@ -21,7 +21,7 @@ runs:
   using: "composite"
   steps:
     # - name: Clone code
-    #   uses: actions/checkout@v2
+    #   uses: actions/checkout@v3
     # - name: Set up config
     #   run: cp config/config.py.template config/config.py 
     #   shell: bash
