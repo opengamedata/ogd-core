@@ -12,7 +12,8 @@ __all__ = [
     "QuitTimestamp",
     "QuitType",
     "WorstAttribute",
-    "WorstPlayerAttribute"
+    "WorstPlayerAttribute",
+    "TopAttribute"
 ]
 
 from . import TextClickCount
@@ -29,4 +30,5 @@ from . import QuitTimestamp
 from . import QuitType
 from . import WorstAttribute
 from . import WorstPlayerAttribute
+from . import TopAttribute
 
