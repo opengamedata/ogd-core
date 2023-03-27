@@ -7,7 +7,7 @@ from typing import Any, Callable, List, Type, Optional
 import utils
 from extractors.registries.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
-from processors.EventProcessor import EventProcessor
+from processors.DetectorProcessor import DetectorProcessor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from utils import ExportRow, Logger
@@ -23,7 +23,7 @@ class EventManager:
         # define instance vars
         self._lines       : List[List[Any]]  = []
         self._columns     : List[str]        = Event.ColumnNames()
-        self._processor   : EventProcessor   = EventProcessor(LoaderClass=LoaderClass,           game_schema=game_schema,
+        self._processor   : DetectorProcessor   = DetectorProcessor(LoaderClass=LoaderClass,           game_schema=game_schema,
                                                               trigger_callback=trigger_callback, feature_overrides=feature_overrides)
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
