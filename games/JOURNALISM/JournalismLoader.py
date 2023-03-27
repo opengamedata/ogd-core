@@ -62,7 +62,8 @@ class JournalismLoader(ExtractorLoader):
                 ret_val = WorstPlayerAttribute.WorstPlayerAttribute(params=extractor_params)
             elif feature_type == "MaxedPlayerAttribute":
                 ret_val = MaxedPlayerAttribute.MaxedPlayerAttribute(params=extractor_params)           
-
+            elif feature_type == "LevelCompleteCount":
+                ret_val = LevelCompleteCount.LevelCompleteCount(params=extractor_params)
 
         else:
             raise NotImplementedError(
