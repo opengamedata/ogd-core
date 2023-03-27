@@ -43,6 +43,12 @@ class JournalismLoader(ExtractorLoader):
             ret_val = TotalLevelTime.TotalLevelTime(params = extractor_params)
         elif feature_type == "PlayerAttributes":
             ret_val = PlayerAttributes.PlayerAttributes(params = extractor_params)
+        elif feature_type == "QuitTimestamp":
+            ret_val = QuitTimestamp.QuitTimestamp(params = extractor_params)
+        elif feature_type == "QuitType":
+            ret_val = QuitType.QuitType(params = extractor_params)
+        elif feature_type == "WorstAttribute":
+            ret_val = WorstAttribute.WorstAttribute(params = extractor_params)
         
         ##per-count features
         elif extractor_params._count_index is not None:

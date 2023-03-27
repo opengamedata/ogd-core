@@ -12,7 +12,7 @@ from extractors.features.SessionFeature import SessionFeature
 
 
 
-class PlayerAttributes(SessionFeature):
+class WorstAttribute(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
@@ -20,9 +20,14 @@ class PlayerAttributes(SessionFeature):
     """
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        self._current_stats ="null"
-        
-        
+        self._min_value : int = 0;
+        self._min_names : List[str] = []
+        self._ATTRIBUTE_ENUM : List[str] = ["endurance", "resourceful", "tech","social","trust","research"]
+        #self._text_click_count : int = 0;
+        # >>> create/initialize any variables to track feature extractor state <<<
+        #
+        # e.g. To track whether extractor found a click event yet:
+        # self._found_click : bool = False
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -32,8 +37,7 @@ class PlayerAttributes(SessionFeature):
         :return: _description_
         :rtype: List[str]
         """
-        return ["all_events"]
-        #return ["snippet_received"] # >>> fill in names of events this Feature should use for extraction. <<<
+        return ["all_events"] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -50,15 +54,19 @@ class PlayerAttributes(SessionFeature):
         :param event: _description_
         :type event: Event
         """
-        # >>> use the data in the Event object to update state variables as needed. <<<
-        # Note that this function runs once on each Event whose name matches one of the strings returned by _getEventDependencies()
-        #
-        # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
-        
-        self._current_stats = event.game_state["current_stats"]
 
+        self._min_names = []
         
-        
+        skill_vals = eval(event.GameState["current_stats"])
+        self._min_value = min(skill_vals)
+        #get lowest val in list 
+        res_list = [i for i in range(len(skill_vals)) if skill_vals[i] == self._min_value]
+
+        for val in res_list:
+            self._min_names.append(self._ATTRIBUTE_ENUM[val])
+
+
+
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
@@ -92,16 +100,16 @@ class PlayerAttributes(SessionFeature):
         #
         # note the code above is redundant, we could just return [self._found_click] to get the same result;
         # the more-verbose code is here for illustrative purposes.
-        
-        return [self._current_stats]
+        return [self._min_value,self._min_names]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return []
+        return ["Names"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+    
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
+        return [ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
     
     # @staticmethod
     # def MinVersion() -> Optional[str]:

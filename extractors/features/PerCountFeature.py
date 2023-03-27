@@ -52,6 +52,7 @@ class PerCountFeature(Feature):
     # *** PRIVATE METHODS ***
 
     def _validateEvent(self, event:Event):
+       
         return (
             self._validateVersion(event.LogVersion)
         and self._validateEventType(event_type=event.EventName)

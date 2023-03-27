@@ -1,0 +1,17 @@
+{
+    "game_id": "JOURNALISM",
+    "dataset_id": "JOURNALISM_20230201_to_20230307",
+    "ogd_revision": "e21d858",
+    "start_date": "02/01/2023",
+    "end_date": "03/07/2023",
+    "date_modified": "03/07/2023",
+    "sessions": 99,
+    "population_file": "JOURNALISM/JOURNALISM_20230201_to_20230307_e21d858_population-features.zip",
+    "population_template": "",
+    "players_file": "JOURNALISM/JOURNALISM_20230201_to_20230307_e21d858_player-features.zip",
+    "players_template": "",
+    "sessions_file": "JOURNALISM/JOURNALISM_20230201_to_20230307_e21d858_session-features.zip",
+    "sessions_template": "",
+    "events_file": null,
+    "events_template": null
+}

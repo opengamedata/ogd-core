@@ -13,6 +13,8 @@ class LevelStoryAlignment(PerLevelFeature):
     def __init__(self, params:ExtractorParameters):
         PerLevelFeature.__init__(self, params=params)
         self._story_alignment = 0
+        ##print("working!")
+
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -24,12 +26,11 @@ class LevelStoryAlignment(PerLevelFeature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        print("event happened!")
-        print(event)
-        self._story_alignment = event["story_alignment"]
+        self._story_alignment = event.EventData["story_alignment"]
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        return
+        print("extracting!")
+        return []
 
     def _getFeatureValues(self) -> List[Any]:
         return [self._story_alignment]

@@ -1,6 +1,9 @@
 # import libraries
 import json
 from typing import Any, List, Optional
+import json
+from time import time
+from datetime  import timedelta, datetime
 # import local files
 from extractors.features.Feature import Feature
 from schemas.Event import Event
@@ -12,17 +15,28 @@ from extractors.features.SessionFeature import SessionFeature
 
 
 
-class PlayerAttributes(SessionFeature):
+
+class QuitType(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
+
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        self._current_stats ="null"
         
-        
+        ##event boolean watchers
+        self._last_event: Optional[str] = None
+        self._display_feedback: bool = False
+        self._start_level: bool = False
+
+        ##feature boolean watchers
+        self._between_levels : bool = False
+        self._on_fail : bool = False
+        self._other : bool = False
+
+    
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -32,8 +46,7 @@ class PlayerAttributes(SessionFeature):
         :return: _description_
         :rtype: List[str]
         """
-        return ["all_events"]
-        #return ["snippet_received"] # >>> fill in names of events this Feature should use for extraction. <<<
+        return ["all_events"] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -55,10 +68,50 @@ class PlayerAttributes(SessionFeature):
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
         
-        self._current_stats = event.game_state["current_stats"]
+        # if(self._display_feedback == True & self._start_level == True)
+        
+        # if(event.EventName == "start_level"):
+        #     self._display_feedback = False
+        #     self._start_level = True
+
+        # if(event.EventName == "display_feedback_dialog"):
+        #     self._display_feedback = True
+        #     self._start_level = False
+        #     self._between_levels = True
+        #     self._other, self._on_fail = False
+
+        ##During the window of events between display_feedback_dialog -> start_level, 
+        ##_between_levels = True. Otherwise, _other= True
+        if(event.EventName == "display_feedback_dialog"):
+            self._start_level = False
+            self._display_feedback = True
+            self._between_levels, self._other = True, False
+
+        if(event.EventName == "start_level"):
+            self._start_level = True
+            if(self._display_feedback == True):
+                self._display_feedback = False
+                self._between_levels, self._other = False, True
+        
+        if(event.EventName == "time_expired"):
+            self._between_levels, self._other = False, False
+            self._on_fail = True
+
+
+
 
         
         
+
+        # if(event.EventName == "display_feedback_dialog"):
+        #     self._display_feedback = True
+        # elif(event.EventName == "start_level"):
+        #     self._start_level = True
+        #     if(self._display_feedback == True):
+        #         self._between_levels 
+
+
+
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
@@ -79,29 +132,17 @@ class PlayerAttributes(SessionFeature):
         :rtype: List[Any]
         """
         
-        # >>> use state variables to calculate the return value(s) of the base Feature and any Subfeatures. <<<
-        # >>> put the calculated value(s) into a list as the function return value. <<<
-        # >>> definitely don't return ["template"], unless you really find that useful... <<<
-        #
-        # e.g. use the self._found_click, which was created/initialized in __init__(...), and updated in _extractFromEvent(...):
-        # if self._found_click:
-        #     ret_val = [True]
-        # else:
-        #     ret_val = [False]
-        # return ret_val
-        #
-        # note the code above is redundant, we could just return [self._found_click] to get the same result;
-        # the more-verbose code is here for illustrative purposes.
-        
-        return [self._current_stats]
+        return [self._delta_time, self._level_quit, self._last_event]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return []
+        return ["Level", "EventName"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+    
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
+        ##don't make available for grouping by playerID
+        return [ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
     
     # @staticmethod
     # def MinVersion() -> Optional[str]:
