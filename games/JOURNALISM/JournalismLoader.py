@@ -54,6 +54,7 @@ class JournalismLoader(ExtractorLoader):
         elif feature_type == "TopPlayerAttribute":
             ret_val = TopPlayerAttribute.TopPlayerAttribute(params=extractor_params)
         
+        
         ##per-count features
         elif extractor_params._count_index is not None:
             if feature_type == "LevelStoryAlignment":
@@ -64,6 +65,8 @@ class JournalismLoader(ExtractorLoader):
                 ret_val = MaxedPlayerAttribute.MaxedPlayerAttribute(params=extractor_params)           
             elif feature_type == "LevelCompleteCount":
                 ret_val = LevelCompleteCount.LevelCompleteCount(params=extractor_params)
+            elif feature_type == "LevelCompleted":
+                ret_val = LevelCompleted.LevelCompleted(params=extractor_params)
 
         else:
             raise NotImplementedError(
