@@ -71,7 +71,7 @@ class DataOuterface(Interface):
 
     def RemoveExportMode(self, mode:ExportMode):
         self._removeExportMode(mode)
-        Logger.Log(f"Removed mode {mode} from output.", logging.INFO)
+        Logger.Log(f"Removed mode {mode} from {type(self).__name__} output.", logging.INFO)
 
     def WriteEventHeader(self, header:List[str]) -> None:
         self._writeEventsHeader(header=header)
