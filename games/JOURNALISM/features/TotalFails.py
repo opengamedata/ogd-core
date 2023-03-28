@@ -20,9 +20,7 @@ class TotalFails(SessionFeature):
     """
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        self._choice_click_count : int = 0;
-        choice_type_names = ["hub", "time", "location", "once", "continue","action","fallback"]
-        self._init_vals = {name: 0 for name in choice_type_names}
+        self._fail_count : int = 0;
         # >>> create/initialize any variables to track feature extractor state <<<
         #
         # e.g. To track whether extractor found a click event yet:
@@ -36,7 +34,7 @@ class TotalFails(SessionFeature):
         :return: _description_
         :rtype: List[str]
         """
-        return ["all_events"] # >>> fill in names of events this Feature should use for extraction. <<<
+        return ["level_fail"] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -58,11 +56,7 @@ class TotalFails(SessionFeature):
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
         
-        if "choice_click" in event.event_name:
-            self._choice_click_count += 1
-            for key in self._init_vals:
-                if key in event.event_name:
-                    self._init_vals[key] +=1
+        self._fail_count +=1
         
         
         return
@@ -99,13 +93,12 @@ class TotalFails(SessionFeature):
         # note the code above is redundant, we could just return [self._found_click] to get the same result;
         # the more-verbose code is here for illustrative purposes.
         
-        return [self._choice_click_count, self._init_vals["action"]]
+        return [self._fail_count]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["Action"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
-    
+        return []
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
         return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
