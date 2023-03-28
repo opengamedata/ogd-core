@@ -19,10 +19,6 @@ class EventProcessor(Processor):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    @property
-    def _mode(self) -> ExtractionMode:
-        return ExtractionMode.DETECTOR
-
     def _getExtractorNames(self, order:int) -> Dict[str,List[FeatureData]]:
         raise NotImplementedError("Function stub! Haven't written name getter for event processor.")
 
