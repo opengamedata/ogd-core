@@ -16,22 +16,12 @@ class EventProcessor(Processor):
     def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema, trigger_callback:Callable[[Event], None],
                  feature_overrides:Optional[List[str]]=None):
         super().__init__(game_schema=game_schema, feature_overrides=feature_overrides)
-        self._registry = DetectorRegistry(mode=self._mode, trigger_callback=trigger_callback)
-        self._registry.LoadFromSchema(schema=game_schema, loader=self._loader, overrides=feature_overrides)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @property
     def _mode(self) -> ExtractionMode:
         return ExtractionMode.DETECTOR
-
-    @property
-    def _playerID(self) -> str:
-        return "events"
-
-    @property
-    def _sessionID(self) -> str:
-        return "events"
 
     def _getExtractorNames(self, order:int) -> Dict[str,List[FeatureData]]:
         raise NotImplementedError("Function stub! Haven't written name getter for event processor.")
