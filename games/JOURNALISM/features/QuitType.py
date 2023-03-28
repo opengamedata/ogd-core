@@ -13,7 +13,18 @@ from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 
 
+"""
+QuitType logic:
+-"complete_level", "display_feedback", "resumed_checkpoint", "level_fail" all denote certain breakpoints in quit types
+-"Buffer_Limit" sets the number of events after a key breakpoint event that the event stays "on"
+-every BUFFER_LIMIT events, the stored_event is reset
+    -a breakpoint event resets the counter
+-time between "display_feedback" event and "complete_level" is considered Quit BetweenLevel
+    -counter is set to -1 and does not begin incrementing again until after complete_level
+-time between "level_fail" and "resumed_checkpoint"(when origin="LevelFail") is considered Quit OnFail
+    -counter is set to -1 and does not begin incrementing again until after resumed_checkpoint
 
+"""
 
 
 class QuitType(SessionFeature):
@@ -27,15 +38,25 @@ class QuitType(SessionFeature):
         super().__init__(params=params)
         
         ##event boolean watchers
-        self._last_event: Optional[str] = None
+        self._store_event: Optional[Event] = None
         self._display_feedback: bool = False
         self._start_level: bool = False
+        self._resumed_checkpoint: bool = False
+        self._reached_checkpoint: bool = False
+        self._level_fail: bool = False
 
-        ##feature boolean watchers
+        self._event_watchers : List[str] = ["complete_level", "display_feedback", "resumed_checkpoint", "level_fail"]
+
+        ##feature booleans:
         self._between_levels : bool = False
         self._on_fail : bool = False
         self._other : bool = False
+        
 
+        #buffer for event margin before quit type is no longer considered something besides "other"
+        self._BUFFER_LIMIT: int = 3
+        #counters
+        self._event_counter : int = 0
     
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -63,53 +84,46 @@ class QuitType(SessionFeature):
         :param event: _description_
         :type event: Event
         """
+        if(self._store_event == None):
+            self._store_event= event
         # >>> use the data in the Event object to update state variables as needed. <<<
         # Note that this function runs once on each Event whose name matches one of the strings returned by _getEventDependencies()
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
+        if(self._event_counter >= self._BUFFER_LIMIT):
+            self._event_counter = 0
+            self._store_event = event
+        elif(self._event_counter != -1):
+            self._event_counter += 1
         
-        # if(self._display_feedback == True & self._start_level == True)
-        
-        # if(event.EventName == "start_level"):
-        #     self._display_feedback = False
-        #     self._start_level = True
+        if(event.EventName in self._event_watchers):
+            #these events have a window of margin longer than BUFFER_LIMIT
+            if(event.EventName == "display_feedback" or event.EventName == "level_fail"):
+                self._event_counter=-1
+                self._store_event = event
 
-        # if(event.EventName == "display_feedback_dialog"):
-        #     self._display_feedback = True
-        #     self._start_level = False
-        #     self._between_levels = True
-        #     self._other, self._on_fail = False
+            else:
+                self._event_counter = 0
+                if(event.EventName=="resumed_checkpoint"):
+                    if(event.EventData["origin"]=="LevelFail"):
+                        #do NOT overwrite the level_fail in store_event with a resumed_checkpoint from level_fail(preserve level_fail)
+                        #start counting with buffer again at this point though
+                        pass
+                    else:
+                        self._store_event = event
+                elif(event.EventName=="complete_level"):
+                    #do NOT overwrite the display_feedback in store_event
+                    #start counting again though
+                    pass
 
-        ##During the window of events between display_feedback_dialog -> start_level, 
-        ##_between_levels = True. Otherwise, _other= True
-        if(event.EventName == "display_feedback_dialog"):
-            self._start_level = False
-            self._display_feedback = True
-            self._between_levels, self._other = True, False
-
-        if(event.EventName == "start_level"):
-            self._start_level = True
-            if(self._display_feedback == True):
-                self._display_feedback = False
-                self._between_levels, self._other = False, True
-        
-        if(event.EventName == "time_expired"):
-            self._between_levels, self._other = False, False
-            self._on_fail = True
+                else:
+                    self._store_event = event
+                    
 
 
-
+                
 
         
-        
-
-        # if(event.EventName == "display_feedback_dialog"):
-        #     self._display_feedback = True
-        # elif(event.EventName == "start_level"):
-        #     self._start_level = True
-        #     if(self._display_feedback == True):
-        #         self._between_levels 
-
 
 
         return
@@ -120,7 +134,7 @@ class QuitType(SessionFeature):
         :param feature: _description_
         :type feature: FeatureData
         """
-        # >>> use data in the FeatureData object to update state variables as needed. <<<
+        # >>> use data in the Feature Data object to update state variables as needed. <<<
         # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
         return
@@ -132,17 +146,30 @@ class QuitType(SessionFeature):
         :rtype: List[Any]
         """
         
-        return [self._delta_time, self._level_quit, self._last_event]
+
+        string_val : Optional[str]
+        try:
+            if(self._store_event.EventName == "display_feedback"):
+                string_val = "BetweenLevels"
+            elif(self._store_event.EventName == "level_fail"):
+                string_val = "OnFail"
+
+            else:
+                string_val = "Other"
+        except:
+            string_val = "null"
+
+        return [string_val]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["Level", "EventName"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+        return [] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
         ##don't make available for grouping by playerID
-        return [ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
+        return [ExtractionMode.POPULATION,ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
     
     # @staticmethod
     # def MinVersion() -> Optional[str]:
