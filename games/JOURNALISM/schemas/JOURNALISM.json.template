@@ -716,6 +716,29 @@
                     "description": "1, 2, or 3"
                 }
             }
+        },
+        "level_fail": {
+            "description" : "When a player fails a level and is unable to continue",
+            "event_data" : {
+                "fail_types":{
+                    "type": "enum(Time, Choice, Research, Resourceful, Endurance, Tech, Social, Trust)",
+                    "description": "The reason for fail event. There can be multiple reasons for an event fail. Enum values are in int form based on index"
+                    
+                }
+            }
+        },
+        "resumed_checkpoint":{
+            "description": "When a player resumes a checkpoint"
+            "event_data":{
+                "node_id":{
+                    "type": "string",
+                    "description": "The hexadecimal id of the checkpoint node"
+                },
+                "origin":{
+                    "type": "string",
+                    "description": "Whether the origin of the checkpoint resume was from menu or from fail"
+                }
+            }
         }
     },
     "features": {

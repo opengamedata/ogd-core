@@ -35,19 +35,49 @@
             "events_template": null
         },
         "JOURNALISM_20230301_to_20230324": {
-            "ogd_revision": "a7144e8",
+            "ogd_revision": "465e136",
             "start_date": "03/01/2023",
             "end_date": "03/24/2023",
-            "date_modified": "03/27/2023",
-            "sessions": 302,
-            "population_file": "JOURNALISM/JOURNALISM_20230301_to_20230324_a7144e8_population-features.zip",
-            "population_template": "",
-            "players_file": "JOURNALISM/JOURNALISM_20230301_to_20230324_a7144e8_player-features.zip",
-            "players_template": "",
-            "sessions_file": "JOURNALISM/JOURNALISM_20230301_to_20230324_a7144e8_session-features.zip",
+            "date_modified": "03/28/2023",
+            "sessions": 0,
+            "population_file": null,
+            "population_template": null,
+            "players_file": null,
+            "players_template": null,
+            "sessions_file": "302",
             "sessions_template": "",
-            "events_file": null,
-            "events_template": null
+            "events_file": "JOURNALISM/JOURNALISM_20230301_to_20230324_465e136_events.zip",
+            "events_template": ""
+        },
+        "JOURNALISM_20230327_to_20230328": {
+            "ogd_revision": "465e136",
+            "start_date": "03/27/2023",
+            "end_date": "03/28/2023",
+            "date_modified": "03/28/2023",
+            "sessions": 0,
+            "population_file": null,
+            "population_template": null,
+            "players_file": null,
+            "players_template": null,
+            "sessions_file": null,
+            "sessions_template": null,
+            "events_file": "JOURNALISM/JOURNALISM_20230327_to_20230328_465e136_events.zip",
+            "events_template": ""
+        },
+        "JOURNALISM_20230328_to_20230328": {
+            "ogd_revision": "465e136",
+            "start_date": "03/28/2023",
+            "end_date": "03/28/2023",
+            "date_modified": "03/28/2023",
+            "sessions": 0,
+            "population_file": null,
+            "population_template": null,
+            "players_file": null,
+            "players_template": null,
+            "sessions_file": "0",
+            "sessions_template": "",
+            "events_file": "JOURNALISM/JOURNALISM_20230328_to_20230328_465e136_events.zip",
+            "events_template": ""
         }
     }
 }
