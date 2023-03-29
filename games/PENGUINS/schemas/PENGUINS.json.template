@@ -3,7 +3,7 @@
     "game_state" : {
         "seconds_from_launch" : {
             "type" : "float",
-            "description" : "The number of seconds elapsed since the game was launched"
+            "description" : "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
         },
         "posX" : {
             "type" : "float",
