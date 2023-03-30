@@ -55,7 +55,8 @@ class JournalismLoader(ExtractorLoader):
             ret_val = TopPlayerAttribute.TopPlayerAttribute(params=extractor_params)
         elif feature_type == "TotalFails":
             ret_val = TotalFails.TotalFails(params=extractor_params)
-        
+        elif feature_type == "ContinuesOnFail":
+            ret_val = ContinuesOnFail.ContinuesOnFail(params = extractor_params)        
         
         ##per-count features
         elif extractor_params._count_index is not None:

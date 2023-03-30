@@ -19,7 +19,8 @@ __all__ = [
     "LevelCompleteCount",
     "LevelCompleted",
     "TotalFails",
-    "FailureCount"
+    "FailureCount",
+    "ContinuesOnFail"
 ]
 
 from . import TextClickCount
@@ -43,3 +44,4 @@ from . import LevelCompleteCount
 from . import LevelCompleted
 from . import TotalFails
 from . import FailureCount
+from . import ContinuesOnFail
