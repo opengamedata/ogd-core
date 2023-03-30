@@ -80,16 +80,16 @@
             "events_template": ""
         },
         "JOURNALISM_20230327_to_20230330": {
-            "ogd_revision": "1f837a1",
+            "ogd_revision": "5df8374",
             "start_date": "03/27/2023",
             "end_date": "03/30/2023",
             "date_modified": "03/30/2023",
             "sessions": 45,
-            "population_file": "JOURNALISM/JOURNALISM_20230327_to_20230330_1f837a1_population-features.zip",
+            "population_file": "JOURNALISM/JOURNALISM_20230327_to_20230330_5df8374_population-features.zip",
             "population_template": "",
-            "players_file": "JOURNALISM/JOURNALISM_20230327_to_20230330_1f837a1_player-features.zip",
+            "players_file": "JOURNALISM/JOURNALISM_20230327_to_20230330_5df8374_player-features.zip",
             "players_template": "",
-            "sessions_file": "JOURNALISM/JOURNALISM_20230327_to_20230330_1f837a1_session-features.zip",
+            "sessions_file": "JOURNALISM/JOURNALISM_20230327_to_20230330_5df8374_session-features.zip",
             "sessions_template": "",
             "events_file": null,
             "events_template": null

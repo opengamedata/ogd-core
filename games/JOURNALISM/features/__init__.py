@@ -18,7 +18,8 @@ __all__ = [
     "MaxedPlayerAttribute",
     "LevelCompleteCount",
     "LevelCompleted",
-    "TotalFails"
+    "TotalFails",
+    "FailureCount"
 ]
 
 from . import TextClickCount
@@ -41,4 +42,4 @@ from . import MaxedPlayerAttribute
 from . import LevelCompleteCount
 from . import LevelCompleted
 from . import TotalFails
-
+from . import FailureCount

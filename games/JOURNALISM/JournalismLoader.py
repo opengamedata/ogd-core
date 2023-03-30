@@ -69,6 +69,8 @@ class JournalismLoader(ExtractorLoader):
                 ret_val = LevelCompleteCount.LevelCompleteCount(params=extractor_params)
             elif feature_type == "LevelCompleted":
                 ret_val = LevelCompleted.LevelCompleted(params=extractor_params)
+            elif feature_type == "FailureCount":
+                ret_val = FailureCount.FailureCount(params=extractor_params)
 
         else:
             raise NotImplementedError(
