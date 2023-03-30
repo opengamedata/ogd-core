@@ -101,13 +101,10 @@ class QuitType(SessionFeature):
         if(event.EventName in self._event_watchers):
             #these events have a window of margin longer than BUFFER_LIMIT
             if(event.EventName == "display_feedback_dialog" or event.EventName == "level_fail"):
-                print("locked at -1")
                 self._event_counter=-1
                 self._store_event = event
 
             else:
-                if(self._event_counter == -1):
-                    print("AT -1 RN!")
                 self._event_counter = 0
                 if(event.EventName=="resumed_checkpoint"):
                     if(event.EventData["origin"]=="LevelFail"):
@@ -155,8 +152,7 @@ class QuitType(SessionFeature):
         :rtype: List[Any]
         """
         
-        if(self._event_counter == -1):
-            print("ECOUNTER!")
+       
 
         string_val : Optional[str]
         try:
