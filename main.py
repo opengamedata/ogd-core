@@ -28,6 +28,7 @@ from interfaces.DataInterface import DataInterface
 from interfaces.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface
 from interfaces.BigQueryInterface import BigQueryInterface
+from interfaces.BQFirebaseInterface import BQFirebaseInterface
 from managers.ExportManager import ExportManager
 from schemas.IDMode import IDMode
 from schemas.GameSchema import GameSchema
@@ -159,7 +160,9 @@ def genDBInterface() -> DataInterface:
     config = settings["GAME_SOURCE_MAP"][args.game]
     config['source'] = {key:val for key,val in source.items()}
 
-    if interface_type == "BigQuery":
+    if interface_type == "Firebase":
+        ret_val = BQFirebaseInterface(game_id=args.game, config=config)
+    elif interface_type == "BigQuery":
         ret_val = BigQueryInterface(game_id=args.game, config=config)
     elif interface_type == "MySQL":
         ret_val = MySQLInterface(game_id=args.game, config=config)
