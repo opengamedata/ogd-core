@@ -1,8 +1,7 @@
 ## import standard libraries
 import abc
+import logging
 from typing import Dict, List, Type, Optional, Set
-
-from numpy import isin
 # import locals
 from extractors.registries.ExtractorRegistry import ExtractorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
@@ -13,7 +12,7 @@ from processors.Processor import Processor
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
 from schemas.ExportMode import ExportMode
-from utils import ExportRow
+from utils import Logger, ExportRow
 
 ## @class Processor
 class ExtractorProcessor(Processor):
@@ -42,14 +41,10 @@ class ExtractorProcessor(Processor):
     def _sessionID(self) -> str:
         pass
 
-    @abc.abstractmethod
-    def _clearLines(self) -> None:
-        pass
+    # *** BUILT-INS & PROPERTIES ***
 
-    # *** BUILT-INS ***
-
-    def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, feature_overrides:Optional[List[str]]=None):
-        super().__init__(game_schema=game_schema, feature_overrides=feature_overrides)
+    def __init__(self, game_schema: GameSchema, LoaderClass:Type[ExtractorLoader], feature_overrides:Optional[List[str]]=None):
+        super().__init__(game_schema=game_schema)
         self._LoaderClass : Type[ExtractorLoader] = LoaderClass
         self._loader      : ExtractorLoader       = LoaderClass(player_id=self._playerID, session_id=self._sessionID, game_schema=self._game_schema,
                                                                 mode=self._mode, feature_overrides=self._overrides)
@@ -58,6 +53,11 @@ class ExtractorProcessor(Processor):
 
     def __str__(self):
         return f""
+
+    @property
+    def ExtractorNames(self) -> List[str]:
+        # TODO: add error handling code, if applicable.
+        return self._getExtractorNames()
 
     # *** PUBLIC STATICS ***
 
@@ -69,13 +69,6 @@ class ExtractorProcessor(Processor):
                 self._registry.ExtractFromFeatureData(feature=feature)
         else:
             Logger.Log(f"Processor has no registry, skipping FeatureData.", logging.WARN)
-
-    def GetExtractorNames(self) -> List[str]:
-        # TODO: add error handling code, if applicable.
-        return self._getExtractorNames()
-
-    def ClearLines(self):
-        self._clearLines()
 
     # *** PRIVATE STATICS ***
 

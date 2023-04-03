@@ -17,7 +17,7 @@ from utils import Logger, ExportRow
 #  Class to extract and manage features for a processed csv file.
 class SessionProcessor(FeatureProcessor):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the SessionProcessor class.
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, player_id:str, session_id:str,
@@ -80,11 +80,13 @@ class SessionProcessor(FeatureProcessor):
         """
         self._registry.ExtractFromEvent(event)
 
-    def _getFeatureValues(self, as_str:bool=False) -> ExportRow:
-        if as_str:
-            return [self._playerID, self._sessionID] + self._registry.GetFeatureStringValues()
-        else:
-            return [self._playerID, self._sessionID] + self._registry.GetFeatureValues()
+    def _getLines(self) -> List[ExportRow]:
+        ret_val : ExportRow
+        # if as_str:
+        #     ret_val = [self._playerID, self._sessionID] + self._registry.GetFeatureStringValues()
+        # else:
+        ret_val = [self._playerID, self._sessionID] + self._registry.GetFeatureValues()
+        return [ret_val]
 
     def _getFeatureData(self, order:int) -> List[FeatureData]:
         return self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)

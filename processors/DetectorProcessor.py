@@ -8,10 +8,11 @@ from processors.ExtractorProcessor import ExtractorProcessor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.GameSchema import GameSchema
+from utils import ExportRow
 
 class DetectorProcessor(ExtractorProcessor):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_schema: GameSchema, LoaderClass: Type[ExtractorLoader], trigger_callback:Callable[[Event], None],
                  feature_overrides:Optional[List[str]]=None):
@@ -35,11 +36,18 @@ class DetectorProcessor(ExtractorProcessor):
         return "detectors"
 
     def _getExtractorNames(self, order:int) -> Dict[str,List[FeatureData]]:
-        raise NotImplementedError("Function stub! Haven't written name getter for event processor.")
+        raise NotImplementedError("Function stub! Haven't written name getter for detector processor.")
 
     def _processEvent(self, event:Event):
         if self._registry is not None:
             self._registry.ExtractFromEvent(event)
+
+    def _getLines(self) -> List[ExportRow]:
+        return []
+
+    def _clearLines(self):
+        if self._registry is not None:
+            self._registry.LoadFromSchema(schema=self._game_schema, loader=self._loader, overrides=self._overrides)
 
     # *** PUBLIC STATICS ***
 
