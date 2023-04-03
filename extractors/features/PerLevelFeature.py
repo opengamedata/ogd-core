@@ -18,7 +18,7 @@ class PerLevelFeature(PerCountFeature):
         _type_: _description_
     """
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)

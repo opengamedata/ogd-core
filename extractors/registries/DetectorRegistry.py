@@ -25,7 +25,7 @@ class DetectorRegistry(ExtractorRegistry):
     :rtype: [type]
     """
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     # Base constructor for Registry.
     def __init__(self, mode:ExtractionMode, trigger_callback:Callable[[Event], None]):

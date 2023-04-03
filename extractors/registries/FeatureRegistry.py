@@ -39,7 +39,7 @@ class FeatureRegistry(ExtractorRegistry):
         def __str__(self):
             return self.name
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     # Base constructor for Registry.
     def __init__(self, mode:ExtractionMode, order:int=len(FeatureOrders)):

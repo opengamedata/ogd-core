@@ -55,7 +55,7 @@ class ExtractorRegistry(abc.ABC):
     def _extractFromFeatureData(self, feature:FeatureData) -> None:
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     # Base constructor for Registry.
     def __init__(self, mode:ExtractionMode):
