@@ -13,8 +13,9 @@ class DetectorProcessor(ExtractorProcessor):
 
     # *** BUILT-INS ***
 
-    def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema, trigger_callback:Callable[[Event], None],
+    def __init__(self, game_schema: GameSchema, LoaderClass: Type[ExtractorLoader], trigger_callback:Callable[[Event], None],
                  feature_overrides:Optional[List[str]]=None):
+        # TODO: Consider having multiple registries for per-player or per-session kinds of things.
         super().__init__(game_schema=game_schema, LoaderClass=LoaderClass, feature_overrides=feature_overrides)
         self._registry = DetectorRegistry(mode=self._mode, trigger_callback=trigger_callback)
         self._registry.LoadFromSchema(schema=game_schema, loader=self._loader, overrides=feature_overrides)
@@ -27,11 +28,11 @@ class DetectorProcessor(ExtractorProcessor):
 
     @property
     def _playerID(self) -> str:
-        return "events"
+        return "detectors"
 
     @property
     def _sessionID(self) -> str:
-        return "events"
+        return "detectors"
 
     def _getExtractorNames(self, order:int) -> Dict[str,List[FeatureData]]:
         raise NotImplementedError("Function stub! Haven't written name getter for event processor.")
