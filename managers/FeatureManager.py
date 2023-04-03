@@ -110,7 +110,7 @@ class FeatureManager:
 
     def GetPopulationFeatureNames(self) -> List[str]:
         if ExportMode.POPULATION in self._exp_types:
-            return self._population.GetExtractorNames()
+            return self._population.ExtractorNames
         else:
             return []
     def GetPopulationFeatures(self, as_str:bool = False) -> List[ExportRow]:
@@ -125,7 +125,7 @@ class FeatureManager:
 
     def GetPlayerFeatureNames(self) -> List[str]:
         if ExportMode.PLAYER in self._exp_types:
-            return self._players["null"].GetExtractorNames()
+            return self._players["null"].ExtractorNames
         else:
             return []
     def GetPlayerFeatures(self, as_str:bool = False) -> List[ExportRow]:
@@ -140,7 +140,7 @@ class FeatureManager:
 
     def GetSessionFeatureNames(self) -> List[str]:
         if ExportMode.SESSION in self._exp_types:
-            return self._sessions["null"]["null"].GetExtractorNames()
+            return self._sessions["null"]["null"].ExtractorNames
         else:
             return []
     def GetSessionFeatures(self, slice_num:int, slice_count:int, as_str:bool = False) -> List[ExportRow]:

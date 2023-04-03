@@ -8,6 +8,7 @@ import utils
 from extractors.registries.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
 from processors.DetectorProcessor import DetectorProcessor
+from processors.EventProcessor import EventProcessor
 from schemas.Event import Event
 from schemas.GameSchema import GameSchema
 from utils import ExportRow, Logger
@@ -21,36 +22,39 @@ class EventManager:
         Just creates empty list of lines and generates list of column names.
         """
         # define instance vars
-        self._lines       : List[List[Any]]  = []
-        self._columns     : List[str]        = Event.ColumnNames()
-        self._processor   : DetectorProcessor   = DetectorProcessor(LoaderClass=LoaderClass,           game_schema=game_schema,
+        self._columns     : List[str]      = Event.ColumnNames()
+        self._raw_events  : EventProcessor = EventProcessor(game_schema=game_schema)
+        self._all_events  : EventProcessor = EventProcessor(game_schema=game_schema)
+        self._detector_processor   : DetectorProcessor   = DetectorProcessor(LoaderClass=LoaderClass,           game_schema=game_schema,
                                                               trigger_callback=trigger_callback, feature_overrides=feature_overrides)
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
-        col_values = event.ColumnValues()
-        for i,col in enumerate(col_values):
-            if isinstance(col, str):
-                col_values[i] = f"\"{col}\""
-            elif isinstance(col, dict):
-                # TODO: double-check if the remote_addr is there to be dropped/ignored.
-                col_values[i] = json.dumps(col, default=lambda x : x.isoformat() if isinstance(x, datetime) else str(x))
         # event.EventData = json.dumps(event.EventData)
-        self._lines.append(col_values) # changed , to \t
-        self._processor.ProcessEvent(event=event)
+        # TODO: double-check if the remote_addr is there to be dropped/ignored.
+        self._raw_events.ProcessEvent(event=event)
+        self._detector_processor.ProcessEvent(event=event)
 
     def GetColumnNames(self) -> List[str]:
         return self._columns
 
-    def GetLines(self, slice_num:int, slice_count:int) -> List[ExportRow]:
+    def GetRawLines(self, slice_num:int, slice_count:int) -> List[ExportRow]:
         start   : datetime = datetime.now()
-        ret_val : List[Any] = self._lines
+        ret_val : List[Any] = self._raw_events.Lines
         time_delta = datetime.now() - start
-        Logger.Log(f"Time to retrieve Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        Logger.Log(f"Time to retrieve raw Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        return ret_val
+
+    def GetAllLines(self, slice_num:int, slice_count:int) -> List[ExportRow]:
+        start   : datetime = datetime.now()
+        ret_val : List[Any] = self._all_events.Lines
+        time_delta = datetime.now() - start
+        Logger.Log(f"Time to retrieve all Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
 
     ## Function to empty the list of lines stored by the EventProcessor.
     #  This is helpful if we're processing a lot of data and want to avoid
     #  Eating too much memory.
     def ClearLines(self):
-        Logger.Log(f"Clearing {len(self._lines)} entries from EventManager.", logging.DEBUG, depth=2)
-        self._lines = []
+        Logger.Log(f"Clearing {len(self._raw_events.Lines)} raw event and {len(self._all_events.Lines)} processed event entries from EventManager.", logging.DEBUG, depth=2)
+        self._raw_events.ClearLines()
+        self._all_events.ClearLines()

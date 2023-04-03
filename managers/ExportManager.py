@@ -45,7 +45,7 @@ class ExportManager:
     Use this class to carry out a request for a data export, by passing along an instance of the `Request` class to the ExecuteRequest function.
     """
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, settings:Dict[str, Any]):
         """Constructor for an ExportManager object.
