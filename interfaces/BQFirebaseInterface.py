@@ -13,7 +13,7 @@ from utils import Logger
 
 AQUALAB_MIN_VERSION = 6.2
 
-class BigQueryInterface(DataInterface):
+class BQFirebaseInterface(DataInterface):
 
     # *** BUILT-INS ***
 
