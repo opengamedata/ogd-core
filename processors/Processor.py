@@ -1,12 +1,14 @@
 ## import standard libraries
 import abc
+import json
 import logging
+from datetime import datetime
 from typing import Any, Dict, List, Type, Optional
 # import locals
 from schemas.FeatureData import FeatureData
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
-from utils import Logger
+from utils import ExportRow, Logger
 
 ## @class Processor
 class Processor(abc.ABC):
@@ -18,13 +20,21 @@ class Processor(abc.ABC):
     def _processEvent(self, event:Event) -> None:
         pass
 
+    @abc.abstractmethod
+    def _getLines(self) -> List[ExportRow]:
+        pass
+
+    @abc.abstractmethod
+    def _clearLines(self) -> None:
+        pass
+
     # *** BUILT-INS ***
 
-    def __init__(self, game_schema: GameSchema, feature_overrides:Optional[List[str]]=None):
-        self._game_schema : GameSchema            = game_schema
+    def __init__(self, game_schema: GameSchema):
+        self._game_schema : GameSchema = game_schema
 
     def __str__(self):
-        return f""
+        return f"Processor object for {self._game_schema.GameName} data"
 
     # *** PUBLIC STATICS ***
 
@@ -33,6 +43,20 @@ class Processor(abc.ABC):
     def ProcessEvent(self, event:Event) -> None:
         # TODO: add error handling code, if applicable.
         self._processEvent(event=event)
+    
+    @property
+    def Lines(self) -> List[ExportRow]:
+        ret_val : List[ExportRow] = []
+
+        # TODO: Should do list of events instead, and put it on outerface to do this part.
+        # When retrieving lines, ensure all lines have values in appropriate format for output to file/web response/whatever.
+        _dumps_default = lambda x : x.isoformat() if isinstance(x, datetime) else str(x)
+        ret_val = [[json.dumps(_col, default=_dumps_default) for _col in _line] for _line in self._getLines()]
+
+        return ret_val
+
+    def ClearLines(self):
+        self._clearLines()
 
     # *** PRIVATE STATICS ***
 
