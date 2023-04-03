@@ -30,6 +30,7 @@ class QuitLevel(SessionFeature):
         self._delta_time : Optional[timedelta] = None
         self._level_quit : int = 0
         self._last_event : Optional[str] = None
+        self._node_id : Optional[str] = None
 
     
 
@@ -71,6 +72,7 @@ class QuitLevel(SessionFeature):
 
         self._level_quit = event.GameState["level"]
         self._last_event = event.event_name
+        self._node_id = event.event_data["node_id"]
 
 
 
@@ -94,12 +96,12 @@ class QuitLevel(SessionFeature):
         :rtype: List[Any]
         """
         
-        return [self._level_quit, self._last_event]
+        return [self._level_quit, self._last_event, self._node_id]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["EventName"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+        return ["EventName", "NodeID"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
