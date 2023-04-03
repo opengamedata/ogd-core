@@ -25,7 +25,7 @@ class LakelandLoader(LegacyLoader):
     def _getFeaturesModule():
         return games.LAKELAND.features
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the WaveExtractor class.
     def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):

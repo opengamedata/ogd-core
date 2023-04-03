@@ -236,7 +236,7 @@ class SQL:
 
 class MySQLInterface(DataInterface):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_id:str, config:Dict[str,Any]):
         self._tunnel    : Optional[sshtunnel.SSHTunnelForwarder] = None

@@ -41,7 +41,7 @@ class DataInterface(Interface):
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str,datetime]:
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_id:str, config:Dict[str,Any]):
         super().__init__(config=config)

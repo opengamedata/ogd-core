@@ -12,7 +12,7 @@ from utils import Logger, ExportRow
 
 class DictionaryOuterface(DataOuterface):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_id:str, out_dict:Dict[str, Dict[str, Union[List[str], List[ExportRow]]]]):
         super().__init__(game_id=game_id, config={})

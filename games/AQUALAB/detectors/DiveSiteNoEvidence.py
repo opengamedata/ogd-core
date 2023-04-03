@@ -81,7 +81,7 @@ class DiveSiteNoEvidence(Detector):
         # further note the event_data can contain any extra data you desire; its contents are entirely up to you.
         return ret_val
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None], threshold:float):
         super().__init__(params=params, trigger_callback=trigger_callback)

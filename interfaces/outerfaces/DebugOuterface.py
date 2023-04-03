@@ -12,7 +12,7 @@ from utils import Logger, ExportRow
 
 class DebugOuterface(DataOuterface):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_id:str):
         super().__init__(game_id=game_id, config={})

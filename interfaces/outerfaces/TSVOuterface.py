@@ -24,7 +24,7 @@ from utils import Logger, ExportRow
 
 class TSVOuterface(DataOuterface):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_id:str, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], file_indexing:Dict[str,str], extension:str="tsv", dataset_id:Optional[str]=None):
         super().__init__(game_id=game_id, config={})

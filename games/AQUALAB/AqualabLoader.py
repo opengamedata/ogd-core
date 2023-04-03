@@ -19,7 +19,7 @@ EXPORT_PATH = "games/AQUALAB/DBExport.json"
 #  Extractor subclass for extracting features from Aqualab game data.
 class AqualabLoader(ExtractorLoader):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the AqualabLoader class.
     def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):

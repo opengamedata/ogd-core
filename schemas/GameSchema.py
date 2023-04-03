@@ -22,7 +22,7 @@ from utils import Logger, loadJSONFile
 #  The class includes several functions for easy access to the various parts of
 #  this schema data.
 class GameSchema(Schema):
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     # TODO: need to get game_state from schema file.
 

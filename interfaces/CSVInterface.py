@@ -12,7 +12,7 @@ from utils import Logger
 
 class CSVInterface(DataInterface):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_id:str, filepath:Path, delim:str = ',', file_schema_name:str = "OGD_EVENT_FILE"):
         # set up data from params

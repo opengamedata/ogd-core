@@ -53,7 +53,7 @@ class DataOuterface(Interface):
     def _writePopulationLines(self, populations:List[ExportRow]) -> None:
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_id, config:Dict[str, Any]):
         super().__init__(config=config)

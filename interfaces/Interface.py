@@ -17,7 +17,7 @@ class Interface(abc.ABC):
     def _close(self) -> bool:
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, config:Dict[str,Any]):
         self._config  : Dict[str, Any] = config

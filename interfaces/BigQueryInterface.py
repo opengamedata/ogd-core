@@ -15,7 +15,7 @@ AQUALAB_MIN_VERSION = 6.2
 
 class BigQueryInterface(DataInterface):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_id:str, config:Dict[str,Any]):
         super().__init__(game_id=game_id, config=config)
