@@ -227,10 +227,10 @@ class BQFirebaseInterface(DataInterface):
             if len(dates) == 2 and dates[0] is not None and dates[1] is not None:
                 ret_val = {'min':datetime.strptime(dates[0], "%m-%d-%Y %H:%M:%S"), 'max':datetime.strptime(dates[1], "%m-%d-%Y %H:%M:%S")}
             else:
-                Logger.Log(f"BigQueryInterface query did not give both a min and a max, setting both to 'now'", logging.WARNING, depth=3)
+                Logger.Log(f"BQFirebaseInterface query did not give both a min and a max, setting both to 'now'", logging.WARNING, depth=3)
                 ret_val = {'min':datetime.now(), 'max':datetime.now()}
         else:
-            Logger.Log(f"BigQueryInterface query did not return any results, setting both min and max to 'now'", logging.WARNING, depth=3)
+            Logger.Log(f"BQFirebaseInterface query did not return any results, setting both min and max to 'now'", logging.WARNING, depth=3)
             ret_val = {'min':datetime.now(), 'max':datetime.now()}
         return ret_val
 
@@ -239,7 +239,7 @@ class BQFirebaseInterface(DataInterface):
     # *** PUBLIC METHODS ***
 
     def IsOpen(self) -> bool:
-        """Overridden version of IsOpen function, checks that BigQueryInterface client has been initialized.
+        """Overridden version of IsOpen function, checks that BQFirebaseInterface client has been initialized.
 
         :return: True if the interface is open, else False
         :rtype: bool
