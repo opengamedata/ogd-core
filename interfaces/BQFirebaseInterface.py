@@ -13,9 +13,9 @@ from utils import Logger
 
 AQUALAB_MIN_VERSION = 6.2
 
-class BigQueryInterface(DataInterface):
+class BQFirebaseInterface(DataInterface):
 
-    # *** BUILT-INS & PROPERTIES ***
+    # *** BUILT-INS ***
 
     def __init__(self, game_id:str, config:Dict[str,Any]):
         super().__init__(game_id=game_id, config=config)
@@ -56,8 +56,10 @@ class BigQueryInterface(DataInterface):
 
     def _allIDs(self) -> List[str]:
         query = f"""
-            SELECT DISTINCT session_id
+            SELECT DISTINCT param.value.int_value AS session_id
             FROM `{self._dbPath()}`,
+            UNNEST(event_params) AS param
+            WHERE param.key = "ga_session_id"
         """
         Logger.Log(f"Running query for all ids:\n{query}", logging.DEBUG, depth=3)
         data = self._client.query(query)
@@ -66,8 +68,15 @@ class BigQueryInterface(DataInterface):
 
     def _fullDateRange(self) -> Dict[str, datetime]:
         query = f"""
-            SELECT MIN(server_time), MAX(server_time)
-            FROM `{self._dbPath()}`
+            WITH datetable AS
+            (
+                SELECT event_date, event_timestamp,
+                FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
+                FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
+                FROM `{self._dbPath()}`
+            )
+            SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
+            FROM datetable
         """
         Logger.Log(f"Running query for full date range:\n{query}", logging.DEBUG, depth=3)
         data = list(self._client.query(query))
@@ -98,39 +107,77 @@ class BigQueryInterface(DataInterface):
     def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode) -> str:
         session_clause : str = ""
         player_clause  : str = ""
-        id_string = ','.join([f"'{x}'" for x in id_list])
         if id_mode == IDMode.SESSION:
-            session_clause = f"AND   session_id IN ({id_string})"
+            id_string = ','.join([f"{x}" for x in id_list])
+            session_clause = f"AND   param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
+            player_clause  = f"AND   (param_user.key   = 'user_code'     OR  param_user.key = 'undefined')"
         elif id_mode == IDMode.USER:
-            player_clause  = f"AND   user_id IN ({id_string})"
+            id_string = ','.join([f"'{x}'" for x in id_list])
+            session_clause = f"AND   param_session.key = 'ga_session_id'"
+            player_clause  = f"AND   (param_user.key   = 'user_code' OR param_user.key = 'undefined') AND param_user.value.string_value IN ({id_string})"
         else:
             Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
-            session_clause = f"AND   session_id IN ({id_string})"
+            id_string = ','.join([f"{x}" for x in id_list])
+            session_clause = f"AND   param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
+            player_clause  = f"AND   (param_user.key   = 'user_code' OR param_user.key = 'undefined')"
         # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
-        where_clause = f"""
-            {session_clause}
-            {player_clause}
-        """
+        if self._game_id == "AQUALAB":
+            where_clause = f"""
+                WHERE param_app_version.key = 'app_version'
+                AND   param_log_version.key = 'log_version'
+                {session_clause}
+                {player_clause}
+            """
+        else:
+            where_clause = f"""
+                WHERE param_app_version.key = 'app_version'
+                AND   param_log_version.key = 'log_version'
+                {session_clause}
+                {player_clause}
+            """
         # 4) Set up actual query
-        # TODO Order by user_id, and by timestamp within that.
-        # Note that this could prove to be wonky when we have more games without user ids,
-        # will need to really rethink this when we start using new system.
-        # Still, not a huge deal because most of these will be rewritten at that time anyway.
-        query = f"""
-            SELECT session_id, user_id, user_data, client_time, client_offset, server_time, event_name, event_data, event_source, game_state, app_version, app_branch, log_version, event_sequence_index
-            FROM `{self._dbPath()}`
-            {where_clause}
-            ORDER BY `user_id`, `session_id`, `server_time` ASC
-        """
+        query = ""
+        if self._game_id == "SHIPWRECKS":
+            query = f"""
+                SELECT event_name, event_params, device, geo, platform,
+                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
+                param_session.value.int_value as session_id,
+                FROM `{self._dbPath()}`
+                CROSS JOIN UNNEST(event_params) AS param_session
+                WHERE param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})
+                ORDER BY `session_id`, `timestamp` ASC
+            """
+        else:
+            # TODO Order by user_id, and by timestamp within that.
+            # Note that this could prove to be wonky when we have more games without user ids,
+            # will need to really rethink this when we start using new system.
+            # Still, not a huge deal because most of these will be rewritten at that time anyway.
+            query = f"""
+                SELECT event_name, event_params, device, geo, platform,
+                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
+                param_app_version.value.string_value as app_version,
+                param_log_version.value.int_value as log_version,
+                param_session.value.int_value as session_id,
+                param_user.value.string_value as fd_user_id
+                FROM `{self._dbPath()}`
+                CROSS JOIN UNNEST(event_params) AS param_app_version
+                CROSS JOIN UNNEST(event_params) AS param_log_version
+                CROSS JOIN UNNEST(event_params) AS param_session
+                CROSS JOIN UNNEST(event_params) AS param_user
+                {where_clause}
+                ORDER BY `fd_user_id`, `timestamp` ASC
+            """
         return query
 
     def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]] = None) -> List[str]:
         ret_val = []
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         query = f"""
-            SELECT DISTINCT session_id
-            FROM `{self._dbPath()}`
-            WHERE _TABLE_SUFFIX BETWEEN '{str_min}' AND '{str_max}'
+            SELECT DISTINCT param.value.int_value AS session_id
+            FROM `{self._dbPath()}`,
+            UNNEST(event_params) AS param
+            WHERE param.key = "ga_session_id"
+            AND _TABLE_SUFFIX BETWEEN '{str_min}' AND '{str_max}'
         """
         Logger.Log(f"Running query for ids from dates:\n{query}", logging.DEBUG, depth=3)
         data = self._client.query(query)
@@ -143,22 +190,33 @@ class BigQueryInterface(DataInterface):
         if id_mode==IDMode.SESSION:
             id_string = ','.join([f"{x}" for x in id_list])
             where_clause = f"""
-                WHERE session_id IN ({id_string})
+                WHERE param.key = "ga_session_id"
+                AND param.value.int_value IN ({id_string})
             """
         elif id_mode==IDMode.USER:
             id_string = ','.join([f"'{x}'" for x in id_list])
             where_clause = f"""
-                WHERE user_id IN ({id_string})
+                WHERE param.key = "user_code"
+                AND param.value.string_value IN ({id_string})
             """
         else:
             Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
             id_string = ','.join([f"{x}" for x in id_list])
             where_clause = f"""
-                WHERE session_id IN ({id_string})
+                WHERE param.key = "ga_session_id"
+                AND param.value.int_value IN ({id_string})
             """
         query = f"""
-            SELECT MIN(server_time), MAX(server_time)
-            FROM `{self._dbPath()}`
+            WITH datetable AS
+            (
+                SELECT event_date, event_timestamp, event_params,
+                FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
+                FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
+                FROM `{self._dbPath()}`
+            )
+            SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
+            FROM datetable,
+            UNNEST(event_params) AS param
             {where_clause}
         """
         Logger.Log(f"Running query for dates from IDs:\n{query}", logging.DEBUG, depth=3)
@@ -169,10 +227,10 @@ class BigQueryInterface(DataInterface):
             if len(dates) == 2 and dates[0] is not None and dates[1] is not None:
                 ret_val = {'min':datetime.strptime(dates[0], "%m-%d-%Y %H:%M:%S"), 'max':datetime.strptime(dates[1], "%m-%d-%Y %H:%M:%S")}
             else:
-                Logger.Log(f"BigQueryInterface query did not give both a min and a max, setting both to 'now'", logging.WARNING, depth=3)
+                Logger.Log(f"BQFirebaseInterface query did not give both a min and a max, setting both to 'now'", logging.WARNING, depth=3)
                 ret_val = {'min':datetime.now(), 'max':datetime.now()}
         else:
-            Logger.Log(f"BigQueryInterface query did not return any results, setting both min and max to 'now'", logging.WARNING, depth=3)
+            Logger.Log(f"BQFirebaseInterface query did not return any results, setting both min and max to 'now'", logging.WARNING, depth=3)
             ret_val = {'min':datetime.now(), 'max':datetime.now()}
         return ret_val
 
@@ -181,7 +239,7 @@ class BigQueryInterface(DataInterface):
     # *** PUBLIC METHODS ***
 
     def IsOpen(self) -> bool:
-        """Overridden version of IsOpen function, checks that BigQueryInterface client has been initialized.
+        """Overridden version of IsOpen function, checks that BQFirebaseInterface client has been initialized.
 
         :return: True if the interface is open, else False
         :rtype: bool
