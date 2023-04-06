@@ -7,24 +7,21 @@
         "min": 0,
         "max": 235
     },
-    "game_state": {},
+    "game_state": {
+        "job_name": {
+            "type": null,
+            "description": "String name of the accepted job"
+        }
+    },
     "events": {
         "accept_job": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the accepted job"
-                }
             }
         },
         "switch_job": {
             "description": "Event that occurs whenever the job switches, whether manually or through an `accept_job` or `complete_job`",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "prev_job_name": {
                     "type": null,
                     "description": "String name of the previous job, may be incorrect when coinciding with any `complete_job`, or with an `accept_job` at a time the user was actively in a job."
@@ -34,10 +31,6 @@
         "receive_fact": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "fact_id": {
                     "type": null,
                     "description": "Unique ID for the given fact"
@@ -47,10 +40,6 @@
         "receive_entity": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "entity_id": {
                     "type": null,
                     "description": "Unique ID for the given entity"
@@ -78,10 +67,6 @@
         "scene_changed": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "scene_name": {
                     "type": null,
                     "description": "Name of the loaded scene"
@@ -91,10 +76,6 @@
         "room_changed": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "room_name": {
                     "type": null,
                     "description": "Name of the room being entered"
@@ -104,10 +85,6 @@
         "begin_dive": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "site_id": {
                     "type": null,
                     "description": "ID of the dive site"
@@ -117,10 +94,6 @@
         "ask_for_help": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "node_id": {
                     "type": null,
                     "description": "Scripting ID for the hint response"
@@ -130,10 +103,6 @@
         "guide_script_triggered": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "node_id": {
                     "type": null,
                     "description": "Scripting ID for the guide's response"
@@ -143,10 +112,6 @@
         "script_fired": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "node_id": {
                     "type": null,
                     "description": "ID of a given script node"
@@ -192,10 +157,6 @@
         "bestiary_select_species": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "species_id": {
                     "type": null,
                     "description": "ID of the selected species"
@@ -205,10 +166,6 @@
         "bestiary_select_environment": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "environment_id": {
                     "type": null,
                     "description": "ID of the selected environment"
@@ -218,10 +175,6 @@
         "bestiary_select_model": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "model_id": {
                     "type": null,
                     "description": "ID of the selected model"
@@ -294,10 +247,6 @@
         "model_phase_changed": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "phase": {
                     "type": null,
                     "description": "The selected modeling phase"
@@ -307,10 +256,6 @@
         "model_ecosystem_selected": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "ecosystem": {
                     "type": null,
                     "description": "Ecosystem selected for modeling"
@@ -320,10 +265,6 @@
         "model_concept_started": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "ecosystem": {
                     "type": null,
                     "description": "Ecosystem selected for modeling"
@@ -333,10 +274,6 @@
         "model_concept_updated": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "ecosystem": {
                     "type": null,
                     "description": "Ecosystem selected for modeling"
@@ -350,10 +287,6 @@
         "model_concept_exported": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "ecosystem": {
                     "type": null,
                     "description": "Ecosystem selected for modeling"
@@ -363,10 +296,6 @@
         "begin_simulation": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "ecosystem": {
                     "type": null,
                     "description": "Ecosystem selected for modeling"
@@ -376,10 +305,6 @@
         "model_sync_error": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "ecosystem": {
                     "type": null,
                     "description": "Ecosystem selected for modeling"
@@ -393,10 +318,6 @@
         "simulation_sync_achieved": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "ecosystem": {
                     "type": null,
                     "description": "Ecosystem selected for modeling"
@@ -406,10 +327,6 @@
         "model_predict_completed": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "ecosystem": {
                     "type": null,
                     "description": "Ecosystem selected for modeling"
@@ -419,10 +336,6 @@
         "model_intervene_update": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "ecosystem": {
                     "type": null,
                     "description": "Ecosystem selected for modeling"
@@ -440,10 +353,6 @@
         "model_intervene_error": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "ecosystem": {
                     "type": null,
                     "description": "Ecosystem selected for modeling"
@@ -453,10 +362,6 @@
         "model_intervene_completed": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "ecosystem": {
                     "type": null,
                     "description": "Ecosystem selected for modeling"
@@ -466,10 +371,6 @@
         "end_model": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "phase": {
                     "type": null,
                     "description": "The selected modeling phase upon leaving"
@@ -483,10 +384,6 @@
         "purchase_upgrade": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "item_id": {
                     "type": null,
                     "description": "ID of the purchased item"
@@ -504,10 +401,6 @@
         "insufficient_funds": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "item_id": {
                     "type": null,
                     "description": "ID of the item"
@@ -534,10 +427,6 @@
         "add_environment": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "tank_type": {
                     "type": null,
                     "description": "Selected tank type for the experiment"
@@ -551,10 +440,6 @@
         "remove_environment": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "tank_type": {
                     "type": null,
                     "description": "Selected tank type for the experiment"
@@ -568,10 +453,6 @@
         "add_critter": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "tank_type": {
                     "type": null,
                     "description": "Selected tank type for the experiment"
@@ -589,10 +470,6 @@
         "remove_critter": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "tank_type": {
                     "type": null,
                     "description": "Selected tank type for the experiment"
@@ -610,10 +487,6 @@
         "begin_experiment": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "tank_type": {
                     "type": null,
                     "description": "Selected tank type for the experiment"
@@ -631,10 +504,6 @@
         "end_experiment": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "tank_type": {
                     "type": null,
                     "description": "Selected tank type for the experiment"
@@ -661,10 +530,6 @@
         "fact_submitted": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "fact_id": {
                     "type": null,
                     "description": "ID of the submitted fact"
@@ -674,10 +539,6 @@
         "fact_rejected": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                },
                 "fact_id": {
                     "type": null,
                     "description": "ID of the rejected fact"
