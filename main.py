@@ -41,12 +41,15 @@ def ListGames() -> bool:
     print(f"The games available for export are:\n{games_list}")
     return True
 
-## Function to print out info on a game from the game's schema.
-#  This does a similar function to writeReadme, but is limited to the CSV
-#  metadata part (basically what was in the schema, at one time written into
-#  the csv's themselves). Further, the output is printed rather than written
-#  to file.
 def ShowGameInfo() -> bool:
+    """Function to print out info on a game from the game's schema.
+   This does a similar function to writeReadme, but is limited to the CSV metadata part
+   (basically what was in the schema, at one time written into the csv's themselves).
+   Further, the output is printed rather than written to file.
+
+    :return: True if game metadata was successfully loaded and printed, or False if an error occurred
+    :rtype: bool
+    """
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
         table_schema = TableSchema(schema_name=f"{settings['GAME_SOURCE_MAP'][args.game]['table']}.json")
@@ -59,11 +62,15 @@ def ShowGameInfo() -> bool:
     else:
         return True
 
-## Function to write out the readme file for a given game.
-#  This includes the CSV metadata (data from the schema, originally written into
-#  the CSV files themselves), custom readme source, and the global changelog.
-#  The readme is placed in the game's data folder.
 def WriteReadme() -> bool:
+    """Function to write out the readme file for a given game.
+   This includes the CSV metadata (data from the schema, originally written into
+   the CSV files themselves), custom readme source, and the global changelog.
+   The readme is placed in the game's data folder.
+
+    :return: _description_
+    :rtype: bool
+    """
     path = Path(f"./data") / args.game
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
@@ -78,9 +85,17 @@ def WriteReadme() -> bool:
         Logger.Log(f"Successfully generated a readme for {args.game}.", logging.INFO)
         return True
 
-## Function to handle execution of export code. This is the main intended use of
-#  the program.
 def RunExport(events:bool = False, features:bool = False) -> bool:
+    """Function to handle execution of export code.
+    This is the main intended use of the program.
+
+    :param events: _description_, defaults to False
+    :type events: bool, optional
+    :param features: _description_, defaults to False
+    :type features: bool, optional
+    :return: _description_
+    :rtype: bool
+    """
     success : bool = False
 
     req = genRequest(events=events, features=features)
