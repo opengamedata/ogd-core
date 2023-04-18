@@ -1,12 +1,81 @@
 # import standard libraries
 import logging
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 # import local files
 from schemas.config_schemas.GameSourceSchema import GameSourceSchema
 from schemas.config_schemas.DataSourceSchema import DataSourceSchema
 from schemas.Schema import Schema
 from utils import Logger
+
+class FileIndexingSchema(Schema):
+    def __init__(self, name:str, all_elements:Dict[str, Any]):
+        self._local_dir     : Path
+        self._remote_url    : Optional[str]
+        self._templates_url : str
+
+        if not isinstance(all_elements, dict):
+            all_elements = {}
+            Logger.Log(f"For {name} base config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
+        if "LOCAL_DIR" in all_elements.keys():
+            self._local_dir = FileIndexingSchema._parseLocalDir(all_elements["LOCAL_DIR"])
+        else:
+            self._local_dir = Path("./data/")
+            Logger.Log(f"{name} config does not have a 'LOCAL_DIR' element; defaulting to local_dir={self._local_dir}", logging.WARN)
+        if "REMOTE_URL" in all_elements.keys():
+            self._remote_url = FileIndexingSchema._parseRemoteURL(all_elements["REMOTE_URL"])
+        else:
+            self._remote_url = None
+            Logger.Log(f"{name} config does not have a 'REMOTE_URL' element; defaulting to remote_url={self._remote_url}", logging.WARN)
+        if "TEMPLATES_URL" in all_elements.keys():
+            self._templates_url = FileIndexingSchema._parseTemplatesURL(all_elements["TEMPLATES_URL"])
+        else:
+            self._templates_url = "https://github.com/opengamedata/opengamedata-samples"
+            Logger.Log(f"{name} config does not have a 'TEMPLATES_URL' element; defaulting to templates_url={self._templates_url}", logging.WARN)
+
+        _leftovers = { key : val for key,val in all_elements.items() if key not in {"schema", "source", "table", "credential"} }
+        super().__init__(name=name, other_elements=_leftovers)
+
+    @property
+    def LocalDirectory(self) -> Path:
+        return self._local_dir
+
+    @property
+    def RemoteURL(self) -> str:
+        return self._remote_url
+
+    @property
+    def TemplatesURL(self) -> str:
+        return self._templates_url
+
+    @property
+    def AsMarkdown(self) -> str:
+        ret_val : str
+
+        ret_val = f"{self.Name} : Local=_{self.LocalDirectory}_, Remote=_{self.RemoteURL}_"
+        return ret_val
+
+    @staticmethod
+    def _parseLocalDir(dir) -> Path:
+        ret_val : Path
+        if isinstance(dir, Path):
+            ret_val = dir
+        elif isinstance(dir, str):
+            ret_val = Path(dir)
+        else:
+            ret_val = Path(str(dir))
+            Logger.Log(f"File Indexing local data directory was unexpected type {type(dir)}, defaulting to Path(str(dir))={ret_val}.", logging.WARN)
+        return ret_val
+
+    @staticmethod
+    def _parseLogFile(use_log) -> bool:
+        ret_val : bool
+        if isinstance(use_log, bool):
+            ret_val = use_log
+        else:
+            ret_val = False
+            Logger.Log(f"Config to use log file was unexpected type {type(use_log)}, defaulting to False.", logging.WARN)
+        return ret_val
 
 class ConfigSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):
@@ -116,41 +185,78 @@ class ConfigSchema(Schema):
         return ret_val
 
     @staticmethod
-    def _parseSchema(schema) -> str:
-        ret_val : str
-        if isinstance(schema, str):
-            ret_val = schema
+    def _parseDataDir(dir) -> Path:
+        ret_val : Path
+        if isinstance(dir, Path):
+            ret_val = dir
+        elif isinstance(dir, str):
+            ret_val = Path(dir)
         else:
-            ret_val = str(schema)
-            Logger.Log(f"Game Source schema type was unexpected type {type(schema)}, defaulting to str(schema)={ret_val}.", logging.WARN)
+            ret_val = Path(str(dir))
+            Logger.Log(f"Config data dir was unexpected type {type(dir)}, defaulting to Path(str(dir))={ret_val}.", logging.WARN)
         return ret_val
 
     @staticmethod
-    def _parseSource(source) -> str:
-        ret_val : str
-        if isinstance(source, str):
-            ret_val = source
+    def _parseLogFile(use_log) -> bool:
+        ret_val : bool
+        if isinstance(use_log, bool):
+            ret_val = use_log
         else:
-            ret_val = str(source)
-            Logger.Log(f"Game Source source name was unexpected type {type(source)}, defaulting to str(source)={ret_val}.", logging.WARN)
+            ret_val = False
+            Logger.Log(f"Config to use log file was unexpected type {type(use_log)}, defaulting to False.", logging.WARN)
         return ret_val
 
     @staticmethod
-    def _parseTableName(table) -> str:
-        ret_val : str
-        if isinstance(table, str):
-            ret_val = table
+    def _parseBatchSize(batch_size) -> int:
+        ret_val : int
+        if isinstance(batch_size, int):
+            ret_val = batch_size
+        elif isinstance(batch_size, str):
+            ret_val = int(batch_size)
         else:
-            ret_val = str(table)
-            Logger.Log(f"Game Source table name was unexpected type {type(table)}, defaulting to str(table)={ret_val}.", logging.WARN)
+            ret_val = int(str(batch_size))
+            Logger.Log(f"Config batch size was unexpected type {type(batch_size)}, defaulting to int(str(batch_size))={ret_val}.", logging.WARN)
         return ret_val
 
     @staticmethod
-    def _parseCredential(credential) -> str:
-        ret_val : str
-        if isinstance(credential, str):
-            ret_val = credential
+    def _parseDebugLevel(level) -> int:
+        ret_val : int
+        if isinstance(level, str):
+            match level.upper():
+                case "ERROR":
+                    ret_val = logging.ERROR
+                case "WARNING" | "WARN":
+                    ret_val = logging.WARN
+                case "INFO":
+                    ret_val = logging.INFO
+                case "DEBUG":
+                    ret_val = logging.DEBUG
+                case _:
+                    ret_val = logging.INFO
+                    Logger.Log(f"Config debug level had unexpected value {level}, defaulting to logging.INFO.", logging.WARN)
         else:
-            ret_val = str(credential)
-            Logger.Log(f"Game Source credential type was unexpected type {type(credential)}, defaulting to str(credential)={ret_val}.", logging.WARN)
+            ret_val = logging.INFO
+            Logger.Log(f"Config debug level was unexpected type {type(level)}, defaulting to logging.INFO.", logging.WARN)
         return ret_val
+
+    @staticmethod
+    def _parseFailFast(fail_fast) -> bool:
+        ret_val : bool
+        if isinstance(fail_fast, bool):
+            ret_val = fail_fast
+        elif isinstance(fail_fast, str):
+            match fail_fast.upper():
+                case "TRUE":
+                    ret_val = True
+                case "FALSE":
+                    ret_val = False
+                case _:
+                    ret_val = False
+                    Logger.Log(f"Config fail fast had unexpected value {fail_fast}, defaulting to False.", logging.WARN)
+        else:
+            ret_val = False
+            Logger.Log(f"Config fail fast was unexpected type {type(fail_fast)}, defaulting to False.", logging.WARN)
+        return ret_val
+
+    @staticmethod
+    def _parseFileIndexing(indexing) -> 
