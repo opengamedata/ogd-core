@@ -17,10 +17,10 @@ class Schema(abc.ABC):
             Logger.Log(f"Schema for {self.Name} contained nonstandard elements {self.NonStandardElementNames}")
 
     def __str__(self):
-        return self.Name
+        return f"{type(self).__name__}[{self.Name}]"
 
     def __repr__(self):
-        return self.Name
+        return f"{type(self).__name__}[{self.Name}]"
 
     @property
     @abc.abstractmethod
