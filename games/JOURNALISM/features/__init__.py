@@ -1,7 +1,7 @@
 __all__ = [
     "TextClickCount",
     "ChoiceClickCount",
-    "IdleState",
+    "SessionPlayTime",
     "SnippetReceivedCount",
     "MeanSnippetTime",
     "StoryCompleteTime",
@@ -20,12 +20,14 @@ __all__ = [
     "LevelCompleted",
     "TotalFails",
     "FailureCount",
-    "ContinuesOnFail"
+    "ContinuesOnFail",
+    "PlayTime",
+    "UserPlayTime"
 ]
 
 from . import TextClickCount
 from . import ChoiceClickCount
-from . import IdleState
+from . import SessionPlayTime
 from . import SnippetReceivedCount
 from . import MeanSnippetTime
 from . import StoryCompleteTime
@@ -45,3 +47,5 @@ from . import LevelCompleted
 from . import TotalFails
 from . import FailureCount
 from . import ContinuesOnFail
+from . import PlayTime
+from . import UserPlayTime

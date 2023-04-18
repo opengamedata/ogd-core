@@ -1,6 +1,9 @@
 # import libraries
 import json
 from typing import Any, List, Optional
+import json
+from time import time
+from datetime  import timedelta, datetime
 # import local files
 from extractors.features.Feature import Feature
 from schemas.Event import Event
@@ -12,22 +15,20 @@ from extractors.features.SessionFeature import SessionFeature
 
 
 
-class TopAttribute(SessionFeature):
+
+class UserPlayTime(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
+
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        self._top_value : int = 0;
-        self._top_names : List[str] = []
-        self._ATTRIBUTE_ENUM : List[str] = ["endurance", "resourceful", "tech","social","trust","research"]
-        #self._text_click_count : int = 0;
-        # >>> create/initialize any variables to track feature extractor state <<<
-        #
-        # e.g. To track whether extractor found a click event yet:
-        # self._found_click : bool = False
+        self._cumulative_play_time : Optional[timedelta] = None 
+        self._cumulative_total_time : Optional[timedelta] = None
+        
+
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -37,7 +38,7 @@ class TopAttribute(SessionFeature):
         :return: _description_
         :rtype: List[str]
         """
-        return ["stat_update"] # >>> fill in names of events this Feature should use for extraction. <<<
+        return [] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -46,7 +47,7 @@ class TopAttribute(SessionFeature):
         :return: _description_
         :rtype: List[str]
         """
-        return [] # >>> fill in names of first-order features this Feature should use for extraction. <<<
+        return ["PlayTime"] # >>> fill in names of first-order features this Feature should use for extraction. <<<
 
     def _extractFromEvent(self, event:Event) -> None:
         """_summary_
@@ -54,18 +55,7 @@ class TopAttribute(SessionFeature):
         :param event: _description_
         :type event: Event
         """
-
-        self._top_names = []
-        
-        skill_vals = eval(event.GameState["current_stats"])
-        self._top_value = max(skill_vals)
-        #get lowest val in list 
-        res_list = [i for i in range(len(skill_vals)) if skill_vals[i] == self._top_value]
-
-        for val in res_list:
-            self._top_names.append(self._ATTRIBUTE_ENUM[val])
-
-
+    
 
         return
 
@@ -78,6 +68,22 @@ class TopAttribute(SessionFeature):
         # >>> use data in the FeatureData object to update state variables as needed. <<<
         # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
+    
+        # Exception handling for empty sessions
+        if(not self._cumulative_play_time):
+            self._cumulative_play_time = feature._vals[0]
+        if(not self._cumulative_total_time):
+            self._cumulative_total_time = feature._vals[1]
+
+        try:
+            self._cumulative_play_time+=feature._vals[0]
+            self._cumulative_total_time+= feature._vals[1]
+        except:
+            self._cumulative_play_time += 0
+            self._cumulative_total_time += 0
+
+        
+        
         return
 
     def _getFeatureValues(self) -> List[Any]:
@@ -86,30 +92,17 @@ class TopAttribute(SessionFeature):
         :return: _description_
         :rtype: List[Any]
         """
-        
-        # >>> use state variables to calculate the return value(s) of the base Feature and any Subfeatures. <<<
-        # >>> put the calculated value(s) into a list as the function return value. <<<
-        # >>> definitely don't return ["template"], unless you really find that useful... <<<
-        #
-        # e.g. use the self._found_click, which was created/initialized in __init__(...), and updated in _extractFromEvent(...):
-        # if self._found_click:
-        #     ret_val = [True]
-        # else:
-        #     ret_val = [False]
-        # return ret_val
-        #
-        # note the code above is redundant, we could just return [self._found_click] to get the same result;
-        # the more-verbose code is here for illustrative purposes.
-        return [self._top_value,self._top_names]
+
+        return [self._cumulative_play_time, self._cumulative_total_time]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["Names"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+        return ["Total Time"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
+        return [ExtractionMode.PLAYER,ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
     
     # @staticmethod
     # def MinVersion() -> Optional[str]:

@@ -56,7 +56,7 @@ class QuitType(SessionFeature):
         
 
         #buffer for event margin before quit type is no longer considered something besides "other"
-        self._BUFFER_LIMIT: int = 3
+        self._BUFFER_LIMIT: int = 9
         #counters            
         self._event_counter : int = 0
     

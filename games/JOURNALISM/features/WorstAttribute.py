@@ -37,7 +37,7 @@ class WorstAttribute(SessionFeature):
         :return: _description_
         :rtype: List[str]
         """
-        return ["all_events"] # >>> fill in names of events this Feature should use for extraction. <<<
+        return ["stat_update"] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:

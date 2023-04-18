@@ -27,8 +27,8 @@ class JournalismLoader(ExtractorLoader):
         ret_val : Feature
         if feature_type == "ChoiceClickCount":
             ret_val = ChoiceClickCount.ChoiceClickCount(params=extractor_params)
-        elif feature_type == "IdleState":
-            ret_val = IdleState.IdleState(params=extractor_params, threshold=schema_args.get("IDLE_THRESH_SECONDS", IdleState.IdleState.IDLE_TIME_THRESHOLD))
+        elif feature_type == "SessionPlayTime":
+            ret_val = SessionPlayTime.SessionPlayTime(params=extractor_params, threshold=schema_args.get("IDLE_THRESH_SECONDS", SessionPlayTime.SessionPlayTime.IDLE_TIME_THRESHOLD))
         elif feature_type == "SkillSequenceCount":
             ret_val = SkillSequenceCount.SkillSequenceCount(params = extractor_params)
         elif feature_type == "MeanSnippetTime":
@@ -57,6 +57,11 @@ class JournalismLoader(ExtractorLoader):
             ret_val = TotalFails.TotalFails(params=extractor_params)
         elif feature_type == "ContinuesOnFail":
             ret_val = ContinuesOnFail.ContinuesOnFail(params = extractor_params)        
+        elif feature_type == "PlayTime":
+            ret_val = PlayTime.PlayTime(params=extractor_params, threshold= schema_args.get("IDLE_THRESH_SECONDS", PlayTime.PlayTime.IDLE_TIME_THRESHOLD))
+
+        elif feature_type == "UserPlayTime":
+            ret_val = UserPlayTime.UserPlayTime(params=extractor_params)
         
         ##per-count features
         elif extractor_params._count_index is not None:
