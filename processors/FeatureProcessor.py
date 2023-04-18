@@ -2,7 +2,6 @@
 import abc
 from typing import Dict, List, Type, Optional, Set
 
-from numpy import isin
 # import locals
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
