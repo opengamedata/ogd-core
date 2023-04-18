@@ -16,22 +16,25 @@ from extractors.features.SessionFeature import SessionFeature
 
 
 
-class IdleState(SessionFeature):
+class SessionPlayTime(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    IDLE_TIME_THRESHOLD = timedelta(seconds=15)
+    IDLE_TIME_THRESHOLD = timedelta(seconds=60)
 
     def __init__(self, params:ExtractorParameters, threshold: int):
         super().__init__(params=params)
-        self._text_click_count : int = 0;
+        self._first_event_timestamp : Optional[datetime] = None
+        self._last_event_timestamp : Optional[datetime] = None
+
+        self._idle_time : Optional[timedelta] = None
         self._time : timedelta = timedelta(0)
         self._count : int = 0
         self._last_timestamp : Optional[datetime] = None
         self._threshold : timedelta = timedelta(seconds=threshold)
-
+        self._total_time : Optional[timedelta] = None
 
         # >>> create/initialize any variables to track feature extractor state <<<
         #
@@ -40,7 +43,7 @@ class IdleState(SessionFeature):
     
     @staticmethod
     def defaultThreshold():
-        return IdleState.IDLE_TIME_THRESHOLD
+        return SessionPlayTime.IDLE_TIME_THRESHOLD
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -71,17 +74,26 @@ class IdleState(SessionFeature):
         # Note that this function runs once on each Event whose name matches one of the strings returned by _getEventDependencies()
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
+        if not self._first_event_timestamp:
+            self._first_event_timestamp = event.Timestamp
+
         if not self._last_timestamp:
             self._last_timestamp = event.Timestamp
+            print("set self._last!")
             return
         if self._last_timestamp is not None:
             time_since_last = event.Timestamp - self._last_timestamp
-            if time_since_last > IdleState.IDLE_TIME_THRESHOLD:
+            if time_since_last > SessionPlayTime.IDLE_TIME_THRESHOLD:
                 self._time += time_since_last
                 self._count += 1
         else:
             raise ValueError("In IdleState, last timestamp is None!")
         self._last_timestamp = event.Timestamp
+
+        if(not self._first_event_timestamp):
+            self._first_event_timestamp = event.Timestamp
+        
+        self._last_event_timestamp = event.Timestamp
 
 
         return
@@ -103,13 +115,25 @@ class IdleState(SessionFeature):
         :return: _description_
         :rtype: List[Any]
         """
+        # print(f'_first_timestamp is:{self._first_event_timestamp}, _last_timestamp is: {self._last_timestamp}')
         
-        return [self._time, self._count]
+        # if(not self._first_event_timestamp):
+        #     self._total_time = 0
+        #     play_time : int = 0
+        # else:
+        #     self._total_time = self._last_timestamp-self._first_event_timestamp
+        #     play_time : timedelta = self._total_time - self._time
+
+        #total idle time, idle count, total session time, (total session time - idle time)
+        # return [self._time, self._count, self._total_time, play_time]
+        total_time : timedelta = self._last_event_timestamp - self._first_event_timestamp
+
+        return [total_time, 0, 0, 0]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["Count"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+        return ["Count", "Total Time", "Total Play Time"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:

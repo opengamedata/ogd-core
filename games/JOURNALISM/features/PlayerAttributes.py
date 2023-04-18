@@ -20,7 +20,7 @@ class PlayerAttributes(SessionFeature):
     """
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        self._current_stats ="null"
+        self._current_stats =[0, 0, 0, 0, 0, 0]
         
         
 
@@ -32,7 +32,7 @@ class PlayerAttributes(SessionFeature):
         :return: _description_
         :rtype: List[str]
         """
-        return ["all_events"]
+        return ["stat_update"]
         #return ["snippet_received"] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
@@ -54,9 +54,8 @@ class PlayerAttributes(SessionFeature):
         # Note that this function runs once on each Event whose name matches one of the strings returned by _getEventDependencies()
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
-        
         self._current_stats = event.game_state["current_stats"]
-
+        
         
         
         return

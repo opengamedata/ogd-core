@@ -50,9 +50,12 @@ class ContinuesOnFail(SessionFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        if(self._quit_type[1] == False):
+        
+        if(self._quit_type[2] == False):
+            #didn't quit on fail
             return [self._total_fails[0]]
         else:
+            #quit on fail, so subtract 1 for 
             return [self._total_fails[0]-1]
 
     # *** Optionally override public functions. ***
