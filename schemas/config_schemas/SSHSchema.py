@@ -39,7 +39,8 @@ class SSHSchema(Schema):
             self._port = 22
             Logger.Log(f"{name} config does not have a 'SSH_PORT' element; defaulting to ssh_port={self._port}", logging.WARN)
 
-        _leftovers = { key : val for key,val in all_elements.items() if key not in {"LOCAL_DIR", "REMOTE_URL", "TEMPLATES_URL"} }
+        _used = {"SSH_HOST", "SSH_USER", "SSH_PW", "SSH_PASS", "SSH_PORT"}
+        _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
     @property

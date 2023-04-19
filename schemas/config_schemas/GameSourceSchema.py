@@ -36,7 +36,8 @@ class GameSourceSchema(Schema):
             self._credential = None
             Logger.Log(f"{name} config does not have a 'credential' element; defaulting to credential={self._credential}", logging.WARN)
 
-        _leftovers = { key : val for key,val in all_elements.items() if key not in {"schema", "source", "table", "credential"} }
+        _used = {"schema", "source", "table", "credential"}
+        _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
     @property

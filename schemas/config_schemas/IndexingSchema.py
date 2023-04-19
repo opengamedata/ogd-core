@@ -31,7 +31,8 @@ class FileIndexingSchema(Schema):
             self._templates_url = "https://github.com/opengamedata/opengamedata-samples"
             Logger.Log(f"{name} config does not have a 'TEMPLATES_URL' element; defaulting to templates_url={self._templates_url}", logging.WARN)
 
-        _leftovers = { key : val for key,val in all_elements.items() if key not in {"LOCAL_DIR", "REMOTE_URL", "TEMPLATES_URL"} }
+        _used = {"LOCAL_DIR", "REMOTE_URL", "TEMPLATES_URL"}
+        _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
     @property
