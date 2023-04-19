@@ -183,11 +183,11 @@ class FeatureManager:
         if not self._up_to_date:
             self.ProcessFeatureData()
             # for some reason, this didn't work as sum over list of lists, so get sessions manually with a normal loop:
-            list_o_lists   : List[List[ExportRow]] = [[session.GetFeatureValues(as_str=as_str) for session_id,session in session_list.items() if (session_id != "null" or self._used_null_sess[player_name])] for player_name,session_list in self._sessions.items()]
+            list_o_lists   : List[List[ExportRow]] = [[session.Lines for session_id,session in session_list.items() if (session_id != "null" or self._used_null_sess[player_name])] for player_name,session_list in self._sessions.items()]
             sess_flat_list : List[ExportRow]       = list(itertools.chain.from_iterable(list_o_lists))
             self._latest_values = {
-                "population" : [self._population.GetFeatureValues(as_str=as_str)],
-                "players"    : [player.GetFeatureValues(as_str=as_str) for player_id,player in self._players.items() if (player_id != "null" or self._used_null_play)],
+                "population" : [self._population.Lines],
+                "players"    : [player.Lines for player_id,player in self._players.items() if (player_id != "null" or self._used_null_play)],
                 "sessions"   : sess_flat_list
             }
             self._up_to_date = True

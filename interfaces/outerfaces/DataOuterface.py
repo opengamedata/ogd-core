@@ -22,7 +22,11 @@ class DataOuterface(Interface):
         pass
 
     @abc.abstractmethod
-    def _writeEventsHeader(self, header:List[str]) -> None:
+    def _writeRawEventsHeader(self, header:List[str]) -> None:
+        pass
+
+    @abc.abstractmethod
+    def _writeProcessedEventsHeader(self, header:List[str]) -> None:
         pass
 
     @abc.abstractmethod
@@ -38,7 +42,11 @@ class DataOuterface(Interface):
         pass
 
     @abc.abstractmethod
-    def _writeEventLines(self, events:List[ExportRow]) -> None:
+    def _writeRawEventLines(self, events:List[ExportRow]) -> None:
+        pass
+
+    @abc.abstractmethod
+    def _writeProcessedEventLines(self, events:List[ExportRow]) -> None:
         pass
 
     @abc.abstractmethod
@@ -73,33 +81,39 @@ class DataOuterface(Interface):
         self._removeExportMode(mode)
         Logger.Log(f"Removed mode {mode} from {type(self).__name__} output.", logging.INFO)
 
-    def WriteEventHeader(self, header:List[str]) -> None:
-        self._writeEventsHeader(header=header)
+    def WriteHeader(self, header:List[str], mode:ExportMode):
+        if mode == ExportMode.EVENTS:
+            self._writeRawEventsHeader(header=header)
+            Logger.Log(f"Wrote event header for {self._game_id} events", depth=3)
+        elif mode == ExportMode.DETECTORS:
+            self._writeProcessedEventsHeader(header=header)
+            Logger.Log(f"Wrote processed event header for {self._game_id} events", depth=3)
+        elif mode == ExportMode.SESSION:
+            self._writeSessionHeader(header=header)
+            Logger.Log(f"Wrote session feature header for {self._game_id} sessions", depth=3)
+        elif mode == ExportMode.PLAYER:
+            self._writePlayerHeader(header=header)
+            Logger.Log(f"Wrote player feature header for {self._game_id} players", depth=3)
+        elif mode == ExportMode.POPULATION:
+            self._writePopulationHeader(header=header)
+            Logger.Log(f"Wrote population feature header for {self._game_id} populations", depth=3)
 
-    def WriteSessionHeader(self, header:List[str]) -> None:
-        self._writeSessionHeader(header=header)
-
-    def WritePlayerHeader(self, header:List[str]) -> None:
-        self._writePlayerHeader(header=header)
-
-    def WritePopulationHeader(self, header:List[str]) -> None:
-        self._writePopulationHeader(header=header)
-
-    def WriteEventLines(self, events:List[ExportRow]) -> None:
-        self._writeEventLines(events=events)
-        Logger.Log(f"Wrote {len(events)} events to {self.Destination(mode=ExportMode.EVENTS)}", logging.INFO, depth=2)
-
-    def WriteSessionLines(self, sessions:List[ExportRow]) -> None:
-        self._writeSessionLines(sessions=sessions)
-        Logger.Log(f"Wrote {len(sessions)} sessions to {self.Destination(mode=ExportMode.SESSION)}", logging.INFO, depth=2)
-
-    def WritePlayerLines(self, players:List[ExportRow]) -> None:
-        self._writePlayerLines(players=players)
-        Logger.Log(f"Wrote {len(players)} players to {self.Destination(mode=ExportMode.PLAYER)}", logging.INFO, depth=2)
-
-    def WritePopulationLines(self, populations:List[ExportRow]) -> None:
-        self._writePopulationLines(populations=populations)
-        Logger.Log(f"Wrote {len(populations)} populations to {self.Destination(mode=ExportMode.POPULATION)}", logging.INFO, depth=2)
+    def WriteLines(self, lines:List[ExportRow], mode:ExportMode) -> None:
+        if mode == ExportMode.EVENTS:
+            self._writeRawEventLines(events=lines)
+            Logger.Log(f"Wrote {len(lines)} {self._game_id} events", depth=3)
+        elif mode == ExportMode.DETECTORS:
+            self._writeProcessedEventLines(events=lines)
+            Logger.Log(f"Wrote {len(lines)} {self._game_id} processed events", depth=3)
+        elif mode == ExportMode.SESSION:
+            self._writeSessionLines(sessions=lines)
+            Logger.Log(f"Wrote {len(lines)} {self._game_id} session lines", depth=3)
+        elif mode == ExportMode.PLAYER:
+            self._writePlayerLines(players=lines)
+            Logger.Log(f"Wrote {len(lines)} {self._game_id} player lines", depth=3)
+        elif mode == ExportMode.POPULATION:
+            self._writePopulationLines(populations=lines)
+            Logger.Log(f"Wrote {len(lines)} {self._game_id} population lines", depth=3)
 
     # *** PROPERTIES ***
 

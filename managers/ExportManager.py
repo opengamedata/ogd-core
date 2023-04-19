@@ -260,33 +260,34 @@ class ExportManager:
             if request.ExportEvents:
                 cols = self._event_mgr.GetColumnNames()
                 for outerface in request.Outerfaces:
-                    outerface.WriteEventHeader(header=cols)
+                    outerface.WriteHeader(header=cols, mode=ExportMode.EVENTS)
+                    outerface.WriteHeader(header=cols, mode=ExportMode.DETECTORS)
             else:
                 Logger.Log("Event log not requested, skipping events output.", logging.INFO, depth=1)
         if self._feat_mgr is not None:
             if request.ExportSessions:
                 cols = self._feat_mgr.GetSessionFeatureNames()
                 for outerface in request.Outerfaces:
-                    outerface.WriteSessionHeader(header=cols)
+                    outerface.WriteHeader(header=cols, mode=ExportMode.SESSION)
             else:
                 Logger.Log("Session features not requested, skipping session_features file.", logging.INFO, depth=1)
             if request.ExportPlayers:
                 cols = self._feat_mgr.GetPlayerFeatureNames()
                 for outerface in request.Outerfaces:
-                    outerface.WritePlayerHeader(header=cols)
+                    outerface.WriteHeader(header=cols, mode=ExportMode.PLAYER)
             else:
                 Logger.Log("Player features not requested, skipping player_features file.", logging.INFO, depth=1)
             if request.ExportPopulation:
                 cols = self._feat_mgr.GetPopulationFeatureNames()
                 for outerface in request.Outerfaces:
-                    outerface.WritePopulationHeader(header=cols)
+                    outerface.WriteHeader(header=cols, mode=ExportMode.POPULATION)
             else:
                 Logger.Log("Population features not requested, skipping population_features file.", logging.INFO, depth=1)
 
     def _outputSlice(self, request:Request, slice_num:int, slice_count:int):
         # TODO: um, so discarding session features after every slice will fuck up second-order features, I believe. Need to deal with that.
         if request.ExportEvents and self._event_mgr is not None:
-            _events = self._event_mgr.GetLines(slice_num=slice_num, slice_count=slice_count)
+            _events = self._event_mgr.GetAllLines(slice_num=slice_num, slice_count=slice_count)
             for outerface in request.Outerfaces:
                 outerface.WriteEventLines(events=_events)
             self._event_mgr.ClearLines()
