@@ -72,7 +72,8 @@ class ConfigSchema(Schema):
             self._game_source_map = {}
             Logger.Log(f"{name} config does not have a 'GAME_SOURCE_MAP' element; defaulting to game_source_map={self._game_source_map}", logging.WARN)
 
-        _leftovers = { key : val for key,val in all_elements.items() if key not in {"schema", "source", "table", "credential"} }
+        _used = {"DATA_DIR", "LOG_FILE", "BATCH_SIZE", "DEBUG_LEVEL", "FAIL_FAST", "FILE_INDEXING", "SSH_CONFIG", "GAME_SOURCES", "GAME_SOURCE_MAP"}
+        _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
     @property
