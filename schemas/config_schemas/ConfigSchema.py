@@ -77,7 +77,11 @@ class ConfigSchema(Schema):
 
     @property
     def DataDirectory(self) -> Path:
-        return self._data_dir
+        if self.FileIndexConfig.LocalDirectory is not None:
+            return self.FileIndexConfig.LocalDirectory
+        else:
+            Logger.Log(f"Did not have a local directory in FILE_INDEXING config item, falling back on DATA_DIR config item.")
+            return self._data_dir
 
     @property
     def UseLogFile(self) -> bool:
