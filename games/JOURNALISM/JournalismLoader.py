@@ -59,9 +59,10 @@ class JournalismLoader(ExtractorLoader):
             ret_val = ContinuesOnFail.ContinuesOnFail(params = extractor_params)        
         elif feature_type == "PlayTime":
             ret_val = PlayTime.PlayTime(params=extractor_params, threshold= schema_args.get("IDLE_THRESH_SECONDS", PlayTime.PlayTime.IDLE_TIME_THRESHOLD))
-
         elif feature_type == "UserPlayTime":
             ret_val = UserPlayTime.UserPlayTime(params=extractor_params)
+        elif feature_type == "GameComplete":
+            ret_val = GameComplete.GameComplete(params=extractor_params)
         
         ##per-count features
         elif extractor_params._count_index is not None:
