@@ -63,6 +63,8 @@ class JournalismLoader(ExtractorLoader):
             ret_val = UserPlayTime.UserPlayTime(params=extractor_params)
         elif feature_type == "GameComplete":
             ret_val = GameComplete.GameComplete(params=extractor_params)
+        elif feature_type == "QuitNode":
+            ret_val = QuitNode.QuitNode(params=extractor_params)
         
         ##per-count features
         elif extractor_params._count_index is not None:

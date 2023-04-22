@@ -23,7 +23,8 @@ __all__ = [
     "ContinuesOnFail",
     "PlayTime",
     "UserPlayTime",
-    "GameComplete"
+    "GameComplete",
+    "QuitNode"
 ]
 
 from . import TextClickCount
@@ -51,3 +52,4 @@ from . import ContinuesOnFail
 from . import PlayTime
 from . import UserPlayTime
 from . import GameComplete
+from . import QuitNode
