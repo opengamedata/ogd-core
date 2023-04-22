@@ -24,10 +24,13 @@ __all__ = [
     "PlayTime",
     "UserPlayTime",
     "GameComplete",
-    "QuitNode"
+    "QuitNode",
+    "SnippetReplace",
+    "StoryEditorTime"
 ]
 
 from . import TextClickCount
+from . import StoryEditorTime
 from . import ChoiceClickCount
 from . import SessionPlayTime
 from . import SnippetReceivedCount
@@ -53,3 +56,4 @@ from . import PlayTime
 from . import UserPlayTime
 from . import GameComplete
 from . import QuitNode
+from . import SnippetReplace
