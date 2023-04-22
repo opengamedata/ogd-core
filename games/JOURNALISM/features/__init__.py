@@ -26,7 +26,8 @@ __all__ = [
     "GameComplete",
     "QuitNode",
     "SnippetReplace",
-    "StoryEditorTime"
+    "StoryEditorTime",
+    "AttributeView"
 ]
 
 from . import TextClickCount
@@ -57,3 +58,4 @@ from . import UserPlayTime
 from . import GameComplete
 from . import QuitNode
 from . import SnippetReplace
+from . import AttributeView
