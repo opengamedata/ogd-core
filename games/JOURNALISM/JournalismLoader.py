@@ -66,6 +66,7 @@ class JournalismLoader(ExtractorLoader):
         elif feature_type == "QuitNode":
             ret_val = QuitNode.QuitNode(params=extractor_params)
         
+        
         ##per-count features
         elif extractor_params._count_index is not None:
             if feature_type == "LevelStoryAlignment":
@@ -80,6 +81,10 @@ class JournalismLoader(ExtractorLoader):
                 ret_val = LevelCompleted.LevelCompleted(params=extractor_params)
             elif feature_type == "FailureCount":
                 ret_val = FailureCount.FailureCount(params=extractor_params)
+            elif feature_type == "SnippetReplace":
+                ret_val = SnippetReplace.SnippetReplace(params=extractor_params)
+            elif feature_type == "StoryEditorTime":
+                ret_val = StoryEditorTime.StoryEditorTime(params=extractor_params)
 
         else:
             raise NotImplementedError(
