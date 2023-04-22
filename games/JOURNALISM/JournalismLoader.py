@@ -87,6 +87,8 @@ class JournalismLoader(ExtractorLoader):
                 ret_val = StoryEditorTime.StoryEditorTime(params=extractor_params)
             elif feature_type == "AttributeView":
                 ret_val = AttributeView.AttributeView(params=extractor_params)
+            elif feature_type == "EditorNoteOpen":
+                ret_val = EditorNoteOpen.EditorNoteOpen(params=extractor_params)
 
         else:
             raise NotImplementedError(
