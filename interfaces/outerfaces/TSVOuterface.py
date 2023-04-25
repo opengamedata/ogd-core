@@ -82,10 +82,11 @@ class TSVOuterface(DataOuterface):
 
     def _open(self) -> bool:
         self._game_data_dir.mkdir(exist_ok=True, parents=True)
-        self._files['events']     = open(self._file_paths['events'],   "w+", encoding="utf-8") if (self._file_paths['events'] is not None) else None
-        self._files['sessions']   = open(self._file_paths['sessions'], "w+", encoding="utf-8") if (self._file_paths['sessions'] is not None) else None
-        self._files['players']    = open(self._file_paths['players'],  "w+", encoding="utf-8") if (self._file_paths['players'] is not None) else None
-        self._files['population'] = open(self._file_paths['population'], "w+", encoding="utf-8") if (self._file_paths['population'] is not None) else None
+        self._files['raw_events']       = open(self._file_paths['raw_events'],   "w+", encoding="utf-8") if (self._file_paths['raw_events'] is not None) else None
+        self._files['processed_events'] = open(self._file_paths['processed_events'],   "w+", encoding="utf-8") if (self._file_paths['processed_events'] is not None) else None
+        self._files['sessions']         = open(self._file_paths['sessions'], "w+", encoding="utf-8") if (self._file_paths['sessions'] is not None) else None
+        self._files['players']          = open(self._file_paths['players'],  "w+", encoding="utf-8") if (self._file_paths['players'] is not None) else None
+        self._files['population']       = open(self._file_paths['population'], "w+", encoding="utf-8") if (self._file_paths['population'] is not None) else None
         return True
 
     def _close(self) -> bool:
@@ -113,7 +114,9 @@ class TSVOuterface(DataOuterface):
     def _destination(self, mode:ExportMode) -> str:
         ret_val = ""
         if mode == ExportMode.EVENTS:
-            ret_val = str(self._file_paths['events'])
+            ret_val = str(self._file_paths['raw_events'])
+        elif mode == ExportMode.DETECTORS:
+            ret_val = str(self._file_paths['processed_events'])
         elif mode == ExportMode.SESSION:
             ret_val = str(self._file_paths['sessions'])
         elif mode == ExportMode.PLAYER:
