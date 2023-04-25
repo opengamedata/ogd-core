@@ -161,7 +161,7 @@ def genRequest(events:bool, features:bool) -> Request:
     _outerfaces : Set[DataOuterface] = {file_outerface}
     # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
     if settings.get("DEBUG_LEVEL") == "DEBUG":
-        _outerfaces.add(DebugOuterface(game_id=args.game))
+        _outerfaces.add(DebugOuterface(game_id=args.game, export_modes=export_modes))
 
     # 4. Once we have the parameters parsed out, construct the request.
     return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces=_outerfaces)
