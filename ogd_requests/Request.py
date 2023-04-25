@@ -92,8 +92,11 @@ class Request(abc.ABC):
         return self._range
 
     @property
-    def ExportEvents(self) -> bool:
+    def ExportRawEvents(self) -> bool:
         return ExportMode.EVENTS in self._exports
+    @property
+    def ExportProcessedEvents(self) -> bool:
+        return ExportMode.DETECTORS in self._exports
     @property
     def ExportSessions(self) -> bool:
         return ExportMode.SESSION in self._exports
