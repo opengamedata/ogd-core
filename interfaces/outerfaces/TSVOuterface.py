@@ -82,11 +82,16 @@ class TSVOuterface(DataOuterface):
 
     def _open(self) -> bool:
         self._game_data_dir.mkdir(exist_ok=True, parents=True)
-        self._files['raw_events']       = open(self._file_paths['raw_events'],   "w+", encoding="utf-8") if (self._file_paths['raw_events'] is not None) else None
-        self._files['processed_events'] = open(self._file_paths['processed_events'],   "w+", encoding="utf-8") if (self._file_paths['processed_events'] is not None) else None
-        self._files['sessions']         = open(self._file_paths['sessions'], "w+", encoding="utf-8") if (self._file_paths['sessions'] is not None) else None
-        self._files['players']          = open(self._file_paths['players'],  "w+", encoding="utf-8") if (self._file_paths['players'] is not None) else None
-        self._files['population']       = open(self._file_paths['population'], "w+", encoding="utf-8") if (self._file_paths['population'] is not None) else None
+        if (self._file_paths['raw_events'] is not None):
+            self._files['raw_events']       = open(self._file_paths['raw_events'],   "w+", encoding="utf-8")
+        if (self._file_paths['processed_events'] is not None):
+            self._files['processed_events'] = open(self._file_paths['processed_events'],   "w+", encoding="utf-8")
+        if (self._file_paths['sessions'] is not None):
+            self._files['sessions']         = open(self._file_paths['sessions'], "w+", encoding="utf-8")
+        if (self._file_paths['players'] is not None):
+            self._files['players']          = open(self._file_paths['players'],  "w+", encoding="utf-8")           
+        if (self._file_paths['population'] is not None):
+            self._files['population']       = open(self._file_paths['population'], "w+", encoding="utf-8")
         return True
 
     def _close(self) -> bool:
