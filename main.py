@@ -190,6 +190,7 @@ def getModes(events:bool, features:bool) -> Set[ExportMode]:
 
     if events:
         ret_val.add(ExportMode.EVENTS)
+        ret_val.add(ExportMode.DETECTORS)
     if features:
         if not args.no_session_file:
             ret_val.add(ExportMode.SESSION)
