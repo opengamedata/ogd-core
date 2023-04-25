@@ -123,7 +123,7 @@ class ExportManager:
         if load_class is not None:
             _game_schema  : GameSchema  = GameSchema(schema_name=request.GameID, schema_path=Path(f"./games/{request.GameID}/schemas"))
 
-            if request.ExportEvents:
+            if request.ExportRawEvents or request.ExportProcessedEvents:
                 self._event_mgr = EventManager(LoaderClass=load_class,                     game_schema=_game_schema,
                                                 trigger_callback=self._receiveEventTrigger, feature_overrides=request._feat_overrides)
             else:
@@ -257,10 +257,15 @@ class ExportManager:
 
     def _outputHeaders(self, request:Request):
         if self._event_mgr is not None:
-            if request.ExportEvents:
+            if request.ExportRawEvents:
                 cols = self._event_mgr.GetColumnNames()
                 for outerface in request.Outerfaces:
                     outerface.WriteHeader(header=cols, mode=ExportMode.EVENTS)
+            else:
+                Logger.Log("Event log not requested, skipping events output.", logging.INFO, depth=1)
+            if request.ExportProcessedEvents:
+                cols = self._event_mgr.GetColumnNames()
+                for outerface in request.Outerfaces:
                     outerface.WriteHeader(header=cols, mode=ExportMode.DETECTORS)
             else:
                 Logger.Log("Event log not requested, skipping events output.", logging.INFO, depth=1)
@@ -286,10 +291,15 @@ class ExportManager:
 
     def _outputSlice(self, request:Request, slice_num:int, slice_count:int):
         # TODO: um, so discarding session features after every slice will fuck up second-order features, I believe. Need to deal with that.
-        if request.ExportEvents and self._event_mgr is not None:
-            _events = self._event_mgr.GetAllLines(slice_num=slice_num, slice_count=slice_count)
-            for outerface in request.Outerfaces:
-                outerface.WriteLines(lines=_events, mode=ExportMode.DETECTORS)
+        if self._event_mgr is not None:
+            if request.ExportRawEvents:
+                _events = self._event_mgr.GetRawLines(slice_num=slice_num, slice_count=slice_count)
+                for outerface in request.Outerfaces:
+                    outerface.WriteLines(lines=_events, mode=ExportMode.EVENTS)
+            if request.ExportProcessedEvents:
+                _events = self._event_mgr.GetAllLines(slice_num=slice_num, slice_count=slice_count)
+                for outerface in request.Outerfaces:
+                    outerface.WriteLines(lines=_events, mode=ExportMode.DETECTORS)
             self._event_mgr.ClearLines()
         if self._feat_mgr is not None:
             if request.ExportSessions:
