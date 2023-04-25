@@ -1,12 +1,9 @@
 ## import standard libraries
-import abc
 import logging
-from datetime import datetime
-from typing import Dict, List, Tuple, Optional, Union
+from typing import List, Set
 
 # import local files
 from interfaces.outerfaces.DataOuterface import DataOuterface
-from schemas.IDMode import IDMode
 from schemas.ExportMode import ExportMode
 from utils import Logger, ExportRow
 
@@ -14,8 +11,8 @@ class DebugOuterface(DataOuterface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str):
-        super().__init__(game_id=game_id, config={})
+    def __init__(self, game_id:str, export_modes:Set[ExportMode]):
+        super().__init__(game_id=game_id, export_modes=export_modes, config={})
         self.Open()
 
     def __del__(self):

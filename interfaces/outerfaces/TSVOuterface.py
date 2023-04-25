@@ -27,19 +27,19 @@ class TSVOuterface(DataOuterface):
     # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_id:str, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], file_indexing:Dict[str,str], extension:str="tsv", dataset_id:Optional[str]=None):
-        super().__init__(game_id=game_id, config={})
-        self._file_paths   : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
-        self._zip_paths    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
-        self._files        : Dict[str,Optional[IO]]   = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
-        self._file_indexing: Dict[str, str]           = file_indexing
-        self._data_dir     : Path = Path(f"./{self._file_indexing.get('LOCAL_DIR', './')}")
-        self._game_data_dir: Path = self._data_dir / self._game_id
-        self._readme_path  : Path = self._game_data_dir / "readme.md"
-        self._extension    : str  = extension
-        self._date_range   : Dict[str,Optional[datetime]] = date_range
-        self._dataset_id   : str  = ""
-        self._short_hash   : str  = ""
-        self._sess_count   : int  = 0
+        super().__init__(game_id=game_id, export_modes=export_modes, config={})
+        self._file_paths    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
+        self._zip_paths     : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
+        self._files         : Dict[str,Optional[IO]]   = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
+        self._file_indexing : Dict[str, str]           = file_indexing
+        self._data_dir      : Path = Path(f"./{self._file_indexing.get('LOCAL_DIR', './')}")
+        self._game_data_dir : Path = self._data_dir / self._game_id
+        self._readme_path   : Path = self._game_data_dir / "readme.md"
+        self._extension     : str  = extension
+        self._date_range    : Dict[str,Optional[datetime]] = date_range
+        self._dataset_id    : str  = ""
+        self._short_hash    : str  = ""
+        self._sess_count    : int  = 0
         # figure out dataset ID.
         start = self._date_range['min'].strftime("%Y%m%d") if self._date_range['min'] is not None else "UNKNOWN"
         end   = self._date_range['max'].strftime("%Y%m%d") if self._date_range['max'] is not None else "UNKNOWN"
