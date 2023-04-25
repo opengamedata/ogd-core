@@ -1,3 +1,5 @@
+"""DataOuterface Module
+"""
 ## import standard libraries
 import abc
 import logging
@@ -10,6 +12,13 @@ from schemas.ExportMode import ExportMode
 from utils import Logger, ExportRow
 
 class DataOuterface(Interface):
+    """Base class for feature and event output.
+
+    :param Interface: _description_
+    :type Interface: _type_
+    :return: _description_
+    :rtype: _type_
+    """
 
     # *** ABSTRACTS ***
 

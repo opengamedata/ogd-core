@@ -28,9 +28,9 @@ class TSVOuterface(DataOuterface):
 
     def __init__(self, game_id:str, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], file_indexing:Dict[str,str], extension:str="tsv", dataset_id:Optional[str]=None):
         super().__init__(game_id=game_id, config={})
-        self._file_paths   : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "events":None}
-        self._zip_paths    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "events":None}
-        self._files        : Dict[str,Optional[IO]]   = {"population":None, "players":None, "sessions":None, "events":None}
+        self._file_paths   : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
+        self._zip_paths    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
+        self._files        : Dict[str,Optional[IO]]   = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
         self._file_indexing: Dict[str, str]           = file_indexing
         self._data_dir     : Path = Path(f"./{self._file_indexing.get('LOCAL_DIR', './')}")
         self._game_data_dir: Path = self._data_dir / self._game_id
@@ -59,17 +59,20 @@ class TSVOuterface(DataOuterface):
         base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
         # finally, generate file names.
         if ExportMode.EVENTS in export_modes:
-            self._file_paths['events']     = self._game_data_dir / f"{base_file_name}_events.{self._extension}"
-            self._zip_paths['events']      = self._game_data_dir / f"{base_file_name}_events.zip"
+            self._file_paths['raw_events']       = self._game_data_dir / f"{base_file_name}_raw_events.{self._extension}"
+            self._zip_paths['raw_events']        = self._game_data_dir / f"{base_file_name}_raw_events.zip"
+        if ExportMode.DETECTORS in export_modes:
+            self._file_paths['processed_events'] = self._game_data_dir / f"{base_file_name}_all_events.{self._extension}"
+            self._zip_paths['processed_events']  = self._game_data_dir / f"{base_file_name}_all_events.zip"
         if ExportMode.SESSION in export_modes:
-            self._file_paths['sessions']   = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}"
-            self._zip_paths['sessions']    = self._game_data_dir / f"{base_file_name}_session-features.zip"
+            self._file_paths['sessions']         = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}"
+            self._zip_paths['sessions']          = self._game_data_dir / f"{base_file_name}_session-features.zip"
         if ExportMode.PLAYER in export_modes:
-            self._file_paths['players']   = self._game_data_dir / f"{base_file_name}_player-features.{self._extension}"
-            self._zip_paths['players']    = self._game_data_dir / f"{base_file_name}_player-features.zip"
+            self._file_paths['players']          = self._game_data_dir / f"{base_file_name}_player-features.{self._extension}"
+            self._zip_paths['players']           = self._game_data_dir / f"{base_file_name}_player-features.zip"
         if ExportMode.POPULATION in export_modes:
-            self._file_paths['population'] = self._game_data_dir / f"{base_file_name}_population-features.{self._extension}"
-            self._zip_paths['population']  = self._game_data_dir / f"{base_file_name}_population-features.zip"
+            self._file_paths['population']       = self._game_data_dir / f"{base_file_name}_population-features.{self._extension}"
+            self._zip_paths['population']        = self._game_data_dir / f"{base_file_name}_population-features.zip"
         self.Open()
 
     def __del__(self):
@@ -121,11 +124,17 @@ class TSVOuterface(DataOuterface):
 
     def _removeExportMode(self, mode:ExportMode):
         if mode == ExportMode.EVENTS:
-            if self._files['events'] is not None:
-                self._files['events'].close()
-            self._files['events']      = None
-            self._file_paths['events'] = None
-            self._zip_paths['events']  = None
+            if self._files['raw_events'] is not None:
+                self._files['raw_events'].close()
+            self._files['raw_events']      = None
+            self._file_paths['raw_events'] = None
+            self._zip_paths['raw_events']  = None
+        if mode == ExportMode.DETECTORS:
+            if self._files['processed_events'] is not None:
+                self._files['processed_events'].close()
+            self._files['processed_events']      = None
+            self._file_paths['processed_events'] = None
+            self._zip_paths['processed_events']  = None
         elif mode == ExportMode.SESSION:
             if self._files['sessions'] is not None:
                 self._files['sessions'].close()
@@ -145,13 +154,22 @@ class TSVOuterface(DataOuterface):
             self._file_paths['population'] = None
             self._zip_paths['population']  = None
 
-    def _writeEventsHeader(self, header:List[str]) -> None:
+    def _writeRawEventsHeader(self, header:List[str]) -> None:
         cols = TSVOuterface._cleanSpecialChars(vals=header)
         cols_line = "\t".join(cols) + "\n"
-        if self._files['events'] is not None:
-            self._files['events'].writelines(cols_line)
+        if self._files['raw_events'] is not None:
+            self._files['raw_events'].writelines(cols_line)
         else:
-            Logger.Log("No events file available, writing to standard output instead.", logging.WARN)
+            Logger.Log("No raw_events file available, writing to standard output instead.", logging.WARN)
+            sys.stdout.write("".join(cols_line))
+
+    def _writeProcessedEventsHeader(self, header:List[str]) -> None:
+        cols = TSVOuterface._cleanSpecialChars(vals=header)
+        cols_line = "\t".join(cols) + "\n"
+        if self._files['processed_events'] is not None:
+            self._files['processed_events'].writelines(cols_line)
+        else:
+            Logger.Log("No processed_events file available, writing to standard output instead.", logging.WARN)
             sys.stdout.write("".join(cols_line))
 
     def _writeSessionHeader(self, header:List[str]) -> None:
@@ -181,13 +199,22 @@ class TSVOuterface(DataOuterface):
             Logger.Log("No population file available, writing to standard output instead.", logging.WARN)
             sys.stdout.write("".join(cols_line))
 
-    def _writeEventLines(self, events:List[ExportRow]) -> None:
+    def _writeRawEventLines(self, events:List[ExportRow]) -> None:
         event_strs = [TSVOuterface._cleanSpecialChars(vals=[str(item) for item in event]) for event in events]
         event_lines = ["\t".join(event) + "\n" for event in event_strs]
-        if self._files['events'] is not None:
-            self._files['events'].writelines(event_lines)
+        if self._files['raw_events'] is not None:
+            self._files['raw_events'].writelines(event_lines)
         else:
-            Logger.Log("No events file available, writing to standard output instead.", logging.WARN)
+            Logger.Log("No raw_events file available, writing to standard output instead.", logging.WARN)
+            sys.stdout.write("".join(event_lines))
+
+    def _writeProcessedEventLines(self, events:List[ExportRow]) -> None:
+        event_strs = [TSVOuterface._cleanSpecialChars(vals=[str(item) for item in event]) for event in events]
+        event_lines = ["\t".join(event) + "\n" for event in event_strs]
+        if self._files['processed_events'] is not None:
+            self._files['processed_events'].writelines(event_lines)
+        else:
+            Logger.Log("No processed_events file available, writing to standard output instead.", logging.WARN)
             sys.stdout.write("".join(event_lines))
 
     def _writeSessionLines(self, sessions:List[ExportRow]) -> None:
