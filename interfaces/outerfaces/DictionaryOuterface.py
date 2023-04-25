@@ -17,10 +17,11 @@ class DictionaryOuterface(DataOuterface):
     def __init__(self, game_id:str, out_dict:Dict[str, Dict[str, Union[List[str], List[ExportRow]]]]):
         super().__init__(game_id=game_id, config={})
         self._out = out_dict
-        self._evts : List[ExportRow] = []
-        self._sess : List[ExportRow] = []
-        self._plrs : List[ExportRow] = []
-        self._pops : List[ExportRow] = []
+        self._raw_evts : List[ExportRow] = []
+        self._all_evts : List[ExportRow] = []
+        self._sess     : List[ExportRow] = []
+        self._plrs     : List[ExportRow] = []
+        self._pops     : List[ExportRow] = []
         self.Open()
 
     def __del__(self):
@@ -29,7 +30,8 @@ class DictionaryOuterface(DataOuterface):
     # *** IMPLEMENT ABSTRACTS ***
 
     def _open(self) -> bool:
-        self._out['events']      = { "cols" : [], "vals" : self._evts }
+        self._out['raw_events']  = { "cols" : [], "vals" : self._raw_evts }
+        self._out['all_events']  = { "cols" : [], "vals" : self._all_evts }
         self._out['sessions']    = { "cols" : [], "vals" : self._sess }
         self._out['players']     = { "cols" : [], "vals" : self._plrs }
         self._out['populations'] = { "cols" : [], "vals" : self._pops }
@@ -43,8 +45,11 @@ class DictionaryOuterface(DataOuterface):
 
     def _removeExportMode(self, mode:ExportMode):
         if mode == ExportMode.EVENTS:
-            self._evts = []
-            self._out['events']      = { "cols" : [], "vals" : self._evts }
+            self._raw_evts = []
+            self._out['raw_events']  = { "cols" : [], "vals" : self._raw_evts }
+        elif mode == ExportMode.DETECTORS:
+            self._all_evts = []
+            self._out['all_events']  = { "cols" : [], "vals" : self._all_evts }
         elif mode == ExportMode.SESSION:
             self._sess = []
             self._out['sessions']    = { "cols" : [], "vals" : self._sess }
@@ -55,8 +60,11 @@ class DictionaryOuterface(DataOuterface):
             self._pops = []
             self._out['populations'] = { "cols" : [], "vals" : self._pops }
 
-    def _writeEventsHeader(self, header:List[str]) -> None:
-        self._out['events']['cols'] = header
+    def _writeRawEventsHeader(self, header:List[str]) -> None:
+        self._out['raw_events']['cols'] = header
+
+    def _writeProcessedEventsHeader(self, header:List[str]) -> None:
+        self._out['all_events']['cols'] = header
 
     def _writeSessionHeader(self, header:List[str]) -> None:
         self._out['sessions']['cols'] = header
@@ -67,12 +75,19 @@ class DictionaryOuterface(DataOuterface):
     def _writePopulationHeader(self, header:List[str]) -> None:
         self._out['populations']['cols'] = header
 
-    def _writeEventLines(self, events:List[ExportRow]) -> None:
+    def _writeRawEventLines(self, events:List[ExportRow]) -> None:
         # I'm always a bit fuzzy on when Python will copy vs. store reference,
         # but tests indicate if we just update self._evts, self._out is updated automatically
         # since it maps to self._evts.
         # Similar for the other functions here.
-        self._evts += events
+        self._raw_evts += events
+
+    def _writeProcessedEventLines(self, events:List[ExportRow]) -> None:
+        # I'm always a bit fuzzy on when Python will copy vs. store reference,
+        # but tests indicate if we just update self._evts, self._out is updated automatically
+        # since it maps to self._evts.
+        # Similar for the other functions here.
+        self._all_evts += events
 
     def _writeSessionLines(self, sessions:List[ExportRow]) -> None:
         self._sess += sessions
