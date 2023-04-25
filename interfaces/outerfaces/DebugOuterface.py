@@ -36,7 +36,9 @@ class DebugOuterface(DataOuterface):
 
     def _removeExportMode(self, mode:ExportMode):
         if mode == ExportMode.EVENTS:
-            self._display("No longer outputting event data to debug stream.")
+            self._display("No longer outputting raw event data to debug stream.")
+        if mode == ExportMode.DETECTORS:
+            self._display("No longer outputting processed event data to debug stream.")
         elif mode == ExportMode.SESSION:
             self._display("No longer outputting session data to debug stream.")
         elif mode == ExportMode.PLAYER:
@@ -44,8 +46,12 @@ class DebugOuterface(DataOuterface):
         elif mode == ExportMode.POPULATION:
             self._display("No longer outputting population data to debug stream.")
 
-    def _writeEventsHeader(self, header:List[str]) -> None:
-        self._display("Events header:")
+    def _writeRawEventsHeader(self, header:List[str]) -> None:
+        self._display("Raw events header:")
+        self._display(header)
+
+    def _writeProcessedEventsHeader(self, header:List[str]) -> None:
+        self._display("Processed events header:")
         self._display(header)
 
     def _writeSessionHeader(self, header:List[str]) -> None:
@@ -60,10 +66,15 @@ class DebugOuterface(DataOuterface):
         self._display("Population header:")
         self._display(header)
 
-    def _writeEventLines(self, events:List[ExportRow]) -> None:
-        self._display("Event data:")
+    def _writeRawEventLines(self, events:List[ExportRow]) -> None:
+        self._display("Raw event data:")
         _lengths = [len(elem) for elem in events]
-        self._display(f"{len(events)} events, average length {sum(_lengths) / len(_lengths)}")
+        self._display(f"{len(events)} raw events, average length {sum(_lengths) / len(_lengths)}")
+
+    def _writeProcessedEventLines(self, events:List[ExportRow]) -> None:
+        self._display("Processed event data:")
+        _lengths = [len(elem) for elem in events]
+        self._display(f"{len(events)} processed events, average length {sum(_lengths) / len(_lengths)}")
 
     def _writeSessionLines(self, sessions:List[ExportRow]) -> None:
         self._display("Session data:")
