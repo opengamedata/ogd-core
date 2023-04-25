@@ -2,7 +2,7 @@
 import json
 import logging
 from datetime import datetime
-from typing import Any, Callable, List, Type, Optional
+from typing import Any, Callable, List, Type, Optional, Set
 ## import local files
 import utils
 from extractors.registries.DetectorRegistry import DetectorRegistry
@@ -10,14 +10,15 @@ from extractors.ExtractorLoader import ExtractorLoader
 from processors.DetectorProcessor import DetectorProcessor
 from processors.EventProcessor import EventProcessor
 from schemas.Event import Event
+from schemas.ExportMode import ExportMode
 from schemas.GameSchema import GameSchema
 from utils import ExportRow, Logger
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
 class EventManager:
-    def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema,
-                 trigger_callback:Callable[[Event], None], feature_overrides:Optional[List[str]]=None):
+    def __init__(self, exp_modes:Set[ExportMode], game_schema: GameSchema, trigger_callback:Callable[[Event], None],
+                 LoaderClass:Optional[Type[ExtractorLoader]], feature_overrides:Optional[List[str]]=None):
         """Constructor for EventManager.
         Just creates empty list of lines and generates list of column names.
         """
@@ -25,8 +26,9 @@ class EventManager:
         self._columns     : List[str]      = Event.ColumnNames()
         self._raw_events  : EventProcessor = EventProcessor(game_schema=game_schema)
         self._all_events  : EventProcessor = EventProcessor(game_schema=game_schema)
-        self._detector_processor   : DetectorProcessor   = DetectorProcessor(LoaderClass=LoaderClass,           game_schema=game_schema,
-                                                              trigger_callback=trigger_callback, feature_overrides=feature_overrides)
+        if LoaderClass is not None:
+            self._detector_processor : DetectorProcessor = DetectorProcessor(game_schema=game_schema,           LoaderClass=LoaderClass,
+                                                                             trigger_callback=trigger_callback, feature_overrides=feature_overrides)
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
         # event.EventData = json.dumps(event.EventData)

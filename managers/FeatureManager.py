@@ -15,7 +15,7 @@ from schemas.ExportMode import ExportMode
 from utils import Logger, ExportRow
 
 class FeatureManager:
-    def __init__(self, LoaderClass:Type[ExtractorLoader], exp_modes:Set[ExportMode], game_schema:GameSchema, feature_overrides:Optional[List[str]]):
+    def __init__(self, exp_modes:Set[ExportMode], game_schema:GameSchema, LoaderClass:Type[ExtractorLoader], feature_overrides:Optional[List[str]]):
         self._LoaderClass    : Type[ExtractorLoader]      = LoaderClass
         self._game_schema    : GameSchema                 = game_schema
         self._exp_types      : Set[ExportMode]            = exp_modes

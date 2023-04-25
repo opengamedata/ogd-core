@@ -118,25 +118,27 @@ class ExportManager:
         self._processEvent(next_event=event)
 
     def _preProcess(self, request:Request) -> None:
-        # 1. Get LoaderClass so we can set up Event and Feature managers.
+        _game_schema  : GameSchema  = GameSchema(schema_name=request.GameID, schema_path=Path(f"./games/{request.GameID}/schemas"))
+        # 1. Get LoaderClass and set up Event and Feature managers.
         load_class = self._loadLoaderClass(request.GameID)
-        if load_class is not None:
-            _game_schema  : GameSchema  = GameSchema(schema_name=request.GameID, schema_path=Path(f"./games/{request.GameID}/schemas"))
+        # 2. Set up EventManager, assuming it was requested.
 
-            if request.ExportRawEvents or request.ExportProcessedEvents:
-                self._event_mgr = EventManager(LoaderClass=load_class,                     game_schema=_game_schema,
-                                                trigger_callback=self._receiveEventTrigger, feature_overrides=request._feat_overrides)
-            else:
-                Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
+        if request.ExportRawEvents or request.ExportProcessedEvents:
+            self._event_mgr = EventManager(game_schema=_game_schema, trigger_callback=self._receiveEventTrigger,
+                                           LoaderClass=load_class,   feature_overrides=request._feat_overrides)
+        else:
+            Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
+        if load_class is not None:
             if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
-                self._feat_mgr = FeatureManager(LoaderClass=load_class, exp_modes=request._exports,
-                                                game_schema=_game_schema, feature_overrides=request._feat_overrides)
+                self._feat_mgr = FeatureManager(exp_modes=request._exports, game_schema=_game_schema,
+                                                LoaderClass=load_class,     feature_overrides=request._feat_overrides)
             else:
                 Logger.Log("Feature data not requested, skipping feature manager.", logging.INFO, depth=1)
         # If game doesn't have an extractor, make sure we don't try to export it.
         else:
             # TODO: figure out how to make sure event manager doesn't try to do detecting, but is still allowed to run.
             Logger.Log("Could not set up feature manager, no feature loader given!", logging.WARNING)
+            request.RemoveExportMode(ExportMode.DETECTORS)
             request.RemoveExportMode(ExportMode.SESSION)
             request.RemoveExportMode(ExportMode.PLAYER)
             request.RemoveExportMode(ExportMode.POPULATION)
@@ -301,12 +303,16 @@ class ExportManager:
                 for outerface in request.Outerfaces:
                     outerface.WriteLines(lines=_events, mode=ExportMode.DETECTORS)
             self._event_mgr.ClearLines()
+        else:
+            Logger.Log(f"Skipping event output for slice [{slice_num}/{slice_count}], no EventManager exists!", logging.DEBUG, depth=3)
         if self._feat_mgr is not None:
             if request.ExportSessions:
                 _sess_feats = self._feat_mgr.GetSessionFeatures(slice_num=slice_num, slice_count=slice_count, as_str=True)
                 for outerface in request.Outerfaces:
                     outerface.WriteLines(lines=_sess_feats, mode=ExportMode.SESSION)
                 self._feat_mgr.ClearSessionLines()
+        else:
+            Logger.Log(f"Skipping feature output for slice [{slice_num}/{slice_count}], no FeatureManager exists!", logging.DEBUG, depth=3)
 
     def _outputPostSlice(self, request:Request):
         if self._feat_mgr is not None:
@@ -320,3 +326,5 @@ class ExportManager:
                 for outerface in request.Outerfaces:
                     outerface.WriteLines(lines=_player_feats, mode=ExportMode.PLAYER)
                 self._feat_mgr.ClearPlayerLines()
+        else:
+            Logger.Log(f"Skipping feature output for post-process, no FeatureManager exists!", logging.DEBUG, depth=3)
