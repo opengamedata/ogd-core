@@ -289,13 +289,13 @@ class ExportManager:
         if request.ExportEvents and self._event_mgr is not None:
             _events = self._event_mgr.GetAllLines(slice_num=slice_num, slice_count=slice_count)
             for outerface in request.Outerfaces:
-                outerface.WriteEventLines(events=_events)
+                outerface.WriteLines(lines=_events, mode=ExportMode.DETECTORS)
             self._event_mgr.ClearLines()
         if self._feat_mgr is not None:
             if request.ExportSessions:
                 _sess_feats = self._feat_mgr.GetSessionFeatures(slice_num=slice_num, slice_count=slice_count, as_str=True)
                 for outerface in request.Outerfaces:
-                    outerface.WriteSessionLines(sessions=_sess_feats)
+                    outerface.WriteLines(lines=_sess_feats, mode=ExportMode.SESSION)
                 self._feat_mgr.ClearSessionLines()
 
     def _outputPostSlice(self, request:Request):
@@ -303,10 +303,10 @@ class ExportManager:
             if request.ExportPopulation:
                 _pop_feats = self._feat_mgr.GetPopulationFeatures(as_str=True)
                 for outerface in request.Outerfaces:
-                    outerface.WritePopulationLines(populations=_pop_feats)
+                    outerface.WriteLines(lines=_pop_feats, mode=ExportMode.POPULATION)
                 self._feat_mgr.ClearPopulationLines()
             if request.ExportPlayers:
                 _player_feats = self._feat_mgr.GetPlayerFeatures(as_str=True)
                 for outerface in request.Outerfaces:
-                    outerface.WritePlayerLines(players=_player_feats)
+                    outerface.WriteLines(lines=_player_feats, mode=ExportMode.PLAYER)
                 self._feat_mgr.ClearPlayerLines()
