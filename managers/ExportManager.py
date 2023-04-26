@@ -59,6 +59,9 @@ class ExportManager:
         self._feat_mgr    : Optional[FeatureManager] = None
         self._debug_count : int                      = 0
 
+    def __str__(self):
+        return f"ExportManager"
+
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
@@ -113,7 +116,7 @@ class ExportManager:
     def _receiveEventTrigger(self, event:Event) -> None:
         # TODO: consider how to put a limit on times this runs, based on how big export is.
         if self._debug_count < 5:
-            Logger.Log("ExportManager received an event trigger.", logging.DEBUG)
+            Logger.Log(f"{self} received an event trigger.", logging.DEBUG)
             self._debug_count += 1
         self._processEvent(next_event=event)
 
@@ -121,27 +124,26 @@ class ExportManager:
         _game_schema  : GameSchema  = GameSchema(schema_name=request.GameID, schema_path=Path(f"./games/{request.GameID}/schemas"))
         # 1. Get LoaderClass and set up Event and Feature managers.
         load_class = self._loadLoaderClass(request.GameID)
-        # 2. Set up EventManager, assuming it was requested.
-
-        if request.ExportRawEvents or request.ExportProcessedEvents:
-            self._event_mgr = EventManager(game_schema=_game_schema, trigger_callback=self._receiveEventTrigger,
-                                           LoaderClass=load_class,   feature_overrides=request._feat_overrides)
-        else:
-            Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
-        if load_class is not None:
-            if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
-                self._feat_mgr = FeatureManager(exp_modes=request._exports, game_schema=_game_schema,
-                                                LoaderClass=load_class,     feature_overrides=request._feat_overrides)
-            else:
-                Logger.Log("Feature data not requested, skipping feature manager.", logging.INFO, depth=1)
-        # If game doesn't have an extractor, make sure we don't try to export it.
-        else:
-            # TODO: figure out how to make sure event manager doesn't try to do detecting, but is still allowed to run.
-            Logger.Log("Could not set up feature manager, no feature loader given!", logging.WARNING)
+        if load_class is None:
+            # If game doesn't have an extractor, make sure we don't try to export it.
             request.RemoveExportMode(ExportMode.DETECTORS)
             request.RemoveExportMode(ExportMode.SESSION)
             request.RemoveExportMode(ExportMode.PLAYER)
             request.RemoveExportMode(ExportMode.POPULATION)
+
+        # 2. Set up EventManager, assuming it was requested.
+        if request.ExportRawEvents or request.ExportProcessedEvents:
+            self._event_mgr = EventManager(game_schema=_game_schema, LoaderClass=load_class,
+                                           trigger_callback=self._receiveEventTrigger, feature_overrides=request._feat_overrides)
+        else:
+            Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
+        # 3. Set up FeatureManager, assuming it was requested.
+        if request.ExportSessions or request.ExportPlayers or request.ExportPopulation:
+            self._feat_mgr = FeatureManager(game_schema=_game_schema, LoaderClass=load_class, feature_overrides=request._feat_overrides)
+        else:
+            Logger.Log("Feature data not requested, or extractor loader unavailable, skipping feature manager.", logging.INFO, depth=1)
+        for outerface in request.Outerfaces:
+            outerface.Open()
         self._outputHeaders(request=request)
 
     def _processSlices(self, request:Request, ids:List[str]) -> None:

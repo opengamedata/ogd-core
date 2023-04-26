@@ -17,7 +17,7 @@ from utils import ExportRow, Logger
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
 class EventManager:
-    def __init__(self, exp_modes:Set[ExportMode], game_schema: GameSchema, trigger_callback:Callable[[Event], None],
+    def __init__(self, game_schema: GameSchema, trigger_callback:Callable[[Event], None],
                  LoaderClass:Optional[Type[ExtractorLoader]], feature_overrides:Optional[List[str]]=None):
         """Constructor for EventManager.
         Just creates empty list of lines and generates list of column names.
@@ -26,15 +26,19 @@ class EventManager:
         self._columns     : List[str]      = Event.ColumnNames()
         self._raw_events  : EventProcessor = EventProcessor(game_schema=game_schema)
         self._all_events  : EventProcessor = EventProcessor(game_schema=game_schema)
+        self._detector_processor : Optional[DetectorProcessor] = None
         if LoaderClass is not None:
-            self._detector_processor : DetectorProcessor = DetectorProcessor(game_schema=game_schema,           LoaderClass=LoaderClass,
-                                                                             trigger_callback=trigger_callback, feature_overrides=feature_overrides)
+            self._detector_processor = DetectorProcessor(game_schema=game_schema,           LoaderClass=LoaderClass,
+                                                         trigger_callback=trigger_callback, feature_overrides=feature_overrides)
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
         # event.EventData = json.dumps(event.EventData)
         # TODO: double-check if the remote_addr is there to be dropped/ignored.
-        self._raw_events.ProcessEvent(event=event)
-        self._detector_processor.ProcessEvent(event=event)
+        self._all_events.ProcessEvent(event=event)
+        if event.EventSource == "GAME":
+            self._raw_events.ProcessEvent(event=event)
+        if self._detector_processor is not None:
+            self._detector_processor.ProcessEvent(event=event)
 
     def GetColumnNames(self) -> List[str]:
         return self._columns
