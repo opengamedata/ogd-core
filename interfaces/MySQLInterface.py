@@ -222,7 +222,7 @@ class SQL:
     def Query(cursor:cursor.MySQLCursor, query:str, params:Optional[Tuple], fetch_results: bool = True) -> Optional[List[Tuple]]:
         result : Optional[List[Tuple]] = None
         # first, we do the query.
-        Logger.Log(f"Running query: {query}\nWith params: {params}", logging.DEBUG)
+        Logger.Log(f"Running query: {query}\nWith params: {params}", logging.DEBUG, depth=3)
         start = datetime.now()
         cursor.execute(query, params)
         time_delta = datetime.now()-start
