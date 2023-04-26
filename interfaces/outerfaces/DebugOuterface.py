@@ -13,7 +13,7 @@ class DebugOuterface(DataOuterface):
 
     def __init__(self, game_id:str, export_modes:Set[ExportMode]):
         super().__init__(game_id=game_id, export_modes=export_modes, config={})
-        self.Open()
+        # self.Open()
 
     def __del__(self):
         self.Close()
@@ -66,27 +66,27 @@ class DebugOuterface(DataOuterface):
     def _writeRawEventLines(self, events:List[ExportRow]) -> None:
         self._display("Raw event data:")
         _lengths = [len(elem) for elem in events]
-        self._display(f"{len(events)} raw events, average length {sum(_lengths) / len(_lengths)}")
+        self._display(f"{len(events)} raw events, average length {sum(_lengths) / len(_lengths) if len(_lengths) > 0 else 'N/A'}")
 
     def _writeProcessedEventLines(self, events:List[ExportRow]) -> None:
         self._display("Processed event data:")
         _lengths = [len(elem) for elem in events]
-        self._display(f"{len(events)} processed events, average length {sum(_lengths) / len(_lengths)}")
+        self._display(f"{len(events)} processed events, average length {sum(_lengths) / len(_lengths) if len(_lengths) > 0 else 'N/A'}")
 
     def _writeSessionLines(self, sessions:List[ExportRow]) -> None:
         self._display("Session data:")
         _lengths = [len(elem) for elem in sessions]
-        self._display(f"{len(sessions)} events, average length {sum(_lengths) / len(_lengths)}")
+        self._display(f"{len(sessions)} events, average length {sum(_lengths) / len(_lengths) if len(_lengths) > 0 else 'N/A'}")
 
     def _writePlayerLines(self, players:List[ExportRow]) -> None:
         self._display("Player data:")
         _lengths = [len(elem) for elem in players]
-        self._display(f"{len(players)} events, average length {sum(_lengths) / len(_lengths)}")
+        self._display(f"{len(players)} events, average length {sum(_lengths) / len(_lengths) if len(_lengths) > 0 else 'N/A'}")
 
     def _writePopulationLines(self, populations:List[ExportRow]) -> None:
         self._display("Population data:")
         _lengths = [len(elem) for elem in populations]
-        self._display(f"{len(populations)} events, average length {sum(_lengths) / len(_lengths)}")
+        self._display(f"{len(populations)} events, average length {sum(_lengths) / len(_lengths) if len(_lengths) > 0 else 'N/A'}")
 
     # *** PUBLIC STATICS ***
 
