@@ -62,8 +62,8 @@ class TSVOuterface(DataOuterface):
             self._file_paths['raw_events']       = self._game_data_dir / f"{base_file_name}_raw_events.{self._extension}"
             self._zip_paths['raw_events']        = self._game_data_dir / f"{base_file_name}_raw_events.zip"
         if ExportMode.DETECTORS in export_modes:
-            self._file_paths['processed_events'] = self._game_data_dir / f"{base_file_name}_all_events.{self._extension}"
-            self._zip_paths['processed_events']  = self._game_data_dir / f"{base_file_name}_all_events.zip"
+            self._file_paths['processed_events'] = self._game_data_dir / f"{base_file_name}_events.{self._extension}"
+            self._zip_paths['processed_events']  = self._game_data_dir / f"{base_file_name}_events.zip"
         if ExportMode.SESSION in export_modes:
             self._file_paths['sessions']         = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}"
             self._zip_paths['sessions']          = self._game_data_dir / f"{base_file_name}_session-features.zip"
@@ -448,7 +448,7 @@ class TSVOuterface(DataOuterface):
         if self._zip_paths['processed_events'] is not None:
             with zipfile.ZipFile(self._zip_paths["processed_events"], "w", compression=zipfile.ZIP_DEFLATED) as _processed_events_zip_file:
                 try:
-                    events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_all_events.{self._extension}"
+                    events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_events.{self._extension}"
                     readme_file = Path(self._dataset_id) / "readme.md"
                     TSVOuterface._addToZip(path=self._file_paths["processed_events"], zip_file=_processed_events_zip_file, path_in_zip=events_file)
                     TSVOuterface._addToZip(path=self._readme_path,          zip_file=_processed_events_zip_file, path_in_zip=readme_file)
@@ -505,8 +505,8 @@ class TSVOuterface(DataOuterface):
                     "sessions_template"         : ''                                      if self._zip_paths['sessions']         else None,
                     "raw_events_file"           :str(self._zip_paths['raw_events'])       if self._zip_paths['raw_events']       else None,
                     "raw_events_template"       : ''                                      if self._zip_paths['raw_events']       else None,
-                    "processed_events_file"     :str(self._zip_paths['processed_events']) if self._zip_paths['processed_events'] else None,
-                    "processed_events_template" : ''                                      if self._zip_paths['processed_events'] else None
+                    "events_file"     :str(self._zip_paths['processed_events']) if self._zip_paths['processed_events'] else None,
+                    "events_template" : ''                                      if self._zip_paths['processed_events'] else None
                 }
                 meta_file.write(json.dumps(metadata, indent=4))
                 meta_file.close()
@@ -560,8 +560,8 @@ class TSVOuterface(DataOuterface):
                     "sessions_template"         : ''                         if sessions_path         is not None else None,
                     "raw_events_file"           : str(raw_events_path)       if raw_events_path       is not None else None,
                     "raw_events_template"       : ''                         if raw_events_path       is not None else None,
-                    "processed_events_file"     : str(processed_events_path) if processed_events_path is not None else None,
-                    "processed_events_template" : ''                         if processed_events_path is not None else None
+                    "events_file"     : str(processed_events_path) if processed_events_path is not None else None,
+                    "events_template" : ''                         if processed_events_path is not None else None
                 }
                 existing_csv_file.write(json.dumps(file_index, indent=4))
 
