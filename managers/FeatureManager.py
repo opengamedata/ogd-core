@@ -11,7 +11,6 @@ from processors.PlayerProcessor import PlayerProcessor
 from processors.SessionProcessor import SessionProcessor
 from schemas.GameSchema import GameSchema
 from schemas.Event import Event
-from schemas.ExportMode import ExportMode
 from utils import Logger, ExportRow
 
 class FeatureManager:

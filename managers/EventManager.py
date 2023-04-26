@@ -9,8 +9,7 @@ from extractors.registries.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
 from processors.DetectorProcessor import DetectorProcessor
 from processors.EventProcessor import EventProcessor
-from schemas.Event import Event
-from schemas.ExportMode import ExportMode
+from schemas.Event import Event, EventSource
 from schemas.GameSchema import GameSchema
 from utils import ExportRow, Logger
 
@@ -35,7 +34,7 @@ class EventManager:
         # event.EventData = json.dumps(event.EventData)
         # TODO: double-check if the remote_addr is there to be dropped/ignored.
         self._all_events.ProcessEvent(event=event)
-        if event.EventSource == "GAME":
+        if event.EventSource == EventSource.GAME:
             self._raw_events.ProcessEvent(event=event)
         if self._detector_processor is not None:
             self._detector_processor.ProcessEvent(event=event)

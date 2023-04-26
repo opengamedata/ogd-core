@@ -229,9 +229,13 @@ class ExportManager:
 
     def _processSlice(self, next_slice_data:List[Event], request: Request, ids:List[str]):
         _unsessioned_event_count : int = 0
+        _sampled_an_event = False
         # 3a) If next slice yielded valid data from the interface, process row-by-row.
         # TODO: instead of separating everything out into one call per event, turn this into a list comprehension using a validation function, so we can pass whole list down a level.
         for event in next_slice_data:
+            if not _sampled_an_event:
+                print(f"First event of slice is:\n{event}")
+                _sampled_an_event = True
             if (request._range._id_mode==IDMode.SESSION and event.SessionID in ids) \
             or (request._range._id_mode==IDMode.USER    and event.UserID    in ids):
                 self._processEvent(next_event=event)
