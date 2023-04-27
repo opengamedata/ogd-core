@@ -11,8 +11,8 @@
         "log_version"          : "app_version",
         "time_offset"          : null,
         "user_id"              : "player_id",
-        "user_data"            : ["persistent_session_id", "http_user_agent"],
-        "game_state"           : ["level"],
+        "user_data"            : {"persistent_session_id":"persistent_session_id", "http_user_agent":"http_user_agent"},
+        "game_state"           : {"level":"level"},
         "event_sequence_index" : "session_n"
     },
 
