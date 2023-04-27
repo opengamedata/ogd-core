@@ -430,13 +430,12 @@ class TableSchema:
                 # if there's a single index, use parse to get the value it is stated to be
                 ret_val = TableSchema._parse(input=row[indices], col_schema=self.Columns[indices])
             elif isinstance(indices, dict):
-                ret_val = {
-                    key : TableSchema._parse(input=row[index], col_schema=self.Columns[index])
-                    for key,index in indices.items()
-                }
+                ret_val = {}
+                for key,index in indices.items():
+                    _val = TableSchema._parse(input=row[index], col_schema=self._columns[index])
+                    ret_val.update(_val if isinstance(_val, dict) else {key:_val})
             elif isinstance(indices, list):
                 ret_val = concatenator.join([str(row[index]) for index in indices])
         else:
             ret_val = fallback
         return ret_val
-    
