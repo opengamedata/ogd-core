@@ -59,11 +59,11 @@ class TSVOuterface(DataOuterface):
         base_file_name    : str  = f"{self._dataset_id}_{self._short_hash}"
         # finally, generate file names.
         if ExportMode.EVENTS in export_modes:
-            self._file_paths['raw_events']       = self._game_data_dir / f"{base_file_name}_raw_events.{self._extension}"
-            self._zip_paths['raw_events']        = self._game_data_dir / f"{base_file_name}_raw_events.zip"
+            self._file_paths['raw_events']       = self._game_data_dir / f"{base_file_name}_events.{self._extension}"
+            self._zip_paths['raw_events']        = self._game_data_dir / f"{base_file_name}_events.zip"
         if ExportMode.DETECTORS in export_modes:
-            self._file_paths['processed_events'] = self._game_data_dir / f"{base_file_name}_events.{self._extension}"
-            self._zip_paths['processed_events']  = self._game_data_dir / f"{base_file_name}_events.zip"
+            self._file_paths['processed_events'] = self._game_data_dir / f"{base_file_name}_all_events.{self._extension}"
+            self._zip_paths['processed_events']  = self._game_data_dir / f"{base_file_name}_all_events.zip"
         if ExportMode.SESSION in export_modes:
             self._file_paths['sessions']         = self._game_data_dir / f"{base_file_name}_session-features.{self._extension}"
             self._zip_paths['sessions']          = self._game_data_dir / f"{base_file_name}_session-features.zip"
@@ -435,7 +435,7 @@ class TSVOuterface(DataOuterface):
         if self._zip_paths['raw_events'] is not None:
             with zipfile.ZipFile(self._zip_paths["raw_events"], "w", compression=zipfile.ZIP_DEFLATED) as _raw_events_zip_file:
                 try:
-                    events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_raw_events.{self._extension}"
+                    events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_events.{self._extension}"
                     readme_file = Path(self._dataset_id) / "readme.md"
                     TSVOuterface._addToZip(path=self._file_paths["raw_events"], zip_file=_raw_events_zip_file, path_in_zip=events_file)
                     TSVOuterface._addToZip(path=self._readme_path,          zip_file=_raw_events_zip_file, path_in_zip=readme_file)
@@ -448,7 +448,7 @@ class TSVOuterface(DataOuterface):
         if self._zip_paths['processed_events'] is not None:
             with zipfile.ZipFile(self._zip_paths["processed_events"], "w", compression=zipfile.ZIP_DEFLATED) as _processed_events_zip_file:
                 try:
-                    events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_events.{self._extension}"
+                    events_file = Path(self._dataset_id) / f"{self._dataset_id}_{self._short_hash}_all_events.{self._extension}"
                     readme_file = Path(self._dataset_id) / "readme.md"
                     TSVOuterface._addToZip(path=self._file_paths["processed_events"], zip_file=_processed_events_zip_file, path_in_zip=events_file)
                     TSVOuterface._addToZip(path=self._readme_path,          zip_file=_processed_events_zip_file, path_in_zip=readme_file)
@@ -497,16 +497,16 @@ class TSVOuterface(DataOuterface):
                     "end_date"     :self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions"     :num_sess,
-                    "population_file"           :str(self._zip_paths['population'])       if self._zip_paths['population']       else None,
-                    "population_template"       : ''                                      if self._zip_paths['population']       else None,
-                    "players_file"              :str(self._zip_paths['players'])          if self._zip_paths['players']          else None,
-                    "players_template"          : ''                                      if self._zip_paths['players']          else None,
-                    "sessions_file"             :str(self._zip_paths['sessions'])         if self._zip_paths['sessions']         else None,
-                    "sessions_template"         : ''                                      if self._zip_paths['sessions']         else None,
-                    "raw_events_file"           :str(self._zip_paths['raw_events'])       if self._zip_paths['raw_events']       else None,
-                    "raw_events_template"       : ''                                      if self._zip_paths['raw_events']       else None,
-                    "events_file"     :str(self._zip_paths['processed_events']) if self._zip_paths['processed_events'] else None,
-                    "events_template" : ''                                      if self._zip_paths['processed_events'] else None
+                    "population_file"     : str(self._zip_paths['population'])       if self._zip_paths['population']       else None,
+                    "population_template" : ''                                      if self._zip_paths['population']       else None,
+                    "players_file"        : str(self._zip_paths['players'])          if self._zip_paths['players']          else None,
+                    "players_template"    : ''                                      if self._zip_paths['players']          else None,
+                    "sessions_file"       : str(self._zip_paths['sessions'])         if self._zip_paths['sessions']         else None,
+                    "sessions_template"   : ''                                      if self._zip_paths['sessions']         else None,
+                    "events_file"         : str(self._zip_paths['raw_events'])       if self._zip_paths['raw_events']       else None,
+                    "events_template"     : ''                                       if self._zip_paths['raw_events']       else None,
+                    "all_events_file"     : str(self._zip_paths['processed_events']) if self._zip_paths['processed_events'] else None,
+                    "all_events_template" : ''                                       if self._zip_paths['processed_events'] else None
                 }
                 meta_file.write(json.dumps(metadata, indent=4))
                 meta_file.close()
@@ -543,25 +543,25 @@ class TSVOuterface(DataOuterface):
                 population_path = self._zip_paths.get("population") or existing_metadata.get("population")
                 players_path    = self._zip_paths.get("players")    or existing_metadata.get("players")
                 sessions_path   = self._zip_paths.get("sessions")   or existing_metadata.get("sessions")
-                raw_events_path = self._zip_paths.get("raw_events") or existing_metadata.get("raw_events")
-                processed_events_path = self._zip_paths.get("processed_events") or existing_metadata.get("processed_events") or existing_metadata.get("events")
+                raw_events_path = self._zip_paths.get("raw_events") or existing_metadata.get("raw_events") or existing_metadata.get("events")
+                processed_events_path = self._zip_paths.get("processed_events") or existing_metadata.get("processed_events")
                 file_index[self._game_id][self._dataset_id] = \
                 {
-                    "ogd_revision"              : self._short_hash,
-                    "start_date"                : self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
-                    "end_date"                  : self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
-                    "date_modified"             : datetime.now().strftime("%m/%d/%Y"),
-                    "sessions"                  : num_sess,
-                    "population_file"           : str(population_path)       if population_path       is not None else None,
-                    "population_template"       : ''                         if population_path       is not None else None,
-                    "players_file"              : str(players_path)          if players_path          is not None else None,
-                    "players_template"          : ''                         if players_path          is not None else None,
-                    "sessions_file"             : str(sessions_path)         if sessions_path         is not None else None,
-                    "sessions_template"         : ''                         if sessions_path         is not None else None,
-                    "raw_events_file"           : str(raw_events_path)       if raw_events_path       is not None else None,
-                    "raw_events_template"       : ''                         if raw_events_path       is not None else None,
-                    "events_file"     : str(processed_events_path) if processed_events_path is not None else None,
-                    "events_template" : ''                         if processed_events_path is not None else None
+                    "ogd_revision"          : self._short_hash,
+                    "start_date"            : self._date_range['min'].strftime("%m/%d/%Y") if self._date_range['min'] is not None else "Unknown",
+                    "end_date"              : self._date_range['max'].strftime("%m/%d/%Y") if self._date_range['max'] is not None else "Unknown",
+                    "date_modified"         : datetime.now().strftime("%m/%d/%Y"),
+                    "sessions"              : num_sess,
+                    "population_file"       : str(population_path)       if population_path       is not None else None,
+                    "population_template"   : ''                         if population_path       is not None else None,
+                    "players_file"          : str(players_path)          if players_path          is not None else None,
+                    "players_template"      : ''                         if players_path          is not None else None,
+                    "sessions_file"         : str(sessions_path)         if sessions_path         is not None else None,
+                    "sessions_template"     : ''                         if sessions_path         is not None else None,
+                    "events_file"           : str(raw_events_path)       if raw_events_path       is not None else None,
+                    "events_template"       : ''                         if raw_events_path       is not None else None,
+                    "all_events_file"       : str(processed_events_path) if processed_events_path is not None else None,
+                    "all_events_template"   : ''                         if processed_events_path is not None else None
                 }
                 existing_csv_file.write(json.dumps(file_index, indent=4))
 
