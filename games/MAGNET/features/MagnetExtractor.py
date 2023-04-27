@@ -40,7 +40,7 @@ class MagnetExtractor(LegacyFeature):
     #                     table assiciated with this game is structured.
     def _extractFromEvent(self, event:Event):
         # put some data in local vars, for readability later.
-        level = event.EventData['level']
+        level = event.GameState['level']
         if level > self._game_schema._max_level:
             Logger.Log(f"Got an event with level too high, full data:\n{str(event)}")
         # Check for invalid row.

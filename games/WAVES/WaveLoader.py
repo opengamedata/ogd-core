@@ -172,7 +172,7 @@ class WaveLoader(ExtractorLoader):
     #                     table assiciated with this game is structured.
     # def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
     #     if event.SessionID == self._session_id:
-    #         level = event.EventData['level']
+    #         level = event.GameState['level']
     #         # If we haven't set persistent id, set now.
     #         if self._features.getValByName(feature_name="persistentSessionID") == 0:
     #             self._features.setValByName(feature_name="persistentSessionID", new_value=event.EventData['persistent_session_id'])
