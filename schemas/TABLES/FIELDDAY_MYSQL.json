@@ -4,7 +4,7 @@
         "app_id"               : "app_id",
         "timestamp"            : ["client_time", "client_time_ms"],
         "event_name"           : ["event", "event_custom"],
-        "event_data"           : ["event_data_complex", "server_time"],
+        "event_data"           : {"event_data_complex":"event_data_complex", "server_time":"server_time"},
         "event_source"         : null,
         "app_version"          : null,
         "app_branch"           : null,

@@ -285,18 +285,8 @@ class TableSchema:
                 TableSchema._conversion_warnings.append("ename")
             ename = str(ename)
 
-        datas : Dict[str, Any] = {}
-        if self._column_map.EventData is not None:
-            if isinstance(self._column_map.EventData, list):
-                # if we had a list of event_data columns, we need a merger, not a concatenation
-                for index in self._column_map.EventData:
-                    val = TableSchema._parse(input=row[index], col_schema=self._columns[index])
-                    datas.update(val if isinstance(val, dict) else {self._columns[index].Name:val})
-            elif isinstance(self._column_map.EventData, int):
-                # if event_data is just one column, then we can just get that item
-                datas = TableSchema._parse(input=row[self._column_map.EventData], col_schema=self.Columns[self._column_map.EventData])
-        else:
-            datas = fallbacks.get('event_data', {})
+        datas : Dict[str, Any] = self._getValueFromRow(row=row, indices=self._column_map.EventData,   concatenator=concatenator, fallback=fallbacks.get('event_data'))
+
         # TODO: go bac to isostring function; need 0-padding on ms first, though
         edata   = dict(sorted(datas.items())) # Sort keys alphabetically
 
