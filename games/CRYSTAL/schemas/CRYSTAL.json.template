@@ -140,12 +140,20 @@
                     "description": "N/A"
                 },
                 "startStability": {
-                    "pack": "int",
-                    "charge": "int"
+                    "type": "Dict",
+                    "details" {
+                        "pack": "int",
+                        "charge": "int"
+                    },
+                    "description": "Starting stability when the molecule was 'grabbed'."
                 },
                 "endStability": {
-                    "pack": "int",
-                    "charge": "int"
+                    "type": "Dict",
+                    "details" {
+                        "pack": "int",
+                        "charge": "int"
+                    },
+                    "description": "Ending stability when the molecule was 'released'."
                 }
             }
         },
