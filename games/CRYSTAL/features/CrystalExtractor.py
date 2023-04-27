@@ -51,7 +51,7 @@ class CrystalExtractor(LegacyFeature):
     #                     table assiciated with this game is structured.
     def _extractFromEvent(self, event:Event):
         # put some data in local vars, for readability later.
-        level = event.EventData['level']
+        level = event.GameState['level']
         event_client_time = event.Timestamp
         # Check for invalid row.
         if self.ExtractionMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
