@@ -258,7 +258,8 @@
                 "enabled": false,
                 "count": "per_level",
                 "prefix": "lvl",
-                "description": "Number of player events in the given level"
+                "description": "Number of player events in the given level",
+                "return_type": "int"
             },
             "durationInSecs": {
                 "enabled": false,
@@ -270,25 +271,29 @@
                 "enabled": false,
                 "count": "per_level",
                 "prefix": "lvl",
-                "description": "Number of stamp rotate events in the level. These are MOLECULE_ROTATE events with isStamp set false."
+                "description": "Number of stamp rotate events in the level. These are MOLECULE_ROTATE events with isStamp set false.",
+                "return_type": "int"
             },
             "singleRotateCount": {
                 "enabled": false,
                 "count": "per_level",
                 "prefix": "lvl",
-                "description": "Number of single rotation events in the level"
+                "description": "Number of single rotation events in the level",
+                "return_type": "int"
             },
             "moleculeMoveCount": {
                 "enabled": false,
                 "count": "per_level",
                 "prefix": "lvl",
-                "description": "Number of molecule move (MOLECULE_RELEASE) events in the level"
+                "description": "Number of molecule move (MOLECULE_RELEASE) events in the level",
+                "return_type": "int"
             },
             "clearBtnPresses": {
                 "enabled": false,
                 "count": "per_level",
                 "prefix": "lvl",
-                "description": "Number of times the clear button was pressed in the level"
+                "description": "Number of times the clear button was pressed in the level",
+                "return_type": "int"
             },
             "avgMoleculeDragDurationInSecs": {
                 "enabled": false,
@@ -306,19 +311,22 @@
                 "enabled": false,
                 "count": "per_level",
                 "prefix": "lvl",
-                "description": "number of times a player 'began' the level. [count of 'BEGIN' events]"
+                "description": "number of times a player 'began' the level. [count of 'BEGIN' events]",
+                "return_type": "int"
             },
             "menuBtnCount": {
                 "enabled": false,
                 "count": "per_level",
                 "prefix": "lvl",
-                "description": "The number of times a player pressed the 'return to menu' button during a level"
+                "description": "The number of times a player pressed the 'return to menu' button during a level",
+                "return_type": "int"
             },
             "completesCount": {
                 "enabled": false,
                 "count": "per_level",
                 "prefix": "lvl",
-                "description": "The number of time the player (pressed the submit button)/(completed the level) in the level"
+                "description": "The number of time the player (pressed the submit button)/(completed the level) in the level",
+                "return_type": "int"
             }
         },
         "per_count": {
@@ -326,13 +334,15 @@
                 "enabled": false,
                 "count": 3,
                 "prefix": "QA",
-                "description": "The answer the user gave to a given question (or -1 if unanswered)"
+                "description": "The answer the user gave to a given question (or -1 if unanswered)",
+                "return_type": "int"
             },
             "questionCorrect": {
                 "enabled": false,
                 "count": 3,
                 "prefix": "QA",
-                "description": "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered"
+                "description": "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered",
+                "return_type": "bool"
             }
         },
         "aggregate": {
@@ -346,7 +356,8 @@
             },
             "sessionEventCount": {
                 "enabled": false,
-                "description": "The total number of events across the entire session"
+                "description": "The total number of events across the entire session",
+                "return_type": "int"
             },
             "sessionDurationInSecs": {
                 "enabled": false,
@@ -354,19 +365,23 @@
             },
             "sessionStampRotateCount": {
                 "enabled": false,
-                "description": "Total number of stamp rotation events over the session"
+                "description": "Total number of stamp rotation events over the session",
+                "return_type": "int"
             },
             "sessionSingleRotateCount": {
                 "enabled": false,
-                "description": "Total number of single rotation events over the session"
+                "description": "Total number of single rotation events over the session",
+                "return_type": "int"
             },
             "sessionMoleculeMoveCount": {
                 "enabled": false,
-                "description": "Total number of molecule move events over the session"
+                "description": "Total number of molecule move events over the session",
+                "return_type": "int"
             },
             "sessionClearBtnPresses": {
                 "enabled": false,
-                "description": "Total number of times the clear button was pressed during the session"
+                "description": "Total number of times the clear button was pressed during the session",
+                "return_type": "int"
             },
             "sessionMuseumDurationInSecs": {
                 "enabled": false,
