@@ -177,8 +177,8 @@ class FeatureManager:
             # for some reason, this didn't work as sum over list of lists, so get sessions manually with a normal loop:
             list_o_playlists : List[List[ExportRow]] = [player.Lines for player_id,player in self._players.items() if (player_id != "null" or self._used_null_play)] if self._players is not None else []
             flat_playlist    : List[ExportRow]       = list(itertools.chain.from_iterable(list_o_playlists))
-            list_o_sesslists   : List[List[ExportRow]] = [[session.Lines for session_id,session in session_list.items() if (session_id != "null" or self._used_null_sess[player_name])] for player_name,session_list in self._sessions.items()] if self._sessions is not None else []
-            flat_sesslist : List[ExportRow]       = list(itertools.chain.from_iterable(list_o_sesslists))
+            list_o_sesslists : List[List[ExportRow]] = [[session.Lines for session_id,session in session_list.items() if (session_id != "null" or self._used_null_sess[player_name])] for player_name,session_list in self._sessions.items()] if self._sessions is not None else []
+            flat_sesslist    : List[ExportRow]       = list(itertools.chain.from_iterable(list_o_sesslists))
             self._latest_values = {
                 "population" : self._population.Lines if self._population is not None else [],
                 "players"    : flat_playlist,
