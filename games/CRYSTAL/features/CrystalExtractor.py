@@ -60,7 +60,7 @@ class CrystalExtractor(LegacyFeature):
         else:
             # If we haven't set persistent id, set now.
             if self._features.getValByName(feature_name="persistentSessionID") == 0:
-                self._features.setValByName(feature_name="persistentSessionID", new_value=event.GameState['persistent_session_id'])
+                self._features.setValByName(feature_name="persistentSessionID", new_value=event.UserData['persistent_session_id'])
             # Ensure we have private data initialized for this level.
             if not level in self._levels:
                 bisect.insort(self._levels, level)

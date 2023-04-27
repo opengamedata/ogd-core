@@ -24,7 +24,7 @@ class PersistentSessionID(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         if self._persistent_id is None:
-            self._persistent_id = event.GameState['persistent_session_id']
+            self._persistent_id = event.UserData['persistent_session_id']
 
     def _extractFromFeatureData(self, feature:FeatureData):
         return

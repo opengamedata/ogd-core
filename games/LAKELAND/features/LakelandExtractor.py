@@ -160,7 +160,7 @@ class LakelandExtractor(LegacyFeature):
         else:
             # If we haven't set persistent id, set now.
             if self.getValByName(feature_name="persistentSessionID") == 0:
-                self.setValByName(feature_name="persistentSessionID", new_value=event.GameState['persistent_session_id'])
+                self.setValByName(feature_name="persistentSessionID", new_value=event.UserData['persistent_session_id'])
             # if self.getValByName(feature_name="player_id") == 0:
             #     self.setValByName(feature_name="player_id",
             #                                new_value=row_with_complex_parsed[table_schema.player_id_index])
