@@ -141,7 +141,7 @@
                 },
                 "startStability": {
                     "type": "Dict",
-                    "details" {
+                    "details": {
                         "pack": "int",
                         "charge": "int"
                     },
@@ -149,7 +149,7 @@
                 },
                 "endStability": {
                     "type": "Dict",
-                    "details" {
+                    "details": {
                         "pack": "int",
                         "charge": "int"
                     },
@@ -182,7 +182,7 @@
                 },
                 "startStability": {
                     "type": "Dict",
-                    "details" {
+                    "details": {
                         "pack": "int",
                         "charge": "int"
                     },
@@ -190,7 +190,7 @@
                 },
                 "endStability": {
                     "type": "Dict",
-                    "details" {
+                    "details": {
                         "pack": "int",
                         "charge": "int"
                     },
