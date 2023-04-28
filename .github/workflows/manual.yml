@@ -36,7 +36,7 @@ on:
         required: true
         default: "false"
       database:
-        desription: "Database: Which database to pull from"
+        description: "Database: Which database to pull from"
         required: true
         default: "logger"
       log_level:
