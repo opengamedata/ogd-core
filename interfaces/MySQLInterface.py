@@ -64,13 +64,16 @@ class SQL:
             SSH_PW   = ssh_settings['SSH_PW']
             SSH_HOST = ssh_settings['SSH_HOST']
             SSH_PORT = ssh_settings['SSH_PORT']
+            Logger.Log(f"Preparing to connect to MySQL via SSH, on host {SSH_HOST}", level=logging.DEBUG)
             if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
                 ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
                 tunnel,db_conn = SQL._connectToMySQLviaSSH(sql=sql_login, ssh=ssh_login)
             else:
+                Logger.Log(f"SSH login had empty data, preparing to connect to MySQL directly instead, on host {DB_HOST}", level=logging.DEBUG)
                 db_conn = SQL._connectToMySQL(login=sql_login)
                 tunnel = None
         else:
+            Logger.Log(f"Preparing to connect to MySQL directly, on host {DB_HOST}", level=logging.DEBUG)
             db_conn = SQL._connectToMySQL(login=sql_login)
             tunnel = None
         # Logger.Log("Done preparing database connection.", logging.INFO)
@@ -88,10 +91,11 @@ class SQL:
         :rtype: Optional[connection.MySQLConnection]
         """
         try:
+            Logger.Log(f"Connecting to SQL (no SSH) at {login.user}@{login.host}:{login.port}/{login.db_name}...", logging.DEBUG)
             db_conn = connection.MySQLConnection(host     = login.host,    port    = login.port,
                                                  user     = login.user,    password= login.pword,
                                                  database = login.db_name, charset = 'utf8')
-            Logger.Log(f"Connected to SQL (no SSH) at {login.host}:{login.port}/{login.db_name}, {login.user}", logging.DEBUG)
+            Logger.Log(f"Connected.", logging.DEBUG)
             return db_conn
         #except MySQLdb.connections.Error as err:
         except Exception as err:
@@ -126,15 +130,16 @@ class SQL:
             if tries > 0:
                 Logger.Log("Re-attempting to connect to SSH.", logging.INFO)
             try:
+                Logger.Log(f"Connecting to SSH at {ssh.user}@{ssh.host}:{ssh.port}...", logging.DEBUG)
                 tunnel = sshtunnel.SSHTunnelForwarder(
                     (ssh.host, ssh.port), ssh_username=ssh.user, ssh_password=ssh.pword,
                     remote_bind_address=(sql.host, sql.port), logger=Logger.std_logger
                 )
                 tunnel.start()
                 connected_ssh = True
-                Logger.Log(f"Connected to SSH at {ssh.host}:{ssh.port}, {ssh.user}", logging.DEBUG)
+                Logger.Log(f"Connected.", logging.DEBUG)
             except Exception as err:
-                msg = f"Could not connect to the SSH: {type(err)} {str(err)}"
+                msg = f"Could not connect via SSH: {type(err)} {str(err)}"
                 Logger.Log(msg, logging.ERROR)
                 Logger.Print(msg, logging.ERROR)
                 traceback.print_tb(err.__traceback__)
@@ -142,10 +147,11 @@ class SQL:
         if connected_ssh == True and tunnel is not None:
             # Then, connect to MySQL
             try:
+                Logger.Log(f"Connecting to SQL (via SSH) at {sql.user}@{sql.host}:{tunnel.local_bind_port}/{sql.db_name}...", logging.DEBUG)
                 db_conn = connection.MySQLConnection(host     = sql.host,    port    = tunnel.local_bind_port,
                                                      user     = sql.user,    password= sql.pword,
                                                      database = sql.db_name, charset ='utf8')
-                Logger.Log(f"Connected to SQL (via SSH) at {sql.host}:{tunnel.local_bind_port}/{sql.db_name}, {sql.user}", logging.DEBUG)
+                Logger.Log(f"Connected", logging.DEBUG)
                 return (tunnel, db_conn)
             except Exception as err:
                 msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
