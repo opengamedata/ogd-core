@@ -8,39 +8,39 @@ on:
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
     inputs:
       game:
-        description: "The game(s) to be exported, comma-separated"
+        description: "Game: The game(s) to be exported, comma-separated"
         required: true
         default: "['BACTERIA']"
       slice_size:
-        description: "The size of slices to use"
+        description: "Slice Size: The size of slices to use"
         required: false
         default: 1000
       monthly:
-        description: "If true, use month/year. Else, use start and end dates"
+        description: "Monthly: If true, use month/year. Else, use start and end dates"
         required: true
         default: "true"
       month_year:
-        description: "The month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
+        description: "Month/Year: The month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
         required: false
         default: "['01/2021']"
       start_date:
-        description: "The start date for the export"
+        description: "Start Date: The start date for the export"
         required: false
         default: "01/01/2021"
       end_date:
-        description: "The end date for the export"
+        description: "End Date: The end date for the export"
         required: false
         default: "01/01/2021"
       export_to_web:
-        description: "Boolean indicating whether the export should go to the website, or only be uploaded as an artifact."
+        description: "Export to Web: Boolean indicating whether the export should go to the website, or only be uploaded as an artifact."
         required: true
         default: "false"
       database:
-        desription: "Which database to pull from"
+        desription: "Database: Which database to pull from"
         required: true
         default: "logger"
       log_level:
-        description: "What level of debugging output to log"
+        description: "Log Level: What level of debugging output to log"
         required: true
         default: "INFO"
 
