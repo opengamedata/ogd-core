@@ -9,7 +9,7 @@
     },
     "game_state": {
         "job_name": {
-            "type": str,
+            "type": "str",
             "description": "String name of the accepted job"
         }
     },
