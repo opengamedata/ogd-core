@@ -126,7 +126,7 @@ jobs:
       if: github.event.inputs.export_to_web == 'true'
       run: |
         mkdir -p ~/.ssh
-        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
         ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
@@ -156,6 +156,6 @@ jobs:
       # run: echo "placeholder for reindexing!"
       run: |
         mkdir -p ~/.ssh
-        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
         ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata; pwd; ls; python3 reindexer.py;"
