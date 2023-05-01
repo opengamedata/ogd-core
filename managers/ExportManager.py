@@ -88,6 +88,8 @@ class ExportManager:
 
             Logger.Log(f"Executing...", logging.INFO)
             _sess_ids        : List[str]       = request.RetrieveIDs() or []
+            for outerface in request.Outerfaces:
+                outerface.SessionCount = len(_sess_ids)
 
             # Process slices
             Logger.Log(f"Preparing to process {len(_sess_ids)} sessions...", logging.INFO, depth=1)

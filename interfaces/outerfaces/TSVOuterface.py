@@ -39,7 +39,7 @@ class TSVOuterface(DataOuterface):
         self._date_range    : Dict[str,Optional[datetime]] = date_range
         self._dataset_id    : str  = ""
         self._short_hash    : str  = ""
-        self._sess_count    : int  = 0
+        # self._sess_count    : int  = 0
         # figure out dataset ID.
         start = self._date_range['min'].strftime("%Y%m%d") if self._date_range['min'] is not None else "UNKNOWN"
         end   = self._date_range['max'].strftime("%Y%m%d") if self._date_range['max'] is not None else "UNKNOWN"
@@ -112,8 +112,8 @@ class TSVOuterface(DataOuterface):
         finally:
             self._closeFiles()
             self._zipFiles()
-            self._writeMetadataFile(num_sess=self._sess_count)
-            self._updateFileExportList(num_sess=self._sess_count)
+            self._writeMetadataFile(num_sess=self.SessionCount)
+            self._updateFileExportList(num_sess=self.SessionCount)
             return True
 
     def _destination(self, mode:ExportMode) -> str:
@@ -226,7 +226,7 @@ class TSVOuterface(DataOuterface):
             sys.stdout.write("".join(event_lines))
 
     def _writeSessionLines(self, sessions:List[ExportRow]) -> None:
-        self._sess_count += len(sessions)
+        # self._sess_count += len(sessions)
         _session_feats = [TSVOuterface._cleanSpecialChars(vals=sess) for sess in sessions]
         _session_lines = ["\t".join(sess) + "\n" for sess in _session_feats]
         if self._files['sessions'] is not None:
