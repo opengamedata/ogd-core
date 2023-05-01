@@ -76,6 +76,7 @@ class DataOuterface(Interface):
         super().__init__(config=config)
         self._game_id : str  = game_id
         self._modes   : Set[ExportMode] = export_modes
+        self._session_ct : int = 0
 
     def __del__(self):
         self.Close()
@@ -83,6 +84,13 @@ class DataOuterface(Interface):
     @property
     def ExportModes(self) -> Set[ExportMode]:
         return self._modes
+
+    @property
+    def SessionCount(self) -> int:
+        return self._session_ct
+    @SessionCount.setter
+    def SessionCount(self, new_val) -> None:
+        self._session_ct = new_val
 
     # *** PUBLIC STATICS ***
 
