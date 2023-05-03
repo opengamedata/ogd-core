@@ -498,15 +498,15 @@ class TSVOuterface(DataOuterface):
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions"     :num_sess,
                     "population_file"     : str(self._zip_paths['population'])       if self._zip_paths['population']       else None,
-                    "population_template" : ''                                      if self._zip_paths['population']       else None,
+                    "population_template" : f'/tree/{self._game_id}'                 if self._zip_paths['population']       else None,
                     "players_file"        : str(self._zip_paths['players'])          if self._zip_paths['players']          else None,
-                    "players_template"    : ''                                      if self._zip_paths['players']          else None,
+                    "players_template"    : f'/tree/{self._game_id}'                 if self._zip_paths['players']          else None,
                     "sessions_file"       : str(self._zip_paths['sessions'])         if self._zip_paths['sessions']         else None,
-                    "sessions_template"   : ''                                      if self._zip_paths['sessions']         else None,
+                    "sessions_template"   : f'/tree/{self._game_id}'                 if self._zip_paths['sessions']         else None,
                     "events_file"         : str(self._zip_paths['raw_events'])       if self._zip_paths['raw_events']       else None,
-                    "events_template"     : ''                                       if self._zip_paths['raw_events']       else None,
+                    "events_template"     : f'/tree/{self._game_id}'                 if self._zip_paths['raw_events']       else None,
                     "all_events_file"     : str(self._zip_paths['processed_events']) if self._zip_paths['processed_events'] else None,
-                    "all_events_template" : ''                                       if self._zip_paths['processed_events'] else None
+                    "all_events_template" : f'/tree/{self._game_id}'                 if self._zip_paths['processed_events'] else None
                 }
                 meta_file.write(json.dumps(metadata, indent=4))
                 meta_file.close()
