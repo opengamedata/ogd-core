@@ -221,7 +221,7 @@ class ConfigSchema(Schema):
     def _parseDataSources(sources) -> Dict[str, DataSourceSchema]:
         ret_val : Dict[str, DataSourceSchema]
         if isinstance(sources, dict):
-            ret_val = { key : DataSourceSchema(name=val, all_elements=val) for key, val in sources.items() }
+            ret_val = { key : DataSourceSchema(name=val, other_elements=val) for key, val in sources.items() }
         else:
             ret_val = {}
             Logger.Log(f"Config data sources was unexpected type {type(sources)}, defaulting to empty dict: {ret_val}.", logging.WARN)
