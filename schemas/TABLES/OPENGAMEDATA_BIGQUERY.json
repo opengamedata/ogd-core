@@ -18,12 +18,6 @@
 
     "columns": [
         {
-            "name": "id",
-            "readable": "Row ID",
-            "description": "Unique identifier for a row",
-            "type": "int"
-        },
-        {
             "name": "session_id",
             "readable": "Session ID",
             "description": "Unique identifier for the gameplay session",
@@ -46,12 +40,6 @@
             "readable": "Client Time",
             "description": "The client machine time when the event was generated",
             "type": "datetime"
-        },
-        {
-            "name": "client_time_ms",
-            "readable": "Client Time Milliseconds",
-            "description": "Number of milliseconds to append to client time",
-            "type": "int"
         },
         {
             "name": "client_offset",
