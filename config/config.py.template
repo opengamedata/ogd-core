@@ -11,10 +11,6 @@ settings = {
     },
     "SSH_CONFIG":
     {
-        "SSH_HOST" : "hostname",
-        "SSH_USER" : "WCER AD User",
-        "SSH_PW" : "WCER AD Password",
-        "SSH_PORT" : 22
     },
     "GAME_SOURCES" :
     {
