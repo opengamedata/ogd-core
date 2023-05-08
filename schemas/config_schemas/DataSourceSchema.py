@@ -6,18 +6,14 @@ from typing import Any, Dict, Optional, Type
 from schemas.Schema import Schema
 from utils import Logger
 
-def ParseSourceType(all_elements:Dict[str, Any]) -> Optional[Type[DataSourceSchema]]:
-    match (all_elements.get("DB_TYPE", "").upper()):
-        case "BIGQUERY":
-            return BigQuerySchema
-        case "MYSQL":
-            return MySQLSchema
-        case _:
-            return None
-
 class DataSourceSchema(Schema):
     def __init__(self, name:str, other_elements:Dict[str, Any]):
         super().__init__(name=name, other_elements=other_elements)
+        if "schema" in other_elements.keys():
+            self._schema = DataSourceSchema._parseSchema(other_elements["schema"])
+        else:
+            self._schema = "UNKNOWN"
+            Logger.Log(f"{name} config does not have a 'schema' element; defaulting to schema={self._schema}", logging.WARN)
 
     @property
     @abc.abstractmethod
@@ -187,3 +183,12 @@ class MySQLSchema(DataSourceSchema):
             ret_val = str(credential)
             Logger.Log(f"Game Source credential type was unexpected type {type(credential)}, defaulting to str(credential)={ret_val}.", logging.WARN)
         return ret_val
+
+def ParseSourceType(all_elements:Dict[str, Any]) -> Optional[Type[DataSourceSchema]]:
+    match (all_elements.get("DB_TYPE", "").upper()):
+        case "BIGQUERY":
+            return BigQuerySchema
+        case "MYSQL":
+            return MySQLSchema
+        case _:
+            return None
