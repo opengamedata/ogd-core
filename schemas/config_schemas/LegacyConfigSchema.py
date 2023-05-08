@@ -30,7 +30,7 @@ class LegacyConfigSchema(Schema):
             self._ssh_config = SSHSchema(name="SSH_CONFIG", all_elements={})
             Logger.Log(f"{name} config does not have a 'SSH_CONFIG' element; defaulting to ssh_config={self._ssh_config}", logging.WARN)
 
-        _used = {"DATA_DIR", "LOG_FILE", "BATCH_SIZE", "DEBUG_LEVEL", "FAIL_FAST", "FILE_INDEXING", "SSH_CONFIG", "GAME_SOURCES", "GAME_SOURCE_MAP"}
+        _used = {"DATA_DIR", "SSH_CONFIG"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
