@@ -27,10 +27,10 @@ class ConfigSchema(Schema):
             self._log_file = False
             Logger.Log(f"{name} config does not have a 'LOG_FILE' element; defaulting to log_file={self._log_file}", logging.WARN)
         if "BATCH_SIZE" in all_elements.keys():
-            self._batch_size_name = ConfigSchema._parseBatchSize(all_elements["BATCH_SIZE"])
+            self._batch_size = ConfigSchema._parseBatchSize(all_elements["BATCH_SIZE"])
         else:
-            self._batch_size_name = 500
-            Logger.Log(f"{name} config does not have a 'BATCH_SIZE' element; defaulting to batch_size={self._batch_size_name}", logging.WARN)
+            self._batch_size = 500
+            Logger.Log(f"{name} config does not have a 'BATCH_SIZE' element; defaulting to batch_size={self._batch_size}", logging.WARN)
         if "DEBUG_LEVEL" in all_elements.keys():
             self._dbg_level = ConfigSchema._parseDebugLevel(all_elements["DEBUG_LEVEL"])
         else:
@@ -42,21 +42,21 @@ class ConfigSchema(Schema):
             self._fail_fast = False
             Logger.Log(f"{name} config does not have a 'FAIL_FAST' element; defaulting to fail_fast={self._fail_fast}", logging.WARN)
         if "FILE_INDEXING" in all_elements.keys():
-            self._file_indexing = ConfigSchema._parseFileIndexing(all_elements["FILE_INDEXING"])
+            self._file_idx = ConfigSchema._parseFileIndexing(all_elements["FILE_INDEXING"])
         else:
             _fallback_elems = { "LOCAL_DIR" : self._legacy_elems.DataDirectory }
-            self._file_indexing = FileIndexingSchema(name="FILE_INDEXING", all_elements=_fallback_elems)
-            Logger.Log(f"{name} config does not have a 'FILE_INDEXING' element; defaulting to file_indexing={self._file_indexing}", logging.WARN)
+            self._file_idx = FileIndexingSchema(name="FILE_INDEXING", all_elements=_fallback_elems)
+            Logger.Log(f"{name} config does not have a 'FILE_INDEXING' element; defaulting to file_indexing={self._file_idx}", logging.WARN)
         if "GAME_SOURCES" in all_elements.keys():
-            self._game_sources = ConfigSchema._parseDataSources(all_elements["GAME_SOURCES"])
+            self._data_src = ConfigSchema._parseDataSources(all_elements["GAME_SOURCES"])
         else:
-            self._game_sources = {}
-            Logger.Log(f"{name} config does not have a 'GAME_SOURCES' element; defaulting to game_sources={self._game_sources}", logging.WARN)
+            self._data_src = {}
+            Logger.Log(f"{name} config does not have a 'GAME_SOURCES' element; defaulting to game_sources={self._data_src}", logging.WARN)
         if "GAME_SOURCE_MAP" in all_elements.keys():
-            self._game_source_map = ConfigSchema._parseGameSourceMap(all_elements["GAME_SOURCE_MAP"])
+            self._game_src_map = ConfigSchema._parseGameSourceMap(map=all_elements["GAME_SOURCE_MAP"], sources=self._data_src)
         else:
-            self._game_source_map = {}
-            Logger.Log(f"{name} config does not have a 'GAME_SOURCE_MAP' element; defaulting to game_source_map={self._game_source_map}", logging.WARN)
+            self._game_src_map = {}
+            Logger.Log(f"{name} config does not have a 'GAME_SOURCE_MAP' element; defaulting to game_source_map={self._game_src_map}", logging.WARN)
 
         _used = {"LOG_FILE", "BATCH_SIZE", "DEBUG_LEVEL", "FAIL_FAST", "FILE_INDEXING", "GAME_SOURCES", "GAME_SOURCE_MAP"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
@@ -92,7 +92,7 @@ class ConfigSchema(Schema):
 
     @property
     def GameSourceMap(self) -> Dict[str, GameSourceMapElementSchema]:
-        return self._game_source_map
+        return self._game_src_map
 
     @property
     def AsMarkdown(self) -> str:
@@ -179,25 +179,22 @@ class ConfigSchema(Schema):
         if isinstance(sources, dict):
             ret_val = {}
             for key,val in sources.items():
-                _type = val.get('DBYTYPE')
-                match (_type):
-                    case "BIGQUERY":
-                        ret_val[key] = BigQuerySchema(name=val, all_elements=val)
-                    case "MYSQL":
-                        ret_val[key] = MySQLSchema(name=val, all_elements=val)
-                    case _:
-                        Logger.Log(f"Game source {key} did not  have a 'DB_TYPE', and will be skipped!", logging.WARN)
+                _type = ParseSourceType(all_elements=val)
+                if _type is not None:
+                    ret_val[key] = _type(name=val, other_elements=val)
+                else:
+                    Logger.Log(f"Game source {key} did not  have a 'DB_TYPE', and will be skipped!", logging.WARN)
         else:
             ret_val = {}
             Logger.Log(f"Config data sources was unexpected type {type(sources)}, defaulting to empty dict: {ret_val}.", logging.WARN)
         return ret_val
 
     @staticmethod
-    def _parseGameSourceMap(sources) -> Dict[str, GameSourceMapElementSchema]:
+    def _parseGameSourceMap(map, sources) -> Dict[str, GameSourceMapElementSchema]:
         ret_val : Dict[str, GameSourceMapElementSchema]
-        if isinstance(sources, dict):
-            ret_val = { key : GameSourceMapElementSchema(name=val, all_elements=val) for key, val in sources.items() }
+        if isinstance(map, dict):
+            ret_val = { key : GameSourceMapElementSchema(name=val, all_elements=val, data_sources=sources) for key, val in map.items() }
         else:
             ret_val = {}
-            Logger.Log(f"Config game source map was unexpected type {type(sources)}, defaulting to empty dict: {ret_val}.", logging.WARN)
+            Logger.Log(f"Config game source map was unexpected type {type(map)}, defaulting to empty dict: {ret_val}.", logging.WARN)
         return ret_val
