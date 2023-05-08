@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Union
 from schemas.Schema import Schema
 from utils import Logger
 
-class GameSourceSchema(Schema):
+class GameSourceMapElementSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):
         self._schema     : str
         self._source     : str
@@ -15,23 +15,18 @@ class GameSourceSchema(Schema):
         if not isinstance(all_elements, dict):
             all_elements = {}
             Logger.Log(f"For {name} Game Source config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
-        if "schema" in all_elements.keys():
-            self._schema = GameSourceSchema._parseSchema(all_elements["schema"])
-        else:
-            self._schema = "UNKNOWN"
-            Logger.Log(f"{name} config does not have a 'schema' element; defaulting to schema={self._schema}", logging.WARN)
         if "source" in all_elements.keys():
-            self._source = GameSourceSchema._parseSource(all_elements["source"])
+            self._source = GameSourceMapElementSchema._parseSource(all_elements["source"])
         else:
             self._source = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'source' element; defaulting to source={self._source}", logging.WARN)
         if "table" in all_elements.keys():
-            self._table_name = GameSourceSchema._parseTableName(all_elements["table"])
+            self._table_name = GameSourceMapElementSchema._parseTableName(all_elements["table"])
         else:
             self._table_name = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'table' element; defaulting to table={self._table_name}", logging.WARN)
         if "credential" in all_elements.keys():
-            self._credential = GameSourceSchema._parseCredential(all_elements["credential"])
+            self._credential = GameSourceMapElementSchema._parseCredential(all_elements["credential"])
         else:
             self._credential = None
             Logger.Log(f"{name} config does not have a 'credential' element; defaulting to credential={self._credential}", logging.WARN)
