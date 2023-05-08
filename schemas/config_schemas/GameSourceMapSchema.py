@@ -10,7 +10,6 @@ class GameSourceMapElementSchema(Schema):
         self._schema     : str
         self._source     : str
         self._table_name : str
-        self._credential : Optional[str]
 
         if not isinstance(all_elements, dict):
             all_elements = {}
@@ -25,19 +24,15 @@ class GameSourceMapElementSchema(Schema):
         else:
             self._table_name = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'table' element; defaulting to table={self._table_name}", logging.WARN)
-        if "credential" in all_elements.keys():
-            self._credential = GameSourceMapElementSchema._parseCredential(all_elements["credential"])
+        if "schema" in all_elements.keys():
+            self._schema = GameSourceMapElementSchema._parseSchema(all_elements["schema"])
         else:
-            self._credential = None
-            Logger.Log(f"{name} config does not have a 'credential' element; defaulting to credential={self._credential}", logging.WARN)
+            self._schema = "UNKNOWN"
+            Logger.Log(f"{name} config does not have a 'schema' element; defaulting to schema={self._schema}", logging.WARN)
 
-        _used = {"schema", "source", "table", "credential"}
+        _used = {"source", "table", "schema"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
-
-    @property
-    def Schema(self) -> str:
-        return self._schema
 
     @property
     def Source(self) -> str:
@@ -48,8 +43,8 @@ class GameSourceMapElementSchema(Schema):
         return self._table_name
 
     @property
-    def Credential(self) -> Optional[str]:
-        return self._credential
+    def Schema(self) -> str:
+        return self._schema
 
     @property
     def AsMarkdown(self) -> str:
@@ -86,14 +81,4 @@ class GameSourceMapElementSchema(Schema):
         else:
             ret_val = str(table)
             Logger.Log(f"Game Source table name was unexpected type {type(table)}, defaulting to str(table)={ret_val}.", logging.WARN)
-        return ret_val
-
-    @staticmethod
-    def _parseCredential(credential) -> str:
-        ret_val : str
-        if isinstance(credential, str):
-            ret_val = credential
-        else:
-            ret_val = str(credential)
-            Logger.Log(f"Game Source credential type was unexpected type {type(credential)}, defaulting to str(credential)={ret_val}.", logging.WARN)
         return ret_val
