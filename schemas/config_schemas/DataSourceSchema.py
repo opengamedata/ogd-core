@@ -9,11 +9,6 @@ from utils import Logger
 class DataSourceSchema(Schema):
     def __init__(self, name:str, other_elements:Dict[str, Any]):
         super().__init__(name=name, other_elements=other_elements)
-        if "schema" in other_elements.keys():
-            self._schema = DataSourceSchema._parseSchema(other_elements["schema"])
-        else:
-            self._schema = "UNKNOWN"
-            Logger.Log(f"{name} config does not have a 'schema' element; defaulting to schema={self._schema}", logging.WARN)
 
     @property
     @abc.abstractmethod
