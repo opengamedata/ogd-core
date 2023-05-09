@@ -7,6 +7,7 @@ from typing import Any, Dict, IO, List, Tuple, Optional
 ## import local files
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
+from schemas.configs.GameSourceMapSchema import GameSourceMapElementSchema
 from schemas.tables.TableSchema import TableSchema
 from utils import Logger
 
@@ -14,12 +15,11 @@ class CSVInterface(DataInterface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, filepath:Path, delim:str = ',', file_schema_name:str = "OGD_EVENT_FILE"):
+    def __init__(self, game_id:str, config:GameSourceMapElementSchema, filepath:Path, delim:str = ','):
         # set up data from params
-        self._file_schema_name = file_schema_name
         self._filepath  : Path = filepath
         self._delimiter : str = delim
-        super().__init__(game_id=game_id, config={})
+        super().__init__(game_id=game_id, config=config)
         # set up data from file
         self._data      : pd.DataFrame = pd.DataFrame()
         self.Open()

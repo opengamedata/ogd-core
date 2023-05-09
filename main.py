@@ -33,6 +33,7 @@ from schemas.IDMode import IDMode
 from schemas.games.GameSchema import GameSchema
 from schemas.tables.TableSchema import TableSchema
 from schemas.configs.ConfigSchema import ConfigSchema
+from schemas.configs.GameSourceMapSchema import GameSourceMapElementSchema
 from ogd_requests.Request import Request, ExporterRange
 from ogd_requests.RequestResult import RequestResult, ResultStatus
 from utils import Logger
@@ -124,7 +125,8 @@ def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Req
     if args.file is not None and args.file != "":
         # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
         _ext = str(args.file).split('.')[-1]
-        interface = CSVInterface(game_id=args.game, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
+        _cfg = GameSourceMapElementSchema(name="FILE SOURCE", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+        interface = CSVInterface(game_id=args.game, config=_cfg, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [])
@@ -168,20 +170,20 @@ def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Req
 
 def genDBInterface(config:ConfigSchema) -> DataInterface:
     ret_val : DataInterface
-    source = config.GameSourceMap[args.game].Source
-    if source is not None:
-        match (source.Type):
+    _game_cfg = config.GameSourceMap.get(args.game)
+    if _game_cfg is not None and _game_cfg.Source is not None:
+        match (_game_cfg.Source.Type):
             case "Firebase" | "FIREBASE":
-                ret_val = BQFirebaseInterface(game_id=args.game, config=source)
+                ret_val = BQFirebaseInterface(game_id=args.game, config=_game_cfg)
             case "BigQuery" | "BIGQUERY":
-                ret_val = BigQueryInterface(game_id=args.game, config=source)
+                ret_val = BigQueryInterface(game_id=args.game, config=_game_cfg)
             case "MySQL" | "MYSQL":
-                ret_val = MySQLInterface(game_id=args.game, config=source)
+                ret_val = MySQLInterface(game_id=args.game, config=_game_cfg)
             case _:
-                raise Exception(f"{source.Type} is not a valid DataInterface type!")
+                raise Exception(f"{_game_cfg.Source.Type} is not a valid DataInterface type!")
         return ret_val
     else:
-        raise ValueError(f"Config")
+        raise ValueError(f"Config for {args.game} was invalid or not found!")
 
 def getModes(with_events:bool, with_features:bool) -> Set[ExportMode]:
     ret_val = set()
