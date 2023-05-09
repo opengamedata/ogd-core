@@ -125,7 +125,7 @@ def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Req
         # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
         _ext = str(args.file).split('.')[-1]
         _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
-        interface = CSVInterface(game_id=args.game, config=_cfg, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
+        interface = CSVInterface(game_id=args.game, config=_cfg, fail_fast=config.FailFast, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [])
@@ -175,11 +175,11 @@ def genDBInterface(config:ConfigSchema) -> DataInterface:
     if _game_cfg is not None and _game_cfg.Source is not None:
         match (_game_cfg.Source.Type):
             case "Firebase" | "FIREBASE":
-                ret_val = BQFirebaseInterface(game_id=args.game, config=_game_cfg)
+                ret_val = BQFirebaseInterface(game_id=args.game, config=_game_cfg, fail_fast=config.FailFast)
             case "BigQuery" | "BIGQUERY":
-                ret_val = BigQueryInterface(game_id=args.game, config=_game_cfg)
+                ret_val = BigQueryInterface(game_id=args.game, config=_game_cfg, fail_fast=config.FailFast)
             case "MySQL" | "MYSQL":
-                ret_val = MySQLInterface(game_id=args.game, config=_game_cfg)
+                ret_val = MySQLInterface(game_id=args.game, config=_game_cfg, fail_fast=config.FailFast)
             case _:
                 raise Exception(f"{_game_cfg.Source.Type} is not a valid DataInterface type!")
         return ret_val
