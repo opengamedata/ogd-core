@@ -85,7 +85,7 @@ def WriteReadme() -> bool:
         Logger.Log(f"Successfully generated a readme for {args.game}.", logging.INFO)
         return True
 
-def RunExport(events:bool = False, features:bool = False) -> bool:
+def RunExport(config:ConfigSchema, with_events:bool = False, with_features:bool = False) -> bool:
     """Function to handle execution of export code.
     This is the main intended use of the program.
 
@@ -98,7 +98,7 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
     """
     success : bool = False
 
-    req = genRequest(events=events, features=features)
+    req = genRequest(with_events=with_events, with_features=with_features)
     if req.Interface.IsOpen():
         export_manager : ExportManager = ExportManager(settings=settings)
         result         : RequestResult = export_manager.ExecuteRequest(request=req)
@@ -110,7 +110,7 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     return success
 
-def genRequest(events:bool, features:bool) -> Request:
+def genRequest(with_events:bool, with_features:bool) -> Request:
     export_modes   : Set[ExportMode]
     interface      : DataInterface
     range          : ExporterRange
@@ -119,7 +119,7 @@ def genRequest(events:bool, features:bool) -> Request:
 
 
     # 1. get exporter modes to run
-    export_modes = getModes(events=events, features=features)
+    export_modes = getModes(with_events=with_events, with_features=with_features)
     # 2. figure out the interface and range; optionally set a different dataset_id
     if args.file is not None and args.file != "":
         # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
@@ -185,13 +185,13 @@ def genDBInterface() -> DataInterface:
         raise Exception(f"{interface_type} is not a valid DataInterface type!")
     return ret_val
 
-def getModes(events:bool, features:bool) -> Set[ExportMode]:
+def getModes(with_events:bool, with_features:bool) -> Set[ExportMode]:
     ret_val = set()
 
-    if events:
+    if with_events:
         ret_val.add(ExportMode.EVENTS)
         ret_val.add(ExportMode.DETECTORS)
-    if features:
+    if with_features:
         if not args.no_session_file:
             ret_val.add(ExportMode.SESSION)
         if not args.no_player_file:
@@ -284,11 +284,11 @@ success : bool
 if args is not None:
     cmd = args.command.lower()
     if cmd == "export":
-        success = RunExport(events=True, features=True)
+        success = RunExport(with_events=True, with_features=True)
     elif cmd == "export-events":
-        success = RunExport(events=True)
+        success = RunExport(with_events=True)
     elif cmd == "export-features":
-        success = RunExport(features=True)
+        success = RunExport(with_features=True)
     elif cmd == "info":
         success = ShowGameInfo()
     elif cmd == "readme":
