@@ -53,7 +53,7 @@ class ExportManager:
         :param settings: [description]
         :type settings: [type]
         """
-        self._config    : ConfigSchema = config
+        self._config      : ConfigSchema = config
         self._event_mgr   : Optional[EventManager]   = None
         self._feat_mgr    : Optional[FeatureManager] = None
         self._debug_count : int                      = 0
@@ -210,7 +210,7 @@ class ExportManager:
 
     def _generateSlices(self, sess_ids:List[str]) -> List[List[str]]:
         _num_sess = len(sess_ids)
-        _slice_size = self._config["BATCH_SIZE"] or default_settings["BATCH_SIZE"]
+        _slice_size = self._config.BatchSize
         Logger.Log(f"With slice size = {_slice_size}, there are {math.ceil(_num_sess / _slice_size)} slices", logging.INFO, depth=1)
         return [[sess_ids[i] for i in range( j*_slice_size, min((j+1)*_slice_size, _num_sess) )]
                              for j in range( 0, math.ceil(_num_sess / _slice_size) )]
@@ -258,7 +258,7 @@ class ExportManager:
             if self._feat_mgr is not None:
                 self._feat_mgr.ProcessEvent(event=next_event)
         except Exception as err:
-            if default_settings.get("FAIL_FAST", None):
+            if self._config.FailFast:
                 Logger.Log(f"Error while processing event {next_event.EventName}.", logging.ERROR, depth=2)
                 raise err
             else:
