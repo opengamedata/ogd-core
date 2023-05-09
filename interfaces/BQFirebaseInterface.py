@@ -6,7 +6,7 @@ from google.cloud import bigquery
 from typing import Any, Dict, List, Tuple, Optional
 # import locals
 from config.config import settings as default_settings
-from interfaces.DataInterface import DataInterface
+from interfaces.BigQueryInterface import BigQueryInterface
 from schemas.IDMode import IDMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
@@ -15,7 +15,9 @@ from utils import Logger
 
 AQUALAB_MIN_VERSION = 6.2
 
-class BQFirebaseInterface(DataInterface):
+class BQFirebaseInterface(BigQueryInterface):
+    """Subclass of the general BigQueryInterface, with re-implemented queries to handle old Firebase unnest bullshit.
+    """
 
     # *** BUILT-INS ***
 
@@ -23,38 +25,7 @@ class BQFirebaseInterface(DataInterface):
         super().__init__(game_id=game_id, config=config)
         self.Open()
 
-    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-
-    def _open(self, force_reopen: bool = False) -> bool:
-        if force_reopen:
-            self.Close()
-            self.Open(force_reopen=False)
-        if not self._is_open:
-            if "GITHUB_ACTIONS" in os.environ:
-                self._client = bigquery.Client()
-            else:
-                credential_path : str = self._config.get("credential") or default_settings["GAME_SOURCE_MAP"][self._game_id]["credential"]
-                os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
-                self._client = bigquery.Client()
-            if self._client != None:
-                self._is_open = True
-                Logger.Log("Connected to BigQuery database.", logging.DEBUG)
-                return True
-            else:
-                Logger.Log("Could not connect to BigQuery Database.", logging.WARN)
-                return False
-        else:
-            return True
-
-    def _close(self) -> bool:
-        self._client.close()
-        self._is_open = False
-        Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
-        return True
-
-    def _loadTableSchema(self, game_id:str) -> TableSchema:
-        _schema_name = self._config.get("schema") or default_settings['GAME_SOURCE_MAP'].get(game_id, {}).get('schema', "NO SCHEMA DEFINED")
-        return TableSchema(schema_name=_schema_name)
+    # *** RE-IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _allIDs(self) -> List[str]:
         query = f"""
@@ -240,25 +211,8 @@ class BQFirebaseInterface(DataInterface):
 
     # *** PUBLIC METHODS ***
 
-    def IsOpen(self) -> bool:
-        """Overridden version of IsOpen function, checks that BQFirebaseInterface client has been initialized.
-
-        :return: True if the interface is open, else False
-        :rtype: bool
-        """
-        return True if (super().IsOpen() and self._client is not None) else False
-
     # *** PROPERTIES ***
 
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
-
-    def _dbPath(self) -> str:
-        default_source : str = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-
-        db_name : str    = self._config.get("source", {}).get("DB_NAME") \
-                        or default_settings["GAME_SOURCES"][default_source]["DB_NAME"]
-        table_name : str = self._config.get("table") \
-                        or default_settings["GAME_SOURCE_MAP"][self._game_id]["table"]
-        return f"{db_name}.{table_name}"
