@@ -10,8 +10,8 @@ from config.config import settings as default_settings
 from interfaces.Interface import Interface
 from schemas.Event import Event
 from schemas.IDMode import IDMode
-from schemas.TableSchema import TableSchema
-from schemas.config_schemas.data_sources.DataSourceSchema import DataSourceSchema
+from schemas.tables.TableSchema import TableSchema
+from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
 from utils import Logger
 
 class DataInterface(Interface):

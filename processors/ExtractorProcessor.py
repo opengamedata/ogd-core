@@ -10,7 +10,7 @@ from extractors.ExtractorLoader import ExtractorLoader
 from extractors.registries.FeatureRegistry import FeatureRegistry
 from processors.Processor import Processor
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 from schemas.ExportMode import ExportMode
 from utils import Logger, ExportRow
 

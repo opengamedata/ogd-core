@@ -11,7 +11,7 @@ from processors.PlayerProcessor import PlayerProcessor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.ExportMode import ExportMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 from utils import Logger, ExportRow
 
 ## @class PopulationProcessor

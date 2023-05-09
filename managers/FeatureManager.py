@@ -9,7 +9,7 @@ from processors.FeatureProcessor import FeatureProcessor
 from processors.PopulationProcessor import PopulationProcessor
 from processors.PlayerProcessor import PlayerProcessor
 from processors.SessionProcessor import SessionProcessor
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 from schemas.Event import Event
 from utils import Logger, ExportRow
 

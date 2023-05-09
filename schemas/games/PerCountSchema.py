@@ -2,7 +2,7 @@
 import logging
 from typing import Any, Dict, Union
 # import local files
-from schemas.game_schemas.FeatureSchema import FeatureSchema
+from schemas.games.FeatureSchema import FeatureSchema
 from utils import Logger
 
 class PerCountSchema(FeatureSchema):

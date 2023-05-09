@@ -3,7 +3,7 @@ import abc
 import logging
 from typing import Any, Dict, List
 # import local files
-from schemas.game_schemas.ExtractorSchema import ExtractorSchema
+from schemas.games.ExtractorSchema import ExtractorSchema
 from schemas.Schema import Schema
 from utils import Logger
 

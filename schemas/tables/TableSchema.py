@@ -13,8 +13,8 @@ Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 import utils
 from config.config import settings as default_settings
 from schemas.Event import Event, EventSource
-from schemas.table_schemas.ColumnMapSchema import ColumnMapSchema
-from schemas.table_schemas.ColumnSchema import ColumnSchema
+from schemas.tables.ColumnMapSchema import ColumnMapSchema
+from schemas.tables.ColumnSchema import ColumnSchema
 from utils import Logger
 
 ## @class TableSchema

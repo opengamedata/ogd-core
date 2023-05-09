@@ -12,7 +12,7 @@ from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 
 LegacyFeatureType = Union[int,float,timedelta,Dict[int,Dict[str,Any]]]
 

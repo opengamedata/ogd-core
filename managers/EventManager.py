@@ -10,7 +10,7 @@ from extractors.ExtractorLoader import ExtractorLoader
 from processors.DetectorProcessor import DetectorProcessor
 from processors.EventProcessor import EventProcessor
 from schemas.Event import Event, EventSource
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 from utils import ExportRow, Logger
 
 ## @class EventProcessor

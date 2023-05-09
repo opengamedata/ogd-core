@@ -2,7 +2,7 @@
 import logging
 from typing import Any, Dict, List, Union
 # import local files
-from schemas.table_schemas.ColumnSchema import ColumnSchema
+from schemas.tables.ColumnSchema import ColumnSchema
 from utils import Logger
 
 class ColumnMapSchema:

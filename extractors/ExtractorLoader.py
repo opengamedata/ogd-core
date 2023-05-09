@@ -9,7 +9,7 @@ from extractors.detectors.Detector import Detector
 from extractors.features.Feature import Feature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 from utils import Logger
 
 class ExtractorLoader(abc.ABC):

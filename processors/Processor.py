@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Type, Optional
 # import locals
 from schemas.FeatureData import FeatureData
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 from schemas.Event import Event
 from utils import ExportRow, Logger
 

@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional
 # import local files
-from schemas.config_schemas.SSHSchema import SSHSchema
+from schemas.configs.SSHSchema import SSHSchema
 from schemas.Schema import Schema
 from utils import Logger
 

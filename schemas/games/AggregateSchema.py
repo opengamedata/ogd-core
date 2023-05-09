@@ -1,7 +1,7 @@
 # import standard libraries
 from typing import Any, Dict, List
 # import local files
-from schemas.game_schemas.FeatureSchema import FeatureSchema
+from schemas.games.FeatureSchema import FeatureSchema
 
 class AggregateSchema(FeatureSchema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

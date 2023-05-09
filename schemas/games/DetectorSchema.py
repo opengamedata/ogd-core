@@ -2,7 +2,7 @@
 from typing import Any, Dict
 # import local files
 from schemas.ExtractionMode import ExtractionMode
-from schemas.game_schemas.ExtractorSchema import ExtractorSchema
+from schemas.games.ExtractorSchema import ExtractorSchema
 
 class DetectorSchema(ExtractorSchema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

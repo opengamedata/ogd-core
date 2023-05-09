@@ -18,9 +18,9 @@ import utils
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.ExtractionMode import ExtractionMode
 from schemas.ExportMode import ExportMode
-from schemas.GameSchema import GameSchema
-from schemas.TableSchema import TableSchema
-from schemas.config_schemas.IndexingSchema import FileIndexingSchema
+from schemas.games.GameSchema import GameSchema
+from schemas.tables.TableSchema import TableSchema
+from schemas.configs.IndexingSchema import FileIndexingSchema
 from utils import Logger, ExportRow
 
 class TSVOuterface(DataOuterface):

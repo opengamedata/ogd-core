@@ -31,8 +31,8 @@ from managers.FeatureManager import FeatureManager
 from schemas.Event import Event
 from schemas.ExportMode import ExportMode
 from schemas.IDMode import IDMode
-from schemas.GameSchema import GameSchema
-from schemas.ConfigSchema import ConfigSchema
+from schemas.games.GameSchema import GameSchema
+from schemas.configs.ConfigSchema import ConfigSchema
 from ogd_requests.Request import Request
 from ogd_requests.RequestResult import RequestResult
 from utils import Logger

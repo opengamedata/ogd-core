@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Tuple, Optional
 from config.config import settings as default_settings
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
-from schemas.TableSchema import TableSchema
+from schemas.tables.TableSchema import TableSchema
 from utils import Logger
 
 AQUALAB_MIN_VERSION = 6.2

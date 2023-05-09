@@ -6,11 +6,11 @@ from typing import Any, Dict, List, Optional, Set, Union
 # import local files
 import utils
 from schemas.Schema import Schema
-from schemas.game_schemas.AggregateSchema import AggregateSchema
-from schemas.game_schemas.DetectorSchema import DetectorSchema
-from schemas.game_schemas.EventSchema import EventSchema
-from schemas.game_schemas.FeatureSchema import FeatureSchema
-from schemas.game_schemas.PerCountSchema import PerCountSchema
+from schemas.games.AggregateSchema import AggregateSchema
+from schemas.games.DetectorSchema import DetectorSchema
+from schemas.games.EventSchema import EventSchema
+from schemas.games.FeatureSchema import FeatureSchema
+from schemas.games.PerCountSchema import PerCountSchema
 from schemas.IterationMode import IterationMode
 from schemas.ExtractionMode import ExtractionMode
 from utils import Logger, loadJSONFile

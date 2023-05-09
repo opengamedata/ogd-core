@@ -9,7 +9,7 @@ from extractors.legacy.LegacyLoader import LegacyLoader
 from games.MAGNET.features.MagnetExtractor import MagnetExtractor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 
 class MagnetLoader(LegacyLoader):
 

@@ -3,10 +3,10 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional
 # import local files
-from schemas.config_schemas.IndexingSchema import FileIndexingSchema
-from schemas.config_schemas.GameSourceMapSchema import GameSourceMapElementSchema
-from schemas.config_schemas.data_sources.DataSourceSchema import DataSourceSchema, BigQuerySchema, MySQLSchema, ParseSourceType
-from schemas.config_schemas.LegacyConfigSchema import LegacyConfigSchema
+from schemas.configs.IndexingSchema import FileIndexingSchema
+from schemas.configs.GameSourceMapSchema import GameSourceMapElementSchema
+from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema, BigQuerySchema, MySQLSchema, ParseSourceType
+from schemas.configs.LegacyConfigSchema import LegacyConfigSchema
 from schemas.Schema import Schema
 from utils import Logger
 

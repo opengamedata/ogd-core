@@ -8,9 +8,9 @@ from typing import Any, Dict, List, Tuple, Optional
 # import locals
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
-from schemas.TableSchema import TableSchema
-from schemas.config_schemas.GameSourceMapSchema import GameSourceMapElementSchema
-from schemas.config_schemas.data_sources.MySQLSourceSchema import MySQLSchema, SSHSchema
+from schemas.tables.TableSchema import TableSchema
+from schemas.configs.GameSourceMapSchema import GameSourceMapElementSchema
+from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema, SSHSchema
 from utils import Logger
 
 

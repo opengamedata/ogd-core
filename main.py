@@ -19,7 +19,7 @@ from interfaces.outerfaces.DataOuterface import DataOuterface
 from interfaces.outerfaces.TSVOuterface import TSVOuterface
 from interfaces.outerfaces.DebugOuterface import DebugOuterface
 from schemas.ExportMode import ExportMode
-from schemas.config_schemas import ConfigSchema
+from schemas.configs import ConfigSchema
 
 # import local files
 from utils import Logger
@@ -31,9 +31,9 @@ from interfaces.BigQueryInterface import BigQueryInterface
 from interfaces.BQFirebaseInterface import BQFirebaseInterface
 from managers.ExportManager import ExportManager
 from schemas.IDMode import IDMode
-from schemas.GameSchema import GameSchema
-from schemas.TableSchema import TableSchema
-from schemas.ConfigSchema import ConfigSchema
+from schemas.games.GameSchema import GameSchema
+from schemas.tables.TableSchema import TableSchema
+from schemas.configs.ConfigSchema import ConfigSchema
 from ogd_requests.Request import Request, ExporterRange
 from ogd_requests.RequestResult import RequestResult, ResultStatus
 from utils import Logger

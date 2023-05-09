@@ -7,7 +7,7 @@ from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.registries.FeatureRegistry import FeatureRegistry
 from processors.ExtractorProcessor import ExtractorProcessor
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 from schemas.ExportMode import ExportMode
 from utils import ExportRow
 

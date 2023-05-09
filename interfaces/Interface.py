@@ -3,7 +3,7 @@ import abc
 from typing import Any, Dict
 
 # import local files
-from schemas.config_schemas.data_sources.DataSourceSchema import DataSourceSchema
+from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
 
 class Interface(abc.ABC):
 

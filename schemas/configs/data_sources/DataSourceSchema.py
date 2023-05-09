@@ -4,8 +4,8 @@ import logging
 from typing import Any, Dict, Optional, Type
 # import local files
 from schemas.Schema import Schema
-from schemas.config_schemas.data_sources.BigQuerySourceSchema import BigQuerySchema
-from schemas.config_schemas.data_sources.MySQLSourceSchema import MySQLSchema
+from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
+from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
 
 class DataSourceSchema(Schema):
     def __init__(self, name:str, other_elements:Dict[str, Any]):

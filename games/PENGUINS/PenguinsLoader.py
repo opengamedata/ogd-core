@@ -11,7 +11,7 @@ from games.PENGUINS.features import *
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 # from games.PENGUINS.DBExport import scene_map
 
 ## @class WaveExtractor

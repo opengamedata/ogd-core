@@ -14,10 +14,10 @@ from extractors.features.Feature import Feature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 from schemas.IterationMode import IterationMode
-from schemas.game_schemas.AggregateSchema import AggregateSchema
-from schemas.game_schemas.PerCountSchema import PerCountSchema
+from schemas.games.AggregateSchema import AggregateSchema
+from schemas.games.PerCountSchema import PerCountSchema
 from utils import Logger
 
 ## @class Extractor
