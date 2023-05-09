@@ -3,7 +3,7 @@ import logging
 from typing import Any, Dict, Optional, Type
 # import local files
 from schemas.Schema import Schema
-from schemas.config_schemas.DataSourceSchema import DataSourceSchema
+from schemas.config_schemas.data_sources.DataSourceSchema import DataSourceSchema
 from utils import Logger
 
 class SSHSchema(Schema):
