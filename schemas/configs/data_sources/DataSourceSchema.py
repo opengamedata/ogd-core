@@ -5,6 +5,7 @@ from typing import Any, Dict, Optional, Type
 # import local files
 from schemas.Schema import Schema
 from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
+from schemas.configs.data_sources.FileSourceSchema import FileSourceSchema
 from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
 
 class DataSourceSchema(Schema):
@@ -22,5 +23,7 @@ def ParseSourceType(all_elements:Dict[str, Any]) -> Optional[Type[DataSourceSche
             return BigQuerySchema
         case "MYSQL":
             return MySQLSchema
+        case "FILE":
+            return FileSourceSchema
         case _:
             return None
