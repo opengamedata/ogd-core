@@ -15,11 +15,6 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Set, Tuple
 
 # import 3rd-party libraries
-from interfaces.outerfaces.DataOuterface import DataOuterface
-from interfaces.outerfaces.TSVOuterface import TSVOuterface
-from interfaces.outerfaces.DebugOuterface import DebugOuterface
-from schemas.ExportMode import ExportMode
-from schemas.configs.ConfigSchema import ConfigSchema
 
 # import local files
 from utils import Logger
@@ -29,7 +24,10 @@ from interfaces.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface
 from interfaces.BigQueryInterface import BigQueryInterface
 from interfaces.BQFirebaseInterface import BQFirebaseInterface
+from interfaces.outerfaces.TSVOuterface import TSVOuterface
+from interfaces.outerfaces.DebugOuterface import DebugOuterface
 from managers.ExportManager import ExportManager
+from schemas.ExportMode import ExportMode
 from schemas.IDMode import IDMode
 from schemas.games.GameSchema import GameSchema
 from schemas.tables.TableSchema import TableSchema
