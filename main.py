@@ -118,7 +118,6 @@ def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Req
     file_outerface : DataOuterface
     dataset_id     : Optional[str] = None
 
-
     # 1. get exporter modes to run
     export_modes = getModes(with_events=with_events, with_features=with_features)
     # 2. figure out the interface and range; optionally set a different dataset_id
@@ -158,15 +157,17 @@ def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Req
             start_date, end_date = getDateRange()
             range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date)
     # 3. set up the outerface, based on the range and dataset_id.
-    file_outerface = TSVOuterface(game_id=args.game, export_modes=export_modes, date_range=range.DateRange,
+    _cfg = GameSourceSchema(name="FILE DEST", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+    file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=range.DateRange,
                                   file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
-    _outerfaces : Set[DataOuterface] = {file_outerface}
+    outerfaces : Set[DataOuterface] = {file_outerface}
     # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
     if config.DebugLevel == "DEBUG":
-        _outerfaces.add(DebugOuterface(game_id=args.game, export_modes=export_modes))
+        _cfg = GameSourceSchema(name="DEBUG", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+        outerfaces.add(DebugOuterface(game_id=args.game, config=_cfg, export_modes=export_modes))
 
     # 4. Once we have the parameters parsed out, construct the request.
-    return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces=_outerfaces)
+    return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
 
 def genDBInterface(config:ConfigSchema) -> DataInterface:
     ret_val : DataInterface
