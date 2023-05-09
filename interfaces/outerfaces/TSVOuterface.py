@@ -18,6 +18,7 @@ import utils
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.ExtractionMode import ExtractionMode
 from schemas.ExportMode import ExportMode
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.games.GameSchema import GameSchema
 from schemas.tables.TableSchema import TableSchema
 from schemas.configs.IndexingSchema import FileIndexingSchema
@@ -27,8 +28,8 @@ class TSVOuterface(DataOuterface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], file_indexing:FileIndexingSchema, extension:str="tsv", dataset_id:Optional[str]=None):
-        super().__init__(game_id=game_id, export_modes=export_modes, config={})
+    def __init__(self, game_id:str, config:GameSourceSchema, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], file_indexing:FileIndexingSchema, extension:str="tsv", dataset_id:Optional[str]=None):
+        super().__init__(game_id=game_id, config=config, export_modes=export_modes)
         self._file_paths    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
         self._zip_paths     : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
         self._files         : Dict[str,Optional[IO]]   = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}

@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Set
 from interfaces.Interface import Interface
 from schemas.IDMode import IDMode
 from schemas.ExportMode import ExportMode
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from utils import Logger, ExportRow
 
 class DataOuterface(Interface):
@@ -72,7 +73,7 @@ class DataOuterface(Interface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id, export_modes:Set[ExportMode], config:Dict[str, Any]):
+    def __init__(self, game_id, config:GameSourceSchema, export_modes:Set[ExportMode]):
         super().__init__(config=config)
         self._game_id : str  = game_id
         self._modes   : Set[ExportMode] = export_modes

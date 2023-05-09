@@ -5,14 +5,15 @@ from typing import List, Set
 # import local files
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.ExportMode import ExportMode
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from utils import Logger, ExportRow
 
 class DebugOuterface(DataOuterface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, export_modes:Set[ExportMode]):
-        super().__init__(game_id=game_id, export_modes=export_modes, config={})
+    def __init__(self, game_id:str, config:GameSourceSchema, export_modes:Set[ExportMode]):
+        super().__init__(game_id=game_id, export_modes=export_modes, config=config)
         # self.Open()
 
     def __del__(self):
