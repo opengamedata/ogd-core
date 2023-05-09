@@ -14,7 +14,6 @@ from schemas.IDMode import IDMode
 
 ## import local files
 import utils
-from config.config import settings as default_settings
 from extractors.ExtractorLoader import ExtractorLoader
 from games.AQUALAB.AqualabLoader import AqualabLoader
 from games.CRYSTAL.CrystalLoader import CrystalLoader
@@ -33,7 +32,7 @@ from schemas.Event import Event
 from schemas.ExportMode import ExportMode
 from schemas.IDMode import IDMode
 from schemas.GameSchema import GameSchema
-from schemas.TableSchema import TableSchema
+from schemas.ConfigSchema import ConfigSchema
 from ogd_requests.Request import Request
 from ogd_requests.RequestResult import RequestResult
 from utils import Logger
@@ -47,14 +46,14 @@ class ExportManager:
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, settings:Dict[str, Any]):
+    def __init__(self, config:ConfigSchema):
         """Constructor for an ExportManager object.
         Simply sets the settings for the manager. All other data comes from a request given to the manager.
 
         :param settings: [description]
         :type settings: [type]
         """
-        self._settings    : Dict[str, Any] = settings
+        self._config    : ConfigSchema = config
         self._event_mgr   : Optional[EventManager]   = None
         self._feat_mgr    : Optional[FeatureManager] = None
         self._debug_count : int                      = 0
@@ -211,7 +210,7 @@ class ExportManager:
 
     def _generateSlices(self, sess_ids:List[str]) -> List[List[str]]:
         _num_sess = len(sess_ids)
-        _slice_size = self._settings["BATCH_SIZE"] or default_settings["BATCH_SIZE"]
+        _slice_size = self._config["BATCH_SIZE"] or default_settings["BATCH_SIZE"]
         Logger.Log(f"With slice size = {_slice_size}, there are {math.ceil(_num_sess / _slice_size)} slices", logging.INFO, depth=1)
         return [[sess_ids[i] for i in range( j*_slice_size, min((j+1)*_slice_size, _num_sess) )]
                              for j in range( 0, math.ceil(_num_sess / _slice_size) )]
