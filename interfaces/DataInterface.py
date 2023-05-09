@@ -11,7 +11,7 @@ from interfaces.Interface import Interface
 from schemas.Event import Event
 from schemas.IDMode import IDMode
 from schemas.tables.TableSchema import TableSchema
-from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
+from schemas.configs.GameSourceMapSchema import GameSourceMapElementSchema
 from utils import Logger
 
 class DataInterface(Interface):
@@ -44,7 +44,7 @@ class DataInterface(Interface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, config:DataSourceSchema):
+    def __init__(self, game_id:str, config:GameSourceMapElementSchema):
         super().__init__(config=config)
         self._game_id : str  = game_id
         self._table_schema : TableSchema = self._loadTableSchema(game_id=game_id)
