@@ -216,7 +216,7 @@ class MySQLInterface(DataInterface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, config:MySQLSchema):
+    def __init__(self, game_id:str, config:GameSourceMapElementSchema):
         self._tunnel    : Optional[sshtunnel.SSHTunnelForwarder] = None
         self._db        : Optional[connection.MySQLConnection] = None
         self._db_cursor : Optional[cursor.MySQLCursor] = None
@@ -231,8 +231,8 @@ class MySQLInterface(DataInterface):
             self.Open(force_reopen=False)
         if not self._is_open:
             start = datetime.now()
-            if isinstance(self._config, MySQLSchema):
-                self._tunnel, self._db = SQL.ConnectDB(schema=self._config)
+            if isinstance(self._config.Source, MySQLSchema):
+                self._tunnel, self._db = SQL.ConnectDB(schema=self._config.Source)
                 if self._db is not None:
                     self._db_cursor = self._db.cursor()
                     self._is_open = True
@@ -257,26 +257,23 @@ class MySQLInterface(DataInterface):
         return True
 
     def _loadTableSchema(self, game_id:str) -> TableSchema:
-        _schema_name = self._config.
-        _schema_name = self._config.get("schema") or default_settings['GAME_SOURCE_MAP'].get(game_id, {}).get('schema', "NO SCHEMA DEFINED")
-        return TableSchema(schema_name=_schema_name)
+        return TableSchema(schema_name=self._config.Schema)
 
     def _allIDs(self) -> List[str]:
-        if not self._db_cursor == None:
-            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
-            table_name : str = self._config.get("table") or default_settings["GAME_SOURCE_MAP"][self._game_id].get("table", "TABLE_NAME_NOT_FOUND")
+        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
+            _db_name     : str = self._config.Source.DBName
+            _table_name  : str = self._config.TableName
 
-            sess_id_col = self._TableSchema.SessionIDColumn or "session_id"
+            sess_id_col  : str = self._TableSchema.SessionIDColumn or "session_id"
 
             filters = []
             params  = []
-            if table_name != self._game_id:
+            if _table_name != self._game_id:
                 filters.append(f"`app_id`=%s")
                 params.append(self._game_id)
             filter_clause = " AND ".join(filters)
             
-            data = SQL.SELECT(cursor =self._db_cursor, db_name=db_name,       table   =table_name,
+            data = SQL.SELECT(cursor =self._db_cursor, db_name=_db_name,      table   =_table_name,
                               columns=[sess_id_col],   filter =filter_clause, distinct=True,
                               params =tuple(params))
             return [str(id[0]) for id in data] if data != None else []
@@ -286,38 +283,35 @@ class MySQLInterface(DataInterface):
 
     def _fullDateRange(self) -> Dict[str,datetime]:
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
-        if not self._db_cursor == None:
-            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
-            table_name : str = self._config.get("table") or default_settings["GAME_SOURCE_MAP"][self._game_id].get("table", "TABLE_NAME_NOT_FOUND")
+        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
+            _db_name     : str = self._config.Source.DBName
+            _table_name  : str = self._config.TableName
 
             # prep filter strings
             filters = []
             params  = []
-            if table_name != self._game_id:
+            if _table_name != self._game_id:
                 filters.append(f"`app_id`=%s")
                 params.append(self._game_id)
             filter_clause = " AND ".join(filters)
 
             # run query
-            result = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
+            result = SQL.SELECT(cursor=self._db_cursor, db_name=_db_name, table=_table_name,
                                 columns=['MIN(server_time)', 'MAX(server_time)'], filter=filter_clause,
                                 params =tuple(params))
             if result is not None:
                 ret_val = {'min':result[0][0], 'max':result[0][1]}
         else:
-            Logger.Log(f"Could not get full date range, MySQL connection is not open.", logging.WARN)
+            Logger.Log(f"Could not get full date range, MySQL connection is not open or config was not for MySQL.", logging.WARN)
         return ret_val
 
     def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> List[Tuple]:
         ret_val = []
         # grab data for the given session range. Sort by event time, so
-        if not self._db_cursor == None:
+        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-
-            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
-            table_name : str = self._config.get("table") or default_settings["GAME_SOURCE_MAP"][self._game_id].get("table", "TABLE_NAME_NOT_FOUND")
+            _db_name     : str = self._config.Source.DBName
+            _table_name  : str = self._config.TableName
 
             sess_id_col = self._TableSchema.SessionIDColumn or 'session_id'
             play_id_col = self._TableSchema.UserIDColumn or 'player_id'
@@ -325,7 +319,7 @@ class MySQLInterface(DataInterface):
 
             filters = []
             params = []
-            if table_name != self._game_id:
+            if _table_name != self._game_id:
                 filters.append(f"`app_id`=%s")
                 params.append(self._game_id)
             # if versions is not None and versions is not []:
@@ -341,28 +335,27 @@ class MySQLInterface(DataInterface):
                 raise ValueError("Invalid IDMode in MySQLInterface!")
             filter_clause = " AND ".join(filters)
 
-            data = SQL.SELECT(cursor=self._db_cursor, db_name=db_name,                         table=table_name,
+            data = SQL.SELECT(cursor=self._db_cursor, db_name=_db_name,                        table=_table_name,
                               filter=filter_clause,   sort_columns=[sess_id_col, seq_idx_col], sort_direction="ASC",
                               params=tuple(params))
             if data is not None:
                 ret_val = data
             # self._select_queries.append(select_query) # this doesn't appear to be used???
         else:
-            Logger.Log(f"Could not get data for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
+            Logger.Log(f"Could not get data for {len(id_list)} sessions, MySQL connection is not open or config was not for MySQL.", logging.WARN)
         return ret_val
 
     def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]]=None) -> List[str]:
         ret_val = []
-        if not self._db_cursor == None:
+        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
             # alias long setting names.
-            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
-            table_name : str = self._config.get("table") or default_settings["GAME_SOURCE_MAP"][self._game_id].get("table", "TABLE_NAME_NOT_FOUND")
+            _db_name     : str = self._config.Source.DBName
+            _table_name  : str = self._config.TableName
 
             # prep filter strings
             filters = []
             params = []
-            if table_name != self._game_id:
+            if _table_name != self._game_id:
                 filters.append(f"`app_id`=%s")
                 params.append(self._game_id)
             # if versions is not None and versions is not []:
@@ -374,29 +367,27 @@ class MySQLInterface(DataInterface):
             # run query
             # We grab the ids for all sessions that have 0th move in the proper date range.
             sess_id_col = self._TableSchema.SessionIDColumn or "`session_id`"
-            sess_ids_raw = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
-                                    columns=[sess_id_col], filter=filter_clause,
-                                    sort_columns=[sess_id_col], sort_direction="ASC", distinct=True,
-                                    params=tuple(params))
+            sess_ids_raw = SQL.SELECT(cursor=self._db_cursor,   db_name=_db_name,     table=_table_name,
+                                     columns=[sess_id_col],     filter=filter_clause,
+                                     sort_columns=[sess_id_col], sort_direction="ASC", distinct=True,
+                                     params=tuple(params))
             if sess_ids_raw is not None:
                 ret_val = [str(sess[0]) for sess in sess_ids_raw]
         else:
-            Logger.Log(f"Could not get session list for {min.isoformat()}-{max.isoformat()} range, MySQL connection is not open.", logging.WARN)
+            Logger.Log(f"Could not get session list for {min.isoformat()}-{max.isoformat()} range, MySQL connection is not open or config was not for MySQL.", logging.WARN)
         return ret_val
 
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Dict[str, datetime]:
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
-        if not self._db_cursor == None:
+        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
             # alias long setting names.
-            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-
-            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
-            table_name : str = self._config.get("table") or default_settings["GAME_SOURCE_MAP"][self._game_id].get("table", "TABLE_NAME_NOT_FOUND")
+            _db_name     : str = self._config.Source.DBName
+            _table_name  : str = self._config.TableName
             
             # prep filter strings
             filters = []
             params = tuple()
-            if table_name != self._game_id:
+            if _table_name != self._game_id:
                 filters.append(f"`app_id`=%s")
                 params = tuple(self._game_id)
             # if versions is not None and versions is not []:
@@ -412,7 +403,7 @@ class MySQLInterface(DataInterface):
                 raise ValueError("Invalid IDMode in MySQLInterface!")
             filter_clause = " AND ".join(filters)
             # run query
-            result = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
+            result = SQL.SELECT(cursor=self._db_cursor,      db_name=_db_name,    table=_table_name,
                                 columns=['MIN(server_time)', 'MAX(server_time)'], filter=filter_clause,
                                 params=params)
             if result is not None:
