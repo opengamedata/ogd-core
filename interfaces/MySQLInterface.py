@@ -234,7 +234,7 @@ class MySQLInterface(DataInterface):
             if isinstance(self._config.Source, MySQLSchema):
                 self._tunnel, self._db = SQL.ConnectDB(schema=self._config.Source)
                 if self._db is not None:
-                    self._db_cursor = self._db.cursor()
+                    self._db_cursor = self._getCursor()
                     self._is_open = True
                     time_delta = datetime.now() - start
                     Logger.Log(f"Database Connection Time: {time_delta}", logging.INFO)
@@ -418,3 +418,14 @@ class MySQLInterface(DataInterface):
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
+
+    def _getCursor(self) -> Optional[cursor.MySQLCursor]:
+        ret_val : Optional[cursor.MySQLCursor] = None
+
+        if self._db is not None:
+            _cursor = self._db.cursor()
+            if isinstance(_cursor, cursor.MySQLCursor):
+                ret_val = _cursor
+            else:
+                Logger.Log(f"db.cursor() call returned a cursor of unexpected type {type(ret_val)}, can not access the database!", logging.ERROR)
+        return ret_val
