@@ -6,7 +6,6 @@ from pprint import pformat
 from typing import Any, Dict, List, Tuple, Optional, Union
 
 # import local files
-from config.config import settings as default_settings
 from interfaces.Interface import Interface
 from schemas.Event import Event
 from schemas.IDMode import IDMode
@@ -40,8 +39,9 @@ class DataInterface(Interface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, config:GameSourceSchema):
+    def __init__(self, game_id:str, config:GameSourceSchema, fail_fast:bool):
         super().__init__(config=config)
+        self._fail_fast = fail_fast
         self._game_id : str  = game_id
         self._table_schema : TableSchema = TableSchema(schema_name=self._config.Schema)
 
@@ -88,7 +88,7 @@ class DataInterface(Interface):
                     next_event.FallbackDefaults(index=_evt_sess_index)
                     _evt_sess_index += 1
                 except Exception as err:
-                    if default_settings.get("FAIL_FAST", None):
+                    if self._fail_fast:
                         Logger.Log(f"Error while converting row to Event\nFull error: {err}\nRow data: {pformat(row)}", logging.ERROR, depth=2)
                         raise err
                     else:
