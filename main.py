@@ -24,6 +24,7 @@ from interfaces.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface
 from interfaces.BigQueryInterface import BigQueryInterface
 from interfaces.BQFirebaseInterface import BQFirebaseInterface
+from interfaces.outerfaces.DataOuterface import DataOuterface
 from interfaces.outerfaces.TSVOuterface import TSVOuterface
 from interfaces.outerfaces.DebugOuterface import DebugOuterface
 from managers.ExportManager import ExportManager
