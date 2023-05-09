@@ -19,7 +19,7 @@ from interfaces.outerfaces.DataOuterface import DataOuterface
 from interfaces.outerfaces.TSVOuterface import TSVOuterface
 from interfaces.outerfaces.DebugOuterface import DebugOuterface
 from schemas.ExportMode import ExportMode
-from schemas.configs import ConfigSchema
+from schemas.configs.ConfigSchema import ConfigSchema
 
 # import local files
 from utils import Logger
