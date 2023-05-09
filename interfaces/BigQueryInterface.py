@@ -25,6 +25,11 @@ class BigQueryInterface(DataInterface):
 
     @property
     def DBPath(self) -> str:
+        """The path of form "[projectID].[datasetID].[tableName]" used to make queries
+
+        :return: The full path from project ID to table name, if properly set in configuration, else the literal string "INVALID SOURCE SCHEMA".
+        :rtype: str
+        """
         if isinstance(self._config.Source, BigQuerySchema):
             return f"{self._config.Source.ProjectID}{self._config.Source.DatasetID}.{self._config.TableName}"
         else:
