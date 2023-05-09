@@ -42,8 +42,12 @@ class GameSourceMapElementSchema(Schema):
         super().__init__(name=name, other_elements=_leftovers)
 
     @property
-    def Source(self) -> str:
+    def SourceName(self) -> str:
         return self._source_name
+
+    @property
+    def Source(self) -> Optional[DataSourceSchema]:
+        return self._source_schema
 
     @property
     def TableName(self) -> str:
