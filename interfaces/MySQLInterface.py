@@ -256,7 +256,7 @@ class MySQLInterface(DataInterface):
         self._is_open = False
         return True
 
-    def _loadTableSchema(self, game_id:str) -> TableSchema:
+    def _loadTableSchema(self) -> TableSchema:
         return TableSchema(schema_name=self._config.Schema)
 
     def _allIDs(self) -> List[str]:

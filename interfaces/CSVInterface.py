@@ -7,7 +7,7 @@ from typing import Any, Dict, IO, List, Tuple, Optional
 ## import local files
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
-from schemas.configs.GameSourceMapSchema import GameSourceMapElementSchema
+from schemas.tables.configs.GameSourceMapSchema import GameSourceMapElementSchema
 from schemas.tables.TableSchema import TableSchema
 from utils import Logger
 
@@ -40,9 +40,9 @@ class CSVInterface(DataInterface):
         self._data = pd.DataFrame() # make new dataframe, let old data get garbage collected I assume.
         return True
 
-    def _loadTableSchema(self, game_id:str) -> TableSchema:
+    def _loadTableSchema(self) -> TableSchema:
         # TODO: make the .meta file of an export include the name of the most current table schema for Event files, then read that in here as default.
-        return TableSchema(schema_name=self._file_schema_name)
+        return TableSchema(schema_name=self._config.Schema)
 
     def _allIDs(self) -> List[str]:
         return self._data['session_id'].unique().tolist()

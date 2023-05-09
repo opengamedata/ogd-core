@@ -19,7 +19,7 @@ class DataInterface(Interface):
     # *** ABSTRACTS ***
 
     @abc.abstractmethod
-    def _loadTableSchema(self, game_id:str) -> TableSchema:
+    def _loadTableSchema(self) -> TableSchema:
         pass
 
     @abc.abstractmethod
@@ -47,7 +47,7 @@ class DataInterface(Interface):
     def __init__(self, game_id:str, config:GameSourceMapElementSchema):
         super().__init__(config=config)
         self._game_id : str  = game_id
-        self._table_schema : TableSchema = self._loadTableSchema(game_id=game_id)
+        self._table_schema : TableSchema = self._loadTableSchema()
 
     def __del__(self):
         self.Close()
