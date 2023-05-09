@@ -33,7 +33,7 @@ from schemas.IDMode import IDMode
 from schemas.games.GameSchema import GameSchema
 from schemas.tables.TableSchema import TableSchema
 from schemas.configs.ConfigSchema import ConfigSchema
-from schemas.configs.GameSourceMapSchema import GameSourceMapElementSchema
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from ogd_requests.Request import Request, ExporterRange
 from ogd_requests.RequestResult import RequestResult, ResultStatus
 from utils import Logger
@@ -125,7 +125,7 @@ def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Req
     if args.file is not None and args.file != "":
         # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
         _ext = str(args.file).split('.')[-1]
-        _cfg = GameSourceMapElementSchema(name="FILE SOURCE", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+        _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
         interface = CSVInterface(game_id=args.game, config=_cfg, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()

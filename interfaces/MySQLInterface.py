@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Tuple, Optional
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
 from schemas.tables.TableSchema import TableSchema
-from schemas.configs.GameSourceMapSchema import GameSourceMapElementSchema
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema, SSHSchema
 from utils import Logger
 
@@ -216,7 +216,7 @@ class MySQLInterface(DataInterface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, config:GameSourceMapElementSchema):
+    def __init__(self, game_id:str, config:GameSourceSchema):
         self._tunnel    : Optional[sshtunnel.SSHTunnelForwarder] = None
         self._db        : Optional[connection.MySQLConnection] = None
         self._db_cursor : Optional[cursor.MySQLCursor] = None

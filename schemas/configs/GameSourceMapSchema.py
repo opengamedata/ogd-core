@@ -6,7 +6,7 @@ from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
 from schemas.Schema import Schema
 from utils import Logger
 
-class GameSourceMapElementSchema(Schema):
+class GameSourceSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any], data_sources:Dict[str, DataSourceSchema]):
         self._source_name   : str
         self._source_schema : Optional[DataSourceSchema]
@@ -17,7 +17,7 @@ class GameSourceMapElementSchema(Schema):
             all_elements = {}
             Logger.Log(f"For {name} Game Source config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if "source" in all_elements.keys():
-            self._source_name = GameSourceMapElementSchema._parseSource(all_elements["source"])
+            self._source_name = GameSourceSchema._parseSource(all_elements["source"])
         else:
             self._source_name = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'source' element; defaulting to source_name={self._source_name}", logging.WARN)
@@ -27,12 +27,12 @@ class GameSourceMapElementSchema(Schema):
             self._source_schema = None
             Logger.Log(f"{name} config's 'source' name ({self._source_name}) was not found in available source schemas; defaulting to source_schema={self._source_schema}", logging.WARN)
         if "table" in all_elements.keys():
-            self._table_name = GameSourceMapElementSchema._parseTableName(all_elements["table"])
+            self._table_name = GameSourceSchema._parseTableName(all_elements["table"])
         else:
             self._table_name = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'table' element; defaulting to table={self._table_name}", logging.WARN)
         if "schema" in all_elements.keys():
-            self._schema = GameSourceMapElementSchema._parseSchema(all_elements["schema"])
+            self._schema = GameSourceSchema._parseSchema(all_elements["schema"])
         else:
             self._schema = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'schema' element; defaulting to schema={self._schema}", logging.WARN)

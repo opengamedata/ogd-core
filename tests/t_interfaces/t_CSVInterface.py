@@ -5,7 +5,7 @@ from unittest import TestCase
 from zipfile import ZipFile
 # import locals
 from interfaces.CSVInterface import CSVInterface
-from schemas.configs.GameSourceMapSchema import GameSourceMapElementSchema
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
 
 class t_CSVInterface(TestCase):
 
@@ -51,7 +51,7 @@ class t_CSVInterface(TestCase):
 
     def test_IDsFromDates(self):
         with self.zipped_file.open(self.zipped_file.namelist()[0]) as f:
-            _cfg = GameSourceMapElementSchema(name="FILE SOURCE", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+            _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
             CSVI = CSVInterface(game_id='BACTERIA', config=_cfg, filepath=f, delim='\t')
             if CSVI.Open():
                 result_session_list = CSVI.IDsFromDates(self.TEST_MIN_DATE, self.TEST_MAX_DATE)
@@ -64,7 +64,7 @@ class t_CSVInterface(TestCase):
 
     def test_DatesFromIDs(self):
         with self.zipped_file.open(self.zipped_file.namelist()[0]) as f:
-            _cfg = GameSourceMapElementSchema(name="FILE SOURCE", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+            _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
             CSVI = CSVInterface(game_id='BACTERIA', config=_cfg, filepath=f, delim='\t')
             if CSVI.Open():
                 dates = CSVI.DatesFromIDs(self.TEST_SESSION_LIST)

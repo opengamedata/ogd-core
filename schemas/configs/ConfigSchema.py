@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 # import local files
 from schemas.configs.IndexingSchema import FileIndexingSchema
-from schemas.configs.GameSourceMapSchema import GameSourceMapElementSchema
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema, BigQuerySchema, MySQLSchema, ParseSourceType
 from schemas.configs.LegacyConfigSchema import LegacyConfigSchema
 from schemas.Schema import Schema
@@ -18,7 +18,7 @@ class ConfigSchema(Schema):
         self._fail_fast  : bool
         self._file_idx   : FileIndexingSchema
         self._data_src   : Dict[str, DataSourceSchema]
-        self._game_src_map : Dict[str, GameSourceMapElementSchema]
+        self._game_src_map : Dict[str, GameSourceSchema]
 
         self._legacy_elems : LegacyConfigSchema = LegacyConfigSchema(name=name, all_elements=all_elements)
         if "LOG_FILE" in all_elements.keys():
@@ -91,7 +91,7 @@ class ConfigSchema(Schema):
         return self._data_src
 
     @property
-    def GameSourceMap(self) -> Dict[str, GameSourceMapElementSchema]:
+    def GameSourceMap(self) -> Dict[str, GameSourceSchema]:
         return self._game_src_map
 
     @property
@@ -190,10 +190,10 @@ class ConfigSchema(Schema):
         return ret_val
 
     @staticmethod
-    def _parseGameSourceMap(map, sources) -> Dict[str, GameSourceMapElementSchema]:
-        ret_val : Dict[str, GameSourceMapElementSchema]
+    def _parseGameSourceMap(map, sources) -> Dict[str, GameSourceSchema]:
+        ret_val : Dict[str, GameSourceSchema]
         if isinstance(map, dict):
-            ret_val = { key : GameSourceMapElementSchema(name=val, all_elements=val, data_sources=sources) for key, val in map.items() }
+            ret_val = { key : GameSourceSchema(name=val, all_elements=val, data_sources=sources) for key, val in map.items() }
         else:
             ret_val = {}
             Logger.Log(f"Config game source map was unexpected type {type(map)}, defaulting to empty dict: {ret_val}.", logging.WARN)

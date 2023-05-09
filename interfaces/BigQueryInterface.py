@@ -8,6 +8,8 @@ from typing import Any, Dict, List, Tuple, Optional
 from config.config import settings as default_settings
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
 from schemas.tables.TableSchema import TableSchema
 from utils import Logger
 
@@ -17,7 +19,7 @@ class BigQueryInterface(DataInterface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, config:Dict[str,Any]):
+    def __init__(self, game_id:str, config:GameSourceSchema):
         super().__init__(game_id=game_id, config=config)
         self.Open()
 
@@ -30,10 +32,11 @@ class BigQueryInterface(DataInterface):
         if not self._is_open:
             if "GITHUB_ACTIONS" in os.environ:
                 self._client = bigquery.Client()
-            else:
-                credential_path : str = self._config.get("credential") or default_settings["GAME_SOURCE_MAP"][self._game_id]["credential"]
-                os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credential_path
+            elif isinstance(self._config.Source, BigQuerySchema):
+                os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self._config.Source.Credential or "NO CREDENTIAL CONFIGURED!" or f"./{self._game_id}.json"
                 self._client = bigquery.Client()
+            else:
+                raise ValueError("No BigQuery credential available in current configuration!")
             if self._client != None:
                 self._is_open = True
                 Logger.Log("Connected to BigQuery database.", logging.DEBUG)

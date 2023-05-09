@@ -8,6 +8,8 @@ from typing import Any, Dict, List, Tuple, Optional
 from config.config import settings as default_settings
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
 from schemas.tables.TableSchema import TableSchema
 from utils import Logger
 
@@ -17,7 +19,7 @@ class BQFirebaseInterface(DataInterface):
 
     # *** BUILT-INS ***
 
-    def __init__(self, game_id:str, config:Dict[str,Any]):
+    def __init__(self, game_id:str, config:GameSourceSchema):
         super().__init__(game_id=game_id, config=config)
         self.Open()
 

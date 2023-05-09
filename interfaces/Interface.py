@@ -3,7 +3,7 @@ import abc
 from typing import Any, Dict
 
 # import local files
-from schemas.configs.GameSourceMapSchema import GameSourceMapElementSchema
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
 
 class Interface(abc.ABC):
 
@@ -19,8 +19,8 @@ class Interface(abc.ABC):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, config:GameSourceMapElementSchema):
-        self._config  : GameSourceMapElementSchema = config
+    def __init__(self, config:GameSourceSchema):
+        self._config  : GameSourceSchema = config
         self._is_open : bool = False
 
     def __del__(self):
