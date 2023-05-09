@@ -193,7 +193,7 @@ class MySQLSchema(DataSourceSchema):
 
     @property
     def SSH(self) -> SSHSchema:
-        """Shorter alias for SSHConfig, useful when using sub-elements of the SSHConfig.
+        """Shortened alias for SSHConfig, convenient when using sub-elements of the SSHConfig.
 
         :return: The schema describing the configuration for an SSH connection to a data source.
         :rtype: SSHSchema
@@ -201,12 +201,25 @@ class MySQLSchema(DataSourceSchema):
         return self._ssh_cfg
 
     @property
+    def HasSSH(self) -> bool:
+        """Property indicating if this MySQL source has a valid SSH configuration attached to it.
+
+        :return: True if there is a valid SSH configuration, otherwise false.
+        :rtype: bool
+        """
+        return (self.SSH.Host is not None and self.SSH.User is not None and self.SSH.Pass is not None)
+
+    @property
     def AsMarkdown(self) -> str:
         ret_val : str
 
-        ssh_part   = f"{self.SSH.AsConnectionInfo} -> " if (self.SSH.Host and self.SSH.Port and self.SSH.User) else ""
-        mysql_part = f"{self.DBUser}@{self.DBHost}:{self.DBPort}/{self.DBName}"
-        ret_val = f"{self.Name} : `{ssh_part}{mysql_part}` ({self.Type})"
+        ssh_part = f"{self.SSH.AsConnectionInfo} -> " if self.HasSSH else ""
+        ret_val  = f"{self.Name} : `{ssh_part}{self.AsConnectionInfo}` ({self.Type})"
+        return ret_val
+
+    @property
+    def AsConnectionInfo(self) -> str:
+        ret_val : str = f"{self.DBUser}@{self.DBHost}:{self.DBPort}/{self.DBName}"
         return ret_val
 
     @staticmethod
