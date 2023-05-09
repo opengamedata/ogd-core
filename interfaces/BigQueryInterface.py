@@ -23,6 +23,13 @@ class BigQueryInterface(DataInterface):
         super().__init__(game_id=game_id, config=config)
         self.Open()
 
+    @property
+    def DBPath(self) -> str:
+        if isinstance(self._config.Source, BigQuerySchema):
+            return f"{self._config.Source.ProjectID}{self._config.Source.DatasetID}.{self._config.TableName}"
+        else:
+            return "INVALID SOURCE SCHEMA"
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _open(self, force_reopen: bool = False) -> bool:
@@ -56,7 +63,7 @@ class BigQueryInterface(DataInterface):
     def _allIDs(self) -> List[str]:
         query = f"""
             SELECT DISTINCT session_id
-            FROM `{self._dbPath()}`,
+            FROM `{self.DBPath}`,
         """
         Logger.Log(f"Running query for all ids:\n{query}", logging.DEBUG, depth=3)
         data = self._client.query(query)
@@ -66,7 +73,7 @@ class BigQueryInterface(DataInterface):
     def _fullDateRange(self) -> Dict[str, datetime]:
         query = f"""
             SELECT MIN(server_time), MAX(server_time)
-            FROM `{self._dbPath()}`
+            FROM `{self.DBPath}`
         """
         Logger.Log(f"Running query for full date range:\n{query}", logging.DEBUG, depth=3)
         data = list(self._client.query(query))
@@ -117,7 +124,7 @@ class BigQueryInterface(DataInterface):
         # Still, not a huge deal because most of these will be rewritten at that time anyway.
         query = f"""
             SELECT session_id, user_id, user_data, client_time, client_offset, server_time, event_name, event_data, event_source, game_state, app_version, app_branch, log_version, event_sequence_index
-            FROM `{self._dbPath()}`
+            FROM `{self.DBPath}`
             {where_clause}
             ORDER BY `user_id`, `session_id`, `server_time` ASC
         """
@@ -128,7 +135,7 @@ class BigQueryInterface(DataInterface):
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         query = f"""
             SELECT DISTINCT session_id
-            FROM `{self._dbPath()}`
+            FROM `{self.DBPath}`
             WHERE _TABLE_SUFFIX BETWEEN '{str_min}' AND '{str_max}'
         """
         Logger.Log(f"Running query for ids from dates:\n{query}", logging.DEBUG, depth=3)
@@ -157,7 +164,7 @@ class BigQueryInterface(DataInterface):
             """
         query = f"""
             SELECT MIN(server_time), MAX(server_time)
-            FROM `{self._dbPath()}`
+            FROM `{self.DBPath}`
             {where_clause}
         """
         Logger.Log(f"Running query for dates from IDs:\n{query}", logging.DEBUG, depth=3)
@@ -192,12 +199,3 @@ class BigQueryInterface(DataInterface):
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
-
-    def _dbPath(self) -> str:
-        default_source : str = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-
-        db_name : str    = self._config.get("source", {}).get("DB_NAME") \
-                        or default_settings["GAME_SOURCES"][default_source]["DB_NAME"]
-        table_name : str = self._config.get("table") \
-                        or default_settings["GAME_SOURCE_MAP"][self._game_id]["table"]
-        return f"{db_name}.{table_name}"
