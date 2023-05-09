@@ -256,9 +256,6 @@ class MySQLInterface(DataInterface):
         self._is_open = False
         return True
 
-    def _loadTableSchema(self) -> TableSchema:
-        return TableSchema(schema_name=self._config.Schema)
-
     def _allIDs(self) -> List[str]:
         if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
             _db_name     : str = self._config.Source.DBName

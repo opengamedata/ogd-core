@@ -19,10 +19,6 @@ class DataInterface(Interface):
     # *** ABSTRACTS ***
 
     @abc.abstractmethod
-    def _loadTableSchema(self) -> TableSchema:
-        pass
-
-    @abc.abstractmethod
     def _allIDs(self) -> List[str]:
         pass
 
@@ -47,7 +43,7 @@ class DataInterface(Interface):
     def __init__(self, game_id:str, config:GameSourceSchema):
         super().__init__(config=config)
         self._game_id : str  = game_id
-        self._table_schema : TableSchema = self._loadTableSchema()
+        self._table_schema : TableSchema = TableSchema(schema_name=self._config.Schema)
 
     def __del__(self):
         self.Close()

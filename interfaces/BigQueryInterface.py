@@ -53,10 +53,6 @@ class BigQueryInterface(DataInterface):
         Logger.Log("Closed connection to BigQuery.", logging.DEBUG)
         return True
 
-    def _loadTableSchema(self, game_id:str) -> TableSchema:
-        _schema_name = self._config.get("schema") or default_settings['GAME_SOURCE_MAP'].get(game_id, {}).get('schema', "NO SCHEMA DEFINED")
-        return TableSchema(schema_name=_schema_name)
-
     def _allIDs(self) -> List[str]:
         query = f"""
             SELECT DISTINCT session_id
