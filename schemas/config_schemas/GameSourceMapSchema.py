@@ -2,7 +2,7 @@
 import logging
 from typing import Any, Dict, List, Optional, Union
 # import local files
-from schemas.config_schemas.DataSourceSchema import DataSourceSchema
+from schemas.config_schemas.data_sources.DataSourceSchema import DataSourceSchema
 from schemas.Schema import Schema
 from utils import Logger
 
