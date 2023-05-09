@@ -11,7 +11,6 @@ from typing import Any, Dict, List, Tuple, Optional, Union
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 ## import local files
 import utils
-from config.config import settings as default_settings
 from schemas.Event import Event, EventSource
 from schemas.tables.ColumnMapSchema import ColumnMapSchema
 from schemas.tables.ColumnSchema import ColumnSchema
@@ -211,14 +210,6 @@ class TableSchema:
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     # *** PUBLIC STATICS ***
-
-    @staticmethod
-    def FromID(game_id:str, settings:Optional[Dict[str, Any]]=None):
-        if settings is not None:
-            _table_name = settings["GAME_SOURCE_MAP"].get(game_id, {}).get("schema", "NO SCHEMA DEFINED")
-        else:
-            _table_name = default_settings["GAME_SOURCE_MAP"].get(game_id, {}).get("schema", "NO SCHEMA DEFINED")
-        return TableSchema(schema_name=f"{_table_name}.json")
 
     # *** PUBLIC METHODS ***
 
