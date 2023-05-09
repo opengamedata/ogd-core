@@ -3,7 +3,7 @@ import abc
 from typing import Any, Dict
 
 # import local files
-from schemas.IDMode import IDMode
+from schemas.config_schemas.data_sources.DataSourceSchema import DataSourceSchema
 
 class Interface(abc.ABC):
 
@@ -19,8 +19,8 @@ class Interface(abc.ABC):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, config:Dict[str,Any]):
-        self._config  : Dict[str, Any] = config
+    def __init__(self, config:DataSourceSchema):
+        self._config  : DataSourceSchema = config
         self._is_open : bool = False
 
     def __del__(self):

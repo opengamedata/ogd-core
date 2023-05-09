@@ -7,28 +7,12 @@ from datetime import datetime
 from typing import Any, Dict, List, Tuple, Optional
 # import locals
 from interfaces.DataInterface import DataInterface
-from config.config import settings as default_settings
 from schemas.IDMode import IDMode
 from schemas.TableSchema import TableSchema
+from schemas.config_schemas.GameSourceMapSchema import GameSourceMapElementSchema
+from schemas.config_schemas.data_sources.MySQLSourceSchema import MySQLSchema, SSHSchema
 from utils import Logger
 
-
-## Dumb struct to collect data used to establish a connection to a SQL database.
-class SQLLogin:
-    def __init__(self, host: str, port: int, db_name: str, user: str, pword: str):
-        self.host    = host
-        self.port    = port
-        self.db_name = db_name
-        self.user    = user
-        self.pword   = pword
- 
-## Dumb struct to collect data used to establish a connection over ssh.
-class SSHLogin:
-    def __init__(self, host: str, port: int, user: str, pword: str):
-        self.host    = host
-        self.port    = port
-        self.user    = user
-        self.pword   = pword
 
 ## @class SQL
 #  A utility class containing some functions to assist in retrieving from a database.
@@ -38,7 +22,7 @@ class SQL:
 
     # Function to set up a connection to a database, via an ssh tunnel if available.
     @staticmethod
-    def ConnectDB(db_settings:Dict[str,Any], ssh_settings:Optional[Dict[str,Any]]=None) -> Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]:
+    def ConnectDB(schema:MySQLSchema) -> Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]:
         """
         Function to set up a connection to a database, via an ssh tunnel if available.
 
@@ -51,37 +35,25 @@ class SQL:
         """
         tunnel  : Optional[sshtunnel.SSHTunnelForwarder] = None
         db_conn : Optional[connection.MySQLConnection]   = None
-        # Load settings, set up consts.
-        DB_HOST = db_settings['DB_HOST']
-        DB_NAME = db_settings["DB_NAME"]
-        DB_PORT = int(db_settings['DB_PORT'])
-        DB_USER = db_settings['DB_USER']
-        DB_PW = db_settings['DB_PW']
-        sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, db_name=DB_NAME, user=DB_USER, pword=DB_PW)
         # Logger.Log("Preparing database connection...", logging.INFO)
-        if ssh_settings is not None:
-            SSH_USER = ssh_settings['SSH_USER']
-            SSH_PW   = ssh_settings['SSH_PW']
-            SSH_HOST = ssh_settings['SSH_HOST']
-            SSH_PORT = ssh_settings['SSH_PORT']
-            Logger.Log(f"Preparing to connect to MySQL via SSH, on host {SSH_HOST}", level=logging.DEBUG)
-            if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
-                ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
-                tunnel,db_conn = SQL._connectToMySQLviaSSH(sql=sql_login, ssh=ssh_login)
+        if schema.HasSSH:
+            Logger.Log(f"Preparing to connect to MySQL via SSH, on host {schema.SSH.Host}", level=logging.DEBUG)
+            if (schema.SSH.Host != "" and schema.SSH.User != "" and schema.SSH.Pass != ""):
+                tunnel,db_conn = SQL._connectToMySQLviaSSH(sql=schema, ssh=schema.SSHConfig)
             else:
-                Logger.Log(f"SSH login had empty data, preparing to connect to MySQL directly instead, on host {DB_HOST}", level=logging.DEBUG)
-                db_conn = SQL._connectToMySQL(login=sql_login)
+                Logger.Log(f"SSH login had empty data, preparing to connect to MySQL directly instead, on host {schema.DBHost}", level=logging.DEBUG)
+                db_conn = SQL._connectToMySQL(login=schema)
                 tunnel = None
         else:
-            Logger.Log(f"Preparing to connect to MySQL directly, on host {DB_HOST}", level=logging.DEBUG)
-            db_conn = SQL._connectToMySQL(login=sql_login)
+            Logger.Log(f"Preparing to connect to MySQL directly, on host {schema.DBHost}", level=logging.DEBUG)
+            db_conn = SQL._connectToMySQL(login=schema)
             tunnel = None
         # Logger.Log("Done preparing database connection.", logging.INFO)
         return (tunnel, db_conn)
 
     # Function to help connect to a mySQL server.
     @staticmethod
-    def _connectToMySQL(login:SQLLogin) -> Optional[connection.MySQLConnection]:
+    def _connectToMySQL(login:MySQLSchema) -> Optional[connection.MySQLConnection]:
         """Function to help connect to a mySQL server.
 
         Simply tries to make a connection, and prints an error in case of failure.
@@ -91,16 +63,16 @@ class SQL:
         :rtype: Optional[connection.MySQLConnection]
         """
         try:
-            Logger.Log(f"Connecting to SQL (no SSH) at {login.user}@{login.host}:{login.port}/{login.db_name}...", logging.DEBUG)
-            db_conn = connection.MySQLConnection(host     = login.host,    port    = login.port,
-                                                 user     = login.user,    password= login.pword,
-                                                 database = login.db_name, charset = 'utf8')
+            Logger.Log(f"Connecting to SQL (no SSH) at {login.AsConnectionInfo}...", logging.DEBUG)
+            db_conn = connection.MySQLConnection(host     = login.DBHost,    port    = login.DBPort,
+                                                 user     = login.DBUser,    password= login.DBPass,
+                                                 database = login.DBName, charset = 'utf8')
             Logger.Log(f"Connected.", logging.DEBUG)
             return db_conn
         #except MySQLdb.connections.Error as err:
         except Exception as err:
             msg = f"""Could not connect to the MySql database.
-            Login info: host={login.host}, port={login.port} w/type={type(login.port)}, db={login.db_name}, user={login.user}.
+            Login info: {login.AsConnectionInfo} w/port type={type(login.DBPort)}.
             Full error: {type(err)} {str(err)}"""
             Logger.Log(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
@@ -108,7 +80,7 @@ class SQL:
 
     ## Function to help connect to a mySQL server over SSH.
     @staticmethod
-    def _connectToMySQLviaSSH(sql:SQLLogin, ssh:SSHLogin) -> Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]:
+    def _connectToMySQLviaSSH(sql:MySQLSchema, ssh:SSHSchema) -> Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]:
         """Function to help connect to a mySQL server over SSH.
 
         Simply tries to make a connection, and prints an error in case of failure.
@@ -130,10 +102,10 @@ class SQL:
             if tries > 0:
                 Logger.Log("Re-attempting to connect to SSH.", logging.INFO)
             try:
-                Logger.Log(f"Connecting to SSH at {ssh.user}@{ssh.host}:{ssh.port}...", logging.DEBUG)
+                Logger.Log(f"Connecting to SSH at {ssh.AsConnectionInfo}...", logging.DEBUG)
                 tunnel = sshtunnel.SSHTunnelForwarder(
-                    (ssh.host, ssh.port), ssh_username=ssh.user, ssh_password=ssh.pword,
-                    remote_bind_address=(sql.host, sql.port), logger=Logger.std_logger
+                    (ssh.Host, ssh.Port), ssh_username=ssh.User, ssh_password=ssh.Pass,
+                    remote_bind_address=(sql.DBHost, sql.DBPort), logger=Logger.std_logger
                 )
                 tunnel.start()
                 connected_ssh = True
@@ -147,10 +119,10 @@ class SQL:
         if connected_ssh == True and tunnel is not None:
             # Then, connect to MySQL
             try:
-                Logger.Log(f"Connecting to SQL (via SSH) at {sql.user}@{sql.host}:{tunnel.local_bind_port}/{sql.db_name}...", logging.DEBUG)
-                db_conn = connection.MySQLConnection(host     = sql.host,    port    = tunnel.local_bind_port,
-                                                     user     = sql.user,    password= sql.pword,
-                                                     database = sql.db_name, charset ='utf8')
+                Logger.Log(f"Connecting to SQL (via SSH) at {sql.DBUser}@{sql.DBHost}:{tunnel.local_bind_port}/{sql.DBName}...", logging.DEBUG)
+                db_conn = connection.MySQLConnection(host     = sql.DBHost,    port    = tunnel.local_bind_port,
+                                                     user     = sql.DBUser,    password= sql.DBPass,
+                                                     database = sql.DBName, charset ='utf8')
                 Logger.Log(f"Connected", logging.DEBUG)
                 return (tunnel, db_conn)
             except Exception as err:
@@ -244,7 +216,7 @@ class MySQLInterface(DataInterface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, config:Dict[str,Any]):
+    def __init__(self, game_id:str, config:MySQLSchema):
         self._tunnel    : Optional[sshtunnel.SSHTunnelForwarder] = None
         self._db        : Optional[connection.MySQLConnection] = None
         self._db_cursor : Optional[cursor.MySQLCursor] = None
@@ -259,19 +231,20 @@ class MySQLInterface(DataInterface):
             self.Open(force_reopen=False)
         if not self._is_open:
             start = datetime.now()
-            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-
-            _sql_cfg = self._config.get("source") or default_settings["GAME_SOURCES"][default_source]
-            _ssh_cfg = default_settings["SSH_CONFIG"]
-            self._tunnel, self._db = SQL.ConnectDB(db_settings=_sql_cfg, ssh_settings=_ssh_cfg)
-            if self._db is not None:
-                self._db_cursor = self._db.cursor()
-                self._is_open = True
-                time_delta = datetime.now() - start
-                Logger.Log(f"Database Connection Time: {time_delta}", logging.INFO)
-                return True
+            if isinstance(self._config, MySQLSchema):
+                self._tunnel, self._db = SQL.ConnectDB(schema=self._config)
+                if self._db is not None:
+                    self._db_cursor = self._db.cursor()
+                    self._is_open = True
+                    time_delta = datetime.now() - start
+                    Logger.Log(f"Database Connection Time: {time_delta}", logging.INFO)
+                    return True
+                else:
+                    Logger.Log(f"Unable to open MySQL interface.", logging.ERROR)
+                    SQL.disconnectMySQL(tunnel=self._tunnel, db=self._db)
+                    return False
             else:
-                Logger.Log(f"Unable to open MySQL interface.", logging.ERROR)
+                Logger.Log(f"Unable to open MySQL interface, the schema has invalid type {type(self._config)}", logging.ERROR)
                 SQL.disconnectMySQL(tunnel=self._tunnel, db=self._db)
                 return False
         else:
@@ -284,6 +257,7 @@ class MySQLInterface(DataInterface):
         return True
 
     def _loadTableSchema(self, game_id:str) -> TableSchema:
+        _schema_name = self._config.
         _schema_name = self._config.get("schema") or default_settings['GAME_SOURCE_MAP'].get(game_id, {}).get('schema', "NO SCHEMA DEFINED")
         return TableSchema(schema_name=_schema_name)
 
