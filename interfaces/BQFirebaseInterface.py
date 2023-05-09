@@ -2,15 +2,11 @@ import json
 import logging
 import os
 from datetime import datetime
-from google.cloud import bigquery
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional
 # import locals
-from config.config import settings as default_settings
 from interfaces.BigQueryInterface import BigQueryInterface
 from schemas.IDMode import IDMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
-from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
-from schemas.tables.TableSchema import TableSchema
 from utils import Logger
 
 AQUALAB_MIN_VERSION = 6.2
@@ -21,8 +17,8 @@ class BQFirebaseInterface(BigQueryInterface):
 
     # *** BUILT-INS ***
 
-    def __init__(self, game_id:str, config:GameSourceSchema):
-        super().__init__(game_id=game_id, config=config)
+    def __init__(self, game_id:str, config:GameSourceSchema, fail_fast:bool):
+        super().__init__(game_id=game_id, config=config, fail_fast=fail_fast)
         self.Open()
 
     # *** RE-IMPLEMENT ABSTRACT FUNCTIONS ***

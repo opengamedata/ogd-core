@@ -216,11 +216,11 @@ class MySQLInterface(DataInterface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, config:GameSourceSchema):
+    def __init__(self, game_id:str, config:GameSourceSchema, fail_fast:bool):
         self._tunnel    : Optional[sshtunnel.SSHTunnelForwarder] = None
         self._db        : Optional[connection.MySQLConnection] = None
         self._db_cursor : Optional[cursor.MySQLCursor] = None
-        super().__init__(game_id=game_id, config=config)
+        super().__init__(game_id=game_id, config=config, fail_fast=fail_fast)
         self.Open()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

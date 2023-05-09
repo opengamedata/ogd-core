@@ -15,11 +15,11 @@ class CSVInterface(DataInterface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, config:GameSourceSchema, filepath:Path, delim:str = ','):
+    def __init__(self, game_id:str, config:GameSourceSchema, fail_fast:bool, filepath:Path, delim:str = ','):
         # set up data from params
         self._filepath  : Path = filepath
         self._delimiter : str = delim
-        super().__init__(game_id=game_id, config=config)
+        super().__init__(game_id=game_id, config=config, fail_fast=fail_fast)
         # set up data from file
         self._data      : pd.DataFrame = pd.DataFrame()
         self.Open()
