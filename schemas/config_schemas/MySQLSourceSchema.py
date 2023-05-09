@@ -123,10 +123,6 @@ class MySQLSchema(DataSourceSchema):
         self._db_user  : str
         self._db_pass  : Optional[str]
         self._ssh_cfg  : SSHSchema
-        # self._ssh_host : Optional[str]
-        # self._ssh_port : Optional[int]
-        # self._ssh_user : Optional[str]
-        # self._ssh_pass : Optional[str]
 
         if not isinstance(all_elements, dict):
             all_elements = {}
