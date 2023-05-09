@@ -20,19 +20,20 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.ExportMode import ExportMode
 from schemas.GameSchema import GameSchema
 from schemas.TableSchema import TableSchema
+from schemas.config_schemas.IndexingSchema import FileIndexingSchema
 from utils import Logger, ExportRow
 
 class TSVOuterface(DataOuterface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], file_indexing:Dict[str,str], extension:str="tsv", dataset_id:Optional[str]=None):
+    def __init__(self, game_id:str, export_modes:Set[ExportMode], date_range:Dict[str,Optional[datetime]], file_indexing:FileIndexingSchema, extension:str="tsv", dataset_id:Optional[str]=None):
         super().__init__(game_id=game_id, export_modes=export_modes, config={})
         self._file_paths    : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
         self._zip_paths     : Dict[str,Optional[Path]] = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
         self._files         : Dict[str,Optional[IO]]   = {"population":None, "players":None, "sessions":None, "processed_events":None, "raw_events":None}
-        self._file_indexing : Dict[str, str]           = file_indexing
-        self._data_dir      : Path = Path(f"./{self._file_indexing.get('LOCAL_DIR', './')}")
+        self._file_indexing : FileIndexingSchema       = file_indexing
+        self._data_dir      : Path = Path(f"./{self._file_indexing.LocalDirectory}")
         self._game_data_dir : Path = self._data_dir / self._game_id
         self._readme_path   : Path = self._game_data_dir / "readme.md"
         self._extension     : str  = extension
@@ -531,8 +532,8 @@ class TSVOuterface(DataOuterface):
             if not "CONFIG" in file_index.keys():
                 Logger.Log(f"No CONFIG found in file_list.json, adding default CONFIG...", logging.WARNING)
                 file_index["CONFIG"] = {
-                    "files_base" : self._file_indexing.get("REMOTE_URL", None),
-                    "templates_base" : self._file_indexing.get("TEMPLATES_URL", None)
+                    "files_base" : self._file_indexing.RemoteURL,
+                    "templates_base" : self._file_indexing.TemplatesURL
                 }
             if not self._game_id in file_index.keys():
                 file_index[self._game_id] = {}
