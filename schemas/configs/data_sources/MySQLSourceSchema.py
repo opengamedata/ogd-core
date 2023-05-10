@@ -119,7 +119,6 @@ class MySQLSchema(DataSourceSchema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):
         self._db_host  : str
         self._db_port  : int
-        self._db_name  : str
         self._db_user  : str
         self._db_pass  : Optional[str]
         self._ssh_cfg  : SSHSchema
@@ -138,11 +137,6 @@ class MySQLSchema(DataSourceSchema):
         else:
             self._db_port = 3306
             Logger.Log(f"{name} config does not have a 'DB_PORT' element; defaulting to db_port={self._db_port}", logging.WARN)
-        if "DB_NAME" in all_elements.keys():
-            self._db_name = MySQLSchema._parseDBName(all_elements["DB_NAME"])
-        else:
-            self._db_name = name
-            Logger.Log(f"{name} config does not have a 'DB_NAME' element; defaulting to db_name={self._db_name}", logging.WARN)
         if "DB_USER" in all_elements.keys():
             self._db_user = MySQLSchema._parseDBUser(all_elements["DB_USER"])
         else:
@@ -159,7 +153,7 @@ class MySQLSchema(DataSourceSchema):
         _ssh_keys = {"SSH_HOST", "SSH_PORT", "SSH_USER", "SSH_PW", "SSH_PASS"}
         self._ssh_cfg = SSHSchema(name=f"{name}-SSH", all_elements={ key : all_elements.get(key) for key in _ssh_keys.intersection(all_elements.keys()) })
 
-        _used = {"DB_HOST", "DB_PORT", "DB_NAME", "DB_USER", "DB_PW", "DB_PASS", "SSH_HOST", "SSH_PORT", "SSH_USER", "SSH_PW", "SSH_PASS"}
+        _used = {"DB_HOST", "DB_PORT", "DB_USER", "DB_PW", "DB_PASS", "SSH_HOST", "SSH_PORT", "SSH_USER", "SSH_PW", "SSH_PASS"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
@@ -170,10 +164,6 @@ class MySQLSchema(DataSourceSchema):
     @property
     def DBPort(self) -> int:
         return self._db_port
-
-    @property
-    def DBName(self) -> str:
-        return self._db_name
 
     @property
     def DBUser(self) -> str:
@@ -236,16 +226,6 @@ class MySQLSchema(DataSourceSchema):
         else:
             ret_val = int(db_port)
             Logger.Log(f"MySQL Data Source DB port was unexpected type {type(db_port)}, defaulting to int(db_port)={ret_val}.", logging.WARN)
-        return ret_val
-
-    @staticmethod
-    def _parseDBName(db_name) -> str:
-        ret_val : str
-        if isinstance(db_name, str):
-            ret_val = db_name
-        else:
-            ret_val = str(db_name)
-            Logger.Log(f"MySQL Data Source DB name was unexpected type {type(db_name)}, defaulting to str(db_name)={ret_val}.", logging.WARN)
         return ret_val
 
     @staticmethod

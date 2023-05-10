@@ -9,18 +9,12 @@ from utils import Logger
 
 class BigQuerySchema(DataSourceSchema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):
-        self._project_id : str
         self._dataset_id : str
         self._credential : Optional[str]
 
         if not isinstance(all_elements, dict):
             all_elements = {}
             Logger.Log(f"For {name} Game Source config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
-        if "PROJECT_ID" in all_elements.keys():
-            self._project_id = BigQuerySchema._parseProjectID(all_elements["PROJECT_ID"])
-        else:
-            self._project_id = "UNKNOWN"
-            Logger.Log(f"{name} config does not have a 'PROJECT_ID' element; defaulting to project_id={self._project_id}", logging.WARN)
         if "DATASET_ID" in all_elements.keys():
             self._dataset_id = BigQuerySchema._parseDatasetID(all_elements["DATASET_ID"])
         else:
@@ -37,10 +31,6 @@ class BigQuerySchema(DataSourceSchema):
         super().__init__(name=name, other_elements=_leftovers)
 
     @property
-    def ProjectID(self) -> str:
-        return self._project_id
-
-    @property
     def DatasetID(self) -> str:
         return self._dataset_id
 
@@ -52,17 +42,7 @@ class BigQuerySchema(DataSourceSchema):
     def AsMarkdown(self) -> str:
         ret_val : str
 
-        ret_val = f"{self.Name}: `{self.ProjectID}.{self.DatasetID}` ({self.Type})"
-        return ret_val
-
-    @staticmethod
-    def _parseProjectID(proj_id) -> str:
-        ret_val : str
-        if isinstance(proj_id, str):
-            ret_val = proj_id
-        else:
-            ret_val = str(proj_id)
-            Logger.Log(f"Data Source project ID was unexpected type {type(proj_id)}, defaulting to str(proj_id)={ret_val}.", logging.WARN)
+        ret_val = f"{self.Name}: `{self.DBName}.{self.DatasetID}` ({self.Type})"
         return ret_val
 
     @staticmethod
