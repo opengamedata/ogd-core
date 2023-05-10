@@ -1,12 +1,8 @@
 # import standard libraries
 import abc
-import logging
-from typing import Any, Dict, Optional, Type
+from typing import Any, Dict
 # import local files
 from schemas.Schema import Schema
-from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
-from schemas.configs.data_sources.FileSourceSchema import FileSourceSchema
-from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
 
 class DataSourceSchema(Schema):
     def __init__(self, name:str, other_elements:Dict[str, Any]):
