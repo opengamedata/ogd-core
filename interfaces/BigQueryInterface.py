@@ -216,7 +216,7 @@ class BigQueryInterface(DataInterface):
         # will need to really rethink this when we start using new system.
         # Still, not a huge deal because most of these will be rewritten at that time anyway.
         query = f"""
-            SELECT session_id, user_id, user_data, client_time, client_offset, server_time, event_name, event_data, event_source, game_state, app_version, app_branch, log_version, event_sequence_index
+            SELECT *
             FROM `{self.DBPath()}`
             {where_clause}
             ORDER BY `user_id`, `session_id`, `server_time` ASC
