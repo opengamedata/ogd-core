@@ -24,9 +24,8 @@ class DataSourceSchema(Schema):
         super().__init__(name=name, other_elements=_leftovers)
 
     @property
-    @abc.abstractmethod
     def Type(self) -> str:
-        pass
+        return self._db_type
 
     @staticmethod
     def _parseDBType(db_type) -> str:

@@ -37,10 +37,6 @@ class BigQuerySchema(DataSourceSchema):
         super().__init__(name=name, other_elements=_leftovers)
 
     @property
-    def Type(self) -> str:
-        return "BigQuery"
-
-    @property
     def ProjectID(self) -> str:
         return self._project_id
 

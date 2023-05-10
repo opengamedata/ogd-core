@@ -12,10 +12,6 @@ class FileSourceSchema(DataSourceSchema):
         super().__init__(name=name, other_elements=all_elements)
 
     @property
-    def Type(self) -> str:
-        return "File"
-
-    @property
     def AsMarkdown(self) -> str:
         ret_val : str
 

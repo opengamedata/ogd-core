@@ -164,10 +164,6 @@ class MySQLSchema(DataSourceSchema):
         super().__init__(name=name, other_elements=_leftovers)
 
     @property
-    def Type(self) -> str:
-        return "MySQL"
-
-    @property
     def DBHost(self) -> str:
         return self._db_host
 
