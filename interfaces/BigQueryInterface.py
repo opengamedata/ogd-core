@@ -92,33 +92,6 @@ class BigQueryInterface(DataInterface):
                 events.append(tuple(event))
         return events if events != None else []
 
-    def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode) -> str:
-        id_clause : str = ""
-        id_string = ','.join([f"'{x}'" for x in id_list])
-        if id_mode == IDMode.SESSION:
-            id_clause = f"session_id IN ({id_string})"
-        elif id_mode == IDMode.USER:
-            id_clause  = f"user_id IN ({id_string})"
-        else:
-            Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
-            id_clause = f"session_id IN ({id_string})"
-        # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
-        where_clause = f"""
-            WHERE {id_clause}
-        """
-        # 4) Set up actual query
-        # TODO Order by user_id, and by timestamp within that.
-        # Note that this could prove to be wonky when we have more games without user ids,
-        # will need to really rethink this when we start using new system.
-        # Still, not a huge deal because most of these will be rewritten at that time anyway.
-        query = f"""
-            SELECT session_id, user_id, user_data, client_time, client_offset, server_time, event_name, event_data, event_source, game_state, app_version, app_branch, log_version, event_sequence_index
-            FROM `{self.DBPath()}`
-            {where_clause}
-            ORDER BY `user_id`, `session_id`, `server_time` ASC
-        """
-        return query
-
     def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]] = None) -> List[str]:
         ret_val = []
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
@@ -223,3 +196,30 @@ class BigQueryInterface(DataInterface):
         return ret_val
 
     # *** PRIVATE METHODS ***
+
+    def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode) -> str:
+        id_clause : str = ""
+        id_string = ','.join([f"'{x}'" for x in id_list])
+        if id_mode == IDMode.SESSION:
+            id_clause = f"session_id IN ({id_string})"
+        elif id_mode == IDMode.USER:
+            id_clause  = f"user_id IN ({id_string})"
+        else:
+            Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
+            id_clause = f"session_id IN ({id_string})"
+        # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
+        where_clause = f"""
+            WHERE {id_clause}
+        """
+        # 4) Set up actual query
+        # TODO Order by user_id, and by timestamp within that.
+        # Note that this could prove to be wonky when we have more games without user ids,
+        # will need to really rethink this when we start using new system.
+        # Still, not a huge deal because most of these will be rewritten at that time anyway.
+        query = f"""
+            SELECT session_id, user_id, user_data, client_time, client_offset, server_time, event_name, event_data, event_source, game_state, app_version, app_branch, log_version, event_sequence_index
+            FROM `{self.DBPath()}`
+            {where_clause}
+            ORDER BY `user_id`, `session_id`, `server_time` ASC
+        """
+        return query
