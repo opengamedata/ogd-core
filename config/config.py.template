@@ -12,9 +12,10 @@ settings = {
     "GAME_SOURCES" :
     {
         "AQUALAB_BQ" : {
-            "DB_TYPE"    : "BIGQUERY",
+            "DB_TYPE"    : "FIREBASE",
             "PROJECT_ID" : "aqualab-57f88",
             "DATASET_ID" : "analytics_271167280",
+            "PROJECT_KEY": "./config/aqualab.json"
         },
         "MASHOPOLIS_BQ": {
             "DB_TYPE"    : "BIGQUERY",
@@ -22,12 +23,12 @@ settings = {
             "DATASET_ID" : "analytics_302498821",
         },
         "SHADOWSPECT_BQ": {
-            "DB_TYPE"    : "BIGQUERY",
+            "DB_TYPE"    : "FIREBASE",
             "PROJECT_ID" : "shadowspect-b8e63",
             "DATASET_ID" : "analytics_284091572",
         },
         "SHIPWRECKS_BQ": {
-            "DB_TYPE"    : "BIGQUERY",
+            "DB_TYPE"    : "FIREBASE",
             "PROJECT_ID" : "shipwrecks-8d142",
             "DATASET_ID" : "analytics_269167605",
         },
