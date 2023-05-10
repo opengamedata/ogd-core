@@ -210,11 +210,11 @@ class BigQueryInterface(DataInterface):
     def _datesWildcard(a:date, b:date) -> str:
         ret_val = "*"
         if a.year == b.year:
-            ret_val = str(a.year)
+            ret_val = str(a.year).rjust(4, "0")
             if a.month == b.month:
-                ret_val += str(a.month)
+                ret_val += str(a.month).rjust(2, "0")
                 if a.day == b.month:
-                    ret_val += str(a.day)
+                    ret_val += str(a.day).rjust(2, "0")
                 else:
                     ret_val += "*"
             else:
