@@ -166,19 +166,17 @@ class BQFirebaseInterface(BigQueryInterface):
             player_clause  = f"(param_user.key   = 'user_code' OR param_user.key = 'undefined')"
         # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
         if self._game_id == "AQUALAB":
-            where_clause = f"""
-                WHERE param_app_version.key = 'app_version'
+            where_clause = \
+            f"""WHERE param_app_version.key = 'app_version'
                 AND   param_log_version.key = 'log_version'
                 AND   {session_clause}
-                AND   {player_clause}
-            """
+                AND   {player_clause}"""
         else:
-            where_clause = f"""
-                WHERE param_app_version.key = 'app_version'
+            where_clause = \
+            f"""WHERE param_app_version.key = 'app_version'
                 AND   param_log_version.key = 'log_version'
                 {session_clause}
-                {player_clause}
-            """
+                {player_clause}"""
         # 4) Set up actual query
         query = ""
         if self._game_id == "SHIPWRECKS":

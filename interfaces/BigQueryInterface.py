@@ -208,9 +208,8 @@ class BigQueryInterface(DataInterface):
             Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
             id_clause = f"session_id IN ({id_string})"
         # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
-        where_clause = f"""
-            WHERE {id_clause}
-        """
+        where_clause = f" WHERE {id_clause}"
+
         # 4) Set up actual query
         # TODO Order by user_id, and by timestamp within that.
         # Note that this could prove to be wonky when we have more games without user ids,
