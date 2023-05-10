@@ -82,7 +82,7 @@ class EventList(Feature):
             }
 
             if event.EventName == "scene_changed":
-                next_event['scene_name'] = event.EventData['scene_name']['string_value']
+                next_event['scene_name'] = event.EventData['scene_name']
 
             if event.EventName in self._details_map:
                 param_name = self._details_map[event.EventName][0]

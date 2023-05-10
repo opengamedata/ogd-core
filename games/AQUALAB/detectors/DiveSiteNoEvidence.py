@@ -36,7 +36,7 @@ class DiveSiteNoEvidence(Detector):
             # as soon as scene changes, reset state.
             self._has_triggered = False
             self._time_since_evidence = 0
-            scene : str = event.EventData['scene_name']['string_value']
+            scene : str = event.EventData['scene_name']
             if scene.startswith("RS-"):
                 self._in_dive = True
                 # if we just started a dive, use now as starting point for counting time without evidence.

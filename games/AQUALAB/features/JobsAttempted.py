@@ -62,7 +62,7 @@ class JobsAttempted(Feature):
 
         if self._validate_job(event.EventData['job_name']):
             user_code = event.UserID
-            job_name = event.EventData["job_name"]["string_value"]
+            job_name = event.EventData["job_name"]
             job_id = self._job_map[job_name]
 
             if event.EventName == "accept_job" and job_id == self._job_id:
@@ -132,7 +132,7 @@ class JobsAttempted(Feature):
     # *** Other local functions
     def _validate_job(self, job_data):
         ret_val : bool = False
-        if job_data['string_value'] and job_data['string_value'] in self._job_map:
+        if job_data and job_data in self._job_map:
             ret_val = True
         else:
             Logger.Log(f"Got invalid job_name data in JobsAttempted", logging.WARNING)

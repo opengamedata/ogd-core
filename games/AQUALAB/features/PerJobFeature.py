@@ -17,7 +17,7 @@ class PerJobFeature(PerCountFeature):
     def _validateEventCountIndex(self, event:Event):
         ret_val : bool = False
 
-        job_data = event.EventData["job_name"]['string_value']
+        job_data = event.EventData["job_name"]
         if job_data is not None:
             if job_data in self._job_map and self._job_map[job_data] == self.CountIndex:
                 ret_val = True

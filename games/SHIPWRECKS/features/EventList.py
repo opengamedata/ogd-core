@@ -37,8 +37,8 @@ class EventList(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.EventName == "checkpoint" and event.EventData["status"]["string_value"] == "Begin Mission":
-            self._mission_id = event.EventData["mission_id"]["string_value"]
+        if event.EventName == "checkpoint" and event.EventData["status"] == "Begin Mission":
+            self._mission_id = event.EventData["mission_id"]
 
         next_event = {
             "name": event.EventName,

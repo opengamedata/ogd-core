@@ -27,7 +27,7 @@ class FunnelByUser(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.EventName in ["start_level", "puzzle_started"]:
-            self._level = event.EventData["task_id"]["string_value"]
+            self._level = event.EventData["task_id"]
 
             if self._level not in self._userFunnelDict.keys():
                 self._userFunnelDict[self._level] = json.loads('{"started": 0, "create_shape": 0, "submitted": 0, "completed": 0}')
