@@ -17,16 +17,15 @@ class LegacyConfigSchema(Schema):
             Logger.Log(f"For {name} base config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if "DATA_DIR" in all_elements.keys():
             self._data_dir = LegacyConfigSchema._parseDataDir(all_elements["DATA_DIR"])
+            Logger.Log(f"Found DATA_DIR legacy item in config file.", logging.INFO)
         else:
             self._data_dir = Path("./data/")
-            # No need to warn if outdated DATA_DIR does not exist.
-            # Logger.Log(f"{name} config does not have a 'DATA_DIR' element; defaulting to data_dir={self._data_dir}", logging.WARN)
         if "SSH_CONFIG" in all_elements.keys():
             self._ssh_config = LegacyConfigSchema._parseSSHConfig(all_elements["SSH_CONFIG"])
+            Logger.Log(f"Found SSH_CONFIG legacy item in config file.", logging.INFO)
         else:
             self._ssh_config = SSHSchema(name="SSH_CONFIG", all_elements={})
-            Logger.Log(f"{name} config does not have a 'SSH_CONFIG' element; defaulting to ssh_config={self._ssh_config}", logging.WARN)
-
+# 
         _used = {"DATA_DIR", "SSH_CONFIG"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
