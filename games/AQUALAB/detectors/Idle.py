@@ -50,7 +50,7 @@ class Idle(Detector):
         :param event: _description_
         :type event: Event
         """
-        if event.EventName == "script_fired" and ("somethingLeft" or "nothingLeft") in event.EventData.get("node_id", {}).get("string_value", ""):
+        if event.EventName == "script_fired" and ("somethingLeft" or "nothingLeft") in event.EventData.get("node_id", ""):
             return
         if self._sess_id == "Unknown":
             self._sess_id = event.SessionID
