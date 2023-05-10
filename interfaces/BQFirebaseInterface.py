@@ -30,7 +30,7 @@ class BQFirebaseInterface(BigQueryInterface):
             UNNEST(event_params) AS param
             WHERE param.key = "ga_session_id"
         """
-        Logger.Log(f"Running query for all ids:\n{query}", logging.DEBUG, depth=3)
+        Logger.Log(f"BQ-Firebase: Running query for all ids:\n{query}", logging.DEBUG, depth=3)
         data = self._client.query(query)
         ids = [str(row['session_id']) for row in data]
         return ids if ids != None else []
@@ -47,7 +47,7 @@ class BQFirebaseInterface(BigQueryInterface):
             SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
             FROM datetable
         """
-        Logger.Log(f"Running query for full date range:\n{query}", logging.DEBUG, depth=3)
+        Logger.Log(f"BQ-Firebase: Running query for full date range:\n{query}", logging.DEBUG, depth=3)
         data = list(self._client.query(query))
         return {'min':data[0][0], 'max':data[0][1]}
 
@@ -56,7 +56,7 @@ class BQFirebaseInterface(BigQueryInterface):
         events = None
         if self._client != None:
             query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode)
-            Logger.Log(f"Running query for rows from IDs:\n{query}", logging.DEBUG, depth=3)
+            Logger.Log(f"BQ-Firebase: Running query for rows from IDs:\n{query}", logging.DEBUG, depth=3)
             data = self._client.query(query)
             events = []
             for row in data:
@@ -85,7 +85,7 @@ class BQFirebaseInterface(BigQueryInterface):
             session_clause = f"AND   param_session.key = 'ga_session_id'"
             player_clause  = f"AND   (param_user.key   = 'user_code' OR param_user.key = 'undefined') AND param_user.value.string_value IN ({id_string})"
         else:
-            Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
+            Logger.Log(f"BQ-Firebase: Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
             id_string = ','.join([f"{x}" for x in id_list])
             session_clause = f"AND   param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
             player_clause  = f"AND   (param_user.key   = 'user_code' OR param_user.key = 'undefined')"
@@ -148,7 +148,7 @@ class BQFirebaseInterface(BigQueryInterface):
             WHERE param.key = "ga_session_id"
             AND _TABLE_SUFFIX BETWEEN '{str_min}' AND '{str_max}'
         """
-        Logger.Log(f"Running query for ids from dates:\n{query}", logging.DEBUG, depth=3)
+        Logger.Log(f"BQ-Firebase: Running query for ids from dates:\n{query}", logging.DEBUG, depth=3)
         data = self._client.query(query)
         ids = [str(row['session_id']) for row in data]
         if ids is not None:
@@ -188,7 +188,7 @@ class BQFirebaseInterface(BigQueryInterface):
             UNNEST(event_params) AS param
             {where_clause}
         """
-        Logger.Log(f"Running query for dates from IDs:\n{query}", logging.DEBUG, depth=3)
+        Logger.Log(f"BQ-Firebase: Running query for dates from IDs:\n{query}", logging.DEBUG, depth=3)
         data = list(self._client.query(query))
         ret_val : Dict[str, datetime] = {}
         if len(data) == 1:
@@ -199,7 +199,7 @@ class BQFirebaseInterface(BigQueryInterface):
                 Logger.Log(f"BQFirebaseInterface query did not give both a min and a max, setting both to 'now'", logging.WARNING, depth=3)
                 ret_val = {'min':datetime.now(), 'max':datetime.now()}
         else:
-            Logger.Log(f"BQFirebaseInterface query did not return any results, setting both min and max to 'now'", logging.WARNING, depth=3)
+            Logger.Log(f"BQ-Firebase: Query did not return any results, setting both min and max to 'now'", logging.WARNING, depth=3)
             ret_val = {'min':datetime.now(), 'max':datetime.now()}
         return ret_val
 
