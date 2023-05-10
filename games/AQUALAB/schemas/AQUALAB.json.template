@@ -31,9 +31,29 @@
         "receive_fact": {
             "description": "N/A",
             "event_data": {
+                "fact_entity": {
+                    "type": "str",
+                    "description": "The entity (e.g. species) with which the fact is associated"
+                },
                 "fact_id": {
-                    "type": null,
+                    "type": "str",
                     "description": "Unique ID for the given fact"
+                },
+                "fact_rate": {
+                    "type": "bool",
+                    "description": "Whether the fact is a... rate fact? I don't really get this one..."
+                },
+                "fact_stressed": {
+                    "type": "bool",
+                    "description": ""
+                },
+                "fact_type": {
+                    "type": "str",
+                    "description": "The type of fact"
+                },
+                "has_rate": {
+                    "type": "bool",
+                    "description": "Whether the fact... has a rate? We need better naming of things I guess..."
                 }
             }
         },
@@ -41,7 +61,7 @@
             "description": "N/A",
             "event_data": {
                 "entity_id": {
-                    "type": null,
+                    "type": "str",
                     "description": "Unique ID for the given entity"
                 }
             }
@@ -86,7 +106,7 @@
             "description": "N/A",
             "event_data": {
                 "site_id": {
-                    "type": null,
+                    "type": "str",
                     "description": "ID of the dive site"
                 }
             }
@@ -95,7 +115,7 @@
             "description": "N/A",
             "event_data": {
                 "node_id": {
-                    "type": null,
+                    "type": "str",
                     "description": "Scripting ID for the hint response"
                 }
             }
@@ -104,7 +124,7 @@
             "description": "N/A",
             "event_data": {
                 "node_id": {
-                    "type": null,
+                    "type": "str",
                     "description": "Scripting ID for the guide's response"
                 }
             }
@@ -113,7 +133,7 @@
             "description": "N/A",
             "event_data": {
                 "node_id": {
-                    "type": null,
+                    "type": "str",
                     "description": "ID of a given script node"
                 }
             }
@@ -142,7 +162,7 @@
             "description": "N/A",
             "event_data": {
                 "species_id": {
-                    "type": null,
+                    "type": "str",
                     "description": "ID of the selected species"
                 }
             }
@@ -151,7 +171,7 @@
             "description": "N/A",
             "event_data": {
                 "environment_id": {
-                    "type": null,
+                    "type": "str",
                     "description": "ID of the selected environment"
                 }
             }
@@ -160,7 +180,7 @@
             "description": "N/A",
             "event_data": {
                 "model_id": {
-                    "type": null,
+                    "type": "str",
                     "description": "ID of the selected model"
                 }
             }
@@ -204,7 +224,7 @@
             "description": "N/A",
             "event_data": {
                 "phase": {
-                    "type": null,
+                    "type": "str",
                     "description": "The selected modeling phase"
                 }
             }
@@ -213,7 +233,7 @@
             "description": "N/A",
             "event_data": {
                 "ecosystem": {
-                    "type": null,
+                    "type": "str",
                     "description": "Ecosystem selected for modeling"
                 }
             }
@@ -222,7 +242,7 @@
             "description": "N/A",
             "event_data": {
                 "ecosystem": {
-                    "type": null,
+                    "type": "str",
                     "description": "Ecosystem selected for modeling"
                 }
             }
@@ -231,11 +251,11 @@
             "description": "N/A",
             "event_data": {
                 "ecosystem": {
-                    "type": null,
+                    "type": "str",
                     "description": "Ecosystem selected for modeling"
                 },
                 "status": {
-                    "type": null,
+                    "type": "str",
                     "description": "Updated status of the concept model"
                 }
             }
@@ -244,7 +264,7 @@
             "description": "N/A",
             "event_data": {
                 "ecosystem": {
-                    "type": null,
+                    "type": "str",
                     "description": "Ecosystem selected for modeling"
                 }
             }
@@ -253,7 +273,7 @@
             "description": "N/A",
             "event_data": {
                 "ecosystem": {
-                    "type": null,
+                    "type": "str",
                     "description": "Ecosystem selected for modeling"
                 }
             }
@@ -262,11 +282,11 @@
             "description": "N/A",
             "event_data": {
                 "ecosystem": {
-                    "type": null,
+                    "type": "str",
                     "description": "Ecosystem selected for modeling"
                 },
                 "sync": {
-                    "type": null,
+                    "type": "int",
                     "description": "Sync % achieved with the current model"
                 }
             }
@@ -275,7 +295,7 @@
             "description": "N/A",
             "event_data": {
                 "ecosystem": {
-                    "type": null,
+                    "type": "str",
                     "description": "Ecosystem selected for modeling"
                 }
             }
@@ -284,7 +304,7 @@
             "description": "N/A",
             "event_data": {
                 "ecosystem": {
-                    "type": null,
+                    "type": "str",
                     "description": "Ecosystem selected for modeling"
                 }
             }
@@ -293,11 +313,11 @@
             "description": "N/A",
             "event_data": {
                 "ecosystem": {
-                    "type": null,
+                    "type": "str",
                     "description": "Ecosystem selected for modeling"
                 },
                 "organism": {
-                    "type": null,
+                    "type": "str",
                     "description": "The organism having its population modified by the player"
                 },
                 "difference_value": {
@@ -310,7 +330,7 @@
             "description": "N/A",
             "event_data": {
                 "ecosystem": {
-                    "type": null,
+                    "type": "str",
                     "description": "Ecosystem selected for modeling"
                 }
             }
@@ -319,7 +339,7 @@
             "description": "N/A",
             "event_data": {
                 "ecosystem": {
-                    "type": null,
+                    "type": "str",
                     "description": "Ecosystem selected for modeling"
                 }
             }
@@ -328,11 +348,11 @@
             "description": "N/A",
             "event_data": {
                 "phase": {
-                    "type": null,
+                    "type": "str",
                     "description": "The selected modeling phase upon leaving"
                 },
                 "ecosystem": {
-                    "type": null,
+                    "type": "str",
                     "description": "The selected ecosystem upon leaving"
                 }
             }
@@ -341,11 +361,11 @@
             "description": "N/A",
             "event_data": {
                 "item_id": {
-                    "type": null,
+                    "type": "str",
                     "description": "ID of the purchased item"
                 },
                 "item_name": {
-                    "type": null,
+                    "type": "str",
                     "description": "String name of the purchased item"
                 },
                 "cost": {
@@ -358,7 +378,7 @@
             "description": "N/A",
             "event_data": {
                 "item_id": {
-                    "type": null,
+                    "type": "str",
                     "description": "ID of the item"
                 },
                 "item_name": {
@@ -380,11 +400,11 @@
             "description": "N/A",
             "event_data": {
                 "tank_type": {
-                    "type": null,
+                    "type": "str",
                     "description": "Selected tank type for the experiment"
                 },
                 "environment": {
-                    "type": null,
+                    "type": "str",
                     "description": "Name of the added environment"
                 }
             }
@@ -393,11 +413,11 @@
             "description": "N/A",
             "event_data": {
                 "tank_type": {
-                    "type": null,
+                    "type": "str",
                     "description": "Selected tank type for the experiment"
                 },
                 "environment": {
-                    "type": null,
+                    "type": "str",
                     "description": "Name of the removed environment"
                 }
             }
@@ -406,15 +426,15 @@
             "description": "N/A",
             "event_data": {
                 "tank_type": {
-                    "type": null,
+                    "type": "str",
                     "description": "Selected tank type for the experiment"
                 },
                 "environment": {
-                    "type": null,
+                    "type": "str",
                     "description": "Selected environment for the experiment"
                 },
                 "critter": {
-                    "type": null,
+                    "type": "str",
                     "description": "Name of the critter added to the tank"
                 }
             }
@@ -423,15 +443,15 @@
             "description": "N/A",
             "event_data": {
                 "tank_type": {
-                    "type": null,
+                    "type": "str",
                     "description": "Selected tank type for the experiment"
                 },
                 "environment": {
-                    "type": null,
+                    "type": "str",
                     "description": "Selected environment for the experiment"
                 },
                 "critter": {
-                    "type": null,
+                    "type": "str",
                     "description": "Name of the critter removed from the tank"
                 }
             }
@@ -440,15 +460,15 @@
             "description": "N/A",
             "event_data": {
                 "tank_type": {
-                    "type": null,
+                    "type": "str",
                     "description": "Selected tank type for the experiment"
                 },
                 "environment": {
-                    "type": null,
+                    "type": "str",
                     "description": "Selected environment for the experiment"
                 },
                 "critters": {
-                    "type": null,
+                    "type": "str",
                     "description": "Comma separated list of all critters added to the tank"
                 }
             }
@@ -457,15 +477,15 @@
             "description": "N/A",
             "event_data": {
                 "tank_type": {
-                    "type": null,
+                    "type": "str",
                     "description": "Selected tank type for the experiment"
                 },
                 "environment": {
-                    "type": null,
+                    "type": "str",
                     "description": "Selected environment for the experiment"
                 },
                 "critters": {
-                    "type": null,
+                    "type": "str",
                     "description": "Comma separated list of all critters added to the tank"
                 }
             }
@@ -479,7 +499,7 @@
             "description": "N/A",
             "event_data": {
                 "fact_id": {
-                    "type": null,
+                    "type": "str",
                     "description": "ID of the submitted fact"
                 }
             }
@@ -488,7 +508,7 @@
             "description": "N/A",
             "event_data": {
                 "fact_id": {
-                    "type": null,
+                    "type": "str",
                     "description": "ID of the rejected fact"
                 }
             }
