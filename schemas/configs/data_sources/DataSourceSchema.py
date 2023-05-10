@@ -18,7 +18,10 @@ class DataSourceSchema(Schema):
         else:
             self._db_type = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'DB_TYPE' element; defaulting to db_host={self._db_type}", logging.WARN)
-        super().__init__(name=name, other_elements=other_elements)
+
+        _used = {"DB_TYPE"}
+        _leftovers = { key : val for key,val in other_elements.items() if key not in _used }
+        super().__init__(name=name, other_elements=_leftovers)
 
     @property
     @abc.abstractmethod
