@@ -25,7 +25,7 @@ class ConfigSchema(Schema):
 
         self._legacy_elems : LegacyConfigSchema = LegacyConfigSchema(name=name, all_elements=all_elements)
         if "LOG_FILE" in all_elements.keys():
-            self._log_file = ConfigSchema._parseLogFile(all_elements["log_file"])
+            self._log_file = ConfigSchema._parseLogFile(all_elements["LOG_FILE"])
         else:
             self._log_file = False
             Logger.Log(f"{name} config does not have a 'LOG_FILE' element; defaulting to log_file={self._log_file}", logging.WARN)
