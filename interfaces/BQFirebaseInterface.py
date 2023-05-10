@@ -26,7 +26,7 @@ class BQFirebaseInterface(BigQueryInterface):
     def _allIDs(self) -> List[str]:
         query = f"""
             SELECT DISTINCT param.value.int_value AS session_id
-            FROM `{self.DBPath}`,
+            FROM `{self.DBPath()}`,
             UNNEST(event_params) AS param
             WHERE param.key = "ga_session_id"
         """
@@ -42,7 +42,7 @@ class BQFirebaseInterface(BigQueryInterface):
                 SELECT event_date, event_timestamp,
                 FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
                 FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
-                FROM `{self.DBPath}`
+                FROM `{self.DBPath()}`
             )
             SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
             FROM datetable
@@ -111,7 +111,7 @@ class BQFirebaseInterface(BigQueryInterface):
                 SELECT event_name, event_params, device, geo, platform,
                 concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
                 param_session.value.int_value as session_id,
-                FROM `{self.DBPath}`
+                FROM `{self.DBPath()}`
                 CROSS JOIN UNNEST(event_params) AS param_session
                 WHERE param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})
                 ORDER BY `session_id`, `timestamp` ASC
@@ -128,7 +128,7 @@ class BQFirebaseInterface(BigQueryInterface):
                 param_log_version.value.int_value as log_version,
                 param_session.value.int_value as session_id,
                 param_user.value.string_value as fd_user_id
-                FROM `{self.DBPath}`
+                FROM `{self.DBPath()}`
                 CROSS JOIN UNNEST(event_params) AS param_app_version
                 CROSS JOIN UNNEST(event_params) AS param_log_version
                 CROSS JOIN UNNEST(event_params) AS param_session
@@ -143,7 +143,7 @@ class BQFirebaseInterface(BigQueryInterface):
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         query = f"""
             SELECT DISTINCT param.value.int_value AS session_id
-            FROM `{self.DBPath}`,
+            FROM `{self.DBPath(min_date=min.date(), max_date=max.date())}`,
             UNNEST(event_params) AS param
             WHERE param.key = "ga_session_id"
             AND _TABLE_SUFFIX BETWEEN '{str_min}' AND '{str_max}'
@@ -181,7 +181,7 @@ class BQFirebaseInterface(BigQueryInterface):
                 SELECT event_date, event_timestamp, event_params,
                 FORMAT_DATE('%m-%d-%Y', PARSE_DATE('%Y%m%d', event_date)) AS date, 
                 FORMAT_TIME('%T', TIME(TIMESTAMP_MICROS(event_timestamp))) AS time,
-                FROM `{self.DBPath}`
+                FROM `{self.DBPath()}`
             )
             SELECT MIN(concat(date, ' ', time)), MAX(concat(date, ' ', time))
             FROM datetable,

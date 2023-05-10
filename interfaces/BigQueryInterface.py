@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, date
 from google.cloud import bigquery
 from typing import Dict, List, Tuple, Optional
 # import locals
@@ -20,18 +20,6 @@ class BigQueryInterface(DataInterface):
     def __init__(self, game_id:str, config:GameSourceSchema, fail_fast:bool):
         super().__init__(game_id=game_id, config=config, fail_fast=fail_fast)
         self.Open()
-
-    @property
-    def DBPath(self) -> str:
-        """The path of form "[projectID].[datasetID].[tableName]" used to make queries
-
-        :return: The full path from project ID to table name, if properly set in configuration, else the literal string "INVALID SOURCE SCHEMA".
-        :rtype: str
-        """
-        if isinstance(self._config.Source, BigQuerySchema):
-            return f"{self._config.Source.DBName}.{self._config.Source.DatasetID}.{self._config.TableName}"
-        else:
-            return "INVALID SOURCE SCHEMA"
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -66,7 +54,7 @@ class BigQueryInterface(DataInterface):
     def _allIDs(self) -> List[str]:
         query = f"""
             SELECT DISTINCT session_id
-            FROM `{self.DBPath}`,
+            FROM `{self.DBPath()}`,
         """
         Logger.Log(f"Running query for all ids:\n{query}", logging.DEBUG, depth=3)
         data = self._client.query(query)
@@ -76,7 +64,7 @@ class BigQueryInterface(DataInterface):
     def _fullDateRange(self) -> Dict[str, datetime]:
         query = f"""
             SELECT MIN(server_time), MAX(server_time)
-            FROM `{self.DBPath}`
+            FROM `{self.DBPath()}`
         """
         Logger.Log(f"Running query for full date range:\n{query}", logging.DEBUG, depth=3)
         data = list(self._client.query(query))
@@ -127,7 +115,7 @@ class BigQueryInterface(DataInterface):
         # Still, not a huge deal because most of these will be rewritten at that time anyway.
         query = f"""
             SELECT session_id, user_id, user_data, client_time, client_offset, server_time, event_name, event_data, event_source, game_state, app_version, app_branch, log_version, event_sequence_index
-            FROM `{self.DBPath}`
+            FROM `{self.DBPath()}`
             {where_clause}
             ORDER BY `user_id`, `session_id`, `server_time` ASC
         """
@@ -138,7 +126,7 @@ class BigQueryInterface(DataInterface):
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         query = f"""
             SELECT DISTINCT session_id
-            FROM `{self.DBPath}`
+            FROM `{self.DBPath(min_date=min.date(), max_date=max.date())}`
             WHERE _TABLE_SUFFIX BETWEEN '{str_min}' AND '{str_max}'
         """
         Logger.Log(f"Running query for ids from dates:\n{query}", logging.DEBUG, depth=3)
@@ -167,7 +155,7 @@ class BigQueryInterface(DataInterface):
             """
         query = f"""
             SELECT MIN(server_time), MAX(server_time)
-            FROM `{self.DBPath}`
+            FROM `{self.DBPath()}`
             {where_clause}
         """
         Logger.Log(f"Running query for dates from IDs:\n{query}", logging.DEBUG, depth=3)
@@ -197,8 +185,42 @@ class BigQueryInterface(DataInterface):
         """
         return True if (super().IsOpen() and self._client is not None) else False
 
-    # *** PROPERTIES ***
+    def DBPath(self, min_date:Optional[date]=None, max_date:Optional[date]=None) -> str:
+        """The path of form "[projectID].[datasetID].[tableName]" used to make queries
+
+        :return: The full path from project ID to table name, if properly set in configuration, else the literal string "INVALID SOURCE SCHEMA".
+        :rtype: str
+        """
+        if isinstance(self._config.Source, BigQuerySchema):
+            _current_date = datetime.now().date()
+            date_wildcard = "*"
+            if min_date is not None and max_date is not None:
+                date_wildcard = BigQueryInterface._datesWildcard(a=min_date, b=max_date)
+            elif min_date is not None:
+                date_wildcard = BigQueryInterface._datesWildcard(a=min_date, b=_current_date)
+            elif max_date is not None:
+                date_wildcard = BigQueryInterface._datesWildcard(a=_current_date, b=max_date)
+            return f"{self._config.Source.AsConnectionInfo}.{self._config.TableName}_{date_wildcard}"
+        else:
+            return "INVALID SOURCE SCHEMA"
 
     # *** PRIVATE STATICS ***
+
+    @staticmethod
+    def _datesWildcard(a:date, b:date) -> str:
+        ret_val = "*"
+        if a.year == b.year:
+            ret_val = str(a.year)
+            if a.month == b.month:
+                ret_val += str(a.month)
+                if a.day == b.month:
+                    ret_val += str(a.day)
+                else:
+                    ret_val += "*"
+            else:
+                ret_val += "*"
+        else:
+            ret_val = "*"
+        return ret_val
 
     # *** PRIVATE METHODS ***
