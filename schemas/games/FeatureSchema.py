@@ -27,7 +27,7 @@ class SubfeatureSchema(Schema):
             self._description = "No description"
             Logger.Log(f"{name} subfeature config does not have an 'description' element; defaulting to description='{self._description}'", logging.WARN)
         
-        _leftovers = { key : val for key,val in all_elements.items() if key not in {"return_value", "description"} }
+        _leftovers = { key : val for key,val in all_elements.items() if key not in {"return_type", "description"} }
         super().__init__(name=name, other_elements=_leftovers)
 
     @property
