@@ -26,9 +26,9 @@ class LegacyConfigSchema(Schema):
         else:
             self._ssh_config = None
 # 
-        _used = {"DATA_DIR", "SSH_CONFIG"}
-        _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
-        super().__init__(name=name, other_elements=_leftovers)
+        # _used = {"DATA_DIR", "SSH_CONFIG"}
+        # _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
+        super().__init__(name=name, other_elements={})
 
     @property
     def DataDirectory(self) -> Optional[Path]:
