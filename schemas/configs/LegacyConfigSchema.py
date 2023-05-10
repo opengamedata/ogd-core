@@ -9,8 +9,8 @@ from utils import Logger
 
 class LegacyConfigSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):
-        self._data_dir   : Path
-        self._ssh_config : SSHSchema
+        self._data_dir   : Optional[Path]
+        self._ssh_config : Optional[SSHSchema]
 
         if not isinstance(all_elements, dict):
             all_elements = {}
@@ -24,18 +24,18 @@ class LegacyConfigSchema(Schema):
             self._ssh_config = LegacyConfigSchema._parseSSHConfig(all_elements["SSH_CONFIG"])
             Logger.Log(f"Found SSH_CONFIG legacy item in config file.", logging.INFO)
         else:
-            self._ssh_config = SSHSchema(name="SSH_CONFIG", all_elements={})
+            self._ssh_config = None
 # 
         _used = {"DATA_DIR", "SSH_CONFIG"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
     @property
-    def DataDirectory(self) -> Path:
+    def DataDirectory(self) -> Optional[Path]:
         return self._data_dir
 
     @property
-    def SSHConfig(self) -> SSHSchema:
+    def SSHConfig(self) -> Optional[SSHSchema]:
         return self._ssh_config
 
     @property
