@@ -23,7 +23,7 @@
             "description": "Event that occurs whenever the job switches, whether manually or through an `accept_job` or `complete_job`",
             "event_data": {
                 "prev_job_name": {
-                    "type": null,
+                    "type": "str",
                     "description": "String name of the previous job, may be incorrect when coinciding with any `complete_job`, or with an `accept_job` at a time the user was actively in a job."
                 }
             }
@@ -50,7 +50,7 @@
             "description": "N/A",
             "event_data": {
                 "job_name": {
-                    "type": null,
+                    "type": "str",
                     "description": "String name of the completed job"
                 }
             }
@@ -58,8 +58,8 @@
         "complete_task": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
+                "task_id": {
+                    "type": "str",
                     "description": "ID of the completed task"
                 }
             }
@@ -68,7 +68,7 @@
             "description": "N/A",
             "event_data": {
                 "scene_name": {
-                    "type": null,
+                    "type": "str",
                     "description": "Name of the loaded scene"
                 }
             }
@@ -77,7 +77,7 @@
             "description": "N/A",
             "event_data": {
                 "room_name": {
-                    "type": null,
+                    "type": "str",
                     "description": "Name of the room being entered"
                 }
             }
@@ -121,37 +121,21 @@
         "open_bestiary": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "bestiary_open_species_tab": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "bestiary_open_environments_tab": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "bestiary_open_models_tab": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "bestiary_select_species": {
@@ -184,64 +168,36 @@
         "close_bestiary": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "open_status": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "status_open_job_tab": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "status_open_item_tab": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "status_open_tech_tab": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "close_status": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "begin_model": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "model_phase_changed": {
@@ -406,7 +362,7 @@
                     "description": "ID of the item"
                 },
                 "item_name": {
-                    "type": null,
+                    "type": "str",
                     "description": "String name of the item"
                 },
                 "cost": {
@@ -418,10 +374,6 @@
         "talk_to_shopkeep": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "add_environment": {
@@ -521,10 +473,6 @@
         "begin_argument": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "fact_submitted": {
@@ -548,19 +496,11 @@
         "leave_argument": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         },
         "complete_argument": {
             "description": "N/A",
             "event_data": {
-                "job_name": {
-                    "type": null,
-                    "description": "String name of the current job"
-                }
             }
         }
     },
