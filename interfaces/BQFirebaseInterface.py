@@ -78,24 +78,24 @@ class BQFirebaseInterface(BigQueryInterface):
         player_clause  : str = ""
         if id_mode == IDMode.SESSION:
             id_string = ','.join([f"{x}" for x in id_list])
-            session_clause = f"AND   param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
-            player_clause  = f"AND   (param_user.key   = 'user_code'     OR  param_user.key = 'undefined')"
+            session_clause = f"param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
+            player_clause  = f"(param_user.key   = 'user_code'     OR  param_user.key = 'undefined')"
         elif id_mode == IDMode.USER:
             id_string = ','.join([f"'{x}'" for x in id_list])
-            session_clause = f"AND   param_session.key = 'ga_session_id'"
-            player_clause  = f"AND   (param_user.key   = 'user_code' OR param_user.key = 'undefined') AND param_user.value.string_value IN ({id_string})"
+            session_clause = f"param_session.key = 'ga_session_id'"
+            player_clause  = f"(param_user.key   = 'user_code' OR param_user.key = 'undefined') AND param_user.value.string_value IN ({id_string})"
         else:
             Logger.Log(f"BQ-Firebase: Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
             id_string = ','.join([f"{x}" for x in id_list])
-            session_clause = f"AND   param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
-            player_clause  = f"AND   (param_user.key   = 'user_code' OR param_user.key = 'undefined')"
+            session_clause = f"param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
+            player_clause  = f"(param_user.key   = 'user_code' OR param_user.key = 'undefined')"
         # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
         if self._game_id == "AQUALAB":
             where_clause = f"""
                 WHERE param_app_version.key = 'app_version'
                 AND   param_log_version.key = 'log_version'
-                {session_clause}
-                {player_clause}
+                AND   {session_clause}
+                AND   {player_clause}
             """
         else:
             where_clause = f"""
