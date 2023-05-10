@@ -63,8 +63,8 @@ jobs:
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.BQ_AQUALAB_PROJECT_ID }}
-        service_account_key: ${{ secrets.BQ_AQUALAB_JSON }}
+        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'MASHOPOLIS' }}
       name: Set up Cloud SDK
