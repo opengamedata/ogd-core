@@ -51,7 +51,7 @@ settings = {
     },
     "GAME_SOURCE_MAP":
     {
-        "AQUALAB":        { "source":"AQUALAB_BQ",            "table":"events_*",         "schema":"FIREBASE"              },
+        "AQUALAB":        { "source":"OGD_AQUALAB",           "table":"aqualab_daily",    "schema":"OPENGAMEDATA_BIGQUERY" },
         "BACTERIA":       { "source":"LOGGER",                "table":"log",              "schema":"FIELDDAY_MYSQL"        },
         "BALLOON":        { "source":"LOGGER",                "table":"log",              "schema":"FIELDDAY_MYSQL"        },
         "CRYSTAL":        { "source":"LOGGER",                "table":"log",              "schema":"FIELDDAY_MYSQL"        },
