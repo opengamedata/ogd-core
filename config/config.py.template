@@ -13,23 +13,23 @@ settings = {
     {
         "AQUALAB_BQ" : {
             "DB_TYPE"    : "FIREBASE",
-            "PROJECT_ID" : "aqualab-57f88",
+            "DB_NAME" : "aqualab-57f88",
             "DATASET_ID" : "analytics_271167280",
             "PROJECT_KEY": "./config/aqualab.json"
         },
         "MASHOPOLIS_BQ": {
             "DB_TYPE"    : "BIGQUERY",
-            "PROJECT_ID" : "mashopolis-36754",
+            "DB_NAME" : "mashopolis-36754",
             "DATASET_ID" : "analytics_302498821",
         },
         "SHADOWSPECT_BQ": {
             "DB_TYPE"    : "FIREBASE",
-            "PROJECT_ID" : "shadowspect-b8e63",
+            "DB_NAME" : "shadowspect-b8e63",
             "DATASET_ID" : "analytics_284091572",
         },
         "SHIPWRECKS_BQ": {
             "DB_TYPE"    : "FIREBASE",
-            "PROJECT_ID" : "shipwrecks-8d142",
+            "DB_NAME"    : "shipwrecks-8d142",
             "DATASET_ID" : "analytics_269167605",
         },
         "LOGGER": {
@@ -51,7 +51,7 @@ settings = {
     },
     "GAME_SOURCE_MAP":
     {
-        "AQUALAB":        { "source":"AQUALAB_BQ",            "table":"events_*",         "schema":"BIGQUERY"              },
+        "AQUALAB":        { "source":"AQUALAB_BQ",            "table":"events_*",         "schema":"FIREBASE"              },
         "BACTERIA":       { "source":"LOGGER",                "table":"log",              "schema":"FIELDDAY_MYSQL"        },
         "BALLOON":        { "source":"LOGGER",                "table":"log",              "schema":"FIELDDAY_MYSQL"        },
         "CRYSTAL":        { "source":"LOGGER",                "table":"log",              "schema":"FIELDDAY_MYSQL"        },
@@ -65,8 +65,8 @@ settings = {
         "LAKELAND":       { "source":"LOGGER",                "table":"log",              "schema":"FIELDDAY_MYSQL"        },
         "MAGNET":         { "source":"LOGGER",                "table":"log",              "schema":"FIELDDAY_MYSQL"        },
         "MASHOPOLIS":     { "source":"MASHOPOLIS_BQ",         "table":"events_*",         "schema":"BIGQUERY"              },
-        "SHIPWRECKS":     { "source":"SHIPWRECKS_BQ",         "table":"events_*",         "schema":"BIGQUERY"              },
-        "SHADOWSPECT":    { "source":"SHADOWSPECT_BQ",        "table":"events_*",         "schema":"BIGQUERY"              },
+        "SHIPWRECKS":     { "source":"SHIPWRECKS_BQ",         "table":"events_*",         "schema":"FIREBASE"              },
+        "SHADOWSPECT":    { "source":"SHADOWSPECT_BQ",        "table":"events_*",         "schema":"FIREBASE"              },
         "STEMPORTS":      { "source":"LOGGER",                "table":"log",              "schema":"FIELDDAY_MYSQL"        },
         "WAVES":          { "source":"LOGGER",                "table":"log",              "schema":"FIELDDAY_MYSQL"        },
         "WIND":           { "source":"LOGGER",                "table":"log",              "schema":"FIELDDAY_MYSQL"        },
