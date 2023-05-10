@@ -13,18 +13,18 @@ settings = {
     {
         "AQUALAB_BQ" : {
             "DB_TYPE"    : "FIREBASE",
-            "DB_NAME" : "aqualab-57f88",
+            "DB_NAME"    : "aqualab-57f88",
             "DATASET_ID" : "analytics_271167280",
             "PROJECT_KEY": "./config/aqualab.json"
         },
         "MASHOPOLIS_BQ": {
             "DB_TYPE"    : "BIGQUERY",
-            "DB_NAME" : "mashopolis-36754",
+            "DB_NAME"    : "mashopolis-36754",
             "DATASET_ID" : "analytics_302498821",
         },
         "SHADOWSPECT_BQ": {
             "DB_TYPE"    : "FIREBASE",
-            "DB_NAME" : "shadowspect-b8e63",
+            "DB_NAME"    : "shadowspect-b8e63",
             "DATASET_ID" : "analytics_284091572",
         },
         "SHIPWRECKS_BQ": {
