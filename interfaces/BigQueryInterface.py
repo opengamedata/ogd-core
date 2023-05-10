@@ -134,6 +134,7 @@ class BigQueryInterface(DataInterface):
         ids = [str(row['session_id']) for row in data]
         if ids is not None:
             ret_val = ids
+        Logger.Log(f"Found {len(ret_val)} ids. {ret_val if len(ret_val) <= 5 else ''}", logging.DEBUG, depth=3)
         return ret_val
 
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
@@ -192,14 +193,14 @@ class BigQueryInterface(DataInterface):
         :rtype: str
         """
         if isinstance(self._config.Source, BigQuerySchema):
-            _current_date = datetime.now().date()
+            # _current_date = datetime.now().date()
             date_wildcard = "*"
-            if min_date is not None and max_date is not None:
-                date_wildcard = BigQueryInterface._datesWildcard(a=min_date, b=max_date)
-            elif min_date is not None:
-                date_wildcard = BigQueryInterface._datesWildcard(a=min_date, b=_current_date)
-            elif max_date is not None:
-                date_wildcard = BigQueryInterface._datesWildcard(a=_current_date, b=max_date)
+            # if min_date is not None and max_date is not None:
+            #     date_wildcard = BigQueryInterface._datesWildcard(a=min_date, b=max_date)
+            # elif min_date is not None:
+            #     date_wildcard = BigQueryInterface._datesWildcard(a=min_date, b=_current_date)
+            # elif max_date is not None:
+            #     date_wildcard = BigQueryInterface._datesWildcard(a=_current_date, b=max_date)
             return f"{self._config.Source.AsConnectionInfo}.{self._config.TableName}_{date_wildcard}"
         else:
             return "INVALID SOURCE SCHEMA"
@@ -213,7 +214,7 @@ class BigQueryInterface(DataInterface):
             ret_val = str(a.year).rjust(4, "0")
             if a.month == b.month:
                 ret_val += str(a.month).rjust(2, "0")
-                if a.day == b.month:
+                if a.day == b.day:
                     ret_val += str(a.day).rjust(2, "0")
                 else:
                     ret_val += "*"
