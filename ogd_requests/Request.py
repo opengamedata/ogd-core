@@ -77,7 +77,7 @@ class Request(abc.ABC):
         except Exception as err:
             Logger.Log(f"Got an error when trying to stringify a Request: {type(err)} {str(err)}")
         finally:
-            return f"{self._game_id}: {_min}<->{_max} ({self._exports})"
+            return f"{self._game_id}: {_min}<->{_max} ({[str(export) for export in self._exports]})"
 
     @property
     def GameID(self):
