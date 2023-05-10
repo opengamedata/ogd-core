@@ -93,20 +93,18 @@ class BigQueryInterface(DataInterface):
         return events if events != None else []
 
     def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode) -> str:
-        session_clause : str = ""
-        player_clause  : str = ""
+        id_clause : str = ""
         id_string = ','.join([f"'{x}'" for x in id_list])
         if id_mode == IDMode.SESSION:
-            session_clause = f"AND   session_id IN ({id_string})"
+            id_clause = f"session_id IN ({id_string})"
         elif id_mode == IDMode.USER:
-            player_clause  = f"AND   user_id IN ({id_string})"
+            id_clause  = f"user_id IN ({id_string})"
         else:
             Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
-            session_clause = f"AND   session_id IN ({id_string})"
+            id_clause = f"session_id IN ({id_string})"
         # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
         where_clause = f"""
-            {session_clause}
-            {player_clause}
+            WHERE {id_clause}
         """
         # 4) Set up actual query
         # TODO Order by user_id, and by timestamp within that.
