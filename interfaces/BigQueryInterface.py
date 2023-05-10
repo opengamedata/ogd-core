@@ -29,7 +29,7 @@ class BigQueryInterface(DataInterface):
         :rtype: str
         """
         if isinstance(self._config.Source, BigQuerySchema):
-            return f"{self._config.Source.ProjectID}{self._config.Source.DatasetID}.{self._config.TableName}"
+            return f"{self._config.Source.ProjectID}.{self._config.Source.DatasetID}.{self._config.TableName}"
         else:
             return "INVALID SOURCE SCHEMA"
 
