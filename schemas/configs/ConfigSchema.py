@@ -183,14 +183,14 @@ class ConfigSchema(Schema):
             ret_val = {}
             for key,val in sources.items():
                 match (val.get("DB_TYPE", "").upper()):
-                    case "BIGQUERY":
+                    case "BIGQUERY" | "FIREBASE":
                         ret_val[key] = BigQuerySchema(name=key, all_elements=val)
                     case "MYSQL":
                         ret_val[key] = MySQLSchema(name=key, all_elements=val)
                     case "FILE":
                         ret_val[key] = FileSourceSchema(name=key, all_elements=val)
                     case _:
-                        Logger.Log(f"Game source {key} did not  have a 'DB_TYPE', and will be skipped!", logging.WARN)
+                        Logger.Log(f"Game source {key} did not  have a valid 'DB_TYPE' (value: {val.get('DB_TYPE', '')}), and will be skipped!", logging.WARN)
         else:
             ret_val = {}
             Logger.Log(f"Config data sources was unexpected type {type(sources)}, defaulting to empty dict: {ret_val}.", logging.WARN)
