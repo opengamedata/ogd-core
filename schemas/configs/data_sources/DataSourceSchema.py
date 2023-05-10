@@ -16,14 +16,3 @@ class DataSourceSchema(Schema):
     @abc.abstractmethod
     def Type(self) -> str:
         pass
-
-def ParseSourceType(all_elements:Dict[str, Any]) -> Optional[Type[DataSourceSchema]]:
-    match (all_elements.get("DB_TYPE", "").upper()):
-        case "BIGQUERY":
-            return BigQuerySchema
-        case "MYSQL":
-            return MySQLSchema
-        case "FILE":
-            return FileSourceSchema
-        case _:
-            return None

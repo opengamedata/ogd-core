@@ -1,11 +1,14 @@
 # import standard libraries
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Type
 # import local files
 from schemas.configs.IndexingSchema import FileIndexingSchema
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
-from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema, BigQuerySchema, MySQLSchema, ParseSourceType
+from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
+from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
+from schemas.configs.data_sources.FileSourceSchema import FileSourceSchema
+from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
 from schemas.configs.LegacyConfigSchema import LegacyConfigSchema
 from schemas.Schema import Schema
 from utils import Logger
@@ -179,11 +182,15 @@ class ConfigSchema(Schema):
         if isinstance(sources, dict):
             ret_val = {}
             for key,val in sources.items():
-                _type = ParseSourceType(all_elements=val)
-                if _type is not None:
-                    ret_val[key] = _type(name=val, other_elements=val)
-                else:
-                    Logger.Log(f"Game source {key} did not  have a 'DB_TYPE', and will be skipped!", logging.WARN)
+                match (val.get("DB_TYPE", "").upper()):
+                    case "BIGQUERY":
+                        ret_val[key] = BigQuerySchema(name=key, all_elements=val)
+                    case "MYSQL":
+                        ret_val[key] = MySQLSchema(name=key, all_elements=val)
+                    case "FILE":
+                        ret_val[key] = FileSourceSchema(name=key, all_elements=val)
+                    case _:
+                        Logger.Log(f"Game source {key} did not  have a 'DB_TYPE', and will be skipped!", logging.WARN)
         else:
             ret_val = {}
             Logger.Log(f"Config data sources was unexpected type {type(sources)}, defaulting to empty dict: {ret_val}.", logging.WARN)
