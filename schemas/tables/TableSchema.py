@@ -1,9 +1,7 @@
 ## import standard libraries
 import json
-from operator import concat
-import os
 import logging
-import traceback
+import re
 from datetime import datetime, time, timedelta
 from json.decoder import JSONDecodeError
 from pathlib import Path
@@ -13,7 +11,7 @@ Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 import utils
 from schemas.Event import Event, EventSource
 from schemas.tables.ColumnMapSchema import ColumnMapSchema
-from schemas.tables.ColumnSchema import ColumnSchema
+from schemas.tables.ColumnSchema import ColumnSchemaItem
 from utils import Logger
 
 ## @class TableSchema
@@ -42,8 +40,8 @@ class TableSchema:
         # declare and initialize vars
         self._schema            : Optional[Dict[str, Any]]
         self._column_map        : ColumnMapSchema
-        self._columns           : List[ColumnSchema]   = []
-        self._table_format_name : str                  = schema_name
+        self._columns           : List[ColumnSchemaItem] = []
+        self._table_format_name : str                    = schema_name
 
         if not self._table_format_name.lower().endswith(".json"):
             self._table_format_name += ".json"
@@ -51,7 +49,7 @@ class TableSchema:
 
         # after loading the file, take the stuff we need and store.
         if self._schema is not None:
-            self._columns    = [ColumnSchema(column_details) for column_details in self._schema.get('columns', [])]
+            self._columns    = [ColumnSchemaItem(column_details) for column_details in self._schema.get('columns', [])]
             self._column_map = ColumnMapSchema(map=self._schema.get('column_map', {}), column_names=self.ColumnNames)
         else:
             Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
@@ -66,7 +64,7 @@ class TableSchema:
         return [col.Name for col in self._columns]
 
     @property
-    def Columns(self) -> List[ColumnSchema]:
+    def Columns(self) -> List[ColumnSchemaItem]:
         return self._columns
 
     @property
@@ -338,7 +336,7 @@ class TableSchema:
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _parse(input:str, col_schema:ColumnSchema) -> Any:
+    def _parse(input:str, col_schema:ColumnSchemaItem) -> Any:
         """Applies whatever parsing is appropriate based on what type the schema said a column contained.
 
         :param input: _description_
@@ -396,7 +394,7 @@ class TableSchema:
 
         if time_str == "None" or time_str == "none" or time_str == "null":
             return None
-        else:
+        elif re.fullmatch(pattern="\d+:\d+:\d+(\.\d+)?", string=time_str):
             try:
                 pieces = time_str.split(':')
                 seconds_pieces = pieces[2].split('.')
@@ -404,6 +402,15 @@ class TableSchema:
                                     minutes=int(pieces[1]),
                                     seconds=int(seconds_pieces[0]),
                                     milliseconds=int(seconds_pieces[1]) if len(seconds_pieces) > 1 else 0)
+            except ValueError as err:
+                pass
+            except IndexError as err:
+                pass
+            else:
+                return ret_val
+        elif re.fullmatch(pattern="-?\d+", string=time_str):
+            try:
+                ret_val = timedelta(milliseconds=int(time_str))
             except ValueError as err:
                 pass
             except IndexError as err:
@@ -419,14 +426,17 @@ class TableSchema:
         if indices is not None:
             if isinstance(indices, int):
                 # if there's a single index, use parse to get the value it is stated to be
+                # print(f"About to parse value {row[indices]} as type {self.Columns[indices]},\nFull list from row is {row},\nFull list of columns is {self.Columns},\nwith names {self.ColumnNames}")
                 ret_val = TableSchema._parse(input=row[indices], col_schema=self.Columns[indices])
-            elif isinstance(indices, dict):
-                ret_val = {}
-                for key,index in indices.items():
-                    _val = TableSchema._parse(input=row[index], col_schema=self._columns[index])
-                    ret_val.update(_val if isinstance(_val, dict) else {key:_val})
             elif isinstance(indices, list):
                 ret_val = concatenator.join([str(row[index]) for index in indices])
+            elif isinstance(indices, dict):
+                ret_val = {}
+                for key,column_index in indices.items():
+                    if column_index > len(row):
+                        Logger.Log(f"Got column index of {column_index} for column {key}, but row only has {len(row)} columns!", logging.ERROR)
+                    _val = TableSchema._parse(input=row[column_index], col_schema=self._columns[column_index])
+                    ret_val.update(_val if isinstance(_val, dict) else {key:_val})
         else:
             ret_val = fallback
         return ret_val
