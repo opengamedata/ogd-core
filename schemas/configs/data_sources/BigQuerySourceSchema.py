@@ -42,7 +42,12 @@ class BigQuerySchema(DataSourceSchema):
     def AsMarkdown(self) -> str:
         ret_val : str
 
-        ret_val = f"{self.Name}: `{self.DBName}.{self.DatasetID}` ({self.Type})"
+        ret_val = f"{self.Name}: `{self.AsConnectionInfo}` ({self.Type})"
+        return ret_val
+
+    @property
+    def AsConnectionInfo(self) -> str:
+        ret_val : str = f"{self.DBName}.{self.DatasetID}"
         return ret_val
 
     @staticmethod
