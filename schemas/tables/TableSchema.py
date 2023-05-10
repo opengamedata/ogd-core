@@ -11,7 +11,7 @@ Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 import utils
 from schemas.Event import Event, EventSource
 from schemas.tables.ColumnMapSchema import ColumnMapSchema
-from schemas.tables.ColumnSchema import ColumnSchemaItem
+from schemas.tables.ColumnSchema import ColumnSchema
 from utils import Logger
 
 ## @class TableSchema
@@ -40,7 +40,7 @@ class TableSchema:
         # declare and initialize vars
         self._schema            : Optional[Dict[str, Any]]
         self._column_map        : ColumnMapSchema
-        self._columns           : List[ColumnSchemaItem] = []
+        self._columns           : List[ColumnSchema] = []
         self._table_format_name : str                    = schema_name
 
         if not self._table_format_name.lower().endswith(".json"):
@@ -49,7 +49,7 @@ class TableSchema:
 
         # after loading the file, take the stuff we need and store.
         if self._schema is not None:
-            self._columns    = [ColumnSchemaItem(column_details) for column_details in self._schema.get('columns', [])]
+            self._columns    = [ColumnSchema(column_details) for column_details in self._schema.get('columns', [])]
             self._column_map = ColumnMapSchema(map=self._schema.get('column_map', {}), column_names=self.ColumnNames)
         else:
             Logger.Log(f"Could not find event_data_complex schemas at {schema_path}{schema_name}", logging.ERROR)
@@ -64,7 +64,7 @@ class TableSchema:
         return [col.Name for col in self._columns]
 
     @property
-    def Columns(self) -> List[ColumnSchemaItem]:
+    def Columns(self) -> List[ColumnSchema]:
         return self._columns
 
     @property
@@ -336,7 +336,7 @@ class TableSchema:
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _parse(input:str, col_schema:ColumnSchemaItem) -> Any:
+    def _parse(input:str, col_schema:ColumnSchema) -> Any:
         """Applies whatever parsing is appropriate based on what type the schema said a column contained.
 
         :param input: _description_
@@ -412,8 +412,6 @@ class TableSchema:
             try:
                 ret_val = timedelta(milliseconds=int(time_str))
             except ValueError as err:
-                pass
-            except IndexError as err:
                 pass
             else:
                 return ret_val
