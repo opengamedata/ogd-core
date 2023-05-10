@@ -23,7 +23,7 @@ class ConfigSchema(Schema):
         self._data_src   : Dict[str, DataSourceSchema]
         self._game_src_map : Dict[str, GameSourceSchema]
 
-        self._legacy_elems : LegacyConfigSchema = LegacyConfigSchema(name=name, all_elements=all_elements)
+        self._legacy_elems : LegacyConfigSchema = LegacyConfigSchema(name=f"{name} Legacy", all_elements=all_elements)
         if "LOG_FILE" in all_elements.keys():
             self._log_file = ConfigSchema._parseLogFile(all_elements["LOG_FILE"])
         else:
