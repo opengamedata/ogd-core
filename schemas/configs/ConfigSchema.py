@@ -200,7 +200,7 @@ class ConfigSchema(Schema):
     def _parseGameSourceMap(map, sources) -> Dict[str, GameSourceSchema]:
         ret_val : Dict[str, GameSourceSchema]
         if isinstance(map, dict):
-            ret_val = { key : GameSourceSchema(name=val, all_elements=val, data_sources=sources) for key, val in map.items() }
+            ret_val = { key : GameSourceSchema(name=key, all_elements=val, data_sources=sources) for key, val in map.items() }
         else:
             ret_val = {}
             Logger.Log(f"Config game source map was unexpected type {type(map)}, defaulting to empty dict: {ret_val}.", logging.WARN)
