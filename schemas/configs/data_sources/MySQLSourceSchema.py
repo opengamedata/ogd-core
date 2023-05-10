@@ -156,8 +156,8 @@ class MySQLSchema(DataSourceSchema):
             self._db_pass = None
             Logger.Log(f"{name} config does not have a 'DB_PW' element; defaulting to db_pass=None", logging.WARN)
         # Parse SSH info, if it exists. Don't notify, if it doesn't exist.
-        _ssh_keys = ["SSH_HOST", "SSH_PORT", "SSH_USER", "SSH_PW", "SSH_PASS"]
-        self._ssh_cfg = SSHSchema(name=f"{name}-SSH", all_elements={ key : all_elements.get(key) for key in _ssh_keys })
+        _ssh_keys = {"SSH_HOST", "SSH_PORT", "SSH_USER", "SSH_PW", "SSH_PASS"}
+        self._ssh_cfg = SSHSchema(name=f"{name}-SSH", all_elements={ key : all_elements.get(key) for key in _ssh_keys.intersection(all_elements.keys()) })
 
         _used = {"DB_HOST", "DB_PORT", "DB_NAME", "DB_USER", "DB_PW", "DB_PASS", "SSH_HOST", "SSH_PORT", "SSH_USER", "SSH_PW", "SSH_PASS"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
