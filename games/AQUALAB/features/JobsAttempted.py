@@ -60,9 +60,9 @@ class JobsAttempted(Feature):
                 # self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
                 # self._job_start_time = event.Timestamp
 
-        if self._validate_job(event.EventData['job_name']):
+        if self._validate_job(event.GameState['job_name']):
             user_code = event.UserID
-            job_name = event.EventData["job_name"]
+            job_name = event.GameState['job_name']
             job_id = self._job_map[job_name]
 
             if event.EventName == "accept_job" and job_id == self._job_id:

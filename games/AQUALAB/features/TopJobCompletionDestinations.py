@@ -30,9 +30,9 @@ class TopJobCompletionDestinations(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self._validate_job(event.EventData['job_name']):
+        if self._validate_job(event.GameState['job_name']):
             user_code = event.UserID
-            job_name = event.EventData["job_name"]
+            job_name = event.GameState['job_name']
 
             # in either case, handle event.
             if event.EventName == "complete_job":

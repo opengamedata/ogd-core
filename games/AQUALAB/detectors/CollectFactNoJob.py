@@ -41,7 +41,7 @@ class CollectFactNoJob(Detector):
         :param event: _description_
         :type event: Event
         """
-        if event.EventData['job_name'] == "no-active-job":
+        if event.GameState['job_name'] == "no-active-job":
             self._sess_id = event.SessionID
             self._player_id = event.UserID
             self._time = event.Timestamp

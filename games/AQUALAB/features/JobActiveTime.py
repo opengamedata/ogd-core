@@ -62,7 +62,7 @@ class JobActiveTime(PerJobFeature):
         if event.EventName == "accept_job":
             self._last_start_time = event.timestamp
         elif event.EventName == "switch_job":
-            new_job = event.EventData["job_name"]
+            new_job = event.GameState['job_name']
             old_job = event.EventData["prev_job_name"]
             # if we switched into "this" job, this becomes new start time
             if self._job_map.get(new_job, None) == self.CountIndex:
@@ -103,7 +103,7 @@ class JobActiveTime(PerJobFeature):
     def _validateEventCountIndex(self, event:Event):
         ret_val : bool = False
 
-        new_job = event.EventData["job_name"]
+        new_job = event.GameState['job_name']
         if self._job_map.get(new_job, None) is not None:
             if self._job_map.get(new_job, None) == self.CountIndex:
                     ret_val = True
