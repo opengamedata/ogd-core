@@ -17,10 +17,10 @@ class SSHSchema(Schema):
             all_elements = {}
             Logger.Log(f"For {name} base config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if "SSH_HOST" in all_elements.keys():
-            self._ssh_host = SSHSchema._parseHost(all_elements["SSH_HOST"])
+            self._host = SSHSchema._parseHost(all_elements["SSH_HOST"])
         else:
-            self._ssh_host = None
-            Logger.Log(f"{name} config does not have a 'SSH_HOST' element; defaulting to ssh_host={self._ssh_host}", logging.WARN)
+            self._host = None
+            Logger.Log(f"{name} config does not have a 'SSH_HOST' element; defaulting to ssh_host={self._host}", logging.WARN)
         if "SSH_USER" in all_elements.keys():
             self._user = SSHSchema._parseUser(all_elements["SSH_USER"])
         else:
