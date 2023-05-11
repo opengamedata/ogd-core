@@ -13,7 +13,7 @@
             "type" : "float",
             "description" : "The current y-position of ______ at the moment the event occurred."
         },
-        "posY" : {
+        "posZ" : {
             "type" : "float",
             "description" : "The current z-position of ______ at the moment the event occurred."
         },
@@ -32,7 +32,7 @@
         "rotW" : {
             "type" : "float",
             "description" : "The w-component of the orientation of ______ at the moment the event occurred."
-        },
+        }
     },
     "events": {
         "open_menu": {
@@ -91,7 +91,7 @@
                 "left_hand_data_package": {
                     "type": "List[Dict]",
                     "description": "A list of dicts, where each dict is one frame of data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
-                },
+                }
             }
         },
         "right_hand_data": {
@@ -100,7 +100,7 @@
                 "right_hand_data_package": {
                     "type": "List[Dict]",
                     "description": "A list of dicts, where each dict is one frame of data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
-                },
+                }
             }
         },
         "player_waddle": {
