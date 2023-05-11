@@ -40,6 +40,12 @@ settings = {
             "DB_USER" : "username",
             "DB_PW"   : "password"
         },
+        "OGD_PENGUINS": {
+            "DB_TYPE"    : "BIGQUERY",
+            "DB_NAME"    : "wcer-field-day-ogd-1798",
+            "DATASET_ID" : "penguins",
+            "PROJECT_KEY": "./config/ogd.json"
+        },
         "OPENGAMEDATA_MYSQL": {
             "DB_TYPE" : "MySQL",
             "DB_HOST" : "127.0.0.1",
@@ -61,7 +67,7 @@ settings = {
         "EARTHQUAKE":     { "source":"LOGGER",                "table":"log",            "schema":"FIELDDAY_MYSQL"        },
         "ICECUBE":        { "source":"OPENGAMEDATA_MYSQL",    "table":"ICECUBE",        "schema":"OPENGAMEDATA_MYSQL"    },
         "JOWILDER":       { "source":"LOGGER",                "table":"log",            "schema":"FIELDDAY_MYSQL"        },
-        "PENGUINS":       { "source":"OPENGAMEDATA_BIGQUERY", "table":"penguins_daily", "schema":"OPENGAMEDATA_BIGQUERY" },
+        "PENGUINS":       { "source":"OGD_PENGUINS",          "table":"penguins_daily", "schema":"OPENGAMEDATA_BIGQUERY" },
         "LAKELAND":       { "source":"LOGGER",                "table":"log",            "schema":"FIELDDAY_MYSQL"        },
         "MAGNET":         { "source":"LOGGER",                "table":"log",            "schema":"FIELDDAY_MYSQL"        },
         "MASHOPOLIS":     { "source":"MASHOPOLIS_BQ",         "table":"events",         "schema":"BIGQUERY"              },
