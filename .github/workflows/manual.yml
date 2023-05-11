@@ -59,7 +59,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       # A bunch of copy-paste crap to set up google cloud for any given game.
-    - if: ${{ contains(fromJson('["AQUALAB", "PENGUINS"]'), matrix.game) }}
+    - if: contains(fromJson('["AQUALAB", "PENGUINS"]'), ${{ matrix.game }})
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
