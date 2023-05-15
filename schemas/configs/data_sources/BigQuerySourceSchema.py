@@ -8,7 +8,7 @@ from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
 from utils import Logger
 
 class BigQuerySchema(DataSourceSchema):
-    def __init__(self, name:str, all_elements:Dict[str, Any]):
+    def __init__(self, name:str, all_elements:Dict[str, Any], fallbacks:Dict[str, Any]={}):
         self._dataset_id : str
         self._credential : Optional[str]
 
@@ -17,11 +17,15 @@ class BigQuerySchema(DataSourceSchema):
             Logger.Log(f"For {name} Game Source config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if "DATASET_ID" in all_elements.keys():
             self._dataset_id = BigQuerySchema._parseDatasetID(all_elements["DATASET_ID"])
+        elif "DATASET_ID" in fallbacks.keys():
+            self._dataset_id = BigQuerySchema._parseDatasetID(fallbacks["DATASET_ID"])
         else:
             self._dataset_id = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'DATASET_ID' element; defaulting to dataset_id={self._dataset_id}", logging.WARN)
         if "PROJECT_KEY" in all_elements.keys():
             self._credential = BigQuerySchema._parseCredential(all_elements["PROJECT_KEY"])
+        elif "PROJECT_KEY" in fallbacks.keys():
+            self._credential = BigQuerySchema._parseCredential(fallbacks["PROJECT_KEY"])
         else:
             self._credential = None
             Logger.Log(f"{name} config does not have a 'PROJECT_KEY' element; defaulting to credential=None", logging.WARN)

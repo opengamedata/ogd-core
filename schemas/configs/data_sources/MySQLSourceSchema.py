@@ -7,7 +7,7 @@ from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
 from utils import Logger
 
 class SSHSchema(Schema):
-    def __init__(self, name:str, all_elements:Dict[str, Any]):
+    def __init__(self, name:str, all_elements:Dict[str, Any], fallbacks:Dict[str, Any]={}):
         self._host : Optional[str]
         self._user : Optional[str]
         self._pass : Optional[str]
@@ -18,11 +18,15 @@ class SSHSchema(Schema):
             Logger.Log(f"For {name} base config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if "SSH_HOST" in all_elements.keys():
             self._host = SSHSchema._parseHost(all_elements["SSH_HOST"])
+        elif "SSH_HOST" in fallbacks.keys():
+            self._host = SSHSchema._parseHost(fallbacks["SSH_HOST"])
         else:
             self._host = None
             Logger.Log(f"{name} config does not have a 'SSH_HOST' element; defaulting to ssh_host={self._host}", logging.WARN)
         if "SSH_USER" in all_elements.keys():
             self._user = SSHSchema._parseUser(all_elements["SSH_USER"])
+        elif "SSH_USER" in fallbacks.keys():
+            self._user = SSHSchema._parseUser(fallbacks["SSH_USER"])
         else:
             self._user = None
             Logger.Log(f"{name} config does not have a 'SSH_USER' element; defaulting to ssh_user={self._user}", logging.WARN)
@@ -30,11 +34,17 @@ class SSHSchema(Schema):
             self._pass = SSHSchema._parsePass(all_elements["SSH_PW"])
         elif "SSH_PASS" in all_elements.keys():
             self._pass = SSHSchema._parsePass(all_elements["SSH_PASS"])
+        elif "SSH_PW" in fallbacks.keys():
+            self._pass = SSHSchema._parsePass(fallbacks["SSH_PW"])
+        elif "SSH_PASS" in fallbacks.keys():
+            self._pass = SSHSchema._parsePass(fallbacks["SSH_PASS"])
         else:
             self._pass = None
             Logger.Log(f"{name} config does not have a 'SSH_PASS' or 'SSH_PW' element; defaulting to ssh_pass={self._pass}", logging.WARN)
         if "SSH_PORT" in all_elements.keys():
             self._port = SSHSchema._parsePort(all_elements["SSH_PORT"])
+        elif "SSH_PORT" in fallbacks.keys():
+            self._port = SSHSchema._parsePort(fallbacks["SSH_PORT"])
         else:
             self._port = 22
             Logger.Log(f"{name} config does not have a 'SSH_PORT' element; defaulting to ssh_port={self._port}", logging.WARN)
