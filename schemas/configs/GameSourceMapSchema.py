@@ -43,7 +43,7 @@ class GameSourceSchema(Schema):
             self._schema = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'schema' element; defaulting to schema={self._schema}", logging.WARN)
 
-        _used = {"source", "table", "schema"}
+        _used = {"source", "database", "table", "schema"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
