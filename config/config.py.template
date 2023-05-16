@@ -38,7 +38,10 @@ settings = {
             "DB_PORT" : 3306,
             "DB_NAME" : "logger",
             "DB_USER" : "username",
-            "DB_PW"   : "password"
+            "DB_PW"   : "password",
+            "SSH_HOST": "hostname",
+            "SSH_USER": "WCER AD User",
+            "SSH_PASS": "WCER AD Password"
         },
         "OGD_PENGUINS": {
             "DB_TYPE"    : "BIGQUERY",
