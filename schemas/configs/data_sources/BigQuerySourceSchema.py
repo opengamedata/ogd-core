@@ -51,7 +51,7 @@ class BigQuerySchema(DataSourceSchema):
 
     @property
     def AsConnectionInfo(self) -> str:
-        ret_val : str = f"{self.DBName}.{self.ProjectID}"
+        ret_val : str = f"{self.ProjectID}"
         return ret_val
 
     @staticmethod

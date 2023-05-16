@@ -9,7 +9,6 @@ from utils import Logger
 class DataSourceSchema(Schema):
     def __init__(self, name:str, other_elements:Dict[str, Any]):
         self._db_type : str
-        self._db_name  : str
         if not isinstance(other_elements, dict):
             other_elements = {}
             Logger.Log(f"For {name} Data Source config, other_elements was not a dict, defaulting to empty dict", logging.WARN)
@@ -27,10 +26,6 @@ class DataSourceSchema(Schema):
     @property
     def Type(self) -> str:
         return self._db_type
-
-    @property
-    def DBName(self) -> str:
-        return self._db_name
 
     @staticmethod
     def _parseDBType(db_type) -> str:
