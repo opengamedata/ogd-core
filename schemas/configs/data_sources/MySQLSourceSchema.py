@@ -215,7 +215,7 @@ class MySQLSchema(DataSourceSchema):
 
     @property
     def AsConnectionInfo(self) -> str:
-        ret_val : str = f"{self.DBUser}@{self.DBHost}:{self.DBPort}/{self.DBName}"
+        ret_val : str = f"{self.DBUser}@{self.DBHost}:{self.DBPort}"
         return ret_val
 
     @staticmethod
