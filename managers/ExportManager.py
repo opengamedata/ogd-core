@@ -259,7 +259,7 @@ class ExportManager:
                 self._feat_mgr.ProcessEvent(event=next_event)
         except Exception as err:
             if self._config.FailFast:
-                Logger.Log(f"Error while processing event {next_event.EventName}.", logging.ERROR, depth=2)
+                Logger.Log(f"Error while processing event {next_event.EventName}:\n{next_event}", logging.ERROR, depth=2)
                 raise err
             else:
                 Logger.Log(f"Error while processing event {next_event.EventName}. This event will be skipped. \nFull error: {traceback.format_exc()}", logging.WARNING, depth=2)
