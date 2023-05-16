@@ -172,7 +172,7 @@ class BigQueryInterface(DataInterface):
             #     date_wildcard = BigQueryInterface._datesWildcard(a=min_date, b=_current_date)
             # elif max_date is not None:
             #     date_wildcard = BigQueryInterface._datesWildcard(a=_current_date, b=max_date)
-            return f"{self._config.Source.AsConnectionInfo}.{self._config.TableName}_{date_wildcard}"
+            return f"{self._config.Source.AsConnectionInfo}.{self._config.DatabaseName}.{self._config.TableName}_{date_wildcard}"
         else:
             return "INVALID SOURCE SCHEMA"
 
