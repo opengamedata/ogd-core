@@ -27,6 +27,11 @@ class DataSourceSchema(Schema):
     def Type(self) -> str:
         return self._db_type
 
+    @property
+    @abc.abstractmethod
+    def AsConnectionInfo(self) -> str:
+        pass
+
     @staticmethod
     def _parseDBType(db_type) -> str:
         ret_val : str
