@@ -10,6 +10,7 @@ class GameSourceSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any], data_sources:Dict[str, DataSourceSchema]):
         self._source_name   : str
         self._source_schema : Optional[DataSourceSchema]
+        self._db_name       : str
         self._table_schema  : str
         self._table_name    : str
 
@@ -26,6 +27,11 @@ class GameSourceSchema(Schema):
         else:
             self._source_schema = None
             Logger.Log(f"{name} config's 'source' name ({self._source_name}) was not found in available source schemas; defaulting to source_schema={self._source_schema}", logging.WARN)
+        if "database" in all_elements.keys():
+            self._db_name = GameSourceSchema._parseDBName(all_elements["database"])
+        else:
+            self._db_name = name
+            Logger.Log(f"{name} config does not have a 'database' element; defaulting to db_name={self._db_name}", logging.WARN)
         if "table" in all_elements.keys():
             self._table_name = GameSourceSchema._parseTableName(all_elements["table"])
         else:
@@ -54,6 +60,10 @@ class GameSourceSchema(Schema):
         return self._table_name
 
     @property
+    def DatabaseName(self) -> str:
+        return self._db_name
+
+    @property
     def Schema(self) -> str:
         return self._schema
 
@@ -61,7 +71,7 @@ class GameSourceSchema(Schema):
     def AsMarkdown(self) -> str:
         ret_val : str
 
-        ret_val = f"{self.Name}: _{self.Schema}_ format, source {self.Source}.{self.TableName}"
+        ret_val = f"{self.Name}: _{self.Schema}_ format, source {self.Source.Name if self.Source else 'None'} : {self.DatabaseName}.{self.TableName}"
         return ret_val
 
     @staticmethod
@@ -82,6 +92,16 @@ class GameSourceSchema(Schema):
         else:
             ret_val = str(source)
             Logger.Log(f"Game Source source name was unexpected type {type(source)}, defaulting to str(source)={ret_val}.", logging.WARN)
+        return ret_val
+
+    @staticmethod
+    def _parseDBName(db_name) -> str:
+        ret_val : str
+        if isinstance(db_name, str):
+            ret_val = db_name
+        else:
+            ret_val = str(db_name)
+            Logger.Log(f"MySQL Data Source DB name was unexpected type {type(db_name)}, defaulting to str(db_name)={ret_val}.", logging.WARN)
         return ret_val
 
     @staticmethod

@@ -9,19 +9,19 @@ from utils import Logger
 
 class BigQuerySchema(DataSourceSchema):
     def __init__(self, name:str, all_elements:Dict[str, Any], fallbacks:Dict[str, Any]={}):
-        self._dataset_id : str
+        self._project_id : str
         self._credential : Optional[str]
 
         if not isinstance(all_elements, dict):
             all_elements = {}
             Logger.Log(f"For {name} Game Source config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
-        if "DATASET_ID" in all_elements.keys():
-            self._dataset_id = BigQuerySchema._parseDatasetID(all_elements["DATASET_ID"])
-        elif "DATASET_ID" in fallbacks.keys():
-            self._dataset_id = BigQuerySchema._parseDatasetID(fallbacks["DATASET_ID"])
+        if "PROJECT_ID" in all_elements.keys():
+            self._project_id = BigQuerySchema._parseProjectID(all_elements["PROJECT_ID"])
+        elif "PROJECT_ID" in fallbacks.keys():
+            self._project_id = BigQuerySchema._parseProjectID(fallbacks["PROJECT_ID"])
         else:
-            self._dataset_id = "UNKNOWN"
-            Logger.Log(f"{name} config does not have a 'DATASET_ID' element; defaulting to dataset_id={self._dataset_id}", logging.WARN)
+            self._project_id = "UNKNOWN"
+            Logger.Log(f"{name} config does not have a 'DATASET_ID' element; defaulting to dataset_id={self._project_id}", logging.WARN)
         if "PROJECT_KEY" in all_elements.keys():
             self._credential = BigQuerySchema._parseCredential(all_elements["PROJECT_KEY"])
         elif "PROJECT_KEY" in fallbacks.keys():
@@ -35,8 +35,8 @@ class BigQuerySchema(DataSourceSchema):
         super().__init__(name=name, other_elements=_leftovers)
 
     @property
-    def DatasetID(self) -> str:
-        return self._dataset_id
+    def ProjectID(self) -> str:
+        return self._project_id
 
     @property
     def Credential(self) -> Optional[str]:
@@ -51,17 +51,17 @@ class BigQuerySchema(DataSourceSchema):
 
     @property
     def AsConnectionInfo(self) -> str:
-        ret_val : str = f"{self.DBName}.{self.DatasetID}"
+        ret_val : str = f"{self.DBName}.{self.ProjectID}"
         return ret_val
 
     @staticmethod
-    def _parseDatasetID(data_id) -> str:
+    def _parseProjectID(project_id) -> str:
         ret_val : str
-        if isinstance(data_id, str):
-            ret_val = data_id
+        if isinstance(project_id, str):
+            ret_val = project_id
         else:
-            ret_val = str(data_id)
-            Logger.Log(f"Data Source dataset ID was unexpected type {type(data_id)}, defaulting to str(data_id)={ret_val}.", logging.WARN)
+            ret_val = str(project_id)
+            Logger.Log(f"Data Source project ID was unexpected type {type(project_id)}, defaulting to str(project_id)={ret_val}.", logging.WARN)
         return ret_val
 
     @staticmethod
