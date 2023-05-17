@@ -51,6 +51,7 @@ class DiveSiteNoEvidence(Detector):
         if self._in_dive and self._last_evidence_time is not None and not self._has_triggered:
             self._time_since_evidence = (event.Timestamp - self._last_evidence_time).total_seconds()
         self._time = event.Timestamp
+        self._current_job = event.GameState.get('job_name', event.EventData.get('job_name'))
         return
     
     def _trigger_condition(self) -> bool:
@@ -69,7 +70,7 @@ class DiveSiteNoEvidence(Detector):
         :rtype: List[Any]
         """
         ret_val : Event = DetectorEvent(session_id="Not Implemented", app_id="Not Implemented", timestamp=self._time,
-                                        event_name="CustomDetector", event_data={})
+                                        event_name="CustomDetector", event_data={}, game_state={"job_name":self._current_job})
         # >>> use state variables to generate the detector's event. <<<
         # >>> definitely don't return all these "Not Implemented" things, unless you really find that useful... <<<
         #
@@ -90,6 +91,7 @@ class DiveSiteNoEvidence(Detector):
         self._last_evidence_time  : Optional[datetime] = None
         self._time_since_evidence : float = 0
         self._has_triggered : bool = False
+        self._current_job = None
 
     # *** PUBLIC STATICS ***
 
