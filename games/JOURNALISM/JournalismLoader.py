@@ -84,16 +84,19 @@ class JournalismLoader(ExtractorLoader):
             elif feature_type == "SnippetReplace":
                 ret_val = SnippetReplace.SnippetReplace(params=extractor_params)
             elif feature_type == "StoryEditorTime":
-                ret_val = StoryEditorTime.StoryEditorTime(params=extractor_params)
+                ret_val = StoryEditorTime.StoryEditorTime(params=extractor_params, threshold= schema_args.get("IDLE_THRESH_SECONDS", PlayTime.PlayTime.IDLE_TIME_THRESHOLD))
             elif feature_type == "AttributeView":
                 ret_val = AttributeView.AttributeView(params=extractor_params)
             elif feature_type == "EditorNoteOpen":
                 ret_val = EditorNoteOpen.EditorNoteOpen(params=extractor_params)
+            elif feature_type == "TopPlayerQuitType":
+                ret_val= TopPlayerQuitType.TopPlayerQuitType(params=extractor_params)
 
         else:
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Journalism.")
         return ret_val
+      
     
 
     def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:

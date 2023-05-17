@@ -28,7 +28,8 @@ __all__ = [
     "SnippetReplace",
     "StoryEditorTime",
     "AttributeView",
-    "EditorNoteOpen"
+    "EditorNoteOpen",
+    "TopPlayerQuitType"
 ]
 
 from . import TextClickCount
@@ -61,3 +62,4 @@ from . import QuitNode
 from . import SnippetReplace
 from . import AttributeView
 from . import EditorNoteOpen
+from . import TopPlayerQuitType
