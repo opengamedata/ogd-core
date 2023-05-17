@@ -33,8 +33,8 @@ settings = {
         },
         "OPENGAMEDATA_BQ" : {
             "DB_TYPE"    : "BIGQUERY",
-            "PROJECT_ID" : "shipwrecks-8d142",
-            "PROJECT_KEY": "./config/shipwrecks.json"
+            "PROJECT_ID" : "wcer-field-day-ogd-1798",
+            "PROJECT_KEY": "./config/ogd.json"
         },
         "OPENGAMEDATA_MYSQL": {
             "DB_TYPE" : "MySQL",
