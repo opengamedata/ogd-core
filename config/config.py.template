@@ -69,7 +69,7 @@ settings = {
         "EARTHQUAKE":     { "source":"LOGGER",             "database":"logger",              "table":"log",              "schema":"FIELDDAY_MYSQL"        },
         "ICECUBE":        { "source":"OPENGAMEDATA_MYSQL", "database":"opengamedata",        "table":"ICECUBE",          "schema":"OPENGAMEDATA_MYSQL"    },
         "JOWILDER":       { "source":"LOGGER",             "database":"logger",              "table":"log",              "schema":"FIELDDAY_MYSQL"        },
-        "JOURNALSM":      { "source":"OPENGAMEDATA_BQ",    "database":"journalism",          "table":"journalism_daily", "schema":"FIELDDAY_MYSQL"        },
+        "JOURNALISM":     { "source":"OPENGAMEDATA_BQ",    "database":"journalism",          "table":"journalism_daily", "schema":"FIELDDAY_MYSQL"        },
         "PENGUINS":       { "source":"OPENGAMEDATA_BQ",    "database":"penguins",            "table":"penguins_daily",   "schema":"OPENGAMEDATA_BIGQUERY" },
         "LAKELAND":       { "source":"LOGGER",             "database":"logger",              "table":"log",              "schema":"FIELDDAY_MYSQL"        },
         "MAGNET":         { "source":"LOGGER",             "database":"logger",              "table":"log",              "schema":"FIELDDAY_MYSQL"        },
