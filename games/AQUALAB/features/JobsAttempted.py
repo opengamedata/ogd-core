@@ -60,10 +60,12 @@ class JobsAttempted(Feature):
                 # self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
                 # self._job_start_time = event.Timestamp
 
-        if self._validate_job(event.GameState['job_name']):
+        _current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if _current_job is None:
+            raise KeyError("Could not find key 'job_name' in GameState or EventData!")
+        if self._validate_job(_current_job):
             user_code = event.UserID
-            job_name = event.GameState['job_name']
-            job_id = self._job_map[job_name]
+            job_id = self._job_map[_current_job]
 
             if event.EventName == "accept_job" and job_id == self._job_id:
                 self._num_starts += 1

@@ -30,20 +30,22 @@ class TopJobSwitchDestinations(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self._validate_job(event.GameState['job_name']):
+        _job_name = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if _job_name is None:
+            raise KeyError("Could not find key 'job_name' in GameState or EventData!")
+        if self._validate_job(_job_name):
             user_code = event.UserID
-            job_name = event.GameState['job_name']
 
             if event.EventName == "accept_job":
-                self._last_started_id = job_name
+                self._last_started_id = _job_name
             elif event.EventName == "switch_job":
-                if user_code == self._current_user_code and self._last_started_id is not None and self._last_started_id != job_name and job_name != "no-active-job":
-                    if not job_name in self._job_switch_pairs[self._last_started_id].keys():
-                        self._job_switch_pairs[self._last_started_id][job_name] = []
+                if user_code == self._current_user_code and self._last_started_id is not None and self._last_started_id != _job_name and _job_name != "no-active-job":
+                    if not _job_name in self._job_switch_pairs[self._last_started_id].keys():
+                        self._job_switch_pairs[self._last_started_id][_job_name] = []
 
-                    self._job_switch_pairs[self._last_started_id][job_name].append(user_code) # here, we take what we switched to, and append where we switched from
+                    self._job_switch_pairs[self._last_started_id][_job_name].append(user_code) # here, we take what we switched to, and append where we switched from
 
-                self._last_started_id = job_name
+                self._last_started_id = _job_name
 
             # once we process the event, we know we're looking at data for this event's user next time.
             self._current_user_code = user_code
