@@ -4,13 +4,12 @@ import logging
 import sshtunnel
 import traceback
 from datetime import datetime
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional
 # import locals
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
-from schemas.tables.TableSchema import TableSchema
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
-from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema, SSHSchema
+from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
 from utils import Logger
 
 
