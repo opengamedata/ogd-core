@@ -647,7 +647,7 @@
                 "new_quality": {
                     "type": "List[enum(BAD, GOOD, GREAT)]",
                     "description": "The quality for each snippet used in the story, sorted by quality. Note that 'GOOD' quality is not displayed to the player"
-                }
+                },
                 "story_score": {
                     "type": "float",
                     "description": "calculated score based on overall quality"
@@ -744,7 +744,7 @@
             }
         },
         "resumed_checkpoint":{
-            "description": "When a player resumes a checkpoint"
+            "description": "When a player resumes a checkpoint",
             "event_data":{
                 "node_id":{
                     "type": "string",
