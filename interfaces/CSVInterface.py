@@ -28,7 +28,8 @@ class CSVInterface(DataInterface):
 
     def _open(self) -> bool:
         try:
-            self._data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter, parse_dates=['timestamp'])
+            _data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter, parse_dates=['timestamp'])
+            self._data = _data.where(_data.notnull(), None)
             self._is_open = True
             return True
         except FileNotFoundError as err:
