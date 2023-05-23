@@ -65,5 +65,5 @@ runs:
       run: sed -i 's/INFO/${{inputs.log_level}}/g' config/config.py
       shell: bash
     - name: Set Slice Size
-      run: sed -i 's/"BATCH_SIZE":1000/"BATCH_SIZE":${{inputs.slice_size}}/g' config/config.py
+      run: sed -i'' -e 's/"BATCH_SIZE" : 10000,/"BATCH_SIZE" : ${{inputs.slice_size}},/g' config/config.py
       shell: bash
