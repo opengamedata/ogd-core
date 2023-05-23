@@ -1,8 +1,8 @@
 settings = {
-    "BATCH_SIZE" : 1000,
-    "LOG_FILE"   : False,
-    "DEBUG_LEVEL": "INFO",
-    "FAIL_FAST"  : False,
+    "BATCH_SIZE":1000,
+    "LOG_FILE":False,
+    "DEBUG_LEVEL":"INFO",
+    "FAIL_FAST":False,
     "FILE_INDEXING" : 
     {
         "LOCAL_DIR"     : "./data/",
