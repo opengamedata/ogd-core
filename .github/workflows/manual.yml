@@ -44,6 +44,9 @@ on:
         required: true
         default: "INFO"
 
+env:
+  OGD_BQ_GAMES: '["AQUALAB", "BACTERIA", "BALLOON", "CRYSTAL", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "JOWILDER", "PENGUINS", "LAKELAND", "MAGNET", "WAVES", "WIND"]'
+
 jobs:
   export_data:
     name: Export Game
@@ -60,7 +63,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       # A bunch of copy-paste crap to set up google cloud for any given game.
-    - if: contains(fromJson('["AQUALAB", "PENGUINS"]'), ${{ matrix.game }})
+    - if: contains(fromJson(${{ env.OGD_BQ_GAMES }}), ${{ matrix.game }})
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
