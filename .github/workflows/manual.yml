@@ -47,6 +47,7 @@ on:
 jobs:
   export_data:
     name: Export Game
+    timeout-minutes: 1440
     strategy:
       matrix:
         game: ${{ FromJson(github.event.inputs.game) }}
