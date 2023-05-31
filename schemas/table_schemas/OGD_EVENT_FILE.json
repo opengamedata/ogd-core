@@ -7,7 +7,7 @@
         "event_data"           : "event_data",
         "event_source"         : "event_source",
         "app_version"          : "app_version",
-        "app_branch"           : "app_version",
+        "app_branch"           : "app_branch",
         "log_version"          : "log_version",
         "time_offset"          : "offset",
         "user_id"              : "user_id",
@@ -39,7 +39,7 @@
             "name": "event_name",
             "readable": "Event Type",
             "description": "The type of event logged",
-            "type": "enum('BEGIN','COMPLETE','SUCCEED','FAIL','CUSTOM','UNDEFINED')"
+            "type": "str"
         },
         {
             "name": "event_data",
@@ -63,7 +63,7 @@
             "name": "app_branch",
             "readable": "App Branch",
             "description": "The branch of the game from which the event came",
-            "type": "int"
+            "type": "str"
         },
         {
             "name": "log_version",
