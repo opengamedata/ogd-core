@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: '1 0 2 * *'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+
+env:
+  OGD_BQ_GAMES: '["AQUALAB", "BACTERIA", "BALLOON", "CRYSTAL", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "JOWILDER", "PENGUINS", "LAKELAND", "MAGNET", "WAVES", "WIND"]'
+
 jobs:
   export_data:
     name: Export All Games
@@ -20,22 +24,22 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       # A bunch of copy-paste crap to set up google cloud for any given game.
-    - if: contains(fromJson('["AQUALAB", "PENGUINS"]'), ${{ matrix.game }})
-      name: Set up Cloud SDK
+    - if: contains(fromJson(${{ env.OGD_BQ_GAMES }}), ${{ matrix.game }})
+      name: Set up Cloud SDK for OGD BigQuery
       uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
         service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'SHADOWSPECT' }}
-      name: Set up Cloud SDK
+      name: Set up Cloud SDK for Shadowspect
       uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
         service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'SHIPWRECKS' }}
-      name: Set up Cloud SDK
+      name: Set up Cloud SDK for Shipwrecks
       uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
