@@ -122,12 +122,11 @@ jobs:
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
-        vpn_user: ${{secrets.VPN_USER}}
-        vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{vars.FD_STORE_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        sql_db: ${{github.event.inputs.database}}
+        ssh_host: ${{vars.FD_STORE_HOST}}
+        ssh_user: ${{secrets.VPN_USER}}
+        ssh_pass: ${{secrets.VPN_PASS}}
         slice_size: ${{ github.event.inputs.slice_size }}
         log_level: ${{ github.event.inputs.log_level }}
     - name: Set up Schema File
