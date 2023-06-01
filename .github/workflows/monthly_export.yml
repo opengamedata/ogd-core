@@ -51,11 +51,11 @@ jobs:
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
-        vpn_user: ${{secrets.VPN_USER}}
-        vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{vars.FD_STORE_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
+        ssh_host: ${{vars.FD_STORE_HOST}}
+        ssh_user: ${{secrets.VPN_USER}}
+        ssh_pass: ${{secrets.VPN_PASS}}
         log_level: "INFO"
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema

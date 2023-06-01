@@ -3,50 +3,65 @@
 # All games, and months, for copy-paste:
 # game: ['AQUALAB', 'BACTERIA', 'BALLOON', 'CRYSTAL', 'CYCLE_CARBON', 'CYCLE_NITROGEN', 'CYCLE_WATER', 'EARTHQUAKE', 'JOWILDER', 'LAKELAND', 'MAGNET', 'STEMPORTS', 'WAVES', 'WIND']
 # month-year: ['03/2019', '04/2019', '05/2019', '06/2019', '07/2019', '08/2019', '09/2019', '10/2019', '11/2019', '12/2019', '01/2020', '02/2020', '03/2020', '04/2020', '05/2020', '06/2020', '07/2020', '08/2020', '09/2020']
-name: Manual Export
+name: Manual Export w/Legacy Data Source (events only)
 on:
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
     inputs:
       game:
-        description: "Game: The game(s) to be exported, comma-separated"
+        description: "The game to be exported (only one, not allowed to do multiple games)"
         required: true
-        default: "['BACTERIA']"
+        default: "BACTERIA"
       monthly:
-        description: "Monthly: If true, use month/year. Else, use start and end dates"
+        description: "If true, use month/year. Else, use start and end dates"
         required: true
         default: "true"
       month_year:
-        description: "Month/Year: The month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
+        description: "The month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
         required: false
         default: "['01/2021']"
       start_date:
-        description: "Start Date: The start date for the export"
+        description: "The start date for the export"
         required: false
         default: "01/01/2021"
       end_date:
-        description: "End Date: The end date for the export"
+        description: "The end date for the export"
         required: false
         default: "01/01/2021"
       export_to_web:
-        description: "Export to Web: Boolean indicating whether the export should go to the website, or only be uploaded as an artifact."
+        description: "Boolean indicating whether the export should go to the website, or only be uploaded as an artifact."
         required: true
         default: "false"
+      source_id:
+        description: "Which game source config to pull from"
+        required: true
+        default: "LOGGER"
+      database:
+        description: "Which database to pull from"
+        required: true
+        default: "logger"
+      table:
+        description: "Which db table to pull from"
+        required: true
+        default: "log"
+      schema_id:
+        description: "Which table schema file to use"
+        required: true
+        default: "FIELDDAY_MYSQL"
       slice_size:
-        description: "Slice Size: The size of slices to use"
+        description: "The size of slices to use"
         required: false
         default: "1000"
       log_level:
-        description: "Log Level: What level of debugging output to log"
+        description: "What level of debugging output to log"
         required: true
         default: "INFO"
 
 env:
-  OGD_BQ_GAMES: '["AQUALAB", "BACTERIA", "BALLOON", "CRYSTAL", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "JOWILDER", "PENGUINS", "LAKELAND", "MAGNET", "WAVES", "WIND"]'
+  MYSQL_SOURCES: '["OPENGAMEDATA_MYSQL", "LOGGER"]'
 
 jobs:
   export_data:
     name: Export Game
-    timeout-minutes: 1440
     strategy:
       matrix:
         game: ${{ FromJson(github.event.inputs.game) }}
@@ -58,69 +73,82 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
-      # A bunch of copy-paste crap to set up google cloud for any given game.
-    - if: contains(fromJson(${{ env.OGD_BQ_GAMES }}), ${{ matrix.game }})
-      name: Set up Cloud SDK
+
+    # A bunch of copy-paste crap to set up google cloud for any given game.
+    # Since we don't know which game source is gonna be used, check for all possibilities
+    - if: ${{ inputs.source_id == 'AQUALAB_BQ' }}
+      name: Set up Cloud SDK for Aqualab
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        project_id: ${{ secrets.BQ_AQUALAB_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_AQUALAB_JSON }}
         export_default_credentials: true
-    - if: ${{ matrix.game == 'MASHOPOLIS' }}
-      name: Set up Cloud SDK
+    - if: ${{ inputs.source_id == 'MASHOPOPLIS_BQ' }}
+      name: Set up Cloud SDK for Mashopolis
       uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
         service_account_key: ${{ secrets.BQ_MASHOPOLIS_JSON }}
         export_default_credentials: true
-    - if: ${{ matrix.game == 'SHADOWSPECT' }}
-      name: Set up Cloud SDK
+    - if: ${{ inputs.source_id == 'SHADOWSPECT_BQ' }}
+      name: Set up Cloud SDK for Shadowspect
       uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
         service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
         export_default_credentials: true
-    - if: ${{ matrix.game == 'SHIPWRECKS' }}
-      name: Set up Cloud SDK
+    - if: ${{ inputs.source_id == 'SHIPWRECKS_BQ' }}
+      name: Set up Cloud SDK for Shipwrecks
       uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
         service_account_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
         export_default_credentials: true
-      # Back to normal setup stuff.
-    - name: Get OpenConnect
-      run: sudo apt-get -q update && sudo apt-get -q install openconnect
-    - name: Connect VPN
-      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - if: ${{ inputs.source_id == 'OPENGAMEDATA_BQ' }}
+      name: Set up Cloud SDK for OGD Project
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        export_default_credentials: true
+    - if: contains(fromJson(${{ env.MYSQL_SOURCES }}), ${{ inputs.source_id }})
+      name: Get OpenConnect and connect to VPN
+      run: |
+        sudo apt-get -q update && sudo apt-get -q install openconnect
+        echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    # Back to normal setup stuff.
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{vars.FD_STORE_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        ssh_host: ${{vars.FD_STORE_HOST}}
-        ssh_user: ${{secrets.VPN_USER}}
-        ssh_pass: ${{secrets.VPN_PASS}}
+        sql_db: ${{github.event.inputs.database}}
         slice_size: ${{ github.event.inputs.slice_size }}
         log_level: ${{ github.event.inputs.log_level }}
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:
         game: ${{matrix.game}}
-    - name: Do Export of Month
+    - name: Do Export of Month (events only)
       if: github.event.inputs.monthly == 'true'
       uses: ./.github/actions/export_custom_month
       with:
         game: ${{matrix.game}}
         month_year: ${{matrix.month_year}}
-    - name: Do Export of Range
+        events_only: true
+    - name: Do Export of Range (events only)
       if: github.event.inputs.monthly == 'false'
       uses: ./.github/actions/export_custom
       with:
         game: ${{matrix.game}}
         start_date: ${{github.event.inputs.start_date}}
         end_date: ${{github.event.inputs.end_date}}
+        events_only: true
     - name: Upload files to opengamedata via scp
       if: github.event.inputs.export_to_web == 'true'
       run: |
@@ -133,7 +161,7 @@ jobs:
       if: github.event.inputs.export_to_web == 'false'
       uses: actions/upload-artifact@v3
       with:
-        name: ${{matrix.game}}_export_data
+        name: ${{matrix.game}}_event_export_data
         path: ./data/${{matrix.game}}/*.zip
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
@@ -143,7 +171,7 @@ jobs:
   
   trigger_reindex:
     name: Reindex OpenGameData Files
-    if: github.event.inputs.export_to_web == 'true'
+    if: always()
     needs: export_data
     runs-on: ubuntu-22.04
     steps:
