@@ -516,50 +516,58 @@
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Number of player events that require the player's active input"
+        "description": "Number of player events that require the player's active input",
+        "return_type": "int"
       },
       "InactiveEventCount": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Number of game events that don't require the player's active input"
+        "description": "Number of game events that don't require the player's active input",
+        "return_type": "int"
       },
       "time_in_secs": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Time (in seconds) spent on the given level"
+        "description": "Time (in seconds) spent on the given level",
+        "return_type": "int"
       },
 
       "count_gamestate_logs": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "count of gamestate logs"
+        "description": "count of gamestate logs",
+        "return_type": "int"
       },
       "count_achievements": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Progress: count of achievements"
+        "description": "Player feature - Progress: count of achievements",
+        "return_type": "int"
       },
       "count_explore_events": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "number of events that explore the gamestate: SELECTTILE, SELECTFARMBIT, SELECTITEM, TOGGLEACHIEVEMENTS, TOGGLESHOP"
+        "description": "number of events that explore the gamestate: SELECTTILE, SELECTFARMBIT, SELECTITEM, TOGGLEACHIEVEMENTS, TOGGLESHOP",
+        "return_type": "int"
       },
       "count_impact_events": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "number of active events that change the gamestate: BUY,TILEUSESELECT,ITEMUSESELECT"
+        "description": "number of active events that change the gamestate: BUY,TILEUSESELECT,ITEMUSESELECT",
+        "return_type": "int"
       },
       "count_idle": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "number of times the player went from active to idle"
+        "description": "number of times the player went from active to idle",
+        "return_type": "int"
       },
 
 
@@ -567,104 +575,121 @@
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: buy a home"
+        "description": "Player feature - Number of times the player: buy a home",
+        "return_type": "int"
       },
       "count_buy_food": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: buy a food"
+        "description": "Player feature - Number of times the player: buy a food",
+        "return_type": "int"
       },
       "count_buy_farm": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: buy a farm"
+        "description": "Player feature - Number of times the player: buy a farm",
+        "return_type": "int"
       },
       "count_buy_fertilizer": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: buy a fertilizer"
+        "description": "Player feature - Number of times the player: buy a fertilizer",
+        "return_type": "int"
       },
       "count_buy_livestock": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: buy a livestock"
+        "description": "Player feature - Number of times the player: buy a livestock",
+        "return_type": "int"
       },
       "count_buy_skimmer": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: buy a skimmer"
+        "description": "Player feature - Number of times the player: buy a skimmer",
+        "return_type": "int"
       },
       "count_buy_sign": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: buy a sign"
+        "description": "Player feature - Number of times the player: buy a sign",
+        "return_type": "int"
       },
       "count_buy_road": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: buy a road"
+        "description": "Player feature - Number of times the player: buy a road",
+        "return_type": "int"
       },
 
       "money_spent": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: money spent"
+        "description": "Player feature - General: money spent",
+        "return_type": "int"
       },
       "money_spent_home": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: money spent on home"
+        "description": "Player feature - General: money spent on home",
+        "return_type": "int"
       },
       "money_spent_food": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: money spent on food"
+        "description": "Player feature - General: money spent on food",
+        "return_type": "int"
       },
       "money_spent_farm": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: money spent on farm"
+        "description": "Player feature - General: money spent on farm",
+        "return_type": "int"
       },
       "money_spent_fertilizer": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: money spent on fertilizer"
+        "description": "Player feature - General: money spent on fertilizer",
+        "return_type": "int"
       },
       "money_spent_livestock": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: money spent on livestock"
+        "description": "Player feature - General: money spent on livestock",
+        "return_type": "int"
       },
       "money_spent_skimmer": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: money spent on skimmer"
+        "description": "Player feature - General: money spent on skimmer",
+        "return_type": "int"
       },
       "money_spent_sign": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: money spent on sign"
+        "description": "Player feature - General: money spent on sign",
+        "return_type": "int"
       },
       "money_spent_road": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: money spent on road"
+        "description": "Player feature - General: money spent on road",
+        "return_type": "int"
       },
 
 
@@ -672,220 +697,256 @@
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: min number of home in play"
+        "description": "Player feature - General: min number of home in play",
+        "return_type": "int"
       },
       "max_num_home_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: max number of home in play"
+        "description": "Player feature - General: max number of home in play",
+        "return_type": "int"
       },
       "min_num_grave_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: min number of grave in play"
+        "description": "Player feature - General: min number of grave in play",
+        "return_type": "int"
       },
       "max_num_grave_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: max number of grave in play"
+        "description": "Player feature - General: max number of grave in play",
+        "return_type": "int"
       },
       "min_num_food_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: min number of food in play"
+        "description": "Player feature - General: min number of food in play",
+        "return_type": "int"
       },
       "max_num_food_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: max number of food in play"
+        "description": "Player feature - General: max number of food in play",
+        "return_type": "int"
       },
       "min_num_farm_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: min number of farm in play"
+        "description": "Player feature - General: min number of farm in play",
+        "return_type": "int"
       },
       "max_num_farm_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: max number of farm in play"
+        "description": "Player feature - General: max number of farm in play",
+        "return_type": "int"
       },
       "min_num_fertilizer_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: min number of fertilizer in play"
+        "description": "Player feature - General: min number of fertilizer in play",
+        "return_type": "int"
       },
       "max_num_fertilizer_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: max number of fertilizer in play"
+        "description": "Player feature - General: max number of fertilizer in play",
+        "return_type": "int"
       },
       "min_num_livestock_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: min number of livestock in play"
+        "description": "Player feature - General: min number of livestock in play",
+        "return_type": "int"
       },
       "max_num_livestock_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: max number of livestock in play"
+        "description": "Player feature - General: max number of livestock in play",
+        "return_type": "int"
       },
       "min_num_skimmer_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: min number of skimmer in play"
+        "description": "Player feature - General: min number of skimmer in play",
+        "return_type": "int"
       },
       "max_num_skimmer_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: max number of skimmer in play"
+        "description": "Player feature - General: max number of skimmer in play",
+        "return_type": "int"
       },
       "min_num_sign_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: min number of sign in play"
+        "description": "Player feature - General: min number of sign in play",
+        "return_type": "int"
       },
       "max_num_sign_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: max number of sign in play"
+        "description": "Player feature - General: max number of sign in play",
+        "return_type": "int"
       },
       "min_num_road_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: min number of road in play"
+        "description": "Player feature - General: min number of road in play",
+        "return_type": "int"
       },
       "max_num_road_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: max number of road in play"
+        "description": "Player feature - General: max number of road in play",
+        "return_type": "int"
       },
       "min_num_water_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: min number of water in play"
+        "description": "Player feature - General: min number of water in play",
+        "return_type": "int"
       },
       "max_num_water_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: max number of water in play"
+        "description": "Player feature - General: max number of water in play",
+        "return_type": "int"
       },
       "min_num_poop_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: min number of poop in play"
+        "description": "Player feature - General: min number of poop in play",
+        "return_type": "int"
       },
       "max_num_poop_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: max number of poop in play"
+        "description": "Player feature - General: max number of poop in play",
+        "return_type": "int"
       },
       "min_num_milk_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: min number of milk in play"
+        "description": "Player feature - General: min number of milk in play",
+        "return_type": "int"
       },
       "max_num_milk_in_play": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: max number of milk in play"
+        "description": "Player feature - General: max number of milk in play",
+        "return_type": "int"
       },
 
       "avg_num_tiles_hovered_before_placing_home": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: ave num tiles hovered before placing home - not all players have hovers (tablets)"
+        "description": "Player feature - General: ave num tiles hovered before placing home - not all players have hovers (tablets)",
+        "return_type": "float"
       },
       "avg_num_tiles_hovered_before_placing_food": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: ave num tiles hovered before placing food - not all players have hovers (tablets)"
+        "description": "Player feature - General: ave num tiles hovered before placing food - not all players have hovers (tablets)",
+        "return_type": "float"
       },
       "avg_num_tiles_hovered_before_placing_farm": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: ave num tiles hovered before placing farm - not all players have hovers (tablets)"
+        "description": "Player feature - General: ave num tiles hovered before placing farm - not all players have hovers (tablets)",
+        "return_type": "float"
       },
       "avg_num_tiles_hovered_before_placing_fertilizer": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: ave num tiles hovered before placing fertilizer - not all players have hovers (tablets)"
+        "description": "Player feature - General: ave num tiles hovered before placing fertilizer - not all players have hovers (tablets)",
+        "return_type": "float"
       },
       "avg_num_tiles_hovered_before_placing_livestock": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: ave num tiles hovered before placing livestock - not all players have hovers (tablets)"
+        "description": "Player feature - General: ave num tiles hovered before placing livestock - not all players have hovers (tablets)",
+        "return_type": "float"
       },
       "avg_num_tiles_hovered_before_placing_skimmer": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: ave num tiles hovered before placing skimmer - not all players have hovers (tablets)"
+        "description": "Player feature - General: ave num tiles hovered before placing skimmer - not all players have hovers (tablets)",
+        "return_type": "float"
       },
       "avg_num_tiles_hovered_before_placing_sign": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: ave num tiles hovered before placing sign - not all players have hovers (tablets)"
+        "description": "Player feature - General: ave num tiles hovered before placing sign - not all players have hovers (tablets)",
+        "return_type": "float"
       },
       "avg_num_tiles_hovered_before_placing_road": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: ave num tiles hovered before placing (the first) road - not all players have hovers (tablets)"
+        "description": "Player feature - General: ave num tiles hovered before placing (the first) road - not all players have hovers (tablets)",
+        "return_type": "float"
       },
 
       "avg_distance_between_poop_placement_and_lake": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Assessment: average distance between poop placement and lake (should be fertilizer)"
+        "description": "Player feature - Assessment: average distance between poop placement and lake (should be fertilizer)",
+        "return_type": "float"
       },
       "avg_avg_distance_between_buildings": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Assessment: Average distance between buildings (when they build, how far is it from the closest thing)"
+        "description": "Player feature - Assessment: Average distance between buildings (when they build, how far is it from the closest thing)",
+        "return_type": "float"
       },
 
       "percent_building_a_farm_on_highest_nutrition_tile": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent building a farm on the best tile with the highest nutrition that was hovered over during the buy process"
+        "description": "Player feature - General: percent building a farm on the best tile with the highest nutrition that was hovered over during the buy process",
+        "return_type": "int"
       },
       "percent_placing_fertilizer_on_lowest_nutrient_farm": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": " TODO:::figure out how to calculate this:::TODO Player feature - General: percent placing fertilizer on lowest nutrient farm"
+        "description": " TODO:::figure out how to calculate this:::TODO Player feature - General: percent placing fertilizer on lowest nutrient farm",
+        "return_type": "int"
       },
       "build_sequences": {
         "enabled": false,
@@ -898,56 +959,65 @@
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: inspect a tile"
+        "description": "Player feature - Number of times the player: inspect a tile",
+        "return_type": "int"
       },
       "count_inspect_farmbit": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: inspect a farmbit"
+        "description": "Player feature - Number of times the player: inspect a farmbit",
+        "return_type": "int"
       },
       "count_inspect_item": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: inspect a item"
+        "description": "Player feature - Number of times the player: inspect a item",
+        "return_type": "int"
       },
       "count_open_achievements": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: look at achievements"
+        "description": "Player feature - Number of times the player: look at achievements",
+        "return_type": "int"
       },
       "count_open_shop": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: open the shop"
+        "description": "Player feature - Number of times the player: open the shop",
+        "return_type": "int"
       },
       "count_deaths": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: num deaths per sess"
+        "description": "Game feature - General: num deaths per sess",
+        "return_type": "int"
       },
       "count_rains": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Count of how many times it rained"
+        "description": "Count of how many times it rained",
+        "return_type": "int"
       },
 
       "count_encounter_tutorial": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: encounter a tutorial"
+        "description": "Player feature - Number of times the player: encounter a tutorial",
+        "return_type": "int"
       },
       "count_skips": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: press skip button"
+        "description": "Player feature - Number of times the player: press skip button",
+        "return_type": "int"
       },
 
       "time_in_nutrition_view": {
@@ -999,270 +1069,314 @@
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: change a sale/eat/feed state in an item panel"
+        "description": "Player feature - Number of times the player: change a sale/eat/feed state in an item panel",
+        "return_type": "int"
       },
       "count_change_tile_mark": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - Number of times the player: change a sale/eat/feed state in a farm panel"
+        "description": "Player feature - Number of times the player: change a sale/eat/feed state in a farm panel",
+        "return_type": "int"
       },
 
       "max_num_food_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of food marked for sale (in the farm marks)"
+        "description": "Player feature - General: percent of food marked for sale (in the farm marks)",
+        "return_type": "int"
       },
       "max_num_food_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of food marked for eat (in the farm marks)"
+        "description": "Player feature - General: percent of food marked for eat (in the farm marks)",
+        "return_type": "int"
       },
       "max_num_food_marked_feed": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of food marked for feed (in the farm marks)"
+        "description": "Player feature - General: percent of food marked for feed (in the farm marks)",
+        "return_type": "int"
       },
       "max_num_milk_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of milk marked for sale (in the farm marks)"
+        "description": "Player feature - General: percent of milk marked for sale (in the farm marks)",
+        "return_type": "int"
       },
       "max_num_milk_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of milk marked for eat (in the farm marks)"
+        "description": "Player feature - General: percent of milk marked for eat (in the farm marks)",
+        "return_type": "int"
       },
       "max_num_poop_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of poop marked for sale (in the farm marks)"
+        "description": "Player feature - General: percent of poop marked for sale (in the farm marks)",
+        "return_type": "int"
       },
       "max_num_poop_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of poop marked for fertilize (in the farm marks)"
+        "description": "Player feature - General: percent of poop marked for fertilize (in the farm marks)",
+        "return_type": "int"
       },
 
       "max_percent_food_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of food marked for sale (in the farm marks)"
+        "description": "Player feature - General: percent of food marked for sale (in the farm marks)",
+        "return_type": "int"
       },
       "max_percent_food_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of food marked for eat (in the farm marks)"
+        "description": "Player feature - General: percent of food marked for eat (in the farm marks)",
+        "return_type": "int"
       },
       "max_percent_food_marked_feed": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of food marked for feed (in the farm marks)"
+        "description": "Player feature - General: percent of food marked for feed (in the farm marks)",
+        "return_type": "int"
       },
       "max_percent_milk_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of milk marked for sale (in the farm marks)"
+        "description": "Player feature - General: percent of milk marked for sale (in the farm marks)",
+        "return_type": "int"
       },
       "max_percent_milk_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of milk marked for eat (in the farm marks)"
+        "description": "Player feature - General: percent of milk marked for eat (in the farm marks)",
+        "return_type": "int"
       },
       "max_percent_poop_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of poop marked for sale (in the farm marks)"
+        "description": "Player feature - General: percent of poop marked for sale (in the farm marks)",
+        "return_type": "int"
       },
       "max_percent_poop_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of poop marked for fertilize (in the farm marks)"
+        "description": "Player feature - General: percent of poop marked for fertilize (in the farm marks)",
+        "return_type": "int"
       },
 
       "min_num_food_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of food marked for sale (in the farm marks)"
+        "description": "Player feature - General: percent of food marked for sale (in the farm marks)",
+        "return_type": "int"
       },
       "min_num_food_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of food marked for eat (in the farm marks)"
+        "description": "Player feature - General: percent of food marked for eat (in the farm marks)",
+        "return_type": "int"
       },
       "min_num_food_marked_feed": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of food marked for feed (in the farm marks)"
+        "description": "Player feature - General: percent of food marked for feed (in the farm marks)",
+        "return_type": "int"
       },
       "min_num_milk_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of milk marked for sale (in the farm marks)"
+        "description": "Player feature - General: percent of milk marked for sale (in the farm marks)",
+        "return_type": "int"
       },
       "min_num_milk_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of milk marked for eat (in the farm marks)"
+        "description": "Player feature - General: percent of milk marked for eat (in the farm marks)",
+        "return_type": "int"
       },
       "min_num_poop_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of poop marked for sale (in the farm marks)"
+        "description": "Player feature - General: percent of poop marked for sale (in the farm marks)",
+        "return_type": "int"
       },
       "min_num_poop_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of poop marked for fertilize (in the farm marks)"
+        "description": "Player feature - General: percent of poop marked for fertilize (in the farm marks)",
+        "return_type": "int"
       },
 
       "min_percent_food_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of food marked for sale (in the farm marks)"
+        "description": "Player feature - General: percent of food marked for sale (in the farm marks)",
+        "return_type": "int"
       },
       "min_percent_food_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of food marked for eat (in the farm marks)"
+        "description": "Player feature - General: percent of food marked for eat (in the farm marks)",
+        "return_type": "int"
       },
       "min_percent_food_marked_feed": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of food marked for feed (in the farm marks)"
+        "description": "Player feature - General: percent of food marked for feed (in the farm marks)",
+        "return_type": "int"
       },
       "min_percent_milk_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of milk marked for sale (in the farm marks)"
+        "description": "Player feature - General: percent of milk marked for sale (in the farm marks)",
+        "return_type": "int"
       },
       "min_percent_milk_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of milk marked for eat (in the farm marks)"
+        "description": "Player feature - General: percent of milk marked for eat (in the farm marks)",
+        "return_type": "int"
       },
       "min_percent_poop_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of poop marked for sale (in the farm marks)"
+        "description": "Player feature - General: percent of poop marked for sale (in the farm marks)",
+        "return_type": "int"
       },
       "min_percent_poop_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: percent of poop marked for fertilize (in the farm marks)"
+        "description": "Player feature - General: percent of poop marked for fertilize (in the farm marks)",
+        "return_type": "int"
       },
 
       "max_num_per_capita_food_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: maximum per capita number of food marked for sale (in the farm marks)"
+        "description": "Player feature - General: maximum per capita number of food marked for sale (in the farm marks)",
+        "return_type": "float"
       },
       "min_num_per_capita_food_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: minimum per capita number of food marked for sale (in the farm marks)"
+        "description": "Player feature - General: minimum per capita number of food marked for sale (in the farm marks)",
+        "return_type": "float"
       },
       "max_num_per_capita_food_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: maximum per capita number of food marked for eat (in the farm marks)"
+        "description": "Player feature - General: maximum per capita number of food marked for eat (in the farm marks)",
+        "return_type": "float"
       },
       "min_num_per_capita_food_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: minimum per capita number of food marked for eat (in the farm marks)"
+        "description": "Player feature - General: minimum per capita number of food marked for eat (in the farm marks)",
+        "return_type": "float"
       },
       "max_num_per_capita_food_marked_feed": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: maximum per capita number of food marked for feed (in the farm marks)"
+        "description": "Player feature - General: maximum per capita number of food marked for feed (in the farm marks)",
+        "return_type": "float"
       },
       "min_num_per_capita_food_marked_feed": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: minimum per capita number of food marked for feed (in the farm marks)"
+        "description": "Player feature - General: minimum per capita number of food marked for feed (in the farm marks)",
+        "return_type": "float"
       },
       "max_num_per_capita_milk_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: maximum per capita number of milk marked for sale (in the farm marks)"
+        "description": "Player feature - General: maximum per capita number of milk marked for sale (in the farm marks)",
+        "return_type": "float"
       },
       "min_num_per_capita_milk_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: minimum per capita number of milk marked for sale  (in the farm marks)"
+        "description": "Player feature - General: minimum per capita number of milk marked for sale  (in the farm marks)",
+        "return_type": "float"
       },
       "max_num_per_capita_milk_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: maximum per capita number of milk marked for eat (in the farm marks)"
+        "description": "Player feature - General: maximum per capita number of milk marked for eat (in the farm marks)",
+        "return_type": "float"
       },
       "min_num_per_capita_milk_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: minimum per capita number of milk marked for eat (in the farm marks)"
+        "description": "Player feature - General: minimum per capita number of milk marked for eat (in the farm marks)",
+        "return_type": "float"
       },
       "max_num_per_capita_poop_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: maximum per capita number of poop marked for sale (in the farm marks)"
+        "description": "Player feature - General: maximum per capita number of poop marked for sale (in the farm marks)",
+        "return_type": "float"
       },
       "min_num_per_capita_poop_marked_sell": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: minimum per capita number of poop marked for sale (in the farm marks)"
+        "description": "Player feature - General: minimum per capita number of poop marked for sale (in the farm marks)",
+        "return_type": "float"
       },
       "max_num_per_capita_poop_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: maximum per capita number of poop marked for fertilize (in the farm marks)"
+        "description": "Player feature - General: maximum per capita number of poop marked for fertilize (in the farm marks)",
+        "return_type": "float"
       },
       "min_num_per_capita_poop_marked_use": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Player feature - General: minimum per capita number of poop marked for fertilize (in the farm marks)"
+        "description": "Player feature - General: minimum per capita number of poop marked for fertilize (in the farm marks)",
+        "return_type": "float"
       },
 
 
@@ -1270,154 +1384,179 @@
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: max num of the fullness_motivated emotes per capita"
+        "description": "Game feature - General: max num of the fullness_motivated emotes per capita",
+        "return_type": "float"
       },
       "count_fullness_desperate_txt_emotes_per_capita": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: max num of the fullness_desperate emotes per capita"
+        "description": "Game feature - General: max num of the fullness_desperate emotes per capita",
+        "return_type": "float"
       },
       "count_energy_desperate_txt_emotes_per_capita": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: max num of the energy_desperate emotes per capita"
+        "description": "Game feature - General: max num of the energy_desperate emotes per capita",
+        "return_type": "float"
       },
       "count_joy_motivated_txt_emotes_per_capita": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: max num of the joy_motivated emotes per capita"
+        "description": "Game feature - General: max num of the joy_motivated emotes per capita",
+        "return_type": "float"
       },
       "count_joy_desperate_txt_emotes_per_capita": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: max num of the joy_desperate emotes per capita"
+        "description": "Game feature - General: max num of the joy_desperate emotes per capita",
+        "return_type": "float"
       },
       "count_puke_txt_emotes_per_capita": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: max num of the puke emotes per capita"
+        "description": "Game feature - General: max num of the puke emotes per capita",
+        "return_type": "float"
       },
       "count_yum_txt_emotes_per_capita": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: max num of the yum emotes per capita"
+        "description": "Game feature - General: max num of the yum emotes per capita",
+        "return_type": "float"
       },
       "count_tired_txt_emotes_per_capita": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: max num of the tired emotes per capita"
+        "description": "Game feature - General: max num of the tired emotes per capita",
+        "return_type": "float"
       },
       "count_happy_txt_emotes_per_capita": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: max num of the happy emotes per capita"
+        "description": "Game feature - General: max num of the happy emotes per capita",
+        "return_type": "float"
       },
       "count_swim_txt_emotes_per_capita": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: max num of the swim emotes per capita"
+        "description": "Game feature - General: max num of the swim emotes per capita",
+        "return_type": "float"
       },
       "count_sale_txt_emotes_per_capita": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: max num of the sale emotes per capita"
+        "description": "Game feature - General: max num of the sale emotes per capita",
+        "return_type": "float"
       },
 
       "percent_positive_emotes": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: percent positive emotes"
+        "description": "Game feature - General: percent positive emotes",
+        "return_type": "float"
       },
       "percent_negative_emotes": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: percent negative emotes"
+        "description": "Game feature - General: percent negative emotes",
+        "return_type": "float"
       },
       "percent_neutral_emotes": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: percent neutral emotes"
+        "description": "Game feature - General: percent neutral emotes",
+        "return_type": "float"
       },
       "money_earned": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: money earned"
+        "description": "Game feature - General: money earned",
+        "return_type": "int"
       },
 
       "total_positive_emotes": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: total positive emotes"
+        "description": "Game feature - General: total positive emotes",
+        "return_type": "int"
       },
       "total_negative_emotes": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: percent negative emotes"
+        "description": "Game feature - General: percent negative emotes",
+        "return_type": "int"
       },
       "total_neutral_emotes": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: percent neutral emotes"
+        "description": "Game feature - General: percent neutral emotes",
+        "return_type": "int"
       },
       "max_avg_lake_nutrition": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: ave lake nutrition"
+        "description": "Game feature - General: ave lake nutrition",
+        "return_type": "float"
       },
       "min_avg_lake_nutrition": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: ave lake nutrition"
+        "description": "Game feature - General: ave lake nutrition",
+        "return_type": "float"
       },
       "count_farmfails": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Count of farms going into low productivity (nutrition roughly < 1%)"
+        "description": "Count of farms going into low productivity (nutrition roughly < 1%)",
+        "return_type": "int"
       },
       "count_blooms": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Count of blooms"
+        "description": "Count of blooms",
+        "return_type": "int"
       },
 
       "count_food_produced": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: num of food produced"
+        "description": "Game feature - General: num of food produced",
+        "return_type": "int"
       },
       "count_milk_produced": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: num of milk produced"
+        "description": "Game feature - General: num of milk produced",
+        "return_type": "int"
       },
       "count_poop_produced": {
         "enabled": false,
         "prefix": "pre",
         "count": 0,
-        "description": "Game feature - General: num of poop produced"
+        "description": "Game feature - General: num of poop produced",
+        "return_type": "int"
       }
     },
     "per_count": {
@@ -1426,112 +1565,138 @@
     "aggregate": {
       "sess_count_achievements": {
         "enabled": false,
-        "description": "Player feature - Progress: count of achievements"
+        "description": "Player feature - Progress: count of achievements",
+        "return_type": "int"
       },
       "sess_count_encounter_tutorial": {
         "enabled": false,
-        "description": "Player feature - Progress: count of tutorials"
+        "description": "Player feature - Progress: count of tutorials",
+        "return_type": "int"
       },
       "sess_count_skips": {
         "enabled": false,
-        "description": "Player feature - Progress: count of skips"
+        "description": "Player feature - Progress: count of skips",
+        "return_type": "int"
       },
       "sess_count_gamestate_logs": {
         "enabled": false,
-        "description": "count of gamestate logs"
+        "description": "count of gamestate logs",
+        "return_type": "int"
       },
       "sess_count_rains": {
         "enabled": false,
-        "description": "Count of how many times it rained"
+        "description": "Count of how many times it rained",
+        "return_type": "int"
       },
 
       "sess_count_explore_events": {
         "enabled": false,
-        "description": "number of events that explore the gamestate: SELECTTILE, SELECTFARMBIT, SELECTITEM, TOGGLEACHIEVEMENTS, TOGGLESHOP"
+        "description": "number of events that explore the gamestate: SELECTTILE, SELECTFARMBIT, SELECTITEM, TOGGLEACHIEVEMENTS, TOGGLESHOP",
+        "return_type": "int"
       },
       "sess_count_impact_events": {
         "enabled": false,
-        "description": "number of active events that change the gamestate: BUY,TILEUSESELECT,ITEMUSESELECT"
+        "description": "number of active events that change the gamestate: BUY,TILEUSESELECT,ITEMUSESELECT",
+        "return_type": "int"
       },
       "sess_count_idle": {
         "enabled": false,
-        "description": "number of times the player went from active to idle"
+        "description": "number of times the player went from active to idle",
+        "return_type": "int"
       },
 
 
       "sess_count_buy_home": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: buy a home"
+        "description": "Player feature - Number of times the player: buy a home",
+        "return_type": "int"
       },
       "sess_count_buy_food": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: buy a food"
+        "description": "Player feature - Number of times the player: buy a food",
+        "return_type": "int"
       },
       "sess_count_buy_farm": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: buy a farm"
+        "description": "Player feature - Number of times the player: buy a farm",
+        "return_type": "int"
       },
       "sess_count_buy_fertilizer": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: buy a fertilizer"
+        "description": "Player feature - Number of times the player: buy a fertilizer",
+        "return_type": "int"
       },
       "sess_count_buy_livestock": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: buy a livestock"
+        "description": "Player feature - Number of times the player: buy a livestock",
+        "return_type": "int"
       },
       "sess_count_buy_skimmer": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: buy a skimmer"
+        "description": "Player feature - Number of times the player: buy a skimmer",
+        "return_type": "int"
       },
       "sess_count_buy_sign": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: buy a sign"
+        "description": "Player feature - Number of times the player: buy a sign",
+        "return_type": "int"
       },
       "sess_count_buy_road": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: buy a road"
+        "description": "Player feature - Number of times the player: buy a road",
+        "return_type": "int"
       },
 
       "sess_money_spent_home": {
         "enabled": false,
-        "description": "Player feature - General: money spent on home"
+        "description": "Player feature - General: money spent on home",
+        "return_type": "int"
       },
       "sess_money_spent_food": {
         "enabled": false,
-        "description": "Player feature - General: money spent on food"
+        "description": "Player feature - General: money spent on food",
+        "return_type": "int"
       },
       "sess_money_spent_farm": {
         "enabled": false,
-        "description": "Player feature - General: money spent on farm"
+        "description": "Player feature - General: money spent on farm",
+        "return_type": "int"
       },
       "sess_money_spent_fertilizer": {
         "enabled": false,
-        "description": "Player feature - General: money spent on fertilizer"
+        "description": "Player feature - General: money spent on fertilizer",
+        "return_type": "int"
       },
       "sess_money_spent_livestock": {
         "enabled": false,
-        "description": "Player feature - General: money spent on livestock"
+        "description": "Player feature - General: money spent on livestock",
+        "return_type": "int"
       },
       "sess_money_spent_skimmer": {
         "enabled": false,
-        "description": "Player feature - General: money spent on skimmer"
+        "description": "Player feature - General: money spent on skimmer",
+        "return_type": "int"
       },
       "sess_money_spent_sign": {
         "enabled": false,
-        "description": "Player feature - General: money spent on sign"
+        "description": "Player feature - General: money spent on sign",
+        "return_type": "int"
       },
       "sess_money_spent_road": {
         "enabled": false,
-        "description": "Player feature - General: money spent on road"
+        "description": "Player feature - General: money spent on road",
+        "return_type": "int"
       },
 
       "sess_count_change_item_mark": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: change a sale/eat/feed state in an item panel"
+        "description": "Player feature - Number of times the player: change a sale/eat/feed state in an item panel",
+        "return_type": "int"
       },
       "sess_count_change_tile_mark": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: change a sale/eat/feed state in a farm panel"
+        "description": "Player feature - Number of times the player: change a sale/eat/feed state in a farm panel",
+        "return_type": "int"
       },
 
       "sess_time_to_exist_achievement": {
@@ -2171,165 +2336,205 @@
 
       "sess_avg_num_tiles_hovered_before_placing_home": {
         "enabled": false,
-        "description": "Player feature - General: ave num tiles hovered before placing home"
+        "description": "Player feature - General: ave num tiles hovered before placing home",
+        "return_type": "float"
       },
       "sess_avg_num_tiles_hovered_before_placing_food": {
         "enabled": false,
-        "description": "Player feature - General: ave num tiles hovered before placing food"
+        "description": "Player feature - General: ave num tiles hovered before placing food",
+        "return_type": "float"
       },
       "sess_avg_num_tiles_hovered_before_placing_farm": {
         "enabled": false,
-        "description": "Player feature - General: ave num tiles hovered before placing farm"
+        "description": "Player feature - General: ave num tiles hovered before placing farm",
+        "return_type": "float"
       },
       "sess_avg_num_tiles_hovered_before_placing_fertilizer": {
         "enabled": false,
-        "description": "Player feature - General: ave num tiles hovered before placing fertilizer"
+        "description": "Player feature - General: ave num tiles hovered before placing fertilizer",
+        "return_type": "float"
       },
       "sess_avg_num_tiles_hovered_before_placing_livestock": {
         "enabled": false,
-        "description": "Player feature - General: ave num tiles hovered before placing livestock"
+        "description": "Player feature - General: ave num tiles hovered before placing livestock",
+        "return_type": "float"
       },
       "sess_avg_num_tiles_hovered_before_placing_skimmer": {
         "enabled": false,
-        "description": "Player feature - General: ave num tiles hovered before placing skimmer"
+        "description": "Player feature - General: ave num tiles hovered before placing skimmer",
+        "return_type": "float"
       },
       "sess_avg_num_tiles_hovered_before_placing_sign": {
         "enabled": false,
-        "description": "Player feature - General: ave num tiles hovered before placing sign"
+        "description": "Player feature - General: ave num tiles hovered before placing sign",
+        "return_type": "float"
       },
       "sess_avg_num_tiles_hovered_before_placing_road": {
         "enabled": false,
-        "description": "Player feature - General: ave num tiles hovered before placing (the first) road"
+        "description": "Player feature - General: ave num tiles hovered before placing (the first) road",
+        "return_type": "float"
       },
 
       "sess_avg_time_per_blurb_in_another_death_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_another_member_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_bloom_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_build_a_farm_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_build_a_house_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_buy_fertilizer_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_buy_food_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_buy_livestock_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_death_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_end_life_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_extra_life_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_final_death_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_flooded_fertilizer_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_gross_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_gross_again_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_livestock_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_long_travel_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_low_nutrients_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_mass_sadness_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_poop_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_rain_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_sell_food_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_successful_harvest_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_timewarp_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_unattended_farm_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
       "sess_avg_time_per_blurb_in_unused_fertilizer_tutorial": {
         "enabled": false,
-        "description": "time per textbox in the specified tutorial"
+        "description": "time per textbox in the specified tutorial",
+        "return_type": "float"
       },
 
       "sess_avg_time_per_blurb": {
         "enabled": false,
-        "description": "? include skips ? Player feature - General: ave time per tutorial screen (blurb) before continue"
+        "description": "? include skips ? Player feature - General: ave time per tutorial screen (blurb) before continue",
+        "return_type": "float"
       },
       "sess_count_food_produced": {
         "enabled": false,
-        "description": "Game feature - General: num of food produced"
+        "description": "Game feature - General: num of food produced",
+        "return_type": "int"
       },
       "sess_count_milk_produced": {
         "enabled": false,
-        "description": "Game feature - General: num of milk produced"
+        "description": "Game feature - General: num of milk produced",
+        "return_type": "int"
       },
       "sess_count_poop_produced": {
         "enabled": false,
-        "description": "Game feature - General: num of poop produced"
+        "description": "Game feature - General: num of poop produced",
+        "return_type": "int"
       },
       "sess_money_earned": {
         "enabled": false,
-        "description": "Game feature - General: money earned"
+        "description": "Game feature - General: money earned",
+        "return_type": "int"
       },
       "sess_money_spent": {
         "enabled": false,
-        "description": "Game feature - General: money earned"
+        "description": "Game feature - General: money earned",
+        "return_type": "int"
       },
 
       "sess_time_in_nutrition_view": {
@@ -2355,387 +2560,480 @@
 
       "sess_max_num_per_capita_food_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: maximum per capita number of food marked for sale"
+        "description": "Player feature - General: maximum per capita number of food marked for sale",
+        "return_type": "float"
       },
       "sess_max_num_per_capita_food_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: maximum per capita number of food marked for eat"
+        "description": "Player feature - General: maximum per capita number of food marked for eat",
+        "return_type": "float"
       },
       "sess_max_num_per_capita_food_marked_feed": {
         "enabled": false,
-        "description": "Player feature - General: maximum per capita number of food marked for feed"
+        "description": "Player feature - General: maximum per capita number of food marked for feed",
+        "return_type": "float"
       },
       "sess_max_num_per_capita_milk_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: maximum per capita number of milk marked for sale"
+        "description": "Player feature - General: maximum per capita number of milk marked for sale",
+        "return_type": "float"
       },
       "sess_max_num_per_capita_milk_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: maximum per capita number of milk marked for eat"
+        "description": "Player feature - General: maximum per capita number of milk marked for eat",
+        "return_type": "float"
       },
       "sess_max_num_per_capita_poop_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: maximum per capita number of poop marked for sale"
+        "description": "Player feature - General: maximum per capita number of poop marked for sale",
+        "return_type": "float"
       },
       "sess_max_num_per_capita_poop_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: maximum per capita number of poop marked for fertilize"
+        "description": "Player feature - General: maximum per capita number of poop marked for fertilize",
+        "return_type": "float"
       },
 
       "sess_min_num_per_capita_food_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: minimum per capita number of food marked for sale"
+        "description": "Player feature - General: minimum per capita number of food marked for sale",
+        "return_type": "float"
       },
       "sess_min_num_per_capita_food_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: minimum per capita number of food marked for eat"
+        "description": "Player feature - General: minimum per capita number of food marked for eat",
+        "return_type": "float"
       },
       "sess_min_num_per_capita_food_marked_feed": {
         "enabled": false,
-        "description": "Player feature - General: minimum per capita number of food marked for feed"
+        "description": "Player feature - General: minimum per capita number of food marked for feed",
+        "return_type": "float"
       },
       "sess_min_num_per_capita_milk_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: minimum per capita number of milk marked for sale"
+        "description": "Player feature - General: minimum per capita number of milk marked for sale",
+        "return_type": "float"
       },
       "sess_min_num_per_capita_milk_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: minimum per capita number of milk marked for eat"
+        "description": "Player feature - General: minimum per capita number of milk marked for eat",
+        "return_type": "float"
       },
       "sess_min_num_per_capita_poop_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: minimum per capita number of poop marked for sale"
+        "description": "Player feature - General: minimum per capita number of poop marked for sale",
+        "return_type": "float"
       },
       "sess_min_num_per_capita_poop_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: minimum per capita number of poop marked for fertilize"
+        "description": "Player feature - General: minimum per capita number of poop marked for fertilize",
+        "return_type": "float"
       },
 
       "sess_max_num_food_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: percent of food marked for sale"
+        "description": "Player feature - General: percent of food marked for sale",
+        "return_type": "float"
       },
       "sess_max_num_food_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: percent of food marked for eat"
+        "description": "Player feature - General: percent of food marked for eat",
+        "return_type": "float"
       },
       "sess_max_num_food_marked_feed": {
         "enabled": false,
-        "description": "Player feature - General: percent of food marked for feed"
+        "description": "Player feature - General: percent of food marked for feed",
+        "return_type": "float"
       },
       "sess_max_num_milk_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: percent of milk marked for sale"
+        "description": "Player feature - General: percent of milk marked for sale",
+        "return_type": "float"
       },
       "sess_max_num_milk_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: percent of milk marked for eat"
+        "description": "Player feature - General: percent of milk marked for eat",
+        "return_type": "float"
       },
       "sess_max_num_poop_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: percent of poop marked for sale"
+        "description": "Player feature - General: percent of poop marked for sale",
+        "return_type": "float"
       },
       "sess_max_num_poop_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: percent of poop marked for fertilize"
+        "description": "Player feature - General: percent of poop marked for fertilize",
+        "return_type": "float"
       },
 
       "sess_max_percent_food_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: percent of food marked for sale"
+        "description": "Player feature - General: percent of food marked for sale",
+        "return_type": "float"
       },
       "sess_max_percent_food_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: percent of food marked for eat"
+        "description": "Player feature - General: percent of food marked for eat",
+        "return_type": "float"
       },
       "sess_max_percent_food_marked_feed": {
         "enabled": false,
-        "description": "Player feature - General: percent of food marked for feed"
+        "description": "Player feature - General: percent of food marked for feed",
+        "return_type": "float"
       },
       "sess_max_percent_milk_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: percent of milk marked for sale"
+        "description": "Player feature - General: percent of milk marked for sale",
+        "return_type": "float"
       },
       "sess_max_percent_milk_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: percent of milk marked for eat"
+        "description": "Player feature - General: percent of milk marked for eat",
+        "return_type": "float"
       },
       "sess_max_percent_poop_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: percent of poop marked for sale"
+        "description": "Player feature - General: percent of poop marked for sale",
+        "return_type": "float"
       },
       "sess_max_percent_poop_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: percent of poop marked for fertilize"
+        "description": "Player feature - General: percent of poop marked for fertilize",
+        "return_type": "float"
       },
 
       "sess_min_num_food_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: percent of food marked for sale"
+        "description": "Player feature - General: percent of food marked for sale",
+        "return_type": "float"
       },
       "sess_min_num_food_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: percent of food marked for eat"
+        "description": "Player feature - General: percent of food marked for eat",
+        "return_type": "float"
       },
       "sess_min_num_food_marked_feed": {
         "enabled": false,
-        "description": "Player feature - General: percent of food marked for feed"
+        "description": "Player feature - General: percent of food marked for feed",
+        "return_type": "float"
       },
       "sess_min_num_milk_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: percent of milk marked for sale"
+        "description": "Player feature - General: percent of milk marked for sale",
+        "return_type": "float"
       },
       "sess_min_num_milk_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: percent of milk marked for eat"
+        "description": "Player feature - General: percent of milk marked for eat",
+        "return_type": "float"
       },
       "sess_min_num_poop_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: percent of poop marked for sale"
+        "description": "Player feature - General: percent of poop marked for sale",
+        "return_type": "float"
       },
       "sess_min_num_poop_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: percent of poop marked for fertilize"
+        "description": "Player feature - General: percent of poop marked for fertilize",
+        "return_type": "float"
       },
 
       "sess_min_percent_food_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: percent of food marked for sale"
+        "description": "Player feature - General: percent of food marked for sale",
+        "return_type": "float"
       },
       "sess_min_percent_food_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: percent of food marked for eat"
+        "description": "Player feature - General: percent of food marked for eat",
+        "return_type": "float"
       },
       "sess_min_percent_food_marked_feed": {
         "enabled": false,
-        "description": "Player feature - General: percent of food marked for feed"
+        "description": "Player feature - General: percent of food marked for feed",
+        "return_type": "float"
       },
       "sess_min_percent_milk_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: percent of milk marked for sale"
+        "description": "Player feature - General: percent of milk marked for sale",
+        "return_type": "float"
       },
       "sess_min_percent_milk_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: percent of milk marked for eat"
+        "description": "Player feature - General: percent of milk marked for eat",
+        "return_type": "float"
       },
       "sess_min_percent_poop_marked_sell": {
         "enabled": false,
-        "description": "Player feature - General: percent of poop marked for sale"
+        "description": "Player feature - General: percent of poop marked for sale",
+        "return_type": "float"
       },
       "sess_min_percent_poop_marked_use": {
         "enabled": false,
-        "description": "Player feature - General: percent of poop marked for fertilize"
+        "description": "Player feature - General: percent of poop marked for fertilize",
+        "return_type": "float"
       },
 
       "sess_min_num_home_in_play": {
         "enabled": false,
-        "description": "Player feature - General: min number of home in play"
+        "description": "Player feature - General: min number of home in play",
+        "return_type": "int"
       },
       "sess_max_num_home_in_play": {
         "enabled": false,
-        "description": "Player feature - General: max number of home in play"
+        "description": "Player feature - General: max number of home in play",
+        "return_type": "int"
       },
       "sess_min_num_grave_in_play": {
         "enabled": false,
-        "description": "Player feature - General: min number of home in play"
+        "description": "Player feature - General: min number of home in play",
+        "return_type": "int"
       },
       "sess_max_num_grave_in_play": {
         "enabled": false,
-        "description": "Player feature - General: max number of home in play"
+        "description": "Player feature - General: max number of home in play",
+        "return_type": "int"
       },
       "sess_min_num_farm_in_play": {
         "enabled": false,
-        "description": "Player feature - General: min number of farm in play"
+        "description": "Player feature - General: min number of farm in play",
+        "return_type": "int"
       },
       "sess_max_num_farm_in_play": {
         "enabled": false,
-        "description": "Player feature - General: max number of farm in play"
+        "description": "Player feature - General: max number of farm in play",
+        "return_type": "int"
       },
       "sess_min_num_fertilizer_in_play": {
         "enabled": false,
-        "description": "Player feature - General: min number of fertilizer in play"
+        "description": "Player feature - General: min number of fertilizer in play",
+        "return_type": "int"
       },
       "sess_max_num_fertilizer_in_play": {
         "enabled": false,
-        "description": "Player feature - General: max number of fertilizer in play"
+        "description": "Player feature - General: max number of fertilizer in play",
+        "return_type": "int"
       },
       "sess_min_num_livestock_in_play": {
         "enabled": false,
-        "description": "Player feature - General: min number of livestock in play"
+        "description": "Player feature - General: min number of livestock in play",
+        "return_type": "int"
       },
       "sess_max_num_livestock_in_play": {
         "enabled": false,
-        "description": "Player feature - General: max number of livestock in play"
+        "description": "Player feature - General: max number of livestock in play",
+        "return_type": "int"
       },
       "sess_min_num_skimmer_in_play": {
         "enabled": false,
-        "description": "Player feature - General: min number of skimmer in play"
+        "description": "Player feature - General: min number of skimmer in play",
+        "return_type": "int"
       },
       "sess_max_num_skimmer_in_play": {
         "enabled": false,
-        "description": "Player feature - General: max number of skimmer in play"
+        "description": "Player feature - General: max number of skimmer in play",
+        "return_type": "int"
       },
       "sess_min_num_sign_in_play": {
         "enabled": false,
-        "description": "Player feature - General: min number of sign in play"
+        "description": "Player feature - General: min number of sign in play",
+        "return_type": "int"
       },
       "sess_max_num_sign_in_play": {
         "enabled": false,
-        "description": "Player feature - General: max number of sign in play"
+        "description": "Player feature - General: max number of sign in play",
+        "return_type": "int"
       },
       "sess_min_num_road_in_play": {
         "enabled": false,
-        "description": "Player feature - General: min number of road in play"
+        "description": "Player feature - General: min number of road in play",
+        "return_type": "int"
       },
       "sess_max_num_road_in_play": {
         "enabled": false,
-        "description": "Player feature - General: max number of road in play"
+        "description": "Player feature - General: max number of road in play",
+        "return_type": "int"
       },
 
       "sess_min_num_food_in_play": {
         "enabled": false,
-        "description": "Player feature - General: min number of food in play"
+        "description": "Player feature - General: min number of food in play",
+        "return_type": "int"
       },
       "sess_max_num_food_in_play": {
         "enabled": false,
-        "description": "Player feature - General: max number of food in play"
+        "description": "Player feature - General: max number of food in play",
+        "return_type": "int"
       },
       "sess_min_num_poop_in_play": {
         "enabled": false,
-        "description": "Player feature - General: min number of poop in play"
+        "description": "Player feature - General: min number of poop in play",
+        "return_type": "int"
       },
       "sess_max_num_poop_in_play": {
         "enabled": false,
-        "description": "Player feature - General: max number of poop in play"
+        "description": "Player feature - General: max number of poop in play",
+        "return_type": "int"
       },
       "sess_min_num_milk_in_play": {
         "enabled": false,
-        "description": "Player feature - General: min number of milk in play"
+        "description": "Player feature - General: min number of milk in play",
+        "return_type": "int"
       },
       "sess_max_num_milk_in_play": {
         "enabled": false,
-        "description": "Player feature - General: max number of milk in play"
+        "description": "Player feature - General: max number of milk in play",
+        "return_type": "int"
       },
 
       "sess_count_fullness_motivated_txt_emotes_per_capita": {
         "enabled": false,
-        "description": "Game feature - General: max num of the fullness_motivated emotes per capita"
+        "description": "Game feature - General: max num of the fullness_motivated emotes per capita",
+        "return_type": "float"
       },
       "sess_count_fullness_desperate_txt_emotes_per_capita": {
         "enabled": false,
-        "description": "Game feature - General: max num of the fullness_desperate emotes per capita"
+        "description": "Game feature - General: max num of the fullness_desperate emotes per capita",
+        "return_type": "float"
       },
       "sess_count_energy_desperate_txt_emotes_per_capita": {
         "enabled": false,
-        "description": "Game feature - General: max num of the energy_desperate emotes per capita"
+        "description": "Game feature - General: max num of the energy_desperate emotes per capita",
+        "return_type": "float"
       },
       "sess_count_joy_motivated_txt_emotes_per_capita": {
         "enabled": false,
-        "description": "Game feature - General: max num of the joy_motivated emotes per capita"
+        "description": "Game feature - General: max num of the joy_motivated emotes per capita",
+        "return_type": "float"
       },
       "sess_count_joy_desperate_txt_emotes_per_capita": {
         "enabled": false,
-        "description": "Game feature - General: max num of the joy_desperate emotes per capita"
+        "description": "Game feature - General: max num of the joy_desperate emotes per capita",
+        "return_type": "float"
       },
       "sess_count_puke_txt_emotes_per_capita": {
         "enabled": false,
-        "description": "Game feature - General: max num of the puke emotes per capita"
+        "description": "Game feature - General: max num of the puke emotes per capita",
+        "return_type": "float"
       },
       "sess_count_yum_txt_emotes_per_capita": {
         "enabled": false,
-        "description": "Game feature - General: max num of the yum emotes per capita"
+        "description": "Game feature - General: max num of the yum emotes per capita",
+        "return_type": "float"
       },
       "sess_count_tired_txt_emotes_per_capita": {
         "enabled": false,
-        "description": "Game feature - General: max num of the tired emotes per capita"
+        "description": "Game feature - General: max num of the tired emotes per capita",
+        "return_type": "float"
       },
       "sess_count_happy_txt_emotes_per_capita": {
         "enabled": false,
-        "description": "Game feature - General: max num of the happy emotes per capita"
+        "description": "Game feature - General: max num of the happy emotes per capita",
+        "return_type": "float"
       },
       "sess_count_swim_txt_emotes_per_capita": {
         "enabled": false,
-        "description": "Game feature - General: max num of the swim emotes per capita"
+        "description": "Game feature - General: max num of the swim emotes per capita",
+        "return_type": "float"
       },
       "sess_count_sale_txt_emotes_per_capita": {
         "enabled": false,
-        "description": "Game feature - General: max num of the sale emotes per capita"
+        "description": "Game feature - General: max num of the sale emotes per capita",
+        "return_type": "float"
       },
 
       "sess_percent_positive_emotes": {
         "enabled": false,
-        "description": "Game feature - General: percent positive emotes"
+        "description": "Game feature - General: percent positive emotes",
+        "return_type": "float"
       },
       "sess_percent_negative_emotes": {
         "enabled": false,
-        "description": "Game feature - General: percent negative emotes"
+        "description": "Game feature - General: percent negative emotes",
+        "return_type": "float"
       },
       "sess_percent_neutral_emotes": {
         "enabled": false,
-        "description": "Game feature - General: percent neutral emotes"
+        "description": "Game feature - General: percent neutral emotes",
+        "return_type": "float"
       },
 
       "sess_total_positive_emotes": {
         "enabled": false,
-        "description": "Game feature - General: total positive emotes"
+        "description": "Game feature - General: total positive emotes",
+        "return_type": "int"
       },
       "sess_total_negative_emotes": {
         "enabled": false,
-        "description": "Game feature - General: total negative emotes"
+        "description": "Game feature - General: total negative emotes",
+        "return_type": "int"
       },
       "sess_total_neutral_emotes": {
         "enabled": false,
-        "description": "Game feature - General: total neutral emotes"
+        "description": "Game feature - General: total neutral emotes",
+        "return_type": "int"
       },
 
       "sess_avg_distance_between_poop_placement_and_lake": {
         "enabled": false,
-        "description": " Player feature - Assessment: average distance between poop placement and lake"
+        "description": " Player feature - Assessment: average distance between poop placement and lake",
+        "return_type": "float"
       },
       "sess_avg_avg_distance_between_buildings": {
         "enabled": false,
-        "description": "Player feature - Assessment: Average distance between buildings (when they build, how far is it from the closest thing)"
+        "description": "Player feature - Assessment: Average distance between buildings (when they build, how far is it from the closest thing)",
+        "return_type": "float"
       },
 
       "sess_count_farmfails": {
         "enabled": false,
-        "description": "Count of farms going into low productivity (nutrition roughly < 1%)"
+        "description": "Count of farms going into low productivity (nutrition roughly < 1%)",
+        "return_type": "int"
       },
       "sess_max_avg_lake_nutrition": {
         "enabled": false,
-        "description": "Game feature - General: ave lake nutrition"
+        "description": "Game feature - General: ave lake nutrition",
+        "return_type": "float"
       },
       "sess_min_avg_lake_nutrition": {
         "enabled": false,
-        "description": "Game feature - General: ave lake nutrition"
+        "description": "Game feature - General: ave lake nutrition",
+        "return_type": "float"
       },
       "sess_count_blooms": {
         "enabled": false,
-        "description": "Count of algae blooms"
+        "description": "Count of algae blooms",
+        "return_type": "int"
       },
       "sess_count_inspect_tile": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: inspect a tile"
+        "description": "Player feature - Number of times the player: inspect a tile",
+        "return_type": "int"
       },
       "sess_count_inspect_farmbit": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: inspect a farmbit"
+        "description": "Player feature - Number of times the player: inspect a farmbit",
+        "return_type": "int"
       },
       "sess_count_inspect_item": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: inspect a item"
+        "description": "Player feature - Number of times the player: inspect a item",
+        "return_type": "int"
       },
       "sess_count_open_achievements": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: look at achievements"
+        "description": "Player feature - Number of times the player: look at achievements",
+        "return_type": "int"
       },
       "sess_count_open_shop": {
         "enabled": false,
-        "description": "Player feature - Number of times the player: open the shop"
+        "description": "Player feature - Number of times the player: open the shop",
+        "return_type": "int"
       },
       "sess_count_deaths": {
         "enabled": false,
-        "description": "Game feature - General: num deaths per sess"
+        "description": "Game feature - General: num deaths per sess",
+        "return_type": "int"
       },
       "event_sequence": {
         "enabled": false,
@@ -2744,24 +3042,29 @@
 
       "sess_percent_building_a_farm_on_highest_nutrition_tile": {
         "enabled": false,
-        "description": "Player feature - General: percent building a farm on the best tile with the highest nutrition that was hovered over during the buy process"
+        "description": "Player feature - General: percent building a farm on the best tile with the highest nutrition that was hovered over during the buy process",
+        "return_type": "float"
       },
       "sess_percent_placing_fertilizer_on_lowest_nutrient_farm": {
         "enabled": false,
-        "description": " TODO:::figure out how to calculate this:::TODO Player feature - General: percent placing fertilizer on lowest nutrient farm"
+        "description": " TODO:::figure out how to calculate this:::TODO Player feature - General: percent placing fertilizer on lowest nutrient farm",
+        "return_type": "float"
       },
 
       "sess_EventCount": {
         "enabled": false,
-        "description": "The total number of events across the entire sess"
+        "description": "The total number of events across the entire sess",
+        "return_type": "int"
       },
       "sess_ActiveEventCount": {
         "enabled": false,
-        "description": "Number of player events that require the player's active input"
+        "description": "Number of player events that require the player's active input",
+        "return_type": "int"
       },
       "sess_InactiveEventCount": {
         "enabled": false,
-        "description": "Number of game events that don't require the player's active input"
+        "description": "Number of game events that don't require the player's active input",
+        "return_type": "int"
       },
       "sess_time_idle": {
         "enabled": false,
@@ -2774,69 +3077,84 @@
 
       "sess_time_in_secs": {
         "enabled": false,
-        "description": "Time (in seconds) spent on the game (copy of sessDuration)"
+        "description": "Time (in seconds) spent on the game (copy of sessDuration)",
+        "return_type": "int"
       },
 
 
       "play_year": {
         "enabled": false,
-        "description": "year started the game (UTC)"
+        "description": "year started the game (UTC)",
+        "return_type": "int"
       },
       "play_month": {
         "enabled": false,
-        "description": "month started the game (UTC)"
+        "description": "month started the game (UTC)",
+        "return_type": "int"
       },
       "play_day": {
         "enabled": false,
-        "description": "day started the game (UTC)"
+        "description": "day started the game (UTC)",
+        "return_type": "int"
       },
       "play_hour": {
         "enabled": false,
-        "description": "hour started the game (UTC)"
+        "description": "hour started the game (UTC)",
+        "return_type": "int"
       },
       "play_minute": {
         "enabled": false,
-        "description": "minute started the game (UTC)"
+        "description": "minute started the game (UTC)",
+        "return_type": "int"
       },
       "play_second": {
         "enabled": false,
-        "description": "second started the game (UTC)"
+        "description": "second started the game (UTC)",
+        "return_type": "int"
       },
 
 
 
       "rt_currently_active": {
         "enabled": false,
-        "description": "(boolean - 1/0) whether or not the player is currently active"
+        "description": "(boolean - 1/0) whether or not the player is currently active",
+        "return_type": "bool"
       },
 
       "continue": {
         "enabled": false,
-        "description": "1 if player continued, 0 if new game"
+        "description": "1 if player continued, 0 if new game",
+        "return_type": "bool"
       },
       "language": {
         "enabled": false,
-        "description": "language name"
+        "description": "language name",
+        "return_type": "str"
       },
       "audio": {
         "enabled": false,
-        "description": "1 if audio on, 0 if off"
+        "description": "1 if audio on, 0 if off",
+        "return_type": "bool"
       },
       "fullscreen": {
         "enabled": false,
-        "description": "1 if fullscreen, 0 if not"
+        "description": "1 if fullscreen, 0 if not",
+        "return_type": "bool"
       },
       "version": {
         "enabled": false,
-        "description": "version number"
+        "description": "version number",
+        "return_type": "int"
       },
       "debug": {
         "enabled": false,
-        "description": "1 if player used a debug feature, 0 if not"
+        "description": "1 if player used a debug feature, 0 if not",
+        "return_type": "bool"
       },
       "num_play": {
         "enabled": false,
-        "description": "Playthrough number (i.e., if a player has died and restarts, this number will be 1 in the first playthrough and 2 in the second)"
+        "description": "Playthrough number (i.e., if a player has died and restarts, this number will be 1 in the first playthrough and 2 in the second)",
+        "return_type": "int"
       },
 
       "sessID": {
@@ -2849,7 +3167,8 @@
       },
       "sessDuration": {
         "enabled": false,
-        "description": "The total time (in seconds) spent over the entire sess"
+        "description": "The total time (in seconds) spent over the entire sess",
+        "return_type": "int"
       },
       "player_id": {
         "enabled": false,
