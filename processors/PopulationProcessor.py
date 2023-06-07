@@ -1,16 +1,13 @@
 # import standard libraries
 import logging
-from datetime import datetime
-from typing import Any, Dict, List, Type, Optional, Set
+from typing import List, Type, Optional, Set
 # import local files
 from schemas.FeatureData import FeatureData
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.registries.FeatureRegistry import FeatureRegistry
 from processors.FeatureProcessor import FeatureProcessor
-from processors.PlayerProcessor import PlayerProcessor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.ExportMode import ExportMode
 from schemas.games.GameSchema import GameSchema
 from utils import Logger, ExportRow
 
