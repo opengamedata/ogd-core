@@ -92,7 +92,7 @@ class DataInterface(Interface):
                         Logger.Log(f"Error while converting row to Event\nFull error: {err}\nRow data: {pformat(row)}", logging.ERROR, depth=2)
                         raise err
                     else:
-                        Logger.Log(f"Error while converting row to Event. This row will be skipped.\nFull error: {err}", logging.WARNING, depth=2)
+                        Logger.Log(f"Error while converting row ({row}) to Event. This row will be skipped.\nFull error: {err}", logging.WARNING, depth=2)
                 else:
                     ret_val.append(next_event)
         else:

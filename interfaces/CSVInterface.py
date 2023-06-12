@@ -28,7 +28,9 @@ class CSVInterface(DataInterface):
 
     def _open(self) -> bool:
         try:
-            _data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter, parse_dates=['timestamp'])
+            # _data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter, parse_dates=['timestamp'])
+            _data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter)
+            Logger.Log(f"Loaded from CSV, columns are: {_data.columns}", logging.INFO)
             self._data = _data.where(_data.notnull(), None)
             self._is_open = True
             return True

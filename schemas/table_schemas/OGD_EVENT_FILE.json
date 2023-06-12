@@ -75,7 +75,7 @@
             "name": "offset",
             "readable": "Time Offset",
             "description": "The local offset of the event time from GMT",
-            "type": "datetime"
+            "type": "timedelta"
         },
         {
             "name": "user_id",
