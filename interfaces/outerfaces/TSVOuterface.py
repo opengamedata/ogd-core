@@ -43,6 +43,7 @@ class TSVOuterface(DataOuterface):
         self._short_hash    : str  = ""
         # self._sess_count    : int  = 0
         # figure out dataset ID.
+        Logger.Log(f"the min in date range is {self._date_range['min']}, of type {type(self._date_range['min'])}")
         start = self._date_range['min'].strftime("%Y%m%d") if self._date_range['min'] is not None else "UNKNOWN"
         end   = self._date_range['max'].strftime("%Y%m%d") if self._date_range['max'] is not None else "UNKNOWN"
         self._dataset_id = dataset_id or f"{self._game_id}_{start}_to_{end}"

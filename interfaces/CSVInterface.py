@@ -28,9 +28,12 @@ class CSVInterface(DataInterface):
 
     def _open(self) -> bool:
         try:
-            # _data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter, parse_dates=['timestamp'])
-            _data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter)
-            Logger.Log(f"Loaded from CSV, columns are: {_data.columns}", logging.INFO)
+            # TODO should include option for access to the TableSchema in the interface, because obviously it should know what form the table takes.
+            target_types = { 'session_id' : 'str' }
+            _data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter, dtype=target_types, parse_dates=['timestamp'])
+            # _data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter)
+            Logger.Log(f"Loaded from CSV, columns are: {_data.dtypes}", logging.INFO)
+            Logger.Log(f"First few rows are:\n{_data.head(n=3)}")
             self._data = _data.where(_data.notnull(), None)
             self._is_open = True
             return True
@@ -44,7 +47,7 @@ class CSVInterface(DataInterface):
         return True
 
     def _allIDs(self) -> List[str]:
-        return self._data['session_id'].unique().tolist()
+        return [str(id) for id in self._data['session_id'].unique().tolist()]
 
     def _fullDateRange(self) -> Dict[str,datetime]:
         min_time = pd.to_datetime(self._data['timestamp'].min())
@@ -73,7 +76,7 @@ class CSVInterface(DataInterface):
         else:
             return []
 
-    def _datesFromIDs(self, id_list:List[int], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Dict[str, datetime]:
         if id_mode == IDMode.SESSION:
             min_date = self._data[self._data['session_id'].isin(id_list)]['timestamp'].min()
             max_date = self._data[self._data['session_id'].isin(id_list)]['timestamp'].max()
