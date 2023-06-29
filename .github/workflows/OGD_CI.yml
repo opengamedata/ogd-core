@@ -10,11 +10,8 @@ on:
     - 'interfaces/**'
     - 'managers/**'
     - 'processors/**'
-    - 'schemas/Event.py'
-    - 'schemas/FeatureData.py'
-    - 'schemas/GameSchema.py'
-    - 'schemas/TableSchema.py'
-    - 'schemas/Request.py'
+    - 'schemas/*'
+    - 'schemas/*_schemas/**'
     - 'main.py'
     - 'utils.py'
     - '.github/workflows/OGD_CI.yml'
@@ -23,13 +20,19 @@ on:
 
 jobs:
   test_export:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
-    - name: Get OpenConnect
-      run: sudo apt-get -q update && sudo apt-get -q install openconnect
-    - name: Connect VPN
-      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        export_default_credentials: true
+    # - name: Get OpenConnect
+    #   run: sudo apt-get -q update && sudo apt-get -q install openconnect
+    # - name: Connect VPN
+    #   run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
     - name: Set up Config File
@@ -37,7 +40,7 @@ jobs:
       with:
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{secrets.SQL_HOST}}
+        sql_host: ${{vars.FD_LOGGER_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "DEBUG"

@@ -2,7 +2,7 @@
 import logging
 from typing import Any, Dict, Union
 # import local files
-from schemas.game_schemas.FeatureSchema import FeatureSchema
+from schemas.games.FeatureSchema import FeatureSchema
 from utils import Logger
 
 class PerCountSchema(FeatureSchema):
@@ -10,24 +10,22 @@ class PerCountSchema(FeatureSchema):
         self._count  : Union[int, str]
         self._prefix : str
 
-
-        if isinstance(all_elements, dict):
-            if "count" in all_elements.keys():
-                self._count = PerCountSchema._parseCount(all_elements["count"])
-            else:
-                self._count = 0
-                Logger.Log(f"{name} config does not have an 'count' element; defaulting to count=0", logging.WARN)
-            if "prefix" in all_elements.keys():
-                self._prefix = PerCountSchema._parsePrefix(all_elements['prefix'])
-            else:
-                self._prefix = "pre"
-                Logger.Log(f"{name} config does not have an 'prefix' element; defaulting to prefix='pre'", logging.WARN)
-        else:
+        if not isinstance(all_elements, dict):
             all_elements = {}
             Logger.Log(f"For {name} Per-count Feature config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
+        if "count" in all_elements.keys():
+            self._count = PerCountSchema._parseCount(all_elements["count"])
+        else:
+            self._count = 0
+            Logger.Log(f"{name} config does not have a 'count' element; defaulting to count={self._count}", logging.WARN)
+        if "prefix" in all_elements.keys():
+            self._prefix = PerCountSchema._parsePrefix(all_elements['prefix'])
+        else:
+            self._prefix = "pre"
+            Logger.Log(f"{name} config does not have a 'prefix' element; defaulting to prefix='{self._prefix}'", logging.WARN)
 
-        self._elements = { key : val for key,val in all_elements.items() if key not in {"count", "prefix"} }
-        super().__init__(name=name, all_elements=all_elements)
+        _leftovers = { key : val for key,val in all_elements.items() if key not in {"count", "prefix"} }
+        super().__init__(name=name, all_elements=_leftovers)
 
     @property
     def Count(self) -> Union[int, str]:
@@ -44,8 +42,8 @@ class PerCountSchema(FeatureSchema):
         ret_val = f"**{self.Name}** : *{self.ReturnType}*, *Per-count feature* {' (disabled)' if not len(self.Enabled) > 0 else ''}  \n{self.Description}  \n"
         if len(self.Subfeatures) > 0:
             ret_val += "*Sub-features*:  \n\n" + "\n".join([subfeature.AsMarkdown for subfeature in self.Subfeatures.values()])
-        if len(self.Elements) > 0:
-            ret_val += "*Other elements*:  \n\n" + "\n".join([f"{elem_name} - {elem}" for elem_name,elem in self.Elements.items()])
+        if len(self.NonStandardElements) > 0:
+            ret_val += "*Other elements*:  \n\n" + "\n".join([f"{elem_name} - {elem}" for elem_name,elem in self.NonStandardElements.items()])
         return ret_val
 
     @staticmethod

@@ -10,7 +10,7 @@ from games.WAVES.features import *
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
@@ -126,7 +126,7 @@ class WaveLoader(ExtractorLoader):
     def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid detector for Waves.")
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the WaveLoader class.
     def __init__(self, player_id:str, session_id: str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]=None):
@@ -172,10 +172,10 @@ class WaveLoader(ExtractorLoader):
     #                     table assiciated with this game is structured.
     # def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
     #     if event.SessionID == self._session_id:
-    #         level = event.EventData['level']
+    #         level = event.GameState['level']
     #         # If we haven't set persistent id, set now.
     #         if self._features.getValByName(feature_name="persistentSessionID") == 0:
-    #             self._features.setValByName(feature_name="persistentSessionID", new_value=event.EventData['persistent_session_id'])
+    #             self._features.setValByName(feature_name="persistentSessionID", new_value=event.UserData['persistent_session_id'])
     #         # Ensure we have private data initialized for the given level.
     #         if not level in self._levels:
     #             bisect.insort(self._levels, level)

@@ -29,7 +29,7 @@ class ActiveJobs(Feature):
 
     def _extractFromEvent(self, event:Event) -> None:
         session_id = event.SessionID
-        mission_name = event.EventData["mission_id"]["string_value"]
+        mission_name = event.EventData["mission_id"]
 
         if (self._current_session_id is not None) and (self._current_session_id != session_id) and (self._current_session_id not in self._active_jobs[self._last_started_id]):
             # if we found a new user, then previous user must have left off on whatever their active job was.

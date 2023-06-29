@@ -30,16 +30,16 @@ class ActiveJobs(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self._validate_job(event.EventData['job_name']):
+        _current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if self._validate_job(_current_job):
             user_code = event.UserID
-            job_name = event.EventData["job_name"]["string_value"]
 
             if (self._current_user_code is not None) and (self._current_user_code != user_code) and (self._current_user_code not in self._active_jobs[self._last_started_id]):
                 # if we found a new user, then previous user must have left off on whatever their active job was.
                 # so, add the user to the list for that job
                 self._active_jobs[self._last_started_id].append(self._current_user_code)
             self._current_user_code = user_code # in either case, set latest user as "current"
-            self._last_started_id = job_name # In either case, set latest job name as "current".
+            self._last_started_id = _current_job # In either case, set latest job name as "current".
 
     def _extractFromFeatureData(self, feature:FeatureData):
         return
@@ -60,7 +60,7 @@ class ActiveJobs(Feature):
     # *** Other local functions
     def _validate_job(self, job_data):
         ret_val : bool = False
-        if job_data['string_value'] and job_data['string_value'] in self._job_map:
+        if job_data and job_data in self._job_map:
             ret_val = True
         else:
             Logger.Log(f"Got invalid job_name data in JobsAttempted", logging.WARNING)

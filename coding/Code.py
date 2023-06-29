@@ -30,7 +30,7 @@ class Code:
         def Index(self):
             return self._index
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, code_word:str, id:str, coder:Coder, events:List[EventID], notes:Optional[str]=None):
         self._code   = code_word

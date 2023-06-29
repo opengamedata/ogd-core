@@ -9,7 +9,7 @@ from extractors.Extractor import Extractor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 from schemas.IterationMode import IterationMode
 
 ## @class Extractor
@@ -55,7 +55,7 @@ class ExtractorRegistry(abc.ABC):
     def _extractFromFeatureData(self, feature:FeatureData) -> None:
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     # Base constructor for Registry.
     def __init__(self, mode:ExtractionMode):

@@ -11,7 +11,7 @@ from extractors.features.Feature import Feature
 from extractors.ExtractorLoader import ExtractorLoader
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 
 
 
@@ -96,13 +96,12 @@ class JournalismLoader(ExtractorLoader):
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Journalism.")
         return ret_val
-      
     
 
     def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Journalism.")
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the JournalismExtractor class.
     def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):

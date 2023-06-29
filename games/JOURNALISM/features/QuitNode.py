@@ -70,19 +70,14 @@ class QuitNode(SessionFeature):
         # >>> use data in the FeatureData object to update state variables as needed. <<<
         # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
-       
-        #check node exists 
         try:
             quit_node : str = feature._vals[2]
         except:
             print("no subfeature value found!")
-        
-        #check if node exists in dict]
-        try:
-            self._quit_nodes[quit_node] +=1
-        except:
-            self._quit_nodes[quit_node]=1
-
+        if(self._quit_nodes[quit_node] is None):
+            self._quit_nodes[quit_node] = 1
+        else:
+            self._quit_nodes[quit_node]+=1
         return
 
     def _getFeatureValues(self) -> List[Any]:
@@ -107,10 +102,9 @@ class QuitNode(SessionFeature):
         # the more-verbose code is here for illustrative purposes.
 
         ##return the top 5 highest values in the dictionary
-        #top_sorted : dict = dict(sorted(self._quit_nodes.iteritems(), key=operator.itemgetter(1), reverse=True)[:5])
-        res = dict(sorted(self._quit_nodes.items(), key = operator.itemgetter(1), reverse = True)[:5])
+        top_sorted : dict = dict(sorted(self._quit_nodes.iteritems(), key=operator.itemgetter(1), reverse=True)[:5])
 
-        return [res]
+        return [top_sorted]
 
 
     # *** Optionally override public functions. ***

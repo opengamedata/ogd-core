@@ -30,8 +30,8 @@ class TopJobSwitchDestinations(Feature):
 
     def _extractFromEvent(self, event:Event) -> None:
         session_id = event.SessionID
-        checkpoint = event.EventData["status"]["string_value"]
-        mission_name = event.EventData["mission_id"]["string_value"]
+        checkpoint = event.EventData["status"]
+        mission_name = event.EventData["mission_id"]
 
         if checkpoint == "Begin Mission":
             if not self._last_started_id:

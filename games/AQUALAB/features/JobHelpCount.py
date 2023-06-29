@@ -32,7 +32,7 @@ class JobHelpCount(PerJobFeature):
             self._current_count += 1
             self._total_count += 1
         elif event.EventName == "complete_task":
-            task_id = event.EventData.get("task_id", {}).get("string_value", "UNKNOWN_TASK")
+            task_id = event.EventData.get("task_id", "UNKNOWN_TASK")
             self._by_task[task_id] = self._current_count
             self._current_count = 0
 

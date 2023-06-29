@@ -6,3 +6,6 @@ class ExtractionMode(IntEnum):
     PLAYER = 2
     POPULATION = 3
     DETECTOR = 4
+
+    def __str__(self):
+        return self.name

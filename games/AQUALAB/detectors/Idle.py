@@ -50,7 +50,7 @@ class Idle(Detector):
         :param event: _description_
         :type event: Event
         """
-        if event.EventName == "script_fired" and ("somethingLeft" or "nothingLeft") in event.EventData.get("node_id", {}).get("string_value", ""):
+        if event.EventName == "script_fired" and ("somethingLeft" or "nothingLeft") in event.EventData.get("node_id", ""):
             return
         if self._sess_id == "Unknown":
             self._sess_id = event.SessionID
@@ -72,7 +72,7 @@ class Idle(Detector):
             self._time = event.Timestamp
             self._app_version = event.AppVersion
             self._log_version = event.LogVersion
-            self._job_name = event.EventData.get("job_name", "JOB NAME NOT FOUND")
+            self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
             self._sequence_index = event.EventSequenceIndex
         return
 

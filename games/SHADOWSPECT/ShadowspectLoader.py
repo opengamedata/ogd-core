@@ -10,7 +10,7 @@ from extractors.Extractor import ExtractorParameters
 from games.SHADOWSPECT.features import *
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 
 ## @class ShadowspectExtractor
 #  Extractor subclass for extracting features from Shadowspects game data.

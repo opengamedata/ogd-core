@@ -34,7 +34,7 @@ class TankRulesCount(PerCountFeature):
             self._found = False
             return
         if not self._found:
-            if event.EventName == "begin_experiment" and event.EventData.get("tank_type").get("string_value") == TANK_TYPE[self.CountIndex]:
+            if event.EventName == "begin_experiment" and event.EventData.get("tank_type") == TANK_TYPE[self.CountIndex]:
                 self._found = True
             return
         if event.EventName == "receive_fact":

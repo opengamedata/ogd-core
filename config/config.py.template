@@ -1,85 +1,83 @@
 settings = {
-    "BATCH_SIZE" : 1000,
-    "LOG_FILE"   : False,
-    "DEBUG_LEVEL": "INFO",
-    "FAIL_FAST"  : False,
+    "BATCH_SIZE":1000,
+    "LOG_FILE":False,
+    "DEBUG_LEVEL":"INFO",
+    "FAIL_FAST":False,
     "FILE_INDEXING" : 
     {
         "LOCAL_DIR"     : "./data/",
         "REMOTE_URL"    : "https://fieldday-web.ad.education.wisc.edu/opengamedata/",
         "TEMPLATES_URL" : "https://github.com/opengamedata/opengamedata-samples"
     },
-    "SSH_CONFIG":
-    {
-        "SSH_HOST" : "hostname",
-        "SSH_USER" : "WCER AD User",
-        "SSH_PW" : "WCER AD Password",
-        "SSH_PORT" : 22
-    },
     "GAME_SOURCES" :
     {
         "AQUALAB_BQ" : {
-            "DB_TYPE"  : "BigQuery",
-            "DB_NAME"    : "aqualab-57f88.analytics_271167280",
+            "DB_TYPE"    : "FIREBASE",
             "PROJECT_ID" : "aqualab-57f88",
-            "DATASET_ID" : "analytics_271167280",
+            "PROJECT_KEY": "./config/aqualab.json"
         },
         "MASHOPOLIS_BQ": {
-            "DB_TYPE"  : "BigQuery",
-            "DB_NAME"    : "mashopolis-36754.analytics_302498821",
+            "DB_TYPE"    : "BIGQUERY",
             "PROJECT_ID" : "mashopolis-36754",
-            "DATASET_ID" : "analytics_302498821",
+            "PROJECT_KEY": "./config/mashopolis.json"
         },
         "SHADOWSPECT_BQ": {
-            "DB_TYPE"  : "BigQuery",
-            "DB_NAME"    : "shadowspect-b8e63.analytics_284091572",
+            "DB_TYPE"    : "FIREBASE",
             "PROJECT_ID" : "shadowspect-b8e63",
-            "DATASET_ID" : "analytics_284091572",
+            "PROJECT_KEY": "./config/shadowspect.json"
         },
         "SHIPWRECKS_BQ": {
-            "DB_TYPE"  : "BigQuery",
-            "DB_NAME"    : "shipwrecks-8d142.analytics_269167605",
+            "DB_TYPE"    : "FIREBASE",
             "PROJECT_ID" : "shipwrecks-8d142",
-            "DATASET_ID" : "analytics_269167605",
+            "PROJECT_KEY": "./config/shipwrecks.json"
         },
-        "LOGGER": {
-            "DB_TYPE" : "MySQL",
-            "DB_HOST" : "127.0.0.1",
-            "DB_PORT" : 3306,
-            "DB_NAME" : "logger",
-            "DB_USER" : "username",
-            "DB_PW"   : "password"
+        "OPENGAMEDATA_BQ" : {
+            "DB_TYPE"    : "BIGQUERY",
+            "PROJECT_ID" : "wcer-field-day-ogd-1798",
+            "PROJECT_KEY": "./config/ogd.json"
         },
         "OPENGAMEDATA_MYSQL": {
             "DB_TYPE" : "MySQL",
             "DB_HOST" : "127.0.0.1",
             "DB_PORT" : 3306,
-            "DB_NAME" : "opengamedata",
             "DB_USER" : "username",
-            "DB_PW"   : "password"
+            "DB_PW"   : "password",
+            "SSH_HOST": "hostname",
+            "SSH_USER": "WCER AD User",
+            "SSH_PASS": "WCER AD Password"
         },
+        "LOGGER": {
+            "DB_TYPE" : "MySQL",
+            "DB_HOST" : "127.0.0.1",
+            "DB_PORT" : 3306,
+            "DB_USER" : "username",
+            "DB_PW"   : "password",
+            "SSH_HOST": "hostname",
+            "SSH_USER": "WCER AD User",
+            "SSH_PASS": "WCER AD Password"
+        }
     },
     "GAME_SOURCE_MAP":
     {
-        "AQUALAB":       {"schema":"BIGQUERY",           "source":"AQUALAB_BQ",         "table":"events_*",   "credential":"./config/aqualab.json"},
-        "BACTERIA":      {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
-        "BALLOON":       {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
-        "CRYSTAL":       {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
-        "CYCLE_CARBON":  {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
-        "CYCLE_NITROGEN":{"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
-        "CYCLE_WATER":   {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
-        "EARTHQUAKE":    {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
-        "ICECUBE":       {"schema":"OPENGAMEDATA_MYSQL", "source":"OPENGAMEDATA_MYSQL", "table":"ICECUBE",    "credential":None},
-        "JOURNALISM":    {"schema":"OPENGAMEDATA_MYSQL", "source":"OPENGAMEDATA_MYSQL", "table":"JOURNALISM", "credential":None},
-        "JOWILDER":      {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
-        "LAKELAND":      {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
-        "MAGNET":        {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
-        "MASHOPOLIS":    {"schema":"BIGQUERY",           "source":"MASHOPOLIS_BQ",      "table":"events_*",   "credential":"./config/shipwrecks.json"},
-        "PENGUINS":      {"schema":"OPENGAMEDATA_MYSQL", "source":"OPENGAMEDATA_MYSQL", "table":"PENGUINS",   "credential":None},
-        "SHIPWRECKS":    {"schema":"BIGQUERY",           "source":"SHIPWRECKS_BQ",      "table":"events_*",   "credential":"./config/shipwrecks.json"},
-        "SHADOWSPECT":   {"schema":"BIGQUERY",           "source":"SHADOWSPECT_BQ",     "table":"events_*",   "credential":"./config/shadowspect.json"},
-        "STEMPORTS":     {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
-        "WAVES":         {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
-        "WIND":          {"schema":"FIELDDAY_MYSQL",     "source":"LOGGER",             "table":"log",        "credential":None},
+        "AQUALAB":        { "source":"OPENGAMEDATA_BQ",    "database":"aqualab",             "table":"aqualab_daily",        "schema":"OPENGAMEDATA_BIGQUERY" },
+        "BACTERIA":       { "source":"OPENGAMEDATA_BQ",    "database":"bacteria",            "table":"bacteria_daily",       "schema":"OPENGAMEDATA_BIGQUERY" },
+        "BALLOON":        { "source":"OPENGAMEDATA_BQ",    "database":"balloon",             "table":"balloon_daily",        "schema":"OPENGAMEDATA_BIGQUERY" },
+        "CRYSTAL":        { "source":"OPENGAMEDATA_BQ",    "database":"crystal",             "table":"crystal_daily",        "schema":"OPENGAMEDATA_BIGQUERY" },
+        "CYCLE_CARBON":   { "source":"OPENGAMEDATA_BQ",    "database":"cycle_carbon",        "table":"cycle_carbon_daily",   "schema":"OPENGAMEDATA_BIGQUERY" },
+        "CYCLE_NITROGEN": { "source":"OPENGAMEDATA_BQ",    "database":"cycle_nitrogen",      "table":"cycle_nitrogen_daily", "schema":"OPENGAMEDATA_BIGQUERY" },
+        "CYCLE_WATER":    { "source":"OPENGAMEDATA_BQ",    "database":"cycle_water",         "table":"cycle_water_daily",    "schema":"OPENGAMEDATA_BIGQUERY" },
+        "EARTHQUAKE":     { "source":"OPENGAMEDATA_BQ",    "database":"earthquake",          "table":"earthquake_daily",     "schema":"OPENGAMEDATA_BIGQUERY" },
+        "ICECUBE":        { "source":"OPENGAMEDATA_MYSQL", "database":"opengamedata",        "table":"ICECUBE",              "schema":"OPENGAMEDATA_MYSQL"    },
+        "JOWILDER":       { "source":"OPENGAMEDATA_BQ",    "database":"jowilder",            "table":"jowilder_daily",       "schema":"OPENGAMEDATA_BIGQUERY" },
+        "JOURNALISM":     { "source":"OPENGAMEDATA_BQ",    "database":"journalism",          "table":"journalism_daily",     "schema":"OPENGAMEDATA_BIGQUERY" },
+        "PENGUINS":       { "source":"OPENGAMEDATA_BQ",    "database":"penguins",            "table":"penguins_daily",       "schema":"OPENGAMEDATA_BIGQUERY" },
+        "LAKELAND":       { "source":"OPENGAMEDATA_BQ",    "database":"lakeland",            "table":"lakeland_daily",       "schema":"OPENGAMEDATA_BIGQUERY" },
+        "MAGNET":         { "source":"OPENGAMEDATA_BQ",    "database":"magnet",              "table":"magnet_daily",         "schema":"OPENGAMEDATA_BIGQUERY" },
+        "MASHOPOLIS":     { "source":"MASHOPOLIS_BQ",      "database":"analytics_302498821", "table":"events",               "schema":"BIGQUERY"              },
+        "SHIPWRECKS":     { "source":"SHIPWRECKS_BQ",      "database":"analytics_269167605", "table":"events",               "schema":"FIREBASE"              },
+        "SHADOWSPECT":    { "source":"SHADOWSPECT_BQ",     "database":"analytics_284091572", "table":"events",               "schema":"FIREBASE"              },
+        "STEMPORTS":      { "source":"LOGGER",             "database":"logger",              "table":"log",                  "schema":"FIELDDAY_MYSQL"        },
+        "WAVES":          { "source":"OPENGAMEDATA_BQ",    "database":"waves",               "table":"waves_daily",          "schema":"OPENGAMEDATA_BIGQUERY" },
+        "WIND":           { "source":"OPENGAMEDATA_BQ",    "database":"wind",                "table":"wind_daily",           "schema":"OPENGAMEDATA_BIGQUERY" },
     },
 }
