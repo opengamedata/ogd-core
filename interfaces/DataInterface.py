@@ -6,20 +6,16 @@ from pprint import pformat
 from typing import Any, Dict, List, Tuple, Optional, Union
 
 # import local files
-from config.config import settings as default_settings
 from interfaces.Interface import Interface
 from schemas.Event import Event
 from schemas.IDMode import IDMode
-from schemas.TableSchema import TableSchema
+from schemas.tables.TableSchema import TableSchema
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from utils import Logger
 
 class DataInterface(Interface):
 
     # *** ABSTRACTS ***
-
-    @abc.abstractmethod
-    def _loadTableSchema(self, game_id:str) -> TableSchema:
-        pass
 
     @abc.abstractmethod
     def _allIDs(self) -> List[str]:
@@ -41,12 +37,13 @@ class DataInterface(Interface):
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str,datetime]:
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, config:Dict[str,Any]):
+    def __init__(self, game_id:str, config:GameSourceSchema, fail_fast:bool):
         super().__init__(config=config)
+        self._fail_fast = fail_fast
         self._game_id : str  = game_id
-        self._table_schema : TableSchema = self._loadTableSchema(game_id=game_id)
+        self._table_schema : TableSchema = TableSchema(schema_name=self._config.Schema)
 
     def __del__(self):
         self.Close()
@@ -91,11 +88,11 @@ class DataInterface(Interface):
                     next_event.FallbackDefaults(index=_evt_sess_index)
                     _evt_sess_index += 1
                 except Exception as err:
-                    if default_settings.get("FAIL_FAST", None):
+                    if self._fail_fast:
                         Logger.Log(f"Error while converting row to Event\nFull error: {err}\nRow data: {pformat(row)}", logging.ERROR, depth=2)
                         raise err
                     else:
-                        Logger.Log(f"Error while converting row to Event. This row will be skipped.\nFull error: {err}", logging.WARNING, depth=2)
+                        Logger.Log(f"Error while converting row ({row}) to Event. This row will be skipped.\nFull error: {err}", logging.WARNING, depth=2)
                 else:
                     ret_val.append(next_event)
         else:

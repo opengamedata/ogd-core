@@ -4,7 +4,7 @@ from typing import List, Optional, Type
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.features.Feature import Feature
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 
 class LegacyLoader(ExtractorLoader):
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):

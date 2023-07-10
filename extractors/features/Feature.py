@@ -38,7 +38,7 @@ class Feature(Extractor):
         """
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)

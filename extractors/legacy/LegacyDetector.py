@@ -43,7 +43,7 @@ class LegacyDetector(Detector):
                                 event_name="CustomDetector", event_data={}, event_source=EventSource.GENERATED)
         return ret_val
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params, trigger_callback=lambda x : None)

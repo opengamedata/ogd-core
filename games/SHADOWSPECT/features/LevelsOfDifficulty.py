@@ -63,7 +63,7 @@ class LevelsOfDifficulty(SessionFeature):
     def _extractFromEvent(self, event:Event) -> None:
         ignoreEvent = False
         if event.EventName in ["start_level", "puzzle_started"]:
-            self._activePuzzle = event.EventData["task_id"]["string_value"]
+            self._activePuzzle = event.EventData["task_id"]
 
             if self._activePuzzle not in self._userPuzzleDict.keys():
                 self._userPuzzleDict[self._activePuzzle] = {"completed":0, "n_actions":0, "n_attempts":0, "active_time":0}

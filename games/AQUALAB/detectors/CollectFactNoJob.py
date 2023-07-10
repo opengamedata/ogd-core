@@ -24,6 +24,7 @@ class CollectFactNoJob(Detector):
         self._fact_id = None
         self._app_version = "Unknown"
         self._log_version = "Unknown"
+        self._current_job = None
 
     # *** Implement abstract functions ***
     @classmethod
@@ -41,7 +42,10 @@ class CollectFactNoJob(Detector):
         :param event: _description_
         :type event: Event
         """
-        if event.EventData['job_name'] == "no-active-job":
+        self._current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if self._current_job is None:
+            raise KeyError("Could not find key 'job_name' in GameState or EventData!")
+        if self._current_job == "no-active-job":
             self._sess_id = event.SessionID
             self._player_id = event.UserID
             self._time = event.Timestamp
@@ -68,5 +72,6 @@ class CollectFactNoJob(Detector):
         ret_val : DetectorEvent = DetectorEvent(session_id=self._sess_id, app_id="AQUALAB", timestamp=self._time,
                                                 event_name="CollectFactNoJob", event_data={"fact_id":self._fact_id},
                                                 app_version=self._app_version, log_version=self._log_version,
-                                                user_id=self._player_id, event_sequence_index=self._sequence_index)
+                                                user_id=self._player_id, game_state={"job_name":self._current_job},
+                                                event_sequence_index=self._sequence_index)
         return ret_val

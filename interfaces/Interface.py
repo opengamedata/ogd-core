@@ -3,7 +3,7 @@ import abc
 from typing import Any, Dict
 
 # import local files
-from schemas.IDMode import IDMode
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
 
 class Interface(abc.ABC):
 
@@ -17,10 +17,10 @@ class Interface(abc.ABC):
     def _close(self) -> bool:
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, config:Dict[str,Any]):
-        self._config  : Dict[str, Any] = config
+    def __init__(self, config:GameSourceSchema):
+        self._config  : GameSourceSchema = config
         self._is_open : bool = False
 
     def __del__(self):

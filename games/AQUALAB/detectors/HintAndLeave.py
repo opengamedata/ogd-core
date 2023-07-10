@@ -63,7 +63,7 @@ class HintAndLeave(Detector):
 
         if event.EventName == "ask_for_help":
             self._last_hint_time = event.Timestamp
-            self._job_name = event.EventData.get("job_name")
+            self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', None))
             self._hint = event.EventData.get("node_id")
             return
 

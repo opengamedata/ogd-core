@@ -10,7 +10,7 @@ from extractors.Extractor import ExtractorParameters
 from extractors.legacy.LegacyFeature import LegacyFeature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 
 # temp comment
 
@@ -51,7 +51,7 @@ class CrystalExtractor(LegacyFeature):
     #                     table assiciated with this game is structured.
     def _extractFromEvent(self, event:Event):
         # put some data in local vars, for readability later.
-        level = event.EventData['level']
+        level = event.GameState['level']
         event_client_time = event.Timestamp
         # Check for invalid row.
         if self.ExtractionMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
@@ -60,7 +60,7 @@ class CrystalExtractor(LegacyFeature):
         else:
             # If we haven't set persistent id, set now.
             if self._features.getValByName(feature_name="persistentSessionID") == 0:
-                self._features.setValByName(feature_name="persistentSessionID", new_value=event.EventData['persistent_session_id'])
+                self._features.setValByName(feature_name="persistentSessionID", new_value=event.UserData['persistent_session_id'])
             # Ensure we have private data initialized for this level.
             if not level in self._levels:
                 bisect.insort(self._levels, level)

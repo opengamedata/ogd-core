@@ -4,243 +4,882 @@
 		"max": 47
 	},
 
-	"events": {
-		"checkpoint": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"name": "event name | ",
-			"level": "enum for current checkpoint | "
-		},
-		"startgame": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"save_code": " | ",
-			"fullscreen": " | ",
-			"music": " | ",
-			"hq": " | ",
-			"name": "event name | ",
-			"level": "enum for current checkpoint | "
-		},
-		"endgame": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"name": "event name | ",
-			"level": "enum for current checkpoint | "
-		},
-		"navigate_click": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"screen_coor": "x,y integer array of where the mouse is in current room | ",
-			"room_coor": "x,y integer array of where the mouse is in the game screen | ",
-			"level": "enum for current checkpoint | "
-		},
-		"notebook_click": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"screen_coor": "x,y integer array of where the mouse is in current room | ",
-			"room_coor": "x,y integer array of where the mouse is in the game screen | ",
-			"name": "event name | ",
-			"page": " | ",
-			"level": "enum for current checkpoint | "
-		},
-		"map_click": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"screen_coor": "x,y integer array of where the mouse is in current room | ",
-			"room_coor": "x,y integer array of where the mouse is in the game screen | ",
-			"name": "event name | ",
-			"level": "enum for current checkpoint | "
-		},
-		"notification_click": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"screen_coor": "x,y integer array of where the mouse is in current room | ",
-			"room_coor": "x,y integer array of where the mouse is in the game screen | ",
-			"name": "event name | ",
-			"level": "enum for current checkpoint | ",
-			"text_fqid": "c.fqid | Text fqid (v6+)",
-			"text": "c_text | Text  (v6+)"
-		},
-		"object_click": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"screen_coor": "x,y integer array of where the mouse is in current room | ",
-			"room_coor": "x,y integer array of where the mouse is in the game screen | ",
-			"name": "event name | ",
-			"level": "enum for current checkpoint | "
-		},
-		"observation_click": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"screen_coor": "x,y integer array of where the mouse is in current room | ",
-			"room_coor": "x,y integer array of where the mouse is in the game screen | ",
-			"name": "event name | ",
-			"level": "enum for current checkpoint | ",
-			"text_fqid": "obs_fqid | Text fqid (v6+)",
-			"text": "obs_text | Text  (v6+)"
-		},
-		"person_click": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"screen_coor": "x,y integer array of where the mouse is in current room | ",
-			"room_coor": "x,y integer array of where the mouse is in the game screen | ",
-			"name": "event name | ",
-			"level": "enum for current checkpoint | ",
-			"text_fqid": "speak.fqid | Text fqid (v6+)",
-			"text": "speak_text | (v6+)"
-		},
-		"cutscene_click": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"screen_coor": "x,y integer array of where the mouse is in current room | ",
-			"room_coor": "x,y integer array of where the mouse is in the game screen | ",
-			"name": "event name | ",
-			"level": "enum for current checkpoint | ",
-			"text_fqid": "cutscene.fqid | Text fqid (v6+)",
-			"text": "txt | Either cutscene text or 'undefined' (v6+)"
-		},
-		"wildcard_click": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"screen_coor": "x,y integer array of where the mouse is in current room | ",
-			"room_coor": "x,y integer array of where the mouse is in the game screen | ",
-			"name": "event name | ",
-			"level": "enum for current checkpoint | ",
-			"correct": "correct answer to the problem (only exists for event name CHOICE) - sometimes doesn't exist?? | Only exists in versions 1-4. (v4-)",
-			"answer": "selected answer (only exists for event name CHOICE) | Only exists in versions 1-4. (v4-)",
-			"cur_cmd_fqid": "cmd_type == 1 ? cur_cmd.speak_fqid : wc.cur_command.entry_fqid | Only exists in versions 6+ (v6+)",
-			"cur_cmd_type": "cmd_type | Only exists in versions 6+ (v6+)",
-			"text": "cmd_txt | Only exists in versions 6+ (v6+)",
-			"interacted_fqid": "clicked_fqid | Only exists in versions 6+ (v6+)"
-		},
-		"navigate_hover": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"start_time": "client side timestamp for the time the hover started | ",
-			"end_time": "client side timestamp for the time the hover ended | ",
-			"name": "event name | ",
-			"level": "enum for current checkpoint | "
-		},
-		"notebook_hover": {
-			"event Name": "Description | Note"
-		},
-		"map_hover": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"start_time": "client side timestamp for the time the hover started | ",
-			"end_time": "client side timestamp for the time the hover ended | ",
-			"name": "event name | ",
-			"level": "enum for current checkpoint | "
-		},
-		"notification_hover": {
-			"event Name": "Description | Note"
-		},
-		"object_hover": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"start_time": "client side timestamp for the time the hover started | ",
-			"end_time": "client side timestamp for the time the hover ended | ",
-			"level": "enum for current checkpoint | ",
-			"name": "event name - sometimes doesn't exist?? | "
-		},
-		"observation_hover": {
-			"event Name": "Description | Note"
-		},
-		"person_hover": {
-			"event Name": "Description | Note"
-		},
-		"cutscene_hover": {
-			"event Name": "Description | Note"
-		},
-		"wildcard_hover": {
-			"event Name": "Description | Note",
-			"room_fqid": "fully qualified id of the room | ",
-			"type": "type name | ",
-			"subtype": "subtype name | ",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted | ",
-			"event_custom": "event enum | ",
-			"start_time": "client side timestamp for the time the hover started | ",
-			"end_time": "client side timestamp for the time the hover ended | ",
-			"name": "event name - sometimes doesn't exist?? | ",
-			"level": "enum for current checkpoint | ",
-			"correct": "correct answer to the problem (only exists for event name CHOICE) - sometimes doesn't exist?? | Only exists in versions 1-4. (v4-)",
-			"answer": "selected answer (only exists for event name CHOICE) | Only exists in versions 1-4. (v4-)",
-			"cur_cmd_fqid": "cmd_type == 1 ? cur_cmd.speak_fqid : wc.cur_command.entry_fqid | Only exists in versions 6+ (v6+)",
-			"cur_cmd_type": "cmd_type | Only exists in versions 6+ (v6+)",
-			"text": "cmd_txt | Only exists in versions 6+ (v6+)",
-			"interacted_fqid": "clicked_fqid | Only exists in versions 6+ (v6+)"
-		},
-		"quiz": {
-			"room_fqid": "fully qualified id of the room",
-			"type": "type enum",
-			"subtype": "subtype enum",
-			"fqid": "fqid of the interaction, with the room_fqid subtracted",
-			"event_custom": "event enum",
-			"questions": "array of question objects, each has question, response, and response_index",
-			"name": "event name enum",
-			"level": "enum for current checkpoint"
-		}
-	},
+   "events": {
+      "checkpoint": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            }
+         }
+      },
+      "startgame": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "save_code": {
+               "type": "N/A",
+               "description": " | "
+            },
+            "fullscreen": {
+               "type": "N/A",
+               "description": " | "
+            },
+            "music": {
+               "type": "N/A",
+               "description": " | "
+            },
+            "hq": {
+               "type": "N/A",
+               "description": " | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            }
+         }
+      },
+      "endgame": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            }
+         }
+      },
+      "navigate_click": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "screen_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in current room | "
+            },
+            "room_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in the game screen | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            }
+         }
+      },
+      "notebook_click": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "screen_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in current room | "
+            },
+            "room_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in the game screen | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name | "
+            },
+            "page": {
+               "type": "N/A",
+               "description": " | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            }
+         }
+      },
+      "map_click": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "screen_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in current room | "
+            },
+            "room_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in the game screen | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            }
+         }
+      },
+      "notification_click": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "screen_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in current room | "
+            },
+            "room_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in the game screen | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            },
+            "text_fqid": {
+               "type": "N/A",
+               "description": "c.fqid | Text fqid (v6+)"
+            },
+            "text": {
+               "type": "N/A",
+               "description": "c_text | Text  (v6+)"
+            }
+         }
+      },
+      "object_click": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "screen_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in current room | "
+            },
+            "room_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in the game screen | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            }
+         }
+      },
+      "observation_click": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "screen_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in current room | "
+            },
+            "room_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in the game screen | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            },
+            "text_fqid": {
+               "type": "N/A",
+               "description": "obs_fqid | Text fqid (v6+)"
+            },
+            "text": {
+               "type": "N/A",
+               "description": "obs_text | Text  (v6+)"
+            }
+         }
+      },
+      "person_click": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "screen_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in current room | "
+            },
+            "room_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in the game screen | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            },
+            "text_fqid": {
+               "type": "N/A",
+               "description": "speak.fqid | Text fqid (v6+)"
+            },
+            "text": {
+               "type": "N/A",
+               "description": "speak_text | (v6+)"
+            }
+         }
+      },
+      "cutscene_click": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "screen_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in current room | "
+            },
+            "room_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in the game screen | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            },
+            "text_fqid": {
+               "type": "N/A",
+               "description": "cutscene.fqid | Text fqid (v6+)"
+            },
+            "text": {
+               "type": "N/A",
+               "description": "txt | Either cutscene text or 'undefined' (v6+)"
+            }
+         }
+      },
+      "wildcard_click": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "screen_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in current room | "
+            },
+            "room_coor": {
+               "type": "N/A",
+               "description": "x,y integer array of where the mouse is in the game screen | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            },
+            "correct": {
+               "type": "N/A",
+               "description": "correct answer to the problem (only exists for event name CHOICE) - sometimes doesn't exist?? | Only exists in versions 1-4. (v4-)"
+            },
+            "answer": {
+               "type": "N/A",
+               "description": "selected answer (only exists for event name CHOICE) | Only exists in versions 1-4. (v4-)"
+            },
+            "cur_cmd_fqid": {
+               "type": "N/A",
+               "description": "cmd_type == 1 ? cur_cmd.speak_fqid : wc.cur_command.entry_fqid | Only exists in versions 6+ (v6+)"
+            },
+            "cur_cmd_type": {
+               "type": "N/A",
+               "description": "cmd_type | Only exists in versions 6+ (v6+)"
+            },
+            "text": {
+               "type": "N/A",
+               "description": "cmd_txt | Only exists in versions 6+ (v6+)"
+            },
+            "interacted_fqid": {
+               "type": "N/A",
+               "description": "clicked_fqid | Only exists in versions 6+ (v6+)"
+            }
+         }
+      },
+      "navigate_hover": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "start_time": {
+               "type": "N/A",
+               "description": "client side timestamp for the time the hover started | "
+            },
+            "end_time": {
+               "type": "N/A",
+               "description": "client side timestamp for the time the hover ended | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            }
+         }
+      },
+      "notebook_hover": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            }
+         }
+      },
+      "map_hover": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "start_time": {
+               "type": "N/A",
+               "description": "client side timestamp for the time the hover started | "
+            },
+            "end_time": {
+               "type": "N/A",
+               "description": "client side timestamp for the time the hover ended | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            }
+         }
+      },
+      "notification_hover": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            }
+         }
+      },
+      "object_hover": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "start_time": {
+               "type": "N/A",
+               "description": "client side timestamp for the time the hover started | "
+            },
+            "end_time": {
+               "type": "N/A",
+               "description": "client side timestamp for the time the hover ended | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name - sometimes doesn't exist?? | "
+            }
+         }
+      },
+      "observation_hover": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            }
+         }
+      },
+      "person_hover": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            }
+         }
+      },
+      "cutscene_hover": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            }
+         }
+      },
+      "wildcard_hover": {
+         "description": "N/A",
+         "event_data": {
+            "event Name": {
+               "type": "N/A",
+               "description": "Description | Note"
+            },
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room | "
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type name | "
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype name | "
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted | "
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum | "
+            },
+            "start_time": {
+               "type": "N/A",
+               "description": "client side timestamp for the time the hover started | "
+            },
+            "end_time": {
+               "type": "N/A",
+               "description": "client side timestamp for the time the hover ended | "
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name - sometimes doesn't exist?? | "
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint | "
+            },
+            "correct": {
+               "type": "N/A",
+               "description": "correct answer to the problem (only exists for event name CHOICE) - sometimes doesn't exist?? | Only exists in versions 1-4. (v4-)"
+            },
+            "answer": {
+               "type": "N/A",
+               "description": "selected answer (only exists for event name CHOICE) | Only exists in versions 1-4. (v4-)"
+            },
+            "cur_cmd_fqid": {
+               "type": "N/A",
+               "description": "cmd_type == 1 ? cur_cmd.speak_fqid : wc.cur_command.entry_fqid | Only exists in versions 6+ (v6+)"
+            },
+            "cur_cmd_type": {
+               "type": "N/A",
+               "description": "cmd_type | Only exists in versions 6+ (v6+)"
+            },
+            "text": {
+               "type": "N/A",
+               "description": "cmd_txt | Only exists in versions 6+ (v6+)"
+            },
+            "interacted_fqid": {
+               "type": "N/A",
+               "description": "clicked_fqid | Only exists in versions 6+ (v6+)"
+            }
+         }
+      },
+      "quiz": {
+         "description": "N/A",
+         "event_data": {
+            "room_fqid": {
+               "type": "N/A",
+               "description": "fully qualified id of the room"
+            },
+            "type": {
+               "type": "N/A",
+               "description": "type enum"
+            },
+            "subtype": {
+               "type": "N/A",
+               "description": "subtype enum"
+            },
+            "fqid": {
+               "type": "N/A",
+               "description": "fqid of the interaction, with the room_fqid subtracted"
+            },
+            "event_custom": {
+               "type": "N/A",
+               "description": "event enum"
+            },
+            "questions": {
+               "type": "N/A",
+               "description": "array of question objects, each has question, response, and response_index"
+            },
+            "name": {
+               "type": "N/A",
+               "description": "event name enum"
+            },
+            "level": {
+               "type": "N/A",
+               "description": "enum for current checkpoint"
+            }
+         }
+      }
+   },
 	"features": {
 		"per_count": {
 			"QuestionAnswers": {

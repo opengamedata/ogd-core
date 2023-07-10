@@ -46,8 +46,8 @@ class JobsAttempted(Feature):
 
     def _extractFromEvent(self, event:Event) -> None:
         session_id = event.SessionID
-        checkpoint = event.EventData["status"]["string_value"]
-        mission_name = event.EventData["mission_id"]["string_value"]
+        checkpoint = event.EventData["status"]
+        mission_name = event.EventData["mission_id"]
         mission_id = self._mission_map[mission_name]
 
         if checkpoint == "Begin Mission":

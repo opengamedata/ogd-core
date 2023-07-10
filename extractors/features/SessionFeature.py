@@ -7,7 +7,7 @@ from utils import Logger
 
 class SessionFeature(Feature):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, params:ExtractorParameters):
         if params._count_index is not None and params._count_index != 0:

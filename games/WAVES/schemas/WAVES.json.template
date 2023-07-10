@@ -1,86 +1,302 @@
 {
     "level_range": { "min":0, "max":34 },
 
-    "events":{
+    "events": {
         "COMPLETE.0": {
-            "event_custom":{"enum":["COMPLETE"]},
-            "amplitude_left":"float",
-            "wavelength_left":"float",
-            "offset_left":"float",
-            "amplitude_right":"float",
-            "wavelength_right":"float",
-            "offset_right":"float",
-            "closeness":"float"
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(COMPLETE)",
+                    "description": "N/A"
+                },
+                "amplitude_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "amplitude_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
         },
         "SUCCEED.0": {
-            "event_custom":{"enum":["SUCCEED"]},
-            "amplitude_left":"float",
-            "wavelength_left":"float",
-            "offset_left":"float",
-            "amplitude_right":"float",
-            "wavelength_right":"float",
-            "offset_right":"float",
-            "closeness":"float"
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(SUCCEED)",
+                    "description": "N/A"
+                },
+                "amplitude_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "amplitude_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
         },
         "FAIL.0": {
-            "event_custom":{"enum":["FAIL"]},
-            "amplitude_left":"float",
-            "wavelength_left":"float",
-            "offset_left":"float",
-            "amplitude_right":"float",
-            "wavelength_right":"float",
-            "offset_right":"float",
-            "closeness":"float"
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(FAIL)",
+                    "description": "N/A"
+                },
+                "amplitude_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "amplitude_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
         },
         "CUSTOM.1": {
-            "event_custom":{"enum":["SLIDER_MOVE_RELEASE"]},
-            "slider":{"enum": ["AMPLITUDE", "OFFSET", "WAVELENGTH"]},
-            "wave":"string",
-            "begin_val":"float",
-            "end_val":"float",
-            "min_val":"float",
-            "max_val":"float",
-            "ave_val":"float",
-            "begin_closeness":"float",
-            "end_closeness":"float",
-            "drag_length_ticks":"int",
-            "direction_shifts":"int",
-            "stdev_val":"float",
-            "correct_val":"float"
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(SLIDER_MOVE_RELEASE)",
+                    "description": "N/A"
+                },
+                "slider": {
+                    "enum": [
+                        "AMPLITUDE",
+                        "OFFSET",
+                        "WAVELENGTH"
+                    ]
+                },
+                "wave": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "begin_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "end_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "min_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "max_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "ave_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "begin_closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "end_closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "drag_length_ticks": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "direction_shifts": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "stdev_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "correct_val": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
         },
         "CUSTOM.2": {
-            "event_custom":{"enum":["ARROW_MOVE_RELEASE"]},
-            "slider":{"enum": ["AMPLITUDE", "OFFSET", "WAVELENGTH"]},
-            "wave":"string",
-            "begin_val":"float",
-            "end_val":"float",
-            "closeness":"float",
-            "correct_val":"float"
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(ARROW_MOVE_RELEASE)",
+                    "description": "N/A"
+                },
+                "slider": {
+                    "enum": [
+                        "AMPLITUDE",
+                        "OFFSET",
+                        "WAVELENGTH"
+                    ]
+                },
+                "wave": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "begin_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "end_val": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "correct_val": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
         },
         "CUSTOM.3": {
-            "event_custom":{"enum":["QUESTION_ANSWER"]},
-            "answer":"int",
-            "answered":"int",
-            "question":"int"
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(QUESTION_ANSWER)",
+                    "description": "N/A"
+                },
+                "answer": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "answered": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "question": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
         },
         "CUSTOM.4": {
-            "event_custom":{"enum":["RESET_BTN_PRESS"]},
-            "amplitude_left":"float",
-            "wavelength_left":"float",
-            "offset_left":"float",
-            "amplitude_right":"float",
-            "wavelength_right":"float",
-            "offset_right":"float",
-            "closeness":"float"
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(RESET_BTN_PRESS)",
+                    "description": "N/A"
+                },
+                "amplitude_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_left": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "amplitude_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "wavelength_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "offset_right": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "closeness": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
         },
         "CUSTOM.5": {
-            "event_custom":{"enum":["MENU_BUTTON"]}
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(MENU_BUTTON)",
+                    "description": "N/A"
+                }
+            }
         },
         "CUSTOM.6": {
-            "event_custom":{"enum":["SKIP_BUTTON"]}
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(SKIP_BUTTON)",
+                    "description": "N/A"
+                }
+            }
         },
         "CUSTOM.7": {
-            "event_custom":{"enum":["DISMISS_MENU_BUTTON"]}
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(DISMISS_MENU_BUTTON)",
+                    "description": "N/A"
+                }
+            }
         }
     },
 

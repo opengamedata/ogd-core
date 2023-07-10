@@ -50,7 +50,7 @@ class CodingInterface(Interface):
     def _createCode(self, code:str, coder_id:str, events:List[Code.EventID], notes:Optional[str]=None) -> bool:
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self):
         super().__init__()

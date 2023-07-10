@@ -15,22 +15,25 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Set, Tuple
 
 # import 3rd-party libraries
-from git.remote import FetchInfo
-from interfaces.outerfaces.DataOuterface import DataOuterface
-from interfaces.outerfaces.TSVOuterface import TSVOuterface
-from schemas.ExportMode import ExportMode
 
 # import local files
 from utils import Logger
-from config.config import settings as settings
+from config.config import settings
 from interfaces.DataInterface import DataInterface
 from interfaces.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface
 from interfaces.BigQueryInterface import BigQueryInterface
+from interfaces.BQFirebaseInterface import BQFirebaseInterface
+from interfaces.outerfaces.DataOuterface import DataOuterface
+from interfaces.outerfaces.TSVOuterface import TSVOuterface
+from interfaces.outerfaces.DebugOuterface import DebugOuterface
 from managers.ExportManager import ExportManager
+from schemas.ExportMode import ExportMode
 from schemas.IDMode import IDMode
-from schemas.GameSchema import GameSchema
-from schemas.TableSchema import TableSchema
+from schemas.games.GameSchema import GameSchema
+from schemas.tables.TableSchema import TableSchema
+from schemas.configs.ConfigSchema import ConfigSchema
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from ogd_requests.Request import Request, ExporterRange
 from ogd_requests.RequestResult import RequestResult, ResultStatus
 from utils import Logger
@@ -39,15 +42,18 @@ def ListGames() -> bool:
     print(f"The games available for export are:\n{games_list}")
     return True
 
-## Function to print out info on a game from the game's schema.
-#  This does a similar function to writeReadme, but is limited to the CSV
-#  metadata part (basically what was in the schema, at one time written into
-#  the csv's themselves). Further, the output is printed rather than written
-#  to file.
-def ShowGameInfo() -> bool:
+def ShowGameInfo(config:ConfigSchema) -> bool:
+    """Function to print out info on a game from the game's schema.
+   This does a similar function to writeReadme, but is limited to the CSV metadata part
+   (basically what was in the schema, at one time written into the csv's themselves).
+   Further, the output is printed rather than written to file.
+
+    :return: True if game metadata was successfully loaded and printed, or False if an error occurred
+    :rtype: bool
+    """
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
-        table_schema = TableSchema(schema_name=f"{settings['GAME_SOURCE_MAP'][args.game]['table']}.json")
+        table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableName}.json")
         print(TSVOuterface.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema))
     except Exception as err:
         msg = f"Could not print information for {args.game}: {type(err)} {str(err)}"
@@ -57,11 +63,15 @@ def ShowGameInfo() -> bool:
     else:
         return True
 
-## Function to write out the readme file for a given game.
-#  This includes the CSV metadata (data from the schema, originally written into
-#  the CSV files themselves), custom readme source, and the global changelog.
-#  The readme is placed in the game's data folder.
 def WriteReadme() -> bool:
+    """Function to write out the readme file for a given game.
+   This includes the CSV metadata (data from the schema, originally written into
+   the CSV files themselves), custom readme source, and the global changelog.
+   The readme is placed in the game's data folder.
+
+    :return: _description_
+    :rtype: bool
+    """
     path = Path(f"./data") / args.game
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
@@ -76,14 +86,22 @@ def WriteReadme() -> bool:
         Logger.Log(f"Successfully generated a readme for {args.game}.", logging.INFO)
         return True
 
-## Function to handle execution of export code. This is the main intended use of
-#  the program.
-def RunExport(events:bool = False, features:bool = False) -> bool:
+def RunExport(config:ConfigSchema, with_events:bool = False, with_features:bool = False) -> bool:
+    """Function to handle execution of export code.
+    This is the main intended use of the program.
+
+    :param events: _description_, defaults to False
+    :type events: bool, optional
+    :param features: _description_, defaults to False
+    :type features: bool, optional
+    :return: _description_
+    :rtype: bool
+    """
     success : bool = False
 
-    req = genRequest(events=events, features=features)
+    req = genRequest(config=config, with_events=with_events, with_features=with_features)
     if req.Interface.IsOpen():
-        export_manager : ExportManager = ExportManager(settings=settings)
+        export_manager : ExportManager = ExportManager(config=config)
         result         : RequestResult = export_manager.ExecuteRequest(request=req)
         success = result.Status == ResultStatus.SUCCESS
         level = logging.INFO if success else logging.ERROR
@@ -93,26 +111,26 @@ def RunExport(events:bool = False, features:bool = False) -> bool:
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     return success
 
-def genRequest(events:bool, features:bool) -> Request:
+def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Request:
     export_modes   : Set[ExportMode]
     interface      : DataInterface
     range          : ExporterRange
     file_outerface : DataOuterface
     dataset_id     : Optional[str] = None
 
-
     # 1. get exporter modes to run
-    export_modes = getModes(events=events, features=features)
+    export_modes = getModes(with_events=with_events, with_features=with_features)
     # 2. figure out the interface and range; optionally set a different dataset_id
     if args.file is not None and args.file != "":
         # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
         _ext = str(args.file).split('.')[-1]
-        interface = CSVInterface(game_id=args.game, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
+        _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"schema":"OGD_EVENT_FILE"}, data_sources={})
+        interface = CSVInterface(game_id=args.game, config=_cfg, fail_fast=config.FailFast, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [])
     else:
-        interface = genDBInterface()
+        interface = genDBInterface(config=config)
         if args.player is not None and args.player != "":
             range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER)
             dataset_id = f"{args.game}_{args.player}"
@@ -139,35 +157,42 @@ def genRequest(events:bool, features:bool) -> Request:
             start_date, end_date = getDateRange()
             range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date)
     # 3. set up the outerface, based on the range and dataset_id.
-    file_outerface = TSVOuterface(game_id=args.game, export_modes=export_modes,
-                                  date_range=range.DateRange, data_dir=settings["DATA_DIR"],
-                                  dataset_id=dataset_id)
+    _cfg = GameSourceSchema(name="FILE DEST", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+    file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=range.DateRange,
+                                  file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
+    outerfaces : Set[DataOuterface] = {file_outerface}
+    # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
+    if config.DebugLevel == "DEBUG":
+        _cfg = GameSourceSchema(name="DEBUG", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+        outerfaces.add(DebugOuterface(game_id=args.game, config=_cfg, export_modes=export_modes))
+
     # 4. Once we have the parameters parsed out, construct the request.
-    return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces={file_outerface})
+    return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
 
-def genDBInterface() -> DataInterface:
+def genDBInterface(config:ConfigSchema) -> DataInterface:
     ret_val : DataInterface
-    source_name = settings["GAME_SOURCE_MAP"][args.game]['source']
-    source : Dict[str,Any] = settings["GAME_SOURCES"][source_name]
-    interface_type = source.get('DB_TYPE')
-
-    config = settings["GAME_SOURCE_MAP"][args.game]
-    config['source'] = {key:val for key,val in source.items()}
-
-    if interface_type == "BigQuery":
-        ret_val = BigQueryInterface(game_id=args.game, config=config)
-    elif interface_type == "MySQL":
-        ret_val = MySQLInterface(game_id=args.game, config=config)
+    _game_cfg = config.GameSourceMap.get(args.game)
+    if _game_cfg is not None and _game_cfg.Source is not None:
+        match (_game_cfg.Source.Type):
+            case "Firebase" | "FIREBASE":
+                ret_val = BQFirebaseInterface(game_id=args.game, config=_game_cfg, fail_fast=config.FailFast)
+            case "BigQuery" | "BIGQUERY":
+                ret_val = BigQueryInterface(game_id=args.game, config=_game_cfg, fail_fast=config.FailFast)
+            case "MySQL" | "MYSQL":
+                ret_val = MySQLInterface(game_id=args.game, config=_game_cfg, fail_fast=config.FailFast)
+            case _:
+                raise Exception(f"{_game_cfg.Source.Type} is not a valid DataInterface type!")
+        return ret_val
     else:
-        raise Exception(f"{interface_type} is not a valid DataInterface type!")
-    return ret_val
+        raise ValueError(f"Config for {args.game} was invalid or not found!")
 
-def getModes(events:bool, features:bool) -> Set[ExportMode]:
+def getModes(with_events:bool, with_features:bool) -> Set[ExportMode]:
     ret_val = set()
 
-    if events:
+    if with_events:
         ret_val.add(ExportMode.EVENTS)
-    if features:
+        ret_val.add(ExportMode.DETECTORS)
+    if with_features:
         if not args.no_session_file:
             ret_val.add(ExportMode.SESSION)
         if not args.no_player_file:
@@ -207,6 +232,7 @@ def getDateRange() -> Tuple[datetime, datetime]:
 #  started.
 # Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
 games_folder : Path = Path("./games")
+config = ConfigSchema(name="config.py", all_elements=settings)
 # set up parent parsers with arguments for each class of command
 games_list = [name.upper() for name in os.listdir(games_folder) if (os.path.isdir(games_folder / name) and name != "__pycache__")]
 game_parser = argparse.ArgumentParser(add_help=False)
@@ -257,23 +283,27 @@ sub_parsers.add_parser("list-games",
 args : Namespace = parser.parse_args()
 
 success : bool
-cmd = args.command.lower()
-if cmd == "export":
-    success = RunExport(events=True, features=True)
-elif cmd == "export-events":
-    success = RunExport(events=True)
-elif cmd == "export-features":
-    success = RunExport(features=True)
-elif cmd == "info":
-    success = ShowGameInfo()
-elif cmd == "readme":
-    success = WriteReadme()
-elif cmd == "list-games":
-    success = ListGames()
-# elif cmd == "help":
-#     success = ShowHelp()
+if args is not None:
+    cmd = args.command.lower()
+    if cmd == "export":
+        success = RunExport(config=config, with_events=True, with_features=True)
+    elif cmd == "export-events":
+        success = RunExport(config=config, with_events=True)
+    elif cmd == "export-features":
+        success = RunExport(config=config, with_features=True)
+    elif cmd == "info":
+        success = ShowGameInfo(config=config)
+    elif cmd == "readme":
+        success = WriteReadme()
+    elif cmd == "list-games":
+        success = ListGames()
+    # elif cmd == "help":
+    #     success = ShowHelp()
+    else:
+        print(f"Invalid Command {cmd}!")
+        success = False
 else:
-    print(f"Invalid Command {cmd}!")
+    print(f"Need to enter a command!")
     success = False
 if not success:
     sys.exit(1)

@@ -26,6 +26,14 @@
         }
     },
     "events": {
+        "new_game" : {
+            "description" : "Player clicked to start a new game",
+            "event_data" : {}
+        },
+        "continue_game" : {
+            "description" : "Player clicked to continue a game",
+            "event_data" : {}
+        },
         "text_click": {
             "description": "clicked to advance to the next text bubble",
             "event_data" : {
@@ -121,7 +129,7 @@
                     "description" : "Whether the choices are being displayed in a normal conversation, or in front of a map image"
                 },
                 "choices" : {
-                    TODO
+                    "TODO":"TODO",
                     "type":"List"
                 }
             }
@@ -639,6 +647,14 @@
                 "new_quality": {
                     "type": "List[enum(BAD, GOOD, GREAT)]",
                     "description": "The quality for each snippet used in the story, sorted by quality. Note that 'GOOD' quality is not displayed to the player"
+                },
+                "story_score": {
+                    "type": "float",
+                    "description": "calculated score based on overall quality"
+                },
+                "story_alignment": {
+                    "type": "float",
+                    "description": "score based on how well the player followed the target composition"
                 }
             }
         },
@@ -714,6 +730,29 @@
                 "scenario": {
                     "type": "int",
                     "description": "1, 2, or 3"
+                }
+            }
+        },
+        "level_fail": {
+            "description" : "When a player fails a level and is unable to continue",
+            "event_data" : {
+                "fail_types":{
+                    "type": "enum(Time, Choice, Research, Resourceful, Endurance, Tech, Social, Trust)",
+                    "description": "The reason for fail event. There can be multiple reasons for an event fail. Enum values are in int form based on index"
+                    
+                }
+            }
+        },
+        "resumed_checkpoint":{
+            "description": "When a player resumes a checkpoint",
+            "event_data":{
+                "node_id":{
+                    "type": "string",
+                    "description": "The hexadecimal id of the checkpoint node"
+                },
+                "origin":{
+                    "type": "string",
+                    "description": "Whether the origin of the checkpoint resume was from menu or from fail"
                 }
             }
         }

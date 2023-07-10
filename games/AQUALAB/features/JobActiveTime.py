@@ -51,8 +51,10 @@ class JobActiveTime(PerJobFeature):
         if event.EventName == "accept_job":
             self._last_start_time = event.timestamp
         elif event.EventName == "switch_job":
-            new_job = event.EventData["job_name"]['string_value']
-            old_job = event.EventData["prev_job_name"]["string_value"]
+            new_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+            if new_job is None:
+                raise KeyError("Could not find key 'job_name' in GameState or EventData!")
+            old_job = event.EventData["prev_job_name"]
             # if we switched into "this" job, this becomes new start time
             if self._job_map.get(new_job, None) == self.CountIndex:
                 self._last_start_time = event.Timestamp
@@ -95,13 +97,15 @@ class JobActiveTime(PerJobFeature):
     def _validateEventCountIndex(self, event:Event):
         ret_val : bool = False
 
-        new_job = event.EventData["job_name"]['string_value']
-        if self._job_map.get(new_job, None) is not None:
-            if self._job_map.get(new_job, None) == self.CountIndex:
+        _current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if _current_job is None:
+            raise KeyError("Could not find key 'job_name' in GameState or EventData!")
+        if self._job_map.get(_current_job, None) is not None:
+            if self._job_map.get(_current_job, None) == self.CountIndex:
                     ret_val = True
             elif event.EventName == "switch_job":
                 # if we got switch job, and were switching away from this instance's job, we still want to process it.
-                old_job = event.EventData["prev_job_name"]["string_value"]
+                old_job = event.EventData["prev_job_name"]
                 if self._job_map.get(old_job, None) == self.CountIndex:
                     ret_val = True
         else:

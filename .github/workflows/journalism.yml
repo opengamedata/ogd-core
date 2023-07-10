@@ -1,0 +1,45 @@
+# Workflow to test-run data when we modify JournalismExtractor.
+name: Journalism (Headlines & High Waters) Exporter CI Test
+on:
+  push:
+    paths:
+    - 'games/JOURNALISM/**'
+    - '.github/workflows/journalism.yml'
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+jobs:
+  Journalism_CI:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get OpenConnect
+      run: sudo apt-get -q update && sudo apt-get -q install openconnect
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{vars.FD_LOGGER_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        # TODO: set log_level to DEBUG once we've made sure there aren't excess outputs from the extractor itself.
+        log_level: "INFO"
+    - name: Set up Schema File
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: "JOURNALISM"
+    - name: Do Export of last week's data
+      uses: ./.github/actions/export_last_week
+      with:
+        game: JOURNALISM
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./*.log
+    - name: Upload zips as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./data/JOURNALISM/*.zip

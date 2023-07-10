@@ -30,19 +30,21 @@ class TopJobCompletionDestinations(Feature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if self._validate_job(event.EventData['job_name']):
+        _job_name = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if _job_name is None:
+            raise KeyError("Could not find key 'job_name' in GameState or EventData!")
+        if self._validate_job(_job_name):
             user_code = event.UserID
-            job_name = event.EventData["job_name"]["string_value"]
 
             # in either case, handle event.
             if event.EventName == "complete_job":
-                self._last_completed_id = job_name # here, we take what we last completed, and append where we switched to.
+                self._last_completed_id = _job_name # here, we take what we last completed, and append where we switched to.
             elif event.EventName == "accept_job":
                 if user_code == self._current_user_code and self._last_completed_id is not None:
-                    if not job_name in self._job_complete_pairs[self._last_completed_id].keys():
-                        self._job_complete_pairs[self._last_completed_id][job_name] = []
+                    if not _job_name in self._job_complete_pairs[self._last_completed_id].keys():
+                        self._job_complete_pairs[self._last_completed_id][_job_name] = []
 
-                    self._job_complete_pairs[self._last_completed_id][job_name].append(user_code)
+                    self._job_complete_pairs[self._last_completed_id][_job_name].append(user_code)
                     self._last_completed_id = None
 
             # finally, once we process the event, we know we're looking at data for this event's user.
@@ -77,7 +79,7 @@ class TopJobCompletionDestinations(Feature):
     # *** Other local functions
     def _validate_job(self, job_data):
         ret_val : bool = False
-        if job_data['string_value'] and job_data['string_value'] in self._job_map:
+        if job_data and job_data in self._job_map:
                 ret_val = True
         else:
             Logger.Log(f"Got invalid job_name data in JobsAttempted", logging.WARNING)
