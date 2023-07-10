@@ -128,12 +128,12 @@ class PlayTime(SessionFeature):
             play_time = 0
 
 
-        return [play_time, total_time, self._idle_time]
+        return [total_time, play_time, self._idle_time]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["Total Time", "Idle Time"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+        return ["Active", "Idle"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
