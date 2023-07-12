@@ -6,6 +6,7 @@ from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import EventSource
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 
 class LegacyDetector(Detector):
     """Dummy version of a detector, so that LegacyLoader can return something that's not None.
