@@ -21,7 +21,7 @@ class StoryAlignmentSequence(PerLevelFeature):
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
-        self._story_alignment_sequence.append(event.event_data["story_alignment"])
+        self._story_alignment_sequence.append(event.EventData["story_alignment"])
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return []
