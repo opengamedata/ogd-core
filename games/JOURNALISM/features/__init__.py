@@ -29,7 +29,14 @@ __all__ = [
     "StoryEditorTime",
     "AttributeView",
     "EditorNoteOpen",
-    "TopPlayerQuitType"
+    "TopPlayerQuitType",
+    "StoryScore",
+    "StoryAlignmentSequence", 
+    "StoryScoreSequence",
+    "LevelTime",
+    "SnippetsCollected"
+
+
 ]
 
 from . import TextClickCount
@@ -63,3 +70,8 @@ from . import SnippetReplace
 from . import AttributeView
 from . import EditorNoteOpen
 from . import TopPlayerQuitType
+from . import StoryScore
+from . import StoryAlignmentSequence
+from . import StoryScoreSequence
+from . import LevelTime
+from . import SnippetsCollected

@@ -9,6 +9,7 @@ from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from extractors.ExtractorLoader import ExtractorLoader
+from games.JOURNALISM.features import StoryScoreSequence
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.games.GameSchema import GameSchema
@@ -91,6 +92,21 @@ class JournalismLoader(ExtractorLoader):
                 ret_val = EditorNoteOpen.EditorNoteOpen(params=extractor_params)
             elif feature_type == "TopPlayerQuitType":
                 ret_val= TopPlayerQuitType.TopPlayerQuitType(params=extractor_params)
+            elif feature_type == "StoryScore":
+                ret_val= StoryScore.StoryScore(params=extractor_params)    
+            elif feature_type == "StoryAlignmentSequence":
+                ret_val= StoryAlignmentSequence.StoryAlignmentSequence(params=extractor_params)    
+            elif feature_type == "StoryScoreSequence":
+                ret_val= StoryScoreSequence.StoryScoreSequence(params=extractor_params)    
+            elif feature_type == "LevelTime":
+                ret_val= LevelTime.LevelTime(params=extractor_params)    
+            elif feature_type == "SnippetsCollected":
+                ret_val= SnippetsCollected.SnippetsCollected(params=extractor_params)    
+            
+
+
+
+
 
         else:
             raise NotImplementedError(
