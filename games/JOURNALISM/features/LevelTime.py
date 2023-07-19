@@ -16,14 +16,14 @@ class LevelTime(PerLevelFeature):
         PerLevelFeature.__init__(self, params=params)
         self._begin_times    : List[datetime] = []
         self._complete_times : List[datetime] = []
-        self._idle_time : Optional[timedelta] = None
+        self._idle_time  : Optional[timedelta] = None
         self._total_time : Optional[timedelta] = None
 
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["BEGIN.0", "COMPLETE.0"]
+        return ["start_level", "complete_level"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -35,9 +35,9 @@ class LevelTime(PerLevelFeature):
 
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.EventName == "BEGIN.0":
+        if event.EventName == "start_level":
             self._begin_times.append(event.Timestamp)
-        elif event.EventName == "COMPLETE.0":
+        elif event.EventName == "complete_level":
             self._complete_times.append(event.Timestamp)
         else:
             Logger.Log(f"LevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
@@ -54,7 +54,7 @@ class LevelTime(PerLevelFeature):
         _diffs = [(self._complete_times[i] - self._begin_times[i]).total_seconds() for i in range(_num_plays)]
         self._total_time = sum(_diffs)
         total_time = self._total_time
-        play_time = total_time - self._idle_time
+        play_time = total_time - self._idle_time.total_seconds()
         return [play_time, total_time, self._idle_time]
 
     # *** Optionally override public functions. ***
