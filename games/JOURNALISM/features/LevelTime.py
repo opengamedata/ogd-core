@@ -27,7 +27,7 @@ class LevelTime(PerLevelFeature):
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return [PlayTime.defaultThreshold()]
+        return ["PlayTime"]
 
     def _validateEventCountIndex(self, event: Event):
         return self.CountIndex == 1
@@ -43,8 +43,9 @@ class LevelTime(PerLevelFeature):
             Logger.Log(f"LevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        if feature.FeatureName == PlayTime.defaultThreshold():
-            self._idle_time = feature._vals[0]
+        IDLE_TIME_INDEX = 2 # Idle time should be at index 2 for the PlayTime feature
+        if feature.FeatureType == "PlayTime":
+            self._idle_time = feature.FeatureValues[IDLE_TIME_INDEX]
 
     def _getFeatureValues(self) -> List[Any]:
         if len(self._begin_times) < len(self._complete_times):
