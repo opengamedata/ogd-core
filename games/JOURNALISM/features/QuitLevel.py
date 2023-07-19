@@ -74,7 +74,7 @@ class QuitLevel(SessionFeature):
 
         # Exception handling for events who don't have level or node_id attached to gamestate
         self._level_quit = event.GameState.get("level", None)
-        self._node_id = event.EventData.get("node_id", "none")
+        self._node_id = event.EventData.get("node_id", "None")
 
         return
 
