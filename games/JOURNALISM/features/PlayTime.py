@@ -99,15 +99,6 @@ class PlayTime(SessionFeature):
         :param feature: _description_
         :type feature: FeatureData
         """
-        # >>> use data in the FeatureData object to update state variables as needed. <<<
-        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
-        #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
-    
-        # self._idle_time = feature._vals[0]
-        
-        # print(feature._vals)
-    
-        
         return
 
     def _getFeatureValues(self) -> List[Any]:
