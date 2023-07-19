@@ -74,7 +74,7 @@ class QuitNode(SessionFeature):
             quit_node : str = str(feature.FeatureValues[2])
         except:
             print("no subfeature value found!")
-        if(self._quit_nodes[quit_node] is None):
+        if(self._quit_nodes.get(quit_node) is None):
             self._quit_nodes[quit_node] = 1
         else:
             self._quit_nodes[quit_node] += 1
