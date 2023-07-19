@@ -7,7 +7,7 @@ from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
-class StoryAlignmentSequence(PerLevelFeature):
+class StoryScoreSequence(PerLevelFeature):
     def __init__(self, params: ExtractorParameters):
         PerLevelFeature.__init__(self, params=params)
         self._story_alignment_sequence = []
