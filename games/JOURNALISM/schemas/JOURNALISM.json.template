@@ -931,7 +931,8 @@
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
-                "description": "time spent on a level [sum of differences in time between 'BEGIN' and 'COMPLETE' event(s)]"
+                "description": "time spent on a level [sum of differences in time between 'BEGIN' and 'COMPLETE' event(s)]",
+                "return_type": "timedelta"
             },
             
             "FailureCount":{
@@ -944,11 +945,11 @@
                 "subfeatures":{
                     "OutOfTime":{
                         "description": "A count of how many failures were due to running out of time",
-                        "type": "int"
+                        "return_type": "int"
                     },
                     "LowAttribute":{
                         "description": "A count of how many failures were due to the player having an attribute value too low",
-                        "type": "int"
+                        "return_type": "int"
                     }
                 }
             }
@@ -1126,6 +1127,7 @@
                         "description": "Quit wasn't on fail or between levels",
                         "return_type": "bool"
                     }
+
                 }
             },
             "WorstAttribute":{
