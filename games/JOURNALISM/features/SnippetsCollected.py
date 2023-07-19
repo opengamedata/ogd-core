@@ -32,6 +32,14 @@ class SnippetsCollected(PerLevelFeature):
         if event.EventName == "snippet_received":
             self._snippet_ids.append(event.EventData["snippet_id"])
 
+    def _extractFromFeatureData(self, feature: FeatureData):
+        """_summary_
+
+        :param feature: _description_
+        :type feature: FeatureData
+        """
+        return
+
     def _getFeatureValues(self) -> List[Any]:
         return [self._snippet_ids]
 
