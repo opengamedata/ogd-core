@@ -789,7 +789,6 @@
                 "return_type":"int",
                 "count":"level_range",
                 "prefix":"lvl"
-
             },
             "EditorNoteOpen":{
                 "enabled":true,
@@ -800,14 +799,37 @@
                 "prefix":"lvl"
 
             },
-            "LevelStoryAlignment": {
-                "type":"LevelStoryAlignment",
+            "StoryScore" : {
+                "enabled":true,
+                "type":"StoryScore",
+                "description": "A player's final score on a story, by level",
+                "return_type":"float",
+                "count":"level_range",
+                "prefix":"lvl"
+            },
+            "StoryScoreSequence": {
+                "type":"StoryScoreSequence",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"List[float]",
+                "description": "The sequence of changes in story score with each change of story composition, by level"
+            },
+            "StoryAlignment": {
+                "type":"StoryAlignment",
                 "enabled": true,
                 "count":"level_range",
                 "prefix": "lvl",
                 "return_type":"float",
-                "description": "Alignment value of the user's story by level"
-            
+                "description": "Final alignment value of the user's story by level"
+            },
+            "StoryAlignmentSequence": {
+                "type":"StoryAlignmentSequence",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"List[float]",
+                "description": "The sequence of changes in alignment with each change of story composition, by level"
             },
             "SnippetReplace":{
                 "type": "SnippetReplace",
@@ -822,6 +844,14 @@
                         "return_type":"float"
                     }
                 }
+            },
+            "SnippetsCollected" : {
+                "type":"SnippetsCollected",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"List[str]",
+                "description": "A list of all snippets collected by the user, by level"
             },
             "WorstPlayerAttribute":{
                 "type":"WorstPlayerAttribute",
@@ -895,6 +925,13 @@
                 "prefix": "lvl",
                 "description": "Boolean perLevel feature for whether a level was completed in session",
                 "return_type": "bool"
+            },
+            "LevelTime": {
+                "type": "LevelTime",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "description": "time spent on a level [sum of differences in time between 'BEGIN' and 'COMPLETE' event(s)]"
             },
             
             "FailureCount":{
@@ -1007,7 +1044,6 @@
                         "return_type": "int"
                     }
                 }
-
             },
             
             "StoryCompleteTime":{
@@ -1015,11 +1051,11 @@
                 "description": "Average amount of time spent completing stories, marked from first snippet received to level change event",
                 "return_type": "float",
                 "subfeatures":{
-                    "Delta Time Logs":{
+                    "DeltaTimeLogs":{
                         "description": "List of delta times between snippet receive and level complete",
                         "return_type": "List[deltatime]"
                     },
-                    "Raw Time Logs":{
+                    "RawTimeLogs":{
                         "description": "List of raw times for snippet receive and level complete, in tuples",
                         "return_type": "List[tuple]"
                     }
@@ -1030,12 +1066,11 @@
                 "description": "Count skill update events and log these events in a sequence",
                 "return_type": "int",
                 "subfeatures":{
-                    "Event Sequence":{
+                    "EventSequence":{
                         "description": "String of skill update events in order",
                         "return_type": "List[String]"
                     }
                 }
-
             },
             "MeanSnippetTime":{
                 "enabled": false,
@@ -1047,14 +1082,6 @@
                         "return_type": "List[int]"
                     }
                 }
-
-            },
-            "TotalLevelTime": {
-                "type": "TotalLevelTime",
-                "enabled": false,
-                "count":"level_range",
-                "prefix": "lvl",
-                "description": "time spent on a level [sum of differences in time between 'BEGIN' and 'COMPLETE' event(s)]"
             },
             "PlayerAttributes": {
                 "enabled": true,
@@ -1099,7 +1126,6 @@
                         "description": "Quit wasn't on fail or between levels",
                         "return_type": "bool"
                     }
-
                 }
             },
             "WorstAttribute":{
@@ -1144,8 +1170,6 @@
                 "description": "Most popular 5 quit nodes at population level",
                 "return_type": "str"
             }
-
-            
         }
     },
     "config": {
