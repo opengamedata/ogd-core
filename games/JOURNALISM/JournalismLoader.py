@@ -70,8 +70,8 @@ class JournalismLoader(ExtractorLoader):
         
         ##per-count features
         elif extractor_params._count_index is not None:
-            if feature_type == "LevelStoryAlignment":
-                ret_val = LevelStoryAlignment.LevelStoryAlignment(params = extractor_params)
+            if feature_type == "StoryAlignment":
+                ret_val = StoryAlignment.StoryAlignment(params = extractor_params)
             elif feature_type == "WorstPlayerAttribute":
                 ret_val = WorstPlayerAttribute.WorstPlayerAttribute(params=extractor_params)
             elif feature_type == "MaxedPlayerAttribute":
