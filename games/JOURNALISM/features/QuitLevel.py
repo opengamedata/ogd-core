@@ -66,7 +66,7 @@ class QuitLevel(SessionFeature):
         
         if not self._first_timestamp:
             self._first_timestamp = event.Timestamp
-            self._delta_time = self._first_timestamp
+            self._delta_time = timedelta(0)
         else:
             self._delta_time = event.Timestamp - self._first_timestamp
         
