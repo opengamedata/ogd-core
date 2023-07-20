@@ -23,9 +23,9 @@ class MeanSnippetTime(SessionFeature):
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
 
-        self._snippet_receive_count : int = 0;
-        self._snippet_time_logs: List[datetime] = [];
-        self._game_init_time: Optional[datetime] = None;
+        self._snippet_receive_count : int = 0
+        self._snippet_time_logs: List[datetime] = []
+        self._game_init_time: Optional[datetime] = None
         
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
