@@ -63,6 +63,6 @@ class LevelTime(PerLevelFeature):
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.SESSION, ExtractionMode.DETECTOR]
+        return [ExtractionMode.SESSION]
 
 

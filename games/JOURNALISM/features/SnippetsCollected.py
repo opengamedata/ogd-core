@@ -47,4 +47,4 @@ class SnippetsCollected(PerLevelFeature):
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR]
+        return [ExtractionMode.PLAYER, ExtractionMode.SESSION]
