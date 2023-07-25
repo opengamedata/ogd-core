@@ -25,9 +25,6 @@ class SnippetsCollected(PerLevelFeature):
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _validateEventCountIndex(self, event: Event):
-        return self.CountIndex == 1
-
     def _extractFromEvent(self, event:Event) -> None:
         if event.EventName == "snippet_received":
             self._snippet_ids.append(event.EventData["snippet_id"])

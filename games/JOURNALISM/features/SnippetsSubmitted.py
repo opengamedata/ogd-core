@@ -1,4 +1,5 @@
 import logging
+import json
 from datetime import datetime
 from schemas import Event
 from typing import Any, List, Optional
@@ -11,6 +12,7 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class SnippetsSubmitted(PerLevelFeature):
+    has_printed = False
     def __init__(self, params:ExtractorParameters):
         PerLevelFeature.__init__(self, params=params)
         self._snippet_ids : List[str] = []
@@ -25,14 +27,14 @@ class SnippetsSubmitted(PerLevelFeature):
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _validateEventCountIndex(self, event: Event):
-        return self.CountIndex == 1
-
     def _extractFromEvent(self, event:Event) -> None:
         if event.EventName == "story_click":
-            snippet_list = event.EventData["snippet_list"]
+            snippet_list = json.loads( event.EventData["snippet_list"] )
             for snippet in snippet_list:
-                self._snippet_ids.append(snippet["snippet_id"])
+                if not SnippetsSubmitted.has_printed:
+                    print(f"snippet: {snippet} of type {type(snippet)}")
+                    SnippetsSubmitted.has_printed = True
+                self._snippet_ids.append(snippet.get("SnippetId", "NOT FOUND"))
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
