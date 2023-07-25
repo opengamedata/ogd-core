@@ -934,6 +934,14 @@
                 "description": "time spent on a level [sum of differences in time between 'BEGIN' and 'COMPLETE' event(s)]",
                 "return_type": "timedelta"
             },
+            "SnippetsSubmitted": {
+                "type": "SnippetsSubmitted",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "description": "List of all snippet ids included when a player submits their story.",
+                "return_type": "List[str]"
+            },
             
             "FailureCount":{
                 "enabled": true,
@@ -1028,7 +1036,7 @@
                 }
             },
             "SnippetReceivedCount":{
-                "enabled": false,
+                "enabled": true,
                 "description": "The number of snippets and types received by the user in a session",
                 "return_type": "int",
                 "subfeatures": {
