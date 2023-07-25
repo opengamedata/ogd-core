@@ -34,6 +34,9 @@ class SnippetsSubmitted(PerLevelFeature):
             for snippet in snippet_list:
                 self._snippet_ids.append(snippet["snippet_id"])
 
+    def _extractFromFeatureData(self, feature: FeatureData):
+        return
+
     def _getFeatureValues(self) -> List[Any]:
         return [self._snippet_ids]
 
