@@ -102,7 +102,8 @@ class JournalismLoader(ExtractorLoader):
                 ret_val= LevelTime.LevelTime(params=extractor_params)    
             elif feature_type == "SnippetsCollected":
                 ret_val= SnippetsCollected.SnippetsCollected(params=extractor_params)    
-            
+            elif feature_type == "SnippetsSubmitted":
+                ret_val= SnippetsSubmitted.SnippetsSubmitted(params=extractor_params)
 
 
 

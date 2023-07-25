@@ -34,7 +34,8 @@ __all__ = [
     "StoryAlignmentSequence", 
     "StoryScoreSequence",
     "LevelTime",
-    "SnippetsCollected"
+    "SnippetsCollected", 
+    "SnippetsSubmitted"
 
 
 ]
@@ -75,3 +76,4 @@ from . import StoryAlignmentSequence
 from . import StoryScoreSequence
 from . import LevelTime
 from . import SnippetsCollected
+from . import SnippetsSubmitted
