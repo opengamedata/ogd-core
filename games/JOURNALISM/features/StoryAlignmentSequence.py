@@ -12,7 +12,7 @@ class StoryAlignmentSequence(PerLevelFeature):
     def __init__(self, params: ExtractorParameters):
         PerLevelFeature.__init__(self, params=params)
         self._story_alignment_sequence = []
-
+        
     @classmethod
     def _getEventDependencies(cls, mode: ExtractionMode) -> List[str]:
         return ["story_updated"]
@@ -60,7 +60,7 @@ class StoryAlignmentSequence(PerLevelFeature):
         return []
 
     def _getFeatureValues(self) -> List[Any]:
-        return self._story_alignment_sequence
+        return [self._story_alignment_sequence]
 
     def Subfeatures(self) -> List[str]:
         return []

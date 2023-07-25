@@ -55,10 +55,10 @@ class StoryScoreSequence(PerLevelFeature):
         self._story_score_sequence.append(event.event_data["story_score"])
 
     def _extractFromFeatureData(self, feature: FeatureData) -> None:
-        return []
+        return
 
     def _getFeatureValues(self) -> List[Any]:
-        return self._story_score_sequence
+        return [self._story_score_sequence]
 
     def Subfeatures(self) -> List[str]:
         return []
