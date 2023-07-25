@@ -19,7 +19,7 @@ class SnippetsSubmitted(PerLevelFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["publish_story_click"]
+        return ["story_click"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -29,7 +29,7 @@ class SnippetsSubmitted(PerLevelFeature):
         return self.CountIndex == 1
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.EventName == "publish_story_click":
+        if event.EventName == "story_click":
             snippet_list = event.EventData["snippet_list"]
             for snippet in snippet_list:
                 self._snippet_ids.append(snippet["snippet_id"])
