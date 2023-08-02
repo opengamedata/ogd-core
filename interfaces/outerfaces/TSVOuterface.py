@@ -108,7 +108,7 @@ class TSVOuterface(DataOuterface):
             self._readme_path = Path("./data") / self._game_id
             game_schema  : GameSchema  = GameSchema(schema_name=self._game_id, schema_path=Path(f"./games/{self._game_id}/schemas"))
             table_schema = TableSchema(schema_name=self._config.Schema)
-            TSVOuterface.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=self._readme_path)
+            TSVOuterface.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=self._game_data_dir)
         else:
             # otherwise, readme is there, so just close it and move on.
             readme.close()
