@@ -1,7 +1,178 @@
 {
     "level_range": { "min":0, "max":3 },
 
+    "game_state" : {
+        "level" : {
+            "type" : "string",
+            "description" : "The name of the level in which the event occurred."
+        },
+        "level_shields" : {
+            "type" : "List[string]",
+            "description" : "A list of which shields the player had previously earned on the level. Empty for events in the map/main menu."
+        }
+    },
+
     "events": {
+        "begin_game": {
+            "description": "When a new game is started",
+            "event_data": {
+            }
+        },
+        "continue_game": {
+            "description": "When the player chooses to resume an existing game",
+            "event_data": {
+            }
+        },
+        "enter_code": {
+            "description": "When the player submits a player ID code, to bring up the 'continue' option",
+            "event_data": {
+                "code": {
+                    "type": "str",
+                    "description": "The player ID code the player entered"
+                }
+            }
+        },
+        "click_tutorial_next": {
+            "description": "When the player clicks the 'next' button in the game intro tutorial",
+            "event_data": {
+                "tutorial_index": {
+                    "type": "int",
+                    "description": "The page number of the tutorial the player was at, before clicking the 'next' button."
+                },
+                "?tutorial_text?": {
+                    "type": "str",
+                    "description": "The text content the tutorial page the player was at, before clicking the 'next' button."
+                }
+            }
+        },
+        "click_tutorial_back": {
+            "description": "When the player clicks the 'back' button in the game intro tutorial",
+            "event_data": {
+                "tutorial_index": {
+                    "type": "int",
+                    "description": "The page number of the tutorial the player was at, before clicking the 'back' button."
+                },
+                "?tutorial_text?": {
+                    "type": "str",
+                    "description": "The text content the tutorial page the player was at, before clicking the 'back' button."
+                }
+            }
+        },
+        "select_level": {
+            "description": "When the player clicks a level from the main map, which they may then click to play",
+            "event_data": {
+                "level_name": {
+                    "type": "str",
+                    "description": "The name of the level selected. Note that the `game_state` will have a `level_name` indicating the event occurred in the map; the `event_data` instance of `level_name` is the name of the level selected."
+                },
+                "level_shields": {
+                    "type": "List[str]",
+                    "description": "A list of which shields the player had previously earned on the level."
+                }
+            }
+        },
+        "click_display_level_rules": {
+            "description": "When the player clicks the button to display the selected level's rules.",
+            "event_data": {
+                "level_name": {
+                    "type": "str",
+                    "description": "The name of the level currently selected. Note that the `game_state` will have a `level_name` indicating the event occurred in the map; the `event_data` instance of `level_name` is the name of the level selected."
+                }
+            }
+        },
+        "click_level_rules_next": {
+            "description": "When the player clicks the 'next' button in the level rules",
+            "event_data": {
+                "level_name": {
+                    "type": "str",
+                    "description": "The name of the level currently selected. Note that the `game_state` will have a `level_name` indicating the event occurred in the map; the `event_data` instance of `level_name` is the name of the level selected."
+                },
+                "rules_index": {
+                    "type": "int",
+                    "description": "The page number of the rules the player was at, before clicking the 'next' button."
+                },
+                "?rules_text?": {
+                    "type": "str",
+                    "description": "The text content the rules page the player was at, before clicking the 'next' button."
+                }
+            }
+        },
+        "click_level_rules_back": {
+            "description": "When the player clicks the 'back' button in the level rules",
+            "event_data": {
+                "level_name": {
+                    "type": "str",
+                    "description": "The name of the level currently selected. Note that the `game_state` will have a `level_name` indicating the event occurred in the map; the `event_data` instance of `level_name` is the name of the level selected."
+                },
+                "rules_index": {
+                    "type": "int",
+                    "description": "The page number of the rules the player was at, before clicking the 'back' button."
+                },
+                "?rules_text?": {
+                    "type": "str",
+                    "description": "The text content the rules page the player was at, before clicking the 'back' button."
+                }
+            }
+        },
+        "click_level_rules_exit": {
+            "description": "When the player clicks the 'exit' button in the level",
+            "event_data": {
+                "level_name": {
+                    "type": "str",
+                    "description": "The name of the level currently selected. Note that the `game_state` will have a `level_name` indicating the event occurred in the map; the `event_data` instance of `level_name` is the name of the level selected."
+                },
+                "rules_index": {
+                    "type": "int",
+                    "description": "The page number of the rules the player was at, before clicking the 'exit' button."
+                },
+                "?rules_text?": {
+                    "type": "str",
+                    "description": "The text content the rules page the player was at, before clicking the 'exit' button."
+                }
+            }
+        },
+        "click_level_rules_finish": {
+            "description": "When the player clicks the button to 'finish' reading the level rules.",
+            "event_data": {
+                "level_name": {
+                    "type": "str",
+                    "description": "The name of the level currently selected. Note that the `game_state` will have a `level_name` indicating the event occurred in the map; the `event_data` instance of `level_name` is the name of the level selected."
+                }
+            }
+        },
+        "click_level_begin": {
+            "description": "When the player clicks the button to enter a level from the 'level selected' screen.",
+            "event_data": {
+                "level_name": {
+                    "type": "str",
+                    "description": "The name of the level currently selected. Note that the `game_state` will have a `level_name` indicating the event occurred in the map; the `event_data` instance of `level_name` is the name of the level selected."
+                }
+            }
+        },
+        "click_display_level_launch": {
+            "TODO": "TODO"
+        },
+        "click_return_to_map": {
+            "description": "When the player is in a level, and clicks the button to return to the map.",
+            "event_data": {
+            }
+        },
+        "run_sequence": {
+            "description": "When the player clicks the button to run a code block sequence.",
+            "event_data": {
+                "sequence_elements": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "block_id":"TODO: determine if there is an ID associated with each block",
+                        "block_index":"int",
+                        "block_type":"enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                        "loop_subelements":"List[Dict]",
+                        "params":"Dict[str, int]"
+                    },
+                    "description": "The name of the level currently selected. Note that the `game_state` will have a `level_name` indicating the event occurred in the map; the `event_data` instance of `level_name` is the name of the level selected."
+                }
+            }
+        },
     },
 
     "features": {
