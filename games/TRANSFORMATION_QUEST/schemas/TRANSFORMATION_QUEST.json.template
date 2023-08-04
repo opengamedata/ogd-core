@@ -173,6 +173,42 @@
                 }
             }
         },
+        "select_new_block": {
+            "description": "When the player selects a new block type in the sidebar, which they can then add to the sequence.",
+            "event_data": {
+                "block_type": {
+                    "type" : "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                    "description" : "The type of block selected in the sidebar"
+                },
+                "params": {
+                    "type" : "Dict[str, int]",
+                    "description" : "A mapping of block parameters to the param values. Varies by block type."
+                } 
+            }
+        },
+        "add_new_block": {
+            "description": "When the player clicks to add the selected block to the sequence.",
+            "event_data": {
+                "block_id": "TODO: determine if there is an ID associated with each block",
+                "block_index": {
+                    "type" : "int",
+                    "description" : "The index of the newly-added block within the sequence/loop"
+                },
+                "in_loop": {
+                    "type" : "bool",
+                    "description" : "A boolean indicator of whether the block was placed into a loop or not."
+                },
+                "loop_id":  "TODO: determine if there is an ID associated with each loop block",
+                "block_type": {
+                    "type" : "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                    "description" : "The type of block added to the sequence"
+                },
+                "params": {
+                    "type" : "Dict[str, int]",
+                    "description" : "A mapping of block parameters to the param values. Varies by block type."
+                } 
+            }
+        },
     },
 
     "features": {
