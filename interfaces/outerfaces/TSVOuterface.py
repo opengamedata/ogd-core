@@ -506,9 +506,9 @@ class TSVOuterface(DataOuterface):
                     "players_template"    : f'/tree/{self._game_id}'                 if self._zip_paths['players']          else None,
                     "sessions_file"       : str(self._zip_paths['sessions'])         if self._zip_paths['sessions']         else None,
                     "sessions_template"   : f'/tree/{self._game_id}'                 if self._zip_paths['sessions']         else None,
-                    "events_file"         : str(self._zip_paths['raw_events'])       if self._zip_paths['raw_events']       else None,
+                    "raw_file"            : str(self._zip_paths['raw_events'])       if self._zip_paths['raw_events']       else None,
                     "events_template"     : f'/tree/{self._game_id}'                 if self._zip_paths['raw_events']       else None,
-                    "all_events_file"     : str(self._zip_paths['processed_events']) if self._zip_paths['processed_events'] else None,
+                    "events_file"         : str(self._zip_paths['processed_events']) if self._zip_paths['processed_events'] else None,
                     "all_events_template" : f'/tree/{self._game_id}'                 if self._zip_paths['processed_events'] else None
                 }
                 meta_file.write(json.dumps(metadata, indent=4))
