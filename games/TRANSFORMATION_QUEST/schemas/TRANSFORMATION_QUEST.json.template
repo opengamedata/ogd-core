@@ -167,10 +167,16 @@
                         "block_index":"int",
                         "block_type":"enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
                         "loop_subelements":"List[Dict]",
-                        "params":"Dict[str, int]"
+                        "block_params":"Dict[str, int]"
                     },
                     "description": "The name of the level currently selected. Note that the `game_state` will have a `level_name` indicating the event occurred in the map; the `event_data` instance of `level_name` is the name of the level selected."
                 }
+            }
+        },
+        "dismiss_sequence_feedback": {
+            "description": "When the player clicks to leave the pop-up feedback after running a sequence.",
+            "event_data": {
+                "TODO" : "TODO"
             }
         },
         "select_new_block": {
@@ -180,9 +186,9 @@
                     "type" : "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
                     "description" : "The type of block selected in the sidebar"
                 },
-                "params": {
+                "block_params": {
                     "type" : "Dict[str, int]",
-                    "description" : "A mapping of block parameters to the param values. Varies by block type."
+                    "description" : "A mapping of the block parameters to the param values. Varies by block type."
                 } 
             }
         },
@@ -203,10 +209,82 @@
                     "type" : "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
                     "description" : "The type of block added to the sequence"
                 },
-                "params": {
+                "block_params": {
                     "type" : "Dict[str, int]",
-                    "description" : "A mapping of block parameters to the param values. Varies by block type."
+                    "description" : "A mapping of the block parameters to the param values. Varies by block type."
                 } 
+            }
+        },
+        "delete_block": {
+            "description": "When the player clicks to remove the selected block from the sequence.",
+            "event_data": {
+                "block_id": "TODO: determine if there is an ID associated with each block",
+                "block_index": {
+                    "type" : "int",
+                    "description" : "The index of the block within the sequence/loop, before it was removed."
+                },
+                "in_loop": {
+                    "type" : "bool",
+                    "description" : "A boolean indicator of whether the block was in a loop or not."
+                },
+                "loop_id":  "TODO: determine if there is an ID associated with each loop block",
+                "block_type": {
+                    "type" : "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                    "description" : "The type of block that was removed from the sequence"
+                },
+                "block_params": {
+                    "type" : "Dict[str, int]",
+                    "description" : "A mapping of the block parameters to the param values. Varies by block type."
+                } 
+            }
+        },
+        "drag_block": {
+            "description": "When the player clicks and drags a block to a new spot in the sequence.",
+            "event_data": {
+                "block_id": "TODO: determine if there is an ID associated with each block",
+                "old_index": {
+                    "type" : "int",
+                    "description" : "The index of the block within the sequence/loop, before it was dragged."
+                },
+                "new_index": {
+                    "type" : "int",
+                    "description" : "The index of the block within the sequence/loop, after it was dragged and dropped."
+                },
+                "in_loop": {
+                    "type" : "bool",
+                    "description" : "A boolean indicator of whether the block is in a loop or not."
+                },
+                "loop_id":  "TODO: determine if there is an ID associated with each loop block",
+                "block_type": {
+                    "type" : "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                    "description" : "The type of block that was moved within the sequence"
+                },
+                "block_params": {
+                    "type" : "Dict[str, int]",
+                    "description" : "A mapping of the block parameters to the param values. Varies by block type."
+                } 
+            }
+        },
+        "set_block_parameter": {
+            "description": "When the player clicks and drags a block to a new spot in the sequence.",
+            "event_data": {
+                "block_id": "TODO: determine if there is an ID associated with each block",
+                "block_type": {
+                    "type" : "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                    "description" : "The type of block that was moved within the sequence"
+                },
+                "changed_param" : {
+                    "type" : "str",
+                    "description" : "The name of the parameter that was changed."
+                },
+                "old_value": {
+                    "type" : "int",
+                    "description" : "The value of the parameter, before it was changed."
+                },
+                "new_value": {
+                    "type" : "int",
+                    "description" : "The value of the parameter, after it was changed."
+                }
             }
         },
     },
