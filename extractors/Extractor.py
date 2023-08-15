@@ -1,5 +1,6 @@
 ## import standard libraries
 import abc
+from datetime import datetime
 from typing import List, Optional
 # import locals
 from schemas.Event import Event
@@ -13,10 +14,15 @@ class ExtractorParameters:
     extractor subclasses every time something changes.
     """
     def __init__(self, name:str, description:str, mode:ExtractionMode, count_index:Optional[int]):
-        self._name = name
-        self._desc = description
-        self._mode = mode
-        self._count_index = count_index
+        self._name        : str            = name
+        self._desc        : str            = description
+        self._mode        : ExtractionMode = mode
+        self._count_index : Optional[int]  = count_index
+        # vars to track what the last thing was an Extractor saw, for use in cache invalidation
+        self._last_session : Optional[str]      = None
+        self._last_index   : Optional[int]      = None
+        self._start_time   : Optional[datetime] = None
+        self._last_time    : Optional[datetime] = None
 
 ## @class Extractor
 #  Abstract base class for all data extractors (features and detectors)
