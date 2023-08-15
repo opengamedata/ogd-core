@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, List, Optional
 
 from schemas.ExtractionMode import ExtractionMode
@@ -40,6 +41,31 @@ class FeatureData:
    @property
    def FeatureValues(self) -> List[Any]:
       return self._vals
+
+   @property
+   def FeatureVersion(self) -> int:
+      # TODO: return a feature version
+      return 0
+
+   @property
+   def OGDVersion(self) -> str:
+      # TODO: return a OGD version
+      return ""
+
+   @property
+   def LastSession(self) -> str:
+      # TODO: return a session ID
+      return ""
+
+   @property
+   def LastIndex(self) -> int:
+      # TODO: return an event sequence index
+      return 0
+
+   @property
+   def LastTime(self) -> datetime:
+      # TODO: return a timestamp
+      return datetime(0, 0, 0)
 
    @property
    def ExportMode(self):
