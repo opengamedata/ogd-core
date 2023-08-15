@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Set
 
 # import local files
 from interfaces.Interface import Interface
+from schemas.Event import Event
 from schemas.ExportMode import ExportMode
 from schemas.FeatureData import FeatureData
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
@@ -52,23 +53,23 @@ class DataOuterface(Interface):
         pass
 
     @abc.abstractmethod
-    def _writeRawEventLines(self, events:List[FeatureData]) -> None:
+    def _writeRawEventLines(self, events:List[Event]) -> None:
         pass
 
     @abc.abstractmethod
-    def _writeProcessedEventLines(self, events:List[FeatureData]) -> None:
+    def _writeProcessedEventLines(self, events:List[Event]) -> None:
         pass
 
     @abc.abstractmethod
-    def _writeSessionLines(self, sessions:List[FeatureData]) -> None:
+    def _writeSessionLines(self, sessions:List[List[FeatureData]]) -> None:
         pass
 
     @abc.abstractmethod
-    def _writePlayerLines(self, players:List[FeatureData]) -> None:
+    def _writePlayerLines(self, players:List[List[FeatureData]]) -> None:
         pass
 
     @abc.abstractmethod
-    def _writePopulationLines(self, populations:List[FeatureData]) -> None:
+    def _writePopulationLines(self, populations:List[List[FeatureData]]) -> None:
         pass
 
     # *** BUILT-INS & PROPERTIES ***
