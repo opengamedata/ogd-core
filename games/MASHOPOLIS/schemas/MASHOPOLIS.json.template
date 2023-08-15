@@ -1,15 +1,6 @@
 {
     "level_range": { "min":0, "max":0 },
 
-    "bugs" : [
-        "client_time is not implemented",
-        "submission_item_selected does not have a singular format; sometimes has 'Symbol' element, sometimes has 'Flower' element, never both",
-        "item_submission does not have a singular format; sometimes has 'Order' and 'Receipt' elements, sometimes has 'Symbol' and 'GoRule' elements, never both",
-        "There's an event called 'achievenment_unlocked', though events with this name are old, so probably has been fixed",
-        "Several events have excessive nesting of data, start_selected and open_shop_selected are the most blatant examples, with nesting at least 3 levels deep; a couple other events have 'LevelData' element which goes a second level deep.",
-        "Several events have apparent inconsistencies in naming for elements that may actully be the same. This includes: start_selected:tiersUnlocked, open_shop_selected:rank; level_completed:MinigameData, other events:MinigameIndex"
-    ],
-
     "events": {
         "day_over": {
             "description": "N/A",
