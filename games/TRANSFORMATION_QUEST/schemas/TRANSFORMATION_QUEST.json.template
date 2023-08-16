@@ -369,7 +369,7 @@
                 "TODO": "TODO"
             }
         },
-        "sequence_execution_stepped": {
+        "sequence_execution_step": {
             "description": "When the sequence is being executed, and the next step runs.",
             "event_data": {
                 "type": {
@@ -446,6 +446,21 @@
                 }
             }
         },
+        "level_begin": {
+            "description": "A progression event indicating when a player actually began a new level. Note: this occurs just after they enter the level, so the level name is recorded in game_state.",
+            "event_data": {
+            }
+        },
+        "level_complete": {
+            "description": "A progression event indicating when a player completed a level, and is about to return to the main navigation menu. Note: this occurs just before they leave the level, so the level name is recorded in game_state.",
+            "event_data": {
+            }
+        },
+        "level_quit": {
+            "description": "A progression event indicating when a player has chosen to quit a level, and is about to return to the main navigation menu. Note: this occurs just before they leave the level, so the level name is recorded in game_state.",
+            "event_data": {
+            }
+        }
     },
 
     "features": {
