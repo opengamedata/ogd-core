@@ -40,8 +40,8 @@ class EventDataElementSchema(Schema):
     def AsMarkdown(self) -> str:
         ret_val : str = f"- **{self.Name}** : *{self.ElementType}*, {self.Description}"
         if self.Details is not None:
-            detail_markdown = [f"**{name}** - {desc}" for name,desc in self.Details]
-            ret_val += f"\n  Details: {detail_markdown}\n"
+            detail_markdown = [f"**{name}** - {desc}" for name,desc in self.Details.items()]
+            ret_val += f"  \n  Details: {detail_markdown}\n"
         return ret_val
 
     @property
