@@ -1,4 +1,3 @@
-import git
 import json
 import logging
 import os
@@ -6,21 +5,13 @@ import re
 import shutil
 import sys
 import traceback
-import zipfile
 from datetime import datetime
-from git.exc import InvalidGitRepositoryError, NoSuchPathError
 from pathlib import Path
 from typing import Any, Dict, IO, List, Optional, Set
 
 # import local files
-import utils
-from interfaces.outerfaces.DataOuterface import DataOuterface
-from schemas.ExtractionMode import ExtractionMode
-from schemas.ExportMode import ExportMode
-from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.games.GameSchema import GameSchema
 from schemas.tables.TableSchema import TableSchema
-from schemas.configs.IndexingSchema import FileIndexingSchema
 from utils.Logger import Logger
 from utils.utils import ExportRow
 
@@ -39,7 +30,7 @@ def GenerateReadme(game_schema:GameSchema, table_schema:TableSchema, path:Path =
             finally:
                 readme.write("\n\n")
             # 2. Use schema to write feature & column descriptions to the readme.
-            meta = TSVOuterface.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema)
+            meta = GenCSVMetadata(game_schema=game_schema, table_schema=table_schema)
             readme.write(meta)
             # 3. Append any important data from the data changelog.
             changelog_dir = Path(f"./schemas/")

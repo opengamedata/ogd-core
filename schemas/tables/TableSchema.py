@@ -9,10 +9,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple, Optional, Union
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 ## import local files
-import utils
 from schemas.Event import Event, EventSource
 from schemas.tables.ColumnMapSchema import ColumnMapSchema
 from schemas.tables.ColumnSchema import ColumnSchema
+from utils import utils
 from utils.Logger import Logger
 
 ## @class TableSchema

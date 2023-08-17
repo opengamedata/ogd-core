@@ -13,7 +13,6 @@ from typing import Any, Dict, List, Tuple, Type, Optional
 from schemas.IDMode import IDMode
 
 ## import local files
-import utils
 from extractors.ExtractorLoader import ExtractorLoader
 from games.AQUALAB.AqualabLoader import AqualabLoader
 from games.CRYSTAL.CrystalLoader import CrystalLoader
