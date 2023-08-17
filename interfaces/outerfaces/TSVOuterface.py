@@ -22,7 +22,8 @@ from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.games.GameSchema import GameSchema
 from schemas.tables.TableSchema import TableSchema
 from schemas.configs.IndexingSchema import FileIndexingSchema
-from utils.Logger import Logger, ExportRow
+from utils.Logger import Logger
+from utils.utils import ExportRow
 
 class TSVOuterface(DataOuterface):
 

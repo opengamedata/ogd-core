@@ -6,7 +6,7 @@ from typing import List, Type, Optional
 from processors.Processor import Processor
 from schemas.Event import Event
 from schemas.games.GameSchema import GameSchema
-from utils import ExportRow
+from utils.utils import ExportRow
 
 class EventProcessor(Processor):
 
