@@ -54,7 +54,7 @@ def ShowGameInfo(config:ConfigSchema) -> bool:
     """
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
-        table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableName}.json")
+        table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableSchema}.json")
         print(GenCSVMetadata(game_schema=game_schema, table_schema=table_schema))
     except Exception as err:
         msg = f"Could not print information for {args.game}: {type(err)} {str(err)}"
@@ -64,7 +64,7 @@ def ShowGameInfo(config:ConfigSchema) -> bool:
     else:
         return True
 
-def WriteReadme() -> bool:
+def WriteReadme(config:ConfigSchema) -> bool:
     """Function to write out the readme file for a given game.
    This includes the CSV metadata (data from the schema, originally written into
    the CSV files themselves), custom readme source, and the global changelog.
@@ -76,7 +76,7 @@ def WriteReadme() -> bool:
     path = Path(f"./data") / args.game
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
-        table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableName}.json")
+        table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableSchema}.json")
         GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=path)
     except Exception as err:
         msg = f"Could not create a readme for {args.game}: {type(err)} {str(err)}"

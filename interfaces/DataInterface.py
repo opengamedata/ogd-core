@@ -43,7 +43,7 @@ class DataInterface(Interface):
         super().__init__(config=config)
         self._fail_fast = fail_fast
         self._game_id : str  = game_id
-        self._table_schema : TableSchema = TableSchema(schema_name=self._config.Schema)
+        self._table_schema : TableSchema = TableSchema(schema_name=self._config.TableSchema)
 
     def __del__(self):
         self.Close()
