@@ -295,7 +295,7 @@ if args is not None:
     elif cmd == "info":
         success = ShowGameInfo(config=config)
     elif cmd == "readme":
-        success = WriteReadme()
+        success = WriteReadme(config=config)
     elif cmd == "list-games":
         success = ListGames()
     # elif cmd == "help":
