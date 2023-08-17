@@ -13,7 +13,7 @@ from schemas.games.FeatureSchema import FeatureSchema
 from schemas.games.PerCountSchema import PerCountSchema
 from schemas.IterationMode import IterationMode
 from schemas.ExtractionMode import ExtractionMode
-from utils import Logger, loadJSONFile
+from utils.Logger import Logger, loadJSONFile
 
 ## @class GameSchema
 #  A fairly simple class that reads a JSON schema with information on how a given

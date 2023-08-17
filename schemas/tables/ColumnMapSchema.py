@@ -3,7 +3,7 @@ import logging
 from typing import Any, Dict, List, Union
 # import local files
 from schemas.tables.ColumnSchema import ColumnSchema
-from utils import Logger
+from utils.Logger import Logger
 
 class ColumnMapSchema:
     def __init__(self, map:Dict[str, Any], column_names:List[str]):

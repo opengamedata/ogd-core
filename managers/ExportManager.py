@@ -35,7 +35,7 @@ from schemas.games.GameSchema import GameSchema
 from schemas.configs.ConfigSchema import ConfigSchema
 from ogd_requests.Request import Request
 from ogd_requests.RequestResult import RequestResult
-from utils import Logger
+from utils.Logger import Logger
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.

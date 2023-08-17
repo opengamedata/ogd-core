@@ -12,7 +12,7 @@ from processors.Processor import Processor
 from schemas.ExtractionMode import ExtractionMode
 from schemas.games.GameSchema import GameSchema
 from schemas.ExportMode import ExportMode
-from utils import Logger, ExportRow
+from utils.Logger import Logger, ExportRow
 
 ## @class Processor
 class ExtractorProcessor(Processor):

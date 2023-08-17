@@ -10,7 +10,7 @@ from schemas.FeatureData import FeatureData
 from games.ICECUBE.DBExport import scene_map
 from games.ICECUBE.features.PerSceneFeature import PerSceneFeature
 from games.ICECUBE.DBExport import scenes_list
-from utils import Logger
+from utils.Logger import Logger
 
 # import libraries
 import logging

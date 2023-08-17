@@ -9,7 +9,7 @@ from processors.FeatureProcessor import FeatureProcessor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.games.GameSchema import GameSchema
-from utils import Logger, ExportRow
+from utils.Logger import Logger, ExportRow
 
 ## @class PopulationProcessor
 #  Class to extract and manage features for a processed csv file.

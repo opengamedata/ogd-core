@@ -8,7 +8,7 @@ from coding.Code import Code
 from coding.Coder import Coder
 from interfaces.Interface import Interface
 from schemas.IDMode import IDMode
-from utils import Logger
+from utils.Logger import Logger
 
 class CodingInterface(Interface):
 

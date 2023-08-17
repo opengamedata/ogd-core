@@ -13,7 +13,7 @@ import utils
 from schemas.Event import Event, EventSource
 from schemas.tables.ColumnMapSchema import ColumnMapSchema
 from schemas.tables.ColumnSchema import ColumnSchema
-from utils import Logger
+from utils.Logger import Logger
 
 ## @class TableSchema
 #  Dumb struct to hold useful info about the structure of database data

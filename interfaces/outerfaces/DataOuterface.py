@@ -10,7 +10,7 @@ from interfaces.Interface import Interface
 from schemas.IDMode import IDMode
 from schemas.ExportMode import ExportMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
-from utils import Logger, ExportRow
+from utils.Logger import Logger, ExportRow
 
 class DataOuterface(Interface):
     """Base class for feature and event output.

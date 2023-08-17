@@ -11,7 +11,7 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
-from utils import Logger
+from utils.Logger import Logger
 
 
 

@@ -11,7 +11,7 @@ from schemas.Event import Event
 from schemas.IDMode import IDMode
 from schemas.tables.TableSchema import TableSchema
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
-from utils import Logger
+from utils.Logger import Logger
 
 class DataInterface(Interface):
 

@@ -6,7 +6,7 @@ from typing import List, Set
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.ExportMode import ExportMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
-from utils import Logger, ExportRow
+from utils.Logger import Logger, ExportRow
 
 class DebugOuterface(DataOuterface):
 

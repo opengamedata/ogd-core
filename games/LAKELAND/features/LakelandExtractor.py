@@ -27,7 +27,7 @@ from extractors.legacy.LegacyFeature import LegacyFeature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.games.GameSchema import GameSchema
-from utils import Logger
+from utils.Logger import Logger
 
 # temp comment
 

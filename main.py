@@ -17,7 +17,7 @@ from typing import Any, Dict, Optional, Set, Tuple
 # import 3rd-party libraries
 
 # import local files
-from utils import Logger
+from utils.Logger import Logger
 from config.config import settings
 from interfaces.DataInterface import DataInterface
 from interfaces.CSVInterface import CSVInterface
@@ -36,7 +36,7 @@ from schemas.configs.ConfigSchema import ConfigSchema
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from ogd_requests.Request import Request, ExporterRange
 from ogd_requests.RequestResult import RequestResult, ResultStatus
-from utils import Logger
+from utils.Logger import Logger
 
 def ListGames() -> bool:
     print(f"The games available for export are:\n{games_list}")

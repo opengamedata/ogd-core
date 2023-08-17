@@ -11,7 +11,7 @@ from processors.PlayerProcessor import PlayerProcessor
 from processors.SessionProcessor import SessionProcessor
 from schemas.games.GameSchema import GameSchema
 from schemas.Event import Event
-from utils import Logger, ExportRow
+from utils.Logger import Logger, ExportRow
 
 class FeatureManager:
     def __init__(self, game_schema:GameSchema, LoaderClass:Optional[Type[ExtractorLoader]], feature_overrides:Optional[List[str]]):

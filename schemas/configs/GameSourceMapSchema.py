@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Union
 # import local files
 from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
 from schemas.Schema import Schema
-from utils import Logger
+from utils.Logger import Logger
 
 class GameSourceSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any], data_sources:Dict[str, DataSourceSchema]):
