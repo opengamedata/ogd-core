@@ -46,6 +46,15 @@ class EventDataElementSchema(Schema):
         return ret_val
 
     @property
+    def AsMarkdownRow(self) -> str:
+        ret_val : str = f"| {self.Name} | {self.ElementType} | {self.Description} |"
+        if self.Details is not None:
+            detail_markdowns = [f"- **{name}** : {desc}  " for name,desc in self.Details.items()]
+            ret_val += '\n'.join(detail_markdowns)
+        ret_val += " |"
+        return ret_val
+
+    @property
     def ElementType(self) -> str:
         return self._type
 
@@ -137,6 +146,16 @@ class EventSchema(Schema):
         other_data_desc = [f"- Other Elements:"]
         other_data = [f"  - **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in self.NonStandardElements]
         return "\n".join(summary + event_data + other_data_desc + other_data)
+
+    @property
+    def AsMarkdownTable(self) -> str:
+        summary = [f"**{self.Name}**: {self.Description}"]
+        event_data_header = ["| **Name** | **Type** | **Description** | **Details** |",
+                             "| ---      | ---      | ---             | ---         |"]
+        event_data_rows = [elem.AsMarkdownRow for elem in self.EventData.values()]
+        other_data_desc = ["- Other Elements:"]
+        other_data = [f"  - **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in self.NonStandardElements]
+        return "\n".join(summary + event_data_header + event_data_rows + other_data_desc + other_data)
 
     @staticmethod
     def _parseEventDataElements(event_data):
