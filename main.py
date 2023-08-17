@@ -37,6 +37,7 @@ from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from ogd_requests.Request import Request, ExporterRange
 from ogd_requests.RequestResult import RequestResult, ResultStatus
 from utils.Logger import Logger
+from utils.Readme import GenCSVMetadata, GenerateReadme
 
 def ListGames() -> bool:
     print(f"The games available for export are:\n{games_list}")
@@ -54,7 +55,7 @@ def ShowGameInfo(config:ConfigSchema) -> bool:
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
         table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableName}.json")
-        print(TSVOuterface.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema))
+        print(GenCSVMetadata(game_schema=game_schema, table_schema=table_schema))
     except Exception as err:
         msg = f"Could not print information for {args.game}: {type(err)} {str(err)}"
         Logger.Log(msg, logging.ERROR)
@@ -76,7 +77,7 @@ def WriteReadme() -> bool:
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
         table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableName}.json")
-        TSVOuterface.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=path)
+        GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=path)
     except Exception as err:
         msg = f"Could not create a readme for {args.game}: {type(err)} {str(err)}"
         Logger.Log(msg, logging.ERROR)

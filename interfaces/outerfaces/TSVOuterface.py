@@ -14,7 +14,6 @@ from pathlib import Path
 from typing import Any, Dict, IO, List, Optional, Set
 
 # import local files
-import utils
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.ExtractionMode import ExtractionMode
 from schemas.ExportMode import ExportMode
@@ -22,8 +21,10 @@ from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.games.GameSchema import GameSchema
 from schemas.tables.TableSchema import TableSchema
 from schemas.configs.IndexingSchema import FileIndexingSchema
+from utils import utils
 from utils.Logger import Logger
 from utils.utils import ExportRow
+from utils.Readme import GenerateReadme
 
 class TSVOuterface(DataOuterface):
 
@@ -109,7 +110,7 @@ class TSVOuterface(DataOuterface):
             self._readme_path = Path("./data") / self._game_id
             game_schema  : GameSchema  = GameSchema(schema_name=self._game_id, schema_path=Path(f"./games/{self._game_id}/schemas"))
             table_schema = TableSchema(schema_name=self._config.Schema)
-            TSVOuterface.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=self._game_data_dir)
+            GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=self._game_data_dir)
         else:
             # otherwise, readme is there, so just close it and move on.
             readme.close()
