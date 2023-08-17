@@ -75,7 +75,7 @@ def WriteReadme() -> bool:
     path = Path(f"./data") / args.game
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
-        table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
+        table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableName}.json")
         TSVOuterface.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=path)
     except Exception as err:
         msg = f"Could not create a readme for {args.game}: {type(err)} {str(err)}"
