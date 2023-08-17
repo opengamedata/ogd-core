@@ -56,7 +56,6 @@ class GameSchema(Schema):
             # 1. Get events, if any
             if "events" in _schema.keys():
                 self._event_list = [EventSchema(name=key, all_elements=val) for key,val in _schema['events'].items()]
-                Logger.Log(f"{self.GameName} events are: {self.EventTypes}")
             else:
                 Logger.Log(f"{self._game_name} game schema does not document any events.", logging.INFO)
             # 2. Get detectors, if any
