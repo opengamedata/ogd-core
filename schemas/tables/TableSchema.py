@@ -74,7 +74,7 @@ class TableSchema:
             "## Database Columns",
             "The individual columns recorded in the database for this game.",
             "\n".join([item.AsMarkdown for item in self.Columns]),
-            "\n\n## Event Object Elements",
+            "## Event Object Elements",
             "The elements (member variables) of each Event object, available to programmers when writing feature extractors. The right-hand side shows which database column(s) are mapped to a given element.",
             self._column_map.AsMarkdown,
             ""])

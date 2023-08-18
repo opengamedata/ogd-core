@@ -24,6 +24,7 @@ class ColumnMapSchema:
             "event_sequence_index" : None
         }
         self._other_elements       : Dict[str, Any]
+        self._column_names = column_names
 
         if isinstance(map, dict):
             for key in self._map.keys():
@@ -44,6 +45,14 @@ class ColumnMapSchema:
 
     @property
     def Map(self) -> Dict[str, Union[int, List[int], Dict[str, int], None]]:
+        """Mapping from Event element names to the indices of the database columns mapped to them.
+        There may be a single index, indicating a 1-to-1 mapping of a database column to the element;
+        There may be a list of indices, indicating multiple columns will be concatenated to form the element value;
+        There may be a further mapping of keys to indicies, indicating multiple columns will be joined into a JSON object, with keys mapped to values found at the columns with given indices.
+
+        :return: The dictionary mapping of element names to indices.
+        :rtype: Dict[str, Union[int, List[int], Dict[str, int], None]]
+        """
         return self._map
 
     @property
@@ -122,6 +131,10 @@ class ColumnMapSchema:
                 elif isinstance(row_col, list):
                     mapped_list = ", ".join([f"'*{item}*'" for item in row_col])
                     event_column_list.append(f"**{evt_col}** = Columns {mapped_list}  ") # figure out how to do one string foreach item in list.
+                elif isinstance(row_col, int):
+                    event_column_list.append(f"**{evt_col}** = Column '*{self._column_names[row_col]}*' (index {row_col})  ")
+                else:
+                    event_column_list.append(f"**{evt_col}** = Column '*{row_col}*' (DEBUG: Type {type(row_col)})  ")
             else:
                 event_column_list.append(f"**{evt_col}** = null  ")
         ret_val = "\n".join(event_column_list)
