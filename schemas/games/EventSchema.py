@@ -141,11 +141,15 @@ class EventSchema(Schema):
 
     @property
     def AsMarkdown(self) -> str:
-        summary = [f"### **{self.Name}**", self.Description]
-        event_data = [elem.AsMarkdown for elem in self.EventData.values()]
-        other_data_desc = [f"- Other Elements:"]
-        other_data = [f"  - **{elem_name}**: {elem_desc}" for elem_name,elem_desc in self.NonStandardElements]
-        return "  \n".join(summary + event_data + other_data_desc + other_data)
+        return "\n\n".join([
+            f"### **{self.Name}**",
+            self.Description,
+            "\n".join(
+                  [elem.AsMarkdown for elem in self.EventData.values()]
+                + ["- Other Elements:"]
+                + [f"  - **{elem_name}**: {elem_desc}" for elem_name,elem_desc in self.NonStandardElements]
+                )
+        ])
 
     @property
     def AsMarkdownTable(self) -> str:

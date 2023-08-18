@@ -49,11 +49,8 @@ class Readme:
                     f"# Game: {self.GameName}",
                     self.CustomReadmeSource,
                     self.DatasetMetadata,
-                    "## Field Descriptions:",
                     self._table_schema.AsMarkdown,
-                    "",
                     self._game_schema.AsMarkdown,
-                    "",
                     self.DatasetChangelog,
                     ""
                 ]))

@@ -70,7 +70,7 @@ class TableSchema:
 
     @property
     def AsMarkdown(self) -> str:
-        ret_val = "  \n\n".join([
+        ret_val = "\n\n".join([
             "## Database Columns",
             "The individual columns recorded in the database for this game.",
             "\n".join([item.AsMarkdown for item in self.Columns]),

@@ -270,7 +270,7 @@ class GameSchema(Schema):
 
     @property
     def AsMarkdown(self) -> str:
-        event_summary = ["## Logged Event Types",
+        event_summary = ["## Logged Events",
                          "The individual fields encoded in the *event_data* Event element for each type of event logged by the game."
                         ]
         # Set up list of events
