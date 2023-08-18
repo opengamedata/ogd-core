@@ -46,6 +46,7 @@ class Readme:
                 # 1. Open files with game-specific readme data, and global db changelog.
                 # 2. Use schema to write feature & column descriptions to the readme.
                 readme.write("\n\n".join([
+                    f"# Game: {self.GameName}",
                     self.CustomReadmeSource,
                     self.DatasetMetadata,
                     "## Field Descriptions:",
@@ -87,20 +88,21 @@ class Readme:
         :return: A string containing metadata for the given game.
         :rtype: str
         """
-        return "  \n".join([
+        return "\n\n".join([
             "## Field Day Open Game Data",
-            "Retrieved from https://fielddaylab.wisc.edu/opengamedata",
-            "These anonymous data are provided in service of future educational data mining research.",
-            "They are made available under the Creative Commons CCO 1.0 Universal license.",
-            "See https://creativecommons.org/publicdomain/zero/1.0/",
-            "",
-            "## Suggested citation:  ",
-            "### Field Day. (2019). Open Educational Game Play Logs - [dataset ID]. Retrieved [today's date] from https://fielddaylab.wisc.edu/opengamedata  ",
-            "",
+            "\n".join([
+                "Retrieved from https://fielddaylab.wisc.edu/opengamedata",
+                "These anonymous data are provided in service of future educational data mining research.",
+                "They are made available under the Creative Commons CCO 1.0 Universal license.",
+                "See https://creativecommons.org/publicdomain/zero/1.0/",
+            ]),
+            "### Suggested citation",
+            "#### Field Day. (2019). Open Educational Game Play Logs - [dataset ID]. Retrieved [today's date] from https://opengamedata.fielddaylab.wisc.edu/"
         ])
 
     def _getDatabaseChangelog(self) -> str:
         ret_val = "No changelog prepared"
+
         changelog_dir = Path(f"./schemas/")
         try:
             with open(changelog_dir / "database_changelog_src.md", "r") as changelog_src:

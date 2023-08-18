@@ -1,4 +1,4 @@
-## Global Database Changelog:
+## Global Database Changelog
 
 ### August 2019
 
