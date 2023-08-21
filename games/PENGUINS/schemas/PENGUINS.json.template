@@ -499,8 +499,13 @@
             "GazeCount": {
                 "type": "GazeCount",
                 "enabled": true,
-                "description": "The number of times a player waddled in a given region."
-            }
+                "description": "The number of times a player waddled in a given region of the game."
+            },
+    	    "EatFishCount": {
+                "type": "EatFishCount”,
+                "enabled": true,
+                "description": "The number of times a player eat the fish.”
+                }
         }
     },
 
