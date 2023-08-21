@@ -6,7 +6,8 @@ from typing import Dict, List, Set, Union
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.ExportMode import ExportMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
-from utils import Logger, ExportRow
+from utils.Logger import Logger
+from utils.utils import ExportRow
 
 class DictionaryOuterface(DataOuterface):
 

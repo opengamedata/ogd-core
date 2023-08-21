@@ -11,7 +11,8 @@ from schemas.Event import Event
 from schemas.ExportMode import ExportMode
 from schemas.FeatureData import FeatureData
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
-from utils import Logger, ExportRow
+from utils.Logger import Logger
+from utils.utils import ExportRow
 
 class DataOuterface(Interface):
     """Base class for feature and event output.

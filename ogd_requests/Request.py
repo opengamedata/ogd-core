@@ -7,7 +7,7 @@ from interfaces.DataInterface import DataInterface
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.IDMode import IDMode
 from schemas.ExportMode import ExportMode
-from utils import Logger
+from utils.Logger import Logger
 
 class ExporterRange:
     """

@@ -9,7 +9,7 @@ from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
-from utils import Logger
+from utils.Logger import Logger
 
 AQUALAB_MIN_VERSION = 6.2
 

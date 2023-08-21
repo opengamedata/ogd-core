@@ -3,7 +3,7 @@ import logging
 from typing import Any, Dict, List, Optional
 # import local files
 from schemas.Schema import Schema
-from utils import Logger
+from utils.Logger import Logger
 
 class EventDataElementSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):
@@ -40,8 +40,18 @@ class EventDataElementSchema(Schema):
     def AsMarkdown(self) -> str:
         ret_val : str = f"- **{self.Name}** : *{self.ElementType}*, {self.Description}"
         if self.Details is not None:
-            detail_markdown = [f"**{name}** - {desc}" for name,desc in self.Details]
-            ret_val += f"\n  Details: {detail_markdown}\n"
+            detail_markdowns = [f"    - **{name}** - {desc}  " for name,desc in self.Details.items()]
+            detail_joined = '\n'.join(detail_markdowns)
+            ret_val += f"  \n  Details:  \n{detail_joined}"
+        return ret_val
+
+    @property
+    def AsMarkdownRow(self) -> str:
+        ret_val : str = f"| {self.Name} | {self.ElementType} | {self.Description} |"
+        if self.Details is not None:
+            detail_markdowns = [f"**{name}** : {desc}" for name,desc in self.Details.items()]
+            ret_val += ', '.join(detail_markdowns)
+        ret_val += " |"
         return ret_val
 
     @property
@@ -131,11 +141,37 @@ class EventSchema(Schema):
 
     @property
     def AsMarkdown(self) -> str:
-        summary = [f"**{self.Name}**: {self.Description}"]
-        event_data = [elem.AsMarkdown for elem in self.EventData.values()]
-        other_data_desc = [f"- Other Elements:"]
-        other_data = [f"  - **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in self.NonStandardElements]
-        return "\n".join(summary + event_data + other_data_desc + other_data)
+        return "\n\n".join([
+            f"### **{self.Name}**",
+            self.Description,
+            "#### Event Data",
+            "\n".join(
+                  [elem.AsMarkdown for elem in self.EventData.values()]
+                + ["- Other Elements:"]
+                + (
+                    [f"  - **{elem_name}**: {elem_desc}" for elem_name,elem_desc in self.NonStandardElements]
+                    if len(self.NonStandardElements) > 0 else ["None"]
+                  )
+            )
+        ])
+
+    @property
+    def AsMarkdownTable(self) -> str:
+        return "\n\n".join([
+            f"### **{self.Name}**",
+            f"{self.Description}",
+            "#### Event Data",
+            "\n".join(
+                ["| **Name** | **Type** | **Description** | **Details** |",
+                 "| ---      | ---      | ---             | ---         |"]
+              + [elem.AsMarkdownRow for elem in self.EventData.values()]
+            ),
+            "#### Other Elements",
+            "\n".join(
+                [f"- **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in self.NonStandardElements]
+                if len(self.NonStandardElements) > 0 else ["- None"]
+            )
+        ])
 
     @staticmethod
     def _parseEventDataElements(event_data):

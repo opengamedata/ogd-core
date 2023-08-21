@@ -4,7 +4,7 @@ import logging
 from typing import Any, Dict, List, Optional
 from extractors.ExtractorLoader import ExtractorLoader
 ## import local files
-from utils import Logger
+from utils.Logger import Logger
 from extractors.Extractor import Extractor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode

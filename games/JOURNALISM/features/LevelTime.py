@@ -4,7 +4,7 @@ from games.JOURNALISM.features import PlayTime
 from schemas import Event
 from typing import Any, List, Optional
 # import locals
-from utils import Logger
+from utils.Logger import Logger
 from extractors.features.PerLevelFeature import PerLevelFeature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event

@@ -9,7 +9,7 @@ from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.tables.TableSchema import TableSchema
-from utils import Logger
+from utils.Logger import Logger
 
 class CSVInterface(DataInterface):
 

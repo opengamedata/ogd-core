@@ -7,7 +7,7 @@ from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
-from utils import Logger
+from utils.Logger import Logger
 
 # import libraries
 import logging
@@ -19,7 +19,7 @@ from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
-from utils import Logger
+from utils.Logger import Logger
 
 class SessionDuration(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.

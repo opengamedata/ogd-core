@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 # import local files
 from schemas.games.ExtractorSchema import ExtractorSchema
 from schemas.Schema import Schema
-from utils import Logger
+from utils.Logger import Logger
 
 class SubfeatureSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, str]):
