@@ -499,7 +499,7 @@
             "GazeCount": {
                 "type": "GazeCount",
                 "enabled": true,
-                "description": "The number of times a player waddled in a given region of the game."
+                "description": "The number of times a player waddled in a given region."
             }
         }
     },
