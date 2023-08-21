@@ -274,7 +274,7 @@ class GameSchema(Schema):
                          "The individual fields encoded in the *event_data* Event element for each type of event logged by the game."
                         ]
         # Set up list of events
-        event_list = [event.AsMarkdown for event in self.Events] if len(self.Events) > 0 else ["None"]
+        event_list = [event.AsMarkdownTable for event in self.Events] if len(self.Events) > 0 else ["None"]
         # Set up list of detectors
         detector_summary = ["## Detected Events",
                             "The custom, data-driven Events calculated from this game's logged events by OpenGameData when an 'export' is run."

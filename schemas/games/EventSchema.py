@@ -144,24 +144,34 @@ class EventSchema(Schema):
         return "\n\n".join([
             f"### **{self.Name}**",
             self.Description,
+            "#### Event Data",
             "\n".join(
                   [elem.AsMarkdown for elem in self.EventData.values()]
                 + ["- Other Elements:"]
-                + [f"  - **{elem_name}**: {elem_desc}" for elem_name,elem_desc in self.NonStandardElements]
-                )
+                + (
+                    [f"  - **{elem_name}**: {elem_desc}" for elem_name,elem_desc in self.NonStandardElements]
+                    if len(self.NonStandardElements) > 0 else ["None"]
+                  )
+            )
         ])
 
     @property
     def AsMarkdownTable(self) -> str:
-        summary = [f"### **{self.Name}**",
-                   f"{self.Description}  ",
-                   "Event Data:"]
-        event_data_header = ["| **Name** | **Type** | **Description** | **Details** |",
-                             "| ---      | ---      | ---             | ---         |"]
-        event_data_rows = [elem.AsMarkdownRow for elem in self.EventData.values()]
-        other_data_desc = ["- Other Elements:"]
-        other_data = [f"  - **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in self.NonStandardElements]
-        return "  \n".join(summary + event_data_header + event_data_rows + other_data_desc + other_data)
+        return "\n\n".join([
+            f"### **{self.Name}**",
+            f"{self.Description}",
+            "#### Event Data",
+            "\n".join(
+                ["| **Name** | **Type** | **Description** | **Details** |",
+                 "| ---      | ---      | ---             | ---         |"]
+              + [elem.AsMarkdownRow for elem in self.EventData.values()]
+            ),
+            "#### Other Elements",
+            "\n".join(
+                [f"- **{elem_name}**: {elem_desc}  " for elem_name,elem_desc in self.NonStandardElements]
+                if len(self.NonStandardElements) > 0 else ["- None"]
+            )
+        ])
 
     @staticmethod
     def _parseEventDataElements(event_data):
