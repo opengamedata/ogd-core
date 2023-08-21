@@ -379,8 +379,7 @@ class TableSchema:
         ret_val : datetime
 
         if time_str == "None" or time_str == "none" or time_str == "null" or time_str == "nan":
-            Logger.Log(f"Got a non-timestamp value of {time_str} when converting events")
-            return None
+            raise ValueError(f"Got a non-timestamp value of {time_str} when converting a datetime column of an Event!")
 
         formats = ["%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M:%S.%f", "%Y-%m-%d %H:%M:%S.%f"]
 
