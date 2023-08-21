@@ -403,7 +403,7 @@
         "per_count": {
             "WaddleByRegion": {
                 "type": "WaddleByRegion",
-                "enabled": true,
+                "enabled": false,
                 "count": 11,
                 "prefix": "region",
                 "description": "The number of times a player waddled in a given region of the game."
