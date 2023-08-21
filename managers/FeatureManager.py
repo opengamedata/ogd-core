@@ -44,6 +44,8 @@ class FeatureManager:
                                             player_id="null", session_id="null", feature_overrides=self._overrides)
                 }
             }
+        else:
+            Logger.Log(f"FeatureManager did not set up any Processors, no LoaderClass was given!", logging.WARN, depth=3)
 
     # TODO: make this function take list of events, and do the loop over events as low in the hierarchy as possible, which technically should be faster.
     def ProcessEvent(self, event:Event) -> None:
@@ -104,7 +106,7 @@ class FeatureManager:
                         player.ProcessFeatureData(feature_list=sess_data)
                     session.ProcessFeatureData(feature_list=sess_data)
             Logger.Log(f"Time to process Feature Data: {datetime.now() - start}", logging.INFO, depth=3)
-        Logger.Log(f"Skipped feature processing, no feature extractors available!", logging.INFO, depth=3)
+        Logger.Log(f"Skipped feature processing, no feature Processors available!", logging.INFO, depth=3)
 
     def GetFeatureValues(self, as_str:bool = False) -> Dict[str, List[ExportRow]]:
         start = datetime.now()
