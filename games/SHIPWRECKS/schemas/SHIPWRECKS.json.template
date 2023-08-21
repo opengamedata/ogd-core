@@ -3,48 +3,144 @@
 
     "events": {
         "start_mission": {
-            "mission_id": "ID for the current mission"
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
         },
         "checkpoint": {
-            "mission_id": "ID for the current mission",
-            "status": "Checkpoint status"
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                },
+                "status": {
+                    "type": "N/A",
+                    "description": "Checkpoint status"
+                }
+            }
         },
         "open_map": {
-            "mission_id": "ID for the current mission"
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
         },
         "scanning": {
-            "mission_id": "ID for the current mission"
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
         },
         "scan_complete": {
-            "mission_id": "ID for the current mission"
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
         },
         "dive_begin": {
-            "mission_id": "ID for the current mission"
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
         },
         "new_evidence": {
-            "mission_id": "ID for the current mission",
-            "type": "Type of evidence found",
-            "source": "Source where the evidence was gathered from",
-            "key": "Name/ID for the evidence found"
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                },
+                "type": {
+                    "type": "N/A",
+                    "description": "Type of evidence found"
+                },
+                "source": {
+                    "type": "N/A",
+                    "description": "Source where the evidence was gathered from"
+                },
+                "key": {
+                    "type": "N/A",
+                    "description": "Name/ID for the evidence found"
+                }
+            }
         },
         "mission_complete": {
-            "mission_id": "ID for the current mission"
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
         },
         "update_ship_overview": {
-            "mission_id": "ID for the current mission",
-            "field": "Field in ship overview that was updated",
-            "evidence": "Evidence placed in ship overview"
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                },
+                "field": {
+                    "type": "N/A",
+                    "description": "Field in ship overview that was updated"
+                },
+                "evidence": {
+                    "type": "N/A",
+                    "description": "Evidence placed in ship overview"
+                }
+            }
         },
         "view_desk": {
-            "mission_id": "ID for the current mission"
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
         },
         "view_tab": {
-            "mission_id": "ID for the current mission",
-            "tab_name": "Name of tab opened"
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                },
+                "tab_name": {
+                    "type": "N/A",
+                    "description": "Name of tab opened"
+                }
+            }
         },
         "view_chat": {
-            "mission_id": "ID for the current mission",
-            "name": "Name of NPC in the chat"
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                },
+                "name": {
+                    "type": "N/A",
+                    "description": "Name of NPC in the chat"
+                }
+            }
         }
     },
 

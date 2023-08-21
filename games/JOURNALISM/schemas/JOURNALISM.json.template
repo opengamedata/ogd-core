@@ -26,6 +26,14 @@
         }
     },
     "events": {
+        "new_game" : {
+            "description" : "Player clicked to start a new game",
+            "event_data" : {}
+        },
+        "continue_game" : {
+            "description" : "Player clicked to continue a game",
+            "event_data" : {}
+        },
         "text_click": {
             "description": "clicked to advance to the next text bubble",
             "event_data" : {
@@ -639,6 +647,14 @@
                 "new_quality": {
                     "type": "List[enum(BAD, GOOD, GREAT)]",
                     "description": "The quality for each snippet used in the story, sorted by quality. Note that 'GOOD' quality is not displayed to the player"
+                },
+                "story_score": {
+                    "type": "float",
+                    "description": "calculated score based on overall quality"
+                },
+                "story_alignment": {
+                    "type": "float",
+                    "description": "score based on how well the player followed the target composition"
                 }
             }
         },
@@ -716,11 +732,455 @@
                     "description": "1, 2, or 3"
                 }
             }
+        },
+        "level_fail": {
+            "description" : "When a player fails a level and is unable to continue",
+            "event_data" : {
+                "fail_types":{
+                    "type": "enum(Time, Choice, Research, Resourceful, Endurance, Tech, Social, Trust)",
+                    "description": "The reason for fail event. There can be multiple reasons for an event fail. Enum values are in int form based on index"
+                    
+                }
+            }
+        },
+        "resumed_checkpoint":{
+            "description": "When a player resumes a checkpoint",
+            "event_data":{
+                "node_id":{
+                    "type": "string",
+                    "description": "The hexadecimal id of the checkpoint node"
+                },
+                "origin":{
+                    "type": "string",
+                    "description": "Whether the origin of the checkpoint resume was from menu or from fail"
+                }
+            }
         }
     },
     "features": {
-        "per_count": {},
-        "aggregate": {}
+        "per_count": {
+            "StoryEditorTime": {
+				"enabled": false,
+				"type": "StoryEditorTime",
+				"description": "A feature to calculate total time spent in the story editor- same logic as SessionPlayTime, but only enabled between editor open/close events",
+				"return_type": "timedelta",
+                "count":"level_range",
+                "prefix":"lvl",
+				"subfeatures": {
+					"Count": {
+						"description": "The total number of times the player entered an idle state",
+						"return_type": "int"
+					},
+                    "Total Time":{
+                        "description": "Total play time in the session",
+                        "return_type": "timedelta"
+                    },
+                    "Total Play Time":{
+                        "description": "Total play time in session minus idle time",
+                        "return_type":"timedelta"
+                    }
+				},
+				"IDLE_THRESH_SECONDS": 60
+			},
+            "AttributeView":{
+                "enabled":true,
+                "type":"AttributeView",
+                "description": "A feature for times a player goes into attribute dist., by level",
+                "return_type":"int",
+                "count":"level_range",
+                "prefix":"lvl"
+            },
+            "EditorNoteOpen":{
+                "enabled":true,
+                "type":"EditorNoteOpen",
+                "description": "A feature for times a player goes into editor notes, by level",
+                "return_type":"int",
+                "count":"level_range",
+                "prefix":"lvl"
+
+            },
+            "StoryScore" : {
+                "enabled":true,
+                "type":"StoryScore",
+                "description": "A player's final score on a story, by level",
+                "return_type":"float",
+                "count":"level_range",
+                "prefix":"lvl"
+            },
+            "StoryScoreSequence": {
+                "type":"StoryScoreSequence",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"List[float]",
+                "description": "The sequence of changes in story score with each change of story composition, by level"
+            },
+            "StoryAlignment": {
+                "type":"StoryAlignment",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"float",
+                "description": "Final alignment value of the user's story by level"
+            },
+            "StoryAlignmentSequence": {
+                "type":"StoryAlignmentSequence",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"List[float]",
+                "description": "The sequence of changes in alignment with each change of story composition, by level"
+            },
+            "SnippetReplace":{
+                "type": "SnippetReplace",
+                "enabled": false,
+                "count": "level_range",
+                "prefix":"lvl",
+                "return_type": "int",
+                "description":"The number of times a snippet is replaced in a level",
+                "subfeatures":{
+                    "AverageReplace":{
+                        "description":"(Number of times replaced)/(num times notebook click)",
+                        "return_type":"float"
+                    }
+                }
+            },
+            "SnippetsCollected" : {
+                "type":"SnippetsCollected",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"List[str]",
+                "description": "A list of all snippets collected by the user, by level"
+            },
+            "WorstPlayerAttribute":{
+                "type":"WorstPlayerAttribute",
+                "enabled": true,
+                "count":"attribute_range",
+                "prefix": "attr",
+                "return_type": "str",
+                "description": "Population level count of worst player attributes",
+                "subfeatures":{
+                    "Count":{
+                        "description": "A count of a specific attribute",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "TopPlayerAttribute":{
+                "type":"TopPlayerAttribute",
+                "enabled": true,
+                "count":"attribute_range",
+                "prefix": "attr",
+                "return_type": "str",
+                "description": "Population level count of top player attributes",
+                "subfeatures":{
+                    "Count":{
+                        "description": "A count of a specific attribute",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "TopPlayerQuitType":{
+                "type":"TopPlayerQuitType",
+                "enabled": true,
+                "count":"quit_type_range",
+                "prefix": "attr",
+                "return_type": "str",
+                "description": "Population level count of top player attributes",
+                "subfeatures":{
+                    "Count":{
+                        "description": "A count of a specific attribute",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "MaxedPlayerAttribute":{
+                "type":"MaxedPlayerAttribute",
+                "enabled":true,
+                "count":"attribute_range",
+                "prefix":"attr",
+                "return_type":"str",
+                "description": "Population level count of maxed player attributes",
+                "subfeatures":{
+                    "Count":{
+                        "description": "A count of a specific attribute",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "LevelCompleteCount": {
+                "type":"LevelCompleteCount",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "Population level count of total level completes"
+            
+            },
+            "LevelCompleted":{
+                "enabled": true,
+                "type": "LevelCompleted",
+                "count": "level_range",
+                "prefix": "lvl",
+                "description": "Boolean perLevel feature for whether a level was completed in session",
+                "return_type": "bool"
+            },
+            "LevelTime": {
+                "type": "LevelTime",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "description": "time spent on a level [sum of differences in time between 'BEGIN' and 'COMPLETE' event(s)]",
+                "return_type": "timedelta"
+            },
+            "SnippetsSubmitted": {
+                "type": "SnippetsSubmitted",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "description": "List of all snippet ids included when a player submits their story.",
+                "return_type": "List[str]"
+            },
+            
+            "FailureCount":{
+                "enabled": true,
+                "type": "FailureCount",
+                "count": "level_range",
+                "prefix": "lvl",
+                "description": "How many times a level was failed",
+                "return_type": "int",
+                "subfeatures":{
+                    "OutOfTime":{
+                        "description": "A count of how many failures were due to running out of time",
+                        "return_type": "int"
+                    },
+                    "LowAttribute":{
+                        "description": "A count of how many failures were due to the player having an attribute value too low",
+                        "return_type": "int"
+                    }
+                }
+            }
+        },
+        "aggregate": {
+            "ChoiceClickCount": {
+				"enabled": false,
+				"description": "The number of choices made by user in a session",
+				"return_type": "int",
+                "subfeatures": {
+					"Action": {
+						"description": "The number of action choices made by a user in a session",
+						"return_type": "int"
+					}
+				}
+			},
+            "GameComplete":{
+                "enabled":true,
+                "description": "Whether a player completed a level",
+                "return_type":"bool"
+            },
+            "TextClickCount": {
+				"enabled": false,
+				"description": "The number of choices made by user in a session",
+				"return_type": "int"
+			},
+            "SessionPlayTime": {
+				"enabled": false,
+				"type": "SessionPlayTime",
+				"description": "A feature to calculate total time spent idle in session; configured to define 'idle' as spending 15 seconds or more without making a 'meaningful' action",
+				"return_type": "timedelta",
+				"subfeatures": {
+					"Count": {
+						"description": "The total number of times the player entered an idle state",
+						"return_type": "int"
+					},
+                    "Total Time":{
+                        "description": "Total play time in the session",
+                        "return_type": "timedelta"
+                    },
+                    "Total Play Time":{
+                        "description": "Total play time in session minus idle time",
+                        "return_type":"timedelta"
+                    }
+				},
+				"IDLE_THRESH_SECONDS": 60
+			},
+            "PlayTime":{
+                "enabled":true,
+                "type": "PlayTime",
+                "description": "Amount of non-idle time player spent on session",
+                "return_type": "timedelta",
+                "subfeatures":{
+                    "Total Time":{
+                        "description": "The total time the player spent on the game, disregarding idle time",
+                        "return_type": "timedelta"
+                    },
+                    "Idle Time":{
+                        "description": "The total time the player spent idle",
+                        "return_type": "timedelta"
+                    }
+                },
+                "IDLE_THRESH_SECONDS": 60
+
+            },
+            "UserPlayTime":{
+                "enabled": true,
+                "type": "UserPlayTime",
+                "description": "Amount of non-idle time spent by user across sessions",
+                "return_type": "timedelta",
+                "subfeatures":{
+                    "TotalTime":{
+                        "description": "Total time user spent across sessions, from start to end",
+                        "return_type": "timedelta"
+                    }
+                }
+            },
+            "SnippetReceivedCount":{
+                "enabled": true,
+                "description": "The number of snippets and types received by the user in a session",
+                "return_type": "int",
+                "subfeatures": {
+                    "Bad":{
+                        "description": "Count of bad snippets",
+                        "return_type": "int"
+                    },
+                    "Good":{
+                        "description": "Count of good snippets",
+                        "return_type": "int"
+                    },
+                    "Great":{
+                        "description": "Count of great snippets",
+                        "return_type": "int"
+                    }
+                }
+            },
+            
+            "StoryCompleteTime":{
+                "enabled": false,
+                "description": "Average amount of time spent completing stories, marked from first snippet received to level change event",
+                "return_type": "float",
+                "subfeatures":{
+                    "DeltaTimeLogs":{
+                        "description": "List of delta times between snippet receive and level complete",
+                        "return_type": "List[deltatime]"
+                    },
+                    "RawTimeLogs":{
+                        "description": "List of raw times for snippet receive and level complete, in tuples",
+                        "return_type": "List[tuple]"
+                    }
+                }
+            },
+            "SkillSequenceCount": {
+                "enabled": true,
+                "description": "Count skill update events and log these events in a sequence",
+                "return_type": "int",
+                "subfeatures":{
+                    "EventSequence":{
+                        "description": "String of skill update events in order",
+                        "return_type": "List[String]"
+                    }
+                }
+            },
+            "MeanSnippetTime":{
+                "enabled": false,
+                "description": "Average amount of time per snippet collected(between start of game and last snippet collect), as well as timestamps of all snippet collects",
+                "return_type": "float",
+                "subfeatures": {
+                    "TimeLog":{
+                        "description": "List of datetimes for snippet collects",
+                        "return_type": "List[int]"
+                    }
+                }
+            },
+            "PlayerAttributes": {
+                "enabled": true,
+                "description": "Final Attributes of Player in a session",
+                "return_type": "String"
+            },
+            "QuitLevel": {
+				"enabled": true,
+				"type": "QuitLevel",
+				"description": "The level of player/session on last logged event",
+				"return_type": "int",
+				"subfeatures": {
+                    "EventName":{
+                        "description": "The last event done by the player",
+                        "return_type": "String"
+                    },
+                    "NodeID":{
+                        "description": "The last nodeID on quit event",
+                        "return_type": "String"
+                    }
+				}
+			},
+            "QuitType":{
+                "enabled": true,
+                "type": "QuitType",
+                "description": "A feature to return a bool for the type of quit event by the player",
+                "return_type": "str",
+                "subfeatures":{
+                    "BetweenLevels":{
+                        "description": "Quit was between levels",
+                        "return_type": "bool"
+                    },
+                    "OnFail":{
+                        "description": "Quit was on fail",
+                        "return_type": "bool"
+                    },
+                    "OnCheckpoint":{
+                        "description": "Quit was on a checkpoint",
+                        "return_type": "bool"
+                    },
+                    "Other":{
+                        "description": "Quit wasn't on fail or between levels",
+                        "return_type": "bool"
+                    }
+
+                }
+            },
+            "WorstAttribute":{
+                "enabled": true,
+                "type": "WorstAttribute",
+                "description": "indicates the value of the lowest attribute the player has.",
+                "return_type": "int",
+                "subfeatures":{
+                    "Names":{
+                        "description": "A list of all names of lowest attributes",
+                        "return_type": "List[str]"
+                    }
+                }
+            },
+            "TopAttribute":{
+                "enabled": true,
+                "type": "TopAttribute",
+                "description": "indicates the value of the top attribute the player has.",
+                "return_type": "int",
+                "subfeatures":{
+                    "Names":{
+                        "description": "A list of all names of top attributes",
+                        "return_type": "List[str]"
+                    }
+                }
+            },
+            "TotalFails":{
+                "enabled":true,
+                "type":"TotalFails",
+                "description": "count of total fail events of all types",
+                "return_type": "int"
+            },
+            "ContinuesOnFail":{
+                "enabled": true,
+                "type": "ContinuesOnFail",
+                "description": "Number of continues on a level after fail",
+                "return_type": "int"
+            },
+            "QuitNode":{
+                "enabled:":true,
+                "type":"QuitNode",
+                "description": "Most popular 5 quit nodes at population level",
+                "return_type": "str"
+            }
+        }
     },
     "config": {
         "SUPPORTED_VERS": [

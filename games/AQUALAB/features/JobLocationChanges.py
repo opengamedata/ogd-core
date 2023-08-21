@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 # import locals
-from utils import Logger
+from utils.Logger import Logger
 from extractors.Extractor import ExtractorParameters
 from games.AQUALAB.features.PerJobFeature import PerJobFeature
 from schemas.Event import Event
@@ -43,7 +43,7 @@ class JobLocationChanges(PerJobFeature):
                 self._last_type = event.EventName
                 self._last_time = event.Timestamp
         elif event.EventName == "complete_task":
-            task_id = event.EventData.get("task_id", {}).get("string_value", "UNKNOWN_TASK")
+            task_id = event.EventData.get("task_id", "UNKNOWN_TASK")
             self._by_task[task_id] = self._current_count
             self._current_count = 0
 

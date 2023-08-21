@@ -7,12 +7,12 @@ from collections import defaultdict
 from datetime import timedelta
 from typing import Any, Dict, List, Optional, Union
 ## import local files
-from utils import Logger
+from utils.Logger import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 
 LegacyFeatureType = Union[int,float,timedelta,Dict[int,Dict[str,Any]]]
 
@@ -32,7 +32,7 @@ class LegacyFeature(Feature):
         """
         return
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     # Base constructor for LegacyFeature classes.
     def __init__(self, params:ExtractorParameters, game_schema:GameSchema, session_id:str):

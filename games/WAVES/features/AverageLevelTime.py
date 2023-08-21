@@ -4,7 +4,7 @@ from datetime import datetime
 from schemas import Event
 from typing import Any, Dict, List, Optional
 # import locals
-from utils import Logger
+from utils.Logger import Logger
 from extractors.features.SessionFeature import SessionFeature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
@@ -28,7 +28,7 @@ class AverageLevelTime(SessionFeature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        _level = event.EventData['level']
+        _level = event.GameState['level']
         self._levels_encountered.add(_level) # set-add level to list, at end we will have set of all levels seen.
         if event.EventName == "BEGIN.0":
             if not _level in self._begin_times.keys():

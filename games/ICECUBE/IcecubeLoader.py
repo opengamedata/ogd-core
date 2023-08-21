@@ -11,7 +11,7 @@ from games.ICECUBE.features import *
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 # from games.ICECUBE.DBExport import scene_map
 
 ## @class WaveExtractor
@@ -58,7 +58,7 @@ class IcecubeLoader(ExtractorLoader):
     def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid detector for Waves.")
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the WaveLoader class.
     def __init__(self, player_id:str, session_id: str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]=None):

@@ -7,19 +7,19 @@ from typing import Any, Dict, IO, List, Tuple, Optional
 ## import local files
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
-from schemas.TableSchema import TableSchema
-from utils import Logger
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.tables.TableSchema import TableSchema
+from utils.Logger import Logger
 
 class CSVInterface(DataInterface):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, filepath:Path, delim:str = ',', file_schema_name:str = "OGD_EVENT_FILE"):
+    def __init__(self, game_id:str, config:GameSourceSchema, fail_fast:bool, filepath:Path, delim:str = ','):
         # set up data from params
-        self._file_schema_name = file_schema_name
         self._filepath  : Path = filepath
         self._delimiter : str = delim
-        super().__init__(game_id=game_id, config={})
+        super().__init__(game_id=game_id, config=config, fail_fast=fail_fast)
         # set up data from file
         self._data      : pd.DataFrame = pd.DataFrame()
         self.Open()
@@ -28,7 +28,13 @@ class CSVInterface(DataInterface):
 
     def _open(self) -> bool:
         try:
-            self._data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter, parse_dates=['timestamp'])
+            # TODO should include option for access to the TableSchema in the interface, because obviously it should know what form the table takes.
+            target_types = { 'session_id' : 'str' }
+            _data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter, dtype=target_types, parse_dates=['timestamp'])
+            # _data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter)
+            Logger.Log(f"Loaded from CSV, columns are: {_data.dtypes}", logging.INFO)
+            Logger.Log(f"First few rows are:\n{_data.head(n=3)}")
+            self._data = _data.where(_data.notnull(), None)
             self._is_open = True
             return True
         except FileNotFoundError as err:
@@ -40,12 +46,8 @@ class CSVInterface(DataInterface):
         self._data = pd.DataFrame() # make new dataframe, let old data get garbage collected I assume.
         return True
 
-    def _loadTableSchema(self, game_id:str) -> TableSchema:
-        # TODO: make the .meta file of an export include the name of the most current table schema for Event files, then read that in here as default.
-        return TableSchema(schema_name=self._file_schema_name)
-
     def _allIDs(self) -> List[str]:
-        return self._data['session_id'].unique().tolist()
+        return [str(id) for id in self._data['session_id'].unique().tolist()]
 
     def _fullDateRange(self) -> Dict[str,datetime]:
         min_time = pd.to_datetime(self._data['timestamp'].min())
@@ -74,7 +76,7 @@ class CSVInterface(DataInterface):
         else:
             return []
 
-    def _datesFromIDs(self, id_list:List[int], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Dict[str, datetime]:
         if id_mode == IDMode.SESSION:
             min_date = self._data[self._data['session_id'].isin(id_list)]['timestamp'].min()
             max_date = self._data[self._data['session_id'].isin(id_list)]['timestamp'].max()

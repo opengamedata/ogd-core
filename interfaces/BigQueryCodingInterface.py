@@ -7,16 +7,15 @@ from typing import Dict, List, Tuple, Optional
 # import locals
 from coding.Code import Code
 from coding.Coder import Coder
-from config.config import settings as default_settings
 from interfaces.CodingInterface import CodingInterface
 from schemas.IDMode import IDMode
-from utils import Logger
+from utils.Logger import Logger
 
 # TODO: see about merging this back into BigQueryInterface for a unified interface.
 
 class BigQueryCodingInterface(CodingInterface):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_id:str, settings):
         super().__init__()

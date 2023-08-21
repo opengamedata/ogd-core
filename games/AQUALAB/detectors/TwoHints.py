@@ -78,7 +78,7 @@ class TwoHints(Detector):
             self._log_version = event.LogVersion
             self._sequence_index = event.EventSequenceIndex
 
-            self._job_name = event.EventData.get("job_name")
+            self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
             self._this_hint = event.EventData.get("node_id")
             self._detector_event_data = {"time": self._time_spent, "level": self._threshold / timedelta(
                 seconds=1), "job_name": self._job_name, "last_hint_node": self._last_hint, "this_hint_node": self._this_hint}

@@ -11,14 +11,15 @@ from schemas.Event import Event
 from schemas.ExportMode import ExportMode
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
-from schemas.GameSchema import GameSchema
-from utils import Logger, ExportRow
+from schemas.games.GameSchema import GameSchema
+from utils.Logger import Logger
+from utils.utils import ExportRow
 
 ## @class PlayerProcessor
 #  Class to extract and manage features for a processed csv file.
 class PlayerProcessor(FeatureProcessor):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the PlayerProcessor class.
     def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema, player_id:str,
@@ -79,13 +80,13 @@ class PlayerProcessor(FeatureProcessor):
         self._sessions.add(event.SessionID)
         self._registry.ExtractFromEvent(event=event)
 
-    def _getFeatureValues(self, as_str:bool=False) -> ExportRow:
+    def _getLines(self) -> List[ExportRow]:
         ret_val : ExportRow
-        if as_str:
-            ret_val = [self._player_id, len(self._sessions)] + self._registry.GetFeatureStringValues()
-        else:
-            ret_val = [self._player_id, len(self._sessions)] + self._registry.GetFeatureValues()
-        return ret_val
+        # if as_str:
+        #     ret_val = [self._player_id, len(self._sessions)] + self._registry.GetFeatureStringValues()
+        # else:
+        ret_val = [self._player_id, len(self._sessions)] + self._registry.GetFeatureValues()
+        return [ret_val]
 
     def _getFeatureData(self, order:int) -> List[FeatureData]:
         return self._registry.GetFeatureData(order=order, player_id=self._player_id)

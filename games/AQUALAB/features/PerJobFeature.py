@@ -2,7 +2,7 @@
 import logging
 from typing import Optional
 # import locals
-from utils import Logger
+from utils.Logger import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.PerCountFeature import PerCountFeature
 from schemas.Event import Event
@@ -17,9 +17,9 @@ class PerJobFeature(PerCountFeature):
     def _validateEventCountIndex(self, event:Event):
         ret_val : bool = False
 
-        job_data = event.EventData["job_name"]['string_value']
-        if job_data is not None:
-            if job_data in self._job_map and self._job_map[job_data] == self.CountIndex:
+        job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
+        if job_name is not None:
+            if job_name in self._job_map and self._job_map[job_name] == self.CountIndex:
                 ret_val = True
         else:
             Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)

@@ -2,55 +2,65 @@
 import json
 import logging
 from datetime import datetime
-from typing import Any, Callable, List, Type, Optional
+from typing import Any, Callable, List, Type, Optional, Set
 ## import local files
-import utils
 from extractors.registries.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
+from processors.DetectorProcessor import DetectorProcessor
 from processors.EventProcessor import EventProcessor
-from schemas.Event import Event
-from schemas.GameSchema import GameSchema
-from utils import ExportRow, Logger
+from schemas.Event import Event, EventSource
+from schemas.games.GameSchema import GameSchema
+from utils import utils
+from utils.Logger import Logger
+from utils.utils import ExportRow
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.
 class EventManager:
-    def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema,
-                 trigger_callback:Callable[[Event], None], feature_overrides:Optional[List[str]]=None):
+    def __init__(self, game_schema: GameSchema, trigger_callback:Callable[[Event], None],
+                 LoaderClass:Optional[Type[ExtractorLoader]], feature_overrides:Optional[List[str]]=None):
         """Constructor for EventManager.
         Just creates empty list of lines and generates list of column names.
         """
         # define instance vars
-        self._lines       : List[List[Any]]  = []
-        self._columns     : List[str]        = Event.ColumnNames()
-        self._processor   : EventProcessor   = EventProcessor(LoaderClass=LoaderClass,           game_schema=game_schema,
-                                                              trigger_callback=trigger_callback, feature_overrides=feature_overrides)
+        self._columns     : List[str]      = Event.ColumnNames()
+        self._raw_events  : EventProcessor = EventProcessor(game_schema=game_schema)
+        self._all_events  : EventProcessor = EventProcessor(game_schema=game_schema)
+        self._detector_processor : Optional[DetectorProcessor] = None
+        if LoaderClass is not None:
+            self._detector_processor = DetectorProcessor(game_schema=game_schema,           LoaderClass=LoaderClass,
+                                                         trigger_callback=trigger_callback, feature_overrides=feature_overrides)
 
     def ProcessEvent(self, event:Event, separator:str = "\t") -> None:
-        col_values = event.ColumnValues()
-        for i,col in enumerate(col_values):
-            if isinstance(col, str):
-                col_values[i] = f"\"{col}\""
-            elif isinstance(col, dict):
-                # TODO: double-check if the remote_addr is there to be dropped/ignored.
-                col_values[i] = json.dumps(col, default=lambda x : x.isoformat() if isinstance(x, datetime) else str(x))
         # event.EventData = json.dumps(event.EventData)
-        self._lines.append(col_values) # changed , to \t
-        self._processor.ProcessEvent(event=event)
+        # TODO: double-check if the remote_addr is there to be dropped/ignored.
+        self._all_events.ProcessEvent(event=event)
+        if event.EventSource == EventSource.GAME:
+            self._raw_events.ProcessEvent(event=event)
+        if self._detector_processor is not None:
+            self._detector_processor.ProcessEvent(event=event)
 
     def GetColumnNames(self) -> List[str]:
         return self._columns
 
-    def GetLines(self, slice_num:int, slice_count:int) -> List[ExportRow]:
+    def GetRawLines(self, slice_num:int, slice_count:int) -> List[ExportRow]:
         start   : datetime = datetime.now()
-        ret_val : List[Any] = self._lines
+        ret_val : List[Any] = self._raw_events.Lines
         time_delta = datetime.now() - start
-        Logger.Log(f"Time to retrieve Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        Logger.Log(f"Time to retrieve raw Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        return ret_val
+
+    def GetAllLines(self, slice_num:int, slice_count:int) -> List[ExportRow]:
+        start   : datetime = datetime.now()
+        ret_val : List[Any] = self._all_events.Lines
+        time_delta = datetime.now() - start
+        Logger.Log(f"Time to retrieve all Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
 
     ## Function to empty the list of lines stored by the EventProcessor.
     #  This is helpful if we're processing a lot of data and want to avoid
     #  Eating too much memory.
     def ClearLines(self):
-        Logger.Log(f"Clearing {len(self._lines)} entries from EventManager.", logging.DEBUG, depth=2)
-        self._lines = []
+        Logger.Log(f"Clearing {len(self._raw_events.Lines)} raw event and {len(self._all_events.Lines)} processed event entries from EventManager.", logging.DEBUG, depth=2)
+        self._raw_events.ClearLines()
+        self._all_events.ClearLines()

@@ -29,11 +29,11 @@ runs:
     #   run: sed -i 's/logger/logger2020/g' config.py
     #   shell: bash
     - name: Execute data export
-      if: ${{ ! inputs.events_only }}
-      run: python3.8 main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly
+      if: ${{ inputs.events_only == 'false' }}
+      run: python3.10 main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly
       shell: bash
     - name: Execute data export (events only)
-      if: ${{ inputs.events_only }}
-      run: python3.8 main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly --no_session_file --no_player_file --no_pop_file
+      if: ${{ inputs.events_only == 'true' }}
+      run: python3.10 main.py export ${{ inputs.game }} ${{ inputs.month_year }} --monthly --no_session_file --no_player_file --no_pop_file
       shell: bash
-      # python3.8 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
+      # python3.10 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021

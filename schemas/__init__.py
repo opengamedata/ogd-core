@@ -9,5 +9,5 @@ __all__ = [
 from . import IDMode
 from . import Event
 from . import FeatureData
-from . import GameSchema
-from . import TableSchema
+from schemas.games import GameSchema
+from schemas.tables import TableSchema

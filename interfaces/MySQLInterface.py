@@ -4,31 +4,14 @@ import logging
 import sshtunnel
 import traceback
 from datetime import datetime
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional
 # import locals
 from interfaces.DataInterface import DataInterface
-from config.config import settings as default_settings
 from schemas.IDMode import IDMode
-from schemas.TableSchema import TableSchema
-from utils import Logger
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
+from utils.Logger import Logger
 
-
-## Dumb struct to collect data used to establish a connection to a SQL database.
-class SQLLogin:
-    def __init__(self, host: str, port: int, db_name: str, user: str, pword: str):
-        self.host    = host
-        self.port    = port
-        self.db_name = db_name
-        self.user    = user
-        self.pword   = pword
- 
-## Dumb struct to collect data used to establish a connection over ssh.
-class SSHLogin:
-    def __init__(self, host: str, port: int, user: str, pword: str):
-        self.host    = host
-        self.port    = port
-        self.user    = user
-        self.pword   = pword
 
 ## @class SQL
 #  A utility class containing some functions to assist in retrieving from a database.
@@ -38,7 +21,7 @@ class SQL:
 
     # Function to set up a connection to a database, via an ssh tunnel if available.
     @staticmethod
-    def ConnectDB(db_settings:Dict[str,Any], ssh_settings:Optional[Dict[str,Any]]=None) -> Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]:
+    def ConnectDB(schema:GameSourceSchema) -> Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]:
         """
         Function to set up a connection to a database, via an ssh tunnel if available.
 
@@ -49,36 +32,34 @@ class SQL:
         :return: A tuple consisting of the tunnel and database connection, respectively.
         :rtype: Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]
         """
+        ret_val : Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]] = (None, None)
+
         tunnel  : Optional[sshtunnel.SSHTunnelForwarder] = None
         db_conn : Optional[connection.MySQLConnection]   = None
-        # Load settings, set up consts.
-        DB_HOST = db_settings['DB_HOST']
-        DB_NAME = db_settings["DB_NAME"]
-        DB_PORT = int(db_settings['DB_PORT'])
-        DB_USER = db_settings['DB_USER']
-        DB_PW = db_settings['DB_PW']
-        sql_login = SQLLogin(host=DB_HOST, port=DB_PORT, db_name=DB_NAME, user=DB_USER, pword=DB_PW)
         # Logger.Log("Preparing database connection...", logging.INFO)
-        if ssh_settings is not None:
-            SSH_USER = ssh_settings['SSH_USER']
-            SSH_PW   = ssh_settings['SSH_PW']
-            SSH_HOST = ssh_settings['SSH_HOST']
-            SSH_PORT = ssh_settings['SSH_PORT']
-            if (SSH_HOST != "" and SSH_USER != "" and SSH_PW != ""):
-                ssh_login = SSHLogin(host=SSH_HOST, port=SSH_PORT, user=SSH_USER, pword=SSH_PW)
-                tunnel,db_conn = SQL._connectToMySQLviaSSH(sql=sql_login, ssh=ssh_login)
+        if schema.Source is not None and isinstance(schema.Source, MySQLSchema):
+            if schema.Source.HasSSH:
+                Logger.Log(f"Preparing to connect to MySQL via SSH, on host {schema.Source.SSH.Host}", level=logging.DEBUG)
+                if (schema.Source.SSH.Host != "" and schema.Source.SSH.User != "" and schema.Source.SSH.Pass != ""):
+                    tunnel,db_conn = SQL._connectToMySQLviaSSH(sql=schema.Source, db=schema.DatabaseName)
+                else:
+                    Logger.Log(f"SSH login had empty data, preparing to connect to MySQL directly instead, on host {schema.Source.DBHost}", level=logging.DEBUG)
+                    db_conn = SQL._connectToMySQL(login=schema.Source, db=schema.DatabaseName)
+                    tunnel = None
             else:
-                db_conn = SQL._connectToMySQL(login=sql_login)
+                Logger.Log(f"Preparing to connect to MySQL directly, on host {schema.Source.DBHost}", level=logging.DEBUG)
+                db_conn = SQL._connectToMySQL(login=schema.Source, db=schema.DatabaseName)
                 tunnel = None
+            # Logger.Log("Done preparing database connection.", logging.INFO)
+            ret_val = (tunnel, db_conn)
         else:
-            db_conn = SQL._connectToMySQL(login=sql_login)
-            tunnel = None
-        # Logger.Log("Done preparing database connection.", logging.INFO)
-        return (tunnel, db_conn)
+            Logger.Log(f"Unable to connect to MySQL, game source schema does not have a valid MySQL config!", level=logging.ERROR)
+
+        return ret_val
 
     # Function to help connect to a mySQL server.
     @staticmethod
-    def _connectToMySQL(login:SQLLogin) -> Optional[connection.MySQLConnection]:
+    def _connectToMySQL(login:MySQLSchema, db:str) -> Optional[connection.MySQLConnection]:
         """Function to help connect to a mySQL server.
 
         Simply tries to make a connection, and prints an error in case of failure.
@@ -88,15 +69,16 @@ class SQL:
         :rtype: Optional[connection.MySQLConnection]
         """
         try:
-            db_conn = connection.MySQLConnection(host     = login.host,    port    = login.port,
-                                                 user     = login.user,    password= login.pword,
-                                                 database = login.db_name, charset = 'utf8')
-            Logger.Log(f"Connected to SQL (no SSH) at {login.host}:{login.port}/{login.db_name}, {login.user}", logging.DEBUG)
+            Logger.Log(f"Connecting to SQL (no SSH) at {login.AsConnectionInfo}...", logging.DEBUG)
+            db_conn = connection.MySQLConnection(host     = login.DBHost,    port    = login.DBPort,
+                                                 user     = login.DBUser,    password= login.DBPass,
+                                                 database = db, charset = 'utf8')
+            Logger.Log(f"Connected.", logging.DEBUG)
             return db_conn
         #except MySQLdb.connections.Error as err:
         except Exception as err:
             msg = f"""Could not connect to the MySql database.
-            Login info: host={login.host}, port={login.port} w/type={type(login.port)}, db={login.db_name}, user={login.user}.
+            Login info: {login.AsConnectionInfo} w/port type={type(login.DBPort)}.
             Full error: {type(err)} {str(err)}"""
             Logger.Log(msg, logging.ERROR)
             traceback.print_tb(err.__traceback__)
@@ -104,7 +86,7 @@ class SQL:
 
     ## Function to help connect to a mySQL server over SSH.
     @staticmethod
-    def _connectToMySQLviaSSH(sql:SQLLogin, ssh:SSHLogin) -> Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]:
+    def _connectToMySQLviaSSH(sql:MySQLSchema, db:str) -> Tuple[Optional[sshtunnel.SSHTunnelForwarder], Optional[connection.MySQLConnection]]:
         """Function to help connect to a mySQL server over SSH.
 
         Simply tries to make a connection, and prints an error in case of failure.
@@ -126,15 +108,16 @@ class SQL:
             if tries > 0:
                 Logger.Log("Re-attempting to connect to SSH.", logging.INFO)
             try:
+                Logger.Log(f"Connecting to SSH at {sql.SSHConfig.AsConnectionInfo}...", logging.DEBUG)
                 tunnel = sshtunnel.SSHTunnelForwarder(
-                    (ssh.host, ssh.port), ssh_username=ssh.user, ssh_password=ssh.pword,
-                    remote_bind_address=(sql.host, sql.port), logger=Logger.std_logger
+                    (sql.SSH.Host, sql.SSH.Port), ssh_username=sql.SSH.User, ssh_password=sql.SSH.Pass,
+                    remote_bind_address=(sql.DBHost, sql.DBPort), logger=Logger.std_logger
                 )
                 tunnel.start()
                 connected_ssh = True
-                Logger.Log(f"Connected to SSH at {ssh.host}:{ssh.port}, {ssh.user}", logging.DEBUG)
+                Logger.Log(f"Connected.", logging.DEBUG)
             except Exception as err:
-                msg = f"Could not connect to the SSH: {type(err)} {str(err)}"
+                msg = f"Could not connect via SSH: {type(err)} {str(err)}"
                 Logger.Log(msg, logging.ERROR)
                 Logger.Print(msg, logging.ERROR)
                 traceback.print_tb(err.__traceback__)
@@ -142,10 +125,11 @@ class SQL:
         if connected_ssh == True and tunnel is not None:
             # Then, connect to MySQL
             try:
-                db_conn = connection.MySQLConnection(host     = sql.host,    port    = tunnel.local_bind_port,
-                                                     user     = sql.user,    password= sql.pword,
-                                                     database = sql.db_name, charset ='utf8')
-                Logger.Log(f"Connected to SQL (via SSH) at {sql.host}:{tunnel.local_bind_port}/{sql.db_name}, {sql.user}", logging.DEBUG)
+                Logger.Log(f"Connecting to SQL (via SSH) at {sql.DBUser}@{sql.DBHost}:{tunnel.local_bind_port}/{db}...", logging.DEBUG)
+                db_conn = connection.MySQLConnection(host     = sql.DBHost,    port    = tunnel.local_bind_port,
+                                                     user     = sql.DBUser,    password= sql.DBPass,
+                                                     database = db, charset ='utf8')
+                Logger.Log(f"Connected", logging.DEBUG)
                 return (tunnel, db_conn)
             except Exception as err:
                 msg = f"Could not connect to the MySql database: {type(err)} {str(err)}"
@@ -222,7 +206,7 @@ class SQL:
     def Query(cursor:cursor.MySQLCursor, query:str, params:Optional[Tuple], fetch_results: bool = True) -> Optional[List[Tuple]]:
         result : Optional[List[Tuple]] = None
         # first, we do the query.
-        Logger.Log(f"Running query: {query}\nWith params: {params}", logging.DEBUG)
+        Logger.Log(f"Running query: {query}\nWith params: {params}", logging.DEBUG, depth=3)
         start = datetime.now()
         cursor.execute(query, params)
         time_delta = datetime.now()-start
@@ -236,13 +220,13 @@ class SQL:
 
 class MySQLInterface(DataInterface):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, config:Dict[str,Any]):
+    def __init__(self, game_id:str, config:GameSourceSchema, fail_fast:bool):
         self._tunnel    : Optional[sshtunnel.SSHTunnelForwarder] = None
         self._db        : Optional[connection.MySQLConnection] = None
         self._db_cursor : Optional[cursor.MySQLCursor] = None
-        super().__init__(game_id=game_id, config=config)
+        super().__init__(game_id=game_id, config=config, fail_fast=fail_fast)
         self.Open()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -253,19 +237,20 @@ class MySQLInterface(DataInterface):
             self.Open(force_reopen=False)
         if not self._is_open:
             start = datetime.now()
-            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-
-            _sql_cfg = self._config.get("source") or default_settings["GAME_SOURCES"][default_source]
-            _ssh_cfg = default_settings["SSH_CONFIG"]
-            self._tunnel, self._db = SQL.ConnectDB(db_settings=_sql_cfg, ssh_settings=_ssh_cfg)
-            if self._db is not None:
-                self._db_cursor = self._db.cursor()
-                self._is_open = True
-                time_delta = datetime.now() - start
-                Logger.Log(f"Database Connection Time: {time_delta}", logging.INFO)
-                return True
+            if isinstance(self._config.Source, MySQLSchema):
+                self._tunnel, self._db = SQL.ConnectDB(schema=self._config)
+                if self._db is not None:
+                    self._db_cursor = self._getCursor()
+                    self._is_open = True
+                    time_delta = datetime.now() - start
+                    Logger.Log(f"Database Connection Time: {time_delta}", logging.INFO)
+                    return True
+                else:
+                    Logger.Log(f"Unable to open MySQL interface.", logging.ERROR)
+                    SQL.disconnectMySQL(tunnel=self._tunnel, db=self._db)
+                    return False
             else:
-                Logger.Log(f"Unable to open MySQL interface.", logging.ERROR)
+                Logger.Log(f"Unable to open MySQL interface, the schema has invalid type {type(self._config)}", logging.ERROR)
                 SQL.disconnectMySQL(tunnel=self._tunnel, db=self._db)
                 return False
         else:
@@ -277,26 +262,21 @@ class MySQLInterface(DataInterface):
         self._is_open = False
         return True
 
-    def _loadTableSchema(self, game_id:str) -> TableSchema:
-        _schema_name = self._config.get("schema") or default_settings['GAME_SOURCE_MAP'].get(game_id, {}).get('schema', "NO SCHEMA DEFINED")
-        return TableSchema(schema_name=_schema_name)
-
     def _allIDs(self) -> List[str]:
-        if not self._db_cursor == None:
-            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
-            table_name : str = self._config.get("table") or default_settings["GAME_SOURCE_MAP"][self._game_id].get("table", "TABLE_NAME_NOT_FOUND")
+        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
+            _db_name     : str = self._config.DatabaseName
+            _table_name  : str = self._config.TableName
 
-            sess_id_col = self._TableSchema.SessionIDColumn or "session_id"
+            sess_id_col  : str = self._TableSchema.SessionIDColumn or "session_id"
 
             filters = []
             params  = []
-            if table_name != self._game_id:
+            if _table_name != self._game_id:
                 filters.append(f"`app_id`=%s")
                 params.append(self._game_id)
             filter_clause = " AND ".join(filters)
             
-            data = SQL.SELECT(cursor =self._db_cursor, db_name=db_name,       table   =table_name,
+            data = SQL.SELECT(cursor =self._db_cursor, db_name=_db_name,      table   =_table_name,
                               columns=[sess_id_col],   filter =filter_clause, distinct=True,
                               params =tuple(params))
             return [str(id[0]) for id in data] if data != None else []
@@ -306,38 +286,35 @@ class MySQLInterface(DataInterface):
 
     def _fullDateRange(self) -> Dict[str,datetime]:
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
-        if not self._db_cursor == None:
-            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
-            table_name : str = self._config.get("table") or default_settings["GAME_SOURCE_MAP"][self._game_id].get("table", "TABLE_NAME_NOT_FOUND")
+        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
+            _db_name     : str = self._config.DatabaseName
+            _table_name  : str = self._config.TableName
 
             # prep filter strings
             filters = []
             params  = []
-            if table_name != self._game_id:
+            if _table_name != self._game_id:
                 filters.append(f"`app_id`=%s")
                 params.append(self._game_id)
             filter_clause = " AND ".join(filters)
 
             # run query
-            result = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
+            result = SQL.SELECT(cursor=self._db_cursor, db_name=_db_name, table=_table_name,
                                 columns=['MIN(server_time)', 'MAX(server_time)'], filter=filter_clause,
                                 params =tuple(params))
             if result is not None:
                 ret_val = {'min':result[0][0], 'max':result[0][1]}
         else:
-            Logger.Log(f"Could not get full date range, MySQL connection is not open.", logging.WARN)
+            Logger.Log(f"Could not get full date range, MySQL connection is not open or config was not for MySQL.", logging.WARN)
         return ret_val
 
     def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> List[Tuple]:
         ret_val = []
         # grab data for the given session range. Sort by event time, so
-        if not self._db_cursor == None:
+        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
-            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-
-            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
-            table_name : str = self._config.get("table") or default_settings["GAME_SOURCE_MAP"][self._game_id].get("table", "TABLE_NAME_NOT_FOUND")
+            _db_name     : str = self._config.DatabaseName
+            _table_name  : str = self._config.TableName
 
             sess_id_col = self._TableSchema.SessionIDColumn or 'session_id'
             play_id_col = self._TableSchema.UserIDColumn or 'player_id'
@@ -345,7 +322,7 @@ class MySQLInterface(DataInterface):
 
             filters = []
             params = []
-            if table_name != self._game_id:
+            if _table_name != self._game_id:
                 filters.append(f"`app_id`=%s")
                 params.append(self._game_id)
             # if versions is not None and versions is not []:
@@ -361,28 +338,27 @@ class MySQLInterface(DataInterface):
                 raise ValueError("Invalid IDMode in MySQLInterface!")
             filter_clause = " AND ".join(filters)
 
-            data = SQL.SELECT(cursor=self._db_cursor, db_name=db_name,                         table=table_name,
+            data = SQL.SELECT(cursor=self._db_cursor, db_name=_db_name,                        table=_table_name,
                               filter=filter_clause,   sort_columns=[sess_id_col, seq_idx_col], sort_direction="ASC",
                               params=tuple(params))
             if data is not None:
                 ret_val = data
             # self._select_queries.append(select_query) # this doesn't appear to be used???
         else:
-            Logger.Log(f"Could not get data for {len(id_list)} sessions, MySQL connection is not open.", logging.WARN)
+            Logger.Log(f"Could not get data for {len(id_list)} sessions, MySQL connection is not open or config was not for MySQL.", logging.WARN)
         return ret_val
 
     def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]]=None) -> List[str]:
         ret_val = []
-        if not self._db_cursor == None:
+        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
             # alias long setting names.
-            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
-            table_name : str = self._config.get("table") or default_settings["GAME_SOURCE_MAP"][self._game_id].get("table", "TABLE_NAME_NOT_FOUND")
+            _db_name     : str = self._config.DatabaseName
+            _table_name  : str = self._config.TableName
 
             # prep filter strings
             filters = []
             params = []
-            if table_name != self._game_id:
+            if _table_name != self._game_id:
                 filters.append(f"`app_id`=%s")
                 params.append(self._game_id)
             # if versions is not None and versions is not []:
@@ -394,29 +370,27 @@ class MySQLInterface(DataInterface):
             # run query
             # We grab the ids for all sessions that have 0th move in the proper date range.
             sess_id_col = self._TableSchema.SessionIDColumn or "`session_id`"
-            sess_ids_raw = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
-                                    columns=[sess_id_col], filter=filter_clause,
-                                    sort_columns=[sess_id_col], sort_direction="ASC", distinct=True,
-                                    params=tuple(params))
+            sess_ids_raw = SQL.SELECT(cursor=self._db_cursor,   db_name=_db_name,     table=_table_name,
+                                     columns=[sess_id_col],     filter=filter_clause,
+                                     sort_columns=[sess_id_col], sort_direction="ASC", distinct=True,
+                                     params=tuple(params))
             if sess_ids_raw is not None:
                 ret_val = [str(sess[0]) for sess in sess_ids_raw]
         else:
-            Logger.Log(f"Could not get session list for {min.isoformat()}-{max.isoformat()} range, MySQL connection is not open.", logging.WARN)
+            Logger.Log(f"Could not get session list for {min.isoformat()}-{max.isoformat()} range, MySQL connection is not open or config was not for MySQL.", logging.WARN)
         return ret_val
 
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Dict[str, datetime]:
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
-        if not self._db_cursor == None:
+        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
             # alias long setting names.
-            default_source = default_settings["GAME_SOURCE_MAP"][self._game_id]["source"]
-
-            db_name    : str = self._config.get("source", {}).get("DB_NAME") or default_settings[default_source]["DB_NAME"]
-            table_name : str = self._config.get("table") or default_settings["GAME_SOURCE_MAP"][self._game_id].get("table", "TABLE_NAME_NOT_FOUND")
+            _db_name     : str = self._config.DatabaseName
+            _table_name  : str = self._config.TableName
             
             # prep filter strings
             filters = []
             params = tuple()
-            if table_name != self._game_id:
+            if _table_name != self._game_id:
                 filters.append(f"`app_id`=%s")
                 params = tuple(self._game_id)
             # if versions is not None and versions is not []:
@@ -432,7 +406,7 @@ class MySQLInterface(DataInterface):
                 raise ValueError("Invalid IDMode in MySQLInterface!")
             filter_clause = " AND ".join(filters)
             # run query
-            result = SQL.SELECT(cursor=self._db_cursor, db_name=db_name, table=table_name,
+            result = SQL.SELECT(cursor=self._db_cursor,      db_name=_db_name,    table=_table_name,
                                 columns=['MIN(server_time)', 'MAX(server_time)'], filter=filter_clause,
                                 params=params)
             if result is not None:
@@ -450,3 +424,14 @@ class MySQLInterface(DataInterface):
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
+
+    def _getCursor(self) -> Optional[cursor.MySQLCursor]:
+        ret_val : Optional[cursor.MySQLCursor] = None
+
+        if self._db is not None:
+            _cursor = self._db.cursor()
+            if isinstance(_cursor, cursor.MySQLCursor):
+                ret_val = _cursor
+            else:
+                Logger.Log(f"db.cursor() call returned a cursor of unexpected type {type(ret_val)}, can not access the database!", logging.ERROR)
+        return ret_val

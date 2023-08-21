@@ -10,8 +10,8 @@ from extractors.registries.ExtractorRegistry import ExtractorRegistry
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
-from schemas.game_schemas.DetectorSchema import DetectorSchema
-from schemas.GameSchema import GameSchema
+from schemas.games.DetectorSchema import DetectorSchema
+from schemas.games.GameSchema import GameSchema
 from schemas.IterationMode import IterationMode
 
 ## @class Extractor
@@ -25,7 +25,7 @@ class DetectorRegistry(ExtractorRegistry):
     :rtype: [type]
     """
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     # Base constructor for Registry.
     def __init__(self, mode:ExtractionMode, trigger_callback:Callable[[Event], None]):
@@ -112,13 +112,13 @@ class DetectorRegistry(ExtractorRegistry):
         # TODO : right now, Detectors are at weird halfway point wrt whether they can be aggregate and percount or not. Need to resolve that.
         detector : Optional[Detector]
         for agg_schema in agg_load_set:
-            detector = loader.LoadDetector(detector_type=agg_schema.TypeName, name=agg_schema.Name, schema_args=agg_schema.Elements, trigger_callback=self._trigger_callback)
+            detector = loader.LoadDetector(detector_type=agg_schema.TypeName, name=agg_schema.Name, schema_args=agg_schema.NonStandardElements, trigger_callback=self._trigger_callback)
             if detector is not None and self._mode in detector.AvailableModes():
                     self.Register(extractor=detector, iter_mode=IterationMode.AGGREGATE)
         for per_schema in per_load_set:
-            for i in schema.GetCountRange(count=per_schema.Elements.get('count', 1)):
-                instance_name = f"{per_schema.Elements.get('prefix', '')}{i}_{per_schema.Name}"
-                detector = loader.LoadDetector(detector_type=per_schema.TypeName, name=per_schema.Name, schema_args=per_schema.Elements, trigger_callback=self._trigger_callback)
+            for i in schema.GetCountRange(count=per_schema.NonStandardElements.get('count', 1)):
+                instance_name = f"{per_schema.NonStandardElements.get('prefix', '')}{i}_{per_schema.Name}"
+                detector = loader.LoadDetector(detector_type=per_schema.TypeName, name=per_schema.Name, schema_args=per_schema.NonStandardElements, trigger_callback=self._trigger_callback)
                 if detector is not None and self._mode in detector.AvailableModes():
                         self.Register(extractor=detector, iter_mode=IterationMode.PERCOUNT)
 

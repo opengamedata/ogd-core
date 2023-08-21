@@ -3,7 +3,7 @@ import json
 from collections import defaultdict
 from typing import Any, List
 # import locals
-from utils import Logger
+from utils.Logger import Logger
 from extractors.features.Feature import Feature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
@@ -30,8 +30,8 @@ class TopJobSwitchDestinations(Feature):
 
     def _extractFromEvent(self, event:Event) -> None:
         session_id = event.SessionID
-        checkpoint = event.EventData["status"]["string_value"]
-        mission_name = event.EventData["mission_id"]["string_value"]
+        checkpoint = event.EventData["status"]
+        mission_name = event.EventData["mission_id"]
 
         if checkpoint == "Begin Mission":
             if not self._last_started_id:
