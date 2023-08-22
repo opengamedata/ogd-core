@@ -510,7 +510,7 @@
             "PlayerWaddleCount": {
                 "type": "PlayerWaddleCount",
                 "enabled": false,
-                "description": "The number of times a player waddled.”
+                "description": "The number of times a player waddled."
             },
             "SessionDuration": {
                 "type": "SessionDuration”,
