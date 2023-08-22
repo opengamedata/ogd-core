@@ -503,9 +503,9 @@
             },
             
         "PickupRockCount": {
-                "type": "PickupRockCount”,
+                "type": "PickupRockCount",
                 "enabled": true,
-                "description": "The duration each session took.”
+                "description": "The duration each session took."
             }
         }
     },
