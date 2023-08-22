@@ -6,7 +6,7 @@ import traceback
 from datetime import datetime
 from typing import Dict, List, Tuple, Optional
 # import locals
-from interfaces.DataInterface import DataInterface
+from interfaces.EventInterface import EventInterface
 from schemas.IDMode import IDMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
@@ -218,7 +218,7 @@ class SQL:
             Logger.Log(f"Query fetch completed, total query time:    {time_delta} to get {len(result) if result is not None else 0:d} rows", logging.DEBUG)
         return result
 
-class MySQLInterface(DataInterface):
+class MySQLInterface(EventInterface):
 
     # *** BUILT-INS & PROPERTIES ***
 

@@ -19,11 +19,11 @@ from typing import Any, Dict, Optional, Set, Tuple
 # import local files
 from utils.Logger import Logger
 from config.config import settings
-from interfaces.DataInterface import DataInterface
-from interfaces.CSVInterface import CSVInterface
+from interfaces.events.EventInterface import EventInterface
+from interfaces.events.CSVInterface import CSVInterface
 from interfaces.MySQLInterface import MySQLInterface
-from interfaces.BigQueryInterface import BigQueryInterface
-from interfaces.BQFirebaseInterface import BQFirebaseInterface
+from interfaces.events.BigQueryInterface import BigQueryInterface
+from interfaces.events.BQFirebaseInterface import BQFirebaseInterface
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from interfaces.outerfaces.TSVOuterface import TSVOuterface
 from interfaces.outerfaces.DebugOuterface import DebugOuterface
@@ -116,7 +116,7 @@ def RunExport(config:ConfigSchema, with_events:bool = False, with_features:bool 
 
 def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Request:
     export_modes   : Set[ExportMode]
-    interface      : DataInterface
+    interface      : EventInterface
     range          : ExporterRange
     file_outerface : DataOuterface
     dataset_id     : Optional[str] = None
@@ -172,8 +172,8 @@ def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Req
     # 4. Once we have the parameters parsed out, construct the request.
     return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
 
-def genDBInterface(config:ConfigSchema) -> DataInterface:
-    ret_val : DataInterface
+def genDBInterface(config:ConfigSchema) -> EventInterface:
+    ret_val : EventInterface
     _game_cfg = config.GameSourceMap.get(args.game)
     if _game_cfg is not None and _game_cfg.Source is not None:
         match (_game_cfg.Source.Type):
@@ -184,7 +184,7 @@ def genDBInterface(config:ConfigSchema) -> DataInterface:
             case "MySQL" | "MYSQL":
                 ret_val = MySQLInterface(game_id=args.game, config=_game_cfg, fail_fast=config.FailFast)
             case _:
-                raise Exception(f"{_game_cfg.Source.Type} is not a valid DataInterface type!")
+                raise Exception(f"{_game_cfg.Source.Type} is not a valid EventInterface type!")
         return ret_val
     else:
         raise ValueError(f"Config for {args.game} was invalid or not found!")

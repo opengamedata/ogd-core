@@ -4,7 +4,7 @@ from pathlib import Path
 from unittest import TestCase
 from zipfile import ZipFile
 # import locals
-from interfaces.CSVInterface import CSVInterface
+from interfaces.events.CSVInterface import CSVInterface
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 
 class t_CSVInterface(TestCase):

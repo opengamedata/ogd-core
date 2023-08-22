@@ -3,7 +3,7 @@ import abc
 from datetime import datetime
 from typing import Dict, List, Optional, Set
 # import local files
-from interfaces.DataInterface import DataInterface
+from interfaces.events.EventInterface import EventInterface
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.IDMode import IDMode
 from schemas.ExportMode import ExportMode
@@ -21,12 +21,12 @@ class ExporterRange:
         self._versions : Optional[List[int]] = versions
 
     @staticmethod
-    def FromDateRange(source:DataInterface, date_min:datetime, date_max:datetime, versions:Optional[List[int]]=None):
+    def FromDateRange(source:EventInterface, date_min:datetime, date_max:datetime, versions:Optional[List[int]]=None):
         ids = source.IDsFromDates(date_min, date_max, versions=versions)
         return ExporterRange(date_min=date_min, date_max=date_max, ids=ids, id_mode=IDMode.SESSION, versions=versions)
 
     @staticmethod
-    def FromIDs(source:DataInterface, ids:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None):
+    def FromIDs(source:EventInterface, ids:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None):
         date_range = source.DatesFromIDs(id_list=ids, id_mode=id_mode, versions=versions)
         return ExporterRange(date_min=date_range['min'], date_max=date_range['max'], ids=ids, id_mode=id_mode, versions=versions)
 
@@ -55,11 +55,11 @@ class Request(abc.ABC):
     #  @param start_date   The starting date for our range of data to process.
     #  @param end_date     The ending date for our range of data to process.
     def __init__(self, range:ExporterRange, exporter_modes:Set[ExportMode],
-                interface:DataInterface,    outerfaces:Set[DataOuterface],
+                interface:EventInterface,    outerfaces:Set[DataOuterface],
                 feature_overrides:Optional[List[str]]=None):
         # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
         self._game_id        : str                    = str(interface._game_id)
-        self._interface      : DataInterface          = interface
+        self._interface      : EventInterface          = interface
         self._range          : ExporterRange          = range
         self._exports        : Set[ExportMode]        = exporter_modes
         self._outerfaces     : Set[DataOuterface]     = outerfaces
@@ -84,7 +84,7 @@ class Request(abc.ABC):
         return self._game_id
 
     @property
-    def Interface(self) -> DataInterface:
+    def Interface(self) -> EventInterface:
         return self._interface
 
     @property

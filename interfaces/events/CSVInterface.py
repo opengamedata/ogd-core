@@ -5,13 +5,13 @@ from pandas.io.parsers import TextFileReader
 from pathlib import Path
 from typing import Any, Dict, IO, List, Tuple, Optional
 ## import local files
-from interfaces.DataInterface import DataInterface
+from interfaces.EventInterface import EventInterface
 from schemas.IDMode import IDMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.tables.TableSchema import TableSchema
 from utils.Logger import Logger
 
-class CSVInterface(DataInterface):
+class CSVInterface(EventInterface):
 
     # *** BUILT-INS & PROPERTIES ***
 

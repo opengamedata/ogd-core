@@ -5,7 +5,7 @@ from datetime import datetime, date
 from google.cloud import bigquery
 from typing import Dict, List, Tuple, Optional
 # import locals
-from interfaces.DataInterface import DataInterface
+from interfaces.EventInterface import EventInterface
 from schemas.IDMode import IDMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
@@ -13,7 +13,7 @@ from utils.Logger import Logger
 
 AQUALAB_MIN_VERSION = 6.2
 
-class BigQueryInterface(DataInterface):
+class BigQueryInterface(EventInterface):
 
     # *** BUILT-INS & PROPERTIES ***
 
