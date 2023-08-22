@@ -505,7 +505,11 @@
                 "type": "EatFishCount”,
                 "enabled": true,
                 "description": "The number of times a player eat the fish.”
-                }
+            },
+            “EggRecoverTime”: {
+                "type": "EggRecoverTime”,
+                "enabled": true,
+                "description": "The duration each time it takes when the egg lost till it’s recovered.”}
         }
     },
 
