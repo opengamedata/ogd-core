@@ -500,11 +500,7 @@
                 "type": "GazeCount",
                 "enabled": true,
                 "description": "The number of times a player waddled in a given region of the game."
-            },
-            “GazeDuration”: {
-                "type": "GazeDuration”,
-                "enabled": true,
-                "description": "How long gaze event last for."}
+            }
         }
     },
 
