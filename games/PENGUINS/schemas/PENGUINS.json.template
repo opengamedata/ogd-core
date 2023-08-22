@@ -501,11 +501,10 @@
                 "enabled": true,
                 "description": "The number of times a player waddled in a given region of the game."
             },
-            “EggRecoverTime”: {
-                "type": "EggRecoverTime”,
+            “GazeDuration”: {
+                "type": "GazeDuration”,
                 "enabled": true,
-                "description": "The duration each time it takes when the egg lost till it’s recovered.”
-            }
+                "description": " How long gaze event last for.”},
         }
     },
 
