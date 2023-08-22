@@ -501,11 +501,31 @@
                 "enabled": true,
                 "description": "The number of times a player waddled in a given region of the game."
             },
-            
+
         "PickupRockCount": {
                 "type": "PickupRockCount",
                 "enabled": true,
                 "description": "The duration each session took."
+            },
+            "PlayerWaddleCount": {
+                "type": "PlayerWaddleCount",
+                "enabled": false,
+                "description": "The number of times a player waddled.”
+            },
+            "SessionDuration": {
+                "type": "SessionDuration”,
+                "enabled": false,
+                "description": "The duration each session took."
+                },
+            "GazeDuration": {
+                "type": "GazeDuration",
+                "enabled": false,
+                "description": "How long gaze event last for."
+            },
+            "MirrorWaddleDuration": {
+                "type": "MirrorWaddleDuration",
+                "enabled": false,
+                "description": "How long gaze event last for."
             }
         }
     },
