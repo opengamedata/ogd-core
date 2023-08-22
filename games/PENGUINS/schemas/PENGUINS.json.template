@@ -501,7 +501,8 @@
                 "enabled": true,
                 "description": "The number of times a player waddled in a given region of the game."
             },
-            “PickupRockCount”: {
+            
+        "PickupRockCount": {
                 "type": "PickupRockCount”,
                 "enabled": true,
                 "description": "The duration each session took.”
