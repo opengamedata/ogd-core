@@ -504,7 +504,7 @@
             “GazeDuration”: {
                 "type": "GazeDuration”,
                 "enabled": true,
-                "description": " How long gaze event last for.”}
+                "description": "How long gaze event last for."}
         }
     },
 
