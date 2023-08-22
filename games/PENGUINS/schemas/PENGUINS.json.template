@@ -513,7 +513,7 @@
                 "description": "The number of times a player waddled."
             },
             "SessionDuration": {
-                "type": "SessionDuration”,
+                "type": "SessionDuration",
                 "enabled": false,
                 "description": "The duration each session took."
                 },
