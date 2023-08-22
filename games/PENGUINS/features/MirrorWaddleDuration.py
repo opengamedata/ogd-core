@@ -20,11 +20,13 @@ class MirrorWaddleDuration(SessionFeature):
         self._prev_timestamp = None
         self._time = 0
         self._waddle_count = 0
+        self._argument_start_time = event.Timestamp
+        self._waddle_count = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["enter_region", "player_waddle",'begin']
+        return [ "player_waddle"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -38,17 +40,14 @@ class MirrorWaddleDuration(SessionFeature):
                 self._time += (self._prev_timestamp - self._argument_start_time).total_seconds()
                 self._argument_start_time = event.Timestamp
 
-        if event.EventName == "begin":
-            self._argument_start_time = event.Timestamp
-            self._waddle_count = 0
+
         elif self._argument_start_time is not None:
             if event.event_name == "player_waddle":
                 self._waddle_count += 1
-            if event.EventName == "enter_region":
-                if event.event_data.get("region_name") == "Mirror":
-                    self._time = (event.Timestamp - self._argument_start_time).total_seconds()
-                    self._argument_start_time = None
-                    return
+                self._time = (event.Timestamp - self._argument_start_time).total_seconds()
+                self._argument_start_time = None
+                return
+            
         self._prev_timestamp = event.Timestamp
     
     def _extractFromFeatureData(self, feature:FeatureData):
