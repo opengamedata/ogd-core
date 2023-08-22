@@ -73,7 +73,7 @@ class TopJobSwitchDestinations(Feature):
     # *** Optionally override public functions. ***
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return "1"
+        return "3"
 
     # *** Other local functions
     def _validate_job(self, job_data):

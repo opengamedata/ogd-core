@@ -126,7 +126,7 @@ class JobActiveTime(PerJobFeature):
 
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return "1"
+        return "3"
 
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:

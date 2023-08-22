@@ -30,4 +30,4 @@ class PerRegionFeature(PerCountFeature):
 
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return "1"
+        return "3"
