@@ -2,7 +2,7 @@
 import logging
 from typing import Optional
 # import locals
-from utils import Logger
+from utils.Logger import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.PerCountFeature import PerCountFeature
 from schemas.Event import Event

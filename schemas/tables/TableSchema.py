@@ -9,11 +9,11 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple, Optional, Union
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 ## import local files
-import utils
 from schemas.Event import Event, EventSource
 from schemas.tables.ColumnMapSchema import ColumnMapSchema
 from schemas.tables.ColumnSchema import ColumnSchema
-from utils import Logger
+from utils import utils
+from utils.Logger import Logger
 
 ## @class TableSchema
 #  Dumb struct to hold useful info about the structure of database data
@@ -70,11 +70,11 @@ class TableSchema:
 
     @property
     def AsMarkdown(self) -> str:
-        ret_val = "  \n\n".join([
+        ret_val = "\n\n".join([
             "## Database Columns",
             "The individual columns recorded in the database for this game.",
             "\n".join([item.AsMarkdown for item in self.Columns]),
-            "\n\n## Event Object Elements",
+            "## Event Object Elements",
             "The elements (member variables) of each Event object, available to programmers when writing feature extractors. The right-hand side shows which database column(s) are mapped to a given element.",
             self._column_map.AsMarkdown,
             ""])
@@ -379,8 +379,7 @@ class TableSchema:
         ret_val : datetime
 
         if time_str == "None" or time_str == "none" or time_str == "null" or time_str == "nan":
-            Logger.Log(f"Got a non-timestamp value of {time_str} when converting events")
-            return None
+            raise ValueError(f"Got a non-timestamp value of {time_str} when converting a datetime column of an Event!")
 
         formats = ["%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M:%S.%f", "%Y-%m-%d %H:%M:%S.%f"]
 

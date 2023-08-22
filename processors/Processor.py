@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Type, Optional
 from schemas.FeatureData import FeatureData
 from schemas.games.GameSchema import GameSchema
 from schemas.Event import Event
-from utils import ExportRow, Logger
+from utils.utils import ExportRow, Logger
 
 ## @class Processor
 class Processor(abc.ABC):

@@ -4,7 +4,6 @@ from pathlib import Path
 from shutil import copyfile
 from typing import Any, Dict, List, Optional, Set, Union
 # import local files
-import utils
 from schemas.Schema import Schema
 from schemas.games.AggregateSchema import AggregateSchema
 from schemas.games.DetectorSchema import DetectorSchema
@@ -13,7 +12,9 @@ from schemas.games.FeatureSchema import FeatureSchema
 from schemas.games.PerCountSchema import PerCountSchema
 from schemas.IterationMode import IterationMode
 from schemas.ExtractionMode import ExtractionMode
-from utils import Logger, loadJSONFile
+from utils import utils
+from utils.utils import loadJSONFile
+from utils.Logger import Logger
 
 ## @class GameSchema
 #  A fairly simple class that reads a JSON schema with information on how a given
@@ -269,24 +270,29 @@ class GameSchema(Schema):
 
     @property
     def AsMarkdown(self) -> str:
-        ret_val = "## Logged Event Types  \n\n"
-        ret_val += "The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  \n\n"
+        event_summary = ["## Logged Events",
+                         "The individual fields encoded in the *event_data* Event element for each type of event logged by the game."
+                        ]
         # Set up list of events
-        event_list = ['\n'.join(event.AsMarkdown) for event in self.Events]
-        ret_val += "\n\n".join(event_list) if len(event_list) > 0 else "None  \n"
+        event_list = [event.AsMarkdownTable for event in self.Events] if len(self.Events) > 0 else ["None"]
         # Set up list of detectors
-        ret_val += "\n\n## Detected Events  \n\n"
-        ret_val += "The custom, data-driven Events calculated from this game's logged events by OpenGameData when an 'export' is run.  \n\n"
+        detector_summary = ["## Detected Events",
+                            "The custom, data-driven Events calculated from this game's logged events by OpenGameData when an 'export' is run."
+                           ]
         detector_list = []
         for detect_kind in ["perlevel", "per_count", "aggregate"]:
             if detect_kind in self._detector_map:
                 detector_list += [detector.AsMarkdown for detector in self.Detectors[detect_kind].values()]
-        ret_val += "\n".join(detector_list) if len(detector_list) > 0 else "None  \n"
+        detector_list = detector_list if len(detector_list) > 0 else ["None"]
         # Set up list of features
-        ret_val += "\n\n## Processed Features  \n\n"
-        ret_val += "The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run.  \n\n"
+        feature_summary = ["## Processed Features",
+                           "The features/metrics calculated from this game's event logs by OpenGameData when an 'export' is run."
+                          ]
         feature_list = [feature.AsMarkdown for feature in self._aggregate_feats.values()] + [feature.AsMarkdown for feature in self._percount_feats.values()]
-        ret_val += "\n".join(feature_list) if len(feature_list) > 0 else "None  \n"
+        feature_list = feature_list if len(feature_list) > 0 else ["None"]
+
+        ret_val = "  \n\n".join(event_summary + event_list + detector_summary + detector_list + feature_summary + feature_list)
+
         return ret_val
 
     # *** PRIVATE STATICS ***

@@ -99,15 +99,6 @@ class PlayTime(SessionFeature):
         :param feature: _description_
         :type feature: FeatureData
         """
-        # >>> use data in the FeatureData object to update state variables as needed. <<<
-        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
-        #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
-    
-        # self._idle_time = feature._vals[0]
-        
-        # print(feature._vals)
-    
-        
         return
 
     def _getFeatureValues(self) -> List[Any]:
@@ -128,16 +119,16 @@ class PlayTime(SessionFeature):
             play_time = 0
 
 
-        return [play_time, total_time, self._idle_time]
+        return [total_time, play_time, self._idle_time]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["Total Time", "Idle Time"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+        return ["Active", "Idle"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
+        return [ExtractionMode.SESSION] # >>> delete any modes you don't want run for your Feature. <<<
     
     # @staticmethod
     # def MinVersion() -> Optional[str]:

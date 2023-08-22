@@ -1,6 +1,7 @@
 # import libraries
-import json
 import operator
+import logging
+from collections import Counter
 from typing import Any, List, Optional
 # import local files
 from extractors.features.Feature import Feature
@@ -10,6 +11,7 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
+from utils.Logger import Logger
 
 
 
@@ -23,7 +25,7 @@ class QuitNode(SessionFeature):
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
 
-        self._quit_nodes : dict = {}
+        self._quit_nodes : Counter = Counter()
         # >>> create/initialize any variables to track feature extractor state <<<
         #
         # e.g. To track whether extractor found a click event yet:
@@ -67,17 +69,13 @@ class QuitNode(SessionFeature):
         :param feature: _description_
         :type feature: FeatureData
         """
-        # >>> use data in the FeatureData object to update state variables as needed. <<<
-        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
-        #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
-        try:
-            quit_node : str = feature._vals[2]
-        except:
-            print("no subfeature value found!")
-        if(self._quit_nodes[quit_node] is None):
-            self._quit_nodes[quit_node] = 1
+        QNODE_INDEX = 2 # The "Node" subfeature of the "QuitLevel" feature should be at index 2.
+        quit_node : Optional[str] = None
+        if len(feature.FeatureValues) > QNODE_INDEX: # need to ensure there's at least 3 items, for index 2 to be valid...
+            quit_node = str(feature.FeatureValues[2])
         else:
-            self._quit_nodes[quit_node]+=1
+            Logger.Log("In QuitNode, no subfeature value found, defaulting to None!", logging.WARN)
+        self._quit_nodes.update(quit_node)
         return
 
     def _getFeatureValues(self) -> List[Any]:
@@ -86,23 +84,8 @@ class QuitNode(SessionFeature):
         :return: _description_
         :rtype: List[Any]
         """
-        
-        # >>> use state variables to calculate the return value(s) of the base Feature and any Subfeatures. <<<
-        # >>> put the calculated value(s) into a list as the function return value. <<<
-        # >>> definitely don't return ["template"], unless you really find that useful... <<<
-        #
-        # e.g. use the self._found_click, which was created/initialized in __init__(...), and updated in _extractFromEvent(...):
-        # if self._found_click:
-        #     ret_val = [True]
-        # else:
-        #     ret_val = [False]
-        # return ret_val
-        #
-        # note the code above is redundant, we could just return [self._found_click] to get the same result;
-        # the more-verbose code is here for illustrative purposes.
-
-        ##return the top 5 highest values in the dictionary
-        top_sorted : dict = dict(sorted(self._quit_nodes.iteritems(), key=operator.itemgetter(1), reverse=True)[:5])
+        ##return the top 5 highest values as a dictionary
+        top_sorted : dict = { elem[0] : elem[1] for elem in self._quit_nodes.most_common(5) }
 
         return [top_sorted]
 
@@ -113,7 +96,7 @@ class QuitNode(SessionFeature):
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.POPULATION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
+        return [ExtractionMode.POPULATION] # >>> delete any modes you don't want run for your Feature. <<<
     
     # @staticmethod
     # def MinVersion() -> Optional[str]:

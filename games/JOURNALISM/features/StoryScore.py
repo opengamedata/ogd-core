@@ -21,7 +21,8 @@ class StoryScore(PerLevelFeature):
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
-        self._story_score = 0
+        if event.EventName == "display_feedback_dialog":
+            self._story_score = event.EventData["story_score"]
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return []

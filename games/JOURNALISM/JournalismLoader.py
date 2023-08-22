@@ -9,6 +9,7 @@ from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from extractors.ExtractorLoader import ExtractorLoader
+from games.JOURNALISM.features import StoryScoreSequence
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.games.GameSchema import GameSchema
@@ -69,8 +70,8 @@ class JournalismLoader(ExtractorLoader):
         
         ##per-count features
         elif extractor_params._count_index is not None:
-            if feature_type == "LevelStoryAlignment":
-                ret_val = LevelStoryAlignment.LevelStoryAlignment(params = extractor_params)
+            if feature_type == "StoryAlignment":
+                ret_val = StoryAlignment.StoryAlignment(params = extractor_params)
             elif feature_type == "WorstPlayerAttribute":
                 ret_val = WorstPlayerAttribute.WorstPlayerAttribute(params=extractor_params)
             elif feature_type == "MaxedPlayerAttribute":
@@ -84,11 +85,29 @@ class JournalismLoader(ExtractorLoader):
             elif feature_type == "SnippetReplace":
                 ret_val = SnippetReplace.SnippetReplace(params=extractor_params)
             elif feature_type == "StoryEditorTime":
-                ret_val = StoryEditorTime.StoryEditorTime(params=extractor_params)
+                ret_val = StoryEditorTime.StoryEditorTime(params=extractor_params, threshold= schema_args.get("IDLE_THRESH_SECONDS", PlayTime.PlayTime.IDLE_TIME_THRESHOLD))
             elif feature_type == "AttributeView":
                 ret_val = AttributeView.AttributeView(params=extractor_params)
             elif feature_type == "EditorNoteOpen":
                 ret_val = EditorNoteOpen.EditorNoteOpen(params=extractor_params)
+            elif feature_type == "TopPlayerQuitType":
+                ret_val= TopPlayerQuitType.TopPlayerQuitType(params=extractor_params)
+            elif feature_type == "StoryScore":
+                ret_val= StoryScore.StoryScore(params=extractor_params)    
+            elif feature_type == "StoryAlignmentSequence":
+                ret_val= StoryAlignmentSequence.StoryAlignmentSequence(params=extractor_params)    
+            elif feature_type == "StoryScoreSequence":
+                ret_val= StoryScoreSequence.StoryScoreSequence(params=extractor_params)    
+            elif feature_type == "LevelTime":
+                ret_val= LevelTime.LevelTime(params=extractor_params)    
+            elif feature_type == "SnippetsCollected":
+                ret_val= SnippetsCollected.SnippetsCollected(params=extractor_params)    
+            elif feature_type == "SnippetsSubmitted":
+                ret_val= SnippetsSubmitted.SnippetsSubmitted(params=extractor_params)
+
+
+
+
 
         else:
             raise NotImplementedError(

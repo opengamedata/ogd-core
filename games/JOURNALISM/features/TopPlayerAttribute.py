@@ -59,5 +59,5 @@ class TopPlayerAttribute(PerCountFeature):
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.POPULATION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
+        return [ExtractionMode.POPULATION] # >>> delete any modes you don't want run for your Feature. <<<
     

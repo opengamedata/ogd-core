@@ -18,7 +18,7 @@ from schemas.games.GameSchema import GameSchema
 from schemas.IterationMode import IterationMode
 from schemas.games.AggregateSchema import AggregateSchema
 from schemas.games.PerCountSchema import PerCountSchema
-from utils import Logger
+from utils.Logger import Logger
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.

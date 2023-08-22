@@ -9,7 +9,7 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 from games.JOWILDER import Jowilder_Enumerators as je
-from utils import Logger
+from utils.Logger import Logger
 
 try:
     with open(file="./games/JOWILDER/interaction_metadata.json") as f:

@@ -11,7 +11,7 @@ from schemas.configs.data_sources.FileSourceSchema import FileSourceSchema
 from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
 from schemas.configs.LegacyConfigSchema import LegacyConfigSchema
 from schemas.Schema import Schema
-from utils import Logger
+from utils.Logger import Logger
 
 class ConfigSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

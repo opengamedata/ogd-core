@@ -11,22 +11,10 @@ on:
         description: "The game to be exported (only one, not allowed to do multiple games)"
         required: true
         default: "BACTERIA"
-      monthly:
-        description: "If true, use month/year. Else, use start and end dates"
-        required: true
-        default: "true"
       month_year:
-        description: "The month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
+        description: "The month(s) and year(s) to export (comma-separated). Due to limits on number of inputs for a GH Actions workflow, only monthly exports are allowed."
         required: false
         default: "['01/2021']"
-      start_date:
-        description: "The start date for the export"
-        required: false
-        default: "01/01/2021"
-      end_date:
-        description: "The end date for the export"
-        required: false
-        default: "01/01/2021"
       export_to_web:
         description: "Boolean indicating whether the export should go to the website, or only be uploaded as an artifact."
         required: true
@@ -134,19 +122,10 @@ jobs:
       with:
         game: ${{matrix.game}}
     - name: Do Export of Month (events only)
-      if: github.event.inputs.monthly == 'true'
       uses: ./.github/actions/export_custom_month
       with:
         game: ${{matrix.game}}
         month_year: ${{matrix.month_year}}
-        events_only: true
-    - name: Do Export of Range (events only)
-      if: github.event.inputs.monthly == 'false'
-      uses: ./.github/actions/export_custom
-      with:
-        game: ${{matrix.game}}
-        start_date: ${{github.event.inputs.start_date}}
-        end_date: ${{github.event.inputs.end_date}}
         events_only: true
     - name: Upload files to opengamedata via scp
       if: github.event.inputs.export_to_web == 'true'
