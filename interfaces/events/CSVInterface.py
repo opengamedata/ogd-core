@@ -5,7 +5,7 @@ from pandas.io.parsers import TextFileReader
 from pathlib import Path
 from typing import Any, Dict, IO, List, Tuple, Optional
 ## import local files
-from interfaces.EventInterface import EventInterface
+from interfaces.events.EventInterface import EventInterface
 from schemas.IDMode import IDMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.tables.TableSchema import TableSchema

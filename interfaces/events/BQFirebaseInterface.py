@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 from typing import Dict, List, Tuple, Optional
 # import locals
-from interfaces.BigQueryInterface import BigQueryInterface
+from interfaces.events.BigQueryInterface import BigQueryInterface
 from schemas.IDMode import IDMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from utils.Logger import Logger
