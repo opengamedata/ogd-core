@@ -20,8 +20,7 @@ class MirrorWaddleDuration(SessionFeature):
         self._prev_timestamp = None
         self._time = 0
         self._waddle_count = 0
-        self._argument_start_time = event.Timestamp
-        self._waddle_count = 0
+
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -30,15 +29,18 @@ class MirrorWaddleDuration(SessionFeature):
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return []
+        return []G
 
     def _extractFromEvent(self, event:Event) -> None:
+
+
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
             # if we jumped to a new session, we only want to count time up to last event, not the time between sessions.
             if self._argument_start_time and self._prev_timestamp:
                 self._time += (self._prev_timestamp - self._argument_start_time).total_seconds()
                 self._argument_start_time = event.Timestamp
+        
 
 
         elif self._argument_start_time is not None:
