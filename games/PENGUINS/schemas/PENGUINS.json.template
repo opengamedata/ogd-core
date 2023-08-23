@@ -509,12 +509,12 @@
             },
             "PlayerWaddleCount": {
                 "type": "PlayerWaddleCount",
-                "enabled": false,
+                "enabled": true,
                 "description": "The number of times a player waddled."
             },
             "SessionDuration": {
                 "type": "SessionDuration",
-                "enabled": false,
+                "enabled": true,
                 "description": "The duration each session took."
                 },
             "GazeDuration": {
