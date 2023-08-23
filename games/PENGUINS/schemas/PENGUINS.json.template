@@ -522,7 +522,7 @@
                 "enabled": true,
                 "description": "How long gaze event last for."
             },
-            "MirrorWaddleDuration": {˝
+            "MirrorWaddleDuration": {
                 "type": "MirrorWaddleDuration",
                 "enabled": true,
                 "description": "How long gaze event last for."
