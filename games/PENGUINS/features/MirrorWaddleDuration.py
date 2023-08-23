@@ -29,7 +29,7 @@ class MirrorWaddleDuration(SessionFeature):
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return []G
+        return []
 
     def _extractFromEvent(self, event:Event) -> None:
 
