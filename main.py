@@ -31,7 +31,7 @@ from managers.ExportManager import ExportManager
 from schemas.ExportMode import ExportMode
 from schemas.IDMode import IDMode
 from schemas.games.GameSchema import GameSchema
-from schemas.tables.TableSchema import TableSchema
+from schemas.tables.EventTableSchema import EventTableSchema
 from schemas.configs.ConfigSchema import ConfigSchema
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from ogd_requests.Request import Request, ExporterRange
@@ -54,7 +54,7 @@ def ShowGameInfo(config:ConfigSchema) -> bool:
     """
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
-        table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableSchema}.json")
+        table_schema = EventTableSchema(schema_name=f"{config.GameSourceMap[args.game].EventTableSchema}.json")
         readme = Readme(game_schema=game_schema, table_schema=table_schema)
         print(readme.CustomReadmeSource)
     except Exception as err:
@@ -77,7 +77,7 @@ def WriteReadme(config:ConfigSchema) -> bool:
     path = Path(f"./data") / args.game
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
-        table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableSchema}.json")
+        table_schema = EventTableSchema(schema_name=f"{config.GameSourceMap[args.game].EventTableSchema}.json")
         readme = Readme(game_schema=game_schema, table_schema=table_schema)
         readme.GenerateReadme(path=path)
     except Exception as err:

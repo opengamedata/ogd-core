@@ -15,18 +15,18 @@ from schemas.tables.ColumnSchema import ColumnSchema
 from utils import utils
 from utils.Logger import Logger
 
-## @class TableSchema
+## @class EventTableSchema
 #  Dumb struct to hold useful info about the structure of database data
 #  for a particular game.
 #  This includes the indices of several important database columns, the names
 #  of the database columns, the max and min levels in the game, and a list of
 #  IDs for the game sessions in the given requested date range.
-class TableSchema:
+class EventTableSchema:
 
     # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, schema_name:str, schema_path:Path = Path("./") / "schemas" / "table_schemas/"):
-        """Constructor for the TableSchema class.
+        """Constructor for the EventTableSchema class.
         Given a database connection and a game data request,
         this retrieves a bit of information from the database to fill in the
         class variables.
@@ -249,30 +249,30 @@ class TableSchema:
         # 3) Assign vals to our arg vars and pass to Event ctor.
         sess_id = self._getValueFromRow(row=row, indices=self._column_map.SessionID,   concatenator=concatenator, fallback=fallbacks.get('session_id'))
         if not isinstance(sess_id, str):
-            if "sess_id" not in TableSchema._conversion_warnings:
+            if "sess_id" not in EventTableSchema._conversion_warnings:
                 Logger.Log(f"{self._table_format_name} table schema set session_id as {type(sess_id)}, but session_id should be a string", logging.WARN)
-                TableSchema._conversion_warnings.append("sess_id")
+                EventTableSchema._conversion_warnings.append("sess_id")
             sess_id = str(sess_id)
 
         app_id  = self._getValueFromRow(row=row, indices=self._column_map.AppID,       concatenator=concatenator, fallback=fallbacks.get('app_id'))
         if not isinstance(app_id, str):
-            if "app_id" not in TableSchema._conversion_warnings:
+            if "app_id" not in EventTableSchema._conversion_warnings:
                 Logger.Log(f"{self._table_format_name} table schema set app_id as {type(app_id)}, but app_id should be a string", logging.WARN)
-                TableSchema._conversion_warnings.append("app_id")
+                EventTableSchema._conversion_warnings.append("app_id")
             app_id = str(app_id)
 
         time   = self._getValueFromRow(row=row, indices=self._column_map.Timestamp,   concatenator=concatenator, fallback=fallbacks.get('timestamp'))
         if not isinstance(time, datetime):
-            if "timestamp" not in TableSchema._conversion_warnings:
+            if "timestamp" not in EventTableSchema._conversion_warnings:
                 Logger.Log(f"{self._table_format_name} table schema parsed timestamp as {type(time)}, but timestamp should be a datetime", logging.WARN)
-                TableSchema._conversion_warnings.append("timestamp")
-            time = TableSchema._convertDateTime(time)
+                EventTableSchema._conversion_warnings.append("timestamp")
+            time = EventTableSchema._convertDateTime(time)
 
         ename   = self._getValueFromRow(row=row, indices=self._column_map.EventName,   concatenator=concatenator, fallback=fallbacks.get('event_name'))
         if not isinstance(ename, str):
-            if "ename" not in TableSchema._conversion_warnings:
+            if "ename" not in EventTableSchema._conversion_warnings:
                 Logger.Log(f"{self._table_format_name} table schema set event_name as {type(ename)}, but event_name should be a string", logging.WARN)
-                TableSchema._conversion_warnings.append("ename")
+                EventTableSchema._conversion_warnings.append("ename")
             ename = str(ename)
 
         datas : Dict[str, Any] = self._getValueFromRow(row=row, indices=self._column_map.EventData,   concatenator=concatenator, fallback=fallbacks.get('event_data'))
@@ -282,39 +282,39 @@ class TableSchema:
 
         esrc    = self._getValueFromRow(row=row, indices=self._column_map.EventSource, concatenator=concatenator, fallback=fallbacks.get('event_source', EventSource.GAME))
         if not isinstance(esrc, EventSource):
-            if "esrc" not in TableSchema._conversion_warnings:
+            if "esrc" not in EventTableSchema._conversion_warnings:
                 Logger.Log(f"{self._table_format_name} table schema set event_source as {type(esrc)}, but event_source should be an EventSource", logging.WARN)
-                TableSchema._conversion_warnings.append("esrc")
+                EventTableSchema._conversion_warnings.append("esrc")
             esrc = EventSource.GENERATED if esrc == "GENERATED" else EventSource.GAME
 
         app_ver = self._getValueFromRow(row=row, indices=self._column_map.AppVersion,  concatenator=concatenator, fallback=fallbacks.get('app_version', "0"))
         if not isinstance(app_ver, str):
-            if "app_ver" not in TableSchema._conversion_warnings:
+            if "app_ver" not in EventTableSchema._conversion_warnings:
                 Logger.Log(f"{self._table_format_name} table schema set app_version as {type(app_ver)}, but app_version should be a string", logging.WARN)
-                TableSchema._conversion_warnings.append("app_ver")
+                EventTableSchema._conversion_warnings.append("app_ver")
             app_ver = str(app_ver)
 
         app_br = self._getValueFromRow(row=row, indices=self._column_map.AppBranch,  concatenator=concatenator, fallback=fallbacks.get('app_branch'))
         if not isinstance(app_br, str):
-            if "app_br" not in TableSchema._conversion_warnings:
+            if "app_br" not in EventTableSchema._conversion_warnings:
                 Logger.Log(f"{self._table_format_name} table schema set app_branch as {type(app_br)}, but app_branch should be a string", logging.WARN)
-                TableSchema._conversion_warnings.append("app_br")
+                EventTableSchema._conversion_warnings.append("app_br")
             app_br = str(app_br)
 
         log_ver = self._getValueFromRow(row=row, indices=self._column_map.LogVersion,  concatenator=concatenator, fallback=fallbacks.get('log_version', "0"))
         if not isinstance(log_ver, str):
-            if "log_ver" not in TableSchema._conversion_warnings:
+            if "log_ver" not in EventTableSchema._conversion_warnings:
                 Logger.Log(f"{self._table_format_name} table schema set log_version as {type(log_ver)}, but log_version should be a string", logging.WARN)
-                TableSchema._conversion_warnings.append("log_ver")
+                EventTableSchema._conversion_warnings.append("log_ver")
             log_ver = str(log_ver)
 
         offset = self._getValueFromRow(row=row, indices=self._column_map.TimeOffset,  concatenator=concatenator, fallback=fallbacks.get('time_offset'))
 
         uid     = self._getValueFromRow(row=row, indices=self._column_map.UserID,      concatenator=concatenator, fallback=fallbacks.get('user_id'))
         if uid is not None and not isinstance(uid, str):
-            if "uid" not in TableSchema._conversion_warnings:
+            if "uid" not in EventTableSchema._conversion_warnings:
                 Logger.Log(f"{self._table_format_name} table schema set user_id as {type(uid)}, but user_id should be a string", logging.WARN)
-                TableSchema._conversion_warnings.append("uid")
+                EventTableSchema._conversion_warnings.append("uid")
             uid = str(uid)
 
         udata   = self._getValueFromRow(row=row, indices=self._column_map.UserData,    concatenator=concatenator, fallback=fallbacks.get('user_data'))
@@ -323,9 +323,9 @@ class TableSchema:
 
         index   = self._getValueFromRow(row=row, indices=self._column_map.EventSequenceIndex, concatenator=concatenator, fallback=fallbacks.get('event_sequence_index'))
         if index is not None and not isinstance(index, int):
-            if "index" not in TableSchema._conversion_warnings:
+            if "index" not in EventTableSchema._conversion_warnings:
                 Logger.Log(f"{self._table_format_name} table schema set event_sequence_index as {type(index)}, but event_sequence_index should be an int", logging.WARN)
-                TableSchema._conversion_warnings.append("index")
+                EventTableSchema._conversion_warnings.append("index")
             index = int(index)
 
         return Event(session_id=sess_id, app_id=app_id, timestamp=time,
@@ -358,9 +358,9 @@ class TableSchema:
         elif col_schema.ValueType == 'float':
             return float(input)
         elif col_schema.ValueType == 'datetime':
-            return input if isinstance(input, datetime) else TableSchema._convertDateTime(str(input))
+            return input if isinstance(input, datetime) else EventTableSchema._convertDateTime(str(input))
         elif col_schema.ValueType == 'timedelta':
-            return input if isinstance(input, timedelta) else TableSchema._convertTimedelta(str(input))
+            return input if isinstance(input, timedelta) else EventTableSchema._convertTimedelta(str(input))
         elif col_schema.ValueType == 'json':
             if input != 'None' and input != '': # watch out for nasty corner cases.
                 try:
@@ -431,7 +431,7 @@ class TableSchema:
             if isinstance(indices, int):
                 # if there's a single index, use parse to get the value it is stated to be
                 # print(f"About to parse value {row[indices]} as type {self.Columns[indices]},\nFull list from row is {row},\nFull list of columns is {self.Columns},\nwith names {self.ColumnNames}")
-                ret_val = TableSchema._parse(input=row[indices], col_schema=self.Columns[indices])
+                ret_val = EventTableSchema._parse(input=row[indices], col_schema=self.Columns[indices])
             elif isinstance(indices, list):
                 ret_val = concatenator.join([str(row[index]) for index in indices])
             elif isinstance(indices, dict):
@@ -439,7 +439,7 @@ class TableSchema:
                 for key,column_index in indices.items():
                     if column_index > len(row):
                         Logger.Log(f"Got column index of {column_index} for column {key}, but row only has {len(row)} columns!", logging.ERROR)
-                    _val = TableSchema._parse(input=row[column_index], col_schema=self._columns[column_index])
+                    _val = EventTableSchema._parse(input=row[column_index], col_schema=self._columns[column_index])
                     ret_val.update(_val if isinstance(_val, dict) else {key:_val})
         else:
             ret_val = fallback

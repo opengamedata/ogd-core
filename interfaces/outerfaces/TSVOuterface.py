@@ -19,7 +19,7 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.ExportMode import ExportMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.games.GameSchema import GameSchema
-from schemas.tables.TableSchema import TableSchema
+from schemas.tables.EventTableSchema import EventTableSchema
 from schemas.configs.IndexingSchema import FileIndexingSchema
 from utils import utils
 from utils.Logger import Logger
@@ -109,7 +109,7 @@ class TSVOuterface(DataOuterface):
             Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING, depth=1)
             self._readme_path = Path("./data") / self._game_id
             game_schema  : GameSchema  = GameSchema(schema_name=self._game_id, schema_path=Path(f"./games/{self._game_id}/schemas"))
-            table_schema = TableSchema(schema_name=self._config.TableSchema)
+            table_schema = EventTableSchema(schema_name=self._config.EventTableSchema)
             readme = Readme(game_schema=game_schema, table_schema=table_schema)
             readme.GenerateReadme(path=self._game_data_dir)
         else:

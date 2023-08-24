@@ -10,7 +10,7 @@ class EventSource(IntEnum):
 
 ## @class Event
 #  Completely dumb struct that enforces a particular structure for the data we get from a source.
-#  Basically, whenever we fetch data, the TableSchema will be used to map columns to the required elements of an Event.
+#  Basically, whenever we fetch data, the EventTableSchema will be used to map columns to the required elements of an Event.
 #  Then the extractors etc. can just access columns in a direct manner.
 class Event:
     def __init__(self, session_id:str, app_id:str,     timestamp:datetime,
@@ -86,6 +86,12 @@ class Event:
 
     @staticmethod
     def CompareVersions(a:str, b:str, version_separator='.') -> int:
+    #     ret_val = Event._compareVersions(a=a, b=b, version_separator=version_separator)
+    #     print(f"In CompareVersions, compared a='{a}' to b='{b}' and found {'a < b' if ret_val==-1 else 'a == b' if ret_val==0 else 'a > b'}")
+    #     return ret_val
+
+    # @staticmethod
+    # def _compareVersions(a:str, b:str, version_separator='.') -> int:
         a_parts : Optional[List[int]]
         b_parts : Optional[List[int]]
         try:

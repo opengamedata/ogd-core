@@ -64,14 +64,14 @@ class GameSourceSchema(Schema):
         return self._table_name
 
     @property
-    def TableSchema(self) -> str:
+    def EventTableSchema(self) -> str:
         return self._schema
 
     @property
     def AsMarkdown(self) -> str:
         ret_val : str
 
-        ret_val = f"{self.Name}: _{self.TableSchema}_ format, source {self.Source.Name if self.Source else 'None'} : {self.DatabaseName}.{self.TableName}"
+        ret_val = f"{self.Name}: _{self.EventTableSchema}_ format, source {self.Source.Name if self.Source else 'None'} : {self.DatabaseName}.{self.TableName}"
         return ret_val
 
     @staticmethod

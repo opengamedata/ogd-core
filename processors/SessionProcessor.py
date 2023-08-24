@@ -28,7 +28,7 @@ class SessionProcessor(FeatureProcessor):
         use.
 
         :param LoaderClass: The type of data extractor to use for input data.
-                            This should correspond to whatever game_id is in the TableSchema.
+                            This should correspond to whatever game_id is in the EventTableSchema.
         :type LoaderClass: Type[ExtractorLoader]
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema

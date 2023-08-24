@@ -267,7 +267,7 @@ class MySQLInterface(EventInterface):
             _db_name     : str = self._config.DatabaseName
             _table_name  : str = self._config.TableName
 
-            sess_id_col  : str = self._TableSchema.SessionIDColumn or "session_id"
+            sess_id_col  : str = self._EventTableSchema.SessionIDColumn or "session_id"
 
             filters = []
             params  = []
@@ -316,9 +316,9 @@ class MySQLInterface(EventInterface):
             _db_name     : str = self._config.DatabaseName
             _table_name  : str = self._config.TableName
 
-            sess_id_col = self._TableSchema.SessionIDColumn or 'session_id'
-            play_id_col = self._TableSchema.UserIDColumn or 'player_id'
-            seq_idx_col = self._TableSchema.EventSequenceIndexColumn or 'session_n'
+            sess_id_col = self._EventTableSchema.SessionIDColumn or 'session_id'
+            play_id_col = self._EventTableSchema.UserIDColumn or 'player_id'
+            seq_idx_col = self._EventTableSchema.EventSequenceIndexColumn or 'session_n'
 
             filters = []
             params = []
@@ -363,13 +363,13 @@ class MySQLInterface(EventInterface):
                 params.append(self._game_id)
             # if versions is not None and versions is not []:
             #     filters.append(f"app_version in ({','.join([str(version) for version in versions])})")
-            filters.append(f"`{self._TableSchema.EventSequenceIndexColumn}`='0'")
+            filters.append(f"`{self._EventTableSchema.EventSequenceIndexColumn}`='0'")
             filters.append(f"(`server_time` BETWEEN '{min.isoformat()}' AND '{max.isoformat()}')")
             filter_clause = " AND ".join(filters)
 
             # run query
             # We grab the ids for all sessions that have 0th move in the proper date range.
-            sess_id_col = self._TableSchema.SessionIDColumn or "`session_id`"
+            sess_id_col = self._EventTableSchema.SessionIDColumn or "`session_id`"
             sess_ids_raw = SQL.SELECT(cursor=self._db_cursor,   db_name=_db_name,     table=_table_name,
                                      columns=[sess_id_col],     filter=filter_clause,
                                      sort_columns=[sess_id_col], sort_direction="ASC", distinct=True,
@@ -397,10 +397,10 @@ class MySQLInterface(EventInterface):
             #     filters.append(f"app_version in ({','.join([str(version) for version in versions])})")
             ids_string = ','.join([f"'{x}'" for x in id_list])
             if id_mode == IDMode.SESSION:
-                sess_id_col = self._TableSchema.SessionIDColumn or "session_id"
+                sess_id_col = self._EventTableSchema.SessionIDColumn or "session_id"
                 filters.append(f"{sess_id_col} IN ({ids_string})")
             elif id_mode == IDMode.USER:
-                play_id_col = self._TableSchema.UserIDColumn or "player_id"
+                play_id_col = self._EventTableSchema.UserIDColumn or "player_id"
                 filters.append(f"`{play_id_col}` IN ({ids_string})")
             else:
                 raise ValueError("Invalid IDMode in MySQLInterface!")

@@ -41,7 +41,7 @@ class ColumnMapSchema:
             self._other_elements = { key : val for key,val in map.items() if key not in self._map.keys() }
         else:
             self._other_elements = {}
-            Logger.Log(f"For TableSchema config, map was not a dict, defaulting all items in map to None", logging.WARN)
+            Logger.Log(f"For EventTableSchema config, map was not a dict, defaulting all items in map to None", logging.WARN)
 
     @property
     def Map(self) -> Dict[str, Union[int, List[int], Dict[str, int], None]]:

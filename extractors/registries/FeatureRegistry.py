@@ -176,7 +176,7 @@ class FeatureRegistry(ExtractorRegistry):
         :type event: Event
         :param table_schema: A data structure containing information on how the db
                              table assiciated with this game is structured.
-        :type table_schema: TableSchema
+        :type table_schema: EventTableSchema
         """
         listener : ExtractorRegistry.Listener = ExtractorRegistry.Listener("EMPTY", IterationMode.AGGREGATE)
         try:
@@ -200,7 +200,7 @@ class FeatureRegistry(ExtractorRegistry):
         :type event: Event
         :param table_schema: A data structure containing information on how the db
                              table assiciated with this game is structured.
-        :type table_schema: TableSchema
+        :type table_schema: EventTableSchema
         """
         listeners = self._feature_registry.get(feature.FeatureType, [])
         # send feature to every listener for the given feature name.

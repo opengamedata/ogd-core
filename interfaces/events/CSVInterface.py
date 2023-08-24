@@ -8,7 +8,7 @@ from typing import Any, Dict, IO, List, Tuple, Optional
 from interfaces.events.EventInterface import EventInterface
 from schemas.IDMode import IDMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
-from schemas.tables.TableSchema import TableSchema
+from schemas.tables.EventTableSchema import EventTableSchema
 from utils.Logger import Logger
 
 class CSVInterface(EventInterface):
@@ -28,7 +28,7 @@ class CSVInterface(EventInterface):
 
     def _open(self) -> bool:
         try:
-            # TODO should include option for access to the TableSchema in the interface, because obviously it should know what form the table takes.
+            # TODO should include option for access to the EventTableSchema in the interface, because obviously it should know what form the table takes.
             target_types = { 'session_id' : 'str' }
             _data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter, dtype=target_types, parse_dates=['timestamp'])
             # _data = pd.read_csv(filepath_or_buffer=self._filepath, delimiter=self._delimiter)

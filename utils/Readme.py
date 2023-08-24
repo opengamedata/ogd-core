@@ -11,14 +11,14 @@ from typing import Any, Dict, IO, List, Optional, Set
 
 # import local files
 from schemas.games.GameSchema import GameSchema
-from schemas.tables.TableSchema import TableSchema
+from schemas.tables.EventTableSchema import EventTableSchema
 from utils.Logger import Logger
 from utils.utils import ExportRow
 
 class Readme:
-    def __init__(self, game_schema:GameSchema, table_schema:TableSchema):
+    def __init__(self, game_schema:GameSchema, table_schema:EventTableSchema):
         self._game_schema  : GameSchema  = game_schema
-        self._table_schema : TableSchema = table_schema
+        self._table_schema : EventTableSchema = table_schema
         self._custom_src   : str   = self._getCustomSrc()
         self._dataset_meta : str   = self._getDatasetMetadata()
         self._changelog    : str   = self._getDatabaseChangelog()
@@ -81,7 +81,7 @@ class Readme:
         :param game_schema: [description]
         :type game_schema: GameSchema
         :param table_schema: [description]
-        :type table_schema: TableSchema
+        :type table_schema: EventTableSchema
         :return: A string containing metadata for the given game.
         :rtype: str
         """

@@ -3,7 +3,7 @@ from datetime import datetime as dt
 import math
 import pandas as pd
 from pathlib import Path
-from schemas.tables.TableSchema import TableSchema
+from schemas.tables.EventTableSchema import EventTableSchema
 from games.LAKELAND.LakelandExtractor import LakelandExtractor
 from realtime.ModelManager import ModelManager
 from schemas.games.GameSchema import GameSchema
@@ -22,8 +22,8 @@ col_names = list(dump.columns)
 game_id = dump['app_id'][0]
 min_level = dump['level'].min()
 max_level = dump['level'].max()
-table = TableSchema(game_id=game_id, column_names=col_names, max_level=max_level, min_level=min_level)
-#table = TableSchema.FromCSV(dump)
+table = EventTableSchema(game_id=game_id, column_names=col_names, max_level=max_level, min_level=min_level)
+#table = EventTableSchema.FromCSV(dump)
 session_id_list = dump.session_id.unique()
 model = model_mgr.LoadModel(model_name)
 test_outfile = open('test_outfile.csv', 'w+')

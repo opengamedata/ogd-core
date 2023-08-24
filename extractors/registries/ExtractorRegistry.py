@@ -100,7 +100,7 @@ class ExtractorRegistry(abc.ABC):
         :type event: Event
         :param table_schema: A data structure containing information on how the db
                              table assiciated with this game is structured.
-        :type table_schema: TableSchema
+        :type table_schema: EventTableSchema
         """
         self._extractFromEvent(event=event)
 
@@ -111,7 +111,7 @@ class ExtractorRegistry(abc.ABC):
         :type event: Event
         :param table_schema: A data structure containing information on how the db
                              table assiciated with this game is structured.
-        :type table_schema: TableSchema
+        :type table_schema: EventTableSchema
         """
         if isinstance(feature, FeatureData):
             self._extractFromFeatureData(feature=feature)

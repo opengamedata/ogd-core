@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Tuple, Optional, Union
 from interfaces.Interface import Interface
 from schemas.Event import Event
 from schemas.IDMode import IDMode
-from schemas.tables.TableSchema import TableSchema
+from schemas.tables.EventTableSchema import EventTableSchema
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from utils.Logger import Logger
 
@@ -43,7 +43,7 @@ class EventInterface(Interface):
         super().__init__(config=config)
         self._fail_fast = fail_fast
         self._game_id : str  = game_id
-        self._table_schema : TableSchema = TableSchema(schema_name=self._config.TableSchema)
+        self._table_schema : EventTableSchema = EventTableSchema(schema_name=self._config.EventTableSchema)
 
     def __del__(self):
         self.Close()
@@ -120,7 +120,7 @@ class EventInterface(Interface):
     # *** PROPERTIES ***
 
     @property
-    def _TableSchema(self) -> TableSchema:
+    def _EventTableSchema(self) -> EventTableSchema:
         return self._table_schema
 
     # *** PRIVATE STATICS ***

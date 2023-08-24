@@ -170,7 +170,7 @@ class WaveLoader(ExtractorLoader):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    # def _extractFeaturesFromEvent(self, event:Event, table_schema:TableSchema):
+    # def _extractFeaturesFromEvent(self, event:Event, table_schema:EventTableSchema):
     #     if event.SessionID == self._session_id:
     #         level = event.GameState['level']
     #         # If we haven't set persistent id, set now.
