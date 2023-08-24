@@ -71,10 +71,10 @@ class FeatureTableSchema:
     @property
     def AsMarkdown(self) -> str:
         ret_val = "\n\n".join([
-            "## Database Columns",
+            "## Feature Database Columns",
             "The individual columns recorded in the database for this game.",
             "\n".join([item.AsMarkdown for item in self.Columns]),
-            "## Event Object Elements",
+            "## Feature Object Elements",
             "The elements (member variables) of each Event object, available to programmers when writing feature extractors. The right-hand side shows which database column(s) are mapped to a given element.",
             self._column_map.AsMarkdown,
             ""])
