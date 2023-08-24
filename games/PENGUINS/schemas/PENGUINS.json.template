@@ -534,7 +534,7 @@
             "PlayerInactiveAvgDuration": {
                 "type": "PlayerInactiveAvgDuration",
                 "enabled": true,
-                "description": "The average of times each player inactivated for.”
+                "description": "The average of times each player inactivated for."
             }
         }
     },
