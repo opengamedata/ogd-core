@@ -526,6 +526,16 @@
                 "type": "MirrorWaddleDuration",
                 "enabled": true,
                 "description": "How long gaze event last for."
+	        },
+            “RingChimesCount”: {
+                "type": "RingChimesCount",
+                "enabled": true,
+                "description": "The number of times a player rings chimes in a given region of the game.”
+            },
+            “PlayerInactiveAvgDuration”: {
+                "type": "PlayerInactiveAvgDuration",
+                "enabled": true,
+                "description": "The average of times each player inactivated for.”
             }
         }
     },
