@@ -10,7 +10,7 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 
-class JobTriesInArgument(PerJobFeature):
+class JobArgumentationEffectiveness(PerJobFeature):
     
     def __init__(self, params:ExtractorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
@@ -20,21 +20,13 @@ class JobTriesInArgument(PerJobFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["begin_argument", "bestiary_select_species", "bestiary_select_environment", "bestiary_select_model", "complete_argument"]
+        return ["fact_rejected"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.EventName == "begin_argument":
-            self._found = True
-            return
-        if event.EventName == "complete_argument":
-            self._found = False
-            return
-        if not self._found:
-            return
         self._count +=1
     def _extractFromFeatureData(self, feature:FeatureData):
         return

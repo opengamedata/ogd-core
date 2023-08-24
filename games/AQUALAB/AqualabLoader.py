@@ -126,6 +126,8 @@ class AqualabLoader(ExtractorLoader):
                 ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobArgumentationTime":
                 ret_val = JobArgumentationTime.JobArgumentationTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobArgumentationEffectiveness":
+                ret_val = JobArgumentationEffectiveness.JobArgumentationEffectiveness(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobCompletionTime":
                 ret_val = JobCompletionTime.JobCompletionTime(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobDiveSitesCount":

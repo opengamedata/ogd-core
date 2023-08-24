@@ -18,7 +18,8 @@ class PerJobFeature(PerCountFeature):
         ret_val : bool = False
 
         job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
-        if job_name is not None:
+        job_name = job_name['string_value']
+        if job_name is not None: 
             if job_name in self._job_map and self._job_map[job_name] == self.CountIndex:
                 ret_val = True
         else:
@@ -30,4 +31,4 @@ class PerJobFeature(PerCountFeature):
 
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return "3"
+        return "0"
