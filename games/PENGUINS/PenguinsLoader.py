@@ -34,7 +34,7 @@ class PenguinsLoader(ExtractorLoader):
         if feature_type == "SessionDuration":
             ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
         elif feature_type == "RegionsEncountered":
-            ret_val = RegionsEncountered.RegionsEncountered(params=extractor_params,region_map = self._job_map)
+            ret_val = RegionsEncountered.RegionsEncountered(params=extractor_params,region_map = self._region_map)
         elif feature_type == "PlayerWaddleCount":
             ret_val = PlayerWaddleCount.PlayerWaddleCount(params=extractor_params)
         elif feature_type == "GazeDuration":
