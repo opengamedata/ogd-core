@@ -487,12 +487,12 @@
 
     "features": {
         "per_count": {
-            "WaddleByRegion": {
-                "type": "WaddleByRegion",
-                "enabled": false,
+            "PerRegionFeature": {
+                "type": "PerRegionFeature",
+                "enabled": true,
                 "count": 11,
                 "prefix": "region",
-                "description": "The number of times a player waddled in a given region of the game."
+                "description": "The number of region a player played in the game."
             }
         },
         "aggregate":{

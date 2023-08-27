@@ -6,10 +6,10 @@ from utils.Logger import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.PerCountFeature import PerCountFeature
 from schemas.Event import Event
-region_map = {'Mirror':0, 'HillUp':1, 'Entrance':2, 'SnowballBowling':3, 'HillDown':4, 'Bridge':5, 'Chimes':6, 'MatingDPath':7, 'MatingD':8, 'ProtectNestPath':9, 'ProtectNest':10}
+
 class PerRegionFeature(PerCountFeature):
     def __init__(self, params:ExtractorParameters, region_map:dict):
-        super().__init__(params=params,)
+        super().__init__(params=params,region_map:dict)
         self.region_map = region_map
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
