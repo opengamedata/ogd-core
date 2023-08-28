@@ -25,7 +25,136 @@ class EventTableSchema:
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, schema_name:str, schema_path:Path = Path("./") / "schemas" / "table_schemas/"):
+    DEFAULT_SCHEMA = {
+        "column_map": {
+            "session_id"           : "session_id",
+            "app_id"               : None,
+            "timestamp"            : ["client_time", "client_time_ms"],
+            "event_name"           : ["event_name"],
+            "event_data"           : {"event_data":"event_data", "server_time":"server_time", "http_user_agent":"http_user_agent"},
+            "event_source"         : None,
+            "app_version"          : "app_version",
+            "app_branch"           : "app_branch",
+            "log_version"          : "log_version",
+            "time_offset"          : "client_offset",
+            "user_id"              : "user_id",
+            "user_data"            : "user_data",
+            "game_state"           : "game_state",
+            "event_sequence_index" : "event_sequence_index"
+        },
+        "columns": [
+            {
+                "name": "id",
+                "readable": "Row ID",
+                "description": "Unique identifier for a row",
+                "type": "int"
+            },
+            {
+                "name": "session_id",
+                "readable": "Session ID",
+                "description": "Unique identifier for the gameplay session",
+                "type": "str"
+            },
+            {
+                "name": "user_id",
+                "readable": "User ID",
+                "description": "Unique identifier for the player",
+                "type": "str"
+            },
+            {
+                "name": "user_data",
+                "readable": "User Data",
+                "description": "Additional metadata about the player",
+                "type": "json"
+            },
+            {
+                "name": "client_time",
+                "readable": "Client Time",
+                "description": "The client machine time when the event was generated",
+                "type": "datetime"
+            },
+            {
+                "name": "client_time_ms",
+                "readable": "Client Time Milliseconds",
+                "description": "Number of milliseconds to append to client time",
+                "type": "int"
+            },
+            {
+                "name": "client_offset",
+                "readable": "Client Time Offset",
+                "description": "The time difference between local client time and GMT",
+                "type": "timedelta"
+            },
+            {
+                "name": "server_time",
+                "readable": "Server Time",
+                "description": "The server machine time when the event was logged",
+                "type": "datetime"
+            },
+            {
+                "name": "event_name",
+                "readable": "Event Type",
+                "description": "The type of event logged",
+                "type": "str"
+            },
+            {
+                "name": "event_data",
+                "readable": "Event Data",
+                "description": "Data specific to an event type, encoded as a JSON string",
+                "type": "json"
+            },
+            {
+                "name": "event_source",
+                "readable": "Event Source",
+                "description": "The generator of the event",
+                "type": "enum('GAME', 'DETECTOR')"
+            },
+            {
+                "name": "game_state",
+                "readable": "Game State",
+                "description": "Additional metadata about the state of the game when the event was logged",
+                "type": "json"
+            },
+            {
+                "name": "app_version",
+                "readable": "App Version",
+                "description": "The version of the game from which the event came",
+                "type": "str"
+            },
+            {
+                "name": "app_branch",
+                "readable": "App Branch",
+                "description": "The branch of the game code from which the event came",
+                "type": "str"
+            },
+            {
+                "name": "log_version",
+                "readable": "Log Version",
+                "description": "The version of the logging code from which the event came",
+                "type": "int"
+            },
+            {
+                "name": "event_sequence_index",
+                "readable": "Event-Sequence Index",
+                "description": "Counter of events in the session, from 0. A row with session_n = i is the (i+1)-th event of the session",
+                "type": "int"
+            },
+            {
+                "name": "remote_addr",
+                "readable": "IP Address",
+                "description": "The IP address for the player's computer",
+                "type": "str"
+            },
+            {
+                "name": "http_user_agent",
+                "readable": "User Agent",
+                "description": "Data on the type of web browser, OS, etc. in use by the player",
+                "type": "str"
+            }
+        ]
+    }
+
+    def __init__(self, schema_name:Optional[str], schema_path:Path = Path("./") / "schemas" / "table_schemas/"):
         """Constructor for the EventTableSchema class.
         Given a database connection and a game data request,
         this retrieves a bit of information from the database to fill in the
@@ -39,14 +168,17 @@ class EventTableSchema:
         :type is_legacy: bool, optional
         """
         # declare and initialize vars
-        self._schema            : Optional[Dict[str, Any]]
+        self._schema            : Dict[str, Any]
         self._column_map        : ColumnMapSchema
         self._columns           : List[ColumnSchema] = []
-        self._table_format_name : str                    = schema_name
+        self._table_format_name : str                = schema_name or "DEFAULT EVENT TABLE SCHEMA"
 
-        if not self._table_format_name.lower().endswith(".json"):
-            self._table_format_name += ".json"
-        self._schema = utils.loadJSONFile(filename=self._table_format_name, path=schema_path)
+        if schema_name is not None:
+            if not self._table_format_name.lower().endswith(".json"):
+                self._table_format_name += ".json"
+            self._schema = utils.loadJSONFile(filename=self._table_format_name, path=schema_path)
+        else:
+            self._schema = EventTableSchema.DEFAULT_SCHEMA
 
         # after loading the file, take the stuff we need and store.
         if self._schema is not None:
