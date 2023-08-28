@@ -99,6 +99,6 @@ class PenguinsLoader(ExtractorLoader):
             self._region_map = export["regions"]
 
 
-     @property
+    @property
     def RegionMap(self) -> Dict:
         return self._region_map
