@@ -92,29 +92,13 @@ class PenguinsLoader(ExtractorLoader):
         """
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
         self._region_map = {"no-active-region": 0}
-        self._minX_map = {0: {"minX": 0} }
-        self._minY_map = {0: {"minY": 0} }
-        self._minZ_map = {0: {"minZ": 0} }
-        self._maxX_map = {0: {"maxX": 0} }
-        self._maxY_map = {0: {"maxY": 0} }
-        self._maxZ_map = {0: {"maxZ": 0} }
+
         # Load Penguins jobs export and map job names to integer values
         with open(EXPORT_PATH, "r") as file:
             export = json.load(file)
+            self._region_map = export["regions"]
 
 
-            for i, regions in enumerate(export["regions"], start=1):
-                self._region_map[regions["name"]] = i
-                self._minX_map[i]=regions["minX"]
-                self._minY_map[i]=regions["minY"]
-                self._minZ_map[i]=regions["minZ"]
-                self._maxX_map[i]=regions["maxX"]
-                self._maxY_map[i]=regions["maxY"]
-                self._maxZ_map[i]=regions["maxZ"]
-                #self._min_bound[i] =list( regions["minX"],regions["minY"],regions["minZ"])
-	            #self._max_bound[i] =list( regions["maxX"],regions["maxY"],regions["maxZ"])
-            
-        # Update level count
-        self._game_schema._max_level = len(self._region_map) - 1
-
- 
+     @property
+    def RegionMap(self) -> Dict:
+        return self._region_map
