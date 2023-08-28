@@ -34,7 +34,7 @@ class PenguinsLoader(ExtractorLoader):
         if feature_type == "SessionDuration":
             ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
         elif feature_type == "RegionsEncountered":
-            ret_val = RegionsEncountered.RegionsEncountered(params=extractor_params,region_map = self._region_map)
+            ret_val = RegionsEncountered.RegionsEncountered(params=extractor_params)
         elif feature_type == "PlayerWaddleCount":
             ret_val = PlayerWaddleCount.PlayerWaddleCount(params=extractor_params)
         elif feature_type == "GazeDuration":
@@ -66,7 +66,7 @@ class PenguinsLoader(ExtractorLoader):
             elif feature_type == "WaddlePerRegion":
                     ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
             elif feature_type == "RegionDuration":
-                    ret_val = RegionDuration.RegionDuration(params=extractor_params,region_map = self._region_map)
+                    ret_val = RegionDuration.RegionDuration(params=extractor_params)
             
         else:
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Penguins.")
