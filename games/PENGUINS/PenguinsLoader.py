@@ -66,7 +66,7 @@ class PenguinsLoader(ExtractorLoader):
             elif feature_type == "WaddlePerRegion":
                     ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
             elif feature_type == "RegionDuration":
-                    ret_val = RegionDuration.RegionDuration(params=extractor_params)
+                    ret_val = RegionDuration.RegionDuration(params=extractor_params,region_map = self._region_map)
             
         else:
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Penguins.")

@@ -487,12 +487,12 @@
 
     "features": {
         "per_count": {
-            "PerRegionFeature": {
-                "type": "PerRegionFeature",
+            "RegionDuration": {
+                "type": "RegionDuration",
                 "enabled": true,
                 "count": 11,
                 "prefix": "region",
-                "description": "The number of region a player played in the game."
+                "description": "The duration of time a player played in a given region of the game."
             }
         },
         "aggregate":{

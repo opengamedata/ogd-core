@@ -13,21 +13,22 @@ from utils.Logger import Logger
 # import libraries
 import logging
 
-region_map = {'Mirror':0, 'HillUp':1, 'Entrance':2, 'SnowballBowling':3, 'HillDown':4, 'Bridge':5, 'Chimes':6, 'MatingDPath':7, 'MatingD':8, 'ProtectNestPath':9, 'ProtectNest':10}
 
 class RegionDuration(PerCountFeature):
     
     def __init__(self, params:ExtractorParameters):
-        super().__init__(params=params)
+        super().__init__(params=params,region_map=dict)
+        self.region_map = region_map
         self._session_id = None
         self._region_start_time = None
         self._prev_timestamp = None
         self._time = 0
         self._name = None
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["exit_region","enter_region"]
+        return []
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -40,14 +41,6 @@ class RegionDuration(PerCountFeature):
             if self._region_start_time and self._prev_timestamp:
                 self._time += (self._prev_timestamp - self._region_start_time).total_seconds()
                 self._region_start_time = event.Timestamp
-
-        
-        if event.EventName == "enter_region":
-            self._region_start_time = event.Timestamp
-        elif event.EventName == "exit_region":
-            if self._region_start_time is not None:
-                self._time += (event.Timestamp - self._region_start_time).total_seconds()
-                self._region_start_time = None
 
         self._prev_timestamp = event.Timestamp
 
