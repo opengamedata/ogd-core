@@ -23,6 +23,112 @@ from utils.Logger import Logger
 #  IDs for the game sessions in the given requested date range.
 class FeatureTableSchema:
 
+    DEFAULT_SCHEMA = {
+        "column_map": {
+            "app_id"               : None,
+            "user_id"              : "user_id",
+            "session_id"           : "session_id",
+            "game_unit_id"         : "game_unit_id",
+            "feature_version"      : "feature_version",
+            "ogd_version"          : "ogd_version",
+            "last_session"         : "last_session",
+            "last_index"           : "last_index",
+            "last_timestamp"       : "last_timestamp",
+            "start_timestamp"      : "start_timestamp",
+            "feature_name"         : "feature_name",
+            "feature_value"        : "feature_value",
+            "feature_state"        : "feature_state",
+            "app_version"          : "app_version",
+            "app_branch"           : "app_branch",
+        },
+        "columns": [
+            {
+                "name": "user_id",
+                "readable": "User ID",
+                "description": "Unique identifier for the player, or '*' to indicate all players across the game's population.",
+                "type": "str"
+            },
+            {
+                "name": "session_id",
+                "readable": "Session ID",
+                "description": "Unique identifier for the gameplay session, or '*' to indicate all sessions across a given player.",
+                "type": "str"
+            },
+            {
+                "name": "game_unit_id",
+                "readable": "Game Unit ID",
+                "description": "Identifier of an in-game unit of measure, such as a level or quest, or '*' to indicate a feature measured across the whole game.",
+                "type": "str"
+            },
+            {
+                "name": "feature_version",
+                "readable": "Feature Version",
+                "description": "A version number for the feature extractor that generated the given row of data.",
+                "type": "json"
+            },
+            {
+                "name": "ogd_version",
+                "readable": "OpenGameData Version",
+                "description": "A version number for the instance of OpenGameData that generated the given row of data.",
+                "type": "json"
+            },
+            {
+                "name": "last_session",
+                "readable": "Last Session ID",
+                "description": "The session ID of the most-recent session whose data contributed to the given row.",
+                "type": "str"
+            },
+            {
+                "name": "last_index",
+                "readable": "Last Event Index",
+                "description": "Within the 'last session,' the index of the last event that contributed to the given row. i.e. the last event seen was the n-th event of the session.",
+                "type": "int"
+            },
+            {
+                "name": "last_timestamp",
+                "readable": "Last Timestamp",
+                "description": "The UTC timestamp of the last event that contributed to the given row.",
+                "type": "datetime"
+            },
+            {
+                "name": "start_timestamp",
+                "readable": "Start Timestamp",
+                "description": "The UTC timestamp of the first event that contributed to the given row, useful for filtering.",
+                "type": "datetime"
+            },
+            {
+                "name": "feature_name",
+                "readable": "Feature Type",
+                "description": "The type of feature stored in this row.",
+                "type": "str"
+            },
+            {
+                "name": "feature_value",
+                "readable": "Feature Value",
+                "description": "Data specific to an event type, encoded as a JSON string",
+                "type": "json"
+            },
+            {
+                "name": "feature_state",
+                "readable": "Feature State",
+                "description": "The values of feature state variables at the time the row was calculated.",
+                "type": "json"
+            },
+            {
+                "name": "app_version",
+                "readable": "App Version",
+                "description": "The version of the game that generated the events from which the feature was generated.",
+                "type": "str"
+            },
+            {
+                "name": "app_branch",
+                "readable": "App Branch",
+                "description": "The branch of the game code that generated the events from which the feature was generated.",
+                "type": "str"
+            }
+        ]
+    }
+
     # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, schema_name:str, schema_path:Path = Path("./") / "schemas" / "table_schemas/"):
