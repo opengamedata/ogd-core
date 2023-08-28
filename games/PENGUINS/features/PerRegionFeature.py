@@ -8,12 +8,11 @@ from extractors.features.PerCountFeature import PerCountFeature
 from schemas.Event import Event
 
 class PerRegionFeature(PerCountFeature):
-    def __init__(self, params:ExtractorParameters, region_map:dict):
-        super().__init__(params=params,region_map=dict)
-        self._region_map = region_map
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
+        self._region_map = {}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-
 
     def _validateEventCountIndex(self, event:Event):
         ret_val : bool = False
@@ -35,7 +34,6 @@ class PerRegionFeature(PerCountFeature):
             ret_val = True
         else:
             Logger.Log(f"Got invalid region_name data in {type(self).__name__}", logging.WARNING)
-        
         return ret_val
 
         #if region_data is not None:
