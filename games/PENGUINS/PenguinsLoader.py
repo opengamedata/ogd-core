@@ -40,13 +40,13 @@ class PenguinsLoader(ExtractorLoader):
         :type feature_overrides: Optional[List[str]]
         """
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
-        self._region_map = region_map
+        self._region_map = {"no-active-region": 0}
         self._task_map = {}
 
         # Load Penguins jobs export and map job names to integer values
         with open(EXPORT_PATH, "r") as file:
             export = json.load(file)
-            region_map = export["regions"]
+            self._region_map = export["regions"]
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @staticmethod
