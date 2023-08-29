@@ -19,6 +19,11 @@ from schemas.games.GameSchema import GameSchema
 
 EXPORT_PATH = "games/PENGUINS/DBExport.json"
 
+# Load Penguins jobs export and map job names to integer values
+with open(EXPORT_PATH, "r") as file:
+    export = json.load(file)
+    region_map = export["regions"]
+
 class PenguinsLoader(ExtractorLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -91,14 +96,21 @@ class PenguinsLoader(ExtractorLoader):
         :type feature_overrides: Optional[List[str]]
         """
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
-        self._region_map = {"no-active-region": 0}
+        self._region_map = region_map
+        self._task_map = {}
 
-        # Load Penguins jobs export and map job names to integer values
-        with open(EXPORT_PATH, "r") as file:
-            export = json.load(file)
-            self._region_map = export["regions"]
+        # Load Aqualab scenes export and map scene names to integer values
+        # with open(EXPORT_PATH, "r") as file:
+        #     export = json.load(file)
 
+        #     task_num = 1
+        #     for i, scene in enumerate(export["scenes"], start=1):
+        #         self._scene_map[scene["id"]] = i
+        #         self._diff_map[i] = scene["difficulties"]
+        #         for task in scene["tasks"]:
+        #             task_by_scene = scene["id"] + "_" + task["id"]
+        #             self._task_map[task_by_scene] = task_num
+        #             task_num += 1
 
-    @property
-    def RegionMap(self) -> Dict:
-        return self._region_map
+        # Update level count
+        # self._game_schema._max_level = len(self._scene_map) - 1

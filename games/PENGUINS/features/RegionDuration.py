@@ -13,11 +13,17 @@ from utils.Logger import Logger
 # import libraries
 import logging
 
+EXPORT_PATH = "games/PENGUINS/DBExport.json"
 
+# Load Penguins jobs export and map job names to integer values
+with open(EXPORT_PATH, "r") as file:
+    export = json.load(file)
+    region_map = export["regions"]
+    
 class RegionDuration(PerCountFeature):
     
     def __init__(self, params:ExtractorParameters):
-        super().__init__(params=params,region_map=dict)
+        super().__init__(params=params)
         self.region_map = region_map
         self._session_id = None
         self._region_start_time = None
@@ -57,7 +63,6 @@ class RegionDuration(PerCountFeature):
         # Logger.Log("______________________________")
         
         if region_data is not None:
-            
             if region_map[region_data] == self.CountIndex:
                 
                 ret_val = True
