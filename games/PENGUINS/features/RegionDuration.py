@@ -9,16 +9,14 @@ from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from utils.Logger import Logger
-
 # import libraries
 import logging
-
+import PerRegionFeature
     
-class RegionDuration(PerCountFeature):
+class RegionDuration(PerRegionFeature):
     
     def __init__(self, params:ExtractorParameters, region_map:dict):
-        super().__init__(params=params, region_map:dict)
-        self._region_map = region_map
+        super().__init__(params=params, region_map = region_map)
         self._session_id = None
         self._region_start_time = None
         self._prev_timestamp = None

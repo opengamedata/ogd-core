@@ -20,7 +20,6 @@ from schemas.games.GameSchema import GameSchema
 EXPORT_PATH = "games/PENGUINS/DBExport.json"
 
 
-
 class PenguinsLoader(ExtractorLoader):
 
 
