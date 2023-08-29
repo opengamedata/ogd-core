@@ -39,7 +39,8 @@ __all__ = [
     "TotalDiveTime",
     "TotalExperimentationTime",
     "UserAvgSessionDuration",
-    "UserTotalSessionDuration"
+    "UserTotalSessionDuration",
+    "PlayLocations"
 ]
 
 from . import JobTriesInArgument
@@ -83,3 +84,4 @@ from . import TotalDiveTime
 from . import TotalExperimentationTime
 from . import UserAvgSessionDuration
 from . import UserTotalSessionDuration
+from . import PlayLocations
