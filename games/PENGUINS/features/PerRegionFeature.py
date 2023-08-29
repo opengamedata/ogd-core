@@ -8,15 +8,10 @@ from extractors.Extractor import ExtractorParameters
 from extractors.features.PerCountFeature import PerCountFeature
 from schemas.Event import Event
 
-EXPORT_PATH = "games/PENGUINS/DBExport.json"
 
-# Load Penguins jobs export and map job names to integer values
-with open(EXPORT_PATH, "r") as file:
-    export = json.load(file)
-    region_map = export["regions"]
 
 class PerRegionFeature(PerCountFeature):
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:ExtractorParameters, region_map:dict):
         super().__init__(params=params)
         self._region_map = region_map
 
