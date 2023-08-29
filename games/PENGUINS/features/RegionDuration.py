@@ -11,7 +11,7 @@ from schemas.FeatureData import FeatureData
 from utils.Logger import Logger
 # import libraries
 import logging
-import PerRegionFeature
+from games.PENGUINS.features.PerRegionFeature import PerRegionFeature
     
 class RegionDuration(PerRegionFeature):
     
