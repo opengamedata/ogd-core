@@ -12,7 +12,7 @@ from schemas.Event import Event
 
 class PerRegionFeature(PerCountFeature):
     def __init__(self, params:ExtractorParameters, region_map:dict):
-        super().__init__(params=params, region_map:dict)
+        super().__init__(params=params)
         self._region_map = region_map
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
