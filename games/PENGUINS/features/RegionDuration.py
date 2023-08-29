@@ -18,7 +18,7 @@ class RegionDuration(PerCountFeature):
     
     def __init__(self, params:ExtractorParameters, region_map:dict):
         super().__init__(params=params, region_map:dict)
-
+        self._region_map = region_map
         self._session_id = None
         self._region_start_time = None
         self._prev_timestamp = None
