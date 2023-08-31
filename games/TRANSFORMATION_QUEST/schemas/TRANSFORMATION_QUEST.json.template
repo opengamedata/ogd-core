@@ -290,13 +290,19 @@
         "dismiss_legend": {
             "description": "When the player clicks to leave the pop-up feedback after running a sequence.",
             "event_data": {
-                "TODO" : "TODO"
+                "time_open": {
+                    "type" : "float",
+                    "description" : "The number of seconds the objectives pop-up was open."
+                }
             }
         },
         "dismiss_objectives": {
             "description": "",
             "event_data": {
-                "TODO": "TODO"
+                "time_open": {
+                    "type" : "float",
+                    "description" : "The number of seconds the objectives pop-up was open."
+                }
             }
         },
         "tutorial_displayed": {
@@ -319,9 +325,9 @@
                     "type" : "List[Dict]",
                     "details": {
                         "level_name":"str",
-                        "status":"enum(?UNAVAILABLE?, AVAILABLE, BRONZE, SILVER, GOLD)"
+                        "status":"enum(UNAVAILABLE, AVAILABLE, BRONZE, SILVER, GOLD)"
                     },
-                    "description" : "A list of levels displayed in the navigation area. TODO: Check whether 'unavailable' is a status for levels, don't recall whether levels are unlocked individually or always available."
+                    "description" : "A list of levels displayed in the navigation area."
                 }
             }
         },
@@ -354,13 +360,23 @@
         "objectives_displayed": {
             "description": "",
             "event_data": {
-                "TODO": "TODO"
+                "?bronze_objective_text?": {
+                    "type": "str",
+                    "description": "The text content indicating what the objectives are to obtain a bronze shield on the current level. TODO: Determine whether to include this or not."
+                },
+                "?silver_objective_text?": {
+                    "type": "str",
+                    "description": "The text content indicating what the objectives are to obtain a silver shield on the current level. TODO: Determine whether to include this or not."
+                },
+                "?gold_objective_text?": {
+                    "type": "str",
+                    "description": "The text content indicating what the objectives are to obtain a gold shield on the current level. TODO: Determine whether to include this or not."
+                }
             }
         },
         "legend_displayed": {
             "description": "",
             "event_data": {
-                "TODO": "TODO"
             }
         },
         "sequence_updated": {
