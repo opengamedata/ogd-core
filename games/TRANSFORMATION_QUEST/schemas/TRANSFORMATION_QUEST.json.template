@@ -361,9 +361,19 @@
             }
         },
         "sequence_updated": {
-            "description": "",
+            "description": "Anytime the sequence changes, whether from a drag-and-drop, adding a block, removing a block, or modifying a block, this event shows the updated state of the sequence.",
             "event_data": {
-                "TODO": "TODO"
+                "sequence_elements": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "block_id":"TODO: determine if there is an ID associated with each block",
+                        "block_index":"int",
+                        "block_type":"enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                        "loop_subelements":"List[Dict]",
+                        "block_params":"Dict[str, int]"
+                    },
+                    "description": "A list of all elements in the sequence of blocks after the sequence was updated by a player action."
+                }
             }
         },
         "sequence_execution_step": {
