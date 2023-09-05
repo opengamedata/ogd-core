@@ -363,7 +363,7 @@
                     "type": "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
                     "description": "The type of block that ran in this step."
                 },
-                "move_number": {
+                "moves_count": {
                     "type": "int",
                     "description": "The number of moves made so far in the sequence, including this move."
                 },
@@ -396,13 +396,17 @@
                     "type": "enum(OUT_OF_BOUNDS, COLLISION, FAILED_OBJECTIVE)",
                     "description": "The failure outcome at the end of the execution."
                 },
-                "blocks": {
-                    "type": "TODO",
-                    "description": ""
+                "outcome_title": {
+                    "type": "str",
+                    "description": "The literal text at at the top of the pop-up, indicating the type of outcome."
                 },
-                "moves": {
-                    "type": "TODO",
-                    "description": ""
+                "outcome_text": {
+                    "type": "str",
+                    "description": "The main text block of the pop-up, indicating what the player did wrong, or what they should do next"
+                },
+                "moves_count": {
+                    "type": "int",
+                    "description": "The final number of moves indicated in the 'moves' counter."
                 },
                 "level_shields": {
                     "type" : "List[enum(BRONZE, SILVER, GOLD)]",
@@ -426,13 +430,17 @@
                     "type": "enum(EARNED_BRONZE, EARNED_SILVER, EARNED_GOLD)",
                     "description": "The success outcome at the end of the execution."
                 },
-                "blocks": {
-                    "type": "TODO",
-                    "description": ""
+                "outcome_title": {
+                    "type": "str",
+                    "description": "The literal text at at the top of the pop-up, indicating the type of outcome."
                 },
-                "moves": {
-                    "type": "TODO",
-                    "description": ""
+                "outcome_text": {
+                    "type": "str",
+                    "description": "The main text block of the pop-up, indicating what the player can do next"
+                },
+                "moves_count": {
+                    "type": "int",
+                    "description": "The final number of moves indicated in the 'moves' counter."
                 },
                 "level_shields": {
                     "type" : "List[enum(BRONZE, SILVER, GOLD)]",
