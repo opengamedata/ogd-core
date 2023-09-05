@@ -1,6 +1,7 @@
 {
    "objectives" : [
       {
+         "level" : 1,
          "bronze" : {
             "max_blocks" : 6,
             "with_loop" : null,
