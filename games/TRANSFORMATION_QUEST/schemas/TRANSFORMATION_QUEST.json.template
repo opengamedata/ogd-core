@@ -129,6 +129,16 @@
             "event_data": {
             }
         },
+        "click_replay_level": {
+            "description": "When the player has just successfully completed a level, and clicks the 'replay' button in the level feedback pop-up.",
+            "event_data": {
+            }
+        },
+        "click_next_level": {
+            "description": "When the player is in a level, and clicks the 'next level' button, which technically just returns them to the map.",
+            "event_data": {
+            }
+        },
         "select_new_block": {
             "description": "When the player selects a new block type in the sidebar, which they can then add to the sequence.",
             "event_data": {
@@ -458,17 +468,17 @@
             }
         },
         "level_begin": {
-            "description": "A progression event indicating when a player actually began a new level. NOTE: this occurs just after they enter the level, so the level name is recorded in game_state.",
+            "description": "A progression event indicating when a player actually began a new level, whether by entering from the map or replaying a level. NOTE: this occurs after they entered the level, so the level number is recorded in `game_state`, not `event_data`.",
             "event_data": {
             }
         },
         "level_complete": {
-            "description": "A progression event indicating when a player completed a level, and is about to return to the main navigation menu. NOTE: this occurs just before they leave the level, so the level name is recorded in game_state.",
+            "description": "A progression event indicating when a player completed a level, and is about to return to the main navigation menu. NOTE: this occurs just before they leave the level, so the level name is recorded in `game_state`, not `event_data`.",
             "event_data": {
             }
         },
         "level_quit": {
-            "description": "A progression event indicating when a player has chosen to quit a level, and is about to return to the main navigation menu. NOTE: this occurs just before they leave the level, so the level name is recorded in game_state.",
+            "description": "A progression event indicating when a player has chosen to quit a level, and is about to return to the main navigation menu. NOTE: this occurs just before they leave the level, so the level name is recorded in `game_state`, not `event_data`.",
             "event_data": {
             }
         }
