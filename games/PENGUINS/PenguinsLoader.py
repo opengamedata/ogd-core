@@ -70,8 +70,8 @@ class PenguinsLoader(ExtractorLoader):
             ret_val = SnowBallDuration.SnowBallDuration(params=extractor_params)
         elif feature_type == "RingChimesCount":
             ret_val = RingChimesCount.RingChimesCount(params=extractor_params)
-        elif feature_type == "RegionWaddleCount":
-            ret_val = RegionWaddleCount.RegionWaddleCount(params=extractor_params)
+        elif feature_type == "WaddlePerRegion":
+            ret_val = WaddlePerRegion.RegionWaddleCount(params=extractor_params)
         elif feature_type == "EatFishCount":
             ret_val = EatFishCount.EatFishCount(params=extractor_params)
         elif feature_type == "PickupRockCount":
@@ -88,8 +88,8 @@ class PenguinsLoader(ExtractorLoader):
         elif extractor_params._count_index is not None:
             if feature_type == "RegionEnterCount":
                 ret_val = RegionEnterCount.RegionEnterCount(params=extractor_params)
-            elif feature_type == "WaddlePerRegion":
-                    ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
+            #elif feature_type == "WaddlePerRegion":
+                    #ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
             elif feature_type == "RegionDuration":
                     ret_val = RegionDuration.RegionDuration(params=extractor_params, region_map=self._region_map)
             
