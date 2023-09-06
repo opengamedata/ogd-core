@@ -71,7 +71,7 @@ class PenguinsLoader(ExtractorLoader):
         elif feature_type == "RingChimesCount":
             ret_val = RingChimesCount.RingChimesCount(params=extractor_params)
         elif feature_type == "WaddlePerRegion":
-            ret_val = WaddlePerRegion.RegionWaddleCount(params=extractor_params)
+            ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
         elif feature_type == "EatFishCount":
             ret_val = EatFishCount.EatFishCount(params=extractor_params)
         elif feature_type == "PickupRockCount":
