@@ -14,7 +14,7 @@ from extractors.features.SessionFeature import SessionFeature
 class WaddlePerRegion(PerRegionFeature):
 
     def __init__(self, params:ExtractorParameters, region_map:dict):
-        super().__init__(params=params)
+        super().__init__(params=params, region_map = region_map)
         self._failure_count : int = 0
         self._region_started = False
         self._cnt_dict = region_map
