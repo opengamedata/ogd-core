@@ -11,7 +11,7 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
 
-class RegionWaddleCount(PerRegionFeature):
+class WaddlePerRegion(PerRegionFeature):
 
     def __init__(self, params:ExtractorParameters, region_map:dict):
         super().__init__(params=params)
