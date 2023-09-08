@@ -60,8 +60,6 @@ class SessionDuration(SessionFeature):
         else:
             self._client_end_time = event.Timestamp
             self._client_end_index = event.EventSequenceIndex
-        
-
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
@@ -71,6 +69,10 @@ class SessionDuration(SessionFeature):
             return [self._client_end_time - self._client_start_time]
         else:
             return ["No events"]
+
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        return [ExtractionMode.SESSION]
 
 
     # *** Optionally override public functions. ***
