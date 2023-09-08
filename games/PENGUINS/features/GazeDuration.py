@@ -57,6 +57,8 @@ class GazeDuration(SessionFeature):
         if event.EventName == "gaze_object_begin":
             self._gaze_start_time = event.Timestamp
             self._object_name = event.event_data.get("object_id")
+            if not self._object_name in self._gaze_dict.keys():
+                self._gaze_dict[self._object_name] = timedelta(0)
         elif event.EventName == "gaze_object_end":
             if self._gaze_start_time is not None:
                 self._time += (event.Timestamp - self._gaze_start_time).total_seconds()
