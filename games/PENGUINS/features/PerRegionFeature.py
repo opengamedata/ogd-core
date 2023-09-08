@@ -20,7 +20,7 @@ class PerRegionFeature(PerCountFeature):
     def _validateEventCountIndex(self, event:Event):
         ret_val : bool = False
 
-        region_data = event.EventData["region_name"]
+        # region_data = event.EventData["region_name"]
         target_region = self._region_map[self.CountIndex]
         current_position = {
             'x': event.GameState['posX'],
@@ -35,8 +35,8 @@ class PerRegionFeature(PerCountFeature):
             current_position['z'] > target_region['minZ'] and
             current_position['z'] < target_region['maxZ']):
             ret_val = True
-        else:
-            Logger.Log(f"Got invalid region_name data in {type(self).__name__}", logging.WARNING)
+        # else:
+        #     Logger.Log(f"Got invalid region_name data in {type(self).__name__}", logging.WARNING)
         return ret_val
 
         #if region_data is not None:
