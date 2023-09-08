@@ -114,6 +114,7 @@ jobs:
       with:
         game: ${{matrix.game}}
         month_year: ${{matrix.month_year}}
+        events_only: false
     - name: Do Export of Range
       if: github.event.inputs.monthly == 'false'
       uses: ./.github/actions/export_custom
@@ -121,6 +122,7 @@ jobs:
         game: ${{matrix.game}}
         start_date: ${{github.event.inputs.start_date}}
         end_date: ${{github.event.inputs.end_date}}
+        events_only: false
     - name: Upload files to opengamedata via scp
       if: github.event.inputs.export_to_web == 'true'
       run: |
