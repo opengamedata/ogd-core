@@ -546,12 +546,6 @@
                 "enabled": true,
                 "description": "The number of times a player rings chimes in a given region of the game.",
                 "return_type": "int"
-            },
-            "PlayerInactiveAvgDuration": {
-                "type": "PlayerInactiveAvgDuration",
-                "enabled": true,
-                "description": "The average of times each player inactivated for.",
-                "return_type": "timedelta"
             }
         }
     },
