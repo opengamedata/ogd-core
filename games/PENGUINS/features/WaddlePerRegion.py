@@ -15,11 +15,11 @@ class WaddlePerRegion(PerRegionFeature):
 
     def __init__(self, params:ExtractorParameters, region_map:dict):
         super().__init__(params=params, region_map = region_map)
-        self._failure_count : int = 0
-        self._region_started = False
-        self._cnt_dict = region_map
-        self._curr_region = None
-        self._region_list = list()
+        self._waddle_count : int = 0
+        # self._region_started = False
+        # self._cnt_dict = region_map
+        # self._curr_region = None
+        # self._region_list = list()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -31,15 +31,16 @@ class WaddlePerRegion(PerRegionFeature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.EventName == "player_waddle" and len(self._region_list)>0:
-            self._curr_region = self._region_list[-1]
+        self._waddle_count += 1
+        # if event.EventName == "player_waddle" and len(self._region_list)>0:
+        #     self._curr_region = self._region_list[-1]
             # Logger.Log(f"region lst is {self._region_list}")
-            self._cnt_dict[self._curr_region] += 1
-        return
+            # self._cnt_dict[self._curr_region] += 1
+
     def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._cnt_dict]
+        return [self._waddle_count]
 
     
