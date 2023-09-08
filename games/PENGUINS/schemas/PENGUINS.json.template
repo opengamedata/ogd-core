@@ -492,56 +492,66 @@
                 "enabled": true,
                 "count": 11,
                 "prefix": "region",
-                "description": "The duration of time a player played in a given region of the game."
+                "description": "The duration of time a player played in a given region of the game.",
+                "return_type": "timedelta"
             },
             "WaddlePerRegion": {
                 "type": "WaddlePerRegion",
                 "enabled": true,
                 "count": 11,
                 "prefix": "region",
-                "description": "The number of times a player waddled in a given region of the game."
+                "description": "The number of times a player waddled in a given region of the game.",
+                "return_type": "int"
             }
         },
         "aggregate":{
             "GazeCount": {
                 "type": "GazeCount",
                 "enabled": true,
-                "description": "The number of times a player waddled in a given region of the game."
+                "description": "The number of times a player waddled in a given region of the game.",
+                "return_type": "int"
             },
             "PickupRockCount": {
                 "type": "PickupRockCount",
                 "enabled": true,
-                "description": "The duration each session took."
+                "description": "The duration each session took.",
+                "return_type": "int"
             },
             "PlayerWaddleCount": {
                 "type": "PlayerWaddleCount",
                 "enabled": true,
-                "description": "The number of times a player waddled."
+                "description": "The number of times a player waddled.",
+                "return_type": "int"
             },
             "SessionDuration": {
                 "type": "SessionDuration",
                 "enabled": true,
-                "description": "The duration each session took."
+                "description": "The duration each session took.",
+                "return_type": "timedelta"
                 },
             "GazeDuration": {
                 "type": "GazeDuration",
                 "enabled": true,
-                "description": "How long gaze event last for."
+                "description": "How long gaze event last for.",
+                "return_type": "timedelta"
             },
             "MirrorWaddleDuration": {
                 "type": "MirrorWaddleDuration",
                 "enabled": true,
-                "description": "How long gaze event last for."
+                "description": "How long gaze event last for.",
+                "return_type": "timedelta"
 	        },
             "RingChimesCount": {
                 "type": "RingChimesCount",
                 "enabled": true,
-                "description": "The number of times a player rings chimes in a given region of the game."
+                "description": "The number of times a player rings chimes in a given region of the game.",
+                "return_type": "int"
             },
             "PlayerInactiveAvgDuration": {
                 "type": "PlayerInactiveAvgDuration",
                 "enabled": true,
-                "description": "The average of times each player inactivated for."
+                "description": "The average of times each player inactivated for.",
+                "return_type": "timedelta"
             }
         }
     },
