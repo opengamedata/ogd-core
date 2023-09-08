@@ -493,6 +493,13 @@
                 "count": 11,
                 "prefix": "region",
                 "description": "The duration of time a player played in a given region of the game."
+            },
+            "WaddlePerRegion": {
+                "type": "WaddlePerRegion",
+                "enabled": true,
+                "count": 11,
+                "prefix": "region",
+                "description": "The number of times a player waddled in a given region of the game."
             }
         },
         "aggregate":{

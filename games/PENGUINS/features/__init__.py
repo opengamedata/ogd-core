@@ -7,7 +7,7 @@ __all__ = [
     "GazeCount",
     "SnowBallDuration",
     "RingChimesCount",
-    "RegionWaddleCount",
+    "WaddlePerRegion",
     "EatFishCount",
     "PickupRockCount",
     "EggLostCount",
@@ -26,7 +26,6 @@ from . import GazeDuration
 from . import GazeCount
 from . import SnowBallDuration
 from . import RingChimesCount
-from . import RegionWaddleCount
 from . import EatFishCount
 from . import PickupRockCount
 from . import EggLostCount
