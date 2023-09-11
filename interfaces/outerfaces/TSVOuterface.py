@@ -16,7 +16,9 @@ from typing import Any, Dict, IO, List, Optional, Set
 # import local files
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.ExtractionMode import ExtractionMode
+from schemas.Event import Event
 from schemas.ExportMode import ExportMode
+from schemas.FeatureData import FeatureData
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.games.GameSchema import GameSchema
 from schemas.tables.EventTableSchema import EventTableSchema
@@ -213,7 +215,7 @@ class TSVOuterface(DataOuterface):
             Logger.Log("No population file available, writing to standard output instead.", logging.WARN)
             sys.stdout.write("".join(cols_line))
 
-    def _writeRawEventLines(self, events:List[ExportRow]) -> None:
+    def _writeRawEventLines(self, events:List[Event]) -> None:
         event_strs = [TSVOuterface._cleanSpecialChars(vals=[str(item) for item in event]) for event in events]
         event_lines = ["\t".join(event) + "\n" for event in event_strs]
         if self._files['raw_events'] is not None:
@@ -222,7 +224,7 @@ class TSVOuterface(DataOuterface):
             Logger.Log("No raw_events file available, writing to standard output instead.", logging.WARN)
             sys.stdout.write("".join(event_lines))
 
-    def _writeProcessedEventLines(self, events:List[ExportRow]) -> None:
+    def _writeProcessedEventLines(self, events:List[Event]) -> None:
         event_strs = [TSVOuterface._cleanSpecialChars(vals=[str(item) for item in event]) for event in events]
         event_lines = ["\t".join(event) + "\n" for event in event_strs]
         if self._files['processed_events'] is not None:
@@ -231,7 +233,7 @@ class TSVOuterface(DataOuterface):
             Logger.Log("No processed_events file available, writing to standard output instead.", logging.WARN)
             sys.stdout.write("".join(event_lines))
 
-    def _writeSessionLines(self, sessions:List[ExportRow]) -> None:
+    def _writeSessionLines(self, sessions:List[List[FeatureData]]) -> None:
         # self._sess_count += len(sessions)
         _session_feats = [TSVOuterface._cleanSpecialChars(vals=sess) for sess in sessions]
         _session_lines = ["\t".join(sess) + "\n" for sess in _session_feats]
@@ -241,7 +243,7 @@ class TSVOuterface(DataOuterface):
             Logger.Log("No session file available, writing to standard output instead.", logging.WARN)
             sys.stdout.write("".join(_session_lines))
 
-    def _writePlayerLines(self, players:List[ExportRow]) -> None:
+    def _writePlayerLines(self, players:List[List[FeatureData]]) -> None:
         _player_feats = [TSVOuterface._cleanSpecialChars(vals=play) for play in players]
         _player_lines = ["\t".join(play) + "\n" for play in _player_feats]
         if self._files['players'] is not None:
@@ -250,7 +252,7 @@ class TSVOuterface(DataOuterface):
             Logger.Log("No player file available, writing to standard output instead.", logging.WARN)
             sys.stdout.write("".join(_player_lines))
 
-    def _writePopulationLines(self, populations:List[ExportRow]) -> None:
+    def _writePopulationLines(self, populations:List[List[FeatureData]]) -> None:
         _pop_feats = [TSVOuterface._cleanSpecialChars(vals=pop) for pop in populations]
         _pop_lines = ["\t".join(pop) + "\n" for pop in _pop_feats]
         if self._files['population'] is not None:

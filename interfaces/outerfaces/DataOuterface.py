@@ -130,7 +130,7 @@ class DataOuterface(Interface):
         else:
             Logger.Log(f"Skipping WriteLines in {type(self).__name__}, export mode {mode} is not enabled for this outerface", depth=3)
 
-    def WriteLines(self, lines:List[ExportRow], mode:ExportMode) -> None:
+    def WriteLines(self, lines:List[Event] | List[FeatureData], mode:ExportMode) -> None:
         if mode in self.ExportModes:
             match (mode):
                 case ExportMode.EVENTS:

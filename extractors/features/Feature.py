@@ -78,7 +78,7 @@ class Feature(Extractor):
             cols=self.GetFeatureNames(),
             vals=self.GetFeatureValues(),
             mode=self.ExtractionMode,
-            player_id=player_id,
+            user_id=player_id,
             sess_id=sess_id
         )
 

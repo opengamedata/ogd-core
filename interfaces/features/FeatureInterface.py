@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Tuple, Optional, Union
 from interfaces.Interface import Interface
 from schemas.Event import Event
 from schemas.IDMode import IDMode
-from schemas.tables.EventTableSchema import EventTableSchema
+from schemas.tables.FeatureTableSchema import FeatureTableSchema
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from utils.Logger import Logger
 
@@ -120,7 +120,7 @@ class FeatureInterface(Interface):
     # *** PROPERTIES ***
 
     @property
-    def _EventTableSchema(self) -> EventTableSchema:
+    def _FeatureTableSchema(self) -> FeatureTableSchema:
         return self._table_schema
 
     # *** PRIVATE STATICS ***

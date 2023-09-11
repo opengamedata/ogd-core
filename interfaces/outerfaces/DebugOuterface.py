@@ -4,7 +4,9 @@ from typing import List, Set
 
 # import local files
 from interfaces.outerfaces.DataOuterface import DataOuterface
+from schemas.Event import Event
 from schemas.ExportMode import ExportMode
+from schemas.FeatureData import FeatureData
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from utils.Logger import Logger
 from utils.utils import ExportRow
@@ -65,27 +67,27 @@ class DebugOuterface(DataOuterface):
         self._display("Population header:")
         self._display(header)
 
-    def _writeRawEventLines(self, events:List[ExportRow]) -> None:
+    def _writeRawEventLines(self, events:List[Event]) -> None:
         self._display("Raw event data:")
         _lengths = [len(elem) for elem in events]
         self._display(f"{len(events)} raw events, average length {sum(_lengths) / len(_lengths) if len(_lengths) > 0 else 'N/A'}")
 
-    def _writeProcessedEventLines(self, events:List[ExportRow]) -> None:
+    def _writeProcessedEventLines(self, events:List[Event]) -> None:
         self._display("Processed event data:")
         _lengths = [len(elem) for elem in events]
         self._display(f"{len(events)} processed events, average length {sum(_lengths) / len(_lengths) if len(_lengths) > 0 else 'N/A'}")
 
-    def _writeSessionLines(self, sessions:List[ExportRow]) -> None:
+    def _writeSessionLines(self, sessions:List[List[FeatureData]]) -> None:
         self._display("Session data:")
         _lengths = [len(elem) for elem in sessions]
         self._display(f"{len(sessions)} events, average length {sum(_lengths) / len(_lengths) if len(_lengths) > 0 else 'N/A'}")
 
-    def _writePlayerLines(self, players:List[ExportRow]) -> None:
+    def _writePlayerLines(self, players:List[List[FeatureData]]) -> None:
         self._display("Player data:")
         _lengths = [len(elem) for elem in players]
         self._display(f"{len(players)} events, average length {sum(_lengths) / len(_lengths) if len(_lengths) > 0 else 'N/A'}")
 
-    def _writePopulationLines(self, populations:List[ExportRow]) -> None:
+    def _writePopulationLines(self, populations:List[List[FeatureData]]) -> None:
         self._display("Population data:")
         _lengths = [len(elem) for elem in populations]
         self._display(f"{len(populations)} events, average length {sum(_lengths) / len(_lengths) if len(_lengths) > 0 else 'N/A'}")
