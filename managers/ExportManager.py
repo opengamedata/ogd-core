@@ -13,7 +13,6 @@ from typing import Any, Dict, List, Tuple, Type, Optional
 from schemas.IDMode import IDMode
 
 ## import local files
-import utils
 from extractors.ExtractorLoader import ExtractorLoader
 from games.AQUALAB.AqualabLoader import AqualabLoader
 from games.CRYSTAL.CrystalLoader import CrystalLoader
@@ -35,7 +34,7 @@ from schemas.games.GameSchema import GameSchema
 from schemas.configs.ConfigSchema import ConfigSchema
 from ogd_requests.Request import Request
 from ogd_requests.RequestResult import RequestResult
-from utils import Logger
+from utils.Logger import Logger
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.

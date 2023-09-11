@@ -4,7 +4,7 @@ import logging
 from typing import Any, Dict
 # import local files
 from schemas.Schema import Schema
-from utils import Logger
+from utils.Logger import Logger
 
 class DataSourceSchema(Schema):
     def __init__(self, name:str, other_elements:Dict[str, Any]):

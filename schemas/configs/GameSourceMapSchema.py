@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Union
 # import local files
 from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
 from schemas.Schema import Schema
-from utils import Logger
+from utils.Logger import Logger
 
 class GameSourceSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any], data_sources:Dict[str, DataSourceSchema]):
@@ -56,22 +56,22 @@ class GameSourceSchema(Schema):
         return self._source_schema
 
     @property
-    def TableName(self) -> str:
-        return self._table_name
-
-    @property
     def DatabaseName(self) -> str:
         return self._db_name
 
     @property
-    def Schema(self) -> str:
+    def TableName(self) -> str:
+        return self._table_name
+
+    @property
+    def TableSchema(self) -> str:
         return self._schema
 
     @property
     def AsMarkdown(self) -> str:
         ret_val : str
 
-        ret_val = f"{self.Name}: _{self.Schema}_ format, source {self.Source.Name if self.Source else 'None'} : {self.DatabaseName}.{self.TableName}"
+        ret_val = f"{self.Name}: _{self.TableSchema}_ format, source {self.Source.Name if self.Source else 'None'} : {self.DatabaseName}.{self.TableName}"
         return ret_val
 
     @staticmethod

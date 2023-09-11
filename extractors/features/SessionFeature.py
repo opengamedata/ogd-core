@@ -3,7 +3,7 @@ import logging
 # import locals
 from extractors.features.Feature import Feature
 from extractors.Extractor import ExtractorParameters
-from utils import Logger
+from utils.Logger import Logger
 
 class SessionFeature(Feature):
 

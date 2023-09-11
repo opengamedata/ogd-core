@@ -11,7 +11,8 @@ from processors.PlayerProcessor import PlayerProcessor
 from processors.SessionProcessor import SessionProcessor
 from schemas.games.GameSchema import GameSchema
 from schemas.Event import Event
-from utils import Logger, ExportRow
+from utils.Logger import Logger
+from utils.utils import ExportRow
 
 class FeatureManager:
     def __init__(self, game_schema:GameSchema, LoaderClass:Optional[Type[ExtractorLoader]], feature_overrides:Optional[List[str]]):
@@ -43,6 +44,8 @@ class FeatureManager:
                                             player_id="null", session_id="null", feature_overrides=self._overrides)
                 }
             }
+        else:
+            Logger.Log(f"FeatureManager did not set up any Processors, no LoaderClass was given!", logging.WARN, depth=3)
 
     # TODO: make this function take list of events, and do the loop over events as low in the hierarchy as possible, which technically should be faster.
     def ProcessEvent(self, event:Event) -> None:
@@ -103,7 +106,7 @@ class FeatureManager:
                         player.ProcessFeatureData(feature_list=sess_data)
                     session.ProcessFeatureData(feature_list=sess_data)
             Logger.Log(f"Time to process Feature Data: {datetime.now() - start}", logging.INFO, depth=3)
-        Logger.Log(f"Skipped feature processing, no feature extractors available!", logging.INFO, depth=3)
+        Logger.Log(f"Skipped feature processing, no feature Processors available!", logging.INFO, depth=3)
 
     def GetFeatureValues(self, as_str:bool = False) -> Dict[str, List[ExportRow]]:
         start = datetime.now()
@@ -175,10 +178,10 @@ class FeatureManager:
         if not self._up_to_date:
             self.ProcessFeatureData()
             # for some reason, this didn't work as sum over list of lists, so get sessions manually with a normal loop:
-            list_o_playlists : List[List[ExportRow]] = [player.Lines for player_id,player in self._players.items() if (player_id != "null" or self._used_null_play)] if self._players is not None else []
-            flat_playlist    : List[ExportRow]       = list(itertools.chain.from_iterable(list_o_playlists))
-            list_o_sesslists : List[List[ExportRow]] = [[session.Lines for session_id,session in session_list.items() if (session_id != "null" or self._used_null_sess[player_name])] for player_name,session_list in self._sessions.items()] if self._sessions is not None else []
-            flat_sesslist    : List[ExportRow]       = list(itertools.chain.from_iterable(list_o_sesslists))
+            list_o_playlists : List[List[ExportRow]]       = [player.Lines for player_id,player in self._players.items() if (player_id != "null" or self._used_null_play)] if self._players is not None else []
+            flat_playlist    : List[ExportRow]             = list(itertools.chain.from_iterable(list_o_playlists))
+            list_o_sesslists : List[List[List[ExportRow]]] = [[session.Lines for session_id,session in session_list.items() if (session_id != "null" or self._used_null_sess[player_name])] for player_name,session_list in self._sessions.items()] if self._sessions is not None else []
+            flat_sesslist    : List[ExportRow]             = list(itertools.chain.from_iterable(itertools.chain.from_iterable(list_o_sesslists)))
             self._latest_values = {
                 "population" : self._population.Lines if self._population is not None else [],
                 "players"    : flat_playlist,

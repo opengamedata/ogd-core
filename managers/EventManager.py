@@ -4,14 +4,15 @@ import logging
 from datetime import datetime
 from typing import Any, Callable, List, Type, Optional, Set
 ## import local files
-import utils
 from extractors.registries.DetectorRegistry import DetectorRegistry
 from extractors.ExtractorLoader import ExtractorLoader
 from processors.DetectorProcessor import DetectorProcessor
 from processors.EventProcessor import EventProcessor
 from schemas.Event import Event, EventSource
 from schemas.games.GameSchema import GameSchema
-from utils import ExportRow, Logger
+from utils import utils
+from utils.Logger import Logger
+from utils.utils import ExportRow
 
 ## @class EventProcessor
 #  Class to manage data for a csv events file.

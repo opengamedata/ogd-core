@@ -3,7 +3,7 @@ import json
 from collections import defaultdict
 from typing import Any, List
 # import locals
-from utils import Logger
+from utils.Logger import Logger
 from extractors.features.Feature import Feature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event

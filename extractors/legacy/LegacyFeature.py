@@ -7,7 +7,7 @@ from collections import defaultdict
 from datetime import timedelta
 from typing import Any, Dict, List, Optional, Union
 ## import local files
-from utils import Logger
+from utils.Logger import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.ExtractionMode import ExtractionMode

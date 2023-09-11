@@ -13,3 +13,8 @@ class FileSourceSchema(DataSourceSchema):
 
         ret_val = f"FILE SOURCE"
         return ret_val
+
+    @property
+    def AsConnectionInfo(self) -> str:
+        ret_val : str = f"{self._name}"
+        return ret_val
