@@ -106,7 +106,8 @@ class FeatureManager:
                         player.ProcessFeatureData(feature_list=sess_data)
                     session.ProcessFeatureData(feature_list=sess_data)
             Logger.Log(f"Time to process Feature Data: {datetime.now() - start}", logging.INFO, depth=3)
-        Logger.Log(f"Skipped feature processing, no feature Processors available!", logging.INFO, depth=3)
+        else:
+            Logger.Log(f"Skipped processing of FeatureData, no feature Processors available!", logging.INFO, depth=3)
 
     def GetFeatureValues(self, as_str:bool = False) -> Dict[str, List[ExportRow]]:
         start = datetime.now()
