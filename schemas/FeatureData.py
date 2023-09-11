@@ -31,7 +31,7 @@ class FeatureData:
       self._start_timestamp = start_timestamp
 
    def __str__(self):
-      return f"Name: {self.Name}\tCount Index: {self.CountIndex}\nValues: {self._feature_val}\nMode: {self._mode.name}\tPlayer: {self.PlayerID}\tSession: {self.SessionID}"
+      return f"Name: {self.Name}\tSub-unit ID: {self.GameUnitID}\nValues: {self._feature_val}\nMode: {self._mode.name}\tPlayer: {self.PlayerID}\tSession: {self.SessionID}"
 
    def __repr__(self):
       return self.Name
@@ -55,6 +55,18 @@ class FeatureData:
    @property
    def FeatureState(self) -> Dict[str, Any]:
       return self._feature_state
+
+   @property
+   def PlayerID(self) -> Optional[str]:
+      return self._user_id
+
+   @property
+   def SessionID(self) -> Optional[str]:
+      return self._sess_id
+
+   @property
+   def GameUnitID(self) -> Optional[str]:
+      return self._game_unit_id
 
    @property
    def FeatureVersion(self) -> int:
@@ -87,11 +99,3 @@ class FeatureData:
    @property
    def StartTime(self) -> datetime:
       return self._start_timestamp
-
-   @property
-   def PlayerID(self) -> Optional[str]:
-      return self._user_id
-
-   @property
-   def SessionID(self) -> Optional[str]:
-      return self._sess_id
