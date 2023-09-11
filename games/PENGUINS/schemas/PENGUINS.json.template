@@ -354,9 +354,8 @@
             "event_data": {}
         },
         "penguin_pin_fell": {
-            "description": "NOT YET DOCUMENTED",
+            "description": "When one of the pins fell in the bowling area.",
             "event_data": {
-                "data": "NOT YET DOCUMENTED"
             }
         },
         "skua_spawn": {
