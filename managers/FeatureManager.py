@@ -69,9 +69,9 @@ class FeatureManager:
             if self._LoaderClass is not None and event.SessionID not in self._sessions[_player_id].keys():
                 self._sessions[_player_id][event.SessionID] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
                                                                     player_id=_player_id,          session_id=event.SessionID,    feature_overrides=self._overrides)
-                self._sessions[_player_id][event.SessionID].ProcessEvent(event=event)
-                if event.SessionID == None or event.SessionID.upper() == "NULL":
-                    self._used_null_sess[_player_id] = True
+            self._sessions[_player_id][event.SessionID].ProcessEvent(event=event)
+            if event.SessionID == None or event.SessionID.upper() == "NULL":
+                self._used_null_sess[_player_id] = True
             self._up_to_date = False
 
     def ProcessFeatureData(self) -> None:
@@ -106,7 +106,8 @@ class FeatureManager:
                         player.ProcessFeatureData(feature_list=sess_data)
                     session.ProcessFeatureData(feature_list=sess_data)
             Logger.Log(f"Time to process Feature Data: {datetime.now() - start}", logging.INFO, depth=3)
-        Logger.Log(f"Skipped feature processing, no feature Processors available!", logging.INFO, depth=3)
+        else:
+            Logger.Log(f"Skipped processing of FeatureData, no feature Processors available!", logging.INFO, depth=3)
 
     def GetFeatureValues(self, as_str:bool = False) -> Dict[str, List[ExportRow]]:
         start = datetime.now()
