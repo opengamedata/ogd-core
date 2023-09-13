@@ -39,54 +39,67 @@ class PlayLocations(SessionFeature):
         return
 
     def _extractFromEvent(self, event:Event) -> None:
-        return
+        if not event.SessionID in self._seen_sessions:
+            self._seen_sessions.add(event.SessionID)
+            # Step 1: calculate local time
+            lat_long = self.calculate_coordinates(event=event)
+            local_time = PlayLocations.calculate_local_time_by_coordinates(utc_time=event.Timestamp, latitude=lat_long.get('latitude'), longitude=lat_long.get('longitude'))
+            # Step 2: check if local time was a school time or not, and add to lists
+            self._session_times.append(local_time)
+            in_school = True # Insert logic to check if local time is a school time or not
+            self._in_school_sessions.append(in_school)
+
+    def _getFeatureValues(self) -> List[Any]:
+        # Sessions that started in school
+        return [self._in_school_sessions, self._session_times]
 
     def __init__(self, params: ExtractorParameters):
         super().__init__(params=params)
 
         # sessions that have been seen before.
-        self._seen_sessions = []
+        self._seen_sessions = set()
         # sessions that started in school.
         self._in_school_sessions = []
-
+        self._session_times = []
         # geolocater
         self.geolocator = Nominatim(user_agent="timezone_converter")
+
+    # *** Optionally override public functions. ***
+    def Subfeatures(self) -> List[str]:
+        return ["LocalTime"]
 
     @classmethod
     def AvailableModes(cls) -> List[ExtractionMode]:
         return [ExtractionMode.PLAYER]
 
-    def calculate_coordinates ():
-        df['region'] = df['event'].apply(lambda event: event.UserData.get("region") if 'event' in event else None)
+    # *** private helper functions ***
+
+    def calculate_coordinates(self, event:Event):
+        region = event.UserData.get("region")
         
-        geolocator = Nominatim(user_agent="my_app")
         # You can continue with the geolocation code
-        df['location_geocoded'] = df['region'].apply(lambda x: geolocator.geocode(x, timeout=10) if x else None)
+        location_geocoded = self.geolocator.geocode(region, timeout=10) if region else None
 
         # Latitude and longitude from the geocoded
-        df['latitude'] = df['location_geocoded'].apply(lambda x: x.latitude if x else None)
-        df['longitude'] = df['location_geocoded'].apply(lambda x: x.longitude if x else None)
+        latitude  = location_geocoded.latitude  if location_geocoded else None
+        longitude = location_geocoded.longitude if location_geocoded else None
 
         # Filter rows where latitude is not NaN
-        df = df[df['latitude'].notna()]
+        return {'latitude':latitude, 'longitude':longitude}
 
 
-    def calculate_local_time_by_coordinates(self, utc_time_str, latitude, longitude):
+    @staticmethod
+    def calculate_local_time_by_coordinates(utc_time, latitude, longitude):
         tz_finder = TimezoneFinder()
         timezone_str = tz_finder.timezone_at(lng=longitude, lat=latitude)
 
         if timezone_str:
             local_timezone = pytz.timezone(timezone_str)
-            utc_time = datetime.strptime(utc_time_str, "%Y-%m-%d %H:%M:%S.%f %Z")
-            utc_time = pytz.timezone('UTC').localize(utc_time)
-            local_time = utc_time.astimezone(local_timezone)
+            localized_time = pytz.timezone('UTC').localize(utc_time)
+            local_time     = localized_time.astimezone(local_timezone)
             return local_time
         else:
             return datetime.min.replace(tzinfo=pytz.UTC)  # Default value 
-
-    def _getFeatureValues(self) -> List[bool]:
-        # Sessions that started in school
-        return [is_in_school for is_in_school in self._in_school_sessions]
 
 
 
