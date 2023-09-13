@@ -116,6 +116,8 @@ class AqualabLoader(ExtractorLoader):
             ret_val = TotalDiveTime.TotalDiveTime(params=extractor_params)
         elif feature_type == "TotalExperimentationTime":
             ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
+        elif feature_type == "PlayLocations":
+            ret_val = PlayLocations.PlayLocations(params=extractor_params)
         elif feature_type == "UserAvgSessionDuration":
             ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
         elif feature_type == "UserTotalSessionDuration":

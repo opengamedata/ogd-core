@@ -57,7 +57,7 @@
             "name": "app_version",
             "readable": "App Version",
             "description": "The version of the game from which the event came",
-            "type": "int"
+            "type": "str"
         },
         {
             "name": "app_branch",
@@ -69,7 +69,7 @@
             "name": "log_version",
             "readable": "Log Version",
             "description": "The version of the logging code for the game from which the event came",
-            "type": "int"
+            "type": "str"
         },
         {
             "name": "offset",
