@@ -6,3 +6,11 @@ numpy>=1.23.*
 pandas>=1.5.*
 scikit-learn>=1.2.*
 sshtunnel==0.4.0
+
+timezonefinder==6.2.0  
+timezones==2.2.0  
+tzdata==2023.3 
+tzwhere==3.0.3
+pytz==2023.3
+geographiclib==2.0    
+geopy==2.4.0

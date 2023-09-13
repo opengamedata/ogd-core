@@ -25,6 +25,7 @@ __all__ = [
     "JobTasksCompleted",
     "JobsAttempted",
     "JobsCompleted",
+    "PlayLocations",
     "PlayerSummary",
     "PopulationSummary",
     "SessionDiveSitesCount",
@@ -69,6 +70,7 @@ from . import JobStartCount
 from . import JobTasksCompleted
 from . import JobsAttempted
 from . import JobsCompleted
+from . import PlayLocations
 from . import PlayerSummary
 from . import PopulationSummary
 from . import SessionDiveSitesCount
