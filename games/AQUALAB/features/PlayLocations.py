@@ -1,3 +1,4 @@
+import logging
 from typing import Any, List
 
 from extractors.Extractor import ExtractorParameters
@@ -5,6 +6,7 @@ from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
+from utils.Logger import Logger
 
 
 
@@ -99,6 +101,7 @@ class PlayLocations(SessionFeature):
             local_time     = localized_time.astimezone(local_timezone)
             return local_time
         else:
+            Logger.Log(f"Could not get timezone string, defaulting to datetime.min with UTC timezone", level=logging.WARN)
             return datetime.min.replace(tzinfo=pytz.UTC)  # Default value 
 
 
