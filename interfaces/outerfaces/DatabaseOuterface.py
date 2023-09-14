@@ -8,8 +8,8 @@ from typing import Any, Dict, List, Set
 # import local files
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.ExportMode import ExportMode
-from schemas.configs.GameSourceMapSchema import GameSourceSchema
-from utils import Logger, ExportRow
+from schemas.configs.GameSourceSchema import GameSourceSchema
+from utils import Logger
 
 class DatabaseOuterface(DataOuterface):
     """Base class for feature and event output.
