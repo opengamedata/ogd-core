@@ -132,7 +132,7 @@ class ExportManager:
             request.RemoveExportMode(ExportMode.POPULATION)
 
         # 2. Set up EventManager, assuming it was requested.
-        if request.ExportRawEvents or request.ExportProcessedEvents:
+        if request.ExportEvents:
             self._event_mgr = EventManager(game_schema=_game_schema, LoaderClass=load_class,
                                            trigger_callback=self._receiveEventTrigger, feature_overrides=request._feat_overrides)
         else:

@@ -98,6 +98,14 @@ class Request(abc.ABC):
     def ExportProcessedEvents(self) -> bool:
         return ExportMode.DETECTORS in self._exports
     @property
+    def ExportEvents(self) -> bool:
+        """Property indicating whether *any* type of event should be exported
+
+        :return: True if at least one type of event is requested for export, otherwise False
+        :rtype: bool
+        """
+        return self.ExportRawEvents or self.ExportProcessedEvents
+    @property
     def ExportSessions(self) -> bool:
         """Property indicating whether session features should be exported
 
