@@ -99,13 +99,36 @@ class Request(abc.ABC):
         return ExportMode.DETECTORS in self._exports
     @property
     def ExportSessions(self) -> bool:
+        """Property indicating whether session features should be exported
+
+        :return: True if session feature export is requested, otherwise False
+        :rtype: bool
+        """
         return ExportMode.SESSION in self._exports
     @property
     def ExportPlayers(self) -> bool:
+        """Property indicating whether player features should be exported
+
+        :return: True if player feature export is requested, otherwise False
+        :rtype: bool
+        """
         return ExportMode.PLAYER in self._exports
     @property
     def ExportPopulation(self) -> bool:
+        """Property indicating whether population features should be exported
+
+        :return: True if population feature export is requested, otherwise False
+        :rtype: bool
+        """
         return ExportMode.POPULATION in self._exports
+    @property
+    def ExportFeatures(self) -> bool:
+        """Property indicating whether *any* type of feature should be exported
+
+        :return: True if at least one type of feature is requested for export, otherwise False
+        :rtype: bool
+        """
+        return self.ExportSessions or self.ExportPlayers or self.ExportPopulation
 
     @property
     def Outerfaces(self) -> Set[DataOuterface]:

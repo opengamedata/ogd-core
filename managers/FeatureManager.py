@@ -15,8 +15,8 @@ from utils.Logger import Logger
 from utils.utils import ExportRow
 
 class FeatureManager:
-    def __init__(self, game_schema:GameSchema, LoaderClass:Optional[Type[ExtractorLoader]], feature_overrides:Optional[List[str]]):
-        self._LoaderClass    : Optional[Type[ExtractorLoader]] = LoaderClass
+    def __init__(self, game_schema:GameSchema, LoaderClass:Type[ExtractorLoader], feature_overrides:Optional[List[str]]):
+        self._LoaderClass    : Type[ExtractorLoader] = LoaderClass
         self._game_schema    : GameSchema                 = game_schema
         self._overrides      : Optional[List[str]]        = feature_overrides
         # local tracking of whether we're up-to-date on getting feature values.
@@ -51,7 +51,7 @@ class FeatureManager:
     def ProcessEvent(self, event:Event) -> None:
         # 1. process at population level.
         # NOTE: removed the skipping of unrequested modes because second-order features may need feats at levels not requested for final export.
-        if self._population is not None and self._players is not None and self._sessions is not None and self._LoaderClass is not None:
+        if self._population is not None and self._players is not None and self._sessions is not None:
             self._population.ProcessEvent(event=event)
             # 2. process at player level, adding player if needed.
             _player_id = event.UserID or "null"
