@@ -30,8 +30,8 @@ class BigQueryInterface(EventInterface):
         if not self._is_open:
             if "GITHUB_ACTIONS" in os.environ:
                 self._client = bigquery.Client()
-            elif isinstance(self._config.Source, BigQuerySchema):
-                os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self._config.Source.Credential or "NO CREDENTIAL CONFIGURED!" or f"./{self._game_id}.json"
+            elif isinstance(self._config.DataHost, BigQuerySchema):
+                os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = self._config.DataHost.Credential or "NO CREDENTIAL CONFIGURED!" or f"./{self._game_id}.json"
                 self._client = bigquery.Client()
             else:
                 raise ValueError("No BigQuery credential available in current configuration!")
@@ -163,7 +163,7 @@ class BigQueryInterface(EventInterface):
         :return: The full path from project ID to table name, if properly set in configuration, else the literal string "INVALID SOURCE SCHEMA".
         :rtype: str
         """
-        if isinstance(self._config.Source, BigQuerySchema):
+        if isinstance(self._config.DataHost, BigQuerySchema):
             # _current_date = datetime.now().date()
             date_wildcard = "*"
             # if min_date is not None and max_date is not None:
@@ -172,7 +172,7 @@ class BigQueryInterface(EventInterface):
             #     date_wildcard = BigQueryInterface._datesWildcard(a=min_date, b=_current_date)
             # elif max_date is not None:
             #     date_wildcard = BigQueryInterface._datesWildcard(a=_current_date, b=max_date)
-            return f"{self._config.Source.AsConnectionInfo}.{self._config.DatabaseName}.{self._config.TableName}_{date_wildcard}"
+            return f"{self._config.DataHost.AsConnectionInfo}.{self._config.DatabaseName}.{self._config.TableName}_{date_wildcard}"
         else:
             return "INVALID SOURCE SCHEMA"
 

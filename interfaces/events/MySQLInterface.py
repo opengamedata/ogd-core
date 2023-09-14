@@ -37,18 +37,18 @@ class SQL:
         tunnel  : Optional[sshtunnel.SSHTunnelForwarder] = None
         db_conn : Optional[connection.MySQLConnection]   = None
         # Logger.Log("Preparing database connection...", logging.INFO)
-        if schema.Source is not None and isinstance(schema.Source, MySQLSchema):
-            if schema.Source.HasSSH:
-                Logger.Log(f"Preparing to connect to MySQL via SSH, on host {schema.Source.SSH.Host}", level=logging.DEBUG)
-                if (schema.Source.SSH.Host != "" and schema.Source.SSH.User != "" and schema.Source.SSH.Pass != ""):
-                    tunnel,db_conn = SQL._connectToMySQLviaSSH(sql=schema.Source, db=schema.DatabaseName)
+        if schema.DataHost is not None and isinstance(schema.DataHost, MySQLSchema):
+            if schema.DataHost.HasSSH:
+                Logger.Log(f"Preparing to connect to MySQL via SSH, on host {schema.DataHost.SSH.Host}", level=logging.DEBUG)
+                if (schema.DataHost.SSH.Host != "" and schema.DataHost.SSH.User != "" and schema.DataHost.SSH.Pass != ""):
+                    tunnel,db_conn = SQL._connectToMySQLviaSSH(sql=schema.DataHost, db=schema.DatabaseName)
                 else:
-                    Logger.Log(f"SSH login had empty data, preparing to connect to MySQL directly instead, on host {schema.Source.DBHost}", level=logging.DEBUG)
-                    db_conn = SQL._connectToMySQL(login=schema.Source, db=schema.DatabaseName)
+                    Logger.Log(f"SSH login had empty data, preparing to connect to MySQL directly instead, on host {schema.DataHost.DBHost}", level=logging.DEBUG)
+                    db_conn = SQL._connectToMySQL(login=schema.DataHost, db=schema.DatabaseName)
                     tunnel = None
             else:
-                Logger.Log(f"Preparing to connect to MySQL directly, on host {schema.Source.DBHost}", level=logging.DEBUG)
-                db_conn = SQL._connectToMySQL(login=schema.Source, db=schema.DatabaseName)
+                Logger.Log(f"Preparing to connect to MySQL directly, on host {schema.DataHost.DBHost}", level=logging.DEBUG)
+                db_conn = SQL._connectToMySQL(login=schema.DataHost, db=schema.DatabaseName)
                 tunnel = None
             # Logger.Log("Done preparing database connection.", logging.INFO)
             ret_val = (tunnel, db_conn)
@@ -237,7 +237,7 @@ class MySQLInterface(EventInterface):
             self.Open(force_reopen=False)
         if not self._is_open:
             start = datetime.now()
-            if isinstance(self._config.Source, MySQLSchema):
+            if isinstance(self._config.DataHost, MySQLSchema):
                 self._tunnel, self._db = SQL.ConnectDB(schema=self._config)
                 if self._db is not None:
                     self._db_cursor = self._getCursor()
@@ -263,7 +263,7 @@ class MySQLInterface(EventInterface):
         return True
 
     def _allIDs(self) -> List[str]:
-        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
+        if self._db_cursor is not None and isinstance(self._config.DataHost, MySQLSchema):
             _db_name     : str = self._config.DatabaseName
             _table_name  : str = self._config.TableName
 
@@ -286,7 +286,7 @@ class MySQLInterface(EventInterface):
 
     def _fullDateRange(self) -> Dict[str,datetime]:
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
-        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
+        if self._db_cursor is not None and isinstance(self._config.DataHost, MySQLSchema):
             _db_name     : str = self._config.DatabaseName
             _table_name  : str = self._config.TableName
 
@@ -311,7 +311,7 @@ class MySQLInterface(EventInterface):
     def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> List[Tuple]:
         ret_val = []
         # grab data for the given session range. Sort by event time, so
-        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
+        if self._db_cursor is not None and isinstance(self._config.DataHost, MySQLSchema):
             # filt = f"app_id='{self._game_id}' AND (session_id  BETWEEN '{next_slice[0]}' AND '{next_slice[-1]}'){ver_filter}"
             _db_name     : str = self._config.DatabaseName
             _table_name  : str = self._config.TableName
@@ -350,7 +350,7 @@ class MySQLInterface(EventInterface):
 
     def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]]=None) -> List[str]:
         ret_val = []
-        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
+        if self._db_cursor is not None and isinstance(self._config.DataHost, MySQLSchema):
             # alias long setting names.
             _db_name     : str = self._config.DatabaseName
             _table_name  : str = self._config.TableName
@@ -382,7 +382,7 @@ class MySQLInterface(EventInterface):
 
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Dict[str, datetime]:
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
-        if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
+        if self._db_cursor is not None and isinstance(self._config.DataHost, MySQLSchema):
             # alias long setting names.
             _db_name     : str = self._config.DatabaseName
             _table_name  : str = self._config.TableName

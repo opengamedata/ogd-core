@@ -175,8 +175,8 @@ def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Req
 def genDBInterface(config:ConfigSchema) -> EventInterface:
     ret_val : EventInterface
     _game_cfg = config.GameSourceMap.get(args.game)
-    if _game_cfg is not None and _game_cfg.Source is not None:
-        match (_game_cfg.Source.Type):
+    if _game_cfg is not None and _game_cfg.DataHost is not None:
+        match (_game_cfg.DataHost.Type):
             case "Firebase" | "FIREBASE":
                 ret_val = BQFirebaseInterface(game_id=args.game, config=_game_cfg, fail_fast=config.FailFast)
             case "BigQuery" | "BIGQUERY":
@@ -184,7 +184,7 @@ def genDBInterface(config:ConfigSchema) -> EventInterface:
             case "MySQL" | "MYSQL":
                 ret_val = MySQLInterface(game_id=args.game, config=_game_cfg, fail_fast=config.FailFast)
             case _:
-                raise Exception(f"{_game_cfg.Source.Type} is not a valid EventInterface type!")
+                raise Exception(f"{_game_cfg.DataHost.Type} is not a valid EventInterface type!")
         return ret_val
     else:
         raise ValueError(f"Config for {args.game} was invalid or not found!")

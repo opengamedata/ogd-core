@@ -9,7 +9,7 @@ from utils.Logger import Logger
 class GameSourceSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any], data_sources:Dict[str, DataHostConfig]):
         self._source_name   : str
-        self._source_schema : Optional[DataHostConfig]
+        self._data_host     : Optional[DataHostConfig]
         self._db_name       : str
         self._table_schema  : str
         self._table_name    : str
@@ -23,10 +23,10 @@ class GameSourceSchema(Schema):
             self._source_name = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'source' element; defaulting to source_name={self._source_name}", logging.WARN)
         if self._source_name in data_sources.keys():
-            self._source_schema = data_sources[self._source_name]
+            self._data_host = data_sources[self._source_name]
         else:
-            self._source_schema = None
-            Logger.Log(f"{name} config's 'source' name ({self._source_name}) was not found in available source schemas; defaulting to source_schema={self._source_schema}", logging.WARN)
+            self._data_host = None
+            Logger.Log(f"{name} config's 'source' name ({self._source_name}) was not found in available source schemas; defaulting to source_schema={self._data_host}", logging.WARN)
         if "database" in all_elements.keys():
             self._db_name = GameSourceSchema._parseDBName(all_elements["database"])
         else:
@@ -52,8 +52,8 @@ class GameSourceSchema(Schema):
         return self._source_name
 
     @property
-    def Source(self) -> Optional[DataHostConfig]:
-        return self._source_schema
+    def DataHost(self) -> Optional[DataHostConfig]:
+        return self._data_host
 
     @property
     def DatabaseName(self) -> str:
@@ -71,7 +71,7 @@ class GameSourceSchema(Schema):
     def AsMarkdown(self) -> str:
         ret_val : str
 
-        ret_val = f"{self.Name}: _{self.EventTableSchema}_ format, source {self.Source.Name if self.Source else 'None'} : {self.DatabaseName}.{self.TableName}"
+        ret_val = f"{self.Name}: _{self.EventTableSchema}_ format, source {self.DataHost.Name if self.DataHost else 'None'} : {self.DatabaseName}.{self.TableName}"
         return ret_val
 
     @staticmethod
