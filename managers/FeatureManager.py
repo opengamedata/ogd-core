@@ -51,14 +51,14 @@ class FeatureManager:
     def ProcessEvent(self, event:Event) -> None:
         # 1. process at population level.
         # NOTE: removed the skipping of unrequested modes because second-order features may need feats at levels not requested for final export.
-        if self._population is not None and self._players is not None and self._sessions is not None:
+        if self._population is not None and self._players is not None and self._sessions is not None and self._LoaderClass is not None:
             self._population.ProcessEvent(event=event)
             # 2. process at player level, adding player if needed.
             _player_id = event.UserID or "null"
-            if self._LoaderClass is not None and _player_id not in self._players.keys():
+            if _player_id not in self._players.keys():
                 self._players[_player_id] = PlayerProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
                                                             player_id=_player_id,          feature_overrides=self._overrides)
-            if self._LoaderClass is not None and _player_id not in self._sessions.keys():
+            if _player_id not in self._sessions.keys():
                 self._sessions[_player_id] = {}
                 self._used_null_sess[_player_id] = False
 
@@ -66,7 +66,7 @@ class FeatureManager:
             if _player_id == "null":
                 self._used_null_play = True
             # 3. process at session level, adding session if needed.
-            if self._LoaderClass is not None and event.SessionID not in self._sessions[_player_id].keys():
+            if event.SessionID not in self._sessions[_player_id].keys():
                 self._sessions[_player_id][event.SessionID] = SessionProcessor(LoaderClass=self._LoaderClass, game_schema=self._game_schema,
                                                                     player_id=_player_id,          session_id=event.SessionID,    feature_overrides=self._overrides)
             self._sessions[_player_id][event.SessionID].ProcessEvent(event=event)
