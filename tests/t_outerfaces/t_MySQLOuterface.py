@@ -16,7 +16,8 @@ class t_CSVInterface(TestCase):
 
     zipped_file = ZipFile(Path("tests/t_interfaces/BACTERIA_20210201_to_20210202_5c61198_events.zip"))
 
-    def RunAll(self):
+    @staticmethod
+    def RunAll():
         mysql_schema_elems = {
             "DB_TYPE" : "MySQL",
             "DB_HOST" : "127.0.0.1",
@@ -47,3 +48,6 @@ class t_CSVInterface(TestCase):
 
         outerface.WriteLines(lines=sample_data, mode=mode)
         print("Ran all t_CSVInterface tests.")
+
+if __name__ == '__main__':
+    t_CSVInterface.RunAll()
