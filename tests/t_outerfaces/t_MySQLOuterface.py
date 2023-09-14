@@ -8,8 +8,8 @@ from zipfile import ZipFile
 from schemas.Event import Event
 from schemas.ExportMode import ExportMode
 from interfaces.outerfaces.MySQLOuterface import MySQLOuterface
-from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
-from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
+from schemas.configs.data_sources.DataHostConfig import DataHostConfig
+from schemas.configs.data_sources.MySQLHostConfig import MySQLSchema
 from schemas.configs.GameSourceSchema import GameSourceSchema
 
 class t_CSVInterface(TestCase):
@@ -28,7 +28,7 @@ class t_CSVInterface(TestCase):
             "SSH_USER": "WCER AD User",
             "SSH_PASS": "WCER AD Password"
         }
-        data_sources : Dict[str, DataSourceSchema] = {
+        data_sources : Dict[str, DataHostConfig] = {
             "MySQL" : MySQLSchema(name="MySQL", all_elements=mysql_schema_elems)
         }
         game_source_elems = {

@@ -6,7 +6,7 @@ from typing import Any, Dict
 from schemas.Schema import Schema
 from utils.Logger import Logger
 
-class DataSourceSchema(Schema):
+class DataHostConfig(Schema):
     def __init__(self, name:str, other_elements:Dict[str, Any]):
         self._db_type : str
         if not isinstance(other_elements, dict):
@@ -14,7 +14,7 @@ class DataSourceSchema(Schema):
             Logger.Log(f"For {name} Data Source config, other_elements was not a dict, defaulting to empty dict", logging.WARN)
         # Parse DB info
         if "DB_TYPE" in other_elements.keys():
-            self._db_type = DataSourceSchema._parseDBType(other_elements["DB_TYPE"])
+            self._db_type = DataHostConfig._parseDBType(other_elements["DB_TYPE"])
         else:
             self._db_type = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'DB_TYPE' element; defaulting to db_host={self._db_type}", logging.WARN)

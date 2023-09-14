@@ -3,7 +3,7 @@ import logging
 from typing import Any, Dict, Optional, Type
 # import local files
 from schemas.Schema import Schema
-from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
+from schemas.configs.data_sources.DataHostConfig import DataHostConfig
 from utils.Logger import Logger
 
 class SSHSchema(Schema):
@@ -125,7 +125,7 @@ class SSHSchema(Schema):
             Logger.Log(f"SSH config for port was unexpected type {type(port)}, defaulting to int(port)={ret_val}.", logging.WARN)
         return ret_val
 
-class MySQLSchema(DataSourceSchema):
+class MySQLSchema(DataHostConfig):
     def __init__(self, name:str, all_elements:Dict[str, Any]):
         self._db_host  : str
         self._db_port  : int

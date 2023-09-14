@@ -9,7 +9,7 @@ from typing import Dict, List, Tuple, Optional
 from interfaces.events.EventInterface import EventInterface
 from schemas.IDMode import IDMode
 from schemas.configs.GameSourceSchema import GameSourceSchema
-from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
+from schemas.configs.data_sources.MySQLHostConfig import MySQLSchema
 from utils.Logger import Logger
 
 

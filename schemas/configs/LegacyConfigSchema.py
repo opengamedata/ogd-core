@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional
 # import local files
-from schemas.configs.data_sources.MySQLSourceSchema import SSHSchema
+from schemas.configs.data_sources.MySQLHostConfig import SSHSchema
 from schemas.Schema import Schema
 from utils.Logger import Logger
 

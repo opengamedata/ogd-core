@@ -2,14 +2,14 @@
 import logging
 from typing import Any, Dict, List, Optional, Union
 # import local files
-from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
+from schemas.configs.data_sources.DataHostConfig import DataHostConfig
 from schemas.Schema import Schema
 from utils.Logger import Logger
 
 class GameSourceSchema(Schema):
-    def __init__(self, name:str, all_elements:Dict[str, Any], data_sources:Dict[str, DataSourceSchema]):
+    def __init__(self, name:str, all_elements:Dict[str, Any], data_sources:Dict[str, DataHostConfig]):
         self._source_name   : str
-        self._source_schema : Optional[DataSourceSchema]
+        self._source_schema : Optional[DataHostConfig]
         self._db_name       : str
         self._table_schema  : str
         self._table_name    : str
@@ -52,7 +52,7 @@ class GameSourceSchema(Schema):
         return self._source_name
 
     @property
-    def Source(self) -> Optional[DataSourceSchema]:
+    def Source(self) -> Optional[DataHostConfig]:
         return self._source_schema
 
     @property

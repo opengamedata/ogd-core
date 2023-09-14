@@ -5,10 +5,10 @@ from typing import Any, Dict, Optional, Type
 # import local files
 from schemas.configs.IndexingSchema import FileIndexingSchema
 from schemas.configs.GameSourceSchema import GameSourceSchema
-from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
-from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
-from schemas.configs.data_sources.FileSourceSchema import FileSourceSchema
-from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
+from schemas.configs.data_sources.DataHostConfig import DataHostConfig
+from schemas.configs.data_sources.BigQueryHostConfig import BigQuerySchema
+from schemas.configs.data_sources.FileHostConfig import FileHostConfig
+from schemas.configs.data_sources.MySQLHostConfig import MySQLSchema
 from schemas.configs.LegacyConfigSchema import LegacyConfigSchema
 from schemas.Schema import Schema
 from utils.Logger import Logger
@@ -20,7 +20,7 @@ class ConfigSchema(Schema):
         self._dbg_level  : int
         self._fail_fast  : bool
         self._file_idx   : FileIndexingSchema
-        self._data_src   : Dict[str, DataSourceSchema]
+        self._data_src   : Dict[str, DataHostConfig]
         self._game_src_map : Dict[str, GameSourceSchema]
 
         self._legacy_elems : LegacyConfigSchema = LegacyConfigSchema(name=f"{name} Legacy", all_elements=all_elements)
@@ -90,7 +90,7 @@ class ConfigSchema(Schema):
         return self._file_idx
 
     @property
-    def DataSources(self) -> Dict[str, DataSourceSchema]:
+    def DataSources(self) -> Dict[str, DataHostConfig]:
         return self._data_src
 
     @property
@@ -177,8 +177,8 @@ class ConfigSchema(Schema):
         return ret_val
 
     @staticmethod
-    def _parseDataSources(sources) -> Dict[str, DataSourceSchema]:
-        ret_val : Dict[str, DataSourceSchema]
+    def _parseDataSources(sources) -> Dict[str, DataHostConfig]:
+        ret_val : Dict[str, DataHostConfig]
         if isinstance(sources, dict):
             ret_val = {}
             for key,val in sources.items():
@@ -188,7 +188,7 @@ class ConfigSchema(Schema):
                     case "MYSQL":
                         ret_val[key] = MySQLSchema(name=key, all_elements=val)
                     case "FILE":
-                        ret_val[key] = FileSourceSchema(name=key, all_elements=val)
+                        ret_val[key] = FileHostConfig(name=key, all_elements=val)
                     case _:
                         Logger.Log(f"Game source {key} did not  have a valid 'DB_TYPE' (value: {val.get('DB_TYPE', '')}), and will be skipped!", logging.WARN)
         else:

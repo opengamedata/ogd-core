@@ -4,10 +4,10 @@ import logging
 from typing import Any, Dict, Optional, Type
 # import local files
 from schemas.Schema import Schema
-from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
+from schemas.configs.data_sources.DataHostConfig import DataHostConfig
 from utils.Logger import Logger
 
-class BigQuerySchema(DataSourceSchema):
+class BigQuerySchema(DataHostConfig):
     def __init__(self, name:str, all_elements:Dict[str, Any], fallbacks:Dict[str, Any]={}):
         self._project_id : str
         self._credential : Optional[str]

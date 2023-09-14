@@ -1,9 +1,9 @@
 # import standard libraries
 from typing import Any, Dict
 # import local files
-from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
+from schemas.configs.data_sources.DataHostConfig import DataHostConfig
 
-class FileSourceSchema(DataSourceSchema):
+class FileHostConfig(DataHostConfig):
     def __init__(self, name:str, all_elements:Dict[str, Any]):
         super().__init__(name=name, other_elements=all_elements)
 
