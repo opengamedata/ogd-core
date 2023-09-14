@@ -7,7 +7,7 @@ from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.Event import Event
 from schemas.ExportMode import ExportMode
 from schemas.FeatureData import FeatureData
-from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.GameSourceSchema import GameSourceSchema
 from utils.Logger import Logger
 from utils.utils import ExportRow
 
