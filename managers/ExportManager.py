@@ -138,7 +138,7 @@ class ExportManager:
         else:
             Logger.Log("Event data not requested, skipping event manager.", logging.INFO, depth=1)
         # 3. Set up FeatureManager, assuming it was requested.
-        if load_class is not None and request.ExportFeatures:
+        if request.ExportFeatures and load_class is not None:
             self._feat_mgr = FeatureManager(game_schema=_game_schema, LoaderClass=load_class, feature_overrides=request._feat_overrides)
         else:
             Logger.Log("Feature data not requested, or extractor loader unavailable, skipping feature manager.", logging.INFO, depth=1)
