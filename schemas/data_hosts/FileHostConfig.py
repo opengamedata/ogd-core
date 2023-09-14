@@ -1,7 +1,7 @@
 # import standard libraries
 from typing import Any, Dict
 # import local files
-from schemas.configs.data_sources.DataHostConfig import DataHostConfig
+from schemas.data_hosts.DataHostConfig import DataHostConfig
 
 class FileHostConfig(DataHostConfig):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

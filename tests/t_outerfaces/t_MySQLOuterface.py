@@ -8,8 +8,8 @@ from zipfile import ZipFile
 from schemas.Event import Event
 from schemas.ExportMode import ExportMode
 from interfaces.outerfaces.MySQLOuterface import MySQLOuterface
-from schemas.configs.data_sources.DataHostConfig import DataHostConfig
-from schemas.configs.data_sources.MySQLHostConfig import MySQLSchema
+from schemas.data_hosts.DataHostConfig import DataHostConfig
+from schemas.data_hosts.MySQLHostConfig import MySQLSchema
 from schemas.configs.GameSourceSchema import GameSourceSchema
 
 class t_CSVInterface(TestCase):
