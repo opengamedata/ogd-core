@@ -8,7 +8,7 @@ from utils.Logger import Logger
 
 class GameSourceSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any], data_sources:Dict[str, DataHostConfig]):
-        self._source_name   : str
+        self._host_cfg_name : str
         self._data_host     : Optional[DataHostConfig]
         self._db_name       : str
         self._table_schema  : str
@@ -18,15 +18,15 @@ class GameSourceSchema(Schema):
             all_elements = {}
             Logger.Log(f"For {name} Game Source config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if "source" in all_elements.keys():
-            self._source_name = GameSourceSchema._parseSource(all_elements["source"])
+            self._host_cfg_name = GameSourceSchema._parseSource(all_elements["source"])
         else:
-            self._source_name = "UNKNOWN"
-            Logger.Log(f"{name} config does not have a 'source' element; defaulting to source_name={self._source_name}", logging.WARN)
-        if self._source_name in data_sources.keys():
-            self._data_host = data_sources[self._source_name]
+            self._host_cfg_name = "UNKNOWN"
+            Logger.Log(f"{name} config does not have a 'source' element; defaulting to source_name={self._host_cfg_name}", logging.WARN)
+        if self._host_cfg_name in data_sources.keys():
+            self._data_host = data_sources[self._host_cfg_name]
         else:
             self._data_host = None
-            Logger.Log(f"{name} config's 'source' name ({self._source_name}) was not found in available source schemas; defaulting to source_schema={self._data_host}", logging.WARN)
+            Logger.Log(f"{name} config's 'source' name ({self._host_cfg_name}) was not found in available source schemas; defaulting to source_schema={self._data_host}", logging.WARN)
         if "database" in all_elements.keys():
             self._db_name = GameSourceSchema._parseDBName(all_elements["database"])
         else:
@@ -48,8 +48,8 @@ class GameSourceSchema(Schema):
         super().__init__(name=name, other_elements=_leftovers)
 
     @property
-    def SourceName(self) -> str:
-        return self._source_name
+    def DataHostName(self) -> str:
+        return self._host_cfg_name
 
     @property
     def DataHost(self) -> Optional[DataHostConfig]:
