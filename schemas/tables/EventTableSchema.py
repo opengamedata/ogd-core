@@ -162,7 +162,7 @@ class EventTableSchema:
 
         :param schema_name: The filename for the table schema JSON.
         :type schema_name: str
-        :param schema_path: Path to find the given table schema file, defaults to "./schemas/table_schemas/"
+        :param schema_path: Path to find the given table schema file, defaults to "./schemas/tables/table_schemas/"
         :type schema_path: str, optional
         :param is_legacy: [description], defaults to False
         :type is_legacy: bool, optional
