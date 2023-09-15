@@ -15,13 +15,13 @@ from games.PENGUINS.features.PerRegionFeature import PerRegionFeature
     
 class RegionDuration(PerRegionFeature):
     
-    def __init__(self, params:ExtractorParameters, region_map:dict):
-        super().__init__(params=params, region_map = region_map)
+    def __init__(self, params: ExtractorParameters, region_map: dict):
+        super().__init__(params=params, region_map=region_map)
         self._session_id = None
+        self._current_region = None
         self._region_start_time = None
-        self._prev_timestamp = None
-        self._time = 0
-        self._name = None
+        self._time_in_region = {}  # Dictionary to store total time spent in each region
+
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -32,21 +32,29 @@ class RegionDuration(PerRegionFeature):
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _extractFromEvent(self, event: Event, region_map:dict) -> None:
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
+            self._current_region = None  # Reset current region for a new session
+            self._region_start_time = None
 
-            if self._region_start_time and self._prev_timestamp:
-                self._time += (self._prev_timestamp - self._region_start_time).total_seconds()
-                self._region_start_time = event.Timestamp
-
-        self._prev_timestamp = event.Timestamp
-
-    def _extractFromFeatureData(self, feature:FeatureData):
-        return
+        # Check if the event provides information about the player's region
+        region_data = event.EventData.get("region_name")
+        if region_data is not None:
+            if region_map.get(region_data):
+                if self._current_region != region_data:
+                    # Transition to a new region, update the current region and start time
+                    self._current_region = region_data
+                    self._region_start_time = event.Timestamp
+                else:
+                    # Player is still in the same region, update the time spent
+                    if self._region_start_time is not None:
+                        self._time_in_region[self._current_region] = self._time_in_region.get(self._current_region, 0) + (
+                                event.Timestamp - self._region_start_time).total_seconds()
 
     def _getFeatureValues(self) -> List[Any]:
-        return [timedelta(seconds=self._time)]
+        # Return a list of total time spent in each region
+        return [timedelta(seconds=self._time_in_region.get(region, 0)) for region in self._region_map.values()]
 
     # *** Optionally override public functions. ***
     def _validateEventCountIndex(self, event: Event, region_map:dict):

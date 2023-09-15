@@ -494,6 +494,14 @@
                 "description": "The duration of time a player played in a given region of the game.",
                 "return_type": "timedelta"
             },
+            "RegionDuration": {
+                "type": "RegionDuration",
+                "enabled": true,
+                "count": 11,
+                "prefix": "region",
+                "description": "The duration of time a player played in a given region of the game.",
+                "return_type": "timedelta"
+            },
             "WaddlePerRegion": {
                 "type": "WaddlePerRegion",
                 "enabled": true,
