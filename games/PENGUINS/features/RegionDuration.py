@@ -18,7 +18,7 @@ class RegionDuration(PerRegionFeature):
     def __init__(self, params:ExtractorParameters, region_map:dict):
         super().__init__(params=params, region_map = region_map)
         self._session_id = None
-        self._region_start_time = None
+        # self._region_start_time = None
         self._prev_timestamp = None
         self._time = 0
         self._name = None
@@ -42,8 +42,9 @@ class RegionDuration(PerRegionFeature):
         
         else:
             self._region_start_time = event.Timestamp 
-            self._time += (self._prev_timestamp - self._region_start_time).total_seconds()
-
+            self._time += timedelta(seconds=self._time)
+            self._time += (event.Timestamp - self._gaze_start_time).total_seconds()
+            self._region_start_time = None
         self._prev_timestamp = event.Timestamp
         
     def _extractFromFeatureData(self, feature:FeatureData):
