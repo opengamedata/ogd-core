@@ -56,7 +56,8 @@ class RegionDuration(PerRegionFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [timedelta(seconds=self._time)]
+        if (len(self._region_time_lst) != 0):
+            return [sum(self._region_time_lst)/len(self._region_time_lst)]
 
     # *** Optionally override public functions. ***
     def _validateEventCountIndex(self, event: Event, region_map:dict):
