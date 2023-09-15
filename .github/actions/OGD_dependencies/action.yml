@@ -12,20 +12,22 @@ runs:
       shell: bash
     - name: Get correct Python
       run: |
-        sudo apt-get -q install python3.8
-        sudo apt-get -q install python3.8-dev
+        sudo apt-get -q install python3.10
       shell: bash
     - name: Set up pip
       run: |
-        python3.8 -m pip install --upgrade pip
+        python3.10 -m pip install --upgrade pip
       shell: bash
+    # sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+    # sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 2
+    # sudo update-alternatives --config python3
     # - name: Get pip cache dir
     #   id: pip-cache
     #   run: |
     #     echo "::set-output name=dir::$(pip cache dir)"
     #   shell: bash
     # - name: Set up pip cache
-    #   uses: actions/cache@v2
+    #   uses: actions/cache@v3
     #   id: cache
     #   with:
     #     path: ${{ steps.pip-cache.outputs.dir }}
@@ -38,7 +40,7 @@ runs:
     - name: Set up Python libraries
       # if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        python3.8 -m pip install setuptools --quiet
-        python3.8 -m pip install wheel --quiet
-        python3.8 -m pip install -r requirements.txt --quiet
+        python3.10 -m pip install setuptools --quiet
+        python3.10 -m pip install wheel --quiet
+        python3.10 -m pip install -r requirements.txt --quiet
       shell: bash

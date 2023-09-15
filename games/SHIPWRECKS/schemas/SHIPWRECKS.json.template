@@ -1,0 +1,271 @@
+{
+    "level_range": { "min":0, "max":3 },
+
+    "events": {
+        "start_mission": {
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
+        },
+        "checkpoint": {
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                },
+                "status": {
+                    "type": "N/A",
+                    "description": "Checkpoint status"
+                }
+            }
+        },
+        "open_map": {
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
+        },
+        "scanning": {
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
+        },
+        "scan_complete": {
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
+        },
+        "dive_begin": {
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
+        },
+        "new_evidence": {
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                },
+                "type": {
+                    "type": "N/A",
+                    "description": "Type of evidence found"
+                },
+                "source": {
+                    "type": "N/A",
+                    "description": "Source where the evidence was gathered from"
+                },
+                "key": {
+                    "type": "N/A",
+                    "description": "Name/ID for the evidence found"
+                }
+            }
+        },
+        "mission_complete": {
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
+        },
+        "update_ship_overview": {
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                },
+                "field": {
+                    "type": "N/A",
+                    "description": "Field in ship overview that was updated"
+                },
+                "evidence": {
+                    "type": "N/A",
+                    "description": "Evidence placed in ship overview"
+                }
+            }
+        },
+        "view_desk": {
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                }
+            }
+        },
+        "view_tab": {
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                },
+                "tab_name": {
+                    "type": "N/A",
+                    "description": "Name of tab opened"
+                }
+            }
+        },
+        "view_chat": {
+            "description": "N/A",
+            "event_data": {
+                "mission_id": {
+                    "type": "N/A",
+                    "description": "ID for the current mission"
+                },
+                "name": {
+                    "type": "N/A",
+                    "description": "Name of NPC in the chat"
+                }
+            }
+        }
+    },
+
+    "features": {
+        "per_count": {
+            "MissionDiveTime": {
+                "type": "MissionDiveTime",
+                "enabled": false,
+                "count": "level_range",
+                "prefix": "mission",
+                "description": "Time spent diving for a given mission"
+            },
+            "MissionSonarTimeToComplete": {
+                "type": "MissionSonarTimeToComplete",
+                "enabled": false,
+                "count": "level_range",
+                "prefix": "mission",
+                "description": "Time taken to complete sonar scan for a given mission"
+            },
+            "JobsAttempted": {
+                "type": "JobsAttempted",
+                "enabled": true,
+                "count": "level_range",
+                "prefix": "mission",
+                "description": "Subfeatures for number of mission starts and completes, percent complete, and avg/std time to complete",
+                "subfeatures": {
+                    "job-name":{"return_type":"string", "description":"String name for a mission"},
+                    "num-starts":{"return_type":"int", "description":"Number of mission_start events for a given mission"},
+                    "num-completes":{"return_type":"int", "description":"Number of mission_complete events for a given mission"},
+                    "percent-complete":{"return_type":"float", "description":"Percent of mission which were accepted and completed"},
+                    "avg-time-complete":{"return_type":"float", "description":"Average time taken from accepting to completing a mission"},
+                    "std-dev-complete":{"return_type":"float", "description":"Standard deviation of time taken to complete"}
+                }
+            }
+        },
+        "aggregate":{
+            "ActiveJobs": {
+                "type": "ActiveJobs",
+                "enabled": true,
+                "description":"Count of players who left off on each mission."
+            },
+            "EventList": {
+                "type": "EventList",
+                "enabled": true,
+                "description": "List of all events in a session"
+            },
+            "JobsCompleted": {
+                "type": "JobsCompleted",
+                "enabled": true,
+                "description": "List of missions completed in a session"
+            },
+            "PlayerSummary": {
+                "type": "PlayerSummary",
+                "enabled": true,
+                "description": "Summary of player statistics (active session time, jobs completed, number of sessions)"
+            },
+            "PopulationSummary": {
+                "type": "PopulationSummary",
+                "enabled": true,
+                "description": "Summary of population statistics (active session time, average jobs completed count, average session count)"
+            },
+            "EvidenceBoardCompleteCount": {
+                "type": "EvidenceBoardCompleteCount",
+                "enabled": false,
+                "description": "Evidence board completes in a session"
+            },
+            "SessionDuration": {
+                "type": "SessionDuration",
+                "enabled": true,
+                "description": "Time spent playing in a given session"
+            },
+            "SessionID": {
+                "type": "SessionID",
+                "enabled": true,
+                "description":"The player's session ID number for this play session"
+            },
+            "TopJobCompletionDestinations": {
+                "type": "TopJobCompletionDestinations",
+                "enabled": true,
+                "description": "Top accepted missions after previously completing a given mission"
+            },
+            "TopJobSwitchDestinations": {
+                "type": "TopJobSwitchDestinations",
+                "enabled": true,
+                "description": "Top accepted missions after leaving a given mission"
+            },
+            "TotalDiveTime": {
+                "type": "TotalDiveTime",
+                "enabled": false,
+                "description": "Total time spent diving in a session"
+            }
+        }
+    },
+
+    "db_columns": {
+        "event_date": "The date on which the event was logged",
+        "event_timestamp": "The time (in microseconds, UTC) at which the event was logged on the client",
+        "event_name": "The name of the event",
+        "event_params": "A repeated record of the parameters associated with this event",
+        "event_previous_timestamp": "The time (in microseconds, UTC) at which the event was previously logged on the client",
+        "event_value_in_usd": "The currency-converted value (in USD) of the event's value parameter",
+        "event_bundle_sequence_id": "The sequential ID of the bundle in which these events were uploaded",
+        "event_server_timestamp_offset": "Timestamp offset between collection time and upload time in micros",
+        "user_id": "The user ID set via the setUserId API",
+        "user_pseudo_id": "The pseudonymous id (e.g., app instance ID) for the user",
+        "user_properties": "A repeated record of user properties set with the setUserProperty API",
+        "user_first_touch_timestamp": "The time (in microseconds) at which the user first opened the app or visited the site",
+        "user_ltv": "A record of Lifetime Value information about the user",
+        "device": "A record of device information",
+        "geo": "A record of the user's geographic information",
+        "app_info": "A record of information on the app",
+        "traffic_source": "Name of the traffic source that first acquired the user",
+        "stream_id": "The numeric ID of the stream",
+        "platform": "The platform on which the app was built",
+        "event_dimensions": "Dimensions associated with the event",
+        "ecommerce": "A record of information about ecommerce",
+        "items": "A repeated record of items included in this event"
+    },
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	},
+    "mission_map": {
+        "Level1": 0,
+        "Level2": 1,
+        "Level3": 2,
+        "Level4": 3
+    }
+}

@@ -74,7 +74,7 @@ class CustomDetector(Detector):
         # further note the event_data can contain any extra data you desire; its contents are entirely up to you.
         return ret_val
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, name:str, description:str, count_index:int, trigger_callback:Callable[[Event], None]):
         super().__init__(name=name, description=description, count_index=count_index, trigger_callback=trigger_callback)

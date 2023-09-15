@@ -60,7 +60,7 @@ class Extractor(abc.ABC):
         """
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, params:ExtractorParameters):
         self._params = params

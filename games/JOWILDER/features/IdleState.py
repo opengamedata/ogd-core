@@ -6,6 +6,7 @@ from datetime  import timedelta, datetime
 # import local files
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
@@ -30,20 +31,25 @@ class IdleState(SessionFeature):
         return IdleState.IDLE_TIME_THRESHOLD
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
-        return ["CUSTOM." + str(i) for i in range(3, 21)] + ["CUSTOM.1"]
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+        return [f"CUSTOM.{i}" for i in range(3, 21)] + ["CUSTOM.1"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.EventName == "CUSTOM.1" and not self._last_timestamp:
             self._last_timestamp = event.Timestamp
             return
-        time_since_last = event.Timestamp - self._last_timestamp
-        if time_since_last > IdleState.IDLE_TIME_THRESHOLD:
-            self._time += time_since_last
-            self._count += 1
+        if self._last_timestamp is not None:
+            time_since_last = event.Timestamp - self._last_timestamp
+            if time_since_last > IdleState.IDLE_TIME_THRESHOLD:
+                self._time += time_since_last
+                self._count += 1
+        else:
+            raise ValueError("In IdleState, last timestamp is None!")
         self._last_timestamp = event.Timestamp
         return
 

@@ -10,14 +10,15 @@ from processors.FeatureProcessor import FeatureProcessor
 from schemas.Event import Event
 from schemas.ExportMode import ExportMode
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
-from utils import Logger, ExportRow
+from schemas.games.GameSchema import GameSchema
+from utils.Logger import Logger
+from utils.utils import ExportRow
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.
 class SessionProcessor(FeatureProcessor):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the SessionProcessor class.
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, player_id:str, session_id:str,
@@ -67,7 +68,7 @@ class SessionProcessor(FeatureProcessor):
         return self._session_id
 
     def _getExtractorNames(self) -> List[str]:
-        return ["SessionID", "PlayerID"] + self._registry.GetExtractorNames()
+        return ["PlayerID", "SessionID"] + self._registry.GetExtractorNames()
 
     ## Function to handle processing of a single row of data.
     def _processEvent(self, event: Event):
@@ -80,23 +81,13 @@ class SessionProcessor(FeatureProcessor):
         """
         self._registry.ExtractFromEvent(event)
 
-    def _processFeatureData(self, feature: FeatureData):
-        self._registry.ExtractFromFeatureData(feature=feature)
-
-    def _getFeatureValues(self, export_types:Set[ExportMode], as_str:bool=False) -> Dict[str,List[ExportRow]]:
-        # 1) First, we get Session's first-order feature data:
-        _first_order_data : Dict[str, List[FeatureData]] = self.GetFeatureData(order=FeatureRegistry.FeatureOrders.FIRST_ORDER.value)
-        # 2) Then we can side-propogate the values to second-order features, and down-propogate to other extractors:
-        for feature in _first_order_data['sessions']:
-            self.ProcessFeatureData(feature=feature)
-        # 3) Finally, we assume higher-ups have already sent down their first-order features, so we are ready to return all feature values.
-        if ExportMode.SESSION in export_types and isinstance(self._registry, FeatureRegistry):
-            if as_str:
-                return {"sessions" : [[self._session_id, self._player_id] + self._registry.GetFeatureStringValues()]}
-            else:
-                return {"sessions" : [[self._session_id, self._player_id] + self._registry.GetFeatureValues()]}
-        else:
-            return {}
+    def _getLines(self) -> List[ExportRow]:
+        ret_val : ExportRow
+        # if as_str:
+        #     ret_val = [self._playerID, self._sessionID] + self._registry.GetFeatureStringValues()
+        # else:
+        ret_val = [self._playerID, self._sessionID] + self._registry.GetFeatureValues()
+        return [ret_val]
 
     def _getFeatureData(self, order:int) -> Dict[str, List[FeatureData]]:
         ret_val : Dict[str, List[FeatureData]] = { "sessions":[] }

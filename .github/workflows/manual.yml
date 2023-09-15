@@ -8,41 +8,45 @@ on:
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
     inputs:
       game:
-        description: "The game(s) to be exported, comma-separated"
+        description: "Game: The game(s) to be exported, comma-separated"
         required: true
         default: "['BACTERIA']"
-      slice_size:
-        description: "The size of slices to use"
-        required: false
-        default: 1000
       monthly:
-        description: "If true, use month/year. Else, use start and end dates"
+        description: "Monthly: If true, use month/year. Else, use start and end dates"
         required: true
         default: "true"
       month_year:
-        description: "The month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
+        description: "Month/Year: The month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
         required: false
         default: "['01/2021']"
       start_date:
-        description: "The start date for the export"
+        description: "Start Date: The start date for the export"
         required: false
         default: "01/01/2021"
       end_date:
-        description: "The end date for the export"
+        description: "End Date: The end date for the export"
         required: false
         default: "01/01/2021"
-      database:
-        desription: "Which database to pull from"
+      export_to_web:
+        description: "Export to Web: Boolean indicating whether the export should go to the website, or only be uploaded as an artifact."
         required: true
-        default: "logger"
+        default: "false"
+      slice_size:
+        description: "Slice Size: The size of slices to use"
+        required: false
+        default: "1000"
       log_level:
-        description: "What level of debugging output to log"
+        description: "Log Level: What level of debugging output to log"
         required: true
         default: "INFO"
+
+env:
+  OGD_BQ_GAMES: '["AQUALAB", "BACTERIA", "BALLOON", "CRYSTAL", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "JOWILDER", "PENGUINS", "LAKELAND", "MAGNET", "WAVES", "WIND"]'
 
 jobs:
   export_data:
     name: Export Game
+    timeout-minutes: 1440
     strategy:
       matrix:
         game: ${{ FromJson(github.event.inputs.game) }}
@@ -51,37 +55,37 @@ jobs:
       max-parallel: 3
 
     # Steps to set up for and execute an export
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       # A bunch of copy-paste crap to set up google cloud for any given game.
-    - if: ${{ matrix.game == 'AQUALAB' }}
+    - if: contains(fromJson(${{ env.OGD_BQ_GAMES }}), ${{ matrix.game }})
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.AQUALAB_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.AQUALAB_BQ_KEY }}
+        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'MASHOPOLIS' }}
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.MASHOPOLIS_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.MASHOPOLIS_BQ_KEY }}
+        project_id: ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_MASHOPOLIS_JSON }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'SHADOWSPECT' }}
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.SHADOWSPECT_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.SHADOWSPECT_BQ_KEY }}
+        project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'SHIPWRECKS' }}
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.SHIPWRECKS_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.SHIPWRECKS_BQ_KEY }}
+        project_id: ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
         export_default_credentials: true
       # Back to normal setup stuff.
     - name: Get OpenConnect
@@ -93,12 +97,11 @@ jobs:
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
-        vpn_user: ${{secrets.VPN_USER}}
-        vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        sql_db: ${{github.event.inputs.database}}
+        ssh_host: ${{vars.FD_STORE_HOST}}
+        ssh_user: ${{secrets.VPN_USER}}
+        ssh_pass: ${{secrets.VPN_PASS}}
         slice_size: ${{ github.event.inputs.slice_size }}
         log_level: ${{ github.event.inputs.log_level }}
     - name: Set up Schema File
@@ -111,6 +114,7 @@ jobs:
       with:
         game: ${{matrix.game}}
         month_year: ${{matrix.month_year}}
+        events_only: false
     - name: Do Export of Range
       if: github.event.inputs.monthly == 'false'
       uses: ./.github/actions/export_custom
@@ -118,23 +122,32 @@ jobs:
         game: ${{matrix.game}}
         start_date: ${{github.event.inputs.start_date}}
         end_date: ${{github.event.inputs.end_date}}
+        events_only: false
     - name: Upload files to opengamedata via scp
+      if: github.event.inputs.export_to_web == 'true'
       run: |
         mkdir -p ~/.ssh
-        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
-        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
-        scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
-    - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v2
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
+        scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
+    - name: Upload data as artifact
+      if: github.event.inputs.export_to_web == 'false'
+      uses: actions/upload-artifact@v3
       with:
+        name: ${{matrix.game}}_export_data
+        path: ./data/${{matrix.game}}/*.zip
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: log_data
         path: ./*.log
   
   trigger_reindex:
     name: Reindex OpenGameData Files
-    if: always()
+    if: github.event.inputs.export_to_web == 'true'
     needs: export_data
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Get OpenConnect
       run: sudo apt-get -q update && sudo apt-get -q install openconnect
@@ -144,6 +157,6 @@ jobs:
       # run: echo "placeholder for reindexing!"
       run: |
         mkdir -p ~/.ssh
-        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
-        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata; pwd; ls; python3 reindexer.py;"
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata; pwd; ls; python3 reindexer.py;"

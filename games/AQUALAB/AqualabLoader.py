@@ -11,16 +11,15 @@ from games.AQUALAB.detectors import *
 from games.AQUALAB.features import *
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 
 EXPORT_PATH = "games/AQUALAB/DBExport.json"
-CONFIG_PATH = "games/AQUALAB/AQUALAB.json"
 
 ## @class AqualabLoader
 #  Extractor subclass for extracting features from Aqualab game data.
 class AqualabLoader(ExtractorLoader):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the AqualabLoader class.
     def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
@@ -38,15 +37,21 @@ class AqualabLoader(ExtractorLoader):
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
         self._job_map = {"no-active-job": 0}
         self._diff_map = {0: {"experimentation": 0, "modeling": 0, "argumentation": 0} }
+        self._task_map = {}
         data = None
 
         # Load Aqualab jobs export and map job names to integer values
         with open(EXPORT_PATH, "r") as file:
             export = json.load(file)
 
+            task_num = 1
             for i, job in enumerate(export["jobs"], start=1):
                 self._job_map[job["id"]] = i
                 self._diff_map[i] = job["difficulties"]
+                for task in job["tasks"]:
+                    task_by_job = job["id"] + "_" + task["id"]
+                    self._task_map[task_by_job] = task_num
+                    task_num += 1
 
         # Update level count
         self._game_schema._max_level = len(self._job_map) - 1
@@ -60,7 +65,22 @@ class AqualabLoader(ExtractorLoader):
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         # First run through aggregate features
-        if feature_type == "ActiveJobs":
+        if feature_type == "ActiveTime":
+            ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
+        elif feature_type == "JobTriesInArgument":
+            ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
+        elif feature_type == "ModelInterveneCount":
+            ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
+        elif feature_type == "TankRulesCount":
+            ret_val = TankRulesCount.TankRulesCount(params=extractor_params)
+        elif feature_type == "ModelExportCount":
+            ret_val = ModelExportCount.ModelExportCount(params=extractor_params, job_map=self._job_map)
+        elif feature_type == "ModelPredictCount":
+            ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
+        elif feature_type == "UserAvgActiveTime":
+            ret_val = UserAvgActiveTime.UserAvgActiveTime(
+                params=extractor_params, player_id=self._player_id)
+        elif feature_type == "ActiveJobs":
             ret_val = ActiveJobs.ActiveJobs(params=extractor_params, job_map=self._job_map)
         elif feature_type == "EchoSessionID":
             ret_val = EchoSessionID.EchoSessionID(params=extractor_params)
@@ -98,8 +118,6 @@ class AqualabLoader(ExtractorLoader):
             ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
         elif feature_type == "UserAvgSessionDuration":
             ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
-        elif feature_type == "UserSessionCount":
-            ret_val = UserSessionCount.UserSessionCount(params=extractor_params, player_id=self._player_id)
         elif feature_type == "UserTotalSessionDuration":
             ret_val = UserTotalSessionDuration.UserTotalSessionDuration(params=extractor_params, player_id=self._player_id)
         # then run through per-count features.
@@ -120,8 +138,12 @@ class AqualabLoader(ExtractorLoader):
                 ret_val = JobGuideCount.JobGuideCount(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobHelpCount":
                 ret_val = JobHelpCount.JobHelpCount(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobLocationChanges":
+                ret_val = JobLocationChanges.JobLocationChanges(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobModelingTime":
                 ret_val = JobModelingTime.JobModelingTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobStartCount":
+                ret_val = JobStartCount.JobStartCount(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobTasksCompleted":
                 ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobsAttempted":
@@ -142,6 +164,14 @@ class AqualabLoader(ExtractorLoader):
             ret_val = DiveSiteNoEvidence.DiveSiteNoEvidence(params=extractor_params, trigger_callback=trigger_callback, threshold=schema_args['threshold'])
         elif detector_type == "EchoRoomChange":
             ret_val = EchoRoomChange.EchoRoomChange(params=extractor_params, trigger_callback=trigger_callback)
+        elif detector_type == "Idle":
+            ret_val = Idle.Idle(params=extractor_params, trigger_callback=trigger_callback, idle_level=schema_args.get("idle_level"))
+        elif detector_type == "SceneChangeFrequently":
+            ret_val = SceneChangeFrequently.SceneChangeFrequently(params=extractor_params, trigger_callback=trigger_callback, time_threshold=schema_args.get("threshold"))
+        elif detector_type == "HintAndLeave":
+            ret_val = HintAndLeave.HintAndLeave(params=extractor_params, trigger_callback=trigger_callback, time_threshold=schema_args.get("threshold"))
+        elif detector_type == "TwoHints":
+            ret_val = TwoHints.TwoHints(params=extractor_params, trigger_callback=trigger_callback, time_threshold=schema_args.get("threshold"))
         else:
             raise NotImplementedError(f"'{detector_type}' is not a valid detector for Aqualab.")
         return ret_val

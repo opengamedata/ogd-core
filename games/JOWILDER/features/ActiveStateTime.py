@@ -6,6 +6,7 @@ from datetime  import timedelta, datetime
 # import local files
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
@@ -17,7 +18,7 @@ class ActiveStateTime(SessionFeature):
     """
 
     ACTIVE_TIME_THRESHOLD = timedelta(seconds=15)
-    CLICK_EVENTS_NAME = ["CUSTOM." + str(i) for i in range(3, 12)]
+    CLICK_EVENTS_NAME = [f"CUSTOM.{i}" for i in range(3, 12)]
 
     def __init__(self, params:ExtractorParameters, threshold:int):
         super().__init__(params=params)
@@ -29,10 +30,12 @@ class ActiveStateTime(SessionFeature):
 
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
-        return ["CUSTOM." + str(i) for i in range(3, 21)] + ["CUSTOM.1"]
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+        return [f"CUSTOM.{i}" for i in range(3, 21)] + ["CUSTOM.1"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -43,16 +46,18 @@ class ActiveStateTime(SessionFeature):
         # elif event.EventName == "CUSTOM.1" or not self._last_hover_or_click_timestamp:
         #     raise(ValueError("Multiple game start events or none gamestart events!"))
 
-        _time_between_hover_or_click = event.Timestamp - self._last_hover_or_click_timestamp
-        if _time_between_hover_or_click < self._threshold:
-            self._time += _time_between_hover_or_click
-        self._last_hover_or_click_timestamp = event.Timestamp
+        if self._last_hover_or_click_timestamp is not None:
+            _time_between_hover_or_click = event.Timestamp - self._last_hover_or_click_timestamp
+            if _time_between_hover_or_click < self._threshold:
+                self._time += _time_between_hover_or_click
+            self._last_hover_or_click_timestamp = event.Timestamp
 
-        if event.EventName in ActiveStateTime.CLICK_EVENTS_NAME:
-            _time_between_click = event.Timestamp - self._last_click_timestamp
-            if _time_between_click < self._threshold:
-                self._clicking_time += _time_between_click
-            self._last_click_timestamp = event.Timestamp
+        if self._last_click_timestamp is not None:
+            if event.EventName in ActiveStateTime.CLICK_EVENTS_NAME:
+                _time_between_click = event.Timestamp - self._last_click_timestamp
+                if _time_between_click < self._threshold:
+                    self._clicking_time += _time_between_click
+                self._last_click_timestamp = event.Timestamp
 
         return
 

@@ -1,0 +1,204 @@
+{
+    "level_range": { "min":1, "max":6 },
+
+    "events":{
+        "headset_on" : {
+            "description" : "Happens when the user puts on the headset, effectively a 'resume' event",
+            "event_data" : {
+            }
+        },
+        "start" : {
+            "description" : "When the game actually starts",
+            "event_data" : {
+                "seconds_from_launch" : {
+                    "type":"float",
+                    "description":"The game time elapsed since the game app was launched"
+                }
+            }
+        },
+        "language_selected" : {
+            "description" : "When the player selects a language from the game menu",
+            "event_data" : {
+                "language" : {
+                    "type":"str",
+                    "description":"The language the player selected to use"
+                },
+                "seconds_from_launch" : {
+                    "type":"float",
+                    "description":"The game time elapsed since the game app was launched"
+                }
+            }
+        },
+        "scene_change" : {
+            "description" : "When the player completes a scene, advancing to the next. Removed in version 2.",
+            "event_data" : {
+                "scene_name" : {
+                    "type":"enum(ICE, VOYAGER, NOTHING, EXTREME, EARTH, CREDITS)",
+                    "description":""
+                },
+                "seconds_from_launch" : {
+                    "type":"float",
+                    "description":"The game time elapsed since the game app was launched"
+                }
+            }
+        },
+        "scene_begin" : {
+            "description" : "When the player starts a new scene. Added in version 2",
+            "event_data" : {
+                "scene_name" : {
+                    "type":"enum(ICE, VOYAGER, NOTHING, EXTREME, EARTH, CREDITS)",
+                    "description":"The scene the player is starting"
+                },
+                "seconds_from_launch" : {
+                    "type":"float",
+                    "description":"The game time elapsed since the game app was launched"
+                }
+            }
+        },
+        "scene_end" : {
+            "description" : "When the player finishes a scene, before advancing to the next. Added in version 2.",
+            "event_data" : {
+                "scene_name" : {
+                    "type":"enum(ICE, VOYAGER, NOTHING, EXTREME, EARTH, CREDITS)",
+                    "description":"The scene the player just completed"
+                },
+                "seconds_from_launch" : {
+                    "type":"float",
+                    "description":"The game time elapsed since the game app was launched"
+                }
+            }
+        },
+        "new_object_displayed" : {
+            "description" : "When a new object is displayed in the scene",
+            "event_data" : {
+                "has_the_indicator" : {
+                    "type":"bool",
+                    "description":""
+                },
+                "object" : {
+                    "type" : "str",
+                    "description":"The name of the object being displayed"
+                },
+                "posX" : {
+                    "type":"float",
+                    "description":""
+                },
+                "posY" : {
+                    "type":"float",
+                    "description":""
+                },
+                "posZ" : {
+                    "type":"float",
+                    "description":""
+                },
+                "rotX" : {
+                    "type":"float",
+                    "description":""
+                },
+                "rotY" : {
+                    "type":"float",
+                    "description":""
+                },
+                "rotZ" : {
+                    "type":"float",
+                    "description":""
+                },
+                "rotW" : {
+                    "type":"float",
+                    "description":""
+                },
+                "seconds_from_launch" : {
+                    "type":"float",
+                    "description":"The game time elapsed since the game app was launched"
+                }
+            }
+        },
+        "object_assigned" : {
+            "description" : "When the game assigns a target for the user to look at/select with their reticle",
+            "event_data" : {
+                "object" : {
+                    "type":"str",
+                    "description":"The ID of the assigned object"
+                },
+                "seconds_from_launch" : {
+                    "type":"float",
+                    "description":"The game time elapsed since the game app was launched"
+                }
+            }
+        },
+        "object_selected" : {
+            "description" : "When the player selects a gaze point object with their reticle",
+            "event_data" : {
+                "gaze_point_name" : {
+                    "type":"str",
+                    "description":""
+                },
+                "seconds_from_launch" : {
+                    "type":"float",
+                    "description":"The game time elapsed since the game app was launched"
+                }
+            }
+        },
+        "caption_displayed" : {
+            "description" : "When the captions for a voiceover are initially displayed",
+            "event_data" : {
+                "caption" : {
+                    "type":"str",
+                    "description":""
+                },
+                "seconds_from_launch" : {
+                    "type":"float",
+                    "description":"The game time elapsed since the game app was launched"
+                }
+            }
+        },
+        "script_audio_started" : {
+            "description" : "When a voiceover audio clip begins",
+            "event_data" : {
+                "caption" : {
+                    "type":"str",
+                    "description":""
+                },
+                "seconds_from_launch" : {
+                    "type":"float",
+                    "description":"The game time elapsed since the game app was launched"
+                }
+            }
+        },
+        "script_audio_complete" : {
+            "description" : "When a voiceover audio clip ends",
+            "event_data" : {
+                "seconds_from_launch" : {
+                    "type":"float",
+                    "description":"The game time elapsed since the game app was launched"
+                }
+            }
+        },
+        "failed" : {
+            "description" : "When a player fails a scene and must re-start the scene",
+            "event_data" : {
+                "seconds_from_launch" : {
+                    "type":"float",
+                    "description":"The game time elapsed since the game app was launched"
+                }
+            }
+        }
+    },
+
+    "features": {
+        "per_count": {
+        },
+        "aggregate":{
+            "ScenesEncountered": {
+                "enabled": true,
+                "type": "ScenesEncountered",
+                "description": "The set of all scenes the player encountered.",
+                "return_type": "List[str]"
+            }
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}

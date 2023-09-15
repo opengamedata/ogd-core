@@ -4,42 +4,46 @@ on:
   schedule:
     - cron: '1 0 2 * *'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+
+env:
+  OGD_BQ_GAMES: '["AQUALAB", "BACTERIA", "BALLOON", "CRYSTAL", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "JOWILDER", "PENGUINS", "LAKELAND", "MAGNET", "WAVES", "WIND"]'
+
 jobs:
   export_data:
     name: Export All Games
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         # don't use the first one until we've got STEMPORTS and AQUALAB
         # game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, STEMPORTS, WAVES, WIND]
-        game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, SHADOWSPECT, SHIPWRECKS, WAVES, WIND]
+        game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, ICECUBE, JOURNALISM, LAKELAND, MAGNET, PENGUINS, SHADOWSPECT, SHIPWRECKS, WAVES, WIND]
       fail-fast: false # we don't want to cancel just because one game fails.
       max-parallel: 1
 
     # Steps to set up for and execute an export
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       # A bunch of copy-paste crap to set up google cloud for any given game.
-    - if: ${{ matrix.game == 'AQUALAB' }}
-      name: Set up Cloud SDK
+    - if: contains(fromJson(${{ env.OGD_BQ_GAMES }}), ${{ matrix.game }})
+      name: Set up Cloud SDK for OGD BigQuery
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.AQUALAB_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.AQUALAB_BQ_KEY }}
+        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'SHADOWSPECT' }}
-      name: Set up Cloud SDK
+      name: Set up Cloud SDK for Shadowspect
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.SHADOWSPECT_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.SHADOWSPECT_BQ_KEY }}
+        project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'SHIPWRECKS' }}
-      name: Set up Cloud SDK
+      name: Set up Cloud SDK for Shipwrecks
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.SHIPWRECKS_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.SHIPWRECKS_BQ_KEY }}
+        project_id: ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
         export_default_credentials: true
       # Back to normal setup stuff.
     - name: Get OpenConnect
@@ -51,11 +55,11 @@ jobs:
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
-        vpn_user: ${{secrets.VPN_USER}}
-        vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{secrets.SQL_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
+        ssh_host: ${{vars.FD_STORE_HOST}}
+        ssh_user: ${{secrets.VPN_USER}}
+        ssh_pass: ${{secrets.VPN_PASS}}
         log_level: "INFO"
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
@@ -68,18 +72,18 @@ jobs:
     - name: Upload files to opengamedata via scp
       run: |
         mkdir -p ~/.ssh
-        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
-        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
-        scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
+        scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./*.log
   
   trigger_reindex:
     name: Reindex OpenGameData Files
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: always()
     needs: export_data
     steps:
@@ -91,6 +95,6 @@ jobs:
       # run: echo "placeholder for reindexing!"
       run: |
         mkdir -p ~/.ssh
-        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
+        echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
         chmod 600 ./key.txt
-        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata; pwd; ls; python3 reindexer.py;"
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata; pwd; ls; python3 reindexer.py;"

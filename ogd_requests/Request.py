@@ -7,7 +7,7 @@ from interfaces.DataInterface import DataInterface
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.IDMode import IDMode
 from schemas.ExportMode import ExportMode
-from utils import Logger
+from utils.Logger import Logger
 
 class ExporterRange:
     """
@@ -77,7 +77,7 @@ class Request(abc.ABC):
         except Exception as err:
             Logger.Log(f"Got an error when trying to stringify a Request: {type(err)} {str(err)}")
         finally:
-            return f"{self._game_id}: {_min}<->{_max}"
+            return f"{self._game_id}: {_min}<->{_max} ({[str(export) for export in self._exports]})"
 
     @property
     def GameID(self):
@@ -92,8 +92,11 @@ class Request(abc.ABC):
         return self._range
 
     @property
-    def ExportEvents(self) -> bool:
+    def ExportRawEvents(self) -> bool:
         return ExportMode.EVENTS in self._exports
+    @property
+    def ExportProcessedEvents(self) -> bool:
+        return ExportMode.DETECTORS in self._exports
     @property
     def ExportSessions(self) -> bool:
         return ExportMode.SESSION in self._exports
@@ -107,6 +110,11 @@ class Request(abc.ABC):
     @property
     def Outerfaces(self) -> Set[DataOuterface]:
         return self._outerfaces
+
+    def RemoveExportMode(self, mode:ExportMode):
+        self._exports.discard(mode)
+        for outerface in self.Outerfaces:
+            outerface.RemoveExportMode(mode=mode)
 
     ## Method to retrieve the list of IDs for all sessions covered by the request.
     #  Note, this will use the 

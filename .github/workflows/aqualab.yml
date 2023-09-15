@@ -2,28 +2,29 @@ name: Aqualab BigQuery Test
 on:
   push:
     paths:
+    - 'interfaces/BigQueryFirebaseInterface.py'
     - 'games/AQUALAB/**'
     - '.github/workflows/aqualab.yml'
   workflow_dispatch:
 jobs:
   Aqualab_CI:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.AQUALAB_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.AQUALAB_BQ_KEY }}
+        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
         export_default_credentials: true
-    - name: Get Dependencies
-      uses: ./.github/actions/OGD_dependencies
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{secrets.SQL_HOST}}
+        sql_host: ${{vars.FD_LOGGER_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "DEBUG"
@@ -32,10 +33,10 @@ jobs:
       with:
         game: AQUALAB
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./*.log
     - name: Upload zips as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./data/AQUALAB/*.zip

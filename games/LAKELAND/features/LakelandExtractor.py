@@ -20,13 +20,13 @@ from math import sqrt
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 ## import local files
-import utils
 from extractors.Extractor import ExtractorParameters
 from extractors.legacy.LegacyFeature import LegacyFeature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
-from utils import Logger
+from schemas.games.GameSchema import GameSchema
+from utils import utils
+from utils.Logger import Logger
 
 # temp comment
 
@@ -149,7 +149,7 @@ class LakelandExtractor(LegacyFeature):
             self._cur_gameplay += 1
             self.setValByName('num_play', self._cur_gameplay)
         if not self._VERSION:
-            self._VERSION = event.AppVersion
+            self._VERSION = event.LogVersion
             self.setValByName("version", self._VERSION)
         # Check for invalid row.
         if self.ExtractionMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
@@ -158,7 +158,7 @@ class LakelandExtractor(LegacyFeature):
         else:
             # If we haven't set persistent id, set now.
             if self.getValByName(feature_name="persistentSessionID") == 0:
-                self.setValByName(feature_name="persistentSessionID", new_value=event.EventData['persistent_session_id'])
+                self.setValByName(feature_name="persistentSessionID", new_value=event.UserData['persistent_session_id'])
             # if self.getValByName(feature_name="player_id") == 0:
             #     self.setValByName(feature_name="player_id",
             #                                new_value=row_with_complex_parsed[table_schema.player_id_index])

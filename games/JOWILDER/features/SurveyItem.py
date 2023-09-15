@@ -1,12 +1,15 @@
 # import libraries
 import json
+import logging
+from datetime import datetime, timedelta
 from typing import Any, List, Optional
-from extractors.Extractor import ExtractorParameters
 # import local files
+from extractors.Extractor import ExtractorParameters
 from extractors.features.PerCountFeature import PerCountFeature
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
-from datetime import datetime, timedelta
+from utils.Logger import Logger
 
 # BUG: Question0 and quiz 0 don't have start time
 # NOTE: Assumptions are: Every quiz should have a quizstart.
@@ -50,7 +53,8 @@ class SurveyItem(PerCountFeature):
         self._index = QUIZ_INDEXES[quiz_index][question_index]
         return self._index == self.CountIndex or self._index == self.CountIndex - 1
 
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -59,7 +63,8 @@ class SurveyItem(PerCountFeature):
         return ["CUSTOM.22", "CUSTOM.23"] 
         # ["CUSTOM.22", "CUSTOM.23"] = ["quizquestion", "quizstart"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -86,9 +91,17 @@ class SurveyItem(PerCountFeature):
         if self._time in [0, None]:
             _question_index = event.EventData.get("question_index")
             if _question_index == 0:
-                self._time = event.Timestamp - self._quiz_start_timestamp
+                if self._quiz_start_timestamp is not None:
+                    self._time = event.Timestamp - self._quiz_start_timestamp
+                else:
+                    raise ValueError(f"SurveyItem got a question answer when there was no quiz start time.")
             else:
-                self._time = event.Timestamp - self._last_timestamp
+                if self._last_timestamp is not None:
+                    self._time = event.Timestamp - self._last_timestamp
+                else:
+                    self._time = None
+                    Logger.Log("SurveyItem got a question answer when there was no last timestamp.", logging.DEBUG)
+                    # raise ValueError(f"SurveyItem got a question answer when there was no last timestamp.")
         self._response_index = event.EventData["response_index"]
         self._text = event.EventData["response"]
         self._num_answers += 1

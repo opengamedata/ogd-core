@@ -1,43 +1,31 @@
 ## import standard libraries
 import abc
+import json
 import logging
+from datetime import datetime
 from typing import Any, Dict, List, Type, Optional
 # import locals
-from extractors.registries.ExtractorRegistry import ExtractorRegistry
-from extractors.ExtractorLoader import ExtractorLoader
-from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 from schemas.Event import Event
+from utils.utils import ExportRow, Logger
 
 ## @class Processor
 class Processor(abc.ABC):
 
     # *** ABSTRACTS ***
 
-    @property
-    @abc.abstractmethod
-    def _mode(self) -> ExtractionMode:
-        pass
-
-    @property
-    @abc.abstractmethod
-    def _playerID(self) -> str:
-        pass
-
-    @property
-    @abc.abstractmethod
-    def _sessionID(self) -> str:
-        pass
-
-    ## Abstract declaration of a function to get the names of all features.
-    @abc.abstractmethod
-    def _getExtractorNames(self) -> List[str]:
-        pass
-
     ## Abstract declaration of a function to get the calculated value of the feature, given data seen so far.
     @abc.abstractmethod
     def _processEvent(self, event:Event) -> None:
+        pass
+
+    @abc.abstractmethod
+    def _getLines(self) -> List[ExportRow]:
+        pass
+
+    @abc.abstractmethod
+    def _clearLines(self) -> None:
         pass
 
     @abc.abstractmethod
@@ -46,32 +34,33 @@ class Processor(abc.ABC):
 
     # *** BUILT-INS ***
 
-    def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, feature_overrides:Optional[List[str]]=None):
-        self._game_schema : GameSchema            = game_schema
-        self._overrides   : Optional[List[str]]   = feature_overrides
-        self._LoaderClass : Type[ExtractorLoader] = LoaderClass
-        self._loader      : ExtractorLoader       = LoaderClass(player_id=self._playerID, session_id=self._sessionID, game_schema=self._game_schema,
-                                                                mode=self._mode, feature_overrides=self._overrides)
-        self._registry    : Optional[ExtractorRegistry] = None
+    def __init__(self, game_schema: GameSchema):
+        self._game_schema : GameSchema = game_schema
 
     def __str__(self):
-        return f""
+        return f"Processor object for {self._game_schema.GameName} data"
 
     # *** PUBLIC STATICS ***
 
     # *** PUBLIC METHODS ***
 
-    def GetExtractorNames(self) -> List[str]:
-        # TODO: add error handling code, if applicable.
-        return self._getExtractorNames()
-
     def ProcessEvent(self, event:Event) -> None:
         # TODO: add error handling code, if applicable.
         self._processEvent(event=event)
+    
+    @property
+    def Lines(self) -> List[ExportRow]:
+        ret_val : List[ExportRow] = []
 
-    def ProcessFeatureData(self, feature:FeatureData) -> None:
-        # TODO: add error handling code, if applicable.
-        self._processFeatureData(feature=feature)
+        # TODO: Should do list of events instead, and put it on outerface to do this part.
+        # When retrieving lines, ensure all lines have values in appropriate format for output to file/web response/whatever.
+        _dumps_default = lambda x : x.isoformat() if isinstance(x, datetime) else str(x)
+        ret_val = [[json.dumps(_col, default=_dumps_default) for _col in _line] for _line in self._getLines()]
+
+        return ret_val
+
+    def ClearLines(self):
+        self._clearLines()
 
     # *** PRIVATE STATICS ***
 

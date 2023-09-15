@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from extractors.Extractor import ExtractorParameters
 # import local files
 from extractors.features.SessionFeature import SessionFeature
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
@@ -22,10 +23,12 @@ class SessionDuration(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.1", "CUSTOM.2"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return [] 
 
     def _extractFromEvent(self, event:Event) -> None:

@@ -19,7 +19,7 @@ class EchoRoomChange(Detector):
         self._found = False
         self._sess_id = "Unknown"
         self._player_id = "Unknown"
-        self._time = datetime.now()
+        self._time = None # datetime.now()
         self._app_version = "Unknown"
         self._log_version = "Unknown"
 

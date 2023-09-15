@@ -6,6 +6,7 @@ import numpy as np
 from extractors.Extractor import ExtractorParameters
 # import local files
 from extractors.features.PerCountFeature import PerCountFeature
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 from datetime import datetime, timedelta
@@ -24,7 +25,7 @@ class InteractionWordsPerSecond(PerCountFeature):
     def __init__(self, params: ExtractorParameters):
         super().__init__(params=params)
         self._interaction : Optional[int] = None
-        self._interaction_time : List[int] = []
+        self._interaction_time : List[float] = []
         self._words_persecond : Optional[float] = None
         self._wps_variance : Optional[float] = None
         self._first_encounter : Optional[float] = None
@@ -34,21 +35,22 @@ class InteractionWordsPerSecond(PerCountFeature):
     def _validateEventCountIndex(self, event: Event):
         if event.EventName == "CUSTOM.1":
             return True
-        self._interaction = je.fqid_to_enum.get(event.EventData.get(
-            "text_fqid") or event.EventData.get("cur_cmd_fqid"))
+        _fqid = event.EventData.get("text_fqid") or event.EventData.get("cur_cmd_fqid") or "FQID NOT FOUND"
+        self._interaction = je.fqid_to_enum.get(_fqid)
         if self._interaction is None:
             return self.CountIndex == clicks_track.LastInteractionIndex
         else:
             return self._interaction == self.CountIndex
 
         
-
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         # NOTE: Count all the click events
-        return ["CUSTOM." + str(i) for i in range(3,12)] + ["CUSTOM.1"]
+        return [f"CUSTOM.{i}" for i in range(3,12)] + ["CUSTOM.1"]
         # CUSTOM.X, X in [3,12) = ['navigate_click','notebook_click', 'map_click', 'notification_click', 'object_click', 'observation_click', 'person_click', 'cutscene_click', 'wildcard_click']
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -64,7 +66,7 @@ class InteractionWordsPerSecond(PerCountFeature):
             else:
                 raise(ValueError("A startgame event needed!"))
         elif event.EventName == "CUSTOM.1": 
-            if clicks_track.EventEq(event, clicks_track._this_click):
+            if clicks_track._this_click is not None and clicks_track.EventEq(event, clicks_track._this_click):
                 return
             # else:
             #     raise(ValueError("Too many startgame events!"))

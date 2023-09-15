@@ -5,6 +5,7 @@ from typing import Any, List, Optional
 from extractors.Extractor import ExtractorParameters
 # import local files
 from extractors.features.PerCountFeature import PerCountFeature
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
 
@@ -25,18 +26,21 @@ class SurveyTime(PerCountFeature):
     def _validateEventCountIndex(self, event: Event):
         # NOTE: [0,2,3,4,5] to [0,1,2,3,4]
         quiz_index = event.EventData.get("quiz_number")
-        if quiz_index >= 2:
-            return quiz_index - 1 == self.CountIndex
+        if quiz_index is not None:
+            if quiz_index >= 2:
+                return quiz_index - 1 == self.CountIndex
+            else:
+                return quiz_index == self.CountIndex
         else:
-            return quiz_index == self.CountIndex
+            raise KeyError(f"SurveyTime got an event of type {event.EventName} with no quiz_number! EventData keys are: {event.EventData.keys()}")
 
-    def _getEventDependencies(self) -> List[str]:
-
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.23", "CUSTOM.24"] 
         # ["CUSTOM.23", "CUSTOM.24"] = [quizstart, quizend]
 
-    def _getFeatureDependencies(self) -> List[str]:
-        
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return [] 
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -51,7 +55,7 @@ class SurveyTime(PerCountFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return self._duration
+        return [self._duration]
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:

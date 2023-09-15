@@ -76,20 +76,19 @@ class EventList(Feature):
                 "user_id": event.UserID,
                 "session_id": event.SessionID,
                 "timestamp": event.Timestamp.isoformat(),
-                "job_name": event.EventData.get("job_name", {}).get("string_value", "UNDEFINED"),
+                "job_name": event.GameState.get('job_name', event.EventData.get('job_name', "UNDEFINED")),
                 "index": event.EventSequenceIndex,
                 "event_primary_detail": None
             }
 
             if event.EventName == "scene_changed":
-                next_event['scene_name'] = event.EventData['scene_name']['string_value']
+                next_event['scene_name'] = event.EventData['scene_name']
 
             if event.EventName in self._details_map:
                 param_name = self._details_map[event.EventName][0]
-                param_type = self._details_map[event.EventName][1]
 
                 try:
-                    next_event["event_primary_detail"] = event.EventData[param_name][param_type]
+                    next_event["event_primary_detail"] = event.EventData[param_name]
                 except KeyError as err:
                     raise KeyError(f"Event of type {event.EventName} did not have parameter {param_name}, valid parameters are {event.EventData.keys()}")
 
