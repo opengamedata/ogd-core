@@ -40,8 +40,10 @@ class RegionDuration(PerRegionFeature):
                 self._time += (self._prev_timestamp - self._region_start_time).total_seconds()
                 self._region_start_time = event.Timestamp
         
-        if event.EventData.get("region_name") == self.CountIndex:
+        else:
             self._region_start_time = event.Timestamp 
+            self._time += (self._prev_timestamp - self._region_start_time).total_seconds()
+
         self._prev_timestamp = event.Timestamp
         
     def _extractFromFeatureData(self, feature:FeatureData):
