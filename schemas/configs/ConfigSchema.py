@@ -5,10 +5,10 @@ from typing import Any, Dict, Optional, Type
 # import local files
 from schemas.configs.IndexingSchema import FileIndexingSchema
 from schemas.configs.GameSourceSchema import GameSourceSchema
-from schemas.data_hosts.DataHostConfig import DataHostConfig
-from schemas.data_hosts.BigQueryHostConfig import BigQuerySchema
-from schemas.data_hosts.FileHostConfig import FileHostConfig
-from schemas.data_hosts.MySQLHostConfig import MySQLSchema
+from schemas.data_sources.DataHostConfig import DataHostConfig
+from schemas.data_sources.BigQueryHostConfig import BigQuerySchema
+from schemas.data_sources.FileHostConfig import FileHostConfig
+from schemas.data_sources.MySQLHostConfig import MySQLSchema
 from schemas.configs.LegacyConfigSchema import LegacyConfigSchema
 from schemas.Schema import Schema
 from utils.Logger import Logger

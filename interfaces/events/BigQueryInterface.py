@@ -8,7 +8,7 @@ from typing import Dict, List, Tuple, Optional
 from interfaces.events.EventInterface import EventInterface
 from schemas.IDMode import IDMode
 from schemas.configs.GameSourceSchema import GameSourceSchema
-from schemas.data_hosts.BigQueryHostConfig import BigQuerySchema
+from schemas.data_sources.BigQueryHostConfig import BigQuerySchema
 from utils.Logger import Logger
 
 AQUALAB_MIN_VERSION = 6.2

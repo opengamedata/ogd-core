@@ -4,7 +4,7 @@ import logging
 from typing import Any, Dict, Optional, Type
 # import local files
 from schemas.Schema import Schema
-from schemas.data_hosts.DataHostConfig import DataHostConfig
+from schemas.data_sources.DataHostConfig import DataHostConfig
 from utils.Logger import Logger
 
 class BigQuerySchema(DataHostConfig):
