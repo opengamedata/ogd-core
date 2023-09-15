@@ -50,18 +50,18 @@ class ConfigSchema(Schema):
             _fallback_elems = { "LOCAL_DIR" : self._legacy_elems.DataDirectory }
             self._file_idx = FileIndexingSchema(name="FILE_INDEXING", all_elements=_fallback_elems)
             Logger.Log(f"{name} config does not have a 'FILE_INDEXING' element; defaulting to file_indexing={self._file_idx}", logging.WARN)
-        if "GAME_SOURCES" in all_elements.keys():
-            self._data_src = ConfigSchema._parseDataSources(all_elements["GAME_SOURCES"])
+        if "DATA_HOSTS" in all_elements.keys():
+            self._data_src = ConfigSchema._parseDataSources(all_elements["DATA_HOSTS"])
         else:
             self._data_src = {}
-            Logger.Log(f"{name} config does not have a 'GAME_SOURCES' element; defaulting to game_sources={self._data_src}", logging.WARN)
+            Logger.Log(f"{name} config does not have a 'DATA_HOSTS' element; defaulting to game_sources={self._data_src}", logging.WARN)
         if "GAME_SOURCE_MAP" in all_elements.keys():
             self._game_src_map = ConfigSchema._parseGameSourceMap(map=all_elements["GAME_SOURCE_MAP"], sources=self._data_src)
         else:
             self._game_src_map = {}
             Logger.Log(f"{name} config does not have a 'GAME_SOURCE_MAP' element; defaulting to game_source_map={self._game_src_map}", logging.WARN)
 
-        _used = {"LOG_FILE", "BATCH_SIZE", "DEBUG_LEVEL", "FAIL_FAST", "FILE_INDEXING", "GAME_SOURCES", "GAME_SOURCE_MAP"}
+        _used = {"LOG_FILE", "BATCH_SIZE", "DEBUG_LEVEL", "FAIL_FAST", "FILE_INDEXING", "DATA_HOSTS", "GAME_SOURCE_MAP"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 

@@ -9,7 +9,7 @@ settings = {
         "REMOTE_URL"    : "https://fieldday-web.ad.education.wisc.edu/opengamedata/",
         "TEMPLATES_URL" : "https://github.com/opengamedata/opengamedata-samples"
     },
-    "GAME_SOURCES" :
+    "DATA_HOSTS" :
     {
         "AQUALAB_BQ" : {
             "DB_TYPE"    : "FIREBASE",
