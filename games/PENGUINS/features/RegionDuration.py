@@ -32,7 +32,7 @@ class RegionDuration(PerRegionFeature):
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event: Event, region_map:dict) -> None:
+    def _extractFromEvent(self, event: Event) -> None:
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
             self._current_region = None  # Reset current region for a new session
@@ -40,17 +40,17 @@ class RegionDuration(PerRegionFeature):
 
         # Check if the event provides information about the player's region
         region_data = event.EventData.get("region_name")
-        if region_data is not None:
-            if region_map.get(region_data):
-                if self._current_region != region_data:
-                    # Transition to a new region, update the current region and start time
-                    self._current_region = region_data
-                    self._region_start_time = event.Timestamp
-                else:
-                    # Player is still in the same region, update the time spent
-                    if self._region_start_time is not None:
-                        self._time_in_region[self._current_region] = self._time_in_region.get(self._current_region, 0) + (
-                                event.Timestamp - self._region_start_time).total_seconds()
+        if region_data is not None and region_data in self._region_map:
+            if self._current_region != region_data:
+                # Transition to a new region, update the current region and start time
+                self._current_region = region_data
+                self._region_start_time = event.Timestamp
+            else:
+                # Player is still in the same region, update the time spent
+                if self._region_start_time is not None:
+                    self._time_in_region[self._current_region] = self._time_in_region.get(self._current_region, 0) + (
+                            event.Timestamp - self._region_start_time).total_seconds()
+
     
     def _extractFromFeatureData(self, feature:FeatureData):
         return
