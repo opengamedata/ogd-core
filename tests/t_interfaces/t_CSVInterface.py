@@ -5,7 +5,7 @@ from unittest import TestCase
 from zipfile import ZipFile
 # import locals
 from interfaces.events.CSVInterface import CSVInterface
-from schemas.configs.GameSourceSchema import GameSourceSchema
+from schemas.data_sources.GameSourceSchema import GameSourceSchema
 
 class t_CSVInterface(TestCase):
 

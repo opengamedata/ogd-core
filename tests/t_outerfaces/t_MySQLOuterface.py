@@ -10,7 +10,7 @@ from schemas.ExportMode import ExportMode
 from interfaces.outerfaces.MySQLOuterface import MySQLOuterface
 from schemas.data_sources.DataHostConfig import DataHostConfig
 from schemas.data_sources.MySQLHostConfig import MySQLSchema
-from schemas.configs.GameSourceSchema import GameSourceSchema
+from schemas.data_sources.GameSourceSchema import GameSourceSchema
 
 class t_CSVInterface(TestCase):
 

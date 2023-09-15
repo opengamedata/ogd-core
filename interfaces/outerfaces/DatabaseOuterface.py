@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Set
 # import local files
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.ExportMode import ExportMode
-from schemas.configs.GameSourceSchema import GameSourceSchema
+from schemas.data_sources.GameSourceSchema import GameSourceSchema
 from utils import Logger
 
 class DatabaseOuterface(DataOuterface):

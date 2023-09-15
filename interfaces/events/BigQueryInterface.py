@@ -7,7 +7,7 @@ from typing import Dict, List, Tuple, Optional
 # import locals
 from interfaces.events.EventInterface import EventInterface
 from schemas.IDMode import IDMode
-from schemas.configs.GameSourceSchema import GameSourceSchema
+from schemas.data_sources.GameSourceSchema import GameSourceSchema
 from schemas.data_sources.BigQueryHostConfig import BigQuerySchema
 from utils.Logger import Logger
 

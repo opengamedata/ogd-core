@@ -3,7 +3,7 @@ import abc
 from typing import Any, Dict
 
 # import local files
-from schemas.configs.GameSourceSchema import GameSourceSchema
+from schemas.data_sources.GameSourceSchema import GameSourceSchema
 
 class Interface(abc.ABC):
 

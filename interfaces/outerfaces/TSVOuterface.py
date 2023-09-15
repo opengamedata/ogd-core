@@ -19,7 +19,7 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.Event import Event
 from schemas.ExportMode import ExportMode
 from schemas.FeatureData import FeatureData
-from schemas.configs.GameSourceSchema import GameSourceSchema
+from schemas.data_sources.GameSourceSchema import GameSourceSchema
 from schemas.games.GameSchema import GameSchema
 from schemas.tables.EventTableSchema import EventTableSchema
 from schemas.configs.IndexingSchema import FileIndexingSchema

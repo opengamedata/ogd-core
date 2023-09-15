@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Type
 # import local files
 from schemas.configs.IndexingSchema import FileIndexingSchema
-from schemas.configs.GameSourceSchema import GameSourceSchema
+from schemas.data_sources.GameSourceSchema import GameSourceSchema
 from schemas.data_sources.DataHostConfig import DataHostConfig
 from schemas.data_sources.BigQueryHostConfig import BigQuerySchema
 from schemas.data_sources.FileHostConfig import FileHostConfig
