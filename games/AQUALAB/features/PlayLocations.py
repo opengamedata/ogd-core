@@ -48,7 +48,11 @@ class PlayLocations(SessionFeature):
             local_time = PlayLocations.calculate_local_time_by_coordinates(utc_time=event.Timestamp, latitude=lat_long.get('latitude'), longitude=lat_long.get('longitude'))
             # Step 2: check if local time was a school time or not, and add to lists
             self._session_times.append(local_time)
-            in_school = True # Insert logic to check if local time is a school time or not
+             # Step 3: Check if local time is on a weekday and between 9 AM and 3 PM
+            is_weekday = local_time.weekday() < 5  # Monday to Friday is 0 to 4
+            is_school_hours = 9 <= local_time.hour < 15
+            
+            in_school = is_weekday and is_school_hours
             self._in_school_sessions.append(in_school)
 
     def _getFeatureValues(self) -> List[Any]:
