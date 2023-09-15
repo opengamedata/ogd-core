@@ -8,7 +8,7 @@ __all__ = [
     "SkillSequenceCount",
     "TotalLevelTime",
     "PlayerAttributes",
-    "LevelStoryAlignment",
+    "StoryAlignment",
     "QuitLevel",
     "QuitType",
     "WorstAttribute",
@@ -28,7 +28,16 @@ __all__ = [
     "SnippetReplace",
     "StoryEditorTime",
     "AttributeView",
-    "EditorNoteOpen"
+    "EditorNoteOpen",
+    "TopPlayerQuitType",
+    "StoryScore",
+    "StoryAlignmentSequence", 
+    "StoryScoreSequence",
+    "LevelTime",
+    "SnippetsCollected", 
+    "SnippetsSubmitted"
+
+
 ]
 
 from . import TextClickCount
@@ -41,7 +50,7 @@ from . import StoryCompleteTime
 from . import SkillSequenceCount
 from . import TotalLevelTime
 from . import PlayerAttributes
-from . import LevelStoryAlignment
+from . import StoryAlignment
 from . import QuitLevel
 from . import QuitType
 from . import WorstAttribute
@@ -61,3 +70,10 @@ from . import QuitNode
 from . import SnippetReplace
 from . import AttributeView
 from . import EditorNoteOpen
+from . import TopPlayerQuitType
+from . import StoryScore
+from . import StoryAlignmentSequence
+from . import StoryScoreSequence
+from . import LevelTime
+from . import SnippetsCollected
+from . import SnippetsSubmitted

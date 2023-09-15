@@ -9,7 +9,7 @@ from coding.Code import Code
 from coding.Coder import Coder
 from interfaces.CodingInterface import CodingInterface
 from schemas.IDMode import IDMode
-from utils import Logger
+from utils.Logger import Logger
 
 # TODO: see about merging this back into BigQueryInterface for a unified interface.
 

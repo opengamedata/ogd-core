@@ -10,7 +10,7 @@ from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
-from utils import Logger
+from utils.Logger import Logger
 
 
 ## @class SQL

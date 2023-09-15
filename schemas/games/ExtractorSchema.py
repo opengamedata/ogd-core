@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Set
 # import local files
 from schemas.ExtractionMode import ExtractionMode
 from schemas.Schema import Schema
-from utils import Logger
+from utils.Logger import Logger
 
 class ExtractorSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

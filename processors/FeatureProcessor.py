@@ -9,7 +9,7 @@ from extractors.registries.FeatureRegistry import FeatureRegistry
 from processors.ExtractorProcessor import ExtractorProcessor
 from schemas.games.GameSchema import GameSchema
 from schemas.ExportMode import ExportMode
-from utils import ExportRow
+from utils.utils import ExportRow
 
 ## @class Processor
 class FeatureProcessor(ExtractorProcessor):

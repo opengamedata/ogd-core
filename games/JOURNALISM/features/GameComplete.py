@@ -74,12 +74,12 @@ class GameComplete(SessionFeature):
         # >>> use data in the FeatureData object to update state variables as needed. <<<
         # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
-        print(feature._vals)
-        print(feature._player_id)
+        # print(feature._vals)
+        # print(feature._player_id)
         if(feature._vals[0]==True):
             self._boolean_log.append(feature._vals[0])
 
-        print("-----")
+        # print("-----")
         return []
 
     def _getFeatureValues(self) -> List[Any]:
@@ -99,7 +99,7 @@ class GameComplete(SessionFeature):
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
         ##don't make available for grouping by playerID
-        return [ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
+        return [ExtractionMode.PLAYER, ExtractionMode.SESSION] # >>> delete any modes you don't want run for your Feature. <<<
     
     # @staticmethod
     # def MinVersion() -> Optional[str]:

@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 # import local files
 from schemas.Schema import Schema
-from utils import Logger
+from utils.Logger import Logger
 
 class FileIndexingSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

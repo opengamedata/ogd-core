@@ -17,7 +17,7 @@ from typing import Any, Dict, Optional, Set, Tuple
 # import 3rd-party libraries
 
 # import local files
-from utils import Logger
+from utils.Logger import Logger
 from config.config import settings
 from interfaces.DataInterface import DataInterface
 from interfaces.CSVInterface import CSVInterface
@@ -36,7 +36,8 @@ from schemas.configs.ConfigSchema import ConfigSchema
 from schemas.configs.GameSourceMapSchema import GameSourceSchema
 from ogd_requests.Request import Request, ExporterRange
 from ogd_requests.RequestResult import RequestResult, ResultStatus
-from utils import Logger
+from utils.Logger import Logger
+from utils.Readme import Readme
 
 def ListGames() -> bool:
     print(f"The games available for export are:\n{games_list}")
@@ -53,8 +54,9 @@ def ShowGameInfo(config:ConfigSchema) -> bool:
     """
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
-        table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableName}.json")
-        print(TSVOuterface.GenCSVMetadata(game_schema=game_schema, table_schema=table_schema))
+        table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableSchema}.json")
+        readme = Readme(game_schema=game_schema, table_schema=table_schema)
+        print(readme.CustomReadmeSource)
     except Exception as err:
         msg = f"Could not print information for {args.game}: {type(err)} {str(err)}"
         Logger.Log(msg, logging.ERROR)
@@ -63,7 +65,7 @@ def ShowGameInfo(config:ConfigSchema) -> bool:
     else:
         return True
 
-def WriteReadme() -> bool:
+def WriteReadme(config:ConfigSchema) -> bool:
     """Function to write out the readme file for a given game.
    This includes the CSV metadata (data from the schema, originally written into
    the CSV files themselves), custom readme source, and the global changelog.
@@ -75,8 +77,9 @@ def WriteReadme() -> bool:
     path = Path(f"./data") / args.game
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
-        table_schema = TableSchema(schema_name=f"FIELDDAY_MYSQL.json")
-        TSVOuterface.GenerateReadme(game_schema=game_schema, table_schema=table_schema, path=path)
+        table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableSchema}.json")
+        readme = Readme(game_schema=game_schema, table_schema=table_schema)
+        readme.GenerateReadme(path=path)
     except Exception as err:
         msg = f"Could not create a readme for {args.game}: {type(err)} {str(err)}"
         Logger.Log(msg, logging.ERROR)
@@ -294,7 +297,7 @@ if args is not None:
     elif cmd == "info":
         success = ShowGameInfo(config=config)
     elif cmd == "readme":
-        success = WriteReadme()
+        success = WriteReadme(config=config)
     elif cmd == "list-games":
         success = ListGames()
     # elif cmd == "help":

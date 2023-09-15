@@ -9,7 +9,7 @@ from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.ExtractionMode import ExtractionMode
-from utils import Logger
+from utils.Logger import Logger
 
 class PlayerSummary(SessionFeature):
 

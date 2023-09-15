@@ -66,22 +66,15 @@ class QuitLevel(SessionFeature):
         
         if not self._first_timestamp:
             self._first_timestamp = event.Timestamp
-            self._delta_time = self._first_timestamp
+            self._delta_time = timedelta(0)
         else:
             self._delta_time = event.Timestamp - self._first_timestamp
         
         self._last_event = event.event_name
 
         # Exception handling for events who don't have level or node_id attached to gamestate
-        try:
-            self._level_quit = event.GameState["level"]
-        except:
-            self._level_quit = None
-        try:
-            self._node_id = event.event_data["node_id"]
-        except:
-            self._node_id = "none"
-
+        self._level_quit = event.GameState.get("level", None)
+        self._node_id = event.EventData.get("node_id", "None")
 
         return
 
@@ -113,7 +106,7 @@ class QuitLevel(SessionFeature):
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
         ##don't make available for grouping by playerID
-        return [ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
+        return [ExtractionMode.PLAYER, ExtractionMode.SESSION] # >>> delete any modes you don't want run for your Feature. <<<
     
     # @staticmethod
     # def MinVersion() -> Optional[str]:

@@ -23,9 +23,9 @@ class MeanSnippetTime(SessionFeature):
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
 
-        self._snippet_receive_count : int = 0;
-        self._snippet_time_logs: List[datetime] = [];
-        self._game_init_time: Optional[datetime] = None;
+        self._snippet_receive_count : int = 0
+        self._snippet_time_logs: List[datetime] = []
+        self._game_init_time: Optional[datetime] = None
         
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -124,7 +124,7 @@ class MeanSnippetTime(SessionFeature):
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
-        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION] # >>> delete any modes you don't want run for your Feature. <<<
     
     # @staticmethod
     # def MinVersion() -> Optional[str]:

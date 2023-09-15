@@ -4,7 +4,7 @@ import logging
 from collections import defaultdict
 from typing import Any, List, Optional
 # import locals
-from utils import Logger
+from utils.Logger import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.Event import Event
