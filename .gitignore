@@ -1,7 +1,9 @@
 # Specific things in this project that shouldn't go to git:
-data
+data/
 config/*.json
 config/config.py
+games/*/schemas/*.json
+fieldday-pyenv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -118,6 +120,9 @@ venv.bak/
 .vscode
 /JohnsLogs/
 
+# pylint
+.pylintrc
 
 OGD_venv/
 john_temp/
+games/JOWILDER/convert.py

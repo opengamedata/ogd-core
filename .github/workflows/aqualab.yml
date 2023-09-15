@@ -1,69 +1,42 @@
 name: Aqualab BigQuery Upload
 on:
+  push:
+    paths:
+    - 'interfaces/BigQueryFirebaseInterface.py'
+    - 'games/AQUALAB/**'
+    - '.github/workflows/aqualab.yml'
   workflow_dispatch:
 jobs:
-  test_connect:
-    runs-on: ubuntu-18.04
+  Aqualab_CI:
+    runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
     - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.AQUALAB_GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.AQUALAB_GCP_SA_KEY }}
+        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
         export_default_credentials: true
-    - name: Get export month
-      run: |
-        MONTH=$(date -d "$(date +%Y-%m-01) -1 month" +'%m')
-        YEAR=$(date -d "$(date +%Y-%m-01) -1 month" +'%Y')
-        MONTH_YEAR=$MONTH/$YEAR
-        echo "MONTH_YEAR=" $MONTH_YEAR >> $GITHUB_ENV
-        echo exporting $MONTH_YEAR
-      shell: bash
-    - name: Get correct Python
-      run: |
-        sudo apt-get -q install python3.8
-        sudo apt-get -q install python3.8-dev
-    - name: Set up Python libraries
-      run: |
-        python3.8 -m pip install --upgrade pip
-        python3.8 -m pip install setuptools --quiet
-        python3.8 -m pip install wheel --quiet
-        python3.8 -m pip install -r requirements.txt --quiet
-      shell: bash
-    - name: Set up code
-      run: cp config/config.py.template config/config.py 
-      shell: bash
-    - name: Set database name
-      run: sed -i 's/project_id.dataset_id/${{secrets.AQUALAB_DB_NAME}}/g' config/config.py
-      shell: bash
-    - name: Run export
-      run: python3.8 main.py export AQUALAB ${{env.MONTH_YEAR}} --monthly
-      shell: bash
-    - name: Get OpenConnect
-      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get -q update && sudo apt-get -q install openconnect
-    - name: Connect VPN
-      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    - name: Upload files to opengamedata via scp
-      run: |
-        mkdir -p ~/.ssh
-        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
-        chmod 600 ./key.txt
-        scp -o StrictHostKeyChecking=no -i ./key.txt ./data/AQUALAB/* ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }}:/var/www/opengamedata/data/AQUALAB/
-
-  trigger_reindex:
-    name: Reindex OpenGameData Files
-    runs-on: ubuntu-18.04
-    if: always()
-    needs: export_data
-    steps:
-    - name: Get OpenConnect
-      run: sudo add-apt-repository ppa:phusen/openconnect && sudo apt-get update && sudo apt-get install openconnect
-    - name: Connect VPN
-      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    - name: Trigger reindex via ssh
-      run: |
-        mkdir -p ~/.ssh
-        echo '${{secrets.FILE_DEPLOY_KEY}}' >> ./key.txt
-        chmod 600 ./key.txt
-        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ secrets.FILE_HOST }} "cd /var/www/opengamedata; pwd; ls; python3 reindexer.py;"
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{vars.FD_LOGGER_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        log_level: "DEBUG"
+    - name: Do Export of last week's data
+      uses: ./.github/actions/export_last_week
+      with:
+        game: AQUALAB
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./*.log
+    - name: Upload zips as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./data/AQUALAB/*.zip

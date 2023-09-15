@@ -1,0 +1,33 @@
+name: "Set custom-selected data source"
+author: Luke Swanson
+description: "Given a pre-configured config file exists, find a given game and set its source element."
+branding:
+  icon: 'clipboard'
+  color: 'blue'
+inputs:
+  game_id:
+    description: "Name of game to set different source."
+    required: true
+    default: 'game name'
+  source_id:
+    description: "Source to use for given game."
+    required: true
+    default: 'source ID'
+  database_name:
+    description: "Within the given source, what database name to use."
+    required: true
+    default: 'database name'
+  table_name:
+    description: "Within the given database, what table name to use."
+    required: true
+    default: 'table name'
+  schema_id:
+    description: "The schema to use for the given table."
+    required: true
+    default: 'schema ID'
+runs:
+  using: "composite"
+  steps:
+    - name: Set game source name
+      run: sed -i 's/"${{inputs.game_id}}"\s*:\s*\{[a-zA-Z:, "]*\}/"${{inputs.game_id}}" : \{ "source" : "${{inputs.source_id}}", "database" : "${{inputs.database_name}}", "table" : "${{input.table_name}}", "schema" : "${{input.schema_id}}"/g' config/config.py
+      shell: bash

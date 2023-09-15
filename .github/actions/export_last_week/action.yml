@@ -1,0 +1,27 @@
+name: "Export Last Week's Data"
+author: Luke Swanson
+description: "Given a game and a date range, this action will export last week's data for that game."
+branding:
+  icon: 'arrow-left'
+  color: 'orange'
+inputs:
+  game:
+   description: "The game with data to export."
+   required: true
+   default: 'Crystal'
+runs:
+  using: "composite"
+  steps:
+    - name: Get yesterday, for export
+      run: |
+        LASTWEEK=$(date -d "$(date +%Y-%m-%d) -1 week" +'%m/%d/%Y')
+        YESTERDAY=$(date -d "$(date +%Y-%m-%d) -1 day" +'%m/%d/%Y')
+        echo "LASTWEEK=" $LASTWEEK >> $GITHUB_ENV
+        echo "YESTERDAY=" $YESTERDAY >> $GITHUB_ENV
+      shell: bash
+    # - name: Clone code
+    #   uses: actions/checkout@v3
+    - name: Execute data export
+      run: python3.10 main.py export ${{ inputs.game }} ${{env.LASTWEEK}} ${{env.YESTERDAY}}
+      shell: bash
+      # python3.10 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021

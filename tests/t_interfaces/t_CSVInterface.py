@@ -1,9 +1,11 @@
-# global imports
+# import libraries
 from datetime import datetime
+from pathlib import Path
 from unittest import TestCase
 from zipfile import ZipFile
-# local imports
+# import locals
 from interfaces.CSVInterface import CSVInterface
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
 
 class t_CSVInterface(TestCase):
 
@@ -40,7 +42,7 @@ class t_CSVInterface(TestCase):
     21010110491046644, 21010109492007536, 21010110495384436, 21010106503171890, 21010110571666436, 21010109570078116, 21010109565541068, 21010115580704280, 
     21010109572227836, 21010109583032190, 21010109583716930, 21010109585054004, 21010109584882670, 21010110000842588, 21010109593906220, 21010109593501640, 
     21010109593889650]
-    zipped_file = ZipFile("tests/t_interfaces/BACTERIA_20210201_to_20210202_5c61198_events.zip")
+    zipped_file = ZipFile(Path("tests/t_interfaces/BACTERIA_20210201_to_20210202_5c61198_events.zip"))
 
     def RunAll(self):
         self.test_IDsFromDates()
@@ -49,18 +51,21 @@ class t_CSVInterface(TestCase):
 
     def test_IDsFromDates(self):
         with self.zipped_file.open(self.zipped_file.namelist()[0]) as f:
-            CSVI = CSVInterface(game_id='BACTERIA', filepath_or_buffer=f, delim='\t')
+            _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+            CSVI = CSVInterface(game_id='BACTERIA', config=_cfg, filepath=f, delim='\t')
             if CSVI.Open():
                 result_session_list = CSVI.IDsFromDates(self.TEST_MIN_DATE, self.TEST_MAX_DATE)
                 self.assertNotEqual(result_session_list, None)
-                diff = set(result_session_list).symmetric_difference(set(self.TEST_SESSION_LIST))
-                self.assertTrue(len(diff) > 0, f"Date range for missed items: {CSVI.DatesFromIDs(list(diff))}")
+                if result_session_list is not None:
+                    diff = set(result_session_list).symmetric_difference(set(self.TEST_SESSION_LIST))
+                    self.assertTrue(len(diff) > 0, f"Date range for missed items: {CSVI.DatesFromIDs(list(diff))}")
             else:
                 raise FileNotFoundError('Could not open the test data TSV!')
 
     def test_DatesFromIDs(self):
         with self.zipped_file.open(self.zipped_file.namelist()[0]) as f:
-            CSVI = CSVInterface(game_id='BACTERIA', filepath_or_buffer=f, delim='\t')
+            _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+            CSVI = CSVInterface(game_id='BACTERIA', config=_cfg, filepath=f, delim='\t')
             if CSVI.Open():
                 dates = CSVI.DatesFromIDs(self.TEST_SESSION_LIST)
                 self.assertEqual(dates['min'], self.ACTUAL_MIN_DATE)

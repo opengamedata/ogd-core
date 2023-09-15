@@ -1,5 +1,9 @@
-name: "Export Monthly Data"
+name: "Export Custom Data Range"
+author: Luke Swanson
 description: "Given a game, this action will export last month's data for that game."
+branding:
+  icon: 'arrow-right'
+  color: 'purple'
 inputs:
   game:
    description: "The game with data to export."
@@ -13,26 +17,10 @@ inputs:
     description: "The end date for the export"
     required: true
     default: "01/01/2021"
-  vpn_user:
-    description: "Username for logging in to the VPN."
-    required: true
-    default: 'user placeholder'
-  vpn_pass:
-    description: "Password for logging in to the VPN."
-    required: true
-    default: 'password placeholder'
-  sql_host:
-    description: "The server hosting the OGD database."
-    required: true
-    default: '127.0.0.1'
-  sql_user:
-    description: "Username for logging in to the SQL database."
-    required: true
-    default: 'user placeholder'
-  sql_pass:
-    description: "Password for logging in to the SQL database."
-    required: true
-    default: 'password placeholder'
+  events_only:
+    description: "If true, only export event data."
+    required: false
+    default: false
 runs:
   using: "composite"
   steps:
@@ -40,37 +28,14 @@ runs:
     # - name: Ensure we have mysql client installed.
     #   run: sudo apt-get install mysql-client
       # shell: bash
-    - name: Set up local bin in path # there is a warning about this in pip output, so we'll do this and see if that makes things better.
-      run: export PATH=/home/runner/.local/bin:$PATH
-      shell: bash
-    - name: Set up Python libraries
-      run: |
-        python3.8 -m pip install --upgrade pip
-        python3.8 -m pip install setuptools --quiet
-        python3.8 -m pip install wheel --quiet
-        python3.8 -m pip install -r requirements.txt --quiet
-      shell: bash
     # - name: Clone code
-    #   uses: actions/checkout@v2
-    - name: Set up code
-      run: cp config/config.py.template config/config.py 
-      shell: bash
-    - name: Set SSH hostname
-      run: sed -i 's/hostname/${{inputs.sql_host}}/g' config/config.py
-      shell: bash
-    - name: Set SSH username
-      run: sed -i 's/WCER AD User/${{inputs.vpn_user}}/g' config/config.py
-      shell: bash
-    - name: Set SSH password
-      run: sed -i 's/WCER AD Password/${{inputs.vpn_pass}}/g' config/config.py
-      shell: bash
-    - name: Set SQL username
-      run: sed -i 's/username/${{inputs.sql_user}}/g' config/config.py
-      shell: bash
-    - name: Set SQL password
-      run: sed -i 's/password/${{inputs.sql_pass}}/g' config/config.py
-      shell: bash
+    #   uses: actions/checkout@v3
     - name: Execute data export
-      run: python3.8 main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }}
+      if: ${{ inputs.events_only == 'false' }}
+      run: python3.10 main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }}
       shell: bash
-      # python3.8 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
+    - name: Execute data export (events only)
+      if: ${{ inputs.events_only == 'false' }}
+      run: python3.10 main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }} --no_session_file --no_player_file --no_pop_file
+      shell: bash
+      # python3.10 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021

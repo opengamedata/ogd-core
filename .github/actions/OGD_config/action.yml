@@ -1,0 +1,62 @@
+name: "Set up config file for a run"
+author: Luke Swanson
+description: "Given a set of appropriate inputs, this action prepares a config.py file for a data export."
+branding:
+  icon: 'clipboard'
+  color: 'blue'
+inputs:
+  sql_user:
+    description: "Username for logging in to the SQL database."
+    required: true
+    default: 'user placeholder'
+  sql_pass:
+    description: "Password for logging in to the SQL database."
+    required: true
+    default: 'password placeholder'
+  ssh_host:
+    description: "The server hosting the OGD database."
+    required: true
+    default: '127.0.0.1'
+  ssh_user:
+    description: "Username for logging in to the SSH server."
+    required: true
+    default: 'user placeholder'
+  ssh_pass:
+    description: "Password for logging in to the SSH server."
+    required: true
+    default: 'password placeholder'
+  slice_size:
+    description: "Number of sessions to process at a time"
+    required: true
+    default: 1000
+  log_level:
+    description: "Logging level to use for export process"
+    required: true
+    default: "INFO"
+runs:
+  using: "composite"
+  steps:
+    - name: Set up config
+      run: cp config/config.py.template config/config.py 
+      shell: bash
+    - name: Set SQL username
+      run: sed -i 's/username/${{inputs.sql_user}}/g' config/config.py
+      shell: bash
+    - name: Set SQL password
+      run: sed -i 's/password/${{inputs.sql_pass}}/g' config/config.py
+      shell: bash
+    - name: Set SSH hostname
+      run: sed -i 's/hostname/${{inputs.sql_host}}/g' config/config.py
+      shell: bash
+    - name: Set SSH username
+      run: sed -i 's/WCER AD User/${{inputs.ssh_user}}/g' config/config.py
+      shell: bash
+    - name: Set SSH password
+      run: sed -i 's/WCER AD Password/${{inputs.ssh_pass}}/g' config/config.py
+      shell: bash
+    - name: Set Logger level
+      run: sed -i 's/INFO/${{inputs.log_level}}/g' config/config.py
+      shell: bash
+    - name: Set Slice Size
+      run: sed -i 's/"BATCH_SIZE"\s*:\s*1000,/"BATCH_SIZE":${{inputs.slice_size}},/g' config/config.py
+      shell: bash

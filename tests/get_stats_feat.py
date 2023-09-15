@@ -2,10 +2,11 @@ import json
 from datetime import datetime as dt
 import math
 import pandas as pd
-from schemas.TableSchema import TableSchema
-from extractors.LakelandExtractor import LakelandExtractor
+from pathlib import Path
+from schemas.tables.TableSchema import TableSchema
+from games.LAKELAND.LakelandExtractor import LakelandExtractor
 from realtime.ModelManager import ModelManager
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 
 dump = pd.read_csv(
     "tests/test_data/LAKELAND_20200828_to_20200828 2/LAKELAND_20200828_to_20200828_d45ae97_dump.tsv", sep='\t')
@@ -15,7 +16,7 @@ proc = pd.read_csv("tests/test_data/LAKELAND_20200828_to_20200828/LAKELAND_20200
 # print(df.columns)
 model_name = 'PopAchVelocityModel'
 file_version = 'v18'
-schema = GameSchema("LAKELAND", "schemas/JSON/")
+schema = GameSchema("LAKELAND", Path("games/LAKELAND/schemas"))
 model_mgr = ModelManager(game_name="LAKELAND")
 col_names = list(dump.columns)
 game_id = dump['app_id'][0]
@@ -84,9 +85,9 @@ for session in session_id_list:
             row[table.client_time_index] = dt.strptime(row[table.client_time_index], '%Y-%m-%d %H:%M:%S')
             row[table.complex_data_index] = complex_data_parsed
             extractor.extractFromRow(row_with_complex_parsed=row, game_table=table)
-        extractor.calculateAggregateFeatures()
+        extractor.CalculateAggregateFeatures()
         all_features = dict(zip(extractor.getFeatureNames(game_table=table, game_schema=schema),
-                                extractor.getCurrentFeatures()))
+                                extractor.GetFeatureValues()))
         all_features = parse_nums(all_features)
         result = model.Eval([all_features])[0]
         if result is None:

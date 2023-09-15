@@ -1,0 +1,117 @@
+{
+    "column_map": {
+        "session_id"           : "session_id",
+        "app_id"               : null,
+        "timestamp"            : "client_time",
+        "event_name"           : ["event_name"],
+        "event_data"           : {"event_data":"event_data", "server_time":"server_time", "http_user_agent":"http_user_agent"},
+        "event_source"         : null,
+        "app_version"          : "app_version",
+        "app_branch"           : "app_branch",
+        "log_version"          : "log_version",
+        "time_offset"          : "client_offset",
+        "user_id"              : "user_id",
+        "user_data"            : "user_data",
+        "game_state"           : "game_state",
+        "event_sequence_index" : "event_sequence_index"
+    },
+
+    "columns": [
+        {
+            "name": "session_id",
+            "readable": "Session ID",
+            "description": "Unique identifier for the gameplay session",
+            "type": "str"
+        },
+        {
+            "name": "user_id",
+            "readable": "User ID",
+            "description": "Unique identifier for the player",
+            "type": "str"
+        },
+        {
+            "name": "user_data",
+            "readable": "User Data",
+            "description": "Additional metadata about the player",
+            "type": "json"
+        },
+        {
+            "name": "client_time",
+            "readable": "Client Time",
+            "description": "The client machine time when the event was generated",
+            "type": "datetime"
+        },
+        {
+            "name": "client_offset",
+            "readable": "Client Time Offset",
+            "description": "The time difference between local client time and GMT",
+            "type": "timedelta"
+        },
+        {
+            "name": "server_time",
+            "readable": "Server Time",
+            "description": "The server machine time when the event was logged",
+            "type": "datetime"
+        },
+        {
+            "name": "event_name",
+            "readable": "Event Type",
+            "description": "The type of event logged",
+            "type": "str"
+        },
+        {
+            "name": "event_data",
+            "readable": "Event Data",
+            "description": "Data specific to an event type, encoded as a JSON string",
+            "type": "json"
+        },
+        {
+            "name": "event_source",
+            "readable": "Event Source",
+            "description": "The generator of the event",
+            "type": "enum('GAME', 'DETECTOR')"
+        },
+        {
+            "name": "game_state",
+            "readable": "Game State",
+            "description": "Additional metadata about the state of the game when the event was logged",
+            "type": "json"
+        },
+        {
+            "name": "app_version",
+            "readable": "App Version",
+            "description": "The version of the game from which the event came",
+            "type": "str"
+        },
+        {
+            "name": "app_branch",
+            "readable": "App Branch",
+            "description": "The branch of the game code from which the event came",
+            "type": "str"
+        },
+        {
+            "name": "log_version",
+            "readable": "Log Version",
+            "description": "The version of the logging code from which the event came",
+            "type": "int"
+        },
+        {
+            "name": "event_sequence_index",
+            "readable": "Event-Sequence Index",
+            "description": "Counter of events in the session, from 0. A row with session_n = i is the (i+1)-th event of the session",
+            "type": "int"
+        },
+        {
+            "name": "remote_addr",
+            "readable": "IP Address",
+            "description": "The IP address for the player's computer",
+            "type": "str"
+        },
+        {
+            "name": "http_user_agent",
+            "readable": "User Agent",
+            "description": "Data on the type of web browser, OS, etc. in use by the player",
+            "type": "str"
+        }
+    ]
+}

@@ -1,0 +1,46 @@
+name: "Set up OGD dependencies"
+author: Luke Swanson
+description: "Given a game and a date range, this action will export the range's data for that game."
+branding:
+  icon: 'download'
+  color: 'blue'
+runs:
+  using: "composite"
+  steps:
+    - name: Set up local bin in path # there is a warning about this in pip output, so we'll do this and see if that makes things better.
+      run: export PATH=/home/runner/.local/bin:$PATH
+      shell: bash
+    - name: Get correct Python
+      run: |
+        sudo apt-get -q install python3.10
+      shell: bash
+    - name: Set up pip
+      run: |
+        python3.10 -m pip install --upgrade pip
+      shell: bash
+    # sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+    # sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 2
+    # sudo update-alternatives --config python3
+    # - name: Get pip cache dir
+    #   id: pip-cache
+    #   run: |
+    #     echo "::set-output name=dir::$(pip cache dir)"
+    #   shell: bash
+    # - name: Set up pip cache
+    #   uses: actions/cache@v3
+    #   id: cache
+    #   with:
+    #     path: ${{ steps.pip-cache.outputs.dir }}
+    #     key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+    # - name: Report cache success
+    #   if: steps.cache.outputs.cache-hit == 'true'
+    #   run: |
+    #     echo "Found pip cache at ${{steps.pip-cache.outputs.dir}}"
+    #   shell: bash
+    - name: Set up Python libraries
+      # if: steps.cache.outputs.cache-hit != 'true'
+      run: |
+        python3.10 -m pip install setuptools --quiet
+        python3.10 -m pip install wheel --quiet
+        python3.10 -m pip install -r requirements.txt --quiet
+      shell: bash
