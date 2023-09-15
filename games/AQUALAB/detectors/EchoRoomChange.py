@@ -6,6 +6,7 @@ from extractors.detectors.Detector import Detector
 from extractors.detectors.DetectorEvent import DetectorEvent
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 
 class EchoRoomChange(Detector):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
@@ -18,12 +19,13 @@ class EchoRoomChange(Detector):
         self._found = False
         self._sess_id = "Unknown"
         self._player_id = "Unknown"
-        self._time = datetime.now()
+        self._time = None # datetime.now()
         self._app_version = "Unknown"
         self._log_version = "Unknown"
 
     # *** Implement abstract functions ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_

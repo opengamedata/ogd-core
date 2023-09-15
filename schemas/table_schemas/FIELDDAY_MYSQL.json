@@ -1,0 +1,135 @@
+{
+    "column_map": {
+        "session_id"           : "session_id",
+        "app_id"               : "app_id",
+        "timestamp"            : ["client_time", "client_time_ms"],
+        "event_name"           : ["event", "event_custom"],
+        "event_data"           : {"event_data_complex":"event_data_complex", "server_time":"server_time"},
+        "event_source"         : null,
+        "app_version"          : null,
+        "app_branch"           : null,
+        "log_version"          : "app_version",
+        "time_offset"          : null,
+        "user_id"              : "player_id",
+        "user_data"            : {"persistent_session_id":"persistent_session_id", "http_user_agent":"http_user_agent"},
+        "game_state"           : {"level":"level"},
+        "event_sequence_index" : "session_n"
+    },
+
+    "columns": [
+        {
+            "name": "id",
+            "readable": "Row ID",
+            "description": "Unique identifier for a row",
+            "type": "int"
+        },
+        {
+            "name": "app_id",
+            "readable": "App Name",
+            "description": "A string identifying which game from which the event came",
+            "type": "str"
+        },
+        {
+            "name": "app_id_fast",
+            "readable": "app_id_fast",
+            "description": "A second version of the app id, to be removed",
+            "type": "enum('UNDEFINED','WAVES','CRYSTAL','JOWILDER','LAKELAND')"
+        },
+        {
+            "name": "app_version",
+            "readable": "App Version",
+            "description": "The version of the game from which the event came",
+            "type": "int"
+        },
+        {
+            "name": "session_id",
+            "readable": "Session ID",
+            "description": "Unique identifier for the gameplay session",
+            "type": "str"
+        },
+        {
+            "name": "persistent_session_id",
+            "readable": "Persistent Session ID",
+            "description": "Unique identifier across all gameplay sessions from a single computer",
+            "type": "str"
+        },
+        {
+            "name": "player_id",
+            "readable": "Player ID",
+            "description": "A custom, per-player ID, only exists if player entered an ID on one of our custom portal pages, else null",
+            "type": "str"
+        },
+        {
+            "name": "level",
+            "readable": "Level",
+            "description": "The game level in which the event was logged",
+            "type": "int"
+        },
+        {
+            "name": "event",
+            "readable": "Event Type",
+            "description": "The type of event logged",
+            "type": "enum('BEGIN','COMPLETE','SUCCEED','FAIL','CUSTOM','UNDEFINED')"
+        },
+        {
+            "name": "event_custom",
+            "readable": "Event Subtype",
+            "description": "A number corresponding to the game-specific event type for events labeled 'Custom'",
+            "type": "str"
+        },
+        {
+            "name": "event_data_simple",
+            "readable": "event_data_simple",
+            "description": "Unused (always=0), to be deleted",
+            "type": "str"
+        },
+        {
+            "name": "event_data_complex",
+            "readable": "Event Data",
+            "description": "Data specific to an event type, encoded as a JSON string",
+            "type": "json"
+        },
+        {
+            "name": "client_time",
+            "readable": "Client Time",
+            "description": "The client machine time when the event was generated",
+            "type": "datetime"
+        },
+        {
+            "name": "client_time_ms",
+            "readable": "Client Time Milliseconds",
+            "description": "Number of milliseconds to append to client time",
+            "type": "int"
+        },
+        {
+            "name": "server_time",
+            "readable": "Server Time",
+            "description": "The server machine time when the event was logged",
+            "type": "datetime"
+        },
+        {
+            "name": "remote_addr",
+            "readable": "IP Address",
+            "description": "The IP address for the player's computer",
+            "type": "str"
+        },
+        {
+            "name": "req_id",
+            "readable": "req_id",
+            "description": "Another ID of some kind, to be removed",
+            "type": "int"
+        },
+        {
+            "name": "session_n",
+            "readable": "Event-Sequence Index",
+            "description": "Counter of events in the session, from 0. A row with session_n = i is the (i+1)-th event of the session",
+            "type": "int"
+        },
+        {
+            "name": "http_user_agent",
+            "readable": "User Agent",
+            "description": "Data on the type of web browser, OS, etc. in use by the player",
+            "type": "str"
+        }
+    ]
+}

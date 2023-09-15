@@ -4,10 +4,11 @@ import logging
 from datetime import timedelta
 from typing import Any, List, Optional
 # import locals
-from utils import Logger
+from utils.Logger import Logger
 from extractors.Extractor import ExtractorParameters
 from games.AQUALAB.features.PerJobFeature import PerJobFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class JobCompletionTime(PerJobFeature):
@@ -20,10 +21,12 @@ class JobCompletionTime(PerJobFeature):
         self._time = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["accept_job", "complete_job"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -44,8 +47,9 @@ class JobCompletionTime(PerJobFeature):
                 self._time += (event.timestamp - self._job_start_time).total_seconds()
                 self._job_start_time = None
             else:
+                _completed_job = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
                 callstack = [f"{_getFilename(inspect.stack()[i].filename)}.{inspect.stack()[i].function}" for i in range(min(11, len(inspect.stack())))]
-                Logger.Log(f"In {callstack}:\n  {event.user_id} ({event.session_id}) completed job {event.event_data['job_name']['string_value']} with no active start time!", logging.DEBUG)
+                Logger.Log(f"In {callstack}:\n  {event.user_id} ({event.session_id}) completed job {_completed_job} with no active start time!", logging.DEBUG)
 
         self._prev_timestamp = event.timestamp
 

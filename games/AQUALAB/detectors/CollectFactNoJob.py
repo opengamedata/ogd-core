@@ -7,6 +7,7 @@ from extractors.detectors.Detector import Detector
 from extractors.detectors.DetectorEvent import DetectorEvent
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 
 class CollectFactNoJob(Detector):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
@@ -19,13 +20,15 @@ class CollectFactNoJob(Detector):
         self._found_jobless_fact = False
         self._sess_id = "Unknown"
         self._player_id = "Unknown"
-        self._time = datetime.now()
+        self._time = None # datetime.now()
         self._fact_id = None
         self._app_version = "Unknown"
         self._log_version = "Unknown"
+        self._current_job = None
 
     # *** Implement abstract functions ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -39,7 +42,10 @@ class CollectFactNoJob(Detector):
         :param event: _description_
         :type event: Event
         """
-        if event.EventData['job_name'] == "no-active-job":
+        self._current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if self._current_job is None:
+            raise KeyError("Could not find key 'job_name' in GameState or EventData!")
+        if self._current_job == "no-active-job":
             self._sess_id = event.SessionID
             self._player_id = event.UserID
             self._time = event.Timestamp
@@ -66,5 +72,6 @@ class CollectFactNoJob(Detector):
         ret_val : DetectorEvent = DetectorEvent(session_id=self._sess_id, app_id="AQUALAB", timestamp=self._time,
                                                 event_name="CollectFactNoJob", event_data={"fact_id":self._fact_id},
                                                 app_version=self._app_version, log_version=self._log_version,
-                                                user_id=self._player_id, event_sequence_index=self._sequence_index)
+                                                user_id=self._player_id, game_state={"job_name":self._current_job},
+                                                event_sequence_index=self._sequence_index)
         return ret_val

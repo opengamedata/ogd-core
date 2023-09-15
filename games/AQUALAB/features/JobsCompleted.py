@@ -3,6 +3,7 @@ from typing import Any, List
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class JobsCompleted(SessionFeature):
@@ -13,15 +14,18 @@ class JobsCompleted(SessionFeature):
         self._jobs_completed = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["complete_job"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
         if event.UserID == self._player_id:
-            self._jobs_completed.append(event.EventData["job_name"]["string_value"])
+            _job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
+            self._jobs_completed.append(_job_name)
 
     def _extractFromFeatureData(self, feature:FeatureData):
         return

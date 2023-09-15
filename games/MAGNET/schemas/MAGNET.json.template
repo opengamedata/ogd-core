@@ -1,0 +1,241 @@
+{
+    "level_range": { "min":0, "max":219 },
+
+    "events": {
+        "COMPLETE": {
+            "description": "N/A",
+            "event_data": {
+                "guessScore": {
+                    "type": "Dict",
+                    "description": "N/A",
+                    "details": {
+                        "northDist": "float",
+                        "southDist": "float"
+                    }
+                },
+                "guessScoreIfSwitched": {
+                    "type": "Dict",
+                    "description": "N/A",
+                    "details": {
+                        "northPoleToSouthGuess": "float",
+                        "southPoleToNorthGuess": "float"
+                    }
+                },
+                "numCompasses": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "ironFilingsUsed": {
+                    "type": "boolean",
+                    "description": "N/A"
+                },
+                "magneticFilmUsed": {
+                    "type": "boolean",
+                    "description": "N/A"
+                },
+                "levelTime": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "numLevels": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "numTimesPolesMoved": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "magnetLocation": {
+                    "type": "Dict",
+                    "description": "N/A",
+                    "details": {
+                        "xNorth": "float",
+                        "yNorth": "float",
+                        "xSouth": "float",
+                        "ySouth": "float"
+                    }
+                },
+                "event_custom": {
+                    "type": "COMPLETE",
+                    "description": "N/A"
+                }
+            }
+        },
+        "DRAG_TOOL": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "DRAG_TOOL",
+                    "description": "N/A"
+                },
+                "toolType": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "dragTime": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "location": {
+                    "type": "Dict",
+                    "description": "N/A",
+                    "details": {
+                        "x": "int",
+                        "y": "int"
+                    }
+                },
+                "toolNum": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
+        },
+        "DRAG_POLE": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "DRAG_POLE",
+                    "description": "N/A"
+                },
+                "poleType": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "dragTime": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "location": {
+                    "type": "Dict",
+                    "description": "N/A",
+                    "details": {
+                        "x": "int",
+                        "y": "int"
+                    }
+                },
+                "numTimesMoved": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "distToPole": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "numToolsUsed": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "PLAYGROUND_EXIT": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "PLAYGROUND_EXIT",
+                    "description": "N/A"
+                },
+                "timeSpent": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "numThingsDragged": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "TUTORIAL_EXIT": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "TUTORIAL_EXIT",
+                    "description": "N/A"
+                },
+                "timeSpent": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
+        }
+    },
+
+    "features": {
+		"legacy" : {
+			"enabled" : true,
+            "return_type" : "Any"
+		},
+        "perlevel": {
+            "eventCount": {
+                "enabled": false,
+                "description": "Number of player events in the given level"
+            },
+            "southPoleScore": {
+                "enabled": false,
+                "description": "The score for the south pole placement"
+            },
+            "northPoleScore": {
+                "enabled": false,
+                "description": "The score for the north pole placement"
+            },
+            "northPoleToSouthGuess": {
+                "enabled": false,
+                "description": "The score for the south pole placement if the poles were switched."
+            },
+            "southPoleToNorthGuess": {
+                "enabled": false,
+                "description": "The score for the north pole placement if the poles were switched."
+            },
+            "numberOfCompassesUsed": {
+                "enabled": false,
+                "description": "How many of the six compasses were placed before guessing"
+            },
+            "usedMagneticFilm": {
+                "enabled": false,
+                "description": "Indicates whether the magnetic film was placed"
+            },
+            "usedIronFilings": {
+                "enabled": false,
+                "description": "Indicates whether the iron filings were placed"
+            },
+            "numTimesPolesMoved": {
+                "enabled": false,
+                "description": "The number of times the poles were moved before finalizing the guess"
+            },
+            "levelTime": {
+                "enabled": false,
+                "description": "The amount of time spent in the level"
+            }
+        },
+        "per_count": {},
+        "aggregate": {
+            "sessionID": {
+                "enabled": false,
+                "description": "The player's session ID number for this play session"
+            },
+            "persistentSessionID": {
+                "enabled": false,
+                "description": "The session ID for the player's device, persists across multiple players using the same device."
+            },
+            "sessionEventCount": {
+                "enabled": false,
+                "description": "The total number of events across the entire session"
+            },
+            "sessionTime": {
+                "enabled": false,
+                "description": "The total number of seconds spent"
+            },
+            "numberOfCompletePlays": {
+                "enabled": false,
+                "description": "The number of times the player played the game"
+            },
+            "averageScore": {
+                "enabled": false,
+                "description": "The average score across all complete plays"
+            }
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [2]
+	}
+}

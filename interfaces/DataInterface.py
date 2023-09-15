@@ -2,12 +2,16 @@
 import abc
 import logging
 from datetime import datetime
-from typing import Dict, List, Tuple, Optional, Union
+from pprint import pformat
+from typing import Any, Dict, List, Tuple, Optional, Union
 
 # import local files
 from interfaces.Interface import Interface
+from schemas.Event import Event
 from schemas.IDMode import IDMode
-from utils import Logger
+from schemas.tables.TableSchema import TableSchema
+from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from utils.Logger import Logger
 
 class DataInterface(Interface):
 
@@ -33,11 +37,13 @@ class DataInterface(Interface):
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str,datetime]:
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id):
-        super().__init__()
+    def __init__(self, game_id:str, config:GameSourceSchema, fail_fast:bool):
+        super().__init__(config=config)
+        self._fail_fast = fail_fast
         self._game_id : str  = game_id
+        self._table_schema : TableSchema = TableSchema(schema_name=self._config.TableSchema)
 
     def __del__(self):
         self.Close()
@@ -62,11 +68,33 @@ class DataInterface(Interface):
             Logger.Log(f"Could not get full date range, the source interface is not open!", logging.WARNING, depth=3)
         return ret_val
 
-    def RowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Optional[List[Tuple]]:
+    def EventsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Optional[List[Event]]:
         ret_val = None
+
+        _curr_sess : str      = ""
+        _evt_sess_index : int = 1
         if self.IsOpen():
             Logger.Log(f"Retrieving rows from IDs with {id_mode.name} ID mode.", logging.DEBUG, depth=3)
-            ret_val = self._rowsFromIDs(id_list=id_list, id_mode=id_mode, versions=versions)
+            _rows   = self._rowsFromIDs(id_list=id_list, id_mode=id_mode, versions=versions)
+            _fallbacks = {"app_id":self._game_id}
+            ret_val = []
+            for row in _rows:
+                try:
+                    next_event = self._table_schema.RowToEvent(row=row, fallbacks=_fallbacks)
+                    # in case event index was not given, we should fall back on using the order it came to us.
+                    if next_event.SessionID != _curr_sess:
+                        _curr_sess = next_event.SessionID
+                        _evt_sess_index = 1
+                    next_event.FallbackDefaults(index=_evt_sess_index)
+                    _evt_sess_index += 1
+                except Exception as err:
+                    if self._fail_fast:
+                        Logger.Log(f"Error while converting row to Event\nFull error: {err}\nRow data: {pformat(row)}", logging.ERROR, depth=2)
+                        raise err
+                    else:
+                        Logger.Log(f"Error while converting row ({row}) to Event. This row will be skipped.\nFull error: {err}", logging.WARNING, depth=2)
+                else:
+                    ret_val.append(next_event)
         else:
             Logger.Log(f"Could not retrieve rows for {len(id_list)} session IDs, the source interface is not open!", logging.WARNING, depth=3)
         return ret_val
@@ -90,6 +118,10 @@ class DataInterface(Interface):
         return ret_val
 
     # *** PROPERTIES ***
+
+    @property
+    def _TableSchema(self) -> TableSchema:
+        return self._table_schema
 
     # *** PRIVATE STATICS ***
 

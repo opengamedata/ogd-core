@@ -5,6 +5,7 @@ from typing import Any, Dict, List
 from extractors.Extractor import ExtractorParameters
 from extractors.features.SessionFeature import SessionFeature
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class PopulationSummary(SessionFeature):
@@ -16,21 +17,23 @@ class PopulationSummary(SessionFeature):
         self._user_session_times = defaultdict(list)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["JobsCompleted", "SessionID", "SessionDuration"]
 
     def _extractFromEvent(self, event: Event) -> None:
         return
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        if feature.Name == "JobsCompleted":
+        if feature.FeatureType == "JobsCompleted":
             self._user_completions[feature.PlayerID].append(feature.FeatureValues[0])
-        elif feature.Name == "SessionID" and feature.SessionID not in self._user_sessions[feature.PlayerID]:
+        elif feature.FeatureType == "SessionID" and feature.SessionID not in self._user_sessions[feature.PlayerID]:
             self._user_sessions[feature.PlayerID].append(feature.SessionID)
-        elif feature.Name == "SessionDuration":
+        elif feature.FeatureType == "SessionDuration":
             self._user_session_times[feature.PlayerID].append(feature.FeatureValues[0])
 
     def _getFeatureValues(self) -> List[Any]:
@@ -64,6 +67,17 @@ class PopulationSummary(SessionFeature):
 
     # *** Optionally override public functions. ***
 
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Feature.
+
+        Overridden from base Feature version.
+        A PlayerSummary is only used at player and population levels; not concerned with session-level.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.POPULATION]
+
     # *** Private Functions ***
 
     @staticmethod
@@ -71,4 +85,4 @@ class PopulationSummary(SessionFeature):
         ret_val = timedelta(0)
         for time in times:
             ret_val += time
-        return ret_val.seconds
+        return ret_val.total_seconds()

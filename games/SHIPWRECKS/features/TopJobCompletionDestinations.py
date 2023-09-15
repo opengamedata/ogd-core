@@ -3,11 +3,13 @@ import json
 from collections import defaultdict
 from typing import Any, List
 # import locals
-from utils import Logger
+from utils.Logger import Logger
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
+
 
 class TopJobCompletionDestinations(Feature):
 
@@ -19,16 +21,18 @@ class TopJobCompletionDestinations(Feature):
         self._mission_complete_pairs = {}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["checkpoint"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
         session_id = event.SessionID
-        checkpoint = event.EventData["status"]["string_value"]
-        mission_id = event.EventData["mission_id"]["string_value"]
+        checkpoint = event.EventData["status"]
+        mission_id = event.EventData["mission_id"]
 
         if session_id != self._current_session_id:
             self._last_completed_id = None

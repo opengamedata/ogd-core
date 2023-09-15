@@ -2,6 +2,8 @@
 from datetime import timedelta
 from enum import IntEnum
 from typing import Any, Dict, List, Union
+# import locals
+from utils.utils import ExportRow
 
 class ResultStatus(IntEnum):
     NONE = 1
@@ -9,7 +11,7 @@ class ResultStatus(IntEnum):
     FAILURE = 3
 
 class ExportResult:
-    def __init__(self, columns:List[str] = [], values:List[List[Any]] = []):
+    def __init__(self, columns:List[str] = [], values:List[ExportRow] = []):
         self._columns = columns
         self._values  = values
 
@@ -21,32 +23,27 @@ class ExportResult:
         self._columns = new_columns
 
     @property
-    def Values(self) -> List[List[Any]]:
+    def Values(self) -> List[ExportRow]:
         return self._values
 
-    def ToDict(self) -> Dict[str, Union[List[str], List[List[Any]]]]:
+    def ToDict(self) -> Dict[str, Union[List[str], List[ExportRow]]]:
         return {
             "cols":self._columns,
             "vals":self._values
         }
 
-    def AppendValues(self, new_values:List[Any]):
+    def AppendRow(self, new_values:ExportRow):
         self._values.append(new_values)
     
-    def ConcatValues(self, new_values:List[List[Any]]):
+    def ConcatRows(self, new_values:List[ExportRow]):
         self._values += new_values
 
 class RequestResult:
     def __init__(self, msg:str="", status:ResultStatus=ResultStatus.NONE,
-                 events:ExportResult  = ExportResult(), sessions:ExportResult   = ExportResult(),
-                 players:ExportResult = ExportResult(), population:ExportResult = ExportResult(),
-                 duration:timedelta=timedelta()):
+                 sess_ct : int = 0, duration:timedelta=timedelta()):
         self._message    = msg
         self._status     = status
-        self._events     = events
-        self._sessions   = sessions
-        self._players    = players
-        self._population = population
+        self._sess_ct    = sess_ct
         self._duration   = duration
 
     @property
@@ -56,31 +53,13 @@ class RequestResult:
     @property
     def Message(self) -> str:
         return self._message
-    
-    @property
-    def Events(self) -> ExportResult:
-        return self._events
-    
-    @property
-    def Sessions(self) -> ExportResult:
-        return self._sessions
-    
-    @property
-    def Players(self) -> ExportResult:
-        return self._players
-    
-    @property
-    def Population(self) -> ExportResult:
-        return self._population
 
     @property
-    def ValuesDict(self) -> Dict[str, Dict[str, List[Any]]]:
-        return {
-            "population" : self.Population.ToDict(),
-            "players"    : self.Players.ToDict(),
-            "sessions"   : self.Sessions.ToDict(),
-            "events"     : self.Events.ToDict()
-        }
+    def SessionCount(self):
+        return self._sess_ct
+    @SessionCount.setter
+    def SessionCount(self, new_ct:int):
+        self._sess_ct = new_ct
 
     @property
     def Duration(self) -> timedelta:
@@ -88,14 +67,6 @@ class RequestResult:
     @Duration.setter
     def Duration(self, new_duration):
         self._duration = new_duration
-
-    @property
-    def SessionCount(self):
-        return len(self.Sessions.Values)
-
-    @property
-    def PlayerCount(self):
-        return len(self.Players.Values)
 
     def RequestSucceeded(self, msg:str):
         self._status = ResultStatus.SUCCESS

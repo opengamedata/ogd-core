@@ -2,10 +2,11 @@ from collections import defaultdict
 from typing import Any, Dict, List, Union
 from unicodedata import numeric
 
-from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
 
 class PopulationSummary(SessionFeature):
 
@@ -15,19 +16,21 @@ class PopulationSummary(SessionFeature):
         self._session_times = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["JobsCompleted", "SessionDuration"]
 
     def _extractFromEvent(self, event: Event) -> None:
         return
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        if feature.Name == "JobsCompleted":
+        if feature.FeatureType == "JobsCompleted":
             self._session_completions[feature.SessionID] = feature.FeatureValues[0]
-        elif feature.Name == "SessionDuration":
+        elif feature.FeatureType == "SessionDuration":
             self._session_times.append(feature.FeatureValues[0])
 
     def _getFeatureValues(self) -> List[Any]:

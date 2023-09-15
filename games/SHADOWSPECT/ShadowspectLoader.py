@@ -1,6 +1,7 @@
 ## import standard libraries
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
+import games.SHADOWSPECT.features
 from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 from extractors.ExtractorLoader import ExtractorLoader
@@ -9,13 +10,17 @@ from extractors.Extractor import ExtractorParameters
 from games.SHADOWSPECT.features import *
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 
 ## @class ShadowspectExtractor
 #  Extractor subclass for extracting features from Shadowspects game data.
 class ShadowspectLoader(ExtractorLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
+    @staticmethod
+    def _getFeaturesModule():
+        return games.SHADOWSPECT.features
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature

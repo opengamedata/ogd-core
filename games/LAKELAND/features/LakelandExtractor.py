@@ -10,6 +10,7 @@ script.
 
 ## import standard libraries
 import logging
+import os
 import sys
 import traceback
 import typing
@@ -20,13 +21,13 @@ from math import sqrt
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 ## import local files
-import utils
 from extractors.Extractor import ExtractorParameters
 from extractors.legacy.LegacyFeature import LegacyFeature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
-from utils import Logger
+from schemas.games.GameSchema import GameSchema
+from utils import utils
+from utils.Logger import Logger
 
 # temp comment
 
@@ -45,9 +46,10 @@ class LakelandExtractor(LegacyFeature):
         "buy_livestock",
     ]
     try:
+        # TODO: someday, change directory to the directory of current file first, and fix this path, so we don't have indirection issues.
         _STR_TO_ENUM = utils.loadJSONFile(filename="LakelandEnumerators.json", path=Path("../opengamedata-core/games/LAKELAND/features/"))
     except FileNotFoundError as err:
-        Logger.Log(message="Could not load Lakeland Enumerators", level=logging.WARNING)
+        Logger.Log(message=f"Could not load Lakeland Enumerators", level=logging.WARNING)
         _STR_TO_ENUM = {}
     _ENUM_TO_STR = {cat: {y: x for x, y in ydict.items()} for cat, ydict in _STR_TO_ENUM.items()}
     _ITEM_MARK_COMBINATIONS = [('food', 'sell'), ('food', 'use'), ('food', 'eat'),
@@ -103,12 +105,11 @@ class LakelandExtractor(LegacyFeature):
         # Initialize superclass
         super().__init__(params=params, game_schema=game_schema, session_id=session_id)
         # Set window and overlap size
-        config = game_schema['config']
-        self._NUM_SECONDS_PER_WINDOW = config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
-        self._NUM_SECONDS_PER_WINDOW_OVERLAP = config["WINDOW_OVERLAP_SECONDS"]
+        self._NUM_SECONDS_PER_WINDOW = game_schema.Config[LakelandExtractor._WINDOW_PREFIX+'WINDOW_SIZE_SECONDS']
+        self._NUM_SECONDS_PER_WINDOW_OVERLAP = game_schema.Config["WINDOW_OVERLAP_SECONDS"]
         self._GAME_SCHEMA = game_schema
-        self._IDLE_THRESH_SECONDS = config['IDLE_THRESH_SECONDS']
-        self.WINDOW_RANGE = range(game_schema.level_range().stop)
+        self._IDLE_THRESH_SECONDS = game_schema.Config['IDLE_THRESH_SECONDS']
+        self.WINDOW_RANGE = range(game_schema.LevelRange.stop)
         self._WINDOW_RANGES = self._get_window_ranges()
         self._cur_gameplay = 1
         self._startgame_count = 0
@@ -150,16 +151,16 @@ class LakelandExtractor(LegacyFeature):
             self._cur_gameplay += 1
             self.setValByName('num_play', self._cur_gameplay)
         if not self._VERSION:
-            self._VERSION = event.AppVersion
+            self._VERSION = event.LogVersion
             self.setValByName("version", self._VERSION)
         # Check for invalid row.
-        if self.ExportMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
+        if self.ExtractionMode == ExtractionMode.SESSION and event.SessionID != self._session_id:
             Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.SessionID}!", logging.ERROR)
         # If row is valid, process it.
         else:
             # If we haven't set persistent id, set now.
             if self.getValByName(feature_name="persistentSessionID") == 0:
-                self.setValByName(feature_name="persistentSessionID", new_value=event.EventData['persistent_session_id'])
+                self.setValByName(feature_name="persistentSessionID", new_value=event.UserData['persistent_session_id'])
             # if self.getValByName(feature_name="player_id") == 0:
             #     self.setValByName(feature_name="player_id",
             #                                new_value=row_with_complex_parsed[table_schema.player_id_index])
@@ -1146,7 +1147,7 @@ class LakelandExtractor(LegacyFeature):
 
     def finish_window(self, w):
         window_end_time = timedelta(seconds=self._WINDOW_RANGES[w][1])
-        for f in self.features.perlevels:
+        for f in self.features._perlevel_names:
             cur_val = self.getValByIndex(f, w)
             if cur_val == float('inf'):
                 # if min_ feature is still float('inf'), then max_value and min_value should still be 0.
@@ -1158,7 +1159,7 @@ class LakelandExtractor(LegacyFeature):
         # update time_in_secs to full (might not be full
 
     def start_window(self, w):
-        for f in self.features.perlevels:
+        for f in self.features._perlevel_names:
             self.setValByIndex(f, w, new_value=self._get_default_val(f))
         if w > 0:
             for type in self._BUILDING_TYPES:
@@ -1349,7 +1350,7 @@ class LakelandExtractor(LegacyFeature):
     def _get_windows_at_time(self, client_time=None):
         # if no client time, get windows at start
         if client_time is not None:
-            seconds_since_start = self.time_since_start(client_time).seconds
+            seconds_since_start = self.time_since_start(client_time).total_seconds()
         else:
             seconds_since_start = 0
         windows = []

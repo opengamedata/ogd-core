@@ -2,10 +2,11 @@
 from schemas import Event
 from typing import Any, List, Optional
 # import locals
-from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
 
 class AverageSliderMoves(SessionFeature):
     def __init__(self, params:ExtractorParameters):
@@ -14,15 +15,17 @@ class AverageSliderMoves(SessionFeature):
         self._slider_count       : int = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.1"]
         # return ["SLIDER_MOVE_RELEASE"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        self._levels_encountered.add(event.EventData['level']) # set-add level to list, at end we will have set of all levels seen.
+        self._levels_encountered.add(event.GameState['level']) # set-add level to list, at end we will have set of all levels seen.
         self._slider_count += 1
 
     def _extractFromFeatureData(self, feature:FeatureData):

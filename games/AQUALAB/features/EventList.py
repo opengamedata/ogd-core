@@ -6,6 +6,7 @@ from typing import Any, List, Optional
 from extractors.features.Feature import Feature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 class EventList(Feature):
@@ -60,10 +61,12 @@ class EventList(Feature):
         }
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["all_events"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -73,20 +76,19 @@ class EventList(Feature):
                 "user_id": event.UserID,
                 "session_id": event.SessionID,
                 "timestamp": event.Timestamp.isoformat(),
-                "job_name": event.EventData["job_name"]["string_value"],
+                "job_name": event.GameState.get('job_name', event.EventData.get('job_name', "UNDEFINED")),
                 "index": event.EventSequenceIndex,
                 "event_primary_detail": None
             }
 
             if event.EventName == "scene_changed":
-                next_event['scene_name'] = event.EventData['scene_name']['string_value']
+                next_event['scene_name'] = event.EventData['scene_name']
 
             if event.EventName in self._details_map:
                 param_name = self._details_map[event.EventName][0]
-                param_type = self._details_map[event.EventName][1]
 
                 try:
-                    next_event["event_primary_detail"] = event.EventData[param_name][param_type]
+                    next_event["event_primary_detail"] = event.EventData[param_name]
                 except KeyError as err:
                     raise KeyError(f"Event of type {event.EventName} did not have parameter {param_name}, valid parameters are {event.EventData.keys()}")
 

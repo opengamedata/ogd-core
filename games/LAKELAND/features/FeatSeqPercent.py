@@ -24,7 +24,7 @@ import numpy as np
 import json
 from datetime import timedelta
 from models.FeatureModel import FeatureModel
-from utils import Logger
+from utils.Logger import Logger
 
 _POP_ACHS = "exist group town city".split()
 _FARM_ACHS = "farmer farmers farmtown megafarm".split()
@@ -148,7 +148,7 @@ class FeatSeqPercentModel(FeatureModel):
             next_feat = self._feature_sequence[-1]
             cur_time = time_to_vals[-1]
         if type(cur_time) is timedelta:  # sessions features give float, but cgi might give timedelta
-            cur_time = cur_time.seconds
+            cur_time = cur_time.total_seconds()
 
         percentile_if_next_feat_now = self._featureQuantiles.get_quantile(next_feat, cur_time, verbose=verbose)
 

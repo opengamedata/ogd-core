@@ -38,25 +38,62 @@ class Feature(Extractor):
         """
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
+        self._up_to_date = False
+        # by default, latest values should just be None, with length equal to number of columns for the feature.
+        self._latest_values : List[Any] = [None for i in range(len(self.GetFeatureNames())) ]
 
     # *** PUBLIC STATICS ***
+
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Feature.
+
+        Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION]
+
+    @staticmethod
+    def FeatureDependencyModes() -> List[ExtractionMode]:
+        """List of ExtractionModes .
+
+        Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION]
 
     # *** PUBLIC METHODS ***
 
     def ToFeatureData(self, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureData:
         return FeatureData(
             name=self.Name,
+            feature_type=type(self).__name__,
             count_index=self.CountIndex,
             cols=self.GetFeatureNames(),
             vals=self.GetFeatureValues(),
-            mode=self.ExportMode,
+            mode=self.ExtractionMode,
             player_id=player_id,
             sess_id=sess_id
         )
+
+    def BaseFeatureSuffix(self) -> str:
+        """Base function to add a suffix to the base feature name, which will not affect the naming of subfeatures.
+        By default, returns ""; override to set a suffix.
+        Example use-case: Suppose you want a feature that captures the number of times a player enters a given state,
+        as well as the time spent in that state.
+        The feature can be named "State", with BaseFeatureSuffix returning "EntryCount" and a subfeature named "Time."
+        Then the columns will be named "StateEntryCount" and "StateTime."
+
+        :return: _description_
+        :rtype: str
+        """
+        return ""
 
     def Subfeatures(self) -> List[str]:
         """Base function to get a list of names of the sub-feature(s) a given Feature class outputs.
@@ -78,28 +115,33 @@ class Feature(Extractor):
         :return: [description]
         :rtype: List[str]
         """
-        return [self.Name] + [f"{self.Name}-{subfeature}" for subfeature in self.Subfeatures()]
+        return [f"{self.Name}{self.BaseFeatureSuffix()}"] + [f"{self.Name}-{subfeature}" for subfeature in self.Subfeatures()]
 
     def ExtractFromEvent(self, event:Event):
+        """Overridden version of function from Extractor base class;
+        In this case, set the "up to date" value to False whenever we see a new event.
+
+        :param event: _description_
+        :type event: Event
+        """
         if self._validateEvent(event=event):
             self._extractFromEvent(event=event)
+            self._up_to_date = False
 
     def ExtractFromFeatureData(self, feature:FeatureData):
         # TODO: add validation for FeatureData, if applicable/possible.
+        # TODO: figure out a way to invalidate/reset if more events are given to features on which the given feature depends.
         self._extractFromFeatureData(feature=feature)
+        self._up_to_date = False
 
     def GetFeatureValues(self) -> List[Any]:
-        return self._getFeatureValues()
-
-    @staticmethod
-    def AvailableModes() -> List[ExtractionMode]:
-        """List of ExtractionMode supported by the Feature.
-
-        Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
-        :return: _description_
-        :rtype: List[ExtractionMode]
-        """
-        return [ExtractionMode.POPULATION, ExtractionMode.USER, ExtractionMode.SESSION]
+        # Only call calculation feature if new events were seen since last call.
+        # Practically, this doesn't matter because we always process all data before using GetFeatureValues.
+        # Someday, however, this may be useful when dealing with a caching system.
+        if not self._up_to_date:
+            self._latest_value = self._getFeatureValues()
+            self._up_to_date = True
+        return self._latest_value
 
     # *** PROPERTIES ***
 

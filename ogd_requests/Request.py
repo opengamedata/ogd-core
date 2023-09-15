@@ -1,11 +1,13 @@
 # import standard libraries
 import abc
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set
 # import local files
 from interfaces.DataInterface import DataInterface
+from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.IDMode import IDMode
-from utils import Logger
+from schemas.ExportMode import ExportMode
+from utils.Logger import Logger
 
 class ExporterRange:
     """
@@ -40,20 +42,6 @@ class ExporterRange:
     def IDMode(self):
         return self._id_mode
 
-class ExporterTypes:
-    """Completely dumb struct that just enforces the names of the four kinds of file we can output.
-    """
-    def __init__(self, events:bool = True, sessions:bool = True, players:bool = True, population:bool = True):
-        self.events = events
-        self.sessions = sessions
-        self.players = players
-        self.population = population
-
-class ExporterLocations:
-    def __init__(self, files:bool = True, dict:bool = False):
-        self.files = files
-        self.dict  = dict
-
 ## @class Request
 #  Dumb struct to hold data related to requests for data export.
 #  This way, we've at least got a list of what is available in a request.
@@ -66,16 +54,16 @@ class Request(abc.ABC):
     #                 Should correspond to the app_id in the database.
     #  @param start_date   The starting date for our range of data to process.
     #  @param end_date     The ending date for our range of data to process.
-    def __init__(self, interface:DataInterface, range:ExporterRange,
-                exporter_types:ExporterTypes = ExporterTypes(), exporter_locs:ExporterLocations = ExporterLocations(),
+    def __init__(self, range:ExporterRange, exporter_modes:Set[ExportMode],
+                interface:DataInterface,    outerfaces:Set[DataOuterface],
                 feature_overrides:Optional[List[str]]=None):
         # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
         self._game_id        : str                    = str(interface._game_id)
         self._interface      : DataInterface          = interface
         self._range          : ExporterRange          = range
-        self._exports        : ExporterTypes          = exporter_types
-        self._locs           : ExporterLocations      = exporter_locs
-        self._feat_overrides : Optional[List[str]] = feature_overrides
+        self._exports        : Set[ExportMode]        = exporter_modes
+        self._outerfaces     : Set[DataOuterface]     = outerfaces
+        self._feat_overrides : Optional[List[str]]    = feature_overrides
 
     ## String representation of a request. Just gives game id, and date range.
     def __str__(self):
@@ -89,7 +77,7 @@ class Request(abc.ABC):
         except Exception as err:
             Logger.Log(f"Got an error when trying to stringify a Request: {type(err)} {str(err)}")
         finally:
-            return f"{self._game_id}: {_min}<->{_max}"
+            return f"{self._game_id}: {_min}<->{_max} ({[str(export) for export in self._exports]})"
 
     @property
     def GameID(self):
@@ -104,24 +92,29 @@ class Request(abc.ABC):
         return self._range
 
     @property
-    def ExportEvents(self) -> bool:
-        return self._exports.events
+    def ExportRawEvents(self) -> bool:
+        return ExportMode.EVENTS in self._exports
+    @property
+    def ExportProcessedEvents(self) -> bool:
+        return ExportMode.DETECTORS in self._exports
     @property
     def ExportSessions(self) -> bool:
-        return self._exports.sessions
+        return ExportMode.SESSION in self._exports
     @property
     def ExportPlayers(self) -> bool:
-        return self._exports.players
+        return ExportMode.PLAYER in self._exports
     @property
     def ExportPopulation(self) -> bool:
-        return self._exports.population
+        return ExportMode.POPULATION in self._exports
 
     @property
-    def ToFile(self) -> bool:
-        return self._locs.files
-    @property
-    def ToDict(self) -> bool:
-        return self._locs.dict
+    def Outerfaces(self) -> Set[DataOuterface]:
+        return self._outerfaces
+
+    def RemoveExportMode(self, mode:ExportMode):
+        self._exports.discard(mode)
+        for outerface in self.Outerfaces:
+            outerface.RemoveExportMode(mode=mode)
 
     ## Method to retrieve the list of IDs for all sessions covered by the request.
     #  Note, this will use the 

@@ -3,9 +3,11 @@ import json
 from typing import Any, List
 # import locals
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
+
 
 class EventList(Feature):
 
@@ -26,15 +28,17 @@ class EventList(Feature):
         }
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["all_events"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        if event.EventName == "checkpoint" and event.EventData["status"]["string_value"] == "Begin Mission":
-            self._mission_id = event.EventData["mission_id"]["string_value"]
+        if event.EventName == "checkpoint" and event.EventData["status"] == "Begin Mission":
+            self._mission_id = event.EventData["mission_id"]
 
         next_event = {
             "name": event.EventName,
@@ -48,9 +52,8 @@ class EventList(Feature):
 
         if event.EventName in self._details_map:
             param_name = self._details_map[event.EventName][0]
-            param_type = self._details_map[event.EventName][1]
 
-            next_event["event_primary_detail"] = event.EventData[param_name][param_type]
+            next_event["event_primary_detail"] = event.EventData[param_name]
 
         self._event_list.append(next_event)
 

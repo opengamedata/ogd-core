@@ -1,9 +1,10 @@
 from typing import Any, List
 
-from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
 
 class JobsCompleted(SessionFeature):
 
@@ -13,15 +14,17 @@ class JobsCompleted(SessionFeature):
         self._jobs_completed = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["checkpoint"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
-        if event.EventData["status"]["string_value"] == "Case Closed" and event.SessionID == self._session_id:
-            self._jobs_completed.append(event.EventData["mission_id"]["string_value"])
+        if event.EventData["status"] == "Case Closed" and event.SessionID == self._session_id:
+            self._jobs_completed.append(event.EventData["mission_id"])
 
     def _extractFromFeatureData(self, feature:FeatureData):
         return

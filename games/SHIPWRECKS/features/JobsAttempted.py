@@ -4,9 +4,11 @@ from statistics import stdev
 from typing import Any, List
 # import locals
 from extractors.features.Feature import Feature
-from schemas.FeatureData import FeatureData
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
+from schemas.ExtractionMode import ExtractionMode
+from schemas.FeatureData import FeatureData
+
 
 class JobsAttempted(Feature):
 
@@ -34,16 +36,18 @@ class JobsAttempted(Feature):
         self._mission_start_time = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["checkpoint"]
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
         session_id = event.SessionID
-        checkpoint = event.EventData["status"]["string_value"]
-        mission_name = event.EventData["mission_id"]["string_value"]
+        checkpoint = event.EventData["status"]
+        mission_name = event.EventData["mission_id"]
         mission_id = self._mission_map[mission_name]
 
         if checkpoint == "Begin Mission":

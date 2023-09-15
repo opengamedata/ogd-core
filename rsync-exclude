@@ -4,6 +4,14 @@ data/
 tests/
 config/
 config/config.py
+games/AQUALAB/schemas/AQUALAB.json
+games/CRYSTAL/schemas/CRYSTAL.json
+games/JOWILDER/schemas/JOWILDER.json
+games/LAKELAND/schemas/LAKELAND.json
+games/MAGNET/schemas/MAGNET.json
+games/SHADOWSPECT/schemas/SHADOWSPECT.json
+games/SHIPWRECKS/schemas/SHIPWRECKS.json
+games/WAVES/schemas/WAVES.json
 TestDriver.py
 .DS_Store
 .gitignore

@@ -26,7 +26,7 @@ class Detector(Extractor):
     def _trigger_event(self) -> DetectorEvent:
         pass
 
-    # *** BUILT-INS *8jr47t*
+    # *** BUILT-INS & PROPERTIES *8jr47t*
 
     def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None]):
         super().__init__(params=params)
@@ -34,7 +34,8 @@ class Detector(Extractor):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
         Any feature intented to be second-order should override this function.
