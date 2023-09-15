@@ -51,7 +51,10 @@ class RegionDuration(PerRegionFeature):
                     if self._region_start_time is not None:
                         self._time_in_region[self._current_region] = self._time_in_region.get(self._current_region, 0) + (
                                 event.Timestamp - self._region_start_time).total_seconds()
-
+    
+    def _extractFromFeatureData(self, feature:FeatureData):
+        return
+        
     def _getFeatureValues(self) -> List[Any]:
         # Return a list of total time spent in each region
         return [timedelta(seconds=self._time_in_region.get(region, 0)) for region in self._region_map.values()]
