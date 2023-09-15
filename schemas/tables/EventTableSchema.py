@@ -154,7 +154,7 @@ class EventTableSchema:
         ]
     }
 
-    def __init__(self, schema_name:Optional[str], schema_path:Path = Path("./") / "schemas" / "table_schemas/"):
+    def __init__(self, schema_name:Optional[str], schema_path:Path = Path("./") / "schemas" / "tables" / "table_schemas/"):
         """Constructor for the EventTableSchema class.
         Given a database connection and a game data request,
         this retrieves a bit of information from the database to fill in the

@@ -131,7 +131,7 @@ class FeatureTableSchema:
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, schema_name:str, schema_path:Path = Path("./") / "schemas" / "table_schemas/"):
+    def __init__(self, schema_name:str, schema_path:Path = Path("./") / "schemas" / "tables" / "table_schemas/"):
         """Constructor for the EventTableSchema class.
         Given a database connection and a game data request,
         this retrieves a bit of information from the database to fill in the
@@ -139,7 +139,7 @@ class FeatureTableSchema:
 
         :param schema_name: The filename for the table schema JSON.
         :type schema_name: str
-        :param schema_path: Path to find the given table schema file, defaults to "./schemas/table_schemas/"
+        :param schema_path: Path to find the given table schema file, defaults to "./schemas/tables/table_schemas/"
         :type schema_path: str, optional
         :param is_legacy: [description], defaults to False
         :type is_legacy: bool, optional
