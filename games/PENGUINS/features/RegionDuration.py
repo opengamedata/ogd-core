@@ -22,6 +22,7 @@ class RegionDuration(PerRegionFeature):
         self._prev_timestamp = None
         self._time = 0
         self._name = None
+        self._region_time_lst=[]
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -40,10 +41,15 @@ class RegionDuration(PerRegionFeature):
                 self._time += (self._prev_timestamp - self._region_start_time).total_seconds()
                 self._region_start_time = event.Timestamp
         
-        else:
-            self._time += (event.Timestamp - self._region_start_time).total_seconds()
-            self._region_start_time = None
-    
+        if event.EventName != "viewport_data":
+            if  self._argument_start_time is None :
+                self._evt_name = event.EventName
+                self._argument_start_time = event.Timestamp
+            else:
+                self._time = (event.Timestamp - self._argument_start_time).total_seconds()
+                self._region_time_lst.append(self._time)
+                self._argument_start_time = None
+
         self._prev_timestamp = event.Timestamp
         
     def _extractFromFeatureData(self, feature:FeatureData):
