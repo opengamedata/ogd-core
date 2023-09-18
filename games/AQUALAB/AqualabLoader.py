@@ -9,6 +9,7 @@ from extractors.ExtractorLoader import ExtractorLoader
 from extractors.features.Feature import Feature
 from games.AQUALAB.detectors import *
 from games.AQUALAB.features import *
+from games.AQUALAB.features.PerDifficultyFeature import PerDifficultyFeature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.games.GameSchema import GameSchema
@@ -130,6 +131,10 @@ class AqualabLoader(ExtractorLoader):
                 ret_val = JobArgumentationFails.JobArgumentationFails(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobArgumentationRejects":
                 ret_val = JobArgumentationRejects.JobArgumentationRejects(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobArgumentationSuccessRatio":
+                ret_val = JobArgumentationSuccessRatio.JobArgumentationSuccessRatio(params=extractor_params, job_map = self._job_map)
+            elif feature_type == "JobArgumentationNoReject":
+                ret_val = JobArgumentationNoReject.JobArgumentationNoReject(params=extractor_params, job_map = self._job_map)
             elif feature_type == "JobCompletionTime":
                 ret_val = JobCompletionTime.JobCompletionTime(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobDiveSitesCount":
@@ -152,8 +157,12 @@ class AqualabLoader(ExtractorLoader):
                 ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobsAttempted":
                 ret_val = JobsAttempted.JobsAttempted(params=extractor_params, job_map=self._job_map, diff_map=self._diff_map)
+            elif feature_type == "PerDifficultyFeature":
+                ret_val = PerDifficultyFeature.PerDifficultyFeature(params=extractor_params, job_map=self._job_map, diff_map=self._diff_map)
             elif feature_type == "SyncCompletionTime":
                 ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
+            elif feature_type == "JobTriesInArgumentPerDifficulty":
+                ret_val = JobTriesInArgumentPerDifficulty.JobTriesInArgumentPerDifficulty(params=extractor_params, diff_map = self._diff_map, difficulty_type="argumentation")
             else:
                 raise NotImplementedError(f"'{feature_type}' is not a valid feature type for Aqualab.")
         else:

@@ -14,6 +14,8 @@ __all__ = [
     "JobCompletionTime",
     "JobDiveSitesCount",
     "JobArgumentationRejects",
+    "JobArgumentationSuccessRatio",
+    "JobArgumentationNoReject",
     "JobDiveTime",
     "JobExperimentationTime",
     "JobGuideCount",
@@ -23,6 +25,7 @@ __all__ = [
     "JobStartCount",
     "JobTasksCompleted",
     "JobsAttempted",
+    "JobTriesInArgumentPerDifficulty",
     "JobsCompleted",
     "PlayerSummary",
     "PopulationSummary",
@@ -41,14 +44,16 @@ __all__ = [
     "TotalExperimentationTime",
     "UserAvgSessionDuration",
     "UserTotalSessionDuration",
-    "JobArgumentationFails"
+    "JobArgumentationFails",
 ]
 
 from . import JobTriesInArgument
+from . import JobArgumentationNoReject
 from . import TankRulesCount
 from . import UserAvgActiveTime
 from . import ModelInterveneCount
 from . import ModelPredictCount
+from . import JobTriesInArgumentPerDifficulty
 from . import ModelExportCount
 from . import ActiveTime
 from . import ActiveJobs
