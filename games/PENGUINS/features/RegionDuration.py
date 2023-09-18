@@ -27,7 +27,7 @@ class RegionDuration(PerRegionFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return []
+        return ["all_events"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -43,7 +43,7 @@ class RegionDuration(PerRegionFeature):
         
         if event.EventName != "viewport_data":
             if  self._argument_start_time is None :
-                self._evt_name = event.EventName
+                # self._evt_name = event.EventName
                 self._argument_start_time = event.Timestamp
             else:
                 self._time = (event.Timestamp - self._argument_start_time).total_seconds()
@@ -60,16 +60,16 @@ class RegionDuration(PerRegionFeature):
             return [sum(self._region_time_lst)/len(self._region_time_lst)]
 
     # *** Optionally override public functions. ***
-    def _validateEventCountIndex(self, event: Event, region_map:dict):
-        ret_val : bool = False
-        region_data = event.EventData.get("region_name")
-        # Logger.Log("______________________________")
+    # def _validateEventCountIndex(self, event: Event, region_map:dict):
+    #     ret_val : bool = False
+    #     region_data = event.EventData.get("region_name")
+    #     # Logger.Log("______________________________")
         
-        if region_data is not None:
-            if region_map[region_data] == self.CountIndex:
+    #     if region_data is not None:
+    #         if region_map[region_data] == self.CountIndex:
 
-                ret_val = True
-        else:
-            Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
+    #             ret_val = True
+    #     else:
+    #         Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
 
-        return ret_val
+    #     return ret_val
