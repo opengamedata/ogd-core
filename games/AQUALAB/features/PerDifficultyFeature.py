@@ -16,20 +16,12 @@ class PerDifficultyFeature(PerCountFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     def _validateEventCountIndex(self, event:Event):
-        self._difficulties = self._diff_map[self.CountIndex]
-
         ret_val : bool = False
 
-        # print(self._difficulties)
-        # print(self._difficulty_type)
-        if self._difficulties[self._difficulty_type] is not None:
-            if self._difficulties[self._difficulty_type] == self.CountIndex:
-                ret_val = True
-                #print("found!")
-        else:
-            #pass
-            Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
-
+        _current_job = event.EventData.get('job_name', "UNKNOWN JOB")
+        if self._diff_map[_current_job][self._difficulty_type] == self.CountIndex:
+            ret_val = True
+        
         return ret_val
 
     # *** Optionally override public functions. ***

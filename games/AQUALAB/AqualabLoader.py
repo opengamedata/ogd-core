@@ -48,7 +48,8 @@ class AqualabLoader(ExtractorLoader):
             task_num = 1
             for i, job in enumerate(export["jobs"], start=1):
                 self._job_map[job["id"]] = i
-                self._diff_map[i] = job["difficulties"]
+                self._diff_map[job['id']] = job["difficulties"]
+
                 for task in job["tasks"]:
                     task_by_job = job["id"] + "_" + task["id"]
                     self._task_map[task_by_job] = task_num
