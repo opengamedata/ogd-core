@@ -539,6 +539,12 @@
                 "enabled": false,
                 "description": "The number of times a player enterd for a given region of the game.",
                 "return_type": "int"
+            },
+            "ActivityCount": {
+                "type": "ActivityCount",
+                "enabled": true,
+                "description": "The activities completed in a given session.",
+                "return_type": "int"
             }
         }
     },
