@@ -20,16 +20,14 @@ class GazeCount(SessionFeature):
         self._object_id = None
         self._gaze_dict = gaze_dict.copy()
         self._obj_list = list()
-
+        
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         return ["gaze_object_end"]
-
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
-
     def _extractFromEvent(self, event:Event) -> None:
         # self._current_count += 1
         self._object_id = event.event_data.get("object_id")
@@ -37,7 +35,6 @@ class GazeCount(SessionFeature):
         
     def _extractFromFeatureData(self, feature:FeatureData):
         return
-
     def _getFeatureValues(self) -> List[Any]:
         return [self._gaze_dict]
 
