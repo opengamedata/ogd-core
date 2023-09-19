@@ -542,7 +542,7 @@
             },
             "ActivityCount": {
                 "type": "ActivityCount",
-                "enabled": true,
+                "enabled": false,
                 "description": "The activities completed in a given session.",
                 "return_type": "int"
             }
