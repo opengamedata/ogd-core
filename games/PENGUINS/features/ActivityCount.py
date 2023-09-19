@@ -64,7 +64,7 @@ class ActivityCount(SessionFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._activity_dict.keys()]
+        return [self._activ_dict.keys()]
 
 
     # *** Optionally override public functions. ***
