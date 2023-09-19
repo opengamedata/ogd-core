@@ -11,14 +11,14 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
 
-gaze_dict = {'BigRock00':0, 'BigRock01':0, 'Bridge2':0, 'Bridge':0}
+
 class GazeCount(SessionFeature):
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
         self._current_count : int = 0
         self._object_id = None
-        self._gaze_dict = gaze_dict.copy()
+        self._gaze_dict = dict()
         self._obj_list = list()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
