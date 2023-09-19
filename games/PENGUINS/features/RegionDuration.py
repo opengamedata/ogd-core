@@ -22,12 +22,12 @@ class RegionDuration(PerRegionFeature):
         self._prev_timestamp = None
         self._time = 0
         self._name = None
-        self._region_time_lst=[]
+        
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return []
+        return ["all_events"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -41,14 +41,9 @@ class RegionDuration(PerRegionFeature):
                 self._time += (self._prev_timestamp - self._region_start_time).total_seconds()
                 self._region_start_time = event.Timestamp
         
-        if event.EventName != "viewport_data":
-            if  self._argument_start_time is None :
-                self._evt_name = event.EventName
-                self._argument_start_time = event.Timestamp
-            else:
-                self._time = (event.Timestamp - self._argument_start_time).total_seconds()
-                self._region_time_lst.append(self._time)
-                self._argument_start_time = None
+        else:
+            self._time += (event.Timestamp - self._region_start_time).total_seconds()
+            self._region_start_time = None
 
         self._prev_timestamp = event.Timestamp
         
@@ -56,8 +51,7 @@ class RegionDuration(PerRegionFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        if (len(self._region_time_lst) != 0):
-            return [sum(self._region_time_lst)/len(self._region_time_lst)]
+        return [timedelta(seconds=self._time)]
 
     # *** Optionally override public functions. ***
     def _validateEventCountIndex(self, event: Event, region_map:dict):
