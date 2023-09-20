@@ -53,17 +53,4 @@ class RegionDuration(PerRegionFeature):
     def _getFeatureValues(self) -> List[Any]:
         return [timedelta(seconds=self._time)]
 
-    # *** Optionally override public functions. ***
-    def _validateEventCountIndex(self, event: Event, region_map:dict):
-        ret_val : bool = False
-        region_data = event.EventData.get("region_name")
-        # Logger.Log("______________________________")
-        
-        if region_data is not None:
-            if region_map[region_data] == self.CountIndex:
 
-                ret_val = True
-        else:
-            Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
-
-        return ret_val
