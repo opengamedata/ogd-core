@@ -21,8 +21,7 @@ class ActivityCount(SessionFeature):
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
         self._activ_dict = {}
-        self._obj_list = list()
-        self._object_name = None
+        self._object_id = None
         self._activ_dict = dict()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -36,7 +35,7 @@ class ActivityCount(SessionFeature):
         return [] 
 
     def _extractFromEvent(self, event:Event) -> None:
-        self._object_id = event.event_data.get("object_id")
+        self._object_id = event.event_data.get("activity_name")
         self._activ_dict[self._object_id]+=1
 
     def _extractFromFeatureData(self, feature: FeatureData):
@@ -46,6 +45,3 @@ class ActivityCount(SessionFeature):
         return [self._activ_dict]
 
 
-    # *** Optionally override public functions. ***
-    def Subfeatures(self) -> List[str]:
-        return [] 
