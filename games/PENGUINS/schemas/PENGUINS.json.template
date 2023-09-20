@@ -534,10 +534,16 @@
                 "description": "How long gaze event last for.",
                 "return_type": "timedelta"
             },
-            "RingChimesCount": {
-                "type": "RingChimesCount",
+            "RegionEnterCount": {
+                "type": "RegionEnterCount",
+                "enabled": false,
+                "description": "The number of times a player enterd for a given region of the game.",
+                "return_type": "int"
+            },
+            "ActivityCount": {
+                "type": "ActivityCount",
                 "enabled": true,
-                "description": "The number of times a player rings chimes in a given region of the game.",
+                "description": "The activities completed in a given session.",
                 "return_type": "int"
             }
         }

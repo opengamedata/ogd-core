@@ -1,16 +1,5 @@
 # import libraries
 import logging
-from typing import Any, List
-# import locals
-from extractors.Extractor import ExtractorParameters
-from extractors.features.SessionFeature import SessionFeature
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from utils.Logger import Logger
-
-# import libraries
-import logging
 from typing import Any, List, Optional
 from datetime import datetime, timedelta
 # import locals

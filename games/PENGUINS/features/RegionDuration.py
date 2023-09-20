@@ -16,13 +16,13 @@ from games.PENGUINS.features.PerRegionFeature import PerRegionFeature
 class RegionDuration(PerRegionFeature):
     
     def __init__(self, params:ExtractorParameters, region_map:dict):
-        super().__init__(params=params, region_map = region_map)
+        super().__init__(params=params,region_map = region_map)
         self._session_id = None
         self._region_start_time = None
         self._prev_timestamp = None
         self._time = 0
         self._name = None
-        self._region_time_lst=[]
+        
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -41,14 +41,9 @@ class RegionDuration(PerRegionFeature):
                 self._time += (self._prev_timestamp - self._region_start_time).total_seconds()
                 self._region_start_time = event.Timestamp
         
-        if event.EventName != "viewport_data":
-            if  self._argument_start_time is None :
-                # self._evt_name = event.EventName
-                self._argument_start_time = event.Timestamp
-            else:
-                self._time = (event.Timestamp - self._argument_start_time).total_seconds()
-                self._region_time_lst.append(self._time)
-                self._argument_start_time = None
+        else:
+            self._time += (event.Timestamp - self._region_start_time).total_seconds()
+            self._region_start_time = None
 
         self._prev_timestamp = event.Timestamp
         
@@ -56,20 +51,6 @@ class RegionDuration(PerRegionFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        if (len(self._region_time_lst) != 0):
-            return [sum(self._region_time_lst)/len(self._region_time_lst)]
+        return [timedelta(seconds=self._time)]
 
-    # *** Optionally override public functions. ***
-    # def _validateEventCountIndex(self, event: Event, region_map:dict):
-    #     ret_val : bool = False
-    #     region_data = event.EventData.get("region_name")
-    #     # Logger.Log("______________________________")
-        
-    #     if region_data is not None:
-    #         if region_map[region_data] == self.CountIndex:
 
-    #             ret_val = True
-    #     else:
-    #         Logger.Log(f"Got invalid job_name data in {type(self).__name__}", logging.WARNING)
-
-    #     return ret_val
