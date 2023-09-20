@@ -16,8 +16,7 @@ from games.PENGUINS.features.PerRegionFeature import PerRegionFeature
 class RegionDuration(PerRegionFeature):
     
     def __init__(self, params:ExtractorParameters, region_map:dict):
-        self._region_map = region_map
-        super().__init__(params=params)
+        super().__init__(params=params,region_map = region_map)
         self._session_id = None
         self._region_start_time = None
         self._prev_timestamp = None
