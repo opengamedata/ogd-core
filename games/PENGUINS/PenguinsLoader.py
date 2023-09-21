@@ -7,6 +7,7 @@ from extractors.detectors.Detector import Detector
 from extractors.Extractor import ExtractorParameters
 from extractors.ExtractorLoader import ExtractorLoader
 from extractors.features.Feature import Feature
+from games.PENGUINS.detectors import *
 from games.PENGUINS.features import *
 from extractors.Extractor import ExtractorParameters
 from schemas.Event import Event
@@ -100,8 +101,15 @@ class PenguinsLoader(ExtractorLoader):
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Penguins.")
         return ret_val
 
-    def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
-        raise NotImplementedError(f"'{detector_type}' is not a valid detector for Waves.")
+    def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
+        ret_val : Detector
+
+        if detector_type == "RegionEnter":
+            ret_val = RegionEnter.RegionEnter(params=extractor_params, trigger_callback=trigger_callback, region_map=self._region_map)
+        else:
+            raise NotImplementedError(f"'{detector_type}' is not a valid detector for Waves.")
+
+        return ret_val
 
 
 

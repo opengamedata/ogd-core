@@ -41,8 +41,8 @@ class RegionDuration(PerRegionFeature):
                 self._time += (self._prev_timestamp - self._region_start_time).total_seconds()
                 self._region_start_time = event.Timestamp
         
-        else:
-            self._time += (event.Timestamp - self._region_start_time).total_seconds()
+        elif self._prev_timestamp is not None:
+            self._time += (event.Timestamp - self._prev_timestamp).total_seconds()
             self._region_start_time = None
 
         self._prev_timestamp = event.Timestamp
