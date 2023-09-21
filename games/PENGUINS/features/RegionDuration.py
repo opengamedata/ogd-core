@@ -1,6 +1,6 @@
 # import libraries
 import json
-from typing import Any, List, Optional
+from typing import Any, Dict, List
 from datetime import timedelta
 # import local files
 from extractors.Extractor import ExtractorParameters
@@ -15,7 +15,7 @@ from games.PENGUINS.features.PerRegionFeature import PerRegionFeature
     
 class RegionDuration(PerRegionFeature):
     
-    def __init__(self, params:ExtractorParameters, region_map:dict):
+    def __init__(self, params:ExtractorParameters, region_map:List[Dict[str, Any]]):
         super().__init__(params=params,region_map = region_map)
         self._session_id = None
         self._region_start_time = None

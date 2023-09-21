@@ -1,6 +1,6 @@
 # import standard libraries
 from datetime import datetime
-from typing import Any, Callable, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 # import local files
 from extractors.Extractor import ExtractorParameters
 from extractors.detectors.Detector import Detector
@@ -104,7 +104,7 @@ class RegionEnter(Detector):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None], region_map:dict):
+    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None], region_map:List[Dict[str, Any]]):
         super().__init__(params=params, trigger_callback=trigger_callback)
         self._region_map = region_map
         self._old_region = "N/A"

@@ -1,7 +1,7 @@
 # import libraries
 import logging
 import json 
-from typing import Optional
+from typing import Any, Dict, List, Optional
 # import locals
 from utils.Logger import Logger
 from extractors.Extractor import ExtractorParameters
@@ -11,7 +11,7 @@ from schemas.Event import Event
 
 
 class PerRegionFeature(PerCountFeature):
-    def __init__(self, params:ExtractorParameters, region_map:dict):
+    def __init__(self, params:ExtractorParameters, region_map:List[Dict[str, Any]]):
         super().__init__(params=params)
         self._region_map = region_map
 

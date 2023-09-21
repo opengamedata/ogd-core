@@ -40,13 +40,12 @@ class PenguinsLoader(ExtractorLoader):
         :type feature_overrides: Optional[List[str]]
         """
         super().__init__(player_id=player_id, session_id=session_id, game_schema=game_schema, mode=mode, feature_overrides=feature_overrides)
-        self._region_map = {"no-active-region": 0}
-        self._task_map = {}
+        self._region_map : List[Dict[str, Any]] = []
 
         # Load Penguins jobs export and map job names to integer values
         with open(EXPORT_PATH, "r") as file:
             export = json.load(file)
-            self._region_map = export["regions"]
+            self._region_map = export.get("regions", [])
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @staticmethod
@@ -91,7 +90,7 @@ class PenguinsLoader(ExtractorLoader):
         
         #elif extractor_params._count_index is not None:
         elif feature_type == "RegionEnterCount":
-                ret_val = RegionEnterCount.RegionEnterCount(params=extractor_params)
+                ret_val = RegionEnterCount.RegionEnterCount(params=extractor_params, region_map=self._region_map)
             #elif feature_type == "WaddlePerRegion":
                     #ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
         elif feature_type == "RegionDuration":

@@ -13,7 +13,7 @@ from extractors.features.SessionFeature import SessionFeature
 
 class WaddlePerRegion(PerRegionFeature):
 
-    def __init__(self, params:ExtractorParameters, region_map:dict):
+    def __init__(self, params:ExtractorParameters, region_map:List[Dict[str, Any]]):
         super().__init__(params=params, region_map = region_map)
         self._waddle_count : int = 0
         # self._region_started = False
