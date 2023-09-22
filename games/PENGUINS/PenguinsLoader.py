@@ -105,6 +105,9 @@ class PenguinsLoader(ExtractorLoader):
 
         if detector_type == "RegionEnter":
             ret_val = RegionEnter.RegionEnter(params=extractor_params, trigger_callback=trigger_callback, region_map=self._region_map)
+        if detector_type == "RegionExit":
+            ret_val = RegionExit.RegionExit(params=extractor_params, trigger_callback=trigger_callback, region_map=self._region_map)
+        
         else:
             raise NotImplementedError(f"'{detector_type}' is not a valid detector for Waves.")
 

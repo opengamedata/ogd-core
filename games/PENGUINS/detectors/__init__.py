@@ -4,3 +4,4 @@ __all__ = [
 # aggregated features
 
 from . import RegionEnter
+from . import RegionExit
