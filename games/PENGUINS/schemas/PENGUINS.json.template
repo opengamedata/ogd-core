@@ -483,6 +483,20 @@
             }
         }
     },
+    "detectors": {
+        "per_count": {
+            "RegionEnter": {
+                "type": "RegionEnter",
+                "enabled": true,
+                "description": "Triggers an event when a player enter a region"
+            },
+            "RegionExit": {
+                "type": "RegionExit",
+                "enabled": true,
+                "description": "Triggers an event when a player exit a region"
+            },
+        },
+        "aggregate": {}
 
     "features": {
         "per_count": {
