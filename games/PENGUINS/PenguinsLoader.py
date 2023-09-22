@@ -84,8 +84,8 @@ class PenguinsLoader(ExtractorLoader):
         #     ret_val = PlayerInactiveAvgDuration.PlayerInactiveAvgDuration(params=extractor_params)
         elif feature_type == "MirrorWaddleDuration":
             ret_val = MirrorWaddleDuration.MirrorWaddleDuration(params=extractor_params)
-        elif feature_type == "ActivityCount":
-            ret_val = ActivityCompleted.ActivityCount(params=extractor_params)
+        elif feature_type == "ActivityCompleted":
+            ret_val = ActivityCompleted.ActivityCompleted(params=extractor_params)
         
         
         #elif extractor_params._count_index is not None:
