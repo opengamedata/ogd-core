@@ -8,6 +8,7 @@ from zipfile import ZipFile
 from schemas.Event import Event
 from schemas.ExportMode import ExportMode
 from interfaces.outerfaces.MySQLOuterface import MySQLOuterface
+from schemas.FeatureData import FeatureData
 from schemas.data_sources.DataHostConfig import DataHostConfig
 from schemas.data_sources.MySQLHostConfig import MySQLSchema
 from schemas.data_sources.GameSourceSchema import GameSourceSchema
@@ -43,7 +44,7 @@ class t_CSVInterface(TestCase):
         outerface = MySQLOuterface(game_id="WAVES", config=config, export_modes=export_modes)
         outerface.Open()
         # Load (or hardcode) the sample data, for now we've got session data
-        sample_data : List[Event] = []
+        sample_data : List[FeatureData] = []
         mode        : ExportMode  = ExportMode.SESSION
 
         outerface.WriteLines(lines=sample_data, mode=mode)
