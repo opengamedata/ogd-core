@@ -35,7 +35,10 @@ class ActivityCount(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         self._object_id = event.event_data.get("activity_name")
-        self._activ_dict[self._object_id]+=1
+        if self._object_id not in self._activ_dict.keys():
+            self._activ_dict[self._object_id]=0
+        else:
+            self._activ_dict[self._object_id]+=1
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
