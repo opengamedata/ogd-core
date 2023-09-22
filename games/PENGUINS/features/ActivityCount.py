@@ -20,7 +20,7 @@ class ActivityCount(SessionFeature):
     """
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        self._activ_dict = {}
+        self._activ_lst = []
         self._object_id = None
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -35,15 +35,16 @@ class ActivityCount(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         self._object_id = event.event_data.get("activity_name")
-        if self._object_id not in self._activ_dict.keys():
-            self._activ_dict[self._object_id]=0
-        else:
-            self._activ_dict[self._object_id]+=1
+        self._activ_lst.append(self._object_id)
+        #if self._object_id not in self._activ_dict.keys():
+            #self._activ_dict[self._object_id]=0
+        #else:
+            #self._activ_dict[self._object_id]+=1
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._activ_dict]
+        return [self._activ_lst]
 
 
