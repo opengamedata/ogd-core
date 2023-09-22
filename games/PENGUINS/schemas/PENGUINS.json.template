@@ -496,7 +496,7 @@
                 "description": "Triggers an event when a player exit a region"
             }
         },
-        
+          
         "aggregate": {}
         },
 

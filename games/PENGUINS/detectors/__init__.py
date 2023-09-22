@@ -1,5 +1,6 @@
 __all__ = [
-    "RegionEnter"
+    "RegionEnter",
+    "RegionExit"
 ]
 # aggregated features
 
