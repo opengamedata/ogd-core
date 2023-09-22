@@ -22,7 +22,6 @@ class ActivityCount(SessionFeature):
         super().__init__(params=params)
         self._activ_dict = {}
         self._object_id = None
-        self._activ_dict = dict()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
