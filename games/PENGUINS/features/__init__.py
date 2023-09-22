@@ -16,7 +16,7 @@ __all__ = [
     "MirrorWaddleDuration",
     "WaddlePerRegion",
     "RegionDuration",
-    "ActivityCount"
+    "ActivityCompleted"
 ]
 # aggregated features
 
@@ -37,4 +37,4 @@ from . import MirrorWaddleDuration
 from . import RegionEnterCount
 from . import WaddlePerRegion
 from . import RegionDuration
-from . import ActivityCount
+from . import ActivityCompleted

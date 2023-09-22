@@ -12,7 +12,7 @@ from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
 
 
-class ActivityCount(SessionFeature):
+class ActivityCompleted(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
