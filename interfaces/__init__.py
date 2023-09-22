@@ -1,7 +1,7 @@
 __all__ = [
     "Interface",
-    "FeatureInterface"
+    # "FeatureInterface"
 ]
 
 from . import Interface
-from . import FeatureInterface
+# from . import FeatureInterface

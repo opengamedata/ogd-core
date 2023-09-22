@@ -5,7 +5,6 @@ from typing import Dict, List
 from unittest import TestCase
 from zipfile import ZipFile
 # import locals
-from schemas.Event import Event
 from schemas.ExportMode import ExportMode
 from interfaces.outerfaces.MySQLOuterface import MySQLOuterface
 from schemas.FeatureData import FeatureData
@@ -13,7 +12,7 @@ from schemas.data_sources.DataHostConfig import DataHostConfig
 from schemas.data_sources.MySQLHostConfig import MySQLSchema
 from schemas.data_sources.GameSourceSchema import GameSourceSchema
 
-class t_CSVInterface(TestCase):
+class t_MySQLOuterface(TestCase):
 
     zipped_file = ZipFile(Path("tests/t_interfaces/BACTERIA_20210201_to_20210202_5c61198_events.zip"))
 
