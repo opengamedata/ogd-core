@@ -4,12 +4,12 @@ from typing import Any, Dict, List, Optional
 from schemas.ExtractionMode import ExtractionMode
 
 class FeatureData:
-   def __init__(self,                  feature_type:str,        mode:ExtractionMode,
-                feature_name:str,      value:Any,               state:Dict[str, Any],
-                user_id:Optional[str], sess_id:Optional[str],   game_unit_id:Optional[str],
-                feature_version:int,   ogd_version:str,         app_version:str, app_branch:str,
-                last_session:str,      last_index:int,
-                last_timestamp:datetime, start_timestamp:datetime):
+   def __init__(self,                       feature_type:str,        mode:ExtractionMode,
+                feature_name:str,           value:Any,               state:Dict[str, Any],
+                user_id:Optional[str],      sess_id:Optional[str],   game_unit_id:Optional[str],
+                feature_version:int,        ogd_version:str,         app_version:str, app_branch:str,
+                last_session:Optional[str], last_index:Optional[int],
+                last_timestamp:Optional[datetime], start_timestamp:Optional[datetime]):
       self._feature_name = feature_name
       self._feature_type = feature_type
       self._mode = mode
@@ -85,17 +85,17 @@ class FeatureData:
       return self._app_branch
 
    @property
-   def LastSession(self) -> str:
+   def LastSession(self) -> Optional[str]:
       return self._last_session
 
    @property
-   def LastIndex(self) -> int:
+   def LastIndex(self) -> Optional[int]:
       return self._last_index
 
    @property
-   def LastTime(self) -> datetime:
+   def LastTime(self) -> Optional[datetime]:
       return self._last_timestamp
 
    @property
-   def StartTime(self) -> datetime:
+   def StartTime(self) -> Optional[datetime]:
       return self._start_timestamp
