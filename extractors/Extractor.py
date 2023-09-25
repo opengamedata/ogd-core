@@ -70,6 +70,9 @@ class Extractor(abc.ABC):
 
     def __init__(self, params:ExtractorParameters):
         self._params = params
+        self._latest_session   : Optional[str]      = None
+        self._latest_index     : int                = 0
+        self._latest_timestamp : Optional[datetime] = None
 
     def __str__(self):
         return f"{self.Name} : {self.Description}"
@@ -88,6 +91,9 @@ class Extractor(abc.ABC):
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event=event):
+            self._latest_session   = event.SessionID
+            self._latest_index     = event.EventSequenceIndex
+            self._latest_timestamp = event.Timestamp
             self._extractFromEvent(event=event)
 
     ## Base function to get the minimum game data version the feature can handle.

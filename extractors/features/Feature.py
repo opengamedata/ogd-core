@@ -1,5 +1,6 @@
 ## import standard libraries
 import abc
+from datetime import datetime
 from typing import Any, Dict, List, Optional
 # import locals
 from extractors.Extractor import Extractor, ExtractorParameters
@@ -17,6 +18,17 @@ class Feature(Extractor):
 #TODO: use a dirty bit so we only run the GetValue function if we've received an event or feature since last calculation
 
     # *** ABSTRACTS ***
+
+    @abc.abstractmethod
+    def _getFeatureVersion(self) -> int:
+        """Abstract declaration of a function to get the version of the given feature.
+        This value should be 1 when the feature is first created, and incremented each time the feature is modified in any way that affects its output.
+        This could include bugfixes or changes in the intended output.
+
+        :return: Returns an integer indicating the feature version.
+        :rtype: int
+        """
+        pass
 
     ## Abstract declaration of a function to perform update of a feature from a row.
     @abc.abstractmethod
@@ -43,8 +55,18 @@ class Feature(Extractor):
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
         self._up_to_date = False
+        self._state = {}
         # by default, latest values should just be None, with length equal to number of columns for the feature.
-        self._latest_values : List[Any] = [None for i in range(len(self.GetFeatureNames())) ]
+        self._latest_values    : List[Any]     = [None for i in range(len(self.GetFeatureNames())) ]
+        self._start_timestamp  : Optional[datetime] = None
+
+    @property
+    def State(self) -> Dict[str, Any]:
+        return self._state
+
+    @property
+    def FeatureVersion(self) -> int:
+        return self._getFeatureVersion()
 
     # *** PUBLIC STATICS ***
 
@@ -70,17 +92,27 @@ class Feature(Extractor):
 
     # *** PUBLIC METHODS ***
 
-    def ToFeatureData(self, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> FeatureData:
-        return FeatureData(
-            name=self.Name,
+    def ToFeatureData(self,            player_id:str,   sess_id:str, prefix:str,
+                      ogd_version:str, app_version:str, app_branch:str) -> List[FeatureData]:
+        columns = zip(self.GetFeatureNames(), self.GetFeatureValues())
+        return [FeatureData(
             feature_type=type(self).__name__,
-            count_index=self.CountIndex,
-            cols=self.GetFeatureNames(),
-            vals=self.GetFeatureValues(),
             mode=self.ExtractionMode,
+            feature_name=col,
+            value=val,
+            state=self._state, # TODO: Force new variables to go through State
             user_id=player_id,
-            sess_id=sess_id
-        )
+            sess_id=sess_id,
+            game_unit_id=prefix,
+            feature_version=self.FeatureVersion,
+            ogd_version=ogd_version,
+            app_version=app_version,
+            app_branch=app_branch,
+            last_session=self._latest_session,
+            last_index=self._latest_index,
+            last_timestamp=self._latest_timestamp,
+            start_timestamp=self._start_timestamp
+        ) for col,val in columns]
 
     def BaseFeatureSuffix(self) -> str:
         """Base function to add a suffix to the base feature name, which will not affect the naming of subfeatures.
@@ -124,6 +156,8 @@ class Feature(Extractor):
         :param event: _description_
         :type event: Event
         """
+        if self._start_timestamp is None:
+            self._start_timestamp = event.Timestamp
         if self._validateEvent(event=event):
             self._extractFromEvent(event=event)
             self._up_to_date = False
@@ -139,9 +173,9 @@ class Feature(Extractor):
         # Practically, this doesn't matter because we always process all data before using GetFeatureValues.
         # Someday, however, this may be useful when dealing with a caching system.
         if not self._up_to_date:
-            self._latest_value = self._getFeatureValues()
+            self._latest_values = self._getFeatureValues()
             self._up_to_date = True
-        return self._latest_value
+        return self._latest_values
 
     # *** PROPERTIES ***
 
