@@ -18,7 +18,7 @@ class Event:
                  app_version:Optional[str] = None,     app_branch:Optional[str] = None,
                  log_version:Optional[str] = None,     time_offset:Optional[timedelta] = None,
                  user_id:Optional[str] = "",           user_data:Optional[utils.map] = {},
-                 game_state:Optional[utils.map] = {},  event_sequence_index:Optional[int] = None):
+                 game_state:Optional[utils.map] = {},  event_sequence_index:int = 0):
         """Constructor for an Event object.
 
         :param session_id: An identifier for the session during which the event occurred.
@@ -60,7 +60,7 @@ class Event:
         self.user_id              : Optional[str] = user_id
         self.user_data            : utils.map     = user_data if user_data is not None else {}
         self.game_state           : utils.map     = game_state if game_state is not None else {}
-        self.event_sequence_index : Optional[int] = event_sequence_index
+        self.event_sequence_index : int           = event_sequence_index
 
     def __str__(self):
         return f"session_id   : {self.session_id}\n"\
@@ -78,7 +78,7 @@ class Event:
              + f"game_state   : {self.game_state}\n"\
              + f"index        : {self.event_sequence_index}\n"\
 
-    def FallbackDefaults(self, app_id:Optional[str]=None, index:Optional[int]=None):
+    def FallbackDefaults(self, app_id:Optional[str]=None, index:int=0):
         if self.app_id == None and app_id != None:
             self.app_id = app_id
         if self.event_sequence_index == None:
@@ -194,5 +194,5 @@ class Event:
         return self.game_state
 
     @property
-    def EventSequenceIndex(self) -> Optional[int]:
+    def EventSequenceIndex(self) -> int:
         return self.event_sequence_index
