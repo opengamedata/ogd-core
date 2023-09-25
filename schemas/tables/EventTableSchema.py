@@ -374,7 +374,7 @@ class EventTableSchema:
         uid     : Optional[str]
         udata   : Optional[Map]
         state   : Optional[Map]
-        index   : Optional[int]
+        index   : int
 
         # 2) Handle event_data parameter, a special case.
         #    For this case we've got to parse the json, and then fold in whatever other columns were desired.
@@ -456,7 +456,7 @@ class EventTableSchema:
         index   = self._getValueFromRow(row=row, indices=self._column_map.EventSequenceIndex, concatenator=concatenator, fallback=fallbacks.get('event_sequence_index'))
         if index is not None and not isinstance(index, int):
             if "index" not in EventTableSchema._conversion_warnings:
-                Logger.Log(f"{self._table_format_name} table schema set event_sequence_index as {type(index)}, but event_sequence_index should be an int", logging.WARN)
+                Logger.Log(f"{self._table_format_name} table schema set event_sequence_index as type `{type(index)}`, but event_sequence_index should be an int. Defaulting to int(index)={int(index)}", logging.WARN)
                 EventTableSchema._conversion_warnings.append("index")
             index = int(index)
 
