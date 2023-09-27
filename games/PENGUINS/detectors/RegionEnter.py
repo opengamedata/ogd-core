@@ -78,7 +78,7 @@ class RegionEnter(Detector):
         #     return False
         # note the code above is redundant, we could just return self._found_click to get the same result;
         # the more-verbose code is here for illustrative purposes.
-        if self._old_region != self._new_region and self._new_region != "NoRegion":
+        if (self._old_region != self._new_region) and (self._new_region != "NoRegion"):
             return True
         else:
             return False
