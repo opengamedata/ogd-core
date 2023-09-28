@@ -16,6 +16,11 @@ class FeatureData:
       self._feature_val = value
       self._feature_state = state
 
+      if self.ExportMode == ExtractionMode.POPULATION:
+         user_id = None
+         sess_id = None
+      elif self.ExportMode == ExtractionMode.PLAYER:
+         sess_id = None
       self._user_id = user_id or "*"
       self._sess_id = sess_id or "*"
       self._game_unit_id = game_unit_id or "*"
