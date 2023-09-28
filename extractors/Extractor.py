@@ -1,7 +1,7 @@
 ## import standard libraries
 import abc
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Set
 # import locals
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
@@ -70,6 +70,8 @@ class Extractor(abc.ABC):
 
     def __init__(self, params:ExtractorParameters):
         self._params = params
+        self._app_versions     : Set[str]           = set()
+        self._app_branches     : Set[str]           = set()
         self._latest_session   : Optional[str]      = None
         self._latest_index     : int                = 0
         self._latest_timestamp : Optional[datetime] = None
@@ -94,6 +96,8 @@ class Extractor(abc.ABC):
             self._latest_session   = event.SessionID
             self._latest_index     = event.EventSequenceIndex
             self._latest_timestamp = event.Timestamp
+            self._app_versions.add(event.AppVersion)
+            self._app_branches.add(event.AppBranch)
             self._extractFromEvent(event=event)
 
     ## Base function to get the minimum game data version the feature can handle.

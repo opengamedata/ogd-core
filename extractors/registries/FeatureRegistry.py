@@ -225,11 +225,12 @@ class FeatureRegistry(ExtractorRegistry):
         """
         return len(self._features)
 
-    def GetFeatureData(self, order:int, player_id:Optional[str]=None, sess_id:Optional[str]=None) -> List[FeatureData]:
+    def GetFeatureData(self, order:int, player_id:Optional[str]=None, sess_id:Optional[str]=None,
+                       ogd_version:Optional[str]=None, app_version:Optional[str]=None, app_branch:Optional[str]=None) -> List[FeatureData]:
         order_index = order - 1 # orders are counted from 1, so need to adjust to index from 0.
         ret_val : List[FeatureData] = []
         for feature in self._features[order_index].values():
-            ret_val.append(feature.ToFeatureData(player_id=player_id, sess_id=sess_id))
+            ret_val.append(feature.ToFeatureData(player_id=player_id, sess_id=sess_id, ogd_version=ogd_version, app_version=app_version, app_branch=app_branch))
         return ret_val
 
     def GetFeatureValues(self) -> List[Any]:

@@ -93,8 +93,10 @@ class Feature(Extractor):
     # *** PUBLIC METHODS ***
 
     def ToFeatureData(self,            player_id:str,   sess_id:str, prefix:str,
-                      ogd_version:str, app_version:str, app_branch:str) -> List[FeatureData]:
+                      ogd_version:str) -> List[FeatureData]:
         columns = zip(self.GetFeatureNames(), self.GetFeatureValues())
+        versions = list(self._app_versions)
+        branches = list(self._app_branches)
         return [FeatureData(
             feature_type=type(self).__name__,
             mode=self.ExtractionMode,
@@ -103,11 +105,11 @@ class Feature(Extractor):
             state=self._state, # TODO: Force new variables to go through State
             user_id=player_id,
             sess_id=sess_id,
-            game_unit_id=prefix,
+            game_unit_id=f"{prefix}{self.CountIndex}",
             feature_version=self.FeatureVersion,
             ogd_version=ogd_version,
-            app_version=app_version,
-            app_branch=app_branch,
+            app_version=versions[0] if len(versions) == 1 else ",".join(versions),
+            app_branch=,
             last_session=self._latest_session,
             last_index=self._latest_index,
             last_timestamp=self._latest_timestamp,
