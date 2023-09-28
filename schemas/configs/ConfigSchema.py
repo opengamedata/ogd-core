@@ -60,8 +60,13 @@ class ConfigSchema(Schema):
         else:
             self._game_src_map = {}
             Logger.Log(f"{name} config does not have a 'GAME_SOURCE_MAP' element; defaulting to game_source_map={self._game_src_map}", logging.WARN)
+        if "GAME_DESTINATION_MAP" in all_elements.keys():
+            self._game_dest_map = ConfigSchema._parseGameDestMap(map=all_elements["GAME_DESTINATION_MAP"], sources=self._data_src)
+        else:
+            self._game_dest_map = {}
+            Logger.Log(f"{name} config does not have a 'GAME_DESTINATION_MAP' element; defaulting to game_dest_map={self._game_dest_map}", logging.WARN)
 
-        _used = {"LOG_FILE", "BATCH_SIZE", "DEBUG_LEVEL", "FAIL_FAST", "FILE_INDEXING", "DATA_HOSTS", "GAME_SOURCE_MAP"}
+        _used = {"LOG_FILE", "BATCH_SIZE", "DEBUG_LEVEL", "FAIL_FAST", "FILE_INDEXING", "DATA_HOSTS", "GAME_SOURCE_MAP", "GAME_DESTINATION_MAP"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
@@ -198,6 +203,16 @@ class ConfigSchema(Schema):
 
     @staticmethod
     def _parseGameSourceMap(map, sources) -> Dict[str, GameSourceSchema]:
+        ret_val : Dict[str, GameSourceSchema]
+        if isinstance(map, dict):
+            ret_val = { key : GameSourceSchema(name=key, all_elements=val, data_sources=sources) for key, val in map.items() }
+        else:
+            ret_val = {}
+            Logger.Log(f"Config game source map was unexpected type {type(map)}, defaulting to empty dict: {ret_val}.", logging.WARN)
+        return ret_val
+
+    @staticmethod
+    def _parseGameDestMap(map, sources) -> Dict[str, GameSourceSchema]:
         ret_val : Dict[str, GameSourceSchema]
         if isinstance(map, dict):
             ret_val = { key : GameSourceSchema(name=key, all_elements=val, data_sources=sources) for key, val in map.items() }

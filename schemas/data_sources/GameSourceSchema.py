@@ -19,9 +19,11 @@ class GameSourceSchema(Schema):
             Logger.Log(f"For {name} Game Source config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if "source" in all_elements.keys():
             self._host_cfg_name = GameSourceSchema._parseSource(all_elements["source"])
+        elif "destination" in all_elements.keys():
+            self._host_cfg_name = GameSourceSchema._parseSource(all_elements["destination"])
         else:
             self._host_cfg_name = "UNKNOWN"
-            Logger.Log(f"{name} config does not have a 'source' element; defaulting to source_name={self._host_cfg_name}", logging.WARN)
+            Logger.Log(f"{name} config does not have a 'source' or 'destination' element; defaulting to source_name={self._host_cfg_name}", logging.WARN)
         if self._host_cfg_name in data_sources.keys():
             self._data_host = data_sources[self._host_cfg_name]
         else:
