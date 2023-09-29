@@ -24,10 +24,10 @@ class RegionsEncountered(SessionFeature):
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return []
+        return ["region_enter"]
 
     def _extractFromEvent(self, event:Event) -> None:
-        self._scene_name = event.EventData.get("region_name")
+        self._scene_name = event.EventData.get("region")
         if self._scene_name not in self._cnt_list:
             self._cnt_list.append(self._scene_name)
 
