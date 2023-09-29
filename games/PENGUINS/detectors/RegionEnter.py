@@ -93,7 +93,6 @@ class RegionEnter(Detector):
                                         event_name="region_enter", event_data={"region":self._new_region})
         # >>> use state variables to generate the detector's event. <<<
         # >>> definitely don't return all these "Not Implemented" things, unless you really find that useful... <<<
-        #
         # e.g. for an (admittedly redundant) Event stating a click of any kind was detected:
         # ret_val : Event = Event(session_id="Unknown", app_id="CustomGame", timestamp=datetime.now(),
         #                         event_name="ClickDetected", event_data={})

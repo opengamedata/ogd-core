@@ -22,12 +22,13 @@ class RegionDuration(PerRegionFeature):
         self._prev_timestamp = None
         self._time = 0
         self._name = None
-        
+        self._region_name = None
+        self._region_dict = dict()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["all_events"]
+        return ["region_enter","region_exit"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -36,17 +37,24 @@ class RegionDuration(PerRegionFeature):
     def _extractFromEvent(self, event:Event) -> None:
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
-
+            # if we jumped to a new session, we only want to count time up to last event, not the time between sessions.
             if self._region_start_time and self._prev_timestamp:
                 self._time += (self._prev_timestamp - self._region_start_time).total_seconds()
                 self._region_start_time = event.Timestamp
-        
-        elif self._prev_timestamp is not None:
-            self._time += (event.Timestamp - self._prev_timestamp).total_seconds()
-            self._region_start_time = None
+
+        if event.EventName == "region_enter":
+            self._region_start_time = event.Timestamp
+            self._region_name = event.event_data.get("region")
+            if not self._region_name in self._region_dict.keys():
+                self._region_start_time[self._region_name] = timedelta(0)
+        elif event.EventName == "region_exit":
+            if self._region_start_time is not None:
+                self._time += (event.Timestamp - self._region_start_time).total_seconds()
+                self._region_dict[self._region_name]+=timedelta(seconds=self._time)
+                self._region_start_time = None
 
         self._prev_timestamp = event.Timestamp
-        
+
     def _extractFromFeatureData(self, feature:FeatureData):
         return
 
