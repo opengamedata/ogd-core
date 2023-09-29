@@ -552,7 +552,7 @@
             },
             "RegionEnterCount": {
                 "type": "RegionEnterCount",
-                "enabled": flase,
+                "enabled": false,
                 "description": "The number of times a player enterd for a given region of the game.",
                 "return_type": "int"
             },
