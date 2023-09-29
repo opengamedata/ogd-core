@@ -110,7 +110,6 @@ class PenguinsLoader(ExtractorLoader):
         
         else:
             raise NotImplementedError(f"'{detector_type}' is not a valid detector for Waves.")
-
         return ret_val
 
 
