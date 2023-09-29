@@ -22,13 +22,13 @@ class RegionDuration(PerRegionFeature):
         self._prev_timestamp = None
         self._time = 0
         #self._name = None
-        self._region_name = None
-        self._region_dict = dict()
+        #self._region_name = None
+        #self._region_dict = dict()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["region_enter","region_exit"]
+        return ["all_events"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:

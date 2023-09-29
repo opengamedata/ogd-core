@@ -15,7 +15,6 @@ from extractors.features.PerCountFeature import PerCountFeature
 class RegionEnterCount(PerCountFeature):
 
     def __init__(self, params:ExtractorParameters, region_map:List[Dict[str, Any]]):
-
         super().__init__(params=params)
         self._region_map = region_map
         self._current_count : int = 0
@@ -41,7 +40,6 @@ class RegionEnterCount(PerCountFeature):
     # *** Optionally override public functions. ***
     def _validateEventCountIndex(self, event: Event):
         ret_val : bool = False
-
         region_data = event.EventData.get("region_name")
         if region_data is not None:
             if region_data in region_map and region_map[region_data] == self.CountIndex:
