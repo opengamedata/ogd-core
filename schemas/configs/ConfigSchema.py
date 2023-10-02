@@ -111,6 +111,10 @@ class ConfigSchema(Schema):
         return self._game_src_map
 
     @property
+    def GameDestinationMap(self) -> Dict[str, GameSourceSchema]:
+        return self._game_dest_map
+
+    @property
     def AsMarkdown(self) -> str:
         ret_val : str
 
