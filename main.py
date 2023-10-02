@@ -12,7 +12,7 @@ from calendar import monthrange
 from datetime import datetime
 from itertools import chain
 from pathlib import Path
-from typing import Any, Dict, Optional, Set, Tuple
+from typing import List, Optional, Set, Tuple
 
 # import 3rd-party libraries
 
@@ -39,7 +39,82 @@ from ogd_requests.RequestResult import RequestResult, ResultStatus
 from utils.Logger import Logger
 from utils.Readme import Readme
 
-def ListGames() -> bool:
+def GetGameParser() -> argparse.ArgumentParser:
+    """Function to set up a simple argument parser to retrieve the 'game' argument
+
+    :return: An ArgumentParser that yields the 'game' command-line argument.
+    :rtype: argparse.ArgumentParser
+    """
+    ret_val = argparse.ArgumentParser(add_help=False)
+    ret_val.add_argument("game", type=str.upper, choices=games_list,
+                        help="The game to use with the given command.")
+    return ret_val
+
+def GetExportParser() -> argparse.ArgumentParser:
+    """Function to set up a simple argument parser to retrieve the command-line arguments pertaining to date range and optional inputs
+
+    :return: An ArgumentParser that yields the start_date, end_date, and optional command-line arguments.
+    :rtype: argparse.ArgumentParser
+    """
+    ret_val = argparse.ArgumentParser(add_help=False, parents=[game_parser])
+    ret_val.add_argument("start_date", nargs="?", default=None,
+                        help="The starting date of an export range in MM/DD/YYYY format (defaults to today).")
+    ret_val.add_argument("end_date", nargs="?", default=None,
+                        help="The ending date of an export range in MM/DD/YYYY format (defaults to today).")
+    ret_val.add_argument("-f", "--file", default="",
+                        help="Tell the program to use a file as input, instead of looking up a database.")
+    ret_val.add_argument("-m", "--monthly", default=False, action="store_true",
+                        help="Set the program to export a month's-worth of data, instead of using a date range. Replace the start_date argument with a month in MM/YYYY format.")
+    # allow specifying only certain players/sessions for export
+    ret_val.add_argument("-p", "--player", default="",
+                        help="Tell the program to output data for a player with given ID, instead of using a date range.")
+    ret_val.add_argument("-s", "--session", default="",
+                        help="Tell the program to output data for a session with given ID, instead of using a date range.")
+    ret_val.add_argument("--player_id_file", default="",
+                        help="Tell the program to output data for a collection of players with IDs in given file, instead of using a date range.")
+    ret_val.add_argument("--session_id_file", default="",
+                        help="Tell the program to output data for a collection of sessions with IDs in given file, instead of using a date range.")
+    # allow individual feature files to be skipped.
+    ret_val.add_argument("--no_files", default=False, action="store_true",
+                        help="Tell the program to skip outputting any files from the export (useful if exporting exclusively to database).")
+    ret_val.add_argument("--no_session_file", default=False, action="store_true",
+                        help="Tell the program to skip outputting a per-session file.")
+    ret_val.add_argument("--no_player_file", default=False, action="store_true",
+                        help="Tell the program to skip outputting a per-player file.")
+    ret_val.add_argument("--no_pop_file", default=False, action="store_true",
+                        help="Tell the program to skip outputting a population file.")
+    return ret_val
+
+# set up main parser, with one sub-parser per-command.
+def GetMainParser(game_parser:argparse.ArgumentParser, export_parser:argparse.ArgumentParser) -> argparse.ArgumentParser:
+    """Function to set up a an argument parser (with subparsers) to retrieve the export commands from the command-line arguments.
+
+    :param export_parser: An ArgumentParser for export commands, which will be parented to appropriate subparsers
+    :type export_parser: argparse.ArgumentParser
+    :param game_parser: An ArgumentParser for game commands, which will be parented to appropriate subparsers
+    :type game_parser: argparse.ArgumentParser
+    :return: An ArgumentParser that yields the export commands.
+    :rtype: argparse.ArgumentParser
+    """
+    ret_val = argparse.ArgumentParser(description="Simple command-line utility to execute OpenGameData export requests.")
+    sub_parsers = ret_val.add_subparsers(help="Chosen command to run", dest="command")
+    sub_parsers.add_parser("export", parents=[export_parser],
+                            help="Export data in a given date range.")
+    sub_parsers.add_parser("export-events", parents=[export_parser],
+                            help="Export event data in a given date range.")
+    sub_parsers.add_parser("export-features", parents=[export_parser],
+                            help="Export session feature data in a given date range.")
+    sub_parsers.add_parser("info", parents=[game_parser],
+                            help="Display info about the given game.")
+    sub_parsers.add_parser("readme", parents=[game_parser],
+                            help="Generate a readme for the given game.")
+    sub_parsers.add_parser("list-games",
+                            help="Display a list of games available for parsing.")
+    # sub_parsers.add_parser("help",
+    #                         help="Display a list of games available for parsing.")
+    return ret_val
+
+def ListGames(games_list:List[str]) -> bool:
     print(f"The games available for export are:\n{games_list}")
     return True
 
@@ -238,51 +313,10 @@ games_folder : Path = Path("./games")
 config = ConfigSchema(name="config.py", all_elements=settings)
 # set up parent parsers with arguments for each class of command
 games_list = [name.upper() for name in os.listdir(games_folder) if (os.path.isdir(games_folder / name) and name != "__pycache__")]
-game_parser = argparse.ArgumentParser(add_help=False)
-game_parser.add_argument("game", type=str.upper, choices=games_list,
-                    help="The game to use with the given command.")
-export_parser = argparse.ArgumentParser(add_help=False, parents=[game_parser])
-export_parser.add_argument("start_date", nargs="?", default=None,
-                    help="The starting date of an export range in MM/DD/YYYY format (defaults to today).")
-export_parser.add_argument("end_date", nargs="?", default=None,
-                    help="The ending date of an export range in MM/DD/YYYY format (defaults to today).")
-export_parser.add_argument("-p", "--player", default="",
-                    help="Tell the program to output data for a player with given ID, instead of using a date range.")
-export_parser.add_argument("-s", "--session", default="",
-                    help="Tell the program to output data for a session with given ID, instead of using a date range.")
-export_parser.add_argument("--player_id_file", default="",
-                    help="Tell the program to output data for a collection of players with IDs in given file, instead of using a date range.")
-export_parser.add_argument("--session_id_file", default="",
-                    help="Tell the program to output data for a collection of sessions with IDs in given file, instead of using a date range.")
-export_parser.add_argument("-f", "--file", default="",
-                    help="Tell the program to use a file as input, instead of looking up a database.")
-export_parser.add_argument("-m", "--monthly", default=False, action="store_true",
-                    help="Set the program to export a month's-worth of data, instead of using a date range. Replace the start_date argument with a month in MM/YYYY format.")
-# allow individual feature files to be skipped.
-export_parser.add_argument("--no_session_file", default=False, action="store_true",
-                    help="Tell the program to skip outputting a per-session file.")
-export_parser.add_argument("--no_player_file", default=False, action="store_true",
-                    help="Tell the program to skip outputting a per-player file.")
-export_parser.add_argument("--no_pop_file", default=False, action="store_true",
-                    help="Tell the program to skip outputting a population file.")
-# set up main parser, with one sub-parser per-command.
-parser = argparse.ArgumentParser(description="Simple command-line utility to execute OpenGameData export requests.")
-sub_parsers = parser.add_subparsers(help="Chosen command to run", dest="command")
-sub_parsers.add_parser("export", parents=[export_parser],
-                        help="Export data in a given date range.")
-sub_parsers.add_parser("export-events", parents=[export_parser],
-                        help="Export event data in a given date range.")
-sub_parsers.add_parser("export-features", parents=[export_parser],
-                        help="Export session feature data in a given date range.")
-sub_parsers.add_parser("info", parents=[game_parser],
-                        help="Display info about the given game.")
-sub_parsers.add_parser("readme", parents=[game_parser],
-                        help="Generate a readme for the given game.")
-sub_parsers.add_parser("list-games",
-                        help="Display a list of games available for parsing.")
-# sub_parsers.add_parser("help",
-#                         help="Display a list of games available for parsing.")
 
+game_parser   = GetGameParser()
+export_parser = GetExportParser()
+parser        = GetMainParser(game_parser=game_parser, export_parser=export_parser)
 args : Namespace = parser.parse_args()
 
 success : bool
@@ -300,7 +334,7 @@ if args is not None:
     elif cmd == "readme":
         success = WriteReadme(game_id=game_id, config=config)
     elif cmd == "list-games":
-        success = ListGames()
+        success = ListGames(games_list=games_list)
     # elif cmd == "help":
     #     success = ShowHelp()
     else:
