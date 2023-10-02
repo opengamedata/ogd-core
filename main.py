@@ -27,6 +27,7 @@ from interfaces.events.BQFirebaseInterface import BQFirebaseInterface
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from interfaces.outerfaces.TSVOuterface import TSVOuterface
 from interfaces.outerfaces.DebugOuterface import DebugOuterface
+from interfaces.outerfaces.MySQLOuterface import MySQLOuterface
 from managers.ExportManager import ExportManager
 from schemas.ExportMode import ExportMode
 from schemas.IDMode import IDMode
@@ -195,7 +196,6 @@ def genRequest(game_id:str, config:ConfigSchema, with_events:bool, with_features
     export_modes   : Set[ExportMode]
     interface      : EventInterface
     range          : ExporterRange
-    file_outerface : DataOuterface
     dataset_id     : Optional[str]
 
     # 1. get exporter modes to run
@@ -203,10 +203,16 @@ def genRequest(game_id:str, config:ConfigSchema, with_events:bool, with_features
     # 2. figure out the interface and range; optionally set a different dataset_id
     interface, range, dataset_id = genInterface(game_id=game_id)
     # 3. set up the outerface, based on the range and dataset_id.
-    _cfg = GameSourceSchema(name="FILE DEST", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
-    file_outerface = TSVOuterface(game_id=game_id, config=_cfg, export_modes=export_modes, date_range=range.DateRange,
-                                  file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
-    outerfaces : Set[DataOuterface] = {file_outerface}
+    outerfaces : Set[DataOuterface] = set()
+    if not args.no_files:
+        _cfg = GameSourceSchema(name="FILE DEST", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+        outerfaces.add(TSVOuterface(game_id=game_id, config=_cfg, export_modes=export_modes, date_range=range.DateRange,
+                                  file_indexing=config.FileIndexConfig, dataset_id=dataset_id))
+    else:
+        Logger.Log(f"Found command-line option disabling file output; all file outputs will be skipped")
+    if args.to_database:
+        _cfg = config.GameDestinationMap.get(game_id)
+        outerfaces.add(MySQLOuterface(game_id=game_id, config=_cfg, export_modes=export_modes))
     # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
     if config.DebugLevel == "DEBUG":
         _cfg = GameSourceSchema(name="DEBUG", all_elements={"SCHEMA":"OGD_DEBUG_OUTPUT", "DB_TYPE":"FILE"}, data_sources={})
