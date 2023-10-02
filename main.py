@@ -196,16 +196,36 @@ def genRequest(game_id:str, config:ConfigSchema, with_events:bool, with_features
     interface      : EventInterface
     range          : ExporterRange
     file_outerface : DataOuterface
-    dataset_id     : Optional[str] = None
+    dataset_id     : Optional[str]
 
     # 1. get exporter modes to run
     export_modes = getModes(with_events=with_events, with_features=with_features)
     # 2. figure out the interface and range; optionally set a different dataset_id
+    interface, range, dataset_id = genInterface(game_id=game_id)
+    # 3. set up the outerface, based on the range and dataset_id.
+    _cfg = GameSourceSchema(name="FILE DEST", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+    file_outerface = TSVOuterface(game_id=game_id, config=_cfg, export_modes=export_modes, date_range=range.DateRange,
+                                  file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
+    outerfaces : Set[DataOuterface] = {file_outerface}
+    # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
+    if config.DebugLevel == "DEBUG":
+        _cfg = GameSourceSchema(name="DEBUG", all_elements={"SCHEMA":"OGD_DEBUG_OUTPUT", "DB_TYPE":"FILE"}, data_sources={})
+        outerfaces.add(DebugOuterface(game_id=game_id, config=_cfg, export_modes=export_modes))
+
+    # 4. Once we have the parameters parsed out, construct the request.
+    return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
+
+def genInterface(game_id:str) -> Tuple[EventInterface, ExporterRange, Optional[str]]:
+    ret_val : Tuple[EventInterface, ExporterRange, Optional[str]]
+
+    interface   : EventInterface
+    range       : ExporterRange
+    dataset_id  : Optional[str] = None
     if args.file is not None and args.file != "":
         # raise NotImplementedError("Sorry, exports with file inputs are currently broken.")
         _ext = str(args.file).split('.')[-1]
         _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"schema":"OGD_EVENT_FILE"}, data_sources={})
-        interface = CSVInterface(game_id=args.game, config=_cfg, fail_fast=config.FailFast, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
+        interface = CSVInterface(game_id=game_id, config=_cfg, fail_fast=config.FailFast, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
         # retrieve/calculate id range.
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [])
@@ -236,18 +256,8 @@ def genRequest(game_id:str, config:ConfigSchema, with_events:bool, with_features
         else:
             start_date, end_date = getDateRange()
             range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date)
-    # 3. set up the outerface, based on the range and dataset_id.
-    _cfg = GameSourceSchema(name="FILE DEST", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
-    file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=range.DateRange,
-                                  file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
-    outerfaces : Set[DataOuterface] = {file_outerface}
-    # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
-    if config.DebugLevel == "DEBUG":
-        _cfg = GameSourceSchema(name="DEBUG", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
-        outerfaces.add(DebugOuterface(game_id=args.game, config=_cfg, export_modes=export_modes))
-
-    # 4. Once we have the parameters parsed out, construct the request.
-    return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
+    ret_val = (interface, range, dataset_id)
+    return ret_val
 
 def genDBInterface(game_id:str, config:ConfigSchema) -> EventInterface:
     ret_val : EventInterface
@@ -308,14 +318,13 @@ def getDateRange() -> Tuple[datetime, datetime]:
         Logger.Log(f"Exporting from {str(start_date)} to {str(end_date)} of data for {args.game}...", logging.INFO)
     return (start_date, end_date)
 
-## This section of code is what runs main itself. Just need something to get it
-#  started.
+## This section of code is what runs main itself. Just need something to get it started.
 # Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
-games_folder : Path = Path("./games")
-config = ConfigSchema(name="config.py", all_elements=settings)
-# set up parent parsers with arguments for each class of command
+config : ConfigSchema = ConfigSchema(name="config.py", all_elements=settings)
+games_folder : Path   = Path("./games")
 games_list = [name.upper() for name in os.listdir(games_folder) if (os.path.isdir(games_folder / name) and name != "__pycache__")]
 
+# set up parent parsers with arguments for each class of command
 game_parser   = GetGameParser()
 export_parser = GetExportParser()
 parser        = GetMainParser(game_parser=game_parser, export_parser=export_parser)
