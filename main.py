@@ -273,11 +273,11 @@ def getModes(with_events:bool, with_features:bool) -> Set[ExportMode]:
         ret_val.add(ExportMode.EVENTS)
         ret_val.add(ExportMode.DETECTORS)
     if with_features:
-        if not args.no_session_file:
+        if not (args.no_session_output or args.no_session_file):
             ret_val.add(ExportMode.SESSION)
-        if not args.no_player_file:
+        if not (args.no_player_output or args.no_player_file):
             ret_val.add(ExportMode.PLAYER)
-        if not args.no_pop_file:
+        if not (args.no_pop_output or args.no_pop_file):
             ret_val.add(ExportMode.POPULATION)
 
     return ret_val
