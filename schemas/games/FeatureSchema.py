@@ -16,18 +16,21 @@ class SubfeatureSchema(Schema):
             self._elements = {}
             Logger.Log(f"For {name} subfeature config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
 
+        _used = set()
         if "return_type" in all_elements.keys():
+            _used.add("return_type")
             self._return_type = SubfeatureSchema._parseReturnType(all_elements['return_type'])
         else:
             self._return_type = "Unknown"
             Logger.Log(f"{name} subfeature config does not have an 'return_type' element; defaulting to return_type='{self._return_type}", logging.WARN)
         if "description" in all_elements.keys():
+            _used.add("description")
             self._description = SubfeatureSchema._parseDescription(all_elements['description'])
         else:
             self._description = "No description"
             Logger.Log(f"{name} subfeature config does not have an 'description' element; defaulting to description='{self._description}'", logging.WARN)
         
-        _leftovers = { key : val for key,val in all_elements.items() if key not in {"return_type", "description"} }
+        _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
     @property

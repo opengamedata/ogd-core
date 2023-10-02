@@ -12,10 +12,12 @@ class BigQuerySchema(DataHostConfig):
         self._project_id : str
         self._credential : Optional[str]
 
+        _used = set()
         if not isinstance(all_elements, dict):
             all_elements = {}
             Logger.Log(f"For {name} Game Source config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if "PROJECT_ID" in all_elements.keys():
+            _used.add("PROJECT_ID")
             self._project_id = BigQuerySchema._parseProjectID(all_elements["PROJECT_ID"])
         elif "PROJECT_ID" in fallbacks.keys():
             self._project_id = BigQuerySchema._parseProjectID(fallbacks["PROJECT_ID"])
@@ -23,6 +25,7 @@ class BigQuerySchema(DataHostConfig):
             self._project_id = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'DATASET_ID' element; defaulting to dataset_id={self._project_id}", logging.WARN)
         if "PROJECT_KEY" in all_elements.keys():
+            _used.add("PROJECT_KEY")
             self._credential = BigQuerySchema._parseCredential(all_elements["PROJECT_KEY"])
         elif "PROJECT_KEY" in fallbacks.keys():
             self._credential = BigQuerySchema._parseCredential(fallbacks["PROJECT_KEY"])
@@ -30,7 +33,6 @@ class BigQuerySchema(DataHostConfig):
             self._credential = None
             Logger.Log(f"{name} config does not have a 'PROJECT_KEY' element; defaulting to credential=None", logging.WARN)
 
-        _used = {"PROJECT_ID", "DATASET_ID", "PROJECT_KEY"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 

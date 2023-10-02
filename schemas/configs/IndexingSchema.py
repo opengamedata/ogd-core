@@ -12,26 +12,29 @@ class FileIndexingSchema(Schema):
         self._remote_url    : Optional[str]
         self._templates_url : str
 
+        _used = set()
         if not isinstance(all_elements, dict):
             all_elements = {}
             Logger.Log(f"For {name} base config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if "LOCAL_DIR" in all_elements.keys():
+            _used.add("LOCAL_DIR")
             self._local_dir = FileIndexingSchema._parseLocalDir(all_elements["LOCAL_DIR"])
         else:
             self._local_dir = Path("./data/")
             Logger.Log(f"{name} config does not have a 'LOCAL_DIR' element; defaulting to local_dir={self._local_dir}", logging.WARN)
         if "REMOTE_URL" in all_elements.keys():
+            _used.add("REMOTE_URL")
             self._remote_url = FileIndexingSchema._parseRemoteURL(all_elements["REMOTE_URL"])
         else:
             self._remote_url = None
             Logger.Log(f"{name} config does not have a 'REMOTE_URL' element; defaulting to remote_url={self._remote_url}", logging.WARN)
         if "TEMPLATES_URL" in all_elements.keys():
+            _used.add("TEMPLATES_URL")
             self._templates_url = FileIndexingSchema._parseTemplatesURL(all_elements["TEMPLATES_URL"])
         else:
             self._templates_url = "https://github.com/opengamedata/opengamedata-samples"
             Logger.Log(f"{name} config does not have a 'TEMPLATES_URL' element; defaulting to templates_url={self._templates_url}", logging.WARN)
 
-        _used = {"LOCAL_DIR", "REMOTE_URL", "TEMPLATES_URL"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 

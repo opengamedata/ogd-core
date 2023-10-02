@@ -13,13 +13,14 @@ class DataHostConfig(Schema):
             other_elements = {}
             Logger.Log(f"For {name} Data Source config, other_elements was not a dict, defaulting to empty dict", logging.WARN)
         # Parse DB info
+        _used = set()
         if "DB_TYPE" in other_elements.keys():
+            _used.add("DB_TYPE")
             self._db_type = DataHostConfig._parseDBType(other_elements["DB_TYPE"])
         else:
             self._db_type = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'DB_TYPE' element; defaulting to db_host={self._db_type}", logging.WARN)
 
-        _used = {"DB_TYPE"}
         _leftovers = { key : val for key,val in other_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 

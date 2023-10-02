@@ -54,12 +54,15 @@ class GameSchema(Schema):
         _schema = GameSchema._loadSchemaFile(game_name=self._game_name, schema_name=schema_name, schema_path=schema_path)
         if _schema is not None:
             # 1. Get events, if any
+            _used = set()
             if "events" in _schema.keys():
+                _used.add("events")
                 self._event_list = [EventSchema(name=key, all_elements=val) for key,val in _schema['events'].items()]
             else:
                 Logger.Log(f"{self._game_name} game schema does not document any events.", logging.INFO)
             # 2. Get detectors, if any
             if "detectors" in _schema.keys():
+                _used.add("detectors")
                 if "perlevel" in _schema['detectors']:
                     _perlevels = _schema['detectors']['perlevel']
                     self._detector_map['per_count'] = {key : DetectorSchema(name=key, all_elements=val) for key,val in _perlevels.items()}
@@ -73,6 +76,7 @@ class GameSchema(Schema):
                 Logger.Log(f"{self._game_name} game schema does not define any detectors.", logging.INFO)
             # 3. Get features, if any
             if "features" in _schema.keys():
+                _used.add("features")
                 if "legacy" in _schema['features'].keys():
                     self._legacy_mode = _schema['features']['legacy'].get('enabled', False)
                 if "perlevel" in _schema['features']:
@@ -88,6 +92,7 @@ class GameSchema(Schema):
                 Logger.Log(f"{self._game_name} game schema does not define any features.", logging.INFO)
             # 4. Get level_range, if any
             if "level_range" in _schema.keys():
+                _used.add("level_range")
                 self._min_level = _schema.get("level_range", {}).get('min', None)
                 self._max_level = _schema.get("level_range", {}).get('max', None)
 
@@ -96,6 +101,7 @@ class GameSchema(Schema):
 
             # 6. Get config, if any
             self._config = _schema.get('config', {})
+            _used.add("config")
             if "SUPPORTED_VERS" in _schema['config']:
                 self._supported_vers = _schema['config']['SUPPORTED_VERS']
             else:
@@ -103,7 +109,7 @@ class GameSchema(Schema):
                 Logger.Log(f"{self._game_name} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
 
             # 7. Collect any other, unexpected elements
-            _leftovers = { key:val for key,val in _schema.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
+            _leftovers = { key:val for key,val in _schema.items() if key not in _used.union(self._other_ranges.keys()) }
             super().__init__(name=self._game_name, other_elements=_leftovers)
 
     # def __getitem__(self, key) -> Any:
