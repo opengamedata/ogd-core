@@ -166,7 +166,7 @@ def WriteReadme(game_id:str, config:ConfigSchema) -> bool:
         Logger.Log(f"Successfully generated a readme for {game_id}.", logging.INFO)
         return True
 
-def RunExport(config:ConfigSchema, with_events:bool = False, with_features:bool = False) -> bool:
+def RunExport(game_id:str, config:ConfigSchema, with_events:bool = False, with_features:bool = False) -> bool:
     """Function to handle execution of export code.
     This is the main intended use of the program.
 
@@ -179,7 +179,7 @@ def RunExport(config:ConfigSchema, with_events:bool = False, with_features:bool 
     """
     success : bool = False
 
-    req = genRequest(config=config, with_events=with_events, with_features=with_features)
+    req = genRequest(game_id=game_id, config=config, with_events=with_events, with_features=with_features)
     if req.Interface.IsOpen():
         export_manager : ExportManager = ExportManager(config=config)
         result         : RequestResult = export_manager.ExecuteRequest(request=req)
@@ -191,7 +191,7 @@ def RunExport(config:ConfigSchema, with_events:bool = False, with_features:bool 
                         # {'req':req, 'feature_exporter':feature_exporter}, {})
     return success
 
-def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Request:
+def genRequest(game_id:str, config:ConfigSchema, with_events:bool, with_features:bool) -> Request:
     export_modes   : Set[ExportMode]
     interface      : EventInterface
     range          : ExporterRange
@@ -210,7 +210,7 @@ def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Req
         ids = interface.AllIDs()
         range = ExporterRange.FromIDs(source=interface, ids=ids if ids is not None else [])
     else:
-        interface = genDBInterface(config=config)
+        interface = genDBInterface(game_id=game_id, config=config)
         if args.player is not None and args.player != "":
             range = ExporterRange.FromIDs(source=interface, ids=[args.player], id_mode=IDMode.USER)
             dataset_id = f"{args.game}_{args.player}"
@@ -249,17 +249,17 @@ def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Req
     # 4. Once we have the parameters parsed out, construct the request.
     return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
 
-def genDBInterface(config:ConfigSchema) -> EventInterface:
+def genDBInterface(game_id:str, config:ConfigSchema) -> EventInterface:
     ret_val : EventInterface
-    _game_cfg = config.GameSourceMap.get(args.game)
+    _game_cfg = config.GameSourceMap.get(game_id)
     if _game_cfg is not None and _game_cfg.DataHost is not None:
         match (_game_cfg.DataHost.Type):
             case "Firebase" | "FIREBASE":
-                ret_val = BQFirebaseInterface(game_id=args.game, config=_game_cfg, fail_fast=config.FailFast)
+                ret_val = BQFirebaseInterface(game_id=game_id, config=_game_cfg, fail_fast=config.FailFast)
             case "BigQuery" | "BIGQUERY":
-                ret_val = BigQueryInterface(game_id=args.game, config=_game_cfg, fail_fast=config.FailFast)
+                ret_val = BigQueryInterface(game_id=game_id, config=_game_cfg, fail_fast=config.FailFast)
             case "MySQL" | "MYSQL":
-                ret_val = MySQLInterface(game_id=args.game, config=_game_cfg, fail_fast=config.FailFast)
+                ret_val = MySQLInterface(game_id=game_id, config=_game_cfg, fail_fast=config.FailFast)
             case _:
                 raise Exception(f"{_game_cfg.DataHost.Type} is not a valid EventInterface type!")
         return ret_val
@@ -326,11 +326,11 @@ if args is not None:
     cmd = args.command.lower()
     game_id = args.game.upper()
     if cmd == "export":
-        success = RunExport(config=config, with_events=True, with_features=True)
+        success = RunExport(game_id=game_id, config=config, with_events=True, with_features=True)
     elif cmd == "export-events":
-        success = RunExport(config=config, with_events=True)
+        success = RunExport(game_id=game_id, config=config, with_events=True)
     elif cmd == "export-features":
-        success = RunExport(config=config, with_features=True)
+        success = RunExport(game_id=game_id, config=config, with_features=True)
     elif cmd == "info":
         success = ShowGameInfo(game_id=game_id, config=config)
     elif cmd == "readme":
