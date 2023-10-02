@@ -65,6 +65,8 @@ def GetExportParser() -> argparse.ArgumentParser:
                         help="Tell the program to use a file as input, instead of looking up a database.")
     ret_val.add_argument("-m", "--monthly", default=False, action="store_true",
                         help="Set the program to export a month's-worth of data, instead of using a date range. Replace the start_date argument with a month in MM/YYYY format.")
+    ret_val.add_argument("-d", "--to_database", default=False, action="store_true",
+                        help="Set the program to export data to the database in the game_destinations config, in addition to any file export.")
     # allow specifying only certain players/sessions for export
     ret_val.add_argument("-p", "--player", default="",
                         help="Tell the program to output data for a player with given ID, instead of using a date range.")
@@ -77,12 +79,12 @@ def GetExportParser() -> argparse.ArgumentParser:
     # allow individual feature files to be skipped.
     ret_val.add_argument("--no_files", default=False, action="store_true",
                         help="Tell the program to skip outputting any files from the export (useful if exporting exclusively to database).")
-    ret_val.add_argument("--no_session_file", default=False, action="store_true",
-                        help="Tell the program to skip outputting a per-session file.")
-    ret_val.add_argument("--no_player_file", default=False, action="store_true",
-                        help="Tell the program to skip outputting a per-player file.")
-    ret_val.add_argument("--no_pop_file", default=False, action="store_true",
-                        help="Tell the program to skip outputting a population file.")
+    ret_val.add_argument("--no_session_output", "--no_session_file", default=False, action="store_true",
+                        help="Tell the program to skip outputting a per-session file/database entries.")
+    ret_val.add_argument("--no_player_output", "--no_player_file", default=False, action="store_true",
+                        help="Tell the program to skip outputting a per-player file/database_entries.")
+    ret_val.add_argument("--no_pop_output", "--no_pop_file", default=False, action="store_true",
+                        help="Tell the program to skip outputting a population file/database_entries.")
     return ret_val
 
 # set up main parser, with one sub-parser per-command.
