@@ -50,4 +50,4 @@ class t_MySQLOuterface(TestCase):
         print("Ran all t_CSVInterface tests.")
 
 if __name__ == '__main__':
-    t_CSVInterface.RunAll()
+    t_MySQLOuterface.RunAll()
