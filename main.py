@@ -21,7 +21,7 @@ from utils.Logger import Logger
 from config.config import settings
 from interfaces.events.EventInterface import EventInterface
 from interfaces.events.CSVInterface import CSVInterface
-from interfaces.MySQLInterface import MySQLInterface
+from interfaces.events.MySQLInterface import MySQLInterface
 from interfaces.events.BigQueryInterface import BigQueryInterface
 from interfaces.events.BQFirebaseInterface import BQFirebaseInterface
 from interfaces.outerfaces.DataOuterface import DataOuterface
@@ -43,7 +43,7 @@ def ListGames() -> bool:
     print(f"The games available for export are:\n{games_list}")
     return True
 
-def ShowGameInfo(config:ConfigSchema) -> bool:
+def ShowGameInfo(game_id:str, config:ConfigSchema) -> bool:
     """Function to print out info on a game from the game's schema.
    This does a similar function to writeReadme, but is limited to the CSV metadata part
    (basically what was in the schema, at one time written into the csv's themselves).
@@ -53,19 +53,19 @@ def ShowGameInfo(config:ConfigSchema) -> bool:
     :rtype: bool
     """
     try:
-        game_schema = GameSchema(schema_name=f"{args.game}.json")
-        table_schema = EventTableSchema(schema_name=f"{config.GameSourceMap[args.game].EventTableSchema}.json")
+        game_schema = GameSchema(schema_name=f"{game_id}.json")
+        table_schema = EventTableSchema(schema_name=f"{config.GameSourceMap[game_id].EventTableSchema}.json")
         readme = Readme(game_schema=game_schema, table_schema=table_schema)
         print(readme.CustomReadmeSource)
     except Exception as err:
-        msg = f"Could not print information for {args.game}: {type(err)} {str(err)}"
+        msg = f"Could not print information for {game_id}: {type(err)} {str(err)}"
         Logger.Log(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
         return False
     else:
         return True
 
-def WriteReadme(config:ConfigSchema) -> bool:
+def WriteReadme(game_id:str, config:ConfigSchema) -> bool:
     """Function to write out the readme file for a given game.
    This includes the CSV metadata (data from the schema, originally written into
    the CSV files themselves), custom readme source, and the global changelog.
@@ -74,19 +74,19 @@ def WriteReadme(config:ConfigSchema) -> bool:
     :return: _description_
     :rtype: bool
     """
-    path = Path(f"./data") / args.game
+    path = Path(f"./data") / game_id
     try:
         game_schema = GameSchema(schema_name=f"{args.game}.json")
-        table_schema = EventTableSchema(schema_name=f"{config.GameSourceMap[args.game].EventTableSchema}.json")
+        table_schema = EventTableSchema(schema_name=f"{config.GameSourceMap[game_id].EventTableSchema}.json")
         readme = Readme(game_schema=game_schema, table_schema=table_schema)
         readme.GenerateReadme(path=path)
     except Exception as err:
-        msg = f"Could not create a readme for {args.game}: {type(err)} {str(err)}"
+        msg = f"Could not create a readme for {game_id}: {type(err)} {str(err)}"
         Logger.Log(msg, logging.ERROR)
         traceback.print_tb(err.__traceback__)
         return False
     else:
-        Logger.Log(f"Successfully generated a readme for {args.game}.", logging.INFO)
+        Logger.Log(f"Successfully generated a readme for {game_id}.", logging.INFO)
         return True
 
 def RunExport(config:ConfigSchema, with_events:bool = False, with_features:bool = False) -> bool:
@@ -288,6 +288,7 @@ args : Namespace = parser.parse_args()
 success : bool
 if args is not None:
     cmd = args.command.lower()
+    game_id = args.game.upper()
     if cmd == "export":
         success = RunExport(config=config, with_events=True, with_features=True)
     elif cmd == "export-events":
@@ -295,9 +296,9 @@ if args is not None:
     elif cmd == "export-features":
         success = RunExport(config=config, with_features=True)
     elif cmd == "info":
-        success = ShowGameInfo(config=config)
+        success = ShowGameInfo(game_id=game_id, config=config)
     elif cmd == "readme":
-        success = WriteReadme(config=config)
+        success = WriteReadme(game_id=game_id, config=config)
     elif cmd == "list-games":
         success = ListGames()
     # elif cmd == "help":
