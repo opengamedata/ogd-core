@@ -14,12 +14,15 @@ class GameSourceSchema(Schema):
         self._table_schema  : str
         self._table_name    : str
 
+        _used = set()
         if not isinstance(all_elements, dict):
             all_elements = {}
             Logger.Log(f"For {name} Game Source config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if "source" in all_elements.keys():
+            _used.add("source")
             self._host_cfg_name = GameSourceSchema._parseSource(all_elements["source"])
         elif "destination" in all_elements.keys():
+            _used.add("destination")
             self._host_cfg_name = GameSourceSchema._parseSource(all_elements["destination"])
         else:
             self._host_cfg_name = "UNKNOWN"
@@ -30,22 +33,24 @@ class GameSourceSchema(Schema):
             self._data_host = None
             Logger.Log(f"{name} config's 'source' name ({self._host_cfg_name}) was not found in available source schemas; defaulting to source_schema={self._data_host}", logging.WARN)
         if "database" in all_elements.keys():
+            _used.add("database")
             self._db_name = GameSourceSchema._parseDBName(all_elements["database"])
         else:
             self._db_name = name
             Logger.Log(f"{name} config does not have a 'database' element; defaulting to db_name={self._db_name}", logging.WARN)
         if "table" in all_elements.keys():
+            _used.add("table")
             self._table_name = GameSourceSchema._parseTableName(all_elements["table"])
         else:
             self._table_name = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'table' element; defaulting to table={self._table_name}", logging.WARN)
         if "schema" in all_elements.keys():
+            _used.add("schema")
             self._schema = GameSourceSchema._parseSchema(all_elements["schema"])
         else:
             self._schema = "UNKNOWN"
             Logger.Log(f"{name} config does not have a 'schema' element; defaulting to schema={self._schema}", logging.WARN)
 
-        _used = {"source", "database", "table", "schema"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
         super().__init__(name=name, other_elements=_leftovers)
 
