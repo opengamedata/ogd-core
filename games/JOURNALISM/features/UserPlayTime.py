@@ -26,7 +26,7 @@ class UserPlayTime(SessionFeature):
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
         self._cumulative_play_time : Optional[timedelta] = None 
-        self._cumulative_total_time : Optional[timedelta] = None
+        self._cumulative_active_time : Optional[timedelta] = None
         
 
 
@@ -72,15 +72,15 @@ class UserPlayTime(SessionFeature):
         # Exception handling for empty sessions
         if(not self._cumulative_play_time):
             self._cumulative_play_time = feature._vals[0]
-        if(not self._cumulative_total_time):
-            self._cumulative_total_time = feature._vals[1]
+        if(not self._cumulative_active_time):
+            self._cumulative_active_time = feature._vals[1]
 
         try:
             self._cumulative_play_time  += feature.FeatureValues[0]
-            self._cumulative_total_time += feature.FeatureValues[1]
+            self._cumulative_active_time += feature.FeatureValues[1]
         except:
             self._cumulative_play_time += timedelta(0)
-            self._cumulative_total_time += timedelta(0)
+            self._cumulative_active_time += timedelta(0)
 
         
         
@@ -93,12 +93,12 @@ class UserPlayTime(SessionFeature):
         :rtype: List[Any]
         """
 
-        return [self._cumulative_play_time, self._cumulative_total_time]
+        return [self._cumulative_play_time, self._cumulative_active_time]
 
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["TotalTime"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+        return ["Active"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
