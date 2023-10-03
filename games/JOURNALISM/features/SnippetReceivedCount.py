@@ -22,9 +22,7 @@ class SnippetReceivedCount(SessionFeature):
         super().__init__(params=params)
         choice_type_names = ["BAD", "GOOD", "GREAT"]
         self._quality_counts = {name: 0 for name in choice_type_names}
-
         self._snippet_receive_count : int = 0
-        self._choice_click_count = 0
         
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -52,8 +50,8 @@ class SnippetReceivedCount(SessionFeature):
         :param event: _description_
         :type event: Event
         """
-        self._choice_click_count += 1
-        _quality = event.EventData.get("snippet_quality")
+        self._snippet_receive_count += 1
+        _quality = event.EventData.get("snippet_quality", "QUALITY NOT FOUND").upper()
         if _quality is not None and _quality in self._quality_counts.keys():
             self._quality_counts[_quality] += 1
         return
