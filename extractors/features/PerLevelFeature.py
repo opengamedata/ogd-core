@@ -1,8 +1,10 @@
+import logging
 # import locals
 from extractors.Extractor import ExtractorParameters
 from extractors.features.PerCountFeature import PerCountFeature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
+from utils.Logger import Logger
 
 ## @class PerLevelFeature
 class PerLevelFeature(PerCountFeature):
@@ -37,4 +39,8 @@ class PerLevelFeature(PerCountFeature):
 
     def _validateEventCountIndex(self, event:Event):
     
-        return int(event.GameState['level']) == self.CountIndex
+        _level = int(event.GameState.get('level', -1))
+        if _level > -1:
+            return _level == self.CountIndex
+        else:
+            Logger.Log(f"{self.Name} Per-level feature found event missing level from game_state!", logging.WARN)
