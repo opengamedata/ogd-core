@@ -42,7 +42,7 @@ class SnippetsCollected(PerLevelFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self._snippet_ids]
+        return [self._snippet_ids, self._snippet_quals, self._snippet_types]
 
     # *** Optionally override public functions. ***
 
