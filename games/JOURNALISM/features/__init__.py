@@ -8,6 +8,7 @@ __all__ = [
     "SkillSequenceCount",
     "TotalLevelTime",
     "PlayerAttributes",
+    "FinalAttributes",
     "StoryAlignment",
     "QuitLevel",
     "QuitType",
@@ -50,6 +51,7 @@ from . import MeanSnippetTime
 from . import StoryCompleteTime
 from . import SkillSequenceCount
 from . import TotalLevelTime
+from . import FinalAttributes
 from . import PlayerAttributes
 from . import StoryAlignment
 from . import QuitLevel
