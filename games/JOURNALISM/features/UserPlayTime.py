@@ -98,7 +98,7 @@ class UserPlayTime(SessionFeature):
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["Total Time"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+        return ["TotalTime"] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
     
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
