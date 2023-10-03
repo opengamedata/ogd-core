@@ -23,7 +23,7 @@ class FailureAttributes(PerLevelFeature):
         super().__init__(params=params)
         PerLevelFeature.__init__(self, params=params)
 
-        self._fails : List[Dict[str, int]]
+        self._fails : List[Dict[str, int]] = []
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
