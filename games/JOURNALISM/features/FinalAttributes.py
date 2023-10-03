@@ -1,5 +1,5 @@
 # import libraries
-from os import truncate
+import json
 from extractors.features.PerCountFeature import PerCountFeature
 from schemas import Event
 from typing import Any, Dict, List, Optional
@@ -29,8 +29,9 @@ class FinalAttributes(PerLevelFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         #self._story_alignment = event.EventData["story_alignment"]
-        _default = [None]*len(self._ATTRIBUTE_ENUM)
-        self._last_attribs = dict(zip(self._ATTRIBUTE_ENUM, event.GameState.get("current_stats", _default)))
+        _default = str([None]*len(self._ATTRIBUTE_ENUM))
+        _stats = json.loads(event.GameState.get("current_stats", _default))
+        self._last_attribs = dict(zip(self._ATTRIBUTE_ENUM, _stats))
 
     def _extractFromFeatureData(self, feature:FeatureData):
         #add logic to make sure that MODE is session, not player so we don't get duplicates

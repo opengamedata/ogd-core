@@ -51,7 +51,8 @@ class FailureAttributes(PerLevelFeature):
         :type event: Event
         """
         attribs = ["endurance", "resourceful", "tech", "social", "trust", "research"]
-        self._fails.append(dict(zip(attribs, event.GameState.get("current_stats", [None]*len(attribs)))))
+        stats = json.loads(event.GameState.get("current_stats", str([None]*len(attribs))))
+        self._fails.append(dict(zip(attribs, stats)))
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
