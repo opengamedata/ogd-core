@@ -76,11 +76,11 @@ class UserPlayTime(SessionFeature):
             self._cumulative_total_time = feature._vals[1]
 
         try:
-            self._cumulative_play_time+=feature._vals[0]
-            self._cumulative_total_time+= feature._vals[1]
+            self._cumulative_play_time  += feature.FeatureValues[0]
+            self._cumulative_total_time += feature.FeatureValues[1]
         except:
-            self._cumulative_play_time += 0
-            self._cumulative_total_time += 0
+            self._cumulative_play_time += timedelta(0)
+            self._cumulative_total_time += timedelta(0)
 
         
         
