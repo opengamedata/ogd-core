@@ -42,19 +42,20 @@ class PlayLocations(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         if not event.SessionID in self._seen_sessions:
-            self._seen_sessions.add(event.SessionID)
             # Step 1: calculate local time
             lat_long = self.calculate_coordinates(event=event)
-            local_time = PlayLocations.calculate_local_time_by_coordinates(utc_time=event.Timestamp, latitude=lat_long.get('latitude'), longitude=lat_long.get('longitude'))
+            local_time = PlayLocations.calculate_local_time_by_coordinates(
+            utc_time=event.Timestamp, latitude=lat_long.get('latitude'), longitude=lat_long.get('longitude'))
             # Step 2: check if local time was a school time or not, and add to lists
             self._session_times.append(local_time)
-             # Step 3: Check if local time is on a weekday and between 9 AM and 3 PM
+            # Step 3: Check if local time is on a weekday and between 9 AM and 3 PM
             is_weekday = local_time.weekday() < 5  # Monday to Friday is 0 to 4
             is_school_hours = 9 <= local_time.hour < 15
-            
+                
             in_school = is_weekday and is_school_hours
             self._in_school_sessions.append(in_school)
 
+            
     def _getFeatureValues(self) -> List[Any]:
         # Sessions that started in school
         return [self._in_school_sessions, self._session_times]
@@ -96,6 +97,9 @@ class PlayLocations(SessionFeature):
 
     @staticmethod
     def calculate_local_time_by_coordinates(utc_time, latitude, longitude):
+        if latitude is None or longitude is None:
+            return None    
+        
         tz_finder = TimezoneFinder()
         timezone_str = tz_finder.timezone_at(lng=longitude, lat=latitude)
 
