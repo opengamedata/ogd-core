@@ -12,7 +12,7 @@ class AppVersions(SessionFeature):
     :param SessionFeature: _description_
     :type SessionFeature: _type_
     """
-    def __init__(self, params:ExtractorParameters, session_id:str):
+    def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
         self._versions = set()
 
