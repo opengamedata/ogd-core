@@ -40,7 +40,8 @@ __all__ = [
     "TotalExperimentationTime",
     "UserAvgSessionDuration",
     "UserTotalSessionDuration",
-    "PlayLocations"
+    "PlayLocations",
+    "AppVersions"
 ]
 
 from . import JobTriesInArgument
@@ -85,3 +86,4 @@ from . import TotalExperimentationTime
 from . import UserAvgSessionDuration
 from . import UserTotalSessionDuration
 from . import PlayLocations
+from . import AppVersions
