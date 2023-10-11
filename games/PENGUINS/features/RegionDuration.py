@@ -62,4 +62,12 @@ class RegionDuration(PerRegionFeature):
     def _getFeatureValues(self) -> List[Any]:
         return [self._region_dict]
 
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Extractor
 
+        Base function to give a list of which ExtractionModes an extractor will handle.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.SESSION]
