@@ -21,9 +21,9 @@ class RegionDuration(PerRegionFeature):
         self._region_start_time = None
         self._prev_timestamp = None
         self._time = 0
-        #self._name = None
-        #self._region_name = None
-        #self._region_dict = dict()
+        self._name = None
+        self._region_name = None
+        self._region_dict = dict()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
@@ -45,13 +45,13 @@ class RegionDuration(PerRegionFeature):
         self._prev_timestamp = event.Timestamp
         if event.EventName == "region_enter":
             self._region_start_time = event.Timestamp
-            #self._region_name = event.event_data.get("region")
-            #if not self._region_name in self._region_dict.keys():
-                #self._region_start_time[self._region_name] = timedelta(0)
+            self._region_name = event.event_data.get("region")
+            if not self._region_name in self._region_dict.keys():
+                self._region_start_time[self._region_name] = timedelta(0)
         elif event.EventName == "region_exit":
             if self._region_start_time is not None:
                 self._time += (event.Timestamp - self._region_start_time).total_seconds()
-                #self._region_dict[self._region_name]+=timedelta(seconds=self._time)
+                self._region_dict[self._region_name]+=timedelta(seconds=self._time)
                 self._region_start_time = None
 
         self._prev_timestamp = event.Timestamp
@@ -60,6 +60,6 @@ class RegionDuration(PerRegionFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [timedelta(self._time)]
+        return [self._region_dict]
 
 
