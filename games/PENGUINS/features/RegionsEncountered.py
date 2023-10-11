@@ -12,24 +12,23 @@ from schemas.FeatureData import FeatureData
 
 class RegionsEncountered(SessionFeature):
 
-    def __init__(self, params:ExtractorParameters):
-        super().__init__(params=params)
-        self._scene_name = None
+    def __init__(self, params:ExtractorParameters, region_map:List[Dict[str, Any]]):
+        super().__init__(params=params, region_map = region_map)
+        #self._scene_name = None
         self._cnt_list = list()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return []
+        return ["region_enter"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["region_enter"]
+        return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        self._scene_name = event.EventData.get("region")
-        if self._scene_name not in self._cnt_list:
-            self._cnt_list.append(self._scene_name)
+        self._object_id = event.event_data.get("region")
+        self._cnt_list.append(self._object_id)
 
     def _extractFromFeatureData(self, feature:FeatureData):
         return
