@@ -42,6 +42,7 @@ class PlayLocations(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         if not event.SessionID in self._seen_sessions:
+            self._seen_sessions.add(event.SessionID)
             # Step 1: calculate local time
             lat_long = self.calculate_coordinates(event=event)
             local_time = PlayLocations.calculate_local_time_by_coordinates(
