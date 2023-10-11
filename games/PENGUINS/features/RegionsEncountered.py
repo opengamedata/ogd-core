@@ -12,8 +12,8 @@ from schemas.FeatureData import FeatureData
 
 class RegionsEncountered(SessionFeature):
 
-    def __init__(self, params:ExtractorParameters, region_map:List[Dict[str, Any]]):
-        super().__init__(params=params, region_map = region_map)
+    def __init__(self, params:ExtractorParameters):
+        super().__init__(params=params)
         #self._scene_name = None
         self._cnt_list = list()
 
