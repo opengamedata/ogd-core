@@ -11,18 +11,14 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from extractors.features.SessionFeature import SessionFeature
 
-gaze_dict = {
-    'BigRock00': 0, 'Bridge': 0, 'Bridge2': 0, 'BigRock01': 0, 'River3': 0, 'Inland2': 0, 'Sea4': 0, 'River2': 0,
-    'Inland1': 0, 'Sea5': 0, 'Sea3': 0, 'River5': 0, 'River4': 0, 'Inland5': 0, 'Inland4': 0, 'Inland3': 0,
-    'River1': 0, 'Sea2': 0, 'Sea1': 0
-}
+# gaze_dict = { 'BigRock00': 0, 'Bridge': 0, 'Bridge2': 0, 'BigRock01': 0, 'River3': 0, 'Inland2': 0, 'Sea4': 0, 'River2': 0,'Inland1': 0, 'Sea5': 0, 'Sea3': 0, 'River5': 0, 'River4': 0, 'Inland5': 0, 'Inland4': 0, 'Inland3': 0,'River1': 0, 'Sea2': 0, 'Sea1': 0}
 class GazeCount(SessionFeature):
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
         # self._current_count : int = 0
         self._object_id = None
-        self._gaze_dict = gaze_dict.copy()
+        self._gaze_dict = dict()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
