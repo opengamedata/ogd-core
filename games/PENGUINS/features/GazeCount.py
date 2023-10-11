@@ -31,7 +31,11 @@ class GazeCount(SessionFeature):
 
     def _extractFromEvent(self, event:Event) -> None:
         # self._current_count += 1
+        
         self._object_id = event.event_data.get("object_id")
+        if not self._object_id in self._gaze_dict.keys():
+                self._gaze_dict[self._object_id] = 0
+        
         self._gaze_dict[self._object_id]+=1
         
     def _extractFromFeatureData(self, feature:FeatureData):
