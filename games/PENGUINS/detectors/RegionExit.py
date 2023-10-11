@@ -62,6 +62,7 @@ class RegionExit(Detector):
 
         self._session_id = event.SessionID
         self._last_timestamp = event.Timestamp
+        self._last_index = event.EventSequenceIndex
     
     def _trigger_condition(self) -> bool:
         """_summary_
@@ -90,7 +91,7 @@ class RegionExit(Detector):
         :rtype: List[Any]
         """
         ret_val : Event = DetectorEvent(session_id=self._session_id, app_id="PENGUINS", timestamp=self._last_timestamp,
-                                        event_name="region_exit", event_data={"region":self._old_region})
+                                        event_name="region_exit", event_data={"region":self._old_region}, event_sequence_index=self._last_index)
         # >>> use state variables to generate the detector's event. <<<
         # >>> definitely don't return all these "Not Implemented" things, unless you really find that useful... <<<
         #
@@ -111,6 +112,7 @@ class RegionExit(Detector):
         self._new_region = "N/A"
         self._session_id = "N/A"
         self._last_timestamp = datetime(2020,1,1)
+        self._last_index = 0
         # >>> create/initialize any variables to track detector state <<<
         #
         # e.g. To track whether detector found a click event yet:
