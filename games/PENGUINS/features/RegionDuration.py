@@ -60,6 +60,6 @@ class RegionDuration(PerRegionFeature):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [timedelta(seconds=self._time)]
+        return [timedelta(self._time)]
 
 
