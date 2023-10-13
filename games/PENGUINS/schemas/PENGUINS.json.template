@@ -562,6 +562,12 @@
                 "description": "The activities completed in a given session.",
                 "return_type": "int"
             },
+            "ActivityDuration": {
+                "type": "ActivityDuration",
+                "enabled": true,
+                "description": "How long activity last for.",
+                "return_type": "int"
+            },
             "RegionsEncountered": {
                 "type": "RegionsEncountered",
                 "enabled": true,
