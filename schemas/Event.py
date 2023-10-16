@@ -143,56 +143,157 @@ class Event:
 
     @property
     def SessionID(self) -> str:
+        """The Session ID of the session that generated the Event
+
+        Generally, this will be a numeric string.
+        Every session ID is unique (with high probability) from all other sessions.
+
+        :return: The Session ID of the session that generated the Event
+        :rtype: str
+        """
         return self.session_id
 
     @property
     def AppID(self) -> str:
+        """The Application ID of the game that generated the Event
+
+        Generally, this will be the game's name, or some abbreviation of the name.
+
+        :return: The Application ID of the game that generated the Event
+        :rtype: str
+        """
         return self.app_id
 
     @property
     def Timestamp(self) -> datetime:
+        """A UTC timestamp of the moment at which the game client sent the Event
+
+        The timestamp is based on the GMT timezone, in keeping with UTC standards.
+        Some legacy games may provide the time based on a local time zone, rather than GMT.
+
+        :return: A UTC timestamp of the moment at which the game client sent the event
+        :rtype: datetime
+        """
         return self.timestamp
 
     @property
+    def TimeOffset(self) -> Optional[timedelta]:
+        """A timedelta for the offset from GMT to the local time zone of the game client that sent the Event
+
+        Some legacy games do not include an offset, and instead log the Timestamp based on the local time zone.
+
+        :return: A timedelta for the offset from GMT to the local time zone of the game client that sent the Event
+        :rtype: Optional[timedelta]
+        """
+        return self.time_offset
+
+    @property
     def EventName(self) -> str:
+        """The name of the specific type of event that occurred
+
+        For some legacy games, the names in this column have a format of CUSTOM.1, CUSTOM.2, etc.
+        For these games, the actual human-readable event names for these events are stored in the EventData column.
+        Please see individual game logging documentation for details.
+
+        :return: The name of the specific type of event that occurred
+        :rtype: str
+        """
         return self.event_name
 
     @property
     def EventData(self) -> utils.map:
+        """A dictionary containing data specific to Events of this type.
+
+        For details, see the documentation in the given game's README.md, included with all datasets.
+        Alternately, review the {GAME_NAME}.json file for the given game.
+
+        :return: A dictionary containing data specific to Events of this type
+        :rtype: Dict[str, Any]
+        """
         return self.event_data
 
     @property
     def EventSource(self) -> EventSource:
+        """An enum indicating whether the event was generated directly by the game, or calculated by a post-hoc detector.
+
+        :return: An enum indicating whether the event was generated directly by the game, or calculated by a post-hoc detector
+        :rtype: EventSource
+        """
         return self.event_source
 
     @property
     def AppVersion(self) -> str:
+        """The semantic versioning string for the game that generated this Event.
+
+        Some legacy games may use a single integer or a string similar to AppID in this column.
+
+        :return: The semantic versioning string for the game that generated this Event
+        :rtype: str
+        """
         return self.app_version
 
     @property
     def AppBranch(self) -> str:
+        """The name of the branch of a game version that generated this Event.
+
+        The branch name is typically used for cases where multiple experimental versions of a game are deployed in parallel;
+        most events will simply have a branch of "main" or "master."
+
+        :return: The name of the branch of a game version that generated this Event
+        :rtype: str
+        """
         return self.app_branch
 
     @property
     def LogVersion(self) -> str:
+        """The version of the logging schema implemented in the game that generated the Event
+
+        For most games, this is a single integer; however, semantic versioning is valid for this column as well.
+
+        :return: The version of the logging schema implemented in the game that generated the Event
+        :rtype: str
+        """
         return self.log_version
 
     @property
-    def TimeOffset(self) -> Optional[timedelta]:
-        return self.time_offset
-
-    @property
     def UserID(self) -> Optional[str]:
+        """A persistent ID for a given user, identifying the individual across multiple gameplay sessions
+
+        This identifier is only included by games with a mechanism for individuals to resume play in a new session.
+
+        :return: A persistent ID for a given user, identifying the individual across multiple gameplay sessions
+        :rtype: Optional[str]
+        """
         return self.user_id
 
     @property
     def UserData(self) -> utils.map:
+        """A dictionary containing any user-specific data tracked across gameplay sessions or individual games.
+
+        :return: A dictionary containing any user-specific data tracked across gameplay sessions or individual games
+        :rtype: Dict[str, Any]
+        """
         return self.user_data
 
     @property
     def GameState(self) -> utils.map:
+        """A dictionary containing any game-specific data that is defined across all event types in the given game.
+
+        This column typically includes data that offers context to a given Event's data in the EventData column.
+        For example, this column would typically include a level number or quest name for whatever level/quest the user was playing when the Event occurred.
+
+        :return: A dictionary containing any game-specific data that is defined across all event types in the given game
+        :rtype: Dict[str, Any]
+        """
         return self.game_state
 
     @property
-    def EventSequenceIndex(self) -> int:
+    def EventSequenceIndex(self) -> Optional[int]:
+        """A strictly-increasing counter indicating the order of events in a session.
+
+        The first event in a session has EventSequenceIndex == 0, the next has index == 1, etc.
+
+        :return: A strictly-increasing counter indicating the order of events in a session
+        :rtype: int
+        """
         return self.event_sequence_index

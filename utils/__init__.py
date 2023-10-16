@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # __all__ = [
 #     "Logger",
 # 		"Readme",
@@ -7,3 +8,5 @@
 # from . import Logger
 # from . import Readme
 # from . import utils
+=======
+>>>>>>> master

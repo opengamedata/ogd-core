@@ -269,8 +269,8 @@ class MySQLInterface(EventInterface):
 
             sess_id_col  : str = self._EventTableSchema.SessionIDColumn or "session_id"
 
-            filters = []
-            params  = []
+            filters : List[str] = []
+            params  : List[str] = []
             if _table_name != self._game_id:
                 filters.append(f"`app_id`=%s")
                 params.append(self._game_id)
@@ -308,7 +308,7 @@ class MySQLInterface(EventInterface):
             Logger.Log(f"Could not get full date range, MySQL connection is not open or config was not for MySQL.", logging.WARN)
         return ret_val
 
-    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None, exclude_rows:Optional[List[str]]=None) -> List[Tuple]:
         ret_val = []
         # grab data for the given session range. Sort by event time, so
         if self._db_cursor is not None and isinstance(self._config.DataHost, MySQLSchema):
@@ -316,9 +316,10 @@ class MySQLInterface(EventInterface):
             _db_name     : str = self._config.DatabaseName
             _table_name  : str = self._config.TableName
 
-            sess_id_col = self._EventTableSchema.SessionIDColumn or 'session_id'
-            play_id_col = self._EventTableSchema.UserIDColumn or 'player_id'
-            seq_idx_col = self._EventTableSchema.EventSequenceIndexColumn or 'session_n'
+            sess_id_col = self._TableSchema.SessionIDColumn or 'session_id'
+            play_id_col = self._TableSchema.UserIDColumn or 'player_id'
+            seq_idx_col = self._TableSchema.EventSequenceIndexColumn or 'session_n'
+            evt_nam_col = self._TableSchema.EventNameColumn or "event_name"
 
             filters = []
             params = []
@@ -336,6 +337,10 @@ class MySQLInterface(EventInterface):
                 params += [str(id) for id in id_list]
             else:
                 raise ValueError("Invalid IDMode in MySQLInterface!")
+            if exclude_rows is not None:
+                evt_name_param_string = ",".join( ["%s"]*len(exclude_rows) )
+                filters.append(f"`{evt_nam_col}` not in ({evt_name_param_string})")
+                params += [str(name) for name in exclude_rows]
             filter_clause = " AND ".join(filters)
 
             data = SQL.SELECT(cursor=self._db_cursor, db_name=_db_name,                        table=_table_name,

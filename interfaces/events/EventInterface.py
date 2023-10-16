@@ -26,7 +26,7 @@ class EventInterface(Interface):
         pass
 
     @abc.abstractmethod
-    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None, exclude_rows:Optional[List[str]] = None) -> List[Tuple]:
         pass
 
     @abc.abstractmethod
@@ -68,14 +68,14 @@ class EventInterface(Interface):
             Logger.Log(f"Could not get full date range, the source interface is not open!", logging.WARNING, depth=3)
         return ret_val
 
-    def EventsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Optional[List[Event]]:
+    def EventsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None, exclude_rows:Optional[List[str]]=None) -> Optional[List[Event]]:
         ret_val = None
 
         _curr_sess : str      = ""
         _evt_sess_index : int = 1
         if self.IsOpen():
             Logger.Log(f"Retrieving rows from IDs with {id_mode.name} ID mode.", logging.DEBUG, depth=3)
-            _rows   = self._rowsFromIDs(id_list=id_list, id_mode=id_mode, versions=versions)
+            _rows   = self._rowsFromIDs(id_list=id_list, id_mode=id_mode, versions=versions, exclude_rows=exclude_rows)
             _fallbacks = {"app_id":self._game_id}
             ret_val = []
             for row in _rows:

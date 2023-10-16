@@ -338,7 +338,7 @@ args : Namespace = parser.parse_args()
 
 success : bool
 if args is not None:
-    cmd = args.command.lower()
+    cmd = (args.command or "help").lower()
     game_id = args.game.upper()
     if cmd == "export":
         success = RunExport(game_id=game_id, config=config, with_events=True, with_features=True)
