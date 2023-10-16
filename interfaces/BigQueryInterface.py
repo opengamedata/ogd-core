@@ -70,11 +70,11 @@ class BigQueryInterface(DataInterface):
         data = list(self._client.query(query))
         return {'min':data[0][0], 'max':data[0][1]}
 
-    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None, exclude_rows:Optional[List[str]]=None) -> List[Tuple]:
         # 2) Set up clauses to select based on Session ID or Player ID.
         events = None
         if self._client != None:
-            query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode)
+            query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode, exclude_rows=exclude_rows)
             Logger.Log(f"Running query for rows from IDs:\n{query}", logging.DEBUG, depth=3)
             data = self._client.query(query)
             events = []
@@ -197,7 +197,7 @@ class BigQueryInterface(DataInterface):
 
     # *** PRIVATE METHODS ***
 
-    def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode) -> str:
+    def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode, exclude_rows:Optional[List[str]]=None) -> str:
         id_clause : str = ""
         id_string = ','.join([f"'{x}'" for x in id_list])
         if id_mode == IDMode.SESSION:
@@ -209,6 +209,8 @@ class BigQueryInterface(DataInterface):
             id_clause = f"session_id IN ({id_string})"
         # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
         where_clause = f" WHERE {id_clause}"
+        if exclude_rows is not None:
+            where_clause += f" AND event_name not in ({exclude_rows})"
 
         # 4) Set up actual query
         # TODO Order by user_id, and by timestamp within that.
