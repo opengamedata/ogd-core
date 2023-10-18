@@ -21,7 +21,7 @@
     },
 
     "events": {
-        "start_level": {
+        "start_game": {
             "description": "Generally not exported by Al",
             "event_data": {
                 "gameName": {
