@@ -6,7 +6,7 @@
 
     "events": {
         "region": {
-            "description": "TODO",
+            "description": "(code=1500), TODO",
             "event_data": {
                 "city": {
                     "type": "str",
@@ -27,7 +27,7 @@
             }
         },
         "welcome": {
-            "description": "It only happens the first time the game runs",
+            "description": "(code=4500), It only happens the first time the game runs",
             "event_data": {
                 "agreed": {
                     "type": "?bool?",
@@ -44,7 +44,7 @@
             }
         },
         "general_level_stats": {
-            "description": "TODO",
+            "description": "(code=5500), TODO",
             "event_data": {
                 "right": {
                     "type": "?int?",
@@ -61,7 +61,7 @@
             }
         },
         "general_game_stats": {
-            "description": "TODO",
+            "description": "(code=5501), TODO",
             "event_data": {
                 "right": {
                     "type": "?int?",
@@ -78,7 +78,7 @@
             }
         },
         "general_level_times": {
-            "description": "TODO",
+            "description": "(code=5502), TODO",
             "event_data": {
                 "playTime": {
                     "type": "?timedelta?",
@@ -99,7 +99,7 @@
             }
         },
         "general_game_times": {
-            "description": "TODO",
+            "description": "(code=5503), TODO",
             "event_data": {
                 "playTime": {
                     "type": "?timedelta?",
@@ -120,7 +120,7 @@
             }
         },
         "general_game_levels": {
-            "description": "TODO",
+            "description": "(code=5504), TODO",
             "event_data": {
                 "startLevel": {
                     "type": "?str?",
