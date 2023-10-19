@@ -5,6 +5,137 @@
     },
 
     "events": {
+        "region": {
+            "description": "TODO",
+            "event_data": {
+                "city": {
+                    "type": "str",
+                    "description": "TODO"
+                },
+                "region": {
+                    "type": "str",
+                    "description": "TODO"
+                },
+                "country": {
+                    "type": "str",
+                    "description": "TODO"
+                },
+                "zipCode": {
+                    "type": "int",
+                    "description": "TODO"
+                }
+            }
+        },
+        "welcome": {
+            "description": "It only happens the first time the game runs",
+            "event_data": {
+                "agreed": {
+                    "type": "bool",
+                    "description": "TODO"
+                },
+                "age": {
+                    "type": "int",
+                    "description": "TODO"
+                },
+                "deviceType": {
+                    "type": "str",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_level_stats": {
+            "description": "TODO",
+            "event_data": {
+                "right": {
+                    "type": "int",
+                    "description": "TODO"
+                },
+                "wrong": {
+                    "type": "int",
+                    "description": "TODO"
+                },
+                "missed": {
+                    "type": "int",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_game_stats": {
+            "description": "TODO",
+            "event_data": {
+                "right": {
+                    "type": "int",
+                    "description": "TODO"
+                },
+                "wrong": {
+                    "type": "int",
+                    "description": "TODO"
+                },
+                "missed": {
+                    "type": "int",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_level_times": {
+            "description": "TODO",
+            "event_data": {
+                "playTime": {
+                    "type": "timedelta",
+                    "description": "TODO"
+                },
+                "gameTime": {
+                    "type": "timedelta",
+                    "description": "TODO"
+                },
+                "averageTimeRight": {
+                    "type": "timedelta",
+                    "description": "TODO"
+                },
+                "averageTimeWrong": {
+                    "type": "timedelta",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_game_times": {
+            "description": "TODO",
+            "event_data": {
+                "playTime": {
+                    "type": "timedelta",
+                    "description": "TODO"
+                },
+                "gameTime": {
+                    "type": "timedelta",
+                    "description": "TODO"
+                },
+                "averageTimeRight": {
+                    "type": "timedelta",
+                    "description": "TODO"
+                },
+                "averageTimeWrong": {
+                    "type": "timedelta",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_game_levels": {
+            "description": "TODO",
+            "event_data": {
+                "startLevel": {
+                    "type": "str",
+                    "description": "TODO"
+                },
+                "endLevel": {
+                    "type": "str",
+                    "description": "TODO"
+                },
+                "highestLevel": {
+                    "type": "str",
+                    "description": "TODO"
+                }
+            }
+        }
     },
 
     "features": {
