@@ -153,7 +153,7 @@
             }
         },
         "start_game": {
-            "description": "Generally not exported by Al",
+            "description": "(code=1001), Generally not exported by Al",
             "event_data": {
                 "gameName": {
                     "type": "str",
@@ -162,7 +162,7 @@
             }
         },
         "gamescribe_created": {
-            "description": "Generally not exported by Al",
+            "description": "(code=1002), Generally not exported by Al",
             "event_data": {
                 "gamescribeMode": {
                     "type": "enum(trace, strict)",
@@ -171,7 +171,7 @@
             }
         },
         "settings": {
-            "description": "TODO",
+            "description": "(code=2001), TODO",
             "event_data": {
                 "playTime": {
                     "type": "?int?",
@@ -180,7 +180,7 @@
             }
         },
         "survey_graphics_version": {
-            "description": "TODO",
+            "description": "(code=2050), TODO",
             "event_data": {
                 "difficulty": {
                     "type": "str",
@@ -193,12 +193,12 @@
             }
         },
         "main_menu_shown": {
-            "description": "TODO",
+            "description": "(code=3001), TODO",
             "event_data": {
             }
         },
         "level_menu_shown": {
-            "description": "This will never be jotted for Fall 2018, because we're not using the level menu",
+            "description": "(code=3002), This will never be jotted for Fall 2018, because we're not using the level menu",
             "event_data": {
                 "passedLevel": {
                     "type": "bool",
@@ -215,17 +215,17 @@
             }
         },
         "level_start": {
-            "description": "Called once the level starts, tutorial not included",
+            "description": "(code=3003), Called once the level starts, tutorial not included",
             "event_data": {
             }
         },
         "tutorial_start": {
-            "description": "gameTime for when the instructions began",
+            "description": "(code=3004), gameTime for when the instructions began",
             "event_data": {
             }
         },
         "change_of_rule": {
-            "description": "Jots when exactly the new instruction screen comes up",
+            "description": "(code=3005), Jots when exactly the new instruction screen comes up",
             "event_data": {
                 "waveType": {
                     "type": "str",
@@ -238,7 +238,7 @@
             }
         },
         "wave_start": {
-            "description": "Called every time a new wave of aliens starts (could be at the beginning of the level or after a rule change)",
+            "description": "(code=3006), Called every time a new wave of aliens starts (could be at the beginning of the level or after a rule change)",
             "event_data": {
                 "waveType": {
                     "type": "str",
@@ -247,7 +247,7 @@
             }
         },
         "starting_food": {
-            "description": "TODO",
+            "description": "(code=3007), TODO",
             "event_data": {
                 "activeFood": {
                     "type": "str",
@@ -256,7 +256,7 @@
             }
         },
         "alien_spawn": {
-            "description": "TODO",
+            "description": "(code=3008), TODO",
             "event_data": {
                 "alienID": {
                     "type": "int",
@@ -277,7 +277,7 @@
             }
         },
         "alien_info": {
-            "description": "TODO",
+            "description": "(code=3009), TODO",
             "event_data": {
                 "alienID": {
                     "type": "int",
@@ -302,7 +302,7 @@
             }
         },
         "summary_screen": {
-            "description": "TODO, gamescribe code 3050",
+            "description": "(code=3050), TODO",
             "event_data": {
                 "levelPoints": {
                     "type": "int",
@@ -323,7 +323,7 @@
             }
         },
         "leaderboard_shown": {
-            "description": "TODO, gamescribe code 3051",
+            "description": "(code=3051), TODO",
             "event_data": {
                 "totalPoints": {
                     "type": "int",
@@ -344,7 +344,7 @@
             }
         },
         "survey_shown": {
-            "description": "TODO",
+            "description": "(code=3052), TODO",
             "event_data": {
                 "surveyType": {
                     "type": "str",
@@ -353,7 +353,7 @@
             }
         },
         "food_switch": {
-            "description": "TODO",
+            "description": "(code=4001), TODO",
             "event_data": {
                 "previousFood": {
                     "type": "str",
@@ -366,7 +366,7 @@
             }
         },
         "alien_shot": {
-            "description": "TODO",
+            "description": "(code=4002), TODO",
             "event_data": {
                 "alienID": {
                     "type": "int",
@@ -383,7 +383,7 @@
             }
         },
         "alien_hit_type_speed": {
-            "description": "TODO",
+            "description": "(code=4003), TODO",
             "event_data": {
                 "alienID": {
                     "type": "int",
@@ -408,7 +408,7 @@
             }
         },
         "alien_hit_reaction_times": {
-            "description": "TODO",
+            "description": "(code=4004), TODO",
             "event_data": {
                 "alienID": {
                     "type": "int",
@@ -429,7 +429,7 @@
             }
         },
         "alien_hit_pos_time": {
-            "description": "TODO",
+            "description": "(code=4005), TODO",
             "event_data": {
                 "alienID": {
                     "type": "int",
@@ -450,7 +450,7 @@
             }
         },
         "alien_hit_score": {
-            "description": "TODO",
+            "description": "(code=4006), TODO",
             "event_data": {
                 "alienID": {
                     "type": "str",
@@ -471,12 +471,12 @@
             }
         },
         "leaderboard_closed": {
-            "description": "As soon as they closed the leaderboard",
+            "description": "(code=4050), As soon as they closed the leaderboard",
             "event_data": {
             }
         },
         "survey_option_selection": {
-            "description": "TODO",
+            "description": "(code=4051), TODO",
             "event_data": {
                 "surveyType": {
                     "type": "str",
@@ -489,7 +489,7 @@
             }
         },
         "survey_submission": {
-            "description": "TODO",
+            "description": "(code=4052), TODO",
             "event_data": {
                 "surveyType": {
                     "type": "str",
@@ -502,7 +502,7 @@
             }
         },
         "micro_adaptation": {
-            "description": "TODO",
+            "description": "(code=5001), TODO",
             "event_data": {
                 "difficulty": {
                     "type": "int",
@@ -515,7 +515,7 @@
             }
         },
         "macro_adaptation": {
-            "description": "TODO",
+            "description": "(code=5050), TODO",
             "event_data": {
                 "difficulty": {
                     "type": "enum(Easy, Normal, Hard)",
