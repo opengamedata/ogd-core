@@ -46,7 +46,7 @@
             "description": "It only happens the first time the game runs",
             "event_data": {
                 "agreed": {
-                    "type": "bool",
+                    "type": "?bool?",
                     "description": "TODO"
                 },
                 "age": {
@@ -54,7 +54,7 @@
                     "description": "TODO"
                 },
                 "deviceType": {
-                    "type": "str",
+                    "type": "?str?",
                     "description": "TODO"
                 }
             }
@@ -63,15 +63,15 @@
             "description": "TODO",
             "event_data": {
                 "right": {
-                    "type": "int",
+                    "type": "?int?",
                     "description": "TODO"
                 },
                 "wrong": {
-                    "type": "int",
+                    "type": "?int?",
                     "description": "TODO"
                 },
                 "missed": {
-                    "type": "int",
+                    "type": "?int?",
                     "description": "TODO"
                 }
             }
@@ -80,15 +80,15 @@
             "description": "TODO",
             "event_data": {
                 "right": {
-                    "type": "int",
+                    "type": "?int?",
                     "description": "TODO"
                 },
                 "wrong": {
-                    "type": "int",
+                    "type": "?int?",
                     "description": "TODO"
                 },
                 "missed": {
-                    "type": "int",
+                    "type": "?int?",
                     "description": "TODO"
                 }
             }
@@ -97,19 +97,19 @@
             "description": "TODO",
             "event_data": {
                 "playTime": {
-                    "type": "timedelta",
+                    "type": "?timedelta?",
                     "description": "TODO"
                 },
                 "gameTime": {
-                    "type": "timedelta",
+                    "type": "?timedelta?",
                     "description": "TODO"
                 },
                 "averageTimeRight": {
-                    "type": "timedelta",
+                    "type": "?timedelta?",
                     "description": "TODO"
                 },
                 "averageTimeWrong": {
-                    "type": "timedelta",
+                    "type": "?timedelta?",
                     "description": "TODO"
                 }
             }
@@ -118,19 +118,19 @@
             "description": "TODO",
             "event_data": {
                 "playTime": {
-                    "type": "timedelta",
+                    "type": "?timedelta?",
                     "description": "TODO"
                 },
                 "gameTime": {
-                    "type": "timedelta",
+                    "type": "?timedelta?",
                     "description": "TODO"
                 },
                 "averageTimeRight": {
-                    "type": "timedelta",
+                    "type": "?timedelta?",
                     "description": "TODO"
                 },
                 "averageTimeWrong": {
-                    "type": "timedelta",
+                    "type": "?timedelta?",
                     "description": "TODO"
                 }
             }
@@ -139,15 +139,15 @@
             "description": "TODO",
             "event_data": {
                 "startLevel": {
-                    "type": "str",
+                    "type": "?str?",
                     "description": "TODO"
                 },
                 "endLevel": {
-                    "type": "str",
+                    "type": "?str?",
                     "description": "TODO"
                 },
                 "highestLevel": {
-                    "type": "str",
+                    "type": "?str?",
                     "description": "TODO"
                 }
             }
