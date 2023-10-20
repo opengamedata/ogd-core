@@ -24,7 +24,7 @@ class SnowBallDuration(SessionFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["enter_region", "push_snowball"]
+        return ["push_snowball"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -38,9 +38,6 @@ class SnowBallDuration(SessionFeature):
                 self._time += (self._prev_timestamp - self._argument_start_time).total_seconds()
                 self._argument_start_time = event.Timestamp
 
-        if event.EventName == "enter_region":
-            if event.event_data.get("region_name") == "SnowballBowling":
-                self._argument_start_time = event.Timestamp
         elif event.EventName == "push_snowball" and self._argument_start_time is not None:
             self._time = (event.Timestamp - self._argument_start_time).total_seconds()
             self._argument_start_time = None

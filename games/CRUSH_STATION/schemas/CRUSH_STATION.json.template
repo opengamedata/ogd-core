@@ -137,7 +137,7 @@
             }
         },
         "start_game": {
-            "description": "(code=1001), Generally not exported by Al",
+            "description": "Generally not exported by Al",
             "event_data": {
                 "gameName": {
                     "type": "str",
@@ -146,7 +146,7 @@
             }
         },
         "gamescribe_created": {
-            "description": "(code=1002), Generally not exported by Al",
+            "description": "Generally not exported by Al",
             "event_data": {
                 "gamescribeMode": {
                     "type": "enum(trace, strict)",
@@ -190,58 +190,91 @@
             "event_data": {
             }
         },
-        "tutorial_slide": {
-            "description": "gameTime for when the instructions began",
-            "event_data": {
-                "slideNumber": {
-                    "type": "int",
-                    "description": "TODO"
-                },
-                "moleInstructions": {
-                    "type": "?str?",
-                    "description": "TODO"
-                }
-            }
-        },
-        "mole_appears": {
+        "bubble_shown": {
             "description": "TODO",
             "event_data": {
                 "id": {
-                    "type": "int",
-                    "description": "Number representing the order in which the avocado appeared, ranges from (1 - a number determined by level designer)."
-                },
-                "posX": {
-                    "type": "float",
-                    "description": "X position where avocado was spawned, 0,0 is lower left corner"
-                },
-                "posY": {
-                    "type": "float",
-                    "description": "Y position where avocado was spawned, 0,0 is lower left corner."
-                },
-                "moleType": {
-                    "type": "enum(REGULAR, SPIKE_HAT, HARD_HAT, ELECTRIC_HAT)",
-                    "description": "Regular, spike hat, hard hat, electric hat"
-                }
-            }
-        },
-        "mole_disappears": {
-            "description": "TODO",
-            "event_data": {
-                "id": {
-                    "type": "int",
-                    "description": "Number representing the order in which the avocado appeared, ranges from (1 - a number determined by level designer)."
-                },
-                "hitType": {
-                    "type": "enum(CORRECT_HIT, WRONG_HIT, CORRECT_MISSED, WRONG_MISSED)",
-                    "description": "Label for CORRECT_HIT, WRONG_HIT, CORRECT_MISSED, WRONG_MISSED if action is correct vs wrong"
-                },
-                "reactionTime": {
-                    "type": "?timedelta?",
-                    "description": "Time between when the ... appears onscreen, vs when the player crushes the avocado"
-                },
-                "score": {
                     "type": "?int?",
-                    "description": "Points received for that avocado"
+                    "description": "TODO"
+                }
+            }
+        },
+        "bubble_hidden": {
+            "description": "TODO",
+            "event_data": {
+                "id": {
+                    "type": "?int?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "bubble_active": {
+            "description": "TODO",
+            "event_data": {
+                "id": {
+                    "type": "?int?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "bubble_chosen": {
+            "description": "Called every time a bubble UI is unfolded",
+            "event_data": {
+                "id": {
+                    "type": "?int?",
+                    "description": "id of the bubble whose UI has been unfolded"
+                },
+                "bubblesArray": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "color": "enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE)",
+                        "shape": "enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER)",
+                        "id": "int"
+                    },
+                    "description": "A list of bubbles"
+                }
+            }
+        },
+        "color_animal_selection": {
+            "description": "(All the choices a player makes, even before bubble has been submitted)",
+            "event_data": {
+                "id": {
+                    "type": "?int?",
+                    "description": "TODO"
+                },
+                "color": {
+                    "type": "enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE)",
+                    "description": "TODO"
+                },
+                "shape": {
+                    "type": "enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER)",
+                    "description": "TODO"
+                }
+            }
+        },
+        "bubble_done": {
+            "description": "Called every time a bubble UI is unfolded",
+            "event_data": {
+                "id": {
+                    "type": "?int?",
+                    "description": "TODO"
+                },
+                "color": {
+                    "type": "enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE)",
+                    "description": "TODO"
+                },
+                "shape": {
+                    "type": "enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER)",
+                    "description": "TODO"
+                },
+                "bubblesArray": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "color": "enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE)",
+                        "shape": "enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER)",
+                        "id": "int"
+                    },
+                    "description": "TODO"
                 }
             }
         },
@@ -290,42 +323,6 @@
         "leaderboard_closed": {
             "description": "TODO",
             "event_data": {
-            }
-        },
-        "motivational_agent": {
-            "description": "Triggered when the motivational agent is shown in the screen",
-            "event_data": {
-                "message": {
-                    "type": "str",
-                    "description": "TODO"
-                },
-                "type": {
-                    "type": "int",
-                    "description": "Category of game message shown (0 - acknowledgement, 1 - encouragement)"
-                }
-            }
-        },
-        "next_level_summary": {
-            "description": "Triggered when the next button from the summary screen is clicked (indicates when exiting the current level)",
-            "event_data": {
-            }
-        },
-        "level_clicked": {
-            "description": "Triggered when a level in the levels menu is clicked",
-            "event_data": {
-                "level": {
-                    "type": "?int?",
-                    "description": "TODO"
-                }
-            }
-        },
-        "pre_level_screen": {
-            "description": "Triggered when the screen containing the information about the level is shown (right when a level starts, before the tutorial and level itself)",
-            "event_data": {
-                "level": {
-                    "type": "?int?",
-                    "description": "TODO"
-                }
             }
         }
     },

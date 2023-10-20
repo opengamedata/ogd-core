@@ -287,7 +287,7 @@ args : Namespace = parser.parse_args()
 
 success : bool
 if args is not None:
-    cmd = args.command.lower()
+    cmd = (args.command or "help").lower()
     if cmd == "export":
         success = RunExport(config=config, with_events=True, with_features=True)
     elif cmd == "export-events":
