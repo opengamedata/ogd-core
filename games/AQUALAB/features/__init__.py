@@ -1,4 +1,5 @@
 __all__ = [
+    "AppVersions",
     "JobTriesInArgument",
     "TankRulesCount",
     "ModelExportCount",
@@ -46,6 +47,7 @@ __all__ = [
     "UserTotalSessionDuration"
 ]
 
+from . import AppVersions
 from . import JobTriesInArgument
 from . import TankRulesCount
 from . import UserAvgActiveTime
