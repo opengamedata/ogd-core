@@ -137,7 +137,7 @@
             }
         },
         "start_game": {
-            "description": "Generally not exported by Al",
+            "description": "(code=1001), Generally not exported by Al",
             "event_data": {
                 "gameName": {
                     "type": "str",
@@ -146,7 +146,7 @@
             }
         },
         "gamescribe_created": {
-            "description": "Generally not exported by Al",
+            "description": "(code=1002), Generally not exported by Al",
             "event_data": {
                 "gamescribeMode": {
                     "type": "enum(trace, strict)",
