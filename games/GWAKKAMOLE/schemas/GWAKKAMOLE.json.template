@@ -2,6 +2,22 @@
     "level_range": { "min":0, "max":3 },
 
     "game_state" : {
+        "gameLevel" : {
+            "type" : "str",
+            "description" : "The name of the level in which the event occurred."
+        },
+        "gameTime" : {
+            "type" : "int",
+            "description" : "The number of ?seconds? ?milliseconds? the player had spent in the game when the event occured."
+        },
+        "logID" : {
+            "type" : "float",
+            "description" : "TODO"
+        },
+        "jotID" : {
+            "type" : "float",
+            "description" : "TODO"
+        }
     },
 
     "events": {
@@ -158,7 +174,7 @@
             "description": "(code=2001), TODO",
             "event_data": {
                 "playTime": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "Amount of active play time research intended for players, as set in DREAM. Not counting instruction screens."
                 }
             }
