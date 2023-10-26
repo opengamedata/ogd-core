@@ -491,7 +491,7 @@
                     "description": "ID defining the selected option (1, 2, 3, 4, 5)"
                 },
                 "optionText": {
-                    "type": "int",
+                    "type": "str",
                     "description": "The actual text content of the survey item selected"
                 }
             }
@@ -508,7 +508,7 @@
                     "description": "ID defining the submitted option (1, 2, 3, 4, 5)"
                 },
                 "optionText": {
-                    "type": "int",
+                    "type": "str",
                     "description": "The actual text content of the survey item selected"
                 }
             }
