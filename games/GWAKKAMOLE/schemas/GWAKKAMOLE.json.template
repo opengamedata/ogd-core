@@ -214,7 +214,7 @@
                     "description": "TODO"
                 },
                 "moleInstructions": {
-                    "type": "?str?",
+                    "type": "enum(NORMAL_MOLE, HAT_MOLE, BOMB_MOLE, NORMAL_AND_SPIKE_MOLE)",
                     "description": "TODO"
                 }
             }
