@@ -51,11 +51,11 @@ class BQFirebaseInterface(BigQueryInterface):
         data = list(self._client.query(query))
         return {'min':data[0][0], 'max':data[0][1]}
 
-    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None, exclude_rows:Optional[List[str]]=None) -> List[Tuple]:
         # 2) Set up clauses to select based on Session ID or Player ID.
         events = None
         if self._client != None:
-            query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode)
+            query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode, exclude_rows=exclude_rows)
             Logger.Log(f"BQ-Firebase: Running query for rows from IDs:\n{query}", logging.DEBUG, depth=3)
             data = self._client.query(query)
             events = []
@@ -148,7 +148,7 @@ class BQFirebaseInterface(BigQueryInterface):
 
     # *** PRIVATE METHODS ***
 
-    def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode) -> str:
+    def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode, exclude_rows:Optional[List[str]]=None) -> str:
         session_clause : str = ""
         player_clause  : str = ""
         if id_mode == IDMode.SESSION:
