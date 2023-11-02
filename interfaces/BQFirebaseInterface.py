@@ -175,8 +175,8 @@ class BQFirebaseInterface(BigQueryInterface):
             where_clause = \
             f"""WHERE param_app_version.key = 'app_version'
                 AND   param_log_version.key = 'log_version'
-                {session_clause}
-                {player_clause}"""
+                AND   {session_clause}
+                AND   {player_clause}"""
         # 4) Set up actual query
         query = ""
         if self._game_id == "SHIPWRECKS":
@@ -187,7 +187,7 @@ class BQFirebaseInterface(BigQueryInterface):
                 FROM `{self.DBPath()}`
                 CROSS JOIN UNNEST(event_params) AS param_session
                 WHERE param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})
-                ORDER BY `session_id`, `timestamp` ASC
+                ORDER BY `session_id`, `timestamp` ASC;
             """
         else:
             # TODO Order by user_id, and by timestamp within that.
@@ -207,6 +207,6 @@ class BQFirebaseInterface(BigQueryInterface):
                 CROSS JOIN UNNEST(event_params) AS param_session
                 CROSS JOIN UNNEST(event_params) AS param_user
                 {where_clause}
-                ORDER BY `fd_user_id`, `timestamp` ASC
+                ORDER BY `fd_user_id`, `timestamp` ASC;
             """
         return query
