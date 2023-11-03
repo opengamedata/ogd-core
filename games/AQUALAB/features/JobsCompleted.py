@@ -25,7 +25,10 @@ class JobsCompleted(SessionFeature):
     def _extractFromEvent(self, event: Event) -> None:
         if event.UserID == self._player_id:
             _job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
-            self._jobs_completed.append(_job_name)
+            if event.app_version == 'Aqualab':
+                self._jobs_completed.append(_job_name.get('string_value'))
+            else:
+                self._jobs_completed.append(_job_name) 
 
     def _extractFromFeatureData(self, feature:FeatureData):
         return

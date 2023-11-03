@@ -29,6 +29,7 @@ __all__ = [
     "PlayLocations",
     "PlayerSummary",
     "PopulationSummary",
+    "RegionJobCount",
     "SessionDiveSitesCount",
     "SessionDuration",
     "SessionID",
@@ -75,6 +76,7 @@ from . import JobsCompleted
 from . import PlayLocations
 from . import PlayerSummary
 from . import PopulationSummary
+from . import RegionJobCount
 from . import SessionDiveSitesCount
 from . import SessionDuration
 from . import SessionID
