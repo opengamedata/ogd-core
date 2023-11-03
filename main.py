@@ -33,7 +33,7 @@ from schemas.IDMode import IDMode
 from schemas.games.GameSchema import GameSchema
 from schemas.tables.TableSchema import TableSchema
 from schemas.configs.ConfigSchema import ConfigSchema
-from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd_requests.Request import Request, ExporterRange
 from ogd_requests.RequestResult import RequestResult, ResultStatus
 from utils.Logger import Logger
