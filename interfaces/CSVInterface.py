@@ -7,7 +7,7 @@ from typing import Any, Dict, IO, List, Tuple, Optional
 ## import local files
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
-from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.GameSourceSchema import GameSourceSchema
 from schemas.tables.TableSchema import TableSchema
 from utils.Logger import Logger
 

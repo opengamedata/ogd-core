@@ -2,6 +2,22 @@
     "level_range": { "min":0, "max":3 },
 
     "game_state" : {
+        "gameLevel" : {
+            "type" : "str",
+            "description" : "The name of the level in which the event occurred."
+        },
+        "gameTime" : {
+            "type" : "int",
+            "description" : "The number of ?seconds? ?milliseconds? the player had spent in the game when the event occured."
+        },
+        "logID" : {
+            "type" : "float",
+            "description" : "TODO"
+        },
+        "jotID" : {
+            "type" : "float",
+            "description" : "TODO"
+        }
     },
 
     "events": {
@@ -155,21 +171,21 @@
             }
         },
         "settings": {
-            "description": "TODO",
+            "description": "(code=2001), TODO",
             "event_data": {
                 "playTime": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "Amount of active play time research intended for players, as set in DREAM. Not counting instruction screens."
                 }
             }
         },
         "main_menu_shown": {
-            "description": "TODO",
+            "description": "(code=3001), TODO",
             "event_data": {
             }
         },
         "level_menu_shown": {
-            "description": "This will never be jotted for Fall 2018, because we're not using the level menu",
+            "description": "(code=3002), This will never be jotted for Fall 2018, because we're not using the level menu",
             "event_data": {
                 "passedLevel": {
                     "type": "bool",
@@ -186,25 +202,25 @@
             }
         },
         "level_start": {
-            "description": "Called once the level starts, tutorial not included",
+            "description": "(code=3003), Called once the level starts, tutorial not included",
             "event_data": {
             }
         },
         "tutorial_slide": {
-            "description": "gameTime for when the instructions began",
+            "description": "(code=3004), gameTime for when the instructions began",
             "event_data": {
                 "slideNumber": {
                     "type": "int",
                     "description": "TODO"
                 },
                 "moleInstructions": {
-                    "type": "?str?",
+                    "type": "enum(NORMAL_MOLE, HAT_MOLE, BOMB_MOLE, NORMAL_AND_SPIKE_MOLE)",
                     "description": "TODO"
                 }
             }
         },
         "mole_appears": {
-            "description": "TODO",
+            "description": "(code=3005), TODO",
             "event_data": {
                 "id": {
                     "type": "int",
@@ -225,7 +241,7 @@
             }
         },
         "mole_disappears": {
-            "description": "TODO",
+            "description": "(code=3006), TODO",
             "event_data": {
                 "id": {
                     "type": "int",
@@ -246,7 +262,7 @@
             }
         },
         "summary_screen": {
-            "description": "TODO",
+            "description": "(code=3050), TODO",
             "event_data": {
                 "levelPoints": {
                     "type": "?int?",
@@ -267,7 +283,7 @@
             }
         },
         "leaderboard_shown": {
-            "description": "TODO",
+            "description": "(code=3051), TODO",
             "event_data": {
                 "totalPoints": {
                     "type": "?int?",
@@ -288,12 +304,12 @@
             }
         },
         "leaderboard_closed": {
-            "description": "TODO",
+            "description": "(code=4050), TODO",
             "event_data": {
             }
         },
         "motivational_agent": {
-            "description": "Triggered when the motivational agent is shown in the screen",
+            "description": "(code=3053), Triggered when the motivational agent is shown in the screen",
             "event_data": {
                 "message": {
                     "type": "str",
@@ -306,12 +322,12 @@
             }
         },
         "next_level_summary": {
-            "description": "Triggered when the next button from the summary screen is clicked (indicates when exiting the current level)",
+            "description": "(code=4053), Triggered when the next button from the summary screen is clicked (indicates when exiting the current level)",
             "event_data": {
             }
         },
         "level_clicked": {
-            "description": "Triggered when a level in the levels menu is clicked",
+            "description": "(code=4054), Triggered when a level in the levels menu is clicked",
             "event_data": {
                 "level": {
                     "type": "?int?",
@@ -320,7 +336,7 @@
             }
         },
         "pre_level_screen": {
-            "description": "Triggered when the screen containing the information about the level is shown (right when a level starts, before the tutorial and level itself)",
+            "description": "(code=3054), Triggered when the screen containing the information about the level is shown (right when a level starts, before the tutorial and level itself)",
             "event_data": {
                 "level": {
                     "type": "?int?",

@@ -6,7 +6,7 @@ from typing import Dict, List, Tuple, Optional
 # import locals
 from interfaces.BigQueryInterface import BigQueryInterface
 from schemas.IDMode import IDMode
-from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.GameSourceSchema import GameSourceSchema
 from utils.Logger import Logger
 
 AQUALAB_MIN_VERSION = 6.2
@@ -51,11 +51,11 @@ class BQFirebaseInterface(BigQueryInterface):
         data = list(self._client.query(query))
         return {'min':data[0][0], 'max':data[0][1]}
 
-    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None, exclude_rows:Optional[List[str]]=None) -> List[Tuple]:
         # 2) Set up clauses to select based on Session ID or Player ID.
         events = None
         if self._client != None:
-            query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode)
+            query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode, exclude_rows=exclude_rows)
             Logger.Log(f"BQ-Firebase: Running query for rows from IDs:\n{query}", logging.DEBUG, depth=3)
             data = self._client.query(query)
             events = []
@@ -148,7 +148,7 @@ class BQFirebaseInterface(BigQueryInterface):
 
     # *** PRIVATE METHODS ***
 
-    def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode) -> str:
+    def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode, exclude_rows:Optional[List[str]]=None) -> str:
         session_clause : str = ""
         player_clause  : str = ""
         if id_mode == IDMode.SESSION:
@@ -175,8 +175,8 @@ class BQFirebaseInterface(BigQueryInterface):
             where_clause = \
             f"""WHERE param_app_version.key = 'app_version'
                 AND   param_log_version.key = 'log_version'
-                {session_clause}
-                {player_clause}"""
+                AND   {session_clause}
+                AND   {player_clause}"""
         # 4) Set up actual query
         query = ""
         if self._game_id == "SHIPWRECKS":
@@ -187,7 +187,7 @@ class BQFirebaseInterface(BigQueryInterface):
                 FROM `{self.DBPath()}`
                 CROSS JOIN UNNEST(event_params) AS param_session
                 WHERE param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})
-                ORDER BY `session_id`, `timestamp` ASC
+                ORDER BY `session_id`, `timestamp` ASC;
             """
         else:
             # TODO Order by user_id, and by timestamp within that.
@@ -207,6 +207,6 @@ class BQFirebaseInterface(BigQueryInterface):
                 CROSS JOIN UNNEST(event_params) AS param_session
                 CROSS JOIN UNNEST(event_params) AS param_user
                 {where_clause}
-                ORDER BY `fd_user_id`, `timestamp` ASC
+                ORDER BY `fd_user_id`, `timestamp` ASC;
             """
         return query
