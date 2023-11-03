@@ -108,11 +108,8 @@ class TSVOuterface(DataOuterface):
             # if not in place, generate the readme
             Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING, depth=1)
             game_schema  : GameSchema  = GameSchema(schema_name=self._game_id, schema_path=Path(f"./games/{self._game_id}/schemas"))
-            print(f"Successfully loaded game schema, moving on to table schema, with config {self._config}")
             table_schema = TableSchema(schema_name=self._config.TableSchema)
-            print("Successfully loaded table schema, moving on to generate readme")
             readme = Readme(game_schema=game_schema, table_schema=table_schema)
-            print("generated readme object, moving on to generate readme")
             readme.GenerateReadme(path=self._game_data_dir)
         else:
             # otherwise, readme is there, so just close it and move on.
