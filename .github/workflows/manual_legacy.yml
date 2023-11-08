@@ -41,9 +41,15 @@ on:
         required: false
         default: "1000"
       log_level:
+        type: choice
         description: "What level of debugging output to log"
         required: true
         default: "INFO"
+        options:
+        - "DEBUG"
+        - "INFO"
+        - "WARNING"
+        - "ERROR"
 
 env:
   MYSQL_SOURCES: '["OPENGAMEDATA_MYSQL", "LOGGER"]'

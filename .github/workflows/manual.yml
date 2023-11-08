@@ -38,9 +38,15 @@ on:
         required: false
         default: "1000"
       log_level:
+        type: choice
         description: "Log Level: What level of debugging output to log"
         required: true
         default: "INFO"
+        options:
+        - "DEBUG"
+        - "INFO"
+        - "WARNING"
+        - "ERROR"
 
 env:
   OGD_BQ_GAMES: '["AQUALAB", "BACTERIA", "BALLOON", "CRYSTAL", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "JOWILDER", "PENGUINS", "LAKELAND", "MAGNET", "WAVES", "WIND"]'
