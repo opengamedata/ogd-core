@@ -16,9 +16,10 @@ on:
         required: false
         default: "['01/2021']"
       export_to_web:
-        description: "Boolean indicating whether the export should go to the website, or only be uploaded as an artifact."
+        type: boolean
+        description: "If true, the exported files will be uploaded to the Open Game Data website, else they will only be uploaded as an artifact in the GitHub Actions results."
         required: true
-        default: "false"
+        default: false
       source_id:
         description: "Which game source config to pull from"
         required: true
