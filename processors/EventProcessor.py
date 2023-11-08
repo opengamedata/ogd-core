@@ -21,8 +21,8 @@ class EventProcessor(Processor):
     def _processEvent(self, event:Event):
         self._events.append(event)
 
-    def _getLines(self) -> List[ExportRow]:
-        return [_event.ColumnValues() for _event in self._events]
+    def _getLines(self) -> List[Event]:
+        return self._events
 
     def _clearLines(self) -> None:
         self._events = []

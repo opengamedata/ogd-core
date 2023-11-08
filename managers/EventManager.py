@@ -43,16 +43,16 @@ class EventManager:
     def GetColumnNames(self) -> List[str]:
         return self._columns
 
-    def GetRawLines(self, slice_num:int, slice_count:int) -> List[ExportRow]:
+    def GetRawLines(self, slice_num:int, slice_count:int) -> List[Event]:
         start   : datetime = datetime.now()
-        ret_val : List[Any] = self._raw_events.Lines
+        ret_val : List[Event] = self._raw_events.Lines
         time_delta = datetime.now() - start
         Logger.Log(f"Time to retrieve raw Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val
 
-    def GetAllLines(self, slice_num:int, slice_count:int) -> List[ExportRow]:
+    def GetAllLines(self, slice_num:int, slice_count:int) -> List[Event]:
         start   : datetime = datetime.now()
-        ret_val : List[Any] = self._all_events.Lines
+        ret_val : List[Event] = self._all_events.Lines
         time_delta = datetime.now() - start
         Logger.Log(f"Time to retrieve all Event lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
         return ret_val

@@ -21,7 +21,7 @@ class Processor(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _getLines(self) -> List[ExportRow]:
+    def _getLines(self) -> List[Event] | List[FeatureData]:
         pass
 
     @abc.abstractmethod
