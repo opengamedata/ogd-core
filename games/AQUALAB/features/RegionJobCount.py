@@ -15,7 +15,7 @@ from extractors.features.PerCountFeature import PerCountFeature
 class RegionJobCount(PerCountFeature):
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        regions = ['arctic', 'coral', 'bayou', 'kelp']
+        regions = ['arctic', 'coral', 'bayou', 'kelp', 'other']
         self.count = 0
         self.region = regions[self.CountIndex]
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -28,10 +28,16 @@ class RegionJobCount(PerCountFeature):
         return []
 
     def _validateEventCountIndex(self, event:Event):
-        if event.EventData.get('job_name', {}).get('string_value').startswith(self.region):
-            return True
+        if event.app_version == 'Aqualab' or event.app_version == 'None':
+            if event.EventData.get('job_name', {}).get('string_value').startswith(self.region):
+                return True
+            else:
+                return False
         else:
-            return False
+            if event.EventData.get('job_name', {}).startswith(self.region):
+                return True
+            else:
+                return False
 # 'aqualab' and 'GameState"
     def _extractFromEvent(self, event:Event) -> None:
         self.count += 1
