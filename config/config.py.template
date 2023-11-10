@@ -59,7 +59,7 @@ settings = {
     },
     "GAME_SOURCE_MAP":
     {
-        "AQUALAB":        { "source":"OPENGAMEDATA_BQ",    "database":"aqualab",             "table":"aqualab_daily",        "schema":"OPENGAMEDATA_BIGQUERY" },
+        "AQUALAB":        { "source":"AQUALAB_BQ",         "database":"analytics_271167280", "table":"events",               "schema":"FIREBASE" },
         "BACTERIA":       { "source":"OPENGAMEDATA_BQ",    "database":"bacteria",            "table":"bacteria_daily",       "schema":"OPENGAMEDATA_BIGQUERY" },
         "BALLOON":        { "source":"OPENGAMEDATA_BQ",    "database":"balloon",             "table":"balloon_daily",        "schema":"OPENGAMEDATA_BIGQUERY" },
         "CRYSTAL":        { "source":"OPENGAMEDATA_BQ",    "database":"crystal",             "table":"crystal_daily",        "schema":"OPENGAMEDATA_BIGQUERY" },
