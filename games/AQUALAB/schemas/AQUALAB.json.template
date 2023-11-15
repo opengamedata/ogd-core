@@ -572,7 +572,7 @@
     "features": {
         "per_count": {
             "JobPriorComplete": {
-                "enabled": true,
+                "enabled": false,
                 "type": "JobPriorComplete",
                 "count": "level_range",
                 "prefix": "job",
@@ -580,7 +580,7 @@
                 "return_type": "list"
             },
             "JobPriorAttempt": {
-                "enabled": true,
+                "enabled": false,
                 "type": "JobPriorAttempt",
                 "count": "level_range",
                 "prefix": "job",
