@@ -724,6 +724,22 @@
                     }
                 }
             },
+            "RegionJobCount": {
+                "enabled": true,
+                "type": "RegionJobCount",
+                "count": 5,
+                "prefix": "region",
+                "description": "The number of jobs completed in a given region",
+                "return_type": "int"
+            },
+            "RegionName": {
+                "enabled": true,
+                "type": "RegionName",
+                "count": 5,
+                "prefix": "region",
+                "description": "The human-readable version of the name for a given region",
+                "return_type": "str"
+            },
             "SyncCompletionTime": {
                 "enabled": false,
                 "type": "SyncCompletionTime",
@@ -762,6 +778,18 @@
                 "type": "PlayerSummary",
                 "description": "Summary of player statistics (active session time, jobs completed, number of sessions)",
                 "return_type": "dict"
+            },
+            "PlayLocations": {
+                "enabled": true,
+                "type": "PlayLocations",
+                "description": "An indicator of whether play happened during normal school hours or not",
+                "return_type": "List[bool]",
+                "subfeatures": {
+                    "LocalTime": {
+                        "description": "The actual local time when each session started",
+                        "return_type": "datetime"
+                    }
+                }
             },
             "PopulationSummary": {
                 "enabled": false,
