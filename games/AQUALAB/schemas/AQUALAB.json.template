@@ -763,6 +763,18 @@
                 "description": "Summary of player statistics (active session time, jobs completed, number of sessions)",
                 "return_type": "dict"
             },
+            "PlayLocations": {
+                "enabled": true,
+                "type": "PlayLocations",
+                "description": "An indicator of whether play happened during normal school hours or not",
+                "return_type": "List[bool]",
+                "subfeatures": {
+                    "LocalTime": {
+                        "description": "The actual local time when each session started",
+                        "return_type": "datetime"
+                    }
+                }
+            },
             "PopulationSummary": {
                 "enabled": false,
                 "type": "PopulationSummary",
