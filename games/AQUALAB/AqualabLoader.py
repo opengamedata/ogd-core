@@ -94,6 +94,8 @@ class AqualabLoader(ExtractorLoader):
             ret_val = PopulationSummary.PopulationSummary(params=extractor_params)
         elif feature_type == "RegionJobCount":
             ret_val = RegionJobCount.RegionJobCount(params=extractor_params)
+        elif feature_type == "RegionName":
+            ret_val = RegionName.RegionName(params=extractor_params)
         elif feature_type == "SessionDiveSitesCount":
             ret_val = SessionDiveSitesCount.SessionDiveSitesCount(params=extractor_params)
         elif feature_type == "SessionDuration":

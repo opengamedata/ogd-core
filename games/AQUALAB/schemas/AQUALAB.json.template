@@ -732,6 +732,14 @@
                 "description": "The number of jobs completed in a given region",
                 "return_type": "int"
             },
+            "RegionName": {
+                "enabled": true,
+                "type": "RegionName",
+                "count": 5,
+                "prefix": "region",
+                "description": "The human-readable version of the name for a given region",
+                "return_type": "str"
+            },
             "SyncCompletionTime": {
                 "enabled": false,
                 "type": "SyncCompletionTime",
