@@ -724,6 +724,14 @@
                     }
                 }
             },
+            "RegionJobCount": {
+                "enabled": true,
+                "type": "RegionJobCount",
+                "count": 5,
+                "prefix": "region",
+                "description": "The number of jobs completed in a given region",
+                "return_type": "int"
+            },
             "SyncCompletionTime": {
                 "enabled": false,
                 "type": "SyncCompletionTime",
