@@ -7,7 +7,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional, List
 # import locals
-from config.config import settings as settings
 from utils.Logger import Logger
 
 map = Dict[str, Any]
