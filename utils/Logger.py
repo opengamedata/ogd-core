@@ -3,7 +3,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional, List
 # import locals
-from schemas.configs.ConfigSchema import ConfigSchema
 
 class Logger:
     debug_level : int = logging.INFO
@@ -11,25 +10,26 @@ class Logger:
     file_logger : Optional[logging.Logger] = None
 
     @classmethod
-    def InitializeLogger(cls, settings:ConfigSchema):
+    def InitializeLogger(cls, level:int, use_logfile:bool):
         # Set up loggers. First, the std out logger
         if not cls.std_logger.hasHandlers():
             stdout_handler = logging.StreamHandler()
             cls.std_logger.addHandler(stdout_handler)
         else:
-            cls.std_logger.warning(f"Trying to add a handler to std_logger, when handlers ({std_logger.handlers}) already exist!")
-        if settings.DebugLevel == "ERROR":
-            cls.std_logger.setLevel(level=logging.ERROR)
-        elif settings.DebugLevel == "WARNING":
-            cls.std_logger.setLevel(level=logging.WARNING)
-        elif settings.DebugLevel == "INFO":
-            cls.std_logger.setLevel(level=logging.INFO)
-        elif settings.DebugLevel == "DEBUG":
-            cls.std_logger.setLevel(level=logging.DEBUG)
+            cls.std_logger.warning(f"Trying to add a handler to std_logger, when handlers ({cls.std_logger.handlers}) already exist!")
+        match level:
+            case "ERROR":
+                cls.std_logger.setLevel(level=logging.ERROR)
+            case "WARNING":
+                cls.std_logger.setLevel(level=logging.WARNING)
+            case "INFO":
+                cls.std_logger.setLevel(level=logging.INFO)
+            case "DEBUG":
+                cls.std_logger.setLevel(level=logging.DEBUG)
         cls.std_logger.info("Initialized standard out logger")
 
         # Then, set up the file logger. Check for permissions errors.
-        if settings.UseLogFile:
+        if use_logfile:
             file_logger = logging.getLogger("file_logger")
             file_logger.setLevel(level=logging.DEBUG)
             # file_logger.setLevel(level=logging.DEBUG)

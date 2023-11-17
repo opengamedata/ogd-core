@@ -233,7 +233,7 @@ def getDateRange() -> Tuple[datetime, datetime]:
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
 config = ConfigSchema(name="config.py", all_elements=settings)
-Logger.InitializeLogger(settings=config)
+Logger.InitializeLogger(level=config.DebugLevel, use_logfile=config.UseLogFile)
 # Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
 # set up parent parsers with arguments for each class of command
 games_folder : Path = Path("./games")
