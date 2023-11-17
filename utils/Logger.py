@@ -9,43 +9,43 @@ class Logger:
     std_logger  : logging.Logger   = logging.getLogger("std_logger")
     file_logger : Optional[logging.Logger] = None
 
-    @classmethod
-    def InitializeLogger(cls, level:int, use_logfile:bool):
+    @staticmethod
+    def InitializeLogger(level:int, use_logfile:bool):
         # Set up loggers. First, the std out logger
-        if not cls.std_logger.hasHandlers():
+        if not Logger.std_logger.hasHandlers():
             stdout_handler = logging.StreamHandler()
-            cls.std_logger.addHandler(stdout_handler)
+            Logger.std_logger.addHandler(stdout_handler)
         else:
-            cls.std_logger.warning(f"Trying to add a handler to std_logger, when handlers ({cls.std_logger.handlers}) already exist!")
+            Logger.std_logger.warning(f"Trying to add a handler to std_logger, when handlers ({Logger.std_logger.handlers}) already exist!")
         match level:
             case "ERROR":
-                cls.std_logger.setLevel(level=logging.ERROR)
+                Logger.std_logger.setLevel(level=logging.ERROR)
             case "WARNING":
-                cls.std_logger.setLevel(level=logging.WARNING)
+                Logger.std_logger.setLevel(level=logging.WARNING)
             case "INFO":
-                cls.std_logger.setLevel(level=logging.INFO)
+                Logger.std_logger.setLevel(level=logging.INFO)
             case "DEBUG":
-                cls.std_logger.setLevel(level=logging.DEBUG)
-        cls.std_logger.info("Initialized standard out logger")
+                Logger.std_logger.setLevel(level=logging.DEBUG)
+        Logger.std_logger.info("Initialized standard out logger")
 
         # Then, set up the file logger. Check for permissions errors.
         if use_logfile:
-            file_logger = logging.getLogger("file_logger")
-            file_logger.setLevel(level=logging.DEBUG)
+            Logger.file_logger = logging.getLogger("file_logger")
+            Logger.file_logger.setLevel(level=logging.DEBUG)
             # file_logger.setLevel(level=logging.DEBUG)
             try:
                 err_handler = logging.FileHandler("./ExportErrorReport.log", encoding="utf-8")
                 debug_handler = logging.FileHandler("./ExportDebugReport.log", encoding="utf-8")
             except PermissionError as err:
-                cls.std_logger.exception(f"Failed permissions check for log files. No file logging on server.")
+                Logger.std_logger.exception(f"Failed permissions check for log files. No file logging on server.")
             else:
-                cls.std_logger.info("Successfully set up logging files.")
+                Logger.std_logger.info("Successfully set up logging files.")
                 err_handler.setLevel(level=logging.WARNING)
-                file_logger.addHandler(err_handler)
+                Logger.file_logger.addHandler(err_handler)
                 debug_handler.setLevel(level=logging.DEBUG)
-                file_logger.addHandler(debug_handler)
+                Logger.file_logger.addHandler(debug_handler)
             finally:
-                file_logger.debug("Initialized file logger")
+                Logger.file_logger.debug("Initialized file logger")
     
     # Function to print a method to both the standard out and file logs.
     # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
