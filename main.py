@@ -262,14 +262,24 @@ def genInterface(game_id:str) -> Tuple[EventInterface, ExporterRange, Optional[s
         else:
             start_date, end_date = getDateRange()
             range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date)
-    ret_val = (interface, range, dataset_id)
-    return ret_val
+    # 3. set up the outerface, based on the range and dataset_id.
+    _cfg = GameSourceSchema(name="FILE DEST", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
+    file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=range.DateRange,
+                                  file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
+    outerfaces : Set[DataOuterface] = {file_outerface}
+    # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
+    if config.DebugLevel == "DEBUG":
+        _cfg = GameSourceSchema(name="DEBUG", all_elements={"database":"DEBUG", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
+        outerfaces.add(DebugOuterface(game_id=args.game, config=_cfg, export_modes=export_modes))
 
-def genDBInterface(game_id:str, config:ConfigSchema) -> EventInterface:
-    ret_val : EventInterface
-    _game_cfg = config.GameSourceMap.get(game_id)
-    if _game_cfg is not None and _game_cfg.DataHost is not None:
-        match (_game_cfg.DataHost.Type):
+    # 4. Once we have the parameters parsed out, construct the request.
+    return Request(range=range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
+
+def genDBInterface(config:ConfigSchema) -> DataInterface:
+    ret_val : DataInterface
+    _game_cfg = config.GameSourceMap.get(args.game)
+    if _game_cfg is not None and _game_cfg.Source is not None:
+        match (_game_cfg.Source.Type):
             case "Firebase" | "FIREBASE":
                 ret_val = BQFirebaseInterface(game_id=game_id, config=_game_cfg, fail_fast=config.FailFast)
             case "BigQuery" | "BIGQUERY":
@@ -319,7 +329,7 @@ def getDateRange() -> Tuple[datetime, datetime]:
     else:
         start_date = datetime.strptime(args.start_date, "%m/%d/%Y") if args.start_date is not None else today
         start_date = start_date.replace(hour=0, minute=0, second=0)
-        end_date   = datetime.strptime(args.end_date, "%m/%d/%Y") if args.end_date is not None else today
+        end_date   = datetime.strptime(args.end_date, "%m/%d/%Y") if args.end_date is not None else start_date
         end_date = end_date.replace(hour=23, minute=59, second=59)
         Logger.Log(f"Exporting from {str(start_date)} to {str(end_date)} of data for {args.game}...", logging.INFO)
     return (start_date, end_date)

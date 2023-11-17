@@ -2,22 +2,6 @@
     "level_range": { "min":0, "max":3 },
 
     "game_state" : {
-        "gameLevel" : {
-            "type" : "str",
-            "description" : "The name of the level in which the event occurred."
-        },
-        "gameTime" : {
-            "type" : "int",
-            "description" : "The number of ?seconds? ?milliseconds? the player had spent in the game when the event occured."
-        },
-        "logID" : {
-            "type" : "float",
-            "description" : "TODO"
-        },
-        "jotID" : {
-            "type" : "float",
-            "description" : "TODO"
-        }
     },
 
     "events": {
@@ -153,7 +137,7 @@
             }
         },
         "start_game": {
-            "description": "(code=1001), Generally not exported by Al",
+            "description": "Generally not exported by Al",
             "event_data": {
                 "gameName": {
                     "type": "str",
@@ -162,7 +146,7 @@
             }
         },
         "gamescribe_created": {
-            "description": "(code=1002), Generally not exported by Al",
+            "description": "Generally not exported by Al",
             "event_data": {
                 "gamescribeMode": {
                     "type": "enum(trace, strict)",
@@ -171,21 +155,21 @@
             }
         },
         "settings": {
-            "description": "(code=2001), TODO",
+            "description": "TODO",
             "event_data": {
                 "playTime": {
-                    "type": "int",
+                    "type": "?int?",
                     "description": "Amount of active play time research intended for players, as set in DREAM. Not counting instruction screens."
                 }
             }
         },
         "main_menu_shown": {
-            "description": "(code=3001), TODO",
+            "description": "TODO",
             "event_data": {
             }
         },
         "level_menu_shown": {
-            "description": "(code=3002), This will never be jotted for Fall 2018, because we're not using the level menu",
+            "description": "This will never be jotted for Fall 2018, because we're not using the level menu",
             "event_data": {
                 "passedLevel": {
                     "type": "bool",
@@ -202,67 +186,100 @@
             }
         },
         "level_start": {
-            "description": "(code=3003), Called once the level starts, tutorial not included",
+            "description": "Called once the level starts, tutorial not included",
             "event_data": {
             }
         },
-        "tutorial_slide": {
-            "description": "(code=3004), gameTime for when the instructions began",
-            "event_data": {
-                "slideNumber": {
-                    "type": "int",
-                    "description": "TODO"
-                },
-                "moleInstructions": {
-                    "type": "enum(NORMAL_MOLE, HAT_MOLE, BOMB_MOLE, NORMAL_AND_SPIKE_MOLE)",
-                    "description": "TODO"
-                }
-            }
-        },
-        "mole_appears": {
-            "description": "(code=3005), TODO",
+        "bubble_shown": {
+            "description": "TODO",
             "event_data": {
                 "id": {
-                    "type": "int",
-                    "description": "Number representing the order in which the avocado appeared, ranges from (1 - a number determined by level designer)."
-                },
-                "posX": {
-                    "type": "float",
-                    "description": "X position where avocado was spawned, 0,0 is lower left corner"
-                },
-                "posY": {
-                    "type": "float",
-                    "description": "Y position where avocado was spawned, 0,0 is lower left corner."
-                },
-                "moleType": {
-                    "type": "enum(REGULAR, SPIKE_HAT, HARD_HAT, ELECTRIC_HAT)",
-                    "description": "Regular, spike hat, hard hat, electric hat"
-                }
-            }
-        },
-        "mole_disappears": {
-            "description": "(code=3006), TODO",
-            "event_data": {
-                "id": {
-                    "type": "int",
-                    "description": "Number representing the order in which the avocado appeared, ranges from (1 - a number determined by level designer)."
-                },
-                "hitType": {
-                    "type": "enum(CORRECT_HIT, WRONG_HIT, CORRECT_MISSED, WRONG_MISSED)",
-                    "description": "Label for CORRECT_HIT, WRONG_HIT, CORRECT_MISSED, WRONG_MISSED if action is correct vs wrong"
-                },
-                "reactionTime": {
-                    "type": "?timedelta?",
-                    "description": "Time between when the ... appears onscreen, vs when the player crushes the avocado"
-                },
-                "score": {
                     "type": "?int?",
-                    "description": "Points received for that avocado"
+                    "description": "TODO"
+                }
+            }
+        },
+        "bubble_hidden": {
+            "description": "TODO",
+            "event_data": {
+                "id": {
+                    "type": "?int?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "bubble_active": {
+            "description": "TODO",
+            "event_data": {
+                "id": {
+                    "type": "?int?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "bubble_chosen": {
+            "description": "Called every time a bubble UI is unfolded",
+            "event_data": {
+                "id": {
+                    "type": "?int?",
+                    "description": "id of the bubble whose UI has been unfolded"
+                },
+                "bubblesArray": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "color": "enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE)",
+                        "shape": "enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER)",
+                        "id": "int"
+                    },
+                    "description": "A list of bubbles"
+                }
+            }
+        },
+        "color_animal_selection": {
+            "description": "(All the choices a player makes, even before bubble has been submitted)",
+            "event_data": {
+                "id": {
+                    "type": "?int?",
+                    "description": "TODO"
+                },
+                "color": {
+                    "type": "enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE)",
+                    "description": "TODO"
+                },
+                "shape": {
+                    "type": "enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER)",
+                    "description": "TODO"
+                }
+            }
+        },
+        "bubble_done": {
+            "description": "Called every time a bubble UI is unfolded",
+            "event_data": {
+                "id": {
+                    "type": "?int?",
+                    "description": "TODO"
+                },
+                "color": {
+                    "type": "enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE)",
+                    "description": "TODO"
+                },
+                "shape": {
+                    "type": "enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER)",
+                    "description": "TODO"
+                },
+                "bubblesArray": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "color": "enum(ALREADY_SUBMITTED, GREEN, YELLOW, RED, PINK, PURPLE)",
+                        "shape": "enum(ALREADY_SUBMITTED, CRAB, JELLYFISH, STARFISH, STINGRAY, LOBSTER)",
+                        "id": "int"
+                    },
+                    "description": "TODO"
                 }
             }
         },
         "summary_screen": {
-            "description": "(code=3050), TODO",
+            "description": "TODO",
             "event_data": {
                 "levelPoints": {
                     "type": "?int?",
@@ -283,7 +300,7 @@
             }
         },
         "leaderboard_shown": {
-            "description": "(code=3051), TODO",
+            "description": "TODO",
             "event_data": {
                 "totalPoints": {
                     "type": "?int?",
@@ -304,44 +321,8 @@
             }
         },
         "leaderboard_closed": {
-            "description": "(code=4050), TODO",
+            "description": "TODO",
             "event_data": {
-            }
-        },
-        "motivational_agent": {
-            "description": "(code=3053), Triggered when the motivational agent is shown in the screen",
-            "event_data": {
-                "message": {
-                    "type": "str",
-                    "description": "TODO"
-                },
-                "type": {
-                    "type": "int",
-                    "description": "Category of game message shown (0 - acknowledgement, 1 - encouragement)"
-                }
-            }
-        },
-        "next_level_summary": {
-            "description": "(code=4053), Triggered when the next button from the summary screen is clicked (indicates when exiting the current level)",
-            "event_data": {
-            }
-        },
-        "level_clicked": {
-            "description": "(code=4054), Triggered when a level in the levels menu is clicked",
-            "event_data": {
-                "level": {
-                    "type": "?int?",
-                    "description": "TODO"
-                }
-            }
-        },
-        "pre_level_screen": {
-            "description": "(code=3054), Triggered when the screen containing the information about the level is shown (right when a level starts, before the tutorial and level itself)",
-            "event_data": {
-                "level": {
-                    "type": "?int?",
-                    "description": "TODO"
-                }
             }
         }
     },

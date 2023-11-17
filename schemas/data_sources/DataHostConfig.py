@@ -26,6 +26,13 @@ class DataHostConfig(Schema):
 
     @property
     def Type(self) -> str:
+        """The type of source indicated by the data source schema.
+
+        This includes but is not limited to "FIREBASE", "BIGQUERY", and "MySQL"
+
+        :return: A string describing the type of the data source
+        :rtype: str
+        """
         return self._db_type
 
     @property

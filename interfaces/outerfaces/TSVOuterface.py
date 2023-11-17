@@ -1,5 +1,4 @@
 ## import standard libraries
-import git
 import json
 import logging
 import os
@@ -9,6 +8,7 @@ import sys
 import traceback
 import zipfile
 from datetime import datetime
+from git.repo import Repo
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
 from pathlib import Path
 from typing import Any, Dict, IO, List, Optional, Set
@@ -53,7 +53,7 @@ class TSVOuterface(DataOuterface):
         self._dataset_id = dataset_id or f"{self._game_id}_{start}_to_{end}"
         # get hash
         try:
-            repo = git.Repo(search_parent_directories=True)
+            repo = Repo(search_parent_directories=True)
             if repo.git is not None:
                 self._short_hash = str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
         except InvalidGitRepositoryError as err:
@@ -116,6 +116,7 @@ class TSVOuterface(DataOuterface):
         else:
             # otherwise, readme is there, so just close it and move on.
             readme.close()
+            Logger.Log(f"Successfully found, opened, and closed the readme.md", logging.DEBUG, depth=1)
         finally:
             self._closeFiles()
             self._zipFiles()

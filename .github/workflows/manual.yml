@@ -12,9 +12,10 @@ on:
         required: true
         default: "['BACTERIA']"
       monthly:
-        description: "Monthly: If true, use month/year. Else, use start and end dates"
+        type: boolean
+        description: "If true, use month/year. Else, use start and end dates"
         required: true
-        default: "true"
+        default: true
       month_year:
         description: "Month/Year: The month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
         required: false
@@ -28,17 +29,24 @@ on:
         required: false
         default: "01/01/2021"
       export_to_web:
-        description: "Export to Web: Boolean indicating whether the export should go to the website, or only be uploaded as an artifact."
+        type: boolean
+        description: "If true, the exported files will be uploaded to the Open Game Data website, else they will only be uploaded as an artifact in the GitHub Actions results."
         required: true
-        default: "false"
+        default: false
       slice_size:
         description: "Slice Size: The size of slices to use"
         required: false
         default: "1000"
       log_level:
+        type: choice
         description: "Log Level: What level of debugging output to log"
         required: true
         default: "INFO"
+        options:
+        - "DEBUG"
+        - "INFO"
+        - "WARNING"
+        - "ERROR"
 
 env:
   OGD_BQ_GAMES: '["AQUALAB", "BACTERIA", "BALLOON", "CRYSTAL", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "JOWILDER", "PENGUINS", "LAKELAND", "MAGNET", "WAVES", "WIND"]'
