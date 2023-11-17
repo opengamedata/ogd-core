@@ -18,7 +18,7 @@ jobs:
         # game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, JOWILDER, LAKELAND, MAGNET, STEMPORTS, WAVES, WIND]
         game: [AQUALAB, BACTERIA, BALLOON, CRYSTAL, CYCLE_CARBON, CYCLE_NITROGEN, CYCLE_WATER, EARTHQUAKE, ICECUBE, JOURNALISM, LAKELAND, MAGNET, PENGUINS, SHADOWSPECT, SHIPWRECKS, WAVES, WIND]
       fail-fast: false # we don't want to cancel just because one game fails.
-      max-parallel: 1
+      max-parallel: 20
 
     # Steps to set up for and execute an export
     steps:

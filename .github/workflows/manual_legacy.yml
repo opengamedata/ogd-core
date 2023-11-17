@@ -16,9 +16,10 @@ on:
         required: false
         default: "['01/2021']"
       export_to_web:
-        description: "Boolean indicating whether the export should go to the website, or only be uploaded as an artifact."
+        type: boolean
+        description: "If true, the exported files will be uploaded to the Open Game Data website, else they will only be uploaded as an artifact in the GitHub Actions results."
         required: true
-        default: "false"
+        default: false
       source_id:
         description: "Which game source config to pull from"
         required: true
@@ -40,9 +41,15 @@ on:
         required: false
         default: "1000"
       log_level:
+        type: choice
         description: "What level of debugging output to log"
         required: true
         default: "INFO"
+        options:
+        - "DEBUG"
+        - "INFO"
+        - "WARNING"
+        - "ERROR"
 
 env:
   MYSQL_SOURCES: '["OPENGAMEDATA_MYSQL", "LOGGER"]'
@@ -128,7 +135,7 @@ jobs:
         month_year: ${{matrix.month_year}}
         events_only: true
     - name: Upload files to opengamedata via scp
-      if: github.event.inputs.export_to_web == 'true'
+      if: github.event.inputs.export_to_web == true
       run: |
         mkdir -p ~/.ssh
         echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
@@ -136,7 +143,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
     - name: Upload data as artifact
-      if: github.event.inputs.export_to_web == 'false'
+      if: github.event.inputs.export_to_web == false
       uses: actions/upload-artifact@v3
       with:
         name: ${{matrix.game}}_event_export_data
