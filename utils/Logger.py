@@ -3,46 +3,49 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional, List
 # import locals
-from config.config import settings as settings
+from schemas.configs.ConfigSchema import ConfigSchema
 
 class Logger:
+    debug_level : int = logging.INFO
     std_logger  : logging.Logger   = logging.getLogger("std_logger")
     file_logger : Optional[logging.Logger] = None
 
-    # Set up loggers. First, the std out logger
-    if not std_logger.hasHandlers():
-        stdout_handler = logging.StreamHandler()
-        std_logger.addHandler(stdout_handler)
-    else:
-        std_logger.warning(f"Trying to add a handler to std_logger, when handlers ({std_logger.handlers}) already exist!")
-    if settings['DEBUG_LEVEL'] == "ERROR":
-        std_logger.setLevel(level=logging.ERROR)
-    elif settings['DEBUG_LEVEL'] == "WARNING":
-        std_logger.setLevel(level=logging.WARNING)
-    elif settings['DEBUG_LEVEL'] == "INFO":
-        std_logger.setLevel(level=logging.INFO)
-    elif settings['DEBUG_LEVEL'] == "DEBUG":
-        std_logger.setLevel(level=logging.DEBUG)
-    std_logger.info("Testing standard out logger")
-
-    # Then, set up the file logger. Check for permissions errors.
-    if settings.get('LOG_FILE', False):
-        file_logger = logging.getLogger("file_logger")
-        file_logger.setLevel(level=logging.DEBUG)
-        # file_logger.setLevel(level=logging.DEBUG)
-        try:
-            err_handler = logging.FileHandler("./ExportErrorReport.log", encoding="utf-8")
-            debug_handler = logging.FileHandler("./ExportDebugReport.log", encoding="utf-8")
-        except PermissionError as err:
-            std_logger.exception(f"Failed permissions check for log files. No file logging on server.")
+    @classmethod
+    def InitializeLogger(cls, settings:ConfigSchema):
+        # Set up loggers. First, the std out logger
+        if not cls.std_logger.hasHandlers():
+            stdout_handler = logging.StreamHandler()
+            cls.std_logger.addHandler(stdout_handler)
         else:
-            std_logger.info("Successfully set up logging files.")
-            err_handler.setLevel(level=logging.WARNING)
-            file_logger.addHandler(err_handler)
-            debug_handler.setLevel(level=logging.DEBUG)
-            file_logger.addHandler(debug_handler)
-        finally:
-            file_logger.debug("Testing file logger")
+            cls.std_logger.warning(f"Trying to add a handler to std_logger, when handlers ({std_logger.handlers}) already exist!")
+        if settings.DebugLevel == "ERROR":
+            cls.std_logger.setLevel(level=logging.ERROR)
+        elif settings.DebugLevel == "WARNING":
+            cls.std_logger.setLevel(level=logging.WARNING)
+        elif settings.DebugLevel == "INFO":
+            cls.std_logger.setLevel(level=logging.INFO)
+        elif settings.DebugLevel == "DEBUG":
+            cls.std_logger.setLevel(level=logging.DEBUG)
+        cls.std_logger.info("Initialized standard out logger")
+
+        # Then, set up the file logger. Check for permissions errors.
+        if settings.UseLogFile:
+            file_logger = logging.getLogger("file_logger")
+            file_logger.setLevel(level=logging.DEBUG)
+            # file_logger.setLevel(level=logging.DEBUG)
+            try:
+                err_handler = logging.FileHandler("./ExportErrorReport.log", encoding="utf-8")
+                debug_handler = logging.FileHandler("./ExportDebugReport.log", encoding="utf-8")
+            except PermissionError as err:
+                cls.std_logger.exception(f"Failed permissions check for log files. No file logging on server.")
+            else:
+                cls.std_logger.info("Successfully set up logging files.")
+                err_handler.setLevel(level=logging.WARNING)
+                file_logger.addHandler(err_handler)
+                debug_handler.setLevel(level=logging.DEBUG)
+                file_logger.addHandler(debug_handler)
+            finally:
+                file_logger.debug("Initialized file logger")
     
     # Function to print a method to both the standard out and file logs.
     # Useful for "general" errors where you just want to print out the exception from a "backstop" try-catch block.
