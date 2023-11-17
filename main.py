@@ -226,7 +226,7 @@ def getDateRange() -> Tuple[datetime, datetime]:
     else:
         start_date = datetime.strptime(args.start_date, "%m/%d/%Y") if args.start_date is not None else today
         start_date = start_date.replace(hour=0, minute=0, second=0)
-        end_date   = datetime.strptime(args.end_date, "%m/%d/%Y") if args.end_date is not None else today
+        end_date   = datetime.strptime(args.end_date, "%m/%d/%Y") if args.end_date is not None else start_date
         end_date = end_date.replace(hour=23, minute=59, second=59)
         Logger.Log(f"Exporting from {str(start_date)} to {str(end_date)} of data for {args.game}...", logging.INFO)
     return (start_date, end_date)

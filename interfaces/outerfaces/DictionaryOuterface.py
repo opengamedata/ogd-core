@@ -14,6 +14,17 @@ class DictionaryOuterface(DataOuterface):
     # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, game_id:str, config:GameSourceSchema, export_modes:Set[ExportMode], out_dict:Dict[str, Dict[str, Union[List[str], List[ExportRow]]]]):
+        """Constructor for a DictionaryOuterface, which provides a dictionary for each kind of data being processed
+
+        :param game_id: The name of the game whose data is being exported
+        :type game_id: str
+        :param config: A GameSourceSchema indicating where output data should be stored. Ignored by the DictionaryOuterface class.
+        :type config: GameSourceSchema
+        :param export_modes: A set of all export modes that should be enabled.
+        :type export_modes: Set[ExportMode]
+        :param out_dict: The dictionary to which outputs are written by the DictionaryOuterface
+        :type out_dict: Dict[str, Dict[str, Union[List[str], List[ExportRow]]]]
+        """
         super().__init__(game_id=game_id, config=config, export_modes=export_modes)
         self._out = out_dict
         self._raw_evts : List[ExportRow] = []
