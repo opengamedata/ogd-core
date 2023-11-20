@@ -11,21 +11,26 @@ class Logger:
 
     @staticmethod
     def InitializeLogger(level:int, use_logfile:bool):
+        """Function to set up the stdout and file loggers of the Logging package.
+
+        :param level: The logging level, which must be one of the levels defined by the Python `logging` package (`ERROR`, `WARN`, `INFO`, or `DEBUG`)
+        :type level: int
+        :param use_logfile: Bool for whether to use file output for logging or not.
+        :type use_logfile: bool
+        """
         # Set up loggers. First, the std out logger
         if not Logger.std_logger.hasHandlers():
             stdout_handler = logging.StreamHandler()
             Logger.std_logger.addHandler(stdout_handler)
+            print("Added handler to std_logger")
         else:
             Logger.std_logger.warning(f"Trying to add a handler to std_logger, when handlers ({Logger.std_logger.handlers}) already exist!")
-        match level:
-            case "ERROR":
-                Logger.std_logger.setLevel(level=logging.ERROR)
-            case "WARNING":
-                Logger.std_logger.setLevel(level=logging.WARNING)
-            case "INFO":
-                Logger.std_logger.setLevel(level=logging.INFO)
-            case "DEBUG":
-                Logger.std_logger.setLevel(level=logging.DEBUG)
+        _valid_levels = {logging.ERROR, logging.WARN, logging.WARNING, logging.INFO, logging.DEBUG}
+        if level in _valid_levels:
+            Logger.std_logger.setLevel(level=level)
+        else:
+            Logger.std_logger.setLevel(level=logging.INFO)
+            Logger.std_logger.info("No valid logging level given, defaulting to INFO.")
         Logger.std_logger.info("Initialized standard out logger")
 
         # Then, set up the file logger. Check for permissions errors.
