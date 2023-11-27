@@ -1,5 +1,4 @@
 __all__ = [
-	"config",
 	"utils",
 	"schemas",
     "extractors",
@@ -9,7 +8,6 @@ __all__ = [
 	"ogd_requests"
 ]
 
-from . import config
 from . import utils
 from . import schemas
 from . import extractors
