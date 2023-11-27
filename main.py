@@ -18,25 +18,25 @@ from typing import Any, Dict, Optional, Set, Tuple
 
 # import local files
 from config.config import settings
-from interfaces.DataInterface import DataInterface
-from interfaces.CSVInterface import CSVInterface
-from interfaces.MySQLInterface import MySQLInterface
-from interfaces.BigQueryInterface import BigQueryInterface
-from interfaces.BQFirebaseInterface import BQFirebaseInterface
-from interfaces.outerfaces.DataOuterface import DataOuterface
-from interfaces.outerfaces.TSVOuterface import TSVOuterface
-from interfaces.outerfaces.DebugOuterface import DebugOuterface
-from managers.ExportManager import ExportManager
-from schemas.ExportMode import ExportMode
-from schemas.IDMode import IDMode
-from schemas.games.GameSchema import GameSchema
-from schemas.tables.TableSchema import TableSchema
-from schemas.configs.ConfigSchema import ConfigSchema
-from schemas.configs.GameSourceSchema import GameSourceSchema
-from ogd_requests.Request import Request, ExporterRange
-from ogd_requests.RequestResult import RequestResult, ResultStatus
-from utils.Logger import Logger
-from utils.Readme import Readme
+from src.ogd.core.interfaces.DataInterface import DataInterface
+from src.ogd.core.interfaces.CSVInterface import CSVInterface
+from src.ogd.core.interfaces.MySQLInterface import MySQLInterface
+from src.ogd.core.interfaces.BigQueryInterface import BigQueryInterface
+from src.ogd.core.interfaces.BQFirebaseInterface import BQFirebaseInterface
+from src.ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
+from src.ogd.core.interfaces.outerfaces.TSVOuterface import TSVOuterface
+from src.ogd.core.interfaces.outerfaces.DebugOuterface import DebugOuterface
+from src.ogd.core.managers.ExportManager import ExportManager
+from src.ogd.core.schemas.ExportMode import ExportMode
+from src.ogd.core.schemas.IDMode import IDMode
+from src.ogd.core.schemas.games.GameSchema import GameSchema
+from src.ogd.core.schemas.tables.TableSchema import TableSchema
+from src.ogd.core.schemas.configs.ConfigSchema import ConfigSchema
+from src.ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from src.ogd.core.requests.Request import Request, ExporterRange
+from src.ogd.core.requests.RequestResult import RequestResult, ResultStatus
+from src.ogd.core.utils.Logger import Logger
+from src.ogd.core.utils.Readme import Readme
 
 def ListGames() -> bool:
     print(f"The games available for export are:\n{games_list}")
