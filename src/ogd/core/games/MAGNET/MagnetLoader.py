@@ -1,7 +1,7 @@
 ## import standard libraries
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
-from ogd.core.games.MAGNET.features
+from . import features
 from ogd.core.extractors.detectors.Detector import Detector
 from ogd.core.extractors.Extractor import ExtractorParameters
 from ogd.core.extractors.features.Feature import Feature
@@ -23,7 +23,7 @@ class MagnetLoader(LegacyLoader):
 
     @staticmethod
     def _getFeaturesModule():
-        return games.MAGNET.features
+        return features
 
     # *** BUILT-INS & PROPERTIES ***
 

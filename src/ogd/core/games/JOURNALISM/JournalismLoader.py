@@ -3,7 +3,7 @@ from datetime import datetime
 import re
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
-from ogd.core.games.JOURNALISM.features
+from . import features
 from ogd.core.games.JOURNALISM.features import *
 from ogd.core.extractors.detectors.Detector import Detector
 from ogd.core.extractors.Extractor import ExtractorParameters
@@ -22,7 +22,7 @@ class JournalismLoader(ExtractorLoader):
 
     @staticmethod
     def _getFeaturesModule():
-        return games.JOURNALISM.features
+        return features
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
@@ -104,11 +104,6 @@ class JournalismLoader(ExtractorLoader):
                 ret_val= SnippetsCollected.SnippetsCollected(params=extractor_params)    
             elif feature_type == "SnippetsSubmitted":
                 ret_val= SnippetsSubmitted.SnippetsSubmitted(params=extractor_params)
-
-
-
-
-
         else:
             raise NotImplementedError(
                 f"'{feature_type}' is not a valid feature for Journalism.")

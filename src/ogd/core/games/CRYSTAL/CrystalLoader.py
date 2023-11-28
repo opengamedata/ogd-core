@@ -1,7 +1,7 @@
 ## import standard libraries
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
-from ogd.core.games.CRYSTAL.features
+import ogd.core.games.CRYSTAL.features
 from ogd.core.extractors.detectors.Detector import Detector
 from ogd.core.extractors.Extractor import ExtractorParameters
 from ogd.core.extractors.features.Feature import Feature
@@ -17,7 +17,7 @@ class CrystalLoader(LegacyLoader):
 
     @staticmethod
     def _getFeaturesModule():
-        return games.CRYSTAL.features
+        return ogd.core.games.CRYSTAL.features
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         return CrystalExtractor(params=extractor_params, game_schema=self._game_schema, session_id=self._session_id)
