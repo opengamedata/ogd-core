@@ -14,17 +14,17 @@ from pathlib import Path
 from typing import Any, Dict, IO, List, Optional, Set
 
 # import local files
-from interfaces.outerfaces.DataOuterface import DataOuterface
-from schemas.ExtractionMode import ExtractionMode
-from schemas.ExportMode import ExportMode
-from schemas.configs.GameSourceSchema import GameSourceSchema
-from schemas.games.GameSchema import GameSchema
-from schemas.tables.TableSchema import TableSchema
-from schemas.configs.IndexingSchema import FileIndexingSchema
-from utils import utils
-from utils.Logger import Logger
-from utils.utils import ExportRow
-from utils.Readme import Readme
+from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.ExportMode import ExportMode
+from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.schemas.tables.TableSchema import TableSchema
+from ogd.core.schemas.configs.IndexingSchema import FileIndexingSchema
+from ogd.core.utils import utils
+from ogd.core.utils.Logger import Logger
+from ogd.core.utils.utils import ExportRow
+from ogd.core.utils.Readme import Readme
 
 class TSVOuterface(DataOuterface):
 

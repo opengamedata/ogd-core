@@ -3,12 +3,12 @@ import json
 from collections import defaultdict
 from typing import Any, List
 # import locals
-from utils.Logger import Logger
-from extractors.features.Feature import Feature
-from extractors.Extractor import ExtractorParameters
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
+from ogd.core.utils.Logger import Logger
+from ogd.core.extractors.features.Feature import Feature
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
 
 
 class TopJobSwitchDestinations(Feature):

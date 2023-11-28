@@ -3,16 +3,16 @@ import logging
 from collections import OrderedDict
 from typing import Any, Callable, List, Optional, Set
 ## import local files
-from extractors.detectors.Detector import Detector
-from extractors.Extractor import Extractor
-from extractors.ExtractorLoader import ExtractorLoader
-from extractors.registries.ExtractorRegistry import ExtractorRegistry
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from schemas.games.DetectorSchema import DetectorSchema
-from schemas.games.GameSchema import GameSchema
-from schemas.IterationMode import IterationMode
+from ogd.core.extractors.detectors.Detector import Detector
+from ogd.core.extractors.Extractor import Extractor
+from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.extractors.registries.ExtractorRegistry import ExtractorRegistry
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.schemas.games.DetectorSchema import DetectorSchema
+from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.schemas.IterationMode import IterationMode
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.

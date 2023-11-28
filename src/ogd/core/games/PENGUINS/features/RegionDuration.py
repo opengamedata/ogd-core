@@ -3,15 +3,15 @@ import json
 from typing import Any, Dict, List
 from datetime import timedelta
 # import local files
-from extractors.Extractor import ExtractorParameters
-from extractors.features.PerCountFeature import PerCountFeature
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from utils.Logger import Logger
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.utils.Logger import Logger
 # import libraries
 import logging
-from games.PENGUINS.features.PerRegionFeature import PerRegionFeature
+from ogd.core.games.PENGUINS.features.PerRegionFeature import PerRegionFeature
     
 class RegionDuration(PerRegionFeature):
     

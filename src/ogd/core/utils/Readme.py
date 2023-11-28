@@ -10,10 +10,10 @@ from pathlib import Path
 from typing import Any, Dict, IO, List, Optional, Set
 
 # import local files
-from schemas.games.GameSchema import GameSchema
-from schemas.tables.TableSchema import TableSchema
-from utils.Logger import Logger
-from utils.utils import ExportRow
+from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.schemas.tables.TableSchema import TableSchema
+from ogd.core.utils.Logger import Logger
+from ogd.core.utils.utils import ExportRow
 
 class Readme:
     def __init__(self, game_schema:GameSchema, table_schema:TableSchema):

@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional, List
 # import locals
-from utils.Logger import Logger
+from ogd.core.utils.Logger import Logger
 
 map = Dict[str, Any]
 ExportRow = List[Any]

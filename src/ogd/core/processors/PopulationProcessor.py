@@ -2,15 +2,15 @@
 import logging
 from typing import List, Type, Optional, Set
 # import local files
-from schemas.FeatureData import FeatureData
-from extractors.ExtractorLoader import ExtractorLoader
-from extractors.registries.FeatureRegistry import FeatureRegistry
-from processors.FeatureProcessor import FeatureProcessor
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.games.GameSchema import GameSchema
-from utils.Logger import Logger
-from utils.utils import ExportRow
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.extractors.registries.FeatureRegistry import FeatureRegistry
+from ogd.core.processors.FeatureProcessor import FeatureProcessor
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.utils.Logger import Logger
+from ogd.core.utils.utils import ExportRow
 
 ## @class PopulationProcessor
 #  Class to extract and manage features for a processed csv file.

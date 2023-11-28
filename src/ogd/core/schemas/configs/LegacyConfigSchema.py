@@ -3,9 +3,9 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional
 # import local files
-from schemas.configs.data_sources.MySQLSourceSchema import SSHSchema
-from schemas.Schema import Schema
-from utils.Logger import Logger
+from ogd.core.schemas.configs.data_sources.MySQLSourceSchema import SSHSchema
+from ogd.core.schemas.Schema import Schema
+from ogd.core.utils.Logger import Logger
 
 class LegacyConfigSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

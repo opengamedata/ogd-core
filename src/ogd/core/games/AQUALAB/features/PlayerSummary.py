@@ -3,13 +3,13 @@ from datetime import timedelta
 from multiprocessing.sharedctypes import Value
 from typing import Any, List
 
-from extractors.Extractor import ExtractorParameters
-from extractors.features.SessionFeature import SessionFeature
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from schemas.ExtractionMode import ExtractionMode
-from utils.Logger import Logger
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.utils.Logger import Logger
 
 class PlayerSummary(SessionFeature):
 

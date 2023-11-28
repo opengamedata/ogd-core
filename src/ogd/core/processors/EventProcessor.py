@@ -3,10 +3,10 @@ import json
 from datetime import datetime
 from typing import List, Type, Optional
 # import locals
-from processors.Processor import Processor
-from schemas.Event import Event
-from schemas.games.GameSchema import GameSchema
-from utils.utils import ExportRow
+from ogd.core.processors.Processor import Processor
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.utils.utils import ExportRow
 
 class EventProcessor(Processor):
 

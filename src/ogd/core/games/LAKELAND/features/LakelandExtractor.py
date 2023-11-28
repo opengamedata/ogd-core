@@ -21,13 +21,13 @@ from math import sqrt
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 ## import local files
-from extractors.Extractor import ExtractorParameters
-from extractors.legacy.LegacyFeature import LegacyFeature
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.games.GameSchema import GameSchema
-from utils import utils
-from utils.Logger import Logger
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.legacy.LegacyFeature import LegacyFeature
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.utils import utils
+from ogd.core.utils.Logger import Logger
 
 # temp comment
 

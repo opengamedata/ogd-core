@@ -2,9 +2,9 @@
 import logging
 from typing import Any, Dict, Optional, Type
 # import local files
-from schemas.Schema import Schema
-from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
-from utils.Logger import Logger
+from ogd.core.schemas.Schema import Schema
+from ogd.core.schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
+from ogd.core.utils.Logger import Logger
 
 class SSHSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any], fallbacks:Dict[str, Any]={}):

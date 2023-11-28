@@ -2,14 +2,14 @@
 import json
 import logging
 from typing import Any, Dict, List, Optional
-from extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.Extractor import ExtractorParameters
 # import local files
-from extractors.features.PerCountFeature import PerCountFeature
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from schemas.Event import Event
-from games.JOWILDER import Jowilder_Enumerators as je
-from utils.Logger import Logger
+from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.schemas.Event import Event
+from ogd.core.games.JOWILDER import Jowilder_Enumerators as je
+from ogd.core.utils.Logger import Logger
 
 try:
     with open(file="./games/JOWILDER/interaction_metadata.json") as f:

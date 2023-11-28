@@ -2,10 +2,10 @@
 import abc
 from typing import Any, Dict, List, Optional
 # import locals
-from extractors.Extractor import Extractor, ExtractorParameters
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
+from ogd.core.extractors.Extractor import Extractor, ExtractorParameters
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
 
 ## @class Model
 #  Abstract base class for session-level Wave features.

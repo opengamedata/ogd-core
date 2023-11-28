@@ -1,9 +1,9 @@
 # import standard libraries
 import logging
 # import locals
-from extractors.features.Feature import Feature
-from extractors.Extractor import ExtractorParameters
-from utils.Logger import Logger
+from ogd.core.extractors.features.Feature import Feature
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.utils.Logger import Logger
 
 class SessionFeature(Feature):
 

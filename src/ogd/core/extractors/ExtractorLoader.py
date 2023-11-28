@@ -4,13 +4,13 @@ import logging
 from importlib import import_module
 from typing import Any, Callable, Dict, List, Optional, Type
 # import locals
-from extractors.Extractor import Extractor, ExtractorParameters
-from extractors.detectors.Detector import Detector
-from extractors.features.Feature import Feature
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.games.GameSchema import GameSchema
-from utils.Logger import Logger
+from ogd.core.extractors.Extractor import Extractor, ExtractorParameters
+from ogd.core.extractors.detectors.Detector import Detector
+from ogd.core.extractors.features.Feature import Feature
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.utils.Logger import Logger
 
 class ExtractorLoader(abc.ABC):
 

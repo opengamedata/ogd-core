@@ -3,7 +3,7 @@ import abc
 from datetime import datetime
 from typing import Any, Dict, Optional
 # import locals
-from schemas.Event import Event, EventSource
+from ogd.core.schemas.Event import Event, EventSource
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 
 class DetectorEvent(Event):

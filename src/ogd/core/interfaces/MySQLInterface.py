@@ -6,11 +6,11 @@ import traceback
 from datetime import datetime
 from typing import Dict, List, Tuple, Optional
 # import locals
-from interfaces.DataInterface import DataInterface
-from schemas.IDMode import IDMode
-from schemas.configs.GameSourceSchema import GameSourceSchema
-from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
-from utils.Logger import Logger
+from ogd.core.interfaces.DataInterface import DataInterface
+from ogd.core.schemas.IDMode import IDMode
+from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.core.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
+from ogd.core.utils.Logger import Logger
 
 
 ## @class SQL

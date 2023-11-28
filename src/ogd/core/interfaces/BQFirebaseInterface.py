@@ -4,10 +4,10 @@ import os
 from datetime import datetime
 from typing import Dict, List, Tuple, Optional
 # import locals
-from interfaces.BigQueryInterface import BigQueryInterface
-from schemas.IDMode import IDMode
-from schemas.configs.GameSourceSchema import GameSourceSchema
-from utils.Logger import Logger
+from ogd.core.interfaces.BigQueryInterface import BigQueryInterface
+from ogd.core.schemas.IDMode import IDMode
+from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.core.utils.Logger import Logger
 
 AQUALAB_MIN_VERSION = 6.2
 

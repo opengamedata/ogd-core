@@ -9,5 +9,5 @@ __all__ = [
 from . import IDMode
 from . import Event
 from . import FeatureData
-from schemas.games import GameSchema
-from schemas.tables import TableSchema
+from ogd.core.schemas.games import GameSchema
+from ogd.core.schemas.tables import TableSchema

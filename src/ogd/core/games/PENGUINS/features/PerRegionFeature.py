@@ -3,10 +3,10 @@ import logging
 import json 
 from typing import Any, Dict, List, Optional
 # import locals
-from utils.Logger import Logger
-from extractors.Extractor import ExtractorParameters
-from extractors.features.PerCountFeature import PerCountFeature
-from schemas.Event import Event
+from ogd.core.utils.Logger import Logger
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.schemas.Event import Event
 
 
 

@@ -3,11 +3,11 @@ import logging
 from typing import Dict, List, Set, Union
 
 # import local files
-from interfaces.outerfaces.DataOuterface import DataOuterface
-from schemas.ExportMode import ExportMode
-from schemas.configs.GameSourceSchema import GameSourceSchema
-from utils.Logger import Logger
-from utils.utils import ExportRow
+from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
+from ogd.core.schemas.ExportMode import ExportMode
+from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.core.utils.Logger import Logger
+from ogd.core.utils.utils import ExportRow
 
 class DictionaryOuterface(DataOuterface):
 

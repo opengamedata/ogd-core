@@ -6,19 +6,19 @@ from collections import OrderedDict
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set, Tuple
 ## import local files
-from extractors.Extractor import Extractor
-from extractors.ExtractorLoader import ExtractorLoader
-from extractors.features.PerCountFeature import PerCountFeature
-from extractors.registries.ExtractorRegistry import ExtractorRegistry
-from extractors.features.Feature import Feature
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from schemas.games.GameSchema import GameSchema
-from schemas.IterationMode import IterationMode
-from schemas.games.AggregateSchema import AggregateSchema
-from schemas.games.PerCountSchema import PerCountSchema
-from utils.Logger import Logger
+from ogd.core.extractors.Extractor import Extractor
+from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.extractors.registries.ExtractorRegistry import ExtractorRegistry
+from ogd.core.extractors.features.Feature import Feature
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.schemas.IterationMode import IterationMode
+from ogd.core.schemas.games.AggregateSchema import AggregateSchema
+from ogd.core.schemas.games.PerCountSchema import PerCountSchema
+from ogd.core.utils.Logger import Logger
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.

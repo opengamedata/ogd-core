@@ -4,14 +4,14 @@ from datetime import datetime, timedelta
 from os import environ
 from typing import Any, List, Optional
 import numpy as np
-from extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.Extractor import ExtractorParameters
 # import local files
-from extractors.features.PerCountFeature import PerCountFeature
-from games.JOWILDER import Jowilder_Enumerators as je
-from games.JOWILDER.features.Interaction import clicks_track
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from schemas.Event import Event
+from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.games.JOWILDER import Jowilder_Enumerators as je
+from ogd.core.games.JOWILDER.features.Interaction import clicks_track
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.schemas.Event import Event
 
 # NOTE: Assumptions are: 1. All click events occured in the order like xxxx111xx222x1x3. 2. Use "text_fqid" to identify interactions. 3. The first interaction "tunic.historicalsociety.closet.intro" makes no sense so we don't need to consider it. That is, there are 190 interactions in total, but we only count 189. And we should confirm that, this tunic.historicalsociety.closet.intro doesn't occur anywhere else.
 

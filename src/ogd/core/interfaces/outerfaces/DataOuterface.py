@@ -6,12 +6,12 @@ import logging
 from typing import Any, Dict, List, Set
 
 # import local files
-from interfaces.Interface import Interface
-from schemas.IDMode import IDMode
-from schemas.ExportMode import ExportMode
-from schemas.configs.GameSourceSchema import GameSourceSchema
-from utils.Logger import Logger
-from utils.utils import ExportRow
+from ogd.core.interfaces.Interface import Interface
+from ogd.core.schemas.IDMode import IDMode
+from ogd.core.schemas.ExportMode import ExportMode
+from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.core.utils.Logger import Logger
+from ogd.core.utils.utils import ExportRow
 
 class DataOuterface(Interface):
     """Base class for feature and event output.

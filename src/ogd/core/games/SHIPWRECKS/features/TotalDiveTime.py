@@ -2,11 +2,11 @@
 from typing import Any, List, Optional
 from datetime import timedelta
 # import locals
-from extractors.features.SessionFeature import SessionFeature
-from extractors.Extractor import ExtractorParameters
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
+from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
 
 class TotalDiveTime(SessionFeature):
 

@@ -24,7 +24,7 @@ import numpy as np
 import json
 from datetime import timedelta
 from models.FeatureModel import FeatureModel
-from utils.Logger import Logger
+from ogd.core.utils.Logger import Logger
 
 _POP_ACHS = "exist group town city".split()
 _FARM_ACHS = "farmer farmers farmtown megafarm".split()

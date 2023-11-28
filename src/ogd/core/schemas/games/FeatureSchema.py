@@ -3,9 +3,9 @@ import abc
 import logging
 from typing import Any, Dict, List
 # import local files
-from schemas.games.ExtractorSchema import ExtractorSchema
-from schemas.Schema import Schema
-from utils.Logger import Logger
+from ogd.core.schemas.games.ExtractorSchema import ExtractorSchema
+from ogd.core.schemas.Schema import Schema
+from ogd.core.utils.Logger import Logger
 
 class SubfeatureSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, str]):

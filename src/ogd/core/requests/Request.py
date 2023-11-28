@@ -3,11 +3,11 @@ import abc
 from datetime import datetime
 from typing import Dict, List, Optional, Set
 # import local files
-from interfaces.DataInterface import DataInterface
-from interfaces.outerfaces.DataOuterface import DataOuterface
-from schemas.IDMode import IDMode
-from schemas.ExportMode import ExportMode
-from utils.Logger import Logger
+from ogd.core.interfaces.DataInterface import DataInterface
+from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
+from ogd.core.schemas.IDMode import IDMode
+from ogd.core.schemas.ExportMode import ExportMode
+from ogd.core.utils.Logger import Logger
 
 class ExporterRange:
     """

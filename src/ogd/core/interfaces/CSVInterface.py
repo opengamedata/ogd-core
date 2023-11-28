@@ -5,11 +5,11 @@ from pandas.io.parsers import TextFileReader
 from pathlib import Path
 from typing import Any, Dict, IO, List, Tuple, Optional
 ## import local files
-from interfaces.DataInterface import DataInterface
-from schemas.IDMode import IDMode
-from schemas.configs.GameSourceSchema import GameSourceSchema
-from schemas.tables.TableSchema import TableSchema
-from utils.Logger import Logger
+from ogd.core.interfaces.DataInterface import DataInterface
+from ogd.core.schemas.IDMode import IDMode
+from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.core.schemas.tables.TableSchema import TableSchema
+from ogd.core.utils.Logger import Logger
 
 class CSVInterface(DataInterface):
 

@@ -6,9 +6,9 @@ from typing import Dict, List, Tuple, Optional
 # import local files
 from coding.Code import Code
 from coding.Coder import Coder
-from interfaces.Interface import Interface
-from schemas.IDMode import IDMode
-from utils.Logger import Logger
+from ogd.core.interfaces.Interface import Interface
+from ogd.core.schemas.IDMode import IDMode
+from ogd.core.utils.Logger import Logger
 
 class CodingInterface(Interface):
 

@@ -5,11 +5,11 @@ from datetime import datetime, date
 from google.cloud import bigquery
 from typing import Dict, List, Tuple, Optional
 # import locals
-from interfaces.DataInterface import DataInterface
-from schemas.IDMode import IDMode
-from schemas.configs.GameSourceSchema import GameSourceSchema
-from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
-from utils.Logger import Logger
+from ogd.core.interfaces.DataInterface import DataInterface
+from ogd.core.schemas.IDMode import IDMode
+from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.core.schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
+from ogd.core.utils.Logger import Logger
 
 AQUALAB_MIN_VERSION = 6.2
 

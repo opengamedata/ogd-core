@@ -2,10 +2,10 @@
 import abc
 from typing import Callable, List, Optional
 # import locals
-from extractors.Extractor import Extractor, ExtractorParameters
-from extractors.detectors.DetectorEvent import DetectorEvent
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
+from ogd.core.extractors.Extractor import Extractor, ExtractorParameters
+from ogd.core.extractors.detectors.DetectorEvent import DetectorEvent
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
 
 ## @class Model
 #  Abstract base class for session-level Wave Detectors.

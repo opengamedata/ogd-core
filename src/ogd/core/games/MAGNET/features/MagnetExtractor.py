@@ -4,12 +4,12 @@ import logging
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 ## import local files
-from utils.Logger import Logger
-from extractors.Extractor import ExtractorParameters
-from extractors.legacy.LegacyFeature import LegacyFeature
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.games.GameSchema import GameSchema
+from ogd.core.utils.Logger import Logger
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.legacy.LegacyFeature import LegacyFeature
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.games.GameSchema import GameSchema
 
 ## @class MagnetExtractor
 #  Extractor subclass for extracting features from Magnet game data.

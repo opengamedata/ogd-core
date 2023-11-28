@@ -3,15 +3,15 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, Optional, Type
 # import local files
-from schemas.configs.IndexingSchema import FileIndexingSchema
-from schemas.configs.GameSourceSchema import GameSourceSchema
-from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
-from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
-from schemas.configs.data_sources.FileSourceSchema import FileSourceSchema
-from schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
-from schemas.configs.LegacyConfigSchema import LegacyConfigSchema
-from schemas.Schema import Schema
-from utils.Logger import Logger
+from ogd.core.schemas.configs.IndexingSchema import FileIndexingSchema
+from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.core.schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
+from ogd.core.schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
+from ogd.core.schemas.configs.data_sources.FileSourceSchema import FileSourceSchema
+from ogd.core.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
+from ogd.core.schemas.configs.LegacyConfigSchema import LegacyConfigSchema
+from ogd.core.schemas.Schema import Schema
+from ogd.core.utils.Logger import Logger
 
 class ConfigSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

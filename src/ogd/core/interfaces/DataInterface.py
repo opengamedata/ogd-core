@@ -6,12 +6,12 @@ from pprint import pformat
 from typing import Any, Dict, List, Tuple, Optional, Union
 
 # import local files
-from interfaces.Interface import Interface
-from schemas.Event import Event
-from schemas.IDMode import IDMode
-from schemas.tables.TableSchema import TableSchema
-from schemas.configs.GameSourceSchema import GameSourceSchema
-from utils.Logger import Logger
+from ogd.core.interfaces.Interface import Interface
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.IDMode import IDMode
+from ogd.core.schemas.tables.TableSchema import TableSchema
+from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.core.utils.Logger import Logger
 
 class DataInterface(Interface):
 

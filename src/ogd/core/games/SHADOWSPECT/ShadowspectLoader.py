@@ -2,15 +2,15 @@
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
 import games.SHADOWSPECT.features
-from extractors.detectors.Detector import Detector
-from extractors.Extractor import ExtractorParameters
-from extractors.ExtractorLoader import ExtractorLoader
-from extractors.features.Feature import Feature
-from extractors.Extractor import ExtractorParameters
-from games.SHADOWSPECT.features import *
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.games.GameSchema import GameSchema
+from ogd.core.extractors.detectors.Detector import Detector
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.extractors.features.Feature import Feature
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.games.SHADOWSPECT.features import *
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.games.GameSchema import GameSchema
 
 ## @class ShadowspectExtractor
 #  Extractor subclass for extracting features from Shadowspects game data.

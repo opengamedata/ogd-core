@@ -5,12 +5,12 @@ import json
 from time import time
 from datetime  import timedelta, datetime
 # import local files
-from extractors.features.Feature import Feature
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from extractors.Extractor import ExtractorParameters
-from extractors.features.SessionFeature import SessionFeature
+from ogd.core.extractors.features.Feature import Feature
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.features.SessionFeature import SessionFeature
 
 
 """

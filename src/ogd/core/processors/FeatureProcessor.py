@@ -3,13 +3,13 @@ import abc
 from typing import Dict, List, Type, Optional, Set
 
 # import locals
-from schemas.FeatureData import FeatureData
-from extractors.ExtractorLoader import ExtractorLoader
-from extractors.registries.FeatureRegistry import FeatureRegistry
-from processors.ExtractorProcessor import ExtractorProcessor
-from schemas.games.GameSchema import GameSchema
-from schemas.ExportMode import ExportMode
-from utils.utils import ExportRow
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.extractors.registries.FeatureRegistry import FeatureRegistry
+from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
+from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.schemas.ExportMode import ExportMode
+from ogd.core.utils.utils import ExportRow
 
 ## @class Processor
 class FeatureProcessor(ExtractorProcessor):

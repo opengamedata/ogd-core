@@ -2,9 +2,9 @@
 import logging
 from typing import Any, Dict, List, Optional, Union
 # import local files
-from schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
-from schemas.Schema import Schema
-from utils.Logger import Logger
+from ogd.core.schemas.configs.data_sources.DataSourceSchema import DataSourceSchema
+from ogd.core.schemas.Schema import Schema
+from ogd.core.utils.Logger import Logger
 
 class GameSourceSchema(Schema):
     """A simple Schema structure containing configuration information for a particular game's data.

@@ -10,31 +10,31 @@ import traceback
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Type, Optional
-from schemas.IDMode import IDMode
+from ogd.core.schemas.IDMode import IDMode
 
 ## import local files
-from extractors.ExtractorLoader import ExtractorLoader
-from games.AQUALAB.AqualabLoader import AqualabLoader
-from games.CRYSTAL.CrystalLoader import CrystalLoader
-from games.ICECUBE.IcecubeLoader import IcecubeLoader
-from games.JOURNALISM.JournalismLoader import JournalismLoader
-from games.JOWILDER.JowilderLoader import JowilderLoader
-from games.LAKELAND.LakelandLoader import LakelandLoader
-from games.MAGNET.MagnetLoader import MagnetLoader
-from games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
-from games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
-from games.WAVES.WaveLoader import WaveLoader
-from games.PENGUINS.PenguinsLoader import PenguinsLoader
-from managers.EventManager import EventManager
-from managers.FeatureManager import FeatureManager
-from schemas.Event import Event
-from schemas.ExportMode import ExportMode
-from schemas.IDMode import IDMode
-from schemas.games.GameSchema import GameSchema
-from schemas.configs.ConfigSchema import ConfigSchema
-from ogd_requests.Request import Request
-from ogd_requests.RequestResult import RequestResult
-from utils.Logger import Logger
+from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.games.AQUALAB.AqualabLoader import AqualabLoader
+from ogd.core.games.CRYSTAL.CrystalLoader import CrystalLoader
+from ogd.core.games.ICECUBE.IcecubeLoader import IcecubeLoader
+from ogd.core.games.JOURNALISM.JournalismLoader import JournalismLoader
+from ogd.core.games.JOWILDER.JowilderLoader import JowilderLoader
+from ogd.core.games.LAKELAND.LakelandLoader import LakelandLoader
+from ogd.core.games.MAGNET.MagnetLoader import MagnetLoader
+from ogd.core.games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
+from ogd.core.games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
+from ogd.core.games.WAVES.WaveLoader import WaveLoader
+from ogd.core.games.PENGUINS.PenguinsLoader import PenguinsLoader
+from ogd.core.managers.EventManager import EventManager
+from ogd.core.managers.FeatureManager import FeatureManager
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExportMode import ExportMode
+from ogd.core.schemas.IDMode import IDMode
+from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
+from ogd.core.requests.Request import Request
+from ogd.core.requests.RequestResult import RequestResult
+from ogd.core.utils.Logger import Logger
 
 ## @class ExportManager
 #  A class to export features and raw data, given a Request object.

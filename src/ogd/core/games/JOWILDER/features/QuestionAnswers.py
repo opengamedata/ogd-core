@@ -1,11 +1,11 @@
 # import libraries
 from typing import Any, List, Optional
 # import locals
-from extractors.features.PerCountFeature import PerCountFeature
-from extractors.Extractor import ExtractorParameters
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from schemas.Event import Event
+from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.schemas.Event import Event
 from .. import Jowilder_Enumerators as je
 
 

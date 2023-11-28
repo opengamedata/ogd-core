@@ -2,9 +2,9 @@
 import abc
 from multiprocessing.sharedctypes import Value
 # import locals
-from extractors.Extractor import ExtractorParameters
-from extractors.features.Feature import Feature
-from schemas.Event import Event
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.features.Feature import Feature
+from ogd.core.schemas.Event import Event
 
 ## @class PerLevelFeature
 class PerCountFeature(Feature):

@@ -9,11 +9,11 @@ from datetime import datetime
 from datetime import timedelta
 from collections import OrderedDict
 # import locals
-from extractors.Extractor import ExtractorParameters
-from schemas.FeatureData import FeatureData
-from extractors.features.SessionFeature import SessionFeature
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
 
 pd.options.mode.chained_assignment = None  # default='warn'
     

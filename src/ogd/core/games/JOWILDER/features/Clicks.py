@@ -1,13 +1,13 @@
 # import libraries
 import logging
 from typing import Any, List, Optional
-from extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.Extractor import ExtractorParameters
 # import local files
-from extractors.features.SessionFeature import SessionFeature
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from schemas.Event import Event
-from utils.Logger import Logger
+from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.schemas.Event import Event
+from ogd.core.utils.Logger import Logger
 
 class Clicks(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.

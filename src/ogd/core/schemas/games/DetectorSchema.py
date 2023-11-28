@@ -1,8 +1,8 @@
 # import standard libraries
 from typing import Any, Dict
 # import local files
-from schemas.ExtractionMode import ExtractionMode
-from schemas.games.ExtractorSchema import ExtractorSchema
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.games.ExtractorSchema import ExtractorSchema
 
 class DetectorSchema(ExtractorSchema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

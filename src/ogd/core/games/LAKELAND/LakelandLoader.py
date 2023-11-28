@@ -2,14 +2,14 @@
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
 import games.LAKELAND.features
-from extractors.detectors.Detector import Detector
-from extractors.Extractor import ExtractorParameters
-from extractors.legacy.LegacyLoader import LegacyLoader
-from extractors.features.Feature import Feature
-from games.LAKELAND.features.LakelandExtractor import LakelandExtractor
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.games.GameSchema import GameSchema
+from ogd.core.extractors.detectors.Detector import Detector
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.legacy.LegacyLoader import LegacyLoader
+from ogd.core.extractors.features.Feature import Feature
+from ogd.core.games.LAKELAND.features.LakelandExtractor import LakelandExtractor
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.games.GameSchema import GameSchema
 
 class LakelandLoader(LegacyLoader):
 

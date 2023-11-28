@@ -3,9 +3,9 @@ import abc
 import logging
 from typing import Any, Dict, List, Set
 # import local files
-from schemas.ExtractionMode import ExtractionMode
-from schemas.Schema import Schema
-from utils.Logger import Logger
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.Schema import Schema
+from ogd.core.utils.Logger import Logger
 
 class ExtractorSchema(Schema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

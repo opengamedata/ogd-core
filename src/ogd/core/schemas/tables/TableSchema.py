@@ -9,11 +9,11 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple, Optional, Union
 Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 ## import local files
-from schemas.Event import Event, EventSource
-from schemas.tables.ColumnMapSchema import ColumnMapSchema
-from schemas.tables.ColumnSchema import ColumnSchema
-from utils import utils
-from utils.Logger import Logger
+from ogd.core.schemas.Event import Event, EventSource
+from ogd.core.schemas.tables.ColumnMapSchema import ColumnMapSchema
+from ogd.core.schemas.tables.ColumnSchema import ColumnSchema
+from ogd.core.utils import utils
+from ogd.core.utils.Logger import Logger
 
 ## @class TableSchema
 #  Dumb struct to hold useful info about the structure of database data

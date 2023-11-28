@@ -2,8 +2,8 @@
 import logging
 from typing import Any, Dict, Union
 # import local files
-from schemas.games.FeatureSchema import FeatureSchema
-from utils.Logger import Logger
+from ogd.core.schemas.games.FeatureSchema import FeatureSchema
+from ogd.core.utils.Logger import Logger
 
 class PerCountSchema(FeatureSchema):
     def __init__(self, name:str, all_elements:Dict[str, Any]):

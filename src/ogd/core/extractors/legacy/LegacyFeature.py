@@ -7,12 +7,12 @@ from collections import defaultdict
 from datetime import timedelta
 from typing import Any, Dict, List, Optional, Union
 ## import local files
-from utils.Logger import Logger
-from extractors.Extractor import ExtractorParameters
-from extractors.features.Feature import Feature
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from schemas.games.GameSchema import GameSchema
+from ogd.core.utils.Logger import Logger
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.features.Feature import Feature
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.schemas.games.GameSchema import GameSchema
 
 LegacyFeatureType = Union[int,float,timedelta,Dict[int,Dict[str,Any]]]
 

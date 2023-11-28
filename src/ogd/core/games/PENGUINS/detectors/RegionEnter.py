@@ -2,11 +2,11 @@
 from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional
 # import local files
-from extractors.Extractor import ExtractorParameters
-from extractors.detectors.Detector import Detector
-from extractors.detectors.DetectorEvent import DetectorEvent
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.detectors.Detector import Detector
+from ogd.core.extractors.detectors.DetectorEvent import DetectorEvent
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
 
 class RegionEnter(Detector):
     """Template file to serve as a guide for creating custom Feature subclasses for games.

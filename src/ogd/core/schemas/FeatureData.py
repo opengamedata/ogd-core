@@ -1,6 +1,6 @@
 from typing import Any, List, Optional
 
-from schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.ExtractionMode import ExtractionMode
 
 class FeatureData:
    def __init__(self, name:str, feature_type:str, count_index:Optional[int],

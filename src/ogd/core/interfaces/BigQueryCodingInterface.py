@@ -7,10 +7,10 @@ from typing import Dict, List, Tuple, Optional
 # import locals
 from coding.Code import Code
 from coding.Coder import Coder
-from interfaces.CodingInterface import CodingInterface
-from schemas.IDMode import IDMode
-from schemas.configs.ConfigSchema import ConfigSchema
-from utils.Logger import Logger
+from ogd.core.interfaces.CodingInterface import CodingInterface
+from ogd.core.schemas.IDMode import IDMode
+from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
+from ogd.core.utils.Logger import Logger
 
 # TODO: see about merging this back into BigQueryInterface for a unified interface.
 

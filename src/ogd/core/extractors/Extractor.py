@@ -2,8 +2,8 @@
 import abc
 from typing import List, Optional
 # import locals
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
 
 ## @class ExtractorParams
 class ExtractorParameters:

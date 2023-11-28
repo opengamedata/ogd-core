@@ -2,11 +2,11 @@
 from datetime import datetime
 from typing import Any, List, Optional
 # import local files
-from extractors.detectors.Detector import Detector
-from extractors.Extractor import ExtractorParameters
-from schemas.Event import EventSource
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
+from ogd.core.extractors.detectors.Detector import Detector
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.schemas.Event import EventSource
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
 
 class LegacyDetector(Detector):
     """Dummy version of a detector, so that LegacyLoader can return something that's not None.

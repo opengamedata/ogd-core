@@ -4,15 +4,15 @@ import logging
 from datetime import datetime
 from typing import Dict, List, Type, Optional, Set, Tuple, Union
 ## import local files
-from extractors.ExtractorLoader import ExtractorLoader
-from processors.FeatureProcessor import FeatureProcessor
-from processors.PopulationProcessor import PopulationProcessor
-from processors.PlayerProcessor import PlayerProcessor
-from processors.SessionProcessor import SessionProcessor
-from schemas.games.GameSchema import GameSchema
-from schemas.Event import Event
-from utils.Logger import Logger
-from utils.utils import ExportRow
+from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.processors.FeatureProcessor import FeatureProcessor
+from ogd.core.processors.PopulationProcessor import PopulationProcessor
+from ogd.core.processors.PlayerProcessor import PlayerProcessor
+from ogd.core.processors.SessionProcessor import SessionProcessor
+from ogd.core.schemas.games.GameSchema import GameSchema
+from ogd.core.schemas.Event import Event
+from ogd.core.utils.Logger import Logger
+from ogd.core.utils.utils import ExportRow
 
 class FeatureManager:
     def __init__(self, game_schema:GameSchema, LoaderClass:Optional[Type[ExtractorLoader]], feature_overrides:Optional[List[str]]):

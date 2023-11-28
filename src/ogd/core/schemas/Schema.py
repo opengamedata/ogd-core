@@ -3,7 +3,7 @@ import abc
 import logging
 from typing import Any, Dict, List, Optional
 # import local files
-from utils.Logger import Logger
+from ogd.core.utils.Logger import Logger
 
 class Schema(abc.ABC):
     def __init__(self, name:str, other_elements:Optional[Dict[str, Any]]):

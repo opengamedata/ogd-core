@@ -1,10 +1,10 @@
 # import libraries
 from typing import List, Optional, Type
 # import locals
-from extractors.ExtractorLoader import ExtractorLoader
-from extractors.features.Feature import Feature
-from schemas.ExtractionMode import ExtractionMode
-from schemas.games.GameSchema import GameSchema
+from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.extractors.features.Feature import Feature
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.games.GameSchema import GameSchema
 
 class LegacyLoader(ExtractorLoader):
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):

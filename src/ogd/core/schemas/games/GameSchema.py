@@ -4,17 +4,17 @@ from pathlib import Path
 from shutil import copyfile
 from typing import Any, Dict, List, Optional, Set, Union
 # import local files
-from schemas.Schema import Schema
-from schemas.games.AggregateSchema import AggregateSchema
-from schemas.games.DetectorSchema import DetectorSchema
-from schemas.games.EventSchema import EventSchema
-from schemas.games.FeatureSchema import FeatureSchema
-from schemas.games.PerCountSchema import PerCountSchema
-from schemas.IterationMode import IterationMode
-from schemas.ExtractionMode import ExtractionMode
-from utils import utils
-from utils.utils import loadJSONFile
-from utils.Logger import Logger
+from ogd.core.schemas.Schema import Schema
+from ogd.core.schemas.games.AggregateSchema import AggregateSchema
+from ogd.core.schemas.games.DetectorSchema import DetectorSchema
+from ogd.core.schemas.games.EventSchema import EventSchema
+from ogd.core.schemas.games.FeatureSchema import FeatureSchema
+from ogd.core.schemas.games.PerCountSchema import PerCountSchema
+from ogd.core.schemas.IterationMode import IterationMode
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.utils import utils
+from ogd.core.utils.utils import loadJSONFile
+from ogd.core.utils.Logger import Logger
 
 ## @class GameSchema
 #  A fairly simple class that reads a JSON schema with information on how a given

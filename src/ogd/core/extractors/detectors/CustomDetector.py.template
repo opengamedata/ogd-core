@@ -2,9 +2,9 @@
 from datetime import datetime
 from typing import Any, Callable, List, Optional
 # import local files
-from extractors.detectors.Detector import Detector
-from extractors.detectors.DetectorEvent import DetectorEvent
-from schemas.Event import Event
+from ogd.core.extractors.detectors.Detector import Detector
+from ogd.core.extractors.detectors.DetectorEvent import DetectorEvent
+from ogd.core.schemas.Event import Event
 
 class CustomDetector(Detector):
     """Template file to serve as a guide for creating custom Feature subclasses for games.

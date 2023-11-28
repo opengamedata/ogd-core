@@ -2,15 +2,15 @@
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
 import games.SHIPWRECKS.features
-from extractors.detectors.Detector import Detector
-from extractors.Extractor import ExtractorParameters
-from extractors.ExtractorLoader import ExtractorLoader
-from extractors.features.Feature import Feature
-from games.SHIPWRECKS.features import *
-from extractors.Extractor import ExtractorParameters
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.games.GameSchema import GameSchema
+from ogd.core.extractors.detectors.Detector import Detector
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.extractors.features.Feature import Feature
+from ogd.core.games.SHIPWRECKS.features import *
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.games.GameSchema import GameSchema
 
 ## @class ShipwrecksLoader
 #  Extractor subclass for extracting features from Shipwrecks game data.

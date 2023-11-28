@@ -4,12 +4,12 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any, List, Optional
 # import local files
-from extractors.Extractor import ExtractorParameters
-from extractors.features.PerCountFeature import PerCountFeature
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from schemas.Event import Event
-from utils.Logger import Logger
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.schemas.Event import Event
+from ogd.core.utils.Logger import Logger
 
 # BUG: Question0 and quiz 0 don't have start time
 # NOTE: Assumptions are: Every quiz should have a quizstart.

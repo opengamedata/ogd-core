@@ -2,15 +2,15 @@
 import json
 from typing import Any, List, Optional
 # import local files
-from extractors.Extractor import ExtractorParameters
-from extractors.features.PerCountFeature import PerCountFeature
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from games.ICECUBE.DBExport import scene_map
-from games.ICECUBE.features.PerSceneFeature import PerSceneFeature
-from games.ICECUBE.DBExport import scenes_list
-from utils.Logger import Logger
+from ogd.core.extractors.Extractor import ExtractorParameters
+from ogd.core.extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.games.ICECUBE.DBExport import scene_map
+from ogd.core.games.ICECUBE.features.PerSceneFeature import PerSceneFeature
+from ogd.core.games.ICECUBE.DBExport import scenes_list
+from ogd.core.utils.Logger import Logger
 
 # import libraries
 import logging
