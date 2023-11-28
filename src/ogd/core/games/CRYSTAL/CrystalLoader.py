@@ -1,7 +1,7 @@
 ## import standard libraries
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
-import games.CRYSTAL.features
+from ogd.core.games.CRYSTAL.features
 from ogd.core.extractors.detectors.Detector import Detector
 from ogd.core.extractors.Extractor import ExtractorParameters
 from ogd.core.extractors.features.Feature import Feature

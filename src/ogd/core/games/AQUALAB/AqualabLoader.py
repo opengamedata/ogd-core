@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 # import local files
-import games.AQUALAB.features
+from ogd.core.games.AQUALAB.features
 from ogd.core.extractors.detectors.Detector import Detector
 from ogd.core.extractors.Extractor import ExtractorParameters
 from ogd.core.extractors.ExtractorLoader import ExtractorLoader

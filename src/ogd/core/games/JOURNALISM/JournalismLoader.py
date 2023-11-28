@@ -3,7 +3,7 @@ from datetime import datetime
 import re
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
-import games.JOURNALISM.features
+from ogd.core.games.JOURNALISM.features
 from ogd.core.games.JOURNALISM.features import *
 from ogd.core.extractors.detectors.Detector import Detector
 from ogd.core.extractors.Extractor import ExtractorParameters
