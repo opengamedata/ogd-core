@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools >= 61.0", "wheel", "setuptools-git-versioning >= 1.13"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools-git-versioning]
+enabled = true
+
+[project]
+name = "opengamedata-core"
+dynamic = ["version"]
+authors = [
+   { name="Luke Swanson", email="superscription58@gmail.com" },
+   { name="Nick Spevacek" },
+   { name="Renee Li" },
+   { name="John McCloskey" },
+   { name="David Gagnon" },
+   { name="Zach Studdiford" },
+   { name="Glenn Palmer" },
+   { name="Haishuo Chen" },
+   { name="Daus" },
+   { name="Ameya Kshirsagar" },
+   { name="Yunqing Xiao" },
+   { name="Erik Harpstead" },
+   { name="Manuel Jesus Gomez Moratilla" }
+]
+description = "A package for retrieving and processing event-based video game data."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/opengamedata/opengamedata-core"
+"Bug Tracker" = "https://github.com/opengamedata/opengamedata-core/issues"
+"Documentation" = "https://opengamedata-doc.readthedocs.io/en/latest/index.html"
