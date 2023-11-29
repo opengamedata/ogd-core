@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 # import local files
 from . import features
+from ogd.core.games import AQUALAB
 from ogd.core.extractors.detectors.Detector import Detector
 from ogd.core.extractors.Extractor import ExtractorParameters
 from ogd.core.extractors.ExtractorLoader import ExtractorLoader
@@ -44,7 +45,8 @@ class AqualabLoader(ExtractorLoader):
         data = None
 
         # Load Aqualab jobs export and map job names to integer values
-        with open(EXPORT_PATH, "r") as file:
+        _dbexport_path = Path(AQUALAB.__file__) if Path(AQUALAB.__file__).is_dir() else Path(AQUALAB.__file__).parent
+        with open(_dbexport_path / "DBExport.json", "r") as file:
             export = json.load(file)
 
             task_num = 1
