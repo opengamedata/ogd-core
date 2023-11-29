@@ -2,6 +2,8 @@
 name: Icecube Exporter CI Test
 on:
   push:
+    branches-ignore:
+    - 'ogd-packaging'
     paths:
     - 'src/ogd/core/games/ICECUBE/**'
     - '.github/workflows/icecube.yml'

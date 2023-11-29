@@ -2,6 +2,8 @@
 name: Journalism (Headlines & High Waters) Exporter CI Test
 on:
   push:
+    branches-ignore:
+    - 'ogd-packaging'
     paths:
     - 'src/ogd/core/games/JOURNALISM/**'
     - '.github/workflows/journalism.yml'

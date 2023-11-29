@@ -2,6 +2,8 @@
 name: Jo Wilder Exporter CI Test
 on:
   push:
+    branches-ignore:
+    - 'ogd-packaging'
     paths:
     - 'src/ogd/core/games/JOWILDER/**'
     - '.github/workflows/jowilder.yml'

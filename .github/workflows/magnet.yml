@@ -2,6 +2,8 @@
 name: Magnet Exporter CI Test
 on:
   push:
+    branches-ignore:
+    - 'ogd-packaging'
     paths:
     - 'src/ogd/core/games/MAGNET/**'
     - '.github/workflows/magnet.yml'

@@ -2,6 +2,8 @@
 name: Lakeland Exporter CI Test
 on:
   push:
+    branches-ignore:
+    - 'ogd-packaging'
     paths:
     - 'src/ogd/core/games/LAKELAND/**'
     - '.github/workflows/lakeland.yml'
