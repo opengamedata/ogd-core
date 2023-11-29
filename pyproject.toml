@@ -13,7 +13,7 @@ authors = [
    { name="Nick Spevacek" },
    { name="Renee Li" },
    { name="John McCloskey" },
-   { name="David Gagnon" },
+   { name="David Gagnon", email="djgagnon@wisc.edu" },
    { name="Zach Studdiford" },
    { name="Glenn Palmer" },
    { name="Haishuo Chen" },
