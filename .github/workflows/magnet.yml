@@ -3,7 +3,7 @@ name: Magnet Exporter CI Test
 on:
   push:
     paths:
-    - 'games/MAGNET/**'
+    - 'src/ogd/core/games/MAGNET/**'
     - '.github/workflows/magnet.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:

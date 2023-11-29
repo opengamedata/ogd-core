@@ -3,7 +3,7 @@ name: Journalism (Headlines & High Waters) Exporter CI Test
 on:
   push:
     paths:
-    - 'games/JOURNALISM/**'
+    - 'src/ogd/core/games/JOURNALISM/**'
     - '.github/workflows/journalism.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:

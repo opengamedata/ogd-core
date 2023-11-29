@@ -1,5 +1,5 @@
 # Workflow to build and deploy a new release of OGDUtils to PyPi.
-name: OGDUtils Release
+name: opengamedata-core Release
 on:
   release:
     types: [prereleased, released]

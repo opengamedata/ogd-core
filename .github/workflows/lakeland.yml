@@ -3,7 +3,7 @@ name: Lakeland Exporter CI Test
 on:
   push:
     paths:
-    - 'games/LAKELAND/**'
+    - 'src/ogd/core/games/LAKELAND/**'
     - '.github/workflows/lakeland.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:

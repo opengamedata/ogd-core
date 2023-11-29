@@ -3,7 +3,7 @@ name: Crystal Exporter CI Test
 on:
   push:
     paths:
-    - 'games/CRYSTAL/**'
+    - 'src/ogd/core/games/CRYSTAL/**'
     - '.github/workflows/crystal.yml'
     - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab

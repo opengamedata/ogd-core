@@ -3,7 +3,7 @@ name: Mashopolis Exporter CI Test
 on:
   push:
     paths:
-    - 'games/MASHOPOLIS/**'
+    - 'src/ogd/core/games/MASHOPOLIS/**'
     - '.github/workflows/mashopolis.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:

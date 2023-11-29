@@ -2,7 +2,7 @@ name: Shadowspect Exporter CI Test
 on:
   push:
     paths:
-    - 'games/SHADOWSPECT/**'
+    - 'src/ogd/core/games/SHADOWSPECT/**'
     - '.github/workflows/shadowspect.yml'
   workflow_dispatch:
 jobs:
