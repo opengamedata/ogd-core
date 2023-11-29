@@ -121,7 +121,8 @@ class ExportManager:
         self._processEvent(next_event=event)
 
     def _preProcess(self, request:Request) -> None:
-        _game_schema  : GameSchema  = GameSchema(schema_name=request.GameID, schema_path=Path(f"./games/{request.GameID}/schemas"))
+        _schema_path = Path(f".") / "ogd" / "core" / "games" / request.GameID / "schemas"
+        _game_schema  : GameSchema  = GameSchema(game_id=request.GameID, schema_path=_schema_path)
         # 1. Get LoaderClass and set up Event and Feature managers.
         load_class = self._loadLoaderClass(request.GameID)
         if load_class is None:

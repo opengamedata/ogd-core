@@ -47,7 +47,7 @@ class LakelandExtractor(LegacyFeature):
     ]
     try:
         # TODO: someday, change directory to the directory of current file first, and fix this path, so we don't have indirection issues.
-        _STR_TO_ENUM = utils.loadJSONFile(filename="LakelandEnumerators.json", path=Path("../opengamedata-core/games/LAKELAND/features/"))
+        _STR_TO_ENUM = utils.loadJSONFile(filename="LakelandEnumerators.json", path=Path(".") / "ogd" / "core" / "games" / "LAKELAND" / "features" )
     except FileNotFoundError as err:
         Logger.Log(message=f"Could not load Lakeland Enumerators", level=logging.WARNING)
         _STR_TO_ENUM = {}
