@@ -18,6 +18,9 @@ from typing import Any, Dict, Optional, Set, Tuple
 
 # import local files
 from config.config import settings
+import_path = Path(".") / "src"
+sys.path.append(str(import_path))
+from src.ogd.core import games
 from src.ogd.core.interfaces.DataInterface import DataInterface
 from src.ogd.core.interfaces.CSVInterface import CSVInterface
 from src.ogd.core.interfaces.MySQLInterface import MySQLInterface
@@ -52,7 +55,7 @@ def ShowGameInfo(config:ConfigSchema) -> bool:
     :rtype: bool
     """
     try:
-        game_schema = GameSchema(schema_name=f"{args.game}.json")
+        game_schema = GameSchema(game_id=args.game)
         table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableSchema}.json")
         readme = Readme(game_schema=game_schema, table_schema=table_schema)
         print(readme.CustomReadmeSource)
@@ -75,7 +78,7 @@ def WriteReadme(config:ConfigSchema) -> bool:
     """
     path = Path(f"./data") / args.game
     try:
-        game_schema = GameSchema(schema_name=f"{args.game}.json")
+        game_schema = GameSchema(game_id=args.game)
         table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableSchema}.json")
         readme = Readme(game_schema=game_schema, table_schema=table_schema)
         readme.GenerateReadme(path=path)
@@ -236,7 +239,7 @@ config = ConfigSchema(name="config.py", all_elements=settings)
 Logger.InitializeLogger(level=config.DebugLevel, use_logfile=config.UseLogFile)
 # Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
 # set up parent parsers with arguments for each class of command
-games_folder : Path = Path("./games")
+games_folder : Path = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
 games_list = [name.upper() for name in os.listdir(games_folder) if (os.path.isdir(games_folder / name) and name != "__pycache__")]
 game_parser = argparse.ArgumentParser(add_help=False)
 game_parser.add_argument("game", type=str.upper, choices=games_list,
