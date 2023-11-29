@@ -5,7 +5,7 @@ __all__ = [
 	"interfaces",
     "games",
 	"managers",
-	"ogd_requests"
+	"requests"
 ]
 
 from . import utils
@@ -14,4 +14,4 @@ from . import extractors
 from . import interfaces
 from . import games
 from . import managers
-from . import ogd_requests
+from . import requests
