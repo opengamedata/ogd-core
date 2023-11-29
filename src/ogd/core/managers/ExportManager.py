@@ -10,9 +10,9 @@ import traceback
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Type, Optional
-from ogd.core.schemas.IDMode import IDMode
 
 ## import local files
+from ogd.core import games
 from ogd.core.extractors.ExtractorLoader import ExtractorLoader
 from ogd.core.games.AQUALAB.AqualabLoader import AqualabLoader
 from ogd.core.games.CRYSTAL.CrystalLoader import CrystalLoader
@@ -121,8 +121,8 @@ class ExportManager:
         self._processEvent(next_event=event)
 
     def _preProcess(self, request:Request) -> None:
-        _schema_path = Path(f".") / "ogd" / "core" / "games" / request.GameID / "schemas"
-        _game_schema  : GameSchema  = GameSchema(game_id=request.GameID, schema_path=_schema_path)
+        _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
+        _game_schema  : GameSchema  = GameSchema(game_id=request.GameID, schema_path=_games_path / request.GameID / "schemas")
         # 1. Get LoaderClass and set up Event and Feature managers.
         load_class = self._loadLoaderClass(request.GameID)
         if load_class is None:
