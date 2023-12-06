@@ -10,20 +10,9 @@ name = "opengamedata-core"
 dynamic = ["version"]
 authors = [
    { name="Luke Swanson", email="superscription58@gmail.com" },
-   { name="Nick Spevacek" },
-   { name="Renee Li" },
-   { name="John McCloskey" },
-   { name="David Gagnon", email="djgagnon@wisc.edu" },
-   { name="Zach Studdiford" },
-   { name="Glenn Palmer" },
-   { name="Haishuo Chen" },
-   { name="Daus" },
-   { name="Ameya Kshirsagar" },
-   { name="Yunqing Xiao" },
-   { name="Erik Harpstead" },
-   { name="Manuel Jesus Gomez Moratilla" }
+   { name="David Gagnon", email="djgagnon@wisc.edu" }
 ]
-description = "A package for retrieving and processing event-based video game data."
+description = "A package for retrieving and processing event-based video game data. Additional authors: Nick Spevacek, Renee Li, John McCloskey, Zach Studdiford, Glenn Palmer, Haishuo Chen, Daus, Ameya Kshirsagar, Yunqing Xiao, Erik Harpstead, Manuel Jesus Gomez Moratilla"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
