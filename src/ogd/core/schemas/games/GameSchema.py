@@ -310,14 +310,18 @@ class GameSchema(Schema):
             ret_val = utils.loadJSONFile(filename=schema_name, path=schema_path)
         except FileNotFoundError as err:
             Logger.Log(f"Unable to load GameSchema for {game_name}, {schema_name} does not exist! Trying to load from json template instead...", logging.WARN, depth=1)
+            print(f"Unable to load GameSchema for {game_name}, {schema_name} does not exist! Trying to load from json template instead...")
             ret_val = GameSchema._schemaFromTemplate(schema_path=schema_path, schema_name=schema_name)
             if ret_val is not None:
                 Logger.Log(f"Loaded schema for {game_name} from template.", logging.WARN, depth=1)
+                print(f"Loaded schema for {game_name} from template.")
             else:
                 Logger.Log(f"Failed to load schema for {game_name} from template.", logging.WARN, depth=1)
+                print(f"Failed to load schema for {game_name} from template.")
         else:
             if ret_val is None:
                 Logger.Log(f"Could not find game schema at {schema_path / schema_name}", logging.ERROR)
+                print(f"Could not find game schema at {schema_path / schema_name}")
         return ret_val
 
     @staticmethod
