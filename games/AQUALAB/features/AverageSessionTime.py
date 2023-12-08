@@ -10,15 +10,12 @@ from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
-class TotalPlayTime(Feature):
-    def __init__(self, params:ExtractorParameters, ):
+class AverageSessionTime(Feature):
+    def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
         self._play_time: timedelta = timedelta(0)
-        self._idle_time: timedelta = timedelta(0)
-        self._active_time: timedelta = timedelta(0)
-    def Subfeatures(self) -> List[str]:
-        return ["Active", "Idle"]
-    
+        self._session_count = 0
+
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
@@ -35,13 +32,12 @@ class TotalPlayTime(Feature):
         if feature.ExportMode == ExtractionMode.SESSION:
             try:
                 self._play_time += feature.FeatureValues[0]
-                self._active_time += feature.FeatureValues[1]
-                self._idle_time += feature.FeatureValues[2]
+                self._session_count += 1
             except TypeError as err:
                 Logger.Log(f"TotalPlayTime for player {feature.PlayerID} got non-timedelta value of {feature.FeatureValues[0]}")
-    
+
     def _getFeatureValues(self) -> List[Any]:
-        return [self._play_time, self._active_time, self._idle_time]
+        return [self._play_time / self._session_count]
 
     # *** Optionally override public functions. ***
 
