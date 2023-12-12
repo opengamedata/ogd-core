@@ -2,6 +2,8 @@
 name: Mashopolis Exporter CI Test
 on:
   push:
+    branches-ignore:
+    - 'ogd-packaging'
     paths:
     - 'src/ogd/core/games/MASHOPOLIS/**'
     - '.github/workflows/mashopolis.yml'

@@ -1,6 +1,8 @@
 name: Shadowspect Exporter CI Test
 on:
   push:
+    branches-ignore:
+    - 'ogd-packaging'
     paths:
     - 'src/ogd/core/games/SHADOWSPECT/**'
     - '.github/workflows/shadowspect.yml'

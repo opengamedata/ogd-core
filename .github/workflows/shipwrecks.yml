@@ -1,6 +1,8 @@
 name: Shipwrecks Exporter CI Test
 on:
   push:
+    branches-ignore:
+    - 'ogd-packaging'
     paths:
     - 'src/ogd/core/games/SHIPWRECKS/**'
     - '.github/workflows/shipwrecks.yml'
