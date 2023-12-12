@@ -322,6 +322,7 @@ class GameSchema(Schema):
             if ret_val is None:
                 Logger.Log(f"Could not find game schema at {schema_path / schema_name}", logging.ERROR)
                 print(f"Could not find game schema at {schema_path / schema_name}")
+        print(f"Finished attempting to load schema, with game_name {game_name} and size {len(ret_val) if ret_val is not None else 'None'}")
         return ret_val
 
     @staticmethod
