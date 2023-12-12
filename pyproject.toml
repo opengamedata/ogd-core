@@ -5,6 +5,15 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools-git-versioning]
 enabled = true
 
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ['core/games/*/schemas/*.json.template']
+
 [project]
 name = "opengamedata-core"
 dynamic = ["version"]
