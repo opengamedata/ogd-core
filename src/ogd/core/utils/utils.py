@@ -12,13 +12,20 @@ map = Dict[str, Any]
 ExportRow = List[Any]
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
-#  @param filename  The name of the JSON file. If the file extension is not .json,
-#                       then ".json" will be appended.
-#  @param path      The path (relative or absolute) to the folder containing the
-#                       JSON file. If path does not end in /, then "/" will be appended.
-#  @return          A python object parsed from the JSON.
-def loadJSONFile(filename:str, path:Path = Path("./")) -> Dict[Any, Any]:
-    if not filename.lower().endswith(".json"):
+def loadJSONFile(filename:str, path:Path = Path("./"), autocorrect_extension:bool = True) -> Dict[Any, Any]:
+    """Function to open a given JSON file, and retrieve the data as a Python object.
+
+    :param filename: The name of the JSON file. If the file extension is not .json, then ".json" will be appended.
+    :type filename: str
+    :param path: The path (relative or absolute) to the folder containing the JSON file. Defaults to Path("./")
+    :type path: Path, optional
+    :param autocorrect_extension: When False, overrides default behavior and will not append .json to a filename with other extension, defaults to True
+    :type autocorrect_extension: bool, optional
+    :raises err: _description_
+    :return: A python object parsed from the JSON.
+    :rtype: Dict[Any, Any]
+    """
+    if autocorrect_extension and not filename.lower().endswith(".json"):
         Logger.Log(f"Got a filename that didn't end with .json: {filename}, appending .json", logging.DEBUG)
         filename = filename + ".json"
     # once we've validated inputs, try actual loading and reading.
