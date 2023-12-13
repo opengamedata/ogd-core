@@ -21,7 +21,7 @@ class SessionDuration(SessionFeature):
         self.total_session_time = timedelta(0)
         # self._session_duration = 0
     def Subfeatures(self) -> List[str]:
-            return ["- Seconds", "Active", "Active - Seconds", "Idle" "Idle - Seconds", "Max-Idle"]
+            return ["Total", "- Seconds", "Active", "Active - Seconds", "Idle" "Idle - Seconds", "Max-Idle"]
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
