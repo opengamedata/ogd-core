@@ -1,5 +1,6 @@
 # import standard libraries
 import logging
+from importlib.resources import files
 from pathlib import Path
 from shutil import copyfile
 from typing import Any, Dict, List, Optional, Set, Union
@@ -329,10 +330,13 @@ class GameSchema(Schema):
     def _schemaFromTemplate(schema_path:Path, schema_name:str) -> Optional[Dict[Any, Any]]:
         ret_val = None
 
+        template_name = schema_name + ".template"
+        template = schema_path / template_name
         try:
-            template_name = schema_name + ".template"
-            template = schema_path / template_name
             copyfile(template, schema_path / schema_name)
+        except FileNotFoundError as no_file:
+            Logger.Log(f"Could not create {schema_name} from template, the template does not exist at {template}.\nTrying to load from package, without copy.", logging.WARN, depth=2)
+            ret_val = loadJSONFile(filename=template_name, path=schema_path)
         except Exception as cp_err:
             Logger.Log(f"Could not create {schema_name} from template, an error occurred:\n{cp_err}", logging.WARN, depth=2)
         else:
