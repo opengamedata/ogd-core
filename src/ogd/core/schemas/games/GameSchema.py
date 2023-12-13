@@ -336,9 +336,11 @@ class GameSchema(Schema):
             copyfile(template, schema_path / schema_name)
         except FileNotFoundError as no_file:
             Logger.Log(f"Could not create {schema_name} from template, the template does not exist at {template}.\nTrying to load from package, without copy.", logging.WARN, depth=2)
+            print(f"Could not create {schema_name} from template, the template does not exist at {template}.\nTrying to load from package, without copy.")
             ret_val = loadJSONFile(filename=template_name, path=schema_path)
         except Exception as cp_err:
             Logger.Log(f"Could not create {schema_name} from template, an error occurred:\n{cp_err}", logging.WARN, depth=2)
+            print(f"Could not create {schema_name} from template, an error occurred:\n{cp_err}")
         else:
             ret_val = loadJSONFile(filename=schema_name, path=schema_path)
         return ret_val
