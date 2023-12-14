@@ -71,14 +71,8 @@ class AqualabLoader(ExtractorLoader):
             ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
         elif feature_type == "JobTriesInArgument":
             ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "ModelInterveneCount":
-            ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
         elif feature_type == "TankRulesCount":
             ret_val = TankRulesCount.TankRulesCount(params=extractor_params)
-        elif feature_type == "ModelExportCount":
-            ret_val = ModelExportCount.ModelExportCount(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "ModelPredictCount":
-            ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
         elif feature_type == "UserAvgActiveTime":
             ret_val = UserAvgActiveTime.UserAvgActiveTime(
                 params=extractor_params, player_id=self._player_id)
@@ -126,6 +120,12 @@ class AqualabLoader(ExtractorLoader):
         elif extractor_params._count_index is not None:
             if feature_type == "JobActiveTime":
                 ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "ModelPredictCount":
+                ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "ModelExportCount":
+                ret_val = ModelExportCount.ModelExportCount(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "ModelInterveneCount":
+                ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobArgumentationTime":
                 ret_val = JobArgumentationTime.JobArgumentationTime(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobArgumentationFails":
@@ -164,6 +164,46 @@ class AqualabLoader(ExtractorLoader):
                 ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
             elif feature_type == "JobTriesInArgumentPerDifficulty":
                 ret_val = JobTriesInArgumentPerDifficulty.JobTriesInArgumentPerDifficulty(params=extractor_params, diff_map = self._diff_map, difficulty_type="argumentation")
+            elif feature_type == "JobArgumentationFailsPerDifficulty":
+                ret_val = JobArgumentationFailsPerDifficulty.JobArgumentationFailsPerDifficulty(params=extractor_params, diff_map = self._diff_map, difficulty_type="argumentation")
+            elif feature_type == "JobArgumentationSuccessRatioPerDifficulty":
+                ret_val = JobArgumentationSuccessRatioPerDifficulty.JobArgumentationSuccessRatioPerDifficulty(params=extractor_params, diff_map = self._diff_map, difficulty_type="argumentation")
+            elif feature_type == "ModelingHelp":
+                ret_val = ModelingHelp.ModelingHelp(params = extractor_params, job_map= self._job_map)
+            elif feature_type == "ModelingInteracts":
+                ret_val = ModelingInteracts.ModelingInteracts(params = extractor_params, job_map= self._job_map)
+            elif feature_type == "JobExperimentInteracts":
+                ret_val = JobExperimentInteracts.JobExperimentInteracts(params = extractor_params, job_map= self._job_map)
+            elif feature_type == "ModelingInteractsPerDifficulty":
+                ret_val = ModelingInteractsPerDifficulty.ModelingInteractsPerDifficulty(params=extractor_params, diff_map = self._diff_map, difficulty_type="modeling")
+            elif feature_type == "ModelingHelpPerDifficulty":
+                ret_val = ModelingHelpPerDifficulty.ModelingHelpPerDifficulty(params=extractor_params, diff_map = self._diff_map, difficulty_type="modeling")
+            elif feature_type == "ModelPredictCountPerDifficulty":
+                ret_val = ModelPredictCountPerDifficulty.ModelPredictCountPerDifficulty(params=extractor_params, diff_map = self._diff_map, difficulty_type="modeling")
+            elif feature_type == "ModelInterveneCountPerDifficulty":
+                ret_val = ModelInterveneCountPerDifficulty.ModelInterveneCountPerDifficulty(params=extractor_params, diff_map = self._diff_map, difficulty_type="modeling")
+            elif feature_type == "JobExperimentInconclusive":
+                ret_val = JobExperimentInconclusive.JobExperimentInconclusive(params=extractor_params, job_map= self._job_map)
+            elif feature_type == "ModelExportCountPerDifficulty":
+                ret_val = ModelExportCountPerDifficulty.ModelExportCountPerDifficulty(params=extractor_params, diff_map = self._diff_map, difficulty_type="modeling")
+            elif feature_type == "JobArgumentationNoRejectPerDifficulty":
+                ret_val = JobArgumentationNoRejectPerDifficulty.JobArgumentationNoRejectPerDifficulty(params=extractor_params, diff_map = self._diff_map, difficulty_type="argumentation")
+            elif feature_type == "JobArgumentationRejectsPerDifficulty":
+                ret_val = JobArgumentationRejectsPerDifficulty.JobArgumentationRejectsPerDifficulty(params=extractor_params, diff_map = self._diff_map, difficulty_type="argumentation")
+            elif feature_type == "JobSimSync":
+                ret_val = JobSimSync.JobSimSync(params=extractor_params, job_map = self._job_map)
+            elif feature_type == "ModelSyncError":
+                ret_val = ModelSyncError.ModelSyncError(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobSimSyncPerDifficulty":
+                ret_val = JobSimSyncPerDifficulty.JobSimSyncPerDifficulty(params=extractor_params, diff_map=self._diff_map, difficulty_type="modeling")
+            elif feature_type == "JobExperimentEnvRemove":
+                ret_val = ModelingInteracts.ModelingInteracts(params = extractor_params, job_map= self._job_map)
+            elif feature_type == "JobExperimentCritterAddRemoveRatio":
+                ret_val = JobExperimentCritterAddRemoveRatio.JobExperimentCritterAddRemoveRatio(params=extractor_params, job_map =self._job_map)
+            elif feature_type == "JobExperimentFactsReceived":
+                ret_val = JobExperimentFactsReceived.JobExperimentFactsReceived(params=extractor_params, job_map = self._job_map)
+            elif feature_type == "JobExperimentBegins":
+                ret_val = JobExperimentBegins.JobExperimentBegins(params=extractor_params, job_map=self._job_map)
             else:
                 raise NotImplementedError(f"'{feature_type}' is not a valid feature type for Aqualab.")
         else:

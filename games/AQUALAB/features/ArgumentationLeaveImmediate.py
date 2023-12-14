@@ -47,4 +47,4 @@ class ArgumentationLeaveImmediate(PerJobFeature):
     # *** Optionally override public functions. ***
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return "0"
+        return "3"

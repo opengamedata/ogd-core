@@ -1,49 +1,53 @@
 # import libraries
-import logging
+from datetime import datetime, timedelta
+import logging, warnings
 from typing import Any, List, Optional
+from games.AQUALAB.features.PerJobFeature import PerJobFeature
 # import locals
 from utils.Logger import Logger
 from extractors.Extractor import ExtractorParameters
-from games.AQUALAB.features.PerJobFeature import PerJobFeature
+from extractors.features.Feature import Feature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 
-class JobArgumentationNoReject(PerJobFeature):
-    
+class ModelingHelp(PerJobFeature):
+
     def __init__(self, params:ExtractorParameters, job_map:dict):
+        self._job_map = job_map
         super().__init__(params=params, job_map=job_map)
-        self._complete_argument = False
-        self._fact_rejected_found = False
+        self._found = False
+        self._help = False
+        
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["all_events"]
+        return ["ask_for_help", "begin_model"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        #print(event.EventName)
-        if event.EventName == "complete_argument":
-            self._complete_argument = True
-        if event.EventName == "fact_rejected":
-            self._fact_rejected_found = True
+        if(event.EventName == "begin_model"):
+            self._found = True
+        if(self._found == True and event.EventName == "ask_for_help"):
+            self._help = True
+
+        
+
     def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        if(self._complete_argument == True and self._fact_rejected_found == False):
+        if(self._help == True):
             return [1]
-        elif(self._complete_argument == True and self._fact_rejected_found == True):
-            return [-1]
         else:
             return [0]
-    
+
     # *** Optionally override public functions. ***
-    @staticmethod       
+    @staticmethod
     def MinVersion() -> Optional[str]:
-        return
+        return 

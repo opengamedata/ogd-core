@@ -27,15 +27,7 @@ class JobTriesInArgumentPerDifficulty(PerDifficultyFeature):
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        # if event.EventName == "begin_argument":
-        #     self._found = True
-        #     return
-        # if event.EventName == "complete_argument":
-        #     self._found = False
-        #     return
-        # if not self._found:
-        #     return
-        self._count +=1
+        self._count += 1
         #print("over here!")
     def _extractFromFeatureData(self, feature:FeatureData):
         return
@@ -47,4 +39,4 @@ class JobTriesInArgumentPerDifficulty(PerDifficultyFeature):
     # *** Optionally override public functions. ***
     @staticmethod
     def MinVersion() -> Optional[str]:
-        return "0"
+        return "3"

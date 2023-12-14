@@ -26,7 +26,6 @@ class JobsAttempted(Feature):
         if self.CountIndex is not None:
             self._job_id = self.CountIndex
             self._job_name = list(job_map.keys())[self.CountIndex]
-            self._difficulties = diff_map[self.CountIndex]
         else:
             raise ValueError("JobsAttempted was not given a count index!")
         self._num_starts = 0
@@ -121,12 +120,11 @@ class JobsAttempted(Feature):
         if len(self._times) > 1:
             self._std_dev_complete = stdev(self._times)
 
-        return [self._job_id, self._job_name, self._num_starts, self._num_completes, self._percent_complete, self._avg_time_complete, self._std_dev_complete, self._difficulties]
+        return [self._job_id, self._job_name]
 
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
-        return ["job-name", "num-starts", "num-completes", "percent-complete", "avg-time-per-attempt", "std-dev-per-attempt", "job-difficulties"]
-
+        return ["job-name"]
     @staticmethod
     def MinVersion() -> Optional[str]:
         return "3"
