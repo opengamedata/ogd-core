@@ -1,5 +1,7 @@
 # import standard libraries
+import itertools
 import json
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 # import local files
 import games.AQUALAB.features
@@ -13,6 +15,7 @@ from games.AQUALAB.features.PerDifficultyFeature import PerDifficultyFeature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.games.GameSchema import GameSchema
+from utils.utils import loadJSONFile
 
 EXPORT_PATH = "games/AQUALAB/DBExport.json"
 
@@ -193,3 +196,17 @@ class AqualabLoader(ExtractorLoader):
     @property
     def JobMap(self) -> Dict:
         return self._job_map
+
+    @staticmethod
+    def GetAqualabJobCount(db_export_path:Path=Path("./games/AQUALAB/")):
+        db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
+        return len(db_export.get("jobs", []))
+
+    @staticmethod
+    def GetAqualabTaskCount(db_export_path:Path=Path("./games/AQUALAB/")):
+        db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
+        list_o_lists = [job.get('tasks', []) for job in db_export.get('jobs', [])]
+        # jobs_to_task_cts = [f"{job.get('id')}: {len(job.get('tasks', []))}" for job in db_export.get('jobs', [])]
+        # Logger.Log(f"Task counts by job:\n{jobs_to_task_cts}", logging.DEBUG)
+        all_tasks    = list(itertools.chain.from_iterable(list_o_lists))
+        return len(all_tasks)

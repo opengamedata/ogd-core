@@ -354,9 +354,8 @@
             "event_data": {}
         },
         "penguin_pin_fell": {
-            "description": "NOT YET DOCUMENTED",
+            "description": "When one of the pins fell in the bowling area.",
             "event_data": {
-                "data": "NOT YET DOCUMENTED"
             }
         },
         "skua_spawn": {
@@ -484,11 +483,97 @@
             }
         }
     },
+    "detectors": {
+        "per_count": {
+            "RegionEnter": {
+                "type": "RegionEnter",
+                "enabled": true,
+                "description": "Triggers an event when a player enter a region"
+            },
+            "RegionExit": {
+                "type": "RegionExit",
+                "enabled": true,
+                "description": "Triggers an event when a player exit a region"
+            }
+        },
+          
+        "aggregate": {}
+        },
 
     "features": {
         "per_count": {
+            "RegionDuration": {
+                "type": "RegionDuration",
+                "enabled": true,
+                "count": 11,
+                "prefix": "region",
+                "description": "The duration of time a player played in a given region of the game.",
+                "return_type": "timedelta"
+            },
+            "WaddlePerRegion": {
+                "type": "WaddlePerRegion",
+                "enabled": true,
+                "count": 11,
+                "prefix": "region",
+                "description": "The number of times a player waddled in a given region of the game.",
+                "return_type": "int"
+            }
         },
         "aggregate":{
+            "GazeCount": {
+                "type": "GazeCount",
+                "enabled": true,
+                "description": "The number of times a player waddled in a given region of the game.",
+                "return_type": "int"
+            },
+            "PickupRockCount": {
+                "type": "PickupRockCount",
+                "enabled": true,
+                "description": "The duration each session took.",
+                "return_type": "int"
+            },
+            "PlayerWaddleCount": {
+                "type": "PlayerWaddleCount",
+                "enabled": true,
+                "description": "The number of times a player waddled.",
+                "return_type": "int"
+            },
+            "SessionDuration": {
+                "type": "SessionDuration",
+                "enabled": true,
+                "description": "The duration each session took.",
+                "return_type": "timedelta"
+                },
+            "GazeDuration": {
+                "type": "GazeDuration",
+                "enabled": true,
+                "description": "How long gaze event last for.",
+                "return_type": "timedelta"
+            },
+            "RegionEnterCount": {
+                "type": "RegionEnterCount",
+                "enabled": false,
+                "description": "The number of times a player enterd for a given region of the game.",
+                "return_type": "int"
+            },
+            "ActivityCompleted": {
+                "type": "ActivityCompleted",
+                "enabled": true,
+                "description": "The activities completed in a given session.",
+                "return_type": "int"
+            },
+            "ActivityDuration": {
+                "type": "ActivityDuration",
+                "enabled": true,
+                "description": "How long activity last for.",
+                "return_type": "int"
+            },
+            "RegionsEncountered": {
+                "type": "RegionsEncountered",
+                "enabled": true,
+                "description": "The regions entered in a given session.",
+                "return_type": "int"
+            }
         }
     },
 

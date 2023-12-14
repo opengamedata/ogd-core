@@ -7,7 +7,7 @@ from typing import Dict, List, Tuple, Optional
 # import locals
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
-from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.GameSourceSchema import GameSourceSchema
 from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
 from utils.Logger import Logger
 
@@ -70,11 +70,11 @@ class BigQueryInterface(DataInterface):
         data = list(self._client.query(query))
         return {'min':data[0][0], 'max':data[0][1]}
 
-    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None, exclude_rows:Optional[List[str]]=None) -> List[Tuple]:
         # 2) Set up clauses to select based on Session ID or Player ID.
         events = None
         if self._client != None:
-            query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode)
+            query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode, exclude_rows=exclude_rows)
             Logger.Log(f"Running query for rows from IDs:\n{query}", logging.DEBUG, depth=3)
             data = self._client.query(query)
             events = []
@@ -111,20 +111,14 @@ class BigQueryInterface(DataInterface):
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
         if id_mode==IDMode.SESSION:
             id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"""
-                WHERE session_id IN ({id_string})
-            """
+            where_clause = f"WHERE session_id IN ({id_string})"
         elif id_mode==IDMode.USER:
             id_string = ','.join([f"'{x}'" for x in id_list])
-            where_clause = f"""
-                WHERE user_id IN ({id_string})
-            """
+            where_clause = f"WHERE user_id IN ({id_string})"
         else:
             Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
             id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"""
-                WHERE session_id IN ({id_string})
-            """
+            where_clause = f"WHERE session_id IN ({id_string})"
         query = f"""
             SELECT MIN(server_time), MAX(server_time)
             FROM `{self.DBPath()}`
@@ -132,6 +126,7 @@ class BigQueryInterface(DataInterface):
         """
         Logger.Log(f"Running query for dates from IDs:\n{query}", logging.DEBUG, depth=3)
         data = list(self._client.query(query))
+        Logger.Log(f"...Query yielded results:\n{data}", logging.DEBUG, depth=3)
         ret_val : Dict[str, datetime] = {}
         if len(data) == 1:
             dates = data[0]
@@ -197,7 +192,7 @@ class BigQueryInterface(DataInterface):
 
     # *** PRIVATE METHODS ***
 
-    def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode) -> str:
+    def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode, exclude_rows:Optional[List[str]]=None) -> str:
         id_clause : str = ""
         id_string = ','.join([f"'{x}'" for x in id_list])
         if id_mode == IDMode.SESSION:
@@ -209,6 +204,8 @@ class BigQueryInterface(DataInterface):
             id_clause = f"session_id IN ({id_string})"
         # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
         where_clause = f" WHERE {id_clause}"
+        if exclude_rows is not None:
+            where_clause += f" AND event_name not in ({exclude_rows})"
 
         # 4) Set up actual query
         # TODO Order by user_id, and by timestamp within that.

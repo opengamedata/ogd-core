@@ -14,10 +14,10 @@ class EventDataElementSchema(Schema):
         if not isinstance(all_elements, dict):
             if isinstance(all_elements, str):
                 all_elements = { 'description' : all_elements }
-                Logger.Log(f"For {name} EventDataElement config, all_elements was a str, probably in legacy format. Defaulting to all_elements = {'{'} description : {all_elements['description']} {'}'}", logging.WARN)
+                Logger.Log(f"For EventDataElement config of `{name}`, all_elements was a str, probably in legacy format. Defaulting to all_elements = {'{'} description : {all_elements['description']} {'}'}", logging.WARN)
             else:
                 all_elements = {}
-                Logger.Log(f"For {name} EventDataElement config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
+                Logger.Log(f"For EventDataElement config of `{name}`, all_elements was not a dict, defaulting to empty dict", logging.WARN)
 
         if "type" in all_elements.keys():
             self._type = EventDataElementSchema._parseElementType(all_elements['type'])

@@ -3,11 +3,11 @@
 
     "events": {
         "day_over": {
-            "description": "N/A",
+            "description": "Progression event indicating when the player reaches the end of a day.",
             "event_data": {
                 "MinigameIndex": {
-                    "type":"int",
-                    "description":"N/A"
+                    "type":"enum(0, 1, 2)",
+                    "description":"An integer indicating which minigame was played that day. 0=Packing, 1=Shipping, 2=Cashier"
                 },
                 "LevelButtonIndex": {
                     "type":"int",
@@ -39,8 +39,8 @@
             "description": "N/A",
             "event_data": {
                 "MinigameIndex": {
-                    "type":"int",
-                    "description":"N/A"
+                    "type":"enum(0, 1, 2)",
+                    "description":"An integer indicating which minigame was being played. 0=Packing, 1=Shipping, 2=Cashier"
                 }
             }
         },
@@ -198,9 +198,9 @@
         "level_completed": {
             "description": "N/A",
             "event_data": {
-                "MinigameData": {
-                    "type":"int",
-                    "description":"N/A"
+                "MinigameIndex": {
+                    "type":"enum(0, 1, 2)",
+                    "description":"An integer indicating which minigame was played that day. 0=Packing, 1=Shipping, 2=Cashier"
                 },
                 "LevelButtonIndex": {
                     "type":"int",
@@ -227,8 +227,8 @@
             "description": "N/A",
             "event_data": {
                 "MinigameIndex": {
-                    "type":"int",
-                    "description":"N/A"
+                    "type":"enum(0, 1, 2)",
+                    "description":"An integer indicating which minigame had a tier unlocked. 0=Packing, 1=Shipping, 2=Cashier"
                 },
                 "Score": {
                     "type":"int",
