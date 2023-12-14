@@ -7,6 +7,21 @@ from schemas.Schema import Schema
 from utils.Logger import Logger
 
 class GameSourceSchema(Schema):
+    """A simple Schema structure containing configuration information for a particular game's data.
+    
+    When given to an interface, this schema is treated as the location from which to retrieve data.
+    When given to an outerface, this schema is treated as the location in which to store data.
+    (note that some interfaces/outerfaces, such as debugging i/o-faces, may ignore the configuration)
+    Key properties of this schema are:
+    - `Name` : Typically, the name of the Game whose source configuration is indicated by this schema
+    - `Source` : A data source where game data is stored
+    - `DatabaseName` : The name of the specific database within the source that contains this game's data
+    - `TableName` : The neame of the specific table within the database holding the given game's data
+    - `TableSchema` : A schema indicating the structure of the table containing the given game's data.
+
+    :param Schema: _description_
+    :type Schema: _type_
+    """
     def __init__(self, name:str, all_elements:Dict[str, Any], data_sources:Dict[str, DataSourceSchema]):
         self._source_name   : str
         self._source_schema : Optional[DataSourceSchema]
@@ -73,6 +88,10 @@ class GameSourceSchema(Schema):
 
         ret_val = f"{self.Name}: _{self.TableSchema}_ format, source {self.Source.Name if self.Source else 'None'} : {self.DatabaseName}.{self.TableName}"
         return ret_val
+
+    @staticmethod
+    def EmptySchema() -> "GameSourceSchema":
+        return GameSourceSchema(name="NOT FOUND", all_elements={}, data_sources={})
 
     @staticmethod
     def _parseSchema(schema) -> str:

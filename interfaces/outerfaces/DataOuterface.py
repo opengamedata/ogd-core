@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Set
 from interfaces.Interface import Interface
 from schemas.IDMode import IDMode
 from schemas.ExportMode import ExportMode
-from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.GameSourceSchema import GameSourceSchema
 from utils.Logger import Logger
 from utils.utils import ExportRow
 
