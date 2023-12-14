@@ -58,24 +58,25 @@ class Logger:
     def Log(message:str, level=logging.INFO, depth:int=0) -> None:
         now = datetime.now().strftime("%y-%m-%d %H:%M:%S")
         indent = ''.join(['  '*depth])
+        _idt_msg = message.replace("\n", f"\n{' '*9}{indent}")
         if Logger.file_logger is not None:
             if level == logging.DEBUG:
-                Logger.file_logger.debug(f"DEBUG:   {now} {indent}{message}")
+                Logger.file_logger.debug(f"DEBUG:   {now} {indent}{_idt_msg}")
             elif level == logging.INFO:
-                Logger.file_logger.info( f"INFO:    {now} {indent}{message}")
+                Logger.file_logger.info( f"INFO:    {now} {indent}{_idt_msg}")
             elif level == logging.WARNING:
-                Logger.file_logger.warn( f"WARNING: {now} {indent}{message}")
+                Logger.file_logger.warn( f"WARNING: {now} {indent}{_idt_msg}")
             elif level == logging.ERROR:
-                Logger.file_logger.error(f"ERROR:   {now} {indent}{message}")
+                Logger.file_logger.error(f"ERROR:   {now} {indent}{_idt_msg}")
         if Logger.std_logger is not None:
             if level == logging.DEBUG:
-                Logger.std_logger.debug(f"DEBUG:   {indent}{message}")
+                Logger.std_logger.debug(f"DEBUG:   {indent}{_idt_msg}")
             elif level == logging.INFO:
-                Logger.std_logger.info( f"INFO:    {indent}{message}")
+                Logger.std_logger.info( f"INFO:    {indent}{_idt_msg}")
             elif level == logging.WARNING:
-                Logger.std_logger.warn( f"WARNING: {indent}{message}")
+                Logger.std_logger.warn( f"WARNING: {indent}{_idt_msg}")
             elif level == logging.ERROR:
-                Logger.std_logger.error(f"ERROR:   {indent}{message}")
+                Logger.std_logger.error(f"ERROR:   {indent}{_idt_msg}")
 
     @staticmethod
     def Print(message:str, level=logging.DEBUG) -> None:
