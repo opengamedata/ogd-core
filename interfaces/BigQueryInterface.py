@@ -111,20 +111,14 @@ class BigQueryInterface(DataInterface):
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
         if id_mode==IDMode.SESSION:
             id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"""
-                WHERE session_id IN ({id_string})
-            """
+            where_clause = f"WHERE session_id IN ({id_string})"
         elif id_mode==IDMode.USER:
             id_string = ','.join([f"'{x}'" for x in id_list])
-            where_clause = f"""
-                WHERE user_id IN ({id_string})
-            """
+            where_clause = f"WHERE user_id IN ({id_string})"
         else:
             Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
             id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"""
-                WHERE session_id IN ({id_string})
-            """
+            where_clause = f"WHERE session_id IN ({id_string})"
         query = f"""
             SELECT MIN(server_time), MAX(server_time)
             FROM `{self.DBPath()}`
@@ -132,6 +126,7 @@ class BigQueryInterface(DataInterface):
         """
         Logger.Log(f"Running query for dates from IDs:\n{query}", logging.DEBUG, depth=3)
         data = list(self._client.query(query))
+        Logger.Log(f"...Query yielded results:\n{data}", logging.DEBUG, depth=3)
         ret_val : Dict[str, datetime] = {}
         if len(data) == 1:
             dates = data[0]
