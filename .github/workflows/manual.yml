@@ -69,11 +69,11 @@ jobs:
       # A bunch of copy-paste crap to set up google cloud for any given game.
     - if: contains(fromJson(${{ env.OGD_BQ_GAMES }}), ${{ matrix.game }})
       name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0
+      uses: google-github-actions/auth@v2
       with:
         project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
-        export_default_credentials: true
+        credentials_json: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        # export_default_credentials: true
     - if: ${{ matrix.game == 'MASHOPOLIS' }}
       name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
