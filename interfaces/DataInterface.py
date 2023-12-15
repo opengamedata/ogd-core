@@ -77,6 +77,7 @@ class DataInterface(Interface):
             Logger.Log(f"Retrieving rows from IDs with {id_mode.name} ID mode.", logging.DEBUG, depth=3)
             _rows   = self._rowsFromIDs(id_list=id_list, id_mode=id_mode, versions=versions, exclude_rows=exclude_rows)
             _fallbacks = {"app_id":self._game_id}
+            _failure_warnings = 0
             ret_val = []
             for row in _rows:
                 try:
@@ -92,10 +93,15 @@ class DataInterface(Interface):
                         Logger.Log(f"Error while converting row to Event\nFull error: {err}\nRow data: {pformat(row)}", logging.ERROR, depth=2)
                         raise err
                     else:
-                        pass
-                        ##Logger.Log(f"Error while converting row ({row}) to Event. This row will be skipped.\nFull error: {err}", logging.WARNING, depth=2)
+                        if _failure_warnings < 5:
+                            Logger.Log(f"Error while converting row ({row}) to Event. This row will be skipped.\nFull error: {err}", logging.WARNING, depth=2)
+                        elif _failure_warnings == 5:
+                            Logger.Log(f"Further warnings for unconverted rows will be truncated from output...", logging.WARNING, depth=2)
+                        _failure_warnings += 1
                 else:
                     ret_val.append(next_event)
+            if _failure_warnings > 0:
+                Logger.Log(f"{_failure_warnings} rows were skipped due to conversion errors.", logging.WARNING, depth=2)
         else:
             Logger.Log(f"Could not retrieve rows for {len(id_list)} session IDs, the source interface is not open!", logging.WARNING, depth=3)
         return ret_val
