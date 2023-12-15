@@ -10,40 +10,45 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
 
-class JobArgumentationNoReject(PerJobFeature):
-    
+"""
+n_critter_remove/(n_critter_add + n_critter_remove)
+"""
+class JobExperimentCritterAddRemoveRatio(PerJobFeature):
+
     def __init__(self, params:ExtractorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
-        self._complete_argument = False
-        self._fact_rejected_found = False
+        self._n_remove = 0
+        self._n_add = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["all_events"]
+        return ["add_critter", "remove_critter"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        #print(event.EventName)
-        if event.EventName == "complete_argument":
-            self._complete_argument = True
-        if event.EventName == "fact_rejected":
-            self._fact_rejected_found = True
+        if(event.EventName == "add_critter"):
+            self._n_add += 1
+        if(event.EventName == "remove_critter"):
+            self._n_remove += 1
+        
+
+
     def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        if(self._complete_argument == True and self._fact_rejected_found == False):
+        if(self._n_remove >= 1 and self._n_add >= 1):
+            return [abs(self._n_remove/(self._n_remove + self._n_add))]
+        elif(self._n_add < 1 and self._n_remove != 0):
             return [1]
-        elif(self._complete_argument == True and self._fact_rejected_found == True):
-            return [-1]
         else:
             return [0]
-    
+
     # *** Optionally override public functions. ***
-    @staticmethod       
+    @staticmethod
     def MinVersion() -> Optional[str]:
         return

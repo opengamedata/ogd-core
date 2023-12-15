@@ -9,41 +9,32 @@ from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 
+class JobExperimentInconclusive(PerJobFeature):
 
-class JobArgumentationNoReject(PerJobFeature):
-    
     def __init__(self, params:ExtractorParameters, job_map:dict):
         super().__init__(params=params, job_map=job_map)
-        self._complete_argument = False
-        self._fact_rejected_found = False
+        self._inconclusive = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["all_events"]
+        return ["script_fired", "guide_script_triggered"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
-        #print(event.EventName)
-        if event.EventName == "complete_argument":
-            self._complete_argument = True
-        if event.EventName == "fact_rejected":
-            self._fact_rejected_found = True
+        if(event.EventData["node_id"]["string_value"] =="partner.talk.experiment.behavior.idle.nothingLeft.2"):
+            self._inconclusive = 1
+#partner.talk.experiment.behavior.idle.nothingLeft.2
     def _extractFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        if(self._complete_argument == True and self._fact_rejected_found == False):
-            return [1]
-        elif(self._complete_argument == True and self._fact_rejected_found == True):
-            return [-1]
-        else:
-            return [0]
-    
+        return [self._inconclusive]
+
     # *** Optionally override public functions. ***
-    @staticmethod       
+    @staticmethod
     def MinVersion() -> Optional[str]:
         return
