@@ -76,21 +76,21 @@ jobs:
         # export_default_credentials: true
     - if: ${{ matrix.game == 'MASHOPOLIS' }}
       name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0
+      uses: google-github-actions/setup-gcloud@v2
       with:
         project_id: ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
         service_account_key: ${{ secrets.BQ_MASHOPOLIS_JSON }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'SHADOWSPECT' }}
       name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0
+      uses: google-github-actions/setup-gcloud@v2
       with:
         project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
         service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
         export_default_credentials: true
     - if: ${{ matrix.game == 'SHIPWRECKS' }}
       name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0
+      uses: google-github-actions/setup-gcloud@v2
       with:
         project_id: ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
         service_account_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}

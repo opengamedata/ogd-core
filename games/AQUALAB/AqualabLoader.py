@@ -67,6 +67,8 @@ class AqualabLoader(ExtractorLoader):
         # First run through aggregate features
         if feature_type == "ActiveTime":
             ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
+        elif feature_type == "JobPlayTime":
+            ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
         elif feature_type == "JobTriesInArgument":
             ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
         elif feature_type == "ModelInterveneCount":
@@ -82,6 +84,8 @@ class AqualabLoader(ExtractorLoader):
                 params=extractor_params, player_id=self._player_id)
         elif feature_type == "ActiveJobs":
             ret_val = ActiveJobs.ActiveJobs(params=extractor_params, job_map=self._job_map)
+        elif feature_type == "AverageSessionTime":
+            ret_val = AverageSessionTime.AverageSessionTime(params=extractor_params)
         elif feature_type == "EchoSessionID":
             ret_val = EchoSessionID.EchoSessionID(params=extractor_params)
         elif feature_type == "EventList":
@@ -99,7 +103,7 @@ class AqualabLoader(ExtractorLoader):
         elif feature_type == "SessionDiveSitesCount":
             ret_val = SessionDiveSitesCount.SessionDiveSitesCount(params=extractor_params)
         elif feature_type == "SessionDuration":
-            ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
+            ret_val = SessionDuration.SessionDuration(params=extractor_params, threshold=int)
         elif feature_type == "TotalHelpCount":
             ret_val = TotalHelpCount.TotalHelpCount(params=extractor_params)
         elif feature_type == "SessionID":
