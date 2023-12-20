@@ -46,7 +46,9 @@ __all__ = [
     "TotalGuideCount",
     "TotalPlayTime",
     "UserAvgSessionDuration",
-    "UserTotalSessionDuration"
+    "UserTotalSessionDuration",
+    "AverageSessionTime",
+    "JobPlayTime"
 ]
 
 from . import AppVersions
@@ -97,3 +99,5 @@ from . import UserAvgSessionDuration
 from . import UserTotalSessionDuration
 from . import JobPriorComplete
 from . import JobPriorAttempt
+from . import AverageSessionTime
+from . import JobPlayTime

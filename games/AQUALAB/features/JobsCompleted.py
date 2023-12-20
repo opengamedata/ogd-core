@@ -29,7 +29,6 @@ class JobsCompleted(SessionFeature):
                 self._jobs_completed.append(_job_name.get('string_value'))
             else:
                 self._jobs_completed.append(_job_name)
-
     def _extractFromFeatureData(self, feature:FeatureData):
         return
 
