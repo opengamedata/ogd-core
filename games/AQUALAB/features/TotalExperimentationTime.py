@@ -41,21 +41,6 @@ class TotalExperimentationTime(Feature):
                 if event.EventName == "begin_experiment":
                     self.on = True
             self.prev_time = event.Timestamp
-        # if event.SessionID != self._session_id:
-        #     self._session_id = event.SessionID
-
-        #     if self._experiment_start_time:
-        #         self._time += (self._prev_timestamp - self._experiment_start_time).total_seconds()
-        #         self._experiment_start_time = event.Timestamp
-
-        # if event.EventName == "begin_experiment":
-        #     self._experiment_start_time = event.Timestamp
-        # elif event.EventName in ["room_changed", "end_experiment"]:
-        #     if self._experiment_start_time is not None:
-        #         self._time += (event.Timestamp - self._experiment_start_time).total_seconds()
-        #         self._experiment_start_time = None
-
-        # self._prev_timestamp = event.Timestamp
 
     def _extractFromFeatureData(self, feature:FeatureData):
         return

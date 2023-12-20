@@ -48,7 +48,11 @@ __all__ = [
     "UserAvgSessionDuration",
     "UserTotalSessionDuration",
     "AverageSessionTime",
-    "JobPlayTime"
+    "JobPlayTime",
+    "TotalKelpTime",
+    "TotalArcticTime",
+    "TotalCoralTime",
+    "TotalBayouTime"
 ]
 
 from . import AppVersions
@@ -93,6 +97,10 @@ from . import TotalDiveTime
 from . import TotalHelpCount
 from . import TotalExperimentationTime
 from . import TotalModelingTime
+from . import TotalKelpTime
+from . import TotalArcticTime
+from . import TotalCoralTime
+from . import TotalBayouTime
 from . import TotalGuideCount
 from . import TotalPlayTime
 from . import UserAvgSessionDuration
