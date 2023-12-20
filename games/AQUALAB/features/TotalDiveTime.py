@@ -40,22 +40,7 @@ class TotalDiveTime(Feature):
                 if event.EventName == "begin_dive":
                     self.on = True
             self.prev_time = event.Timestamp
-        # if event.SessionID != self._session_id:
-        #     self._session_id = event.SessionID
-
-        #     if self._dive_start_time:
-        #         self._time += (self._prev_timestamp - self._dive_start_time).total_seconds()
-        #         self._dive_start_time = event.Timestamp
-
-        # if event.EventName == "begin_dive":
-        #     self._dive_start_time = event.Timestamp
-        # elif event.EventName == "scene_changed":
-        #     if self._dive_start_time is not None:
-        #         self._time += (event.Timestamp - self._dive_start_time).total_seconds()
-        #         self._dive_start_time = None
-
-        # self._prev_timestamp = event.Timestamp
-
+       
     def _extractFromFeatureData(self, feature:FeatureData):
         return
 
