@@ -34,15 +34,15 @@ def loadJSONFile(filename:str, path:Path = Path("./"), autocorrect_extension:boo
         with open(file_path, "r") as json_file:
             return json.loads(json_file.read())
     except FileNotFoundError as err:
-        Logger.Log(f"File {file_path} does not exist, trying to find within package.", logging.WARNING)
+        Logger.Log(f"Could not load JSON file, {file_path} does not exist, trying to find within package.", logging.WARNING)
         package_file_path = None
         try:
             package_file_path = files(".".join(path.parts)).joinpath(filename)
             with package_file_path.open() as json_file:
                 return json.loads(json_file.read())
         except ModuleNotFoundError as err:
-            Logger.Log(f"Could not search in module for {path}, got the following error:\n{err.msg}.", logging.WARNING)
+            Logger.Log(f"Could not load JSON file, unable to search in module for {path}, got the following error:\n{err.msg}.", logging.WARNING)
             raise err
         except FileNotFoundError as err:
-            Logger.Log(f"File {package_file_path} does not exist.", logging.WARNING)
+            Logger.Log(f"Could not load JSON file from package, {package_file_path} does not exist.", logging.WARNING)
             raise err

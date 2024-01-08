@@ -309,7 +309,7 @@ class GameSchema(Schema):
         # 2. try to actually load the contents of the file.
         try:
             ret_val = utils.loadJSONFile(filename=schema_name, path=schema_path)
-        except FileNotFoundError as err:
+        except (ModuleNotFoundError, FileNotFoundError) as err:
             Logger.Log(f"Unable to load GameSchema for {game_name}, {schema_name} does not exist! Trying to load from json template instead...", logging.WARN, depth=1)
             ret_val = GameSchema._schemaFromTemplate(schema_path=schema_path, schema_name=schema_name)
             if ret_val is not None:
