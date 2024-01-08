@@ -12,7 +12,7 @@ include-package-data = true
 where = ["src"]
 
 [tool.setuptools.package-data]
-"*" = ['core/games/*/schemas/*.json.template', 'core/games/LAKELAND/features/*.json]
+"*" = ['core/games/*/schemas/*.json.template', 'core/games/LAKELAND/features/*.json', 'core/schemas/table_schemas/*.json']
 
 [project]
 name = "opengamedata-core"
