@@ -318,7 +318,7 @@ class GameSchema(Schema):
                 Logger.Log(f"Failed to load schema for {game_name} from template.", logging.WARN, depth=1)
         else:
             if ret_val is None:
-                Logger.Log(f"Could not find game schema at {schema_path / schema_name}", logging.ERROR)
+                Logger.Log(f"Could not load game schema at {schema_path / schema_name}, the file was empty!", logging.ERROR)
         return ret_val
 
     @staticmethod
