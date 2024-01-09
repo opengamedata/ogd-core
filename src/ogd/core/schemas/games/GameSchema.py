@@ -326,18 +326,19 @@ class GameSchema(Schema):
         ret_val = None
 
         template_name = schema_name + ".template"
-        template = schema_path / template_name
         try:
-            copyfile(template, schema_path / schema_name)
-        except FileNotFoundError as no_file:
-            Logger.Log(f"Could not create {schema_name} from template, the template does not exist at {template}.\nTrying to load from package, without copy.", logging.WARN, depth=2)
-            print(f"Could not create {schema_name} from template, the template does not exist at {template}.\nTrying to load from package, without copy.")
             ret_val = loadJSONFile(filename=template_name, path=schema_path, autocorrect_extension=False)
-        except Exception as cp_err:
-            Logger.Log(f"Could not create {schema_name} from template, an error occurred:\n{cp_err}", logging.WARN, depth=2)
-            print(f"Could not create {schema_name} from template, an error occurred:\n{cp_err}")
+        except FileNotFoundError as no_file:
+            Logger.Log(       f"Could not load {schema_name} from template, the template does not exist at {schema_path}.", logging.WARN, depth=2)
+            print(f"(via print) Could not create {schema_name} from template, the template does not exist at {schema_path}.")
         else:
-            ret_val = loadJSONFile(filename=schema_name, path=schema_path)
+            Logger.Log(f"Trying to copy {schema_name} from template, for future use...", logging.DEBUG, depth=2)
+            template = schema_path / template_name
+            try:
+                copyfile(template, schema_path / schema_name)
+            except Exception as cp_err:
+                Logger.Log(       f"Could not copy {schema_name} from template, a {type(cp_err)} error occurred:\n{cp_err}", logging.WARN, depth=2)
+                print(f"(via print) Could not copy {schema_name} from template, a {type(cp_err)} error occurred:\n{cp_err}")
         return ret_val
 
     # *** PRIVATE METHODS ***
