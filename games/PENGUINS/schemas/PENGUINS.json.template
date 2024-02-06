@@ -53,7 +53,7 @@
             }
         },
         "viewport_data": {
-            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player for each frame in the past second",
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player headset for each frame in the past second",
             "event_data": {
                 "gaze_data_package" : {
                     "type" : "List[Dict]",
@@ -61,7 +61,7 @@
                         "pos" : "List[float]",
                         "rot" : "List[float]"
                     },
-                    "description" : "An array of per-frame objects, each containing the position and rotation of the headset on the given frame."
+                    "description" : "A list of dicts, where each dict is one frame of headset data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
                 }
             }
         },
@@ -70,7 +70,11 @@
             "event_data": {
                 "left_hand_data_package": {
                     "type": "List[Dict]",
-                    "description": "A list of dicts, where each dict is one frame of data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                    "details" : {
+                        "pos" : "List[float]",
+                        "rot" : "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of left-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
                 }
             }
         },
@@ -79,7 +83,11 @@
             "event_data": {
                 "right_hand_data_package": {
                     "type": "List[Dict]",
-                    "description": "A list of dicts, where each dict is one frame of data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                    "details" : {
+                        "pos" : "List[float]",
+                        "rot" : "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of right-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
                 }
             }
         },
