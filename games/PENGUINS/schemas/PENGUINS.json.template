@@ -52,6 +52,14 @@
                 }
             }
         },
+        "headset_on": {
+            "description": "When the player puts the headset on, resuming the game",
+            "event_data": {}
+        },
+        "headset_off": {
+            "description": "When the player removes the headset from their head, pausing the game",
+            "event_data": {}
+        },
         "viewport_data": {
             "description": "An event sent approximately once per second, containing the in-game position and orientation of the player headset for each frame in the past second",
             "event_data": {
