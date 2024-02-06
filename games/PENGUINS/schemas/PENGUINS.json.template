@@ -55,33 +55,13 @@
         "viewport_data": {
             "description": "An event sent approximately once per second, containing the in-game position and orientation of the player for each frame in the past second",
             "event_data": {
-                "px": {
-                    "type": "List[float]",
-                    "description": "The x-positions of the player for each frame in the last second"
-                },
-                "py": {
-                    "type": "List[float]",
-                    "description": "The y-positions of the player for each frame in the last second"
-                },
-                "pz": {
-                    "type": "List[float]",
-                    "description": "The z-positions of the player for each frame in the last second"
-                },
-                "qx": {
-                    "type": "List[float]",
-                    "description": "The x-component of the quaternion for the player's orientation for each frame in the last second"
-                },
-                "qy": {
-                    "type": "List[float]",
-                    "description": "The y-component of the quaternion for the player's orientation for each frame in the last second"
-                },
-                "qz": {
-                    "type": "List[float]",
-                    "description": "The z-component of the quaternion for the player's orientation for each frame in the last second"
-                },
-                "qw": {
-                    "type": "List[float]",
-                    "description": "The w-component of the quaternion for the player's orientation for each frame in the last second"
+                "gaze_data_package" : {
+                    "type" : "List[Dict]",
+                    "details" : {
+                        "pos" : "List[float]",
+                        "rot" : "List[float]"
+                    },
+                    "description" : "An array of per-frame objects, each containing the position and rotation of the headset on the given frame."
                 }
             }
         },
