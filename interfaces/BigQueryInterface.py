@@ -218,6 +218,6 @@ class BigQueryInterface(DataInterface):
             SELECT *
             FROM `{self.DBPath()}`
             {where_clause}
-            ORDER BY `user_id`, `session_id`, `server_time` ASC
+            ORDER BY `user_id`, `session_id`, `event_sequence_index` ASC
         """
         return query
