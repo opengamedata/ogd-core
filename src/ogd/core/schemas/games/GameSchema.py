@@ -39,7 +39,9 @@ class GameSchema(Schema):
         :param schema_path: schema_path Path to the folder containing the JSON schema file, defaults to None
         :type schema_path: str, optional
         """
-        # define instance vars
+        # Give schema_path a default, don't think we can use game_id to construct it directly in the function header (so do it here if None)
+        schema_path = schema_path or Path("./") / "ogd" / "core" / "games" / game_id / "schemas"
+    # 1. define instance vars
         self._event_list             : List[EventSchema] = []
         self._detector_map           : Dict[str, Dict[str, DetectorSchema]] = {'perlevel':{}, 'per_count':{}, 'aggregate':{}}
         self._aggregate_feats        : Dict[str, AggregateSchema]           = {}
@@ -51,15 +53,15 @@ class GameSchema(Schema):
         self._min_level              : Optional[int]
         self._max_level              : Optional[int]
         self._supported_vers         : Optional[List[int]]
-        # set instance vars
+    # 2. set instance vars
         _schema = GameSchema._loadSchemaFile(game_name=self._game_id, schema_path=schema_path)
         if _schema is not None:
-            # 1. Get events, if any
+    # 3. Get events, if any
             if "events" in _schema.keys():
                 self._event_list = [EventSchema(name=key, all_elements=val) for key,val in _schema['events'].items()]
             else:
                 Logger.Log(f"{self._game_id} game schema does not document any events.", logging.INFO)
-            # 2. Get detectors, if any
+    # 4. Get detectors, if any
             if "detectors" in _schema.keys():
                 if "perlevel" in _schema['detectors']:
                     _perlevels = _schema['detectors']['perlevel']
@@ -72,7 +74,7 @@ class GameSchema(Schema):
                     self._detector_map['aggregate'] = {key : DetectorSchema(name=key, all_elements=val) for key,val in _aggregates.items()}
             else:
                 Logger.Log(f"{self._game_id} game schema does not define any detectors.", logging.INFO)
-            # 3. Get features, if any
+    # 5. Get features, if any
             if "features" in _schema.keys():
                 if "legacy" in _schema['features'].keys():
                     self._legacy_mode = _schema['features']['legacy'].get('enabled', False)
@@ -87,15 +89,15 @@ class GameSchema(Schema):
                     self._aggregate_feats.update({key : AggregateSchema(name=key, all_elements=val) for key,val in _aggregates.items()})
             else:
                 Logger.Log(f"{self._game_id} game schema does not define any features.", logging.INFO)
-            # 4. Get level_range, if any
+    # 6. Get level_range, if any
             if "level_range" in _schema.keys():
                 self._min_level = _schema.get("level_range", {}).get('min', None)
                 self._max_level = _schema.get("level_range", {}).get('max', None)
 
-            # 5. Get other ranges, if any
+    # 7. Get other ranges, if any
             self._other_ranges = {key:range(val.get('min', 0), val.get('max', 1)) for key,val in _schema.items() if key.endswith("_range")}
 
-            # 6. Get config, if any
+    # 8. Get config, if any
             self._config = _schema.get('config', {})
             if "SUPPORTED_VERS" in _schema['config']:
                 self._supported_vers = _schema['config']['SUPPORTED_VERS']
@@ -103,7 +105,7 @@ class GameSchema(Schema):
                 self._supported_vers = None
                 Logger.Log(f"{self._game_id} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
 
-            # 7. Collect any other, unexpected elements
+    # 9. Collect any other, unexpected elements
             _leftovers = { key:val for key,val in _schema.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
             super().__init__(name=self._game_id, other_elements=_leftovers)
 
@@ -299,13 +301,11 @@ class GameSchema(Schema):
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _loadSchemaFile(game_name:str, schema_path:Optional[Path] = None) -> Optional[Dict[Any, Any]]:
+    def _loadSchemaFile(game_name:str, schema_path:Path) -> Optional[Dict[Any, Any]]:
         ret_val = None
 
         # 1. make sure the name and path are in the right form.
         schema_name = f"{game_name.upper()}.json"
-        if schema_path == None:
-            schema_path = Path("./") / "ogd" / "core" / "games" / game_name / "schemas"
         # 2. try to actually load the contents of the file.
         try:
             ret_val = utils.loadJSONFile(filename=schema_name, path=schema_path)
