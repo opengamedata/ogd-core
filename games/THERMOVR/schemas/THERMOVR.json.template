@@ -181,8 +181,8 @@
             "description": "When the player clicks the button for a new game. This should trigger a new `game_start` event, with new session and player IDs",
             "event_data": {
                 "hand": {
-                    "type": "enum(LEFT, RIGHT)",
-                    "description": "Indicator of whether the player pressed the button with their right or left hand."
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
                 }
             }
         },
@@ -190,8 +190,8 @@
             "description": "When the player clicks the button to reset the sim to its default state. The default state may be redefined by certain tasks in lab mode.",
             "event_data": {
                 "hand": {
-                    "type": "enum(LEFT, RIGHT)",
-                    "description": "Indicator of whether the player pressed the button with their right or left hand."
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
                 },
                 "default_state" : {
                     "type": "Dict[str, float]",
@@ -279,8 +279,8 @@
                     "description": "The orientation of the tablet when the player grabbed it"
                 },
                 "hand": {
-                    "type": "enum(LEFT, RIGHT)",
-                    "description": "Indicator of whether the player grabbed the tablet with their right or left hand."
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player grabbed the tablet with their right or left hand, or a mouse."
                 }
             }
         },
@@ -307,8 +307,8 @@
                     "description": "The orientation of the tablet when the player released it"
                 },
                 "hand": {
-                    "type": "enum(LEFT, RIGHT)",
-                    "description": "Indicator of whether the player was moving the tablet with their right or left hand."
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player was moving the tablet with their right or left hand, or a mouse."
                 }
             }
         },
@@ -320,8 +320,8 @@
                     "description": "The height of the workstation handle when the player grabbed it."
                 },
                 "hand": {
-                    "type": "enum(LEFT, RIGHT)",
-                    "description": "Indicator of whether the player grabbed the handle with their right or left hand."
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player grabbed the handle with their right or left hand, or a mouse."
                 }
             }
         },
@@ -333,8 +333,8 @@
                     "description": "The height of the workstation handle when the player released it."
                 },
                 "hand": {
-                    "type": "enum(LEFT, RIGHT)",
-                    "description": "Indicator of whether the player moved the handle with their right or left hand."
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player moved the handle with their right or left hand, or a mouse."
                 }
             }
         },
@@ -350,8 +350,8 @@
                     "description": "The rotation of the graph as a result of the button press, in degrees, relative to the default graph rotation."
                 },
                 "hand": {
-                    "type": "enum(LEFT, RIGHT)",
-                    "description": "Indicator of whether the player grabbed the handle with their right or left hand."
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player grabbed the handle with their right or left hand, or a mouse."
                 }
             }
         },
@@ -367,8 +367,8 @@
                     "description": "The rotation of the graph as a result of the button press, in degrees, relative to the default graph rotation."
                 },
                 "hand": {
-                    "type": "enum(LEFT, RIGHT)",
-                    "description": "Indicator of whether the player moved the handle with their right or left hand."
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player moved the handle with their right or left hand, or a mouse."
                 }
             }
         },
@@ -376,8 +376,8 @@
             "description": "When the player grabs the phase graph's state 'ball' and begins to drag it around",
             "event_data": {
                 "hand": {
-                    "type": "enum(LEFT, RIGHT)",
-                    "description": "Indicator of whether the player grabbed the ball with their right or left hand."
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player grabbed the ball with their right or left hand, or a mouse."
                 }
             }
         },
@@ -385,8 +385,8 @@
             "description": "When the player releases the phase graph's state 'ball' at a new position on the graph.",
             "event_data": {
                 "hand": {
-                    "type": "enum(LEFT, RIGHT)",
-                    "description": "Indicator of whether the player moved the ball with their right or left hand."
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player moved the ball with their right or left hand, or a mouse."
                 }
             }
         },
@@ -406,8 +406,8 @@
                     "description": "True if clicking the button reset the tool to its default value (0 for most tools)."
                 },
                 "hand": {
-                    "type": "enum(LEFT, RIGHT)",
-                    "description": "Indicator of whether the player pressed the button with their right or left hand."
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
                 }
             }
         },
@@ -423,8 +423,8 @@
                     "description": "The tool value after being nudged."
                 },
                 "hand": {
-                    "type": "enum(LEFT, RIGHT)",
-                    "description": "Indicator of whether the player pressed the button with their right or left hand."
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
                 }
             }
         },
@@ -440,8 +440,177 @@
                     "description": "The tool value after being nudged."
                 },
                 "hand": {
-                    "type": "enum(LEFT, RIGHT)",
-                    "description": "Indicator of whether the player pressed the button with their right or left hand."
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "grab_tool_slider": {
+            "description": "When the player grabs the tool slider to adjust the value",
+            "event_data": {
+                "tool_name": {
+                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "description": "The tool whose decrease button was clicked."
+                },
+                "start_value": {
+                    "type": "float",
+                    "description": "The tool value when the player grabbed the slider, in the tool's units."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "release_tool_slider": {
+            "description": "When the player releases the tool slider after adjusting the value",
+            "event_data": {
+                "tool_name": {
+                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "description": "The tool whose decrease button was clicked."
+                },
+                "end_value": {
+                    "type": "float",
+                    "description": "The tool value after the slider was released, in the tool's units."
+                },
+                "auto_release" : {
+                    "type" : "bool",
+                    "description" : "Indicator for whether the release of the slider was automatically enforced by the system. This could be either because the player's hand got too far from the slider, or because the player pressed another button, such as reset, while dragging the slider."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "gaze_object_end": {
+            "description": "When the player has been looking at one of the major objects for at least a full second, and looks away.",
+            "event_data": {
+                "object": {
+                    "type": "enum(TABLET, PISTON, GRAPH, CONTROLS)",
+                    "description": "Which object the player gazed at."
+                },
+                "gaze_duration": {
+                    "type": "float",
+                    "description": "The time in seconds the player spent looking at the object."
+                }
+            }
+        },
+        "click_view_settings": {
+            "description": "When the player presses the tablet button to view settings panel",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_toggle_setting": {
+            "description": "When the player ticks/unticks a setting in the settings panel",
+            "event_data": {
+                "setting": {
+                    "type": "enum(AXIS_NUMBERS, GRID_LINES, REGION_LABELS, AXIS_TRACKERS)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                },
+                "enabled" : {
+                    "type" : "bool",
+                    "description" : "True if the click enabled the given setting, or false if it disabled the setting."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "tool_locked": {
+            "description": "When a lab task locks a specific tool, making it unvailable to the player",
+            "event_data": {
+                "hand": {
+                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "description": "The specific tool that was locked."
+                }
+            }
+        },
+        "tool_unlocked": {
+            "description": "When a lab task unlocks a specific tool, making it ailable to the player. Also occurs when returning to Sandbox mode.",
+            "event_data": {
+                "hand": {
+                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "description": "The specific tool that was unlocked."
+                }
+            }
+        },
+        "click_sandbox_mode": {
+            "description": "When the player presses the tablet button to enter sandbox mode",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_lab_mode": {
+            "description": "When the player presses the tablet button to enter lab mode",
+            "event_data": {
+                "initial_lab" : {
+                    "type": "Dict[str, int] | null",
+                    "details": {
+                        "lab_name":"str",
+                        "author":"str",
+                        "percent_complete":"float",
+                        "sections": "Dict[str, Any]"
+                    },
+                    "description": "A description of the lab that was started/resumed upon entering lab mode, or null if no lab was start and the player was shown the lab menu instead."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_lab_scroll_up": {
+            "description": "When the player presses the button to scroll up in the list of available labs in the lab menu",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_lab_scroll_down": {
+            "description": "When the player presses the button to scroll down in the list of available labs in the lab menu",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "lab_menu_displayed": {
+            "description": "When the tablet displays a list of available labs to the player",
+            "event_data": {
+                "available_labs" : {
+                    "type": "List[Dict]",
+                    "details": {
+                        "lab_name":"str",
+                        "author":"str",
+                        "percent_complete":"float"
+                    },
+                    "description": "A list of the labs displayed to the player (not including any labs that are available but undisplayed)."
+                }
+            }
+        },
+        "select_lab": {
+            "description": "When the player selects a lab from the menu",
+            "event_data": {
+                "initial_lab" : {
+                    "type": "List[Dict]",
+                    "details": {
+                        "lab_name":"str",
+                        "author":"str",
+                        "percent_complete":"float"
+                    },
+                    "description": "A list of the labs displayed to the player (not including any labs that are available but undisplayed)."
                 }
             }
         },
