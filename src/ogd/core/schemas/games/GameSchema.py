@@ -115,6 +115,15 @@ class GameSchema(Schema):
     # *** PUBLIC METHODS ***
 
     def GetCountRange(self, count:Any) -> range:
+        """Function to get a predefined range for per-count features, or to generate a range up to given count.
+        Typically, this would be used to retrieve the `level_range` for the game.
+        However, any other ranges defined in the game's schema can be retrieved here, or a custom range object generated (using `int(count)`).
+
+        :param count: The name of a range defined in the game schema, or an object that can be int-ified to define a custom range.
+        :type count: Any
+        :return: The range object with name given by `count`, or a new range from 0 to (but not including) `int(count)`
+        :rtype: range
+        """
         if isinstance(count, str):
             if count.lower() == "level_range":
                 count_range = self.LevelRange
@@ -128,6 +137,18 @@ class GameSchema(Schema):
         return count_range
 
     def DetectorEnabled(self, detector_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+        """Function to check if detector with given base name and iteration mode (aggregate or percount) is enabled for given extract mode.
+
+        :param detector_name: The base name of the detector class to check
+        :type detector_name: str
+        :param iter_mode: The "iteration" mode of the detector class (aggregate or per-count)
+        :type iter_mode: IterationMode
+        :param extract_mode: The extraction mode of the detector (which... should always be detector?)
+        :type extract_mode: ExtractionMode
+        :raises ValueError: Error indicating an unrecognized iteration mode was given.
+        :return: True if the given detector is enabled in the schema, otherwise False
+        :rtype: bool
+        """
         if self._legacy_mode:
             return False
         ret_val : bool
@@ -191,49 +212,60 @@ class GameSchema(Schema):
 
     @property
     def GameName(self) -> str:
+        """Property for the name of the game configured by this schema
+        """
         return self._game_id
 
-    ## Function to retrieve the dictionary of event types for the game.
     @property
     def Events(self) -> List[EventSchema]:
+        """Property for the list of events the game logs.
+        """
         return self._event_list
 
-    ## Function to retrieve the names of all event types for the game.
     @property
     def EventTypes(self) -> List[str]:
+        """Property for the names of all event types for the game.
+        """
         return [event.Name for event in self.Events]
 
-    ## Function to retrieve the dictionary of categorized detectors to extract.
     @property
     def Detectors(self) -> Dict[str, Dict[str, DetectorSchema]]:
+        """Property for the dictionary of categorized detectors to extract.
+        """
         return self._detector_map
 
-    ## Function to retrieve the compiled list of all detector names.
     @property
     def DetectorNames(self) -> List[str]:
+        """Property for the compiled list of all detector names.
+        """
         ret_val : List[str] = []
         for _category in self.Detectors.values():
             ret_val += [detector.Name for detector in _category.values()]
         return ret_val
 
-    ## Function to retrieve the dictionary of per-custom-count detectors.
     @property
     def PerCountDetectors(self) -> Dict[str, DetectorSchema]:
+        """Property for the dictionary of per-custom-count detectors.
+        """
         return self.Detectors.get("per_count", {})
 
-    ## Function to retrieve the dictionary of aggregate detectors.
+    ## Function to retrieve the 
     @property
     def AggregateDetectors(self) -> Dict[str, DetectorSchema]:
+        """Property for the dictionary of aggregate detectors.
+        """
         return self.Detectors.get("aggregate", {})
 
-    ## Function to retrieve the dictionary of categorized features to extract.
     @property
     def Features(self) -> Dict[str, Union[Dict[str, AggregateSchema], Dict[str, PerCountSchema]]]:
+        """Property for the dictionary of categorized features to extract.
+        """
         return { 'aggregate' : self._aggregate_feats, 'per_count' : self._percount_feats, 'perlevel' : self._legacy_perlevel_feats }
 
-    ## Function to retrieve the compiled list of all feature names.
     @property
     def FeatureNames(self) -> List[str]:
+        """Property for the compiled list of all feature names.
+        """
         ret_val : List[str] = []
         for _category in self.Features.values():
             ret_val += [feature.Name for feature in _category.values()]
@@ -241,20 +273,26 @@ class GameSchema(Schema):
 
     @property
     def LegacyPerLevelFeatures(self) -> Dict[str,PerCountSchema]:
+        """Property for the dictionary of legacy per-level features
+        """
         return self._legacy_perlevel_feats
 
-    ## Function to retrieve the dictionary of per-custom-count features.
     @property
     def PerCountFeatures(self) -> Dict[str,PerCountSchema]:
+        """Property for the dictionary of per-custom-count features.
+        """
         return self._percount_feats
 
-    ## Function to retrieve the dictionary of aggregate features.
     @property
     def AggregateFeatures(self) -> Dict[str,AggregateSchema]:
+        """Property for the dictionary of aggregate features.
+        """
         return self._aggregate_feats
 
     @property
     def LevelRange(self) -> range:
+        """Property for the range of levels defined in the schema if any.
+        """
         ret_val = range(0)
         if self._min_level is not None and self._max_level is not None:
             # for i in range(self._min_level, self._max_level+1):
