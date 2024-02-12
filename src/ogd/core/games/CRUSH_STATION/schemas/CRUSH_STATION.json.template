@@ -137,7 +137,7 @@
             }
         },
         "start_game": {
-            "description": "Generally not exported by Al",
+            "description": "(code=1001) Generally not exported by Al",
             "event_data": {
                 "gameName": {
                     "type": "str",
@@ -146,7 +146,7 @@
             }
         },
         "gamescribe_created": {
-            "description": "Generally not exported by Al",
+            "description": "(code=1002) Generally not exported by Al",
             "event_data": {
                 "gamescribeMode": {
                     "type": "enum(trace, strict)",
@@ -155,21 +155,21 @@
             }
         },
         "settings": {
-            "description": "TODO",
+            "description": "(code=2001) TODO",
             "event_data": {
                 "playTime": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "Amount of active play time research intended for players, as set in DREAM. Not counting instruction screens."
                 }
             }
         },
         "main_menu_shown": {
-            "description": "TODO",
+            "description": "(code=3001) TODO",
             "event_data": {
             }
         },
         "level_menu_shown": {
-            "description": "This will never be jotted for Fall 2018, because we're not using the level menu",
+            "description": "(code=3002) This will never be jotted for Fall 2018, because we're not using the level menu",
             "event_data": {
                 "passedLevel": {
                     "type": "bool",
@@ -186,42 +186,42 @@
             }
         },
         "level_start": {
-            "description": "Called once the level starts, tutorial not included",
+            "description": "(code=3003) Called once the level starts, tutorial not included",
             "event_data": {
             }
         },
         "bubble_shown": {
-            "description": "TODO",
+            "description": "(code=3004) TODO",
             "event_data": {
                 "id": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "TODO"
                 }
             }
         },
         "bubble_hidden": {
-            "description": "TODO",
+            "description": "(code=3005) TODO",
             "event_data": {
                 "id": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "TODO"
                 }
             }
         },
         "bubble_active": {
-            "description": "TODO",
+            "description": "(code=3006) TODO",
             "event_data": {
                 "id": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "TODO"
                 }
             }
         },
         "bubble_chosen": {
-            "description": "Called every time a bubble UI is unfolded",
+            "description": "(code=4001) Called every time a bubble UI is unfolded",
             "event_data": {
                 "id": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "id of the bubble whose UI has been unfolded"
                 },
                 "bubblesArray": {
@@ -236,10 +236,10 @@
             }
         },
         "color_animal_selection": {
-            "description": "(All the choices a player makes, even before bubble has been submitted)",
+            "description": "(code=4002) (All the choices a player makes, even before bubble has been submitted)",
             "event_data": {
                 "id": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "TODO"
                 },
                 "color": {
@@ -253,10 +253,10 @@
             }
         },
         "bubble_done": {
-            "description": "Called every time a bubble UI is unfolded",
+            "description": "(code=4003) Called every time a bubble UI is unfolded",
             "event_data": {
                 "id": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "TODO"
                 },
                 "color": {
@@ -279,28 +279,28 @@
             }
         },
         "summary_screen": {
-            "description": "TODO",
+            "description": "(code=3050) TODO",
             "event_data": {
                 "levelPoints": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "Summarizes points the participant earned during the level; never negative to protect feelings. Since this can never go below 0, may be different from LevelRealPoints"
                 },
                 "levelRealPoints": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "Summarizes points the participant earned during the level; can be negative"
                 },
                 "maxLevelPoints": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "Maximum points it would have been possible to earn"
                 },
                 "numStars": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "Number of stars displayed after completing the level; depends on percentage"
                 }
             }
         },
         "leaderboard_shown": {
-            "description": "TODO",
+            "description": "(code=3051) TODO",
             "event_data": {
                 "totalPoints": {
                     "type": "?int?",
