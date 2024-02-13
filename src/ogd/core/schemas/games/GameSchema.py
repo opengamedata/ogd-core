@@ -154,12 +154,13 @@ class GameSchema(Schema):
         ret_val : bool
 
         _detector_schema : Optional[DetectorSchema]
-        if iter_mode == IterationMode.AGGREGATE:
-            _detector_schema = self.Detectors['aggregate'].get(detector_name)
-        elif iter_mode == IterationMode.PERCOUNT:
-            _detector_schema = self.Detectors['per_count'].get(detector_name, self.Detectors['perlevel'].get(detector_name))
-        else:
-            raise ValueError(f"In GameSchema, DetectorEnabled was given an unrecognized iteration mode of {iter_mode.name}")
+        match iter_mode:
+            case IterationMode.AGGREGATE:
+                _detector_schema = self.Detectors['aggregate'].get(detector_name)
+            case IterationMode.PERCOUNT:
+                _detector_schema = self.Detectors['per_count'].get(detector_name, self.Detectors['perlevel'].get(detector_name))
+            case _:
+                raise ValueError(f"In GameSchema, DetectorEnabled was given an unrecognized iteration mode of {iter_mode.name}")
         if _detector_schema is not None:
             ret_val = extract_mode in _detector_schema.Enabled
         else:
@@ -173,12 +174,13 @@ class GameSchema(Schema):
         ret_val : bool
 
         _feature_schema : Optional[FeatureSchema]
-        if iter_mode == IterationMode.AGGREGATE:
-            _feature_schema = self.AggregateFeatures.get(feature_name)
-        elif iter_mode == IterationMode.PERCOUNT:
-            _feature_schema = self.PerCountFeatures.get(feature_name)
-        else:
-            raise ValueError(f"In GameSchema, FeatureEnabled was given an unrecognized iteration mode of {iter_mode.name}")
+        match iter_mode:
+            case IterationMode.AGGREGATE:
+                _feature_schema = self.AggregateFeatures.get(feature_name)
+            case IterationMode.PERCOUNT:
+                _feature_schema = self.PerCountFeatures.get(feature_name)
+            case _:
+                raise ValueError(f"In GameSchema, FeatureEnabled was given an unrecognized iteration mode of {iter_mode.name}")
         if _feature_schema is not None:
             ret_val = extract_mode in _feature_schema.Enabled
         else:

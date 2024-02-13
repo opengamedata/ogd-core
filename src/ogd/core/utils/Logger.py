@@ -60,31 +60,34 @@ class Logger:
         indent = ''.join(['  '*depth])
         _idt_msg = message.replace("\n", f"\n{' '*9}{indent}")
         if Logger.file_logger is not None:
-            if level == logging.DEBUG:
-                Logger.file_logger.debug(f"DEBUG:   {now} {indent}{_idt_msg}")
-            elif level == logging.INFO:
-                Logger.file_logger.info( f"INFO:    {now} {indent}{_idt_msg}")
-            elif level == logging.WARNING:
-                Logger.file_logger.warn( f"WARNING: {now} {indent}{_idt_msg}")
-            elif level == logging.ERROR:
-                Logger.file_logger.error(f"ERROR:   {now} {indent}{_idt_msg}")
+            match level:
+                case logging.DEBUG:
+                    Logger.file_logger.debug(f"DEBUG:   {now} {indent}{_idt_msg}")
+                case logging.INFO:
+                    Logger.file_logger.info( f"INFO:    {now} {indent}{_idt_msg}")
+                case logging.WARNING:
+                    Logger.file_logger.warn( f"WARNING: {now} {indent}{_idt_msg}")
+                case logging.ERROR:
+                    Logger.file_logger.error(f"ERROR:   {now} {indent}{_idt_msg}")
         if Logger.std_logger is not None:
-            if level == logging.DEBUG:
-                Logger.std_logger.debug(f"DEBUG:   {indent}{_idt_msg}")
-            elif level == logging.INFO:
-                Logger.std_logger.info( f"INFO:    {indent}{_idt_msg}")
-            elif level == logging.WARNING:
-                Logger.std_logger.warn( f"WARNING: {indent}{_idt_msg}")
-            elif level == logging.ERROR:
-                Logger.std_logger.error(f"ERROR:   {indent}{_idt_msg}")
+            match level:
+                case logging.DEBUG:
+                    Logger.std_logger.debug(f"DEBUG:   {indent}{_idt_msg}")
+                case logging.INFO:
+                    Logger.std_logger.info( f"INFO:    {indent}{_idt_msg}")
+                case logging.WARNING:
+                    Logger.std_logger.warn( f"WARNING: {indent}{_idt_msg}")
+                case logging.ERROR:
+                    Logger.std_logger.error(f"ERROR:   {indent}{_idt_msg}")
 
     @staticmethod
     def Print(message:str, level=logging.DEBUG) -> None:
-        if level == logging.DEBUG:
-            print(f"debug:   {message}")
-        elif level == logging.INFO:
-            print(f"info:    {message}")
-        elif level == logging.WARNING:
-            print(f"warning: {message}")
-        elif level == logging.ERROR:
-            print(f"error:   {message}")
+        match level:
+            case logging.DEBUG:
+                print(f"debug:   {message}")
+            case logging.INFO:
+                print(f"info:    {message}")
+            case logging.WARNING:
+                print(f"warning: {message}")
+            case logging.ERROR:
+                print(f"error:   {message}")

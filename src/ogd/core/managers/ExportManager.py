@@ -179,33 +179,35 @@ class ExportManager:
 
     def _loadLoaderClass(self, game_id:str) -> Optional[Type[ExtractorLoader]]:
         _loader_class: Optional[Type[ExtractorLoader]] = None
-        if game_id == "AQUALAB":
-            _loader_class = AqualabLoader
-        elif game_id == "CRYSTAL":
-            _loader_class = CrystalLoader
-        elif game_id == "ICECUBE":
-            _loader_class = IcecubeLoader
-        elif game_id == "JOURNALISM":
-            _loader_class = JournalismLoader
-        elif game_id == "JOWILDER":
-            _loader_class = JowilderLoader
-        elif game_id == "LAKELAND":
-            _loader_class = LakelandLoader
-        elif game_id == "MAGNET":
-            _loader_class = MagnetLoader
-        elif game_id == "SHADOWSPECT":
-            _loader_class = ShadowspectLoader
-        elif game_id == "SHIPWRECKS":
-            _loader_class = ShipwrecksLoader
-        elif game_id == "WAVES":
-            _loader_class = WaveLoader
-        elif game_id == "PENGUINS":
-            _loader_class = PenguinsLoader
-        elif game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WIND"}:
-            # all games with data but no extractor.
-            pass
-        else:
-            raise Exception(f"Got an invalid game ID ({game_id})!")
+        match game_id:
+            case "AQUALAB":
+                _loader_class = AqualabLoader
+            case "CRYSTAL":
+                _loader_class = CrystalLoader
+            case "ICECUBE":
+                _loader_class = IcecubeLoader
+            case "JOURNALISM":
+                _loader_class = JournalismLoader
+            case "JOWILDER":
+                _loader_class = JowilderLoader
+            case "LAKELAND":
+                _loader_class = LakelandLoader
+            case "MAGNET":
+                _loader_class = MagnetLoader
+            case "SHADOWSPECT":
+                _loader_class = ShadowspectLoader
+            case "SHIPWRECKS":
+                _loader_class = ShipwrecksLoader
+            case "WAVES":
+                _loader_class = WaveLoader
+            case "PENGUINS":
+                _loader_class = PenguinsLoader
+            case _:
+                if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WIND"}:
+                    # all games with data but no extractor.
+                    pass
+                else:
+                    raise Exception(f"Got an invalid game ID ({game_id})!")
         return _loader_class
 
     def _generateSlices(self, sess_ids:List[str]) -> List[List[str]]:

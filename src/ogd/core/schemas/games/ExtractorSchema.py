@@ -67,17 +67,18 @@ class ExtractorSchema(Schema):
                 ret_val = set()
         elif isinstance(enabled, list):
             for mode in enabled:
-                mode = str(mode)
-                if mode.upper() == "DETECTOR":
-                    ret_val.add(ExtractionMode.DETECTOR)
-                elif mode.upper() == "SESSION":
-                    ret_val.add(ExtractionMode.SESSION)
-                elif mode.upper() == "PLAYER":
-                    ret_val.add(ExtractionMode.PLAYER)
-                elif mode.upper() == "POPULATION":
-                    ret_val.add(ExtractionMode.POPULATION)
-                else:
-                    Logger.Log(f"Found unrecognized element of 'enabled': {mode}", logging.WARN)
+                mode = str(mode).upper()
+                match mode:
+                    case "DETECTOR":
+                        ret_val.add(ExtractionMode.DETECTOR)
+                    case "SESSION":
+                        ret_val.add(ExtractionMode.SESSION)
+                    case "PLAYER":
+                        ret_val.add(ExtractionMode.PLAYER)
+                    case "POPULATION":
+                        ret_val.add(ExtractionMode.POPULATION)
+                    case _:
+                        Logger.Log(f"Found unrecognized element of 'enabled': {mode}", logging.WARN)
         else:
             ret_val = {ExtractionMode.DETECTOR, ExtractionMode.SESSION, ExtractionMode.PLAYER, ExtractionMode.POPULATION}
             Logger.Log(f"'enabled' element has unrecognized type {type(enabled)}; defaulting to enable all modes", logging.WARN)
