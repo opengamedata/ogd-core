@@ -151,84 +151,65 @@ class BQFirebaseInterface(BigQueryInterface):
     def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode, exclude_rows:Optional[List[str]]=None) -> str:
         session_clause : str = ""
         player_clause  : str = ""
-        if id_mode == IDMode.SESSION:
-            id_string = ','.join([f"{x}" for x in id_list])
-            session_clause = f"param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
-            player_clause  = f"(param_user.key   = 'user_code'     OR  param_user.key = 'undefined')"
-        elif id_mode == IDMode.USER:
-            id_string = ','.join([f"'{x}'" for x in id_list])
-            session_clause = f"param_session.key = 'ga_session_id'"
-            player_clause  = f"(param_user.key   = 'user_code' OR param_user.key = 'undefined') AND param_user.value.string_value IN ({id_string})"
-        else:
-            Logger.Log(f"BQ-Firebase: Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
-            id_string = ','.join([f"{x}" for x in id_list])
-            session_clause = f"param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
-            player_clause  = f"(param_user.key   = 'user_code' OR param_user.key = 'undefined')"
+        match id_mode:
+            case IDMode.SESSION:
+                id_string = ','.join([f"{x}" for x in id_list])
+                session_clause = f"param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
+                player_clause  = f"(param_user.key   = 'user_code'     OR  param_user.key = 'undefined')"
+            case IDMode.USER:
+                id_string = ','.join([f"'{x}'" for x in id_list])
+                session_clause = f"param_session.key = 'ga_session_id'"
+                player_clause  = f"(param_user.key   = 'user_code' OR param_user.key = 'undefined') AND param_user.value.string_value IN ({id_string})"
+            case _:
+                Logger.Log(f"BQ-Firebase: Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
+                id_string = ','.join([f"{x}" for x in id_list])
+                session_clause = f"param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
+                player_clause  = f"(param_user.key   = 'user_code' OR param_user.key = 'undefined')"
         # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
-        if self._game_id == "AQUALAB":
-            where_clause = \
-            f"""WHERE param_app_version.key = 'app_version'
-                AND   param_log_version.key = 'log_version'
-                AND   {session_clause}
-                AND   {player_clause}"""
-        elif self._game_id == "SHADOWSPECT":
-            where_clause = \
-            f"WHERE {session_clause}"
-        elif self._game_id == "SHIPWRECKS":
-            where_clause = \
-            f"WHERE {session_clause}"
-        else:
-            where_clause = \
-            f"""WHERE param_app_version.key = 'app_version'
-                AND   param_log_version.key = 'log_version'
-                AND   {session_clause}
-                AND   {player_clause}"""
+        match self._game_id:
+            case "SHADOWSPECT" | "SHIPWRECKS":
+                where_clause = \
+                f"WHERE {session_clause}"
+            case _:
+                where_clause = \
+                f"""WHERE param_app_version.key = 'app_version'
+                    AND   param_log_version.key = 'log_version'
+                    AND   {session_clause}
+                    AND   {player_clause}"""
         # 4) Set up actual query
         query = ""
-        if self._game_id == "SHADOWSPECT":
-            query = f"""
-                SELECT event_name, event_params, device, geo, platform,
-                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
-                null as app_version,
-                null as log_version,
-                param_session.value.int_value as session_id,
-                null as fd_user_id
-                FROM `{self.DBPath()}`
-                CROSS JOIN UNNEST(event_params) AS param_session
-                {where_clause}
-                ORDER BY `session_id`, `timestamp` ASC;
-            """
-        elif self._game_id == "SHIPWRECKS":
-            query = f"""
-                SELECT event_name, event_params, device, geo, platform,
-                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
-                null as app_version,
-                null as log_version,
-                param_session.value.int_value as session_id,
-                null as fd_user_id
-                FROM `{self.DBPath()}`
-                CROSS JOIN UNNEST(event_params) AS param_session
-                {where_clause}
-                ORDER BY `session_id`, `timestamp` ASC;
-            """
-        else:
-            # TODO Order by user_id, and by timestamp within that.
-            # Note that this could prove to be wonky when we have more games without user ids,
-            # will need to really rethink this when we start using new system.
-            # Still, not a huge deal because most of these will be rewritten at that time anyway.
-            query = f"""
-                SELECT event_name, event_params, device, geo, platform,
-                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
-                param_app_version.value.string_value as app_version,
-                param_log_version.value.int_value as log_version,
-                param_session.value.int_value as session_id,
-                param_user.value.string_value as fd_user_id
-                FROM `{self.DBPath()}`
-                CROSS JOIN UNNEST(event_params) AS param_app_version
-                CROSS JOIN UNNEST(event_params) AS param_log_version
-                CROSS JOIN UNNEST(event_params) AS param_session
-                CROSS JOIN UNNEST(event_params) AS param_user
-                {where_clause}
-                ORDER BY `fd_user_id`, `timestamp` ASC;
-            """
+        match self._game_id:
+            case "SHADOWSPECT" | "SHIPWRECKS":
+                query = f"""
+                    SELECT event_name, event_params, device, geo, platform,
+                    concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
+                    null as app_version,
+                    null as log_version,
+                    param_session.value.int_value as session_id,
+                    null as fd_user_id
+                    FROM `{self.DBPath()}`
+                    CROSS JOIN UNNEST(event_params) AS param_session
+                    {where_clause}
+                    ORDER BY `session_id`, `timestamp` ASC;
+                """
+            case _:
+                # TODO Order by user_id, and by timestamp within that.
+                # Note that this could prove to be wonky when we have more games without user ids,
+                # will need to really rethink this when we start using new system.
+                # Still, not a huge deal because most of these will be rewritten at that time anyway.
+                query = f"""
+                    SELECT event_name, event_params, device, geo, platform,
+                    concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
+                    param_app_version.value.string_value as app_version,
+                    param_log_version.value.int_value as log_version,
+                    param_session.value.int_value as session_id,
+                    param_user.value.string_value as fd_user_id
+                    FROM `{self.DBPath()}`
+                    CROSS JOIN UNNEST(event_params) AS param_app_version
+                    CROSS JOIN UNNEST(event_params) AS param_log_version
+                    CROSS JOIN UNNEST(event_params) AS param_session
+                    CROSS JOIN UNNEST(event_params) AS param_user
+                    {where_clause}
+                    ORDER BY `fd_user_id`, `timestamp` ASC;
+                """
         return query
