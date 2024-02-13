@@ -291,23 +291,24 @@ args : Namespace = parser.parse_args()
 success : bool
 if args is not None:
     cmd = (args.command or "help").lower()
-    if cmd == "export":
-        success = RunExport(config=config, with_events=True, with_features=True)
-    elif cmd == "export-events":
-        success = RunExport(config=config, with_events=True)
-    elif cmd == "export-features":
-        success = RunExport(config=config, with_features=True)
-    elif cmd == "info":
-        success = ShowGameInfo(config=config)
-    elif cmd == "readme":
-        success = WriteReadme(config=config)
-    elif cmd == "list-games":
-        success = ListGames()
-    # elif cmd == "help":
-    #     success = ShowHelp()
-    else:
-        print(f"Invalid Command {cmd}!")
-        success = False
+    match cmd:
+        case "export":
+            success = RunExport(config=config, with_events=True, with_features=True)
+        case "export-events":
+            success = RunExport(config=config, with_events=True)
+        case "export-features":
+            success = RunExport(config=config, with_features=True)
+        case "info":
+            success = ShowGameInfo(config=config)
+        case "readme":
+            success = WriteReadme(config=config)
+        case "list-games":
+            success = ListGames()
+        # case "help":
+        #     success = ShowHelp()
+        case _:
+            print(f"Invalid Command {cmd}!")
+            success = False
 else:
     print(f"Need to enter a command!")
     success = False
