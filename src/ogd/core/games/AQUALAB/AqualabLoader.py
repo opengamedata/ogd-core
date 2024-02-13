@@ -70,115 +70,118 @@ class AqualabLoader(ExtractorLoader):
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         # First run through aggregate features
-        if feature_type == "ActiveTime":
-            ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
-        elif feature_type == "JobTriesInArgument":
-            ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "ModelInterveneCount":
-            ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "TankRulesCount":
-            ret_val = TankRulesCount.TankRulesCount(params=extractor_params)
-        elif feature_type == "ModelExportCount":
-            ret_val = ModelExportCount.ModelExportCount(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "ModelPredictCount":
-            ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "UserAvgActiveTime":
-            ret_val = UserAvgActiveTime.UserAvgActiveTime(
-                params=extractor_params, player_id=self._player_id)
-        elif feature_type == "ActiveJobs":
-            ret_val = ActiveJobs.ActiveJobs(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "EchoSessionID":
-            ret_val = EchoSessionID.EchoSessionID(params=extractor_params)
-        elif feature_type == "EventList":
-            ret_val = EventList.EventList(params=extractor_params)
-        elif feature_type == "JobsCompleted":
-            ret_val = JobsCompleted.JobsCompleted(params=extractor_params, player_id=self._player_id)
-        elif feature_type == "PlayerSummary":
-            ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
-        elif feature_type == "PopulationSummary":
-            ret_val = PopulationSummary.PopulationSummary(params=extractor_params)
-        elif feature_type == "SessionDiveSitesCount":
-            ret_val = SessionDiveSitesCount.SessionDiveSitesCount(params=extractor_params)
-        elif feature_type == "SessionDuration":
-            ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
-        elif feature_type == "SessionGuideCount":
-            ret_val = SessionGuideCount.SessionGuideCount(params=extractor_params)
-        elif feature_type == "SessionHelpCount":
-            ret_val = SessionHelpCount.SessionHelpCount(params=extractor_params)
-        elif feature_type == "SessionID":
-            ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
-        elif feature_type == "SessionJobsCompleted":
-            ret_val = SessionJobsCompleted.SessionJobsCompleted(params=extractor_params)
-        elif feature_type == "SwitchJobsCount":
-            ret_val = SwitchJobsCount.SwitchJobsCount(params=extractor_params)
-        elif feature_type == "TopJobCompletionDestinations":
-            ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "TopJobSwitchDestinations":
-            ret_val = TopJobSwitchDestinations.TopJobSwitchDestinations(params=extractor_params, job_map=self._job_map)
-        elif feature_type == "TotalArgumentationTime":
-            ret_val = TotalArgumentationTime.TotalArgumentationTime(params=extractor_params)
-        elif feature_type == "TotalDiveTime":
-            ret_val = TotalDiveTime.TotalDiveTime(params=extractor_params)
-        elif feature_type == "TotalExperimentationTime":
-            ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
-        elif feature_type == "UserAvgSessionDuration":
-            ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
-        elif feature_type == "UserTotalSessionDuration":
-            ret_val = UserTotalSessionDuration.UserTotalSessionDuration(params=extractor_params, player_id=self._player_id)
+        if extractor_params._count_index == None:
+            match feature_type:
+                case "ActiveTime":
+                    ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
+                case "JobTriesInArgument":
+                    ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
+                case "ModelInterveneCount":
+                    ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
+                case "TankRulesCount":
+                    ret_val = TankRulesCount.TankRulesCount(params=extractor_params)
+                case "ModelExportCount":
+                    ret_val = ModelExportCount.ModelExportCount(params=extractor_params, job_map=self._job_map)
+                case "ModelPredictCount":
+                    ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
+                case "UserAvgActiveTime":
+                    ret_val = UserAvgActiveTime.UserAvgActiveTime(params=extractor_params, player_id=self._player_id)
+                case "ActiveJobs":
+                    ret_val = ActiveJobs.ActiveJobs(params=extractor_params, job_map=self._job_map)
+                case "EchoSessionID":
+                    ret_val = EchoSessionID.EchoSessionID(params=extractor_params)
+                case "EventList":
+                    ret_val = EventList.EventList(params=extractor_params)
+                case "JobsCompleted":
+                    ret_val = JobsCompleted.JobsCompleted(params=extractor_params, player_id=self._player_id)
+                case "PlayerSummary":
+                    ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
+                case "PopulationSummary":
+                    ret_val = PopulationSummary.PopulationSummary(params=extractor_params)
+                case "SessionDiveSitesCount":
+                    ret_val = SessionDiveSitesCount.SessionDiveSitesCount(params=extractor_params)
+                case "SessionDuration":
+                    ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
+                case "SessionGuideCount":
+                    ret_val = SessionGuideCount.SessionGuideCount(params=extractor_params)
+                case "SessionHelpCount":
+                    ret_val = SessionHelpCount.SessionHelpCount(params=extractor_params)
+                case "SessionID":
+                    ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
+                case "SessionJobsCompleted":
+                    ret_val = SessionJobsCompleted.SessionJobsCompleted(params=extractor_params)
+                case "SwitchJobsCount":
+                    ret_val = SwitchJobsCount.SwitchJobsCount(params=extractor_params)
+                case "TopJobCompletionDestinations":
+                    ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params, job_map=self._job_map)
+                case "TopJobSwitchDestinations":
+                    ret_val = TopJobSwitchDestinations.TopJobSwitchDestinations(params=extractor_params, job_map=self._job_map)
+                case "TotalArgumentationTime":
+                    ret_val = TotalArgumentationTime.TotalArgumentationTime(params=extractor_params)
+                case "TotalDiveTime":
+                    ret_val = TotalDiveTime.TotalDiveTime(params=extractor_params)
+                case "TotalExperimentationTime":
+                    ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
+                case "UserAvgSessionDuration":
+                    ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
+                case "UserTotalSessionDuration":
+                    ret_val = UserTotalSessionDuration.UserTotalSessionDuration(params=extractor_params, player_id=self._player_id)
+                case _:
+                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature type for Aqualab.")
         # then run through per-count features.
-        elif extractor_params._count_index is not None:
-            if feature_type == "JobActiveTime":
-                ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobArgumentationTime":
-                ret_val = JobArgumentationTime.JobArgumentationTime(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobCompletionTime":
-                ret_val = JobCompletionTime.JobCompletionTime(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobDiveSitesCount":
-                ret_val = JobDiveSitesCount.JobDiveSitesCount(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobDiveTime":
-                ret_val = JobDiveTime.JobDiveTime(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobExperimentationTime":
-                ret_val = JobExperimentationTime.JobExperimentationTime(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobGuideCount":
-                ret_val = JobGuideCount.JobGuideCount(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobHelpCount":
-                ret_val = JobHelpCount.JobHelpCount(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobLocationChanges":
-                ret_val = JobLocationChanges.JobLocationChanges(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobModelingTime":
-                ret_val = JobModelingTime.JobModelingTime(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobStartCount":
-                ret_val = JobStartCount.JobStartCount(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobTasksCompleted":
-                ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
-            elif feature_type == "JobsAttempted":
-                ret_val = JobsAttempted.JobsAttempted(params=extractor_params, job_map=self._job_map, diff_map=self._diff_map)
-            elif feature_type == "SyncCompletionTime":
-                ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
-            else:
-                raise NotImplementedError(f"'{feature_type}' is not a valid feature type for Aqualab.")
         else:
-            raise TypeError(f"Got None for extractor_params._count_index (feature_type={feature_type}), should have a value!")
+            match feature_type:
+                case "JobActiveTime":
+                    ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
+                case "JobArgumentationTime":
+                    ret_val = JobArgumentationTime.JobArgumentationTime(params=extractor_params, job_map=self._job_map)
+                case "JobCompletionTime":
+                    ret_val = JobCompletionTime.JobCompletionTime(params=extractor_params, job_map=self._job_map)
+                case "JobDiveSitesCount":
+                    ret_val = JobDiveSitesCount.JobDiveSitesCount(params=extractor_params, job_map=self._job_map)
+                case "JobDiveTime":
+                    ret_val = JobDiveTime.JobDiveTime(params=extractor_params, job_map=self._job_map)
+                case "JobExperimentationTime":
+                    ret_val = JobExperimentationTime.JobExperimentationTime(params=extractor_params, job_map=self._job_map)
+                case "JobGuideCount":
+                    ret_val = JobGuideCount.JobGuideCount(params=extractor_params, job_map=self._job_map)
+                case "JobHelpCount":
+                    ret_val = JobHelpCount.JobHelpCount(params=extractor_params, job_map=self._job_map)
+                case "JobLocationChanges":
+                    ret_val = JobLocationChanges.JobLocationChanges(params=extractor_params, job_map=self._job_map)
+                case "JobModelingTime":
+                    ret_val = JobModelingTime.JobModelingTime(params=extractor_params, job_map=self._job_map)
+                case "JobStartCount":
+                    ret_val = JobStartCount.JobStartCount(params=extractor_params, job_map=self._job_map)
+                case "JobTasksCompleted":
+                    ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
+                case "JobsAttempted":
+                    ret_val = JobsAttempted.JobsAttempted(params=extractor_params, job_map=self._job_map, diff_map=self._diff_map)
+                case "SyncCompletionTime":
+                    ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
+                case _:
+                    raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature type for Aqualab.")
         return ret_val
 
     def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         ret_val : Detector
-        if detector_type == "CollectFactNoJob":
-            ret_val = CollectFactNoJob.CollectFactNoJob(params=extractor_params, trigger_callback=trigger_callback)
-        elif detector_type == "DiveSiteNoEvidence":
-            ret_val = DiveSiteNoEvidence.DiveSiteNoEvidence(params=extractor_params, trigger_callback=trigger_callback, threshold=schema_args['threshold'])
-        elif detector_type == "EchoRoomChange":
-            ret_val = EchoRoomChange.EchoRoomChange(params=extractor_params, trigger_callback=trigger_callback)
-        elif detector_type == "Idle":
-            ret_val = Idle.Idle(params=extractor_params, trigger_callback=trigger_callback, idle_level=schema_args.get("idle_level"))
-        elif detector_type == "SceneChangeFrequently":
-            ret_val = SceneChangeFrequently.SceneChangeFrequently(params=extractor_params, trigger_callback=trigger_callback, time_threshold=schema_args.get("threshold"))
-        elif detector_type == "HintAndLeave":
-            ret_val = HintAndLeave.HintAndLeave(params=extractor_params, trigger_callback=trigger_callback, time_threshold=schema_args.get("threshold"))
-        elif detector_type == "TwoHints":
-            ret_val = TwoHints.TwoHints(params=extractor_params, trigger_callback=trigger_callback, time_threshold=schema_args.get("threshold"))
-        else:
-            raise NotImplementedError(f"'{detector_type}' is not a valid detector for Aqualab.")
+        match detector_type:
+            case "CollectFactNoJob":
+                ret_val = CollectFactNoJob.CollectFactNoJob(params=extractor_params, trigger_callback=trigger_callback)
+            case "DiveSiteNoEvidence":
+                ret_val = DiveSiteNoEvidence.DiveSiteNoEvidence(params=extractor_params, trigger_callback=trigger_callback, threshold=schema_args['threshold'])
+            case "EchoRoomChange":
+                ret_val = EchoRoomChange.EchoRoomChange(params=extractor_params, trigger_callback=trigger_callback)
+            case "Idle":
+                ret_val = Idle.Idle(params=extractor_params, trigger_callback=trigger_callback, idle_level=schema_args.get("idle_level"))
+            case "SceneChangeFrequently":
+                ret_val = SceneChangeFrequently.SceneChangeFrequently(params=extractor_params, trigger_callback=trigger_callback, time_threshold=schema_args.get("threshold"))
+            case "HintAndLeave":
+                ret_val = HintAndLeave.HintAndLeave(params=extractor_params, trigger_callback=trigger_callback, time_threshold=schema_args.get("threshold"))
+            case "TwoHints":
+                ret_val = TwoHints.TwoHints(params=extractor_params, trigger_callback=trigger_callback, time_threshold=schema_args.get("threshold"))
+            case _:
+                raise NotImplementedError(f"'{detector_type}' is not a valid detector for Aqualab.")
         return ret_val
 
     @property
