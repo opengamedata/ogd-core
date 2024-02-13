@@ -131,7 +131,7 @@ jobs:
         end_date: ${{github.event.inputs.end_date}}
         events_only: true
     - name: Upload files to opengamedata via scp
-      if: github.event.inputs.export_to_web == true
+      if: github.event.inputs.export_to_web == 'true'
       run: |
         mkdir -p ~/.ssh
         echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
@@ -139,7 +139,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
         scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
     - name: Upload data as artifact
-      if: github.event.inputs.export_to_web == false
+      if: github.event.inputs.export_to_web == 'false'
       uses: actions/upload-artifact@v3
       with:
         name: ${{matrix.game}}_event_export_data
@@ -152,7 +152,7 @@ jobs:
   
   trigger_reindex:
     name: Reindex OpenGameData Files
-    if: github.event.inputs.export_to_web == true
+    if: github.event.inputs.export_to_web == 'true'
     needs: export_data
     runs-on: ubuntu-22.04
     steps:
