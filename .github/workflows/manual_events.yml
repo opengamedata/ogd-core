@@ -116,14 +116,14 @@ jobs:
       with:
         game: ${{matrix.game}}
     - name: Do Export of Month (events only)
-      if: github.event.inputs.monthly == true
+      if: github.event.inputs.monthly == 'true'
       uses: ./.github/actions/export_custom_month
       with:
         game: ${{matrix.game}}
         month_year: ${{matrix.month_year}}
         events_only: true
     - name: Do Export of Range (events only)
-      if: github.event.inputs.monthly == false
+      if: github.event.inputs.monthly == 'false'
       uses: ./.github/actions/export_custom
       with:
         game: ${{matrix.game}}
