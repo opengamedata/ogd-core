@@ -52,7 +52,6 @@ class BQFirebaseInterface(BigQueryInterface):
         return {'min':data[0][0], 'max':data[0][1]}
 
     def _rowsFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None, exclude_rows:Optional[List[str]]=None) -> List[Tuple]:
-        # 2) Set up clauses to select based on Session ID or Player ID.
         events = None
         if self._client != None:
             query = self._generateRowFromIDQuery(id_list=id_list, id_mode=id_mode, exclude_rows=exclude_rows)
@@ -151,6 +150,7 @@ class BQFirebaseInterface(BigQueryInterface):
     # *** PRIVATE METHODS ***
 
     def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode, exclude_rows:Optional[List[str]]=None) -> str:
+        # 2) Set up clauses to select based on Session ID or Player ID.
         session_clause : str = ""
         player_clause  : str = ""
         match id_mode:
