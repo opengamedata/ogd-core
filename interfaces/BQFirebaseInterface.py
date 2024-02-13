@@ -150,7 +150,7 @@ class BQFirebaseInterface(BigQueryInterface):
     # *** PRIVATE METHODS ***
 
     def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode, exclude_rows:Optional[List[str]]=None) -> str:
-        # 2) Set up clauses to select based on Session ID or Player ID.
+    # 2) Set up clauses to select based on Session ID or Player ID.
         session_clause : str = ""
         player_clause  : str = ""
         match id_mode:
@@ -167,7 +167,7 @@ class BQFirebaseInterface(BigQueryInterface):
                 id_string = ','.join([f"{x}" for x in id_list])
                 session_clause = f"param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})"
                 player_clause  = f"(param_user.key   = 'user_code' OR param_user.key = 'undefined')"
-        # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
+    # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
         match self._game_id:
             case "SHADOWSPECT" | "SHIPWRECKS":
                 where_clause = \
@@ -178,7 +178,7 @@ class BQFirebaseInterface(BigQueryInterface):
                     AND   param_log_version.key = 'log_version'
                     AND   {session_clause}
                     AND   {player_clause}"""
-        # 4) Set up actual query
+    # 4) Set up actual query
         query = ""
         match self._game_id:
             case "SHADOWSPECT" | "SHIPWRECKS":
