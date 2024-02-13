@@ -24,103 +24,109 @@ class WaveLoader(ExtractorLoader):
     
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
-        # Per-count features
-            # level attempt features
-        if feature_type == "BeginCount":
-            ret_val = BeginCount.BeginCount(params=extractor_params)
-        elif feature_type == "Completed":
-            ret_val = Completed.Completed(params=extractor_params)
-        elif feature_type == "MenuButtonCount":
-            ret_val = MenuButtonCount.MenuButtonCount(params=extractor_params)
-        elif feature_type == "SucceedCount":
-            ret_val = SucceedCount.SucceedCount(params=extractor_params)
-        elif feature_type == "TotalFails":
-            ret_val = TotalFails.TotalFails(params=extractor_params)
-        elif feature_type == "TotalLevelTime":
-            ret_val = TotalLevelTime.TotalLevelTime(params=extractor_params)
-        elif feature_type == "TotalResets":
-            ret_val = TotalResets.TotalResets(params=extractor_params)
-        elif feature_type == "TotalSkips":
-            ret_val = TotalSkips.TotalSkips(params=extractor_params)
-            # slider move features
-        elif feature_type == "FirstMoveType":
-            ret_val = FirstMoveType.FirstMoveType(params=extractor_params)
-        elif feature_type == "AmplitudeGoodMoveCount":
-            ret_val = AmplitudeGoodMoveCount.AmplitudeGoodMoveCount(params=extractor_params)
-        elif feature_type == "OffsetGoodMoveCount":
-            ret_val = OffsetGoodMoveCount.OffsetGoodMoveCount(params=extractor_params)
-        elif feature_type == "WavelengthGoodMoveCount":
-            ret_val = WavelengthGoodMoveCount.WavelengthGoodMoveCount(params=extractor_params)
-        elif feature_type == "PercentAmplitudeMoves":
-            ret_val = PercentAmplitudeMoves.PercentAmplitudeMoves(params=extractor_params)
-        elif feature_type == "PercentOffsetMoves":
-            ret_val = PercentOffsetMoves.PercentOffsetMoves(params=extractor_params)
-        elif feature_type == "PercentWavelengthMoves":
-            ret_val = PercentWavelengthMoves.PercentWavelengthMoves(params=extractor_params)
-        elif feature_type == "PercentAmplitudeGoodMoves":
-            ret_val = PercentAmplitudeGoodMoves.PercentAmplitudeGoodMoves(params=extractor_params)
-        elif feature_type == "PercentOffsetGoodMoves":
-            ret_val = PercentOffsetGoodMoves.PercentOffsetGoodMoves(params=extractor_params)
-        elif feature_type == "PercentWavelengthGoodMoves":
-            ret_val = PercentWavelengthGoodMoves.PercentWavelengthGoodMoves(params=extractor_params)
-        elif feature_type == "SliderAverageRange":
-            ret_val = SliderAverageRange.SliderAverageRange(params=extractor_params)
-        elif feature_type == "SliderAverageStandardDeviations":
-            ret_val = SliderAverageStandardDeviations.SliderAverageStandardDeviations(params=extractor_params)
-        elif feature_type == "TotalArrowMoves":
-            ret_val = TotalArrowMoves.TotalArrowMoves(params=extractor_params)
-        elif feature_type == "TotalMoveTypeChanges":
-            ret_val = TotalMoveTypeChanges.TotalMoveTypeChanges(params=extractor_params)
-        elif feature_type == "TotalSliderMoves":
-            ret_val = TotalSliderMoves.TotalSliderMoves(params=extractor_params)
-            # level progress over time features
-        # elif feature_type == "ClosenessIntercept":
-        #     ret_val = ClosenessIntercept.ClosenessIntercept(params=extractor_params)
-        # elif feature_type == "ClosenessR2":
-        #     ret_val = ClosenessR2.ClosenessR2(params=extractor_params)
-        # elif feature_type == "ClosenessSlope":
-        #     ret_val = ClosenessSlope.ClosenessSlope(params=extractor_params)
-        # elif feature_type == "RangeIntercept":
-        #     ret_val = RangeIntercept.RangeIntercept(params=extractor_params)
-        # elif feature_type == "RangeR2":
-        #     ret_val = RangeR2.RangeR2(params=extractor_params)
-        # elif feature_type == "RangeSlope":
-        #     ret_val = RangeSlope.RangeSlope(params=extractor_params)
-            # quiz features
-        elif feature_type == "QuestionAnswered":
-            ret_val = QuestionAnswered.QuestionAnswered(params=extractor_params)
-        elif feature_type == "QuestionCorrect":
-            ret_val = QuestionCorrect.QuestionCorrect(params=extractor_params)
-        elif feature_type == "TimeToAnswerMS":
-            ret_val = TimeToAnswerMS.TimeToAnswerMS(params=extractor_params)
         # Session-level features.
-        elif feature_type == "AverageFails":
-            ret_val = AverageFails.AverageFails(params=extractor_params)
-        elif feature_type == "AverageLevelTime":
-            ret_val = AverageLevelTime.AverageLevelTime(params=extractor_params)
-        elif feature_type == "AverageMoveTypeChanges":
-            ret_val = AverageMoveTypeChanges.AverageMoveTypeChanges(params=extractor_params)
-        elif feature_type == "AverageSliderMoves":
-            ret_val = AverageSliderMoves.AverageSliderMoves(params=extractor_params)
-        elif feature_type == "OverallPercentAmplitudeMoves":
-            ret_val = OverallPercentAmplitudeMoves.OverallPercentAmplitudeMoves(params=extractor_params)
-        elif feature_type == "OverallPercentOffsetMoves":
-            ret_val = OverallPercentOffsetMoves.OverallPercentOffsetMoves(params=extractor_params)
-        elif feature_type == "OverallPercentWavelengthMoves":
-            ret_val = OverallPercentWavelengthMoves.OverallPercentWavelengthMoves(params=extractor_params)
-        elif feature_type == "OverallSliderAverageRange":
-            ret_val = OverallSliderAverageRange.OverallSliderAverageRange(params=extractor_params)
-        elif feature_type == "OverallSliderAverageStandardDeviations":
-            ret_val = OverallSliderAverageStandardDeviations.OverallSliderAverageStandardDeviations(params=extractor_params)
-        elif feature_type == "PersistentSessionID":
-            ret_val = PersistentSessionID.PersistentSessionID(params=extractor_params)
-        elif feature_type == "SessionID":
-            ret_val = SessionID.SessionID(params=extractor_params, sessionID=self._session_id)
-            # sequence features
-        elif feature_type == "SequenceLevel":
-            ret_val = SequenceLevel.SequenceLevel(params=extractor_params)
+        if extractor_params._count_index is None:
+            match feature_type:
+                case "AverageFails":
+                    ret_val = AverageFails.AverageFails(params=extractor_params)
+                case "AverageLevelTime":
+                    ret_val = AverageLevelTime.AverageLevelTime(params=extractor_params)
+                case "AverageMoveTypeChanges":
+                    ret_val = AverageMoveTypeChanges.AverageMoveTypeChanges(params=extractor_params)
+                case "AverageSliderMoves":
+                    ret_val = AverageSliderMoves.AverageSliderMoves(params=extractor_params)
+                case "OverallPercentAmplitudeMoves":
+                    ret_val = OverallPercentAmplitudeMoves.OverallPercentAmplitudeMoves(params=extractor_params)
+                case "OverallPercentOffsetMoves":
+                    ret_val = OverallPercentOffsetMoves.OverallPercentOffsetMoves(params=extractor_params)
+                case "OverallPercentWavelengthMoves":
+                    ret_val = OverallPercentWavelengthMoves.OverallPercentWavelengthMoves(params=extractor_params)
+                case "OverallSliderAverageRange":
+                    ret_val = OverallSliderAverageRange.OverallSliderAverageRange(params=extractor_params)
+                case "OverallSliderAverageStandardDeviations":
+                    ret_val = OverallSliderAverageStandardDeviations.OverallSliderAverageStandardDeviations(params=extractor_params)
+                case "PersistentSessionID":
+                    ret_val = PersistentSessionID.PersistentSessionID(params=extractor_params)
+                case "SessionID":
+                    ret_val = SessionID.SessionID(params=extractor_params, sessionID=self._session_id)
+                    # sequence features
+                case "SequenceLevel":
+                    ret_val = SequenceLevel.SequenceLevel(params=extractor_params)
+                case _:
+                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature for Waves.")
+        # Per-count features
+        # level attempt features
         else:
-            raise NotImplementedError(f"'{feature_type}' is not a valid feature for Waves.")
+            match feature_type:
+                case "BeginCount":
+                    ret_val = BeginCount.BeginCount(params=extractor_params)
+                case "Completed":
+                    ret_val = Completed.Completed(params=extractor_params)
+                case "MenuButtonCount":
+                    ret_val = MenuButtonCount.MenuButtonCount(params=extractor_params)
+                case "SucceedCount":
+                    ret_val = SucceedCount.SucceedCount(params=extractor_params)
+                case "TotalFails":
+                    ret_val = TotalFails.TotalFails(params=extractor_params)
+                case "TotalLevelTime":
+                    ret_val = TotalLevelTime.TotalLevelTime(params=extractor_params)
+                case "TotalResets":
+                    ret_val = TotalResets.TotalResets(params=extractor_params)
+                case "TotalSkips":
+                    ret_val = TotalSkips.TotalSkips(params=extractor_params)
+                    # slider move features
+                case "FirstMoveType":
+                    ret_val = FirstMoveType.FirstMoveType(params=extractor_params)
+                case "AmplitudeGoodMoveCount":
+                    ret_val = AmplitudeGoodMoveCount.AmplitudeGoodMoveCount(params=extractor_params)
+                case "OffsetGoodMoveCount":
+                    ret_val = OffsetGoodMoveCount.OffsetGoodMoveCount(params=extractor_params)
+                case "WavelengthGoodMoveCount":
+                    ret_val = WavelengthGoodMoveCount.WavelengthGoodMoveCount(params=extractor_params)
+                case "PercentAmplitudeMoves":
+                    ret_val = PercentAmplitudeMoves.PercentAmplitudeMoves(params=extractor_params)
+                case "PercentOffsetMoves":
+                    ret_val = PercentOffsetMoves.PercentOffsetMoves(params=extractor_params)
+                case "PercentWavelengthMoves":
+                    ret_val = PercentWavelengthMoves.PercentWavelengthMoves(params=extractor_params)
+                case "PercentAmplitudeGoodMoves":
+                    ret_val = PercentAmplitudeGoodMoves.PercentAmplitudeGoodMoves(params=extractor_params)
+                case "PercentOffsetGoodMoves":
+                    ret_val = PercentOffsetGoodMoves.PercentOffsetGoodMoves(params=extractor_params)
+                case "PercentWavelengthGoodMoves":
+                    ret_val = PercentWavelengthGoodMoves.PercentWavelengthGoodMoves(params=extractor_params)
+                case "SliderAverageRange":
+                    ret_val = SliderAverageRange.SliderAverageRange(params=extractor_params)
+                case "SliderAverageStandardDeviations":
+                    ret_val = SliderAverageStandardDeviations.SliderAverageStandardDeviations(params=extractor_params)
+                case "TotalArrowMoves":
+                    ret_val = TotalArrowMoves.TotalArrowMoves(params=extractor_params)
+                case "TotalMoveTypeChanges":
+                    ret_val = TotalMoveTypeChanges.TotalMoveTypeChanges(params=extractor_params)
+                case "TotalSliderMoves":
+                    ret_val = TotalSliderMoves.TotalSliderMoves(params=extractor_params)
+                    # level progress over time features
+                # case "ClosenessIntercept":
+                #     ret_val = ClosenessIntercept.ClosenessIntercept(params=extractor_params)
+                # case "ClosenessR2":
+                #     ret_val = ClosenessR2.ClosenessR2(params=extractor_params)
+                # case "ClosenessSlope":
+                #     ret_val = ClosenessSlope.ClosenessSlope(params=extractor_params)
+                # case "RangeIntercept":
+                #     ret_val = RangeIntercept.RangeIntercept(params=extractor_params)
+                # case "RangeR2":
+                #     ret_val = RangeR2.RangeR2(params=extractor_params)
+                # case "RangeSlope":
+                #     ret_val = RangeSlope.RangeSlope(params=extractor_params)
+                    # quiz features
+                case "QuestionAnswered":
+                    ret_val = QuestionAnswered.QuestionAnswered(params=extractor_params)
+                case "QuestionCorrect":
+                    ret_val = QuestionCorrect.QuestionCorrect(params=extractor_params)
+                case "TimeToAnswerMS":
+                    ret_val = TimeToAnswerMS.TimeToAnswerMS(params=extractor_params)
+                case _:
+                    raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature for Waves.")
         return ret_val
 
     def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:

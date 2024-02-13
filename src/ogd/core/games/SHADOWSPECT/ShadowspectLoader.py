@@ -24,22 +24,23 @@ class ShadowspectLoader(ExtractorLoader):
 
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
-        if feature_type == "MoveShapeCount":
-            ret_val = MoveShapeCount.MoveShapeCount(params=extractor_params)
-        elif feature_type == "SessionID":
-            ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
-        elif feature_type == "FunnelByUser":
-            ret_val = FunnelByUser.FunnelByUser(params=extractor_params)
-        elif feature_type == "LevelsOfDifficulty":
-            ret_val = LevelsOfDifficulty.LevelsOfDifficulty(params=extractor_params)
-        elif feature_type == "SequenceBetweenPuzzles":
-            ret_val = SequenceBetweenPuzzles.SequenceBetweenPuzzles(params=extractor_params)
-        else:
-            raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shadowspect.")
+        match feature_type:
+            case "MoveShapeCount":
+                ret_val = MoveShapeCount.MoveShapeCount(params=extractor_params)
+            case "SessionID":
+                ret_val = SessionID.SessionID(params=extractor_params, session_id=self._session_id)
+            case "FunnelByUser":
+                ret_val = FunnelByUser.FunnelByUser(params=extractor_params)
+            case "LevelsOfDifficulty":
+                ret_val = LevelsOfDifficulty.LevelsOfDifficulty(params=extractor_params)
+            case "SequenceBetweenPuzzles":
+                ret_val = SequenceBetweenPuzzles.SequenceBetweenPuzzles(params=extractor_params)
+            case _:
+                raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shadowspect.")
         return ret_val
 
     def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:
-        raise NotImplementedError(f"'{detector_type}' is not a valid feature for Shadowspect.")
+        raise NotImplementedError(f"'{detector_type}' is not a valid detector for Shadowspect.")
 
     ## Constructor for the ShadowspectExtractor class.
     def __init__(self, player_id:str, session_id: str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]=None):

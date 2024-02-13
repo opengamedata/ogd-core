@@ -28,31 +28,34 @@ class IcecubeLoader(ExtractorLoader):
     
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
+        if extractor_params._count_index is None:
+            match feature_type:
+                case "ScenesEncountered":
+                    ret_val = ScenesEncountered.ScenesEncountered(params=extractor_params)
+                case "Session_Language":
+                    ret_val = Session_Language.Session_Language(params=extractor_params)
+                case "SessionDuration":
+                    ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
+                case "HeadsetOnCount":
+                    ret_val = HeadsetOnCount.HeadsetOnCount(params=extractor_params)
+                case "ObjectSelectionsDuringVoiceover":
+                    ret_val = ObjectSelectionsDuringVoiceover.ObjectSelectionsDuringVoiceover(params=extractor_params)
+                case "SceneFailureCount":
+                    ret_val = SceneFailureCount.SceneFailureCount(params=extractor_params)
+                case _:
+                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature for Waves.")
         # Per-count features
-            # level attempt features
-        if feature_type == "ScenesEncountered":
-            ret_val = ScenesEncountered.ScenesEncountered(params=extractor_params)
-        elif feature_type == "Session_Language":
-            ret_val = Session_Language.Session_Language(params=extractor_params)
-        elif feature_type == "SessionDuration":
-            ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
-        elif feature_type == "HeadsetOnCount":
-            ret_val = HeadsetOnCount.HeadsetOnCount(params=extractor_params)
-        elif feature_type == "ObjectSelectionsDuringVoiceover":
-            ret_val = ObjectSelectionsDuringVoiceover.ObjectSelectionsDuringVoiceover(params=extractor_params)
-        elif feature_type == "SceneFailureCount":
-            ret_val = SceneFailureCount.SceneFailureCount(params=extractor_params)
-        
-        elif extractor_params._count_index is not None:
-            if feature_type == "SceneFailures":
-                ret_val = SceneFailures.SceneFailures(params=extractor_params)
-            elif feature_type == "TaskTimeToComplete":
-                    ret_val = TaskTimeToComplete.TaskTimeToComplete(params=extractor_params)
-            elif feature_type == "SceneDuration":
-                    ret_val = SceneDuration.SceneDuration(params=extractor_params)
-            
         else:
-            raise NotImplementedError(f"'{feature_type}' is not a valid feature for Waves.")
+            match feature_type:
+                case "SceneFailures":
+                    ret_val = SceneFailures.SceneFailures(params=extractor_params)
+                case "TaskTimeToComplete":
+                        ret_val = TaskTimeToComplete.TaskTimeToComplete(params=extractor_params)
+                case "SceneDuration":
+                        ret_val = SceneDuration.SceneDuration(params=extractor_params)
+                case _:
+                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature for Waves.")
+            
         return ret_val
 
     def _loadDetector(self, detector_type:str, name:str, detector_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Detector:

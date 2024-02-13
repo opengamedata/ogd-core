@@ -54,63 +54,66 @@ class PenguinsLoader(ExtractorLoader):
     
     def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
+        if extractor_params._count_index == None:
+            match feature_type:
+                case "SessionDuration":
+                    ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
+                case "RegionsEncountered":
+                    ret_val = RegionsEncountered.RegionsEncountered(params=extractor_params)
+                case "PlayerWaddleCount":
+                    ret_val = PlayerWaddleCount.PlayerWaddleCount(params=extractor_params)
+                case "GazeDuration":
+                    ret_val = GazeDuration.GazeDuration(params=extractor_params)
+                case "GazeCount":
+                    ret_val = GazeCount.GazeCount(params=extractor_params)
+                case "SnowBallDuration":
+                    ret_val = SnowBallDuration.SnowBallDuration(params=extractor_params)
+                # case "RingChimesCount":
+                    # ret_val = RingChimesCount.RingChimesCount(params=extractor_params)
+                case "WaddlePerRegion":
+                    ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params, region_map=self._region_map)
+                case "EatFishCount":
+                    ret_val = EatFishCount.EatFishCount(params=extractor_params)
+                case "PickupRockCount":
+                    ret_val = PickupRockCount.PickupRockCount(params=extractor_params)
+                case "EggLostCount":
+                    ret_val = EggLostCount.EggLostCount(params=extractor_params)
+                case "EggRecoverTime":
+                    ret_val = EggRecoverTime.EggRecoverTime(params=extractor_params)
+                # case "PlayerInactiveAvgDuration":
+                #     ret_val = PlayerInactiveAvgDuration.PlayerInactiveAvgDuration(params=extractor_params)
+                case "MirrorWaddleDuration":
+                    ret_val = MirrorWaddleDuration.MirrorWaddleDuration(params=extractor_params)
+                case "ActivityCompleted":
+                    ret_val = ActivityCompleted.ActivityCompleted(params=extractor_params)
+                case "ActivityDuration":
+                    ret_val = ActivityDuration.ActivityDuration(params=extractor_params)       
+                case _:
+                    raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature for Penguins.")
         # Per-count features
-            # level attempt features
-        if feature_type == "SessionDuration":
-            ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
-        elif feature_type == "RegionsEncountered":
-            ret_val = RegionsEncountered.RegionsEncountered(params=extractor_params)
-        elif feature_type == "PlayerWaddleCount":
-            ret_val = PlayerWaddleCount.PlayerWaddleCount(params=extractor_params)
-        elif feature_type == "GazeDuration":
-            ret_val = GazeDuration.GazeDuration(params=extractor_params)
-        elif feature_type == "GazeCount":
-            ret_val = GazeCount.GazeCount(params=extractor_params)
-        elif feature_type == "SnowBallDuration":
-            ret_val = SnowBallDuration.SnowBallDuration(params=extractor_params)
-        # elif feature_type == "RingChimesCount":
-            # ret_val = RingChimesCount.RingChimesCount(params=extractor_params)
-        elif feature_type == "WaddlePerRegion":
-            ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params, region_map=self._region_map)
-        elif feature_type == "EatFishCount":
-            ret_val = EatFishCount.EatFishCount(params=extractor_params)
-        elif feature_type == "PickupRockCount":
-            ret_val = PickupRockCount.PickupRockCount(params=extractor_params)
-        elif feature_type == "EggLostCount":
-            ret_val = EggLostCount.EggLostCount(params=extractor_params)
-        elif feature_type == "EggRecoverTime":
-            ret_val = EggRecoverTime.EggRecoverTime(params=extractor_params)
-        # elif feature_type == "PlayerInactiveAvgDuration":
-        #     ret_val = PlayerInactiveAvgDuration.PlayerInactiveAvgDuration(params=extractor_params)
-        elif feature_type == "MirrorWaddleDuration":
-            ret_val = MirrorWaddleDuration.MirrorWaddleDuration(params=extractor_params)
-        elif feature_type == "ActivityCompleted":
-            ret_val = ActivityCompleted.ActivityCompleted(params=extractor_params)
-        elif feature_type == "ActivityDuration":
-            ret_val = ActivityDuration.ActivityDuration(params=extractor_params)       
-        
-        #elif extractor_params._count_index is not None:
-        elif feature_type == "RegionEnterCount":
-                ret_val = RegionEnterCount.RegionEnterCount(params=extractor_params, region_map=self._region_map)
-            #elif feature_type == "WaddlePerRegion":
-                    #ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
-        elif feature_type == "RegionDuration":
-                    ret_val = RegionDuration.RegionDuration(params=extractor_params, region_map=self._region_map)
-            
+        # level attempt features
         else:
-            raise NotImplementedError(f"'{feature_type}' is not a valid feature for Penguins.")
+            match feature_type:
+                case "RegionEnterCount":
+                        ret_val = RegionEnterCount.RegionEnterCount(params=extractor_params, region_map=self._region_map)
+                # case "WaddlePerRegion":
+                        #ret_val = WaddlePerRegion.WaddlePerRegion(params=extractor_params)
+                case "RegionDuration":
+                            ret_val = RegionDuration.RegionDuration(params=extractor_params, region_map=self._region_map)
+                case _:
+                    raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature for Penguins.")
         return ret_val
 
     def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         ret_val : Detector
 
-        if detector_type == "RegionEnter":
-            ret_val = RegionEnter.RegionEnter(params=extractor_params, trigger_callback=trigger_callback, region_map=self._region_map)
-        elif detector_type == "RegionExit":
-            ret_val = RegionExit.RegionExit(params=extractor_params, trigger_callback=trigger_callback, region_map=self._region_map)
-        
-        else:
-            raise NotImplementedError(f"'{detector_type}' is not a valid detector for Waves.")
+        match detector_type:
+            case "RegionEnter":
+                ret_val = RegionEnter.RegionEnter(params=extractor_params, trigger_callback=trigger_callback, region_map=self._region_map)
+            case "RegionExit":
+                ret_val = RegionExit.RegionExit(params=extractor_params, trigger_callback=trigger_callback, region_map=self._region_map)
+            case _:
+                raise NotImplementedError(f"'{detector_type}' is not a valid detector for Penguins.")
         return ret_val
 
 
