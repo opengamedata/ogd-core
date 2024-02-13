@@ -38,12 +38,9 @@ class UsedContinue(SessionFeature):
             self._save_code = feature.FeatureValues[0]
         elif feature.FeatureType == "FirstInteraction":
             self._first_inc = feature.FeatureValues[0]
-        
         return
 
     def _getFeatureValues(self) -> List[Any]:
         if not self._save_code and self._first_inc != UsedContinue.START_SIGN:
             self._continue = 1
         return [self._continue]
-
-
