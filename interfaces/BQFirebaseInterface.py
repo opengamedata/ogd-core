@@ -63,13 +63,14 @@ class BQFirebaseInterface(BigQueryInterface):
                 items = tuple(row.items())
                 event = []
                 for item in items:
-                    if item[0] == "event_params":
-                        _params = {param['key']:param['value'] for param in item[1]}
-                        event.append(json.dumps(_params, sort_keys=True))
-                    elif item[0] in {"device", "geo"}:
-                        event.append(json.dumps(item[1], sort_keys=True))
-                    else:
-                        event.append(item[1])
+                    match item[0]:
+                        case "event_params":
+                            _params = {param['key']:param['value'] for param in item[1]}
+                            event.append(json.dumps(_params, sort_keys=True))
+                        case "device" | "geo":
+                            event.append(json.dumps(item[1], sort_keys=True))
+                        case _:
+                            event.append(item[1])
                 events.append(tuple(event))
         return events if events != None else []
 
@@ -91,25 +92,26 @@ class BQFirebaseInterface(BigQueryInterface):
         return ret_val
 
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
-        if id_mode==IDMode.SESSION:
-            id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"""
-                WHERE param.key = "ga_session_id"
-                AND param.value.int_value IN ({id_string})
-            """
-        elif id_mode==IDMode.USER:
-            id_string = ','.join([f"'{x}'" for x in id_list])
-            where_clause = f"""
-                WHERE param.key = "user_code"
-                AND param.value.string_value IN ({id_string})
-            """
-        else:
-            Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
-            id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"""
-                WHERE param.key = "ga_session_id"
-                AND param.value.int_value IN ({id_string})
-            """
+        match id_mode:
+            case IDMode.SESSION:
+                id_string = ','.join([f"{x}" for x in id_list])
+                where_clause = f"""
+                    WHERE param.key = "ga_session_id"
+                    AND param.value.int_value IN ({id_string})
+                """
+            case IDMode.USER:
+                id_string = ','.join([f"'{x}'" for x in id_list])
+                where_clause = f"""
+                    WHERE param.key = "user_code"
+                    AND param.value.string_value IN ({id_string})
+                """
+            case _:
+                Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
+                id_string = ','.join([f"{x}" for x in id_list])
+                where_clause = f"""
+                    WHERE param.key = "ga_session_id"
+                    AND param.value.int_value IN ({id_string})
+                """
         query = f"""
             WITH datetable AS
             (
