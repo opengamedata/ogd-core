@@ -171,6 +171,12 @@ class BQFirebaseInterface(BigQueryInterface):
                 AND   param_log_version.key = 'log_version'
                 AND   {session_clause}
                 AND   {player_clause}"""
+        elif self._game_id == "SHADOWSPECT":
+            where_clause = \
+            f"WHERE {session_clause}"
+        elif self._game_id == "SHIPWRECKS":
+            where_clause = \
+            f"WHERE {session_clause}"
         else:
             where_clause = \
             f"""WHERE param_app_version.key = 'app_version'
@@ -179,14 +185,24 @@ class BQFirebaseInterface(BigQueryInterface):
                 AND   {player_clause}"""
         # 4) Set up actual query
         query = ""
-        if self._game_id == "SHIPWRECKS":
+        if self._game_id == "SHADOWSPECT":
             query = f"""
                 SELECT event_name, event_params, device, geo, platform,
                 concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
                 param_session.value.int_value as session_id,
                 FROM `{self.DBPath()}`
                 CROSS JOIN UNNEST(event_params) AS param_session
-                WHERE param_session.key = 'ga_session_id' AND param_session.value.int_value IN ({id_string})
+                {where_clause}
+                ORDER BY `session_id`, `timestamp` ASC;
+            """
+        elif self._game_id == "SHIPWRECKS":
+            query = f"""
+                SELECT event_name, event_params, device, geo, platform,
+                concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
+                param_session.value.int_value as session_id,
+                FROM `{self.DBPath()}`
+                CROSS JOIN UNNEST(event_params) AS param_session
+                {where_clause}
                 ORDER BY `session_id`, `timestamp` ASC;
             """
         else:
