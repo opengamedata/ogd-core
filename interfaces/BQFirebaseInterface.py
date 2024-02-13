@@ -189,7 +189,10 @@ class BQFirebaseInterface(BigQueryInterface):
             query = f"""
                 SELECT event_name, event_params, device, geo, platform,
                 concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
+                null as app_version,
+                null as log_version,
                 param_session.value.int_value as session_id,
+                null as fd_user_id
                 FROM `{self.DBPath()}`
                 CROSS JOIN UNNEST(event_params) AS param_session
                 {where_clause}
@@ -199,7 +202,10 @@ class BQFirebaseInterface(BigQueryInterface):
             query = f"""
                 SELECT event_name, event_params, device, geo, platform,
                 concat(FORMAT_DATE('%Y-%m-%d', PARSE_DATE('%Y%m%d', event_date)), FORMAT_TIME('T%H:%M:%S.00', TIME(TIMESTAMP_MICROS(event_timestamp)))) AS timestamp,
+                null as app_version,
+                null as log_version,
                 param_session.value.int_value as session_id,
+                null as fd_user_id
                 FROM `{self.DBPath()}`
                 CROSS JOIN UNNEST(event_params) AS param_session
                 {where_clause}
