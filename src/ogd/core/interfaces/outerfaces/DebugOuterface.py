@@ -34,16 +34,17 @@ class DebugOuterface(DataOuterface):
         return "Logger.Log"
 
     def _removeExportMode(self, mode:ExportMode):
-        if mode == ExportMode.EVENTS:
-            self._display("No longer outputting raw event data to debug stream.")
-        if mode == ExportMode.DETECTORS:
-            self._display("No longer outputting processed event data to debug stream.")
-        elif mode == ExportMode.SESSION:
-            self._display("No longer outputting session data to debug stream.")
-        elif mode == ExportMode.PLAYER:
-            self._display("No longer outputting player data to debug stream.")
-        elif mode == ExportMode.POPULATION:
-            self._display("No longer outputting population data to debug stream.")
+        match mode:
+            case ExportMode.EVENTS:
+                self._display("No longer outputting raw event data to debug stream.")
+            case ExportMode.DETECTORS:
+                self._display("No longer outputting processed event data to debug stream.")
+            case ExportMode.SESSION:
+                self._display("No longer outputting session data to debug stream.")
+            case ExportMode.PLAYER:
+                self._display("No longer outputting player data to debug stream.")
+            case ExportMode.POPULATION:
+                self._display("No longer outputting population data to debug stream.")
 
     def _writeRawEventsHeader(self, header:List[str]) -> None:
         self._display("Raw events header:")

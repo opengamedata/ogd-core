@@ -82,13 +82,14 @@ class BigQueryInterface(DataInterface):
                 items = tuple(row.items())
                 event = []
                 for item in items:
-                    if item[0] == "event_params":
-                        _params = {param['key']:param['value'] for param in item[1]}
-                        event.append(json.dumps(_params, sort_keys=True))
-                    elif item[0] in {"device", "geo"}:
-                        event.append(json.dumps(item[1], sort_keys=True))
-                    else:
-                        event.append(item[1])
+                    match item[0]:
+                        case "event_params":
+                            _params = {param['key']:param['value'] for param in item[1]}
+                            event.append(json.dumps(_params, sort_keys=True))
+                        case "device" | "geo":
+                            event.append(json.dumps(item[1], sort_keys=True))
+                        case _:
+                            event.append(item[1])
                 events.append(tuple(event))
         return events if events != None else []
 
@@ -109,16 +110,17 @@ class BigQueryInterface(DataInterface):
         return ret_val
 
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
-        if id_mode==IDMode.SESSION:
-            id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"WHERE session_id IN ({id_string})"
-        elif id_mode==IDMode.USER:
-            id_string = ','.join([f"'{x}'" for x in id_list])
-            where_clause = f"WHERE user_id IN ({id_string})"
-        else:
-            Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
-            id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"WHERE session_id IN ({id_string})"
+        match id_mode:
+            case IDMode.SESSION:
+                id_string = ','.join([f"{x}" for x in id_list])
+                where_clause = f"WHERE session_id IN ({id_string})"
+            case IDMode.USER:
+                id_string = ','.join([f"'{x}'" for x in id_list])
+                where_clause = f"WHERE user_id IN ({id_string})"
+            case _:
+                Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
+                id_string = ','.join([f"{x}" for x in id_list])
+                where_clause = f"WHERE session_id IN ({id_string})"
         query = f"""
             SELECT MIN(server_time), MAX(server_time)
             FROM `{self.DBPath()}`
@@ -197,13 +199,14 @@ class BigQueryInterface(DataInterface):
     def _generateRowFromIDQuery(self, id_list:List[str], id_mode:IDMode, exclude_rows:Optional[List[str]]=None) -> str:
         id_clause : str = ""
         id_string = ','.join([f"'{x}'" for x in id_list])
-        if id_mode == IDMode.SESSION:
-            id_clause = f"session_id IN ({id_string})"
-        elif id_mode == IDMode.USER:
-            id_clause  = f"user_id IN ({id_string})"
-        else:
-            Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
-            id_clause = f"session_id IN ({id_string})"
+        match id_mode:
+            case IDMode.SESSION:
+                id_clause = f"session_id IN ({id_string})"
+            case IDMode.USER:
+                id_clause  = f"user_id IN ({id_string})"
+            case _:
+                Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
+                id_clause = f"session_id IN ({id_string})"
         # 3) Set up WHERE clause based on whether we need Aqualab min version or not.
         where_clause = f" WHERE {id_clause}"
         if exclude_rows is not None:

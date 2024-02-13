@@ -54,21 +54,22 @@ class DictionaryOuterface(DataOuterface):
         return "RequestResult"
 
     def _removeExportMode(self, mode:ExportMode):
-        if mode == ExportMode.EVENTS:
-            self._raw_evts = []
-            self._out['raw_events']  = { "cols" : [], "vals" : self._raw_evts }
-        elif mode == ExportMode.DETECTORS:
-            self._all_evts = []
-            self._out['all_events']  = { "cols" : [], "vals" : self._all_evts }
-        elif mode == ExportMode.SESSION:
-            self._sess = []
-            self._out['sessions']    = { "cols" : [], "vals" : self._sess }
-        elif mode == ExportMode.PLAYER:
-            self._plrs = []
-            self._out['players']     = { "cols" : [], "vals" : self._plrs }
-        elif mode == ExportMode.POPULATION:
-            self._pops = []
-            self._out['populations'] = { "cols" : [], "vals" : self._pops }
+        match mode:
+            case ExportMode.EVENTS:
+                self._raw_evts = []
+                self._out['raw_events']  = { "cols" : [], "vals" : self._raw_evts }
+            case ExportMode.DETECTORS:
+                self._all_evts = []
+                self._out['all_events']  = { "cols" : [], "vals" : self._all_evts }
+            case ExportMode.SESSION:
+                self._sess = []
+                self._out['sessions']    = { "cols" : [], "vals" : self._sess }
+            case ExportMode.PLAYER:
+                self._plrs = []
+                self._out['players']     = { "cols" : [], "vals" : self._plrs }
+            case ExportMode.POPULATION:
+                self._pops = []
+                self._out['populations'] = { "cols" : [], "vals" : self._pops }
 
     def _writeRawEventsHeader(self, header:List[str]) -> None:
         self._out['raw_events']['cols'] = header

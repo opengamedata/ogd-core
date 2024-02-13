@@ -126,49 +126,53 @@ class TSVOuterface(DataOuterface):
 
     def _destination(self, mode:ExportMode) -> str:
         ret_val = ""
-        if mode == ExportMode.EVENTS:
-            ret_val = str(self._file_paths['raw_events'])
-        elif mode == ExportMode.DETECTORS:
-            ret_val = str(self._file_paths['processed_events'])
-        elif mode == ExportMode.SESSION:
-            ret_val = str(self._file_paths['sessions'])
-        elif mode == ExportMode.PLAYER:
-            ret_val = str(self._file_paths['players'])
-        elif mode == ExportMode.POPULATION:
-            ret_val = str(self._file_paths['population'])
+        match mode:
+            case ExportMode.EVENTS:
+                ret_val = str(self._file_paths['raw_events'])
+            case ExportMode.DETECTORS:
+                ret_val = str(self._file_paths['processed_events'])
+            case ExportMode.SESSION:
+                ret_val = str(self._file_paths['sessions'])
+            case ExportMode.PLAYER:
+                ret_val = str(self._file_paths['players'])
+            case ExportMode.POPULATION:
+                ret_val = str(self._file_paths['population'])
         return ret_val
 
     def _removeExportMode(self, mode:ExportMode):
-        if mode == ExportMode.EVENTS:
-            if self._files['raw_events'] is not None:
-                self._files['raw_events'].close()
-            self._files['raw_events']      = None
-            self._file_paths['raw_events'] = None
-            self._zip_paths['raw_events']  = None
-        if mode == ExportMode.DETECTORS:
-            if self._files['processed_events'] is not None:
-                self._files['processed_events'].close()
-            self._files['processed_events']      = None
-            self._file_paths['processed_events'] = None
-            self._zip_paths['processed_events']  = None
-        elif mode == ExportMode.SESSION:
-            if self._files['sessions'] is not None:
-                self._files['sessions'].close()
-            self._files['sessions']      = None
-            self._file_paths['sessions'] = None
-            self._zip_paths['sessions']  = None
-        elif mode == ExportMode.PLAYER:
-            if self._files['players'] is not None:
-                self._files['players'].close()
-            self._files['players']      = None
-            self._file_paths['players'] = None
-            self._zip_paths['players']  = None
-        elif mode == ExportMode.POPULATION:
-            if self._files['population'] is not None:
-                self._files['population'].close()
-            self._files['population']      = None
-            self._file_paths['population'] = None
-            self._zip_paths['population']  = None
+        match mode:
+            # NOTE: Originally, this case was a lone "if" followed by "if-elif-elif..." for Detectors on.
+            # I don't think that was intentional, but wanted to make a note of it just in case.
+            case ExportMode.EVENTS:
+                if self._files['raw_events'] is not None:
+                    self._files['raw_events'].close()
+                self._files['raw_events']      = None
+                self._file_paths['raw_events'] = None
+                self._zip_paths['raw_events']  = None
+            case ExportMode.DETECTORS:
+                if self._files['processed_events'] is not None:
+                    self._files['processed_events'].close()
+                self._files['processed_events']      = None
+                self._file_paths['processed_events'] = None
+                self._zip_paths['processed_events']  = None
+            case ExportMode.SESSION:
+                if self._files['sessions'] is not None:
+                    self._files['sessions'].close()
+                self._files['sessions']      = None
+                self._file_paths['sessions'] = None
+                self._zip_paths['sessions']  = None
+            case ExportMode.PLAYER:
+                if self._files['players'] is not None:
+                    self._files['players'].close()
+                self._files['players']      = None
+                self._file_paths['players'] = None
+                self._zip_paths['players']  = None
+            case ExportMode.POPULATION:
+                if self._files['population'] is not None:
+                    self._files['population'].close()
+                self._files['population']      = None
+                self._file_paths['population'] = None
+                self._zip_paths['population']  = None
 
     def _writeRawEventsHeader(self, header:List[str]) -> None:
         cols = TSVOuterface._cleanSpecialChars(vals=header)

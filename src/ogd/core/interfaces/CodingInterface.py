@@ -79,24 +79,26 @@ class CodingInterface(Interface):
         return ret_val
 
     def GetCodes(self, mode:IDMode, id:str):
-        if mode == IDMode.GAME:
-            self._getCodesByGame(game_id=id)
-        elif mode == IDMode.USER:
-            self._getCodesByCoder(coder_id=id)
-        elif mode == IDMode.SESSION:
-            self._getCodesBySession(session_id=id)
-        else:
-            raise NotImplementedError(f"The given retrieval mode '{mode}' is not supported for retrieving codes!")
+        match mode:
+            case IDMode.GAME:
+                self._getCodesByGame(game_id=id)
+            case IDMode.USER:
+                self._getCodesByCoder(coder_id=id)
+            case IDMode.SESSION:
+                self._getCodesBySession(session_id=id)
+            case _:
+                raise NotImplementedError(f"The given retrieval mode '{mode}' is not supported for retrieving codes!")
 
     def GetCodeWords(self, mode:IDMode, id:str):
-        if mode == IDMode.GAME:
-            self._getCodeWordsByGame(game_id=id)
-        elif mode == IDMode.USER:
-            self._getCodeWordsByCoder(coder_id=id)
-        elif mode == IDMode.SESSION:
-            self._getCodeWordsBySession(session_id=id)
-        else:
-            raise NotImplementedError(f"The given retrieval mode '{mode}' is not supported for retrieving code words!")
+        match mode:
+            case IDMode.GAME:
+                self._getCodeWordsByGame(game_id=id)
+            case IDMode.USER:
+                self._getCodeWordsByCoder(coder_id=id)
+            case IDMode.SESSION:
+                self._getCodeWordsBySession(session_id=id)
+            case _:
+                raise NotImplementedError(f"The given retrieval mode '{mode}' is not supported for retrieving code words!")
 
     def CreateCode(self, code:str, coder_id:str, events:List[Code.EventID], notes:Optional[str]=None) -> bool:
         ret_val = False
