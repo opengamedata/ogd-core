@@ -197,30 +197,31 @@ class WaveLoader(ExtractorLoader):
     #         if event_type == "CUSTOM":
     #             event_type = event.EventData['event_custom']
     #         # 2) handle cases for each type of event
-    #         if event_type == "BEGIN":
-    #             self._extractFromBegin(level=level, event_client_time=event.Timestamp)
-    #         elif event_type == "COMPLETE":
-    #             self._extractFromComplete(level=level, event_client_time=event.Timestamp)
-    #         elif event_type == "SUCCEED":
-    #             self._extractFromSucceed(level=level)
-    #         elif event_type == "MENU_BUTTON":
-    #             self._extractFromMenuBtn(level=level, event_client_time=event.Timestamp)
-    #         elif event_type == "SKIP_BUTTON":
-    #             self._extractFromSkipBtn(level=level)
-    #         elif event_type == "DISMISS_MENU_BUTTON":
-    #             pass
-    #             # print("Stub: Got a DISMISS_MENU_BUTTON event, nothing to do with it.")
-    #         elif event_type == "RESET_BTN_PRESS":
-    #             self._extractFromResetBtnPress(level=level)
-    #         elif event_type == "FAIL":
-    #             self._extractFromFail(level=level)
-    #         elif event_type in ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"] :
-    #             self._extractFromMoveRelease(level=level, event_data=event.EventData, event_client_time=event.Timestamp)
-    #         elif event_type == "QUESTION_ANSWER":
-    #             self._extractFromQuestionAnswer(event_data=event.EventData, event_client_time=event.Timestamp)
-    #             # print("Q+A: " + str(event_data))
-    #         else:
-    #             raise Exception(f"Found an unrecognized event type: {event_type}")
+    #         match event_type:
+    #             case "BEGIN":
+    #                 self._extractFromBegin(level=level, event_client_time=event.Timestamp)
+    #             case "COMPLETE":
+    #                 self._extractFromComplete(level=level, event_client_time=event.Timestamp)
+    #             case "SUCCEED":
+    #                 self._extractFromSucceed(level=level)
+    #             case "MENU_BUTTON":
+    #                 self._extractFromMenuBtn(level=level, event_client_time=event.Timestamp)
+    #             case "SKIP_BUTTON":
+    #                 self._extractFromSkipBtn(level=level)
+    #             case "DISMISS_MENU_BUTTON":
+    #                 pass
+    #                 # print("Stub: Got a DISMISS_MENU_BUTTON event, nothing to do with it.")
+    #             case "RESET_BTN_PRESS":
+    #                 self._extractFromResetBtnPress(level=level)
+    #             case "FAIL":
+    #                 self._extractFromFail(level=level)
+    #             case ["SLIDER_MOVE_RELEASE", "ARROW_MOVE_RELEASE"] :
+    #                 self._extractFromMoveRelease(level=level, event_data=event.EventData, event_client_time=event.Timestamp)
+    #             case "QUESTION_ANSWER":
+    #                 self._extractFromQuestionAnswer(event_data=event.EventData, event_client_time=event.Timestamp)
+    #                 # print("Q+A: " + str(event_data))
+    #             case _:
+    #                 raise Exception(f"Found an unrecognized event type: {event_type}")
     #     else:
     #         Logger.Log(f"Got a row with incorrect session id! Expected {self._session_id}, got {event.SessionID}!", logging.ERROR)
                                                

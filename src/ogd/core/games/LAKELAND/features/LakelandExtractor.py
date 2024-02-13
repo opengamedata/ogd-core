@@ -229,90 +229,91 @@ class LakelandExtractor(LegacyFeature):
                 self._extractFromExplore(event.Timestamp, event.EventData)
             if event_type_str in LakelandExtractor._IMPACT_EVENTS:
                 self._extractFromImpact(event.Timestamp, event.EventData)
-            if event_type_str == "GAMESTATE":
-                self._extractFromGamestate(event.Timestamp, event.EventData)
-            elif event_type_str == "STARTGAME":
-                self._extractFromStartgame(event.Timestamp, event.EventData)
-            elif event_type_str == "CHECKPOINT":
-                self._extractFromCheckpoint(event.Timestamp, event.EventData)
-            elif event_type_str == "SELECTTILE":
-                self._extractFromSelecttile(event.Timestamp, event.EventData)
-            elif event_type_str == "SELECTFARMBIT":
-                self._extractFromSelectfarmbit(event.Timestamp, event.EventData)
-            elif event_type_str == "SELECTITEM":
-                self._extractFromSelectitem(event.Timestamp, event.EventData)
-            elif event_type_str == "SELECTBUY":
-                self._extractFromSelectbuy(event.Timestamp, event.EventData)
-            elif event_type_str == "BUY":
-                self._extractFromBuy(event.Timestamp, event.EventData)
-            elif event_type_str == "CANCELBUY":
-                self._extractFromCancelbuy(event.Timestamp, event.EventData)
-            elif event_type_str == "ROADBUILDS":
-                self._extractFromRoadbuilds(event.Timestamp, event.EventData)
-            elif event_type_str == "TILEUSESELECT":
-                self._extractFromTileuseselect(event.Timestamp, event.EventData)
-            elif event_type_str == "ITEMUSESELECT":
-                self._extractFromItemuseselect(event.Timestamp, event.EventData)
-            elif event_type_str == "TOGGLENUTRITION":
-                self._extractFromTogglenutrition(event.Timestamp, event.EventData)
-            elif event_type_str == "TOGGLESHOP":
-                self._extractFromToggleshop(event.Timestamp, event.EventData)
-            elif event_type_str == "TOGGLEACHIEVEMENTS":
-                self._extractFromToggleachievements(event.Timestamp, event.EventData)
-            elif event_type_str == "SKIPTUTORIAL":
-                self._extractFromSkiptutorial(event.Timestamp, event.EventData)
-            elif event_type_str == "SPEED":
-                self._extractFromSpeed(event.Timestamp, event.EventData)
-            elif event_type_str == "ACHIEVEMENT":
-                self._extractFromAchievement(event.Timestamp, event.EventData)
-            elif event_type_str == "FARMBITDEATH":
-                self._extractFromFarmbitdeath(event.Timestamp, event.EventData)
-            elif event_type_str == "BLURB":
-                self._extractFromBlurb(event.Timestamp, event.EventData)
-            elif event_type_str == "CLICK":
-                self._extractFromClick(event.Timestamp, event.EventData)
-            elif event_type_str == "RAINSTOPPED":
-                self._extractFromRainstopped(event.Timestamp, event.EventData)
-            elif event_type_str == "HISTORY":
-                self._extractFromHistory(event.Timestamp, event.EventData)
-            elif event_type_str == "ENDGAME":
-                self._extractFromEndgame(event.Timestamp, event.EventData)
-            elif event_type_str == "EMOTE":
-                self._extractFromEmote(event.Timestamp, event.EventData)
-            elif event_type_str == "FARMFAIL":
-                self._extractFromFarmfail(event.Timestamp, event.EventData)
-            elif event_type_str == "BLOOM":
-                self._extractFromBloom(event.Timestamp, event.EventData)
-            elif event_type_str == "FARMHARVESTED":
-                self._extractFromFarmharvested(event.Timestamp, event.EventData)
-            elif event_type_str == "MILKPRODUCED":
-                self._extractFromMilkproduced(event.Timestamp, event.EventData)
-            elif event_type_str == "POOPPRODUCED":
-                self._extractFromPoopproduced(event.Timestamp, event.EventData)
-            elif event_type_str == "DEBUG":
-                self._extractFromDebug(event.Timestamp, event.EventData)
-            elif event_type_str == "NEWFARMBIT":
-                self._extractFromNewfarmbit(event.Timestamp, event.EventData)
-            elif event_type_str == "AVAILABLEFOOD":
-                self._extractFromAvailablefood(event.Timestamp, event.EventData)
-            elif event_type_str == "MONEYRATE":
-                self._extractFromMoneyrate(event.Timestamp, event.EventData)
-            elif event_type_str == "SADFARMBITS":
-                self._extractFromSadfarmbits(event.Timestamp, event.EventData)
-            elif event_type_str == "LAKENUTRITION":
-                self._extractFromLakenutrition(event.Timestamp, event.EventData)
-            elif event_type_str == "SALESTART":
-                self._extractFromSalestart(event.Timestamp, event.EventData)
-            elif event_type_str == "SALEEND":
-                self._extractFromSaleend(event.Timestamp, event.EventData)
-            elif event_type_str == "RAINSTARTED":
-                self._extractFromRainstarted(event.Timestamp, event.EventData)
-            elif event_type_str == "EATFOOD":
-                self._extractFromEatfood(event.Timestamp, event.EventData)
-            elif event_type_str == "RESET":
-                self._extractFromReset(event.Timestamp, event.EventData)
-            else:
-                raise Exception(f"Found an unrecognized event type: {event.EventName}")
+            match event_type_str:
+                case "GAMESTATE":
+                    self._extractFromGamestate(event.Timestamp, event.EventData)
+                case "STARTGAME":
+                    self._extractFromStartgame(event.Timestamp, event.EventData)
+                case "CHECKPOINT":
+                    self._extractFromCheckpoint(event.Timestamp, event.EventData)
+                case "SELECTTILE":
+                    self._extractFromSelecttile(event.Timestamp, event.EventData)
+                case "SELECTFARMBIT":
+                    self._extractFromSelectfarmbit(event.Timestamp, event.EventData)
+                case "SELECTITEM":
+                    self._extractFromSelectitem(event.Timestamp, event.EventData)
+                case "SELECTBUY":
+                    self._extractFromSelectbuy(event.Timestamp, event.EventData)
+                case "BUY":
+                    self._extractFromBuy(event.Timestamp, event.EventData)
+                case "CANCELBUY":
+                    self._extractFromCancelbuy(event.Timestamp, event.EventData)
+                case "ROADBUILDS":
+                    self._extractFromRoadbuilds(event.Timestamp, event.EventData)
+                case "TILEUSESELECT":
+                    self._extractFromTileuseselect(event.Timestamp, event.EventData)
+                case "ITEMUSESELECT":
+                    self._extractFromItemuseselect(event.Timestamp, event.EventData)
+                case "TOGGLENUTRITION":
+                    self._extractFromTogglenutrition(event.Timestamp, event.EventData)
+                case "TOGGLESHOP":
+                    self._extractFromToggleshop(event.Timestamp, event.EventData)
+                case "TOGGLEACHIEVEMENTS":
+                    self._extractFromToggleachievements(event.Timestamp, event.EventData)
+                case "SKIPTUTORIAL":
+                    self._extractFromSkiptutorial(event.Timestamp, event.EventData)
+                case "SPEED":
+                    self._extractFromSpeed(event.Timestamp, event.EventData)
+                case "ACHIEVEMENT":
+                    self._extractFromAchievement(event.Timestamp, event.EventData)
+                case "FARMBITDEATH":
+                    self._extractFromFarmbitdeath(event.Timestamp, event.EventData)
+                case "BLURB":
+                    self._extractFromBlurb(event.Timestamp, event.EventData)
+                case "CLICK":
+                    self._extractFromClick(event.Timestamp, event.EventData)
+                case "RAINSTOPPED":
+                    self._extractFromRainstopped(event.Timestamp, event.EventData)
+                case "HISTORY":
+                    self._extractFromHistory(event.Timestamp, event.EventData)
+                case "ENDGAME":
+                    self._extractFromEndgame(event.Timestamp, event.EventData)
+                case "EMOTE":
+                    self._extractFromEmote(event.Timestamp, event.EventData)
+                case "FARMFAIL":
+                    self._extractFromFarmfail(event.Timestamp, event.EventData)
+                case "BLOOM":
+                    self._extractFromBloom(event.Timestamp, event.EventData)
+                case "FARMHARVESTED":
+                    self._extractFromFarmharvested(event.Timestamp, event.EventData)
+                case "MILKPRODUCED":
+                    self._extractFromMilkproduced(event.Timestamp, event.EventData)
+                case "POOPPRODUCED":
+                    self._extractFromPoopproduced(event.Timestamp, event.EventData)
+                case "DEBUG":
+                    self._extractFromDebug(event.Timestamp, event.EventData)
+                case "NEWFARMBIT":
+                    self._extractFromNewfarmbit(event.Timestamp, event.EventData)
+                case "AVAILABLEFOOD":
+                    self._extractFromAvailablefood(event.Timestamp, event.EventData)
+                case "MONEYRATE":
+                    self._extractFromMoneyrate(event.Timestamp, event.EventData)
+                case "SADFARMBITS":
+                    self._extractFromSadfarmbits(event.Timestamp, event.EventData)
+                case "LAKENUTRITION":
+                    self._extractFromLakenutrition(event.Timestamp, event.EventData)
+                case "SALESTART":
+                    self._extractFromSalestart(event.Timestamp, event.EventData)
+                case "SALEEND":
+                    self._extractFromSaleend(event.Timestamp, event.EventData)
+                case "RAINSTARTED":
+                    self._extractFromRainstarted(event.Timestamp, event.EventData)
+                case "EATFOOD":
+                    self._extractFromEatfood(event.Timestamp, event.EventData)
+                case "RESET":
+                    self._extractFromReset(event.Timestamp, event.EventData)
+                case _:
+                    raise Exception(f"Found an unrecognized event type: {event.EventName}")
 
     def _extractFromFirst(self, event_client_time, event_data):
         self._CLIENT_START_TIME = event_client_time

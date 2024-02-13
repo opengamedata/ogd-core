@@ -64,18 +64,19 @@ class MagnetExtractor(LegacyFeature):
             if event_type == "CUSTOM":
                 event_type = event.EventData['event_custom']
             # 3) handle cases for each type of event
-            if event_type == "COMPLETE":
-                self._extractFromComplete(level=level, event_data=event.EventData)
-            elif event_type == "DRAG_TOOL":
-                pass
-            elif event_type == "DRAG_POLE":
-                pass
-            elif event_type == "PLAYGROUND_EXIT":
-                self._extractFromPlaygroundExit(level=level, event_data=event.EventData)
-            elif event_type == "TUTORIAL_EXIT":
-                self._extractFromTutorialExit(level=level, event_data=event.EventData)
-            else:
-                raise Exception(f"Found an unrecognized event type: {event_type}")
+            match event_type:
+                case "COMPLETE":
+                    self._extractFromComplete(level=level, event_data=event.EventData)
+                case "DRAG_TOOL":
+                    pass
+                case "DRAG_POLE":
+                    pass
+                case "PLAYGROUND_EXIT":
+                    self._extractFromPlaygroundExit(level=level, event_data=event.EventData)
+                case "TUTORIAL_EXIT":
+                    self._extractFromTutorialExit(level=level, event_data=event.EventData)
+                case _:
+                    raise Exception(f"Found an unrecognized event type: {event_type}")
 
     ## Function to perform calculation of aggregate features from existing
     #  per-level/per-custom-count features.

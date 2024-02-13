@@ -76,24 +76,25 @@ class CrystalExtractor(LegacyFeature):
             if event_type == "CUSTOM":
                 event_type = event.EventData['event_custom']
             # 3) handle cases for each type of event
-            if event_type == "BEGIN":
-                self._extractFromBegin(level, event_client_time)
-            elif event_type == "COMPLETE":
-                self._extractFromComplete(level, event_client_time, event.EventData)
-            elif event_type == "MOLECULE_RELEASE":
-                self._extractFromMoleculeRelease(level, event.EventData)
-            elif event_type == "MOLECULE_ROTATE":
-                self._extractFromMoleculeRotate(level, event.EventData)
-            elif event_type == "BACK_TO_MENU":
-                self._extractFromMenuBtn(level, event_client_time)
-            elif event_type == "CLEAR_BTN_PRESS":
-                self._extractFromClearBtnPress(level)
-            elif event_type in "MUSEUM_CLOSE" :
-                self._extractFromMuseumClose(event.EventData)
-            elif event_type == "QUESTION_ANSWER":
-                self._extractFromQuestionAnswer(event.EventData)
-            else:
-                raise Exception(f"Found an unrecognized event type: {event_type}")
+            match event_type:
+                case "BEGIN":
+                    self._extractFromBegin(level, event_client_time)
+                case "COMPLETE":
+                    self._extractFromComplete(level, event_client_time, event.EventData)
+                case "MOLECULE_RELEASE":
+                    self._extractFromMoleculeRelease(level, event.EventData)
+                case "MOLECULE_ROTATE":
+                    self._extractFromMoleculeRotate(level, event.EventData)
+                case "BACK_TO_MENU":
+                    self._extractFromMenuBtn(level, event_client_time)
+                case "CLEAR_BTN_PRESS":
+                    self._extractFromClearBtnPress(level)
+                case "MUSEUM_CLOSE" :
+                    self._extractFromMuseumClose(event.EventData)
+                case "QUESTION_ANSWER":
+                    self._extractFromQuestionAnswer(event.EventData)
+                case _:
+                    raise Exception(f"Found an unrecognized event type: {event_type}")
                                                
     ## Function to perform calculation of aggregate features from existing
     #  per-level/per-custom-count features.
