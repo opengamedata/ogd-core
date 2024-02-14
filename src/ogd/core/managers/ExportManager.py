@@ -23,6 +23,7 @@ from ogd.core.games.LAKELAND.LakelandLoader import LakelandLoader
 from ogd.core.games.MAGNET.MagnetLoader import MagnetLoader
 from ogd.core.games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
 from ogd.core.games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
+from ogd.core.games.THERMOVR.ThermoVRLoader import ThermoVRLoader
 from ogd.core.games.WAVES.WaveLoader import WaveLoader
 from ogd.core.games.PENGUINS.PenguinsLoader import PenguinsLoader
 from ogd.core.managers.EventManager import EventManager
@@ -198,6 +199,8 @@ class ExportManager:
                 _loader_class = ShadowspectLoader
             case "SHIPWRECKS":
                 _loader_class = ShipwrecksLoader
+            case "THERMOVR":
+                _loader_class = ThermoVRLoader
             case "WAVES":
                 _loader_class = WaveLoader
             case "PENGUINS":
