@@ -47,14 +47,13 @@ class ThermoVRLoader(ExtractorLoader):
         with open(_dbexport_path / "DBExport.json", "r") as file:
             export = json.load(file)
 
-            task_num = 1
-            for i, job in enumerate(export["jobs"], start=1):
-                self._lab_map[job["id"]] = i
-                self._diff_map[i] = job["difficulties"]
-                for task in job["tasks"]:
-                    task_by_job = job["id"] + "_" + task["id"]
-                    self._task_map[task_by_job] = task_num
-                    task_num += 1
+            # task_num = 1
+            # for i, lab in enumerate(export["labs"], start=1):
+            #     self._lab_map[lab["id"]] = i
+            #     for task in lab["tasks"]:
+            #         task_by_lab = lab["id"] + "_" + task["id"]
+            #         self._task_map[task_by_lab] = task_num
+            #         task_num += 1
 
         # Update level count
         self._game_schema._max_level = len(self._lab_map) - 1
