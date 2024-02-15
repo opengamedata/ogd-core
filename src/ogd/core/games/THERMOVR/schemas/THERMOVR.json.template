@@ -159,9 +159,9 @@
             "details": {
                 "category":"enum(TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
                 "task_number":"int",
-                "prompts":"List[str]",
+                "is_complete":"bool",
                 "available_tools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
-                "is_complete":"bool"
+                "prompts":"List[str]"
             },
             "description": "A description of the currently-active lab task, or null if not in lab mode."
         }
@@ -594,23 +594,154 @@
                     "details": {
                         "lab_name":"str",
                         "author":"str",
-                        "percent_complete":"float"
+                        "percent_complete":"float",
+                        "is_active" : "bool"
                     },
-                    "description": "A list of the labs displayed to the player (not including any labs that are available but undisplayed)."
+                    "description": "A list of the labs (w/o section details) displayed to the player (not including any labs that are available but undisplayed)."
                 }
             }
         },
         "select_lab": {
             "description": "When the player selects a lab from the menu",
             "event_data": {
-                "initial_lab" : {
-                    "type": "List[Dict]",
+                "lab" : {
+                    "type": "Dict[str, Any]",
                     "details": {
                         "lab_name":"str",
                         "author":"str",
-                        "percent_complete":"float"
+                        "percent_complete":"float",
+                        "is_active" : "bool",
+                        "sections" : "List[Dict]"
                     },
-                    "description": "A list of the labs displayed to the player (not including any labs that are available but undisplayed)."
+                    "description": "Details of the lab the player selected, including section and task sub-objects."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_lab_home": {
+            "description": "When the player presses the button to return to the main lab menu",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_select_section": {
+            "description": "When the player presses the button to change to a new section of the lab",
+            "event_data": {
+                "section" : {
+                    "type": "Dict[str, Any]",
+                    "details": {
+                        "lab_name" : "str",
+                        "section_number" : "int",
+                        "description" : "str",
+                        "is_complete" : "bool",
+                        "is_active" : "bool",
+                        "tasks" : "List[Dict]"
+                    },
+                    "description" : "Details of the section the player selected, including task sub-objects."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_section_scroll_up": {
+            "description": "When the player presses the button to scroll up in the list of available sections in the current lab",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_section_scroll_down": {
+            "description": "When the player presses the button to scroll down in the list of available sections in the current lab",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "section_list_displayed": {
+            "description": "When the tablet displays a list of available sections in the current lab to the player",
+            "event_data": {
+                "available_sections" : {
+                    "type": "List[Dict]",
+                    "details": {
+                        "lab_name" : "str",
+                        "section_number" : "int",
+                        "description" : "str",
+                        "is_complete" : "bool",
+                        "is_active" : "bool"
+                    },
+                    "description": "A list of the lab sections (w/o task details) displayed to the player (not including any sections that are available but undisplayed)."
+                }
+            }
+        },
+        "click_select_task": {
+            "description": "When the player presses the button to change to a new task in the lab",
+            "event_data": {
+                "section" : {
+                    "type": "Dict[str, Any]",
+                    "details": {
+                        "category":"enum(TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
+                        "lab_name":"str",
+                        "section_number":"str",
+                        "task_number":"int",
+                        "is_active":"bool",
+                        "is_complete":"bool",
+                        "available_tools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
+                        "prompts":"List[str]"
+                    },
+                    "description" : "Details of the task the player selected."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_task_scroll_left": {
+            "description": "When the player presses the button to scroll left in the list of available tasks in the current lab section",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_task_scroll_right": {
+            "description": "When the player presses the button to scroll right in the list of available tasks in the current lab section",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "task_list_displayed": {
+            "description": "When the tablet displays a list of available tasks in the current lab section to the player",
+            "event_data": {
+                "available_sections" : {
+                    "type": "List[Dict]",
+                    "details": {
+                        "category":"enum(TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
+                        "lab_name":"str",
+                        "section_number":"str",
+                        "task_number":"int",
+                        "is_active":"bool",
+                        "is_complete":"bool",
+                        "available_tools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
+                        "prompts":"List[str]"
+                    },
+                    "description": "A list of the tasks for the current lab section shown to the player (not including any tasks that are available but undisplayed)."
                 }
             }
         },
