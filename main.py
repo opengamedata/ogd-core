@@ -19,7 +19,7 @@ from typing import Any, Dict, Optional, Set, Tuple
 # import local files
 from config.config import settings
 import_path = Path(".") / "src"
-sys.path.append(str(import_path))
+sys.path.insert(0, str(import_path))
 from src.ogd.core import games
 from src.ogd.core.interfaces.DataInterface import DataInterface
 from src.ogd.core.interfaces.CSVInterface import CSVInterface

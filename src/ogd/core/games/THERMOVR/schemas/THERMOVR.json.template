@@ -745,6 +745,68 @@
                 }
             }
         },
+        "target_state_achieved": {
+            "description": "When the simulation reaches a target state defined for a lab task",
+            "event_data": {
+                "target_state": {
+                    "type": "Dict[enum(TEMPERATURE, PRESSURE, VOLUME, INTERNAL_ENERGY, ENTROPY, ENTHALPY, VAPOR_PROPORTION), float]",
+                    "description": "The specific details of the target state, as a mapping from sim properties to the target values (note, not every property will be included, only the ones that had a target value specified)."
+                }
+            }
+        },
+        "target_state_lost": {
+            "description": "When the simulation leaves a target state defined for a lab task, after previously reaching the target. Note that losing the target state does change the task to be incomplete.",
+            "event_data": {
+                "target_state": {
+                    "type": "Dict[enum(TEMPERATURE, PRESSURE, VOLUME, INTERNAL_ENERGY, ENTROPY, ENTHALPY, VAPOR_PROPORTION), float]",
+                    "description": "The specific details of the target state, as a mapping from sim properties to the target values (note, not every property will be included, only the ones that had a target value specified)."
+                },
+                "incorrect_variables" : {
+                    "type": "List[enum(TEMPERATURE, PRESSURE, VOLUME, INTERNAL_ENERGY, ENTROPY, ENTHALPY, VAPOR_PROPORTION)]",
+                    "description": "A list of which properties changed away from their target values."
+                }
+            }
+        },
+        "constant_variable_achieved": {
+            "description": "NOT YET IMPLEMENTED",
+            "event_data": {
+            }
+        },
+        "constant_variable_lost": {
+            "description": "NOT YET IMPLEMENTED",
+            "event_data": {
+            }
+        },
+        "click_select_answer": {
+            "description": "When the player presses the button to select an answer to a quiz question",
+            "event_data": {
+                "quiz_task" : {
+                    "type": "Dict[str, Any]",
+                    "details": {
+                        "category":"enum(MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
+                        "lab_name":"str",
+                        "section_number":"str",
+                        "task_number":"int",
+                        "is_active":"bool",
+                        "is_complete":"bool",
+                        "available_tools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
+                        "prompts":"List[str]",
+                        "options":"List[str | float]",
+                        "selected_options":"List[str | float]",
+                        "correct_answer":"float | str | List[float] | List[str]"
+                    },
+                    "description": "A list of the tasks for the current lab section shown to the player (not including any tasks that are available but undisplayed)."
+                },
+                "selection_index": {
+                    "type": "int",
+                    "description": "Index of the newly-selected item in the 'options' list (note that the actual selected item will appear in `selected_options`."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
     },
 
     "features": {
