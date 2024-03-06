@@ -13,11 +13,11 @@ from extractors.features.Feature import Feature
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 from schemas.IterationMode import IterationMode
-from schemas.game_schemas.AggregateSchema import AggregateSchema
-from schemas.game_schemas.PerCountSchema import PerCountSchema
-from utils import Logger
+from schemas.games.AggregateSchema import AggregateSchema
+from schemas.games.PerCountSchema import PerCountSchema
+from utils.Logger import Logger
 
 ## @class Extractor
 #  Abstract base class for game feature extractors.
@@ -35,7 +35,10 @@ class FeatureRegistry(ExtractorRegistry):
         FIRST_ORDER = 0
         SECOND_ORDER = 1
 
-    # *** BUILT-INS ***
+        def __str__(self):
+            return self.name
+
+    # *** BUILT-INS & PROPERTIES ***
 
     # Base constructor for Registry.
     def __init__(self, mode:ExtractionMode, order:int=len(FeatureOrders)):
@@ -155,13 +158,13 @@ class FeatureRegistry(ExtractorRegistry):
         per_load_set = per_load_set.union({schema.PerCountFeatures[per] for per in _per_deps if per in schema.PerCountFeatures.keys()})
         # 3. Now that we know what needs loading, load them and register.
         for agg_schema in sorted(agg_load_set, key=lambda x : x.Name):
-            feature = loader.LoadFeature(feature_type=agg_schema.TypeName, name=agg_schema.Name, schema_args=agg_schema.Elements)
+            feature = loader.LoadFeature(feature_type=agg_schema.TypeName, name=agg_schema.Name, schema_args=agg_schema.NonStandardElements)
             if feature is not None and self._mode in feature.AvailableModes():
                     self.Register(extractor=feature, iter_mode=IterationMode.AGGREGATE)
         for per_schema in sorted(per_load_set, key=lambda x : x.Name):
             for i in schema.GetCountRange(count=per_schema.Count):
                 instance_name = f"{per_schema.Prefix}{i}_{per_schema.Name}"
-                feature = loader.LoadFeature(feature_type=per_schema.TypeName, name=instance_name, schema_args=per_schema.Elements, count_index=i)
+                feature = loader.LoadFeature(feature_type=per_schema.TypeName, name=instance_name, schema_args=per_schema.NonStandardElements, count_index=i)
                 if feature is not None and self._mode in feature.AvailableModes():
                         self.Register(extractor=feature, iter_mode=IterationMode.PERCOUNT)
 
@@ -174,17 +177,20 @@ class FeatureRegistry(ExtractorRegistry):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
-        if event.EventName in self._event_registry.keys():
+        listener : ExtractorRegistry.Listener = ExtractorRegistry.Listener("EMPTY", IterationMode.AGGREGATE)
+        try:
             # send event to every listener for the given event name.
-            for listener in self._event_registry[event.EventName]:
+            for listener in self._event_registry.get(event.EventName, []):
                 for order_key in range(len(self._features)):
                     if listener.name in self._features[order_key].keys():
                         self._features[order_key][listener.name].ExtractFromEvent(event)
-        # don't forget to send to any features listening for "all" events
-        for listener in self._event_registry["all_events"]:
-            for order_key in range(len(self._features)):
-                if listener.name in self._features[order_key].keys():
-                    self._features[order_key][listener.name].ExtractFromEvent(event)
+            # don't forget to send to any features listening for "all" events
+            for listener in self._event_registry["all_events"]:
+                for order_key in range(len(self._features)):
+                    if listener.name in self._features[order_key].keys():
+                        self._features[order_key][listener.name].ExtractFromEvent(event)
+        except KeyError as err:
+            Logger.Log(f"{listener.name} found event {event} missing expected key: {err}", logging.ERROR)
 
     def _extractFromFeatureData(self, feature:FeatureData) -> None:
         """Perform extraction of features from a row.
@@ -200,7 +206,9 @@ class FeatureRegistry(ExtractorRegistry):
         for listener in listeners:
             for order_key in range(len(self._features)):
                 if listener.name in self._features[order_key].keys():
-                    self._features[order_key][listener.name].ExtractFromFeatureData(feature)
+                    _extractor = self._features[order_key][listener.name]
+                    if feature.ExportMode in _extractor.FeatureDependencyModes():
+                        self._features[order_key][listener.name].ExtractFromFeatureData(feature)
 
 
     # *** PUBLIC STATICS ***

@@ -1,4 +1,11 @@
 __all__ = [
+    "JobTriesInArgument",
+    "TankRulesCount",
+    "ModelExportCount",
+    "ModelPredictCount",
+    "UserAvgActiveTime",
+    "ModelInterveneCount",
+    "ActiveTime",
     "ActiveJobs",
     "EchoSessionID",
     "EventList",
@@ -10,7 +17,9 @@ __all__ = [
     "JobExperimentationTime",
     "JobGuideCount",
     "JobHelpCount",
+    "JobLocationChanges",
     "JobModelingTime",
+    "JobStartCount",
     "JobTasksCompleted",
     "JobsAttempted",
     "JobsCompleted",
@@ -30,10 +39,16 @@ __all__ = [
     "TotalDiveTime",
     "TotalExperimentationTime",
     "UserAvgSessionDuration",
-    "UserSessionCount",
     "UserTotalSessionDuration"
 ]
 
+from . import JobTriesInArgument
+from . import TankRulesCount
+from . import UserAvgActiveTime
+from . import ModelInterveneCount
+from . import ModelPredictCount
+from . import ModelExportCount
+from . import ActiveTime
 from . import ActiveJobs
 from . import EchoSessionID
 from . import EventList
@@ -45,7 +60,9 @@ from . import JobDiveTime
 from . import JobExperimentationTime
 from . import JobGuideCount
 from . import JobHelpCount
+from . import JobLocationChanges
 from . import JobModelingTime
+from . import JobStartCount
 from . import JobTasksCompleted
 from . import JobsAttempted
 from . import JobsCompleted
@@ -65,5 +82,4 @@ from . import TotalArgumentationTime
 from . import TotalDiveTime
 from . import TotalExperimentationTime
 from . import UserAvgSessionDuration
-from . import UserSessionCount
 from . import UserTotalSessionDuration

@@ -1,21 +1,20 @@
+# Workflow to test-run data when we modify MashopolisExtractor.
 name: Mashopolis Exporter CI Test
 on:
   push:
     paths:
     - 'games/MASHOPOLIS/**'
     - '.github/workflows/mashopolis.yml'
-  workflow_dispatch:
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
   Mashopolis_CI:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0
-      with:
-        project_id: ${{ secrets.MASHOPOLIS_BQ_PROJECT_ID }}
-        service_account_key: ${{ secrets.MASHOPOLIS_BQ_KEY }}
-        export_default_credentials: true
+    - uses: actions/checkout@v3
+    - name: Get OpenConnect
+      run: sudo apt-get -q update && sudo apt-get -q install openconnect
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
     - name: Set up Config File
@@ -23,7 +22,7 @@ jobs:
       with:
         vpn_user: ${{secrets.VPN_USER}}
         vpn_pass: ${{secrets.VPN_PASS}}
-        sql_host: ${{secrets.SQL_HOST}}
+        sql_host: ${{vars.FD_LOGGER_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "DEBUG"
@@ -31,15 +30,15 @@ jobs:
       uses: ./.github/actions/OGD_schema
       with:
         game: "MASHOPOLIS"
-    - name: Do Export of last week's data
-      uses: ./.github/actions/export_last_week
+    - name: Do Export of yesterday's data
+      uses: ./.github/actions/export_yesterday
       with:
         game: MASHOPOLIS
     - name: Upload logs as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./*.log
     - name: Upload zips as artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./data/MASHOPOLIS/*.zip

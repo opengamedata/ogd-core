@@ -10,8 +10,8 @@ from extractors.features.Feature import Feature
 from extractors.features.builtin import *
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
-from utils import Logger
+from schemas.games.GameSchema import GameSchema
+from utils.Logger import Logger
 
 class ExtractorLoader(abc.ABC):
 
@@ -30,7 +30,7 @@ class ExtractorLoader(abc.ABC):
     def _getFeaturesModule():
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
         """Base constructor for Extractor classes.

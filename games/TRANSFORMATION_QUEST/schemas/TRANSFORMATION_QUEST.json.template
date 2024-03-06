@@ -1,0 +1,507 @@
+{
+    "level_range": { "min":0, "max":3 },
+
+    "game_state" : {
+        "level" : {
+            "type" : "Optional[int]",
+            "description" : "The number of the level in which the event occurred, or null if the event occurred in the main menu (map)."
+        },
+        "level_shields" : {
+            "type" : "List[enum(BRONZE, SILVER, GOLD)]",
+            "description" : "A list of which shields the player had previously earned on the level. Empty for events in the map/main menu."
+        },
+        "sequence_block_count" : {
+            "type" : "int",
+            "description" : "The total number of blocks currently in the sequence."
+        }
+
+    },
+
+    "events": {
+        "begin_game": {
+            "description": "When a new game is started",
+            "event_data": {
+            }
+        },
+        "continue_game": {
+            "description": "When the player chooses to resume an existing game",
+            "event_data": {
+            }
+        },
+        "enter_code": {
+            "description": "When the player submits a player ID code, to bring up the 'continue' option",
+            "event_data": {
+                "code": {
+                    "type": "str",
+                    "description": "The player ID code the player entered"
+                }
+            }
+        },
+        "click_tutorial_next": {
+            "description": "When the player clicks the 'next' button in the game intro tutorial",
+            "event_data": {
+                "from_index": {
+                    "type": "int",
+                    "description": "The page number of the tutorial the player was at, *before* clicking the 'next' button."
+                }
+            }
+        },
+        "click_tutorial_back": {
+            "description": "When the player clicks the 'back' button in the game intro tutorial",
+            "event_data": {
+                "from_index": {
+                    "type": "int",
+                    "description": "The page number of the tutorial the player was at, *before* clicking the 'back' button."
+                }
+            }
+        },
+        "select_level": {
+            "description": "When the player clicks a level from the main map, which they may then click to play",
+            "event_data": {
+                "level": {
+                    "type": "int",
+                    "description": "The number of the level selected.  NOTE: the `game_state` will have a `level` of null, indicating the `select_level` event occurred in the map; the `event_data` instance of `level` is the number of the level selected."
+                },
+                "level_shields": {
+                    "type" : "List[enum(BRONZE, SILVER, GOLD)]",
+                    "description": "A list of which shields the player had previously earned on the level."
+                }
+            }
+        },
+        "click_level_play": {
+            "description": "When the player clicks the 'play' button to enter a level from the level's 'mission' pop-up.",
+            "event_data": {
+            }
+        },
+        "click_display_level_rules": {
+            "description": "When the player clicks the button to display the selected level's rules.",
+            "event_data": {
+            }
+        },
+        "click_level_rules_next": {
+            "description": "When the player clicks the 'next' button in the level rules",
+            "event_data": {
+                "from_index": {
+                    "type": "int",
+                    "description": "The page number of the rules the player was at, *before* clicking the 'next' button."
+                }
+            }
+        },
+        "click_level_rules_back": {
+            "description": "When the player clicks the 'back' button in the level rules",
+            "event_data": {
+                "from_index": {
+                    "type": "int",
+                    "description": "The page number of the rules the player was at, *before* clicking the 'back' button."
+                }
+            }
+        },
+        "click_level_rules_exit": {
+            "description": "When the player clicks the 'x' button to leave the level rules, returning them to the level 'mission' pop-up.",
+            "event_data": {
+                "from_index": {
+                    "type": "int",
+                    "description": "The page number of the rules the player was at, *before* clicking the 'exit' button."
+                }
+            }
+        },
+        "click_level_rules_finish": {
+            "description": "When the player clicks the button to 'finish' reading the level rules, returning them to the level 'mission' pop-up.",
+            "event_data": {
+            }
+        },
+        "click_level_mission": {
+            "description": "When the player clicks the 'mission' button from inside a level, to display the level 'mission' pop-up.  NOTE: when the 'mission' pop-up is currently displayed, the player can click the 'mission' button to dismiss the pop-up; however this triggers a `click_dismiss_mission` event, **not** a `click_level_mission`.",
+            "event_data": {
+            }
+        },
+        "click_dismiss_mission": {
+            "description": "When the player is in the level 'mission' pop-up, and clicks the 'mission' button to dismiss the pop-up.",
+            "event_data": {
+                "time_open": {
+                    "type" : "float",
+                    "description" : "The number of seconds the objectives pop-up was open."
+                }
+            }
+        },
+        "click_return_to_map": {
+            "description": "When the player is in a level, and clicks the button to return to the map.",
+            "event_data": {
+            }
+        },
+        "click_replay_level": {
+            "description": "When the player has just successfully completed a level, and clicks the 'replay' button in the level feedback pop-up.",
+            "event_data": {
+            }
+        },
+        "click_next_level": {
+            "description": "When the player is in a level, and clicks the 'next level' button, which technically just returns them to the map.",
+            "event_data": {
+            }
+        },
+        "select_new_block": {
+            "description": "When the player selects a new block type in the sidebar, which they can then add to the sequence.",
+            "event_data": {
+                "block_type": {
+                    "type" : "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                    "description" : "The type of block selected in the sidebar"
+                },
+                "block_params": {
+                    "type" : "Dict[str, int]",
+                    "description" : "A mapping of the block parameters to the param values. Varies by block type."
+                } 
+            }
+        },
+        "add_new_block": {
+            "description": "When the player clicks to add the selected block to the sequence.",
+            "event_data": {
+                "block_id": "TODO: determine if there is an ID associated with each block",
+                "block_index": {
+                    "type" : "int",
+                    "description" : "The index of the newly-added block within the sequence/loop"
+                },
+                "in_loop": {
+                    "type" : "bool",
+                    "description" : "A boolean indicator of whether the block was placed into a loop or not."
+                },
+                "loop_id":  "TODO: determine if there is an ID associated with each loop block",
+                "block_type": {
+                    "type" : "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                    "description" : "The type of block added to the sequence"
+                },
+                "block_params": {
+                    "type" : "Dict[str, int]",
+                    "description" : "A mapping of the block parameters to the param values. Varies by block type."
+                }
+            }
+        },
+        "delete_block": {
+            "description": "When the player clicks to remove the selected block from the sequence.",
+            "event_data": {
+                "block_id": "TODO: determine if there is an ID associated with each block",
+                "block_index": {
+                    "type" : "int",
+                    "description" : "The index of the block within the sequence/loop, before it was removed."
+                },
+                "in_loop": {
+                    "type" : "bool",
+                    "description" : "A boolean indicator of whether the block was in a loop or not."
+                },
+                "loop_id":  "TODO: determine if there is an ID associated with each loop block",
+                "block_type": {
+                    "type" : "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                    "description" : "The type of block that was removed from the sequence"
+                },
+                "block_params": {
+                    "type" : "Dict[str, int]",
+                    "description" : "A mapping of the block parameters to the param values. Varies by block type."
+                } 
+            }
+        },
+        "drag_block": {
+            "description": "When the player clicks and drags a block to a new spot in the sequence.",
+            "event_data": {
+                "block_id": "TODO: determine if there is an ID associated with each block",
+                "from_index": {
+                    "type" : "int",
+                    "description" : "The index of the block within the sequence/loop, before it was dragged."
+                },
+                "new_index": {
+                    "type" : "int",
+                    "description" : "The index of the block within the sequence/loop, after it was dragged and dropped."
+                },
+                "in_loop": {
+                    "type" : "bool",
+                    "description" : "A boolean indicator of whether the block is in a loop or not."
+                },
+                "loop_id":  "TODO: determine if there is an ID associated with each loop block",
+                "block_type": {
+                    "type" : "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                    "description" : "The type of block that was moved within the sequence"
+                },
+                "block_params": {
+                    "type" : "Dict[str, int]",
+                    "description" : "A mapping of the block parameters to the param values. Varies by block type."
+                } 
+            }
+        },
+        "set_block_parameter": {
+            "description": "When the player clicks and drags a block to a new spot in the sequence.",
+            "event_data": {
+                "block_id": "TODO: determine if there is an ID associated with each block",
+                "block_type": {
+                    "type" : "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                    "description" : "The type of block that was moved within the sequence"
+                },
+                "changed_param" : {
+                    "type" : "str",
+                    "description" : "The name of the parameter that was changed."
+                },
+                "old_value": {
+                    "type" : "int",
+                    "description" : "The value of the parameter, before it was changed."
+                },
+                "new_value": {
+                    "type" : "int",
+                    "description" : "The value of the parameter, after it was changed."
+                }
+            }
+        },
+        "run_sequence": {
+            "description": "When the player clicks the button to run a code block sequence.",
+            "event_data": {
+                "sequence_elements": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "block_id":"TODO: determine if there is an ID associated with each block",
+                        "block_index":"int",
+                        "block_type":"enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                        "loop_subelements":"List[Dict]",
+                        "block_params":"Dict[str, int]"
+                    },
+                    "description": "A list of all elements in the sequence of blocks the player is about to run."
+                }
+            }
+        },
+        "dismiss_sequence_feedback": {
+            "description": "When the player clicks to leave the pop-up feedback after running a sequence.",
+            "event_data": {
+                "time_open": {
+                    "type" : "float",
+                    "description" : "The number of seconds the objectives pop-up was open."
+                }
+            }
+        },
+        "dismiss_legend": {
+            "description": "When the player clicks to leave the pop-up indicating what each symbol means.",
+            "event_data": {
+                "time_open": {
+                    "type" : "float",
+                    "description" : "The number of seconds the objectives pop-up was open."
+                }
+            }
+        },
+        "dismiss_objectives": {
+            "description": "",
+            "event_data": {
+                "time_open": {
+                    "type" : "float",
+                    "description" : "The number of seconds the objectives pop-up was open."
+                }
+            }
+        },
+        "tutorial_displayed": {
+            "description": "When the game shows a page of the initial game tutorial to the player, including when the player clicks 'next' or 'back' within the tutorial pop-up.",
+            "event_data": {
+                "tutorial_index": {
+                    "type" : "int",
+                    "description" : "The index of the displayed tutorial page, among all pages in the tutorial."
+                },
+                "tutorial_text": {
+                    "type" : "str",
+                    "description" : "The actual text content being displayed."
+                }
+            }
+        },
+        "navigation_displayed": {
+            "description": "When the game shows the 'map' of levels to the player.",
+            "event_data": {
+                "levels": {
+                    "type" : "List[Dict]",
+                    "details": {
+                        "level_name":"str",
+                        "status":"enum(UNAVAILABLE, AVAILABLE, BRONZE, SILVER, GOLD)"
+                    },
+                    "description" : "A list of levels displayed in the navigation area."
+                }
+            }
+        },
+        "level_mission_displayed": {
+            "description": "When the 'mission' pop-up for a level is displayed, allowing the player to review the 'rules' or click 'play'. This occurs when a player starts a level they have not yet completed, or when the player clicks the 'mission' button",
+            "event_data": {
+                "mission_text": {
+                    "type": "str",
+                    "description": "The actual 'mission' text content displayed in the pop-up menu."
+                }
+            }
+        },
+        "level_rules_displayed": {
+            "description": "When the player clicks to view the 'rules' of a level, or clicks for the 'next' page of rules, and a new 'rules' page is displayed.",
+            "event_data": {
+                "rules_index": {
+                    "type": "int",
+                    "description": "The page number of the rules page being displayed."
+                },
+                "rules_text": {
+                    "type": "str",
+                    "description": "The actual text content displayed in the current rule pane."
+                }
+            }
+        },
+        "objectives_displayed": {
+            "description": "",
+            "event_data": {
+                "bronze_objective_text": {
+                    "type": "str",
+                    "description": "The text content indicating what the objectives are to obtain a bronze shield on the current level."
+                },
+                "silver_objective_text": {
+                    "type": "str",
+                    "description": "The text content indicating what the objectives are to obtain a silver shield on the current level."
+                },
+                "gold_objective_text": {
+                    "type": "str",
+                    "description": "The text content indicating what the objectives are to obtain a gold shield on the current level."
+                }
+            }
+        },
+        "legend_displayed": {
+            "description": "",
+            "event_data": {
+            }
+        },
+        "sequence_updated": {
+            "description": "Anytime the sequence changes, whether from a drag-and-drop, adding a block, removing a block, or modifying a block, this event shows the updated state of the sequence.",
+            "event_data": {
+                "sequence_elements": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "block_id":"TODO: determine if there is an ID associated with each block",
+                        "block_index":"int",
+                        "block_type":"enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                        "loop_subelements":"List[Dict]",
+                        "block_params":"Dict[str, int]"
+                    },
+                    "description": "A list of all elements in the sequence of blocks after the sequence was updated by a player action."
+                }
+            }
+        },
+        "sequence_execution_step": {
+            "description": "When the sequence is being executed, and the next step runs.",
+            "event_data": {
+                "type": {
+                    "type": "enum(TRANSLATE_HORIZONTAL, TRANSLATE_VERTICAL, ROTATE_CW_90, ROTATE_CCW_90, ROTATE_ABOUT_CW_90, ROTATE_ABOUT_CCW_90, REFLECT_ACROSS_X_VAL, REFLECT_ACROSS_Y_VAL, REFLECT_ACROSS_X_AXIS, REFLECT_ACROSS_Y_AXIS)",
+                    "description": "The type of block that ran in this step."
+                },
+                "moves_count": {
+                    "type": "int",
+                    "description": "The number of moves made so far in the sequence, including this move."
+                },
+                "blue_gems": {
+                    "type": "int",
+                    "description": "The total number of blue gems collected so far in the sequence, including any collected on this move."
+                },
+                "yellow_gems": {
+                    "type": "int",
+                    "description": "The total number of yellow gems collected so far in the sequence, including any collected on this move."
+                },
+                "stamp_points": {
+                    "type": "int",
+                    "description": "The total number of points gained from stamps so far in the sequence, including any collected on this move."
+                },
+                "outcome": {
+                    "type": "enum(NONE, OUT_OF_BOUNDS, MONSTER, STAMP_1_POINT, STAMP_2_POINT, GEM_YELLOW, GEM_BLUE, GOAL)",
+                    "description": "The result of the step executing, which could be none, or could represent progress or a level failure."
+                },
+                "rules_text": {
+                    "type": "str",
+                    "description": "The text content the rules page the player was at, before clicking the 'exit' button."
+                }
+            }
+        },
+        "sequence_fail_displayed": {
+            "description": "When the player's sequence ends in a failure, and the feedback is displayed",
+            "event_data": {
+                "outcome": {
+                    "type": "enum(OUT_OF_BOUNDS, COLLISION, FAILED_OBJECTIVE)",
+                    "description": "The failure outcome at the end of the execution."
+                },
+                "outcome_title": {
+                    "type": "str",
+                    "description": "The literal text at at the top of the pop-up, indicating the type of outcome."
+                },
+                "outcome_text": {
+                    "type": "str",
+                    "description": "The main text block of the pop-up, indicating what the player did wrong, or what they should do next"
+                },
+                "moves_count": {
+                    "type": "int",
+                    "description": "The final number of moves indicated in the 'moves' counter."
+                },
+                "level_shields": {
+                    "type" : "List[enum(BRONZE, SILVER, GOLD)]",
+                    "description": "A list of which shields the player has earned on this level."
+                },
+                "collected_items": {
+                    "type": "Dict[str, int]",
+                    "details": {
+                        "blue_gems":"int",
+                        "yellow_gems":"int",
+                        "stamp_points":"int"
+                    },
+                    "description": "A summary of how many of each type of item the player collected during execution."
+                }
+            }
+        },
+        "sequence_success_displayed": {
+            "description": "When the player's sequence ends in a success, and the feedback is displayed",
+            "event_data": {
+                "outcome": {
+                    "type": "enum(EARNED_BRONZE, EARNED_SILVER, EARNED_GOLD)",
+                    "description": "The success outcome at the end of the execution."
+                },
+                "outcome_title": {
+                    "type": "str",
+                    "description": "The literal text at at the top of the pop-up, indicating the type of outcome."
+                },
+                "outcome_text": {
+                    "type": "str",
+                    "description": "The main text block of the pop-up, indicating what the player can do next"
+                },
+                "moves_count": {
+                    "type": "int",
+                    "description": "The final number of moves indicated in the 'moves' counter."
+                },
+                "level_shields": {
+                    "type" : "List[enum(BRONZE, SILVER, GOLD)]",
+                    "description": "A list of which shields the player has earned on this level, including the shield earned on this successful execution."
+                },
+                "collected_items": {
+                    "type": "Dict[str, int]",
+                    "details": {
+                        "blue_gems":"int",
+                        "yellow_gems":"int",
+                        "stamp_points":"int"
+                    },
+                    "description": "A summary of how many of each type of item the player collected during execution."
+                }
+            }
+        },
+        "level_begin": {
+            "description": "A progression event indicating when a player actually began a new level, whether by entering from the map or replaying a level. NOTE: this occurs after they entered the level, so the level number is recorded in `game_state`, not `event_data`.",
+            "event_data": {
+            }
+        },
+        "level_complete": {
+            "description": "A progression event indicating when a player completed a level, and is about to return to the main navigation menu. NOTE: this occurs just before they leave the level, so the level name is recorded in `game_state`, not `event_data`.",
+            "event_data": {
+            }
+        },
+        "level_quit": {
+            "description": "A progression event indicating when a player has chosen to quit a level, and is about to return to the main navigation menu. NOTE: this occurs just before they leave the level, so the level name is recorded in `game_state`, not `event_data`.",
+            "event_data": {
+            }
+        }
+    },
+
+    "features": {
+        "per_count": {
+        },
+        "aggregate":{
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}

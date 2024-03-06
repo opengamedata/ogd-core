@@ -36,7 +36,7 @@ class DiveSiteNoEvidence(Detector):
             # as soon as scene changes, reset state.
             self._has_triggered = False
             self._time_since_evidence = 0
-            scene : str = event.EventData['scene_name']['string_value']
+            scene : str = event.EventData['scene_name']
             if scene.startswith("RS-"):
                 self._in_dive = True
                 # if we just started a dive, use now as starting point for counting time without evidence.
@@ -50,6 +50,8 @@ class DiveSiteNoEvidence(Detector):
 
         if self._in_dive and self._last_evidence_time is not None and not self._has_triggered:
             self._time_since_evidence = (event.Timestamp - self._last_evidence_time).total_seconds()
+        self._time = event.Timestamp
+        self._current_job = event.GameState.get('job_name', event.EventData.get('job_name'))
         return
     
     def _trigger_condition(self) -> bool:
@@ -67,8 +69,8 @@ class DiveSiteNoEvidence(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val : Event = DetectorEvent(session_id="Not Implemented", app_id="Not Implemented", timestamp=datetime.now(),
-                                        event_name="CustomDetector", event_data={})
+        ret_val : Event = DetectorEvent(session_id="Not Implemented", app_id="Not Implemented", timestamp=self._time,
+                                        event_name="CustomDetector", event_data={}, game_state={"job_name":self._current_job})
         # >>> use state variables to generate the detector's event. <<<
         # >>> definitely don't return all these "Not Implemented" things, unless you really find that useful... <<<
         #
@@ -80,7 +82,7 @@ class DiveSiteNoEvidence(Detector):
         # further note the event_data can contain any extra data you desire; its contents are entirely up to you.
         return ret_val
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None], threshold:float):
         super().__init__(params=params, trigger_callback=trigger_callback)
@@ -89,6 +91,7 @@ class DiveSiteNoEvidence(Detector):
         self._last_evidence_time  : Optional[datetime] = None
         self._time_since_evidence : float = 0
         self._has_triggered : bool = False
+        self._current_job = None
 
     # *** PUBLIC STATICS ***
 

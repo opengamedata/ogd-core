@@ -1,0 +1,63 @@
+{
+    "column_map": {
+        "session_id"           : "session_id",
+        "app_id"               : null,
+        "timestamp"            : "timestamp",
+        "event_name"           : "event_name",
+        "event_data"           : "event_params",
+        "event_source"         : null,
+        "app_version"          : null,
+        "app_branch"           : null,
+        "log_version"          : null,
+        "time_offset"          : null,
+        "user_id"              : null,
+        "user_data"            : null,
+        "game_state"           : null,
+        "event_sequence_index" : null
+    },
+
+    "columns": [
+        {
+            "name": "event_name",
+            "readable": "Event Name",
+            "description": "The name of the event",
+            "type": "str"
+        },
+        {
+            "name": "event_params",
+            "readable": "Event Parameters",
+            "description": "A repeated record of the parameters associated with this event",
+            "type": "json"
+        },
+        {
+            "name": "device",
+            "readable": "Device",
+            "description": "A record of device information",
+            "type": "json"
+        },
+        {
+            "name": "geo",
+            "readable": "Geo",
+            "description": "A record of the user's geographic information",
+            "type": "json"
+        },
+        {
+            "name": "platform",
+            "readable": "Platform",
+            "description": "The platform on which the app was built",
+            "type": "str"
+        },
+        {
+            "name": "timestamp",
+            "readable": "Timestamp",
+            "description": "Datetime when event was logged",
+            "type": "datetime"
+        },
+        {
+            "name": "session_id",
+            "readable": "Session ID",
+            "description": "ID for the play session",
+            "type": "int"
+        }
+    ]
+}

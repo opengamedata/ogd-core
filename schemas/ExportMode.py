@@ -7,3 +7,6 @@ class ExportMode(IntEnum):
     POPULATION = 3
     EVENTS = 4
     DETECTORS = 5
+
+    def __str__(self):
+        return self.name

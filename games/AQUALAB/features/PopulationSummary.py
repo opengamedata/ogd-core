@@ -67,6 +67,17 @@ class PopulationSummary(SessionFeature):
 
     # *** Optionally override public functions. ***
 
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Feature.
+
+        Overridden from base Feature version.
+        A PlayerSummary is only used at player and population levels; not concerned with session-level.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.POPULATION]
+
     # *** Private Functions ***
 
     @staticmethod

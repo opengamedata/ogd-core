@@ -3,7 +3,7 @@ from datetime import timedelta
 from enum import IntEnum
 from typing import Any, Dict, List, Union
 # import locals
-from utils import ExportRow
+from utils.utils import ExportRow
 
 class ResultStatus(IntEnum):
     NONE = 1

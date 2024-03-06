@@ -5,7 +5,8 @@ __all__ = [
     "LakelandLoader",
     "MagnetLoader",
     "ShadowspectLoader",
-    "WaveLoader"
+    "WaveLoader",
+    "JournalismLoader"
 ]
 
 from .AQUALAB import AqualabLoader
@@ -15,3 +16,4 @@ from .LAKELAND import LakelandLoader
 from .MAGNET import MagnetLoader
 from .SHADOWSPECT import ShadowspectLoader
 from .WAVES import WaveLoader
+from .JOURNALISM import JournalismLoader

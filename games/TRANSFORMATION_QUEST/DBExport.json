@@ -1,0 +1,31 @@
+{
+   "objectives" : [
+      {
+         "level" : 1,
+         "bronze" : {
+            "max_blocks" : 6,
+            "with_loop" : null,
+            "max_outer_blocks" : null,
+            "yellow_gems" : "ALL",
+            "blue_gems" : "NONE",
+            "stamp_points" : null
+         },
+         "silver" : {
+            "max_blocks" : 4,
+            "with_loop" : null,
+            "max_outer_blocks" : null,
+            "yellow_gems" : "NONE",
+            "blue_gems" : "ALL",
+            "stamp_points" : null
+         },
+         "gold" : {
+            "max_blocks" : null,
+            "with_loop" : true,
+            "max_outer_blocks" : 1,
+            "yellow_gems" : "NONE",
+            "blue_gems" : "ALL",
+            "stamp_points" : null
+         }
+      }
+   ]
+}

@@ -10,14 +10,15 @@ from processors.FeatureProcessor import FeatureProcessor
 from schemas.Event import Event
 from schemas.ExportMode import ExportMode
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
-from utils import Logger, ExportRow
+from schemas.games.GameSchema import GameSchema
+from utils.Logger import Logger
+from utils.utils import ExportRow
 
 ## @class SessionProcessor
 #  Class to extract and manage features for a processed csv file.
 class SessionProcessor(FeatureProcessor):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the SessionProcessor class.
     def __init__(self, LoaderClass:Type[ExtractorLoader], game_schema: GameSchema, player_id:str, session_id:str,
@@ -67,7 +68,7 @@ class SessionProcessor(FeatureProcessor):
         return self._session_id
 
     def _getExtractorNames(self) -> List[str]:
-        return ["SessionID", "PlayerID"] + self._registry.GetExtractorNames()
+        return ["PlayerID", "SessionID"] + self._registry.GetExtractorNames()
 
     ## Function to handle processing of a single row of data.
     def _processEvent(self, event: Event):
@@ -80,11 +81,13 @@ class SessionProcessor(FeatureProcessor):
         """
         self._registry.ExtractFromEvent(event)
 
-    def _getFeatureValues(self, as_str:bool=False) -> ExportRow:
-        if as_str:
-            return [self._sessionID, self._playerID] + self._registry.GetFeatureStringValues()
-        else:
-            return [self._sessionID, self._playerID] + self._registry.GetFeatureValues()
+    def _getLines(self) -> List[ExportRow]:
+        ret_val : ExportRow
+        # if as_str:
+        #     ret_val = [self._playerID, self._sessionID] + self._registry.GetFeatureStringValues()
+        # else:
+        ret_val = [self._playerID, self._sessionID] + self._registry.GetFeatureValues()
+        return [ret_val]
 
     def _getFeatureData(self, order:int) -> List[FeatureData]:
         return self._registry.GetFeatureData(order=order, player_id=self._player_id, sess_id=self._session_id)
