@@ -76,6 +76,7 @@ settings = {
         "MASHOPOLIS":     { "source":"OPENGAMEDATA_BQ",    "database":"mashopolis",          "table":"mashopolis_daily",     "schema":"OPENGAMEDATA_BIGQUERY" },
         "SHIPWRECKS":     { "source":"SHIPWRECKS_BQ",      "database":"analytics_269167605", "table":"events",               "schema":"FIREBASE"              },
         "SHADOWSPECT":    { "source":"SHADOWSPECT_BQ",     "database":"analytics_284091572", "table":"events",               "schema":"FIREBASE"              },
+        "THERMOVR":       { "source":"OPENGAMEDATA_BQ",    "database":"thermovr",            "table":"thermovr_daily",       "schema":"OPENGAMEDATA_BIGQUERY" },
         "WAVES":          { "source":"OPENGAMEDATA_BQ",    "database":"waves",               "table":"waves_daily",          "schema":"OPENGAMEDATA_BIGQUERY" },
         "WIND":           { "source":"OPENGAMEDATA_BQ",    "database":"wind",                "table":"wind_daily",           "schema":"OPENGAMEDATA_BIGQUERY" },
     },
