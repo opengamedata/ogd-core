@@ -24,7 +24,7 @@ class QuestionAnswers(PerCountFeature):
         if event.EventName == "CUSTOM.20":
             return self.cur_question == self.CountIndex and self.cur_question in [10, 16]
         if Event.CompareVersions(event.LogVersion, "6") >= 0 and event.EventData.get("cur_cmd_type") == 2:
-                self.cur_question = je.answer_to_question(event.EventData.get("cur_cmd_fqid"), event.EventData["level"])
+                self.cur_question = je.answer_to_question(event.EventData.get("cur_cmd_fqid"), event.GameState["level"])
         return self.cur_question==self.CountIndex
     
     @classmethod
@@ -46,7 +46,7 @@ class QuestionAnswers(PerCountFeature):
         if Event.CompareVersions(event.LogVersion, "6") >= 0: 
             if event.EventData.get("cur_cmd_type") == 2:
                 self.cur_question = je.answer_to_question(
-                    event.EventData.get("cur_cmd_fqid"), event.EventData["level"])
+                    event.EventData.get("cur_cmd_fqid"), event.GameState["level"])
                 self.chosen_answer = event.EventData.get("interacted_fqid")
             elif event.EventData.get("cur_cmd_type") == 1:
                 if self.chosen_answer:

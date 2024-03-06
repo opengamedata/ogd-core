@@ -5,7 +5,7 @@ from statistics import stdev
 from typing import Any, List, Optional
 from schemas.ExtractionMode import ExtractionMode
 # import locals
-from utils import Logger
+from utils.Logger import Logger
 from extractors.Extractor import ExtractorParameters
 from extractors.features.Feature import Feature
 from schemas.Event import Event
@@ -15,9 +15,6 @@ from schemas.FeatureData import FeatureData
 class JobsAttempted(Feature):
 
     def __init__(self, params:ExtractorParameters, job_map:dict, diff_map: dict):
-        self._pop_call_count = 0
-        self._pla_call_count = 0
-        self._ses_call_count = 0
         self._player_id = None
 
         self._job_map = job_map
@@ -63,10 +60,12 @@ class JobsAttempted(Feature):
                 # self._time += (self._prev_timestamp - self._job_start_time).total_seconds()
                 # self._job_start_time = event.Timestamp
 
-        if self._validate_job(event.EventData['job_name']):
+        _current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        if _current_job is None:
+            raise KeyError("Could not find key 'job_name' in GameState or EventData!")
+        if self._validate_job(_current_job):
             user_code = event.UserID
-            job_name = event.EventData["job_name"]["string_value"]
-            job_id = self._job_map[job_name]
+            job_id = self._job_map[_current_job]
 
             if event.EventName == "accept_job" and job_id == self._job_id:
                 self._num_starts += 1
@@ -85,29 +84,29 @@ class JobsAttempted(Feature):
         # self._prev_timestamp = event.Timestamp
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        if feature.ExportMode == ExtractionMode.POPULATION:
-            self._pop_call_count += 1
-        if feature.ExportMode == ExtractionMode.PLAYER:
-            self._pla_call_count += 1
-        if feature.ExportMode == ExtractionMode.SESSION:
-            self._ses_call_count += 1
-
         if feature.FeatureType == "JobActiveTime":
             if feature.CountIndex == self.CountIndex:
                 _active_time = feature.FeatureValues[0]
                 if self.ExtractionMode == ExtractionMode.SESSION \
-            and feature.ExportMode == ExtractionMode.SESSION:
+                and feature.ExportMode == ExtractionMode.SESSION:
                     # session should only have one time, namely the time for the session.
                     self._times = [_active_time]
+                    # print(f"JobsAttempted got session-session for player {self._player_id}")
                 elif self.ExtractionMode == ExtractionMode.PLAYER \
-                and feature.ExportMode == ExtractionMode.PLAYER:
+                and feature.ExportMode   == ExtractionMode.PLAYER:
                     # player should only have one time, namely the time for the player.
                     self._times = [_active_time]
+                    # print(f"JobsAttempted got player-player for player {self._player_id}")
                 elif self.ExtractionMode == ExtractionMode.POPULATION \
-                and feature.ExportMode == ExtractionMode.PLAYER:
+                and feature.ExportMode   == ExtractionMode.PLAYER:
                     # population could have many times. Only add to list if they actually spent time there, though.
                     if _active_time > 0:
                         self._times.append(_active_time)
+                    # print(f"JobsAttempted got population-player for player {self._player_id}")
+                # else:
+                    # print(f"JobsAttempted got a {self.ExtractionMode.name}-{feature.ExportMode.name} matching, not helpful.")
+        else:
+            print(f"JobsAttempted got a feature of wrong type: {feature.FeatureType}")
 
     def _getFeatureValues(self) -> List[Any]:
         if self._num_starts > 0:
@@ -135,7 +134,7 @@ class JobsAttempted(Feature):
     # *** Other local functions
     def _validate_job(self, job_data):
         ret_val : bool = False
-        if job_data['string_value'] and job_data['string_value'] in self._job_map:
+        if job_data and job_data in self._job_map:
             ret_val = True
         else:
             Logger.Log(f"Got invalid job_name data in JobsAttempted", logging.WARNING)

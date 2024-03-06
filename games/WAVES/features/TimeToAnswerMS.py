@@ -29,9 +29,9 @@ class TimeToAnswerMS(Feature):
 
     def _extractFromEvent(self, event:Event) -> None:
         if event.EventName == "COMPLETE.0":
-            if event.EventData['level'] == 8:
+            if event.GameState['level'] == 8:
                 self._latest_complete_lvl8 = event.Timestamp
-            if event.EventData['level'] == 16:
+            if event.GameState['level'] == 16:
                 self._latest_complete_lvl16 = event.Timestamp
         elif event.EventName == "CUSTOM.3":
             q_num = event.EventData["question"]

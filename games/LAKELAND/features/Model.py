@@ -9,6 +9,9 @@ class ModelInputType(enum.Enum):
     FEATURE  = enum.auto()
     SEQUENCE = enum.auto()
 
+    def __str__(self):
+        return self.name
+
 ## @class Model
 #  Abstract base class for models to be displayed in realtime dashboard.
 #  Models only have one public function, called Eval.

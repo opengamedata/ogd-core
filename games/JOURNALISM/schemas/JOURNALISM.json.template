@@ -1,0 +1,1190 @@
+{
+    "level_range": {
+        "min": 1,
+        "max": 6
+    },
+    "game_state": {
+        "level": {
+            "type": "int",
+            "description": "The current level when the event happens"
+        },
+        "current_stats": {
+            "type": "Dict",
+            "details": {
+                "endurance": "int",
+                "resourceful": "int",
+                "tech": "int",
+                "social": "int",
+                "trust": "int",
+                "research": "int"
+            },
+            "description": "The player's current stats for each attribute"
+        },
+        "location": {
+            "type": "str",
+            "description": "The current location of the player when the event happens"
+        }
+    },
+    "events": {
+        "new_game" : {
+            "description" : "Player clicked to start a new game",
+            "event_data" : {}
+        },
+        "continue_game" : {
+            "description" : "Player clicked to continue a game",
+            "event_data" : {}
+        },
+        "text_click": {
+            "description": "clicked to advance to the next text bubble",
+            "event_data" : {
+                "node_id": {
+                    "type": "str",
+                    "description": "the node id containing the text"
+                },
+                "text_content": {
+                    "type": "str",
+                    "description": "the actual text content of the bubble"
+                },
+                "speaker": {
+                    "type": "str",
+                    "description": "the speaker_id of the character/entity who 'spoke' the text"
+                }
+            }
+        },
+        "display_text_dialog": {
+            "description": "a new dialog text bubble is displayed on the screen",
+            "event_data" : {
+                "node_id": {
+                    "type": "str",
+                    "description": "the node id containing the text"
+                },
+                "text_content": {
+                    "type": "str",
+                    "description": "the actual text content of the bubble"
+                },
+                "speaker": {
+                    "type": "str",
+                    "description": "the speaker_id of the character/entity who 'spoke' the text"
+                }
+            }
+        },
+        "display_breakdown_dialog": {
+            "description": "during the editor review of a submitted story, the story composition/breakdown is displayed like a text bubble.",
+            "event_data" : {
+                "final_breakdown": {
+                    "type": "Dict",
+                    "details": {
+                        "color_weight": "int",
+                        "facts_weight": "int",
+                        "useful_weight": "int"
+                    },
+                    "description": "The color/fact/useful breakdown of the submitted story"
+                },
+                "target_breakdown": {
+                    "type": "Dict",
+                    "details": {
+                        "color_weight": "int",
+                        "facts_weight": "int",
+                        "useful_weight": "int"
+                    },
+                    "description": "The target color/fact/useful breakdown assigned to the story"
+                }
+            }
+        },
+        "display_snippet_quality_dialog": {
+            "description": "during the editor review of a submitted story, the story snippet qualities are displayed like a text bubble.",
+            "event_data" : {
+                "current_quality": {
+                    "type": "List[enum(BAD, GOOD, GREAT)]",
+                    "description": "The quality for each snippet used in the story, sorted by quality. Note that 'GOOD' quality is not displayed to the player"
+                }
+            }
+        },
+        "display_feedback_dialog": {
+            "description": "a new dialog text bubble is displayed on the screen during the editor's feedback on a submitted story",
+            "event_data" : {
+                "node_id": {
+                    "type": "str",
+                    "description": "the node id containing the text"
+                },
+                "text_content": {
+                    "type": "str",
+                    "description": "the actual text content of the bubble"
+                },
+                "story_score": {
+                    "type": "float",
+                    "description": "calculated score based on overall quality"
+                },
+                "story_alignment": {
+                    "type": "float",
+                    "description": "score based on how well the player followed the target composition"
+                }
+            }
+        },
+        "display_choices": {
+            "description": "Event for when a set of choices are displayed to the user.",
+            "event_data": {
+                "context": {
+                    "type": "enum(CONVERSATION, LOCATION_MAP)",
+                    "description" : "Whether the choices are being displayed in a normal conversation, or in front of a map image"
+                },
+                "choices" : {
+                    "TODO":"TODO",
+                    "type":"List"
+                }
+            }
+        },
+        "hub_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
+                "text_content": {
+                    "type": "str",
+                    "description": "The text contents of the choice button"
+                },
+                "node_id": {
+                    "type": "str",
+                    "description": ""
+                },
+                "next_node_id": {
+                    "type": "str",
+                    "description": ""
+                },
+                "next_location": {
+                    "type": "Optional[str]",
+                    "description": ""
+                },
+                "time_cost": {
+                    "type": "int",
+                    "description": ""
+                },
+                "time_cost_is_mystery": {
+                    "type": "bool",
+                    "description": ""
+                }
+            }
+        },
+        "time_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
+                "text_content": {
+                    "type": "str",
+                    "description": ""
+                },
+                "current_node_id": {
+                    "type": "str",
+                    "description": ""
+                },
+                "next_node_id": {
+                    "type": "str",
+                    "description": ""
+                },
+                "time_cost": {
+                    "type": "int",
+                    "description": ""
+                },
+                "time_cost_is_mystery": {
+                    "type": "bool",
+                    "description": ""
+                }
+            }
+        },
+        "location_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
+                "text_content": {
+                    "type": "str",
+                    "description": ""
+                },
+                "current_node_id": {
+                    "type": "str",
+                    "description": ""
+                },
+                "next_node_id": {
+                    "type": "str",
+                    "description": ""
+                },
+                "next_location": {
+                    "type": "str",
+                    "description": ""
+                }
+            }
+        },
+        "once_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
+                "text_content": {
+                    "type": "str",
+                    "description": ""
+                },
+                "current_node_id": {
+                    "type": "str",
+                    "description": ""
+                },
+                "next_node_id": {
+                    "type": "str",
+                    "description": ""
+                }
+            }
+        },
+        "continue_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
+                "text_content": {
+                    "type": "str",
+                    "description": ""
+                },
+                "current_node_id": {
+                    "type": "str",
+                    "description": ""
+                }
+            }
+        },
+        "action_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
+                "text_content": {
+                    "type": "str",
+                    "description": ""
+                },
+                "current_node_id": {
+                    "type": "str",
+                    "description": ""
+                }
+            }
+        },
+        "fallback_choice_click": {
+            "description": "clicked to choose a text option",
+            "event_data" : {
+                "text_content": {
+                    "type": "str",
+                    "description": ""
+                },
+                "current_node_id": {
+                    "type": "str",
+                    "description": ""
+                },
+                "next_node_id": {
+                    "type": "str",
+                    "description": ""
+                }
+            }
+        },
+        "open_stats_tab": {
+            "description": "The event when player clicks to open the player stats tab",
+            "event_data" : {
+            }
+        },
+        "close_stats_tab": {
+            "description": "The event when player clicks to clsoe the player stats tab",
+            "event_data" : {
+            }
+        },
+        "open_map_tab": {
+            "description": "Event when the player opens their non-interactive map tab",
+            "event_data" : {
+                "current_location": {
+                    "type": "str",
+                    "description": "The player's currently-displayed location on the map"
+                },
+                "locations_list": {
+                    "type": "List[str]",
+                    "description": "each string is a location ID for one of the locations currently shown on the map"
+                }
+            }
+        },
+        "open_choice_map": {
+            "description": "Event when the game displays a map during a choice dialog",
+            "event_data" : {
+                "current_location": {
+                    "type": "str",
+                    "description": "The player's currently-displayed location on the map"
+                },
+                "locations_list": {
+                    "type": "List[str]",
+                    "description": "each string is a location ID for one of the locations currently shown on the map"
+                }
+            }
+        },
+        "close_map_tab": {
+            "description": "When the player closes their map tab",
+            "event_data" : {
+            }
+        },
+        "open_impact_map": {
+            "description": "When a player publishes the story, the impact map displays",
+            "event_data" : {
+                "feeback_ids": {
+                    "type": "List[str]",
+                    "description": ""
+                },
+                "feedback_texts": {
+                    "type": "List[str]",
+                    "description": ""
+                }
+            }
+        },
+        "close_impact_map": {
+            "description": "Player clicks button to close the impact map.",
+            "event_data" : {
+            }
+        },
+        "reached_checkpoint": {
+            "description": "Event when player reaches a checkpoint",
+            "event_data" : {
+                "node_id": {
+                    "type": "str",
+                    "description": "The node ID from which the checkpoint was saved"
+                }
+            }
+        },
+        "stat_update": {
+            "description": "happens when a stat is updated",
+            "event_data" : {
+                "node_id": {
+                    "type": "str",
+                    "description": "Node ID in which the stat update happens"
+                },
+                "stats": {
+                    "type": "Dict[enum(ENDURANCE, RESOURCEFUL, TECH, SOCIAL, TRUST, RESEARCH), int]",
+                    "description": "Mapping of stat types to change amounts"
+                }
+            }
+        },
+        "change_background_image": {
+            "description": "a change in the background image behind text",
+            "event_data" : {
+                "node_id": {
+                    "type": "str",
+                    "description": "The node in which the background image is changed"
+                },
+                "image_name": {
+                    "type":"str",
+                    "description":"The image file's name without file extension."
+                }
+            }
+        },
+        "show_popup_image": {
+            "description": "a change in popup image next to text",
+            "event_data" : {
+                "is_animated": {
+                    "type": "bool",
+                    "description": "True if the image is animated, otherwise false"
+                },
+                "node_id": {
+                    "type": "str",
+                    "description": "The node in which the popup image is displayed"
+                },
+                "image_name": {
+                    "type":"str",
+                    "description":"The image file's name without file extension."
+                }
+            }
+        },
+        "change_location": {
+            "description": "a change in player location",
+            "event_data" : {
+                "new_location_id" : {
+                    "type":"str",
+                    "description":""
+                }
+            }
+        },
+        "unlocked_notebook": {
+            "description": "When the player unlocks the notebook early in the game",
+            "event_data" : {
+            }
+        },
+        "open_notebook": {
+            "description": "When the player opens the notebook (not editor notes)",
+            "event_data" : {
+                "snippet_list": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "snippet_id":"str",
+                        "snippet_type":"enum(IMAGE, QUOTE)",
+                        "snippet_quality":"enum(BAD, GOOD, GREAT)",
+                        "snippet_attributes":"List[enum(COLOR, FACTS, USEFUL)]",
+                        "is_selectable":"bool"
+                    },
+                    "description": "A list of snippet ids available on the left of the notebook"
+                },
+                "layout": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "type": "enum(ANY,PICTURE)",
+                        "is_wide": "bool",
+                        "assigned_snippet": "Optional[snippet_id]"
+                    },
+                    "description": "A list whose elements are 'slots', each with a type and the id of the currently-assigned snippet, if one is assigned."
+                }
+            }
+        },
+        "select_snippet": {
+            "description": "When a player selects a snippet in the notebook",
+            "event_data" : {
+                "snippet_id": {
+                    "type": "str",
+                    "description": ""
+                },
+                "snippet_type": {
+                    "type": "enum(IMAGE, QUOTE)",
+                    "description": "Whether the given snippet is an image or a quote"
+                },
+                "snippet_quality": {
+                    "type": "enum(BAD, GOOD, GREAT)",
+                    "description": "good, bad, great"
+                },
+                "snippet_attributes": {
+                    "type": "List[enum(COLOR, FACTS, USEFUL)]",
+                    "description": ""
+                }
+            }
+        },
+        "place_snippet": {
+            "description" : "When a player places a snippet into a spot on the story layout",
+            "event_data" : {
+                "layout": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "type": "enum(ANY,PICTURE)",
+                        "is_wide": "bool",
+                        "assigned_snippet": "Optional[snippet_id]"
+                    },
+                    "description": "A list whose elements are 'slots', each with a type and the id of the currently-assigned snippet, if one is assigned."
+                },
+                "location": {
+                    "type": "int",
+                    "description": ""
+                },
+                "snippet_id": {
+                    "type": "str",
+                    "description": "str"
+                },
+                "snippet_type": {
+                    "type": "enum(IMAGE, QUOTE)",
+                    "description": "image or quote"
+                },
+                "snippet_quality ": {
+                    "type": "enum(BAD, GOOD, GREAT)",
+                    "description": "good, bad, great"
+                },
+                "snippet_attribute": {
+                    "type": "List[]",
+                    "description": "color, facts, useful"
+                }
+            }
+        },
+        "remove_snippet": {
+            "description" : "When a player removes an item from the story layout",
+            "event_data" : {
+                "layout": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "type": "enum(ANY,PICTURE)",
+                        "is_wide": "bool",
+                        "assigned_snippet": "Optional[snippet_id]"
+                    },
+                    "description": "A list whose elements are 'slots', each with a type and the id of the currently-assigned snippet, if one is assigned."
+                },
+                "location": {
+                    "type": "int",
+                    "description": ""
+                },
+                "snippet_id": {
+                    "type": "",
+                    "description": "str"
+                },
+                "snippet_type": {
+                    "type": "",
+                    "description": "image or quote"
+                },
+                "snippet_quality": {
+                    "type": "",
+                    "description": "good, bad, great, lousy"
+                },
+                "snippet_attribute": {
+                    "type": "",
+                    "description": "List[] made up of color, facts, useful"
+                }
+            }
+        },
+        "open_editor_note": {
+            "description":"Event when user is in the notebook and clicks to open editor's notes",
+            "event_data" : {
+                "current_breakdown": {
+                    "type": "Dict",
+                    "details": {
+                        "color_weight": "int",
+                        "facts_weight": "int",
+                        "useful_weight": "int"
+                    },
+                    "description": "The color/fact/useful breakdown of the current story"
+                },
+                "target_breakdown": {
+                    "type": "Dict",
+                    "details": {
+                        "color_weight": "int",
+                        "facts_weight": "int",
+                        "useful_weight": "int"
+                    },
+                    "description": "The target color/fact/useful breakdown assigned to the story"
+                },
+                "current_quality": {
+                    "type": "List[enum(BAD, GOOD, GREAT)]",
+                    "description": "The quality for each snippet used in the story, sorted by quality. Note that 'GOOD' quality is not displayed to the player"
+                }
+            }
+        },
+        "close_editor_note": {
+            "description": "",
+            "event_data" : {
+            }
+        },
+        "close_notebook": {
+            "description": "",
+            "event_data" : {
+            }
+        },
+        "time_limit_assigned": {
+            "description": "",
+            "event_data" : {
+                "node_id": {
+                    "type":"str",
+                    "description":"The node for which a time limit was assigned"
+                },
+                "how_long": {
+                    "type": "timedelta",
+                    "description": ""
+                }
+            }
+        },
+        "open_timer": {
+            "description": "A player clicks to view the timer tab",
+            "event_data" : {
+                "time_left": {
+                    "type": "timedelta",
+                    "description": ""
+                }
+            }
+        },
+        "close_timer": {
+            "description": "The player closes the timer tab",
+            "event_data" : {
+            }
+        },
+        "time_elapsed": {
+            "description": "",
+            "event_data" : {
+                "node_id" : {
+                    "type":"str",
+                    "description":""
+                },
+                "how_much": {
+                    "type": "int",
+                    "description": "The amount of time that elapsed"
+                }
+            }
+        },
+        "time_expired": {
+            "description": "",
+            "event_data" : {
+                "node_id" : {
+                    "type":"str",
+                    "description":""
+                },
+                "leftover_time": {
+                    "type":"int",
+                    "description":"If the player's time expired because remaining choices all are too long, this is the remaining time they would have had."
+                }
+            }
+        },
+        "snippet_received": {
+            "description": "",
+            "event_data" : {
+                "node_id" : {
+                    "type":"str",
+                    "description":""
+                },
+                "snippet_id": {
+                    "type": "str",
+                    "description": ""
+                },
+                "snippet_type": {
+                    "type": "enum(IMAGE, QUOTE)",
+                    "description": "Whether the given snippet is an image or a quote"
+                },
+                "snippet_quality": {
+                    "type": "enum(BAD, GOOD, GREAT)",
+                    "description": "good, bad, great"
+                },
+                "snippet_attributes": {
+                    "type": "List[enum(COLOR, FACTS, USEFUL)]",
+                    "description": ""
+                }
+            }
+        },
+        "story_updated": {
+            "description": "Event when a snippet is placed or removed, changing the current story",
+            "event_data" : {
+                "new_breakdown": {
+                    "type": "Dict",
+                    "details": {
+                        "color_weight": "int",
+                        "facts_weight": "int",
+                        "useful_weight": "int"
+                    },
+                    "description": "The color/fact/useful breakdown of the submitted story"
+                },
+                "target_breakdown": {
+                    "type": "Dict",
+                    "details": {
+                        "color_weight": "int",
+                        "facts_weight": "int",
+                        "useful_weight": "int"
+                    },
+                    "description": "The target color/fact/useful breakdown assigned to the story"
+                },
+                "new_quality": {
+                    "type": "List[enum(BAD, GOOD, GREAT)]",
+                    "description": "The quality for each snippet used in the story, sorted by quality. Note that 'GOOD' quality is not displayed to the player"
+                },
+                "story_score": {
+                    "type": "float",
+                    "description": "calculated score based on overall quality"
+                },
+                "story_alignment": {
+                    "type": "float",
+                    "description": "score based on how well the player followed the target composition"
+                }
+            }
+        },
+        "publish_story_click": {
+            "description": "When a player clicks to submit the story for publishing",
+            "event_data" : {
+                "snippet_list": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "snippet_id":"str",
+                        "snippet_type":"enum(IMAGE, QUOTE)",
+                        "snippet_quality":"enum(BAD, GOOD, GREAT)",
+                        "snippet_attributes":"List[enum(COLOR, FACTS, USEFUL)]",
+                        "is_selectable":"bool"
+                    },
+                    "description": "A list of snippet ids available on the left of the notebook"
+                },
+                "layout": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "type": "enum(ANY,PICTURE)",
+                        "is_wide": "bool",
+                        "assigned_snippet": "Optional[snippet_id]"
+                    },
+                    "description": "A list whose elements are 'slots', each with a type and the id of the currently-assigned snippet, if one is assigned."
+                }
+            }
+        },
+        "display_published_story": {
+            "description": "",
+            "event_data" : {
+                "story_layout": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "type": "enum(TEXT,PICTURE,EMPTY)",
+                        "is_wide": "bool",
+                        "text": "str"
+                    },
+                    "description": "A list whose elements are 'slots', each with a type and the id of the currently-assigned snippet, if one is assigned."
+                }
+            }
+        },
+        "close_published_story": {
+            "description": "",
+            "event_data" : {
+            }
+        },
+        "start_level": {
+            "description": "When a new level is started",
+            "event_data" : {
+                "level_started": {
+                    "type": "int",
+                    "description": ""
+                }
+            }
+        },
+        "complete_level": {
+            "description": "The event when a level is completely finished, following a fade to black",
+            "event_data" : {
+                "level_completed": {
+                    "type": "int",
+                    "description": ""
+                }
+            }
+        },
+        "start_endgame": {
+            "description" : "When the player finishes the last level, and enters the 'endgame' portion showing where their town ended up",
+            "event_data" : {
+                "city_score": {
+                    "type": "float",
+                    "description": ""
+                },
+                "scenario": {
+                    "type": "int",
+                    "description": "1, 2, or 3"
+                }
+            }
+        },
+        "level_fail": {
+            "description" : "When a player fails a level and is unable to continue",
+            "event_data" : {
+                "fail_types":{
+                    "type": "enum(Time, Choice, Research, Resourceful, Endurance, Tech, Social, Trust)",
+                    "description": "The reason for fail event. There can be multiple reasons for an event fail. Enum values are in int form based on index"
+                    
+                }
+            }
+        },
+        "resumed_checkpoint":{
+            "description": "When a player resumes a checkpoint",
+            "event_data":{
+                "node_id":{
+                    "type": "string",
+                    "description": "The hexadecimal id of the checkpoint node"
+                },
+                "origin":{
+                    "type": "string",
+                    "description": "Whether the origin of the checkpoint resume was from menu or from fail"
+                }
+            }
+        }
+    },
+    "features": {
+        "per_count": {
+            "StoryEditorTime": {
+				"enabled": false,
+				"type": "StoryEditorTime",
+				"description": "A feature to calculate total time spent in the story editor- same logic as SessionPlayTime, but only enabled between editor open/close events",
+				"return_type": "timedelta",
+                "count":"level_range",
+                "prefix":"lvl",
+				"subfeatures": {
+					"Count": {
+						"description": "The total number of times the player entered an idle state",
+						"return_type": "int"
+					},
+                    "Total Time":{
+                        "description": "Total play time in the session",
+                        "return_type": "timedelta"
+                    },
+                    "Total Play Time":{
+                        "description": "Total play time in session minus idle time",
+                        "return_type":"timedelta"
+                    }
+				},
+				"IDLE_THRESH_SECONDS": 60
+			},
+            "AttributeView":{
+                "enabled":true,
+                "type":"AttributeView",
+                "description": "A feature for times a player goes into attribute dist., by level",
+                "return_type":"int",
+                "count":"level_range",
+                "prefix":"lvl"
+            },
+            "EditorNoteOpen":{
+                "enabled":true,
+                "type":"EditorNoteOpen",
+                "description": "A feature for times a player goes into editor notes, by level",
+                "return_type":"int",
+                "count":"level_range",
+                "prefix":"lvl"
+
+            },
+            "StoryScore" : {
+                "enabled":true,
+                "type":"StoryScore",
+                "description": "A player's final score on a story, by level",
+                "return_type":"float",
+                "count":"level_range",
+                "prefix":"lvl"
+            },
+            "StoryScoreSequence": {
+                "type":"StoryScoreSequence",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"List[float]",
+                "description": "The sequence of changes in story score with each change of story composition, by level"
+            },
+            "StoryAlignment": {
+                "type":"StoryAlignment",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"float",
+                "description": "Final alignment value of the user's story by level"
+            },
+            "StoryAlignmentSequence": {
+                "type":"StoryAlignmentSequence",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"List[float]",
+                "description": "The sequence of changes in alignment with each change of story composition, by level"
+            },
+            "SnippetReplace":{
+                "type": "SnippetReplace",
+                "enabled": false,
+                "count": "level_range",
+                "prefix":"lvl",
+                "return_type": "int",
+                "description":"The number of times a snippet is replaced in a level",
+                "subfeatures":{
+                    "AverageReplace":{
+                        "description":"(Number of times replaced)/(num times notebook click)",
+                        "return_type":"float"
+                    }
+                }
+            },
+            "SnippetsCollected" : {
+                "type":"SnippetsCollected",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"List[str]",
+                "description": "A list of all snippets collected by the user, by level"
+            },
+            "WorstPlayerAttribute":{
+                "type":"WorstPlayerAttribute",
+                "enabled": true,
+                "count":"attribute_range",
+                "prefix": "attr",
+                "return_type": "str",
+                "description": "Population level count of worst player attributes",
+                "subfeatures":{
+                    "Count":{
+                        "description": "A count of a specific attribute",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "TopPlayerAttribute":{
+                "type":"TopPlayerAttribute",
+                "enabled": true,
+                "count":"attribute_range",
+                "prefix": "attr",
+                "return_type": "str",
+                "description": "Population level count of top player attributes",
+                "subfeatures":{
+                    "Count":{
+                        "description": "A count of a specific attribute",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "TopPlayerQuitType":{
+                "type":"TopPlayerQuitType",
+                "enabled": true,
+                "count":"quit_type_range",
+                "prefix": "attr",
+                "return_type": "str",
+                "description": "Population level count of top player attributes",
+                "subfeatures":{
+                    "Count":{
+                        "description": "A count of a specific attribute",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "MaxedPlayerAttribute":{
+                "type":"MaxedPlayerAttribute",
+                "enabled":true,
+                "count":"attribute_range",
+                "prefix":"attr",
+                "return_type":"str",
+                "description": "Population level count of maxed player attributes",
+                "subfeatures":{
+                    "Count":{
+                        "description": "A count of a specific attribute",
+                        "return_type": "int"
+                    }
+                }
+            },
+            "LevelCompleteCount": {
+                "type":"LevelCompleteCount",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "return_type":"int",
+                "description": "Population level count of total level completes"
+            
+            },
+            "LevelCompleted":{
+                "enabled": true,
+                "type": "LevelCompleted",
+                "count": "level_range",
+                "prefix": "lvl",
+                "description": "Boolean perLevel feature for whether a level was completed in session",
+                "return_type": "bool"
+            },
+            "LevelTime": {
+                "type": "LevelTime",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "description": "time spent on a level [sum of differences in time between 'BEGIN' and 'COMPLETE' event(s)]",
+                "return_type": "timedelta"
+            },
+            "SnippetsSubmitted": {
+                "type": "SnippetsSubmitted",
+                "enabled": true,
+                "count":"level_range",
+                "prefix": "lvl",
+                "description": "List of all snippet ids included when a player submits their story.",
+                "return_type": "List[str]"
+            },
+            
+            "FailureCount":{
+                "enabled": true,
+                "type": "FailureCount",
+                "count": "level_range",
+                "prefix": "lvl",
+                "description": "How many times a level was failed",
+                "return_type": "int",
+                "subfeatures":{
+                    "OutOfTime":{
+                        "description": "A count of how many failures were due to running out of time",
+                        "return_type": "int"
+                    },
+                    "LowAttribute":{
+                        "description": "A count of how many failures were due to the player having an attribute value too low",
+                        "return_type": "int"
+                    }
+                }
+            }
+        },
+        "aggregate": {
+            "ChoiceClickCount": {
+				"enabled": false,
+				"description": "The number of choices made by user in a session",
+				"return_type": "int",
+                "subfeatures": {
+					"Action": {
+						"description": "The number of action choices made by a user in a session",
+						"return_type": "int"
+					}
+				}
+			},
+            "GameComplete":{
+                "enabled":true,
+                "description": "Whether a player completed a level",
+                "return_type":"bool"
+            },
+            "TextClickCount": {
+				"enabled": false,
+				"description": "The number of choices made by user in a session",
+				"return_type": "int"
+			},
+            "SessionPlayTime": {
+				"enabled": false,
+				"type": "SessionPlayTime",
+				"description": "A feature to calculate total time spent idle in session; configured to define 'idle' as spending 15 seconds or more without making a 'meaningful' action",
+				"return_type": "timedelta",
+				"subfeatures": {
+					"Count": {
+						"description": "The total number of times the player entered an idle state",
+						"return_type": "int"
+					},
+                    "Total Time":{
+                        "description": "Total play time in the session",
+                        "return_type": "timedelta"
+                    },
+                    "Total Play Time":{
+                        "description": "Total play time in session minus idle time",
+                        "return_type":"timedelta"
+                    }
+				},
+				"IDLE_THRESH_SECONDS": 60
+			},
+            "PlayTime":{
+                "enabled":true,
+                "type": "PlayTime",
+                "description": "Amount of non-idle time player spent on session",
+                "return_type": "timedelta",
+                "subfeatures":{
+                    "Total Time":{
+                        "description": "The total time the player spent on the game, disregarding idle time",
+                        "return_type": "timedelta"
+                    },
+                    "Idle Time":{
+                        "description": "The total time the player spent idle",
+                        "return_type": "timedelta"
+                    }
+                },
+                "IDLE_THRESH_SECONDS": 60
+
+            },
+            "UserPlayTime":{
+                "enabled": true,
+                "type": "UserPlayTime",
+                "description": "Amount of non-idle time spent by user across sessions",
+                "return_type": "timedelta",
+                "subfeatures":{
+                    "TotalTime":{
+                        "description": "Total time user spent across sessions, from start to end",
+                        "return_type": "timedelta"
+                    }
+                }
+            },
+            "SnippetReceivedCount":{
+                "enabled": true,
+                "description": "The number of snippets and types received by the user in a session",
+                "return_type": "int",
+                "subfeatures": {
+                    "Bad":{
+                        "description": "Count of bad snippets",
+                        "return_type": "int"
+                    },
+                    "Good":{
+                        "description": "Count of good snippets",
+                        "return_type": "int"
+                    },
+                    "Great":{
+                        "description": "Count of great snippets",
+                        "return_type": "int"
+                    }
+                }
+            },
+            
+            "StoryCompleteTime":{
+                "enabled": false,
+                "description": "Average amount of time spent completing stories, marked from first snippet received to level change event",
+                "return_type": "float",
+                "subfeatures":{
+                    "DeltaTimeLogs":{
+                        "description": "List of delta times between snippet receive and level complete",
+                        "return_type": "List[deltatime]"
+                    },
+                    "RawTimeLogs":{
+                        "description": "List of raw times for snippet receive and level complete, in tuples",
+                        "return_type": "List[tuple]"
+                    }
+                }
+            },
+            "SkillSequenceCount": {
+                "enabled": true,
+                "description": "Count skill update events and log these events in a sequence",
+                "return_type": "int",
+                "subfeatures":{
+                    "EventSequence":{
+                        "description": "String of skill update events in order",
+                        "return_type": "List[String]"
+                    }
+                }
+            },
+            "MeanSnippetTime":{
+                "enabled": false,
+                "description": "Average amount of time per snippet collected(between start of game and last snippet collect), as well as timestamps of all snippet collects",
+                "return_type": "float",
+                "subfeatures": {
+                    "TimeLog":{
+                        "description": "List of datetimes for snippet collects",
+                        "return_type": "List[int]"
+                    }
+                }
+            },
+            "PlayerAttributes": {
+                "enabled": true,
+                "description": "Final Attributes of Player in a session",
+                "return_type": "String"
+            },
+            "QuitLevel": {
+				"enabled": true,
+				"type": "QuitLevel",
+				"description": "The level of player/session on last logged event",
+				"return_type": "int",
+				"subfeatures": {
+                    "EventName":{
+                        "description": "The last event done by the player",
+                        "return_type": "String"
+                    },
+                    "NodeID":{
+                        "description": "The last nodeID on quit event",
+                        "return_type": "String"
+                    }
+				}
+			},
+            "QuitType":{
+                "enabled": true,
+                "type": "QuitType",
+                "description": "A feature to return a bool for the type of quit event by the player",
+                "return_type": "str",
+                "subfeatures":{
+                    "BetweenLevels":{
+                        "description": "Quit was between levels",
+                        "return_type": "bool"
+                    },
+                    "OnFail":{
+                        "description": "Quit was on fail",
+                        "return_type": "bool"
+                    },
+                    "OnCheckpoint":{
+                        "description": "Quit was on a checkpoint",
+                        "return_type": "bool"
+                    },
+                    "Other":{
+                        "description": "Quit wasn't on fail or between levels",
+                        "return_type": "bool"
+                    }
+
+                }
+            },
+            "WorstAttribute":{
+                "enabled": true,
+                "type": "WorstAttribute",
+                "description": "indicates the value of the lowest attribute the player has.",
+                "return_type": "int",
+                "subfeatures":{
+                    "Names":{
+                        "description": "A list of all names of lowest attributes",
+                        "return_type": "List[str]"
+                    }
+                }
+            },
+            "TopAttribute":{
+                "enabled": true,
+                "type": "TopAttribute",
+                "description": "indicates the value of the top attribute the player has.",
+                "return_type": "int",
+                "subfeatures":{
+                    "Names":{
+                        "description": "A list of all names of top attributes",
+                        "return_type": "List[str]"
+                    }
+                }
+            },
+            "TotalFails":{
+                "enabled":true,
+                "type":"TotalFails",
+                "description": "count of total fail events of all types",
+                "return_type": "int"
+            },
+            "ContinuesOnFail":{
+                "enabled": true,
+                "type": "ContinuesOnFail",
+                "description": "Number of continues on a level after fail",
+                "return_type": "int"
+            },
+            "QuitNode":{
+                "enabled:":true,
+                "type":"QuitNode",
+                "description": "Most popular 5 quit nodes at population level",
+                "return_type": "str"
+            }
+        }
+    },
+    "config": {
+        "SUPPORTED_VERS": [
+            1
+        ]
+    }
+}

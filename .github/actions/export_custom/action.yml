@@ -17,6 +17,10 @@ inputs:
     description: "The end date for the export"
     required: true
     default: "01/01/2021"
+  events_only:
+    description: "If true, only export event data."
+    required: false
+    default: false
 runs:
   using: "composite"
   steps:
@@ -25,8 +29,13 @@ runs:
     #   run: sudo apt-get install mysql-client
       # shell: bash
     # - name: Clone code
-    #   uses: actions/checkout@v2
+    #   uses: actions/checkout@v3
     - name: Execute data export
-      run: python3.8 main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }}
+      if: ${{ inputs.events_only == 'false' }}
+      run: python3.10 main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }}
       shell: bash
-      # python3.8 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021
+    - name: Execute data export (events only)
+      if: ${{ inputs.events_only == 'false' }}
+      run: python3.10 main.py export ${{ inputs.game }} ${{ inputs.start_date }} ${{ inputs.end_date }} --no_session_file --no_player_file --no_pop_file
+      shell: bash
+      # python3.10 main.py export ${{ inputs.game }} 1/1/2021 1/2/2021

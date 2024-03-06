@@ -1,0 +1,412 @@
+{
+    "level_range": { "min":0, "max":8 },
+
+    "events": {
+        "COMPLETE": {
+            "description": "N/A",
+            "event_data": {
+                "0": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "1": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "2": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "3": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "4": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "5": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "6": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "7": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "8": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "stability": {
+                    "type": "Dict",
+                    "description": "N/A",
+                    "details": {
+                        "pack": "int",
+                        "charge": "int"
+                    }
+                }
+            }
+        },
+        "BEGIN": {
+            "description": "N/A",
+            "event_data": {
+                "stars_0": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "stars_1": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "stars_2": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "stars_3": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "stars_4": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "stars_5": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "stars_6": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "stars_7": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "stars_8": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "MOLECULE_RELEASE": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "MOLECULE_RELEASE",
+                    "description": "N/A"
+                },
+                "startPosition": {
+                    "type": "Dict",
+                    "details": {
+                        "coord_0": {
+                            "x": "int",
+                            "y": "int"
+                        },
+                        "coord_1": {
+                            "x": "int",
+                            "y": "int"
+                        },
+                        "coord_2": {
+                            "x": "int",
+                            "y": "int"
+                        }
+                    },
+                    "description": "may be more coords, not sure if upper limit exists"
+                },
+                "endPosition": {
+                    "type": "Dict",
+                    "details": {
+                        "coord_0": {
+                            "x": "int",
+                            "y": "int"
+                        },
+                        "coord_1": {
+                            "x": "int",
+                            "y": "int"
+                        },
+                        "coord_2": {
+                            "x": "int",
+                            "y": "int"
+                        }
+                    },
+                    "description": "may be more coords, not sure if upper limit exists"
+                },
+                "time": {
+                    "type": "float",
+                    "description": "N/A"
+                },
+                "startStability": {
+                    "type": "Dict",
+                    "details": {
+                        "pack": "int",
+                        "charge": "int"
+                    },
+                    "description": "Starting stability when the molecule was 'grabbed'."
+                },
+                "endStability": {
+                    "type": "Dict",
+                    "details": {
+                        "pack": "int",
+                        "charge": "int"
+                    },
+                    "description": "Ending stability when the molecule was 'released'."
+                }
+            }
+        },
+        "MOLECULE_ROTATE": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "isStamp": {
+                    "type": "bool",
+                    "description": "N/A"
+                },
+                "startRotation": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "endRotation": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "numRotations": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "startStability": {
+                    "type": "Dict",
+                    "details": {
+                        "pack": "int",
+                        "charge": "int"
+                    },
+                    "description": "Starting stability when the molecule was 'grabbed'."
+                },
+                "endStability": {
+                    "type": "Dict",
+                    "details": {
+                        "pack": "int",
+                        "charge": "int"
+                    },
+                    "description": "Ending stability after the molecule was rotated."
+                }
+            }
+        },
+        "CLEAR_BTN_PRESS": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "numTimesPressed": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "numMolecules": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "stability": {
+                    "pack": "int",
+                    "charge": "int"
+                }
+            }
+        },
+        "QUESTION_ANSWER": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "answer": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "answered": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "question": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "MUSEUM_CLOSE": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeOpen": {
+                    "type": "float",
+                    "description": "N/A"
+                }
+            }
+        },
+        "BACK_TO_MENU": {
+            "description": "N/A",
+            "event_data": {
+                "event_custom": {
+                    "type": "enum(BACK_TO_MENU)",
+                    "description": "N/A"
+                }
+            }
+        }
+    },
+
+    "features": {
+		"legacy" : {
+			"enabled" : true,
+            "return_type" : "Any"
+		},
+        "perlevel": {
+            "eventCount": {
+                "enabled": false,
+                "count": "per_level",
+                "prefix": "lvl",
+                "description": "Number of player events in the given level",
+                "return_type": "int"
+            },
+            "durationInSecs": {
+                "enabled": false,
+                "count": "per_level",
+                "prefix": "lvl",
+                "description": "Time (in seconds) spent on the given level"
+            },
+            "stampRotateCount": {
+                "enabled": false,
+                "count": "per_level",
+                "prefix": "lvl",
+                "description": "Number of stamp rotate events in the level. These are MOLECULE_ROTATE events with isStamp set false.",
+                "return_type": "int"
+            },
+            "singleRotateCount": {
+                "enabled": false,
+                "count": "per_level",
+                "prefix": "lvl",
+                "description": "Number of single rotation events in the level",
+                "return_type": "int"
+            },
+            "moleculeMoveCount": {
+                "enabled": false,
+                "count": "per_level",
+                "prefix": "lvl",
+                "description": "Number of molecule move (MOLECULE_RELEASE) events in the level",
+                "return_type": "int"
+            },
+            "clearBtnPresses": {
+                "enabled": false,
+                "count": "per_level",
+                "prefix": "lvl",
+                "description": "Number of times the clear button was pressed in the level",
+                "return_type": "int"
+            },
+            "avgMoleculeDragDurationInSecs": {
+                "enabled": false,
+                "count": "per_level",
+                "prefix": "lvl",
+                "description": "The average number of seconds each drag took, over the given level"
+            },
+            "finalScore": {
+                "enabled": false,
+                "count": "per_level",
+                "prefix": "lvl",
+                "description": "The max final score given when submit button pressed, for this level, among all plays"
+            },
+            "beginCount": {
+                "enabled": false,
+                "count": "per_level",
+                "prefix": "lvl",
+                "description": "number of times a player 'began' the level. [count of 'BEGIN' events]",
+                "return_type": "int"
+            },
+            "menuBtnCount": {
+                "enabled": false,
+                "count": "per_level",
+                "prefix": "lvl",
+                "description": "The number of times a player pressed the 'return to menu' button during a level",
+                "return_type": "int"
+            },
+            "completesCount": {
+                "enabled": false,
+                "count": "per_level",
+                "prefix": "lvl",
+                "description": "The number of time the player (pressed the submit button)/(completed the level) in the level",
+                "return_type": "int"
+            }
+        },
+        "per_count": {
+            "questionAnswered": {
+                "enabled": false,
+                "count": 3,
+                "prefix": "QA",
+                "description": "The answer the user gave to a given question (or -1 if unanswered)",
+                "return_type": "int"
+            },
+            "questionCorrect": {
+                "enabled": false,
+                "count": 3,
+                "prefix": "QA",
+                "description": "0 if user answered the question incorrectly, 1 if answered correctly, -1 if unanswered",
+                "return_type": "bool"
+            }
+        },
+        "aggregate": {
+            "sessionID": {
+                "enabled": false,
+                "description": "The player's session ID number for this play session"
+            },
+            "persistentSessionID": {
+                "enabled": false,
+                "description": "The session ID for the player's device, persists across multiple players using the same device."
+            },
+            "sessionEventCount": {
+                "enabled": false,
+                "description": "The total number of events across the entire session",
+                "return_type": "int"
+            },
+            "sessionDurationInSecs": {
+                "enabled": false,
+                "description": "The total time (in seconds) spent over the entire session"
+            },
+            "sessionStampRotateCount": {
+                "enabled": false,
+                "description": "Total number of stamp rotation events over the session",
+                "return_type": "int"
+            },
+            "sessionSingleRotateCount": {
+                "enabled": false,
+                "description": "Total number of single rotation events over the session",
+                "return_type": "int"
+            },
+            "sessionMoleculeMoveCount": {
+                "enabled": false,
+                "description": "Total number of molecule move events over the session",
+                "return_type": "int"
+            },
+            "sessionClearBtnPresses": {
+                "enabled": false,
+                "description": "Total number of times the clear button was pressed during the session",
+                "return_type": "int"
+            },
+            "sessionMuseumDurationInSecs": {
+                "enabled": false,
+                "description": "Total amount of time spent in a museum during the session?"
+            }
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [3]
+	}
+}
