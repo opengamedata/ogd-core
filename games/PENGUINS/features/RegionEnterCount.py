@@ -11,13 +11,12 @@ from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from extractors.features.PerCountFeature import PerCountFeature
 
-region_map = {'Mirror':0, 'HillUp':1, 'Entrance':2, 'SnowballBowling':3, 'HillDown':4, 'Bridge':5, 'Chimes':6, 'MatingDPath':7, 'MatingD':8, 'ProtectNestPath':9, 'ProtectNest':10}
 
 class RegionEnterCount(PerCountFeature):
 
-    def __init__(self, params:ExtractorParameters):
-        self._region_map = region_map
+    def __init__(self, params:ExtractorParameters, region_map:List[Dict[str, Any]]):
         super().__init__(params=params)
+        self._region_map = region_map
         self._current_count : int = 0
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
@@ -41,7 +40,6 @@ class RegionEnterCount(PerCountFeature):
     # *** Optionally override public functions. ***
     def _validateEventCountIndex(self, event: Event):
         ret_val : bool = False
-
         region_data = event.EventData.get("region_name")
         if region_data is not None:
             if region_data in region_map and region_map[region_data] == self.CountIndex:

@@ -1,5 +1,4 @@
 ## import standard libraries
-import git
 import json
 import logging
 import os
@@ -9,6 +8,7 @@ import sys
 import traceback
 import zipfile
 from datetime import datetime
+from git.repo import Repo
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
 from pathlib import Path
 from typing import Any, Dict, IO, List, Optional, Set
@@ -17,7 +17,7 @@ from typing import Any, Dict, IO, List, Optional, Set
 from interfaces.outerfaces.DataOuterface import DataOuterface
 from schemas.ExtractionMode import ExtractionMode
 from schemas.ExportMode import ExportMode
-from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.GameSourceSchema import GameSourceSchema
 from schemas.games.GameSchema import GameSchema
 from schemas.tables.TableSchema import TableSchema
 from schemas.configs.IndexingSchema import FileIndexingSchema
@@ -51,7 +51,7 @@ class TSVOuterface(DataOuterface):
         self._dataset_id = dataset_id or f"{self._game_id}_{start}_to_{end}"
         # get hash
         try:
-            repo = git.Repo(search_parent_directories=True)
+            repo = Repo(search_parent_directories=True)
             if repo.git is not None:
                 self._short_hash = str(repo.git.rev_parse(repo.head.object.hexsha, short=7))
         except InvalidGitRepositoryError as err:
@@ -107,7 +107,6 @@ class TSVOuterface(DataOuterface):
         except FileNotFoundError:
             # if not in place, generate the readme
             Logger.Log(f"Missing readme for {self._game_id}, generating new readme...", logging.WARNING, depth=1)
-            self._readme_path = Path("./data") / self._game_id
             game_schema  : GameSchema  = GameSchema(schema_name=self._game_id, schema_path=Path(f"./games/{self._game_id}/schemas"))
             table_schema = TableSchema(schema_name=self._config.TableSchema)
             readme = Readme(game_schema=game_schema, table_schema=table_schema)
@@ -115,6 +114,7 @@ class TSVOuterface(DataOuterface):
         else:
             # otherwise, readme is there, so just close it and move on.
             readme.close()
+            Logger.Log(f"Successfully found, opened, and closed the readme.md", logging.DEBUG, depth=1)
         finally:
             self._closeFiles()
             self._zipFiles()
@@ -440,15 +440,15 @@ class TSVOuterface(DataOuterface):
                     "date_modified":datetime.now().strftime("%m/%d/%Y"),
                     "sessions"     :num_sess,
                     "population_file"     : str(self._zip_paths['population'])       if self._zip_paths['population']       else None,
-                    "population_template" : f'/tree/{self._game_id}'                 if self._zip_paths['population']       else None,
+                    "population_template" : f'/tree/{self._game_id.lower()}'         if self._zip_paths['population']       else None,
                     "players_file"        : str(self._zip_paths['players'])          if self._zip_paths['players']          else None,
-                    "players_template"    : f'/tree/{self._game_id}'                 if self._zip_paths['players']          else None,
+                    "players_template"    : f'/tree/{self._game_id.lower()}'         if self._zip_paths['players']          else None,
                     "sessions_file"       : str(self._zip_paths['sessions'])         if self._zip_paths['sessions']         else None,
-                    "sessions_template"   : f'/tree/{self._game_id}'                 if self._zip_paths['sessions']         else None,
+                    "sessions_template"   : f'/tree/{self._game_id.lower()}'         if self._zip_paths['sessions']         else None,
                     "raw_file"            : str(self._zip_paths['raw_events'])       if self._zip_paths['raw_events']       else None,
-                    "events_template"     : f'/tree/{self._game_id}'                 if self._zip_paths['raw_events']       else None,
+                    "events_template"     : f'/tree/{self._game_id.lower()}'         if self._zip_paths['raw_events']       else None,
                     "events_file"         : str(self._zip_paths['processed_events']) if self._zip_paths['processed_events'] else None,
-                    "all_events_template" : f'/tree/{self._game_id}'                 if self._zip_paths['processed_events'] else None
+                    "all_events_template" : f'/tree/{self._game_id.lower()}'         if self._zip_paths['processed_events'] else None
                 }
                 meta_file.write(json.dumps(metadata, indent=4))
                 meta_file.close()

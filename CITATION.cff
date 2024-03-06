@@ -1,0 +1,28 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: opengamedata-core
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - name: Field Day Lab
+    city: Madison
+    country: US
+    region: Wisconsin
+    website: 'https://fielddaylab.wisc.edu/'
+  - given-names: Luke
+    family-names: Swanson
+    email: lwswanson2@wisc.edu
+    affiliation: Field Day Lab
+    orcid: 'https://orcid.org/0000-0002-8455-7441'
+  - given-names: David
+    family-names: Gagnon
+    email: djgagnon@wisc.edu
+    affiliation: Field Day Lab
+    orcid: 'https://orcid.org/0000-0001-5126-0476'
+repository-code: 'https://github.com/opengamedata/opengamedata-core'
+url: 'https://opengamedata.fielddaylab.wisc.edu/index.php'
+license: MIT

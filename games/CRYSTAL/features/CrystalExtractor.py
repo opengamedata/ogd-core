@@ -102,7 +102,7 @@ class CrystalExtractor(LegacyFeature):
         # them until we know how many total events occur.
         for level in self._levels:
             count = self._features.getValByIndex(feature_name="moleculeMoveCount", index=level)
-            avg = self._totalMoleculeDragDuration[level] / count if count > 0 else count
+            avg = self._totalMoleculeDragDuration[level] / count if (count is not None and count > 0) else count
             self._features.setValByIndex(feature_name="avgMoleculeDragDurationInSecs", index=level, new_value=avg)
 
     ## Private function to extract features from a "BEGIN" event.

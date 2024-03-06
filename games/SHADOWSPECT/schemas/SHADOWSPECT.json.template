@@ -905,22 +905,26 @@
             "MoveShapeCount": {
                 "type": "MoveShapeCount",
                 "enabled": true,
-                "description":"Total number of shape moves in a given session"
+                "description":"Total number of shape moves in a given session",
+                "return_type": "int"
             },
             "SessionID": {
                 "type": "SessionID",
                 "enabled": true,
-                "description":"The player's session ID number for this play session"
+                "description":"The player's session ID number for this play session",
+                "return_type": "str"
             },
             "FunnelByUser": {
                 "type": "FunnelByUser",
                 "enabled": false,
-                "description":"Funnel of puzzles for this play session"
+                "description":"Funnel of puzzles for this play session",
+                "return_type": "List[float | int]"
             },
             "LevelsOfDifficulty": {
                 "type": "LevelsOfDifficulty",
                 "enabled": true,
-                "description":"Set of features for each level describing the difficulty of a puzzle (on-going-work)"
+                "description":"Set of features for each level describing the difficulty of a puzzle (on-going-work)",
+                "return_type": "List[bool | int | timedelta]"
             },
             "SequenceBetweenPuzzles": {
                 "type": "SequenceBetweenPuzzles",

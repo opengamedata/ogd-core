@@ -52,36 +52,24 @@
                 }
             }
         },
+        "headset_on": {
+            "description": "When the player puts the headset on, resuming the game",
+            "event_data": {}
+        },
+        "headset_off": {
+            "description": "When the player removes the headset from their head, pausing the game",
+            "event_data": {}
+        },
         "viewport_data": {
-            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player for each frame in the past second",
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player headset for each frame in the past second",
             "event_data": {
-                "px": {
-                    "type": "List[float]",
-                    "description": "The x-positions of the player for each frame in the last second"
-                },
-                "py": {
-                    "type": "List[float]",
-                    "description": "The y-positions of the player for each frame in the last second"
-                },
-                "pz": {
-                    "type": "List[float]",
-                    "description": "The z-positions of the player for each frame in the last second"
-                },
-                "qx": {
-                    "type": "List[float]",
-                    "description": "The x-component of the quaternion for the player's orientation for each frame in the last second"
-                },
-                "qy": {
-                    "type": "List[float]",
-                    "description": "The y-component of the quaternion for the player's orientation for each frame in the last second"
-                },
-                "qz": {
-                    "type": "List[float]",
-                    "description": "The z-component of the quaternion for the player's orientation for each frame in the last second"
-                },
-                "qw": {
-                    "type": "List[float]",
-                    "description": "The w-component of the quaternion for the player's orientation for each frame in the last second"
+                "gaze_data_package" : {
+                    "type" : "List[Dict]",
+                    "details" : {
+                        "pos" : "List[float]",
+                        "rot" : "List[float]"
+                    },
+                    "description" : "A list of dicts, where each dict is one frame of headset data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
                 }
             }
         },
@@ -90,7 +78,11 @@
             "event_data": {
                 "left_hand_data_package": {
                     "type": "List[Dict]",
-                    "description": "A list of dicts, where each dict is one frame of data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                    "details" : {
+                        "pos" : "List[float]",
+                        "rot" : "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of left-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
                 }
             }
         },
@@ -99,7 +91,11 @@
             "event_data": {
                 "right_hand_data_package": {
                     "type": "List[Dict]",
-                    "description": "A list of dicts, where each dict is one frame of data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                    "details" : {
+                        "pos" : "List[float]",
+                        "rot" : "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of right-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
                 }
             }
         },
@@ -354,9 +350,8 @@
             "event_data": {}
         },
         "penguin_pin_fell": {
-            "description": "NOT YET DOCUMENTED",
+            "description": "When one of the pins fell in the bowling area.",
             "event_data": {
-                "data": "NOT YET DOCUMENTED"
             }
         },
         "skua_spawn": {
@@ -484,11 +479,97 @@
             }
         }
     },
+    "detectors": {
+        "per_count": {
+            "RegionEnter": {
+                "type": "RegionEnter",
+                "enabled": true,
+                "description": "Triggers an event when a player enter a region"
+            },
+            "RegionExit": {
+                "type": "RegionExit",
+                "enabled": true,
+                "description": "Triggers an event when a player exit a region"
+            }
+        },
+          
+        "aggregate": {}
+        },
 
     "features": {
         "per_count": {
+            "RegionDuration": {
+                "type": "RegionDuration",
+                "enabled": true,
+                "count": 11,
+                "prefix": "region",
+                "description": "The duration of time a player played in a given region of the game.",
+                "return_type": "timedelta"
+            },
+            "WaddlePerRegion": {
+                "type": "WaddlePerRegion",
+                "enabled": true,
+                "count": 11,
+                "prefix": "region",
+                "description": "The number of times a player waddled in a given region of the game.",
+                "return_type": "int"
+            }
         },
         "aggregate":{
+            "GazeCount": {
+                "type": "GazeCount",
+                "enabled": true,
+                "description": "The number of times a player waddled in a given region of the game.",
+                "return_type": "int"
+            },
+            "PickupRockCount": {
+                "type": "PickupRockCount",
+                "enabled": true,
+                "description": "The duration each session took.",
+                "return_type": "int"
+            },
+            "PlayerWaddleCount": {
+                "type": "PlayerWaddleCount",
+                "enabled": true,
+                "description": "The number of times a player waddled.",
+                "return_type": "int"
+            },
+            "SessionDuration": {
+                "type": "SessionDuration",
+                "enabled": true,
+                "description": "The duration each session took.",
+                "return_type": "timedelta"
+                },
+            "GazeDuration": {
+                "type": "GazeDuration",
+                "enabled": true,
+                "description": "How long gaze event last for.",
+                "return_type": "timedelta"
+            },
+            "RegionEnterCount": {
+                "type": "RegionEnterCount",
+                "enabled": false,
+                "description": "The number of times a player enterd for a given region of the game.",
+                "return_type": "int"
+            },
+            "ActivityCompleted": {
+                "type": "ActivityCompleted",
+                "enabled": true,
+                "description": "The activities completed in a given session.",
+                "return_type": "int"
+            },
+            "ActivityDuration": {
+                "type": "ActivityDuration",
+                "enabled": true,
+                "description": "How long activity last for.",
+                "return_type": "int"
+            },
+            "RegionsEncountered": {
+                "type": "RegionsEncountered",
+                "enabled": true,
+                "description": "The regions entered in a given session.",
+                "return_type": "int"
+            }
         }
     },
 
