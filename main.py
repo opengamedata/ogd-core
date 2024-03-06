@@ -17,7 +17,6 @@ from typing import List, Optional, Set, Tuple
 # import 3rd-party libraries
 
 # import local files
-from utils.Logger import Logger
 from config.config import settings
 from interfaces.events.EventInterface import EventInterface
 from interfaces.events.CSVInterface import CSVInterface
@@ -334,10 +333,13 @@ def getDateRange() -> Tuple[datetime, datetime]:
         Logger.Log(f"Exporting from {str(start_date)} to {str(end_date)} of data for {args.game}...", logging.INFO)
     return (start_date, end_date)
 
-## This section of code is what runs main itself. Just need something to get it started.
+## This section of code is what runs main itself. Just need something to get it
+#  started.
+config = ConfigSchema(name="config.py", all_elements=settings)
+Logger.InitializeLogger(level=config.DebugLevel, use_logfile=config.UseLogFile)
 # Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
-config : ConfigSchema = ConfigSchema(name="config.py", all_elements=settings)
-games_folder : Path   = Path("./games")
+# set up parent parsers with arguments for each class of command
+games_folder : Path = Path("./games")
 games_list = [name.upper() for name in os.listdir(games_folder) if (os.path.isdir(games_folder / name) and name != "__pycache__")]
 
 # set up parent parsers with arguments for each class of command

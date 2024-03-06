@@ -222,7 +222,7 @@
         "mole_appears": {
             "description": "(code=3005), TODO",
             "event_data": {
-                "id": {
+                "moleID": {
                     "type": "int",
                     "description": "Number representing the order in which the avocado appeared, ranges from (1 - a number determined by level designer)."
                 },
@@ -235,7 +235,7 @@
                     "description": "Y position where avocado was spawned, 0,0 is lower left corner."
                 },
                 "moleType": {
-                    "type": "enum(REGULAR, SPIKE_HAT, HARD_HAT, ELECTRIC_HAT)",
+                    "type": "enum(NORMAL, SPIKE, HAT, ELECTRIC)",
                     "description": "Regular, spike hat, hard hat, electric hat"
                 }
             }
@@ -243,20 +243,20 @@
         "mole_disappears": {
             "description": "(code=3006), TODO",
             "event_data": {
-                "id": {
+                "moleID": {
                     "type": "int",
                     "description": "Number representing the order in which the avocado appeared, ranges from (1 - a number determined by level designer)."
                 },
                 "hitType": {
-                    "type": "enum(CORRECT_HIT, WRONG_HIT, CORRECT_MISSED, WRONG_MISSED)",
+                    "type": "enum(CORRECT_HIT, INCORRECT_HIT, CORRECT_MISSED, INCORRECT_MISSED)",
                     "description": "Label for CORRECT_HIT, WRONG_HIT, CORRECT_MISSED, WRONG_MISSED if action is correct vs wrong"
                 },
                 "reactionTime": {
-                    "type": "?timedelta?",
+                    "type": "float",
                     "description": "Time between when the ... appears onscreen, vs when the player crushes the avocado"
                 },
                 "score": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "Points received for that avocado"
                 }
             }
@@ -265,19 +265,19 @@
             "description": "(code=3050), TODO",
             "event_data": {
                 "levelPoints": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "Summarizes points the participant earned during the level; never negative to protect feelings. Since this can never go below 0, may be different from LevelRealPoints"
                 },
                 "levelRealPoints": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "Summarizes points the participant earned during the level; can be negative"
                 },
                 "maxLevelPoints": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "Maximum points it would have been possible to earn"
                 },
                 "numStars": {
-                    "type": "?int?",
+                    "type": "int",
                     "description": "Number of stars displayed after completing the level; depends on percentage"
                 }
             }

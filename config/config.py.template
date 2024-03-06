@@ -67,7 +67,7 @@ settings = {
         "CYCLE_NITROGEN": { "source":"OPENGAMEDATA_BQ",    "database":"cycle_nitrogen",      "table":"cycle_nitrogen_daily", "schema":"OPENGAMEDATA_BIGQUERY" },
         "CYCLE_WATER":    { "source":"OPENGAMEDATA_BQ",    "database":"cycle_water",         "table":"cycle_water_daily",    "schema":"OPENGAMEDATA_BIGQUERY" },
         "EARTHQUAKE":     { "source":"OPENGAMEDATA_BQ",    "database":"earthquake",          "table":"earthquake_daily",     "schema":"OPENGAMEDATA_BIGQUERY" },
-        "ICECUBE":        { "source":"OPENGAMEDATA_MYSQL", "database":"opengamedata",        "table":"ICECUBE",              "schema":"OPENGAMEDATA_MYSQL"    },
+        "ICECUBE":        { "source":"OPENGAMEDATA_BQ",    "database":"icecube",             "table":"icecube_daily",        "schema":"OPENGAMEDATA_BIGQUERY" },
         "JOWILDER":       { "source":"OPENGAMEDATA_BQ",    "database":"jowilder",            "table":"jowilder_daily",       "schema":"OPENGAMEDATA_BIGQUERY" },
         "JOURNALISM":     { "source":"OPENGAMEDATA_BQ",    "database":"journalism",          "table":"journalism_daily",     "schema":"OPENGAMEDATA_BIGQUERY" },
         "PENGUINS":       { "source":"OPENGAMEDATA_BQ",    "database":"penguins",            "table":"penguins_daily",       "schema":"OPENGAMEDATA_BIGQUERY" },
