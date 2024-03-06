@@ -4,16 +4,16 @@ name: OpenGameData-Core CI Test
 on:
   push:
     paths:
-    - 'detectors/**'
-    - 'extractors/**'
-    - 'features/**'
-    - 'interfaces/**'
-    - 'managers/**'
-    - 'processors/**'
-    - 'schemas/*'
-    - 'schemas/*_schemas/**'
+    - 'src/ogd/core/detectors/**'
+    - 'src/ogd/core/extractors/**'
+    - 'src/ogd/core/features/**'
+    - 'src/ogd/core/interfaces/**'
+    - 'src/ogd/core/managers/**'
+    - 'src/ogd/core/processors/**'
+    - 'src/ogd/core/schemas/*'
+    - 'src/ogd/core/schemas/*_schemas/**'
+    - 'src/ogd/core/utils/*'
     - 'main.py'
-    - 'utils.py'
     - '.github/workflows/OGD_CI.yml'
     - '.github/actions/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab

@@ -2,8 +2,10 @@
 name: Jo Wilder Exporter CI Test
 on:
   push:
+    branches-ignore:
+    - 'ogd-packaging'
     paths:
-    - 'games/JOWILDER/**'
+    - 'src/ogd/core/games/JOWILDER/**'
     - '.github/workflows/jowilder.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:

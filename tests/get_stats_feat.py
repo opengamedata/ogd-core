@@ -3,10 +3,10 @@ from datetime import datetime as dt
 import math
 import pandas as pd
 from pathlib import Path
-from schemas.tables.TableSchema import TableSchema
-from games.LAKELAND.LakelandExtractor import LakelandExtractor
+from ogd.core.schemas.tables.TableSchema import TableSchema
+from ogd.core.games.LAKELAND.LakelandExtractor import LakelandExtractor
 from realtime.ModelManager import ModelManager
-from schemas.games.GameSchema import GameSchema
+from ogd.core.schemas.games.GameSchema import GameSchema
 
 dump = pd.read_csv(
     "tests/test_data/LAKELAND_20200828_to_20200828 2/LAKELAND_20200828_to_20200828_d45ae97_dump.tsv", sep='\t')
