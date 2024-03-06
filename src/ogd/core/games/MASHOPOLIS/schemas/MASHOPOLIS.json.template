@@ -1,0 +1,316 @@
+{
+    "level_range": { "min":0, "max":0 },
+
+    "events": {
+        "day_over": {
+            "description": "Progression event indicating when the player reaches the end of a day.",
+            "event_data": {
+                "MinigameIndex": {
+                    "type":"enum(0, 1, 2)",
+                    "description":"An integer indicating which minigame was played that day. 0=Packing, 1=Shipping, 2=Cashier"
+                },
+                "LevelButtonIndex": {
+                    "type":"int",
+                    "description":"N/A"
+                },
+                "StarsEarned": {
+                    "type":"int",
+                    "description":"N/A"
+                }
+            }
+        },
+        "achievement_unlocked": {
+            "description": "N/A",
+            "event_data": {
+                "Achievements": {
+                    "type":"List[Dict]",
+                    "details": {
+                        "rewardType":"int",
+                        "reward":"str",
+                        "unlockCondition":"int",
+                        "unlockDetails":"int",
+                        "unlocked":"bool"
+                    },
+                    "description":"N/A"
+                }
+            }
+        },
+        "pause_selected": {
+            "description": "N/A",
+            "event_data": {
+                "MinigameIndex": {
+                    "type":"enum(0, 1, 2)",
+                    "description":"An integer indicating which minigame was being played. 0=Packing, 1=Shipping, 2=Cashier"
+                }
+            }
+        },
+        "open_shop_selected": {
+            "description": "N/A",
+            "event_data": {
+                "GreenhouseLvls": {
+                    "type":"Dict[str, Any]",
+                    "details": {
+                        "totalStarsEarned":"int",
+                        "tiers":"List[Dict]",
+                        "rank":"int"
+                    },
+                    "description":"N/A"
+                },
+                "ShippingLvls": {
+                    "type":"Dict[str, Any]",
+                    "details": {
+                        "totalStarsEarned":"int",
+                        "tiers":"List[Dict]",
+                        "rank":"int"
+                    },
+                    "description":"N/A"
+                },
+                "CashierLevels": {
+                    "type":"Dict[str, Any]",
+                    "details": {
+                        "totalStarsEarned":"int",
+                        "tiers":"List[Dict]",
+                        "rank":"int"
+                    },
+                    "description":"N/A"
+                }
+            }
+        },
+        "try_pot_plant": {
+            "description": "N/A",
+            "event_data": {
+                "Plant": {
+                    "type":"str",
+                    "description":"N/A"
+                },
+                "Symbol": {
+                    "type":"str",
+                    "description":"N/A"
+                }
+            }
+        },
+        "plant_bench_exited": {
+            "description": "N/A",
+            "event_data": {
+                "UnlockedFlowers": {
+                    "type":"List[int]",
+                    "description":"N/A"
+                },
+                "UnlockedSymbols": {
+                    "type":"List[int]",
+                    "description":"N/A"
+                },
+                "Map": {
+                    "type":"List[int]",
+                    "description":"N/A"
+                }
+            }
+        },
+        "plant_bench_entered": {
+            "description": "N/A",
+            "event_data": {
+                "UnlockedFlowers": {
+                    "type":"List[int]",
+                    "description":"N/A"
+                },
+                "UnlockedSymbols": {
+                    "type":"List[int]",
+                    "description":"N/A"
+                },
+                "Map": {
+                    "type":"List[int]",
+                    "description":"N/A"
+                }
+            }
+        },
+        "mingame_door_click": {
+            "description": "N/A",
+            "event_data": {
+            }
+        },
+        "level_icon_click": {
+            "description": "N/A",
+            "event_data": {
+                "LevelButtonIndex": {
+                    "type":"int",
+                    "description":"N/A"
+                },
+                "LevelData": {
+                    "type":"Dict",
+                    "details": {
+                        "starsEarned":"int",
+                        "cutoffs":"List[int]",
+                        "achievements":"List[Dict]",
+                        "waitDuration":"int",
+                        "additionalSymbols":"int"
+                    },
+                    "description":"N/A"
+                }
+            }
+        },
+        "submission_item_selected": {
+            "description": "N/A",
+            "event_data": {
+                "Symbol": {
+                    "type":"str",
+                    "description":"N/A"
+                },
+                "Flower": {
+                    "type":"str",
+                    "description":"N/A"
+                }
+            }
+        },
+        "item_submission": {
+            "description": "N/A",
+            "event_data": {
+                "Order": {
+                    "type":"List[str]",
+                    "description":"N/A"
+                },
+                "Receipt": {
+                    "type":"List[str]",
+                    "description":"N/A"
+                },
+                "Symbol": {
+                    "type":"str",
+                    "description":"N/A"
+                },
+                "GoRule": {
+                    "type":"bool",
+                    "description":"N/A"
+                }
+            }
+        },
+        "item_discarded": {
+            "description": "N/A",
+            "event_data": {
+                "Symbol": {
+                    "type":"str",
+                    "description":"N/A"
+                },
+                "NoGoRule": {
+                    "type":"bool",
+                    "description":"N/A"
+                }
+            }
+        },
+        "level_completed": {
+            "description": "N/A",
+            "event_data": {
+                "MinigameIndex": {
+                    "type":"enum(0, 1, 2)",
+                    "description":"An integer indicating which minigame was played that day. 0=Packing, 1=Shipping, 2=Cashier"
+                },
+                "LevelButtonIndex": {
+                    "type":"int",
+                    "description":"N/A"
+                },
+                "Score": {
+                    "type":"int",
+                    "description":"N/A"
+                },
+                "LevelData": {
+                    "type":"Dict",
+                    "details": {
+                        "starsEarned":"int",
+                        "cutoffs":"List[int]",
+                        "achievements":"List[Dict]",
+                        "waitDuration":"int",
+                        "additionalSymbols":"int"
+                    },
+                    "description":"N/A"
+                }
+            }
+        },
+        "tier_unlocked": {
+            "description": "N/A",
+            "event_data": {
+                "MinigameIndex": {
+                    "type":"enum(0, 1, 2)",
+                    "description":"An integer indicating which minigame had a tier unlocked. 0=Packing, 1=Shipping, 2=Cashier"
+                },
+                "Score": {
+                    "type":"int",
+                    "description":"N/A"
+                },
+                "Tier": {
+                    "type":"int",
+                    "description":"N/A"
+                }
+            }
+        },
+        "order_created": {
+            "description": "N/A",
+            "event_data": {
+                "Order": {
+                    "type":"List[int]",
+                    "description":"N/A"
+                }
+            }
+        },
+        "Go-No-Go_ruleset": {
+            "description": "N/A",
+            "event_data": {
+                "NoGoSymbols": {
+                    "type":"List[str]",
+                    "description":"N/A"
+                }
+            }
+        },
+        "start_selected": {
+            "description": "N/A",
+            "event_data": {
+                "GreenhouseLvls": {
+                    "type":"Dict[str, Any]",
+                    "details": {
+                        "totalStarsEarned":"int",
+                        "tiers":"List[Dict]",
+                        "tiersUnlocked":"int"
+                    },
+                    "description":"N/A"
+                },
+                "ShippingLvls": {
+                    "type":"Dict[str, Any]",
+                    "details": {
+                        "totalStarsEarned":"int",
+                        "tiers":"List[Dict]",
+                        "tiersUnlocked":"int"
+                    },
+                    "description":"N/A"
+                },
+                "CashierLevels": {
+                    "type":"Dict[str, Any]",
+                    "details": {
+                        "totalStarsEarned":"int",
+                        "tiers":"List[Dict]",
+                        "tiersUnlocked":"int"
+                    },
+                    "description":"N/A"
+                }
+            }
+        }
+    },
+
+    "features": {
+        "per_count": {
+        },
+        "aggregate":{
+        }
+    },
+
+    "db_columns": {
+        "event_name": "The name of the event",
+        "event_params": "A repeated record of the parameters associated with this event",
+        "user_id": "The user ID set via the setUserId API",
+        "device": "A record of device information",
+        "geo": "A record of the user's geographic information",
+        "platform": "The platform on which the app was built",
+        "session_id": "ID for the current play session",
+        "timestamp": "Datetime when the event was logged"
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}

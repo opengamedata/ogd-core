@@ -1,0 +1,951 @@
+{
+    "level_range": { "min":0, "max":0 },
+
+    "events": {
+        "start_game": {
+            "description": "N/A",
+            "event_data": {
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "version_num": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "env_configs": {
+                    "type": "dict{}",
+                    "description": "N/A"
+                },
+                "game_id": {
+                    "type": "string",
+                    "description": "N/A"
+                }
+            }
+        },
+        "login_user": {
+            "description": "N/A",
+            "event_data": {
+                "game_id": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                }
+            }
+        },
+        "disconnect": {
+            "description": "N/A",
+            "event_data": {}
+        },
+        "exit_to_menu": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "start_level": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "task_id": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "set_id": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "fullscreen": {
+                    "type": "bool",
+                    "description": "N/A"
+                },
+                "resolution": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "conditions": {
+                    "type": "dict",
+                    "description": "N/A"
+                }
+            }
+        },
+        "puzzle_started": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "task_id": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "set_id": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "puzzle_complete": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "task_id": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "set_id": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "restart_puzzle": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "create_shape": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "color": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "spawnPosition": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "changeMode": {
+                    "type": "bool",
+                    "description": "N/A"
+                },
+                "objSerialization": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "shapeType": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "delete_shape": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "color": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "changeMode": {
+                    "type": "bool",
+                    "description": "N/A"
+                },
+                "deletedShapes": {
+                    "type": "List[int]",
+                    "description": "N/A"
+                }
+            }
+        },
+        "select_shape": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "newSelection": {
+                    "type": "List[int]",
+                    "description": "N/A"
+                },
+                "prevSelection": {
+                    "type": "List[int]",
+                    "description": "N/A"
+                }
+            }
+        },
+        "deselect_shape": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "newSelection": {
+                    "type": "List[int]",
+                    "description": "N/A"
+                },
+                "prevSelection": {
+                    "type": "List[int]",
+                    "description": "N/A"
+                }
+            }
+        },
+        "select_shape_add": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "newSelection": {
+                    "type": "List[int]",
+                    "description": "N/A"
+                },
+                "prevSelection": {
+                    "type": "List[int]",
+                    "description": "N/A"
+                }
+            }
+        },
+        "move_shape": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "selectedObjects": {
+                    "type": "List[int]",
+                    "description": "N/A"
+                },
+                "prevPositions": {
+                    "type": "List[dict]",
+                    "description": "N/A"
+                },
+                "targetOffset": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "validMove": {
+                    "type": "bool",
+                    "description": "N/A"
+                }
+            }
+        },
+        "rotate_shape": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "selectedObject": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "rotationOffset": {
+                    "type": "dict",
+                    "description": "N/A"
+                }
+            }
+        },
+        "scale_shape": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "selectedObject": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "newScale": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "prevScale": {
+                    "type": "dict",
+                    "description": "N/A"
+                }
+            }
+        },
+        "mode_change": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "mode": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "prevMode": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "xfmMode": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "prevXfmMode": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "shape": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "prevShape": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "click_nothing": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "rotate_view": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "freeformDrag": {
+                    "type": "bool",
+                    "description": "N/A"
+                },
+                "freeformRelease": {
+                    "type": "bool",
+                    "description": "N/A"
+                },
+                "targetCam": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "prevCam": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "check_solution": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "correct": {
+                    "type": "List[bool]",
+                    "description": "N/A"
+                }
+            }
+        },
+        "toogle_paint_display": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "isOpen": {
+                    "type": "bool",
+                    "description": "N/A"
+                }
+            }
+        },
+        "palette_change": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "newPalette": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "prevPalette": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "changeMode": {
+                    "type": "bool",
+                    "description": "N/A"
+                }
+            }
+        },
+        "paint": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "shapeIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "newColor": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "prevColor": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "toggle_snapshot_display": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "isOpen": {
+                    "type": "bool",
+                    "description": "N/A"
+                }
+            }
+        },
+        "snapshot": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "cameraAngle": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "undo_action": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "targetedActionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        },
+        "redo_action": {
+            "description": "N/A",
+            "event_data": {
+                "user": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "group": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "timeStamp": {
+                    "type": "double",
+                    "description": "N/A"
+                },
+                "screenPos": {
+                    "type": "dict",
+                    "description": "N/A"
+                },
+                "input": {
+                    "type": "string",
+                    "description": "N/A"
+                },
+                "actionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                },
+                "targetedActionIndex": {
+                    "type": "int",
+                    "description": "N/A"
+                }
+            }
+        }
+    },
+
+    "features": {
+        "per_count": {
+        },
+        "aggregate":{
+            "MoveShapeCount": {
+                "type": "MoveShapeCount",
+                "enabled": true,
+                "description":"Total number of shape moves in a given session",
+                "return_type": "int"
+            },
+            "SessionID": {
+                "type": "SessionID",
+                "enabled": true,
+                "description":"The player's session ID number for this play session",
+                "return_type": "str"
+            },
+            "FunnelByUser": {
+                "type": "FunnelByUser",
+                "enabled": false,
+                "description":"Funnel of puzzles for this play session",
+                "return_type": "List[float | int]"
+            },
+            "LevelsOfDifficulty": {
+                "type": "LevelsOfDifficulty",
+                "enabled": true,
+                "description":"Set of features for each level describing the difficulty of a puzzle (on-going-work)",
+                "return_type": "List[bool | int | timedelta]"
+            },
+            "SequenceBetweenPuzzles": {
+                "type": "SequenceBetweenPuzzles",
+                "enabled": false,
+                "description":"Sequence of puzzles and its funnel stage reached of a given session"
+            }
+        }
+    },
+
+    "db_columns": {
+        "event_name": "The name of the event",
+        "event_params": "A repeated record of the parameters associated with this event",
+        "user_id": "The user ID set via the setUserId API",
+        "device": "A record of device information",
+        "geo": "A record of the user's geographic information",
+        "platform": "The platform on which the app was built",
+        "session_id": "ID for the current play session",
+        "timestamp": "Datetime when the event was logged"
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}
