@@ -1,0 +1,81 @@
+# Workflow to build and deploy a new release of OGDUtils to PyPi.
+name: opengamedata-core Release
+on:
+  release:
+    types: [prereleased, released]
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+
+jobs:
+  build:
+    name: Build Package for Release
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+    - name: Build Package
+      run: python -m build
+    # - name: Upload Wheel to GitHub Release
+    #   uses: actions/upload-release-asset@v1
+    #   with:
+    #     upload_url: ${{ github.event.release.upload_url }}
+    #     asset_path: ./dist/*.whl
+    #     asset_name: OGDUtils.whl
+        # asset_content_type: application/zip
+    - name: Cache Build for Publishing
+      id: cache-build
+      uses: actions/cache/save@v3
+      with:
+        key: opengamedata-core-build-${{ github.run_id }}-${{ github.run_attempt }}
+        path: ./dist/
+    - name: Print event type
+      run: echo ${{ github.event.action }}
+
+  release:
+    name: Publish Release to PyPI
+    needs: build
+    if: github.event.action == 'released'
+    runs-on: ubuntu-22.04
+    environment:
+      name: pypi_release
+      url: https://pypi.org/manage/project/opengamedata-core/
+    permissions:
+      id-token: write
+    steps:
+    - name: Restore Cached Build
+      id: cached-build
+      uses: actions/cache/restore@v3
+      with:
+        key: opengamedata-core-build-${{ github.run_id }}-${{ github.run_attempt }}
+        path: ./dist/
+        fail-on-cache-miss: true
+    - name: Publish to PyPI
+      if: steps.cached-build.outputs.cache-hit == 'true'
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        print-hash: true
+
+  prerelease:
+    name: Publish Prerelease to PyPI
+    needs: build
+    if: github.event.action == 'prereleased'
+    runs-on: ubuntu-22.04
+    environment:
+      name: pypi_prerelease
+      url: https://pypi.org/manage/project/opengamedata-core/
+    permissions:
+      id-token: write
+    steps:
+    - name: Restore Cached Build
+      id: cached-build
+      uses: actions/cache/restore@v3
+      with:
+        key: opengamedata-core-build-${{ github.run_id }}-${{ github.run_attempt }}
+        path: ./dist/
+        fail-on-cache-miss: true
+    - name: Publish to PyPI
+      if: steps.cached-build.outputs.cache-hit == 'true'
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        print-hash: true
+        repository-url: https://test.pypi.org/legacy/

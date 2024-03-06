@@ -2,8 +2,10 @@
 name: Penguins (Waddle) Exporter CI Test
 on:
   push:
+    branches-ignore:
+    - 'ogd-packaging'
     paths:
-    - 'games/PENGUINS/**'
+    - 'src/ogd/core/games/PENGUINS/**'
     - '.github/workflows/penguins.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
