@@ -2,7 +2,7 @@
 data/
 config/*.json
 config/config.py
-src/ogd/core/games/*/schemas/*.json
+src/ogd/games/*/schemas/*.json
 fieldday-pyenv
 /games/
 
