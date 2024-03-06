@@ -1,15 +1,11 @@
-import datetime
-import json
 import logging
 import os
 import traceback
-import typing
 import unittest
 from pathlib import Path
 from unittest import TestCase
 # local import(s)
-from config.config import settings
-import utils
+from utils import utils
 
 class t_utils(TestCase):
     def RunAll(self):

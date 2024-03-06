@@ -19,6 +19,7 @@ __all__ = [
     "JobHelpCount",
     "JobLocationChanges",
     "JobModelingTime",
+    "JobStartCount",
     "JobTasksCompleted",
     "JobsAttempted",
     "JobsCompleted",
@@ -38,7 +39,6 @@ __all__ = [
     "TotalDiveTime",
     "TotalExperimentationTime",
     "UserAvgSessionDuration",
-    "UserSessionCount",
     "UserTotalSessionDuration"
 ]
 
@@ -62,6 +62,7 @@ from . import JobGuideCount
 from . import JobHelpCount
 from . import JobLocationChanges
 from . import JobModelingTime
+from . import JobStartCount
 from . import JobTasksCompleted
 from . import JobsAttempted
 from . import JobsCompleted
@@ -81,5 +82,4 @@ from . import TotalArgumentationTime
 from . import TotalDiveTime
 from . import TotalExperimentationTime
 from . import UserAvgSessionDuration
-from . import UserSessionCount
 from . import UserTotalSessionDuration

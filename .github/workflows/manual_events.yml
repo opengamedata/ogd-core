@@ -1,0 +1,169 @@
+
+# Workflow to run monthly exports of data.
+# All games, and months, for copy-paste:
+# game: ['AQUALAB', 'BACTERIA', 'BALLOON', 'CRYSTAL', 'CYCLE_CARBON', 'CYCLE_NITROGEN', 'CYCLE_WATER', 'EARTHQUAKE', 'JOWILDER', 'LAKELAND', 'MAGNET', 'STEMPORTS', 'WAVES', 'WIND']
+# month-year: ['03/2019', '04/2019', '05/2019', '06/2019', '07/2019', '08/2019', '09/2019', '10/2019', '11/2019', '12/2019', '01/2020', '02/2020', '03/2020', '04/2020', '05/2020', '06/2020', '07/2020', '08/2020', '09/2020']
+name: Manual Export (events only)
+on:
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+    inputs:
+      game:
+        description: "The game(s) to be exported, comma-separated"
+        required: true
+        default: "['BACTERIA']"
+      monthly:
+        type: boolean
+        description: "If true, use month/year. Else, use start and end dates"
+        required: true
+        default: true
+      month_year:
+        description: "The month(s) and year(s) to export (comma-separated). Only used if 'monthly' is true."
+        required: false
+        default: "['01/2021']"
+      start_date:
+        description: "The start date for the export"
+        required: false
+        default: "01/01/2021"
+      end_date:
+        description: "The end date for the export"
+        required: false
+        default: "01/01/2021"
+      export_to_web:
+        type: boolean
+        description: "If true, the exported files will be uploaded to the Open Game Data website, else they will only be uploaded as an artifact in the GitHub Actions results."
+        required: true
+        default: false
+      slice_size:
+        description: "The size of slices to use"
+        required: false
+        default: "1000"
+      log_level:
+        type: choice
+        description: "What level of debugging output to log"
+        required: true
+        default: "INFO"
+        options:
+        - "DEBUG"
+        - "INFO"
+        - "WARNING"
+        - "ERROR"
+
+env:
+  OGD_BQ_GAMES: '["AQUALAB", "BACTERIA", "BALLOON", "CRYSTAL", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "JOWILDER", "PENGUINS", "LAKELAND", "MAGNET", "TRANSFORMATION_QUEST", "THERMOVR", "WAVES", "WIND"]'
+
+jobs:
+  export_data:
+    name: Export Game
+    strategy:
+      matrix:
+        game: ${{ FromJson(github.event.inputs.game) }}
+        month_year: ${{ FromJson(github.event.inputs.month_year) }}
+      fail-fast: false # we don't want to cancel just because one game fails.
+      max-parallel: 3
+
+    # Steps to set up for and execute an export
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+      # A bunch of copy-paste crap to set up google cloud for any given game.
+    - if: contains(fromJson(${{ env.OGD_BQ_GAMES }}), ${{ matrix.game }})
+      name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        export_default_credentials: true
+    - if: ${{ matrix.game == 'MASHOPOLIS' }}
+      name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.BQ_MASHOPOLIS_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_MASHOPOLIS_JSON }}
+        export_default_credentials: true
+    - if: ${{ matrix.game == 'SHADOWSPECT' }}
+      name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
+        export_default_credentials: true
+    - if: ${{ matrix.game == 'SHIPWRECKS' }}
+      name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.BQ_SHIPWRECKS_PROJECT_ID }}
+        service_account_key: ${{ secrets.BQ_SHIPWRECKS_JSON }}
+        export_default_credentials: true
+      # Back to normal setup stuff.
+    - name: Get OpenConnect
+      run: sudo apt-get -q update && sudo apt-get -q install openconnect
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        ssh_host: ${{vars.FD_STORE_HOST}}
+        ssh_user: ${{secrets.VPN_USER}}
+        ssh_pass: ${{secrets.VPN_PASS}}
+        slice_size: ${{ github.event.inputs.slice_size }}
+        log_level: ${{ github.event.inputs.log_level }}
+    - name: Set up Schema File
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: ${{matrix.game}}
+    - name: Do Export of Month (events only)
+      if: github.event.inputs.monthly == 'true'
+      uses: ./.github/actions/export_custom_month
+      with:
+        game: ${{matrix.game}}
+        month_year: ${{matrix.month_year}}
+        events_only: true
+    - name: Do Export of Range (events only)
+      if: github.event.inputs.monthly == 'false'
+      uses: ./.github/actions/export_custom
+      with:
+        game: ${{matrix.game}}
+        start_date: ${{github.event.inputs.start_date}}
+        end_date: ${{github.event.inputs.end_date}}
+        events_only: true
+    - name: Upload files to opengamedata via scp
+      if: github.event.inputs.export_to_web == 'true'
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata/data; mkdir -p ${{matrix.game}}"
+        scp -o StrictHostKeyChecking=no -i ./key.txt ./data/${{matrix.game}}/* ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }}:/var/www/opengamedata/data/${{matrix.game}}/
+    - name: Upload data as artifact
+      if: github.event.inputs.export_to_web == 'false'
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{matrix.game}}_event_export_data
+        path: ./data/${{matrix.game}}/*.zip
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: log_data
+        path: ./*.log
+  
+  trigger_reindex:
+    name: Reindex OpenGameData Files
+    if: github.event.inputs.export_to_web == 'true'
+    needs: export_data
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Get OpenConnect
+      run: sudo apt-get -q update && sudo apt-get -q install openconnect
+    - name: Connect VPN
+      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+    - name: Trigger reindex via ssh
+      # run: echo "placeholder for reindexing!"
+      run: |
+        mkdir -p ~/.ssh
+        echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
+        chmod 600 ./key.txt
+        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata; pwd; ls; python3 reindexer.py;"

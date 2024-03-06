@@ -35,7 +35,7 @@ class SequenceBetweenPuzzles(SessionFeature):
         ignoreEvent = False
         
         if event.EventName == "start_level":
-            self._activePuzzle = event.EventData["task_id"]["string_value"]
+            self._activePuzzle = event.EventData["task_id"]
             
             if self._activePuzzle == "Sandbox":
                 ignoreEvent = True

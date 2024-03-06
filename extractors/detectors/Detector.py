@@ -26,7 +26,7 @@ class Detector(Extractor):
     def _trigger_event(self) -> DetectorEvent:
         pass
 
-    # *** BUILT-INS *8jr47t*
+    # *** BUILT-INS & PROPERTIES *8jr47t*
 
     def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None]):
         super().__init__(params=params)

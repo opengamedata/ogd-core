@@ -24,7 +24,7 @@ import numpy as np
 import json
 from datetime import timedelta
 from models.FeatureModel import FeatureModel
-from utils import Logger
+from utils.Logger import Logger
 
 _POP_ACHS = "exist group town city".split()
 _FARM_ACHS = "farmer farmers farmtown megafarm".split()

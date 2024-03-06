@@ -7,7 +7,7 @@ from extractors.features.SessionFeature import SessionFeature
 from schemas.ExtractionMode import ExtractionMode
 from schemas.FeatureData import FeatureData
 from schemas.Event import Event
-from utils import Logger
+from utils.Logger import Logger
 
 class Clicks(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
@@ -35,10 +35,11 @@ class Clicks(SessionFeature):
         return
 
     def _extractFromFeatureData(self, feature: FeatureData):
-        try: 
+        if self._click_count > 0:
             self._avg_time = feature.FeatureValues[0].total_seconds()/self._click_count
-        except ZeroDivisionError:
-            Logger.Log(f"Clicks extractor tried to divide by 0 clicks, in mode {self.ExtractionMode}", logging.WARN)
+        else:
+            Logger.Log(f"Clicks extractor received 0 click events, in mode {self.ExtractionMode.name}", logging.DEBUG)
+            self._avg_time = 0
         self._avg_time = round(self._avg_time, 3)
         return
 

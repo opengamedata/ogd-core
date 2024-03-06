@@ -1,5 +1,7 @@
 # import standard libraries
+import itertools
 import json
+from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 # import local files
 import games.AQUALAB.features
@@ -11,16 +13,16 @@ from games.AQUALAB.detectors import *
 from games.AQUALAB.features import *
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
+from utils.utils import loadJSONFile
 
 EXPORT_PATH = "games/AQUALAB/DBExport.json"
-CONFIG_PATH = "games/AQUALAB/AQUALAB.json"
 
 ## @class AqualabLoader
 #  Extractor subclass for extracting features from Aqualab game data.
 class AqualabLoader(ExtractorLoader):
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the AqualabLoader class.
     def __init__(self, player_id:str, session_id:str, game_schema: GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):
@@ -119,8 +121,6 @@ class AqualabLoader(ExtractorLoader):
             ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
         elif feature_type == "UserAvgSessionDuration":
             ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
-        elif feature_type == "UserSessionCount":
-            ret_val = UserSessionCount.UserSessionCount(params=extractor_params, player_id=self._player_id)
         elif feature_type == "UserTotalSessionDuration":
             ret_val = UserTotalSessionDuration.UserTotalSessionDuration(params=extractor_params, player_id=self._player_id)
         # then run through per-count features.
@@ -145,6 +145,8 @@ class AqualabLoader(ExtractorLoader):
                 ret_val = JobLocationChanges.JobLocationChanges(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobModelingTime":
                 ret_val = JobModelingTime.JobModelingTime(params=extractor_params, job_map=self._job_map)
+            elif feature_type == "JobStartCount":
+                ret_val = JobStartCount.JobStartCount(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobTasksCompleted":
                 ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
             elif feature_type == "JobsAttempted":
@@ -180,3 +182,17 @@ class AqualabLoader(ExtractorLoader):
     @property
     def JobMap(self) -> Dict:
         return self._job_map
+
+    @staticmethod
+    def GetAqualabJobCount(db_export_path:Path=Path("./games/AQUALAB/")):
+        db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
+        return len(db_export.get("jobs", []))
+
+    @staticmethod
+    def GetAqualabTaskCount(db_export_path:Path=Path("./games/AQUALAB/")):
+        db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
+        list_o_lists = [job.get('tasks', []) for job in db_export.get('jobs', [])]
+        # jobs_to_task_cts = [f"{job.get('id')}: {len(job.get('tasks', []))}" for job in db_export.get('jobs', [])]
+        # Logger.Log(f"Task counts by job:\n{jobs_to_task_cts}", logging.DEBUG)
+        all_tasks    = list(itertools.chain.from_iterable(list_o_lists))
+        return len(all_tasks)

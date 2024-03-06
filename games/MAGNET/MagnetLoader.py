@@ -9,7 +9,7 @@ from extractors.legacy.LegacyLoader import LegacyLoader
 from games.MAGNET.features.MagnetExtractor import MagnetExtractor
 from schemas.Event import Event
 from schemas.ExtractionMode import ExtractionMode
-from schemas.GameSchema import GameSchema
+from schemas.games.GameSchema import GameSchema
 
 class MagnetLoader(LegacyLoader):
 
@@ -25,7 +25,7 @@ class MagnetLoader(LegacyLoader):
     def _getFeaturesModule():
         return games.MAGNET.features
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the WaveExtractor class.
     def __init__(self, player_id:str, session_id:str, game_schema:GameSchema, mode:ExtractionMode, feature_overrides:Optional[List[str]]):

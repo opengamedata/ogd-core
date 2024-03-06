@@ -1,0 +1,105 @@
+{
+    "column_map": {
+        "session_id"           : "session_id",
+        "app_id"               : null,
+        "timestamp"            : "client_time",
+        "event_name"           : "event_name",
+        "event_data"           : "event_data",
+        "event_source"         : "event_source",
+        "app_version"          : "app_version",
+        "app_branch"           : "app_branch",
+        "log_version"          : "log_version",
+        "time_offset"          : "client_offset",
+        "user_id"              : "user_id",
+        "user_data"            : "user_data",
+        "game_state"           : "game_state",
+        "event_sequence_index" : "event_sequence_index"
+    },
+
+    "columns": [
+        {
+            "name": "session_id",
+            "readable": "Session ID",
+            "description": "ID for the play session",
+            "type": "str"
+        },
+        {
+            "name": "user_id",
+            "readable": "Field Day User ID",
+            "description": "The player's generated user code",
+            "type": "str"
+        },
+        {
+            "name": "user_data",
+            "readable": "User Data",
+            "description": "A record of user-specific data",
+            "type": "json"
+        },
+        {
+            "name": "client_time",
+            "readable": "Client Time",
+            "description": "UTC timestamp of when event was sent by the client",
+            "type": "datetime"
+        },
+        {
+            "name": "client_offset",
+            "readable": "Client Time Offset",
+            "description": "Offset of client's local datetime from GMT",
+            "type": "int"
+        },
+        {
+            "name": "server_time",
+            "readable": "Server Time",
+            "description": "Date & time when event was received by the server",
+            "type": "datetime"
+        },
+        {
+            "name": "event_name",
+            "readable": "Event Name",
+            "description": "The name of the event",
+            "type": "str"
+        },
+        {
+            "name": "event_data",
+            "readable": "Event Data",
+            "description": "A dictionary recording event-specific data for the given event",
+            "type": "json"
+        },
+        {
+            "name": "event_source",
+            "readable": "Event Source",
+            "description": "Whether the event was a GAME event (created by game) or GENERATED event (created by post-processing)",
+            "type": "str"
+        },
+        {
+            "name": "game_state",
+            "readable": "Game State",
+            "description": "A dictionary recording information about the game's state when the event occurred",
+            "type": "json"
+        },
+        {
+            "name": "app_version",
+            "readable": "Application/Game Version",
+            "description": "The version of the application (game) that generated the data",
+            "type": "int"
+        },
+        {
+            "name": "app_branch",
+            "readable": "App Branch",
+            "description": "The branch of the game version that sent the event",
+            "type": "str"
+        },
+        {
+            "name": "log_version",
+            "readable": "Logging Version",
+            "description": "The version of the logging code that generated the data",
+            "type": "int"
+        },
+        {
+            "name": "event_sequence_index",
+            "readable": "Event Sequnce Index",
+            "description": "Indicates the order in which events occurred in the gameplay session",
+            "type": "int"
+        }
+    ]
+}

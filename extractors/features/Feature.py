@@ -38,7 +38,7 @@ class Feature(Extractor):
         """
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
@@ -51,6 +51,16 @@ class Feature(Extractor):
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
         """List of ExtractionMode supported by the Feature.
+
+        Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION]
+
+    @staticmethod
+    def FeatureDependencyModes() -> List[ExtractionMode]:
+        """List of ExtractionModes .
 
         Overridden from Extractor's version of the function, only makes the Feature-related modes supported.
         :return: _description_

@@ -26,7 +26,7 @@ class PerCountFeature(Feature):
     def _validateEventCountIndex(self, event:Event):
         pass
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
@@ -52,6 +52,7 @@ class PerCountFeature(Feature):
     # *** PRIVATE METHODS ***
 
     def _validateEvent(self, event:Event):
+       
         return (
             self._validateVersion(event.LogVersion)
         and self._validateEventType(event_type=event.EventName)
