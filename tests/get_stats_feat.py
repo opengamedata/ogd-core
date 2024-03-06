@@ -4,7 +4,7 @@ import math
 import pandas as pd
 from pathlib import Path
 from ogd.core.schemas.tables.TableSchema import TableSchema
-from ogd.core.games.LAKELAND.LakelandExtractor import LakelandExtractor
+from ogd.games.LAKELAND.LakelandExtractor import LakelandExtractor
 from realtime.ModelManager import ModelManager
 from ogd.core.schemas.games.GameSchema import GameSchema
 
