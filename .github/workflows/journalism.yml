@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
-    - name: Get OpenConnect
-      run: sudo apt-get -q update && sudo apt-get -q install openconnect
+    # - name: Get OpenConnect
+    #   run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
     - name: Set up Cloud SDK
