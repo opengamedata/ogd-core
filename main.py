@@ -17,7 +17,6 @@ from typing import Any, Dict, Optional, Set, Tuple
 # import 3rd-party libraries
 
 # import local files
-from utils.Logger import Logger
 from config.config import settings
 from interfaces.DataInterface import DataInterface
 from interfaces.CSVInterface import CSVInterface
@@ -233,10 +232,11 @@ def getDateRange() -> Tuple[datetime, datetime]:
 
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
-# Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
-games_folder : Path = Path("./games")
 config = ConfigSchema(name="config.py", all_elements=settings)
+Logger.InitializeLogger(level=config.DebugLevel, use_logfile=config.UseLogFile)
+# Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
 # set up parent parsers with arguments for each class of command
+games_folder : Path = Path("./games")
 games_list = [name.upper() for name in os.listdir(games_folder) if (os.path.isdir(games_folder / name) and name != "__pycache__")]
 game_parser = argparse.ArgumentParser(add_help=False)
 game_parser.add_argument("game", type=str.upper, choices=games_list,
