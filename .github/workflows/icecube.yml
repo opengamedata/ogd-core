@@ -2,8 +2,10 @@
 name: Icecube Exporter CI Test
 on:
   push:
+    branches-ignore:
+    - 'ogd-packaging'
     paths:
-    - 'games/ICECUBE/**'
+    - 'src/ogd/core/games/ICECUBE/**'
     - '.github/workflows/icecube.yml'
     - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
