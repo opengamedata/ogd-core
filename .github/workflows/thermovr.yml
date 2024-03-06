@@ -2,8 +2,6 @@
 name: ThermoVR Exporter CI Test
 on:
   push:
-    branches-ignore:
-    - 'ogd-packaging'
     paths:
     - 'src/ogd/core/games/THERMOVR/**'
     - '.github/workflows/thermovr.yml'
