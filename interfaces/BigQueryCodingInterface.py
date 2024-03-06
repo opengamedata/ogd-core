@@ -9,6 +9,7 @@ from coding.Code import Code
 from coding.Coder import Coder
 from interfaces.CodingInterface import CodingInterface
 from schemas.IDMode import IDMode
+from schemas.configs.ConfigSchema import ConfigSchema
 from utils.Logger import Logger
 
 # TODO: see about merging this back into BigQueryInterface for a unified interface.
@@ -17,10 +18,10 @@ class BigQueryCodingInterface(CodingInterface):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_id:str, settings):
+    def __init__(self, game_id:str, config:ConfigSchema):
         super().__init__()
         self._game_id : str = game_id
-        self._settings = settings
+        self._settings = config
         self.Open()
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

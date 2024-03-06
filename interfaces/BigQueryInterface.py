@@ -7,7 +7,7 @@ from typing import Dict, List, Tuple, Optional
 # import locals
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
-from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.GameSourceSchema import GameSourceSchema
 from schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
 from utils.Logger import Logger
 
@@ -111,20 +111,14 @@ class BigQueryInterface(DataInterface):
     def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
         if id_mode==IDMode.SESSION:
             id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"""
-                WHERE session_id IN ({id_string})
-            """
+            where_clause = f"WHERE session_id IN ({id_string})"
         elif id_mode==IDMode.USER:
             id_string = ','.join([f"'{x}'" for x in id_list])
-            where_clause = f"""
-                WHERE user_id IN ({id_string})
-            """
+            where_clause = f"WHERE user_id IN ({id_string})"
         else:
             Logger.Log(f"Invalid ID mode given (name={id_mode.name}, val={id_mode.value}), defaulting to session mode.", logging.WARNING, depth=3)
             id_string = ','.join([f"{x}" for x in id_list])
-            where_clause = f"""
-                WHERE session_id IN ({id_string})
-            """
+            where_clause = f"WHERE session_id IN ({id_string})"
         query = f"""
             SELECT MIN(server_time), MAX(server_time)
             FROM `{self.DBPath()}`
@@ -132,11 +126,14 @@ class BigQueryInterface(DataInterface):
         """
         Logger.Log(f"Running query for dates from IDs:\n{query}", logging.DEBUG, depth=3)
         data = list(self._client.query(query))
+        Logger.Log(f"...Query yielded results:\n{data}", logging.DEBUG, depth=3)
         ret_val : Dict[str, datetime] = {}
         if len(data) == 1:
             dates = data[0]
             if len(dates) == 2 and dates[0] is not None and dates[1] is not None:
-                ret_val = {'min':datetime.strptime(dates[0], "%m-%d-%Y %H:%M:%S"), 'max':datetime.strptime(dates[1], "%m-%d-%Y %H:%M:%S")}
+                _min = dates[0] if type(dates[0]) == datetime else datetime.strptime(str(dates[0]), "%m-%d-%Y %H:%M:%S")
+                _max = dates[1] if type(dates[1]) == datetime else datetime.strptime(str(dates[1]), "%m-%d-%Y %H:%M:%S")
+                ret_val = {'min':_min, 'max':_max}
             else:
                 Logger.Log(f"BigQueryInterface query did not give both a min and a max, setting both to 'now'", logging.WARNING, depth=3)
                 ret_val = {'min':datetime.now(), 'max':datetime.now()}
@@ -221,6 +218,6 @@ class BigQueryInterface(DataInterface):
             SELECT *
             FROM `{self.DBPath()}`
             {where_clause}
-            ORDER BY `user_id`, `session_id`, `server_time` ASC
+            ORDER BY `user_id`, `session_id`, `event_sequence_index` ASC
         """
         return query

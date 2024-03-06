@@ -3,7 +3,7 @@
 
     "game_state" : {
         "gameLevel" : {
-            "type" : "string",
+            "type" : "str",
             "description" : "The name of the level in which the event occurred."
         },
         "gameTime" : {
@@ -173,6 +173,10 @@
         "settings": {
             "description": "(code=2001), TODO",
             "event_data": {
+                "itemID": {
+                    "type": "int",
+                    "description": "TODO"
+                },
                 "playTime": {
                     "type": "?int?",
                     "description": "Amount of active play time research intended for players, as set in DREAM. Not counting instruction screens."
@@ -232,7 +236,7 @@
                     "description": "Rule that will apply in the following wave"
                 },
                 "ruleOnScreen": {
-                    "type": "enum(basic, radiation, black_hole)",
+                    "type": "str",
                     "description": "Specific rule being shown on the screen (could be the basic rule, radiation, or black hole)"
                 }
             }
@@ -250,7 +254,7 @@
             "description": "(code=3007), TODO",
             "event_data": {
                 "activeFood": {
-                    "type": "str",
+                    "type": "enum(FOOD, DRINK)",
                     "description": "The food item active at the start of that level. Randomly assigned."
                 }
             }
@@ -292,7 +296,7 @@
                     "description": "Eye (red/blue) of alien as identified by alienID"
                 },
                 "desiredFood": {
-                    "type": "?bool?",
+                    "type": "enum(FOOD, DRINK, BOTH)",
                     "description": "Whether the alien requires the food or drink during that level"
                 },
                 "waveType": {
@@ -356,11 +360,11 @@
             "description": "(code=4001), TODO",
             "event_data": {
                 "previousFood": {
-                    "type": "str",
+                    "type": "enum(FOOD, DRINK)",
                     "description": "TODO"
                 },
                 "currentFood": {
-                    "type": "str",
+                    "type": "enum(FOOD, DRINK)",
                     "description": "TODO"
                 }
             }
@@ -373,11 +377,11 @@
                     "description": "Count of alien, represents order of appearance."
                 },
                 "foodShot": {
-                    "type": "str",
+                    "type": "enum(FOOD, DRINK)",
                     "description": "Item player shot"
                 },
                 "foodNeeded": {
-                    "type": "str",
+                    "type": "enum(FOOD, DRINK, BOTH)",
                     "description": "Item the rules identified as correct for that alien"
                 }
             }
@@ -398,7 +402,7 @@
                     "description": "Eye color (red/blue) of alien as identified by alienID"
                 },
                 "hitType": {
-                    "type": "enum(HIT, WRONG, MISSED)",
+                    "type": "enum(HIT, SHOT, WRONG, MISSED)",
                     "description": "Label for HIT, WRONG, MISSED if food is correct, wrong, or missed"
                 },
                 "speed": {
@@ -415,15 +419,15 @@
                     "description": "Count of alien, represents order of appearance "
                 },
                 "reactionTime": {
-                    "type": "int",
+                    "type": "float",
                     "description": "Time between when the first pixel of the alien appears onscreen, vs when the player shoots"
                 },
                 "eyeReactionTime": {
-                    "type": "int",
+                    "type": "float",
                     "description": "Time between when the first pixel of the alien's eyes appear onscreen, vs when the player shoots"
                 },
                 "afterHighlightedReactionTime": {
-                    "type": "int",
+                    "type": "float",
                     "description": "Time between when the alien was highlighted by the player, vs when the player shoots"
                 }
             }
@@ -444,7 +448,7 @@
                     "description": "Y position where alien was hit, 0,0 is lower left corner. This will be the same for all aliens."
                 },
                 "oldReactionTime": {
-                    "type": "int",
+                    "type": "float",
                     "description": "Time between when top of alien was an alien's length onscreen, and when it was hit by a food object"
                 }
             }
@@ -466,7 +470,7 @@
                 },
                 "changeInDifficulty": {
                     "type": "enum(Initial, Decrease, Same, Increase, Final)",
-                    "description": "(Initial, Decrease, Same, Increase, Final)"
+                    "description": "(INITIAL, DECREASE, SAME, INCREASE, FINAL)"
                 }
             }
         },
@@ -484,7 +488,11 @@
                 },
                 "optionSelected": {
                     "type": "int",
-                    "description": "Id defining the selected option (1, 2, 3, 4, 5)"
+                    "description": "ID defining the selected option (1, 2, 3, 4, 5)"
+                },
+                "optionText": {
+                    "type": "str",
+                    "description": "The actual text content of the survey item selected"
                 }
             }
         },
@@ -495,9 +503,13 @@
                     "type": "str",
                     "description": "Name of the survey (i.e. Difficulty, NextLevelAdaptable)"
                 },
-                "optionSelected": {
+                "optionSubmitted": {
                     "type": "int",
-                    "description": "Id defining the selected option (1, 2, 3, 4, 5)"
+                    "description": "ID defining the submitted option (1, 2, 3, 4, 5)"
+                },
+                "optionText": {
+                    "type": "str",
+                    "description": "The actual text content of the survey item selected"
                 }
             }
         },

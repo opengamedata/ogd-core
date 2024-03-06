@@ -10,7 +10,7 @@ from interfaces.Interface import Interface
 from schemas.Event import Event
 from schemas.IDMode import IDMode
 from schemas.tables.TableSchema import TableSchema
-from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.GameSourceSchema import GameSourceSchema
 from utils.Logger import Logger
 
 class DataInterface(Interface):
