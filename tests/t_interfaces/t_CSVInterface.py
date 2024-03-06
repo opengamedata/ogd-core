@@ -4,8 +4,8 @@ from pathlib import Path
 from unittest import TestCase
 from zipfile import ZipFile
 # import locals
-from interfaces.CSVInterface import CSVInterface
-from schemas.configs.GameSourceSchema import GameSourceSchema
+from ogd.core.interfaces.CSVInterface import CSVInterface
+from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 
 class t_CSVInterface(TestCase):
 
