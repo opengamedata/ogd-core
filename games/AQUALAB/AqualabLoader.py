@@ -125,6 +125,14 @@ class AqualabLoader(ExtractorLoader):
             ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
         elif feature_type == "TotalModelingTime":
             ret_val = TotalModelingTime.TotalModelingTime(params=extractor_params)
+        elif feature_type == "TotalKelpTime":
+            ret_val = TotalKelpTime.TotalKelpTime(params=extractor_params)
+        elif feature_type == "TotalCoralTime":
+            ret_val = TotalCoralTime.TotalCoralTime(params=extractor_params)
+        elif feature_type == "TotalArcticTime":
+            ret_val = TotalArcticTime.TotalArcticTime(params=extractor_params)
+        elif feature_type == "TotalBayouTime":
+            ret_val = TotalBayouTime.TotalBayouTime(params=extractor_params)
         elif feature_type == "TotalGuideCount":
             ret_val = TotalGuideCount.TotalGuideCount(params=extractor_params)
         elif feature_type == "TotalPlayTime":
