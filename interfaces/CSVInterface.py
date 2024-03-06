@@ -7,7 +7,7 @@ from typing import Any, Dict, IO, List, Tuple, Optional
 ## import local files
 from interfaces.DataInterface import DataInterface
 from schemas.IDMode import IDMode
-from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.GameSourceSchema import GameSourceSchema
 from schemas.tables.TableSchema import TableSchema
 from utils.Logger import Logger
 
@@ -54,16 +54,21 @@ class CSVInterface(DataInterface):
         max_time = pd.to_datetime(self._data['timestamp'].max())
         return {'min':min_time, 'max':max_time}
 
-    def _rowsFromIDs(self, id_list: List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> List[Tuple]:
+    def _rowsFromIDs(self, id_list: List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None, exclude_rows:Optional[List[str]]=None) -> List[Tuple]:
+        ret_val : List[Tuple] = []
         if self.IsOpen() and not self._data.empty:
+            _data : pd.DataFrame
             if id_mode == IDMode.SESSION:
-                return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
+                _data = self._data.loc[self._data['session_id'].isin(id_list)]
             elif id_mode == IDMode.USER:
-                return list(self._data.loc[self._data['user_id'].isin(id_list)].itertuples(index=False, name=None))
+                _data = self._data.loc[self._data['user_id'].isin(id_list)]
             else:
-                return list(self._data.loc[self._data['session_id'].isin(id_list)].itertuples(index=False, name=None))
-        else:
-            return []
+                _data = self._data.loc[self._data['session_id'].isin(id_list)]
+            if exclude_rows is not None:
+                _mask = _data[_data['event_name'].isin(exclude_rows)]
+                _data = _data.drop(~_mask)
+            ret_val = list(_data.itertuples(index=False, name=None))
+        return ret_val
 
     def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]]=None) -> List[str]:
         if not self._data.empty:

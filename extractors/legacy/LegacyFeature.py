@@ -87,12 +87,14 @@ class LegacyFeature(Feature):
         # features that weren't in the schema (by misreferencing actual features), and they were appended to the end of
         # the feature list.
         for key in self._features.FeatureNames:
-            key_type = type(self._features.getValByName(key))
-            if key_type is type({}) or key_type is type(defaultdict()):
-                # if it's a dictionary, expand.
-                column_vals.extend([_format(self._features.getValByIndex(key, num)) for num in self._features.getValByName(feature_name=key).keys()])
-            else:
-                column_vals.append(_format(self._features.getValByName(key)))
+            _feature = self._features.getValByName(feature_name=key)
+            if _feature is not None:
+                key_type = type(_feature)
+                if key_type is type({}) or key_type is type(defaultdict()):
+                    # if it's a dictionary, expand.
+                    column_vals.extend([_format(self._features.getValByIndex(key, num)) for num in _feature.keys()])
+                else:
+                    column_vals.append(_format(self._features.getValByName(key)))
         return column_vals
 
     # *** PUBLIC STATICS ***
@@ -165,7 +167,7 @@ class LegacyFeature(Feature):
         #  @param feature_name The name of the feature to retrieve
         #  @param index        The count index of the specific value, e.g. the level
         #  @return             The value stored for the given feature at given index.
-        def getValByIndex(self, feature_name: str, index: int) -> Any:
+        def getValByIndex(self, feature_name: str, index: int) -> Optional[Any]:
             if self._has_feature(feature_name):
                 feature = self._features[feature_name]
                 if type(feature) is dict and index in feature.keys():
@@ -182,7 +184,7 @@ class LegacyFeature(Feature):
         #  @param index        The count index of the desired value, e.g. the level
         #  @return             The feature stored for the given feature at given index.
         #                      This feature is a dictionary with a "val" and "prefix"
-        def getFeatureByIndex(self, feature_name: str, index: int) -> Any:
+        def getFeatureByIndex(self, feature_name: str, index: int) -> Optional[Any]:
             if self._has_feature(feature_name):
                 feature = self._features[feature_name]
                 if type(feature) is dict and index in feature.keys():
@@ -199,7 +201,7 @@ class LegacyFeature(Feature):
         #
         #  @param feature_name The name of the feature to retrieve
         #  @return             The value stored for the given feature.
-        def getValByName(self, feature_name: str) -> Any:
+        def getValByName(self, feature_name: str) -> Optional[Any]:
             if self._has_feature(feature_name):
                 return self._features[feature_name]
             else:

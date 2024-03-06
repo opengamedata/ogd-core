@@ -17,7 +17,6 @@ from typing import Any, Dict, Optional, Set, Tuple
 # import 3rd-party libraries
 
 # import local files
-from utils.Logger import Logger
 from config.config import settings
 from interfaces.DataInterface import DataInterface
 from interfaces.CSVInterface import CSVInterface
@@ -33,7 +32,7 @@ from schemas.IDMode import IDMode
 from schemas.games.GameSchema import GameSchema
 from schemas.tables.TableSchema import TableSchema
 from schemas.configs.ConfigSchema import ConfigSchema
-from schemas.configs.GameSourceMapSchema import GameSourceSchema
+from schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd_requests.Request import Request, ExporterRange
 from ogd_requests.RequestResult import RequestResult, ResultStatus
 from utils.Logger import Logger
@@ -160,13 +159,13 @@ def genRequest(config:ConfigSchema, with_events:bool, with_features:bool) -> Req
             start_date, end_date = getDateRange()
             range = ExporterRange.FromDateRange(source=interface, date_min=start_date, date_max=end_date)
     # 3. set up the outerface, based on the range and dataset_id.
-    _cfg = GameSourceSchema(name="FILE DEST", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+    _cfg = GameSourceSchema(name="FILE DEST", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
     file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=range.DateRange,
                                   file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
     outerfaces : Set[DataOuterface] = {file_outerface}
     # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
     if config.DebugLevel == "DEBUG":
-        _cfg = GameSourceSchema(name="DEBUG", all_elements={"SCHEMA":"OGD_EVENT_FILE", "DB_TYPE":"FILE"}, data_sources={})
+        _cfg = GameSourceSchema(name="DEBUG", all_elements={"database":"DEBUG", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
         outerfaces.add(DebugOuterface(game_id=args.game, config=_cfg, export_modes=export_modes))
 
     # 4. Once we have the parameters parsed out, construct the request.
@@ -226,17 +225,18 @@ def getDateRange() -> Tuple[datetime, datetime]:
     else:
         start_date = datetime.strptime(args.start_date, "%m/%d/%Y") if args.start_date is not None else today
         start_date = start_date.replace(hour=0, minute=0, second=0)
-        end_date   = datetime.strptime(args.end_date, "%m/%d/%Y") if args.end_date is not None else today
+        end_date   = datetime.strptime(args.end_date, "%m/%d/%Y") if args.end_date is not None else start_date
         end_date = end_date.replace(hour=23, minute=59, second=59)
         Logger.Log(f"Exporting from {str(start_date)} to {str(end_date)} of data for {args.game}...", logging.INFO)
     return (start_date, end_date)
 
 ## This section of code is what runs main itself. Just need something to get it
 #  started.
-# Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
-games_folder : Path = Path("./games")
 config = ConfigSchema(name="config.py", all_elements=settings)
+Logger.InitializeLogger(level=config.DebugLevel, use_logfile=config.UseLogFile)
+# Logger.Log(f"Running {sys.argv[0]}...", logging.INFO)
 # set up parent parsers with arguments for each class of command
+games_folder : Path = Path("./games")
 games_list = [name.upper() for name in os.listdir(games_folder) if (os.path.isdir(games_folder / name) and name != "__pycache__")]
 game_parser = argparse.ArgumentParser(add_help=False)
 game_parser.add_argument("game", type=str.upper, choices=games_list,
@@ -287,7 +287,7 @@ args : Namespace = parser.parse_args()
 
 success : bool
 if args is not None:
-    cmd = args.command.lower()
+    cmd = (args.command or "help").lower()
     if cmd == "export":
         success = RunExport(config=config, with_events=True, with_features=True)
     elif cmd == "export-events":

@@ -3,7 +3,7 @@
 
     "game_state" : {
         "gameLevel" : {
-            "type" : "string",
+            "type" : "str",
             "description" : "The name of the level in which the event occurred."
         },
         "gameTime" : {
@@ -21,8 +21,139 @@
     },
 
     "events": {
-        "start_level": {
-            "description": "Generally not exported by Al",
+        "region": {
+            "description": "(code=1500), TODO",
+            "event_data": {
+                "city": {
+                    "type": "str",
+                    "description": "TODO"
+                },
+                "region": {
+                    "type": "str",
+                    "description": "TODO"
+                },
+                "country": {
+                    "type": "str",
+                    "description": "TODO"
+                },
+                "zipCode": {
+                    "type": "int",
+                    "description": "TODO"
+                }
+            }
+        },
+        "welcome": {
+            "description": "(code=4500), It only happens the first time the game runs",
+            "event_data": {
+                "agreed": {
+                    "type": "?bool?",
+                    "description": "TODO"
+                },
+                "age": {
+                    "type": "int",
+                    "description": "TODO"
+                },
+                "deviceType": {
+                    "type": "?str?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_level_stats": {
+            "description": "(code=5500), TODO",
+            "event_data": {
+                "right": {
+                    "type": "?int?",
+                    "description": "TODO"
+                },
+                "wrong": {
+                    "type": "?int?",
+                    "description": "TODO"
+                },
+                "missed": {
+                    "type": "?int?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_game_stats": {
+            "description": "(code=5501), TODO",
+            "event_data": {
+                "right": {
+                    "type": "?int?",
+                    "description": "TODO"
+                },
+                "wrong": {
+                    "type": "?int?",
+                    "description": "TODO"
+                },
+                "missed": {
+                    "type": "?int?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_level_times": {
+            "description": "(code=5502), TODO",
+            "event_data": {
+                "playTime": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                },
+                "gameTime": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                },
+                "averageTimeRight": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                },
+                "averageTimeWrong": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_game_times": {
+            "description": "(code=5503), TODO",
+            "event_data": {
+                "playTime": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                },
+                "gameTime": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                },
+                "averageTimeRight": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                },
+                "averageTimeWrong": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_game_levels": {
+            "description": "(code=5504), TODO",
+            "event_data": {
+                "startLevel": {
+                    "type": "?str?",
+                    "description": "TODO"
+                },
+                "endLevel": {
+                    "type": "?str?",
+                    "description": "TODO"
+                },
+                "highestLevel": {
+                    "type": "?str?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "start_game": {
+            "description": "(code=1001), Generally not exported by Al",
             "event_data": {
                 "gameName": {
                     "type": "str",
@@ -31,7 +162,7 @@
             }
         },
         "gamescribe_created": {
-            "description": "Generally not exported by Al",
+            "description": "(code=1002), Generally not exported by Al",
             "event_data": {
                 "gamescribeMode": {
                     "type": "enum(trace, strict)",
@@ -40,8 +171,12 @@
             }
         },
         "settings": {
-            "description": "TODO",
+            "description": "(code=2001), TODO",
             "event_data": {
+                "itemID": {
+                    "type": "int",
+                    "description": "TODO"
+                },
                 "playTime": {
                     "type": "?int?",
                     "description": "Amount of active play time research intended for players, as set in DREAM. Not counting instruction screens."
@@ -49,7 +184,7 @@
             }
         },
         "survey_graphics_version": {
-            "description": "TODO",
+            "description": "(code=2050), TODO",
             "event_data": {
                 "difficulty": {
                     "type": "str",
@@ -62,12 +197,12 @@
             }
         },
         "main_menu_shown": {
-            "description": "TODO",
+            "description": "(code=3001), TODO",
             "event_data": {
             }
         },
         "level_menu_shown": {
-            "description": "This will never be jotted for Fall 2018, because we're not using the level menu",
+            "description": "(code=3002), This will never be jotted for Fall 2018, because we're not using the level menu",
             "event_data": {
                 "passedLevel": {
                     "type": "bool",
@@ -84,30 +219,30 @@
             }
         },
         "level_start": {
-            "description": "Called once the level starts, tutorial not included",
+            "description": "(code=3003), Called once the level starts, tutorial not included",
             "event_data": {
             }
         },
         "tutorial_start": {
-            "description": "gameTime for when the instructions began",
+            "description": "(code=3004), gameTime for when the instructions began",
             "event_data": {
             }
         },
         "change_of_rule": {
-            "description": "Jots when exactly the new instruction screen comes up",
+            "description": "(code=3005), Jots when exactly the new instruction screen comes up",
             "event_data": {
                 "waveType": {
                     "type": "str",
                     "description": "Rule that will apply in the following wave"
                 },
                 "ruleOnScreen": {
-                    "type": "enum(basic, radiation, black_hole)",
+                    "type": "str",
                     "description": "Specific rule being shown on the screen (could be the basic rule, radiation, or black hole)"
                 }
             }
         },
         "wave_start": {
-            "description": "Called every time a new wave of aliens starts (could be at the beginning of the level or after a rule change)",
+            "description": "(code=3006), Called every time a new wave of aliens starts (could be at the beginning of the level or after a rule change)",
             "event_data": {
                 "waveType": {
                     "type": "str",
@@ -116,16 +251,16 @@
             }
         },
         "starting_food": {
-            "description": "TODO",
+            "description": "(code=3007), TODO",
             "event_data": {
                 "activeFood": {
-                    "type": "str",
+                    "type": "enum(FOOD, DRINK)",
                     "description": "The food item active at the start of that level. Randomly assigned."
                 }
             }
         },
         "alien_spawn": {
-            "description": "TODO",
+            "description": "(code=3008), TODO",
             "event_data": {
                 "alienID": {
                     "type": "int",
@@ -146,7 +281,7 @@
             }
         },
         "alien_info": {
-            "description": "TODO",
+            "description": "(code=3009), TODO",
             "event_data": {
                 "alienID": {
                     "type": "int",
@@ -161,7 +296,7 @@
                     "description": "Eye (red/blue) of alien as identified by alienID"
                 },
                 "desiredFood": {
-                    "type": "?bool?",
+                    "type": "enum(FOOD, DRINK, BOTH)",
                     "description": "Whether the alien requires the food or drink during that level"
                 },
                 "waveType": {
@@ -171,7 +306,7 @@
             }
         },
         "summary_screen": {
-            "description": "TODO, gamescribe code 3050",
+            "description": "(code=3050), TODO",
             "event_data": {
                 "levelPoints": {
                     "type": "int",
@@ -192,7 +327,7 @@
             }
         },
         "leaderboard_shown": {
-            "description": "TODO, gamescribe code 3051",
+            "description": "(code=3051), TODO",
             "event_data": {
                 "totalPoints": {
                     "type": "int",
@@ -213,7 +348,7 @@
             }
         },
         "survey_shown": {
-            "description": "TODO",
+            "description": "(code=3052), TODO",
             "event_data": {
                 "surveyType": {
                     "type": "str",
@@ -222,37 +357,37 @@
             }
         },
         "food_switch": {
-            "description": "TODO",
+            "description": "(code=4001), TODO",
             "event_data": {
                 "previousFood": {
-                    "type": "str",
+                    "type": "enum(FOOD, DRINK)",
                     "description": "TODO"
                 },
                 "currentFood": {
-                    "type": "str",
+                    "type": "enum(FOOD, DRINK)",
                     "description": "TODO"
                 }
             }
         },
         "alien_shot": {
-            "description": "TODO",
+            "description": "(code=4002), TODO",
             "event_data": {
                 "alienID": {
                     "type": "int",
                     "description": "Count of alien, represents order of appearance."
                 },
                 "foodShot": {
-                    "type": "str",
+                    "type": "enum(FOOD, DRINK)",
                     "description": "Item player shot"
                 },
                 "foodNeeded": {
-                    "type": "str",
+                    "type": "enum(FOOD, DRINK, BOTH)",
                     "description": "Item the rules identified as correct for that alien"
                 }
             }
         },
         "alien_hit_type_speed": {
-            "description": "TODO",
+            "description": "(code=4003), TODO",
             "event_data": {
                 "alienID": {
                     "type": "int",
@@ -267,7 +402,7 @@
                     "description": "Eye color (red/blue) of alien as identified by alienID"
                 },
                 "hitType": {
-                    "type": "enum(HIT, WRONG, MISSED)",
+                    "type": "enum(HIT, SHOT, WRONG, MISSED)",
                     "description": "Label for HIT, WRONG, MISSED if food is correct, wrong, or missed"
                 },
                 "speed": {
@@ -277,28 +412,28 @@
             }
         },
         "alien_hit_reaction_times": {
-            "description": "TODO",
+            "description": "(code=4004), TODO",
             "event_data": {
                 "alienID": {
                     "type": "int",
                     "description": "Count of alien, represents order of appearance "
                 },
                 "reactionTime": {
-                    "type": "int",
+                    "type": "float",
                     "description": "Time between when the first pixel of the alien appears onscreen, vs when the player shoots"
                 },
                 "eyeReactionTime": {
-                    "type": "int",
+                    "type": "float",
                     "description": "Time between when the first pixel of the alien's eyes appear onscreen, vs when the player shoots"
                 },
                 "afterHighlightedReactionTime": {
-                    "type": "int",
+                    "type": "float",
                     "description": "Time between when the alien was highlighted by the player, vs when the player shoots"
                 }
             }
         },
         "alien_hit_pos_time": {
-            "description": "TODO",
+            "description": "(code=4005), TODO",
             "event_data": {
                 "alienID": {
                     "type": "int",
@@ -313,13 +448,13 @@
                     "description": "Y position where alien was hit, 0,0 is lower left corner. This will be the same for all aliens."
                 },
                 "oldReactionTime": {
-                    "type": "int",
+                    "type": "float",
                     "description": "Time between when top of alien was an alien's length onscreen, and when it was hit by a food object"
                 }
             }
         },
         "alien_hit_score": {
-            "description": "TODO",
+            "description": "(code=4006), TODO",
             "event_data": {
                 "alienID": {
                     "type": "str",
@@ -335,17 +470,17 @@
                 },
                 "changeInDifficulty": {
                     "type": "enum(Initial, Decrease, Same, Increase, Final)",
-                    "description": "(Initial, Decrease, Same, Increase, Final)"
+                    "description": "(INITIAL, DECREASE, SAME, INCREASE, FINAL)"
                 }
             }
         },
         "leaderboard_closed": {
-            "description": "As soon as they closed the leaderboard",
+            "description": "(code=4050), As soon as they closed the leaderboard",
             "event_data": {
             }
         },
         "survey_option_selection": {
-            "description": "TODO",
+            "description": "(code=4051), TODO",
             "event_data": {
                 "surveyType": {
                     "type": "str",
@@ -353,25 +488,33 @@
                 },
                 "optionSelected": {
                     "type": "int",
-                    "description": "Id defining the selected option (1, 2, 3, 4, 5)"
+                    "description": "ID defining the selected option (1, 2, 3, 4, 5)"
+                },
+                "optionText": {
+                    "type": "str",
+                    "description": "The actual text content of the survey item selected"
                 }
             }
         },
         "survey_submission": {
-            "description": "TODO",
+            "description": "(code=4052), TODO",
             "event_data": {
                 "surveyType": {
                     "type": "str",
                     "description": "Name of the survey (i.e. Difficulty, NextLevelAdaptable)"
                 },
-                "optionSelected": {
+                "optionSubmitted": {
                     "type": "int",
-                    "description": "Id defining the selected option (1, 2, 3, 4, 5)"
+                    "description": "ID defining the submitted option (1, 2, 3, 4, 5)"
+                },
+                "optionText": {
+                    "type": "str",
+                    "description": "The actual text content of the survey item selected"
                 }
             }
         },
         "micro_adaptation": {
-            "description": "TODO",
+            "description": "(code=5001), TODO",
             "event_data": {
                 "difficulty": {
                     "type": "int",
@@ -384,7 +527,7 @@
             }
         },
         "macro_adaptation": {
-            "description": "TODO",
+            "description": "(code=5050), TODO",
             "event_data": {
                 "difficulty": {
                     "type": "enum(Easy, Normal, Hard)",

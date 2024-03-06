@@ -215,7 +215,10 @@ class ExportManager:
         self._try_update(as_str=as_str)
         ret_val = self._latest_values.get('sessions', [])
         time_delta = datetime.now() - start
-        Logger.Log(f"Time to retrieve Session lines for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} lines", logging.INFO, depth=2)
+        if ret_val is not None:
+            Logger.Log(f"Retrieval time for slice [{slice_num}/{slice_count}]: {time_delta} to get {len(ret_val)} events", logging.INFO, depth=2)
+        else:
+            Logger.Log(f"Could not retrieve data set for slice [{slice_num}/{slice_count}].", logging.WARN, depth=2)
         return ret_val
 
     def _processSlice(self, next_slice_data:List[Event], request: Request, ids:List[str]):

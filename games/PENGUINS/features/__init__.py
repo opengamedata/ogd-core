@@ -6,8 +6,8 @@ __all__ = [
     "GazeDuration",
     "GazeCount",
     "SnowBallDuration",
-    "RingChimesCount",
-    "RegionWaddleCount",
+    # "RingChimesCount",
+    "WaddlePerRegion",
     "EatFishCount",
     "PickupRockCount",
     "EggLostCount",
@@ -15,7 +15,9 @@ __all__ = [
     "PlayerInactiveAvgDuration",
     "MirrorWaddleDuration",
     "WaddlePerRegion",
-    "RegionDuration"
+    "RegionDuration",
+    "ActivityCompleted",
+    "ActivityDuration"
 ]
 # aggregated features
 
@@ -26,7 +28,6 @@ from . import GazeDuration
 from . import GazeCount
 from . import SnowBallDuration
 from . import RingChimesCount
-from . import RegionWaddleCount
 from . import EatFishCount
 from . import PickupRockCount
 from . import EggLostCount
@@ -37,4 +38,6 @@ from . import MirrorWaddleDuration
 from . import RegionEnterCount
 from . import WaddlePerRegion
 from . import RegionDuration
+from . import ActivityCompleted
+from . import ActivityDuration
 
