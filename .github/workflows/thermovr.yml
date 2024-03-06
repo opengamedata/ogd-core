@@ -7,7 +7,7 @@ on:
     - '.github/workflows/thermovr.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
-  Journalism_CI:
+  ThermoVR_CI:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
