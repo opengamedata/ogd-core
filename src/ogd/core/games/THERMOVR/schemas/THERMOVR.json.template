@@ -806,7 +806,7 @@
                     "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
                 }
             }
-        },
+        }
     },
 
     "features": {
