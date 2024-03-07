@@ -688,7 +688,7 @@
         "click_select_task": {
             "description": "When the player presses the button to change to a new task in the lab",
             "event_data": {
-                "section" : {
+                "task" : {
                     "type": "Dict[str, Any]",
                     "details": {
                         "category":"enum(TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
@@ -894,6 +894,105 @@
                 "hand": {
                     "type": "enum(LEFT, RIGHT, MOUSE)",
                     "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_open_word_bank": {
+            "description": "When the player presses the button to open the bank of words for a 'word bank' quiz",
+            "event_data": {
+                "quiz_task" : {
+                    "type": "Dict[str, Any]",
+                    "details": {
+                        "category":"enum(MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
+                        "lab_name":"str",
+                        "section_number":"str",
+                        "task_number":"int",
+                        "is_active":"bool",
+                        "is_complete":"bool",
+                        "available_tools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
+                        "prompts":"List[str]",
+                        "options":"List[str | float]",
+                        "selected_options":"List[str | float]",
+                        "correct_answer":"float | str | List[float] | List[str]"
+                    },
+                    "description": "A list of the tasks for the current lab section shown to the player (not including any tasks that are available but undisplayed)."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "word_bank_displayed": {
+            "description": "When the system displays the bank of available words in a 'word bank' quiz",
+            "event_data": {
+                "words": {
+                    "type": "List[str]",
+                    "description": "The list of words available to be chosen from the bank."
+                }
+            }
+        },
+        "word_bank_closed": {
+            "description": "When the system closes the bank of available words in a 'word bank' quiz, typically after the player performed a `click_select_answer`",
+            "event_data": {
+                "words": {
+                    "type": "List[str]",
+                    "description": "The list of words available to be chosen from the bank."
+                },
+                "selected_word": {
+                    "type": "str",
+                    "description": "The word the player selected before the bank closed."
+                }
+            }
+        },
+        "complete_lab": {
+            "description": "When the player completes the last incomplete task of the last incomplete section of a lab",
+            "event_data": {
+                "lab" : {
+                    "type": "Dict[str, int] | null",
+                    "details": {
+                        "lab_name":"str",
+                        "author":"str",
+                        "percent_complete":"float",
+                        "sections": "Dict[str, Any]"
+                    },
+                    "description": "A description of the lab that was started/resumed upon entering lab mode, or null if no lab was start and the player was shown the lab menu instead."
+                }
+            }
+        },
+        "complete_section": {
+            "description": "When the player completes the last incomplete task of a lab section",
+            "event_data": {
+                "section" : {
+                    "type": "Dict[str, Any]",
+                    "details": {
+                        "lab_name" : "str",
+                        "section_number" : "int",
+                        "description" : "str",
+                        "is_complete" : "bool",
+                        "is_active" : "bool",
+                        "tasks" : "List[Dict]"
+                    },
+                    "description" : "Details of the section the player selected, including task sub-objects."
+                }
+            }
+        },
+        "complete_task": {
+            "description": "When the player completes the last incomplete task of the last incomplete section of a lab",
+            "event_data": {
+                "task" : {
+                    "type": "Dict[str, Any]",
+                    "details": {
+                        "category":"enum(TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
+                        "lab_name":"str",
+                        "section_number":"str",
+                        "task_number":"int",
+                        "is_active":"bool",
+                        "is_complete":"bool",
+                        "available_tools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
+                        "prompts":"List[str]"
+                    },
+                    "description" : "Details of the task the player selected."
                 }
             }
         }
