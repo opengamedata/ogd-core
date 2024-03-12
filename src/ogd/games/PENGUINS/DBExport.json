@@ -1,4 +1,5 @@
 {
+   "log_versions" : [9],
    "regions": [
       {
          "name": "HillUp",
