@@ -189,12 +189,12 @@ class AqualabLoader(ExtractorLoader):
         return self._job_map
 
     @staticmethod
-    def GetAqualabJobCount(db_export_path:Path=Path(".") / "ogd" / "core" / "games" / "AQUALAB"):
+    def GetAqualabJobCount(db_export_path:Path=Path(".") / "ogd" / "games" / "AQUALAB"):
         db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
         return len(db_export.get("jobs", []))
 
     @staticmethod
-    def GetAqualabTaskCount(db_export_path:Path=Path(".") / "ogd" / "core" / "games" / "AQUALAB"):
+    def GetAqualabTaskCount(db_export_path:Path=Path(".") / "ogd" / "games" / "AQUALAB"):
         db_export = loadJSONFile(filename="DBExport.json", path=db_export_path)
         list_o_lists = [job.get('tasks', []) for job in db_export.get('jobs', [])]
         # jobs_to_task_cts = [f"{job.get('id')}: {len(job.get('tasks', []))}" for job in db_export.get('jobs', [])]

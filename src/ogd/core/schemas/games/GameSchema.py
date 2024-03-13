@@ -40,7 +40,7 @@ class GameSchema(Schema):
         :type schema_path: str, optional
         """
         # Give schema_path a default, don't think we can use game_id to construct it directly in the function header (so do it here if None)
-        schema_path = schema_path or Path("./") / "ogd" / "core" / "games" / game_id / "schemas"
+        schema_path = schema_path or Path("./") / "ogd" / "games" / game_id / "schemas"
     # 1. define instance vars
         self._event_list             : List[EventSchema] = []
         self._detector_map           : Dict[str, Dict[str, DetectorSchema]] = {'perlevel':{}, 'per_count':{}, 'aggregate':{}}
