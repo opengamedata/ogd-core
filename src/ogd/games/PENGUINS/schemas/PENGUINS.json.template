@@ -48,7 +48,6 @@
                     "type": "enum(HOME_MODE, ...)",
                     "description": "The game mode that the player launched"
                 }
-                }
             }
         },
         "open_menu": {
