@@ -35,6 +35,22 @@
         }
     },
     "events": {
+        "session_start": {
+            "description": "When the app is started and the gameplay session is assigned a session ID. The player has not necessarily begun the game itself yet.",
+            "event_data": {
+                "random_seed" : "The random seed used for all random number/position/rotation generation in the game."
+            }
+        },
+        "game_start": {
+            "description": "When a new game is started",
+            "event_data": {
+                "mode": {
+                    "type": "enum(HOME_MODE, ...)",
+                    "description": "The game mode that the player launched"
+                }
+                }
+            }
+        },
         "open_menu": {
             "description": "When the player opens the game menu",
             "event_data": {}
@@ -405,19 +421,6 @@
                 "to_position_z": {
                     "type": "float",
                     "description": "The new z-position of the skua that moved"
-                }
-            }
-        },
-        "application_start": {
-            "description": "Event when the application begins to run. The player has not necessarily begun the game itself yet.",
-            "event_data": {}
-        },
-        "begin": {
-            "description": "Event when the player actually starts the game itself.",
-            "event_data": {
-                "mode": {
-                    "type": "enum(home_mode, ...)",
-                    "description": "The game mode that the player launched"
                 }
             }
         },
