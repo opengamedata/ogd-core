@@ -1,44 +1,47 @@
 {
-    "level_range": { "min":1, "max":6 },
-    "game_state" : {
-        "seconds_from_launch" : {
-            "type" : "float",
-            "description" : "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
+    "level_range": {
+        "min": 1,
+        "max": 6
+    },
+    "game_state": {
+        "seconds_from_launch": {
+            "type": "float",
+            "description": "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
         },
-        "posX" : {
-            "type" : "float",
-            "description" : "The current x-position of ______ at the moment the event occurred."
+        "posX": {
+            "type": "float",
+            "description": "The current x-position of ______ at the moment the event occurred."
         },
-        "posY" : {
-            "type" : "float",
-            "description" : "The current y-position of ______ at the moment the event occurred."
+        "posY": {
+            "type": "float",
+            "description": "The current y-position of ______ at the moment the event occurred."
         },
-        "posZ" : {
-            "type" : "float",
-            "description" : "The current z-position of ______ at the moment the event occurred."
+        "posZ": {
+            "type": "float",
+            "description": "The current z-position of ______ at the moment the event occurred."
         },
-        "rotX" : {
-            "type" : "float",
-            "description" : "The x-component of the orientation of ______ at the moment the event occurred."
+        "rotX": {
+            "type": "float",
+            "description": "The x-component of the orientation of ______ at the moment the event occurred."
         },
-        "rotY" : {
-            "type" : "float",
-            "description" : "The y-component of the orientation of ______ at the moment the event occurred."
+        "rotY": {
+            "type": "float",
+            "description": "The y-component of the orientation of ______ at the moment the event occurred."
         },
-        "rotZ" : {
-            "type" : "float",
-            "description" : "The z-component of the orientation of ______ at the moment the event occurred."
+        "rotZ": {
+            "type": "float",
+            "description": "The z-component of the orientation of ______ at the moment the event occurred."
         },
-        "rotW" : {
-            "type" : "float",
-            "description" : "The w-component of the orientation of ______ at the moment the event occurred."
+        "rotW": {
+            "type": "float",
+            "description": "The w-component of the orientation of ______ at the moment the event occurred."
         }
     },
     "events": {
         "session_start": {
             "description": "When the app is started and the gameplay session is assigned a session ID. The player has not necessarily begun the game itself yet.",
             "event_data": {
-                "random_seed" : "The random seed used for all random number/position/rotation generation in the game."
+                "random_seed": "The random seed used for all random number/position/rotation generation in the game."
             }
         },
         "game_start": {
@@ -78,13 +81,13 @@
         "viewport_data": {
             "description": "An event sent approximately once per second, containing the in-game position and orientation of the player headset for each frame in the past second",
             "event_data": {
-                "gaze_data_package" : {
-                    "type" : "List[Dict]",
-                    "details" : {
-                        "pos" : "List[float]",
-                        "rot" : "List[float]"
+                "gaze_data_package": {
+                    "type": "List[Dict]",
+                    "details": {
+                        "pos": "List[float]",
+                        "rot": "List[float]"
                     },
-                    "description" : "A list of dicts, where each dict is one frame of headset data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                    "description": "A list of dicts, where each dict is one frame of headset data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
                 }
             }
         },
@@ -93,9 +96,9 @@
             "event_data": {
                 "left_hand_data_package": {
                     "type": "List[Dict]",
-                    "details" : {
-                        "pos" : "List[float]",
-                        "rot" : "List[float]"
+                    "details": {
+                        "pos": "List[float]",
+                        "rot": "List[float]"
                     },
                     "description": "A list of dicts, where each dict is one frame of left-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
                 }
@@ -106,9 +109,9 @@
             "event_data": {
                 "right_hand_data_package": {
                     "type": "List[Dict]",
-                    "details" : {
-                        "pos" : "List[float]",
-                        "rot" : "List[float]"
+                    "details": {
+                        "pos": "List[float]",
+                        "rot": "List[float]"
                     },
                     "description": "A list of dicts, where each dict is one frame of right-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
                 }
@@ -366,8 +369,7 @@
         },
         "penguin_pin_fell": {
             "description": "When one of the pins fell in the bowling area.",
-            "event_data": {
-            }
+            "event_data": {}
         },
         "skua_spawn": {
             "description": "Event when a new skua is added in the nest/egg defense mini-game.",
@@ -494,10 +496,8 @@
                 "description": "Triggers an event when a player exit a region"
             }
         },
-          
         "aggregate": {}
-        },
-
+    },
     "features": {
         "per_count": {
             "RegionDuration": {
@@ -517,7 +517,7 @@
                 "return_type": "int"
             }
         },
-        "aggregate":{
+        "aggregate": {
             "GazeCount": {
                 "type": "GazeCount",
                 "enabled": true,
@@ -541,7 +541,7 @@
                 "enabled": true,
                 "description": "The duration each session took.",
                 "return_type": "timedelta"
-                },
+            },
             "GazeDuration": {
                 "type": "GazeDuration",
                 "enabled": true,
@@ -574,8 +574,9 @@
             }
         }
     },
-
     "config": {
-    	"SUPPORTED_VERS": [1]
-	}
+        "SUPPORTED_VERS": [
+            1
+        ]
+    }
 }
