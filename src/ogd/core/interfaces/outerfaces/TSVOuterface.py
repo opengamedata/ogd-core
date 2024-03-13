@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any, Dict, IO, List, Optional, Set
 
 # import local files
-from ogd.core import games
+from ogd import games
 from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.ExportMode import ExportMode

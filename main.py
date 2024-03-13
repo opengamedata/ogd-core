@@ -20,7 +20,7 @@ from typing import Any, Dict, Optional, Set, Tuple
 from config.config import settings
 import_path = Path(".") / "src"
 sys.path.insert(0, str(import_path))
-from src.ogd.core import games
+from src.ogd import games
 from src.ogd.core.interfaces.DataInterface import DataInterface
 from src.ogd.core.interfaces.CSVInterface import CSVInterface
 from src.ogd.core.interfaces.MySQLInterface import MySQLInterface
