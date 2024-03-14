@@ -1,20 +1,22 @@
-# Workflow to test-run data when we modify JournalismExtractor.
-name: Journalism (Headlines & High Waters) Exporter CI Test
+# Workflow to test-run data when we modify PenguinExtractor.
+name: Penguins (Waddle) Exporter CI Test
 on:
   push:
     branches-ignore:
     - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/games/JOURNALISM/**'
-    - '.github/workflows/journalism.yml'
+    - 'src/ogd/core/games/PENGUINS/**'
+    - '.github/workflows/CI_penguins.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
-  Journalism_CI:
+  Penguin_CI:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     # - name: Get OpenConnect
     #   run: sudo apt-get -q update && sudo apt-get -q install openconnect
+    # - name: Connect VPN
+    #   run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
     - name: Set up Cloud SDK
@@ -36,11 +38,11 @@ jobs:
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:
-        game: "JOURNALISM"
+        game: "PENGUINS"
     - name: Do Export of last week's data
       uses: ./.github/actions/export_last_week
       with:
-        game: JOURNALISM
+        game: PENGUINS
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -48,4 +50,4 @@ jobs:
     - name: Upload zips as artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ./data/JOURNALISM/*.zip
+        path: ./data/PENGUINS/*.zip

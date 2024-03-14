@@ -1,13 +1,15 @@
-# Workflow to test-run data when we modify PenguinExtractor.
-name: Weather Station Exporter CI Test
+# Workflow to test-run data when we modify JournalismExtractor.
+name: Journalism (Headlines & High Waters) Exporter CI Test
 on:
   push:
+    branches-ignore:
+    - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/games/WEATHER_STATION/**'
-    - '.github/workflows/weather_station.yml'
+    - 'src/ogd/core/games/JOURNALISM/**'
+    - '.github/workflows/CI_journalism.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
-  WeatherStation_CI:
+  Journalism_CI:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
@@ -34,11 +36,11 @@ jobs:
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:
-        game: "WEATHER_STATION"
+        game: "JOURNALISM"
     - name: Do Export of last week's data
       uses: ./.github/actions/export_last_week
       with:
-        game: WEATHER_STATION
+        game: JOURNALISM
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -46,4 +48,4 @@ jobs:
     - name: Upload zips as artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ./data/WEATHER_STATION/*.zip
+        path: ./data/JOURNALISM/*.zip

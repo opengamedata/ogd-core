@@ -5,7 +5,7 @@ on:
     - 'ogd-packaging'
     paths:
     - 'src/ogd/core/games/SHIPWRECKS/**'
-    - '.github/workflows/shipwrecks.yml'
+    - '.github/workflows/CI_shipwrecks.yml'
   workflow_dispatch:
 jobs:
   Shipwrecks_CI:

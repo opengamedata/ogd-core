@@ -1,15 +1,15 @@
-# Workflow to test-run data when we modify MagnetExtractor.
-name: Magnet Exporter CI Test
+# Workflow to test-run data when we modify JowilderExtractor.
+name: Jo Wilder Exporter CI Test
 on:
   push:
     branches-ignore:
     - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/games/MAGNET/**'
-    - '.github/workflows/magnet.yml'
+    - 'src/ogd/core/games/JOWILDER/**'
+    - '.github/workflows/CI_jowilder.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
-  Magnet_CI:
+  JoWilder_CI:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
@@ -33,15 +33,16 @@ jobs:
         sql_host: ${{vars.FD_LOGGER_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "DEBUG"
+        # TODO: set log_level to DEBUG once we've made sure there aren't excess outputs from the extractor itself.
+        log_level: "INFO"
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:
-        game: "MAGNET"
+        game: "JOWILDER"
     - name: Do Export of yesterday's data
       uses: ./.github/actions/export_yesterday
       with:
-        game: MAGNET
+        game: JOWILDER
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -49,4 +50,4 @@ jobs:
     - name: Upload zips as artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ./data/MAGNET/*.zip
+        path: ./data/JOWILDER/*.zip

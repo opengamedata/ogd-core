@@ -1,18 +1,18 @@
-name: Aqualab BigQuery Test
+# Workflow to test-run data when we modify PenguinExtractor.
+name: Weather Station Exporter CI Test
 on:
   push:
-    branches-ignore:
-    - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/interfaces/BigQueryFirebaseInterface.py'
-    - 'src/ogd/core/games/AQUALAB/**'
-    - '.github/workflows/aqualab.yml'
-  workflow_dispatch:
+    - 'src/ogd/core/games/WEATHER_STATION/**'
+    - '.github/workflows/CI_weather_station.yml'
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
-  Aqualab_CI:
+  WeatherStation_CI:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
+    # - name: Get OpenConnect
+    #   run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
     - name: Set up Cloud SDK
@@ -29,11 +29,16 @@ jobs:
         sql_host: ${{vars.FD_LOGGER_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "DEBUG"
+        # TODO: set log_level to DEBUG once we've made sure there aren't excess outputs from the extractor itself.
+        log_level: "INFO"
+    - name: Set up Schema File
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: "WEATHER_STATION"
     - name: Do Export of last week's data
       uses: ./.github/actions/export_last_week
       with:
-        game: AQUALAB
+        game: WEATHER_STATION
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -41,4 +46,4 @@ jobs:
     - name: Upload zips as artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ./data/AQUALAB/*.zip
+        path: ./data/WEATHER_STATION/*.zip

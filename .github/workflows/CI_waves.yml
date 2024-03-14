@@ -1,25 +1,16 @@
-# Workflow to run a test export of Crystal whenever we change the core OGD backend code.
-# Chose Crystal simply because it has an extractor, but not a particularly complex one.
-name: OpenGameData-Core CI Test
+# Workflow to test-run data when we modify WaveExtractor.
+name: Waves Exporter CI Test
 on:
   push:
+    branches-ignore:
+    - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/detectors/**'
-    - 'src/ogd/core/extractors/**'
-    - 'src/ogd/core/features/**'
-    - 'src/ogd/core/interfaces/**'
-    - 'src/ogd/core/managers/**'
-    - 'src/ogd/core/processors/**'
-    - 'src/ogd/core/schemas/*'
-    - 'src/ogd/core/schemas/*_schemas/**'
-    - 'src/ogd/core/utils/*'
-    - 'main.py'
-    - '.github/workflows/OGD_CI.yml'
-    - '.github/actions/**'
+    - 'src/ogd/core/games/WAVES/**'
+    - '.github/workflows/CI_waves.yml'
+    - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
-
 jobs:
-  test_export:
+  Waves_CI:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
@@ -44,19 +35,11 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "DEBUG"
-    - name: Set up Schema File for Crystal
-      uses: ./.github/actions/OGD_schema
-      with:
-        game: "CRYSTAL"
-    - name: Attempt Export of yesterday's data with LegacyFeature
-      uses: ./.github/actions/export_yesterday
-      with:
-        game: CRYSTAL
-    - name: Set up Schema File for Waves
+    - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:
         game: "WAVES"
-    - name: Attempt Export of yesterday's data with Regular Extractor
+    - name: Do Export of yesterday's data
       uses: ./.github/actions/export_yesterday
       with:
         game: WAVES
@@ -64,11 +47,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: ./*.log
-    - name: Upload Crystal zips as artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        path: ./data/CRYSTAL/*.zip
-    - name: Upload Wave zips as artifacts
+    - name: Upload zips as artifacts
       uses: actions/upload-artifact@v3
       with:
         path: ./data/WAVES/*.zip

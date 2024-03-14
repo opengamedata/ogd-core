@@ -1,23 +1,18 @@
-# Workflow to test-run data when we modify Icecube features.
-name: Icecube Exporter CI Test
+# Workflow to test-run data when we modify PenguinExtractor.
+name: ThermoVR Exporter CI Test
 on:
   push:
-    branches-ignore:
-    - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/games/ICECUBE/**'
-    - '.github/workflows/icecube.yml'
-    - '.github/actions/export_yesterday/**'
+    - 'src/ogd/core/games/THERMOVR/**'
+    - '.github/workflows/CI_thermovr.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
-  Icecube_CI:
+  ThermoVR_CI:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     # - name: Get OpenConnect
     #   run: sudo apt-get -q update && sudo apt-get -q install openconnect
-    # - name: Connect VPN
-    #   run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
     - name: Set up Cloud SDK
@@ -34,15 +29,16 @@ jobs:
         sql_host: ${{vars.FD_LOGGER_HOST}}
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
-        log_level: "DEBUG"
+        # TODO: set log_level to DEBUG once we've made sure there aren't excess outputs from the extractor itself.
+        log_level: "INFO"
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:
-        game: "ICECUBE"
-    - name: Do Export of last month's data
-      uses: ./.github/actions/export_last_month
+        game: "THERMOVR"
+    - name: Do Export of last week's data
+      uses: ./.github/actions/export_last_week
       with:
-        game: ICECUBE
+        game: THERMOVR
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -50,4 +46,4 @@ jobs:
     - name: Upload zips as artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ./data/ICECUBE/*.zip
+        path: ./data/THERMOVR/*.zip

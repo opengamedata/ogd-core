@@ -6,7 +6,7 @@ on:
     - 'ogd-packaging'
     paths:
     - 'src/ogd/core/games/MASHOPOLIS/**'
-    - '.github/workflows/mashopolis.yml'
+    - '.github/workflows/CI_mashopolis.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
   Mashopolis_CI:
