@@ -36,7 +36,7 @@ args : Namespace = parser.parse_args()
 success : bool
 if args is not None:
     cmd = (args.command or "help").lower()
-    dest = Path(args.destination) if args.destination != "" else config.DataDirectory
+    dest = Path(args.destination if args.destination != "" else "./") if 'destination' in args else config.DataDirectory
     match cmd:
         case "export":
             success = OGDCommands.RunExport(args=args, config=config, destination=dest, with_events=True, with_features=True)

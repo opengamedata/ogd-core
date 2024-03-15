@@ -1,6 +1,6 @@
 # import standard libraries
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, SUPPRESS
 from pathlib import Path
 from typing import List
 
@@ -64,7 +64,7 @@ class OGDParsers:
     @staticmethod
     def DestinationParser() -> ArgumentParser:
         destination_parser = ArgumentParser(add_help=False)
-        destination_parser.add_argument("-d", "--destination", default="", type=str,
+        destination_parser.add_argument("-d", "--destination", default=SUPPRESS, type=str,
                             help="The destination folder for the readme.")
         return destination_parser
 
