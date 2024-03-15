@@ -37,18 +37,20 @@ jobs:
       uses: ./.github/actions/OGD_schema
       with:
         game: "BALLOON"
+    - name: Configure Git User
+      run: |
+        git config --global user.name 'fieldday-service'
+        git config --global user.email 'fieldday@office365.wisc.edu'
 
   # 3. Generate README
     - name: Create README file
       run: python main.py readme BALLOON --destination src/ogd/games
     - name: Commit README file
       run: |
-        git config --global user.name 'fieldday-service'
-          git config --global user.email 'fieldday@office365.wisc.edu'
-          git add src/ogd/games/BALLOON/README.md
-          git commit -m "Update Balloon README"
-          git pull
-          git push
+        git add src/ogd/games/BALLOON/README.md
+        git commit -m "Update Balloon README"
+        git pull
+        git push
 
   # 4. Cleanup & complete
     - name: Upload data as artifact

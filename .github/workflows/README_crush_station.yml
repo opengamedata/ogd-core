@@ -37,18 +37,20 @@ jobs:
       uses: ./.github/actions/OGD_schema
       with:
         game: "CRUSH_STATION"
+    - name: Configure Git User
+      run: |
+        git config --global user.name 'fieldday-service'
+        git config --global user.email 'fieldday@office365.wisc.edu'
 
   # 3. Generate README
     - name: Create README file
       run: python main.py readme CRUSH_STATION --destination src/ogd/games
     - name: Commit README file
       run: |
-        git config --global user.name 'fieldday-service'
-          git config --global user.email 'fieldday@office365.wisc.edu'
-          git add src/ogd/games/CRUSH_STATION/README.md
-          git commit -m "Update Crush Station README"
-          git pull
-          git push
+        git add src/ogd/games/CRUSH_STATION/README.md
+        git commit -m "Update Crush Station README"
+        git pull
+        git push
 
   # 4. Cleanup & complete
     - name: Upload data as artifact
