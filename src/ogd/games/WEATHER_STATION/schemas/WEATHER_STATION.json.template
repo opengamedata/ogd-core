@@ -54,7 +54,7 @@
             "event_data": {
             }
         },
-        "start_game": {
+        "game_start": {
             "description": "When the player starts a new game (at present, this happens automatically at launch, but in the future the player will launch a new game from a menu).",
             "event_data": {
             }

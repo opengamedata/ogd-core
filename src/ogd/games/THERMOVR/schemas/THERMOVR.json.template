@@ -168,6 +168,11 @@
     },
 
     "events": {
+        "session_start": {
+            "description": "When the app is started and the gameplay session is assigned a session ID",
+            "event_data": {
+            }
+        },
         "game_start": {
             "description": "When a new game is started",
             "event_data": {
