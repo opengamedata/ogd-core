@@ -44,21 +44,3 @@ jobs:
       with:
         name: log_data
         path: ./*.log
-  
-  trigger_reindex:
-    name: Reindex OpenGameData Files
-    if: github.event.inputs.export_to_web == 'true'
-    needs: export_data
-    runs-on: ubuntu-22.04
-    steps:
-    - name: Get OpenConnect
-      run: sudo apt-get -q update && sudo apt-get -q install openconnect
-    - name: Connect VPN
-      run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    - name: Trigger reindex via ssh
-      # run: echo "placeholder for reindexing!"
-      run: |
-        mkdir -p ~/.ssh
-        echo '${{secrets.DEPLOY_KEY}}' >> ./key.txt
-        chmod 600 ./key.txt
-        ssh -o StrictHostKeyChecking=no -i ./key.txt ${{ secrets.VPN_USER }}@${{ vars.FD_WEB_HOST }} "cd /var/www/opengamedata; pwd; ls; python3 reindexer.py;"
