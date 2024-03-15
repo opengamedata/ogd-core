@@ -3,7 +3,7 @@ name: ThermoVR Exporter CI Test
 on:
   push:
     paths:
-    - 'src/ogd/core/games/THERMOVR/**'
+    - 'src/ogd/games/THERMOVR/**'
     - '.github/workflows/CI_thermovr.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:

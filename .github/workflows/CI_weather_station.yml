@@ -3,7 +3,7 @@ name: Weather Station Exporter CI Test
 on:
   push:
     paths:
-    - 'src/ogd/core/games/WEATHER_STATION/**'
+    - 'src/ogd/games/WEATHER_STATION/**'
     - '.github/workflows/CI_weather_station.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:

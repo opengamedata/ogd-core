@@ -5,7 +5,7 @@ on:
     - 'ogd-packaging'
     paths:
     - 'src/ogd/core/interfaces/BigQueryFirebaseInterface.py'
-    - 'src/ogd/core/games/AQUALAB/**'
+    - 'src/ogd/games/AQUALAB/**'
     - '.github/workflows/CI_aqualab.yml'
   workflow_dispatch:
 jobs:

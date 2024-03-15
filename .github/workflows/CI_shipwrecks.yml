@@ -4,7 +4,7 @@ on:
     branches-ignore:
     - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/games/SHIPWRECKS/**'
+    - 'src/ogd/games/SHIPWRECKS/**'
     - '.github/workflows/CI_shipwrecks.yml'
   workflow_dispatch:
 jobs:

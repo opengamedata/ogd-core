@@ -5,7 +5,7 @@ on:
     branches-ignore:
     - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/games/CRYSTAL/**'
+    - 'src/ogd/games/CRYSTAL/**'
     - '.github/workflows/CI_crystal.yml'
     - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
