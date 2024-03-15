@@ -45,7 +45,8 @@ jobs:
       run: |
         git config --global user.name 'fieldday-service'
           git config --global user.email 'fieldday@office365.wisc.edu'
-          git commit -am "Update Earthquake README"
+          git add src/ogd/games/EARTHQUAKE/README.md
+          git commit -m "Update Earthquake README"
           git push
 
   # 4. Cleanup & complete

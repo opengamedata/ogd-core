@@ -1,16 +1,16 @@
-name: Nitrogen Cycle Readme Update Script
+name: Gwakkamole Readme Update Script
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 
 on:
   push:
     paths:
-    - 'src/ogd/games/CYCLE_NITROGEN/schemas/CYCLE_NITROGEN.json.template'
-    - '.github/workflows/README_cycle_nitrogen.yml'
+    - 'src/ogd/games/GWAKKAMOLE/schemas/GWAKKAMOLE.json.template'
+    - '.github/workflows/README_gwakkamole.yml'
   workflow_dispatch:
 
 jobs:
   ci_export:
-    name: Update Nitrogen Cycle README.md
+    name: Update Gwakkamole README.md
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
@@ -36,25 +36,25 @@ jobs:
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:
-        game: "CYCLE_NITROGEN"
+        game: "GWAKKAMOLE"
 
   # 3. Generate README
     - name: Create README file
-      run: python main.py readme CYCLE_NITROGEN --destination src/ogd/games
+      run: python main.py readme GWAKKAMOLE --destination src/ogd/games
     - name: Commit README file
       run: |
         git config --global user.name 'fieldday-service'
           git config --global user.email 'fieldday@office365.wisc.edu'
-          git add src/ogd/games/CYCLE_NITROGEN/README.md
-          git commit -m "Update Nitrogen Cycle README"
+          git add src/ogd/games/ICECUBE/README.md
+          git commit -m "Update Gwakkamole README"
           git push
 
   # 4. Cleanup & complete
     - name: Upload data as artifact
       uses: actions/upload-artifact@v3
       with:
-        name: CYCLE_NITROGEN_readme
-        path: ./src/ogd/games/CYCLE_NITROGEN/README.md
+        name: GWAKKAMOLE_readme
+        path: ./src/ogd/games/GWAKKAMOLE/README.md
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:
