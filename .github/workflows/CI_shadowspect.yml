@@ -1,25 +1,37 @@
-name: Shadowspect Exporter CI Test
+name: Shadowspect Exporter CI Script
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
+
 on:
   push:
-    branches-ignore:
-    - 'ogd-packaging'
     paths:
     - 'src/ogd/games/SHADOWSPECT/**'
     - '.github/workflows/CI_shadowspect.yml'
+    - '.github/actions/export_last_week/**'
   workflow_dispatch:
+
 jobs:
-  Shadowspect_CI:
+  ci_export:
+    name: CI Export of Shadowspect Data
     runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     steps:
-    - uses: actions/checkout@v3
+
+  # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+
+  # 2. Configure cloud & local environments
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ secrets.BQ_SHADOWSPECT_PROJECT_ID }}
         service_account_key: ${{ secrets.BQ_SHADOWSPECT_JSON }}
         export_default_credentials: true
-    - name: Get Dependencies
-      uses: ./.github/actions/OGD_dependencies
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
@@ -33,10 +45,14 @@ jobs:
       uses: ./.github/actions/OGD_schema
       with:
         game: "SHADOWSPECT"
-    - name: Do Export of last month's data
-      uses: ./.github/actions/export_last_month
+
+  # 3. Perform export
+    - name: Do Export of last week's data
+      uses: ./.github/actions/export_last_week
       with:
         game: SHADOWSPECT
+
+  # 4. Cleanup & complete
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:
