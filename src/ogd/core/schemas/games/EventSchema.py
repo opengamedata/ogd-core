@@ -162,7 +162,7 @@ class EventSchema(Schema):
             f"{self.Description}",
             "#### Event Data",
             "\n".join(
-                ["| **Name** | **Type** | **Description** | **Details** |",
+                ["| **Name** | **Type** | **Description** | **Sub-Elements** |",
                  "| ---      | ---      | ---             | ---         |"]
               + [elem.AsMarkdownRow for elem in self.EventData.values()]
             ),
