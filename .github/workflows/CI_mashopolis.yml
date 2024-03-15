@@ -5,7 +5,7 @@ on:
     branches-ignore:
     - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/games/MASHOPOLIS/**'
+    - 'src/ogd/games/MASHOPOLIS/**'
     - '.github/workflows/CI_mashopolis.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:

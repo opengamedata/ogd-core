@@ -5,7 +5,7 @@ on:
     branches-ignore:
     - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/games/WAVES/**'
+    - 'src/ogd/games/WAVES/**'
     - '.github/workflows/CI_waves.yml'
     - '.github/actions/export_yesterday/**'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab

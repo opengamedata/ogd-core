@@ -36,7 +36,7 @@ class GameSchema(Schema):
 
         :param schema_name: The name of the JSON schema file (if .json is not the file extension, .json will be appended)
         :type schema_name: str
-        :param schema_path: schema_path Path to the folder containing the JSON schema file; if None is given, defaults to ./ogd/core/games/{game_id}/schemas/
+        :param schema_path: schema_path Path to the folder containing the JSON schema file; if None is given, defaults to ./ogd/games/{game_id}/schemas/
         :type schema_path: str, optional
         """
         # Give schema_path a default, don't think we can use game_id to construct it directly in the function header (so do it here if None)

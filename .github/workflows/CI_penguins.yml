@@ -5,7 +5,7 @@ on:
     branches-ignore:
     - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/games/PENGUINS/**'
+    - 'src/ogd/games/PENGUINS/**'
     - '.github/workflows/CI_penguins.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:

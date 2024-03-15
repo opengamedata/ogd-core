@@ -4,7 +4,7 @@ on:
     branches-ignore:
     - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/games/SHADOWSPECT/**'
+    - 'src/ogd/games/SHADOWSPECT/**'
     - '.github/workflows/CI_shadowspect.yml'
   workflow_dispatch:
 jobs:

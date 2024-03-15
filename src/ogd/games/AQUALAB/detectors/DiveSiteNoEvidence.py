@@ -69,8 +69,8 @@ class DiveSiteNoEvidence(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val : Event = DetectorEvent(session_id="Not Implemented", app_id="Not Implemented", timestamp=self._time,
-                                        event_name="CustomDetector", event_data={}, game_state={"job_name":self._current_job})
+        ret_val : Event = DetectorEvent(session_id="Not Implemented", app_id="AQUALAB", timestamp=self._time,
+                                        event_name="DiveSiteNoEvidence", event_data={}, game_state={"job_name":self._current_job})
         # >>> use state variables to generate the detector's event. <<<
         # >>> definitely don't return all these "Not Implemented" things, unless you really find that useful... <<<
         #

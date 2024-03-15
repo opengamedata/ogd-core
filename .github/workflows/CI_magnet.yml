@@ -5,7 +5,7 @@ on:
     branches-ignore:
     - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/games/MAGNET/**'
+    - 'src/ogd/games/MAGNET/**'
     - '.github/workflows/CI_magnet.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:

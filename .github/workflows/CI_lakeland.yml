@@ -5,7 +5,7 @@ on:
     branches-ignore:
     - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/games/LAKELAND/**'
+    - 'src/ogd/games/LAKELAND/**'
     - '.github/workflows/CI_lakeland.yml'
   workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
 jobs:
