@@ -60,7 +60,7 @@ class OGDCommands:
             return True
 
     @staticmethod
-    def WriteReadme(config:ConfigSchema, game:str) -> bool:
+    def WriteReadme(config:ConfigSchema, game:str, destination:Path) -> bool:
         """Function to write out the readme file for a given game.
     This includes the CSV metadata (data from the schema, originally written into
     the CSV files themselves), custom readme source, and the global changelog.
@@ -69,7 +69,7 @@ class OGDCommands:
         :return: _description_
         :rtype: bool
         """
-        path = Path(f"./data") / game
+        path = destination / game
         try:
             game_schema = GameSchema(game_id=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
             table_schema = TableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
@@ -85,7 +85,7 @@ class OGDCommands:
             return True
 
     @staticmethod
-    def RunExport(args:Namespace, config:ConfigSchema, with_events:bool = False, with_features:bool = False) -> bool:
+    def RunExport(args:Namespace, config:ConfigSchema, destination:Path, with_events:bool = False, with_features:bool = False) -> bool:
         """Function to handle execution of export code.
         This is the main intended use of the program.
 

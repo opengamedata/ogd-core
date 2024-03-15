@@ -36,17 +36,18 @@ args : Namespace = parser.parse_args()
 success : bool
 if args is not None:
     cmd = (args.command or "help").lower()
+    dest = Path(args.destination) if args.destination != "" else config.DataDirectory
     match cmd:
         case "export":
-            success = OGDCommands.RunExport(args=args, config=config, with_events=True, with_features=True)
+            success = OGDCommands.RunExport(args=args, config=config, destination=dest, with_events=True, with_features=True)
         case "export-events":
-            success = OGDCommands.RunExport(args=args, config=config, with_events=True)
+            success = OGDCommands.RunExport(args=args, config=config, destination=dest, with_events=True)
         case "export-features":
-            success = OGDCommands.RunExport(args=args, config=config, with_features=True)
+            success = OGDCommands.RunExport(args=args, config=config, destination=dest, with_features=True)
         case "info":
             success = OGDCommands.ShowGameInfo(config=config, game=args.game)
         case "readme":
-            success = OGDCommands.WriteReadme(config=config, game=args.game)
+            success = OGDCommands.WriteReadme(config=config, game=args.game, destination=dest)
         case "list-games":
             success = OGDCommands.ListGames(games_list=games_list)
         # case "help":
