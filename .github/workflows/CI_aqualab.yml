@@ -1,5 +1,5 @@
 name: Aqualab Exporter CI Script
-run-name: Aqualab ":" ${{ github.event.head_commit.message }}
+run-name: Aqualab - ${{ github.event.head_commit.message }}
 
 on:
   push:
