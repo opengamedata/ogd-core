@@ -41,6 +41,12 @@ jobs:
   # 3. Generate README
     - name: Create README file
       run: python main.py readme AQUALAB --destination src/ogd/games
+    - name: Commit README file
+      run: |
+        git config --global user.name 'fieldday-service'
+          git config --global user.email 'fieldday@office365.wisc.edu'
+          git commit -am "Update Aqualab README"
+          git push
 
   # 4. Cleanup & complete
     - name: Upload data as artifact
