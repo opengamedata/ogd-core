@@ -1,7 +1,6 @@
 # Workflow to test-run data when we modify CrystalExtractor.
 name: Crystal Exporter CI Script
-# run-name: Crystal - ${{ github.event.head_commit.message }}
-run-name: ${{ github.event_name == 'push' && format('Crystal - {0}', github.event.head_commit.message) || github.workflow }}
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message) || 'Manual Run' }}
 on:
   push:
     paths:
