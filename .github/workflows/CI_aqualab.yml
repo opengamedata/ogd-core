@@ -1,20 +1,31 @@
-name: Aqualab BigQuery Test
+name: Aqualab Exporter CI Script
+run-name: Aqualab ":" ${{ github.event.head_commit.message }}
+
 on:
   push:
-    branches-ignore:
-    - 'ogd-packaging'
     paths:
-    - 'src/ogd/core/interfaces/BigQueryFirebaseInterface.py'
     - 'src/ogd/games/AQUALAB/**'
     - '.github/workflows/CI_aqualab.yml'
+    - '.github/actions/export_yesterday/**'
   workflow_dispatch:
+
 jobs:
-  Aqualab_CI:
+  ci_export:
+    name: CI Export of Aqualab Data
     runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     steps:
-    - uses: actions/checkout@v3
+
+  # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v3
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
+
+  # 2. Configure cloud & local environments
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
@@ -30,10 +41,18 @@ jobs:
         sql_user: ${{secrets.SQL_USER}}
         sql_pass: ${{secrets.SQL_PASS}}
         log_level: "DEBUG"
+    - name: Set up Schema File
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: "AQUALAB"
+
+  # 3. Perform export
     - name: Do Export of last week's data
-      uses: ./.github/actions/export_last_week
+      uses: ./.github/actions/export_yesterday
       with:
         game: AQUALAB
+
+  # 4. Cleanup & complete
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:
