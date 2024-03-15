@@ -8,6 +8,10 @@ on:
     - '.github/workflows/README_cycle_nitrogen.yml'
   workflow_dispatch:
 
+concurrency:
+  group: Readme-Scripts-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   ci_export:
     name: Update Nitrogen Cycle README.md
@@ -50,6 +54,8 @@ jobs:
       run: |
         git add src/ogd/games/CYCLE_NITROGEN/README.md
         git diff --staged --quiet || git commit -m "Update Nitrogen Cycle README"
+    - name: Push Changes to GitHub
+      run: |
         git pull
         git push
 
