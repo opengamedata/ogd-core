@@ -1,22 +1,29 @@
-# Workflow to test-run data when we modify JournalismExtractor.
-name: Journalism (Headlines & High Waters) Exporter CI Test
+name: Journalism Exporter CI Script
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 on:
   push:
-    branches-ignore:
-    - 'ogd-packaging'
     paths:
     - 'src/ogd/games/JOURNALISM/**'
     - '.github/workflows/CI_journalism.yml'
-  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+    - '.github/actions/export_yesterday/**'
+  workflow_dispatch:
+
 jobs:
-  Journalism_CI:
+  ci_export:
+    name: CI Export of Journalism (Headlines & High Waters) Data
     runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     steps:
+
+  # 1. Local checkout 
     - uses: actions/checkout@v3
-    # - name: Get OpenConnect
-    #   run: sudo apt-get -q update && sudo apt-get -q install openconnect
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
+
+  # 2. Configure cloud & local environments
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
@@ -37,10 +44,14 @@ jobs:
       uses: ./.github/actions/OGD_schema
       with:
         game: "JOURNALISM"
-    - name: Do Export of last week's data
-      uses: ./.github/actions/export_last_week
+
+  # 3. Perform export
+    - name: Do Export of yesterday's data
+      uses: ./.github/actions/export_yesterday
       with:
         game: JOURNALISM
+
+  # 4. Cleanup & complete
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:

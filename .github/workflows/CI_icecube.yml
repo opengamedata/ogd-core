@@ -1,25 +1,30 @@
-# Workflow to test-run data when we modify Icecube features.
-name: Icecube Exporter CI Test
+name: Icecube Exporter CI Script
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 on:
   push:
-    branches-ignore:
-    - 'ogd-packaging'
     paths:
     - 'src/ogd/games/ICECUBE/**'
     - '.github/workflows/CI_icecube.yml'
-    - '.github/actions/export_yesterday/**'
-  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+    - '.github/actions/export_last_week/**'
+  workflow_dispatch:
+
 jobs:
-  Icecube_CI:
+  ci_export:
+    name: CI Export of Icecube Data
     runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     steps:
-    - uses: actions/checkout@v3
-    # - name: Get OpenConnect
-    #   run: sudo apt-get -q update && sudo apt-get -q install openconnect
-    # - name: Connect VPN
-    #   run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
+
+  # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v3
     - name: Get Dependencies
       uses: ./.github/actions/OGD_dependencies
+
+  # 2. Configure cloud & local environments
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
@@ -39,10 +44,14 @@ jobs:
       uses: ./.github/actions/OGD_schema
       with:
         game: "ICECUBE"
-    - name: Do Export of last month's data
-      uses: ./.github/actions/export_last_month
+
+  # 3. Perform export
+    - name: Do Export of last week's data
+      uses: ./.github/actions/export_last_week
       with:
         game: ICECUBE
+
+  # 4. Cleanup & complete
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:
