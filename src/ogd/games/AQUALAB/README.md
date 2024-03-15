@@ -65,7 +65,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -78,7 +78,7 @@ Event that occurs whenever the job switches, whether manually or through an `acc
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | prev_job_name | str | String name of the previous job, may be incorrect when coinciding with any `complete_job`, or with an `accept_job` at a time the user was actively in a job. | |
 
@@ -92,7 +92,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | fact_entity | str | The entity (e.g. species) with which the fact is associated | |
 | fact_id | str | Unique ID for the given fact | |
@@ -111,7 +111,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | entity_id | str | Unique ID for the given entity | |
 
@@ -125,7 +125,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | job_name | str | String name of the completed job | |
 
@@ -139,7 +139,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | task_id | str | ID of the completed task | |
 
@@ -153,7 +153,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | scene_name | str | Name of the loaded scene | |
 
@@ -167,7 +167,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | room_name | str | Name of the room being entered | |
 
@@ -181,7 +181,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | site_id | str | ID of the dive site | |
 
@@ -195,7 +195,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | node_id | str | Scripting ID for the hint response | |
 
@@ -209,7 +209,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | node_id | str | Scripting ID for the guide's response | |
 
@@ -223,7 +223,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | node_id | str | ID of a given script node | |
 
@@ -237,7 +237,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -250,7 +250,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -263,7 +263,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -276,7 +276,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -289,7 +289,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | species_id | str | ID of the selected species | |
 
@@ -303,7 +303,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | environment_id | str | ID of the selected environment | |
 
@@ -317,7 +317,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | model_id | str | ID of the selected model | |
 
@@ -331,7 +331,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -344,7 +344,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -357,7 +357,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -370,7 +370,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -383,7 +383,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -396,7 +396,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -409,7 +409,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -422,7 +422,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | phase | str | The selected modeling phase | |
 
@@ -436,7 +436,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
 
@@ -450,7 +450,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
 
@@ -464,7 +464,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
 | status | str | Updated status of the concept model | |
@@ -479,7 +479,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
 
@@ -493,7 +493,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
 
@@ -507,7 +507,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
 | sync | int | Sync % achieved with the current model | |
@@ -522,7 +522,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
 
@@ -536,7 +536,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
 
@@ -550,7 +550,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
 | organism | str | The organism having its population modified by the player | |
@@ -566,7 +566,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
 
@@ -580,7 +580,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | ecosystem | str | Ecosystem selected for modeling | |
 
@@ -594,7 +594,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | phase | str | The selected modeling phase upon leaving | |
 | ecosystem | str | The selected ecosystem upon leaving | |
@@ -609,7 +609,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | item_id | str | ID of the purchased item | |
 | item_name | str | String name of the purchased item | |
@@ -625,7 +625,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | item_id | str | ID of the item | |
 | item_name | str | String name of the item | |
@@ -641,7 +641,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -654,7 +654,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | tank_type | str | Selected tank type for the experiment | |
 | environment | str | Name of the added environment | |
@@ -669,7 +669,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | tank_type | str | Selected tank type for the experiment | |
 | environment | str | Name of the removed environment | |
@@ -684,7 +684,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | tank_type | str | Selected tank type for the experiment | |
 | environment | str | Selected environment for the experiment | |
@@ -700,7 +700,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | tank_type | str | Selected tank type for the experiment | |
 | environment | str | Selected environment for the experiment | |
@@ -716,7 +716,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | tank_type | str | Selected tank type for the experiment | |
 | environment | str | Selected environment for the experiment | |
@@ -732,7 +732,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | tank_type | str | Selected tank type for the experiment | |
 | environment | str | Selected environment for the experiment | |
@@ -748,7 +748,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -761,7 +761,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | fact_id | str | ID of the submitted fact | |
 
@@ -775,7 +775,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 | fact_id | str | ID of the rejected fact | |
 
@@ -789,7 +789,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -802,7 +802,7 @@ N/A
 
 #### Event Data
 
-| **Name** | **Type** | **Description** | **Details** |
+| **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
 
 #### Other Elements
@@ -821,7 +821,7 @@ Triggers an event when a player collects a fact while not actively working on a 
 Triggers an event when a player has gone sufficiently long at a dive site without uncovering new evidence  
 *Other elements*:  
 
-threshold - 30  
+threshold : 30  
 
 **EchoRoomChange** : *Detector*  (disabled)  
 Triggers an event when a player changes rooms.  
@@ -831,25 +831,25 @@ Triggers an event when a player changes rooms.
   
 *Other elements*:  
 
-threshold - 30  
+threshold : 30  
 
 **Idle** : *Detector*   
   
 *Other elements*:  
 
-idle_level - 30  
+idle_level : 30  
 
 **SceneChangeFrequently** : *Detector*   
   
 *Other elements*:  
 
-threshold - 30  
+threshold : 30  
 
 **TwoHints** : *Detector*   
   
 *Other elements*:  
 
-threshold - 30  
+threshold : 30  
 
 ## Processed Features  
 
