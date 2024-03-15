@@ -10,7 +10,7 @@
     "game_state": {
         "job_name": {
             "type": "str",
-            "description": "String name of the accepted job"
+            "description": "The name of the current job"
         }
     },
     "events": {
