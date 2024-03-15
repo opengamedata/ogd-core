@@ -1,31 +1,38 @@
 # Workflow to test-run data when we modify CrystalExtractor.
-name: Crystal Exporter CI Test
+name: Crystal Exporter CI Script
+# run-name: Crystal - ${{ github.event.head_commit.message }}
+run-name: ${{ github.event_name == 'push' && format('Crystal - {1}', github.event.head_commit.message) || github.workflow }}
 on:
   push:
-    branches-ignore:
-    - 'ogd-packaging'
     paths:
     - 'src/ogd/games/CRYSTAL/**'
     - '.github/workflows/CI_crystal.yml'
     - '.github/actions/export_yesterday/**'
-  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+  workflow_dispatch:
+
 jobs:
-  Crystal_CI:
+  ci_export:
+    name: CI Export of Crystal Data
     runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
     steps:
-    - uses: actions/checkout@v3
+
+  # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+
+  # 2. Configure cloud & local environments
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
         service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
         export_default_credentials: true
-    # - name: Get OpenConnect
-    #   run:  sudo apt-get -q update && sudo apt-get -q install openconnect
-    # - name: Connect VPN
-      # run: echo ${{ secrets.VPN_PASS }} | sudo openconnect --protocol=gp -u ${{ secrets.VPN_USER }} --passwd-on-stdin soe.vpn.wisc.edu &
-    - name: Get Dependencies
-      uses: ./.github/actions/OGD_dependencies
     - name: Set up Config File
       uses: ./.github/actions/OGD_config
       with:
@@ -39,10 +46,14 @@ jobs:
       uses: ./.github/actions/OGD_schema
       with:
         game: "CRYSTAL"
+
+  # 3. Perform export
     - name: Do Export of yesterday's data
       uses: ./.github/actions/export_yesterday
       with:
         game: CRYSTAL
+
+  # 4. Cleanup & complete
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:
