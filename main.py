@@ -78,7 +78,7 @@ def WriteReadme(config:ConfigSchema) -> bool:
     """
     path = Path(f"./data") / args.game
     try:
-        game_schema = GameSchema(game_id=args.game)
+        game_schema = GameSchema(game_id=args.game, schema_path=Path("src") / "ogd" / "games" / args.game / "schemas")
         table_schema = TableSchema(schema_name=f"{config.GameSourceMap[args.game].TableSchema}.json")
         readme = Readme(game_schema=game_schema, table_schema=table_schema)
         readme.GenerateReadme(path=path)

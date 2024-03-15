@@ -379,6 +379,8 @@ class GameSchema(Schema):
             except Exception as cp_err:
                 Logger.Log(       f"Could not copy {schema_name} from template, a {type(cp_err)} error occurred:\n{cp_err}", logging.WARN, depth=2)
                 print(f"(via print) Could not copy {schema_name} from template, a {type(cp_err)} error occurred:\n{cp_err}")
+            else:
+                Logger.Log(       f"Successfully copied {schema_name} from template.", logging.DEBUG, depth=2)
         return ret_val
 
     # *** PRIVATE METHODS ***
