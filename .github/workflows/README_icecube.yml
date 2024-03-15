@@ -1,16 +1,16 @@
-name: Gwakkamole Readme Update Script
+name: Icecube Readme Update Script
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
 
 on:
   push:
     paths:
-    - 'src/ogd/games/GWAKKAMOLE/schemas/GWAKKAMOLE.json.template'
-    - '.github/workflows/README_gwakkamole.yml'
+    - 'src/ogd/games/ICECUBE/schemas/ICECUBE.json.template'
+    - '.github/workflows/README_icecube.yml'
   workflow_dispatch:
 
 jobs:
   ci_export:
-    name: Update Gwakkamole README.md
+    name: Update Icecube README.md
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
@@ -36,7 +36,7 @@ jobs:
     - name: Set up Schema File
       uses: ./.github/actions/OGD_schema
       with:
-        game: "GWAKKAMOLE"
+        game: "ICECUBE"
     - name: Configure Git User
       run: |
         git config --global user.name 'fieldday-service'
@@ -44,11 +44,11 @@ jobs:
 
   # 3. Generate README
     - name: Create README file
-      run: python main.py readme GWAKKAMOLE --destination src/ogd/games
+      run: python main.py readme ICECUBE --destination src/ogd/games
     - name: Commit README file
       run: |
         git add src/ogd/games/ICECUBE/README.md
-        git commit -m "Update Gwakkamole README"
+        git commit -m "Update Icecube README"
         git pull
         git push
 
@@ -56,8 +56,8 @@ jobs:
     - name: Upload data as artifact
       uses: actions/upload-artifact@v3
       with:
-        name: GWAKKAMOLE_readme
-        path: ./src/ogd/games/GWAKKAMOLE/README.md
+        name: ICECUBE_readme
+        path: ./src/ogd/games/ICECUBE/README.md
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
       with:
