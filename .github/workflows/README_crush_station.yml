@@ -49,7 +49,7 @@ jobs:
     - name: Commit README file
       run: |
         git add src/ogd/games/CRUSH_STATION/README.md
-        git commit -m "Update Crush Station README"
+        git diff --staged --quiet || git commit -m "Update Crush Station README"
         git pull
         git push
 

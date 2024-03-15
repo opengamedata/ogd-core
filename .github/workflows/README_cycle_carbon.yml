@@ -49,7 +49,7 @@ jobs:
     - name: Commit README file
       run: |
         git add src/ogd/games/CYCLE_CARBON/README.md
-        git commit -m "Update Carbon Cycle README"
+        git diff --staged --quiet || git commit -m "Update Carbon Cycle README"
         git pull
         git push
 

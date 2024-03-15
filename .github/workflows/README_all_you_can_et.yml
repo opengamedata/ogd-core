@@ -49,7 +49,7 @@ jobs:
     - name: Commit README file
       run: |
         git add src/ogd/games/ALL_YOU_CAN_ET/README.md
-        git commit -m "Update All You Can ET README"
+        git diff --staged --quiet || git commit -m "Update All You Can ET README"
         git pull
         git push
 
