@@ -44,7 +44,8 @@ settings = {
             "DB_PW"   : "password",
             "SSH_HOST": "hostname",
             "SSH_USER": "WCER AD User",
-            "SSH_PASS": "WCER AD Password"
+            "SSH_PASS": "WCER AD Password",
+            "SSH_PORT": 22
         },
         "LOGGER": {
             "DB_TYPE" : "MySQL",
@@ -54,7 +55,8 @@ settings = {
             "DB_PW"   : "password",
             "SSH_HOST": "hostname",
             "SSH_USER": "WCER AD User",
-            "SSH_PASS": "WCER AD Password"
+            "SSH_PASS": "WCER AD Password",
+            "SSH_PORT": 22
         }
     },
     "GAME_SOURCE_MAP":
