@@ -14,7 +14,16 @@ from ogd.core.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
 class ConfigSchema(Schema):
+    """Dumb struct containing properties for each standard OGD-core config item.
+    """
     def __init__(self, name:str, all_elements:Dict[str, Any]):
+        """Constructs a ConfigSchema, from a name and dictionary of JSON-style elements.
+
+        :param name: The name of the configuration schema.
+        :type name: str
+        :param all_elements: A dictionary mapping config item names to their configured values. These will be checked and made available through the ConfigSchema properties.
+        :type all_elements: Dict[str, Any]
+        """
         self._log_file   : bool
         self._batch_size : int
         self._dbg_level  : int
@@ -67,38 +76,72 @@ class ConfigSchema(Schema):
 
     @property
     def DataDirectory(self) -> Path:
+        """
+        The local directory where export files will be stored by default.
+
+        :return: The local directory where export files will be stored by default.
+        :rtype: Path
+        """
         return self.FileIndexConfig.LocalDirectory
 
     @property
     def UseLogFile(self) -> bool:
+        """
+        Whether to use a log file to store log output from exports.
+        """
         return self._log_file
 
     @property
     def BatchSize(self) -> int:
+        """
+        The number of sessions to process at once during an export.
+        """
         return self._batch_size
 
     @property
     def DebugLevel(self) -> int:
+        """
+        The least-severe level of debug output that should be logged.
+        Defaults to INFO if not specified.
+        """
         return self._dbg_level
 
     @property
     def FailFast(self) -> bool:
+        """
+        Whether to fail the export on errors due to bad data, or ignore the bad data and continue processing.
+        """
         return self._fail_fast
 
     @property
     def FileIndexConfig(self) -> FileIndexingSchema:
+        """
+        A collection of settings for indexing output files.
+
+        TODO : Need better documentation of this item.
+        """
         return self._file_idx
 
     @property
     def DataSources(self) -> Dict[str, DataSourceSchema]:
+        """
+        A collection of all configured sources of data that can be used for exports.
+        """
         return self._data_src
 
     @property
     def GameSourceMap(self) -> Dict[str, GameSourceSchema]:
+        """
+        A mapping from game IDs to the data sources they use.
+        """
         return self._game_src_map
 
     @property
     def AsMarkdown(self) -> str:
+        """
+        A Markdown-formatted stringification of the ConfigSchema.
+        (presently just the schema name)
+        """
         ret_val : str
 
         ret_val = f"{self.Name}"
