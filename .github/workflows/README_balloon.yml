@@ -47,6 +47,7 @@ jobs:
           git config --global user.email 'fieldday@office365.wisc.edu'
           git add src/ogd/games/BALLOON/README.md
           git commit -m "Update Balloon README"
+          git pull
           git push
 
   # 4. Cleanup & complete

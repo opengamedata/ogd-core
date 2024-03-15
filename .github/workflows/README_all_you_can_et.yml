@@ -47,6 +47,7 @@ jobs:
           git config --global user.email 'fieldday@office365.wisc.edu'
           git add src/ogd/games/ALL_YOU_CAN_ET/README.md
           git commit -m "Update All You Can ET README"
+          git pull
           git push
 
   # 4. Cleanup & complete

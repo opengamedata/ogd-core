@@ -47,6 +47,7 @@ jobs:
           git config --global user.email 'fieldday@office365.wisc.edu'
           git add src/ogd/games/CRUSH_STATION/README.md
           git commit -m "Update Crush Station README"
+          git pull
           git push
 
   # 4. Cleanup & complete

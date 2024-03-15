@@ -47,6 +47,8 @@ jobs:
           git config --global user.email 'fieldday@office365.wisc.edu'
           git add src/ogd/games/CYCLE_NITROGEN/README.md
           git commit -m "Update Nitrogen Cycle README"
+          git pull
+          git push
           git push
 
   # 4. Cleanup & complete

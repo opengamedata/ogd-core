@@ -47,6 +47,12 @@ jobs:
           git config --global user.email 'fieldday@office365.wisc.edu'
           git add src/ogd/games/BLOOM/README.md
           git commit -m "Update Bloom README"
+          git pull
+          git push
+          git push
+          git push
+          git push
+          git push
           git push
 
   # 4. Cleanup & complete
