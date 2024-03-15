@@ -41,6 +41,7 @@ jobs:
       run: |
         git config --global user.name 'fieldday-service'
         git config --global user.email 'fieldday@office365.wisc.edu'
+        git config --global pull.rebase false
 
   # 3. Generate README
     - name: Create README file
