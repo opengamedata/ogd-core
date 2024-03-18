@@ -36,11 +36,11 @@ class GameSchema(Schema):
 
         :param schema_name: The name of the JSON schema file (if .json is not the file extension, .json will be appended)
         :type schema_name: str
-        :param schema_path: schema_path Path to the folder containing the JSON schema file; if None is given, defaults to ./ogd/core/games/{game_id}/schemas/
+        :param schema_path: schema_path Path to the folder containing the JSON schema file; if None is given, defaults to ./ogd/games/{game_id}/schemas/
         :type schema_path: str, optional
         """
         # Give schema_path a default, don't think we can use game_id to construct it directly in the function header (so do it here if None)
-        schema_path = schema_path or Path("./") / "ogd" / "core" / "games" / game_id / "schemas"
+        schema_path = schema_path or Path("./") / "ogd" / "games" / game_id / "schemas"
     # 1. define instance vars
         self._event_list             : List[EventSchema] = []
         self._detector_map           : Dict[str, Dict[str, DetectorSchema]] = {'perlevel':{}, 'per_count':{}, 'aggregate':{}}
@@ -379,6 +379,8 @@ class GameSchema(Schema):
             except Exception as cp_err:
                 Logger.Log(       f"Could not copy {schema_name} from template, a {type(cp_err)} error occurred:\n{cp_err}", logging.WARN, depth=2)
                 print(f"(via print) Could not copy {schema_name} from template, a {type(cp_err)} error occurred:\n{cp_err}")
+            else:
+                Logger.Log(       f"Successfully copied {schema_name} from template.", logging.DEBUG, depth=2)
         return ret_val
 
     # *** PRIVATE METHODS ***

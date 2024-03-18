@@ -98,7 +98,7 @@ class ExtractorLoader(abc.ABC):
     def _validateMode(self, feature_type) -> bool:
         ret_val = False
 
-        mod_name = f"ogd.core.games.{self._game_schema.GameName}.features.{feature_type}"
+        mod_name = f"ogd.games.{self._game_schema.GameName}.features.{feature_type}"
         try:
             feature_module = import_module(mod_name)
         except ModuleNotFoundError:

@@ -2,6 +2,7 @@
 #  A module of utility functions used in the feature_extraction_to_csv project
 import json
 import logging
+import os
 from importlib.resources import files
 from pathlib import Path
 from typing import Any, Dict, Optional, List
@@ -34,7 +35,7 @@ def loadJSONFile(filename:str, path:Path = Path("./"), autocorrect_extension:boo
         with open(file_path, "r") as json_file:
             return json.loads(json_file.read())
     except FileNotFoundError as err:
-        Logger.Log(f"Could not load JSON file, {file_path} does not exist, trying to find within package.", logging.WARNING)
+        Logger.Log(f"Could not load JSON file, {file_path} could not be found from {os.getcwd()}, trying to find within package.", logging.WARNING)
         package_file_path = None
         try:
             package_file_path = files(".".join(path.parts)).joinpath(filename)
