@@ -94,6 +94,8 @@ class AqualabLoader(ExtractorLoader):
                     ret_val = EventList.EventList(params=extractor_params)
                 case "JobsCompleted":
                     ret_val = JobsCompleted.JobsCompleted(params=extractor_params, player_id=self._player_id)
+                case "PlayLocations":
+                    ret_val = PlayLocations.PlayLocations(params=extractor_params)
                 case "PlayerSummary":
                     ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
                 case "PopulationSummary":
@@ -120,6 +122,8 @@ class AqualabLoader(ExtractorLoader):
                     ret_val = TotalGuideCount.TotalGuideCount(params=extractor_params)
                 case "TotalHelpCount":
                     ret_val = TotalHelpCount.TotalHelpCount(params=extractor_params)
+                case "TotalPlayTime":
+                    ret_val = TotalPlayTime.TotalPlayTime(params=extractor_params)
                 case "TotalExperimentationTime":
                     ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
                 case "UserAvgSessionDuration":
@@ -157,6 +161,10 @@ class AqualabLoader(ExtractorLoader):
                     ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
                 case "JobsAttempted":
                     ret_val = JobsAttempted.JobsAttempted(params=extractor_params, job_map=self._job_map, diff_map=self._diff_map)
+                case "RegionName":
+                    ret_val = RegionName.RegionName(params=extractor_params)
+                case "RegionJobCount":
+                    ret_val = RegionJobCount.RegionJobCount(params=extractor_params)
                 case "SyncCompletionTime":
                     ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
                 case _:

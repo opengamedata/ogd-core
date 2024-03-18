@@ -767,12 +767,6 @@
                 "description": "List of key events that happened in a player's session(s)",
                 "return_type": "list"
             },
-            "JobsAttempted": {
-                "enabled": true,
-                "type": "JobsAttempted",
-                "description": "List of attempted jobs for a player",
-                "return_type": "list[str]"
-            },
             "JobsCompleted": {
                 "enabled": true,
                 "type": "JobsCompleted",
