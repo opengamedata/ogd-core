@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools >= 61.0", "wheel", "setuptools-git-versioning >= 1.13"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools-git-versioning]
+enabled = true
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ['games/*/schemas/*.json.template', 'games/*/DBExport.json', 'core/schemas/table_schemas/*.json', 'games/LAKELAND/features/*.json']
+
+[project]
+name = "opengamedata-core"
+dynamic = ["version"]
+authors = [
+   { name="Luke Swanson", email="superscription58@gmail.com" },
+   { name="David Gagnon", email="djgagnon@wisc.edu" }
+]
+description = "A package for retrieving and processing event-based video game data. Additional authors: Nick Spevacek, Renee Li, John McCloskey, Zach Studdiford, Glenn Palmer, Haishuo Chen, Daus, Ameya Kshirsagar, Yunqing Xiao, Erik Harpstead, Manuel Jesus Gomez Moratilla"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/opengamedata/opengamedata-core"
+"Bug Tracker" = "https://github.com/opengamedata/opengamedata-core/issues"
+"Documentation" = "https://opengamedata-doc.readthedocs.io/en/latest/index.html"

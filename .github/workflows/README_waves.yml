@@ -1,0 +1,72 @@
+name: Wave Combinator Readme Update Script
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
+
+on:
+  push:
+    paths:
+    - 'src/ogd/games/WAVES/schemas/WAVES.json.template'
+    - '.github/workflows/README_waves.yml'
+    - 'src/ogd/core/utils/Readme.py'
+  workflow_dispatch:
+
+concurrency:
+  group: Readme-Scripts-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  ci_export:
+    name: Update Wave Combinator README.md
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+
+  # 1. Local checkout 
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+
+  # 2. Configure cloud & local environments
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        ssh_host: ${{vars.FD_STORE_HOST}}
+        ssh_user: ${{secrets.VPN_USER}}
+        ssh_pass: ${{secrets.VPN_PASS}}
+    - name: Set up Schema File
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: "WAVES"
+    - name: Configure Git User
+      run: |
+        git config --global user.name 'fieldday-service'
+        git config --global user.email 'fieldday@office365.wisc.edu'
+        git config --global pull.rebase false
+
+  # 3. Generate README
+    - name: Create README file
+      run: python main.py readme WAVES --destination src/ogd/games
+    - name: Commit README file
+      run: |
+        git pull
+        git add src/ogd/games/WAVES/README.md
+        git diff --staged --quiet || git commit -m "Update Wave Combinator README"
+    - name: Push Changes to GitHub
+      run: git push
+
+  # 4. Cleanup & complete
+    - name: Upload data as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: WAVES_readme
+        path: ./src/ogd/games/WAVES/README.md
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: log_data
+        path: ./*.log

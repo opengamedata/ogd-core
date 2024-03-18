@@ -1,0 +1,359 @@
+{
+    "level_range": { "min":0, "max":3 },
+
+    "game_state" : {
+        "gameLevel" : {
+            "type" : "str",
+            "description" : "The name of the level in which the event occurred."
+        },
+        "gameTime" : {
+            "type" : "int",
+            "description" : "The number of ?seconds? ?milliseconds? the player had spent in the game when the event occured."
+        },
+        "logID" : {
+            "type" : "float",
+            "description" : "TODO"
+        },
+        "jotID" : {
+            "type" : "float",
+            "description" : "TODO"
+        }
+    },
+
+    "events": {
+        "region": {
+            "description": "(code=1500), TODO",
+            "event_data": {
+                "city": {
+                    "type": "str",
+                    "description": "TODO"
+                },
+                "region": {
+                    "type": "str",
+                    "description": "TODO"
+                },
+                "country": {
+                    "type": "str",
+                    "description": "TODO"
+                },
+                "zipCode": {
+                    "type": "int",
+                    "description": "TODO"
+                }
+            }
+        },
+        "welcome": {
+            "description": "(code=4500), It only happens the first time the game runs",
+            "event_data": {
+                "agreed": {
+                    "type": "?bool?",
+                    "description": "TODO"
+                },
+                "age": {
+                    "type": "int",
+                    "description": "TODO"
+                },
+                "deviceType": {
+                    "type": "?str?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_level_stats": {
+            "description": "(code=5500), TODO",
+            "event_data": {
+                "right": {
+                    "type": "?int?",
+                    "description": "TODO"
+                },
+                "wrong": {
+                    "type": "?int?",
+                    "description": "TODO"
+                },
+                "missed": {
+                    "type": "?int?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_game_stats": {
+            "description": "(code=5501), TODO",
+            "event_data": {
+                "right": {
+                    "type": "?int?",
+                    "description": "TODO"
+                },
+                "wrong": {
+                    "type": "?int?",
+                    "description": "TODO"
+                },
+                "missed": {
+                    "type": "?int?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_level_times": {
+            "description": "(code=5502), TODO",
+            "event_data": {
+                "playTime": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                },
+                "gameTime": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                },
+                "averageTimeRight": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                },
+                "averageTimeWrong": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_game_times": {
+            "description": "(code=5503), TODO",
+            "event_data": {
+                "playTime": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                },
+                "gameTime": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                },
+                "averageTimeRight": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                },
+                "averageTimeWrong": {
+                    "type": "?timedelta?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "general_game_levels": {
+            "description": "(code=5504), TODO",
+            "event_data": {
+                "startLevel": {
+                    "type": "?str?",
+                    "description": "TODO"
+                },
+                "endLevel": {
+                    "type": "?str?",
+                    "description": "TODO"
+                },
+                "highestLevel": {
+                    "type": "?str?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "start_game": {
+            "description": "(code=1001), Generally not exported by Al",
+            "event_data": {
+                "gameName": {
+                    "type": "str",
+                    "description": "TODO"
+                }
+            }
+        },
+        "gamescribe_created": {
+            "description": "(code=1002), Generally not exported by Al",
+            "event_data": {
+                "gamescribeMode": {
+                    "type": "enum(trace, strict)",
+                    "description": "trace or strict (trace is for debug, strict for production)"
+                }
+            }
+        },
+        "settings": {
+            "description": "(code=2001), TODO",
+            "event_data": {
+                "playTime": {
+                    "type": "int",
+                    "description": "Amount of active play time research intended for players, as set in DREAM. Not counting instruction screens."
+                }
+            }
+        },
+        "main_menu_shown": {
+            "description": "(code=3001), TODO",
+            "event_data": {
+            }
+        },
+        "level_menu_shown": {
+            "description": "(code=3002), This will never be jotted for Fall 2018, because we're not using the level menu",
+            "event_data": {
+                "passedLevel": {
+                    "type": "bool",
+                    "description": "Binary - did they complete the level or not?"
+                },
+                "highestPanelUnlocked": {
+                    "type": "?int?",
+                    "description": "This refers to the highest panel unlocked. The game organizes progess in levels and panels (i.e., dots at the bottom), with up to 20 (?) levels per panel. "
+                },
+                "highestLevelUnlocked": {
+                    "type": "?int?",
+                    "description": "This shows the highest level unlocked. The game organizes progess in levels and panels, with up to 20 (?) levels per panel. "
+                }
+            }
+        },
+        "level_start": {
+            "description": "(code=3003), Called once the level starts, tutorial not included",
+            "event_data": {
+            }
+        },
+        "tutorial_slide": {
+            "description": "(code=3004), gameTime for when the instructions began",
+            "event_data": {
+                "slideNumber": {
+                    "type": "int",
+                    "description": "TODO"
+                },
+                "moleInstructions": {
+                    "type": "enum(NORMAL_MOLE, HAT_MOLE, BOMB_MOLE, NORMAL_AND_SPIKE_MOLE)",
+                    "description": "TODO"
+                }
+            }
+        },
+        "mole_appears": {
+            "description": "(code=3005), TODO",
+            "event_data": {
+                "moleID": {
+                    "type": "int",
+                    "description": "Number representing the order in which the avocado appeared, ranges from (1 - a number determined by level designer)."
+                },
+                "posX": {
+                    "type": "float",
+                    "description": "X position where avocado was spawned, 0,0 is lower left corner"
+                },
+                "posY": {
+                    "type": "float",
+                    "description": "Y position where avocado was spawned, 0,0 is lower left corner."
+                },
+                "moleType": {
+                    "type": "enum(NORMAL, SPIKE, HAT, ELECTRIC)",
+                    "description": "Regular, spike hat, hard hat, electric hat"
+                }
+            }
+        },
+        "mole_disappears": {
+            "description": "(code=3006), TODO",
+            "event_data": {
+                "moleID": {
+                    "type": "int",
+                    "description": "Number representing the order in which the avocado appeared, ranges from (1 - a number determined by level designer)."
+                },
+                "hitType": {
+                    "type": "enum(CORRECT_HIT, INCORRECT_HIT, CORRECT_MISSED, INCORRECT_MISSED)",
+                    "description": "Label for CORRECT_HIT, WRONG_HIT, CORRECT_MISSED, WRONG_MISSED if action is correct vs wrong"
+                },
+                "reactionTime": {
+                    "type": "float",
+                    "description": "Time between when the ... appears onscreen, vs when the player crushes the avocado"
+                },
+                "score": {
+                    "type": "int",
+                    "description": "Points received for that avocado"
+                }
+            }
+        },
+        "summary_screen": {
+            "description": "(code=3050), TODO",
+            "event_data": {
+                "levelPoints": {
+                    "type": "int",
+                    "description": "Summarizes points the participant earned during the level; never negative to protect feelings. Since this can never go below 0, may be different from LevelRealPoints"
+                },
+                "levelRealPoints": {
+                    "type": "int",
+                    "description": "Summarizes points the participant earned during the level; can be negative"
+                },
+                "maxLevelPoints": {
+                    "type": "int",
+                    "description": "Maximum points it would have been possible to earn"
+                },
+                "numStars": {
+                    "type": "int",
+                    "description": "Number of stars displayed after completing the level; depends on percentage"
+                }
+            }
+        },
+        "leaderboard_shown": {
+            "description": "(code=3051), TODO",
+            "event_data": {
+                "totalPoints": {
+                    "type": "?int?",
+                    "description": "Total points displayed to participant (?)"
+                },
+                "totalRealPoints": {
+                    "type": "?int?",
+                    "description": "Total points actually earned by participant (?)"
+                },
+                "classPoints": {
+                    "type": "?int?",
+                    "description": "Total points earned by the class (i.e., same access code)"
+                },
+                "highestClassPoints": {
+                    "type": "?int?",
+                    "description": "Highest point value earned by any class (in a Dream table, EF Leaderboard)"
+                }
+            }
+        },
+        "leaderboard_closed": {
+            "description": "(code=4050), TODO",
+            "event_data": {
+            }
+        },
+        "motivational_agent": {
+            "description": "(code=3053), Triggered when the motivational agent is shown in the screen",
+            "event_data": {
+                "message": {
+                    "type": "str",
+                    "description": "TODO"
+                },
+                "type": {
+                    "type": "int",
+                    "description": "Category of game message shown (0 - acknowledgement, 1 - encouragement)"
+                }
+            }
+        },
+        "next_level_summary": {
+            "description": "(code=4053), Triggered when the next button from the summary screen is clicked (indicates when exiting the current level)",
+            "event_data": {
+            }
+        },
+        "level_clicked": {
+            "description": "(code=4054), Triggered when a level in the levels menu is clicked",
+            "event_data": {
+                "level": {
+                    "type": "?int?",
+                    "description": "TODO"
+                }
+            }
+        },
+        "pre_level_screen": {
+            "description": "(code=3054), Triggered when the screen containing the information about the level is shown (right when a level starts, before the tutorial and level itself)",
+            "event_data": {
+                "level": {
+                    "type": "?int?",
+                    "description": "TODO"
+                }
+            }
+        }
+    },
+
+    "features": {
+        "per_count": {
+        },
+        "aggregate":{
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}
