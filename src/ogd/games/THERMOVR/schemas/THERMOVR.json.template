@@ -865,7 +865,6 @@
                 "is_correct_answer": {
                     "type": "bool",
                     "description": "Indicator for whether the submitted selection is correct or not (note, this could be derived from the `quiz_task`)."
-<<<<<<< HEAD:src/ogd/core/games/THERMOVR/schemas/THERMOVR.json.template
                 },
                 "hand": {
                     "type": "enum(LEFT, RIGHT, MOUSE)",
@@ -896,8 +895,6 @@
                 "was_correct_answer": {
                     "type": "bool",
                     "description": "Indicator for whether the previously-submitted selection was correct or not. If false, the player is resetting after a failed attempt."
-=======
->>>>>>> master:src/ogd/games/THERMOVR/schemas/THERMOVR.json.template
                 },
                 "hand": {
                     "type": "enum(LEFT, RIGHT, MOUSE)",
@@ -905,39 +902,6 @@
                 }
             }
         },
-<<<<<<< HEAD:src/ogd/core/games/THERMOVR/schemas/THERMOVR.json.template
-=======
-        "click_reset_quiz": {
-            "description": "When the player presses the button to reset the quiz after submitting an answer",
-            "event_data": {
-                "quiz_task" : {
-                    "type": "Dict[str, Any]",
-                    "details": {
-                        "category":"enum(MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
-                        "lab_name":"str",
-                        "section_number":"str",
-                        "task_number":"int",
-                        "is_active":"bool",
-                        "is_complete":"bool",
-                        "available_tools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
-                        "prompts":"List[str]",
-                        "options":"List[str | float]",
-                        "selected_options":"List[str | float]",
-                        "correct_answer":"float | str | List[float] | List[str]"
-                    },
-                    "description": "A list of the tasks for the current lab section shown to the player (not including any tasks that are available but undisplayed)."
-                },
-                "was_correct_answer": {
-                    "type": "bool",
-                    "description": "Indicator for whether the previously-submitted selection was correct or not. If false, the player is resetting after a failed attempt."
-                },
-                "hand": {
-                    "type": "enum(LEFT, RIGHT, MOUSE)",
-                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
-                }
-            }
-        },
->>>>>>> master:src/ogd/games/THERMOVR/schemas/THERMOVR.json.template
         "click_open_word_bank": {
             "description": "When the player presses the button to open the bank of words for a 'word bank' quiz",
             "event_data": {
