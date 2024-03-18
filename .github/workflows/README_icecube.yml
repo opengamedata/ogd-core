@@ -3,6 +3,8 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 
 on:
   push:
+    branches:
+    - master
     paths:
     - 'src/ogd/games/ICECUBE/schemas/ICECUBE.json.template'
     - '.github/workflows/README_icecube.yml'
