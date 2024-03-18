@@ -3,6 +3,8 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 
 on:
   push:
+    branches:
+    - master
     paths:
     - 'src/ogd/games/CYCLE_NITROGEN/schemas/CYCLE_NITROGEN.json.template'
     - '.github/workflows/README_cycle_nitrogen.yml'

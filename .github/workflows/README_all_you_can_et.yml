@@ -3,6 +3,8 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' &
 
 on:
   push:
+    branches:
+    - master
     paths:
     - 'src/ogd/games/ALL_YOU_CAN_ET/schemas/ALL_YOU_CAN_ET.json.template'
     - '.github/workflows/README_all_you_can_et.yml'
