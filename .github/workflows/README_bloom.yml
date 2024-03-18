@@ -59,7 +59,13 @@ jobs:
         git add src/ogd/games/BLOOM/README.md
         git diff --staged --quiet || git commit -m "Update Bloom README"
     - name: Push Changes to GitHub
-      run: git pushOOM_readme
+      run: git push
+
+  # 4. Cleanup & complete
+    - name: Upload data as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: BACTERIA_readme
         path: ./src/ogd/games/BLOOM/README.md
     - name: Upload logs as artifacts
       uses: actions/upload-artifact@v3
