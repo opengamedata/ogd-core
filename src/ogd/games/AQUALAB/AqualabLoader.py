@@ -133,7 +133,7 @@ class AqualabLoader(ExtractorLoader):
             match feature_type:
                 case "JobActiveTime":
                     ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
-                case "JobArgumentationTime":
+                case "JobArgumentation":
                     ret_val = JobArgumentation.JobArgumentation(params=extractor_params, job_map=self._job_map)
                 case "JobCompletionTime":
                     ret_val = JobCompletionTime.JobCompletionTime(params=extractor_params, job_map=self._job_map)
@@ -141,7 +141,7 @@ class AqualabLoader(ExtractorLoader):
                     ret_val = JobDiveSitesCount.JobDiveSitesCount(params=extractor_params, job_map=self._job_map)
                 case "JobDiveTime":
                     ret_val = JobDiveTime.JobDiveTime(params=extractor_params, job_map=self._job_map)
-                case "JobExperimentationTime":
+                case "JobExperimentation":
                     ret_val = JobExperimentation.JobExperimentation(params=extractor_params, job_map=self._job_map)
                 case "JobGuideCount":
                     ret_val = JobGuideCount.JobGuideCount(params=extractor_params, job_map=self._job_map)
@@ -149,7 +149,7 @@ class AqualabLoader(ExtractorLoader):
                     ret_val = JobHelpCount.JobHelpCount(params=extractor_params, job_map=self._job_map)
                 case "JobLocationChanges":
                     ret_val = JobLocationChanges.JobLocationChanges(params=extractor_params, job_map=self._job_map)
-                case "JobModelingTime":
+                case "JobModeling":
                     ret_val = JobModeling.JobModeling(params=extractor_params, job_map=self._job_map)
                 case "JobStartCount":
                     ret_val = JobStartCount.JobStartCount(params=extractor_params, job_map=self._job_map)
