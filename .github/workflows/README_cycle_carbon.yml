@@ -6,6 +6,7 @@ on:
     paths:
     - 'src/ogd/games/CYCLE_CARBON/schemas/CYCLE_CARBON.json.template'
     - '.github/workflows/README_cycle_carbon.yml'
+    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 concurrency:

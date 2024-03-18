@@ -6,6 +6,7 @@ on:
     paths:
     - 'src/ogd/games/PENGUINS/schemas/PENGUINS.json.template'
     - '.github/workflows/README_penguins.yml'
+    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 concurrency:

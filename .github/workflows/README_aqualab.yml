@@ -6,6 +6,7 @@ on:
     paths:
     - 'src/ogd/games/AQUALAB/schemas/AQUALAB.json.template'
     - '.github/workflows/README_aqualab.yml'
+    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 concurrency:

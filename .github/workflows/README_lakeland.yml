@@ -6,6 +6,7 @@ on:
     paths:
     - 'src/ogd/games/LAKELAND/schemas/LAKELAND.json.template'
     - '.github/workflows/README_lakeland.yml'
+    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 concurrency:

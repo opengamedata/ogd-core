@@ -6,6 +6,7 @@ on:
     paths:
     - 'src/ogd/games/BALLOON/schemas/BALLOON.json.template'
     - '.github/workflows/README_balloon.yml'
+    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 concurrency:

@@ -6,6 +6,7 @@ on:
     paths:
     - 'src/ogd/games/TRANSFORMATION_QUEST/schemas/TRANSFORMATION_QUEST.json.template'
     - '.github/workflows/README_transformation_quest.yml'
+    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 concurrency:

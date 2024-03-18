@@ -6,6 +6,7 @@ on:
     paths:
     - 'src/ogd/games/EARTHQUAKE/schemas/EARTHQUAKE.json.template'
     - '.github/workflows/README_earthquake.yml'
+    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 concurrency:

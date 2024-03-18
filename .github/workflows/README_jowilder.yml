@@ -6,6 +6,7 @@ on:
     paths:
     - 'src/ogd/games/JOWILDER/schemas/JOWILDER.json.template'
     - '.github/workflows/README_jowilder.yml'
+    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 concurrency:

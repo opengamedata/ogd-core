@@ -6,6 +6,7 @@ on:
     paths:
     - 'src/ogd/games/BLOOM/schemas/BLOOM.json.template'
     - '.github/workflows/README_bloom.yml'
+    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 concurrency:

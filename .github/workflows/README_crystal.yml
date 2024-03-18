@@ -6,6 +6,7 @@ on:
     paths:
     - 'src/ogd/games/CRYSTAL/schemas/CRYSTAL.json.template'
     - '.github/workflows/README_crystal.yml'
+    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 concurrency:

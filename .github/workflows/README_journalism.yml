@@ -6,6 +6,7 @@ on:
     paths:
     - 'src/ogd/games/JOURNALISM/schemas/JOURNALISM.json.template'
     - '.github/workflows/README_journalism.yml'
+    - 'src/ogd/core/utils/Readme.py'
   workflow_dispatch:
 
 concurrency:
