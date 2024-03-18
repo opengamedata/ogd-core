@@ -53,12 +53,11 @@ jobs:
       run: python main.py readme BACTERIA --destination src/ogd/games
     - name: Commit README file
       run: |
+        git pull
         git add src/ogd/games/BACTERIA/README.md
         git diff --staged --quiet || git commit -m "Update Bacteria README"
     - name: Push Changes to GitHub
-      run: |
-        git pull
-        git push
+      run: git push
 
   # 4. Cleanup & complete
     - name: Upload data as artifact
