@@ -655,20 +655,14 @@
             }
         },
         "battery_box_open": {
-            "description": "TODO.",
+            "description": "When the battery box opens after placing it on the workbench.",
             "event_data": {
-                "hand": {
-                    "type": "enum(Hand)",
-                    "description": "Indicator of whether the player pressed the button with their right or left hand."
-                }
             }
         },
         "battery_box_close": {
-            "description": "TODO.",
+            "description": "When the battery box closes after completing the battery puzzle.",
             "event_data": {
                 "hand": {
-                    "type": "enum(Hand)",
-                    "description": "Indicator of whether the player pressed the button with their right or left hand."
                 }
             }
         },
