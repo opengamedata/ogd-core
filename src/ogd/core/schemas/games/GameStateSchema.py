@@ -63,13 +63,3 @@ class GameStateSchema(Schema):
             ret_val = {}
             Logger.Log(f"event_data was unexpected type {type(event_data)}, defaulting to empty dict.", logging.WARN)
         return ret_val
-
-    @staticmethod
-    def _parseDescription(description):
-        ret_val : str
-        if isinstance(description, str):
-            ret_val = description
-        else:
-            ret_val = str(description)
-            Logger.Log(f"Event description was not a string, defaulting to str(description) == {ret_val}", logging.WARN)
-        return ret_val
