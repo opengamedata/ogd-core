@@ -333,8 +333,21 @@ class GameSchema(Schema):
                           ]
         feature_list = [feature.AsMarkdown for feature in self._aggregate_feats.values()] + [feature.AsMarkdown for feature in self._percount_feats.values()]
         feature_list = feature_list if len(feature_list) > 0 else ["None"]
+        # Include other elements
+        other_summary = ["## Other Elements",
+                         "Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors."
+                         ]
+        other_element_list = [ f"{key} : {self._other_elements[key]}" for key in self._other_elements.keys()]
+        other_range_summary = ["### Other Ranges",
+                         "Extra ranges specified in the game's schema, which may be referenced by event/feature processors."
+                         ]
+        other_range_list = [ f"{key} : {self._other_elements[key]}" for key in self.OtherRanges ]
 
-        ret_val = "  \n\n".join(event_summary + event_list + detector_summary + detector_list + feature_summary + feature_list)
+        ret_val = "  \n\n".join(event_summary + event_list
+                              + detector_summary + detector_list
+                              + feature_summary + feature_list
+                              + other_summary + other_element_list
+                              + other_range_summary + other_range_list)
 
         return ret_val
 
