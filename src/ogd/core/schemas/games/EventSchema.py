@@ -1,6 +1,6 @@
 # import standard libraries
 import logging
-from typing import Dict
+from typing import Any, Dict, Optional
 # import local files
 from ogd.core.schemas.games.EventDataElementSchema import EventDataElementSchema
 from ogd.core.schemas.Schema import Schema
@@ -13,23 +13,24 @@ class EventSchema(Schema):
     These essentially are just a description of the event, and a set of elements in the EventData attribute of the Event.
     """
     def __init__(self, name:str, all_elements:Dict[str, Dict]):
-        self._description : str
-        self._event_data  : Dict[str, EventDataElementSchema]
+        self._description : str                               = "No description available"
+        self._event_data  : Dict[str, EventDataElementSchema] = {}
+        _leftovers        : Optional[Dict[str, Any]]          = {}
 
         if not isinstance(all_elements, dict):
-            self._elements   = {}
             Logger.Log(f"For {name} Event config, all_elements was not a dict, defaulting to empty dict", logging.WARN)
-        if "description" in all_elements.keys():
-            self._description = EventSchema._parseDescription(description=all_elements['description'])
         else:
-            self._description = "Unknown"
-            Logger.Log(f"{name} EventSchema config does not have a 'description' element; defaulting to description='{self._description}", logging.WARN)
-        if "event_data" in all_elements.keys():
-            self._event_data = EventSchema._parseEventDataElements(event_data=all_elements['event_data'])
-        else:
-            self._event_data = {}
-            Logger.Log(f"{name} EventSchema config does not have an 'event_data' element; defaulting to empty dict", logging.WARN)
-        _leftovers = { key : val for key,val in all_elements.items() if key not in {"description", "event_data"} }
+            if "description" in all_elements.keys():
+                self._description = EventSchema._parseDescription(description=all_elements['description'])
+            else:
+                self._description = "Unknown"
+                Logger.Log(f"{name} EventSchema config does not have a 'description' element; defaulting to description='{self._description}", logging.WARN)
+            if "event_data" in all_elements.keys():
+                self._event_data = EventSchema._parseEventDataElements(event_data=all_elements['event_data'])
+            else:
+                self._event_data = {}
+                Logger.Log(f"{name} EventSchema config does not have an 'event_data' element; defaulting to empty dict", logging.WARN)
+            _leftovers = { key : val for key,val in all_elements.items() if key not in {"description", "event_data"} }
         super().__init__(name=name, other_elements=_leftovers)
 
     @property
