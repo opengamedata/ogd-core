@@ -50,7 +50,7 @@ class EventSchema(Schema):
                   [elem.AsMarkdown for elem in self.EventData.values()]
                 + (["- Other Elements:"] +
                    [f"  - **{elem_name}**: {elem_desc}" for elem_name,elem_desc in self.NonStandardElements]
-                  ) if len(self.NonStandardElements) > 0 else ["None"]
+                  ) if len(self.NonStandardElements) > 0 else []
             )
         ])
 
