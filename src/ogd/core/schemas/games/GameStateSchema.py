@@ -41,12 +41,11 @@ class GameStateSchema(Schema):
     def AsMarkdownTable(self) -> str:
         return "\n\n".join([
             f"### **{self.Name}**",
-            f"{self.Description}",
             "#### Event Data",
             "\n".join(
                 ["| **Name** | **Type** | **Description** | **Sub-Elements** |",
-                 "| ---      | ---      | ---             | ---         |"]
-              + [elem.AsMarkdownRow for elem in self.EventData.values()]
+                 "| ---      | ---      | ---             | ---              |"]
+              + [elem.AsMarkdownRow for elem in self.GameStateElements.values()]
             ),
             "#### Other Elements",
             "\n".join(
