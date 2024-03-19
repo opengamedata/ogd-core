@@ -700,13 +700,12 @@ When the player presses the button to test the propeller they placed on the wind
 
 ### **battery_box_open**
 
-TODO.
+When the battery box opens after placing it on the workbench.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| hand | enum(Hand) | Indicator of whether the player pressed the button with their right or left hand. | |
 
 #### Other Elements
 
@@ -714,13 +713,13 @@ TODO.
 
 ### **battery_box_close**
 
-TODO.
+When the battery box closes after completing the battery puzzle.
 
 #### Event Data
 
 | **Name** | **Type** | **Description** | **Sub-Elements** |
 | ---      | ---      | ---             | ---         |
-| hand | enum(Hand) | Indicator of whether the player pressed the button with their right or left hand. | |
+| hand | Unknown | Unknown | |
 
 #### Other Elements
 
