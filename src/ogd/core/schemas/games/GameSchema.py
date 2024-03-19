@@ -95,7 +95,7 @@ class GameSchema(Schema):
                 self._max_level = _schema.get("level_range", {}).get('max', None)
 
     # 7. Get other ranges, if any
-            self._other_ranges = {key:range(val.get('min', 0), val.get('max', 1)) for key,val in _schema.items() if key.endswith("_range")}
+            self._other_ranges = {key : range(val.get('min', 0), val.get('max', 1)) for key,val in _schema.items() if key.endswith("_range")}
 
     # 8. Get config, if any
             self._config = _schema.get('config', {})
@@ -341,7 +341,7 @@ class GameSchema(Schema):
         other_range_summary = ["### Other Ranges",
                          "Extra ranges specified in the game's schema, which may be referenced by event/feature processors."
                          ]
-        other_range_list = [ f"{key} : {self._other_elements[key]}" for key in self.OtherRanges ]
+        other_range_list = [ f"{key} : {self.OtherRanges[key]}" for key in self.OtherRanges ]
 
         ret_val = "  \n\n".join(event_summary + event_list
                               + detector_summary + detector_list
