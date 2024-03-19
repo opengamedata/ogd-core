@@ -21,7 +21,6 @@ class EventDataElementSchema(Schema):
             else:
                 all_elements = {}
                 Logger.Log(f"For EventDataElement config of `{name}`, all_elements was not a dict, defaulting to empty dict", logging.WARN)
-
         if "type" in all_elements.keys():
             self._type = EventDataElementSchema._parseElementType(all_elements['type'])
         else:
