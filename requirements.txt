@@ -5,6 +5,7 @@ google-cloud-bigquery==3.4.0
 mysql-connector-python==8.0.25
 numpy>=1.23.*
 pandas>=1.5.*
+python-dateutil>=2.8.*
 scikit-learn>=1.2.*
 sshtunnel==0.4.0
 twine>=4.0.*
