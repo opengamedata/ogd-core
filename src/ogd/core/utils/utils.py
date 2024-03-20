@@ -13,7 +13,7 @@ map = Dict[str, Any]
 ExportRow = List[Any]
 
 ## Function to open a given JSON file, and retrieve the data as a Python object.
-def loadJSONFile(filename:str, path:Path = Path("./"), autocorrect_extension:bool = True) -> Dict[Any, Any]:
+def loadJSONFile(filename:str, path:Path = Path("./"), autocorrect_extension:bool = True) -> Dict[str, Any]:
     """Function to open a given JSON file, and retrieve the data as a Python object.
 
     :param filename: The name of the JSON file. If the file extension is not .json, then ".json" will be appended.
