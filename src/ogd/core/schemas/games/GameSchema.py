@@ -3,14 +3,16 @@ import logging
 from importlib.resources import files
 from pathlib import Path
 from shutil import copyfile
-from typing import Any, Dict, List, Optional, Set, Union
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
 # import local files
 from ogd.core.schemas.Schema import Schema
 from ogd.core.schemas.games.AggregateSchema import AggregateSchema
 from ogd.core.schemas.games.DetectorSchema import DetectorSchema
+from ogd.core.schemas.games.DetectorMapSchema import DetectorMapSchema
 from ogd.core.schemas.games.EventSchema import EventSchema
-from ogd.core.schemas.games.FeatureSchema import FeatureSchema
 from ogd.core.schemas.games.PerCountSchema import PerCountSchema
+from ogd.core.schemas.games.FeatureSchema import FeatureSchema
+from ogd.core.schemas.games.FeatureMapSchema import FeatureMapSchema
 from ogd.core.schemas.IterationMode import IterationMode
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.utils import utils
@@ -46,70 +48,56 @@ class GameSchema(Schema):
         self._percount_feats         : Dict[str, PerCountSchema]            = {}
         self._legacy_perlevel_feats  : Dict[str, PerCountSchema]            = {}
         self._legacy_mode            : bool                                 = False
-        self._game_id                : str                                  = game_id
+        self._game_id                : str                                  = name
         self._config                 : Dict[str, Any]
         self._game_state             : Dict[str, Any]
         self._other_ranges           : Dict[str, range]
-        self._min_level              : Optional[int]
-        self._max_level              : Optional[int]
+        self._min_level              : Optional[int]                        = None
+        self._max_level              : Optional[int]                        = None
         self._supported_vers         : Optional[List[int]]
     # 2. set instance vars
-        if not isinstance(_schema, dict):
+        if not isinstance(all_elements, dict):
             all_elements   = {}
             Logger.Log(f"For {self._game_id} GameSchema, all_elements was not a dict, defaulting to empty dict", logging.WARN)
-        if _schema is not None:
-    # 3. Get events, if any
-            if "events" in _schema.keys():
-                self._event_list = [EventSchema(name=key, all_elements=val) for key,val in _schema['events'].items()]
-            else:
-                Logger.Log(f"{self._game_id} game schema does not document any events.", logging.INFO)
-    # 4. Get detectors, if any
-            if "detectors" in _schema.keys():
-                if "perlevel" in _schema['detectors']:
-                    _perlevels = _schema['detectors']['perlevel']
-                    self._detector_map['per_count'] = {key : DetectorSchema(name=key, all_elements=val) for key,val in _perlevels.items()}
-                if "per_count" in _schema['detectors']:
-                    _percounts = _schema['detectors']['per_count']
-                    self._detector_map['per_count'].update({key : DetectorSchema(name=key, all_elements=val) for key,val in _percounts.items()})
-                if "aggregate" in _schema['detectors']:
-                    _aggregates = _schema['detectors']['aggregate']
-                    self._detector_map['aggregate'] = {key : DetectorSchema(name=key, all_elements=val) for key,val in _aggregates.items()}
-            else:
-                Logger.Log(f"{self._game_id} game schema does not define any detectors.", logging.INFO)
-    # 5. Get features, if any
-            if "features" in _schema.keys():
-                if "legacy" in _schema['features'].keys():
-                    self._legacy_mode = _schema['features']['legacy'].get('enabled', False)
-                if "perlevel" in _schema['features']:
-                    _perlevels = _schema['features']['perlevel']
-                    self._legacy_perlevel_feats.update({key : PerCountSchema(name=key, all_elements=val) for key,val in _perlevels.items()})
-                if "per_count" in _schema['features']:
-                    _percounts = _schema['features']['per_count']
-                    self._percount_feats.update({key : PerCountSchema(name=key, all_elements=val) for key,val in _percounts.items()})
-                if "aggregate" in _schema['features']:
-                    _aggregates = _schema['features']['aggregate']
-                    self._aggregate_feats.update({key : AggregateSchema(name=key, all_elements=val) for key,val in _aggregates.items()})
-            else:
-                Logger.Log(f"{self._game_id} game schema does not define any features.", logging.INFO)
+        if "events" in all_elements.keys():
+            self._event_list = GameSchema._parseEventList(events_list=all_elements['events'])
+        else:
+            Logger.Log(f"{self._game_id} game schema does not document any events.", logging.INFO)
+        if "detectors" in all_elements.keys():
+            # TODO : Just have DetectorMapSchema directly
+            _detector_map = GameSchema._parseDetectorMap(detector_map=all_elements['detectors'])
+            self._detector_map = _detector_map.AsDict
+        else:
+            Logger.Log(f"{self._game_id} game schema does not define any detectors.", logging.INFO)
+        if "features" in all_elements.keys():
+            # TODO : Just have the FeatureMapSchema directly, not 4 different things.
+            _feat_map = GameSchema._parseFeatureMap(feature_map=all_elements['features'])
+            self._legacy_mode = _feat_map.LegacyMode
+            self._legacy_perlevel_feats.update(_feat_map.LegacyPerLevelFeatures)
+            self._percount_feats.update(_feat_map.PerCountFeatures)
+            self._aggregate_feats.update(_feat_map.AggregateFeatures)
+        else:
+            Logger.Log(f"{self._game_id} game schema does not define any features.", logging.INFO)
     # 6. Get level_range, if any
-            if "level_range" in _schema.keys():
-                self._min_level = _schema.get("level_range", {}).get('min', None)
-                self._max_level = _schema.get("level_range", {}).get('max', None)
+        if "level_range" in all_elements.keys():
+            self._min_level, self._max_level = GameSchema._parseLevelRange(all_elements['level_range'])
+        else:
+            Logger.Log(f"{self._game_id} game schema does not define a level range.", logging.INFO)
 
     # 7. Get other ranges, if any
-            self._other_ranges = {key : range(val.get('min', 0), val.get('max', 1)) for key,val in _schema.items() if key.endswith("_range")}
+        self._other_ranges = {key : range(val.get('min', 0), val.get('max', 1)) for key,val in _schema.items() if key.endswith("_range")}
 
     # 8. Get config, if any
-            self._config = _schema.get('config', {})
-            if "SUPPORTED_VERS" in _schema['config']:
-                self._supported_vers = _schema['config']['SUPPORTED_VERS']
-            else:
-                self._supported_vers = None
-                Logger.Log(f"{self._game_id} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
+        self._config = _schema.get('config', {})
+        if "SUPPORTED_VERS" in _schema['config']:
+            self._supported_vers = _schema['config']['SUPPORTED_VERS']
+        else:
+            self._supported_vers = None
+            Logger.Log(f"{self._game_id} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
 
     # 9. Collect any other, unexpected elements
-            _leftovers = { key:val for key,val in _schema.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
-            super().__init__(name=self._game_id, other_elements=_leftovers)
+        _leftovers = { key:val for key,val in _schema.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
+        super().__init__(name=self._game_id, other_elements=_leftovers)
 
     # *** BUILT-INS & PROPERTIES ***
 
@@ -404,6 +392,46 @@ class GameSchema(Schema):
                 print(f"(via print) Could not copy {schema_name} from template, a {type(cp_err)} error occurred:\n{cp_err}")
             else:
                 Logger.Log(       f"Successfully copied {schema_name} from template.", logging.DEBUG, depth=2)
+        return ret_val
+
+    @staticmethod
+    def _parseEventList(events_list:Dict[str, Any]) -> List[EventSchema]:
+        ret_val : List[EventSchema]
+        if isinstance(events_list, dict):
+            ret_val = [EventSchema(name=key, all_elements=val) for key,val in events_list.items()]
+        else:
+            ret_val = []
+            Logger.Log(f"events_list was unexpected type {type(events_list)}, defaulting to empty List.", logging.WARN)
+        return ret_val
+
+    @staticmethod
+    def _parseDetectorMap(detector_map:Dict[str, Any]) -> DetectorMapSchema:
+        ret_val : DetectorMapSchema
+        if isinstance(detector_map, dict):
+            ret_val = DetectorMapSchema(name=f"Detectors", all_elements=detector_map)
+        else:
+            ret_val = DetectorMapSchema(name="Empty Features", all_elements={})
+            Logger.Log(f"detector_map was unexpected type {type(detector_map)}, defaulting to empty map.", logging.WARN)
+        return ret_val
+
+    @staticmethod
+    def _parseFeatureMap(feature_map:Dict[str, Any]) -> FeatureMapSchema:
+        ret_val : FeatureMapSchema
+        if isinstance(feature_map, dict):
+            ret_val = FeatureMapSchema(name=f"Features", all_elements=feature_map)
+        else:
+            ret_val = FeatureMapSchema(name="Empty Features", all_elements={})
+            Logger.Log(f"feature_map was unexpected type {type(feature_map)}, defaulting to empty map.", logging.WARN)
+        return ret_val
+
+    @staticmethod
+    def _parseLevelRange(level_range:Dict[str, int]) -> Tuple[Optional[int], Optional[int]]:
+        ret_val : Tuple[Optional[int], Optional[int]]
+        if isinstance(level_range, dict):
+            ret_val = (level_range.get("min", None), level_range.get("max", None))
+        else:
+            ret_val = (None, None)
+            Logger.Log(f"level_range was unexpected type {type(level_range)}, defaulting to no specified range.", logging.WARN)
         return ret_val
 
     # *** PRIVATE METHODS ***
