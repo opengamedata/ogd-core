@@ -78,25 +78,21 @@ class GameSchema(Schema):
             self._aggregate_feats.update(_feat_map.AggregateFeatures)
         else:
             Logger.Log(f"{self._game_id} game schema does not define any features.", logging.INFO)
-    # 6. Get level_range, if any
         if "level_range" in all_elements.keys():
             self._min_level, self._max_level = GameSchema._parseLevelRange(all_elements['level_range'])
         else:
             Logger.Log(f"{self._game_id} game schema does not define a level range.", logging.INFO)
-
     # 7. Get other ranges, if any
-        self._other_ranges = {key : range(val.get('min', 0), val.get('max', 1)) for key,val in _schema.items() if key.endswith("_range")}
-
+        self._other_ranges = {key : range(val.get('min', 0), val.get('max', 1)) for key,val in all_elements.items() if key.endswith("_range")}
     # 8. Get config, if any
-        self._config = _schema.get('config', {})
-        if "SUPPORTED_VERS" in _schema['config']:
-            self._supported_vers = _schema['config']['SUPPORTED_VERS']
+        self._config = all_elements.get('config', {})
+        if "SUPPORTED_VERS" in all_elements['config']:
+            self._supported_vers = all_elements['config']['SUPPORTED_VERS']
         else:
             self._supported_vers = None
             Logger.Log(f"{self._game_id} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
-
     # 9. Collect any other, unexpected elements
-        _leftovers = { key:val for key,val in _schema.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
+        _leftovers = { key:val for key,val in all_elements.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
         super().__init__(name=self._game_id, other_elements=_leftovers)
 
     # *** BUILT-INS & PROPERTIES ***
