@@ -3,10 +3,7 @@ import logging
 from typing import Any, Dict, List, Optional
 # import local files
 from ogd.core.schemas.games.AggregateSchema import AggregateSchema
-from ogd.core.schemas.games.FeatureSchema import FeatureSchema
 from ogd.core.schemas.games.PerCountSchema import PerCountSchema
-from ogd.core.schemas.IterationMode import IterationMode
-from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
