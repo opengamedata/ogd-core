@@ -28,7 +28,7 @@ class GameSchema(Schema):
 
     # TODO: need to get game_state from schema file.
 
-    def __init__(self, game_id:str, schema_path:Optional[Path] = None):
+    def __init__(self, name:str, all_elements:Dict[str, Any]):
         """Constructor for the GameSchema class.
         Given a path and filename, it loads the data from a JSON schema,
         storing the full schema into a private variable, and compiling a list of
@@ -39,8 +39,6 @@ class GameSchema(Schema):
         :param schema_path: schema_path Path to the folder containing the JSON schema file; if None is given, defaults to ./ogd/games/{game_id}/schemas/
         :type schema_path: str, optional
         """
-        # Give schema_path a default, don't think we can use game_id to construct it directly in the function header (so do it here if None)
-        schema_path = schema_path or Path("./") / "ogd" / "games" / game_id / "schemas"
     # 1. define instance vars
         self._event_list             : List[EventSchema] = []
         self._detector_map           : Dict[str, Dict[str, DetectorSchema]] = {'perlevel':{}, 'per_count':{}, 'aggregate':{}}
@@ -50,11 +48,15 @@ class GameSchema(Schema):
         self._legacy_mode            : bool                                 = False
         self._game_id                : str                                  = game_id
         self._config                 : Dict[str, Any]
+        self._game_state             : Dict[str, Any]
+        self._other_ranges           : Dict[str, range]
         self._min_level              : Optional[int]
         self._max_level              : Optional[int]
         self._supported_vers         : Optional[List[int]]
     # 2. set instance vars
-        _schema = GameSchema._loadSchemaFile(game_name=self._game_id, schema_path=schema_path)
+        if not isinstance(_schema, dict):
+            all_elements   = {}
+            Logger.Log(f"For {self._game_id} GameSchema, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if _schema is not None:
     # 3. Get events, if any
             if "events" in _schema.keys():
@@ -109,108 +111,10 @@ class GameSchema(Schema):
             _leftovers = { key:val for key,val in _schema.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
             super().__init__(name=self._game_id, other_elements=_leftovers)
 
+    # *** BUILT-INS & PROPERTIES ***
+
     # def __getitem__(self, key) -> Any:
     #     return _schema[key] if _schema is not None else None
-
-    # *** PUBLIC METHODS ***
-
-    def GetCountRange(self, count:Any) -> range:
-        """Function to get a predefined range for per-count features, or to generate a range up to given count.
-        Typically, this would be used to retrieve the `level_range` for the game.
-        However, any other ranges defined in the game's schema can be retrieved here, or a custom range object generated (using `int(count)`).
-
-        :param count: The name of a range defined in the game schema, or an object that can be int-ified to define a custom range.
-        :type count: Any
-        :return: The range object with name given by `count`, or a new range from 0 to (but not including) `int(count)`
-        :rtype: range
-        """
-        if isinstance(count, str):
-            if count.lower() == "level_range":
-                count_range = self.LevelRange
-            elif count in self.OtherRanges.keys():
-                count_range = self.OtherRanges.get(count, range(0))
-            else:
-                other_range : Dict[str, int] = self.NonStandardElements.get(count, {'min':0, 'max':-1})
-                count_range = range(other_range['min'], other_range['max']+1)
-        else:
-            count_range = range(0,int(count))
-        return count_range
-
-    def DetectorEnabled(self, detector_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
-        """Function to check if detector with given base name and iteration mode (aggregate or percount) is enabled for given extract mode.
-
-        :param detector_name: The base name of the detector class to check
-        :type detector_name: str
-        :param iter_mode: The "iteration" mode of the detector class (aggregate or per-count)
-        :type iter_mode: IterationMode
-        :param extract_mode: The extraction mode of the detector (which... should always be detector?)
-        :type extract_mode: ExtractionMode
-        :raises ValueError: Error indicating an unrecognized iteration mode was given.
-        :return: True if the given detector is enabled in the schema, otherwise False
-        :rtype: bool
-        """
-        if self._legacy_mode:
-            return False
-        ret_val : bool
-
-        _detector_schema : Optional[DetectorSchema]
-        match iter_mode:
-            case IterationMode.AGGREGATE:
-                _detector_schema = self.Detectors['aggregate'].get(detector_name)
-            case IterationMode.PERCOUNT:
-                _detector_schema = self.Detectors['per_count'].get(detector_name, self.Detectors['perlevel'].get(detector_name))
-            case _:
-                raise ValueError(f"In GameSchema, DetectorEnabled was given an unrecognized iteration mode of {iter_mode.name}")
-        if _detector_schema is not None:
-            ret_val = extract_mode in _detector_schema.Enabled
-        else:
-            Logger.Log(f"Could not find detector {detector_name} in schema for {iter_mode.name} mode")
-            ret_val = False
-        return ret_val
-
-    def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
-        if self._legacy_mode:
-            return feature_name == "legacy"
-        ret_val : bool
-
-        _feature_schema : Optional[FeatureSchema]
-        match iter_mode:
-            case IterationMode.AGGREGATE:
-                _feature_schema = self.AggregateFeatures.get(feature_name)
-            case IterationMode.PERCOUNT:
-                _feature_schema = self.PerCountFeatures.get(feature_name)
-            case _:
-                raise ValueError(f"In GameSchema, FeatureEnabled was given an unrecognized iteration mode of {iter_mode.name}")
-        if _feature_schema is not None:
-            ret_val = extract_mode in _feature_schema.Enabled
-        else:
-            Logger.Log(f"Could not find feature {feature_name} in schema for {iter_mode.name} mode")
-            ret_val = False
-        return ret_val
-
-    def EnabledDetectors(self, iter_modes:Set[IterationMode], extract_modes:Set[ExtractionMode]=set()) -> Dict[str, DetectorSchema]:
-        if self._legacy_mode:
-            return {}
-        ret_val : Dict[str, DetectorSchema] = {}
-
-        if IterationMode.AGGREGATE in iter_modes:
-            ret_val.update({key:val for key,val in self.AggregateDetectors.items() if val.Enabled.issuperset(extract_modes)})
-        if IterationMode.PERCOUNT in iter_modes:
-            ret_val.update({key:val for key,val in self.PerCountDetectors.items() if val.Enabled.issuperset(extract_modes)})
-        return ret_val
-
-    def EnabledFeatures(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.PERCOUNT}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, FeatureSchema]:
-        if self._legacy_mode:
-            return {"legacy" : AggregateSchema("legacy", {"type":"legacy", "return_type":None, "description":"", "enabled":True})} if IterationMode.AGGREGATE in iter_modes else {}
-        ret_val : Dict[str, FeatureSchema] = {}
-
-        if IterationMode.AGGREGATE in iter_modes:
-            ret_val.update({key:val for key,val in self.AggregateFeatures.items() if val.Enabled.issuperset(extract_modes)})
-        if IterationMode.PERCOUNT in iter_modes:
-            ret_val.update({key:val for key,val in self.PerCountFeatures.items() if val.Enabled.issuperset(extract_modes)})
-        return ret_val
-
-    # *** PROPERTIES ***
 
     @property
     def GameName(self) -> str:
@@ -251,7 +155,6 @@ class GameSchema(Schema):
         """
         return self.Detectors.get("per_count", {})
 
-    ## Function to retrieve the 
     @property
     def AggregateDetectors(self) -> Dict[str, DetectorSchema]:
         """Property for the dictionary of aggregate detectors.
@@ -349,6 +252,113 @@ class GameSchema(Schema):
                               + other_summary + other_element_list
                               + other_range_summary + other_range_list)
 
+        return ret_val
+
+
+    # *** PUBLIC STATICS ***
+    @staticmethod
+    def FromFile(game_id:str, schema_path:Optional[Path] = None):
+        # Give schema_path a default, don't think we can use game_id to construct it directly in the function header (so do it here if None)
+        schema_path = schema_path or Path("./") / "ogd" / "games" / game_id / "schemas"
+        all_elements = GameSchema._loadSchemaFile(game_name=game_id, schema_path=schema_path)
+        return GameSchema(name=game_id, all_elements=all_elements or {})
+
+    # *** PUBLIC METHODS ***
+
+    def GetCountRange(self, count:Any) -> range:
+        """Function to get a predefined range for per-count features, or to generate a range up to given count.
+        Typically, this would be used to retrieve the `level_range` for the game.
+        However, any other ranges defined in the game's schema can be retrieved here, or a custom range object generated (using `int(count)`).
+
+        :param count: The name of a range defined in the game schema, or an object that can be int-ified to define a custom range.
+        :type count: Any
+        :return: The range object with name given by `count`, or a new range from 0 to (but not including) `int(count)`
+        :rtype: range
+        """
+        if isinstance(count, str):
+            if count.lower() == "level_range":
+                count_range = self.LevelRange
+            elif count in self.OtherRanges.keys():
+                count_range = self.OtherRanges.get(count, range(0))
+            else:
+                other_range : Dict[str, int] = self.NonStandardElements.get(count, {'min':0, 'max':-1})
+                count_range = range(other_range['min'], other_range['max']+1)
+        else:
+            count_range = range(0,int(count))
+        return count_range
+
+    def DetectorEnabled(self, detector_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+        """Function to check if detector with given base name and iteration mode (aggregate or percount) is enabled for given extract mode.
+
+        :param detector_name: The base name of the detector class to check
+        :type detector_name: str
+        :param iter_mode: The "iteration" mode of the detector class (aggregate or per-count)
+        :type iter_mode: IterationMode
+        :param extract_mode: The extraction mode of the detector (which... should always be detector?)
+        :type extract_mode: ExtractionMode
+        :raises ValueError: Error indicating an unrecognized iteration mode was given.
+        :return: True if the given detector is enabled in the schema, otherwise False
+        :rtype: bool
+        """
+        if self._legacy_mode:
+            return False
+        ret_val : bool
+
+        _detector_schema : Optional[DetectorSchema]
+        match iter_mode:
+            case IterationMode.AGGREGATE:
+                _detector_schema = self.Detectors['aggregate'].get(detector_name)
+            case IterationMode.PERCOUNT:
+                _detector_schema = self.Detectors['per_count'].get(detector_name, self.Detectors['perlevel'].get(detector_name))
+            case _:
+                raise ValueError(f"In GameSchema, DetectorEnabled was given an unrecognized iteration mode of {iter_mode.name}")
+        if _detector_schema is not None:
+            ret_val = extract_mode in _detector_schema.Enabled
+        else:
+            Logger.Log(f"Could not find detector {detector_name} in schema for {iter_mode.name} mode")
+            ret_val = False
+        return ret_val
+
+    def FeatureEnabled(self, feature_name:str, iter_mode:IterationMode, extract_mode:ExtractionMode) -> bool:
+        if self._legacy_mode:
+            return feature_name == "legacy"
+        ret_val : bool
+
+        _feature_schema : Optional[FeatureSchema]
+        match iter_mode:
+            case IterationMode.AGGREGATE:
+                _feature_schema = self.AggregateFeatures.get(feature_name)
+            case IterationMode.PERCOUNT:
+                _feature_schema = self.PerCountFeatures.get(feature_name)
+            case _:
+                raise ValueError(f"In GameSchema, FeatureEnabled was given an unrecognized iteration mode of {iter_mode.name}")
+        if _feature_schema is not None:
+            ret_val = extract_mode in _feature_schema.Enabled
+        else:
+            Logger.Log(f"Could not find feature {feature_name} in schema for {iter_mode.name} mode")
+            ret_val = False
+        return ret_val
+
+    def EnabledDetectors(self, iter_modes:Set[IterationMode], extract_modes:Set[ExtractionMode]=set()) -> Dict[str, DetectorSchema]:
+        if self._legacy_mode:
+            return {}
+        ret_val : Dict[str, DetectorSchema] = {}
+
+        if IterationMode.AGGREGATE in iter_modes:
+            ret_val.update({key:val for key,val in self.AggregateDetectors.items() if val.Enabled.issuperset(extract_modes)})
+        if IterationMode.PERCOUNT in iter_modes:
+            ret_val.update({key:val for key,val in self.PerCountDetectors.items() if val.Enabled.issuperset(extract_modes)})
+        return ret_val
+
+    def EnabledFeatures(self, iter_modes:Set[IterationMode]={IterationMode.AGGREGATE, IterationMode.PERCOUNT}, extract_modes:Set[ExtractionMode]=set()) -> Dict[str, FeatureSchema]:
+        if self._legacy_mode:
+            return {"legacy" : AggregateSchema("legacy", {"type":"legacy", "return_type":None, "description":"", "enabled":True})} if IterationMode.AGGREGATE in iter_modes else {}
+        ret_val : Dict[str, FeatureSchema] = {}
+
+        if IterationMode.AGGREGATE in iter_modes:
+            ret_val.update({key:val for key,val in self.AggregateFeatures.items() if val.Enabled.issuperset(extract_modes)})
+        if IterationMode.PERCOUNT in iter_modes:
+            ret_val.update({key:val for key,val in self.PerCountFeatures.items() if val.Enabled.issuperset(extract_modes)})
         return ret_val
 
     # *** PRIVATE STATICS ***

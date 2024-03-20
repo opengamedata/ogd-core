@@ -123,7 +123,7 @@ class ExportManager:
 
     def _preProcess(self, request:Request) -> None:
         _games_path  = Path(games.__file__) if Path(games.__file__).is_dir() else Path(games.__file__).parent
-        _game_schema  : GameSchema  = GameSchema(game_id=request.GameID, schema_path=_games_path / request.GameID / "schemas")
+        _game_schema  : GameSchema  = GameSchema.FromFile(game_id=request.GameID, schema_path=_games_path / request.GameID / "schemas")
         # 1. Get LoaderClass and set up Event and Feature managers.
         load_class = self._loadLoaderClass(request.GameID)
         if load_class is None:
