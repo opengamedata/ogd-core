@@ -5,29 +5,28 @@ from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
-class TaskCompleteCount(SessionFeature):
+class PlayMode(SessionFeature):
 
     def __init__(self, params: ExtractorParameters, player_id: str):
-        self.task_complete_count = 0
+        self.play_mode = None
         super().__init__(params=params)
 
     @classmethod
     def _getEventDependencies(cls, mode: ExtractionMode) -> List[str]:
-        return ["click_new_game", "click_reset_sim"]
+        return ["game_start"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
-        if event.EventType in ["click_new_game", "click_reset_sim"]:
-            if event.EventData.get("current_task"):
-                is_complete = event.EventData["current_task"].get("is_complete")
-                if is_complete:
-                    self.task_complete_count += 1
+        if event.EventType == "game_start":
+            mode = event.EventData.get("mode")
+            if mode:
+                self.play_mode = mode
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self.task_complete_count]
+        return [self.play_mode]
