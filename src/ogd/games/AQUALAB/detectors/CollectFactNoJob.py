@@ -5,7 +5,7 @@ from typing import Callable, List
 # import local files
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
-from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import ExtractorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 

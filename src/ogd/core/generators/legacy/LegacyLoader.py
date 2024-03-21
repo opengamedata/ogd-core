@@ -1,7 +1,7 @@
 # import libraries
 from typing import List, Optional, Type
 # import locals
-from ogd.core.generators.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import ExtractorLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema

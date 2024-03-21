@@ -4,7 +4,7 @@ import traceback
 from typing import List, Dict, Type, Optional, Set
 # import local files
 from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.generators.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import ExtractorLoader
 from ogd.core.generators.registries.FeatureRegistry import FeatureRegistry
 from ogd.core.processors.FeatureProcessor import FeatureProcessor
 from ogd.core.schemas.Event import Event

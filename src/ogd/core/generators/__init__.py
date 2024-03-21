@@ -3,11 +3,11 @@ __all__ = [
     "detectors",
     "extractors",
     "registries",
-    "ExtractorLoader"
+    "GeneratorLoader"
 ]
 
 from . import Extractor
 from . import detectors
 from . import extractors
 from . import registries
-from . import ExtractorLoader
+from . import GeneratorLoader

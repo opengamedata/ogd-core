@@ -3,10 +3,10 @@ from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from . import features
 from ogd.core.generators.detectors.Detector import Detector
-from ogd.core.generators.Extractor import ExtractorParameters
-from ogd.core.generators.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.GeneratorLoader import ExtractorLoader
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import ExtractorParameters
 from ogd.games.SHADOWSPECT.features import *
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode

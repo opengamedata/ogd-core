@@ -7,8 +7,8 @@ from typing import Any, Callable, Dict, List, Optional
 from . import features
 from ogd.games import THERMOVR
 from ogd.core.generators.detectors.Detector import Detector
-from ogd.core.generators.Extractor import ExtractorParameters
-from ogd.core.generators.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.GeneratorLoader import ExtractorLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.THERMOVR.detectors import *
 from ogd.games.THERMOVR.features import *

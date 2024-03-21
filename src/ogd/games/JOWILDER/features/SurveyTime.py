@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 import json
 from typing import Any, List, Optional
-from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import ExtractorParameters
 # import local files
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode

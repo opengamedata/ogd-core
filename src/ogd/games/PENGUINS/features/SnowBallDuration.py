@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
 from datetime import datetime, timedelta
-from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import ExtractorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.PENGUINS.features.PerRegionFeature import PerRegionFeature
 from ogd.core.schemas.Event import Event

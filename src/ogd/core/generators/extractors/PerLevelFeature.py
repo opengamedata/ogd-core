@@ -1,5 +1,5 @@
 # import locals
-from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import ExtractorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode

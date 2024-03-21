@@ -4,7 +4,7 @@ import logging
 from importlib import import_module
 from typing import Any, Callable, Dict, List, Optional, Type
 # import locals
-from ogd.core.generators.Extractor import Extractor, ExtractorParameters
+from ogd.core.generators.Generator import Extractor, ExtractorParameters
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event

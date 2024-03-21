@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from os import environ
 from typing import Any, List, Optional
 import numpy as np
-from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import ExtractorParameters
 # import local files
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.games.JOWILDER import Jowilder_Enumerators as je

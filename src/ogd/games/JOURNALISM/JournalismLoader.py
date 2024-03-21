@@ -6,9 +6,9 @@ from typing import Any, Callable, Dict, List, Optional
 from . import features
 from ogd.games.JOURNALISM.features import *
 from ogd.core.generators.detectors.Detector import Detector
-from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import ExtractorParameters
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.generators.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import ExtractorLoader
 from ogd.games.JOURNALISM.features import StoryScoreSequence
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode

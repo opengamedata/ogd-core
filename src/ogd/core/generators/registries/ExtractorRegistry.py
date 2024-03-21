@@ -2,10 +2,10 @@
 import abc
 import logging
 from typing import Any, Dict, List, Optional
-from ogd.core.generators.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import ExtractorLoader
 ## import local files
 from ogd.core.utils.Logger import Logger
-from ogd.core.generators.Extractor import Extractor
+from ogd.core.generators.Generator import Extractor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData

@@ -2,7 +2,7 @@
 import logging
 # import locals
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import ExtractorParameters
 from ogd.core.utils.Logger import Logger
 
 class SessionFeature(Feature):

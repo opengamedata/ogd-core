@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any, Callable, List, Type, Optional, Set
 ## import local files
 from ogd.core.generators.registries.DetectorRegistry import DetectorRegistry
-from ogd.core.generators.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import ExtractorLoader
 from ogd.core.processors.DetectorProcessor import DetectorProcessor
 from ogd.core.processors.EventProcessor import EventProcessor
 from ogd.core.schemas.Event import Event, EventSource

@@ -3,7 +3,7 @@ from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from . import features
 from ogd.core.generators.detectors.Detector import Detector
-from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.Generator import ExtractorParameters
 from ogd.core.generators.legacy.LegacyLoader import LegacyLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.LAKELAND.features.LakelandExtractor import LakelandExtractor

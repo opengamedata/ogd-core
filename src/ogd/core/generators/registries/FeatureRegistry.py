@@ -6,8 +6,8 @@ from collections import OrderedDict
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set, Tuple
 ## import local files
-from ogd.core.generators.Extractor import Extractor
-from ogd.core.generators.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.Generator import Extractor
+from ogd.core.generators.GeneratorLoader import ExtractorLoader
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.generators.extractors.Feature import Feature
