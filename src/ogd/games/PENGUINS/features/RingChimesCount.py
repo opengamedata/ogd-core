@@ -3,7 +3,7 @@ import logging
 from typing import Any, Dict, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.PENGUINS.features.PerRegionFeature import PerRegionFeature
 from ogd.core.schemas.Event import Event
@@ -14,7 +14,7 @@ from ogd.core.generators.extractors.SessionFeature import SessionFeature
 chime_dict = {'chime 1':0, 'chime 2':0, 'chime 3':0, 'chime 4':0, 'chime 5':0, 'chime 6':0}
 class RingChimesCount(SessionFeature):
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._current_count : int = 0
         self._object_id = None

@@ -4,7 +4,7 @@ import logging
 from importlib import import_module
 from typing import Any, Callable, Dict, List, Optional, Type
 # import locals
-from ogd.core.generators.Generator import Extractor, ExtractorParameters
+from ogd.core.generators.Generator import Extractor, GeneratorParameters
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event
@@ -17,11 +17,11 @@ class GeneratorLoader(abc.ABC):
     # *** ABSTRACTS ***
     
     @abc.abstractmethod
-    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
         pass
     
     @abc.abstractmethod
-    def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         pass
 
     @staticmethod
@@ -55,7 +55,7 @@ class GeneratorLoader(abc.ABC):
     def LoadDetector(self, detector_type:str, name:str, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None], count_index:Optional[int] = None) -> Optional[Detector]:
         ret_val = None
 
-        params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
+        params = GeneratorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
         try:
             ret_val = self._loadDetector(detector_type=detector_type, extractor_params=params, schema_args=schema_args, trigger_callback=trigger_callback)
         except NotImplementedError as err:
@@ -69,7 +69,7 @@ class GeneratorLoader(abc.ABC):
         # bit of a hack using globals() here, but theoretically this lets us access the class object with only a string.
         # feature_class : Optional[Type[Extractor]] = globals().get(feature_type, None)
         if self._validateMode(feature_type=feature_type):
-            params = ExtractorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
+            params = GeneratorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
             try:
                 ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
             except NotImplementedError as err:

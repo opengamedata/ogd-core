@@ -2,7 +2,7 @@
 import json
 from typing import Any, List, Optional
 # import local files
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -16,7 +16,7 @@ class FirstInteraction(SessionFeature):
     """
     NO_SENSE = 'tunic.historicalsociety.closet.intro'
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._interaction : Optional[str] = None
 

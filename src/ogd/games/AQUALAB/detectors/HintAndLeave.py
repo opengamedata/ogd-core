@@ -5,7 +5,7 @@ from typing import Callable, List, Optional, Union
 # import local files
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 
@@ -19,7 +19,7 @@ class HintAndLeave(Detector):
     DEFAULT_THRESOLD = 5
 
 
-    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None], time_threshold:Optional[int]):
+    def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], time_threshold:Optional[int]):
         super().__init__(params=params, trigger_callback=trigger_callback)
         self._found = False
         self._sess_id = "Unknown"

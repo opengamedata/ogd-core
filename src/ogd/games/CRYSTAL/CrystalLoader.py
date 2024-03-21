@@ -3,7 +3,7 @@ from typing import Any, Callable, Dict, List, Optional
 ## import local files
 import ogd.games.CRYSTAL.features
 from ogd.core.generators.detectors.Detector import Detector
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.generators.legacy.LegacyLoader import LegacyLoader
 from ogd.games.CRYSTAL.features.CrystalExtractor import CrystalExtractor
@@ -19,10 +19,10 @@ class CrystalLoader(LegacyLoader):
     def _getFeaturesModule():
         return ogd.games.CRYSTAL.features
 
-    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
         return CrystalExtractor(params=extractor_params, game_schema=self._game_schema, session_id=self._session_id)
 
-    def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid feature for Lakeland.")
 
     # *** BUILT-INS & PROPERTIES ***

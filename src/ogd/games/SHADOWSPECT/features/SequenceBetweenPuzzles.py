@@ -2,7 +2,7 @@
 from typing import Any, List
 import json
 # import locals
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -15,7 +15,7 @@ orderMapping = {'1. One Box': 1, '2. Separated Boxes': 2, '3. Rotate a Pyramid':
 listPuzzles = list(orderMapping.keys())
 
 class SequenceBetweenPuzzles(SessionFeature):
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._numPuzzles = 1
         self._currentPuzzle = {}

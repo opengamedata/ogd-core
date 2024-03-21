@@ -1,7 +1,7 @@
 # import libraries
 from typing import Any, List, Optional
 from datetime import datetime, timedelta
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 # import local files
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -16,7 +16,7 @@ class SessionDuration(SessionFeature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._start_time : Optional[datetime] = None
         self._duration : timedelta = timedelta(0)

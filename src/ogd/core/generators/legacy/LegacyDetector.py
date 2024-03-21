@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Any, List, Optional
 # import local files
 from ogd.core.generators.detectors.Detector import Detector
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import EventSource
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -46,5 +46,5 @@ class LegacyDetector(Detector):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params, trigger_callback=lambda x : None)

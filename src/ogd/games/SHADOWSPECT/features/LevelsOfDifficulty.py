@@ -9,7 +9,7 @@ from datetime import datetime
 from datetime import timedelta
 from collections import OrderedDict
 # import locals
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
@@ -34,7 +34,7 @@ typeMapping = {'1. One Box': 'Basic Puzzles', '2. Separated Boxes': 'Basic Puzzl
 thresHoldActivity = 60
 
 class LevelsOfDifficulty(SessionFeature):
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._numberActions = 0
         self._numberAttempts = 0

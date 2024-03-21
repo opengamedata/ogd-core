@@ -2,7 +2,7 @@
 import json
 import logging
 from typing import Any, Dict, List, Optional
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 # import local files
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -22,7 +22,7 @@ except FileNotFoundError as err:
 
 class InteractionName(PerCountFeature):
 
-    def __init__(self, params=ExtractorParameters):
+    def __init__(self, params=GeneratorParameters):
         super().__init__(params=params)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

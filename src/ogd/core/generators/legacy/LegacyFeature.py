@@ -8,7 +8,7 @@ from datetime import timedelta
 from typing import Any, Dict, List, Optional, Union
 ## import local files
 from ogd.core.utils.Logger import Logger
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -35,7 +35,7 @@ class LegacyFeature(Feature):
     # *** BUILT-INS & PROPERTIES ***
 
     # Base constructor for LegacyFeature classes.
-    def __init__(self, params:ExtractorParameters, game_schema:GameSchema, session_id:str):
+    def __init__(self, params:GeneratorParameters, game_schema:GameSchema, session_id:str):
         """Base constructor for LegacyFeature classes.
         The constructor sets an extractor's session id and range of levels,
         as well as initializing the features dictionary and list of played levels.

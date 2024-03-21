@@ -3,7 +3,7 @@ from datetime import timedelta
 from typing import Any, List, Optional
 # import locals
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -11,7 +11,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class MissionDiveTime(Feature):
     
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._dive_start_time = None
         self._time = timedelta(0)

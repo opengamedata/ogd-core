@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -11,7 +11,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class JobLocationChanges(PerJobFeature):
 
-    def __init__(self, params:ExtractorParameters, job_map:dict):
+    def __init__(self, params:GeneratorParameters, job_map:dict):
         self._job_map = job_map
         super().__init__(params=params, job_map=job_map)
         self._by_task       : Dict[str, int] = {}

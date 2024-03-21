@@ -1,6 +1,6 @@
 from typing import Any, List
 
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -8,7 +8,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class JobsCompleted(SessionFeature):
 
-    def __init__(self, params:ExtractorParameters, player_id:str):
+    def __init__(self, params:GeneratorParameters, player_id:str):
         self._player_id = player_id
         super().__init__(params=params)
         self._jobs_completed = []

@@ -6,7 +6,7 @@ from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 
 ## @class ExtractorParams
-class ExtractorParameters:
+class GeneratorParameters:
     """Dumb struct to hold the data that should be available to every Extractor.
     This just makes it easier to add/manage any new params,
     so that we don't need to change the param list for hundreds of individual
@@ -62,7 +62,7 @@ class Extractor(abc.ABC):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         self._params = params
 
     def __str__(self):

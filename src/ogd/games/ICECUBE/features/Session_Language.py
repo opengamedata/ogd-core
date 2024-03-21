@@ -1,7 +1,7 @@
 from typing import Any, List
 
 from typing import Any, Dict, List, Optional
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -13,7 +13,7 @@ class Session_Language(SessionFeature):
     :param SessionFeature: _description_
     :type SessionFeature: _type_
     """
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         self._session_language = None
         super().__init__(params=params)
 

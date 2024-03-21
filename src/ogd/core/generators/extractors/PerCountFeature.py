@@ -2,7 +2,7 @@
 import abc
 from multiprocessing.sharedctypes import Value
 # import locals
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event
 
@@ -28,7 +28,7 @@ class PerCountFeature(Feature):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

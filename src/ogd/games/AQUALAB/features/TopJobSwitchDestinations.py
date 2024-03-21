@@ -6,14 +6,14 @@ from typing import Any, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
 class TopJobSwitchDestinations(Feature):
 
-    def __init__(self, params:ExtractorParameters, job_map:dict):
+    def __init__(self, params:GeneratorParameters, job_map:dict):
         self._job_map = job_map
         super().__init__(params=params)
         self._current_user_code = None

@@ -2,7 +2,7 @@
 import logging
 from typing import Any, List
 # import locals
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -11,7 +11,7 @@ from ogd.core.utils.Logger import Logger
 
 class SessionDuration(SessionFeature):
 
-    def __init__(self, params:ExtractorParameters, session_id:str):
+    def __init__(self, params:GeneratorParameters, session_id:str):
         self._session_id = session_id
         super().__init__(params=params)
         self._client_start_time = None

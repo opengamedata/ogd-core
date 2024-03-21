@@ -4,7 +4,7 @@ from typing import Any, Callable, List, Optional
 # import local files
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 
@@ -84,7 +84,7 @@ class DiveSiteNoEvidence(Detector):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None], threshold:float):
+    def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], threshold:float):
         super().__init__(params=params, trigger_callback=trigger_callback)
         self._threshold : float = threshold
         self._in_dive : bool    = False

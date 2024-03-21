@@ -9,7 +9,7 @@ from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 
@@ -24,7 +24,7 @@ class SessionPlayTime(SessionFeature):
     """
     IDLE_TIME_THRESHOLD = timedelta(seconds=60)
 
-    def __init__(self, params:ExtractorParameters, threshold: int):
+    def __init__(self, params:GeneratorParameters, threshold: int):
         super().__init__(params=params)
         self._first_event_timestamp : Optional[datetime] = None
         self._last_event_timestamp : Optional[datetime] = None

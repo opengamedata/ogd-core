@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional
 # import local files
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.schemas.Event import Event
@@ -105,7 +105,7 @@ class RegionExit(Detector):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None], region_map:List[Dict[str, Any]]):
+    def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], region_map:List[Dict[str, Any]]):
         super().__init__(params=params, trigger_callback=trigger_callback)
         self._region_map = region_map
         self._old_region = "N/A"

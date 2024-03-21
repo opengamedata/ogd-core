@@ -2,7 +2,7 @@
 from typing import Any, List, Optional
 # import locals
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.schemas.Event import Event
@@ -13,7 +13,7 @@ from .. import Jowilder_Enumerators as je
 # NOTE: Assumption is that in question 10 and qustion 16, we will have hover events which indicates new answer
 
 class QuestionAnswers(PerCountFeature):
-    def __init__(self, params: ExtractorParameters):
+    def __init__(self, params: GeneratorParameters):
         PerCountFeature.__init__(self, params=params)
         self._guess_list : List[str] = []
         self.cur_question : Optional[int] = None

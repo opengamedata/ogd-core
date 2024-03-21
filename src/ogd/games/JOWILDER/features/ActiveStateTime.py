@@ -4,7 +4,7 @@ from time import time
 from typing import Any, List, Optional
 from datetime  import timedelta, datetime
 # import local files
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -20,7 +20,7 @@ class ActiveStateTime(SessionFeature):
     ACTIVE_TIME_THRESHOLD = timedelta(seconds=15)
     CLICK_EVENTS_NAME = [f"CUSTOM.{i}" for i in range(3, 12)]
 
-    def __init__(self, params:ExtractorParameters, threshold:int):
+    def __init__(self, params:GeneratorParameters, threshold:int):
         super().__init__(params=params)
         self._time : timedelta = timedelta(0)
         self._clicking_time : timedelta = timedelta(0)

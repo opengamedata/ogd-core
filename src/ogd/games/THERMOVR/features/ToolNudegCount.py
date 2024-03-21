@@ -1,6 +1,6 @@
 from typing import Any, List
 from enum import Enum
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -19,7 +19,7 @@ class Thermotool(Enum):
 
 class ToolNudgeCount(SessionFeature):
 
-    def __init__(self, params:ExtractorParameters, player_id:str):
+    def __init__(self, params:GeneratorParameters, player_id:str):
         self._player_id = player_id
         self._tool_nudge_count = {tool: 0 for tool in Thermotool}
         super().__init__(params=params)

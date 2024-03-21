@@ -4,7 +4,7 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any, List, Optional
 # import local files
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -30,7 +30,7 @@ class SurveyItem(PerCountFeature):
     """
     
     
-    def __init__(self, params: ExtractorParameters):
+    def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
         # NOTE: The time we record it the first time that players answered the given question minus the last time answering the last question or the time starting the quiz
         self._last_timestamp : Optional[datetime] = None

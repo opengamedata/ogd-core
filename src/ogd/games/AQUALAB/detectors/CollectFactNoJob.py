@@ -5,7 +5,7 @@ from typing import Callable, List
 # import local files
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 
@@ -15,7 +15,7 @@ class CollectFactNoJob(Detector):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None]):
+    def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None]):
         super().__init__(params=params, trigger_callback=trigger_callback)
         self._found_jobless_fact = False
         self._sess_id = "Unknown"

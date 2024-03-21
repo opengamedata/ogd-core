@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
 from datetime import datetime, timedelta
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.PENGUINS.features.PerRegionFeature import PerRegionFeature
 from ogd.core.schemas.Event import Event
@@ -14,7 +14,7 @@ from ogd.core.generators.extractors.SessionFeature import SessionFeature
 
 class EggRecoverTime(SessionFeature):
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._session_id = None
         self._argument_start_time : Optional[datetime] = None

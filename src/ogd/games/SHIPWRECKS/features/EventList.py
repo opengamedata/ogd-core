@@ -3,7 +3,7 @@ import json
 from typing import Any, List
 # import locals
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -11,7 +11,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class EventList(Feature):
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._event_list = []
         self._mission_id = None

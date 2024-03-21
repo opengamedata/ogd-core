@@ -2,7 +2,7 @@
 import abc
 from typing import Any, Dict, List, Optional
 # import locals
-from ogd.core.generators.Generator import Extractor, ExtractorParameters
+from ogd.core.generators.Generator import Extractor, GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -40,7 +40,7 @@ class Feature(Extractor):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._up_to_date = False
         # by default, latest values should just be None, with length equal to number of columns for the feature.

@@ -6,7 +6,7 @@ from typing import Any, Callable, Dict, List, Optional
 from . import features
 from ogd.games.JOURNALISM.features import *
 from ogd.core.generators.detectors.Detector import Detector
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.games.JOURNALISM.features import StoryScoreSequence
@@ -24,7 +24,7 @@ class JournalismLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
 
-    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         if extractor_params._count_index == None:
             match feature_type:
@@ -114,7 +114,7 @@ class JournalismLoader(GeneratorLoader):
         return ret_val
     
 
-    def _loadDetector(self, detector_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
+    def _loadDetector(self, detector_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any], trigger_callback:Callable[[Event], None]) -> Detector:
         raise NotImplementedError(f"'{detector_type}' is not a valid detector for Journalism.")
 
     # *** BUILT-INS & PROPERTIES ***

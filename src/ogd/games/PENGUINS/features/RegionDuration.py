@@ -3,7 +3,7 @@ import json
 from typing import Any, Dict, List
 from datetime import timedelta
 # import local files
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -15,7 +15,7 @@ from ogd.games.PENGUINS.features.PerRegionFeature import PerRegionFeature
     
 class RegionDuration(PerRegionFeature):
     
-    def __init__(self, params:ExtractorParameters, region_map:List[Dict[str, Any]]):
+    def __init__(self, params:GeneratorParameters, region_map:List[Dict[str, Any]]):
         super().__init__(params=params,region_map = region_map)
         self._region_start_time = None
         self._time = timedelta(0)

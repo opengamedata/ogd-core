@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 import json
 from typing import Any, List, Optional
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 # import local files
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -17,7 +17,7 @@ class SurveyTime(PerCountFeature):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, params=ExtractorParameters):
+    def __init__(self, params=GeneratorParameters):
         super().__init__(params=params)
         self._start_time : Optional[datetime] = None
         self._duration : Optional[timedelta] = None

@@ -2,7 +2,7 @@
 import abc
 from typing import Callable, List, Optional
 # import locals
-from ogd.core.generators.Generator import Extractor, ExtractorParameters
+from ogd.core.generators.Generator import Extractor, GeneratorParameters
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -28,7 +28,7 @@ class Detector(Extractor):
 
     # *** BUILT-INS & PROPERTIES *8jr47t*
 
-    def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None]):
+    def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None]):
         super().__init__(params=params)
         self._callback    = trigger_callback
 

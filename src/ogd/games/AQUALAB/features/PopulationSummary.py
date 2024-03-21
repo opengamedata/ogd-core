@@ -2,7 +2,7 @@ from collections import defaultdict
 from datetime import timedelta
 from typing import Any, Dict, List
 
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -10,7 +10,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class PopulationSummary(SessionFeature):
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self._user_sessions = defaultdict(list)
         self._user_completions = defaultdict(list)

@@ -3,11 +3,11 @@ from typing import Any, Callable, Dict, List, Optional
 ## import local files
 from . import features
 from ogd.core.generators.detectors.Detector import Detector
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.WAVES.features import *
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
@@ -22,7 +22,7 @@ class WaveLoader(GeneratorLoader):
     def _getFeaturesModule():
         return features
     
-    def _loadFeature(self, feature_type:str, extractor_params:ExtractorParameters, schema_args:Dict[str,Any]) -> Feature:
+    def _loadFeature(self, feature_type:str, extractor_params:GeneratorParameters, schema_args:Dict[str,Any]) -> Feature:
         ret_val : Feature
         # Session-level features.
         if extractor_params._count_index is None:

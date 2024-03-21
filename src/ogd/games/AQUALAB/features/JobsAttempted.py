@@ -6,7 +6,7 @@ from typing import Any, List, Optional
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 # import locals
 from ogd.core.utils.Logger import Logger
-from ogd.core.generators.Generator import ExtractorParameters
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -14,7 +14,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class JobsAttempted(Feature):
 
-    def __init__(self, params:ExtractorParameters, job_map:dict, diff_map: dict):
+    def __init__(self, params:GeneratorParameters, job_map:dict, diff_map: dict):
         self._player_id = None
 
         self._job_map = job_map
