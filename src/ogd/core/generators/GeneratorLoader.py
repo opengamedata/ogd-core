@@ -12,7 +12,7 @@ from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.Logger import Logger
 
-class ExtractorLoader(abc.ABC):
+class GeneratorLoader(abc.ABC):
 
     # *** ABSTRACTS ***
     
@@ -59,7 +59,7 @@ class ExtractorLoader(abc.ABC):
         try:
             ret_val = self._loadDetector(detector_type=detector_type, extractor_params=params, schema_args=schema_args, trigger_callback=trigger_callback)
         except NotImplementedError as err:
-            Logger.Log(f"In ExtractorLoader, '{name}' is not a valid detector for {self._game_schema.GameName}", logging.ERROR)
+            Logger.Log(f"In GeneratorLoader, '{name}' is not a valid detector for {self._game_schema.GameName}", logging.ERROR)
 
         return ret_val
 
@@ -73,7 +73,7 @@ class ExtractorLoader(abc.ABC):
             try:
                 ret_val = self._loadFeature(feature_type=feature_type, extractor_params=params, schema_args=schema_args)
             except NotImplementedError as err:
-                Logger.Log(f"In ExtractorLoader, unable to load '{name}', {feature_type} is not implemented!:", logging.ERROR)
+                Logger.Log(f"In GeneratorLoader, unable to load '{name}', {feature_type} is not implemented!:", logging.ERROR)
                 Logger.Log(str(err), logging.ERROR, depth=1)
 
         return ret_val
@@ -102,12 +102,12 @@ class ExtractorLoader(abc.ABC):
         try:
             feature_module = import_module(mod_name)
         except ModuleNotFoundError:
-            Logger.Log(f"In ExtractorLoader, '{mod_name}' could not be found, skipping {feature_type}", logging.ERROR)
+            Logger.Log(f"In GeneratorLoader, '{mod_name}' could not be found, skipping {feature_type}", logging.ERROR)
         else:
             feature_class : Optional[Type[Extractor]] = getattr(feature_module, feature_type, None)
             if feature_class is not None:
                 ret_val = self._mode in feature_class.AvailableModes()
             else:
-                Logger.Log(f"In ExtractorLoader, feature class '{feature_type}' could not be found in module {feature_module}", logging.WARN)
+                Logger.Log(f"In GeneratorLoader, feature class '{feature_type}' could not be found in module {feature_module}", logging.WARN)
 
         return ret_val

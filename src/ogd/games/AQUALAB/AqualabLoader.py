@@ -8,7 +8,7 @@ from . import features
 from ogd.games import AQUALAB
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import ExtractorParameters
-from ogd.core.generators.GeneratorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.AQUALAB.detectors import *
 from ogd.games.AQUALAB.features import *
@@ -21,7 +21,7 @@ EXPORT_PATH = "games/AQUALAB/DBExport.json"
 
 ## @class AqualabLoader
 #  Extractor subclass for extracting features from Aqualab game data.
-class AqualabLoader(ExtractorLoader):
+class AqualabLoader(GeneratorLoader):
 
     # *** BUILT-INS & PROPERTIES ***
 

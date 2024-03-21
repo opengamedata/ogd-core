@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, List, Optional
 from . import features
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import ExtractorParameters
-from ogd.core.generators.GeneratorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.generators.Generator import ExtractorParameters
 from ogd.games.SHADOWSPECT.features import *
@@ -14,7 +14,7 @@ from ogd.core.schemas.games.GameSchema import GameSchema
 
 ## @class ShadowspectExtractor
 #  Extractor subclass for extracting features from Shadowspects game data.
-class ShadowspectLoader(ExtractorLoader):
+class ShadowspectLoader(GeneratorLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 

@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Tuple, Type, Optional
 
 ## import local files
 from ogd import games
-from ogd.core.generators.GeneratorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.games.AQUALAB.AqualabLoader import AqualabLoader
 from ogd.games.CRYSTAL.CrystalLoader import CrystalLoader
 from ogd.games.ICECUBE.IcecubeLoader import IcecubeLoader
@@ -178,8 +178,8 @@ class ExportManager:
         time_delta = datetime.now() - start
         Logger.Log(f"Output time for population: {time_delta}", logging.INFO, depth=2)
 
-    def _loadLoaderClass(self, game_id:str) -> Optional[Type[ExtractorLoader]]:
-        _loader_class: Optional[Type[ExtractorLoader]] = None
+    def _loadLoaderClass(self, game_id:str) -> Optional[Type[GeneratorLoader]]:
+        _loader_class: Optional[Type[GeneratorLoader]] = None
         match game_id:
             case "AQUALAB":
                 _loader_class = AqualabLoader

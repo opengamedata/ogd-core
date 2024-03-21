@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Set, Tuple
 ## import local files
 from ogd.core.generators.Generator import Extractor
-from ogd.core.generators.GeneratorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.generators.extractors.Feature import Feature
@@ -132,7 +132,7 @@ class FeatureRegistry(ExtractorRegistry):
                 ret_val += feature.GetFeatureNames()
         return ret_val
 
-    def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, overrides:Optional[List[str]]=None):
+    def _loadFromSchema(self, schema:GameSchema, loader:GeneratorLoader, overrides:Optional[List[str]]=None):
         # first, get list of what should actually be loaded.
         # TODO : move this logic as high up as possible, so that we only need to do it once for each kind of processor.
         # 1. Start with overrides, else list of enabled features in schema.

@@ -7,7 +7,7 @@ from . import features
 from ogd.games import PENGUINS
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import ExtractorParameters
-from ogd.core.generators.GeneratorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.PENGUINS.detectors import *
 from ogd.games.PENGUINS.features import *
@@ -23,7 +23,7 @@ from ogd.core.schemas.games.GameSchema import GameSchema
 EXPORT_PATH = "games/PENGUINS/DBExport.json"
 
 
-class PenguinsLoader(ExtractorLoader):
+class PenguinsLoader(GeneratorLoader):
 
 
     # *** BUILT-INS & PROPERTIES ***

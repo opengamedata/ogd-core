@@ -2,7 +2,7 @@
 import abc
 import logging
 from typing import Any, Dict, List, Optional
-from ogd.core.generators.GeneratorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 ## import local files
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.Generator import Extractor
@@ -44,7 +44,7 @@ class ExtractorRegistry(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _loadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, overrides:Optional[List[str]]):
+    def _loadFromSchema(self, schema:GameSchema, loader:GeneratorLoader, overrides:Optional[List[str]]):
         pass
 
     @abc.abstractmethod
@@ -90,7 +90,7 @@ class ExtractorRegistry(abc.ABC):
         """
         return self._getExtractorNames()
 
-    def LoadFromSchema(self, schema:GameSchema, loader:ExtractorLoader, overrides:Optional[List[str]]):
+    def LoadFromSchema(self, schema:GameSchema, loader:GeneratorLoader, overrides:Optional[List[str]]):
         self._loadFromSchema(schema=schema, loader=loader, overrides=overrides)
 
     def ExtractFromEvent(self, event:Event) -> None:

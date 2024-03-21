@@ -3,7 +3,7 @@ from typing import Any, Callable, Dict, List, Type, Optional
 # import locals
 from ogd.core.generators.registries.DetectorRegistry import DetectorRegistry
 from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.generators.GeneratorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -14,7 +14,7 @@ class DetectorProcessor(ExtractorProcessor):
 
     # *** BUILT-INS & PROPERTIES ***
 
-    def __init__(self, game_schema: GameSchema, LoaderClass: Type[ExtractorLoader], trigger_callback:Callable[[Event], None],
+    def __init__(self, game_schema: GameSchema, LoaderClass: Type[GeneratorLoader], trigger_callback:Callable[[Event], None],
                  feature_overrides:Optional[List[str]]=None):
         # TODO: Consider having multiple registries for per-player or per-session kinds of things.
         super().__init__(game_schema=game_schema, LoaderClass=LoaderClass, feature_overrides=feature_overrides)

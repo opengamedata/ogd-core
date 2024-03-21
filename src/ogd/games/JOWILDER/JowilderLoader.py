@@ -7,7 +7,7 @@ from . import features
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import ExtractorParameters
 from ogd.core.generators.extractors.Feature import Feature
-from ogd.core.generators.GeneratorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.games.JOWILDER.features.UsedContinue import UsedContinue
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -16,7 +16,7 @@ from ogd.games.JOWILDER.features import *
 
 
 
-class JowilderLoader(ExtractorLoader):
+class JowilderLoader(GeneratorLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 

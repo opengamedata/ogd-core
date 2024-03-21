@@ -3,7 +3,7 @@ import logging
 from typing import List, Type, Optional, Set
 # import local files
 from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.generators.GeneratorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.registries.FeatureRegistry import FeatureRegistry
 from ogd.core.processors.FeatureProcessor import FeatureProcessor
 from ogd.core.schemas.Event import Event
@@ -19,14 +19,14 @@ class PopulationProcessor(FeatureProcessor):
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the PopulationProcessor class.
-    def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema,
+    def __init__(self, LoaderClass: Type[GeneratorLoader], game_schema: GameSchema,
                  feature_overrides:Optional[List[str]]=None):
         """Constructor for the PopulationProcessor class.
         Simply stores some data for use later, including the type of extractor to use.
 
         :param LoaderClass: The type of data extractor to use for input data.
                             This should correspond to whatever game_id is in the TableSchema.
-        :type LoaderClass: Type[ExtractorLoader]
+        :type LoaderClass: Type[GeneratorLoader]
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema
         :param feature_overrides: _description_, defaults to None

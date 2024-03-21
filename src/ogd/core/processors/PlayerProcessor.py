@@ -3,7 +3,7 @@ import logging
 import traceback
 from typing import List, Dict, Type, Optional, Set
 # import local files
-from ogd.core.generators.GeneratorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.registries.FeatureRegistry import FeatureRegistry
 from ogd.core.processors.FeatureProcessor import FeatureProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
@@ -22,14 +22,14 @@ class PlayerProcessor(FeatureProcessor):
     # *** BUILT-INS & PROPERTIES ***
 
     ## Constructor for the PlayerProcessor class.
-    def __init__(self, LoaderClass: Type[ExtractorLoader], game_schema: GameSchema, player_id:str,
+    def __init__(self, LoaderClass: Type[GeneratorLoader], game_schema: GameSchema, player_id:str,
                  feature_overrides:Optional[List[str]]=None):
         """Constructor for the PlayerProcessor class.
            Simply stores some data for use later, including the type of extractor to use.
 
         :param LoaderClass: The type of data extractor to use for input data.
                             This should correspond to whatever game_id is in the TableSchema.
-        :type LoaderClass: Type[ExtractorLoader]
+        :type LoaderClass: Type[GeneratorLoader]
         :param game_schema: A dictionary that defines how the game data itself is structured.
         :type game_schema: GameSchema
         :param player_id: _description_

@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 from typing import Dict, List, Type, Optional, Set, Tuple, Union
 ## import local files
-from ogd.core.generators.GeneratorLoader import ExtractorLoader
+from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.processors.FeatureProcessor import FeatureProcessor
 from ogd.core.processors.PopulationProcessor import PopulationProcessor
 from ogd.core.processors.PlayerProcessor import PlayerProcessor
@@ -15,8 +15,8 @@ from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow
 
 class FeatureManager:
-    def __init__(self, game_schema:GameSchema, LoaderClass:Optional[Type[ExtractorLoader]], feature_overrides:Optional[List[str]]):
-        self._LoaderClass    : Optional[Type[ExtractorLoader]] = LoaderClass
+    def __init__(self, game_schema:GameSchema, LoaderClass:Optional[Type[GeneratorLoader]], feature_overrides:Optional[List[str]]):
+        self._LoaderClass    : Optional[Type[GeneratorLoader]] = LoaderClass
         self._game_schema    : GameSchema                 = game_schema
         self._overrides      : Optional[List[str]]        = feature_overrides
         # local tracking of whether we're up-to-date on getting feature values.
