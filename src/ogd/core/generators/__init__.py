@@ -1,13 +1,13 @@
 __all__ = [
     "Extractor",
     "detectors",
-    "features",
+    "extractors",
     "registries",
     "ExtractorLoader"
 ]
 
 from . import Extractor
 from . import detectors
-from . import features
+from . import extractors
 from . import registries
 from . import ExtractorLoader
