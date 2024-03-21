@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Tuple, Type, Optional
 
 ## import local files
 from ogd import games
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.ExtractorLoader import ExtractorLoader
 from ogd.games.AQUALAB.AqualabLoader import AqualabLoader
 from ogd.games.CRYSTAL.CrystalLoader import CrystalLoader
 from ogd.games.ICECUBE.IcecubeLoader import IcecubeLoader

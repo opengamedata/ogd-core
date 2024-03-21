@@ -2,8 +2,8 @@
 import abc
 from typing import Callable, List, Optional
 # import locals
-from ogd.core.extractors.Extractor import Extractor, ExtractorParameters
-from ogd.core.extractors.detectors.DetectorEvent import DetectorEvent
+from ogd.core.generators.Extractor import Extractor, ExtractorParameters
+from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 

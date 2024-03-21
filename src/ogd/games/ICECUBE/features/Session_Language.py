@@ -1,8 +1,8 @@
 from typing import Any, List
 
 from typing import Any, Dict, List, Optional
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.SessionFeature import SessionFeature
+from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.features.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData

@@ -1,18 +1,21 @@
 # import libraries
+import json
 from typing import Any, List, Optional
 # import local files
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.PerCountFeature import PerCountFeature
-from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.features.Feature import Feature
 from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
 
-class CustomFeature(PerCountFeature):
+
+class CustomFeature(Feature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
 
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    def __init__(self, params=ExtractorParameters):
+    def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
         # >>> create/initialize any variables to track feature extractor state <<<
         #
@@ -20,10 +23,8 @@ class CustomFeature(PerCountFeature):
         # self._found_click : bool = False
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
-    def _validateEventCountIndex(self, event: Event):
-        return self.CountIndex == None
-
-    def _getEventDependencies(self) -> List[str]:
+    @classmethod
+    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -31,7 +32,8 @@ class CustomFeature(PerCountFeature):
         """
         return [] # >>> fill in names of events this Feature should use for extraction. <<<
 
-    def _getFeatureDependencies(self) -> List[str]:
+    @classmethod
+    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -89,6 +91,10 @@ class CustomFeature(PerCountFeature):
     # *** Optionally override public functions. ***
     def Subfeatures(self) -> List[str]:
         return [] # >>> fill in names of Subfeatures for which this Feature should extract values. <<<
+    
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        return [ExtractionMode.POPULATION, ExtractionMode.PLAYER, ExtractionMode.SESSION, ExtractionMode.DETECTOR] # >>> delete any modes you don't want run for your Feature. <<<
     
     @staticmethod
     def MinVersion() -> Optional[str]:

@@ -2,9 +2,9 @@
 from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional
 # import local files
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.detectors.Detector import Detector
-from ogd.core.extractors.detectors.DetectorEvent import DetectorEvent
+from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.detectors.Detector import Detector
+from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 

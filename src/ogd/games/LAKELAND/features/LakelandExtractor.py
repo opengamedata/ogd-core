@@ -21,8 +21,8 @@ from math import sqrt
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 ## import local files
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.legacy.LegacyFeature import LegacyFeature
+from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.legacy.LegacyFeature import LegacyFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema

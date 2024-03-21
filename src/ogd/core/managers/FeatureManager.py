@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 from typing import Dict, List, Type, Optional, Set, Tuple, Union
 ## import local files
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.ExtractorLoader import ExtractorLoader
 from ogd.core.processors.FeatureProcessor import FeatureProcessor
 from ogd.core.processors.PopulationProcessor import PopulationProcessor
 from ogd.core.processors.PlayerProcessor import PlayerProcessor

@@ -2,10 +2,10 @@
 from typing import Any, Callable, Dict, List, Optional
 ## import local files
 import ogd.games.CRYSTAL.features
-from ogd.core.extractors.detectors.Detector import Detector
-from ogd.core.extractors.Extractor import ExtractorParameters
-from ogd.core.extractors.features.Feature import Feature
-from ogd.core.extractors.legacy.LegacyLoader import LegacyLoader
+from ogd.core.generators.detectors.Detector import Detector
+from ogd.core.generators.Extractor import ExtractorParameters
+from ogd.core.generators.features.Feature import Feature
+from ogd.core.generators.legacy.LegacyLoader import LegacyLoader
 from ogd.games.CRYSTAL.features.CrystalExtractor import CrystalExtractor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode

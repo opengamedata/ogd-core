@@ -3,10 +3,10 @@ import logging
 from collections import OrderedDict
 from typing import Any, Callable, List, Optional, Set
 ## import local files
-from ogd.core.extractors.detectors.Detector import Detector
-from ogd.core.extractors.Extractor import Extractor
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
-from ogd.core.extractors.registries.ExtractorRegistry import ExtractorRegistry
+from ogd.core.generators.detectors.Detector import Detector
+from ogd.core.generators.Extractor import Extractor
+from ogd.core.generators.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData

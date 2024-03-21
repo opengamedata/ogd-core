@@ -3,11 +3,11 @@ import abc
 import logging
 from typing import Dict, List, Type, Optional, Set
 # import locals
-from ogd.core.extractors.registries.ExtractorRegistry import ExtractorRegistry
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
+from ogd.core.generators.ExtractorLoader import ExtractorLoader
 from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
-from ogd.core.extractors.registries.FeatureRegistry import FeatureRegistry
+from ogd.core.generators.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.registries.FeatureRegistry import FeatureRegistry
 from ogd.core.processors.Processor import Processor
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema

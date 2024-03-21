@@ -1,9 +1,9 @@
 # import libraries
 from typing import Any, Callable, Dict, List, Type, Optional
 # import locals
-from ogd.core.extractors.registries.DetectorRegistry import DetectorRegistry
+from ogd.core.generators.registries.DetectorRegistry import DetectorRegistry
 from ogd.core.schemas.FeatureData import FeatureData
-from ogd.core.extractors.ExtractorLoader import ExtractorLoader
+from ogd.core.generators.ExtractorLoader import ExtractorLoader
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode

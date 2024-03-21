@@ -2,7 +2,7 @@
 import abc
 from typing import Any, Dict, List, Optional
 # import locals
-from ogd.core.extractors.Extractor import Extractor, ExtractorParameters
+from ogd.core.generators.Extractor import Extractor, ExtractorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
