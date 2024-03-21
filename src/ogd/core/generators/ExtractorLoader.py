@@ -6,7 +6,7 @@ from typing import Any, Callable, Dict, List, Optional, Type
 # import locals
 from ogd.core.generators.Extractor import Extractor, ExtractorParameters
 from ogd.core.generators.detectors.Detector import Detector
-from ogd.core.generators.features.Feature import Feature
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema

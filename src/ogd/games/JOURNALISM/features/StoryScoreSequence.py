@@ -1,7 +1,7 @@
 # import libraries
 from typing import Any, List
 from ogd.core.schemas import Event
-from ogd.core.generators.features.PerLevelFeature import PerLevelFeature
+from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.core.generators.Extractor import ExtractorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode

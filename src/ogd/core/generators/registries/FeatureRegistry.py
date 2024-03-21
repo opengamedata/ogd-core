@@ -8,9 +8,9 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 ## import local files
 from ogd.core.generators.Extractor import Extractor
 from ogd.core.generators.ExtractorLoader import ExtractorLoader
-from ogd.core.generators.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
-from ogd.core.generators.features.Feature import Feature
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData

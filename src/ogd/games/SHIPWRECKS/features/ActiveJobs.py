@@ -3,7 +3,7 @@ import json
 from collections import defaultdict
 from typing import Any, List, Optional
 # import locals
-from ogd.core.generators.features.Feature import Feature
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.generators.Extractor import ExtractorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode

@@ -2,7 +2,7 @@
 from typing import Any, List, Optional, Union
 from ogd.core.generators.Extractor import ExtractorParameters
 # import local files
-from ogd.core.generators.features.SessionFeature import SessionFeature
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.schemas.Event import Event

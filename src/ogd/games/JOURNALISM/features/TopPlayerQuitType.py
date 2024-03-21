@@ -1,10 +1,10 @@
 # import libraries
 from os import truncate
-from ogd.core.generators.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas import Event
 from typing import Any, List, Optional
 # import locals
-from ogd.core.generators.features.PerLevelFeature import PerLevelFeature
+from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
 from ogd.core.generators.Extractor import ExtractorParameters
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode

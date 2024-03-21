@@ -3,7 +3,7 @@ import logging
 from typing import Any, List
 # import locals
 from ogd.core.generators.Extractor import ExtractorParameters
-from ogd.core.generators.features.SessionFeature import SessionFeature
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -15,7 +15,7 @@ from typing import Any, List, Optional
 from datetime import datetime, timedelta
 # import locals
 from ogd.core.generators.Extractor import ExtractorParameters
-from ogd.core.generators.features.SessionFeature import SessionFeature
+from ogd.core.generators.extractors.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData

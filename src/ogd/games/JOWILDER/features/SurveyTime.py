@@ -4,7 +4,7 @@ import json
 from typing import Any, List, Optional
 from ogd.core.generators.Extractor import ExtractorParameters
 # import local files
-from ogd.core.generators.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.schemas.Event import Event

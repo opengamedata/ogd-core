@@ -1,14 +1,14 @@
 # import locals
 from ogd.core.generators.Extractor import ExtractorParameters
-from ogd.core.generators.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 
 ## @class PerLevelFeature
-class PerUserFeature(PerCountFeature):
+class PerLevelFeature(PerCountFeature):
     """PerLevelFeature
-    Abstract base class for per-user game features.
-    Works like a normal Feature, but checks if the given event has right user
+    Abstract base class for per-level game features.
+    Works like a normal Feature, but checks if the given event has right "level"
     before attempting to extract from event.
 
     Args:
@@ -18,7 +18,7 @@ class PerUserFeature(PerCountFeature):
         _type_: _description_
     """
 
-    # *** BUILT-INS ***
+    # *** BUILT-INS & PROPERTIES ***
 
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
@@ -37,4 +37,4 @@ class PerUserFeature(PerCountFeature):
 
     def _validateEventCountIndex(self, event:Event):
     
-        return event.UserID == self.CountIndex
+        return int(event.GameState['level']) == self.CountIndex

@@ -5,7 +5,7 @@ from . import features
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Extractor import ExtractorParameters
 from ogd.core.generators.legacy.LegacyLoader import LegacyLoader
-from ogd.core.generators.features.Feature import Feature
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.LAKELAND.features.LakelandExtractor import LakelandExtractor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode

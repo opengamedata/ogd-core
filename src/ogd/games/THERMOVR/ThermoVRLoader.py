@@ -9,7 +9,7 @@ from ogd.games import THERMOVR
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Extractor import ExtractorParameters
 from ogd.core.generators.ExtractorLoader import ExtractorLoader
-from ogd.core.generators.features.Feature import Feature
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.THERMOVR.detectors import *
 from ogd.games.THERMOVR.features import *
 from ogd.core.schemas.Event import Event

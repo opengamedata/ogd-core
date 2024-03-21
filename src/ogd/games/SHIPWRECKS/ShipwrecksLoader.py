@@ -5,7 +5,7 @@ from . import features
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Extractor import ExtractorParameters
 from ogd.core.generators.ExtractorLoader import ExtractorLoader
-from ogd.core.generators.features.Feature import Feature
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.games.SHIPWRECKS.features import *
 from ogd.core.generators.Extractor import ExtractorParameters
 from ogd.core.schemas.Event import Event

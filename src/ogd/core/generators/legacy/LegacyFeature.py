@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Union
 ## import local files
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.Extractor import ExtractorParameters
-from ogd.core.generators.features.Feature import Feature
+from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.schemas.games.GameSchema import GameSchema
