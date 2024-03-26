@@ -2,7 +2,7 @@ import logging
 from datetime import datetime, timedelta
 from ogd.games.JOURNALISM.features import PlayTime
 from ogd.core.schemas import Event
-from typing import Any, List, Optional
+from typing import Any, Final, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
 from ogd.core.extractors.features.PerLevelFeature import PerLevelFeature
@@ -43,7 +43,7 @@ class LevelTime(PerLevelFeature):
             Logger.Log(f"LevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
 
     def _extractFromFeatureData(self, feature:FeatureData):
-        IDLE_TIME_INDEX = 2 # Idle time should be at index 2 for the PlayTime feature
+        IDLE_TIME_INDEX : Final[int] = 2 # Idle time should be at index 2 for the PlayTime feature
         if feature.FeatureType == "PlayTime":
             self._idle_time = feature.FeatureValues[IDLE_TIME_INDEX]
 

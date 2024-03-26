@@ -1,6 +1,6 @@
 # import libraries
 import json
-from typing import Any, List, Optional
+from typing import Any, Final, List
 # import local files
 from ogd.core.extractors.features.Feature import Feature
 from ogd.core.schemas.Event import Event
@@ -20,9 +20,9 @@ class TopAttribute(SessionFeature):
     """
     def __init__(self, params:ExtractorParameters):
         super().__init__(params=params)
-        self._top_value : int = 0;
+        self._top_value : int = 0
         self._top_names : List[str] = []
-        self._ATTRIBUTE_ENUM : List[str] = ["endurance", "resourceful", "tech","social","trust","research"]
+        self._ATTRIBUTE_ENUM : Final[List[str]] = ["endurance", "resourceful", "tech","social","trust","research"]
         #self._text_click_count : int = 0;
         # >>> create/initialize any variables to track feature extractor state <<<
         #

@@ -2,7 +2,7 @@
 from os import truncate
 from ogd.core.extractors.features.PerCountFeature import PerCountFeature
 from ogd.core.schemas import Event
-from typing import Any, List, Optional
+from typing import Any, Final, List
 # import locals
 from ogd.core.extractors.features.PerLevelFeature import PerLevelFeature
 from ogd.core.extractors.Extractor import ExtractorParameters
@@ -14,7 +14,7 @@ class TopPlayerAttribute(PerCountFeature):
     def __init__(self, params:ExtractorParameters):
         PerCountFeature.__init__(self, params=params)
         self._attr_count = 0
-        self._ATTRIBUTE_ENUM : List[str] = ["endurance", "resourceful", "tech","social","trust","research"]
+        self._ATTRIBUTE_ENUM : Final[List[str]] = ["endurance", "resourceful", "tech","social","trust","research"]
         self._attr_name = self._ATTRIBUTE_ENUM[self.CountIndex]
 
 

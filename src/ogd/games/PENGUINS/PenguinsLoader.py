@@ -1,7 +1,7 @@
 ## import standard libraries
 import json
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, Final, List, Optional
 ## import local files
 from . import features
 from ogd.games import PENGUINS
@@ -20,8 +20,7 @@ from ogd.core.schemas.games.GameSchema import GameSchema
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
 
-EXPORT_PATH = "games/PENGUINS/DBExport.json"
-
+EXPORT_PATH : Final[str] = "games/PENGUINS/DBExport.json"
 
 class PenguinsLoader(ExtractorLoader):
 
