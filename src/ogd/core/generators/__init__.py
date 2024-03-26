@@ -1,12 +1,12 @@
 __all__ = [
-    "Extractor",
+    "Generator",
     "detectors",
     "extractors",
     "registries",
     "GeneratorLoader"
 ]
 
-from . import Extractor
+from . import Generator
 from . import detectors
 from . import extractors
 from . import registries
