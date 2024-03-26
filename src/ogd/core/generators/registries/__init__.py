@@ -1,9 +1,9 @@
 __all__ = [
-    "ExtractorRegistry",
+    "GeneratorRegistry",
     "DetectorRegistry",
     "FeatureRegistry",
 ]
 
-from . import ExtractorRegistry
+from . import GeneratorRegistry
 from . import DetectorRegistry
 from . import FeatureRegistry

@@ -16,7 +16,7 @@ from ogd.core.schemas.IterationMode import IterationMode
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class ExtractorRegistry(abc.ABC):
+class GeneratorRegistry(abc.ABC):
     """Class for registering features to listen for events.
 
     :return: [description]
@@ -66,7 +66,7 @@ class ExtractorRegistry(abc.ABC):
         _event_registry maps event names to Listener objects, which basically just say which feature(s) wants the given enent.
         _feature_registry maps feature names to Listener objects, which basically just say which 2nd-order feature(s) wants the given 1st-order feature.
         """
-        self._event_registry : Dict[str,List[ExtractorRegistry.Listener]] = {"all_events":[]}
+        self._event_registry : Dict[str,List[GeneratorRegistry.Listener]] = {"all_events":[]}
         self._mode        : ExtractionMode = mode
 
     # *** PUBLIC STATICS ***

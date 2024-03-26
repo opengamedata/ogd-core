@@ -6,7 +6,7 @@ from typing import Any, Callable, List, Optional, Set
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
+from ogd.core.generators.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -18,7 +18,7 @@ from ogd.core.schemas.IterationMode import IterationMode
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class DetectorRegistry(ExtractorRegistry):
+class DetectorRegistry(GeneratorRegistry):
     """Class for registering features to listen for events.
 
     :return: [description]
@@ -72,7 +72,7 @@ class DetectorRegistry(ExtractorRegistry):
 
     def _register(self, extractor:Generator, iter_mode:IterationMode):
         if isinstance(extractor, Detector):
-            _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=iter_mode)
+            _listener = GeneratorRegistry.Listener(name=extractor.Name, mode=iter_mode)
             _event_types   = extractor.GetEventDependencies(mode=self._mode)
             # First, add detector to the _features dict.
             self._detectors[extractor.Name] = extractor

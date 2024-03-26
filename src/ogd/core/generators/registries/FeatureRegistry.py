@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
-from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
+from ogd.core.generators.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -24,7 +24,7 @@ from ogd.core.utils.Logger import Logger
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class FeatureRegistry(ExtractorRegistry):
+class FeatureRegistry(GeneratorRegistry):
     """Class for registering features to listen for events.
 
     :return: [description]
@@ -52,7 +52,7 @@ class FeatureRegistry(ExtractorRegistry):
         """
         super().__init__(mode=mode)
         self._features : List[OrderedDict[str, Feature]] = [OrderedDict() for i in range(order)]
-        self._feature_registry: Dict[str,List[ExtractorRegistry.Listener]] = {}
+        self._feature_registry: Dict[str,List[GeneratorRegistry.Listener]] = {}
         # self._features : Dict[str, OrderedDict[str, Feature]] = {
         #     "first_order" : OrderedDict(),
         #     "second_order" : OrderedDict()
@@ -95,7 +95,7 @@ class FeatureRegistry(ExtractorRegistry):
 
     def _register(self, extractor:Generator, iter_mode:IterationMode):
         if isinstance(extractor, Feature):
-            _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=iter_mode)
+            _listener = GeneratorRegistry.Listener(name=extractor.Name, mode=iter_mode)
             _feature_deps = extractor.GetFeatureDependencies(mode=self._mode)
             _event_deps   = extractor.GetEventDependencies(mode=self._mode)
             # First, add feature to the _features dict.
@@ -178,7 +178,7 @@ class FeatureRegistry(ExtractorRegistry):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
-        listener : ExtractorRegistry.Listener = ExtractorRegistry.Listener("EMPTY", IterationMode.AGGREGATE)
+        listener : GeneratorRegistry.Listener = GeneratorRegistry.Listener("EMPTY", IterationMode.AGGREGATE)
         try:
             # send event to every listener for the given event name.
             for listener in self._event_registry.get(event.EventName, []):
