@@ -35,12 +35,12 @@ class SurveyTime(PerCountFeature):
             raise KeyError(f"SurveyTime got an event of type {event.EventName} with no quiz_number! EventData keys are: {event.EventData.keys()}")
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.23", "CUSTOM.24"] 
         # ["CUSTOM.23", "CUSTOM.24"] = [quizstart, quizend]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return [] 
 
     def _extractFromEvent(self, event:Event) -> None:

@@ -45,7 +45,7 @@ class PlayTime(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -54,7 +54,7 @@ class PlayTime(SessionFeature):
         return ["all_events"] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_

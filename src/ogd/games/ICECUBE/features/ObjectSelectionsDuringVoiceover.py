@@ -21,11 +21,11 @@ class ObjectSelectionsDuringVoiceover (SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["script_audio_started","script_audio_complete","object_selected"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

@@ -14,11 +14,11 @@ class StoryAlignmentSequence(PerLevelFeature):
         self._story_alignment_sequence = []
         
     @classmethod
-    def _getEventDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
         return ["story_updated"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
@@ -46,11 +46,11 @@ class StoryAlignmentSequence(PerLevelFeature):
         self._story_alignment_sequence = []
 
     @classmethod
-    def _getEventDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode: ExtractionMode) -> List[str]:
         return ["story_updated"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode: ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event: Event) -> None:

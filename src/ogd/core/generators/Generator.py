@@ -28,7 +28,7 @@ class Generator(abc.ABC):
     ## Abstract function to get a list of event types the Feature wants.
     @classmethod
     @abc.abstractmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """ Abstract function to get a list of event types the Feature wants.
             The types of event accepted by a feature are a responsibility of the Feature's developer,
             so this is a required part of interface instead of a config item in the schema.
@@ -40,7 +40,7 @@ class Generator(abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """Base function for getting any features a second-order feature depends upon.
         By default, no dependencies.
         Any feature intented to be second-order should override this function.
@@ -73,12 +73,12 @@ class Generator(abc.ABC):
     # *** PUBLIC METHODS ***
 
     @classmethod
-    def GetEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return cls._getEventDependencies(mode=mode)
+    def EventFilter(cls, mode:ExtractionMode) -> List[str]:
+        return cls._eventFilter(mode=mode)
 
     @classmethod
-    def GetFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return cls._getFeatureDependencies(mode=mode)
+    def FeatureFilter(cls, mode:ExtractionMode) -> List[str]:
+        return cls._featureFilter(mode=mode)
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event=event):
@@ -187,7 +187,7 @@ class Generator(abc.ABC):
         :return: True if the given event type is in this feature's list, otherwise false.
         :rtype: bool
         """
-        _deps = self.GetEventDependencies(mode=self.ExtractionMode)
+        _deps = self.EventFilter(mode=self.ExtractionMode)
         if event_type in _deps or 'all_events' in _deps:
             return True
         else:

@@ -32,7 +32,7 @@ class UserPlayTime(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -41,7 +41,7 @@ class UserPlayTime(SessionFeature):
         return [] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -66,7 +66,7 @@ class UserPlayTime(SessionFeature):
         :type feature: FeatureData
         """
         # >>> use data in the FeatureData object to update state variables as needed. <<<
-        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
+        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _featureFilter().
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
     
         # Exception handling for empty sessions

@@ -96,8 +96,8 @@ class ExtractorRegistry(GeneratorRegistry):
     def _register(self, extractor:Generator, iter_mode:IterationMode):
         if isinstance(extractor, Feature):
             _listener = GeneratorRegistry.Listener(name=extractor.Name, mode=iter_mode)
-            _feature_deps = extractor.GetFeatureDependencies(mode=self._mode)
-            _event_deps   = extractor.GetEventDependencies(mode=self._mode)
+            _feature_deps = extractor.FeatureFilter(mode=self._mode)
+            _event_deps   = extractor.EventFilter(mode=self._mode)
             # First, add feature to the _features dict.
             if len(_feature_deps) > 0:
                 _feat_order = ExtractorRegistry.FeatureOrders.SECOND_ORDER.value
@@ -149,13 +149,13 @@ class ExtractorRegistry(GeneratorRegistry):
         for agg in agg_load_set:
             _class = loader.GetFeatureClass(feature_type=agg.TypeName)
             if _class is not None:
-                _agg_deps = _agg_deps.union(set(_class.GetFeatureDependencies(mode=self._mode)))
+                _agg_deps = _agg_deps.union(set(_class.FeatureFilter(mode=self._mode)))
         agg_load_set = agg_load_set.union({schema.AggregateFeatures[agg] for agg in _agg_deps if agg in schema.AggregateFeatures.keys()})
         _per_deps = set()
         for per in per_load_set:
             _class = loader.GetFeatureClass(feature_type=per.TypeName)
             if _class is not None:
-                _per_deps = _per_deps.union(set(_class.GetFeatureDependencies(mode=self._mode)))
+                _per_deps = _per_deps.union(set(_class.FeatureFilter(mode=self._mode)))
         per_load_set = per_load_set.union({schema.PerCountFeatures[per] for per in _per_deps if per in schema.PerCountFeatures.keys()})
         # 3. Now that we know what needs loading, load them and register.
         for agg_schema in sorted(agg_load_set, key=lambda x : x.Name):

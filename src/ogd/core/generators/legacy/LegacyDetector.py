@@ -15,7 +15,7 @@ class LegacyDetector(Detector):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_

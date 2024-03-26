@@ -28,7 +28,7 @@ class JobActiveTime(PerJobFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["all_events"]
         # if self.ExtractionMode == ExtractionMode.PLAYER \
         # or self.ExtractionMode == ExtractionMode.SESSION:
@@ -37,7 +37,7 @@ class JobActiveTime(PerJobFeature):
         #     return []
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
         # if self.ExtractionMode == ExtractionMode.POPULATION:
         #     return ["JobActiveTime"]

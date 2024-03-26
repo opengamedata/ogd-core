@@ -23,7 +23,7 @@ class CustomFeature(PerCountFeature):
     def _validateEventCountIndex(self, event: Event):
         return self.CountIndex == None
 
-    def _getEventDependencies(self) -> List[str]:
+    def _eventFilter(self) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -31,7 +31,7 @@ class CustomFeature(PerCountFeature):
         """
         return [] # >>> fill in names of events this Feature should use for extraction. <<<
 
-    def _getFeatureDependencies(self) -> List[str]:
+    def _featureFilter(self) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -46,7 +46,7 @@ class CustomFeature(PerCountFeature):
         :type event: Event
         """
         # >>> use the data in the Event object to update state variables as needed. <<<
-        # Note that this function runs once on each Event whose name matches one of the strings returned by _getEventDependencies()
+        # Note that this function runs once on each Event whose name matches one of the strings returned by _eventFilter()
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
         # if "Click" in event.EventName:
@@ -60,7 +60,7 @@ class CustomFeature(PerCountFeature):
         :type feature: FeatureData
         """
         # >>> use data in the FeatureData object to update state variables as needed. <<<
-        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
+        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _featureFilter().
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
         return
 

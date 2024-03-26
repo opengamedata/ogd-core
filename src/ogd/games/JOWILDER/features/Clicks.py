@@ -23,11 +23,11 @@ class Clicks(SessionFeature):
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return [f"CUSTOM.{i}" for i in range(3, 12)]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["SessionDuration"] 
 
     def _extractFromEvent(self, event:Event) -> None:

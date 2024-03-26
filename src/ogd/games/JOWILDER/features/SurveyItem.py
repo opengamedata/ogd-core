@@ -54,7 +54,7 @@ class SurveyItem(PerCountFeature):
         return self._index == self.CountIndex or self._index == self.CountIndex - 1
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -64,7 +64,7 @@ class SurveyItem(PerCountFeature):
         # ["CUSTOM.22", "CUSTOM.23"] = ["quizquestion", "quizstart"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_

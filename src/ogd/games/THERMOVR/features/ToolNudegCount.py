@@ -25,11 +25,11 @@ class ToolNudgeCount(SessionFeature):
         super().__init__(params=params)
 
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["click_tool_increase", "click_tool_decrease"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

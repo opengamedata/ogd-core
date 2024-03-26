@@ -33,7 +33,7 @@ class QuitNode(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -42,7 +42,7 @@ class QuitNode(SessionFeature):
         return [] # >>> fill in names of events this Feature should use for extraction. <<<
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         """_summary_
 
         :return: _description_
@@ -57,7 +57,7 @@ class QuitNode(SessionFeature):
         :type event: Event
         """
         # >>> use the data in the Event object to update state variables as needed. <<<
-        # Note that this function runs once on each Event whose name matches one of the strings returned by _getEventDependencies()
+        # Note that this function runs once on each Event whose name matches one of the strings returned by _eventFilter()
         #
         # e.g. check if the event name contains the substring "Click," and if so set self._found_click to True
         

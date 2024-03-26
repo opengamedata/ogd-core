@@ -28,12 +28,12 @@ class QuestionAnswers(PerCountFeature):
         return self.cur_question==self.CountIndex
     
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.11", "CUSTOM.20"]
         # ["CUSTOM.11", "CUSTOM.20"] = ["wildcard_clicks", "wildcard_hover"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:

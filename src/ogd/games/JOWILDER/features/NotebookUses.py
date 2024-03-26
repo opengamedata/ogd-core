@@ -20,11 +20,11 @@ class NotebookUses(SessionFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["CUSTOM.4"] 
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
@@ -39,7 +39,7 @@ class NotebookUses(SessionFeature):
         :type feature: FeatureData
         """
         # >>> use data in the FeatureData object to update state variables as needed. <<<
-        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _getFeatureDependencies().
+        # Note: This function runs on data from each Feature whose name matches one of the strings returned by _featureFilter().
         #       The number of instances of each Feature may vary, depending on the configuration and the unit of analysis at which this CustomFeature is run.
         return
 

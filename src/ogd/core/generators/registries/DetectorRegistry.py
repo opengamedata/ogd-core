@@ -73,7 +73,7 @@ class DetectorRegistry(GeneratorRegistry):
     def _register(self, extractor:Generator, iter_mode:IterationMode):
         if isinstance(extractor, Detector):
             _listener = GeneratorRegistry.Listener(name=extractor.Name, mode=iter_mode)
-            _event_types   = extractor.GetEventDependencies(mode=self._mode)
+            _event_types   = extractor.EventFilter(mode=self._mode)
             # First, add detector to the _features dict.
             self._detectors[extractor.Name] = extractor
             # Register detector's requested events.
