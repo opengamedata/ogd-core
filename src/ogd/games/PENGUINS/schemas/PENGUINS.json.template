@@ -163,6 +163,10 @@
                 "rotW": {
                     "type": "float",
                     "description": "The W-component of the rotation when the waddle ended."
+                },
+                "source": {
+                    "type": "enum(BUTTON, WADDLE)",
+                    "description": "Indicator for whether the player waddled by pressing a button, or by making the 'waddle' gesture with their head."
                 }
             }
         },
