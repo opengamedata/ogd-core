@@ -6,7 +6,7 @@ from dateutil import parser
 from datetime import datetime, time, timedelta
 from json.decoder import JSONDecodeError
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Optional, Union
+from typing import Any, Dict, Final, List, Tuple, Optional, Union
 ## import local files
 from ogd.core import schemas
 from ogd.core.schemas.Event import Event, EventSource
@@ -230,7 +230,7 @@ class TableSchema:
         :rtype: [type]
         """
         # define vars to be passed as params
-        MAX_WARNINGS : int = 10
+        MAX_WARNINGS : Final[int] = 10
         sess_id : str
         app_id  : str
         time    : datetime
