@@ -22,10 +22,7 @@ class Idle(Detector):
         super().__init__(params=params, trigger_callback=trigger_callback)
         self._found = False
         self._sess_id = "Unknown"
-        self._player_id = "Unknown"
         self._last_action_time = None
-        self._app_version = "Unknown"
-        self._log_version = "Unknown"
         self._job_name = "Unknown"
         self._idle_level = 0
         self._idle_time: Optional[Union[float, timedelta]] = None
@@ -68,12 +65,7 @@ class Idle(Detector):
             self._idle_time = self._idle_time / timedelta(seconds=1)
             self._idle_level = self._idle_threads / timedelta(seconds=1)
             self._sess_id = event.SessionID
-            self._player_id = event.UserID
-            self._time = event.Timestamp
-            self._app_version = event.AppVersion
-            self._log_version = event.LogVersion
             self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
-            self._sequence_index = event.EventSequenceIndex
         return
 
     def _trigger_condition(self) -> bool:
@@ -89,5 +81,11 @@ class Idle(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val : DetectorEvent = DetectorEvent(session_id=self._sess_id, app_id="AQUALAB", timestamp=self._time, event_name="Idle", event_data={"level" : self._idle_level, "time": self._idle_time, "job_name": self._job_name}, app_version=self._app_version, log_version=self._log_version, user_id=self._player_id, event_sequence_index=self._sequence_index)
+        _event_data = {
+            "level" : self._idle_level,
+            "time": self._idle_time,
+            "job_name": self._job_name
+        }
+        ret_val : DetectorEvent = self.GenerateEvent(session_id=self._sess_id, app_id="AQUALAB",
+                                                     event_name="Idle", event_data=_event_data)
         return ret_val
