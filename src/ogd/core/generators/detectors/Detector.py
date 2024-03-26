@@ -2,7 +2,7 @@
 import abc
 from typing import Callable, List, Optional
 # import locals
-from ogd.core.generators.Generator import Extractor, GeneratorParameters
+from ogd.core.generators.Generator import Generator, GeneratorParameters
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -13,7 +13,7 @@ from ogd.core.schemas.ExtractionMode import ExtractionMode
 #  The Eval function takes a list of row data, computes some statistic, and returns a list of results.
 #  If the model works on Detectors from session data, it should calculate one result for each row (each row being a session).
 #  If the model works on a raw list of recent events, it should calculate a single result (each row being an event).
-class Detector(Extractor):
+class Detector(Generator):
 #TODO: use a dirty bit so we only run the GetValue function if we've received an event or Detector since last calculation
 
     # *** ABSTRACTS ***

@@ -6,7 +6,7 @@ from collections import OrderedDict
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set, Tuple
 ## import local files
-from ogd.core.generators.Generator import Extractor
+from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
@@ -93,7 +93,7 @@ class FeatureRegistry(ExtractorRegistry):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _register(self, extractor:Extractor, iter_mode:IterationMode):
+    def _register(self, extractor:Generator, iter_mode:IterationMode):
         if isinstance(extractor, Feature):
             _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=iter_mode)
             _feature_deps = extractor.GetFeatureDependencies(mode=self._mode)

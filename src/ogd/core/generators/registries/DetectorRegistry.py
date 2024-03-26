@@ -4,7 +4,7 @@ from collections import OrderedDict
 from typing import Any, Callable, List, Optional, Set
 ## import local files
 from ogd.core.generators.detectors.Detector import Detector
-from ogd.core.generators.Generator import Extractor
+from ogd.core.generators.Generator import Generator
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.schemas.Event import Event
@@ -70,7 +70,7 @@ class DetectorRegistry(ExtractorRegistry):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _register(self, extractor:Extractor, iter_mode:IterationMode):
+    def _register(self, extractor:Generator, iter_mode:IterationMode):
         if isinstance(extractor, Detector):
             _listener = ExtractorRegistry.Listener(name=extractor.Name, mode=iter_mode)
             _event_types   = extractor.GetEventDependencies(mode=self._mode)

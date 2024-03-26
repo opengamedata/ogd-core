@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 ## import local files
 from ogd.core.utils.Logger import Logger
-from ogd.core.generators.Generator import Extractor
+from ogd.core.generators.Generator import Generator
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
@@ -36,7 +36,7 @@ class ExtractorRegistry(abc.ABC):
     # *** ABSTRACTS ***
 
     @abc.abstractmethod
-    def _register(self, extractor:Extractor, iter_mode:IterationMode):
+    def _register(self, extractor:Generator, iter_mode:IterationMode):
         pass
 
     @abc.abstractmethod
@@ -73,7 +73,7 @@ class ExtractorRegistry(abc.ABC):
 
     # *** PUBLIC METHODS ***
 
-    def Register(self, extractor:Extractor, iter_mode:IterationMode):
+    def Register(self, extractor:Generator, iter_mode:IterationMode):
         self._register(extractor=extractor, iter_mode=iter_mode)
 
     def GetExtractorNames(self) -> List[str]:

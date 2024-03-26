@@ -7,7 +7,7 @@ from ogd.core.schemas.ExtractionMode import ExtractionMode
 
 ## @class ExtractorParams
 class GeneratorParameters:
-    """Dumb struct to hold the data that should be available to every Extractor.
+    """Dumb struct to hold the data that should be available to every Generator.
     This just makes it easier to add/manage any new params,
     so that we don't need to change the param list for hundreds of individual
     extractor subclasses every time something changes.
@@ -20,7 +20,7 @@ class GeneratorParameters:
 
 ## @class Extractor
 #  Abstract base class for all data extractors (features and detectors)
-class Extractor(abc.ABC):
+class Generator(abc.ABC):
 #TODO: use a dirty bit so we only run the GetValue function if we've received an event or feature since last calculation
 
     # *** ABSTRACTS ***
