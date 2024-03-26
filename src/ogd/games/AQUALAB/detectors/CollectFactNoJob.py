@@ -18,12 +18,7 @@ class CollectFactNoJob(Detector):
     def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None]):
         super().__init__(params=params, trigger_callback=trigger_callback)
         self._found_jobless_fact = False
-        self._sess_id = "Unknown"
-        self._player_id = "Unknown"
-        self._time = None # datetime.now()
         self._fact_id = None
-        self._app_version = "Unknown"
-        self._log_version = "Unknown"
         self._current_job = None
 
     # *** Implement abstract functions ***
@@ -46,14 +41,8 @@ class CollectFactNoJob(Detector):
         if self._current_job is None:
             raise KeyError("Could not find key 'job_name' in GameState or EventData!")
         if self._current_job == "no-active-job":
-            self._sess_id = event.SessionID
-            self._player_id = event.UserID
-            self._time = event.Timestamp
             self._found_jobless_fact = True
             self._fact_id = event.EventData['fact_id']
-            self._app_version = event.AppVersion
-            self._log_version = event.LogVersion
-            self._sequence_index = event.EventSequenceIndex
         return
 
     def _trigger_condition(self) -> bool:
@@ -69,9 +58,7 @@ class CollectFactNoJob(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val : DetectorEvent = DetectorEvent(session_id=self._sess_id, app_id="AQUALAB", timestamp=self._time,
-                                                event_name="CollectFactNoJob", event_data={"fact_id":self._fact_id},
-                                                app_version=self._app_version, log_version=self._log_version,
-                                                user_id=self._player_id, game_state={"job_name":self._current_job},
-                                                event_sequence_index=self._sequence_index)
+        ret_val : DetectorEvent = self.GenerateEvent(app_id="AQUALAB",
+                                                     event_name="CollectFactNoJob", event_data={"fact_id":self._fact_id},
+                                                     game_state={"job_name":self._current_job})
         return ret_val

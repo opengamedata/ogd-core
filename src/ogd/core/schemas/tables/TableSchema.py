@@ -7,7 +7,6 @@ from datetime import datetime, time, timedelta
 from json.decoder import JSONDecodeError
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Optional, Union
-Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 ## import local files
 from ogd.core import schemas
 from ogd.core.schemas.Event import Event, EventSource
@@ -15,6 +14,7 @@ from ogd.core.schemas.tables.ColumnMapSchema import ColumnMapSchema
 from ogd.core.schemas.tables.ColumnSchema import ColumnSchema
 from ogd.core.utils import utils
 from ogd.core.utils.Logger import Logger
+from ogd.core.utils.typing import Map
 
 ## @class TableSchema
 #  Dumb struct to hold useful info about the structure of database data

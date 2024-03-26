@@ -1,11 +1,13 @@
 ## import standard libraries
 import abc
-from typing import Callable, List, Optional
+from datetime import datetime, timedelta
+from typing import Any, Callable, Dict, List, Optional
 # import locals
 from ogd.core.generators.Generator import Generator, GeneratorParameters
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.utils.typing import Map
 
 ## @class Model
 #  Abstract base class for session-level Wave Detectors.
@@ -30,7 +32,10 @@ class Detector(Generator):
 
     def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None]):
         super().__init__(params=params)
-        self._callback    = trigger_callback
+        self._callback        = trigger_callback
+        self._saw_first_event : bool            = False
+        # Set up variables for default values of DetectorEvent elements
+        self._triggering_event: Event
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -47,16 +52,6 @@ class Detector(Generator):
 
     # *** PUBLIC STATICS ***
 
-    # *** PUBLIC METHODS ***
-
-    def ExtractFromEvent(self, event:Event):
-        if self._validateEvent(event=event):
-            self._extractFromEvent(event=event)
-            if self._trigger_condition():
-                _event = self._trigger_event()
-                # TODO: add some logic to fill in empty values of Event with reasonable defaults, where applicable.
-                self._callback(_event)
-
     @staticmethod
     def AvailableModes() -> List[ExtractionMode]:
         """List of ExtractionMode supported by the Detector.
@@ -66,6 +61,37 @@ class Detector(Generator):
         :rtype: List[ExtractionMode]
         """
         return [ExtractionMode.DETECTOR]
+
+    # *** PUBLIC METHODS ***
+
+    def ExtractFromEvent(self, event:Event):
+        if self._validateEvent(event=event):
+            self._extractFromEvent(event=event)
+            if self._trigger_condition():
+                self._triggering_event = event
+                _new_event = self._trigger_event()
+                self._callback(_new_event)
+
+    def GenerateEvent(self, event_name:str,              event_data:Map,
+                      session_id:Optional[str]=None,     app_id:Optional[str]=None,
+                      timestamp:Optional[datetime]=None, time_offset:Optional[timedelta]=None,
+                      app_version:Optional[str]=None,    log_version:Optional[str]=None,
+                      user_id:Optional[str] = None,      user_data:Optional[Map] = None,
+                      game_state:Optional[Map]=None,     event_sequence_index:Optional[int]=None):
+        return DetectorEvent(
+            session_id = session_id   or self._triggering_event.SessionID,
+            app_id     = app_id       or self._triggering_event.AppID,
+            event_name = event_name,  # no default, must be provided
+            event_data = event_data,  # no default, must be provided
+            timestamp  = timestamp    or self._triggering_event.Timestamp,
+            time_offset= time_offset  or self._triggering_event.TimeOffset,
+            app_version= app_version  or self._triggering_event.AppVersion,
+            log_version= log_version  or self._triggering_event.LogVersion,
+            user_id    = user_id      or self._triggering_event.UserID,
+            user_data  = user_data    or self._triggering_event.UserData,
+            game_state = game_state   or self._triggering_event.GameState,
+            event_sequence_index = event_sequence_index or self._triggering_event.EventSequenceIndex
+        )
 
     # *** PROPERTIES ***
 

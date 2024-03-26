@@ -16,12 +16,6 @@ class EchoRoomChange(Detector):
     """
     def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None]):
         super().__init__(params=params, trigger_callback=trigger_callback)
-        self._found = False
-        self._sess_id = "Unknown"
-        self._player_id = "Unknown"
-        self._time = None # datetime.now()
-        self._app_version = "Unknown"
-        self._log_version = "Unknown"
 
     # *** Implement abstract functions ***
     @classmethod
@@ -40,12 +34,6 @@ class EchoRoomChange(Detector):
         :type event: Event
         """
         self._found = True
-        self._sess_id = event.SessionID
-        self._player_id = event.UserID
-        self._time = event.Timestamp
-        self._app_version = event.AppVersion
-        self._log_version = event.LogVersion
-        self._sequence_index = event.EventSequenceIndex
         return
 
     def _trigger_condition(self) -> bool:
@@ -61,8 +49,5 @@ class EchoRoomChange(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val : DetectorEvent = DetectorEvent(session_id=self._sess_id, app_id="AQUALAB", timestamp=self._time,
-                                                event_name="EchoRoomChange", event_data={},
-                                                app_version=self._app_version, log_version=self._log_version,
-                                                user_id=self._player_id, event_sequence_index=self._sequence_index)
+        ret_val : DetectorEvent = self.GenerateEvent(event_name="EchoRoomChange", event_data={})
         return ret_val

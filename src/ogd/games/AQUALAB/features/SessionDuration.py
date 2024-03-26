@@ -35,12 +35,12 @@ class SessionDuration(SessionFeature):
             self._client_start_time = event.Timestamp
             self._client_start_index = event.EventSequenceIndex
         if self._client_start_time > event.Timestamp:
-            Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp} earlier than start event, with time {self._client_start_time}, index {self._client_start_index}!", logging.WARN)
+            Logger.Log(f"Got out-of-order events in SessionDuration for session {self._session_id};\nevent {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp} earlier than start event, with time {self._client_start_time}, index {self._client_start_index}!", logging.WARN)
             self._client_start_time = event.Timestamp
             self._client_start_index = event.EventSequenceIndex
         # if this was the latest event, make it the end time, otherwise output error.
         if self._client_end_time is not None and self._client_end_time > event.Timestamp:
-            Logger.Log(f"Got out-of-order events in SessionDuration; event {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp} earlier than end event, with time {self._client_end_time}, index {self._client_end_index}!", logging.WARN)
+            Logger.Log(f"Got out-of-order events in SessionDuration for session {self._session_id};\nevent {event.EventName}:{event.EventSequenceIndex} for player {event.UserID}:{event.SessionID} had timestamp {event.Timestamp} earlier than end event, with time {self._client_end_time}, index {self._client_end_index}!", logging.WARN)
         else:
             self._client_end_time = event.Timestamp
             self._client_end_index = event.EventSequenceIndex
