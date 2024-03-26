@@ -214,6 +214,7 @@ When a player performs a waddle movement to move their penguin avatar forward
 | rotY | float | The Y-component of the rotation when the waddle ended. | |
 | rotZ | float | The Z-component of the rotation when the waddle ended. | |
 | rotW | float | The W-component of the rotation when the waddle ended. | |
+| source | enum(BUTTON, WADDLE) | Indicator for whether the player waddled by pressing a button, or by making the 'waddle' gesture with their head. | |
 
 #### Other Elements
 
@@ -664,7 +665,19 @@ The duration of time a player played in a given region of the game.
 
 **WaddlePerRegion** : *int*, *Per-count feature*   
 The number of times a player waddled in a given region of the game.  
+  
 
+## Other Elements  
+
+Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
+
+game_state : {'seconds_from_launch': {'type': 'float', 'description': 'The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*.'}, 'posX': {'type': 'float', 'description': 'The current x-position of ______ at the moment the event occurred.'}, 'posY': {'type': 'float', 'description': 'The current y-position of ______ at the moment the event occurred.'}, 'posZ': {'type': 'float', 'description': 'The current z-position of ______ at the moment the event occurred.'}, 'rotX': {'type': 'float', 'description': 'The x-component of the orientation of ______ at the moment the event occurred.'}, 'rotY': {'type': 'float', 'description': 'The y-component of the orientation of ______ at the moment the event occurred.'}, 'rotZ': {'type': 'float', 'description': 'The z-component of the orientation of ______ at the moment the event occurred.'}, 'rotW': {'type': 'float', 'description': 'The w-component of the orientation of ______ at the moment the event occurred.'}}  
+
+### Other Ranges  
+
+Extra ranges specified in the game's schema, which may be referenced by event/feature processors.  
+
+level_range : range(1, 6)
 
 No changelog prepared
 
