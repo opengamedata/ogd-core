@@ -33,14 +33,9 @@ class Detector(Extractor):
     def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None]):
         super().__init__(params=params)
         self._callback        = trigger_callback
-        self._saw_first_event : bool          = False
+        self._saw_first_event : bool            = False
         # Set up variables for default values of DetectorEvent elements
-        self._session_id      : str           = "UNKNOWN"
-        self._app_id          : str           = "UNKNOWN"
-        self._app_version     : Optional[str] = None
-        self._log_version     : Optional[str] = None
-        self._user_id         : Optional[str] = None
-        self._user_data       : Optional[Map] = {}
+        self._triggering_event: Event
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -71,70 +66,35 @@ class Detector(Extractor):
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event=event):
-            if not self._saw_first_event:
-                self._firstEvent(event=event)
-                self._saw_first_event = True
             self._extractFromEvent(event=event)
             if self._trigger_condition():
-                _event = self._trigger_event()
-                # TODO: add some logic to fill in empty values of Event with reasonable defaults, where applicable.
-                self._callback(_event)
+                self._triggering_event = event
+                _new_event = self._trigger_event()
+                self._callback(_new_event)
 
     def GenerateEvent(self, event_name:str,              event_data:Map,
-                      timestamp:datetime,                time_offset:Optional[timedelta],
-                      game_state:Optional[Map],          event_sequence_index:Optional[int],
+                      timestamp:Optional[datetime]=None, time_offset:Optional[timedelta]=None,
+                      game_state:Optional[Map]=None,     event_sequence_index:Optional[int]=None,
                       session_id:Optional[str]=None,     app_id:Optional[str]=None,
                       app_version:Optional[str]=None,    log_version:Optional[str]=None,
                       user_id:Optional[str] = None,      user_data:Optional[Map] = None):
         return DetectorEvent(
-            session_id = session_id   or self.DefaultSessionID,
-            app_id     = app_id       or self.DefaultAppID,
+            session_id = session_id   or self._triggering_event.SessionID,
+            app_id     = app_id       or self._triggering_event.AppID,
             event_name = event_name,  # no default, must be provided
             event_data = event_data,  # no default, must be provided
-            timestamp  = timestamp,   # no default, must be provided
-            time_offset= time_offset, # no default, must be provided
-            app_version= app_version or self.DefaultAppVersion,
-            log_version= log_version or self.DefaultLogVersion,
-            user_id    = user_id     or self.DefaultUserID,
-            user_data  = user_data   or self.DefaultUserData,
-            game_state = game_state  or {},
-            event_sequence_index = event_sequence_index # no default, must be provided
+            timestamp  = timestamp    or self._triggering_event.Timestamp,
+            time_offset= time_offset  or self._triggering_event.TimeOffset,
+            app_version= app_version  or self._triggering_event.AppVersion,
+            log_version= log_version  or self._triggering_event.LogVersion,
+            user_id    = user_id      or self._triggering_event.UserID,
+            user_data  = user_data    or self._triggering_event.UserData,
+            game_state = game_state   or self._triggering_event.GameState,
+            event_sequence_index = event_sequence_index or self._triggering_event.EventSequenceIndex
         )
 
     # *** PROPERTIES ***
 
-    @property
-    def DefaultSessionID(self) -> str:
-        return self._session_id
-
-    @property
-    def DefaultAppID(self) -> str:
-        return self._app_id
-
-    @property
-    def DefaultAppVersion(self) -> Optional[str]:
-        return self._app_version
-
-    @property
-    def DefaultLogVersion(self) -> Optional[str]:
-        return self._log_version
-
-    @property
-    def DefaultUserID(self) -> Optional[str]:
-        return self._user_id
-
-    @property
-    def DefaultUserData(self) -> Optional[Map]:
-        return self._user_data
-
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
-
-    def _firstEvent(self, event:Event):
-        self._session_id = event.SessionID
-        self._app_id = event.AppID
-        self._app_version = event.AppVersion
-        self._log_version = event.LogVersion
-        self._user_id = event.UserID
-        self._user_data = event.UserData
