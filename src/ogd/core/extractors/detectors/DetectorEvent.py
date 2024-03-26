@@ -1,6 +1,6 @@
 # import libraries
 import abc
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
 # import locals
 from ogd.core.schemas.Event import Event, EventSource
@@ -8,9 +8,9 @@ Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 
 class DetectorEvent(Event):
    def __init__(self, session_id:str,  app_id:str, event_name:str,    event_data:Map,
-                timestamp:datetime=datetime.now(), time_offset:Optional[int] = None,
+                timestamp:datetime=datetime.now(), time_offset:Optional[timedelta] = None,
                 app_version:Optional[str]=None,    log_version:Optional[str]=None,
-                user_id:Optional[str] = "",        user_data:Optional[Map] = {},
+                user_id:Optional[str] = None,        user_data:Optional[Map] = {},
                 game_state:Optional[Map] = {},     event_sequence_index:Optional[int] = None):
       """Constructor for the simple DetectorEvent wrapper.
 
