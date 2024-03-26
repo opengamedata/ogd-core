@@ -4,9 +4,9 @@ import logging
 from importlib import import_module
 from typing import Any, Callable, Dict, List, Optional, Type
 # import locals
-from ogd.core.generators.Generator import Extractor, GeneratorParameters
+from ogd.core.generators.Generator import Generator, GeneratorParameters
 from ogd.core.generators.detectors.Detector import Detector
-from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.generators.extractors.Extractor import Extractor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
@@ -63,11 +63,9 @@ class GeneratorLoader(abc.ABC):
 
         return ret_val
 
-    def LoadFeature(self, feature_type:str, name:str, schema_args:Dict[str,Any], count_index:Optional[int] = None) -> Optional[Feature]:
+    def LoadFeature(self, feature_type:str, name:str, schema_args:Dict[str,Any], count_index:Optional[int] = None) -> Optional[Extractor]:
         ret_val = None
 
-        # bit of a hack using globals() here, but theoretically this lets us access the class object with only a string.
-        # feature_class : Optional[Type[Extractor]] = globals().get(feature_type, None)
         if self._validateMode(feature_type=feature_type):
             params = GeneratorParameters(name=name, description=schema_args.get('description',""), mode=self._mode, count_index=count_index)
             try:
@@ -78,8 +76,8 @@ class GeneratorLoader(abc.ABC):
 
         return ret_val
 
-    def GetFeatureClass(self, feature_type:str) -> Optional[Type[Feature]]:
-        ret_val : Optional[Type[Feature]] = None
+    def GetFeatureClass(self, feature_type:str) -> Optional[Type[Extractor]]:
+        ret_val : Optional[Type[Extractor]] = None
         base_mod = self._getFeaturesModule()
         try:
             feature_mod = getattr(base_mod, feature_type)
@@ -104,6 +102,8 @@ class GeneratorLoader(abc.ABC):
         except ModuleNotFoundError:
             Logger.Log(f"In GeneratorLoader, '{mod_name}' could not be found, skipping {feature_type}", logging.ERROR)
         else:
+            # bit of a hack using globals() here, but theoretically this lets us access the class object with only a string.
+            # feature_class : Optional[Type[Extractor]] = globals().get(feature_type, None)
             feature_class : Optional[Type[Extractor]] = getattr(feature_module, feature_type, None)
             if feature_class is not None:
                 ret_val = self._mode in feature_class.AvailableModes()
