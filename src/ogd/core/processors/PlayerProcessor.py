@@ -5,7 +5,7 @@ from typing import List, Dict, Type, Optional, Set
 # import local files
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
-from ogd.core.processors.FeatureProcessor import FeatureProcessor
+from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExportMode import ExportMode
@@ -17,7 +17,7 @@ from ogd.core.utils.utils import ExportRow
 
 ## @class PlayerProcessor
 #  Class to extract and manage features for a processed csv file.
-class PlayerProcessor(FeatureProcessor):
+class PlayerProcessor(ExtractorProcessor):
 
     # *** BUILT-INS & PROPERTIES ***
 

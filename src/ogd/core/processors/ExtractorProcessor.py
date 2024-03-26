@@ -12,7 +12,7 @@ from ogd.core.schemas.ExportMode import ExportMode
 from ogd.core.utils.utils import ExportRow
 
 ## @class Processor
-class FeatureProcessor(GeneratorProcessor):
+class ExtractorProcessor(GeneratorProcessor):
 
     # *** ABSTRACTS ***
 

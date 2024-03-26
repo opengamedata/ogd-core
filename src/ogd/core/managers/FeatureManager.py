@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Dict, List, Type, Optional, Set, Tuple, Union
 ## import local files
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.processors.FeatureProcessor import FeatureProcessor
+from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.processors.PopulationProcessor import PopulationProcessor
 from ogd.core.processors.PlayerProcessor import PlayerProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
@@ -164,8 +164,8 @@ class FeatureManager:
                                         player_id="null", session_id="null", feature_overrides=self._overrides)
             }
 
-    def _flatHierarchy(self) -> List[FeatureProcessor]:
-        ret_val : List[FeatureProcessor] = []
+    def _flatHierarchy(self) -> List[ExtractorProcessor]:
+        ret_val : List[ExtractorProcessor] = []
         if self._population is not None:
             ret_val = [self._population]
         if self._players is not None:

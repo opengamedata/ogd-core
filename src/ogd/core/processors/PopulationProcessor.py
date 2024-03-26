@@ -5,7 +5,7 @@ from typing import List, Type, Optional, Set
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
-from ogd.core.processors.FeatureProcessor import FeatureProcessor
+from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
@@ -14,7 +14,7 @@ from ogd.core.utils.utils import ExportRow
 
 ## @class PopulationProcessor
 #  Class to extract and manage features for a processed csv file.
-class PopulationProcessor(FeatureProcessor):
+class PopulationProcessor(ExtractorProcessor):
 
     # *** BUILT-INS & PROPERTIES ***
 
