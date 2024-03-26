@@ -1,11 +1,12 @@
 ## import standard libraries
 import abc
-from typing import Callable, List, Optional
+from typing import Any, Callable, Dict, List, Optional
 # import locals
 from ogd.core.extractors.Extractor import Extractor, ExtractorParameters
 from ogd.core.extractors.detectors.DetectorEvent import DetectorEvent
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
+Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
 
 ## @class Model
 #  Abstract base class for session-level Wave Detectors.
@@ -30,7 +31,15 @@ class Detector(Extractor):
 
     def __init__(self, params:ExtractorParameters, trigger_callback:Callable[[Event], None]):
         super().__init__(params=params)
-        self._callback    = trigger_callback
+        self._callback        = trigger_callback
+        self._saw_first_event : bool          = False
+        # Set up variables for default values of DetectorEvent elements
+        self._session_id      : str           = "UNKNOWN"
+        self._app_id          : str           = "UNKNOWN"
+        self._app_version     : Optional[str] = None
+        self._log_version     : Optional[str] = None
+        self._user_id         : Optional[str] = None
+        self._user_data       : Optional[Map] = {}
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
 
@@ -51,6 +60,9 @@ class Detector(Extractor):
 
     def ExtractFromEvent(self, event:Event):
         if self._validateEvent(event=event):
+            if not self._saw_first_event:
+                self._firstEvent(event=event)
+                self._saw_first_event = True
             self._extractFromEvent(event=event)
             if self._trigger_condition():
                 _event = self._trigger_event()
@@ -72,3 +84,11 @@ class Detector(Extractor):
     # *** PRIVATE STATICS ***
 
     # *** PRIVATE METHODS ***
+
+    def _firstEvent(self, event:Event):
+        self._session_id = event.SessionID
+        self._app_id = event.AppID
+        self._app_version = event.AppVersion
+        self._log_version = event.LogVersion
+        self._user_id = event.UserID
+        self._user_data = event.UserData
