@@ -4,7 +4,7 @@ import traceback
 from typing import List, Dict, Type, Optional, Set
 # import local files
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.registries.FeatureRegistry import FeatureRegistry
+from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.FeatureProcessor import FeatureProcessor
 from ogd.core.processors.SessionProcessor import SessionProcessor
 from ogd.core.schemas.Event import Event
@@ -64,7 +64,7 @@ class PlayerProcessor(FeatureProcessor):
         return "player"
 
     def _getExtractorNames(self) -> List[str]:
-        if isinstance(self._registry, FeatureRegistry):
+        if isinstance(self._registry, ExtractorRegistry):
             return ["PlayerID", "SessionCount"] + self._registry.GetExtractorNames()
         else:
             raise TypeError()
@@ -97,7 +97,7 @@ class PlayerProcessor(FeatureProcessor):
         This is helpful if we're processing a lot of data and want to avoid eating too much memory.
         """
         Logger.Log(f"Clearing features from PlayerProcessor for {self._player_id}.", logging.DEBUG, depth=2)
-        self._registry = FeatureRegistry(mode=self._mode)
+        self._registry = ExtractorRegistry(mode=self._mode)
 
     # *** PUBLIC STATICS ***
 

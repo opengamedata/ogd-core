@@ -7,7 +7,7 @@ from ogd.core.generators.registries.GeneratorRegistry import GeneratorRegistry
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.registries.FeatureRegistry import FeatureRegistry
+from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.Processor import Processor
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema

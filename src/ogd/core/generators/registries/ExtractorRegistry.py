@@ -24,7 +24,7 @@ from ogd.core.utils.Logger import Logger
 #  Abstract base class for game feature extractors.
 #  Gives a few static functions to be used across all extractor classes,
 #  and defines an interface that the SessionProcessor can use.
-class FeatureRegistry(GeneratorRegistry):
+class ExtractorRegistry(GeneratorRegistry):
     """Class for registering features to listen for events.
 
     :return: [description]
@@ -100,9 +100,9 @@ class FeatureRegistry(GeneratorRegistry):
             _event_deps   = extractor.GetEventDependencies(mode=self._mode)
             # First, add feature to the _features dict.
             if len(_feature_deps) > 0:
-                _feat_order = FeatureRegistry.FeatureOrders.SECOND_ORDER.value
+                _feat_order = ExtractorRegistry.FeatureOrders.SECOND_ORDER.value
             else:
-                _feat_order = FeatureRegistry.FeatureOrders.FIRST_ORDER.value
+                _feat_order = ExtractorRegistry.FeatureOrders.FIRST_ORDER.value
             self._features[_feat_order][extractor.Name] = extractor
             # Register feature to listen for any requested first-order features.
             for _feature_dep in _feature_deps:
@@ -118,7 +118,7 @@ class FeatureRegistry(GeneratorRegistry):
                         self._event_registry[event] = []
                     self._event_registry[event].append(_listener)
         else:
-            raise TypeError("FeatureRegistry was given an Extractor which was not a Feature!")
+            raise TypeError("ExtractorRegistry was given an Extractor which was not a Feature!")
 
     def _getExtractorNames(self) -> List[str]:
         """Implementation of abstract function to retrieve the names of all extractors currently registered.
@@ -217,7 +217,7 @@ class FeatureRegistry(GeneratorRegistry):
     # *** PUBLIC METHODS ***
 
     def OrderCount(self) -> int:
-        """Gets the number of "orders" of features stored in the FeatureRegistry.
+        """Gets the number of "orders" of features stored in the ExtractorRegistry.
         For now, there's just two of them.
 
         :return: _description_

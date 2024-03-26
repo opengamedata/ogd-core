@@ -5,7 +5,7 @@ from typing import Dict, List, Type, Optional, Set
 # import locals
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.registries.FeatureRegistry import FeatureRegistry
+from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.schemas.ExportMode import ExportMode
@@ -25,7 +25,7 @@ class FeatureProcessor(ExtractorProcessor):
 
     def __init__(self, game_schema: GameSchema, LoaderClass:Type[GeneratorLoader], feature_overrides:Optional[List[str]]=None):
         super().__init__(game_schema=game_schema, LoaderClass=LoaderClass, feature_overrides=feature_overrides)
-        self._registry : FeatureRegistry = FeatureRegistry(mode=self._mode)
+        self._registry : ExtractorRegistry = ExtractorRegistry(mode=self._mode)
         self._registry.LoadFromSchema(schema=game_schema, loader=self._loader, overrides=feature_overrides)
 
     def __str__(self):

@@ -4,7 +4,7 @@ from typing import List, Type, Optional, Set
 # import local files
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.generators.registries.FeatureRegistry import FeatureRegistry
+from ogd.core.generators.registries.ExtractorRegistry import ExtractorRegistry
 from ogd.core.processors.FeatureProcessor import FeatureProcessor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
@@ -56,10 +56,10 @@ class PopulationProcessor(FeatureProcessor):
         return "population"
 
     def _getExtractorNames(self) -> List[str]:
-        if isinstance(self._registry, FeatureRegistry):
+        if isinstance(self._registry, ExtractorRegistry):
             return ["PlayerCount", "SessionCount"] + self._registry.GetExtractorNames()
         else:
-            raise TypeError("PopulationProcessor's registry is not a FeatureRegistry!")
+            raise TypeError("PopulationProcessor's registry is not a ExtractorRegistry!")
 
     ## Function to handle processing of a single row of data.
     def _processEvent(self, event:Event):
@@ -91,7 +91,7 @@ class PopulationProcessor(FeatureProcessor):
     #   eating too much memory.
     def _clearLines(self) -> None:
         Logger.Log(f"Clearing features from PopulationProcessor.", logging.DEBUG, depth=2)
-        self._registry = FeatureRegistry(mode=self._mode)
+        self._registry = ExtractorRegistry(mode=self._mode)
 
     # *** PUBLIC STATICS ***
 
