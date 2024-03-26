@@ -59,26 +59,10 @@ class RegionEnter(Detector):
                 new_position['z'] > region['minZ'] and
                 new_position['z'] < region['maxZ']):
                 self._new_region = region['name']
-
-        self._session_id = event.SessionID
-        self._last_timestamp = event.Timestamp
-        self._last_index = event.EventSequenceIndex
     
     def _trigger_condition(self) -> bool:
         """_summary_
         """
-        # >>> use the detector's state data to determine if conditions are met to trigger an event. <<<
-        # Note that this function also runs once for each Event, after the _extractFromEvent(...) function is done.
-        #
-        # e.g. check if we have found a click event, and if so, we want to trigger the custom detector Event.
-        #      in the 'True' case, we also set self._found_click back to False, so that the trigger condition is False until a new click Event is found.
-        # if self._found_click == True:
-        #     self._found_click = False
-        #     return True
-        # else:
-        #     return False
-        # note the code above is redundant, we could just return self._found_click to get the same result;
-        # the more-verbose code is here for illustrative purposes.
         if (self._old_region != self._new_region) and (self._new_region != "NoRegion"):
             return True
         else:
@@ -90,16 +74,8 @@ class RegionEnter(Detector):
         :return: _description_
         :rtype: List[Any]
         """
-        ret_val : Event = DetectorEvent(session_id=self._session_id, app_id="PENGUINS", timestamp=self._last_timestamp,
-                                        event_name="region_enter", event_data={"region":self._new_region}, event_sequence_index=self._last_index)
-        # >>> use state variables to generate the detector's event. <<<
-        # >>> definitely don't return all these "Not Implemented" things, unless you really find that useful... <<<
-        # e.g. for an (admittedly redundant) Event stating a click of any kind was detected:
-        # ret_val : Event = Event(session_id="Unknown", app_id="CustomGame", timestamp=datetime.now(),
-        #                         event_name="ClickDetected", event_data={})
-        # note the code above doesn't provide much useful information to the Event;
-        # we may want to use additional state variables to capture the session_id, app_id, timestamp, etc. from the click Event in _extractFromEvent(...)
-        # further note the event_data can contain any extra data you desire; its contents are entirely up to you.
+        ret_val : Event = self.GenerateEvent(app_id="PENGUINS",
+                                             event_name="region_enter", event_data={"region":self._new_region})
         return ret_val
 
     # *** BUILT-INS & PROPERTIES ***
@@ -109,13 +85,6 @@ class RegionEnter(Detector):
         self._region_map = region_map
         self._old_region = "N/A"
         self._new_region = "N/A"
-        self._session_id = "N/A"
-        self._last_timestamp = datetime(2020,1,1)
-        self._last_index = 0
-        # >>> create/initialize any variables to track detector state <<<
-        #
-        # e.g. To track whether detector found a click event yet:
-        # self._found_click : bool = False
 
     # *** PUBLIC STATICS ***
 
