@@ -4,7 +4,7 @@ import json
 import logging
 from collections import OrderedDict
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set
 ## import local files
 from ogd.core.extractors.Extractor import Extractor
 from ogd.core.extractors.ExtractorLoader import ExtractorLoader
@@ -32,7 +32,7 @@ class FeatureRegistry(ExtractorRegistry):
     """
 
     @enum.unique
-    class FeatureOrders(enum.Enum):
+    class FeatureOrders(enum.IntEnum):
         FIRST_ORDER = 0
         SECOND_ORDER = 1
 
