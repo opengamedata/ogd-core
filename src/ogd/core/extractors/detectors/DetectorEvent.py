@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
 # import locals
 from ogd.core.schemas.Event import Event, EventSource
-Map = Dict[str, Any] # type alias: we'll call any dict using string keys a "Map"
+from ogd.core.utils.typing import Map
 
 class DetectorEvent(Event):
    def __init__(self, session_id:str,      app_id:str,
