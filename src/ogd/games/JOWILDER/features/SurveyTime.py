@@ -43,14 +43,14 @@ class SurveyTime(PerCountFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return [] 
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if self.CountIndex == 0:
             return
         # TODO: Fix the bugs that quizstart and quizend doesn't match
         raise(NotImplementedError("Haven't implemented the function due to bugs"))
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         
         return
 

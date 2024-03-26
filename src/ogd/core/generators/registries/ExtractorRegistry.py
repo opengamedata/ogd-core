@@ -169,7 +169,7 @@ class ExtractorRegistry(GeneratorRegistry):
                 if feature is not None and self._mode in feature.AvailableModes():
                         self.Register(extractor=feature, iter_mode=IterationMode.PERCOUNT)
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.
 
         :param event: [description]
@@ -184,16 +184,16 @@ class ExtractorRegistry(GeneratorRegistry):
             for listener in self._event_registry.get(event.EventName, []):
                 for order_key in range(len(self._features)):
                     if listener.name in self._features[order_key].keys():
-                        self._features[order_key][listener.name].ExtractFromEvent(event)
+                        self._features[order_key][listener.name].UpdateFromEvent(event)
             # don't forget to send to any features listening for "all" events
             for listener in self._event_registry["all_events"]:
                 for order_key in range(len(self._features)):
                     if listener.name in self._features[order_key].keys():
-                        self._features[order_key][listener.name].ExtractFromEvent(event)
+                        self._features[order_key][listener.name].UpdateFromEvent(event)
         except KeyError as err:
             Logger.Log(f"{listener.name} found event {event} missing expected key: {err}", logging.ERROR)
 
-    def _extractFromFeatureData(self, feature:FeatureData) -> None:
+    def _updateFromFeatureData(self, feature:FeatureData) -> None:
         """Perform extraction of features from a row.
 
         :param event: [description]
@@ -209,7 +209,7 @@ class ExtractorRegistry(GeneratorRegistry):
                 if listener.name in self._features[order_key].keys():
                     _extractor = self._features[order_key][listener.name]
                     if feature.ExportMode in _extractor.FeatureDependencyModes():
-                        self._features[order_key][listener.name].ExtractFromFeatureData(feature)
+                        self._features[order_key][listener.name].UpdateFromFeatureData(feature)
 
 
     # *** PUBLIC STATICS ***

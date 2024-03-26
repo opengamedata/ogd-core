@@ -33,7 +33,7 @@ class ActivityCompleted(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return [] 
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         self._object_id = event.event_data.get("activity_name")
         self._activ_lst.append(self._object_id)
         #if self._object_id not in self._activ_dict.keys():
@@ -41,7 +41,7 @@ class ActivityCompleted(SessionFeature):
         #else:
             #self._activ_dict[self._object_id]+=1
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

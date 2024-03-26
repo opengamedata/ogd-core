@@ -27,10 +27,10 @@ class UserTotalSessionDuration(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["SessionDuration"]
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         if feature.PlayerID == self._player_id:
             if type(feature.FeatureValues[0]) == str and feature.FeatureValues[0] == "No events":
                 pass

@@ -72,7 +72,7 @@ class QuitTypePerLevel(PerLevelFeature):
         """
         return ["QuitType"] # >>> fill in names of first-order features this Feature should use for extraction. <<<
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_
@@ -126,7 +126,7 @@ class QuitTypePerLevel(PerLevelFeature):
 
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         """_summary_
 
         :param feature: _description_

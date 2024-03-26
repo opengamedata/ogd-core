@@ -29,14 +29,14 @@ class LastInteraction(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         _interaction = event.EventData.get("text_fqid")
         if _interaction is not None and _interaction != LastInteraction.NO_SENSE:
             self._interaction = _interaction
 
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

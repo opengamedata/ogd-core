@@ -31,7 +31,7 @@ class SequenceBetweenPuzzles(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         ignoreEvent = False
         
         if event.EventName == "start_level":
@@ -70,7 +70,7 @@ class SequenceBetweenPuzzles(SessionFeature):
                 self._currentPuzzle = {}
                 self._numPuzzles += 1
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -29,7 +29,7 @@ class ActiveJobs(Feature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         _current_job = event.GameState.get('job_name', event.EventData.get('job_name', None))
         if self._validate_job(_current_job):
             user_code = event.UserID
@@ -41,7 +41,7 @@ class ActiveJobs(Feature):
             self._current_user_code = user_code # in either case, set latest user as "current"
             self._last_started_id = _current_job # In either case, set latest job name as "current".
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

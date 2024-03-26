@@ -40,7 +40,7 @@ class DetectorProcessor(GeneratorProcessor):
 
     def _processEvent(self, event:Event):
         if self._registry is not None:
-            self._registry.ExtractFromEvent(event)
+            self._registry.UpdateFromEvent(event)
 
     def _getLines(self) -> List[ExportRow]:
         return []

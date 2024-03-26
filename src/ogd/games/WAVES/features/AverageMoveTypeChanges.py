@@ -25,7 +25,7 @@ class AverageMoveTypeChanges(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         _level = event.GameState['level']
         self._levels_encountered.add(_level) # set-add level to list, at end we will have set of all levels seen.
         if not _level in self._change_count.keys():
@@ -35,7 +35,7 @@ class AverageMoveTypeChanges(SessionFeature):
             self._change_count[_level] += 1
         self._last_move[_level] = event.EventName
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

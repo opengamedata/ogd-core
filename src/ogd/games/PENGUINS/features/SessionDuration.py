@@ -45,7 +45,7 @@ class SessionDuration(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         # if this was earliest event, make it the start time.
         if not self._client_start_time:
             self._client_start_time = event.Timestamp
@@ -62,7 +62,7 @@ class SessionDuration(SessionFeature):
             self._client_end_index = event.EventSequenceIndex
         # self._session_duration = (event.Timestamp - self._client_start_time).total_seconds()
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

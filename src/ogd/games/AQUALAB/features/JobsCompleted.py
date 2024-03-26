@@ -22,12 +22,12 @@ class JobsCompleted(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         if event.UserID == self._player_id:
             _job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
             self._jobs_completed.append(_job_name)
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

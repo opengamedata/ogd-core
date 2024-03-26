@@ -34,13 +34,13 @@ class TopPlayerQuitType(PerCountFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["QuitType"]
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         #self._story_alignment = event.EventData["story_alignment"]
 
         pass
 
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         print(feature._vals)
         #add logic to make sure that MODE is session, not player so we don't get duplicates
         if(feature._mode == ExtractionMode.SESSION):

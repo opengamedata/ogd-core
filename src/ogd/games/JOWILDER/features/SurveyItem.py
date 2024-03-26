@@ -72,7 +72,7 @@ class SurveyItem(PerCountFeature):
         """
         return [] 
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_
@@ -109,7 +109,7 @@ class SurveyItem(PerCountFeature):
         
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

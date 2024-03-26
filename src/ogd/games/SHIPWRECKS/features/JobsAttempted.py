@@ -44,7 +44,7 @@ class JobsAttempted(Feature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         session_id = event.SessionID
         checkpoint = event.EventData["status"]
         mission_name = event.EventData["mission_id"]
@@ -71,7 +71,7 @@ class JobsAttempted(Feature):
                     self._times.append((event.Timestamp - self._mission_start_time).total_seconds())
                     self._mission_start_time = None
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

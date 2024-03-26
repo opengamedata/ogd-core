@@ -28,7 +28,7 @@ class TopJobSwitchDestinations(Feature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         session_id = event.SessionID
         checkpoint = event.EventData["status"]
         mission_name = event.EventData["mission_id"]
@@ -48,7 +48,7 @@ class TopJobSwitchDestinations(Feature):
         # once we process the event, we know we're looking at data for this event's user next time.
         self._current_session_id = session_id
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

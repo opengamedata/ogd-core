@@ -24,10 +24,10 @@ class PopulationSummary(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["JobsCompleted", "SessionDuration"]
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         if feature.FeatureType == "JobsCompleted":
             self._session_completions[feature.SessionID] = feature.FeatureValues[0]
         elif feature.FeatureType == "SessionDuration":

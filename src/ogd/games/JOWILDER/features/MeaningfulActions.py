@@ -31,13 +31,13 @@ class MeaningfulActions(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         # fqid != 0 means that the click event does make Jo move to some interactive items, such as an interaction, an item that Jo can look into, or a way to next room.
         if event.EventData.get("fqid") != 0:
             self._click_count += 1
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -73,7 +73,7 @@ class PopulationProcessor(ExtractorProcessor):
         if event.UserID:
             self._players.add(event.UserID)
         self._sessions.add(event.SessionID)
-        self._registry.ExtractFromEvent(event=event)
+        self._registry.UpdateFromEvent(event=event)
 
     def _getLines(self) -> List[ExportRow]:
         ret_val : ExportRow

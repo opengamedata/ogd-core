@@ -58,7 +58,7 @@ class InteractionWordsPerSecond(PerCountFeature):
         """
         return ["InteractionName"]
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         if not clicks_track.GameStart:
             if event.EventName == "CUSTOM.1":
                 clicks_track.startGame(event)
@@ -87,7 +87,7 @@ class InteractionWordsPerSecond(PerCountFeature):
         
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         if len(self._interaction_time) == 0:
             return
         if feature.CountIndex != self.CountIndex:

@@ -36,7 +36,7 @@ class SceneFailures(PerCountFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         # Logger.Log(f"event data is {event.EventData}")
         if event.EventName == "failed":
             self._failure_count += 1
@@ -44,7 +44,7 @@ class SceneFailures(PerCountFeature):
         
         
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

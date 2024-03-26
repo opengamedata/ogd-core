@@ -44,7 +44,7 @@ class JobActiveTime(PerJobFeature):
         # else:
         #     return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         self._player_id = event.UserID
         if event.SessionID != self._session_id:
             _old_sess = self._session_id
@@ -91,7 +91,7 @@ class JobActiveTime(PerJobFeature):
         else:
             self._last_event_time = event.timestamp
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
         # if self.ExtractionMode == ExtractionMode.PLAYER \
         # or self.ExtractionMode == ExtractionMode.SESSION:

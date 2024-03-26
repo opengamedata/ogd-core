@@ -31,7 +31,7 @@ class CollectFactNoJob(Detector):
         """
         return ["receive_fact"]
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_

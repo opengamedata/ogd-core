@@ -24,10 +24,10 @@ class UserAvgActiveTime(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["ActiveTime"]
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         if feature.PlayerID == self._player_id:
             if feature.FeatureValues[0] == "No events":
                 pass

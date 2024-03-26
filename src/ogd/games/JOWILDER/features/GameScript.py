@@ -32,7 +32,7 @@ class GameScript(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return [] 
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if Event.CompareVersions(event.LogVersion, "7") >= 0:
             _type = event.EventData.get("script_type")
             self._version = event.EventData.get("script_version")
@@ -43,7 +43,7 @@ class GameScript(SessionFeature):
 
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

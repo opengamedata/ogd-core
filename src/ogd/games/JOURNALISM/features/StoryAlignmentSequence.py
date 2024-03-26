@@ -21,10 +21,10 @@ class StoryAlignmentSequence(PerLevelFeature):
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         self._story_alignment_sequence.append(event.event_data["story_alignment"])
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return []
 
     def _getFeatureValues(self) -> List[Any]:
@@ -53,10 +53,10 @@ class StoryAlignmentSequence(PerLevelFeature):
     def _featureFilter(cls, mode: ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         self._story_alignment_sequence.append(event.event_data["story_alignment"])
 
-    def _extractFromFeatureData(self, feature: FeatureData) -> None:
+    def _updateFromFeatureData(self, feature: FeatureData) -> None:
         return
 
     def _getFeatureValues(self) -> List[Any]:

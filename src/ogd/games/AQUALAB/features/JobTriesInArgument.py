@@ -26,7 +26,7 @@ class JobTriesInArgument(PerJobFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "begin_argument":
             self._found = True
             return
@@ -37,7 +37,7 @@ class JobTriesInArgument(PerJobFeature):
             return
         self._count += 1
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

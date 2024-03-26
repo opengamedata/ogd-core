@@ -27,12 +27,12 @@ class NotebookUses(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventData.get('name') == "open":
             self._notebook_uses_count += 1
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         """_summary_
 
         :param feature: _description_

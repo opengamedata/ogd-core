@@ -66,7 +66,7 @@ class GeneratorProcessor(Processor):
     def ProcessFeatureData(self, feature_list:List[FeatureData]) -> None:
         if self._registry is not None:
             for feature in feature_list:
-                self._registry.ExtractFromFeatureData(feature=feature)
+                self._registry.UpdateFromFeatureData(feature=feature)
         else:
             Logger.Log(f"Processor has no registry, skipping FeatureData.", logging.WARN)
 

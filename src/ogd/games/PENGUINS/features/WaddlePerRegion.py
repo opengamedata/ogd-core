@@ -30,14 +30,14 @@ class WaddlePerRegion(PerRegionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         self._waddle_count += 1
         # if event.EventName == "player_waddle" and len(self._region_list)>0:
         #     self._curr_region = self._region_list[-1]
             # Logger.Log(f"region lst is {self._region_list}")
             # self._cnt_dict[self._curr_region] += 1
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

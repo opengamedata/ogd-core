@@ -25,7 +25,7 @@ class FunnelByUser(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName in ["start_level", "puzzle_started"]:
             self._level = event.EventData["task_id"]
 
@@ -44,7 +44,7 @@ class FunnelByUser(SessionFeature):
         elif event.EventName == "puzzle_complete":
             self._userFunnelDict[self._level]["completed"] = 1
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

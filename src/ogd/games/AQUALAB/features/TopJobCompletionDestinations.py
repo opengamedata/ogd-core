@@ -29,7 +29,7 @@ class TopJobCompletionDestinations(Feature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         _job_name = event.GameState.get('job_name', event.EventData.get('job_name', None))
         if _job_name is None:
             raise KeyError("Could not find key 'job_name' in GameState or EventData!")
@@ -50,7 +50,7 @@ class TopJobCompletionDestinations(Feature):
             # finally, once we process the event, we know we're looking at data for this event's user.
             self._current_user_code = user_code
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

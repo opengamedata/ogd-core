@@ -21,7 +21,7 @@ class Extractor(Generator):
 
     ## Abstract declaration of a function to perform update of a feature from a row.
     @abc.abstractmethod
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         """Abstract declaration of a function to perform update of a feature from a row.
 
         :param event: An event, used to update the feature's data.
@@ -118,7 +118,7 @@ class Extractor(Generator):
         """
         return [f"{self.Name}{self.BaseFeatureSuffix()}"] + [f"{self.Name}-{subfeature}" for subfeature in self.Subfeatures()]
 
-    def ExtractFromEvent(self, event:Event):
+    def UpdateFromEvent(self, event:Event):
         """Overridden version of function from Extractor base class;
         In this case, set the "up to date" value to False whenever we see a new event.
 
@@ -126,13 +126,13 @@ class Extractor(Generator):
         :type event: Event
         """
         if self._validateEvent(event=event):
-            self._extractFromEvent(event=event)
+            self._updateFromEvent(event=event)
             self._up_to_date = False
 
-    def ExtractFromFeatureData(self, feature:FeatureData):
+    def UpdateFromFeatureData(self, feature:FeatureData):
         # TODO: add validation for FeatureData, if applicable/possible.
         # TODO: figure out a way to invalidate/reset if more events are given to features on which the given feature depends.
-        self._extractFromFeatureData(feature=feature)
+        self._updateFromFeatureData(feature=feature)
         self._up_to_date = False
 
     def GetFeatureValues(self) -> List[Any]:

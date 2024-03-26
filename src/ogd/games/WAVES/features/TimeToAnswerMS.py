@@ -27,7 +27,7 @@ class TimeToAnswerMS(Feature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "COMPLETE.0":
             if event.GameState['level'] == 8:
                 self._latest_complete_lvl8 = event.Timestamp
@@ -42,7 +42,7 @@ class TimeToAnswerMS(Feature):
             if self.CountIndex == q_num:
                 self._answer_time = self._calcAnswerTime(timestamp=event.Timestamp)
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

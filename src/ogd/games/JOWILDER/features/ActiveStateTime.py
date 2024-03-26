@@ -38,7 +38,7 @@ class ActiveStateTime(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "CUSTOM.1" and not self._last_hover_or_click_timestamp:
             self._last_hover_or_click_timestamp = event.Timestamp
             self._last_click_timestamp = event.Timestamp
@@ -61,7 +61,7 @@ class ActiveStateTime(SessionFeature):
 
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

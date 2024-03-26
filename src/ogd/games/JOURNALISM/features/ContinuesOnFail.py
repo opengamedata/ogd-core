@@ -33,13 +33,13 @@ class ContinuesOnFail(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["QuitType", "TotalFails"]
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         #self._story_alignment = event.EventData["story_alignment"]
 
         pass
 
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         if(feature._name =="QuitType"):
             self._quit_type = feature._vals
         elif(feature._name == "TotalFails"):

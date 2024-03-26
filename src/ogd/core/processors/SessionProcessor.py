@@ -79,7 +79,7 @@ class SessionProcessor(ExtractorProcessor):
         :param event: Object with the data for the game event data to be processed.
         :type event: Event
         """
-        self._registry.ExtractFromEvent(event)
+        self._registry.UpdateFromEvent(event)
 
     def _getLines(self) -> List[ExportRow]:
         ret_val : ExportRow

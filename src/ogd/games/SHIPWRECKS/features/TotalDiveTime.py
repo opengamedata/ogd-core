@@ -23,7 +23,7 @@ class TotalDiveTime(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "dive_start":
             self._dive_start_time = event.Timestamp
         elif event.EventName == "dive_exit":
@@ -31,7 +31,7 @@ class TotalDiveTime(SessionFeature):
                 self._time += (event.Timestamp - self._dive_start_time).total_seconds()
                 self._dive_start_time = None
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

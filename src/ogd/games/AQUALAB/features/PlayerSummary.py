@@ -26,10 +26,10 @@ class PlayerSummary(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["JobsCompleted", "SessionDuration", "SessionID"]
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         user_id = feature.PlayerID
 
         if user_id not in self._summary:

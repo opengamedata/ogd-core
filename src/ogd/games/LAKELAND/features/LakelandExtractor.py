@@ -122,7 +122,7 @@ class LakelandExtractor(LegacyFeature):
     
     def _extractFeaturesFromEvent(self, event:Event):
         try:
-            self._extractFromEvent(event)
+            self._updateFromEvent(event)
         except Exception as e:
             if len(self.debug_strs) > 10:
                 debug_strs = self.debug_strs[:5] + ['...'] + self.debug_strs[-5:]
@@ -141,7 +141,7 @@ class LakelandExtractor(LegacyFeature):
     #                                 "complex data" already parsed from JSON.
     #  @param table_schema A data structure containing information on how the db
     #                      table assiciated with this game is structured.
-    def _extractFromEvent(self, event:Event):
+    def _updateFromEvent(self, event:Event):
 
         # put some data in local vars, for readability later.
         self.event_client_time = event.Timestamp

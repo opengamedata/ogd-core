@@ -36,7 +36,7 @@ class QuestionAnswers(PerCountFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         # XXX: Need a new feature as dependency to become independent from wildcard_hover event. For now, it is weird that we need to seperate two kinds of events
         # NOTE: self.chosen_answer's change: None ->interacted_fqid(click and type==2) -> interacted_fqid(hover, optional step) -> none(click and type==1, that's where we update numguesses if chosen_answer is not None)
         # NOTE: self.cur_question's function: 0 -> cur_cmd_fqid&level (cmd_type==2) -> if in [10, 16] in a wildcard_hover event, update chosen answer
@@ -54,7 +54,7 @@ class QuestionAnswers(PerCountFeature):
                     self.chosen_answer = None
         return 
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -33,7 +33,7 @@ class PlayerInactiveAvgDuration(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.SessionID != self._session_id:
             self._session_id = event.SessionID
             # if we jumped to a new session, we only want to count time up to last event, not the time between sessions.
@@ -50,7 +50,7 @@ class PlayerInactiveAvgDuration(SessionFeature):
                 self._argument_start_time = None
         self._prev_timestamp = event.Timestamp
     
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

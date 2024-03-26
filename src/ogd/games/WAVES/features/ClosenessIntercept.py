@@ -22,7 +22,7 @@ class ClosenessIntercept(Feature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
     #     closenesses = self.move_closenesses_tx[lvl]['completeness']
     #     times = self.move_closenesses_tx[lvl]['t']
     #     ranges = self.move_closenesses_tx[lvl]['range']
@@ -43,7 +43,7 @@ class ClosenessIntercept(Feature):
     #         self._features.setValByIndex(feature_name='closenessR2', index=lvl, new_value=r_sq)
         pass
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

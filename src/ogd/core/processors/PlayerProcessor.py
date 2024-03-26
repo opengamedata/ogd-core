@@ -78,7 +78,7 @@ class PlayerProcessor(ExtractorProcessor):
         :type event: Event
         """
         self._sessions.add(event.SessionID)
-        self._registry.ExtractFromEvent(event=event)
+        self._registry.UpdateFromEvent(event=event)
 
     def _getLines(self) -> List[ExportRow]:
         ret_val : ExportRow

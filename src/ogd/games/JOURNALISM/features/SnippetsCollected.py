@@ -25,11 +25,11 @@ class SnippetsCollected(PerLevelFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "snippet_received":
             self._snippet_ids.append(event.EventData["snippet_id"])
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         """_summary_
 
         :param feature: _description_

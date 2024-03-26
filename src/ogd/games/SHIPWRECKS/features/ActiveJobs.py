@@ -27,7 +27,7 @@ class ActiveJobs(Feature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         session_id = event.SessionID
         mission_name = event.EventData["mission_id"]
 
@@ -38,7 +38,7 @@ class ActiveJobs(Feature):
         self._current_session_id = session_id # in either case, set latest user as "current"
         self._last_started_id = mission_name # In either case, set latest job name as "current".
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

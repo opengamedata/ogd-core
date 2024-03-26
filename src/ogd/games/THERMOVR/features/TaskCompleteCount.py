@@ -20,13 +20,13 @@ class TaskCompleteCount(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event: Event) -> None:
+    def _updateFromEvent(self, event: Event) -> None:
         if event.UserID == self._player_id:
             current_task = event.GameState.get('current_task', None)
             if current_task and current_task.get('is_complete', False):
                 self._task_complete_count += 1
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

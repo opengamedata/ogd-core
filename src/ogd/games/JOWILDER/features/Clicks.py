@@ -30,11 +30,11 @@ class Clicks(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["SessionDuration"] 
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         self._click_count += 1
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         if self._click_count > 0:
             self._avg_time = feature.FeatureValues[0].total_seconds()/self._click_count
         else:

@@ -64,9 +64,9 @@ class Detector(Generator):
 
     # *** PUBLIC METHODS ***
 
-    def ExtractFromEvent(self, event:Event):
+    def UpdateFromEvent(self, event:Event):
         if self._validateEvent(event=event):
-            self._extractFromEvent(event=event)
+            self._updateFromEvent(event=event)
             if self._trigger_condition():
                 self._triggering_event = event
                 _new_event = self._trigger_event()

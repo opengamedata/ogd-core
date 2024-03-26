@@ -122,7 +122,7 @@ class DetectorRegistry(GeneratorRegistry):
                 if detector is not None and self._mode in detector.AvailableModes():
                         self.Register(extractor=detector, iter_mode=IterationMode.PERCOUNT)
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.
 
         :param event: [description]
@@ -135,13 +135,13 @@ class DetectorRegistry(GeneratorRegistry):
             # send event to every listener for the given event name.
             for listener in self._event_registry[event.EventName]:
                 if listener.name in self._detectors.keys():
-                    self._detectors[listener.name].ExtractFromEvent(event)
+                    self._detectors[listener.name].UpdateFromEvent(event)
         # don't forget to send to any features listening for "all" events
         for listener in self._event_registry["all_events"]:
             if listener.name in self._detectors.keys():
-                self._detectors[listener.name].ExtractFromEvent(event)
+                self._detectors[listener.name].UpdateFromEvent(event)
 
-    def _extractFromFeatureData(self, feature:FeatureData) -> None:
+    def _updateFromFeatureData(self, feature:FeatureData) -> None:
         return
 
     # *** PUBLIC STATICS ***

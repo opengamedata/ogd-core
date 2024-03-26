@@ -30,7 +30,7 @@ class RegionDuration(PerRegionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "region_enter":
             self._region_start_time = event.Timestamp
         elif event.EventName == "region_exit":
@@ -38,7 +38,7 @@ class RegionDuration(PerRegionFeature):
                 self._time += (event.Timestamp - self._region_start_time)
                 self._region_start_time = None
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

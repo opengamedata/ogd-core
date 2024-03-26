@@ -24,7 +24,7 @@ class CustomDetector(Detector):
         """
         return [] # >>> fill in names of events this Detector should use for detecting whatever you're looking for. <<<
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_
@@ -42,7 +42,7 @@ class CustomDetector(Detector):
         """_summary_
         """
         # >>> use the detector's state data to determine if conditions are met to trigger an event. <<<
-        # Note that this function also runs once for each Event, after the _extractFromEvent(...) function is done.
+        # Note that this function also runs once for each Event, after the _updateFromEvent(...) function is done.
         #
         # e.g. check if we have found a click event, and if so, we want to trigger the custom detector Event.
         #      in the 'True' case, we also set self._found_click back to False, so that the trigger condition is False until a new click Event is found.
@@ -70,7 +70,7 @@ class CustomDetector(Detector):
         # ret_val : Event = Event(session_id="Unknown", app_id="CustomGame", timestamp=datetime.now(),
         #                         event_name="ClickDetected", event_data={})
         # note the code above doesn't provide much useful information to the Event;
-        # we may want to use additional state variables to capture the session_id, app_id, timestamp, etc. from the click Event in _extractFromEvent(...)
+        # we may want to use additional state variables to capture the session_id, app_id, timestamp, etc. from the click Event in _updateFromEvent(...)
         # further note the event_data can contain any extra data you desire; its contents are entirely up to you.
         return ret_val
 

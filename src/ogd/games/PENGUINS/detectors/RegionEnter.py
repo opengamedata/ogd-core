@@ -26,7 +26,7 @@ class RegionEnter(Detector):
         """
         return ["player_waddle"] # >>> fill in names of events this Detector should use for detecting whatever you're looking for. <<<
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_

@@ -27,7 +27,7 @@ class EchoRoomChange(Detector):
         """
         return ["room_changed"] # >>> fill in names of events this Feature should use for extraction. <<<
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_

@@ -22,10 +22,10 @@ class EchoSessionID(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["SessionID"]
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         self._session_id = feature.FeatureValues[0]
 
     def _getFeatureValues(self) -> List[Any]:

@@ -38,7 +38,7 @@ class MagnetExtractor(LegacyFeature):
     #                                 "complex data" already parsed from JSON.
     #  @param game_table  A data structure containing information on how the db
     #                     table assiciated with this game is structured.
-    def _extractFromEvent(self, event:Event):
+    def _updateFromEvent(self, event:Event):
         # put some data in local vars, for readability later.
         level = event.GameState['level']
         if level > self._game_schema._max_level:

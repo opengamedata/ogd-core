@@ -48,11 +48,11 @@ class GeneratorRegistry(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         pass
 
     @abc.abstractmethod
-    def _extractFromFeatureData(self, feature:FeatureData) -> None:
+    def _updateFromFeatureData(self, feature:FeatureData) -> None:
         pass
 
     # *** BUILT-INS & PROPERTIES ***
@@ -93,7 +93,7 @@ class GeneratorRegistry(abc.ABC):
     def LoadFromSchema(self, schema:GameSchema, loader:GeneratorLoader, overrides:Optional[List[str]]):
         self._loadFromSchema(schema=schema, loader=loader, overrides=overrides)
 
-    def ExtractFromEvent(self, event:Event) -> None:
+    def UpdateFromEvent(self, event:Event) -> None:
         """Perform extraction of features from a row.
 
         :param event: [description]
@@ -102,9 +102,9 @@ class GeneratorRegistry(abc.ABC):
                              table assiciated with this game is structured.
         :type table_schema: TableSchema
         """
-        self._extractFromEvent(event=event)
+        self._updateFromEvent(event=event)
 
-    def ExtractFromFeatureData(self, feature:FeatureData) -> None:
+    def UpdateFromFeatureData(self, feature:FeatureData) -> None:
         """Perform extraction of features from a row.
 
         :param event: [description]
@@ -114,7 +114,7 @@ class GeneratorRegistry(abc.ABC):
         :type table_schema: TableSchema
         """
         if isinstance(feature, FeatureData):
-            self._extractFromFeatureData(feature=feature)
+            self._updateFromFeatureData(feature=feature)
         else:
             Logger.Log(f"Got an invalid feature {feature} of type {type(feature)} for a registry in {self._mode.name} mode")
 

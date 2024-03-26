@@ -29,7 +29,7 @@ class GazeCount(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         # self._current_count += 1
         
         self._object_id = event.event_data.get("object_id")
@@ -38,7 +38,7 @@ class GazeCount(SessionFeature):
         
         self._gaze_dict[self._object_id]+=1
         
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

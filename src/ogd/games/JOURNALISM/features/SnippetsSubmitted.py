@@ -27,7 +27,7 @@ class SnippetsSubmitted(PerLevelFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "story_click":
             snippet_list = json.loads( event.EventData["snippet_list"] )
             for snippet in snippet_list:
@@ -36,7 +36,7 @@ class SnippetsSubmitted(PerLevelFeature):
                     SnippetsSubmitted.has_printed = True
                 self._snippet_ids.append(snippet.get("SnippetId", "NOT FOUND"))
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

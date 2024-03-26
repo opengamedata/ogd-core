@@ -32,7 +32,7 @@ class TotalLevelTime(PerLevelFeature):
         
 
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "BEGIN.0":
             self._begin_times.append(event.Timestamp)
         elif event.EventName == "COMPLETE.0":
@@ -40,7 +40,7 @@ class TotalLevelTime(PerLevelFeature):
         else:
             Logger.Log(f"AverageLevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

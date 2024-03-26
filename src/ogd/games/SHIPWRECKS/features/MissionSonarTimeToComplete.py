@@ -25,7 +25,7 @@ class MissionSonarTimeToComplete(Feature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "sonar_start":
             self._sonar_start_time = event.Timestamp
         elif event.EventName == "sonar_complete":
@@ -33,7 +33,7 @@ class MissionSonarTimeToComplete(Feature):
                 self._time += (event.Timestamp - self._sonar_start_time).total_seconds() # TODO : maybe see if we should add timedeltas and convert to float at end?
                 self._sonar_start_time = None
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

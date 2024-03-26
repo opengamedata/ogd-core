@@ -31,7 +31,7 @@ class SessionDuration(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return [] 
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "CUSTOM.1" and not self._start_time:
             self._start_time = event.Timestamp
             return
@@ -40,7 +40,7 @@ class SessionDuration(SessionFeature):
             return
 
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

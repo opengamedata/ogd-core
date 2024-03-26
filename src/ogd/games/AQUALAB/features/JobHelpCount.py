@@ -27,7 +27,7 @@ class JobHelpCount(PerJobFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventName == "ask_for_help":
             self._current_count += 1
             self._total_count += 1
@@ -36,7 +36,7 @@ class JobHelpCount(PerJobFeature):
             self._by_task[task_id] = self._current_count
             self._current_count = 0
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

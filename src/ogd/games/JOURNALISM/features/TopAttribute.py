@@ -48,7 +48,7 @@ class TopAttribute(SessionFeature):
         """
         return [] # >>> fill in names of first-order features this Feature should use for extraction. <<<
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         """_summary_
 
         :param event: _description_
@@ -69,7 +69,7 @@ class TopAttribute(SessionFeature):
 
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         """_summary_
 
         :param feature: _description_
@@ -91,7 +91,7 @@ class TopAttribute(SessionFeature):
         # >>> put the calculated value(s) into a list as the function return value. <<<
         # >>> definitely don't return ["template"], unless you really find that useful... <<<
         #
-        # e.g. use the self._found_click, which was created/initialized in __init__(...), and updated in _extractFromEvent(...):
+        # e.g. use the self._found_click, which was created/initialized in __init__(...), and updated in _updateFromEvent(...):
         # if self._found_click:
         #     ret_val = [True]
         # else:

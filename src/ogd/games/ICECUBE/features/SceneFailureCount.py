@@ -32,7 +32,7 @@ class SceneFailureCount(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         # if event.EventName == "scene_change":
         #     self._scene_list.append(event.event_data.get("scene_name"))
         # elif event.EventName == "failed":
@@ -41,7 +41,7 @@ class SceneFailureCount(SessionFeature):
         self._game_state.append(event.game_state)
         # return
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

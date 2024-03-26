@@ -50,7 +50,7 @@ class JobsAttempted(Feature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["JobActiveTime"]
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.UserID != self._player_id:
             self._player_id = event.UserID
         if event.SessionID != self._session_id:
@@ -83,7 +83,7 @@ class JobsAttempted(Feature):
 
         # self._prev_timestamp = event.Timestamp
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         if feature.FeatureType == "JobActiveTime":
             if feature.CountIndex == self.CountIndex:
                 _active_time = feature.FeatureValues[0]

@@ -52,7 +52,7 @@ class Generator(abc.ABC):
 
     ## Abstract declaration of a function to perform update of a feature from a row.
     @abc.abstractmethod
-    def _extractFromEvent(self, event:Event):
+    def _updateFromEvent(self, event:Event):
         """Abstract declaration of a function to perform update of a feature from a row.
 
         :param event: An event, used to update the feature's data.
@@ -80,9 +80,9 @@ class Generator(abc.ABC):
     def FeatureFilter(cls, mode:ExtractionMode) -> List[str]:
         return cls._featureFilter(mode=mode)
 
-    def ExtractFromEvent(self, event:Event):
+    def UpdateFromEvent(self, event:Event):
         if self._validateEvent(event=event):
-            self._extractFromEvent(event=event)
+            self._updateFromEvent(event=event)
 
     ## Base function to get the minimum game data version the feature can handle.
     @staticmethod

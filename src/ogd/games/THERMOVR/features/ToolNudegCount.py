@@ -32,14 +32,14 @@ class ToolNudgeCount(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
             if event.EventName == "click_tool_increase" or event.EventName == "click_tool_decrease":
                 tool_name = event.EventData.get('tool_name', None)
                 if tool_name:
                     tool = Thermotool(tool_name)
                     self._tool_nudge_count[tool] += 1
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -60,7 +60,7 @@ class LevelsOfDifficulty(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         ignoreEvent = False
         if event.EventName in ["start_level", "puzzle_started"]:
             self._activePuzzle = event.EventData["task_id"]
@@ -105,7 +105,7 @@ class LevelsOfDifficulty(SessionFeature):
                     self._numberAttempts = 0
                     self._numberActions = 0
             
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -27,7 +27,7 @@ class AverageLevelTime(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         _level = event.GameState['level']
         self._levels_encountered.add(_level) # set-add level to list, at end we will have set of all levels seen.
         if event.EventName == "BEGIN.0":
@@ -41,7 +41,7 @@ class AverageLevelTime(SessionFeature):
         else:
             Logger.Log(f"AverageLevelTime received an event which was not a BEGIN or a COMPLETE!", logging.WARN)
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

@@ -30,10 +30,10 @@ class UsedContinue(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["FirstInteraction", "UsedSaveCode"] 
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         return
 
-    def _extractFromFeatureData(self, feature: FeatureData):
+    def _updateFromFeatureData(self, feature: FeatureData):
         if feature.FeatureType == "UsedSaveCode":
             self._save_code = feature.FeatureValues[0]
         elif feature.FeatureType == "FirstInteraction":
