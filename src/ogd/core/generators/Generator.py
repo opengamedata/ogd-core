@@ -84,10 +84,10 @@ class Generator(abc.ABC):
         if self._validateEvent(event=event):
             self._updateFromEvent(event=event)
 
-    ## Base function to get the minimum game data version the feature can handle.
+    ## Base function to get the minimum log version the feature can handle.
     @staticmethod
     def MinVersion() -> Optional[str]:
-        """ Base function to get the minimum game data version the feature can handle.
+        """ Base function to get the minimum log version the feature can handle.
             A value of None will set no minimum, so all levels are accepted (unless a max is set).
             Typically default to None, unless there is a required element of the event data that was not added until a certain version.        
             The versions of data accepted by a feature are a responsibility of the Feature's developer,
@@ -98,10 +98,10 @@ class Generator(abc.ABC):
         """
         return None
 
-    ## Base function to get the maximum game data version the feature can handle.
+    ## Base function to get the maximum log version the feature can handle.
     @staticmethod
     def MaxVersion() -> Optional[str]:
-        """ Base function to get the maximum game data version the feature can handle.
+        """ Base function to get the maximum log version the feature can handle.
             A value of None will set no maximum, so all levels are accepted (unless a min is set).
             Typically default to None, unless the feature is not compatible with new data and is only kept for legacy purposes.
             The versions of data accepted by a feature are a responsibility of the Feature's developer,
