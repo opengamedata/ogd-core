@@ -1,5 +1,6 @@
 ## import standard libraries
 import abc
+from datetime import datetime, timedelta
 from typing import Any, Callable, Dict, List, Optional
 # import locals
 from ogd.core.extractors.Extractor import Extractor, ExtractorParameters
@@ -56,6 +57,16 @@ class Detector(Extractor):
 
     # *** PUBLIC STATICS ***
 
+    @staticmethod
+    def AvailableModes() -> List[ExtractionMode]:
+        """List of ExtractionMode supported by the Detector.
+
+        Overridden from Extractor's version of the function, only makes Detector mode supported.
+        :return: _description_
+        :rtype: List[ExtractionMode]
+        """
+        return [ExtractionMode.DETECTOR]
+
     # *** PUBLIC METHODS ***
 
     def ExtractFromEvent(self, event:Event):
@@ -69,17 +80,52 @@ class Detector(Extractor):
                 # TODO: add some logic to fill in empty values of Event with reasonable defaults, where applicable.
                 self._callback(_event)
 
-    @staticmethod
-    def AvailableModes() -> List[ExtractionMode]:
-        """List of ExtractionMode supported by the Detector.
-
-        Overridden from Extractor's version of the function, only makes Detector mode supported.
-        :return: _description_
-        :rtype: List[ExtractionMode]
-        """
-        return [ExtractionMode.DETECTOR]
+    def GenerateEvent(self, event_name:str,              event_data:Map,
+                      timestamp:datetime,                time_offset:Optional[timedelta],
+                      game_state:Optional[Map],          event_sequence_index:Optional[int],
+                      session_id:Optional[str]=None,     app_id:Optional[str]=None,
+                      app_version:Optional[str]=None,    log_version:Optional[str]=None,
+                      user_id:Optional[str] = None,      user_data:Optional[Map] = None):
+        return DetectorEvent(
+            session_id = session_id   or self.DefaultSessionID,
+            app_id     = app_id       or self.DefaultAppID,
+            event_name = event_name,  # no default, must be provided
+            event_data = event_data,  # no default, must be provided
+            timestamp  = timestamp,   # no default, must be provided
+            time_offset= time_offset, # no default, must be provided
+            app_version= app_version or self.DefaultAppVersion,
+            log_version= log_version or self.DefaultLogVersion,
+            user_id    = user_id     or self.DefaultUserID,
+            user_data  = user_data   or self.DefaultUserData,
+            game_state = game_state  or {},
+            event_sequence_index = event_sequence_index # no default, must be provided
+        )
 
     # *** PROPERTIES ***
+
+    @property
+    def DefaultSessionID(self) -> str:
+        return self._session_id
+
+    @property
+    def DefaultAppID(self) -> str:
+        return self._app_id
+
+    @property
+    def DefaultAppVersion(self) -> Optional[str]:
+        return self._app_version
+
+    @property
+    def DefaultLogVersion(self) -> Optional[str]:
+        return self._log_version
+
+    @property
+    def DefaultUserID(self) -> Optional[str]:
+        return self._user_id
+
+    @property
+    def DefaultUserData(self) -> Optional[Map]:
+        return self._user_data
 
     # *** PRIVATE STATICS ***
 
