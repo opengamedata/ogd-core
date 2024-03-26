@@ -14,18 +14,6 @@ from typing import Any, Dict, List, Tuple, Type, Optional
 ## import local files
 from ogd import games
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.games.AQUALAB.AqualabLoader import AqualabLoader
-from ogd.games.CRYSTAL.CrystalLoader import CrystalLoader
-from ogd.games.ICECUBE.IcecubeLoader import IcecubeLoader
-from ogd.games.JOURNALISM.JournalismLoader import JournalismLoader
-from ogd.games.JOWILDER.JowilderLoader import JowilderLoader
-from ogd.games.LAKELAND.LakelandLoader import LakelandLoader
-from ogd.games.MAGNET.MagnetLoader import MagnetLoader
-from ogd.games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
-from ogd.games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
-from ogd.games.THERMOVR.ThermoVRLoader import ThermoVRLoader
-from ogd.games.WAVES.WaveLoader import WaveLoader
-from ogd.games.PENGUINS.PenguinsLoader import PenguinsLoader
 from ogd.core.managers.EventManager import EventManager
 from ogd.core.managers.FeatureManager import FeatureManager
 from ogd.core.schemas.Event import Event
@@ -182,28 +170,40 @@ class ExportManager:
         _loader_class: Optional[Type[GeneratorLoader]] = None
         match game_id:
             case "AQUALAB":
+                from ogd.games.AQUALAB.AqualabLoader import AqualabLoader
                 _loader_class = AqualabLoader
             case "CRYSTAL":
+                from ogd.games.CRYSTAL.CrystalLoader import CrystalLoader
                 _loader_class = CrystalLoader
             case "ICECUBE":
+                from ogd.games.ICECUBE.IcecubeLoader import IcecubeLoader
                 _loader_class = IcecubeLoader
             case "JOURNALISM":
+                from ogd.games.JOURNALISM.JournalismLoader import JournalismLoader
                 _loader_class = JournalismLoader
             case "JOWILDER":
+                from ogd.games.JOWILDER.JowilderLoader import JowilderLoader
                 _loader_class = JowilderLoader
             case "LAKELAND":
+                from ogd.games.LAKELAND.LakelandLoader import LakelandLoader
                 _loader_class = LakelandLoader
             case "MAGNET":
+                from ogd.games.MAGNET.MagnetLoader import MagnetLoader
                 _loader_class = MagnetLoader
             case "SHADOWSPECT":
+                from ogd.games.SHADOWSPECT.ShadowspectLoader import ShadowspectLoader
                 _loader_class = ShadowspectLoader
             case "SHIPWRECKS":
+                from ogd.games.SHIPWRECKS.ShipwrecksLoader import ShipwrecksLoader
                 _loader_class = ShipwrecksLoader
             case "THERMOVR":
+                from ogd.games.THERMOVR.ThermoVRLoader import ThermoVRLoader
                 _loader_class = ThermoVRLoader
             case "WAVES":
+                from ogd.games.WAVES.WaveLoader import WaveLoader
                 _loader_class = WaveLoader
             case "PENGUINS":
+                from ogd.games.PENGUINS.PenguinsLoader import PenguinsLoader
                 _loader_class = PenguinsLoader
             case _:
                 if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WIND"}:
