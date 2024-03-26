@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, Final, List
 from enum import Enum
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
@@ -7,15 +7,15 @@ from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
 class Thermotool(Enum):
-    INSULATION = "insulation"
-    LOWER_STOP = "lower_stop"
-    UPPER_STOP = "upper_stop"
-    INCREASE_WEIGHT = "increase_weight"
-    DECREASE_WEIGHT = "decrease_weight"
-    HEAT = "heat"
-    COOLING = "cooling"
+    INSULATION          = "insulation"
+    LOWER_STOP          = "lower_stop"
+    UPPER_STOP          = "upper_stop"
+    INCREASE_WEIGHT     = "increase_weight"
+    DECREASE_WEIGHT     = "decrease_weight"
+    HEAT                = "heat"
+    COOLING             = "cooling"
     CHAMBER_TEMPERATURE = "chamber_temperature"
-    CHAMBER_PRESSURE = "chamber_pressure"
+    CHAMBER_PRESSURE    = "chamber_pressure"
 
 class ToolNudgeCount(SessionFeature):
 
@@ -32,8 +32,8 @@ class ToolNudgeCount(SessionFeature):
     def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event: Event) -> None:
-            if event.EventType == "click_tool_increase" or event.EventType == "click_tool_decrease":
+    def _extractFromEvent(self, event:Event) -> None:
+            if event.EventName == "click_tool_increase" or event.EventName == "click_tool_decrease":
                 tool_name = event.EventData.get('tool_name', None)
                 if tool_name:
                     tool = Thermotool(tool_name)

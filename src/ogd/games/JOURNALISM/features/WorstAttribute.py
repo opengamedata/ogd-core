@@ -1,6 +1,6 @@
 # import libraries
 import json
-from typing import Any, List, Optional
+from typing import Any, Final, List, Optional
 # import local files
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.schemas.Event import Event
@@ -8,9 +8,6 @@ from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.SessionFeature import SessionFeature
-
-
-
 
 class WorstAttribute(SessionFeature):
     """Template file to serve as a guide for creating custom Feature subclasses for games.
@@ -20,9 +17,9 @@ class WorstAttribute(SessionFeature):
     """
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
-        self._min_value : int = 0;
+        self._min_value : int = 0
         self._min_names : List[str] = []
-        self._ATTRIBUTE_ENUM : List[str] = ["endurance", "resourceful", "tech","social","trust","research"]
+        self._ATTRIBUTE_ENUM : Final[List[str]] = ["endurance", "resourceful", "tech","social","trust","research"]
         #self._text_click_count : int = 0;
         # >>> create/initialize any variables to track feature extractor state <<<
         #

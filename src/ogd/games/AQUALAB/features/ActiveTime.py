@@ -1,7 +1,7 @@
 # import libraries
 from datetime import datetime, timedelta
 import logging, warnings
-from typing import Any, List, Optional
+from typing import Any, Final, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.Generator import GeneratorParameters
@@ -11,7 +11,7 @@ from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
 class ActiveTime(Feature):
-    IDLE_LEVEL = 30
+    IDLE_LEVEL : Final[int] = 30
 
     def __init__(self, params:GeneratorParameters, job_map:dict, active_threads:Optional[float] = None):
         self._job_map = job_map

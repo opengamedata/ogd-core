@@ -1,7 +1,7 @@
 # import standard libraries
 from datetime import datetime, timedelta
 from time import time
-from typing import Callable, List, Optional, Union
+from typing import Callable, Final, List, Optional, Union
 # import local files
 from ogd.core.generators.detectors.Detector import Detector
 from ogd.core.generators.detectors.DetectorEvent import DetectorEvent
@@ -15,7 +15,7 @@ class Idle(Detector):
     :param Feature: Base class for a Custom Feature class.
     :type Feature: _type_
     """
-    DEFAULT_IDLE_LEVEL = 30
+    DEFAULT_IDLE_LEVEL : Final[int] = 30
 
 
     def __init__(self, params:GeneratorParameters, trigger_callback:Callable[[Event], None], idle_level:Optional[int]):

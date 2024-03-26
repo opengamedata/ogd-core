@@ -1,6 +1,6 @@
 # import libraries
 from datetime import timedelta
-from typing import Any, List
+from typing import Any, Final, List
 # import locals
 from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
@@ -8,7 +8,7 @@ from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
-TANK_TYPE = [
+TANK_TYPE : Final[List[str]] = [
     "Observation",
     "Stress",
     "Measurement"]

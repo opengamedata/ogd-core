@@ -1,6 +1,6 @@
 ## import standard libraries
 import json
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, Final, List, Optional
 ## import local files
 from . import features
 from ogd.core.generators.detectors.Detector import Detector
@@ -17,7 +17,7 @@ from ogd.core.schemas.games.GameSchema import GameSchema
 ## @class WaveExtractor
 #  Extractor subclass for extracting features from Waves game data.
 
-EXPORT_PATH = "games/ICECUBE/DBExport.json"
+EXPORT_PATH : Final[str] = "games/ICECUBE/DBExport.json"
 class IcecubeLoader(GeneratorLoader):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***

@@ -2,7 +2,7 @@
 import itertools
 import json
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, Final, List, Optional
 # import local files
 from . import features
 from ogd.games import AQUALAB
@@ -17,7 +17,7 @@ from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.utils import loadJSONFile
 
-EXPORT_PATH = "games/AQUALAB/DBExport.json"
+EXPORT_PATH : Final[str] = "games/AQUALAB/DBExport.json"
 
 ## @class AqualabLoader
 #  Extractor subclass for extracting features from Aqualab game data.

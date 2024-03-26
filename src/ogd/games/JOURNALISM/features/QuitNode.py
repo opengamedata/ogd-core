@@ -2,7 +2,7 @@
 import operator
 import logging
 from collections import Counter
-from typing import Any, List, Optional
+from typing import Any, Final, List, Optional
 # import local files
 from ogd.core.generators.extractors.Feature import Feature
 from ogd.core.generators.extractors.PerLevelFeature import PerLevelFeature
@@ -69,8 +69,8 @@ class QuitNode(SessionFeature):
         :param feature: _description_
         :type feature: FeatureData
         """
-        QNODE_INDEX = 2 # The "Node" subfeature of the "QuitLevel" feature should be at index 2.
-        quit_node : Optional[str] = None
+        QNODE_INDEX : Final[int]    = 2 # The "Node" subfeature of the "QuitLevel" feature should be at index 2.
+        quit_node   : Optional[str] = None
         if len(feature.FeatureValues) > QNODE_INDEX: # need to ensure there's at least 3 items, for index 2 to be valid...
             quit_node = str(feature.FeatureValues[2])
         else:
