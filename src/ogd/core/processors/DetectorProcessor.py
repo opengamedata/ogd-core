@@ -4,13 +4,13 @@ from typing import Any, Callable, Dict, List, Type, Optional
 from ogd.core.generators.registries.DetectorRegistry import DetectorRegistry
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.generators.GeneratorLoader import GeneratorLoader
-from ogd.core.processors.ExtractorProcessor import ExtractorProcessor
+from ogd.core.processors.GeneratorProcessor import GeneratorProcessor
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.games.GameSchema import GameSchema
 from ogd.core.utils.utils import ExportRow
 
-class DetectorProcessor(ExtractorProcessor):
+class DetectorProcessor(GeneratorProcessor):
 
     # *** BUILT-INS & PROPERTIES ***
 

@@ -16,7 +16,7 @@ from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow
 
 ## @class Processor
-class ExtractorProcessor(Processor):
+class GeneratorProcessor(Processor):
 
     # *** ABSTRACTS ***
 
