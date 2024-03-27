@@ -12,8 +12,8 @@ from ogd.games.JOWILDER import Jowilder_Enumerators as je
 from ogd.core.utils.Logger import Logger
 
 try:
-    with open(file="./games/JOWILDER/interaction_metadata.json") as f:
-        METADATA_RAW : Dict[str, Dict[str, Any]] = json.load(f)
+    with open(file="./games/JOWILDER/interaction_metadata.json") as interaction_file:
+        METADATA_RAW : Dict[str, Dict[str, Any]] = json.load(interaction_file)
         METADATA     : Dict[int, Dict[str, Any]] = {je.fqid_to_enum.get(v.get("fqid", "FQID NOT FOUND"), -1): v for v in METADATA_RAW.values()}
 except FileNotFoundError as err:
     Logger.Log(f"Could not find ./games/JOWILDER/interaction_metadata.json")
