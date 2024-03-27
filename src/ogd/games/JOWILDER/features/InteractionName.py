@@ -1,24 +1,22 @@
 # import libraries
 import json
 import logging
+from pathlib import Path
 from typing import Any, Dict, List, Optional
-from ogd.core.generators.Generator import GeneratorParameters
 # import local files
+from ogd.core.generators.Generator import GeneratorParameters
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.schemas.Event import Event
 from ogd.games.JOWILDER import Jowilder_Enumerators as je
+from ogd.core.utils.utils import loadJSONFile
 from ogd.core.utils.Logger import Logger
 
-try:
-    with open(file="./games/JOWILDER/interaction_metadata.json") as interaction_file:
-        METADATA_RAW : Dict[str, Dict[str, Any]] = json.load(interaction_file)
-        METADATA     : Dict[int, Dict[str, Any]] = {je.fqid_to_enum.get(v.get("fqid", "FQID NOT FOUND"), -1): v for v in METADATA_RAW.values()}
-except FileNotFoundError as err:
-    Logger.Log(f"Could not find ./games/JOWILDER/interaction_metadata.json")
-    METADATA_RAW = {}
-    METADATA     = {}
+interaction_path = Path('.') / "ogd" / "games" / "JOWILDER"
+METADATA_RAW : Dict[str, Dict[str, Any]] = loadJSONFile(filename="interaction_metadata.json", path=interaction_path, search_in_src=True)
+METADATA     : Dict[int, Dict[str, Any]] = {je.fqid_to_enum.get(v.get("fqid", "FQID NOT FOUND"), -1): v for v in METADATA_RAW.values()}
+Logger.Log(f"JoWilder InteractionName loaded {len(METADATA.keys())} metadata items.")
 
 class InteractionName(PerCountFeature):
 
