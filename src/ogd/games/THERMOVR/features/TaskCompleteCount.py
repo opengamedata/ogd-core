@@ -20,11 +20,11 @@ class TaskCompleteCount(SessionFeature):
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
-        if event.EventType == "target_state_achieved":
+        if event.EventName == "target_state_achieved":
             target_state = event.EventData.get("target_state")
             if target_state:
                 self.completed_tasks.add(str(target_state))
-        elif event.EventType == "click_submit_answer":
+        elif event.EventName == "click_submit_answer":
             quiz_task = event.EventData.get("quiz_task")
             if quiz_task and quiz_task.get("is_complete"):
                 _id = f"{quiz_task.get('lab_name')}_{quiz_task.get('section_number')}_{quiz_task.get('task_number')}"
