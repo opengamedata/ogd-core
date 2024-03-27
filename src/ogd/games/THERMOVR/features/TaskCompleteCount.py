@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Set
 from ogd.core.extractors.Extractor import ExtractorParameters
 from ogd.core.extractors.features.SessionFeature import SessionFeature
 from ogd.core.schemas.Event import Event
@@ -8,26 +8,30 @@ from ogd.core.schemas.FeatureData import FeatureData
 class TaskCompleteCount(SessionFeature):
 
     def __init__(self, params: ExtractorParameters, player_id: str):
-        self.task_complete_count = 0
+        self.completed_tasks: Set[str] = set()
         super().__init__(params=params)
 
     @classmethod
     def _getEventDependencies(cls, mode: ExtractionMode) -> List[str]:
-        return ["click_new_game", "click_reset_sim"]
+        return ["target_state_achieved", "click_submit_answer"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
-        if event.EventType in ["click_new_game", "click_reset_sim"]:
-            if event.EventData.get("current_task"):
-                is_complete = event.EventData["current_task"].get("is_complete")
-                if is_complete:
-                    self.task_complete_count += 1
+        if event.EventType == "target_state_achieved":
+            target_state = event.EventData.get("target_state")
+            if target_state:
+                self.completed_tasks.add(str(target_state))
+        elif event.EventType == "click_submit_answer":
+            quiz_task = event.EventData.get("quiz_task")
+            if quiz_task and quiz_task.get("is_complete"):
+                _id = f"{quiz_task.get('lab_name')}_{quiz_task.get('section_number')}_{quiz_task.get('task_number')}"
+                self.completed_tasks.add(_id)
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self.task_complete_count]
+        return [len(self.completed_tasks)]
