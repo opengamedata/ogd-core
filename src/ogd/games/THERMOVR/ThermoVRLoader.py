@@ -69,11 +69,27 @@ class ThermoVRLoader(ExtractorLoader):
         # First run through aggregate features
         if extractor_params._count_index == None:
             match feature_type:
+                case "PhasesReached":
+                    ret_val = PhasesReached.PhasesReached(params=extractor_params, job_map=self._job_map)
+                case "PlayMode":
+                    ret_val = PlayMode.PlayMode(params=extractor_params, job_map=self._job_map)
                 case _:
                     raise NotImplementedError(f"'{feature_type}' is not a valid aggregate feature type for ThermoVR.")
         # then run through per-count features.
         else:
             match feature_type:
+                case "LabCompleteCount":
+                    ret_val = LabCompleteCount.LabCompleteCount(params=extractor_params, job_map=self._job_map)
+                case "LeftHandMoves":
+                    ret_val = LeftHandMoves.LeftHandMoves(params=extractor_params, job_map=self._job_map)
+                case "RightHandMoves":
+                    ret_val = RightHandMoves.RightHandMoves(params=extractor_params, job_map=self._job_map)
+                case "TaskCompeletCount":
+                    ret_val = TaskCompeletCount.TaskCompeletCount(params=extractor_params, job_map=self._job_map)
+                case "ToolNudgeCount":
+                    ret_val = ToolNudgeCount.ToolNudgeCount(params=extractor_params, job_map=self._job_map)
+                case "ToolSliderTime":
+                    ret_val = ToolSliderTime.ToolSliderTime(params=extractor_params, job_map=self._job_map)
                 case _:
                     raise NotImplementedError(f"'{feature_type}' is not a valid per-count feature type for ThermoVR.")
         return ret_val

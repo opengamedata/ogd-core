@@ -13,16 +13,16 @@ class PhasesReached(SessionFeature):
 
     @classmethod
     def _getEventDependencies(cls, mode: ExtractionMode) -> List[str]:
-        return ["game_state"]
+        return ["all_events"]
 
     @classmethod
     def _getFeatureDependencies(cls, mode: ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event: Event) -> None:
-        game_state = event.EventData.get("game_state")
+        game_state = event.EventData.get("all_events")
         if game_state:
-            region = game_state.get("region")
+            region = event.GameState.get("region")
             if region:
                 self.phases_reached.add(region)
 

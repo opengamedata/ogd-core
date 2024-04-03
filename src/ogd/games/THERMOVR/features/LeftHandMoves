@@ -10,7 +10,7 @@ class LeftHandMovesCount(SessionFeature):
 
     def __init__(self, params: ExtractorParameters, player_id: str):
         self._left_hand_move_count = 0
-        self._last_hand_action = {}
+        self._last_hand_action = None
         super().__init__(params=params)
 
     @classmethod
@@ -30,9 +30,9 @@ class LeftHandMovesCount(SessionFeature):
         hand = event.EventData.get("hand")
         if hand == "LEFT":
             action = event.EventType.split("_")[0]  # Extract action (grab, release, click, etc.)
-            if action not in self._last_hand_action or self._last_hand_action[action] != hand:
+            if action in ["grab", "click"] or (action == "release" and self._last_hand_action != "grab"):
                 self._left_hand_move_count += 1
-            self._last_hand_action[action] = hand
+            self._last_hand_action = action
 
     def _extractFromFeatureData(self, feature: FeatureData):
         return
