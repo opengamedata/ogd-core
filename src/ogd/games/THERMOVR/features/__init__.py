@@ -10,7 +10,7 @@ __all__ = [
     "RightHandMoves",
     "PhasesReached",
     "PlayMode",
-    "TaskCompeletCount",
+    "TaskCompleteCount",
     "ToolNudgeCount",
     "ToolSliderTime",
 
@@ -23,6 +23,6 @@ from . import LeftHandMoves
 from . import RightHandMoves
 from . import PhasesReached
 from . import PlayMode
-from . import TaskCompeletCount
+from . import TaskCompleteCount
 from . import ToolNudgeCount
 from . import ToolSliderTime
