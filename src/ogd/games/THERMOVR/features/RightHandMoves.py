@@ -8,7 +8,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class RightHandMovesCount(SessionFeature):
 
-    def __init__(self, params: ExtractorParameters, player_id: str):
+    def __init__(self, params: ExtractorParameters):
         self._right_hand_move_count = 0
         self._last_hand_action = None
         super().__init__(params=params)

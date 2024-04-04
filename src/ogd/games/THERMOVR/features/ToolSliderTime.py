@@ -8,7 +8,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class ToolSliderTime(SessionFeature):
 
-    def __init__(self, params: ExtractorParameters, player_id: str):
+    def __init__(self, params: ExtractorParameters):
         self._slider_start_time = {}
         self._slider_times = {}
         super().__init__(params=params)

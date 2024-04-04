@@ -7,7 +7,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class PhasesReached(SessionFeature):
 
-    def __init__(self, params: ExtractorParameters, player_id: str):
+    def __init__(self, params: ExtractorParameters):
         self.phases_reached = set()
         super().__init__(params=params)
 

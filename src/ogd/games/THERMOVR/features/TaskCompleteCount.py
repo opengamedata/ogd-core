@@ -7,7 +7,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class TaskCompleteCount(SessionFeature):
 
-    def __init__(self, params: ExtractorParameters, player_id: str):
+    def __init__(self, params: ExtractorParameters):
         self.completed_tasks: Set[str] = set()
         super().__init__(params=params)
 

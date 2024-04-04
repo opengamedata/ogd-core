@@ -7,7 +7,7 @@ from ogd.core.schemas.FeatureData import FeatureData
 
 class PlayMode(SessionFeature):
 
-    def __init__(self, params: ExtractorParameters, player_id: str):
+    def __init__(self, params: ExtractorParameters):
         self.play_mode = None
         super().__init__(params=params)
 
