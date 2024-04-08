@@ -13,5 +13,5 @@ runs:
   using: "composite"
   steps:
     - name: Set up schema file
-      run: cp games/${{inputs.game}}/schemas/${{inputs.game}}.json.template games/${{inputs.game}}/schemas/${{inputs.game}}.json
+      run: cp src/ogd/games/${{inputs.game}}/schemas/${{inputs.game}}.json.template src/ogd/games/${{inputs.game}}/schemas/${{inputs.game}}.json
       shell: bash
