@@ -1,14 +1,14 @@
 # import libraries
 from typing import Any, List, Optional
 # import locals
-from extractors.Extractor import ExtractorParameters
-from schemas.Event import Event
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
-from extractors.features.PerCountFeature import PerCountFeature
+from ogd.core.generators.extractors.Extractor import GeneratorParameters
+from ogd.core.schemas.Event import Event
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
+from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 
 class RegionName(PerCountFeature):
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         regions = ['arctic', 'coral', 'bayou', 'kelp', 'other']
         self.count = 0

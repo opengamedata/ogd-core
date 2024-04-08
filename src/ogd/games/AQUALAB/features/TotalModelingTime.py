@@ -2,15 +2,15 @@
 from datetime import timedelta
 from typing import Any, List
 # import locals
-from extractors.Extractor import ExtractorParameters
-from extractors.features.Feature import Feature
-from schemas.Event import Event, EventSource
-from schemas.ExtractionMode import ExtractionMode
-from schemas.FeatureData import FeatureData
+from ogd.core.generators.extractors.Extractor import GeneratorParameters
+from ogd.core.generators.extractors.Feature import Feature
+from ogd.core.schemas.Event import Event, EventSource
+from ogd.core.schemas.ExtractionMode import ExtractionMode
+from ogd.core.schemas.FeatureData import FeatureData
 
 class TotalModelingTime(Feature):
 
-    def __init__(self, params:ExtractorParameters):
+    def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         self.prev_time = timedelta(0)
         self.total_time = timedelta(0)
