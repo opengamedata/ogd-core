@@ -10,13 +10,8 @@ from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 
-<<<<<<< HEAD:src/ogd/games/AQUALAB/features/JobModeling.py
-class JobModeling(PerJobFeature):
-    def __init__(self, params:ExtractorParameters, job_map:dict):
-=======
 class JobModelingTime(PerJobFeature):
     def __init__(self, params:GeneratorParameters, job_map:dict):
->>>>>>> master:src/ogd/games/AQUALAB/features/JobModelingTime.py
         self._job_map = job_map
         super().__init__(params=params, job_map=job_map)
         self._session_id = None
@@ -27,13 +22,8 @@ class JobModelingTime(PerJobFeature):
 
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-<<<<<<< HEAD:src/ogd/games/AQUALAB/features/JobModeling.py
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
-        return ["all_events"]
-=======
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return []
->>>>>>> master:src/ogd/games/AQUALAB/features/JobModelingTime.py
+        return ["all_events"]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
