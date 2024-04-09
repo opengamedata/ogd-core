@@ -571,22 +571,6 @@
     },
     "features": {
         "per_count": {
-            "JobPriorComplete": {
-                "enabled": true,
-                "type": "JobPriorComplete",
-                "count": "level_range",
-                "prefix": "job",
-                "description": "",
-                "return_type": "list"
-            },
-            "JobPriorAttempt": {
-                "enabled": true,
-                "type": "JobPriorAttempt",
-                "count": "level_range",
-                "prefix": "job",
-                "description": "",
-                "return_type": "list"
-            },
             "JobActiveTime": {
                 "enabled": true,
                 "type": "JobActiveTime",
@@ -647,20 +631,6 @@
                     }
                 }
             },
-            "JobModeling": {
-                "enabled": true,
-                "type": "JobModeling",
-                "count": "level_range",
-                "prefix": "job",
-                "description": "Number of times the player entered the modeling mechanic during a job",
-                "return_type": "timedelta",
-                "subfeatures": {
-                    "Time": {
-                        "description": "Time spent in modeling during a job",
-                        "return_type": "timedelta"
-                    }
-                }
-            },
             "JobGuideCount": {
                 "enabled": false,
                 "type": "JobGuideCount",
@@ -696,6 +666,36 @@
                         "return_type": "int"
                     }
                 }
+            },
+            "JobModeling": {
+                "enabled": true,
+                "type": "JobModeling",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "Number of times the player entered the modeling mechanic during a job",
+                "return_type": "timedelta",
+                "subfeatures": {
+                    "Time": {
+                        "description": "Time spent in modeling during a job",
+                        "return_type": "timedelta"
+                    }
+                }
+            },
+            "JobPriorComplete": {
+                "enabled": true,
+                "type": "JobPriorComplete",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "",
+                "return_type": "list"
+            },
+            "JobPriorAttempt": {
+                "enabled": true,
+                "type": "JobPriorAttempt",
+                "count": "level_range",
+                "prefix": "job",
+                "description": "",
+                "return_type": "list"
             },
             "JobTasksCompleted": {
                 "enabled": true,

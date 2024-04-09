@@ -74,18 +74,6 @@ class AqualabLoader(GeneratorLoader):
             match feature_type:
                 case "ActiveTime":
                     ret_val = ActiveTime.ActiveTime(params=extractor_params, job_map=self._job_map, active_threads=schema_args.get("Active_threshold"))
-                case "JobTriesInArgument":
-                    ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
-                case "ModelInterveneCount":
-                    ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
-                case "TankRulesCount":
-                    ret_val = TankRulesCount.TankRulesCount(params=extractor_params)
-                case "ModelExportCount":
-                    ret_val = ModelExportCount.ModelExportCount(params=extractor_params, job_map=self._job_map)
-                case "ModelPredictCount":
-                    ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
-                case "UserAvgActiveTime":
-                    ret_val = UserAvgActiveTime.UserAvgActiveTime(params=extractor_params, player_id=self._player_id)
                 case "ActiveJobs":
                     ret_val = ActiveJobs.ActiveJobs(params=extractor_params, job_map=self._job_map)
                 case "EchoSessionID":
@@ -94,6 +82,16 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = EventList.EventList(params=extractor_params)
                 case "JobsCompleted":
                     ret_val = JobsCompleted.JobsCompleted(params=extractor_params, player_id=self._player_id)
+                case "JobTriesInArgument":
+                    ret_val = JobTriesInArgument.JobTriesInArgument(params=extractor_params, job_map=self._job_map)
+                case "ModelExportCount":
+                    ret_val = ModelExportCount.ModelExportCount(params=extractor_params, job_map=self._job_map)
+                case "ModelInterveneCount":
+                    ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
+                case "ModelPredictCount":
+                    ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
+                case "PlayLocations":
+                    ret_val = PlayLocations.PlayLocations(params=extractor_params)
                 case "PlayerSummary":
                     ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
                 case "PopulationSummary":
@@ -112,6 +110,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = SessionJobsCompleted.SessionJobsCompleted(params=extractor_params)
                 case "SwitchJobsCount":
                     ret_val = SwitchJobsCount.SwitchJobsCount(params=extractor_params)
+                case "TankRulesCount":
+                    ret_val = TankRulesCount.TankRulesCount(params=extractor_params)
                 case "TopJobCompletionDestinations":
                     ret_val = TopJobCompletionDestinations.TopJobCompletionDestinations(params=extractor_params, job_map=self._job_map)
                 case "TopJobSwitchDestinations":
@@ -122,6 +122,16 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = TotalDiveTime.TotalDiveTime(params=extractor_params)
                 case "TotalExperimentationTime":
                     ret_val = TotalExperimentationTime.TotalExperimentationTime(params=extractor_params)
+                case "TotalGuideCount":
+                    ret_val = TotalGuideCount.TotalGuideCount(params=extractor_params)
+                case "TotalHelpCount":
+                    ret_val = TotalHelpCount.TotalHelpCount(params=extractor_params)
+                case "TotalModelingTime":
+                    ret_val = TotalModelingTime.TotalModelingTime(params=extractor_params)
+                case "TotalPlayTime":
+                    ret_val = TotalPlayTime.TotalPlayTime(params=extractor_params)
+                case "UserAvgActiveTime":
+                    ret_val = UserAvgActiveTime.UserAvgActiveTime(params=extractor_params, player_id=self._player_id)
                 case "UserAvgSessionDuration":
                     ret_val = UserAvgSessionDuration.UserAvgSessionDuration(params=extractor_params, player_id=self._player_id)
                 case "UserTotalSessionDuration":
@@ -151,12 +161,20 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = JobLocationChanges.JobLocationChanges(params=extractor_params, job_map=self._job_map)
                 case "JobModeling":
                     ret_val = JobModeling.JobModeling(params=extractor_params, job_map=self._job_map)
+                case "JobPriorAttempt":
+                    ret_val = JobPriorAttempt.JobPriorAttempt(params=extractor_params, job_map=self._job_map)
+                case "JobPriorComplete":
+                    ret_val = JobPriorComplete.JobPriorComplete(params=extractor_params, job_map=self._job_map)
                 case "JobStartCount":
                     ret_val = JobStartCount.JobStartCount(params=extractor_params, job_map=self._job_map)
                 case "JobTasksCompleted":
                     ret_val = JobTasksCompleted.JobTasksCompleted(params=extractor_params, job_map=self._job_map)
                 case "JobsAttempted":
                     ret_val = JobsAttempted.JobsAttempted(params=extractor_params, job_map=self._job_map, diff_map=self._diff_map)
+                case "RegionName":
+                    ret_val = RegionName.RegionName(params=extractor_params)
+                case "RegionJobCount":
+                    ret_val = RegionJobCount.RegionJobCount(params=extractor_params)
                 case "SyncCompletionTime":
                     ret_val = SyncCompletionTime.SyncCompletionTime(params=extractor_params)
                 case _:
