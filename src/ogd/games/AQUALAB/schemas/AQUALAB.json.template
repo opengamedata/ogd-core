@@ -777,6 +777,7 @@
             "ActiveTime": {
                 "enabled": true,
                 "type": "ActiveTime",
+                "description": "Total time spent actively playing",
                 "return_type": "timedelta"
             },
             "EventList": {
