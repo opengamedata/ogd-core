@@ -8,7 +8,7 @@ from ogd.core.schemas.Event import Event, EventSource
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
 from ogd.core.utils.Logger import Logger
-from games.AQUALAB.features.PerJobFeature import PerJobFeature
+from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.core.generators.extractors.PerCountFeature import PerCountFeature
 
 class TotalKelpTime(Feature):

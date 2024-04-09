@@ -6,7 +6,7 @@ from typing import Any, List, Optional
 # import locals
 from ogd.core.utils.Logger import Logger
 from ogd.core.generators.extractors.Extractor import GeneratorParameters
-from games.AQUALAB.features.PerJobFeature import PerJobFeature
+from ogd.games.AQUALAB.features.PerJobFeature import PerJobFeature
 from ogd.core.schemas.Event import Event
 from ogd.core.schemas.ExtractionMode import ExtractionMode
 from ogd.core.schemas.FeatureData import FeatureData
