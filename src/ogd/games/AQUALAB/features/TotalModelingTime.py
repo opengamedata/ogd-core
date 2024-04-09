@@ -29,7 +29,7 @@ class TotalModelingTime(Feature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.EventSource == EventSource.GAME:
             if self.on:
                 self.total_time += (event.Timestamp - self.prev_time)
@@ -42,7 +42,7 @@ class TotalModelingTime(Feature):
                     self.on = True
             self.prev_time = event.Timestamp
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

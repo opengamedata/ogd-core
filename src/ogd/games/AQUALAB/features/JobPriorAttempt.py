@@ -27,7 +27,7 @@ class JobPriorAttempt(PerCountFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         job_data = event.EventData["job_name"]['string_value']
         if event.event_name == "complete_job":
             if self._job_map[job_data] == self.CountIndex:
@@ -41,7 +41,7 @@ class JobPriorAttempt(PerCountFeature):
     def _validateEventCountIndex(self, event:Event) -> bool:
         return not self._completed
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

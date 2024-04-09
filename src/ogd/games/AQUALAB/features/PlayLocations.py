@@ -37,10 +37,10 @@ class PlayLocations(SessionFeature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
     
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if not event.SessionID in self._seen_sessions:
             self._seen_sessions.add(event.SessionID)
             # Step 1: calculate local time

@@ -32,7 +32,7 @@ class TotalKelpTime(Feature):
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         if event.app_version == 'Aqualab' or event.app_version == 'None':
             if event.EventSource == EventSource.GAME:
                 if self.on:
@@ -58,7 +58,7 @@ class TotalKelpTime(Feature):
                         self.on = True
                 self.prev_time = event.Timestamp
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:

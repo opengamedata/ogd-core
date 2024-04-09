@@ -25,10 +25,10 @@ class RegionName(PerCountFeature):
     def _validateEventCountIndex(self, event:Event):
         pass
 
-    def _extractFromEvent(self, event:Event) -> None:
+    def _updateFromEvent(self, event:Event) -> None:
         pass
 
-    def _extractFromFeatureData(self, feature:FeatureData):
+    def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
