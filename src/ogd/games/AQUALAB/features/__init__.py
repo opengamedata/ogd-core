@@ -1,13 +1,8 @@
 __all__ = [
-    "AppVersions",
-    "JobTriesInArgument",
-    "TankRulesCount",
-    "ModelExportCount",
-    "ModelPredictCount",
-    "UserAvgActiveTime",
-    "ModelInterveneCount",
-    "ActiveTime",
     "ActiveJobs",
+    "ActiveTime",
+    "AppVersions",
+    "AverageSessionTime",
     "EchoSessionID",
     "EventList",
     "JobActiveTime",
@@ -20,14 +15,19 @@ __all__ = [
     "JobHelpCount",
     "JobLocationChanges",
     "JobModeling",
+    "JobPlayTime",
     "JobPriorAttempt",
     "JobPriorComplete",
-    "JobStartCount",
-    "JobTasksCompleted",
     "JobsAttempted",
     "JobsCompleted",
-    "PlayLocations",
+    "JobStartCount",
+    "JobTasksCompleted",
+    "JobTriesInArgument",
+    "ModelExportCount",
+    "ModelInterveneCount",
+    "ModelPredictCount",
     "PlayerSummary",
+    "PlayLocations",
     "PopulationSummary",
     "RegionJobCount",
     "RegionName",
@@ -36,25 +36,26 @@ __all__ = [
     "SessionGuideCount",
     "SessionHelpCount",
     "SessionID",
+    "SessionJobsCompleted",
     "SwitchJobsCount",
     "SyncCompletionTime",
-    "TotalHelpCount",
+    "TankRulesCount",
     "TopJobCompletionDestinations",
     "TopJobSwitchDestinations",
+    "TotalArcticTime",
     "TotalArgumentationTime",
+    "TotalBayouTime",
+    "TotalCoralTime",
     "TotalDiveTime",
     "TotalExperimentationTime",
-    "TotalModelingTime",
     "TotalGuideCount",
-    "TotalPlayTime",
-    "UserAvgSessionDuration",
-    "UserTotalSessionDuration",
-    "AverageSessionTime",
-    "JobPlayTime",
+    "TotalHelpCount",
     "TotalKelpTime",
-    "TotalArcticTime",
-    "TotalCoralTime",
-    "TotalBayouTime"
+    "TotalModelingTime",
+    "TotalPlayTime",
+    "UserAvgActiveTime",
+    "UserAvgSessionDuration",
+    "UserTotalSessionDuration"
 ]
 
 from . import ActiveJobs
@@ -94,6 +95,7 @@ from . import SessionDuration
 from . import SessionGuideCount
 from . import SessionHelpCount
 from . import SessionID
+from . import SessionJobsCompleted
 from . import SwitchJobsCount
 from . import SyncCompletionTime
 from . import TankRulesCount
