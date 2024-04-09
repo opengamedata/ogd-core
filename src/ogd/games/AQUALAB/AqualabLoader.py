@@ -101,7 +101,7 @@ class AqualabLoader(GeneratorLoader):
                 case "SessionDiveSitesCount":
                     ret_val = SessionDiveSitesCount.SessionDiveSitesCount(params=extractor_params)
                 case "SessionDuration":
-                    ret_val = SessionDuration.SessionDuration(params=extractor_params, session_id=self._session_id)
+                    ret_val = SessionDuration.SessionDuration(params=extractor_params, threshold=int(schema_args.get("threshold", 60)))
                 case "SessionGuideCount":
                     ret_val = SessionGuideCount.SessionGuideCount(params=extractor_params)
                 case "SessionHelpCount":
@@ -133,24 +133,24 @@ class AqualabLoader(GeneratorLoader):
             match feature_type:
                 case "JobActiveTime":
                     ret_val = JobActiveTime.JobActiveTime(params=extractor_params, job_map=self._job_map)
-                case "JobArgumentationTime":
-                    ret_val = JobArgumentationTime.JobArgumentationTime(params=extractor_params, job_map=self._job_map)
+                case "JobArgumentation":
+                    ret_val = JobArgumentation.JobArgumentation(params=extractor_params, job_map=self._job_map)
                 case "JobCompletionTime":
                     ret_val = JobCompletionTime.JobCompletionTime(params=extractor_params, job_map=self._job_map)
                 case "JobDiveSitesCount":
                     ret_val = JobDiveSitesCount.JobDiveSitesCount(params=extractor_params, job_map=self._job_map)
                 case "JobDiveTime":
                     ret_val = JobDiveTime.JobDiveTime(params=extractor_params, job_map=self._job_map)
-                case "JobExperimentationTime":
-                    ret_val = JobExperimentationTime.JobExperimentationTime(params=extractor_params, job_map=self._job_map)
+                case "JobExperimentation":
+                    ret_val = JobExperimentation.JobExperimentation(params=extractor_params, job_map=self._job_map)
                 case "JobGuideCount":
                     ret_val = JobGuideCount.JobGuideCount(params=extractor_params, job_map=self._job_map)
                 case "JobHelpCount":
                     ret_val = JobHelpCount.JobHelpCount(params=extractor_params, job_map=self._job_map)
                 case "JobLocationChanges":
                     ret_val = JobLocationChanges.JobLocationChanges(params=extractor_params, job_map=self._job_map)
-                case "JobModelingTime":
-                    ret_val = JobModelingTime.JobModelingTime(params=extractor_params, job_map=self._job_map)
+                case "JobModeling":
+                    ret_val = JobModeling.JobModeling(params=extractor_params, job_map=self._job_map)
                 case "JobStartCount":
                     ret_val = JobStartCount.JobStartCount(params=extractor_params, job_map=self._job_map)
                 case "JobTasksCompleted":
