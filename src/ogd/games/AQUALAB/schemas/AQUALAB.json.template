@@ -775,7 +775,7 @@
                 "return_type": "dict"
             },
             "ActiveTime": {
-                "enabled": true,
+                "enabled": false,
                 "type": "ActiveTime",
                 "description": "Total time spent actively playing",
                 "return_type": "timedelta"

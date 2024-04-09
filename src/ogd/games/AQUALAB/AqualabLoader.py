@@ -90,8 +90,8 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = ModelInterveneCount.ModelInterveneCount(params=extractor_params, job_map=self._job_map)
                 case "ModelPredictCount":
                     ret_val = ModelPredictCount.ModelPredictCount(params=extractor_params, job_map=self._job_map)
-                case "PlayLocations":
-                    ret_val = PlayLocations.PlayLocations(params=extractor_params)
+                # case "PlayLocations":
+                #     ret_val = PlayLocations.PlayLocations(params=extractor_params)
                 case "PlayerSummary":
                     ret_val = PlayerSummary.PlayerSummary(params=extractor_params)
                 case "PopulationSummary":
