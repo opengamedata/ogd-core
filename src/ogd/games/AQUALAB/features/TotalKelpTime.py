@@ -25,11 +25,11 @@ class TotalKelpTime(Feature):
         return ["Seconds", "Active", "Active-Seconds", "Idle", "Idle-Seconds"]
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
-    def _getEventDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
         return ["begin_argument", "room_changed", "leave_argument", "complete_argument"]
 
     @classmethod
-    def _getFeatureDependencies(cls, mode:ExtractionMode) -> List[str]:
+    def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
     def _extractFromEvent(self, event:Event) -> None:
