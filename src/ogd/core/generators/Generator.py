@@ -36,7 +36,7 @@ class Generator(abc.ABC):
         :return: [description]
         :rtype: List[str]
         """
-        pass
+        raise TypeError(f"Can't call function on class {cls.__name__} with abstract method _eventFilter")
 
     @classmethod
     @abc.abstractmethod
@@ -48,7 +48,7 @@ class Generator(abc.ABC):
         :return: _description_
         :rtype: List[str]
         """
-        pass
+        raise TypeError(f"Can't call function on class {cls.__name__} with abstract method _featureFilter")
 
     ## Abstract declaration of a function to perform update of a feature from a row.
     @abc.abstractmethod
