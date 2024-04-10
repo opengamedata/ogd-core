@@ -3,6 +3,7 @@
       "BlockType": [ "WIRE", "POWER", "TRANSISTOR" ],
       "MovementConstraint": [ "NO_ROTATE", "NO_VERTICAL", "NO_HORIZONTAL" ]
    },
+
    "game_state": {
       "seconds_from_launch": {
          "type": "float",
@@ -28,6 +29,7 @@
          "description" : "TODO - Placeholder for some representation of the board state."
       }
    },
+
    "events": {
       "session_start": {
          "description": "When the app is started and the gameplay session is assigned a session ID",
@@ -199,7 +201,6 @@
       "click_request_hint": {
          "description": "TODO - Placeholder for when hinting is implemented in the game.",
          "event_data": {
-            }
          }
       },
       "select_hint_block": {
