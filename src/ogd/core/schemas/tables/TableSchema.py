@@ -338,7 +338,7 @@ class TableSchema:
     # *** PRIVATE STATICS ***
 
     @staticmethod
-    def _parse(input:str, col_schema:ColumnSchema) -> Any:
+    def _parse(input:Any, col_schema:ColumnSchema) -> Any:
         """Applies whatever parsing is appropriate based on what type the schema said a column contained.
 
         :param input: _description_
@@ -363,14 +363,20 @@ class TableSchema:
         elif col_schema.ValueType == 'timedelta':
             return input if isinstance(input, timedelta) else TableSchema._convertTimedelta(str(input))
         elif col_schema.ValueType == 'json':
-            if input != 'None' and input != '': # watch out for nasty corner cases.
-                try:
+            try:
+                if isinstance(input, dict):
+                    # if input was a dict already, then just give it back. Else, try to load it from string.
+                    return input
+                elif isinstance(input, str):
+                    if input != 'None' and input != '': # watch out for nasty corner cases.
+                        return json.loads(input)
+                    else:
+                        return None
+                else:
                     return json.loads(str(input))
-                except JSONDecodeError as err:
-                    Logger.Log(f"Could not parse input '{input}' of type {type(input)} from column {col_schema.Name}, got the following error:\n{str(err)}", logging.WARN)
-                    return {}
-            else:
-                return None
+            except JSONDecodeError as err:
+                Logger.Log(f"Could not parse input '{input}' of type {type(input)} from column {col_schema.Name}, got the following error:\n{str(err)}", logging.WARN)
+                return {}
         elif col_schema.ValueType.startswith('enum'):
             # if the column is supposed to be an enum, for now we just stick with the string.
             return str(input)
