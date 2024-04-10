@@ -13,7 +13,7 @@
       },
       "level": {
          "type": "int",
-         "description": "The current level the player is in (0-5)."
+         "description": "The current level the player is in (1-6, or 0 when not in a level)."
       },
       "level_info": {
          "type" : "Dict",
