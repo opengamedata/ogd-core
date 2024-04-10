@@ -1,0 +1,205 @@
+{
+   "enums": {
+      "LevelType": [ "DEFAULT", "CLUTTER", "BOMBS", "FULL_SET", "FULL_ORDERED_SET", "SHIFTING" ],
+      "LevelDifficulty": ["NORMAL", "HARD"],
+      "PieceShape": [ "HEAD", "ARM", "BODY", "LEG", "BOMB" ],
+      "ReceiptItem": [ "GOOD", "DAMAGED", "JUNK", "MISSED", "FULL_SET", "DUPLICATE", "LEG_POS", "TORSO_POS", "HEAD_POS" ],
+      "PunchType": [ "CLICK", "SPACEBAR" ]
+   },
+   "game_state": {
+      "seconds_from_launch": {
+         "type": "float",
+         "description": "The number of seconds of game time elapsed since the game was launched."
+      },
+      "level": {
+         "type": "int",
+         "description": "The current level the player is in (0-5)."
+      },
+      "level_info": {
+         "type" : "Dict",
+         "details" : {
+            "type" : "LevelType",
+            "difficulty" : "LevelDifficulty"
+         },
+         "description" : "A dict, containing elements to indicate the type of level the player is on, and whether they are playing in 'hard' mode or not. Note, currently, there's just one level of each type, but this may change in the future."
+      },
+      "level_time": {
+         "type": "int",
+         "description": "The number of seconds elapsed since the start of the level."
+      },
+      "level_max_time": {
+         "type": "int",
+         "description": "The number of seconds the player has to complete the level, i.e. the starting value of the level's countdown timer."
+      },
+      "score": {
+         "type": "int",
+         "description": "The player's score on the current level."
+      },
+      "box_count": {
+         "type": "int",
+         "description": "The number of boxes the player has filled on the current level, which count towards the current score. During the level, this is the number of filled boxes; when the level ends a partially-filled box will also count as it is automatically 'packaged' before the final score is given."
+      },
+      "piece_count": {
+         "type": "int",
+         "description": "The total number of pieces the player has pushed into boxes on the current level."
+      },
+      "target_pieces": {
+         "type" : "List[PieceType]",
+         "description" : "A list of the types of pieces accepted on the given level's target board. For 'ordered set' levels, the order in the list indicates the order pieces must be placed."
+      },
+      "box_contents": {
+         "type" : "List[Dict]",
+         "details" : {
+            "type" : "PieceType",
+            "is_damaged" : "bool",
+            "is_target" : "bool"
+         },
+         "description" : "A list whose elements are dictionaries describing individual pieces placed in the current box. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target."
+      }
+   },
+   "events": {
+      "session_start": {
+         "description": "When the app is started and the gameplay session is assigned a session ID",
+         "event_data": {}
+      },
+      "game_start": {
+         "description": "When the player starts a new game (at present, this happens automatically at launch, but in the future the player may launch a new game from a menu).",
+         "event_data": {}
+      },
+      "display_level_preview": {
+         "description": "When the system displays a preview of the upcoming level to the player, including the target score and allowed time.",
+         "event_data": {
+            "level_id" : {
+               "type":"int",
+               "description":"The level number for the previewed level."
+            },
+            "level_type" : {
+               "type":"LevelType",
+               "description":"The type of the previewed level."
+            },
+            "duration" : {
+               "type":"int",
+               "description":"The allotted time for the previewed level."
+            },
+            "goal_score" : {
+               "type":"int",
+               "description":"The target score on the level."
+            }
+         }
+      },
+      "click_level_play": {
+         "description": "When the player clicks the 'play' button from the preview to start the level.",
+         "event_data": {
+            "level_id" : {
+               "type":"int",
+               "description":"The level number for the previewed level."
+            },
+            "level_type" : {
+               "type":"LevelType",
+               "description":"The type of the previewed level."
+            },
+            "duration" : {
+               "type":"int",
+               "description":"The allotted time for the previewed level."
+            },
+            "goal_score" : {
+               "type":"int",
+               "description":"The target score on the level."
+            }
+         }
+      },
+      "level_begin": {
+         "description": "When a level actually begins, whether due to the player clicking 'play' from a new level preview, or clicking 'replay' in a level summary.",
+         "event_data": {
+            "level_id" : {
+               "type":"int",
+               "description":"The level number for the previewed level."
+            },
+            "level_type" : {
+               "type":"LevelType",
+               "description":"The type of the previewed level."
+            },
+            "duration" : {
+               "type":"int",
+               "description":"The allotted time for the previewed level."
+            },
+            "goal_score" : {
+               "type":"int",
+               "description":"The target score on the level."
+            }
+         }
+      },
+      "piece_appeared": {
+         "description": "When a new piece appears on the conveyer belt.",
+         "event_data": {
+            "type" : {
+               "type":"PieceType",
+               "description":"The type of piece that appeared on the belt."
+            }
+         }
+      },
+      "piece_disappeared": {
+         "description": "When a non-packed piece disappears off the conveyer belt.",
+         "event_data": {
+            "type" : {
+               "type":"PieceType",
+               "description":"The type of piece that left the belt."
+            }
+         }
+      },
+      "punch_launched": {
+         "description": "When the player clicks (or presses key) to punch a piece into the box.",
+         "event_data": {
+            "type" : {
+               "type":"PunchType",
+               "description":"Whether the player triggered the punch with a click or the spacebar."
+            }
+         }
+      },
+      "piece_hit": {
+         "description": "When a piece is hit by a punch, packing it into the box.",
+         "event_data": {
+            "piece": {
+               "type" : "Dict",
+               "details" : {
+                  "type" : "PieceType",
+                  "is_damaged" : "bool",
+                  "is_target" : "bool"
+               },
+               "description" : "A dict describing the piece that was hit. Indicates the type of the piece, whether the piece was damaged, and whether it matched the level target."
+            },
+            "new_box_contents": {
+               "type" : "List[Dict]",
+               "details" : {
+                  "type" : "PieceType",
+                  "is_damaged" : "bool",
+                  "is_target" : "bool"
+               },
+               "description" : "A list whose elements are dictionaries describing individual pieces placed in the current box, including the newly-packed piece. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target."
+            },
+            "accuracy" : {
+               "type":"float",
+               "description":"A value, from 0-1, indicating how close the player was to a 'perfectly accurate' punch."
+            }
+         }
+      },
+      "bomb_hit": {
+         "description": "When a bomb is hit by a punch, destroying the current contents of the box.",
+         "event_data": {
+            "pieces_destroyed": {
+               "type" : "List[Dict]",
+               "details" : {
+                  "type" : "PieceType",
+                  "is_damaged" : "bool",
+                  "is_target" : "bool"
+               },
+               "description" : "A list whose elements are dictionaries describing individual pieces that were in the current box, and destroyed by the bomb. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target."
+            },
+            "accuracy" : {
+               "type":"float",
+               "description":"A value, from 0-1, indicating how close the player was to a 'perfectly accurate' punch."
+            }
+         }
+      },
+   }
+}
