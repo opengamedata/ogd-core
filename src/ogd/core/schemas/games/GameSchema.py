@@ -86,8 +86,8 @@ class GameSchema(Schema):
         self._other_ranges = {key : range(val.get('min', 0), val.get('max', 1)) for key,val in all_elements.items() if key.endswith("_range")}
     # 8. Get config, if any
         self._config = all_elements.get('config', {})
-        if "SUPPORTED_VERS" in all_elements['config']:
-            self._supported_vers = all_elements['config']['SUPPORTED_VERS']
+        if "SUPPORTED_VERS" in self._config:
+            self._supported_vers = self._config['SUPPORTED_VERS']
         else:
             self._supported_vers = None
             Logger.Log(f"{self._game_id} game schema does not define supported versions, defaulting to support all versions.", logging.INFO)
