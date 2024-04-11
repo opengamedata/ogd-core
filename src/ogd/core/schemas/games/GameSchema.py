@@ -53,7 +53,7 @@ class GameSchema(Schema):
         self._percount_feats         : Dict[str, PerCountSchema]            = {}
         self._legacy_perlevel_feats  : Dict[str, PerCountSchema]            = {}
         self._legacy_mode            : bool                                 = False
-        self._config                 : Dict[str, Any]
+        self._config                 : Dict[str, Any]                       = {}
         self._min_level              : Optional[int]                        = None
         self._max_level              : Optional[int]                        = None
         self._other_ranges           : Dict[str, range]
@@ -104,7 +104,10 @@ class GameSchema(Schema):
             Logger.Log(f"{self._game_id} game schema does not define any features.", logging.INFO)
 
     # 5. Get config, if any
-        self._config = all_elements.get('config', {})
+        if "config" in all_elements.keys():
+            self._config = all_elements['config']
+        else:
+            Logger.Log(f"{self._game_id} game schema does not define any config items.", logging.INFO)
         if "SUPPORTED_VERS" in self._config:
             self._supported_vers = self._config['SUPPORTED_VERS']
         else:
@@ -120,7 +123,7 @@ class GameSchema(Schema):
         self._other_ranges = {key : range(val.get('min', 0), val.get('max', 1)) for key,val in all_elements.items() if key.endswith("_range")}
 
     # 7. Collect any other, unexpected elements
-        _leftovers = { key:val for key,val in all_elements.items() if key not in {'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
+        _leftovers = { key:val for key,val in all_elements.items() if key not in {'enums', 'game_state', 'user_data', 'events', 'detectors', 'features', 'level_range', 'config'}.union(self._other_ranges.keys()) }
         super().__init__(name=self._game_id, other_elements=_leftovers)
 
     # *** BUILT-INS & PROPERTIES ***
