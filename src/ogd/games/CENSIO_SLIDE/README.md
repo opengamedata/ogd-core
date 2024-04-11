@@ -57,7 +57,29 @@ The elements (member variables) of each Event object, available to programmers w
 
 ## Logged Events  
 
-The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  
+The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game.  
+
+### Enums  
+
+| **Name** | **Values** |
+| ---      | ---        |
+| BlockType | ['WIRE', 'POWER', 'TRANSISTOR'] |
+| MovementConstraint | ['NO_ROTATE', 'NO_VERTICAL', 'NO_HORIZONTAL'] |  
+
+### Game State  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| seconds_from_launch | float | The number of seconds of game time elapsed since the game was launched. | |
+| level | int | The current level the player is in. | |
+| move_count | int | The number of moves the player has made on the current level. | |
+| level_max_moves | int | The maximum number of moves allowed in the current level. | |
+| board | N/A | TODO - Placeholder for some representation of the board state. |**N/A** : N/A |  
+
+### User Data  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **session_start**
 
@@ -419,10 +441,6 @@ None
 ## Other Elements  
 
 Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
-
-enums : {'BlockType': ['WIRE', 'POWER', 'TRANSISTOR'], 'MovementConstraint': ['NO_ROTATE', 'NO_VERTICAL', 'NO_HORIZONTAL']}  
-
-game_state : {'seconds_from_launch': {'type': 'float', 'description': 'The number of seconds of game time elapsed since the game was launched.'}, 'level': {'type': 'int', 'description': 'The current level the player is in.'}, 'move_count': {'type': 'int', 'description': 'The number of moves the player has made on the current level.'}, 'level_max_moves': {'type': 'int', 'description': 'The maximum number of moves allowed in the current level.'}, 'board': {'type': 'N/A', 'details': {'N/A': 'N/A'}, 'description': 'TODO - Placeholder for some representation of the board state.'}}  
 
 ### Other Ranges  
 
