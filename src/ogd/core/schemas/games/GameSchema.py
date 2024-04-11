@@ -9,7 +9,7 @@ from ogd.core.schemas.Schema import Schema
 from ogd.core.schemas.games.AggregateSchema import AggregateSchema
 from ogd.core.schemas.games.DetectorSchema import DetectorSchema
 from ogd.core.schemas.games.DetectorMapSchema import DetectorMapSchema
-from ogd.core.schemas.games.EventDataElementSchema import DataElementSchema
+from ogd.core.schemas.games.DataElementSchema import DataElementSchema
 from ogd.core.schemas.games.EventSchema import EventSchema
 from ogd.core.schemas.games.PerCountSchema import PerCountSchema
 from ogd.core.schemas.games.FeatureSchema import FeatureSchema
