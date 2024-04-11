@@ -135,7 +135,10 @@ class JobActiveTime(PerJobFeature):
                 # Logger.Log(f"JobActiveTime attempting to update total time for {event.UserID} ({_old_sess} -> {self._session_id}) following change in session, index={event.EventSequenceIndex}", logging.INFO)
                 self._updateTotalTime()
                 # Logger.Log("Done", logging.INFO)
-                current_job = event.EventData.get("job_name", {}).get("string_value")
+                if event.app_version == 'Aqualab' or event.app_version == 'None':
+                    current_job = event.EventData.get("job_name", {}).get('string_value')
+                else:
+                    current_job = event.EventData.get("job_name")
                 if current_job is not None and self._job_map.get(current_job, None) == self.CountIndex:
                     self._last_start_time = event.Timestamp
                     self._last_event_time = event.Timestamp

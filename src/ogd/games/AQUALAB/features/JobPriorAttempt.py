@@ -28,7 +28,10 @@ class JobPriorAttempt(PerCountFeature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        job_data = event.EventData["job_name"]['string_value']
+        if event.app_version == 'Aqualab' or event.app_version == 'None':
+            job_data = event.EventData["job_name"]['string_value']
+        else:
+            job_data = event.EventData["job_name"]
         if event.event_name == "complete_job":
             if self._job_map[job_data] == self.CountIndex:
                 self._completed = True
