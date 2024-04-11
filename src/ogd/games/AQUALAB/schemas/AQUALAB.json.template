@@ -799,7 +799,7 @@
                 "return_type": "dict"
             },
             "PlayLocations": {
-                "enabled": true,
+                "enabled": false,
                 "type": "PlayLocations",
                 "description": "An indicator of whether play happened during normal school hours or not",
                 "return_type": "List[bool]",
