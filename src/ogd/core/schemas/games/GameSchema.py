@@ -247,8 +247,26 @@ class GameSchema(Schema):
     @property
     def AsMarkdown(self) -> str:
         event_summary = ["## Logged Events",
-                         "The individual fields encoded in the *event_data* Event element for each type of event logged by the game."
+                         "The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game."
                         ]
+        enum_list     = ["### Enums",
+                             "\n".join(
+                                 ["| **Name** | **Values** |",
+                                  "| ---      | ---        |"]
+                               + [f"| {name} | {val_list} |" for name,val_list in self.EnumDefs.items()]
+                             )]
+        game_state_list = ["### Game State",
+                             "\n".join(
+                                 ["| **Name** | **Type** | **Description** | **Sub-Elements** |",
+                                  "| ---      | ---      | ---             | ---         |"]
+                               + [elem.AsMarkdownRow for elem in self.GameState.values()]
+                             )]
+        user_data_list = ["### User Data",
+                             "\n".join(
+                                 ["| **Name** | **Type** | **Description** | **Sub-Elements** |",
+                                  "| ---      | ---      | ---             | ---         |"]
+                               + [elem.AsMarkdownRow for elem in self.UserData.values()]
+                             )]
         # Set up list of events
         event_list = [event.AsMarkdownTable for event in self.Events] if len(self.Events) > 0 else ["None"]
         # Set up list of detectors
@@ -276,7 +294,8 @@ class GameSchema(Schema):
                          ]
         other_range_list = [ f"{key} : {self.OtherRanges[key]}" for key in self.OtherRanges ]
 
-        ret_val = "  \n\n".join(event_summary + event_list
+        ret_val = "  \n\n".join(event_summary
+                              + enum_list + game_state_list + user_data_list + event_list
                               + detector_summary + detector_list
                               + feature_summary + feature_list
                               + other_summary + other_element_list
