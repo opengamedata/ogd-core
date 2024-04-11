@@ -253,23 +253,23 @@ class GameSchema(Schema):
                          "The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game."
                         ]
         enum_list     = ["### Enums",
-                             "\n".join(
-                                 ["| **Name** | **Values** |",
-                                  "| ---      | ---        |"]
-                               + [f"| {name} | {val_list} |" for name,val_list in self.EnumDefs.items()]
-                             )]
+                         "\n".join(
+                             ["| **Name** | **Values** |",
+                             "| ---      | ---        |"]
+                         + [f"| {name} | {val_list} |" for name,val_list in self.EnumDefs.items()]
+                        )]
         game_state_list = ["### Game State",
-                             "\n".join(
-                                 ["| **Name** | **Type** | **Description** | **Sub-Elements** |",
-                                  "| ---      | ---      | ---             | ---         |"]
-                               + [elem.AsMarkdownRow for elem in self.GameState.values()]
-                             )]
+                           "\n".join(
+                               ["| **Name** | **Type** | **Description** | **Sub-Elements** |",
+                               "| ---      | ---      | ---             | ---         |"]
+                           + [elem.AsMarkdownRow for elem in self.GameState.values()]
+                          )]
         user_data_list = ["### User Data",
-                             "\n".join(
-                                 ["| **Name** | **Type** | **Description** | **Sub-Elements** |",
-                                  "| ---      | ---      | ---             | ---         |"]
-                               + [elem.AsMarkdownRow for elem in self.UserData.values()]
-                             )]
+                          "\n".join(
+                              ["| **Name** | **Type** | **Description** | **Sub-Elements** |",
+                              "| ---      | ---      | ---             | ---         |"]
+                          + [elem.AsMarkdownRow for elem in self.UserData.values()]
+                         )]
         # Set up list of events
         event_list = [event.AsMarkdownTable for event in self.Events] if len(self.Events) > 0 else ["None"]
         # Set up list of detectors
