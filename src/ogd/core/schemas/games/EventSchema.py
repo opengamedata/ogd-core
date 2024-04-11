@@ -2,7 +2,7 @@
 import logging
 from typing import Any, Dict, Optional
 # import local files
-from ogd.core.schemas.games.EventDataElementSchema import EventDataElementSchema
+from ogd.core.schemas.games.DataElementSchema import DataElementSchema
 from ogd.core.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
@@ -14,7 +14,7 @@ class EventSchema(Schema):
     """
     def __init__(self, name:str, all_elements:Dict[str, Dict]):
         self._description : str                               = "No description available"
-        self._event_data  : Dict[str, EventDataElementSchema] = {}
+        self._event_data  : Dict[str, DataElementSchema] = {}
 
         if not isinstance(all_elements, dict):
             all_elements = {}
@@ -37,7 +37,7 @@ class EventSchema(Schema):
         return self._description
 
     @property
-    def EventData(self) -> Dict[str, EventDataElementSchema]:
+    def EventData(self) -> Dict[str, DataElementSchema]:
         return self._event_data
 
     @property
@@ -74,9 +74,9 @@ class EventSchema(Schema):
 
     @staticmethod
     def _parseEventDataElements(event_data):
-        ret_val : Dict[str, EventDataElementSchema]
+        ret_val : Dict[str, DataElementSchema]
         if isinstance(event_data, dict):
-            ret_val = {name:EventDataElementSchema(name=name, all_elements=elems) for name,elems in event_data.items()}
+            ret_val = {name:DataElementSchema(name=name, all_elements=elems) for name,elems in event_data.items()}
         else:
             ret_val = {}
             Logger.Log(f"event_data was unexpected type {type(event_data)}, defaulting to empty dict.", logging.WARN)

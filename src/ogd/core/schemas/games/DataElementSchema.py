@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 from ogd.core.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
-class EventDataElementSchema(Schema):
+class DataElementSchema(Schema):
     """
     Dumb struct to contain a specification of a data element from the EventData, GameState, or UserData attributes of an Event.
     """
@@ -22,17 +22,17 @@ class EventDataElementSchema(Schema):
                 all_elements = {}
                 Logger.Log(f"For EventDataElement config of `{name}`, all_elements was not a dict, defaulting to empty dict", logging.WARN)
         if "type" in all_elements.keys():
-            self._type = EventDataElementSchema._parseElementType(all_elements['type'])
+            self._type = DataElementSchema._parseElementType(all_elements['type'])
         else:
             self._type = "Unknown"
             Logger.Log(f"{name} EventDataElement config does not have a 'type' element; defaulting to type='{self._type}", logging.WARN)
         if "description" in all_elements.keys():
-            self._description = EventDataElementSchema._parseDescription(all_elements['description'])
+            self._description = DataElementSchema._parseDescription(all_elements['description'])
         else:
             self._description = "Unknown"
             Logger.Log(f"{name} EventDataElement config does not have a 'description' element; defaulting to description='{self._description}", logging.WARN)
         if "details" in all_elements.keys():
-            self._details = EventDataElementSchema._parseDetails(details=all_elements['details'])
+            self._details = DataElementSchema._parseDetails(details=all_elements['details'])
         else:
             self._details = None
         _leftovers = { key : val for key,val in all_elements.items() if key not in {"type", "description", "details"} }
