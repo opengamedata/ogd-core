@@ -2,7 +2,7 @@
 import logging
 from typing import Dict
 # import local files
-from ogd.core.schemas.games.EventDataElementSchema import EventDataElementSchema
+from ogd.core.schemas.games.DataElementSchema import DataElementSchema
 from ogd.core.schemas.Schema import Schema
 from ogd.core.utils.Logger import Logger
 
@@ -13,7 +13,7 @@ class GameStateSchema(Schema):
     These essentially are just a set of elements in the GameState attribute of the game's Events.
     """
     def __init__(self, name:str, all_elements:Dict[str, Dict]):
-        self._game_state  : Dict[str, EventDataElementSchema]
+        self._game_state  : Dict[str, DataElementSchema]
 
         if not isinstance(all_elements, dict):
             all_elements   = {}
@@ -22,7 +22,7 @@ class GameStateSchema(Schema):
         super().__init__(name=name, other_elements=None)
 
     @property
-    def GameStateElements(self) -> Dict[str, EventDataElementSchema]:
+    def GameStateElements(self) -> Dict[str, DataElementSchema]:
         return self._game_state
 
     @property
@@ -56,9 +56,9 @@ class GameStateSchema(Schema):
 
     @staticmethod
     def _parseGameStateElements(event_data):
-        ret_val : Dict[str, EventDataElementSchema]
+        ret_val : Dict[str, DataElementSchema]
         if isinstance(event_data, dict):
-            ret_val = {name:EventDataElementSchema(name=name, all_elements=elems) for name,elems in event_data.items()}
+            ret_val = {name:DataElementSchema(name=name, all_elements=elems) for name,elems in event_data.items()}
         else:
             ret_val = {}
             Logger.Log(f"event_data was unexpected type {type(event_data)}, defaulting to empty dict.", logging.WARN)
