@@ -57,7 +57,37 @@ The elements (member variables) of each Event object, available to programmers w
 
 ## Logged Events  
 
-The individual fields encoded in the *event_data* Event element for each type of event logged by the game.  
+The individual fields encoded in the *game_state* and *user_data* Event element for all event types, and the fields in the *event_data* Event element for each individual event type logged by the game.  
+
+### Enums  
+
+| **Name** | **Values** |
+| ---      | ---        |
+| LevelType | ['DEFAULT', 'CLUTTER', 'BOMBS', 'FULL_SET', 'FULL_ORDERED_SET', 'SHIFTING'] |
+| LevelDifficulty | ['NORMAL', 'HARD'] |
+| PieceShape | ['HEAD', 'ARM', 'BODY', 'LEG', 'BOMB'] |
+| ReceiptItem | ['GOOD', 'DAMAGED', 'JUNK', 'MISSED', 'FULL_SET', 'DUPLICATE', 'LEG_POS', 'TORSO_POS', 'HEAD_POS'] |
+| PunchType | ['CLICK', 'SPACEBAR'] |  
+
+### Game State  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |
+| seconds_from_launch | float | The number of seconds of game time elapsed since the game was launched. | |
+| level | int | The current level the player is in (1-6, or 0 when not in a level). | |
+| level_info | Dict | A dict, containing elements to indicate the type of level the player is on, and whether they are playing in 'hard' mode or not. Note, currently, there's just one level of each type, but this may change in the future. |**type** : LevelType, **difficulty** : LevelDifficulty |
+| level_time | int | The number of seconds elapsed since the start of the level. | |
+| level_max_time | int | The number of seconds the player has to complete the level, i.e. the starting value of the level's countdown timer. | |
+| score | int | The player's score on the current level. | |
+| box_count | int | The number of boxes the player has filled on the current level, which count towards the current score. During the level, this is the number of filled boxes; when the level ends a partially-filled box will also count as it is automatically 'packaged' before the final score is given. | |
+| piece_count | int | The total number of pieces the player has pushed into boxes on the current level. | |
+| target_pieces | List[PieceType] | A list of the types of pieces accepted on the given level's target board. For 'ordered set' levels, the order in the list indicates the order pieces must be placed. | |
+| box_contents | List[Dict] | A list whose elements are dictionaries describing individual pieces placed in the current box. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target. |**type** : PieceType, **is_damaged** : bool, **is_target** : bool |  
+
+### User Data  
+
+| **Name** | **Type** | **Description** | **Sub-Elements** |
+| ---      | ---      | ---             | ---         |  
 
 ### **session_start**
 
@@ -548,10 +578,6 @@ None
 ## Other Elements  
 
 Other (potentially non-standard) elements specified in the game's schema, which may be referenced by event/feature processors.  
-
-enums : {'LevelType': ['DEFAULT', 'CLUTTER', 'BOMBS', 'FULL_SET', 'FULL_ORDERED_SET', 'SHIFTING'], 'LevelDifficulty': ['NORMAL', 'HARD'], 'PieceShape': ['HEAD', 'ARM', 'BODY', 'LEG', 'BOMB'], 'ReceiptItem': ['GOOD', 'DAMAGED', 'JUNK', 'MISSED', 'FULL_SET', 'DUPLICATE', 'LEG_POS', 'TORSO_POS', 'HEAD_POS'], 'PunchType': ['CLICK', 'SPACEBAR']}  
-
-game_state : {'seconds_from_launch': {'type': 'float', 'description': 'The number of seconds of game time elapsed since the game was launched.'}, 'level': {'type': 'int', 'description': 'The current level the player is in (1-6, or 0 when not in a level).'}, 'level_info': {'type': 'Dict', 'details': {'type': 'LevelType', 'difficulty': 'LevelDifficulty'}, 'description': "A dict, containing elements to indicate the type of level the player is on, and whether they are playing in 'hard' mode or not. Note, currently, there's just one level of each type, but this may change in the future."}, 'level_time': {'type': 'int', 'description': 'The number of seconds elapsed since the start of the level.'}, 'level_max_time': {'type': 'int', 'description': "The number of seconds the player has to complete the level, i.e. the starting value of the level's countdown timer."}, 'score': {'type': 'int', 'description': "The player's score on the current level."}, 'box_count': {'type': 'int', 'description': "The number of boxes the player has filled on the current level, which count towards the current score. During the level, this is the number of filled boxes; when the level ends a partially-filled box will also count as it is automatically 'packaged' before the final score is given."}, 'piece_count': {'type': 'int', 'description': 'The total number of pieces the player has pushed into boxes on the current level.'}, 'target_pieces': {'type': 'List[PieceType]', 'description': "A list of the types of pieces accepted on the given level's target board. For 'ordered set' levels, the order in the list indicates the order pieces must be placed."}, 'box_contents': {'type': 'List[Dict]', 'details': {'type': 'PieceType', 'is_damaged': 'bool', 'is_target': 'bool'}, 'description': 'A list whose elements are dictionaries describing individual pieces placed in the current box. Each dict indicates the type of the piece, whether the piece was damaged, and whether it matched the level target.'}}  
 
 ### Other Ranges  
 
