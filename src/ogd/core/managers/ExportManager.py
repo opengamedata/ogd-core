@@ -90,8 +90,11 @@ class ExportManager:
 
             ret_val.SessionCount = len(_sess_ids)
             ret_val.RequestSucceeded(msg=f"Successfully executed data request {request}.")
+        except ValueError as err:
+            msg = f"Failed to execute data request {str(request)}, an invalid value was found:\n{str(err)}"
+            ret_val.RequestErrored(msg=msg)
         except Exception as err:
-            msg = f"Failed to execute data request {str(request)}, an error occurred:\n{type(err)} {str(err)}\n{traceback.format_exc()}"
+            msg = f"Failed to execute data request {str(request)}, an unexpected error occurred:\n{type(err)} {str(err)}\n{traceback.format_exc()}"
             ret_val.RequestErrored(msg=msg)
         finally:
             time_delta = datetime.now() - start
@@ -206,11 +209,11 @@ class ExportManager:
                 from ogd.games.PENGUINS.PenguinsLoader import PenguinsLoader
                 _loader_class = PenguinsLoader
             case _:
-                if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WIND"}:
+                if game_id in {"BACTERIA", "BALLOON", "CYCLE_CARBON", "CYCLE_NITROGEN", "CYCLE_WATER", "EARTHQUAKE", "MASHOPOLIS", "WEATHER_STATION", "WIND"}:
                     # all games with data but no extractor.
                     pass
                 else:
-                    raise Exception(f"Got an invalid game ID ({game_id})!")
+                    raise ValueError(f"Got an unrecognized game ID ({game_id})!")
         return _loader_class
 
     def _generateSlices(self, sess_ids:List[str]) -> List[List[str]]:
