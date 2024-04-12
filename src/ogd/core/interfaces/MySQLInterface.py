@@ -4,7 +4,7 @@ import logging
 import sshtunnel
 import traceback
 from datetime import datetime
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, Final, List, Tuple, Optional
 # import locals
 from ogd.core.interfaces.DataInterface import DataInterface
 from ogd.core.schemas.IDMode import IDMode
@@ -99,7 +99,7 @@ class SQL:
         """
         tunnel    : Optional[sshtunnel.SSHTunnelForwarder] = None
         db_conn   : Optional[connection.MySQLConnection] = None
-        MAX_TRIES : int = 5
+        MAX_TRIES : Final[int] = 5
         tries : int = 0
         connected_ssh : bool = False
 
