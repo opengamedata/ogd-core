@@ -55,7 +55,9 @@ __all__ = [
     "TotalPlayTime",
     "UserAvgActiveTime",
     "UserAvgSessionDuration",
-    "UserTotalSessionDuration"
+    "UserTotalSessionDuration",
+    "PlayLocations",
+    "AppVersions"
 ]
 
 from . import ActiveJobs
@@ -115,3 +117,5 @@ from . import TotalPlayTime
 from . import UserAvgActiveTime
 from . import UserAvgSessionDuration
 from . import UserTotalSessionDuration
+from . import PlayLocations
+from . import AppVersions
